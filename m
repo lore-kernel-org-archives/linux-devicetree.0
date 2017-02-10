@@ -1,300 +1,164 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH linux v7 1/6] hwmon: Add core On-Chip Controller support
- for POWER CPUs
-Date: Fri, 10 Feb 2017 16:01:43 +1030
-Message-ID: <CACPK8XcPwKN2oEeryXh3909OZs9eF=rjnZVJV3NRo_OAK-Zhcg@mail.gmail.com>
-References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com> <1486509056-25838-2-git-send-email-eajames@linux.vnet.ibm.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 2/2] dmaengine: Add DW AXI DMAC driver
+Date: Fri, 10 Feb 2017 11:36:06 +0530
+Message-ID: <20170210060606.GO19244@localhost>
+References: <1485358457-22957-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+ <1485358457-22957-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486509056-25838-2-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: eajames <eajames@linux.vnet.ibm.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1485358457-22957-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 9:40 AM,  <eajames@linux.vnet.ibm.com> wrote:
+On Wed, Jan 25, 2017 at 06:34:17PM +0300, Eugeniy Paltsev wrote:
+> This patch adds support for the DW AXI DMAC controller.
+> 
+> DW AXI DMAC is a part of upcoming development board from Synopsys.
 
-> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-> new file mode 100644
-> index 0000000..79d1642
-> --- /dev/null
-> +++ b/Documentation/hwmon/occ
+How different is AXI from DW Synopsys?
 
-The kernel is using  reStructuredText these days. You should consider
-following suit:
+Is the spec publicly available?
 
- https://www.kernel.org/doc/html/latest/doc-guide/sphinx.html#writing-documentation
+> +config AXI_DW_DMAC
+> +	tristate "Synopsys DesignWare AXI DMA support"
+> +	depends on OF && !64BIT
 
+why not 64 bit, can you also add compile test
 
-> @@ -0,0 +1,40 @@
-> +Kernel driver occ
-> +=================
-> +
-> +Supported chips:
-> + * ASPEED AST2400
-> + * ASPEED AST2500
+> +#define AXI_DMA_BUSWIDTHS		  \
+> +	(DMA_SLAVE_BUSWIDTH_UNDEFINED	| \
 
-Not really - this will run on any chip that's connected to a P8 or P9.
+DMA_SLAVE_BUSWIDTH_UNDEFINED??
 
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5f10c28..193a13b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9128,6 +9128,13 @@ T:       git git://linuxtv.org/media_tree.git
->  S:     Maintained
->  F:     drivers/media/i2c/ov7670.c
->
-> +ON-CHIP CONTROLLER HWMON DRIVER
-
-Mention P8 and P9?
-
-> +M:     Eddie James <eajames@us.ibm.com>
-> +L:     linux-hwmon@vger.kernel.org
-
-Have you subscribed to this list? Would you prefer the mail to come to
-the openbmc list?
-
-> +S:     Maintained
-> +F:     Documentation/hwmon/occ
-> +F:     drivers/hwmon/occ/
-> +
->  ONENAND FLASH DRIVER
->  M:     Kyungmin Park <kyungmin.park@samsung.com>
->  L:     linux-mtd@lists.infradead.org
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 190d270..e80ca81 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1240,6 +1240,8 @@ config SENSORS_NSA320
->           This driver can also be built as a module. If so, the module
->           will be called nsa320-hwmon.
->
-> +source drivers/hwmon/occ/Kconfig
-> +
->  config SENSORS_PCF8591
->         tristate "Philips PCF8591 ADC/DAC"
->         depends on I2C
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index d2cb7e8..c7ec5d4 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -169,6 +169,7 @@ obj-$(CONFIG_SENSORS_WM831X)        += wm831x-hwmon.o
->  obj-$(CONFIG_SENSORS_WM8350)   += wm8350-hwmon.o
->  obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
->
-> +obj-$(CONFIG_SENSORS_PPC_OCC)  += occ/
->  obj-$(CONFIG_PMBUS)            += pmbus/
->
->  ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
-
-
-> diff --git a/drivers/hwmon/occ/occ.c b/drivers/hwmon/occ/occ.c
-> new file mode 100644
-> index 0000000..af077f2
-> --- /dev/null
-> +++ b/drivers/hwmon/occ/occ.c
-
-> +               sensors = &resp->data.blocks[b].sensors;
-> +               if (!sensors) {
-> +                       /* first poll response */
-> +                       sensors = driver->ops.alloc_sensor(dev, sensor_type,
-> +                                                          block->num_sensors);
-> +                       if (!sensors)
-> +                               return -ENOMEM;
-> +
-> +                       resp->data.blocks[b].sensors = sensors;
-> +                       resp->data.sensor_block_id[sensor_type] = b;
-> +                       resp->data.blocks[b].header = *block;
-> +               } else if (block->sensor_length !=
-> +                        resp->data.blocks[b].header.sensor_length) {
-> +                       dev_warn(dev,
-> +                                "different sensor length than first poll\n");
-
-The driver has changed behaviour from your previous version; now it
-discards data if the sensors change.
-
-Under what circumstances does the sensor data change?
-
-> +                       continue;
-> +               }
-> +
-> +               for (s = 0; s < block->num_sensors &&
-> +                    s < resp->data.blocks[b].header.num_sensors; s++) {
-> +                       if (offset + block->sensor_length > num_bytes) {
-> +                               dev_warn(dev, "exceeded data length\n");
-> +                               return 0;
-> +                       }
-> +
-> +                       driver->ops.parse_sensor(data, sensors, sensor_type,
-> +                                                offset, s);
-> +                       offset += block->sensor_length;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static u8 occ_send_cmd(struct occ *driver, u8 seq, u8 type, u16 length,
-> +                      const u8 *data, u8 *resp)
+> +static irqreturn_t dw_axi_dma_intretupt(int irq, void *dev_id)
 > +{
-> +       u32 cmd1, cmd2 = 0;
-> +       u16 checksum = 0;
-> +       bool retry = false;
-> +       int i, rc, tries = 0;
+> +	struct axi_dma_chip *chip = dev_id;
 > +
-> +       cmd1 = (seq << 24) | (type << 16) | length;
-> +       memcpy(&cmd2, data, length);
-> +       cmd2 <<= ((4 - length) * 8);
+> +	/* Disable DMAC inerrupts. We'll enable them in the tasklet */
+> +	axi_dma_irq_disable(chip);
 > +
-> +       /* checksum: sum of every bytes of cmd1, cmd2 */
-> +       for (i = 0; i < 4; i++) {
-> +               checksum += (cmd1 >> (i * 8)) & 0xFF;
-> +               checksum += (cmd2 >> (i * 8)) & 0xFF;
-> +       }
-> +
-> +       cmd2 |= checksum << ((2 - length) * 8);
-> +
-> +       /* Init OCB */
+> +	tasklet_schedule(&chip->dw->tasklet);
 
-You should mention what OCB means in your documentation.
+This is very inefficient, we would want to submit next txn here and not in
+tasklet
 
-> +       rc = driver->bus_ops.putscom(driver->bus, OCB_STATUS_CONTROL_OR,
-> +                                    OCB_OR_INIT0, OCB_OR_INIT1);
-> +       if (rc)
-> +               goto err;
-> +
-
-> +int occ_set_user_powercap(struct occ *occ, u16 cap)
+> +static void axi_chan_block_xfer_complete(struct axi_dma_chan *chan)
 > +{
-> +       u8 resp[8];
+> +	struct virt_dma_desc *vd;
+> +	unsigned long flags;
 > +
-> +       cap = cpu_to_be16(cap);
+> +	spin_lock_irqsave(&chan->vc.lock, flags);
+> +	if (unlikely(axi_chan_is_hw_enable(chan))) {
+> +		dev_err(chan2dev(chan), "BUG: %s catched DWAXIDMAC_IRQ_DMA_TRF, but channel not idle!\n",
+> +			axi_chan_name(chan));
+> +		axi_chan_disable(chan);
+> +	}
 > +
-> +       return occ_send_cmd(occ, 0, OCC_SET_USER_POWR_CAP, 2, (const u8 *)&cap,
-> +                           resp);
-> +}
-> +EXPORT_SYMBOL(occ_set_user_powercap);
-> +
-> +struct occ *occ_start(struct device *dev, void *bus,
+> +	/* The completed descriptor currently is in the head of vc list */
+> +	vd = vchan_next_desc(&chan->vc);
+> +	/* Remove the completed descriptor from issued list before completing */
+> +	list_del(&vd->node);
+> +	vchan_cookie_complete(vd);
 
->From what I can tell this doesn't start anything. Call it occ_init()
-or something.
-
-> +                     struct occ_bus_ops *bus_ops, const struct occ_ops *ops,
-> +                     const struct occ_config *config)
-
-Create a structure with all of these details in it. Some of them don't
-need to be broken out into their own, for instance:
-
-struct occ *occ_start(struct device *dev, const struct occ_init_context *init)
-{
-
-   driver->dev = dev;
-   driver->bus = init->bus;
-   driver->bus_read = init->bus_read;
-   driver->bus_write = init->bus_write;
-   driver->config = init->config;
-   driver->cmd_addr = init->cmd_addr;
-
-etc.
+this should be called from irq handler
 
 
-
+> +static int dw_remove(struct platform_device *pdev)
 > +{
-> +       struct occ *driver = devm_kzalloc(dev, sizeof(struct occ), GFP_KERNEL);
+> +	struct axi_dma_chip *chip = platform_get_drvdata(pdev);
+> +	struct dw_axi_dma *dw = chip->dw;
+> +	struct axi_dma_chan *chan, *_chan;
+> +	u32 i;
 > +
-> +       if (!driver)
-> +               return ERR_PTR(-ENOMEM);
+> +	axi_dma_irq_disable(chip);
+> +	for (i = 0; i < dw->hdata->nr_channels; i++) {
+> +		axi_chan_disable(&chip->dw->chan[i]);
+> +		axi_chan_irq_disable(&chip->dw->chan[i], DWAXIDMAC_IRQ_ALL);
+> +	}
+> +	axi_dma_disable(chip);
 > +
-> +       driver->dev = dev;
-> +       driver->bus = bus;
-> +       driver->bus_ops = *bus_ops;
-> +       driver->ops = *ops;
-> +       driver->config = *config;
-> +       driver->raw_data = devm_kzalloc(dev, OCC_DATA_MAX, GFP_KERNEL);
-> +       if (!driver->raw_data)
-> +               return ERR_PTR(-ENOMEM);
+> +	tasklet_kill(&dw->tasklet);
 > +
-> +       mutex_init(&driver->update_lock);
+> +	list_for_each_entry_safe(chan, _chan, &dw->dma.channels,
+> +			vc.chan.device_node) {
+> +		list_del(&chan->vc.chan.device_node);
+> +		tasklet_kill(&chan->vc.task);
+> +	}
+
+very nice :)
+
+But please freeup irq as well
+
+> +module_platform_driver(dw_driver);
 > +
-> +       return driver;
+> +static int __init dw_init(void)
+> +{
+> +	return platform_driver_register(&dw_driver);
 > +}
-> +EXPORT_SYMBOL(occ_start);
+> +subsys_initcall(dw_init);
+
+why subsys_initcall??
+
+> +/* Common registers offset */
+> +#define DMAC_ID			0x000 // R DMAC ID
+> +#define DMAC_COMPVER		0x008 // R DMAC Component Version
+> +#define DMAC_CFG		0x010 // R/W DMAC Configuration
+> +#define DMAC_CHEN		0x018 // R/W DMAC Channel Enable
+> +#define DMAC_CHEN_L		0x018 // R/W DMAC Channel Enable 00-31
+> +#define DMAC_CHEN_H		0x01C // R/W DMAC Channel Enable 32-63
+> +#define DMAC_INTSTATUS		0x030 // R DMAC Interrupt Status
+> +#define DMAC_COMMON_INTCLEAR	0x038 // W DMAC Interrupt Clear
+> +#define DMAC_COMMON_INTSTATUS_ENA 0x040 // R DMAC Interrupt Status Enable
+> +#define DMAC_COMMON_INTSIGNAL_ENA 0x048 // R/W DMAC Interrupt Signal Enable
+> +#define DMAC_COMMON_INTSTATUS	0x050 // R DMAC Interrupt Status
+> +#define DMAC_RESET		0x058 // R DMAC Reset Register1
+
+DMAC is a generic term, AX_DMAC and no C99 style comment, checkpatch would
+have cribbed
+
+Use BITS and GENMASK here
+
 > +
-> +MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-> +MODULE_DESCRIPTION("OCC hwmon core driver");
-> +MODULE_LICENSE("GPL");
+> +/* DMA channel registers offset */
+> +#define CH_SAR			0x000 // R/W Chan Source Address
+> +#define CH_DAR			0x008 // R/W Chan Destination Address
+> +#define CH_BLOCK_TS		0x010 // R/W Chan Block Transfer Size
+> +#define CH_CTL			0x018 // R/W Chan Control
+> +#define CH_CTL_L		0x018 // R/W Chan Control 00-31
+> +#define CH_CTL_H		0x01C // R/W Chan Control 32-63
+> +#define CH_CFG			0x020 // R/W Chan Configuration
+> +#define CH_CFG_L		0x020 // R/W Chan Configuration 00-31
+> +#define CH_CFG_H		0x024 // R/W Chan Configuration 32-63
+> +#define CH_LLP			0x028 // R/W Chan Linked List Pointer
+> +#define CH_STATUS		0x030 // R Chan Status
+> +#define CH_SWHSSRC		0x038 // R/W Chan SW Handshake Source
+> +#define CH_SWHSDST		0x040 // R/W Chan SW Handshake Destination
+> +#define CH_BLK_TFR_RESUMEREQ	0x048 // W Chan Block Transfer Resume Req
+> +#define CH_AXI_ID		0x050 // R/W Chan AXI ID
+> +#define CH_AXI_QOS		0x058 // R/W Chan AXI QOS
+> +#define CH_SSTAT		0x060 // R Chan Source Status
+> +#define CH_DSTAT		0x068 // R Chan Destination Status
+> +#define CH_SSTATAR		0x070 // R/W Chan Source Status Fetch Addr
+> +#define CH_DSTATAR		0x078 // R/W Chan Destination Status Fetch Addr
+> +#define CH_INTSTATUS_ENA	0x080 // R/W Chan Interrupt Status Enable
+> +#define CH_INTSTATUS		0x088 // R/W Chan Interrupt Status
+> +#define CH_INTSIGNAL_ENA	0x090 // R/W Chan Interrupt Signal Enable
+> +#define CH_INTCLEAR		0x098 // W Chan Interrupt Clear
 
-> diff --git a/drivers/hwmon/occ/scom.h b/drivers/hwmon/occ/scom.h
-> new file mode 100644
-> index 0000000..b0691f3
-> --- /dev/null
-> +++ b/drivers/hwmon/occ/scom.h
-> @@ -0,0 +1,47 @@
-> +/*
-> + * scom.h - hwmon OCC driver
-> + *
-> + * This file contains data structures for scom operations to the OCC
+Same here
 
-Are these really SCOM operations?
-
-I think they're better described read and write callbacks, as the
-operation is may be talking i2c or FSI or in the future some other
-kind of access.
-
-They do take scom addresses as parameters, so I can see the argument
-for calling them getscom/putscom.
-
-
-> + *
-> + * Copyright 2016 IBM Corp.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#ifndef __SCOM_H__
-> +#define __SCOM_H__
-> +
-> +/*
-> + * occ_bus_ops - represent the low-level transfer methods to communicate with
-> + * the OCC.
-> + *
-> + * getscom - OCC scom read
-> + * @bus: handle to slave device
-> + * @address: address
-> + * @data: where to store data read from slave; buffer size must be at least
-> + * eight bytes.
-
-Are there situations where it's more than 8 bytes?
-
-Would it be safer to add a length argument so the read call so we
-don't put more data in the buffer than the caller expects?
-
-
-> + *
-> + * Returns 0 on success or a negative errno on error
-> + *
-> + * putscom - OCC scom write
-> + * @bus: handle to slave device
-> + * @address: address
-> + * @data0: first data word to write
-> + * @data1: second data word to write
-> + *
-> + * Returns 0 on success or a negative errno on error
-> + */
-> +struct occ_bus_ops {
-> +       int (*getscom)(void *bus, u32 address, u64 *data);
-> +       int (*putscom)(void *bus, u32 address, u32 data0, u32 data1);
-> +};
-> +
-> +#endif /* __SCOM_H__ */
+-- 
+~Vinod
