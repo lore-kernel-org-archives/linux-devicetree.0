@@ -1,75 +1,98 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Sat, 11 Feb 2017 00:17:42 +0200
-Message-ID: <20170210221742.GI13854@valkosipuli.retiisi.org.uk>
-References: <20161214122451.GB27011@amd>
- <20161222100104.GA30917@amd>
- <20161222133938.GA30259@amd>
- <20161224152031.GA8420@amd>
- <20170203123508.GA10286@amd>
- <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
- <20170208223017.GA18807@amd>
- <CAL_JsqKSHvg+iB-SRd=YthauGP8mWeVF0j8X-fgLchwtOppH8A@mail.gmail.com>
- <CAL_JsqLfbAxBbXOyK0QOCc=wPe6=a+qyrAwtdbt3DtspK6oiaw@mail.gmail.com>
- <20170210195435.GA1615@amd>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/2] devicetree: add lm90 thermal_zone sensor support
+Date: Fri, 10 Feb 2017 15:51:17 -0800
+Message-ID: <20170210235117.GA526@roeck-us.net>
+References: <2979642.2YCYMDeKdL@debian64>
+ <0d274e32ad09daa2f6f7f27f1c36d39da526b66d.1486741517.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170210195435.GA1615@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0d274e32ad09daa2f6f7f27f1c36d39da526b66d.1486741517.git.chunkeey@googlemail.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Wei Ni <wni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-On Fri, Feb 10, 2017 at 08:54:35PM +0100, Pavel Machek wrote:
+On Fri, Feb 10, 2017 at 05:12:29PM +0100, Christian Lamparter wrote:
+> This patch updates the LM90's devicetree definition to
+> include the #thermal-sensor-cells property as well as
+> the sensor constants in include/dt-bindings/thermal/lm90.h.
 > 
-> > >>> > diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
-> > >>> > new file mode 100644
-> > >>> > index 0000000..1b9f8e0
-> > >>> > --- /dev/null
-> > >>> > +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
-> > >>> > @@ -0,0 +1,63 @@
-> > >>> > +Video Bus Switch Binding
-> > >>> > +========================
-> > >>>
-> > >>> I'd call it a mux rather than switch.
-> > >>
-> > >> It is a switch, not a multiplexor (
-> > >> https://en.wikipedia.org/wiki/Multiplexing ). Only one camera can
-> > >> operate at a time.
-> > >
-> > > It's no different than an i2c mux. It's one at a time.
+> Cc: Wei Ni <wni@nvidia.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+
+I don't really know who would normally apply a patch like this,
+so I added it to hwmon-next.
+
+Thanks,
+Guenter
+
+> ---
+> I've reordered LM90_LOCAL_TEMPERATURE and LM90_REMOTE_TEMPERATURE.
+> Everything else is the same as in the RFC. This is the only
+> required patch and it only updates the documentation and binding.
+> [PATCH 2/2] is optional (as I said I would look at it).
+> ---
+>  Documentation/devicetree/bindings/hwmon/lm90.txt |  6 ++++++
+>  MAINTAINERS                                      |  1 +
+>  include/dt-bindings/thermal/lm90.h               | 12 ++++++++++++
+>  3 files changed, 19 insertions(+)
+>  create mode 100644 include/dt-bindings/thermal/lm90.h
 > 
-> Take a look at the wikipedia. If you do "one at a time" at 100Hz, you
-> can claim it is time-domain multiplex. But we are plain switching the
-> cameras. It takes second (or so) to setup the pipeline.
+> diff --git a/Documentation/devicetree/bindings/hwmon/lm90.txt b/Documentation/devicetree/bindings/hwmon/lm90.txt
+> index e8632486b9ef..97581266e329 100644
+> --- a/Documentation/devicetree/bindings/hwmon/lm90.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/lm90.txt
+> @@ -33,6 +33,11 @@ Optional properties:
+>                LM90 "-ALERT" pin output.
+>                See interrupt-controller/interrupts.txt for the format.
+>  
+> +- #thermal-sensor-cells: should be set to 1. See thermal/thermal.txt for
+> +	      details. See <include/dt-bindings/thermal/lm90.h> for the
+> +	      definition of the local, remote and 2nd remote sensor index
+> +	      constants.
+> +
+>  Example LM90 node:
+>  
+>  temp-sensor {
+> @@ -41,4 +46,5 @@ temp-sensor {
+>  	vcc-supply = <&palmas_ldo6_reg>;
+>  	interrupt-parent = <&gpio>;
+>  	interrupts = <TEGRA_GPIO(O, 4) IRQ_TYPE_LEVEL_LOW>;
+> +	#thermal-sensor-cells = <1>;
+>  }
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2be620cea1ed..73972ccebc56 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7541,6 +7541,7 @@ S:	Maintained
+>  F:	Documentation/hwmon/lm90
+>  F:	Documentation/devicetree/bindings/hwmon/lm90.txt
+>  F:	drivers/hwmon/lm90.c
+> +F:	include/dt-bindings/thermal/lm90.h
+>  
+>  LM95234 HARDWARE MONITOR DRIVER
+>  M:	Guenter Roeck <linux@roeck-us.net>
+> diff --git a/include/dt-bindings/thermal/lm90.h b/include/dt-bindings/thermal/lm90.h
+> new file mode 100644
+> index 000000000000..8c2e3095f704
+> --- /dev/null
+> +++ b/include/dt-bindings/thermal/lm90.h
+> @@ -0,0 +1,12 @@
+> +/*
+> + * This header provides constants for the LM90 thermal bindings.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_THERMAL_LM90_H_
+> +#define _DT_BINDINGS_THERMAL_LM90_H_
+> +
+> +#define LM90_LOCAL_TEMPERATURE 0
+> +#define LM90_REMOTE_TEMPERATURE 1
+> +#define LM90_REMOTE2_TEMPERATURE 2
+> +
+> +#endif
+> -- 
+> 2.11.0
 > 
-> This is not multiplex.
-
-The functionality is still the same, isn't it? Does it change what it is if
-the frequency might be 100 Hz or 0,01 Hz?
-
-I was a bit annoyed for having to have two drivers for switching the source
-(one for GPIO, another for syscon / register), where both of the drivers
-would be essentially the same with the minor exception of having a slightly
-different means to toggle the mux setting.
-
-The MUX framework adds an API for controlling the MUX. Thus we'll need only
-a single driver that uses the MUX framework API for V4L2. As an added bonus,
-V4L2 would be in line with the rest of the MUX usage in the kernel.
-
-The set appears to already contain a GPIO MUX. What's needed would be to use
-the MUX API instead of direct GPIOs usage.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
