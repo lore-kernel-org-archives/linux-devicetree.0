@@ -1,14 +1,14 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH linux v7 3/6] hwmon: occ: Add I2C transport implementation
- for SCOM operations
-Date: Fri, 10 Feb 2017 16:01:28 +1030
-Message-ID: <CACPK8XcdsG83HsQW1Pv5zR339mgTzYjfuLQE+gE8yk8Z88MrTA@mail.gmail.com>
-References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com> <1486509056-25838-4-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH linux v7 5/6] hwmon: occ: Add hwmon implementation for the
+ P8 OCC
+Date: Fri, 10 Feb 2017 16:01:51 +1030
+Message-ID: <CACPK8XenXd7z6kb0N3pG4WRGD0QG5q+Rv9duo6HYhJpG58v2hQ@mail.gmail.com>
+References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com> <1486509056-25838-6-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1486509056-25838-4-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-doc-owner@vger.kernel.org
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <1486509056-25838-6-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-hwmon-owner@vger.kernel.org
 To: eajames <eajames@linux.vnet.ibm.com>
 Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
@@ -16,65 +16,78 @@ List-Id: devicetree@vger.kernel.org
 On Wed, Feb 8, 2017 at 9:40 AM,  <eajames@linux.vnet.ibm.com> wrote:
 > From: "Edward A. James" <eajames@us.ibm.com>
 >
-> Add functions to send SCOM operations over I2C bus. The BMC can
-> communicate with the Power8 host processor over I2C, but needs to use SCOM
-> operations in order to access the OCC register space.
-
-This doesn't need to be separate from the p8_occ_i2c.c file. You can
-remove a layer of function calls by merging this in and having these
-be your getscom putscom bus_ops callbacks.
-
+> Add code to tie the hwmon sysfs code and the POWER8 OCC code together, as
+> well as probe the entire driver from the I2C bus. I2C is the communication
+> method between the BMC and the P8 OCC.
+>
 > Signed-off-by: Edward A. James <eajames@us.ibm.com>
 > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/hwmon/occ/occ_scom_i2c.c | 77 ++++++++++++++++++++++++++++++++++++++++
->  drivers/hwmon/occ/occ_scom_i2c.h | 26 ++++++++++++++
->  2 files changed, 103 insertions(+)
->  create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
->  create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+>  Documentation/devicetree/bindings/hwmon/occ.txt |  13 +++
+>  drivers/hwmon/occ/Kconfig                       |  14 ++++
+>  drivers/hwmon/occ/Makefile                      |   1 +
+>  drivers/hwmon/occ/p8_occ_i2c.c                  | 104 ++++++++++++++++++++++++
+
+For consistency, how about we call this occ_p8_i2c.c? The other files
+have the machine name second.
+
+
+>  4 files changed, 132 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+>  create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
 >
-> diff --git a/drivers/hwmon/occ/occ_scom_i2c.c b/drivers/hwmon/occ/occ_scom_i2c.c
-> new file mode 100644
-> index 0000000..74bd6ff
-> --- /dev/null
-> +++ b/drivers/hwmon/occ/occ_scom_i2c.c
-> @@ -0,0 +1,77 @@
+
+> diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
+> index cdb64a7..3a5188f 100644
+> --- a/drivers/hwmon/occ/Kconfig
+> +++ b/drivers/hwmon/occ/Kconfig
+> @@ -13,3 +13,17 @@ menuconfig SENSORS_PPC_OCC
+>
+>           This driver can also be built as a module. If so, the module
+>           will be called occ.
+> +
+> +if SENSORS_PPC_OCC
+> +
+> +config SENSORS_PPC_OCC_P8_I2C
+> +       tristate "POWER8 OCC hwmon support"
+> +       depends on I2C
+> +       help
+> +        Provide a hwmon sysfs interface for the POWER8 On-Chip Controller,
+> +        exposing temperature, frequency and power measurements.
+> +
+> +        This driver can also be built as a module. If so, the module will be
+> +        called p8-occ-i2c.
+
+Mention that this driver is for the BMC (or just "service processor"),
+and is not useful in the Power8 kernel.
+
+I'm trying to think of a better prefix than PPC. PPC means much more
+than Power8 and Power9, which is what we mean. It's also confusing as
+we don't run this on any PowerPC machine - it's for an ARM chip.
 
 > +
-> +int occ_i2c_getscom(void *bus, u32 address, u64 *data)
+> +int p8_i2c_getscom(void *bus, u32 address, u64 *data)
 > +{
-> +       ssize_t rc;
-> +       u64 buf;
+> +       /* P8 i2c slave requires address to be shifted by 1 */
+> +       address = address << 1;
 
-If you add endianness annotations sparse can check your types are
-consistent. The warning looks like this:
+I think these are scom addresses? Please indicate that so we don't get
+them confused with i2c.
 
-make C=2 drivers/hwmon/occ/occ_scom_i2c.o
-drivers/hwmon/occ/occ_scom_i2c.c:48:17: warning: cast to restricted __be64
+Or are they scom operations?
 
-Which tells you it expects the type you pass to be64_to_cpu to be __be64.
-
-
-> +       struct i2c_client *client = bus;
-> +       struct i2c_msg msgs[2];
 > +
-> +       msgs[0].addr = client->addr;
-> +       msgs[0].flags = client->flags & I2C_M_TEN;
-> +       msgs[0].len = sizeof(u32);
-> +       msgs[0].buf = (char *)&address;
+> +       return occ_i2c_getscom(bus, address, data);
+> +}
 > +
-> +       msgs[1].addr = client->addr;
-> +       msgs[1].flags = client->flags & I2C_M_TEN;
-> +       msgs[1].flags |= I2C_M_RD;
+> +int p8_i2c_putscom(void *bus, u32 address, u32 data0, u32 data1)
 
-I first thought you had made a mistake here. Instead you could do:
+The functions can be static.
 
-       msgs[1].flags = client->flags & I2C_M_TEN | I2C_M_RD;
-
-> +       msgs[1].len = sizeof(u64);
-> +       msgs[1].buf = (char *)&buf;
+> +{
+> +       /* P8 i2c slave requires address to be shifted by 1 */
+> +       address = address << 1;
 > +
-> +       rc = i2c_transfer(client->adapter, msgs, 2);
-> +       if (rc < 0)
-> +               return rc;
-> +
+> +       return occ_i2c_putscom(bus, address, data0, data1);
+> +}
