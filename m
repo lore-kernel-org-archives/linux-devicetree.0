@@ -1,49 +1,47 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v4 4/8] ASoC: sun8i-codec-analog: Add
- amplifier event to fix first delay
-Date: Fri, 10 Feb 2017 14:08:54 +0800
-Message-ID: <CAGb2v66NXJ5RG8VUbvtZcqXzzOvhRc8A_M1R=2rRpfnHNbZDpw@mail.gmail.com>
-References: <20170202092422.5588-1-mylene.josserand@free-electrons.com>
- <20170202092422.5588-5-mylene.josserand@free-electrons.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 0/4] Move DP phy switch to PHY driver
+Date: Fri, 10 Feb 2017 15:44:10 +0800
+Message-ID: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170202092422.5588-5-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, kishon@ti.com, robh@kernel.org, linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, linux-kernel@vger.kernel.org, groeck@chromium.org, zyw@rock-chips.com, Brian Norris <briannorris@chromium.org>, Jianqun Xu <jay.xu@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, William wu <wulf@rock-chips.com>, linux-arm-kernel@lists.infradead.org, Douglas Anderson <dianders@chromium.org>, Tomasz Figa <tfiga@chromium.org>, David Wu <david.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMiwgMjAxNyBhdCA1OjI0IFBNLCBNeWzDqG5lIEpvc3NlcmFuZAo8bXlsZW5l
-Lmpvc3NlcmFuZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+IFdoZW4gcGxheWluZyBhIHNv
-dW5kIGZvciB0aGUgZmlyc3QgdGltZSwgYSBzaG9ydCBkZWxheSwgd2hlcmUgdGhlIGF1ZGlvCj4g
-ZmlsZSBpcyBub3QgcGxheWVkLCBjYW4gYmUgbm90aWNlZC4KPiBPbiBhIHNlY29uZCBwbGF5IChy
-aWdodCBhZnRlciksIHRoZSBzb3VuZCBpcyBwbGF5ZWQgY29ycmVjdGx5Lgo+IElmIHdlIHdhaXQg
-YSBzaG9ydCB0aW1lICh+NSBzZWMgd2hpY2ggY29ycmVzcG9uZHMgdG8gdGhlIGFwbGF5Cj4gdGlt
-ZW91dCksIHRoZSBkZWxheSBpcyBiYWNrLgo+Cj4gVGhpcyBwYXRjaCBmaXhlcyBpdCBieSB1c2lu
-ZyBhbiBldmVudCBvbiBoZWFkcGhvbmUgYW1wbGlmaWVyLgo+IEl0IGFsbG93cyB0byBrZWVwIHRo
-ZSBhbXBsaWZpZXIgZW5hYmxlIHdoaWxlIHBsYXlpbmcgYSBzb3VuZC4KPiBBIGRlbGF5IG9mIDcw
-MG1zIGFsbG93cyB0byB3YWl0IHRoYXQgdGhlIGFtcGxpZmllciBpcyBwb3dlcmVkLXVwCj4gYmVm
-b3JlIHBsYXlpbmcgdGhlIHNvdW5kLgo+Cj4gU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJh
-bmQgPG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IEFja2VkLWJ5OiBNYXhp
-bWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KCkkgZ2V0IHNvbWUg
-c3RhdGljIGluIG15IGhlYWRwaG9uZXMgaW4gdGhlIHRpbWUgYmV0d2VlbiB3aGVuIHRoZQphbXBs
-aWZpZXIgaXMgZW5hYmxlZCBhbmQgd2hlbiBzb3VuZCBzdGFydHMgcGxheWluZy4gV29uZGVyIGlm
-CnRoaXMgY2FuIGJlIGZpeGVkIGluIGFueSB3YXk/CgpPbmUgc29sdXRpb24gdGhhdCBtaWdodCB3
-b3JrIGlzIHRvIG11dGUgdGhlIGhlYWRwaG9uZSBvdXRwdXQKd2hpbGUgdGhlIGFtcCBpcyBiZWlu
-ZyBjaGFyZ2VkLCBieSBzZXR0aW5nIFNVTjhJX0FEREFfSFBfVk9MQ19IUF9WT0wKdG8gMCwgYW5k
-IHRoZW4gcmVzdG9yaW5nIHRoZSB2YWx1ZSBvbmNlIGl0IGlzIGNoYXJnZWQuIEluIG90aGVyCndv
-cmRzLCBvdmVycmlkaW5nIHRoZSB2YWx1ZSBmb3IgdGhlIGR1cmF0aW9uIG9mIHN1bjhpX2hlYWRw
-aG9uZV9hbXBfZXZlbnQuCgpSZWdhcmRzCkNoZW5ZdQpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVs
-QGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+ClRoZXJlIGFyZSAyIFR5cGUtYyBQSFlzIGluIFJLMzM5OSwgYnV0IG9ubHkgb25lIERQIGNvbnRy
+b2xsZXIuIEhlbmNlCm9ubHkgb25lIFBIWSBjYW4gY29ubmVjdCB0byBEUCBjb250cm9sbGVyIGF0
+IG9uZSB0aW1lLCB0aGUgb3RoZXIgc2hvdWxkCmJlIGRpc2Nvbm5lY3RlZC4gVGhlIEdSRl9TT0Nf
+Q09OMjYgcmVnaXN0ZXIgaGFzIGEgc3dpdGNoIGJpdCB0byBkbyBpdCwKc2V0IHRoaXMgYml0IG1l
+YW5zIGVuYWJsZSBQSFkgMSwgY2xlYXIgdGhpcyBiaXQgbWVhbnMgZW5hYmxlIFBIWSAwLgoKSWYg
+dGhlIGJvYXJkIGhhcyAyIFR5cGUtQyBwb3J0cywgdGhlIERQIGRyaXZlciBnZXQgdGhlIHBoeSBp
+ZCBmcm9tCmRldm1fb2ZfcGh5X2dldF9ieV9pbmRleCwgYW5kIHRoZW4gY29udHJvbCB0aGlzIHN3
+aXRjaCBhY2NvcmRpbmcgdG8KdGhpcyBpZC4gQnV0IHNvbWUgb3RoZXJzIGJvYXJkIG9ubHkgaGFz
+IG9uZSBUeXBlLUMgcG9ydCwgaXQgbWF5IGJlIFBIWSAwCm9yIFBIWSAxLiBUaGUgZHRzIG5vZGUg
+aWQgY2FuIG5vdCB0ZWxsIHVzIHRoZSBjb3JyZWN0IFBIWSBpZC4gSGVuY2UgbW92ZQp0aGlzIHN3
+aXRjaCB0byBQSFkgZHJpdmVyLCB0aGUgUEhZIGRyaXZlciBjYW4gZGlzdGluZ3Vpc2ggYmV0d2Vl
+biBQSFkgMAphbmQgUEhZIDEsIGFuZCB0aGVuIHdyaXRlIHRoZSBjb3JyZWN0IHJlZ2lzdGVyIGJp
+dC4KCgoKQ2hyaXMgWmhvbmcgKDQpOgogIERvY3VtZW50YXRpb246IGJpbmRpbmdzOiBhZGQgdXBo
+eS1kcC1zZWwgZm9yIFJvY2tjaGlwIFVTQiBUeXBlLUMgUEhZCiAgYXJtNjQ6IGR0czogcm9ja2No
+aXA6IGFkZCByb2NrY2hpcCx1cGh5LWRwLXNlbCBmb3IgVHlwZS1DIHBoeQogIHBoeTogcm9ja2No
+aXAtdHlwZWM6IHN1cHBvcnQgRFAgcGh5IHN3aXRjaAogIGRybS9yb2NrY2hpcDogY2RuLWRwOiBy
+ZW1vdmUgdGhlIERQIHBoeSBzd2l0Y2gKCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy50eHQgfCA1ICsrKysrCiBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAyICsrCiBkcml2
+ZXJzL2dwdS9kcm0vcm9ja2NoaXAvY2RuLWRwLWNvcmUuYyAgICAgICAgICAgICAgICAgICAgICAg
+fCA3IC0tLS0tLS0KIGRyaXZlcnMvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy5jICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDkgKysrKysrKysrCiA0IGZpbGVzIGNoYW5nZWQsIDE2IGluc2Vy
+dGlvbnMoKyksIDcgZGVsZXRpb25zKC0pCgotLSAKMi42LjMKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
