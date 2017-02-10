@@ -1,252 +1,280 @@
-Return-Path: <SRS0=jvFg=ZO=linaro.org=baoyou.xie@kernel.org>
+Return-Path: <SRS0=jJAd=ZX=broadcom.com=jon.mason@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20170130165359.GA20288@roeck-us.net>
-References: <1485312289-18354-1-git-send-email-baoyou.xie@linaro.org>
- <1485312289-18354-3-git-send-email-baoyou.xie@linaro.org> <20170125162346.GA591@linaro.org>
- <CA+DQWkxpcHqVfDSGuUK-i4DOVXsYEYo60MG5y_oBDNp+ykEdLQ@mail.gmail.com>
- <20170126161729.GA1515@linaro.org> <CA+DQWkyPtndGEz-QYvmKaXoGNKQ69Zqu-aG7tCKnT-Mrmx5Wsw@mail.gmail.com>
- <20170130165359.GA20288@roeck-us.net>
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Date: Wed, 1 Feb 2017 11:29:15 +0800
-Message-ID: <CA+DQWkyfgx7U4GPkCKhg0zCyOkAT3z3pRU57uu6ccZSZG5d8mA@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] watchdog: zx2967: add watchdog controller driver
- for ZTE's zx2967 family
-Content-Type: multipart/alternative; boundary=001a1144ca223fce0305476fa7f3
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Jun Nie <jun.nie@linaro.org>, wim@iguana.be, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+In-Reply-To: <b2bdc1a7-4e5c-a13e-0cda-c90759d7308c@gmail.com>
+References: <20170208233023.31922-1-zajec5@gmail.com> <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
+ <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl> <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
+ <b715c193196fb2de2b95cc3d15102e1b@milecki.pl> <b2bdc1a7-4e5c-a13e-0cda-c90759d7308c@gmail.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Date: Thu, 9 Feb 2017 19:27:44 -0500
+Message-ID: <CAC3K-4o+ARP=_hg2XQszQh6v+ySpubyKRspCF38SLUUx4mXQDA@mail.gmail.com>
+Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
+ Broadcom NSP SoC"
+Content-Type: multipart/alternative; boundary=001a11439ad4a5f7650548222abe
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a1144ca223fce0305476fa7f3
+--001a11439ad4a5f7650548222abe
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 31 January 2017 at 00:53, Guenter Roeck <linux@roeck-us.net> wrote:
+On Thu, Feb 9, 2017 at 2:18 PM, Florian Fainelli <f.fainelli@gmail.com>
+wrote:
 
-> On Fri, Jan 27, 2017 at 10:40:09AM +0800, Baoyou Xie wrote:
-> > On 27 January 2017 at 00:17, Mathieu Poirier <mathieu.poirier@linaro.org
+> On 02/08/2017 11:21 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+> > On 2017-02-09 00:44, Florian Fainelli wrote:
+> >> On 02/08/2017 03:39 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+> >>> On 2017-02-09 00:32, Florian Fainelli wrote:
+> >>>> On 02/08/2017 03:30 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+> >>>>> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> >>>>>
+> >>>>> This reverts commit d7bc1a7d41bf ("phy: Add USB3 PHY support for
+> >>>>> Broadcom NSP SoC") as we already have driver for this PHY (shared
+> >>>>> by NS
+> >>>>> and NSP). It was added in commit e5666281d9ea ("phy: bcm-ns-usb3: n=
+ew
+> >>>>> driver for USB 3.0 PHY on Northstar").
+> >>>>>
+> >>>>> Instead of adding separated driver & duplicating code we should
+> >>>>> work on
+> >>>>> improving existing (old) one. Thanks to work done by Broadcom we kn=
+ow
+> >>>>> there is MDIO bus we weren't aware of & we know register names whic=
+h
+> >>>>> makes initialization more clear. This is very valuable info and we
+> >>>>> should work on using it in existing driver afterwards.
+> >>>>
+> >>>> Should not we first extend the old driver to support NSP and then
+> >>>> revert
+> >>>> d7bc1a7d41bf ("phy: Add USB3 PHY support for Broadcom NSP SoC")?
+> >>>
+> >>> Sounds like a weird / dirty development method to me: adding duplicat=
+ed
+> >>> code
+> >>> first then working on cleaning it. Unless you mean drivers/staging/.
+> >>
+> >> There was clearly a mistake in submitting this NSP USB PHY driver, and
+> >> it should have been a patch against the existing NS USB PHY driver, bu=
+t
+> >> it was not, okay fair enough.
+> >>
+> >> It's one thing to address that in the future, and it's another thing t=
+o
+> >> flat out revert the driver just because you don't like the duplication=
+.
+> >>
+> >> I don't like that either, and we can discuss on how to improve things
+> >> (like have the maintainer review that too), but duplication is a lesse=
+r
+> >> evil than not having the hardware supported at all, and even more so,
+> >> purposely reverting in the name of removing that duplication, that's
+> >> intentionally breaking working hardware!
 > >
-> > wrote:
+> > Hardware support is not excuse and I don't think it ever was in the
+> Linux.
 > >
-> > > On Thu, Jan 26, 2017 at 09:32:56AM +0800, Baoyou Xie wrote:
-> > > > On 26 January 2017 at 00:23, Mathieu Poirier <
-> mathieu.poirier@linaro.org
-> > > >
-> > > > wrote:
-> > > >
-> > > > > On Wed, Jan 25, 2017 at 10:44:49AM +0800, Baoyou Xie wrote:
-> > > > > > This patch adds watchdog controller driver for ZTE's zx2967
-> family.
-> > > > > >
-> > > > > > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> > > > > > ---
-> [ ... ]
-> > > > > > +     reset_control_assert(rstc);
-> > > > > > +     usleep_range(500, 20000);
-> > > > >
-> > > > > Alright, I'm officially confused.
-> > > > >
-> > > > > First and foremost you still haven't provided an explanation as to
-> why
-> > > > > this is
-> > > > > required.  Second, in your previous submission you had:
-> > > > >
-> > > > >         mdelay(10);
-> > > > >
-> > > > > That is a busy loop of 10ms.  In this post using usleep_range() is
-> a
-> > > step
-> > > > > in the
-> > > > > right direction but the min and max values to wait for don't make
-> > > sense.
-> > > > > Here
-> > > > > you have 500 and 20000, which is 0.5ms and 20ms.
-> > > > >
-> > > > > In fact, sleeping for 0.5ms is enough.
-> > > > we extended the sleeping time to 20ms, the purpose is merging the
-> timer
-> > > > interrupts. of course, it's happy to replace it with
-> usleep_range(500,
-> > > > 1000).
-> > >
-> > > "merging the timer interrupts" - you mean trying to get the WD tick to
-> be
-> > > closer
-> > > to other timers?  If so I really don't see why.  Timers are
-> asynchronous by
-> > > nature and there can be dozens of them enabled at any given time.
-> > >
-> > > Really?
-> > Even if the system runs asynchronously, early process may trigger delayed
-> > process, for example delayed work queue or timers, we can merge our
-> > watchdog timer and those delayed work's timers.
+> > We don't accept badly designed drivers just because they provide new hw
+> > support.
+> > We have various standards (for quality, style, design, code) at kernel
+> > and we
+> > stick to them unless it's drivers/staging/. As you said this driver
+> > shouldn't be
+> > pushed in the first place.
 > >
-> In the probe function ?
->
-> > Furthermore, what happen if we build this driver as module?
+> > Dropping hardware support in kernel happens. Sometimes it's about ancie=
+nt
+> > devices, sometimes about code quality (some forgotten staging drivers
+> > used to be
+> > dropped AFAIK).
 > >
-> If every driver writer would use that line of argument, booting would
-> take much longer than necessary, with every process sitting on unnecessary
-> wait or sleep calls for perceived "optimization" purposes. Probe functions
-> run exactly once, and should be time optimized. You should have an idea
-> what the minimum reset hold time is, and follow it.
+> > Additionally you're talking about support that was *just* added and
+> > isn't used
+> > by anyone in the wild world yet.
 >
-> > But, as i said early, it's a trial optimization but can be instead with
-> > usleep_range(500, 1000).
+> Except people working on it at Broadcom, but fair enough.
+>
 > >
-> > In some case, such optimization is helpful. I'd like to talk a story
-> here,
-> > about before ten years, I pressed a return key in console, you know, in
-> > this case, a process be created and exited, so the cpu core that process
-> > run at sent an IPI to other CPU, IPI interrupt resulted in the
-> performance
-> > decreased by 20%, so sad:)
+> > This hardware was missing upstream support for 4 years so 2 extra month=
+s
+> > won't
+> > really hurt anyone.
 > >
-> It appears to be somewhat unlikely that each keypress resulted in a driver
-> being instantiated. If it did, a sleep in its probe function was the least
-> of your problems.
+> > I really don't see excusee or need for keeping this driver.
+> >
+> > If you want to (and you feel it's well designed), we can keep
+> > brcm,nsp-usb3-phy.txt
 >
-> > Unless there is a H/W constraint requiring a delay between the
-> > > assert/deassert
-> > > of the WD, I don't think adding a wait operation (of any kind) make
-> sense.
+> No it's fine, let's drop it all and replace it with whatever you and Jon
+> come up with next.
 >
-> Correct.
+> >
+> > I vote for focusing on existing driver improvements instead of looking
+> for
+> > excuses for keeping driver that shouldn't be added in the first place.
+> > Jon seems to be already working on this, I'm willing to help him, I'm
+> > sure we
+> > can get you a proper support for the next merge window.
 >
+> Fair enough, I dropped Dhanajay's changes ("ARM: dts: NSP: Add USB nodes
+> for Northstar Plus") from devicetree/next so you and Jon can figure out
+> what is the best thing to move forward and we minimize the amount of
+> incompatible DT stuff to be sorted out later on. So as far as I am
+> concerned, there are no board/SoC DTS changes to be patched later on, we
+> could re-apply this patch as-is, or we could have to define a new binding=
+.
+> --
+> Florian
 >
-I have discussed with hardware and reset driver engineers, It's better to
-place usleep_range call into reset driver, so we're happy to remove
-usleep_range
-here.
 
-So, I will send a new patch that remove it.
 
+Per the discussion with Rafal, this is acceptable
 
-> Guenter
->
+Acked-by: Jon Mason <jon.mason@broadcom.com>
 
---001a1144ca223fce0305476fa7f3
+--001a11439ad4a5f7650548222abe
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On 31 January 2017 at 00:53, Guenter Roeck <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:linux@roeck-us.net" target=3D"_blank">linux@roeck-us.net</a>&gt=
-;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
-x 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"><span =
-class=3D"gmail-">On Fri, Jan 27, 2017 at 10:40:09AM +0800, Baoyou Xie wrote=
-:<br>
-&gt; On 27 January 2017 at 00:17, Mathieu Poirier &lt;<a href=3D"mailto:mat=
-hieu.poirier@linaro.org">mathieu.poirier@linaro.org</a>&gt;<br>
-&gt; wrote:<br>
-&gt;<br>
-&gt; &gt; On Thu, Jan 26, 2017 at 09:32:56AM +0800, Baoyou Xie wrote:<br>
-&gt; &gt; &gt; On 26 January 2017 at 00:23, Mathieu Poirier &lt;<a href=3D"=
-mailto:mathieu.poirier@linaro.org">mathieu.poirier@linaro.org</a><br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; wrote:<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; On Wed, Jan 25, 2017 at 10:44:49AM +0800, Baoyou Xie wr=
-ote:<br>
-&gt; &gt; &gt; &gt; &gt; This patch adds watchdog controller driver for ZTE=
-&#39;s zx2967 family.<br>
-&gt; &gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; &gt; Signed-off-by: Baoyou Xie &lt;<a href=3D"mailto:ba=
-oyou.xie@linaro.org">baoyou.xie@linaro.org</a>&gt;<br>
-&gt; &gt; &gt; &gt; &gt; ---<br>
-</span>[ ... ]<br>
-<div><div class=3D"gmail-h5">&gt; &gt; &gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0=
-reset_control_assert(rstc);<br>
-&gt; &gt; &gt; &gt; &gt; +=C2=A0 =C2=A0 =C2=A0usleep_range(500, 20000);<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; Alright, I&#39;m officially confused.<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; First and foremost you still haven&#39;t provided an ex=
-planation as to why<br>
-&gt; &gt; &gt; &gt; this is<br>
-&gt; &gt; &gt; &gt; required.=C2=A0 Second, in your previous submission you=
- had:<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0mdelay(10);<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; That is a busy loop of 10ms.=C2=A0 In this post using u=
-sleep_range() is a<br>
-&gt; &gt; step<br>
-&gt; &gt; &gt; &gt; in the<br>
-&gt; &gt; &gt; &gt; right direction but the min and max values to wait for =
-don&#39;t make<br>
-&gt; &gt; sense.<br>
-&gt; &gt; &gt; &gt; Here<br>
-&gt; &gt; &gt; &gt; you have 500 and 20000, which is 0.5ms and 20ms.<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; In fact, sleeping for 0.5ms is enough.<br>
-&gt; &gt; &gt; we extended the sleeping time to 20ms, the purpose is mergin=
-g the timer<br>
-&gt; &gt; &gt; interrupts. of course, it&#39;s happy to replace it with usl=
-eep_range(500,<br>
-&gt; &gt; &gt; 1000).<br>
-&gt; &gt;<br>
-&gt; &gt; &quot;merging the timer interrupts&quot; - you mean trying to get=
- the WD tick to be<br>
-&gt; &gt; closer<br>
-&gt; &gt; to other timers?=C2=A0 If so I really don&#39;t see why.=C2=A0 Ti=
-mers are asynchronous by<br>
-&gt; &gt; nature and there can be dozens of them enabled at any given time.=
+te">On Thu, Feb 9, 2017 at 2:18 PM, Florian Fainelli <span dir=3D"ltr">&lt;=
+<a href=3D"mailto:f.fainelli@gmail.com" target=3D"_blank">f.fainelli@gmail.=
+com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"mar=
+gin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1=
+ex"><div class=3D"gmail-m_6954105614134943765HOEnZb"><div class=3D"gmail-m_=
+6954105614134943765h5">On 02/08/2017 11:21 PM, Rafa=C5=82 Mi=C5=82ecki wrot=
+e:<br>
+&gt; On 2017-02-09 00:44, Florian Fainelli wrote:<br>
+&gt;&gt; On 02/08/2017 03:39 PM, Rafa=C5=82 Mi=C5=82ecki wrote:<br>
+&gt;&gt;&gt; On 2017-02-09 00:32, Florian Fainelli wrote:<br>
+&gt;&gt;&gt;&gt; On 02/08/2017 03:30 PM, Rafa=C5=82 Mi=C5=82ecki wrote:<br>
+&gt;&gt;&gt;&gt;&gt; From: Rafa=C5=82 Mi=C5=82ecki &lt;<a href=3D"mailto:ra=
+fal@milecki.pl" target=3D"_blank">rafal@milecki.pl</a>&gt;<br>
+&gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; This reverts commit d7bc1a7d41bf (&quot;phy: Add USB3 =
+PHY support for<br>
+&gt;&gt;&gt;&gt;&gt; Broadcom NSP SoC&quot;) as we already have driver for =
+this PHY (shared<br>
+&gt;&gt;&gt;&gt;&gt; by NS<br>
+&gt;&gt;&gt;&gt;&gt; and NSP). It was added in commit e5666281d9ea (&quot;p=
+hy: bcm-ns-usb3: new<br>
+&gt;&gt;&gt;&gt;&gt; driver for USB 3.0 PHY on Northstar&quot;).<br>
+&gt;&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt;&gt; Instead of adding separated driver &amp; duplicating c=
+ode we should<br>
+&gt;&gt;&gt;&gt;&gt; work on<br>
+&gt;&gt;&gt;&gt;&gt; improving existing (old) one. Thanks to work done by B=
+roadcom we know<br>
+&gt;&gt;&gt;&gt;&gt; there is MDIO bus we weren&#39;t aware of &amp; we kno=
+w register names which<br>
+&gt;&gt;&gt;&gt;&gt; makes initialization more clear. This is very valuable=
+ info and we<br>
+&gt;&gt;&gt;&gt;&gt; should work on using it in existing driver afterwards.=
 <br>
-&gt; &gt;<br>
-&gt; &gt; Really?<br>
-&gt; Even if the system runs asynchronously, early process may trigger dela=
-yed<br>
-&gt; process, for example delayed work queue or timers, we can merge our<br=
->
-&gt; watchdog timer and those delayed work&#39;s timers.<br>
+&gt;&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&gt; Should not we first extend the old driver to support NSP a=
+nd then<br>
+&gt;&gt;&gt;&gt; revert<br>
+&gt;&gt;&gt;&gt; d7bc1a7d41bf (&quot;phy: Add USB3 PHY support for Broadcom=
+ NSP SoC&quot;)?<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt; Sounds like a weird / dirty development method to me: adding d=
+uplicated<br>
+&gt;&gt;&gt; code<br>
+&gt;&gt;&gt; first then working on cleaning it. Unless you mean drivers/sta=
+ging/.<br>
+&gt;&gt;<br>
+&gt;&gt; There was clearly a mistake in submitting this NSP USB PHY driver,=
+ and<br>
+&gt;&gt; it should have been a patch against the existing NS USB PHY driver=
+, but<br>
+&gt;&gt; it was not, okay fair enough.<br>
+&gt;&gt;<br>
+&gt;&gt; It&#39;s one thing to address that in the future, and it&#39;s ano=
+ther thing to<br>
+&gt;&gt; flat out revert the driver just because you don&#39;t like the dup=
+lication.<br>
+&gt;&gt;<br>
+&gt;&gt; I don&#39;t like that either, and we can discuss on how to improve=
+ things<br>
+&gt;&gt; (like have the maintainer review that too), but duplication is a l=
+esser<br>
+&gt;&gt; evil than not having the hardware supported at all, and even more =
+so,<br>
+&gt;&gt; purposely reverting in the name of removing that duplication, that=
+&#39;s<br>
+&gt;&gt; intentionally breaking working hardware!<br>
 &gt;<br>
-</div></div>In the probe function ?<br>
-<span class=3D"gmail-"><br>
-&gt; Furthermore, what happen if we build this driver as module?<br>
+&gt; Hardware support is not excuse and I don&#39;t think it ever was in th=
+e Linux.<br>
 &gt;<br>
-</span>If every driver writer would use that line of argument, booting woul=
+&gt; We don&#39;t accept badly designed drivers just because they provide n=
+ew hw<br>
+&gt; support.<br>
+&gt; We have various standards (for quality, style, design, code) at kernel=
+<br>
+&gt; and we<br>
+&gt; stick to them unless it&#39;s drivers/staging/. As you said this drive=
+r<br>
+&gt; shouldn&#39;t be<br>
+&gt; pushed in the first place.<br>
+&gt;<br>
+&gt; Dropping hardware support in kernel happens. Sometimes it&#39;s about =
+ancient<br>
+&gt; devices, sometimes about code quality (some forgotten staging drivers<=
+br>
+&gt; used to be<br>
+&gt; dropped AFAIK).<br>
+&gt;<br>
+&gt; Additionally you&#39;re talking about support that was *just* added an=
 d<br>
-take much longer than necessary, with every process sitting on unnecessary<=
-br>
-wait or sleep calls for perceived &quot;optimization&quot; purposes. Probe =
-functions<br>
-run exactly once, and should be time optimized. You should have an idea<br>
-what the minimum reset hold time is, and follow it.<br>
-<span class=3D"gmail-"><br>
-&gt; But, as i said early, it&#39;s a trial optimization but can be instead=
- with<br>
-&gt; usleep_range(500, 1000).<br>
-&gt;<br>
-&gt; In some case, such optimization is helpful. I&#39;d like to talk a sto=
-ry here,<br>
-&gt; about before ten years, I pressed a return key in console, you know, i=
-n<br>
-&gt; this case, a process be created and exited, so the cpu core that proce=
-ss<br>
-&gt; run at sent an IPI to other CPU, IPI interrupt resulted in the perform=
-ance<br>
-&gt; decreased by 20%, so sad:)<br>
-&gt;<br>
-</span>It appears to be somewhat unlikely that each keypress resulted in a =
-driver<br>
-being instantiated. If it did, a sleep in its probe function was the least<=
-br>
-of your problems.<br>
-<span class=3D"gmail-"><br>
-&gt; Unless there is a H/W constraint requiring a delay between the<br>
-&gt; &gt; assert/deassert<br>
-&gt; &gt; of the WD, I don&#39;t think adding a wait operation (of any kind=
-) make sense.<br>
+&gt; isn&#39;t used<br>
+&gt; by anyone in the wild world yet.<br>
 <br>
-</span>Correct.<br>
-<span class=3D"gmail-HOEnZb"><font color=3D"#888888"><br></font></span></bl=
-ockquote><div>=C2=A0</div><div>I have discussed with hardware and reset dri=
-ver engineers, It&#39;s better to place <span class=3D"gmail-">usleep_range=
- call</span> into reset driver, so we&#39;re happy to remove <span class=3D=
-"gmail-">usleep_range here.<br><br></span>So, I will send a new patch that =
-remove it. <br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" sty=
-le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
-ng-left:1ex"><span class=3D"gmail-HOEnZb"><font color=3D"#888888">
-Guenter<br>
-</font></span></blockquote></div><br></div></div>
+</div></div>Except people working on it at Broadcom, but fair enough.<br>
+<span><br>
+&gt;<br>
+&gt; This hardware was missing upstream support for 4 years so 2 extra mont=
+hs<br>
+&gt; won&#39;t<br>
+&gt; really hurt anyone.<br>
+&gt;<br>
+&gt; I really don&#39;t see excusee or need for keeping this driver.<br>
+&gt;<br>
+&gt; If you want to (and you feel it&#39;s well designed), we can keep<br>
+&gt; brcm,nsp-usb3-phy.txt<br>
+<br>
+</span>No it&#39;s fine, let&#39;s drop it all and replace it with whatever=
+ you and Jon<br>
+come up with next.<br>
+<span><br>
+&gt;<br>
+&gt; I vote for focusing on existing driver improvements instead of looking=
+ for<br>
+&gt; excuses for keeping driver that shouldn&#39;t be added in the first pl=
+ace.<br>
+&gt; Jon seems to be already working on this, I&#39;m willing to help him, =
+I&#39;m<br>
+&gt; sure we<br>
+&gt; can get you a proper support for the next merge window.<br>
+<br>
+</span>Fair enough, I dropped Dhanajay&#39;s changes (&quot;ARM: dts: NSP: =
+Add USB nodes<br>
+for Northstar Plus&quot;) from devicetree/next so you and Jon can figure ou=
+t<br>
+what is the best thing to move forward and we minimize the amount of<br>
+incompatible DT stuff to be sorted out later on. So as far as I am<br>
+concerned, there are no board/SoC DTS changes to be patched later on, we<br=
+>
+could re-apply this patch as-is, or we could have to define a new binding.<=
+br>
+<span class=3D"gmail-m_6954105614134943765HOEnZb"><font color=3D"#888888">-=
+-<br>
+Florian<br>
+</font></span></blockquote></div><br></div><div class=3D"gmail_extra"><div =
+class=3D"gmail_extra"><br></div><div class=3D"gmail_extra">Per the discussi=
+on with Rafal, this is acceptable</div><div class=3D"gmail_extra"><br></div=
+><div class=3D"gmail_extra">Acked-by: Jon Mason &lt;<a href=3D"mailto:jon.m=
+ason@broadcom.com">jon.mason@broadcom.com</a>&gt;</div><div class=3D"gmail_=
+extra"><br></div></div></div>
 
---001a1144ca223fce0305476fa7f3--
+--001a11439ad4a5f7650548222abe--
