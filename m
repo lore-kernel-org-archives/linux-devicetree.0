@@ -1,73 +1,410 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun5i-gr8: Rename pwm0_pins_a to pwm0_pins
-Date: Fri, 10 Feb 2017 11:42:34 +0800
-Message-ID: <20170210034234.3612-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH linux v7 2/6] hwmon: occ: Add sysfs interface
+Date: Fri, 10 Feb 2017 16:01:23 +1030
+Message-ID: <CACPK8Xf8kSD6bkB1PUkMNr5Dn5_nxgf6v2Va3-x5HhHtMbcNHg@mail.gmail.com>
+References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com> <1486509056-25838-3-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBMPN6TCAKGQEXVH7DBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1486509056-25838-3-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: eajames <eajames@linux.vnet.ibm.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-The GR8, like other sun5i SoCs, has only 1 pin option for PWM0 output.
-Other SoCs had named the pingroup "pwm0_pins" in their dtsi files, while
-GR8 named it "pwm0_pins_a". When we switched to the new common sun5i
-dtsi file, we forgot to rename the pingroup references in the GR8 board
-dts files.
+On Wed, Feb 8, 2017 at 9:40 AM,  <eajames@linux.vnet.ibm.com> wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+>
+> Add a generic mechanism to expose the sensors provided by the OCC in
+> sysfs.
+>
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/hwmon/occ       |  62 +++++++++++
+>  drivers/hwmon/occ/Makefile    |   2 +-
+>  drivers/hwmon/occ/occ_sysfs.c | 251 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/hwmon/occ/occ_sysfs.h |  30 +++++
+>  4 files changed, 344 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/hwmon/occ/occ_sysfs.c
+>  create mode 100644 drivers/hwmon/occ/occ_sysfs.h
+>
+> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
+> index 79d1642..d0bdf06 100644
+> --- a/Documentation/hwmon/occ
+> +++ b/Documentation/hwmon/occ
+> @@ -25,6 +25,68 @@ Currently, all versions of the OCC support four types of sensor data: power,
+>  temperature, frequency, and "caps," which indicate limits and thresholds used
+>  internally on the OCC.
+>
+> +sysfs Entries
+> +-------------
+> +
+> +The OCC driver uses the hwmon sysfs framework to provide data to userspace.
+> +
+> +The driver exports a number of sysfs files for each type of sensor. The
+> +sensor-specific files vary depending on the processor type, though many of the
+> +attributes are common for both the POWER8 and POWER9.
+> +
+> +The hwmon interface cannot define every type of sensor that may be used.
+> +Therefore, the frequency sensor on the OCC uses the "input" type sensor defined
+> +by the hwmon interface, rather than defining a new type of custom sensor.
+> +
+> +Below are detailed the names and meaning of each sensor file for both types of
+> +processors. All sensors are read-only unless otherwise specified. <x> indicates
+> +the hwmon index. sensor id indicates the unique internal OCC identifer. Please
+> +see the POWER OCC specification for details on all these sensor values.
+> +
+> +frequency:
+> +       all processors:
+> +               in<x>_input - frequency value
+> +               in<x>_label - sensor id
+> +temperature:
+> +       POWER8:
+> +               temp<x>_input - temperature value
+> +               temp<x>_label - sensor id
+> +       POWER9 (in addition to above):
+> +               temp<x>_type - FRU type
+> +
+> +power:
+> +       POWER8:
+> +               power<x>_input - power value
+> +               power<x>_label - sensor id
+> +               power<x>_average - accumulator
+> +               power<x>_average_interval - update tag (number of samples in
+> +                       accumulator)
+> +       POWER9:
+> +               power<x>_input - power value
+> +               power<x>_label - sensor id
+> +               power<x>_average_min - accumulator[0]
+> +               power<x>_average_max - accumulator[1] (64 bits total)
+> +               power<x>_average_interval - update tag
+> +               power<x>_reset_history - (function_id | (apss_channel << 8)
+> +
+> +caps:
+> +       POWER8:
+> +               power<x>_cap - current powercap
+> +               power<x>_cap_max - max powercap
+> +               power<x>_cap_min - min powercap
+> +               power<x>_max - normal powercap
+> +               power<x>_alarm - user powercap, r/w
+> +       POWER9:
+> +               power<x>_cap_alarm - user powercap source
+> +
+> +The driver also provides two sysfs entries through hwmon to better
+> +control the driver and monitor the master OCC. Though there may be multiple
+> +OCCs present on the system, these two files are only present for the "master"
+> +OCC.
+> +       name - read the name of the driver
+> +       update_interval - read or write the minimum interval for polling the
+> +               OCC.
+> +
+>  BMC - Host Communications
+>  -------------------------
+>
+> diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
+> index 93cb52f..a6881f9 100644
+> --- a/drivers/hwmon/occ/Makefile
+> +++ b/drivers/hwmon/occ/Makefile
+> @@ -1 +1 @@
+> -obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o
+> +obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o occ_sysfs.o
+> diff --git a/drivers/hwmon/occ/occ_sysfs.c b/drivers/hwmon/occ/occ_sysfs.c
+> new file mode 100644
+> index 0000000..9598f78
+> --- /dev/null
+> +++ b/drivers/hwmon/occ/occ_sysfs.c
+> @@ -0,0 +1,251 @@
+> +/*
+> + * occ_sysfs.c - OCC sysfs interface
+> + *
+> + * This file contains the methods and data structures for implementing the OCC
+> + * hwmon sysfs entries.
+> + *
+> + * Copyright 2016 IBM Corp.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/init.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/slab.h>
+> +#include "occ.h"
+> +#include "occ_sysfs.h"
+> +
+> +#define OCC_HWMON_NAME_LENGTH  32
+> +
+> +struct occ_sysfs {
+> +       struct device *dev;
+> +       struct occ *occ;
+> +
+> +       char hwmon_name[OCC_HWMON_NAME_LENGTH + 1];
+> +       const u32 *sensor_hwmon_configs;
+> +       struct hwmon_channel_info **occ_sensors;
+> +       struct hwmon_chip_info occ_info;
+> +       u16 user_powercap;
+> +};
+> +
+> +static int occ_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
+> +                         u32 attr, int channel, long *val)
+> +{
+> +       int rc;
+> +       struct occ_sysfs *driver = dev_get_drvdata(dev);
+> +       struct occ *occ = driver->occ;
+> +
+> +       switch (type) {
+> +       case hwmon_in:
+> +               rc = occ_get_sensor_field(occ, FREQ, channel, attr, val);
+> +               break;
+> +       case hwmon_temp:
+> +               rc = occ_get_sensor_field(occ, TEMP, channel, attr, val);
+> +               break;
+> +       case hwmon_power:
+> +               rc = occ_get_sensor_field(occ, POWER, channel, attr, val);
+> +               break;
+> +       default:
+> +               rc = -EOPNOTSUPP;
+> +       }
+> +
+> +       return rc;
+> +}
+> +
+> +static int occ_hwmon_read_string(struct device *dev,
+> +                                enum hwmon_sensor_types type, u32 attr,
+> +                                int channel, char **str)
+> +{
+> +       int rc;
+> +       unsigned long val = 0;
+> +
+> +       if (!((type == hwmon_in && attr == hwmon_in_label) ||
+> +           (type == hwmon_temp && attr == hwmon_temp_label) ||
+> +           (type == hwmon_power && attr == hwmon_power_label)))
+> +               return -EOPNOTSUPP;
+> +
+> +       /* will fetch the "label", the sensor_id */
+> +       rc = occ_hwmon_read(dev, type, attr, channel, &val);
+> +       if (rc < 0)
+> +               return rc;
+> +
+> +       rc = snprintf(*str, PAGE_SIZE - 1, "%lu", val);
+> +       if (rc > 0)
+> +               rc = 0;
+> +
+> +       return rc;
+> +}
+> +
+> +static int occ_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
+> +                          u32 attr, int channel, long val)
+> +{
+> +       int rc;
+> +       struct occ_sysfs *driver = dev_get_drvdata(dev);
+> +
+> +       if (type == hwmon_power && attr == hwmon_power_alarm) {
+> +               rc = occ_set_user_powercap(driver->occ, val);
+> +               if (rc) {
+> +                       dev_err(dev, "set user powercap failed:%d\n", rc);
+> +                       return rc;
+> +               }
+> +
+> +               driver->user_powercap = val;
+> +
+> +               return rc;
+> +       }
+> +
+> +       return -EOPNOTSUPP;
+> +}
+> +
+> +static umode_t occ_is_visible(const void *data, enum hwmon_sensor_types type,
+> +                             u32 attr, int channel)
+> +{
+> +       const struct occ_sysfs *driver = data;
+> +
+> +       switch (type) {
+> +       case hwmon_chip:
+> +               if (attr == hwmon_chip_update_interval)
+> +                       return 00644;
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
+Perhaps 0644?
 
-Fixes: a2138ce584d5 ("ARM: sun5i: gr8: Use common sun5i DTSI")
-
-Since the broken patch is only in Maxime's tree, the above tag contains
-the current commit hash in his tree. This is likely to change once
-4.11-rc1 is released and the branch is rebased.
-
-Maxime, maybe you could insert this patch before the "common sun5i"
-patches, and do a bit of fixup?
-
-Until then I'll keep this patch at the tip of our own sunxi-next branch.
-
-ChenYu
-
- arch/arm/boot/dts/sun5i-gr8-chip-pro.dts | 2 +-
- arch/arm/boot/dts/sun5i-gr8-evb.dts      | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts b/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
-index e5eb46b500ae..c55b11a4d3c7 100644
---- a/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
-+++ b/arch/arm/boot/dts/sun5i-gr8-chip-pro.dts
-@@ -171,7 +171,7 @@
- 
- &pwm {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pwm0_pins_a>, <&pwm1_pins>;
-+	pinctrl-0 = <&pwm0_pins>, <&pwm1_pins>;
- 	status = "disabled";
- };
- 
-diff --git a/arch/arm/boot/dts/sun5i-gr8-evb.dts b/arch/arm/boot/dts/sun5i-gr8-evb.dts
-index ebd8388e2ba1..558c16a30543 100644
---- a/arch/arm/boot/dts/sun5i-gr8-evb.dts
-+++ b/arch/arm/boot/dts/sun5i-gr8-evb.dts
-@@ -281,7 +281,7 @@
- 
- &pwm {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pwm0_pins_a>;
-+	pinctrl-0 = <&pwm0_pins>;
- 	status = "okay";
- };
- 
--- 
-2.11.0
+> +               break;
+> +       case hwmon_in:
+> +               if (BIT(attr) & driver->sensor_hwmon_configs[0])
+> +                       return 00444;
+> +               break;
+> +       case hwmon_temp:
+> +               if (BIT(attr) & driver->sensor_hwmon_configs[1])
+> +                       return 00444;
+> +               break;
+> +       case hwmon_power:
+> +               /* user power limit */
+> +               if (attr == hwmon_power_alarm)
+> +                       return 00644;
+> +               else if ((BIT(attr) & driver->sensor_hwmon_configs[2]) ||
+> +                        (BIT(attr) & driver->sensor_hwmon_configs[3]))
+> +                       return 00444;
+> +               break;
+> +       default:
+> +               return 0;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct hwmon_ops occ_hwmon_ops = {
+> +       .is_visible = occ_is_visible,
+> +       .read = occ_hwmon_read,
+> +       .read_string = occ_hwmon_read_string,
+> +       .write = occ_hwmon_write,
+> +};
+> +
+> +static const enum hwmon_sensor_types occ_sensor_types[MAX_OCC_SENSOR_TYPE] = {
+> +       hwmon_in,
+> +       hwmon_temp,
+> +       hwmon_power,
+> +       hwmon_power
+> +};
+> +
+> +struct occ_sysfs *occ_sysfs_start(struct device *dev, struct occ *occ,
+> +                                 const u32 *sensor_hwmon_configs,
+> +                                 const char *name)
+> +{
+> +       int rc, i, j, num_sensors, index = 0, id;
+> +       char *brk;
+> +       struct occ_blocks *resp = NULL;
+> +       u32 *sensor_config;
+> +       struct occ_sysfs *hwmon = devm_kzalloc(dev, sizeof(struct occ_sysfs),
+> +                                              GFP_KERNEL);
+> +       if (!hwmon)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       /* need space for null-termination */
+> +       hwmon->occ_sensors =
+> +               devm_kzalloc(dev, sizeof(struct hwmon_channel_info *) *
+> +                            (MAX_OCC_SENSOR_TYPE + 1), GFP_KERNEL);
+> +       if (!hwmon->occ_sensors)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       hwmon->occ = occ;
+> +       hwmon->sensor_hwmon_configs = sensor_hwmon_configs;
+> +       hwmon->occ_info.ops = &occ_hwmon_ops;
+> +       hwmon->occ_info.info =
+> +               (const struct hwmon_channel_info **)hwmon->occ_sensors;
+> +
+> +       occ_get_response_blocks(occ, &resp);
+> +
+> +       for (i = 0; i < MAX_OCC_SENSOR_TYPE; ++i)
+> +               resp->sensor_block_id[i] = -1;
+> +
+> +       /* read sensor data from occ */
+> +       rc = occ_update_device(occ);
+> +       if (rc)
+> +               return ERR_PTR(rc);
+> +
+> +       for (i = 0; i < MAX_OCC_SENSOR_TYPE; i++) {
+> +               id = resp->sensor_block_id[i];
+> +               if (id < 0)
+> +                       continue;
+> +
+> +               num_sensors = resp->blocks[id].header.num_sensors;
+> +               /* need null-termination */
+> +               sensor_config = devm_kzalloc(dev,
+> +                                            sizeof(u32) * (num_sensors + 1),
+> +                                            GFP_KERNEL);
+> +               if (!sensor_config)
+> +                       return ERR_PTR(-ENOMEM);
+> +
+> +               for (j = 0; j < num_sensors; j++)
+> +                       sensor_config[j] = sensor_hwmon_configs[i];
+> +
+> +               hwmon->occ_sensors[index] =
+> +                       devm_kzalloc(dev, sizeof(struct hwmon_channel_info),
+> +                                    GFP_KERNEL);
+> +               if (!hwmon->occ_sensors[index])
+> +                       return ERR_PTR(-ENOMEM);
+> +
+> +               hwmon->occ_sensors[index]->type = occ_sensor_types[i];
+> +               hwmon->occ_sensors[index]->config = sensor_config;
+> +               index++;
+> +       }
+> +
+> +       /* search for bad chars */
+> +       strncpy(hwmon->hwmon_name, name, OCC_HWMON_NAME_LENGTH);
+> +       brk = strpbrk(hwmon->hwmon_name, "-* \t\n");
+> +       while (brk) {
+> +               *brk = '_';
+> +               brk = strpbrk(brk,  "-* \t\n");
+> +       }
+> +
+> +       hwmon->dev = devm_hwmon_device_register_with_info(dev,
+> +                                                         hwmon->hwmon_name,
+> +                                                         hwmon,
+> +                                                         &hwmon->occ_info,
+> +                                                         NULL);
+> +       if (IS_ERR(hwmon->dev)) {
+> +               dev_err(dev, "cannot register hwmon device %s: %ld\n",
+> +                       hwmon->hwmon_name, PTR_ERR(hwmon->dev));
+> +               return ERR_CAST(hwmon->dev);
+> +       }
+> +
+> +       return hwmon;
+> +}
+> +EXPORT_SYMBOL(occ_sysfs_start);
+> +
+> +MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
+> +MODULE_DESCRIPTION("OCC sysfs driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/hwmon/occ/occ_sysfs.h b/drivers/hwmon/occ/occ_sysfs.h
+> new file mode 100644
+> index 0000000..462f9d2
+> --- /dev/null
+> +++ b/drivers/hwmon/occ/occ_sysfs.h
+> @@ -0,0 +1,30 @@
+> +/*
+> + * occ_sysfs.h - OCC sysfs interface
+> + *
+> + * This file contains the data structures and function prototypes for the OCC
+> + * hwmon sysfs entries.
+> + *
+> + * Copyright 2016 IBM Corp.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#ifndef __OCC_SYSFS_H__
+> +#define __OCC_SYSFS_H__
+> +
+> +struct occ;
+> +struct device;
+> +struct occ_sysfs;
+> +
+> +struct occ_sysfs *occ_sysfs_start(struct device *dev, struct occ *occ,
+> +                                 const u32 *sensor_hwmon_configs,
+> +                                 const char *name);
+> +#endif /* __OCC_SYSFS_H__ */
+> --
+> 1.8.3.1
+>
