@@ -1,44 +1,50 @@
-From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: sun7i: Enable audio codec on A20-OLinuXino-Micro
-Date: Fri, 10 Feb 2017 20:33:37 +1100
-Message-ID: <20170210093337.28821-1-net147@gmail.com>
-Reply-To: net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
+Subject: [PATCH 0/4] ASoC: sun8i-codec: Clean-up
+Date: Fri, 10 Feb 2017 10:41:29 +0100
+Message-ID: <20170210094133.11382-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCVMZKEXYEFBBGUS63CAKGQEPYP3XYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The A20-OLinuXino-Micro has 3.5 mm sockets for headphone output and
-microphone input.
-
-Signed-off-by: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-index 223fbd9f7c62..3c1680c340b1 100644
---- a/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts
-@@ -85,6 +85,10 @@
- 	status = "okay";
- };
- 
-+&codec {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
--- 
-2.11.1
+SGkgYWxsLAoKVGhhbmtzIHRvIENoZW4tWXUncyByZXZpZXcgWzFdLCBoZXJlIGFyZSBzb21lIHBh
+dGNoZXMgdG8gY2xlYW4tdXAKbXkgc3VuOGkgQTMzIGF1ZGlvIGRyaXZlci4KClBhdGNoZXMgdGVz
+dGVkIG9uIGFzb2MvZm9yLW5leHQgYnJhbmNoIHdpdGggYWRkaXRpb25uYWwgcGF0Y2hlcwp0byBh
+cHBseSBiZWZvcmU6Cmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTQ0NzYzMS8K
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NDIzOTk5LwpodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzk1MjExMjEvCmh0dHBzOi8vd3d3LnNwaW5pY3MubmV0L2xp
+c3RzL2FybS1rZXJuZWwvbXNnNTYwMDkxLmh0bWwKClBhdGNoIDE6IFJlbW92ZXMgdGhlIEhQIHdp
+ZGdldCB3aGljaCBpcyBhdmFpbGFibGUgaW4gdGhlIGFuYWxvZyBwYXJ0LgoKUGF0Y2ggMjogVXBk
+YXRlIHRoZSBkcml2ZXIgdG8gdXNlIFNPQ19EQVBNX0RPVUJMRSBhbmQgcmVuYW1lIHRoZQpjb250
+cm9scyBhY2NvcmRpbmdseS4KClBhdGNoIDM6IENvbnZlcnQgU05EX1NPQ19EQVBNX01JWEVSIHRv
+IFNPQ19NSVhFUl9BUlJBWS4KClBhdGNoIDM6IENvbnZlcnQgU05EX1NPQ19EQVBNX0RBQyB0byBT
+TkRfU09DX0RBUE1fQUlGX0lOIGRlZmluaXRpb24uCgpUaGUgbGFzdCBDaGVuIFl1J3MgY29tbWVu
+dHMgYXJlIHN0aWxsIGluIHByb2dyZXNzIChpZSB1c2Ugb2YKc2V0X3BsbCBhbmQgc2V0X3N5c2Ns
+ayBhbmQgcmV3b3JraW5nIHRoZSBhdWRpbyByb3V0ZSkuCgpBZnRlciB0aGlzIHNlcmllcywgYW1p
+eGVyIGNvbW1hbmRzIHRvIHRlc3QgYW4gYXVkaW8gZmlsZToKCWFtaXhlciBzZXQgJ0hlYWRwaG9u
+ZScgNzUlCglhbWl4ZXIgc2V0ICdIZWFkcGhvbmUnIG9uCglhbWl4ZXIgc2V0ICdEQUMnIG9uCglh
+bWl4ZXIgc2V0ICdBSUYxIFNsb3QgMCBEaWdpdGFsIERBQycgb24KClsxXSBodHRwczovL2xrbWwu
+b3JnL2xrbWwvMjAxNy8yLzcvMTAzCgpUaGFuayB5b3UgaW4gYWR2YW5jZSwKQmVzdCByZWdhcmRz
+LAoKTXlsw6huZSBKb3NzZXJhbmQgKDQpOgogIEFTb0M6IHN1bjhpLWNvZGVjOiBSZW1vdmUgYW5h
+bG9nICJIUCIgd2lkZ2V0CiAgQVNvQzogc3VuOGktY29kZWM6IFVwZGF0ZSBtaXhlciB0byB1c2Ug
+U09DX0RBUE1fRE9VQkxFCiAgQVNvQzogc3VuOGktY29kZWM6IENvbnZlcnQgdG8gU09DX01JWEVS
+X0FSUkFZCiAgQVNvQzogc3VuOGktY29kZWM6IENvbnZlcnQgdG8gdXNlIFNORF9TT0NfREFQTV9B
+SUZfSU4KCiBhcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMuZHRzaSB8ICA0ICstLQogc291bmQv
+c29jL3N1bnhpL3N1bjhpLWNvZGVjLmMgICAgfCA2NSArKysrKysrKysrKysrKysrKy0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDM5IGRl
+bGV0aW9ucygtKQoKLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXBy
+b2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9hbHNhLWRldmVsCg==
