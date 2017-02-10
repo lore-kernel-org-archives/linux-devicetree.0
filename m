@@ -1,43 +1,182 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 2/4] arm64: dts: rockchip: add rockchip,
- uphy-dp-sel for Type-C phy
-Date: Fri, 10 Feb 2017 15:44:12 +0800
-Message-ID: <1486712654-15431-3-git-send-email-zyw@rock-chips.com>
-References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
+From: Jerry Huang <jerry.huang-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v4 3/3] USB3/DWC3: Enable undefined length INCR burst type
+Date: Fri, 10 Feb 2017 07:45:56 +0000
+Message-ID: <DB5PR0401MB1813965DDC8CC6CD0BD85980FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+References: <1484727138-3264-1-git-send-email-jerry.huang@nxp.com>
+ <1484727138-3264-3-git-send-email-jerry.huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, kishon@ti.com, robh@kernel.org, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, zyw@rock-chips.com, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, groeck@chromium.org, William wu <wulf@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484727138-3264-3-git-send-email-jerry.huang-3arQi8VN3Tc@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerry Huang <jerry.huang-3arQi8VN3Tc@public.gmane.org>, "balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rajesh Bhagat <rajesh.bhagat-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-cm9ja2NoaXAsdXBoeS1kcC1zZWwgaXMgdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkgZW5hYmxl
-IERQIGZ1bmN0aW9uLgoKU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBz
-LmNvbT4KLS0tCgogYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaSB8IDIg
-KysKIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9y
-b2NrY2hpcC9yazMzOTkuZHRzaQppbmRleCA4ZTZkMWJkLi43ZThhYThjIDEwMDY0NAotLS0gYS9h
-cmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpCisrKyBiL2FyY2gvYXJtNjQv
-Ym9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0c2kKQEAgLTEyMjUsNiArMTIyNSw3IEBACiAJCXJv
-Y2tjaGlwLHVzYjN0b3VzYjItZW4gPSA8MHhlNTgwIDMgMTk+OwogCQlyb2NrY2hpcCxleHRlcm5h
-bC1wc20gPSA8MHhlNTg4IDE0IDMwPjsKIAkJcm9ja2NoaXAscGlwZS1zdGF0dXMgPSA8MHhlNWMw
-IDAgMD47CisJCXJvY2tjaGlwLHVwaHktZHAtc2VsID0gPDB4NjI2OCAxOSAxOT47CiAJCXN0YXR1
-cyA9ICJkaXNhYmxlZCI7CiAKIAkJdGNwaHkwX2RwOiBkcC1wb3J0IHsKQEAgLTEyNTQsNiArMTI1
-NSw3IEBACiAJCXJvY2tjaGlwLHVzYjN0b3VzYjItZW4gPSA8MHhlNThjIDMgMTk+OwogCQlyb2Nr
-Y2hpcCxleHRlcm5hbC1wc20gPSA8MHhlNTk0IDE0IDMwPjsKIAkJcm9ja2NoaXAscGlwZS1zdGF0
-dXMgPSA8MHhlNWMwIDE2IDE2PjsKKwkJcm9ja2NoaXAsdXBoeS1kcC1zZWwgPSA8MHg2MjY4IDMg
-MTk+OwogCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCiAJCXRjcGh5MV9kcDogZHAtcG9ydCB7Ci0t
-IAoyLjYuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+> -----Original Message-----
+> From: Changming Huang [mailto:jerry.huang-3arQi8VN3Tc@public.gmane.org]
+> Sent: Wednesday, January 18, 2017 4:12 PM
+> To: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
+> catalin.marinas-5wv7dgnIgG8@public.gmane.org
+> Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Jerry
+> Huang <jerry.huang-3arQi8VN3Tc@public.gmane.org>; Rajesh Bhagat <rajesh.bhagat-3arQi8VN3Tc@public.gmane.org>
+> Subject: [PATCH v4 3/3] USB3/DWC3: Enable undefined length INCR burst
+> type
+>=20
+> Enable the undefined length INCR burst type and set INCRx.
+> Different platform may has the different burst size type.
+> In order to get best performance, we need to tune the burst size to one
+> special value, instead of the default value.
+>=20
+> Signed-off-by: Changming Huang <jerry.huang-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Rajesh Bhagat <rajesh.bhagat-3arQi8VN3Tc@public.gmane.org>
+> ---
+> Changes in v4:
+>   - Modify the codes according to the definition of this property.
+> Changes in v3:
+>   - add new property for INCR burst in usb node to reset GSBUSCFG0.
+> Changes in v2:
+>   - split patch
+>   - create one new function to handle soc bus configuration register.
+>=20
+>  drivers/usb/dwc3/core.c |   83
+> +++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/dwc3/core.h |    7 ++++
+>  2 files changed, 90 insertions(+)
+>=20
+> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c index
+> 369bab1..446aec3 100644
+> --- a/drivers/usb/dwc3/core.c
+> +++ b/drivers/usb/dwc3/core.c
+> @@ -650,6 +650,87 @@ static void dwc3_core_setup_global_control(struct
+> dwc3 *dwc)
+>  	dwc3_writel(dwc->regs, DWC3_GCTL, reg);  }
+>=20
+> +/* set global soc bus configuration registers */ static void
+> +dwc3_set_soc_bus_cfg(struct dwc3 *dwc) {
+> +	struct device *dev =3D dwc->dev;
+> +	u32 *vals;
+> +	u32 cfg;
+> +	int ntype;
+> +	int ret;
+> +	int i;
+> +
+> +	cfg =3D dwc3_readl(dwc->regs, DWC3_GSBUSCFG0);
+> +
+> +	/*
+> +	 * Handle property "snps,incr-burst-type-adjustment".
+> +	 * Get the number of value from this property:
+> +	 * result <=3D 0, means this property is not supported.
+> +	 * result =3D 1, means INCRx burst mode supported.
+> +	 * result > 1, means undefined length burst mode supported.
+> +	 */
+> +	ntype =3D device_property_read_u32_array(dev,
+> +			"snps,incr-burst-type-adjustment", NULL, 0);
+> +	if (ntype > 0) {
+> +		vals =3D kcalloc(ntype, sizeof(u32), GFP_KERNEL);
+> +		if (!vals) {
+> +			dev_err(dev, "Error to get memory\n");
+> +			return;
+> +		}
+> +		/* Get INCR burst type, and parse it */
+> +		ret =3D device_property_read_u32_array(dev,
+> +			"snps,incr-burst-type-adjustment", vals, ntype);
+> +		if (ret) {
+> +			dev_err(dev, "Error to get property\n");
+> +			return;
+> +		}
+> +		*(dwc->incrx_type + 1) =3D vals[0];
+> +		if (ntype > 1) {
+> +			*dwc->incrx_type =3D 1;
+> +			for (i =3D 1; i < ntype; i++) {
+> +				if (vals[i] > *(dwc->incrx_type + 1))
+> +					*(dwc->incrx_type + 1) =3D vals[i];
+> +			}
+> +		} else
+> +			*dwc->incrx_type =3D 0;
+> +
+> +		/* Enable Undefined Length INCR Burst and Enable INCRx
+> Burst */
+> +		cfg &=3D ~DWC3_GSBUSCFG0_INCRBRST_MASK;
+> +		if (*dwc->incrx_type)
+> +			cfg |=3D DWC3_GSBUSCFG0_INCRBRSTENA;
+> +		switch (*(dwc->incrx_type + 1)) {
+> +		case 256:
+> +			cfg |=3D DWC3_GSBUSCFG0_INCR256BRSTENA;
+> +			break;
+> +		case 128:
+> +			cfg |=3D DWC3_GSBUSCFG0_INCR128BRSTENA;
+> +			break;
+> +		case 64:
+> +			cfg |=3D DWC3_GSBUSCFG0_INCR64BRSTENA;
+> +			break;
+> +		case 32:
+> +			cfg |=3D DWC3_GSBUSCFG0_INCR32BRSTENA;
+> +			break;
+> +		case 16:
+> +			cfg |=3D DWC3_GSBUSCFG0_INCR16BRSTENA;
+> +			break;
+> +		case 8:
+> +			cfg |=3D DWC3_GSBUSCFG0_INCR8BRSTENA;
+> +			break;
+> +		case 4:
+> +			cfg |=3D DWC3_GSBUSCFG0_INCR4BRSTENA;
+> +			break;
+> +		case 1:
+> +			break;
+> +		default:
+> +			dev_err(dev, "Invalid property\n");
+> +			break;
+> +		}
+> +	}
+> +
+> +	dwc3_writel(dwc->regs, DWC3_GSBUSCFG0, cfg); }
+> +
+>  /**
+>   * dwc3_core_init - Low-level initialization of DWC3 Core
+>   * @dwc: Pointer to our controller context structure @@ -698,6 +779,8 @@
+> static int dwc3_core_init(struct dwc3 *dwc)
+>  	/* Adjust Frame Length */
+>  	dwc3_frame_length_adjustment(dwc);
+>=20
+> +	dwc3_set_soc_bus_cfg(dwc);
+> +
+>  	usb_phy_set_suspend(dwc->usb2_phy, 0);
+>  	usb_phy_set_suspend(dwc->usb3_phy, 0);
+>  	ret =3D phy_power_on(dwc->usb2_generic_phy);
+> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h index
+> 065aa6f..9df6304 100644
+> --- a/drivers/usb/dwc3/core.h
+> +++ b/drivers/usb/dwc3/core.h
+> @@ -805,6 +805,7 @@ struct dwc3_scratchpad_array {
+>   * @regs: base address for our registers
+>   * @regs_size: address space size
+>   * @fladj: frame length adjustment
+> + * @incrx_type: INCR burst type adjustment
+>   * @irq_gadget: peripheral controller's IRQ number
+>   * @nr_scratch: number of scratch buffers
+>   * @u1u2: only used on revisions <1.83a for workaround @@ -928,6 +929,12
+> @@ struct dwc3 {
+>  	enum usb_phy_interface	hsphy_mode;
+>=20
+>  	u32			fladj;
+> +	/*
+> +	 * For INCR burst type.
+> +	 * First field: for undefined length INCR burst type enable.
+> +	 * Second field: for INCRx burst type enable
+> +	 */
+> +	u32			incrx_type[2];
+>  	u32			irq_gadget;
+>  	u32			nr_scratch;
+>  	u32			u1u2;
+> --
+> 1.7.9.5
+Hi, Balbi and all guys,
+Any comment for these patches? Can they be accepted?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
