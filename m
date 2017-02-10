@@ -1,73 +1,157 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
-Subject: [PATCH 4/4] ASoC: sun8i-codec: Convert to use
-	SND_SOC_DAPM_AIF_IN
-Date: Fri, 10 Feb 2017 10:41:33 +0100
-Message-ID: <20170210094133.11382-5-mylene.josserand@free-electrons.com>
-References: <20170210094133.11382-1-mylene.josserand@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 5/8] arm64: dts: allwinner: add R_PIO node
+Date: Fri, 10 Feb 2017 17:59:45 +0800
+Message-ID: <CAGb2v65L4TBGZo8r=wo_U6grTtutupaoCmZQkNGcyRQoM2EUzw@mail.gmail.com>
+References: <20170210113215.W9Rqn4js@smtp2m.mail.yandex.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170210094133.11382-1-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, perex@perex.cz, tiwai@suse.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBKM663CAKGQEUNJXYSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170210113215.W9Rqn4js-/T50SzA6+Nc0PDqKvflMoHmW9unr2Ajn@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VXBkYXRlIHRoZSBkcml2ZXIgdG8gdXNlIFNORF9TT0NfREFQTV9BSUZfSU4gaW5zdGVhZCBvZgpT
-TkRfU09DX0RBUE1fREFDLgoKU2V0IHRoZSByb3V0ZSBuYW1lcyBzbyBpdCBtdXN0IGJlIHVwZGF0
-ZWQgb24gdGhlIGRldmljZSB0cmVlIHRvby4KClNpZ25lZC1vZmYtYnk6IE15bMOobmUgSm9zc2Vy
-YW5kIDxteWxlbmUuam9zc2VyYW5kQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBhcmNoL2FybS9i
-b290L2R0cy9zdW44aS1hMzMuZHRzaSB8ICA0ICsrLS0KIHNvdW5kL3NvYy9zdW54aS9zdW44aS1j
-b2RlYy5jICAgIHwgMjAgKysrKysrKysrKystLS0tLS0tLS0KIDIgZmlsZXMgY2hhbmdlZCwgMTMg
-aW5zZXJ0aW9ucygrKSwgMTEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
-dC9kdHMvc3VuOGktYTMzLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMuZHRzaQpp
-bmRleCA0ZTM0ZWM2NjEzYTAuLmU5ZTJlNzMxMjQ2MCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvc3VuOGktYTMzLmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktYTMzLmR0
-c2kKQEAgLTc4LDggKzc4LDggQEAKIAkJc2ltcGxlLWF1ZGlvLWNhcmQsbWNsay1mcyA9IDw1MTI+
-OwogCQlzaW1wbGUtYXVkaW8tY2FyZCxhdXgtZGV2cyA9IDwmY29kZWNfYW5hbG9nPjsKIAkJc2lt
-cGxlLWF1ZGlvLWNhcmQscm91dGluZyA9Ci0JCQkiTGVmdCBEQUMiLCAiRGlnaXRhbCBMZWZ0IERB
-QyIsCi0JCQkiUmlnaHQgREFDIiwgIkRpZ2l0YWwgUmlnaHQgREFDIjsKKwkJCSJMZWZ0IERBQyIs
-ICJBSUYxIFNsb3QgMCBMZWZ0IiwKKwkJCSJSaWdodCBEQUMiLCAiQUlGMSBTbG90IDAgUmlnaHQi
-OwogCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCiAJCXNpbXBsZS1hdWRpby1jYXJkLGNwdSB7CmRp
-ZmYgLS1naXQgYS9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYyBiL3NvdW5kL3NvYy9zdW54
-aS9zdW44aS1jb2RlYy5jCmluZGV4IGE3NWE5ODM5NzRkOS4uOWIxNWE1ZWUyMzVmIDEwMDY0NAot
-LS0gYS9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYworKysgYi9zb3VuZC9zb2Mvc3VueGkv
-c3VuOGktY29kZWMuYwpAQCAtMjgxLDExICsyODEsMTMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBz
-bmRfc29jX2RhcG1fd2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lkZ2V0c1tdID0gewogCVNORF9T
-T0NfREFQTV9TVVBQTFkoIkRBQyIsIFNVTjhJX0RBQ19ESUdfQ1RSTCwgU1VOOElfREFDX0RJR19D
-VFJMX0VOREEsCiAJCQkgICAgMCwgTlVMTCwgMCksCiAKLQkvKiBBbmFsb2cgREFDICovCi0JU05E
-X1NPQ19EQVBNX0RBQygiRGlnaXRhbCBMZWZ0IERBQyIsICJQbGF5YmFjayIsIFNVTjhJX0FJRjFf
-REFDREFUX0NUUkwsCi0JCQkgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTF9BSUYxX0RBMExfRU5BLCAw
-KSwKLQlTTkRfU09DX0RBUE1fREFDKCJEaWdpdGFsIFJpZ2h0IERBQyIsICJQbGF5YmFjayIsIFNV
-TjhJX0FJRjFfREFDREFUX0NUUkwsCi0JCQkgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTF9BSUYxX0RB
-MFJfRU5BLCAwKSwKKwkvKiBBbmFsb2cgREFDIEFJRiAqLworCVNORF9TT0NfREFQTV9BSUZfSU4o
-IkFJRjEgU2xvdCAwIExlZnQiLCAiUGxheWJhY2siLCAwLAorCQkJICAgIFNVTjhJX0FJRjFfREFD
-REFUX0NUUkwsCisJCQkgICAgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTF9BSUYxX0RBMExfRU5BLCAw
-KSwKKwlTTkRfU09DX0RBUE1fQUlGX0lOKCJBSUYxIFNsb3QgMCBSaWdodCIsICJQbGF5YmFjayIs
-IDAsCisJCQkgICAgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTCwKKwkJCSAgICBTVU44SV9BSUYxX0RB
-Q0RBVF9DVFJMX0FJRjFfREEwUl9FTkEsIDApLAogCiAJLyogREFDIE1peGVycyAqLwogCVNPQ19N
-SVhFUl9BUlJBWSgiTGVmdCBEaWdpdGFsIERBQyBNaXhlciIsIFNORF9TT0NfTk9QTSwgMCwgMCwK
-QEAgLTMyOSwxNCArMzMxLDE0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3Jv
-dXRlIHN1bjhpX2NvZGVjX2RhcG1fcm91dGVzW10gPSB7CiAJeyAiREFDIiwgTlVMTCwgIk1PRENM
-SyBEQUMiIH0sCiAKIAkvKiBEQUMgUm91dGVzICovCi0JeyAiRGlnaXRhbCBMZWZ0IERBQyIsIE5V
-TEwsICJEQUMiIH0sCi0JeyAiRGlnaXRhbCBSaWdodCBEQUMiLCBOVUxMLCAiREFDIiB9LAorCXsg
-IkFJRjEgU2xvdCAwIFJpZ2h0IiwgTlVMTCwgIkRBQyIgfSwKKwl7ICJBSUYxIFNsb3QgMCBMZWZ0
-IiwgTlVMTCwgIkRBQyIgfSwKIAogCS8qIERBQyBNaXhlciBSb3V0ZXMgKi8KIAl7ICJMZWZ0IERp
-Z2l0YWwgREFDIE1peGVyIiwgIkFJRjEgU2xvdCAwIERpZ2l0YWwgREFDIFBsYXliYWNrIFN3aXRj
-aCIsCi0JICAiRGlnaXRhbCBMZWZ0IERBQyJ9LAorCSAgIkFJRjEgU2xvdCAwIExlZnQifSwKIAl7
-ICJSaWdodCBEaWdpdGFsIERBQyBNaXhlciIsICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5
-YmFjayBTd2l0Y2ggIiwKLQkgICJEaWdpdGFsIFJpZ2h0IERBQyJ9LAorCSAgIkFJRjEgU2xvdCAw
-IFJpZ2h0In0sCiB9OwogCiBzdGF0aWMgc3RydWN0IHNuZF9zb2NfZGFpX29wcyBzdW44aV9jb2Rl
-Y19kYWlfb3BzID0gewotLSAKMi4xMS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2Et
-cHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2Fsc2EtZGV2ZWwK
+On Fri, Feb 10, 2017 at 4:32 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+>
+> 2017=E5=B9=B42=E6=9C=8810=E6=97=A5 16:07=E4=BA=8E Maxime Ripard <maxime.r=
+ipard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+>>
+>> On Wed, Feb 08, 2017 at 07:08:46PM +0800, Icenowy Zheng wrote:
+>> > 08.02.2017, 18:15, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+>> > > On Wed, Feb 08, 2017 at 06:00:06PM +0800, Icenowy Zheng wrote:
+>> > >>  Allwinner A64 SoC has a R_PIO node like the one in H3.
+>> > >>
+>> > >>  Add the node as well as needed clocks and resets.
+>> > >>
+>> > >>  As there's no document for apb0_gates, I only added the R_PIO bit =
+here.
+>> > >>
+>> > >>  Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> > >>  ---
+>> > >>   arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 40 ++++++++++++++=
++++++++++++++
+>> > >>   1 file changed, 40 insertions(+)
+>> > >>
+>> > >>  diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/=
+arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> > >>  index 1c64ea2d23f9..4b0baa79554c 100644
+>> > >>  --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> > >>  +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+>> > >>  @@ -98,6 +98,15 @@
+>> > >>                   clock-output-names =3D "osc32k";
+>> > >>           };
+>> > >>
+>> > >>  + apb0: apb0_clk {
+>> > >>  + compatible =3D "fixed-factor-clock";
+>> > >>  + #clock-cells =3D <0>;
+>> > >>  + clock-div =3D <1>;
+>> > >>  + clock-mult =3D <1>;
+>> > >>  + clocks =3D <&osc24M>;
+>> > >>  + clock-output-names =3D "apb0";
+>> > >>  + };
+>> > >>  +
+>> > >>           psci {
+>> > >>                   compatible =3D "arm,psci-0.2";
+>> > >>                   method =3D "smc";
+>> > >>  @@ -392,5 +401,36 @@
+>> > >>                           interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL=
+_HIGH>,
+>> > >>                                        <GIC_SPI 41 IRQ_TYPE_LEVEL_H=
+IGH>;
+>> > >>                   };
+>> > >>  +
+>> > >>  + apb0_gates: clk@1f01428 {
+>> > >>  + compatible =3D "allwinner,sun50i-a64-apb0-gates-clk",
+>> > >>  + "allwinner,sun4i-a10-gates-clk";
+>> > >>  + reg =3D <0x01f01428 0x4>;
+>> > >>  + #clock-cells =3D <1>;
+>> > >>  + clocks =3D <&apb0>;
+>> > >>  + clock-indices =3D <0>;
+>> > >>  + clock-output-names =3D "apb0_pio";
+>> > >>  + };
+>> > >>  +
+>> > >>  + apb0_rst: reset@1f014b0 {
+>> > >>  + reg =3D <0x01f014b0 0x4>;
+>> > >>  + compatible =3D "allwinner,sun6i-a31-clock-reset";
+>> > >>  + #reset-cells =3D <1>;
+>> > >>  + };
+>> > >
+>> > > Please make a sunxi-ng driver for those clocks.
+>> >
+>> > We have no enough materials to make such a CCU driver.
+>> >
+>> > Clocks in CPUs are usually undocumented, and difficult to
+>> > be collected -- even the clk-sun50iw1.c in BSP do not have
+>> > all clocks in CPUs.
+>>
+>> That's unfortunate, but we can deal with that by simply extending the
+>> clocks we have. Nothing too complicated or unconvenient to deal with.
+>
+> I did a WIP R_CCU driver based on the info on the wiki -- https://github.=
+com/Icenowy/linux/commit/8d215986f4d33ded68c705d4bb152bbb863446c9
+>
+> Only infomation about H3 and A64 is included, because A31 and A23 PRCM is=
+ a MFD, and I have no hackable device with A83T.
+
+The most complex PRCMs (that we know of) are the A80 and the A83T.
+Some code can be found for A33 and A64. I cannot find where I got
+the information for the A23. I probably assumed it was similar to
+the A31.
+
+The parts we know that are constant across SoCs are the register
+offsets for the CPUS, APBS, APBS bus gates and reset controls.
+The APBS divider is slightly different. Offsets for the gates
+and reset controls are fairly standardized, except for the trusted
+watchdog on the A80. We can treat the A80 as the canonical source
+of possible peripheral gates if you want to do a single driver
+for all SoCs.
+
+Also the A8X chips have extra muxes for osc24M not available on
+other chips. This should be made available for the main CCU on
+them.
+
+As for the ones that already have an MFD binding, it is possible
+to support it even with the new driver. It's just going to be
+messy as hell.
+
+
+Regards
+ChenYu
+
+>
+>>
+>> > We should only make it sunxi-ng until it's fully discovered (all
+>> > functions in CPUs are functional).
+>>
+>> No, I expect that by 4.12 we have converted every users to sunxi-ng,
+>> PRCM included.
+>>
+>> Maxime
+>>
+>> --
+>> Maxime Ripard, Free Electrons
+>> Embedded Linux and Kernel engineering
+>> http://free-electrons.com
+>>
+>> --
+>> You received this message because you are subscribed to the Google Group=
+s "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it, send a=
+n email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+>> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
