@@ -1,79 +1,74 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Fri, 10 Feb 2017 16:12:14 +0100
-Message-ID: <CACQ1gAgBFb-+CjdH50e01Q-1gt7tK8CNH_y8pytq5MDzpc6K6Q@mail.gmail.com>
-References: <20170124134809.23315-1-richard.genoud@gmail.com>
- <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
- <CGME20170125075556epcas1p4b916a6d6acda28f8fc1959a1227520fa@epcas1p4.samsung.com>
- <CAJKOXPesCuYsK23466=6W9PPX7DtztdymZLBfNz0Dmjzwp4qBA@mail.gmail.com>
- <ef6c0d33-73d6-805e-aeab-86190e8b0aa0@samsung.com> <CAJKOXPd+CnmVG282NEVCFqS_3YEURCWx41udyQKpL21keGJOWg@mail.gmail.com>
- <4dca1d8e-f955-7791-90c0-4e73a273fe62@gmail.com> <CACQ1gAj5ebug28CJ2xiYWKohMhNbGr=tmy6mS-57CFq=K-bqyQ@mail.gmail.com>
- <20170210133439.qfiuggbuoi7hq6el@kozik-lap>
+From: Jerry Huang <jerry.huang@nxp.com>
+Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
+ incr-burst-type-adjustment" for INCR burst type
+Date: Fri, 10 Feb 2017 15:16:36 +0000
+Message-ID: <DB5PR0401MB181337ABF15D0C02DB4342E4FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
+ <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
+ <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
+ <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
+ <DB5PR0401MB181361EBAD1B2BFA8DC5ED7AFE610@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <CAL_JsqJLr7pFSd5DW2ghNmn5-Lggrefp=GMPLOiiQmmqyPU4iA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170210133439.qfiuggbuoi7hq6el@kozik-lap>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Anand Moon <linux.amoon@gmail.com>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie@samsung.com>, Felipe Balbi <balbi@kernel.org>, Huang Rui <ray.huang@amd.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqJLr7pFSd5DW2ghNmn5-Lggrefp=GMPLOiiQmmqyPU4iA@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-02-10 14:34 GMT+01:00 Krzysztof Kozlowski <krzk@kernel.org>:
-> On Thu, Feb 09, 2017 at 11:26:48AM +0100, Richard Genoud wrote:
->> I did some tests with XU3 and XU4, playing with USB2 and USB3 quirks
->> (snps,dis_u{2,3}_susphy_quirk)
->>
->> kernel for the tests: next-20170206
->> DTBs: exynos5422-odroidxu3-lite.dtb exynos5422-odroidxu4.dtb
->>
->> USB devices used for the tests: kingston USB3 key, Akasa sata/USB3
->> +SSD standard USB2 key
->> once recognized, a dd if=/dev/sda bs=1M count=100 of=/dev/null is done.
->>
->>
->> The results are:
->> - On XU4:
->>   - adding snps,dis_u2_susphy_quirk doesn't change anything:
->>     inserting an USB2 or USB3 device gives the error message:
->>     xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec,
->> port status = 0xc400fe3
->>   - with snps,dis_u3_susphy_quirk, USB2 and USB3 devices are recognized
->>
->> - On XU3:
->>   - Without changing XU3 dts, USB2 devices are recognized.
->>   - With or without the snps,dis_u3_susphy_quirk, USB3 devices are not
->> recognized/not working properly
->>   (never seen or disconnected, unable to enumerate, etc.)
->>   However, adding an external powered USB3 hub in between works. (with
->> or without the snps,dis_u3_susphy_quirk)
->>   Anyway, this problem doesn't seems to be related to the other since
->>   addind the quirks doesn't change anything.
->
-> From this description I am missing where are you inserting the USB
-> devices.
->
-> Both boards have totally different USB port configuration. On XU3 the
-> hub is on USB 2.0 port. On XU4 the opposite - the hub is on USB 3.0
-> port.
-Yes, sorry.
-All the tests I did were on USB3.0 ports.
-So, for the XU4, it was the double USB3.0 connector.
-For the XU3, it was the single USB3.0 host port.
-
-(and the XU3 USB3.0 device port for the test bellow)
-
-I didn't do any test on the USB2 ports.
-
->
-> Best regards,
-> Krzysztof
->
->> - On XU3 USB3 device port (dr_mode = "peripheral"):
->>   - acting as an ethernet gadget only works with the snps,dis_u3_susphy_quirk.
->>     It works well as USB2 or USB3 (tested with ethernet gadget+iperf)
->>
->> So, at the end, it does seem usefull to add the
->> snps,dis_u3_susphy_quirk at the exynos5420.dtsi level.
->> Adding the snps,dis_u2_susphy_quirk doesn't seems to change anything
->> for XU3/XU4 board,
->> so I don't know if it is necessary or not.
+> >> >> Why do you need the first field? Is the 2nd field used if the 1st is 0?
+> >> >> If not, then just use the presence of the property to enable or not.
+> >> > The first field is one switch.
+> >> > When it is 1, means undefined length INCR burst type enabled, we
+> >> > can use
+> >> any length less than or equal to the largest-enabled burst length of
+> >> INCR4/8/16/32/64/128/256.
+> >> > When it is zero, means INCRx burst mode enabled, we can use one
+> >> > fixed
+> >> burst length of 1/4/8/16/32/64/128/256 byte.
+> >> > So, the 2nd field is used if the 1st is 0, we need to select one
+> >> > largest burst
+> >> length the USB controller can support.
+> >> > If we don't want to change the value of this register (use the
+> >> > default value),
+> >> we don't need to add this property to usb node.
+> >>
+> >> Just make this a single value with 0 meaning INCR and 4/8/16/etc being
+> INCRx.
+> > Maybe, I didn't describe it clearly.
+> > According to DWC3 spec, the value "0" of field INCRBrstEna means INCRx
+> burst mode, 1 means INCR burst mode.
+> > Regardless of the value of INCRBrstEna [bit0], we need to modify the other
+> field bit[1,2,3,4,5,6,7] to one INCR burst type  for the platform supported.
+> > Ad you mentioned, if we just use a single value with 0 meaning INCR and
+> 4/8/16/etc being INCRx.
+> > I understand totally that when it is none-zero, we can use it for INCR burst
+> mode.
+> > Then, when it is 0, how to select the INCRx value?
+> 
+> What I mean is:
+> <no prop> - burst disabled
+Yes, I understand it.
+> 0 - INCR burst. INCR is undefined length burst IIRC.
+When INCR is undefined length, we need to set the max INCR type, too, such as when setting INCR16, controller can use any length less than or equal to the 16 byte.
+> 4/8/16/etc. - INCR4/INCR8/INCR16/etc.
+I understand it, too.
+> 
+> What case does this not cover?
+According to Balbi's suggestion, I changed the property like below, you can see the detail in v4 (sent by 1/18/2017)
+Property "snps,incr-burst-type-adjustment = <x>, <y>..." for USB3.0 DWC3.
+When Just one value means INCRx mode with fix burst type.
+When more than one value, means undefined length burst mode, USB controller can use the length less than or equal to the largest enabled burst length.
