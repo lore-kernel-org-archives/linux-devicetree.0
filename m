@@ -1,13 +1,13 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH linux v7 4/6] hwmon: occ: Add callbacks for parsing P8 OCC datastructures
-Date: Fri, 10 Feb 2017 16:01:32 +1030
-Message-ID: <CACPK8Xf+YFuGydAMxcqD3eTYkgfgHtg743kkd-J_EshnYZ1J=Q@mail.gmail.com>
-References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com> <1486509056-25838-5-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH linux v7 6/6] hwmon: occ: Add callbacks for parsing P9 OCC datastructures
+Date: Fri, 10 Feb 2017 16:01:58 +1030
+Message-ID: <CACPK8XeX12cQgJ2HqHFqvZmFh7TNWMJq3ysaOOmnh-kp02D+YA@mail.gmail.com>
+References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com> <1486509056-25838-7-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1486509056-25838-5-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-hwmon-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486509056-25838-7-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: eajames <eajames@linux.vnet.ibm.com>
 Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
@@ -16,101 +16,102 @@ On Wed, Feb 8, 2017 at 9:40 AM,  <eajames@linux.vnet.ibm.com> wrote:
 > From: "Edward A. James" <eajames@us.ibm.com>
 >
 > Add functions to parse the data structures that are specific to the OCC on
-> the POWER8 processor. These are the sensor data structures, including
+> the POWER9 processor. These are the sensor data structures, including
 > temperature, frequency, power, and "caps."
 >
 > Signed-off-by: Edward A. James <eajames@us.ibm.com>
 > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > ---
->  Documentation/hwmon/occ    |   9 ++
->  drivers/hwmon/occ/occ_p8.c | 248 +++++++++++++++++++++++++++++++++++++++++++++
->  drivers/hwmon/occ/occ_p8.h |  30 ++++++
->  3 files changed, 287 insertions(+)
->  create mode 100644 drivers/hwmon/occ/occ_p8.c
->  create mode 100644 drivers/hwmon/occ/occ_p8.h
+>  Documentation/hwmon/occ    |   3 +
+>  drivers/hwmon/occ/occ_p9.c | 309 +++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/hwmon/occ/occ_p9.h |  30 +++++
+>  3 files changed, 342 insertions(+)
+>  create mode 100644 drivers/hwmon/occ/occ_p9.c
+>  create mode 100644 drivers/hwmon/occ/occ_p9.h
 
->
-> diff --git a/drivers/hwmon/occ/occ_p8.c b/drivers/hwmon/occ/occ_p8.c
+> diff --git a/drivers/hwmon/occ/occ_p9.c b/drivers/hwmon/occ/occ_p9.c
 > new file mode 100644
-> index 0000000..5c61fc4
+> index 0000000..9c1283c
 > --- /dev/null
-> +++ b/drivers/hwmon/occ/occ_p8.c
+> +++ b/drivers/hwmon/occ/occ_p9.c
+> @@ -0,0 +1,309 @@
+> +/*
+> + * occ_p9.c - OCC hwmon driver
+> + *
+> + * This file contains the Power9-specific methods and data structures for
+> + * the OCC hwmon driver.
+> + *
+> + * Copyright 2016 IBM Corp.
 
-> +void p8_parse_sensor(u8 *data, void *sensor, int sensor_type, int off,
-> +                    int snum)
-> +{
-> +       switch (sensor_type) {
-> +       case FREQ:
-> +       case TEMP:
-> +       {
-> +               struct p8_occ_sensor *os =
-> +                       &(((struct p8_occ_sensor *)sensor)[snum]);
+It's 2017.
+
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+We generally just include the first paragraph. Same goes for all of the files.
+
 > +
-> +               os->sensor_id = be16_to_cpu(get_unaligned((u16 *)&data[off]));
-> +               os->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 2]));
-> +       }
-> +               break;
-> +       case POWER:
-> +       {
-> +               struct p8_power_sensor *ps =
-> +                       &(((struct p8_power_sensor *)sensor)[snum]);
+> +static const u32 p9_sensor_hwmon_configs[MAX_OCC_SENSOR_TYPE] = {
+> +       HWMON_I_INPUT | HWMON_I_LABEL,  /* freq: value | label */
+> +       /* temp: value | label | fru_type */
+> +       HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_TYPE,
+> +       /* power: value | label | accum[0] | accum[1] | update_tag |
+> +        *       (function_id | (apss_channel << 8))
+> +        */
+> +       HWMON_P_INPUT | HWMON_P_LABEL | HWMON_P_AVERAGE_MIN |
+> +               HWMON_P_AVERAGE_MAX | HWMON_P_AVERAGE_INTERVAL |
+> +               HWMON_P_RESET_HISTORY,
+> +       /* caps: curr | max | min | norm | user | source */
+> +       HWMON_P_CAP | HWMON_P_CAP_MAX | HWMON_P_CAP_MIN | HWMON_P_MAX |
+> +               HWMON_P_ALARM | HWMON_P_CAP_ALARM,
+
+I find this really hard to read. Perhaps something like this:
+
+
+#define FREQ_CONFIG        (HWMON_I_INPUT | HWMON_I_LABEL)
+#deifne TEMP_CONFIG        (HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_TYPE)
+#define POWER_CONFIG    ( HWMON_P_INPUT | HWMON_P_LABEL |
+HWMON_P_AVERAGE_MIN | \
+                                                 HWMON_P_AVERAGE_MAX |
+HWMON_P_AVERAGE_INTERVAL | \
+                                                 HWMON_P_RESET_HISTORY)
+
+etc. Do the same in the p8 driver.
+
+
+> diff --git a/drivers/hwmon/occ/occ_p9.h b/drivers/hwmon/occ/occ_p9.h
+> new file mode 100644
+> index 0000000..18ca16a
+> --- /dev/null
+> +++ b/drivers/hwmon/occ/occ_p9.h
+
 > +
-> +               ps->sensor_id = be16_to_cpu(get_unaligned((u16 *)&data[off]));
-> +               ps->update_tag =
-> +                       be32_to_cpu(get_unaligned((u32 *)&data[off + 2]));
-
-This might be more readable if you wrote a
-cast_get_unaliged_be32_to_cpu() macro.
-
-> +               ps->accumulator =
-> +                       be32_to_cpu(get_unaligned((u32 *)&data[off + 6]));
-> +               ps->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 10]));
-> +       }
-> +               break;
-> +       case CAPS:
-> +       {
-
-> +const u32 *p8_get_sensor_hwmon_configs()
-> +{
-> +       return p8_sensor_hwmon_configs;
-> +}
-> +EXPORT_SYMBOL(p8_get_sensor_hwmon_configs);
+> +#ifndef __OCC_P9_H__
+> +#define __OCC_P9_H__
 > +
-> +struct occ *p8_occ_start(struct device *dev, void *bus,
-> +                        struct occ_bus_ops *bus_ops)
-> +{
-> +       return occ_start(dev, bus, bus_ops, &p8_ops, &p8_config);
-> +}
-> +EXPORT_SYMBOL(p8_occ_start);
+> +#include "scom.h"
+> +
+> +struct device;
 
-We don't need to export these symbols; they're not used outside of the
-OCC module. The same goes for all of the exports you've made in this
-series.
+Include the header for struct device instead.
 
-I suggest we re-architect the drivers so we build all of the objects
-and link them into one module for each platform, instead of having an
-occ module and occ-p8/occ-p9 modules and i2c modules that all depend
-on each other. The Makefile could look like this:
+Did you consider the one header file for all of your shared functions?
+I don't think there's much value in having a whole heap of small ones.
 
-obj-$(CONFIG_SENSORS_PPC_OCC_P8_I2C) += hwmon_occ_p8.o
-obj-$(CONFIG_SENSORS_PPC_OCC_P9) += hwmon_occ_p9.o
-
-hwmon_occ_p8-$(CONFIG_SENSORS_PPC_OCC_P8_I2C) += occ_scom_i2c.o
-occ_p8.o p8_occ_i2c.o occ_sysfs.o occ.o
-hwmon_occ_p9-$(CONFIG_SENSORS_PPC_OCC_P9) += occ_p9.o occ_sysfs.o occ.o
-
-And the Kbuild like this:
-
-menuconfig SENSORS_PPC_OCC
-        bool "PPC On-Chip Controller"
-
-if SENSORS_PPC_OCC
-
-config SENSORS_PPC_OCC_P8_I2C
-        bool "POWER8 OCC hwmon support"
-        depends on I2C
-
-config SENSORS_PPC_OCC_P9
-        bool "POWER9 OCC hwmon support"
-
-endif
+> +
+> +const u32 *p9_get_sensor_hwmon_configs(void);
+> +struct occ *p9_occ_start(struct device *dev, void *bus,
+> +                        struct occ_bus_ops *bus_ops);
+> +
+> +#endif /* __OCC_P9_H__ */
+> --
+> 1.8.3.1
+>
