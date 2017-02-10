@@ -1,33 +1,33 @@
-From: Velibor Markovski <velibor.markovski-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/2] Add support for ARM CCN-502 interconnect
-Date: Fri, 10 Feb 2017 12:42:46 -0800
-Message-ID: <1486759368-24067-1-git-send-email-velibor.markovski@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Velibor Markovski <velibor.markovski-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Velibor Markovski <velibor.markovski@broadcom.com>
+Subject: [PATCH 2/2] bus: arm-ccn: Enable stats for CCN-502 interconnect
+Date: Fri, 10 Feb 2017 12:42:48 -0800
+Message-ID: <1486759368-24067-3-git-send-email-velibor.markovski@broadcom.com>
+References: <1486759368-24067-1-git-send-email-velibor.markovski@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486759368-24067-1-git-send-email-velibor.markovski@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Velibor Markovski <velibor.markovski@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible string for ARM CCN-502 interconnect.
-CCN-502 interconnect is already compatible with the 
-existing ARM CCN driver, which supports CCN-504.
+Add compatible string for the ARM CCN-502 interconnect
 
-This patchset is based on v4.10-rc3 and is available from github:
-repo: https://github.com/Broadcom/arm64-linux
-branch: arm64-ccn502
+Signed-off-by: Velibor Markovski <velibor.markovski@broadcom.com>
+---
+ drivers/bus/arm-ccn.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Velibor Markovski (2):
-  dt-bindings: arm-ccn: Add bindings info for CCN-502 compatible string
-  bus: arm-ccn: Enable stats for CCN-502 interconnect
-
- Documentation/devicetree/bindings/arm/ccn.txt | 1 +
- drivers/bus/arm-ccn.c                         | 1 +
- 2 files changed, 2 insertions(+)
-
+diff --git a/drivers/bus/arm-ccn.c b/drivers/bus/arm-ccn.c
+index 4d6a2b7..98a6995 100644
+--- a/drivers/bus/arm-ccn.c
++++ b/drivers/bus/arm-ccn.c
+@@ -1544,6 +1544,7 @@ static int arm_ccn_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id arm_ccn_match[] = {
++	{ .compatible = "arm,ccn-502", },
+ 	{ .compatible = "arm,ccn-504", },
+ 	{},
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
