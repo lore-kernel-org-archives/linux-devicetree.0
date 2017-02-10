@@ -1,7 +1,7 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 1/4] checks: Add Warning for stricter property name character checking
-Date: Fri, 10 Feb 2017 10:47:14 -0600
-Message-ID: <20170210164717.1234-2-robh@kernel.org>
+Subject: [PATCH v2 4/4] checks: Add bus checks for PCI buses
+Date: Fri, 10 Feb 2017 10:47:17 -0600
+Message-ID: <20170210164717.1234-5-robh@kernel.org>
 References: <20170210164717.1234-1-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170210164717.1234-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
@@ -10,82 +10,152 @@ To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-While '?', '.', '+', '*', and '_' are considered valid characters their
-use is discouraged in recommended practices. '#' is also only
-recommended to be used at the beginning of property names.
+Add PCI bridge and device node checks. We identify PCI bridges with
+'device_type = "pci"' as only PCI bridges should set that property. For
+bridges, check that ranges is present and #address-cells and
 
-Testing this found one typo error with '.' used instead of ','. The
-rest of the warnings were all from underscores.
+For devices, the primary check is the reg property and the unit address.
+Device unit addresses are in the form DD or DD,F where DD is the
+device 0-0x1f and F is the function 0-7.
 
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
 v2:
-- Disable check by default
+- Remove bus_type functions. Combine test for bus_type and bridge check
+  into single check.
+- Add a check that PCI bridge node name is pci or pcie.
 
- checks.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ checks.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ dtc.h    |  7 ++++++
+ 2 files changed, 90 insertions(+)
 
 diff --git a/checks.c b/checks.c
-index 3d18e45374c8..22ef4748d7be 100644
+index 16d17d20caec..9ebb148f947a 100644
 --- a/checks.c
 +++ b/checks.c
-@@ -239,6 +239,7 @@ ERROR(duplicate_property_names, check_duplicate_property_names, NULL);
- #define UPPERCASE	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
- #define DIGITS		"0123456789"
- #define PROPNODECHARS	LOWERCASE UPPERCASE DIGITS ",._+*#?-"
-+#define PROPNODECHARSSTRICT	LOWERCASE UPPERCASE DIGITS ",-"
-
- static void check_node_name_chars(struct check *c, struct dt_info *dti,
- 				  struct node *node)
-@@ -299,6 +300,38 @@ static void check_property_name_chars(struct check *c, struct dt_info *dti,
+@@ -702,6 +702,86 @@ static void check_ranges_format(struct check *c, struct dt_info *dti,
  }
- ERROR(property_name_chars, check_property_name_chars, PROPNODECHARS);
-
-+static void check_property_name_chars_strict(struct check *c,
-+					     struct dt_info *dti,
-+					     struct node *node)
+ WARNING(ranges_format, check_ranges_format, NULL, &addr_size_cells);
+ 
++static const struct bus_type pci_bus = {
++	.type = PCI_BUS_TYPE,
++};
++
++static void check_pci_bridge(struct check *c, struct dt_info *dti, struct node *node)
 +{
 +	struct property *prop;
 +
-+	for_each_property(node, prop) {
-+		const char *name = prop->name;
-+		int n = strspn(name, c->data);
++	prop = get_property(node, "device_type");
++	if (!prop || strcmp(prop->val.val, "pci"))
++		return;
 +
-+		if (n == strlen(prop->name))
-+			continue;
++	node->bus = &pci_bus;
 +
-+		/* Certain names are whitelisted */
-+		if (strcmp(name, "device_type") == 0)
-+			continue;
++	if (strncmp(node->name, "pci", node->basenamelen) &&
++	    strncmp(node->name, "pcie", node->basenamelen))
++		FAIL(c, "Node %s node name is not \"pci\" or \"pcie\"",
++			     node->fullpath);
 +
-+		/*
-+		 * # is only allowed at the beginning of property names not counting
-+		 * the vendor prefix.
-+		 */
-+		if (name[n] == '#' && ((n == 0) || (name[n-1] == ','))) {
-+			name += n + 1;
-+			n = strspn(name, c->data);
-+		}
-+		if (n < strlen(name))
-+			FAIL(c, "Character '%c' not recommended in property name \"%s\", node %s",
-+			     name[n], prop->name, node->fullpath);
-+	}
++	prop = get_property(node, "ranges");
++	if (!prop)
++		FAIL(c, "Node %s missing ranges for PCI bridge (or not a bridge)",
++			     node->fullpath);
++
++	if (node_addr_cells(node) != 3)
++		FAIL(c, "Node %s incorrect #address-cells for PCI bridge",
++			     node->fullpath);
++	if (node_size_cells(node) != 2)
++		FAIL(c, "Node %s incorrect #size-cells for PCI bridge",
++			     node->fullpath);
 +}
-+CHECK(property_name_chars_strict, check_property_name_chars_strict, PROPNODECHARSSTRICT);
++WARNING(pci_bridge, check_pci_bridge, NULL,
++	&device_type_is_string, &addr_size_cells);
 +
- #define DESCLABEL_FMT	"%s%s%s%s%s"
- #define DESCLABEL_ARGS(node,prop,mark)		\
- 	((mark) ? "value of " : ""),		\
-@@ -703,6 +736,8 @@ static struct check *check_table[] = {
- 	&address_cells_is_cell, &size_cells_is_cell, &interrupt_cells_is_cell,
- 	&device_type_is_string, &model_is_string, &status_is_string,
-
-+	&property_name_chars_strict,
++static void check_pci_device(struct check *c, struct dt_info *dti, struct node *node)
++{
++	struct property *prop;
++	const char *unitname = get_unitname(node);
++	char unit_addr[5];
++	unsigned int dev, func, reg;
 +
- 	&addr_size_cells, &reg_format, &ranges_format,
-
++	if (!node->parent || !node->parent->bus ||
++	    (node->parent->bus->type != PCI_BUS_TYPE))
++		return;
++
++	prop = get_property(node, "reg");
++	if (!prop)
++		return;
++
++	reg = fdt32_to_cpu(*((cell_t *)prop->val.val));
++
++	dev = (reg & 0xf800) >> 11;
++	func = (reg & 0x700) >> 8;
++
++	if (reg & 0xff000000)
++		FAIL(c, "Node %s PCI reg address is not configuration space",
++			     node->fullpath);
++
++	if (dev > 0x1f)
++		FAIL(c, "Node %s PCI device number out of range",
++			     node->fullpath);
++	if (func > 7)
++		FAIL(c, "Node %s PCI function number out of range",
++		     node->fullpath);
++
++	if (func == 0) {
++		snprintf(unit_addr, sizeof(unit_addr), "%x", dev);
++		if (!strcmp(unitname, unit_addr))
++			return;
++	}
++
++	snprintf(unit_addr, sizeof(unit_addr), "%x,%x", dev, func);
++	if (!strcmp(unitname, unit_addr))
++		return;
++
++	FAIL(c, "Node %s PCI unit address format error, expected \"%s\"",
++	     node->fullpath, unit_addr);
++}
++WARNING(pci_device, check_pci_device, NULL, &reg_format);
++
+ /*
+  * Style checks
+  */
+@@ -775,6 +855,9 @@ static struct check *check_table[] = {
  	&unit_address_vs_reg,
---
+ 	&unit_address_format,
+ 
++	&pci_bridge,
++	&pci_device,
++
+ 	&avoid_default_addr_size,
+ 	&obsolete_chosen_interrupt_controller,
+ 
+diff --git a/dtc.h b/dtc.h
+index c6f125c68ba8..c538ef4afafb 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -136,6 +136,12 @@ struct label {
+ 	struct label *next;
+ };
+ 
++#define PCI_BUS_TYPE	1
++
++struct bus_type {
++	int type;
++};
++
+ struct property {
+ 	bool deleted;
+ 	char *name;
+@@ -162,6 +168,7 @@ struct node {
+ 	int addr_cells, size_cells;
+ 
+ 	struct label *labels;
++	const struct bus_type *bus;
+ };
+ 
+ #define for_each_label_withdel(l0, l) \
+-- 
 2.10.1
 
 --
