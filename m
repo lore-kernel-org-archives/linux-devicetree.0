@@ -1,52 +1,85 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/4] clk: mvebu: Expand mv98dx3236-core-clock support
-Date: Fri, 10 Feb 2017 09:21:20 -0800
-Message-ID: <20170210172120.GR25384@codeaurora.org>
-References: <20170203034012.29399-1-chris.packham@alliedtelesis.co.nz>
- <5a974d9d7260432087619486bf5d79ed@svr-chch-ex1.atlnz.lc>
- <6149d4126a214ac8b0b0184bd818bea6@svr-chch-ex1.atlnz.lc>
- <9294933.cXSW0amFbE@wuerfel>
- <aabc6853d7934507a4507b0ad4354b72@svr-chch-ex1.atlnz.lc>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform
+ documentation
+Date: Fri, 10 Feb 2017 11:32:29 -0600
+Message-ID: <CAL_JsqLaLnzFzQbGVpxGRFjkjSEM7mmGMd+xJ_urwcX5Jq9L+w@mail.gmail.com>
+References: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
+ <1486667612-8168-1-git-send-email-jnair@caviumnetworks.com>
+ <CAL_JsqKm-c6D_fki_TsRYKH3aGoC5GE7n0DazNi7P268aj-93g@mail.gmail.com>
+ <20170210150754.GA1874@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <aabc6853d7934507a4507b0ad4354b72@svr-chch-ex1.atlnz.lc>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170210150754.GA1874@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jayachandran C <jnair@caviumnetworks.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/08, Chris Packham wrote:
-> On 08/02/17 23:53, Arnd Bergmann wrote:
-> > On Tuesday, February 7, 2017 3:07:37 AM CET Chris Packham wrote:
-> >>>
-> >>> Actually I wonder if I can try a bit harder to keep a system booting.
-> >>> The following might work
-> >>> 1) add the compatible strings to the existing armada clock drivers.
-> >>> 2) update the dts to use the new compatible strings.
-> >>> 3) add the new driver and remove the compatible strings from the armada
-> >>> drivers.
-> >>>
-> >>> #1 would still upset checkpatch.pl because the documentation would only
-> >>> arrive in #2.
-> >>
-> >> Actually upon testing #1 is unnecessary. I lose some of the gated clocks
-> >> but nothing that prevents booting.
-> >
-> > Just to be sure: this means we can merge 2) and 3) independently and
-> > having just one of them will not cause regressions over what we have
-> > today?
-> >
-> 
-> Correct. And that's what I sent out as v2.
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/486467.html
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/486471.html
-> 
+On Fri, Feb 10, 2017 at 9:07 AM, Jayachandran C
+<jnair@caviumnetworks.com> wrote:
+> On Fri, Feb 10, 2017 at 08:55:31AM -0600, Rob Herring wrote:
+>> On Thu, Feb 9, 2017 at 1:13 PM, Jayachandran C <jnair@caviumnetworks.com> wrote:
+>> > Add documentation for Cavium ThunderX2 CN99XX ARM64 processor family.
+>> > The the SoC will use the ID "cavium,thunderx2-cn9900".
+>> >
+>> > Add documentation entry for the "cavium,thunder2" cpu core as well.
+>> >
+>> > Signed-off-by: Jayachandran C <jnair@caviumnetworks.com>
+>> > ---
+>> >
+>> > v3->v4
+>> > Documentation updates to reflect changes in device tree.
+>> >
+>> >  Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 8 ++++++++
+>> >  Documentation/devicetree/bindings/arm/cpus.txt            | 1 +
+>> >  2 files changed, 9 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+>> > new file mode 100644
+>> > index 0000000..dc5dd65
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+>> > @@ -0,0 +1,8 @@
+>> > +Cavium ThunderX2 CN99XX platform tree bindings
+>> > +----------------------------------------------
+>> > +
+>> > +Boards with Cavium ThunderX2 CN99XX SoC shall have the root property:
+>> > +  compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
+>> > +
+>> > +These SoC uses the "cavium,thunder2" core which will be compatible
+>> > +with "brcm,vulcan".
+>> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>> > index a1bcfee..74f0b23 100644
+>> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>> > @@ -169,6 +169,7 @@ nodes to be present and contain the properties described below.
+>> >                             "brcm,brahma-b15"
+>> >                             "brcm,vulcan"
+>> >                             "cavium,thunder"
+>> > +                           "cavium,thunder2"
+>>
+>> Is this the same as brcm,vulcan?
+>
+> It will have a different CPU ID, with different implementer and part num,
+> but compatible with "brcm,vulcan". In the ThunderX2 dtsi file (once
+> ARCH_VULCAN goes away), we want to be compatable = "cavium,thunder2", with
+> maybe "brcm,vulcan" after that.
 
-Ok... so I'll apply the 6/6 patch now to the clk tree.
+Okay, new ID registers is good enough reason. I'd just let brcm,vulcan
+die though I have no idea how many Broadcom systems there are out in
+the wild (and ones that you care about DT on).
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob
