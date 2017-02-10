@@ -1,74 +1,42 @@
-From: Jerry Huang <jerry.huang@nxp.com>
-Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
- incr-burst-type-adjustment" for INCR burst type
-Date: Fri, 10 Feb 2017 15:16:36 +0000
-Message-ID: <DB5PR0401MB181337ABF15D0C02DB4342E4FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
- <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
- <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
- <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
- <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
- <DB5PR0401MB181361EBAD1B2BFA8DC5ED7AFE610@DB5PR0401MB1813.eurprd04.prod.outlook.com>
- <CAL_JsqJLr7pFSd5DW2ghNmn5-Lggrefp=GMPLOiiQmmqyPU4iA@mail.gmail.com>
+From: Yannick Fertre <yannick.fertre@st.com>
+Subject: [PATCH v2 3/7] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
+Date: Fri, 10 Feb 2017 16:24:30 +0100
+Message-ID: <1486740274-25958-4-git-send-email-yannick.fertre@st.com>
+References: <1486740274-25958-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqJLr7pFSd5DW2ghNmn5-Lggrefp=GMPLOiiQmmqyPU4iA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "balbi@kernel.org" <balbi@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1486740274-25958-1-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> >> >> Why do you need the first field? Is the 2nd field used if the 1st is 0?
-> >> >> If not, then just use the presence of the property to enable or not.
-> >> > The first field is one switch.
-> >> > When it is 1, means undefined length INCR burst type enabled, we
-> >> > can use
-> >> any length less than or equal to the largest-enabled burst length of
-> >> INCR4/8/16/32/64/128/256.
-> >> > When it is zero, means INCRx burst mode enabled, we can use one
-> >> > fixed
-> >> burst length of 1/4/8/16/32/64/128/256 byte.
-> >> > So, the 2nd field is used if the 1st is 0, we need to select one
-> >> > largest burst
-> >> length the USB controller can support.
-> >> > If we don't want to change the value of this register (use the
-> >> > default value),
-> >> we don't need to add this property to usb node.
-> >>
-> >> Just make this a single value with 0 meaning INCR and 4/8/16/etc being
-> INCRx.
-> > Maybe, I didn't describe it clearly.
-> > According to DWC3 spec, the value "0" of field INCRBrstEna means INCRx
-> burst mode, 1 means INCR burst mode.
-> > Regardless of the value of INCRBrstEna [bit0], we need to modify the other
-> field bit[1,2,3,4,5,6,7] to one INCR burst type  for the platform supported.
-> > Ad you mentioned, if we just use a single value with 0 meaning INCR and
-> 4/8/16/etc being INCRx.
-> > I understand totally that when it is none-zero, we can use it for INCR burst
-> mode.
-> > Then, when it is 0, how to select the INCRx value?
-> 
-> What I mean is:
-> <no prop> - burst disabled
-Yes, I understand it.
-> 0 - INCR burst. INCR is undefined length burst IIRC.
-When INCR is undefined length, we need to set the max INCR type, too, such as when setting INCR16, controller can use any length less than or equal to the 16 byte.
-> 4/8/16/etc. - INCR4/INCR8/INCR16/etc.
-I understand it, too.
-> 
-> What case does this not cover?
-According to Balbi's suggestion, I changed the property like below, you can see the detail in v4 (sent by 1/18/2017)
-Property "snps,incr-burst-type-adjustment = <x>, <y>..." for USB3.0 DWC3.
-When Just one value means INCRx mode with fix burst type.
-When more than one value, means undefined length burst mode, USB controller can use the length less than or equal to the largest enabled burst length.
+U2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KLS0t
+CiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgu
+dHh0ICAgICAgICAgfCA3ICsrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0CgpkaWZmIC0tZ2l0IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFt
+LTQ4MDI3MmgzdG1xdy10MDFoLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQKbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uZjU5ZTNjNAotLS0gL2Rldi9udWxsCisrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00
+ODAyNzJoM3RtcXctdDAxaC50eHQKQEAgLTAsMCArMSw3IEBACitBbXBpcmUgQU0tNDgwMjcySDNU
+TVFXLVQwMUggNC4zIiBXUVZHQSBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6
+CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIgor
+CitUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFuZWwgYmluZGlu
+Zywgd2hpY2ggaXMgc3BlY2lmaWVkCitpbiBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0
+b3J5LgotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
