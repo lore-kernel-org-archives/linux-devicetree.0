@@ -1,151 +1,49 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/8] arm64: dts: allwinner: add R_PIO node
-Date: Fri, 10 Feb 2017 09:07:06 +0100
-Message-ID: <20170210080706.loofvr3mmctfa2mc@lukather>
-References: <20170208100009.29362-1-icenowy@aosc.xyz>
- <20170208100009.29362-5-icenowy@aosc.xyz>
- <20170208101458.du6ybqsw52ypzhzw@lukather>
- <39431486552126@web41j.yandex.ru>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 2/2] dmaengine: Add DW AXI DMAC driver
+Date: Fri, 10 Feb 2017 08:23:15 +0000
+Message-ID: <1486714994.7530.11.camel@synopsys.com>
+References: <1485358457-22957-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+ <1485358457-22957-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
+ <20170210060606.GO19244@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jwrinjwhek26djsn"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBK7J6XCAKGQEVXX2IWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <39431486552126-4vD9JDEoAAxxpj1cXAZ9Bg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170210060606.GO19244@localhost>
+Content-Language: en-US
+Content-ID: <9225940094A559439E8A81D2067EA431@internal.synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: "vinod.koul@intel.com" <vinod.koul@intel.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-
---jwrinjwhek26djsn
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 08, 2017 at 07:08:46PM +0800, Icenowy Zheng wrote:
-> 08.02.2017, 18:15, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > On Wed, Feb 08, 2017 at 06:00:06PM +0800, Icenowy Zheng wrote:
-> >> =C2=A0Allwinner A64 SoC has a R_PIO node like the one in H3.
-> >>
-> >> =C2=A0Add the node as well as needed clocks and resets.
-> >>
-> >> =C2=A0As there's no document for apb0_gates, I only added the R_PIO bi=
-t here.
-> >>
-> >> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> =C2=A0---
-> >> =C2=A0=C2=A0arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 40 +++++++=
-++++++++++++++++++++
-> >> =C2=A0=C2=A01 file changed, 40 insertions(+)
-> >>
-> >> =C2=A0diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arc=
-h/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> =C2=A0index 1c64ea2d23f9..4b0baa79554c 100644
-> >> =C2=A0--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> =C2=A0+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> >> =C2=A0@@ -98,6 +98,15 @@
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0clock-output-names =3D "osc32k";
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> >>
-> >> =C2=A0+ apb0: apb0_clk {
-> >> =C2=A0+ compatible =3D "fixed-factor-clock";
-> >> =C2=A0+ #clock-cells =3D <0>;
-> >> =C2=A0+ clock-div =3D <1>;
-> >> =C2=A0+ clock-mult =3D <1>;
-> >> =C2=A0+ clocks =3D <&osc24M>;
-> >> =C2=A0+ clock-output-names =3D "apb0";
-> >> =C2=A0+ };
-> >> =C2=A0+
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0psci {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "arm,psci-0.2";
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0method =3D "smc";
-> >> =C2=A0@@ -392,5 +401,36 @@
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0<GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> >> =C2=A0+
-> >> =C2=A0+ apb0_gates: clk@1f01428 {
-> >> =C2=A0+ compatible =3D "allwinner,sun50i-a64-apb0-gates-clk",
-> >> =C2=A0+ "allwinner,sun4i-a10-gates-clk";
-> >> =C2=A0+ reg =3D <0x01f01428 0x4>;
-> >> =C2=A0+ #clock-cells =3D <1>;
-> >> =C2=A0+ clocks =3D <&apb0>;
-> >> =C2=A0+ clock-indices =3D <0>;
-> >> =C2=A0+ clock-output-names =3D "apb0_pio";
-> >> =C2=A0+ };
-> >> =C2=A0+
-> >> =C2=A0+ apb0_rst: reset@1f014b0 {
-> >> =C2=A0+ reg =3D <0x01f014b0 0x4>;
-> >> =C2=A0+ compatible =3D "allwinner,sun6i-a31-clock-reset";
-> >> =C2=A0+ #reset-cells =3D <1>;
-> >> =C2=A0+ };
-> >
-> > Please make a sunxi-ng driver for those clocks.
->=20
-> We have no enough materials to make such a CCU driver.
->=20
-> Clocks in CPUs are usually undocumented, and difficult to
-> be collected -- even the clk-sun50iw1.c in BSP do not have
-> all clocks in CPUs.
-
-That's unfortunate, but we can deal with that by simply extending the
-clocks we have. Nothing too complicated or unconvenient to deal with.
-
-> We should only make it sunxi-ng until it's fully discovered (all
-> functions in CPUs are functional).
-
-No, I expect that by 4.12 we have converted every users to sunxi-ng,
-PRCM included.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---jwrinjwhek26djsn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYnXSqAAoJEBx+YmzsjxAgvCwP/jz6fMkzK82uE7uGoLJesacU
-HKbgwOjMPRJCmwKfmcoYckPr8xSWNPfkB16W1I2Fk3E8EyluSwWz15tKxvzrfeVf
-oLFlnsPzbl+xJAiRiABAw2XsSUoFwwppz7cxhwnbO2BNHqEJ6ogFIKercMz9YzEU
-dzO58Z7S/wQ/zjeDgxpNEO/IkyQJcqMBlQLOo4btmAKN4nACpaJx5tY1tLH6oGLH
-2ugeM9ACmXwEbF2DB8W96/+xMd0pV22GqlEyRMGRXctRN8y6CD7iuY07BuWjC++I
-974/nYdOW5FpE4bHGO4A6vuH9ljRMipsooZplgM4XsGPShBXEzKU+TW93OGp7vQ3
-7qru94Iu1ocuZkhbc/ronrhwudkY8ArEa8cuLZO+1k+jUWk1vAan/a7VIcduzKTR
-6LCjwcDePuFv2XpEvk/2pyxrKsLxvZWcjhXTZpOV6fDxFZozUSxet+3W7wctuGPF
-encnryj2yC/oIijt4CGdCiZTTOMAboHRgYyODXs5DDjn8dWDRasza5xtdtmnTBH4
-oMklTnC5zN/IfipZDZpiJgxPRwS/JvFNx2kRFAu2jd3vdbJW9o60TJQ8GUVeX/NV
-+ycbMJM2V4AGhE9Rd2oEOfHFk/k4D111LnWxqMooF9zBQfth9JUD2/Jpy9GvyrEy
-XAGFNEdBB346QRQmpk54
-=d7UZ
------END PGP SIGNATURE-----
-
---jwrinjwhek26djsn--
+SGkgVmlub2QsDQoNCk9uIEZyaSwgMjAxNy0wMi0xMCBhdCAxMTozNiArMDUzMCwgVmlub2QgS291
+bCB3cm90ZToNCj4gT24gV2VkLCBKYW4gMjUsIDIwMTcgYXQgMDY6MzQ6MTdQTSArMDMwMCwgRXVn
+ZW5peSBQYWx0c2V2IHdyb3RlOg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBzdXBwb3J0IGZv
+ciB0aGUgRFcgQVhJIERNQUMgY29udHJvbGxlci4NCj4gPiANCj4gPiBEVyBBWEkgRE1BQyBpcyBh
+IHBhcnQgb2YgdXBjb21pbmcgZGV2ZWxvcG1lbnQgYm9hcmQgZnJvbSBTeW5vcHN5cy4NCj4gDQo+
+IEhvdyBkaWZmZXJlbnQgaXMgQVhJIGZyb20gRFcgU3lub3BzeXM/DQoNClRoZXNlIGFyZSAyIGNv
+bXBsZXRlbHkgdW5yZWxhdGVkIHByb2R1Y3RzIGZyb20gU3lub3BzeXMsIHNlZToNCsKgYSnCoGh0
+dHBzOi8vd3d3LnN5bm9wc3lzLmNvbS9kdy9pcGRpci5waHA/ZHM9YW1iYV9haGJfZG1hDQrCoGIp
+wqBodHRwczovL3d3dy5zeW5vcHN5cy5jb20vZHcvaXBkaXIucGhwP2RzPWFtYmFfYXhpX2RtYQ0K
+DQo+IElzIHRoZSBzcGVjIHB1YmxpY2x5IGF2YWlsYWJsZT8NCg0KSSdtIGFmcmFpZCBub3QuIFN5
+bm9wc3lzIGN1c3RvbWVycyBtYXkgZ2V0IERXIEFYSSBETUFDIGRhdGFib29rIGhlcmU6DQpodHRw
+czovL3d3dy5zeW5vcHN5cy5jb20vZHcvZG9jLnBocC9paXAvRFdfYXhpX2RtYWMvbGF0ZXN0L2Rv
+Yy9EV19heGlfZG1hY19kYXRhYm9vay5wZGYNCg0KSnVzdCBhIHNpZGUgbm90ZSAiRFciIHByZWZp
+eCBzdGFuZHMgZm9yIERlc2lnbldhcmUgYW5kIGFwcGxpY2FibGUNCnRvIG1vc3QgaWYgbm90IGFs
+bCBJUCBsaWJzIGZyb20gU3lub3BzeXMgc28gaGVyZSB3ZSdyZSB0YWxraW5nIGFib3V0DQpBSEIg
+RE1BQyB2cyBBWEkgRE1BQy4gU3RpbGwgbXkgdW5kZXJzdGFuZGluZyBpcyBkaWZmZXJlbnQgYnVz
+IHR5cGUgaXMNCm5vdCB0aGUgb25lIGFuZCBvbmx5IGRpZmZlcmVuY2UgYnV0IGp1c3QgdGhlIG9u
+ZSB3aGljaCBtaWdodCBzaW1wbGlmeQ0Kc2VsZWN0aW9uIG9mIG9uZSBvciBhbm90aGVyIElQIGJs
+b2NrLg0KDQotQWxleGV5Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LXNucHMtYXJjIG1haWxpbmcgbGlzdApsaW51eC1zbnBzLWFyY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtc25wcy1hcmM=
