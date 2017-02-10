@@ -1,67 +1,47 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 3/3] mfd: wm831x: Add device tree binding document
-Date: Fri, 10 Feb 2017 13:53:20 +0000
-Message-ID: <1486734800-10141-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1486734800-10141-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RESEND 4/5] mtd: nand: atmel: Document the new DT bindings
+Date: Fri, 10 Feb 2017 07:58:15 -0600
+Message-ID: <CAL_Jsq+cmS=o-ZN2PUCreRrWAEdEgV4pRCfWaJ9jHy_oSHMPfg@mail.gmail.com>
+References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1485535324-28393-5-git-send-email-boris.brezillon@free-electrons.com>
+ <20170201153920.g26erfzxnxrmsu4z@rob-hp-laptop> <20170201164711.27e4b600@bbrezillon>
+ <20170210135528.4ee6807b@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486734800-10141-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <20170210135528.4ee6807b@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Marek Vasut <ma>
 List-Id: devicetree@vger.kernel.org
 
-This is just a very simple initial binding, supporting only registering
-the chip and the GPIOs. More features will be added as support for
-device tree in the driver is expanded.
+On Fri, Feb 10, 2017 at 6:55 AM, Boris Brezillon
+<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Wed, 1 Feb 2017 16:47:11 +0100
+> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>
+>> On Wed, 1 Feb 2017 09:39:20 -0600
+>> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> > On Fri, Jan 27, 2017 at 05:42:03PM +0100, Boris Brezillon wrote:
+>> > > Document the new DT bindings for the Atmel NAND controller and
+>> > > deprecate the old ones.
+>> >
+>> > Why?
+>>
+>> Because the existing representation is not only wrong, it also causes
+>> pinmux conflicts between the NAND controller and other devices present
+>> on the EBI bus.
+>> It's explained in the cover letter, but maybe you want me to put that
+>> in the commit message.
+>
+> Do you need more explanation (A.K.A. ping).
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/wm831x.txt | 31 ++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/wm831x.txt
+No, but it should be in the commit msg.
 
-diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
-new file mode 100644
-index 0000000..9771022
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
-@@ -0,0 +1,31 @@
-+Cirrus Logic/Wolfson Microelectronics wm831x PMICs
-+
-+System PMICs with a wide range of additional features.
-+
-+Required properties:
-+
-+  - compatible : One of the following chip-specific strings:
-+        "wlf,wm8310"
-+        "wlf,wm8311"
-+        "wlf,wm8312"
-+        "wlf,wm8320"
-+        "wlf,wm8321"
-+        "wlf,wm8325"
-+        "wlf,wm8326"
-+
-+  - reg : I2C slave address when connected using I2C, chip select number when
-+    using SPI.
-+
-+  - gpio-controller : Indicates this device is a GPIO controller.
-+  - #gpio-cells : Must be 2. The first cell is the pin number and the
-+    second cell is used to specify optional parameters (currently unused).
-+
-+Example:
-+
-+wm8310: wm8310@36 {
-+	compatible = "wlf,wm8310";
-+	reg = <0x36>;
-+
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+};
--- 
-2.1.4
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
