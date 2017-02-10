@@ -1,434 +1,199 @@
-Return-Path: <SRS0=gZru=Z2=gmail.com=slongerbeam@kernel.org>
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev
- driver
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
- <1486036237.2289.37.camel@pengutronix.de>
- <ca0a2eb3-21b6-d312-c8e0-61da48c4c700@gmail.com>
- <20170208234235.GA27312@n2100.armlinux.org.uk>
- <d6dba77e-902c-7a4c-cc70-fe3a5c9649bb@gmail.com>
- <e9076980-ce84-f9ee-096d-865243b82a9e@gmail.com>
- <1486977617.2873.29.camel@pengutronix.de>
-Message-ID: <ade249bc-0a63-6637-8ad2-d6208c684f47@gmail.com>
-Date: Mon, 13 Feb 2017 15:19:04 -0800
+Return-Path: <SRS0=jJAd=ZX=broadcom.com=jon.mason@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1486977617.2873.29.camel@pengutronix.de>
-Content-Type: multipart/alternative;
- boundary="------------C9DE8933A54EC569559A5F13"
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+In-Reply-To: <20170208233023.31922-2-zajec5@gmail.com>
+References: <20170208233023.31922-1-zajec5@gmail.com> <20170208233023.31922-2-zajec5@gmail.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Date: Thu, 9 Feb 2017 19:27:30 -0500
+Message-ID: <CAC3K-4rmqvJR9xETQG9ibTLUr9uaDEVOaHfSSuZU3K8zy0BWKw@mail.gmail.com>
+Subject: Re: [PATCH for-4.11 2/2] Revert "dt-bindings: phy: Add documentation
+ for NSP USB3 PHY"
+Content-Type: multipart/alternative; boundary=001a114f3274cc46210548222979
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------C9DE8933A54EC569559A5F13
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+--001a114f3274cc46210548222979
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Philipp,
+On Wed, Feb 8, 2017 at 6:30 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
+wrote:
 
-
-On 02/13/2017 01:20 AM, Philipp Zabel wrote:
-> Hi Steve,
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 >
-> On Thu, 2017-02-09 at 15:51 -0800, Steve Longerbeam wrote:
->> On 02/09/2017 03:49 PM, Steve Longerbeam wrote:
->>> On 02/08/2017 03:42 PM, Russell King - ARM Linux wrote:
->>>> On Wed, Feb 08, 2017 at 03:23:53PM -0800, Steve Longerbeam wrote:
->>>>>> Actually, this exact function already exists as
->>>>>> dw_mipi_dsi_phy_write in
->>>>>> drivers/gpu/drm/rockchip/dw-mipi-dsi.c, and it looks like the D-PHY
->>>>>> register 0x44 might contain a field called HSFREQRANGE_SEL.
->>>>> Thanks for pointing out drivers/gpu/drm/rockchip/dw-mipi-dsi.c.
->>>>> It's clear from that driver that there probably needs to be a fuller
->>>>> treatment of the D-PHY programming here, but I don't know where
->>>>> to find the MIPI CSI-2 D-PHY documentation for the i.MX6. The code
->>>>> in imxcsi2_reset() was also pulled from FSL, and that's all I really
->>>>> have
->>>>> to go on for the D-PHY programming. I assume the D-PHY is also a
->>>>> Synopsys core, like the host controller, but the i.MX6 manual doesn't
->>>>> cover it.
->>>> Why exactly?  What problems are you seeing that would necessitate a
->>>> more detailed programming of the D-PHY?  From my testing, I can wind
->>>> a 2-lane MIPI bus on iMX6D from 912Mbps per lane down to (eg) 308Mbps
->>>> per lane with your existing code without any issues.
->>> That's good to hear.
->>>
->>> Just from my experience with struggles to get the CSI2 receiver
->>> up and running with an active clock lane, and my suspicions that
->>> some of that could be due to my lack of understanding of the D-PHY
->>> programming.
->> But I should add that after a re-org of the sequence, it looks more stable
->> now. Tested on both the SabreSD and SabreLite with the OV5640.
-> It seems the OV5640 driver never puts its the CSI-2 lanes into stop
-> state while not streaming.
-
-Yes I found that as well.
-
-But good news, I finally managed to coax the OV5640's clock lane
-into LP-11 state! It was accomplished by setting bit 5 in OV5640 register
-0x4800. The datasheet describes this bit as "Gate clock lane when no
-packet to transmit". But I may have also got this to work with the 
-additional
-write 1 to bits 4-6 in register 0x3019 ("MIPI CLK/data lane state in sleep
-mode" - setting 1 to these bits selects LP-11 for sleep mode).
-
-So I am now finally able to call csi2_dphy_wait_stopstate() in
-csi2_s_stream(ON).
-
-So for the TC35874, you shouldn't see a timeout in csi2_s_stream(ON)
-any longer.
-
-I have updated both ov5640.c and imx6-mipi-csi2.c in the wip branch.
-Can you try again? I have not applied your patch below, because I
-don't think that is needed anymore.
-
-And speaking of the TC35874, I received this module for the SabreLite
-from Boundary Devices (thanks BD!). So I can finally help you with
-debug/test. Are there any patches you need to send to me (against
-wip branch) for this support, or can I use what exists now in media
-tree? Also any scripts or help with running.
-
-
->   With the recent s_stream reordering,
-> streaming from TC358743 does not work anymore, since imx6-mipi-csi2
-> s_stream is called before tc358743 s_stream, while all lanes are still
-> in stop state. Then it waits for the clock lane to become active and
-> fails. I have applied the following patch to revert the reordering
-> locally to get it to work again.
+> This reverts commit c8ca631f9480 ("dt-bindings: phy: Add documentation
+> for NSP USB3 PHY") to match reverting commit adding the new PHY driver.
+> Please note we revert this commit before it reached stable release.
 >
-> The initialization order, as Russell pointed out, should be:
+> If new compatible string is needed it should be added to the existing
+> bcm-ns-usb3-phy.txt which already describes this PHY.
 >
-> 1. reset the D-PHY.
-> 2. place MIPI sensor in LP-11 state
-> 3. perform D-PHY initialisation
-> 4. configure CSI2 lanes and de-assert resets and shutdown signals
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
 >
-> So csi2_s_stream should wait for stop state on all lanes (the result of
-> 2.) before dphy_init (3.), not wait for active clock afterwards. That
-> should happen only after sensor_s_stream was called. So unless we are
-> allowed to reorder steps 1. and 2., we might need the prepare_stream
-> callback after all.
 
-Agreed!
+Per the discussion with Rafal, this is acceptable
 
-See my new FIXME comment in imx6-mipi-csi2.c.
+Acked-by: Jon Mason <jon.mason@broadcom.com>
 
-I agree we might need a new subdev op .prepare_stream(). This
-op would be implemented by imx6-mipi-csi2.c, and would carry
-out steps 3, 4, 5 (instead of currently by csi2_s_stream()). Then
-step 6 would finally become available as csi2_s_stream().
 
-And then we must re-order stream on to start sensor first, then
-csi2, as in your patch below.
-
-Steve
-
->
-> More specifically, the chapter 40.3.1 "Startup Sequence" in the i.MX6DQ
-> reference manual states:
->
-> 1. Deassert presetn signal (global reset)
->     - This is probably the APB global reset, so not something we have to
->       care about.
-> 2. Configure MIPI Camera Sensor to put all Tx lanes in PL-11 state
-> 3. D-PHY initialization (write 0x14 to address 0x44)
-> 4. CSI2 Controller programming
->     - Set N_LANES
->     - Deassert PHY_SHUTDOWNZ
->     - Deassert PHY_RSTZ
->     - Deassert CSI2_RESETN
-> 5. Read the PHY status register (PHY_STATE) to confirm that all data and
->     clock lanes of the D-PHY are in Stop State
-> 6. Configure the MIPI Camera Sensor to start transmitting a clock on the
->     D-PHY clock lane
-> 7. CSI2 Controller programming - Read the PHY status register
->     (PHY_STATE) to confirm that the D-PHY is receiving a clock on the
->     D-PHY clock lane
->
-> 2. can be done in sensor s_power (which tc358743 currently does) only if
-> the sensor can still be configured in step 6.
-> Also, 3./4./5. are csi2 code, 6. is sensor code, and 7. is csi2 code
-> again. For reliable startup we need csi2 receiver code to be called on
-> both sides of the sensor enabling its clock lane.
-> ----------8<----------
->  From f12758caa3e1d05980cd2ac07587d125449fc860 Mon Sep 17 00:00:00 2001
-> From: Philipp Zabel<p.zabel@pengutronix.de>
-> Date: Mon, 13 Feb 2017 09:28:27 +0100
-> Subject: [PATCH] media: imx: revert streamon sequence change
->
-> Without this patch, starting streaming from a TC358743 MIPI CSI-2 source
-> fails with the following error messages:
->
->      imx6-mipi-csi2: clock lane timeout, phy_state = 0x000006f0
->      ipu1_csi0: pipeline_set_stream failed with -110
->
-> The phy state above has the stopstateclk, rxulpsclknot, and
-> stopstatedata[3:0] bits set: at this point all lanes are in stop state,
-> no lane is in ultra low power state or active.
-> This is no suprise, since tc358743 s_stream(sd, 1) has not been called
-> due to the recently changed ordering. The imx6-mipi-csi2 s_stream does
-> wait for the clock lane to become active, so csi2_s_stream must happen
-> after tc358743_s_stream.
->
-> Signed-off-by: Philipp Zabel<p.zabel@pengutronix.de>
 > ---
->   drivers/staging/media/imx/imx-media-utils.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  | 39
+> ----------------------
+>  1 file changed, 39 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-
+> phy.txt
 >
-> diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-> index 81eabcf76a66f..495ccefa3cd2a 100644
-> --- a/drivers/staging/media/imx/imx-media-utils.c
-> +++ b/drivers/staging/media/imx/imx-media-utils.c
-> @@ -782,8 +782,8 @@ static const u32 stream_on_seq[] = {
->   	IMX_MEDIA_GRP_ID_IC_PRPENC,
->   	IMX_MEDIA_GRP_ID_IC_PRP,
->   	IMX_MEDIA_GRP_ID_VDIC,
-> -	IMX_MEDIA_GRP_ID_CSI2,
->   	IMX_MEDIA_GRP_ID_SENSOR,
-> +	IMX_MEDIA_GRP_ID_CSI2,
->   	IMX_MEDIA_GRP_ID_VIDMUX,
->   	IMX_MEDIA_GRP_ID_CSI,
->   };
-> @@ -795,8 +795,8 @@ static const u32 stream_off_seq[] = {
->   	IMX_MEDIA_GRP_ID_VDIC,
->   	IMX_MEDIA_GRP_ID_CSI,
->   	IMX_MEDIA_GRP_ID_VIDMUX,
-> -	IMX_MEDIA_GRP_ID_SENSOR,
->   	IMX_MEDIA_GRP_ID_CSI2,
-> +	IMX_MEDIA_GRP_ID_SENSOR,
->   };
->   
->   #define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
+> b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
+> deleted file mode 100644
+> index e68ae5dec9c9..000000000000
+> --- a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
+> +++ /dev/null
+> @@ -1,39 +0,0 @@
+> -Broadcom USB3 phy binding for northstar plus SoC
+> -The USB3 phy is internal to the SoC and is accessed using mdio interface=
+.
+> -
+> -Required mdio bus properties:
+> -- reg: Should be 0x0 for SoC internal USB3 phy
+> -- #address-cells: must be 1
+> -- #size-cells: must be 0
+> -
+> -Required USB3 PHY properties:
+> -- compatible: should be "brcm,nsp-usb3-phy"
+> -- reg: USB3 Phy address on SoC internal MDIO bus and it should be 0x10.
+> -- usb3-ctrl-syscon: handler of syscon node defining physical address
+> -  of usb3 control register.
+> -- #phy-cells: must be 0
+> -
+> -Required usb3 control properties:
+> -- compatible: should be "brcm,nsp-usb3-ctrl"
+> -- reg: offset and length of the control registers
+> -
+> -Example:
+> -
+> -       mdio@0 {
+> -               reg =3D <0x0>;
+> -               #address-cells =3D <1>;
+> -               #size-cells =3D <0>;
+> -
+> -               usb3_phy: usb-phy@10 {
+> -                       compatible =3D "brcm,nsp-usb3-phy";
+> -                       reg =3D <0x10>;
+> -                       usb3-ctrl-syscon =3D <&usb3_ctrl>;
+> -                       #phy-cells =3D <0>;
+> -                       status =3D "disabled";
+> -               };
+> -       };
+> -
+> -       usb3_ctrl: syscon@104408 {
+> -               compatible =3D "brcm,nsp-usb3-ctrl", "syscon";
+> -               reg =3D <0x104408 0x3fc>;
+> -       };
+> --
+> 2.11.0
+>
+>
 
+--001a114f3274cc46210548222979
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
---------------C9DE8933A54EC569559A5F13
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On Wed, Feb 8, 2017 at 6:30 PM, Rafa=C5=82 Mi=C5=82ecki <span dir=3D"lt=
+r">&lt;<a href=3D"mailto:zajec5@gmail.com" target=3D"_blank">zajec5@gmail.c=
+om</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1e=
+x">From: Rafa=C5=82 Mi=C5=82ecki &lt;<a href=3D"mailto:rafal@milecki.pl">ra=
+fal@milecki.pl</a>&gt;<br>
+<br>
+This reverts commit c8ca631f9480 (&quot;dt-bindings: phy: Add documentation=
+<br>
+for NSP USB3 PHY&quot;) to match reverting commit adding the new PHY driver=
+.<br>
+Please note we revert this commit before it reached stable release.<br>
+<br>
+If new compatible string is needed it should be added to the existing<br>
+bcm-ns-usb3-phy.txt which already describes this PHY.<br>
+<br>
+Signed-off-by: Rafa=C5=82 Mi=C5=82ecki &lt;<a href=3D"mailto:rafal@milecki.=
+pl">rafal@milecki.pl</a>&gt;<br></blockquote><div><br></div><div>Per the di=
+scussion with Rafal, this is acceptable</div><div><br></div><div>Acked-by: =
+Jon Mason &lt;<a href=3D"mailto:jon.mason@broadcom.com">jon.mason@broadcom.=
+com</a>&gt;<br></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" sty=
+le=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);paddi=
+ng-left:1ex">
+---<br>
+=C2=A0.../devicetree/bindings/phy/<wbr>brcm,nsp-usb3-phy.txt=C2=A0 | 39 ---=
+-------------------<br>
+=C2=A01 file changed, 39 deletions(-)<br>
+=C2=A0delete mode 100644 Documentation/devicetree/<wbr>bindings/phy/brcm,ns=
+p-usb3-<wbr>phy.txt<br>
+<br>
+diff --git a/Documentation/devicetree/<wbr>bindings/phy/brcm,nsp-usb3-<wbr>=
+phy.txt b/Documentation/devicetree/<wbr>bindings/phy/brcm,nsp-usb3-<wbr>phy=
+.txt<br>
+deleted file mode 100644<br>
+index e68ae5dec9c9..000000000000<br>
+--- a/Documentation/devicetree/<wbr>bindings/phy/brcm,nsp-usb3-<wbr>phy.txt=
+<br>
++++ /dev/null<br>
+@@ -1,39 +0,0 @@<br>
+-Broadcom USB3 phy binding for northstar plus SoC<br>
+-The USB3 phy is internal to the SoC and is accessed using mdio interface.<=
+br>
+-<br>
+-Required mdio bus properties:<br>
+-- reg: Should be 0x0 for SoC internal USB3 phy<br>
+-- #address-cells: must be 1<br>
+-- #size-cells: must be 0<br>
+-<br>
+-Required USB3 PHY properties:<br>
+-- compatible: should be &quot;brcm,nsp-usb3-phy&quot;<br>
+-- reg: USB3 Phy address on SoC internal MDIO bus and it should be 0x10.<br=
+>
+-- usb3-ctrl-syscon: handler of syscon node defining physical address<br>
+-=C2=A0 of usb3 control register.<br>
+-- #phy-cells: must be 0<br>
+-<br>
+-Required usb3 control properties:<br>
+-- compatible: should be &quot;brcm,nsp-usb3-ctrl&quot;<br>
+-- reg: offset and length of the control registers<br>
+-<br>
+-Example:<br>
+-<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0mdio@0 {<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0x0&gt;=
+;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#address-cells =3D =
+&lt;1&gt;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0#size-cells =3D &lt=
+;0&gt;;<br>
+-<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0usb3_phy: usb-phy@1=
+0 {<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0compatible =3D &quot;brcm,nsp-usb3-phy&quot;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0reg =3D &lt;0x10&gt;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0usb3-ctrl-syscon =3D &lt;&amp;usb3_ctrl&gt;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0#phy-cells =3D &lt;0&gt;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0status =3D &quot;disabled&quot;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+-<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0usb3_ctrl: syscon@104408 {<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quo=
+t;brcm,nsp-usb3-ctrl&quot;, &quot;syscon&quot;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0reg =3D &lt;0x10440=
+8 0x3fc&gt;;<br>
+-=C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+<span class=3D"gmail-HOEnZb"><font color=3D"#888888">--<br>
+2.11.0<br>
+<br>
+</font></span></blockquote></div><br></div></div>
 
-<html>
-  <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <p>Hi Philipp,<br>
-    </p>
-    <br>
-    <div class="moz-cite-prefix">On 02/13/2017 01:20 AM, Philipp Zabel
-      wrote:<br>
-    </div>
-    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">Hi Steve,
-
-On Thu, 2017-02-09 at 15:51 -0800, Steve Longerbeam wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">On 02/09/2017 03:49 PM, Steve Longerbeam wrote:
-</pre>
-        <blockquote type="cite">
-          <pre wrap="">
-On 02/08/2017 03:42 PM, Russell King - ARM Linux wrote:
-</pre>
-          <blockquote type="cite">
-            <pre wrap="">On Wed, Feb 08, 2017 at 03:23:53PM -0800, Steve Longerbeam wrote:
-</pre>
-            <blockquote type="cite">
-              <blockquote type="cite">
-                <pre wrap="">Actually, this exact function already exists as 
-dw_mipi_dsi_phy_write in
-drivers/gpu/drm/rockchip/dw-mipi-dsi.c, and it looks like the D-PHY
-register 0x44 might contain a field called HSFREQRANGE_SEL.
-</pre>
-              </blockquote>
-              <pre wrap="">Thanks for pointing out drivers/gpu/drm/rockchip/dw-mipi-dsi.c.
-It's clear from that driver that there probably needs to be a fuller
-treatment of the D-PHY programming here, but I don't know where
-to find the MIPI CSI-2 D-PHY documentation for the i.MX6. The code
-in imxcsi2_reset() was also pulled from FSL, and that's all I really 
-have
-to go on for the D-PHY programming. I assume the D-PHY is also a
-Synopsys core, like the host controller, but the i.MX6 manual doesn't
-cover it.
-</pre>
-            </blockquote>
-            <pre wrap="">Why exactly?  What problems are you seeing that would necessitate a
-more detailed programming of the D-PHY?  From my testing, I can wind
-a 2-lane MIPI bus on iMX6D from 912Mbps per lane down to (eg) 308Mbps
-per lane with your existing code without any issues.
-</pre>
-          </blockquote>
-          <pre wrap="">That's good to hear.
-
-Just from my experience with struggles to get the CSI2 receiver
-up and running with an active clock lane, and my suspicions that
-some of that could be due to my lack of understanding of the D-PHY
-programming.
-</pre>
-        </blockquote>
-        <pre wrap="">But I should add that after a re-org of the sequence, it looks more stable
-now. Tested on both the SabreSD and SabreLite with the OV5640.
-</pre>
-      </blockquote>
-      <pre wrap="">It seems the OV5640 driver never puts its the CSI-2 lanes into stop
-state while not streaming.</pre>
-    </blockquote>
-    <br>
-    Yes I found that as well.<br>
-    <br>
-    But good news, I finally managed to coax the OV5640's clock lane<br>
-    into LP-11 state! It was accomplished by setting bit 5 in OV5640
-    register<br>
-    0x4800. The datasheet describes this bit as "Gate clock lane when no<br>
-    packet to transmit". But I may have also got this to work with the
-    additional<br>
-    write 1 to bits 4-6 in register 0x3019 ("MIPI CLK/data lane state in
-    sleep<br>
-    mode" - setting 1 to these bits selects LP-11 for sleep mode).<br>
-    <br>
-    So I am now finally able to call csi2_dphy_wait_stopstate() in<br>
-    csi2_s_stream(ON).<br>
-    <br>
-    So for the TC35874, you shouldn't see a timeout in csi2_s_stream(ON)<br>
-    any longer.<br>
-    <br>
-    I have updated both ov5640.c and imx6-mipi-csi2.c in the wip branch.<br>
-    Can you try again? I have not applied your patch below, because I<br>
-    don't think that is needed anymore.<br>
-    <br>
-    And speaking of the TC35874, I received this module for the
-    SabreLite<br>
-    from Boundary Devices (thanks BD!). So I can finally help you with <br>
-    debug/test. Are there any patches you need to send to me (against<br>
-    wip branch) for this support, or can I use what exists now in media<br>
-    tree? Also any scripts or help with running.<br>
-    <br>
-    <br>
-    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
-      type="cite">
-      <pre wrap=""> With the recent s_stream reordering,
-streaming from TC358743 does not work anymore, since imx6-mipi-csi2
-s_stream is called before tc358743 s_stream, while all lanes are still
-in stop state. Then it waits for the clock lane to become active and
-fails. I have applied the following patch to revert the reordering
-locally to get it to work again.
-
-The initialization order, as Russell pointed out, should be:
-
-1. reset the D-PHY.
-2. place MIPI sensor in LP-11 state
-3. perform D-PHY initialisation
-4. configure CSI2 lanes and de-assert resets and shutdown signals
-
-So csi2_s_stream should wait for stop state on all lanes (the result of
-2.) before dphy_init (3.), not wait for active clock afterwards. That
-should happen only after sensor_s_stream was called. So unless we are
-allowed to reorder steps 1. and 2., we might need the prepare_stream
-callback after all.</pre>
-    </blockquote>
-    <br>
-    Agreed!<br>
-    <br>
-    See my new FIXME comment in imx6-mipi-csi2.c.<br>
-    <br>
-    I agree we might need a new subdev op .prepare_stream(). This<br>
-    op would be implemented by imx6-mipi-csi2.c, and would carry<br>
-    out steps 3, 4, 5 (instead of currently by csi2_s_stream()). Then<br>
-    step 6 would finally become available as csi2_s_stream().<br>
-    <br>
-    And then we must re-order stream on to start sensor first, then<br>
-    csi2, as in your patch below.<br>
-    <br>
-    Steve<br>
-    <br>
-    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-
-More specifically, the chapter 40.3.1 "Startup Sequence" in the i.MX6DQ
-reference manual states:
-
-1. Deassert presetn signal (global reset)
-   - This is probably the APB global reset, so not something we have to
-     care about.
-2. Configure MIPI Camera Sensor to put all Tx lanes in PL-11 state
-3. D-PHY initialization (write 0x14 to address 0x44)
-4. CSI2 Controller programming
-   - Set N_LANES
-   - Deassert PHY_SHUTDOWNZ
-   - Deassert PHY_RSTZ
-   - Deassert CSI2_RESETN
-5. Read the PHY status register (PHY_STATE) to confirm that all data and
-   clock lanes of the D-PHY are in Stop State
-6. Configure the MIPI Camera Sensor to start transmitting a clock on the
-   D-PHY clock lane
-7. CSI2 Controller programming - Read the PHY status register
-   (PHY_STATE) to confirm that the D-PHY is receiving a clock on the
-   D-PHY clock lane
-
-2. can be done in sensor s_power (which tc358743 currently does) only if
-the sensor can still be configured in step 6.
-Also, 3./4./5. are csi2 code, 6. is sensor code, and 7. is csi2 code
-again. For reliable startup we need csi2 receiver code to be called on
-both sides of the sensor enabling its clock lane.
-</pre>
-    </blockquote>
-    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-----------8&lt;----------
->From f12758caa3e1d05980cd2ac07587d125449fc860 Mon Sep 17 00:00:00 2001
-From: Philipp Zabel <a class="moz-txt-link-rfc2396E" href="mailto:p.zabel@pengutronix.de">&lt;p.zabel@pengutronix.de&gt;</a>
-Date: Mon, 13 Feb 2017 09:28:27 +0100
-Subject: [PATCH] media: imx: revert streamon sequence change
-
-Without this patch, starting streaming from a TC358743 MIPI CSI-2 source
-fails with the following error messages:
-
-    imx6-mipi-csi2: clock lane timeout, phy_state = 0x000006f0
-    ipu1_csi0: pipeline_set_stream failed with -110
-
-The phy state above has the stopstateclk, rxulpsclknot, and
-stopstatedata[3:0] bits set: at this point all lanes are in stop state,
-no lane is in ultra low power state or active.
-This is no suprise, since tc358743 s_stream(sd, 1) has not been called
-due to the recently changed ordering. The imx6-mipi-csi2 s_stream does
-wait for the clock lane to become active, so csi2_s_stream must happen
-after tc358743_s_stream.
-
-Signed-off-by: Philipp Zabel <a class="moz-txt-link-rfc2396E" href="mailto:p.zabel@pengutronix.de">&lt;p.zabel@pengutronix.de&gt;</a>
----
- drivers/staging/media/imx/imx-media-utils.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-index 81eabcf76a66f..495ccefa3cd2a 100644
---- a/drivers/staging/media/imx/imx-media-utils.c
-+++ b/drivers/staging/media/imx/imx-media-utils.c
-@@ -782,8 +782,8 @@ static const u32 stream_on_seq[] = {
- 	IMX_MEDIA_GRP_ID_IC_PRPENC,
- 	IMX_MEDIA_GRP_ID_IC_PRP,
- 	IMX_MEDIA_GRP_ID_VDIC,
--	IMX_MEDIA_GRP_ID_CSI2,
- 	IMX_MEDIA_GRP_ID_SENSOR,
-+	IMX_MEDIA_GRP_ID_CSI2,
- 	IMX_MEDIA_GRP_ID_VIDMUX,
- 	IMX_MEDIA_GRP_ID_CSI,
- };
-@@ -795,8 +795,8 @@ static const u32 stream_off_seq[] = {
- 	IMX_MEDIA_GRP_ID_VDIC,
- 	IMX_MEDIA_GRP_ID_CSI,
- 	IMX_MEDIA_GRP_ID_VIDMUX,
--	IMX_MEDIA_GRP_ID_SENSOR,
- 	IMX_MEDIA_GRP_ID_CSI2,
-+	IMX_MEDIA_GRP_ID_SENSOR,
- };
- 
- #define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------C9DE8933A54EC569559A5F13--
+--001a114f3274cc46210548222979--
