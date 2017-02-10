@@ -1,1785 +1,557 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v3 3/4] dmaengine: Add Broadcom SBA RAID driver
-Date: Fri, 10 Feb 2017 14:37:07 +0530
-Message-ID: <1486717628-17580-4-git-send-email-anup.patel@broadcom.com>
-References: <1486717628-17580-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486717628-17580-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-raid@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v6 5/5] ARM: dts: sun9i: Initial support for the Sunchip
+ CX-A99 board
+Date: Fri, 10 Feb 2017 17:22:21 +0800
+Message-ID: <CAGb2v64AfBW+CHHkFvvNzCGBG09UK-sPcAZi2QgCR9wM=jguxw@mail.gmail.com>
+References: <cover.1486592470.git.rask@formelder.dk>
+ <d4211c5d57f80b0281d7d332edc7d69e66202d3d.1486592471.git.rask@formelder.dk>
+ <20170210085920.7l7gswm6yjuqgdfx@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170210085920.7l7gswm6yjuqgdfx@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rask Ingemann Lambertsen <rask@formelder.dk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom stream buffer accelerator (SBA) provides offloading
-capabilities for RAID operations. This SBA offload engine is
-accessible via Broadcom SoC specific ring manager.
+On Fri, Feb 10, 2017 at 4:59 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Hi,
+>
+> On Thu, Feb 09, 2017 at 12:34:06AM +0100, Rask Ingemann Lambertsen wrote:
+>> The Suncip CX-A99 board is found in at least four brands of media players.
+>> It features an Allwinner A80 ARM SoC and is found in two models:
+>>
+>> 1) 2 GiB DDR3 DRAM and 16 GB eMMC
+>> 2) 4 GiB DDR3 DRAM and 32 GB eMMC
+>>
+>> For details of the board, see the linux-sunxi page
+>> <URL:https://linux-sunxi.org/Sunchip_CX-A99>.
+>
+> Please don't put URLs in commit logs (and the DT).
+>
+>>
+>> Supported features (+ means tested):
+>> + One Cortex-A7 CPU core (or four with experimental U-Boot PSCI patches)
+>> + AXP808 power management chip
+>> + OZ80120 voltage regulator
+>> + Serial console port (internal)
+>> + eMMC and SD card slot
+>> + USB 2.0 host ports on on-board USB hub
+>> + SATA port on on-board SATA-to-USB bridge *
+>> + IEEE 802.11 a/b/g/n/ac SDIO Wifi
+>> + Real-time clock
+>> + LEDs
+>> - IR receiver for remote control
+>>
+>> * Only shows up when a SATA device is connected. Also, if a power source
+>>   is connected to the USB 3.0 connector across power cycles (e.g. FEL
+>>   boot), the bridge may not properly reset and not show up on the USB bus.
+>>   The vendor U-Boot performs some unknown magic which resets the bridge.
+>
+> Is that magic at the USB level, or specific to the bridge itself?
+>
+>> So far unsupported features:
+>> - Using any of the Cortex-A15 CPU cores
+>> - USB 3.0 port (except for supplying 5 V power)
+>> - IEEE 802.3 10/100/1000 megabit Ethernet
+>> - HDMI connector
+>> - S/PDIF audio output
+>> - Jack socket with composite video and analog stereo audio
+>> - Bluetooth
+>> - FM radio receiver (assuming it is even wired on the board)
+>
+> I guess that should be in your cover letter.
+>
+> This is not found in your DT, so no one really expects it to work :)
+>
+>> Signed-off-by: Rask Ingemann Lambertsen <rask@formelder.dk>
+>> ---
+>>
+>> Changes in v6:
+>> - Updated commit message description of SATA-to-USB bridge quirk and added
+>>   note about experimental U-Boot PSCI support for up to four CPU cores.
+>> - The blue LED is no longer on by default as its meaning is not documented.
+>> - Removed "regulator-boot-on" from regulators having "regulator-always-on".
+>> - Removed misleading mention of "OTG connector" which the device doesn't have.
+>> - More detailed explanation for the need for "broken-cd" on mmc0.
+>> - Several regulators have had their voltage range relaxed a little to match
+>>   the permissible range according to the data sheets of the consumers. This
+>>   is similar to what is used for the Cubieboard4 and Merrii A80 Optimus.
+>> - Shortened regulator dcdce name as per v5 comments. A comment now lists the
+>>   pin groups supplied by dcdce.
+>>
+>> Changes in v5:
+>> - Switched pinmux modes to generic properties and dropped
+>>   #include <dt-bindings/pinctrl/sun4i-a10.h> as a consequence.
+>> - Dropped pinctrl properties from GPIO nodes and dropped the pinmux
+>>   nodes for them.
+>> - AXP808 regulators added.
+>> - Dropped the now unused #include <sunxi-common-regulators.dtsi>.
+>> - Ampak AP6335 SDIO-Wifi added.
+>> - USB Vbus changes as per v4 comments.
+>> - Added "broken-cd" to mmc0 because GPIO interrupts don't work.
+>>
+>> Changes in v4:
+>> - Node names had underscores changed to hyphens.
+>> - Changed formatting of the ac100/rtc node's clock output name list to match
+>>  that of the same node in the cubieboard4 and a80-optimus device trees.
+>>
+>> Changes in v3:
+>> None.
+>>
+>> Changes in v2:
+>> - Fixed formatting and style issues found by scripts/checkpatch.pl.
+>>
+>>  arch/arm/boot/dts/Makefile             |   3 +-
+>>  arch/arm/boot/dts/sun9i-a80-cx-a99.dts | 409 +++++++++++++++++++++++++++++++++
+>>  2 files changed, 411 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/sun9i-a80-cx-a99.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 8553bd7..40546fa 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -862,7 +862,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>>       sun8i-v3s-licheepi-zero.dtb
+>>  dtb-$(CONFIG_MACH_SUN9I) += \
+>>       sun9i-a80-optimus.dtb \
+>> -     sun9i-a80-cubieboard4.dtb
+>> +     sun9i-a80-cubieboard4.dtb \
+>> +     sun9i-a80-cx-a99.dtb
+>>  dtb-$(CONFIG_ARCH_TANGO) += \
+>>       tango4-vantage-1172.dtb
+>>  dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
+>> diff --git a/arch/arm/boot/dts/sun9i-a80-cx-a99.dts b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
+>> new file mode 100644
+>> index 0000000..f5496d2
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
+>> @@ -0,0 +1,409 @@
+>> +/*
+>> + * sun9i-a80-cx-a99.dts - Device Tree file for the Sunchip CX-A99 board.
+>> + *
+>> + * Copyright (C) 2017 Rask Ingemann Lambertsen <rask@formelder.dk>
+>> + *
+>> + * This file is dual-licensed: you can use it either under the terms
+>> + * of the GPL or the X11 license, at your option. Note that this dual
+>> + * licensing only applies to this file, and not this project as a
+>> + * whole.
+>> + *
+>> + *  a) This file is free software; you can redistribute it and/or
+>> + *     modify it under the terms of the GNU General Public License as
+>> + *     published by the Free Software Foundation; either version 2 of the
+>> + *     License, or (at your option) any later version.
+>> + *
+>> + *     This file is distributed in the hope that it will be useful,
+>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + *     GNU General Public License for more details.
+>> + *
+>> + * Or, alternatively,
+>> + *
+>> + *  b) Permission is hereby granted, free of charge, to any person
+>> + *     obtaining a copy of this software and associated documentation
+>> + *     files (the "Software"), to deal in the Software without
+>> + *     restriction, including without limitation the rights to use,
+>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> + *     sell copies of the Software, and to permit persons to whom the
+>> + *     Software is furnished to do so, subject to the following
+>> + *     conditions:
+>> + *
+>> + *     The above copyright notice and this permission notice shall be
+>> + *     included in all copies or substantial portions of the Software.
+>> + *
+>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>> + */
+>> +
+>> +/*
+>> + * The Sunchip CX-A99 board is found in several similar Android media
+>> + * players, such as:
+>> + *
+>> + * Instabox Fantasy A8 (no external antenna)
+>> + * Jesurun CS-Q8 (ships with larger remote control)
+>> + * Jesurun Maxone
+>> + * Rikomagic (RKM) MK80/MK80LE
+>> + * Tronsmart Draco AW80 Meta/Telos
+>> + *
+>> + * See <URL:https://linux-sunxi.org/Sunchip_CX-A99> for more information.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "sun9i-a80.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +
+>> +/ {
+>> +     model = "Sunchip CX-A99";
+>> +     compatible = "sunchip,cx-a99", "allwinner,sun9i-a80";
+>> +
+>> +     aliases {
+>> +             serial0 = &uart0;
+>> +     };
+>> +
+>> +     chosen {
+>> +             stdout-path = "serial0:115200n8";
+>> +     };
+>> +
+>> +     leds {
+>> +             compatible = "gpio-leds";
+>> +
+>> +             blue {
+>> +                     gpios = <&pio 6 10 GPIO_ACTIVE_HIGH>;   /* PG10 */
+>> +                     label = "cx-a99:blue:status";
+>> +             };
+>> +
+>> +             red {
+>> +                     gpios = <&pio 6 11 GPIO_ACTIVE_HIGH>;   /* PG11 */
+>> +                     label = "cx-a99:red:status";
+>> +             };
+>> +     };
+>> +
+>> +     powerseq_wifi: powerseq-wifi {
+>> +             compatible = "mmc-pwrseq-simple";
+>> +             clocks = <&ac100_rtc 1>;
+>> +             clock-names = "ext_clock";
+>> +             reset-gpios = <&r_pio 1 0 GPIO_ACTIVE_LOW>;     /* PM0 */
+>> +             post-power-on-delay-ms = <1>;   /* Minimum 2 cycles. */
+>> +     };
+>> +
+>> +     /* USB 3.0 standard-A receptacle. For now, only Vbus is supported. */
+>
+> I'm not sure what you mean by "only VBUS is supported"? Is there any
+> other signal?
+>
+>> +     reg_usb0_vbus: regulator-usb0-vbus {
+>> +             compatible = "regulator-fixed";
+>> +             regulator-name = "usb0-vbus";
+>> +             regulator-min-microvolt = <5000000>;
+>> +             regulator-max-microvolt = <5000000>;
+>> +             gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;    /* PH15 */
+>> +             enable-active-high;
+>
+> This is redundant with the GPIO flag
+>
+>> +             regulator-always-on;
+>
+> And it shouldn't be always on. The USB driver will enable it if needs
+> be.
+>
+>> +     };
+>> +
+>> +     /*
+>> +      * A GL850G hub with two external USB connectors is connected
+>> +      * to ehci0. Each has a Vbus regulator controlled by a GPIO:
+>> +      * PL7 for port 1, closest to the 12 V power connector, and
+>> +      * PL8 for port 2, next to the SD card slot.
+>> +      * Because regulator-fixed doesn't support a GPIO list, and
+>> +      * allwinner,sun9i-a80-usb-phy doesn't support more than one
+>> +      * supply, we have to use regulator-always-on on usb1-2-vbus.
+>> +      * Note that the GPIO pins also need cldo1 to be enabled.
+>> +      */
+>
+> What is the source of those regulators connected then? Some PMIC
+> regulator? AC-IN?
+>
+>> +     reg_usb1_1_vbus: regulator-usb1-1-vbus {
+>> +             compatible = "regulator-fixed";
+>> +             regulator-name = "usb1-1-vbus";
+>> +             regulator-min-microvolt = <5000000>;
+>> +             regulator-max-microvolt = <5000000>;
+>> +             gpio = <&r_pio 0 7 GPIO_ACTIVE_HIGH>;   /* PL7 */
+>> +             enable-active-high;
+>> +     };
+>> +
+>> +     reg_usb1_2_vbus: regulator-usb1-2-vbus {
+>> +             compatible = "regulator-fixed";
+>> +             regulator-name = "usb1-2-vbus";
+>> +             regulator-min-microvolt = <5000000>;
+>> +             regulator-max-microvolt = <5000000>;
+>> +             gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>;   /* PL8 */
+>> +             enable-active-high;
+>> +             regulator-always-on;
+>
+> Same comment about always on. If the driver needs fixing to grab an
+> additional regulator, fix it, but this shouldn't be left that way.
+>
+>> +     };
+>> +
+>> +     /* OZ80120 voltage regulator for the four Cortex-A15 cores. */
+>> +     reg_vdd_cpub: regulator-vdd-cpub {
+>> +             compatible = "regulator-gpio";
+>> +
+>> +             regulator-always-on;
+>> +             regulator-min-microvolt = < 800000>;
+>> +             regulator-max-microvolt = <1100000>;
+>> +             regulator-name = "vdd-cpub";
+>> +
+>> +             enable-gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>;    /* PL2 */
+>> +             enable-active-high;
+>> +             gpios = <&r_pio 0 3 GPIO_ACTIVE_HIGH>,          /* PL3 */
+>> +                     <&r_pio 0 4 GPIO_ACTIVE_HIGH>,          /* PL4 */
+>> +                     <&r_pio 0 5 GPIO_ACTIVE_HIGH>;          /* PL5 */
+>> +
+>> +             gpios-states = <1 0 0>;
+>> +             states = <       750000 0x7
+>> +                              800000 0x3
+>> +                              850000 0x5
+>> +                              900000 0x1
+>> +                              950000 0x6
+>> +                             1000000 0x2
+>> +                             1100000 0x4
+>> +                             1200000 0x0>;
+>
+> You're listing a minimum state of 750mv, yet your minimum voltage is
+> 800mV.
+>
+>> +     };
+>> +};
+>> +
+>> +&ehci0 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&ehci2 {
+>> +     status = "okay";
+>> +};
+>> +
+>> +/*
+>> + * SD card slot. Although the GPIO pin for card detection is listed as capable
+>> + * of generating interrupts in the "A80 User Manual", this doesn't work for
+>> + * some unknown reason, so poll the GPIO for card detection. This is also what
+>> + * the vendor sys_config.fex file specifies.
+>> + */
+>> +&mmc0 {
+>> +     bus-width = <4>;
+>> +     cd-gpios = <&pio 7 17 GPIO_ACTIVE_LOW>; /* PH17 */
+>> +     broken-cd;                              /* Poll. */
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc0_pins>;
+>> +     vmmc-supply = <&reg_dcdce>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +/* Ampak AP6335 IEEE 802.11 a/b/g/n/ac "Wifi". */
+>
+> Why "wifi" ? It's not implementing true wifi?
+>
+>> +&mmc1 {
+>> +     bus-width = <4>;
+>> +     non-removable;
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc1_pins>;
+>> +     vmmc-supply = <&reg_cldo3>;     /* See cldo2,cldo3 note. */
+>> +     vqmmc-supply = <&reg_aldo2>;
+>
+> So it's able to support 1.2 or 1.8V IO modes? Surely you want to
+> enable those modes here to.
+>
+>> +     mmc-pwrseq = <&powerseq_wifi>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +/* On-board eMMC card. */
+>> +&mmc2 {
+>> +     bus-width = <8>;
+>> +     non-removable;
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&mmc2_8bit_pins>;
+>> +     vmmc-supply = <&reg_dcdce>;
+>> +     status = "okay";
+>> +};
+>> +
+>> +&osc32k {
+>> +     clocks = <&ac100_rtc 0>;
+>> +};
+>> +
+>> +&r_ir {
+>> +     status = "okay";
+>> +};
+>> +
+>> +&r_rsb {
+>> +     status = "okay";
+>> +
+>> +     ac100: codec@e89 {
+>> +             compatible = "x-powers,ac100";
+>> +             reg = <0xe89>;
+>> +
+>> +             ac100_codec: codec {
+>> +                     compatible = "x-powers,ac100-codec";
+>> +                     interrupt-parent = <&r_pio>;
+>> +                     interrupts = <0 9 IRQ_TYPE_LEVEL_LOW>;  /* PL9 */
+>> +                     #clock-cells = <0>;
+>> +                     clock-output-names = "4M_adda";
+>> +             };
+>> +
+>> +             ac100_rtc: rtc {
+>> +                     compatible = "x-powers,ac100-rtc";
+>> +                     interrupt-parent = <&nmi_intc>;
+>> +                     interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> +                     clocks = <&ac100_codec>;
+>> +                     #clock-cells = <1>;
+>> +                     clock-output-names = "cko1_rtc",
+>> +                                          "cko2_rtc",
+>> +                                          "cko3_rtc";
+>> +             };
+>> +     };
+>> +
+>> +     pmic@745 {
+>> +             compatible = "x-powers,axp808", "x-powers,axp806";
 
-This patch adds Broadcom SBA RAID driver which provides one
-DMA device with RAID capabilities using one or more Broadcom
-SoC specific ring manager channels. The SBA RAID driver in its
-current shape implements memcpy, xor, and pq operations.
+As you mentioned elsewhere, they are not really compatible.
+You should drop the latter compatible.
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
----
- drivers/dma/Kconfig        |   13 +
- drivers/dma/Makefile       |    1 +
- drivers/dma/bcm-sba-raid.c | 1711 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1725 insertions(+)
- create mode 100644 drivers/dma/bcm-sba-raid.c
+>> +             reg = <0x745>;
+>> +             interrupt-parent = <&nmi_intc>;
+>> +             interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>> +             interrupt-controller;
+>> +             #interrupt-cells = <1>;
+>> +
+>> +             swin-supply = <&reg_dcdce>;
+>
+> Please use an incude for that PMIC.
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 263495d..bf8fb84 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -99,6 +99,19 @@ config AXI_DMAC
- 	  controller is often used in Analog Device's reference designs for FPGA
- 	  platforms.
- 
-+config BCM_SBA_RAID
-+	tristate "Broadcom SBA RAID engine support"
-+	depends on (ARM64 && MAILBOX && RAID6_PQ) || COMPILE_TEST
-+	select DMA_ENGINE
-+	select DMA_ENGINE_RAID
-+	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enable support for Broadcom SBA RAID Engine. The SBA RAID
-+	  engine is available on most of the Broadcom iProc SoCs. It
-+	  has the capability to offload memcpy, xor and pq computation
-+	  for raid5/6.
-+
- config COH901318
- 	bool "ST-Ericsson COH901318 DMA support"
- 	select DMA_ENGINE
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index a4fa336..ba96bdd 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -17,6 +17,7 @@ obj-$(CONFIG_AMCC_PPC440SPE_ADMA) += ppc4xx/
- obj-$(CONFIG_AT_HDMAC) += at_hdmac.o
- obj-$(CONFIG_AT_XDMAC) += at_xdmac.o
- obj-$(CONFIG_AXI_DMAC) += dma-axi-dmac.o
-+obj-$(CONFIG_BCM_SBA_RAID) += bcm-sba-raid.o
- obj-$(CONFIG_COH901318) += coh901318.o coh901318_lli.o
- obj-$(CONFIG_DMA_BCM2835) += bcm2835-dma.o
- obj-$(CONFIG_DMA_JZ4740) += dma-jz4740.o
-diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-new file mode 100644
-index 0000000..bab9918
---- /dev/null
-+++ b/drivers/dma/bcm-sba-raid.c
-@@ -0,0 +1,1711 @@
-+/*
-+ * Copyright (C) 2017 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * Broadcom SBA RAID Driver
-+ *
-+ * The Broadcom stream buffer accelerator (SBA) provides offloading
-+ * capabilities for RAID operations. The SBA offload engine is accessible
-+ * via Broadcom SoC specific ring manager. Two or more offload engines
-+ * can share same Broadcom SoC specific ring manager due to this Broadcom
-+ * SoC specific ring manager driver is implemented as a mailbox controller
-+ * driver and offload engine drivers are implemented as mallbox clients.
-+ *
-+ * Typically, Broadcom SoC specific ring manager will implement larger
-+ * number of hardware rings over one or more SBA hardware devices. By
-+ * design, the internal buffer size of SBA hardware device is limited
-+ * but all offload operations supported by SBA can be broken down into
-+ * multiple small size requests and executed parallely on multiple SBA
-+ * hardware devices for achieving high through-put.
-+ *
-+ * The Broadcom SBA RAID driver does not require any register programming
-+ * except submitting request to SBA hardware device via mailbox channels.
-+ * This driver implements a DMA device with one DMA channel using a set
-+ * of mailbox channels provided by Broadcom SoC specific ring manager
-+ * driver. To exploit parallelism (as described above), all DMA request
-+ * coming to SBA RAID DMA channel are broken down to smaller requests
-+ * and submitted to multiple mailbox channels in round-robin fashion.
-+ * For having more SBA DMA channels, we can create more SBA device nodes
-+ * in Broadcom SoC specific DTS based on number of hardware rings supported
-+ * by Broadcom SoC ring manager.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/dmaengine.h>
-+#include <linux/list.h>
-+#include <linux/mailbox_client.h>
-+#include <linux/mailbox/brcm-message.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/slab.h>
-+#include <linux/raid/pq.h>
-+
-+#include "dmaengine.h"
-+
-+/* SBA command helper macros */
-+#define SBA_DEC(_d, _s, _m)		(((_d) >> (_s)) & (_m))
-+#define SBA_ENC(_d, _v, _s, _m)					\
-+		do {						\
-+			(_d) &= ~((u64)(_m) << (_s));		\
-+			(_d) |= (((u64)(_v) & (_m)) << (_s));	\
-+		} while (0)
-+
-+/* SBA command related defines */
-+#define SBA_TYPE_SHIFT					48
-+#define SBA_TYPE_MASK					GENMASK(1, 0)
-+#define SBA_TYPE_A					0x0
-+#define SBA_TYPE_B					0x2
-+#define SBA_TYPE_C					0x3
-+#define SBA_USER_DEF_SHIFT				32
-+#define SBA_USER_DEF_MASK				GENMASK(15, 0)
-+#define SBA_R_MDATA_SHIFT				24
-+#define SBA_R_MDATA_MASK				GENMASK(7, 0)
-+#define SBA_C_MDATA_MS_SHIFT				18
-+#define SBA_C_MDATA_MS_MASK				GENMASK(1, 0)
-+#define SBA_INT_SHIFT					17
-+#define SBA_INT_MASK					BIT(0)
-+#define SBA_RESP_SHIFT					16
-+#define SBA_RESP_MASK					BIT(0)
-+#define SBA_C_MDATA_SHIFT				8
-+#define SBA_C_MDATA_MASK				GENMASK(7, 0)
-+#define SBA_C_MDATA_BNUMx_SHIFT(__bnum)			(2 * (__bnum))
-+#define SBA_C_MDATA_BNUMx_MASK				GENMASK(1, 0)
-+#define SBA_C_MDATA_DNUM_SHIFT				5
-+#define SBA_C_MDATA_DNUM_MASK				GENMASK(4, 0)
-+#define SBA_C_MDATA_LS(__v)				((__v) & 0xff)
-+#define SBA_C_MDATA_MS(__v)				(((__v) >> 8) & 0x3)
-+#define SBA_CMD_SHIFT					0
-+#define SBA_CMD_MASK					GENMASK(3, 0)
-+#define SBA_CMD_ZERO_BUFFER				0x4
-+#define SBA_CMD_ZERO_ALL_BUFFERS			0x8
-+#define SBA_CMD_LOAD_BUFFER				0x9
-+#define SBA_CMD_XOR					0xa
-+#define SBA_CMD_GALOIS_XOR				0xb
-+#define SBA_CMD_WRITE_BUFFER				0xc
-+#define SBA_CMD_GALOIS					0xe
-+
-+/* Driver helper macros */
-+#define to_sba_request(tx)		\
-+	container_of(tx, struct sba_request, tx)
-+#define to_sba_device(dchan)		\
-+	container_of(dchan, struct sba_device, dma_chan)
-+
-+enum sba_request_state {
-+	SBA_REQUEST_STATE_FREE = 1,
-+	SBA_REQUEST_STATE_ALLOCED = 2,
-+	SBA_REQUEST_STATE_PENDING = 3,
-+	SBA_REQUEST_STATE_ACTIVE = 4,
-+	SBA_REQUEST_STATE_RECEIVED = 5,
-+	SBA_REQUEST_STATE_COMPLETED = 6,
-+	SBA_REQUEST_STATE_ABORTED = 7,
-+};
-+
-+struct sba_request {
-+	/* Global state */
-+	struct list_head node;
-+	struct sba_device *sba;
-+	enum sba_request_state state;
-+	bool fence;
-+	/* Chained requests management */
-+	struct sba_request *first;
-+	struct list_head next;
-+	unsigned int next_count;
-+	atomic_t next_pending_count;
-+	/* BRCM message data */
-+	void *resp;
-+	dma_addr_t resp_dma;
-+	struct brcm_sba_command *cmds;
-+	struct brcm_message msg;
-+	struct dma_async_tx_descriptor tx;
-+};
-+
-+enum sba_version {
-+	SBA_VER_1 = 0,
-+	SBA_VER_2
-+};
-+
-+struct sba_device {
-+	/* Underlying device */
-+	struct device *dev;
-+	/* DT configuration parameters */
-+	enum sba_version ver;
-+	/* Derived configuration parameters */
-+	u32 max_req;
-+	u32 hw_buf_size;
-+	u32 hw_resp_size;
-+	u32 max_pq_coefs;
-+	u32 max_pq_srcs;
-+	u32 max_cmd_per_req;
-+	u32 max_xor_srcs;
-+	u32 max_resp_pool_size;
-+	u32 max_cmds_pool_size;
-+	/* Maibox client and Mailbox channels */
-+	struct mbox_client client;
-+	int mchans_count;
-+	atomic_t mchans_current;
-+	struct mbox_chan **mchans;
-+	struct device *mbox_dev;
-+	/* DMA device and DMA channel */
-+	struct dma_device dma_dev;
-+	struct dma_chan dma_chan;
-+	/* DMA channel resources */
-+	void *resp_base;
-+	dma_addr_t resp_dma_base;
-+	void *cmds_base;
-+	dma_addr_t cmds_dma_base;
-+	spinlock_t reqs_lock;
-+	struct sba_request *reqs;
-+	bool reqs_fence;
-+	struct list_head reqs_alloc_list;
-+	struct list_head reqs_pending_list;
-+	struct list_head reqs_active_list;
-+	struct list_head reqs_received_list;
-+	struct list_head reqs_completed_list;
-+	struct list_head reqs_aborted_list;
-+	struct list_head reqs_free_list;
-+	int reqs_free_count;
-+};
-+
-+/* ====== C_MDATA helper routines ===== */
-+
-+static inline u32 sba_cmd_load_c_mdata(u32 b0)
-+{
-+	return b0 & SBA_C_MDATA_BNUMx_MASK;
-+}
-+
-+static inline u32 sba_cmd_write_c_mdata(u32 b0)
-+{
-+	return b0 & SBA_C_MDATA_BNUMx_MASK;
-+}
-+
-+static inline u32 sba_cmd_xor_c_mdata(u32 b1, u32 b0)
-+{
-+	return (b0 & SBA_C_MDATA_BNUMx_MASK) |
-+	       ((b1 & SBA_C_MDATA_BNUMx_MASK) << SBA_C_MDATA_BNUMx_SHIFT(1));
-+}
-+
-+static inline u32 sba_cmd_pq_c_mdata(u32 d, u32 b1, u32 b0)
-+{
-+	return (b0 & SBA_C_MDATA_BNUMx_MASK) |
-+	       ((b1 & SBA_C_MDATA_BNUMx_MASK) << SBA_C_MDATA_BNUMx_SHIFT(1)) |
-+	       ((d & SBA_C_MDATA_DNUM_MASK) << SBA_C_MDATA_DNUM_SHIFT);
-+}
-+
-+/* ====== Channel resource management routines ===== */
-+
-+static struct sba_request *sba_alloc_request(struct sba_device *sba)
-+{
-+	unsigned long flags;
-+	struct sba_request *req = NULL;
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	if (!list_empty(&sba->reqs_free_list)) {
-+		req = list_first_entry(&sba->reqs_free_list,
-+				       struct sba_request,
-+				       node);
-+
-+		list_move_tail(&req->node, &sba->reqs_alloc_list);
-+		req->state = SBA_REQUEST_STATE_ALLOCED;
-+		req->fence = false;
-+		req->first = req;
-+		INIT_LIST_HEAD(&req->next);
-+		req->next_count = 1;
-+		atomic_set(&req->next_pending_count, 1);
-+
-+		sba->reqs_free_count--;
-+
-+		dma_async_tx_descriptor_init(&req->tx, &sba->dma_chan);
-+	}
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+
-+	return req;
-+}
-+
-+/* Note: Must be called with sba->reqs_lock held */
-+static void _sba_pending_request(struct sba_device *sba,
-+				 struct sba_request *req)
-+{
-+	req->state = SBA_REQUEST_STATE_PENDING;
-+	list_move_tail(&req->node, &sba->reqs_pending_list);
-+	if (list_empty(&sba->reqs_active_list))
-+		sba->reqs_fence = false;
-+}
-+
-+/* Note: Must be called with sba->reqs_lock held */
-+static bool _sba_active_request(struct sba_device *sba,
-+				struct sba_request *req)
-+{
-+	if (list_empty(&sba->reqs_active_list))
-+		sba->reqs_fence = false;
-+	if (sba->reqs_fence)
-+		return false;
-+	req->state = SBA_REQUEST_STATE_ACTIVE;
-+	list_move_tail(&req->node, &sba->reqs_active_list);
-+	if (req->fence)
-+		sba->reqs_fence = true;
-+	return true;
-+}
-+
-+/* Note: Must be called with sba->reqs_lock held */
-+static void _sba_abort_request(struct sba_device *sba,
-+			       struct sba_request *req)
-+{
-+	req->state = SBA_REQUEST_STATE_ABORTED;
-+	list_move_tail(&req->node, &sba->reqs_aborted_list);
-+	if (list_empty(&sba->reqs_active_list))
-+		sba->reqs_fence = false;
-+}
-+
-+/* Note: Must be called with sba->reqs_lock held */
-+static void _sba_free_request(struct sba_device *sba,
-+			      struct sba_request *req)
-+{
-+	req->state = SBA_REQUEST_STATE_FREE;
-+	list_move_tail(&req->node, &sba->reqs_free_list);
-+	if (list_empty(&sba->reqs_active_list))
-+		sba->reqs_fence = false;
-+	sba->reqs_free_count++;
-+}
-+
-+static void sba_received_request(struct sba_request *req)
-+{
-+	unsigned long flags;
-+	struct sba_device *sba = req->sba;
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+	req->state = SBA_REQUEST_STATE_RECEIVED;
-+	list_move_tail(&req->node, &sba->reqs_received_list);
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+}
-+
-+static void sba_complete_chained_requests(struct sba_request *req)
-+{
-+	unsigned long flags;
-+	struct sba_request *nreq;
-+	struct sba_device *sba = req->sba;
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	req->state = SBA_REQUEST_STATE_COMPLETED;
-+	list_move_tail(&req->node, &sba->reqs_completed_list);
-+	list_for_each_entry(nreq, &req->next, next) {
-+		nreq->state = SBA_REQUEST_STATE_COMPLETED;
-+		list_move_tail(&nreq->node, &sba->reqs_completed_list);
-+	}
-+	if (list_empty(&sba->reqs_active_list))
-+		sba->reqs_fence = false;
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+}
-+
-+static void sba_free_chained_requests(struct sba_request *req)
-+{
-+	unsigned long flags;
-+	struct sba_request *nreq;
-+	struct sba_device *sba = req->sba;
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	_sba_free_request(sba, req);
-+	list_for_each_entry(nreq, &req->next, next) {
-+		_sba_free_request(sba, nreq);
-+	}
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+}
-+
-+static void sba_chain_request(struct sba_request *first,
-+			      struct sba_request *req)
-+{
-+	unsigned long flags;
-+	struct sba_device *sba = req->sba;
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	list_add_tail(&req->next, &first->next);
-+	req->first = first;
-+	first->next_count++;
-+	atomic_set(&first->next_pending_count, first->next_count);
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+}
-+
-+static void sba_cleanup_nonpending_requests(struct sba_device *sba)
-+{
-+	unsigned long flags;
-+	struct sba_request *req, *req1;
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	/* Freeup all alloced request */
-+	list_for_each_entry_safe(req, req1, &sba->reqs_alloc_list, node) {
-+		_sba_free_request(sba, req);
-+	}
-+
-+	/* Freeup all received request */
-+	list_for_each_entry_safe(req, req1, &sba->reqs_received_list, node) {
-+		_sba_free_request(sba, req);
-+	}
-+
-+	/* Freeup all completed request */
-+	list_for_each_entry_safe(req, req1, &sba->reqs_completed_list, node) {
-+		_sba_free_request(sba, req);
-+	}
-+
-+	/* Set all active requests as aborted */
-+	list_for_each_entry_safe(req, req1, &sba->reqs_active_list, node) {
-+		_sba_abort_request(sba, req);
-+	}
-+
-+	/*
-+	 * Note: We expect that aborted request will be eventually
-+	 * freed by sba_receive_message()
-+	 */
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+}
-+
-+static void sba_cleanup_pending_requests(struct sba_device *sba)
-+{
-+	unsigned long flags;
-+	struct sba_request *req, *req1;
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	/* Freeup all pending request */
-+	list_for_each_entry_safe(req, req1, &sba->reqs_pending_list, node) {
-+		/* Freeup rest of the pending request */
-+		_sba_free_request(sba, req);
-+	}
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+}
-+
-+/* ====== DMAENGINE callbacks ===== */
-+
-+static void sba_free_chan_resources(struct dma_chan *dchan)
-+{
-+	/*
-+	 * Channel resources are pre-alloced so we just free-up
-+	 * whatever we can so that we can re-use pre-alloced
-+	 * channel resources next time.
-+	 */
-+	sba_cleanup_nonpending_requests(to_sba_device(dchan));
-+}
-+
-+static int sba_device_terminate_all(struct dma_chan *dchan)
-+{
-+	/* Cleanup all pending requests */
-+	sba_cleanup_pending_requests(to_sba_device(dchan));
-+
-+	return 0;
-+}
-+
-+static int sba_send_mbox_request(struct sba_device *sba,
-+				 struct sba_request *req)
-+{
-+	int mchans_idx, ret = 0;
-+
-+	/* Select mailbox channel in round-robin fashion */
-+	mchans_idx = atomic_inc_return(&sba->mchans_current);
-+	mchans_idx = mchans_idx % sba->mchans_count;
-+
-+	/* Send message for the request */
-+	req->msg.error = 0;
-+	ret = mbox_send_message(sba->mchans[mchans_idx], &req->msg);
-+	if (ret < 0) {
-+		dev_err(sba->dev, "send message failed with error %d", ret);
-+		return ret;
-+	}
-+	ret = req->msg.error;
-+	if (ret < 0) {
-+		dev_err(sba->dev, "message error %d", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void sba_issue_pending(struct dma_chan *dchan)
-+{
-+	int ret;
-+	unsigned long flags;
-+	struct sba_request *req, *req1;
-+	struct sba_device *sba = to_sba_device(dchan);
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	/* Process all pending request */
-+	list_for_each_entry_safe(req, req1, &sba->reqs_pending_list, node) {
-+		/* Try to make request active */
-+		if (!_sba_active_request(sba, req))
-+			break;
-+
-+		/* Send request to mailbox channel */
-+		spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+		ret = sba_send_mbox_request(sba, req);
-+		spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+		/* If something went wrong then keep request pending */
-+		if (ret < 0) {
-+			_sba_pending_request(sba, req);
-+			break;
-+		}
-+	}
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+}
-+
-+static dma_cookie_t sba_tx_submit(struct dma_async_tx_descriptor *tx)
-+{
-+	unsigned long flags;
-+	dma_cookie_t cookie;
-+	struct sba_device *sba;
-+	struct sba_request *req, *nreq;
-+
-+	if (unlikely(!tx))
-+		return -EINVAL;
-+
-+	sba = to_sba_device(tx->chan);
-+	req = to_sba_request(tx);
-+
-+	/* Assign cookie and mark all chained requests pending */
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+	cookie = dma_cookie_assign(tx);
-+	_sba_pending_request(sba, req);
-+	list_for_each_entry(nreq, &req->next, next) {
-+		_sba_pending_request(sba, nreq);
-+	}
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+
-+	return cookie;
-+}
-+
-+static enum dma_status sba_tx_status(struct dma_chan *dchan,
-+				     dma_cookie_t cookie,
-+				     struct dma_tx_state *txstate)
-+{
-+	int mchan_idx;
-+	enum dma_status ret;
-+	struct sba_device *sba = to_sba_device(dchan);
-+
-+	for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
-+		mbox_client_peek_data(sba->mchans[mchan_idx]);
-+
-+	ret = dma_cookie_status(dchan, cookie, txstate);
-+	if (ret == DMA_COMPLETE)
-+		return ret;
-+
-+	return dma_cookie_status(dchan, cookie, txstate);
-+}
-+
-+static void sba_fillup_memcpy_msg(struct sba_request *req,
-+				  struct brcm_sba_command *cmds,
-+				  struct brcm_message *msg,
-+				  dma_addr_t msg_offset, size_t msg_len,
-+				  dma_addr_t dst, dma_addr_t src)
-+{
-+	u64 cmd;
-+	u32 c_mdata;
-+	struct brcm_sba_command *cmdsp = cmds;
-+
-+	/* Type-B command to load data into buf0 */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_B, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+	c_mdata = sba_cmd_load_c_mdata(0);
-+	SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+		SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+	SBA_ENC(cmd, SBA_CMD_LOAD_BUFFER,
-+		SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+	cmdsp->data = src + msg_offset;
-+	cmdsp->data_len = msg_len;
-+	cmdsp++;
-+
-+	/* Type-A command to write buf0 */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_A, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+	SBA_ENC(cmd, 0x1, SBA_RESP_SHIFT, SBA_RESP_MASK);
-+	c_mdata = sba_cmd_write_c_mdata(0);
-+	SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+		SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+	SBA_ENC(cmd, SBA_CMD_WRITE_BUFFER,
-+		SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+	if (req->sba->hw_resp_size) {
-+		cmdsp->flags |= BRCM_SBA_CMD_HAS_RESP;
-+		cmdsp->resp = req->resp_dma;
-+		cmdsp->resp_len = req->sba->hw_resp_size;
-+	}
-+	cmdsp->flags |= BRCM_SBA_CMD_HAS_OUTPUT;
-+	cmdsp->data = dst + msg_offset;
-+	cmdsp->data_len = msg_len;
-+	cmdsp++;
-+
-+	/* Fillup brcm_message */
-+	msg->type = BRCM_MESSAGE_SBA;
-+	msg->sba.cmds = cmds;
-+	msg->sba.cmds_count = cmdsp - cmds;
-+	msg->ctx = req;
-+	msg->error = 0;
-+}
-+
-+static struct sba_request *
-+sba_prep_dma_memcpy_req(struct sba_device *sba,
-+			dma_addr_t off, dma_addr_t dst, dma_addr_t src,
-+			size_t len, unsigned long flags)
-+{
-+	struct sba_request *req = NULL;
-+
-+	/* Alloc new request */
-+	req = sba_alloc_request(sba);
-+	if (!req)
-+		return NULL;
-+	req->fence = (flags & DMA_PREP_FENCE) ? true : false;
-+
-+	/* Fillup request message */
-+	sba_fillup_memcpy_msg(req, req->cmds, &req->msg,
-+			      off, len, dst, src);
-+
-+	/* Init async_tx descriptor */
-+	req->tx.flags = flags;
-+	req->tx.cookie = -EBUSY;
-+
-+	return req;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+sba_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst, dma_addr_t src,
-+		    size_t len, unsigned long flags)
-+{
-+	size_t req_len;
-+	dma_addr_t off = 0;
-+	struct sba_device *sba = to_sba_device(dchan);
-+	struct sba_request *first = NULL, *req;
-+
-+	/* Create chained requests where each request is upto hw_buf_size */
-+	while (len) {
-+		req_len = (len < sba->hw_buf_size) ? len : sba->hw_buf_size;
-+
-+		req = sba_prep_dma_memcpy_req(sba, off, dst, src,
-+					      req_len, flags);
-+		if (!req) {
-+			if (first)
-+				sba_free_chained_requests(first);
-+			return NULL;
-+		}
-+
-+		if (first)
-+			sba_chain_request(first, req);
-+		else
-+			first = req;
-+
-+		off += req_len;
-+		len -= req_len;
-+	}
-+
-+	return (first) ? &first->tx : NULL;
-+}
-+
-+static void sba_fillup_xor_msg(struct sba_request *req,
-+				struct brcm_sba_command *cmds,
-+				struct brcm_message *msg,
-+				dma_addr_t msg_offset, size_t msg_len,
-+				dma_addr_t dst, dma_addr_t *src, u32 src_cnt)
-+{
-+	u64 cmd;
-+	u32 c_mdata;
-+	unsigned int i;
-+	struct brcm_sba_command *cmdsp = cmds;
-+
-+	/* Type-B command to load data into buf0 */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_B, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+	c_mdata = sba_cmd_load_c_mdata(0);
-+	SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+		SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+	SBA_ENC(cmd, SBA_CMD_LOAD_BUFFER,
-+		SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+	cmdsp->data = src[0] + msg_offset;
-+	cmdsp->data_len = msg_len;
-+	cmdsp++;
-+
-+	/* Type-B commands to xor data with buf0 and put it back in buf0 */
-+	for (i = 1; i < src_cnt; i++) {
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_B, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		c_mdata = sba_cmd_xor_c_mdata(0, 0);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_CMD_XOR, SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+		cmdsp->data = src[i] + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+	}
-+
-+	/* Type-A command to write buf0 */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_A, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+	SBA_ENC(cmd, 0x1, SBA_RESP_SHIFT, SBA_RESP_MASK);
-+	c_mdata = sba_cmd_write_c_mdata(0);
-+	SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+		SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+	SBA_ENC(cmd, SBA_CMD_WRITE_BUFFER,
-+		SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+	if (req->sba->hw_resp_size) {
-+		cmdsp->flags |= BRCM_SBA_CMD_HAS_RESP;
-+		cmdsp->resp = req->resp_dma;
-+		cmdsp->resp_len = req->sba->hw_resp_size;
-+	}
-+	cmdsp->flags |= BRCM_SBA_CMD_HAS_OUTPUT;
-+	cmdsp->data = dst + msg_offset;
-+	cmdsp->data_len = msg_len;
-+	cmdsp++;
-+
-+	/* Fillup brcm_message */
-+	msg->type = BRCM_MESSAGE_SBA;
-+	msg->sba.cmds = cmds;
-+	msg->sba.cmds_count = cmdsp - cmds;
-+	msg->ctx = req;
-+	msg->error = 0;
-+}
-+
-+struct sba_request *
-+sba_prep_dma_xor_req(struct sba_device *sba,
-+		     dma_addr_t off, dma_addr_t dst, dma_addr_t *src,
-+		     u32 src_cnt, size_t len, unsigned long flags)
-+{
-+	struct sba_request *req = NULL;
-+
-+	/* Alloc new request */
-+	req = sba_alloc_request(sba);
-+	if (!req)
-+		return NULL;
-+	req->fence = (flags & DMA_PREP_FENCE) ? true : false;
-+
-+	/* Fillup request message */
-+	sba_fillup_xor_msg(req, req->cmds, &req->msg,
-+			   off, len, dst, src, src_cnt);
-+
-+	/* Init async_tx descriptor */
-+	req->tx.flags = flags;
-+	req->tx.cookie = -EBUSY;
-+
-+	return req;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+sba_prep_dma_xor(struct dma_chan *dchan, dma_addr_t dst, dma_addr_t *src,
-+		 u32 src_cnt, size_t len, unsigned long flags)
-+{
-+	size_t req_len;
-+	dma_addr_t off = 0;
-+	struct sba_device *sba = to_sba_device(dchan);
-+	struct sba_request *first = NULL, *req;
-+
-+	/* Sanity checks */
-+	if (unlikely(src_cnt > sba->max_xor_srcs))
-+		return NULL;
-+
-+	/* Create chained requests where each request is upto hw_buf_size */
-+	while (len) {
-+		req_len = (len < sba->hw_buf_size) ? len : sba->hw_buf_size;
-+
-+		req = sba_prep_dma_xor_req(sba, off, dst, src, src_cnt,
-+					   req_len, flags);
-+		if (!req) {
-+			if (first)
-+				sba_free_chained_requests(first);
-+			return NULL;
-+		}
-+
-+		if (first)
-+			sba_chain_request(first, req);
-+		else
-+			first = req;
-+
-+		off += req_len;
-+		len -= req_len;
-+	}
-+
-+	return (first) ? &first->tx : NULL;
-+}
-+
-+static void sba_fillup_pq_msg(struct sba_request *req,
-+				bool pq_continue,
-+				struct brcm_sba_command *cmds,
-+				struct brcm_message *msg,
-+				dma_addr_t msg_offset, size_t msg_len,
-+				dma_addr_t *dst_p, dma_addr_t *dst_q,
-+				const u8 *scf, dma_addr_t *src, u32 src_cnt)
-+{
-+	u64 cmd;
-+	u32 c_mdata;
-+	unsigned int i;
-+	struct brcm_sba_command *cmdsp = cmds;
-+
-+	if (pq_continue) {
-+		/* Type-B command to load old P into buf0 */
-+		if (dst_p) {
-+			cmd = 0;
-+			SBA_ENC(cmd, SBA_TYPE_B,
-+				SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+			SBA_ENC(cmd, msg_len,
-+				SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+			c_mdata = sba_cmd_load_c_mdata(0);
-+			SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+				SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+			SBA_ENC(cmd, SBA_CMD_LOAD_BUFFER,
-+				SBA_CMD_SHIFT, SBA_CMD_MASK);
-+			cmdsp->cmd = cmd;
-+			*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+			cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+			cmdsp->data = *dst_p + msg_offset;
-+			cmdsp->data_len = msg_len;
-+			cmdsp++;
-+		}
-+
-+		/* Type-B command to load old Q into buf1 */
-+		if (dst_q) {
-+			cmd = 0;
-+			SBA_ENC(cmd, SBA_TYPE_B,
-+				SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+			SBA_ENC(cmd, msg_len,
-+				SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+			c_mdata = sba_cmd_load_c_mdata(1);
-+			SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+				SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+			SBA_ENC(cmd, SBA_CMD_LOAD_BUFFER,
-+				SBA_CMD_SHIFT, SBA_CMD_MASK);
-+			cmdsp->cmd = cmd;
-+			*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+			cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+			cmdsp->data = *dst_q + msg_offset;
-+			cmdsp->data_len = msg_len;
-+			cmdsp++;
-+		}
-+	} else {
-+		/* Type-A command to zero all buffers */
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_A, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		SBA_ENC(cmd, SBA_CMD_ZERO_ALL_BUFFERS,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+		cmdsp++;
-+	}
-+
-+	/* Type-B commands for generate P onto buf0 and Q onto buf1 */
-+	for (i = 0; i < src_cnt; i++) {
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_B, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		c_mdata = sba_cmd_pq_c_mdata(raid6_gflog[scf[i]], 1, 0);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_C_MDATA_MS(c_mdata),
-+			SBA_C_MDATA_MS_SHIFT, SBA_C_MDATA_MS_MASK);
-+		SBA_ENC(cmd, SBA_CMD_GALOIS_XOR,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+		cmdsp->data = src[i] + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+	}
-+
-+	/* Type-A command to write buf0 */
-+	if (dst_p) {
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_A, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		SBA_ENC(cmd, 0x1, SBA_RESP_SHIFT, SBA_RESP_MASK);
-+		c_mdata = sba_cmd_write_c_mdata(0);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_CMD_WRITE_BUFFER,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+		if (req->sba->hw_resp_size) {
-+			cmdsp->flags |= BRCM_SBA_CMD_HAS_RESP;
-+			cmdsp->resp = req->resp_dma;
-+			cmdsp->resp_len = req->sba->hw_resp_size;
-+		}
-+		cmdsp->flags |= BRCM_SBA_CMD_HAS_OUTPUT;
-+		cmdsp->data = *dst_p + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+	}
-+
-+	/* Type-A command to write buf1 */
-+	if (dst_q) {
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_A, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		SBA_ENC(cmd, 0x1, SBA_RESP_SHIFT, SBA_RESP_MASK);
-+		c_mdata = sba_cmd_write_c_mdata(1);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_CMD_WRITE_BUFFER,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+		if (req->sba->hw_resp_size) {
-+			cmdsp->flags |= BRCM_SBA_CMD_HAS_RESP;
-+			cmdsp->resp = req->resp_dma;
-+			cmdsp->resp_len = req->sba->hw_resp_size;
-+		}
-+		cmdsp->flags |= BRCM_SBA_CMD_HAS_OUTPUT;
-+		cmdsp->data = *dst_q + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+	}
-+
-+	/* Fillup brcm_message */
-+	msg->type = BRCM_MESSAGE_SBA;
-+	msg->sba.cmds = cmds;
-+	msg->sba.cmds_count = cmdsp - cmds;
-+	msg->ctx = req;
-+	msg->error = 0;
-+}
-+
-+struct sba_request *
-+sba_prep_dma_pq_req(struct sba_device *sba, dma_addr_t off,
-+		    dma_addr_t *dst_p, dma_addr_t *dst_q, dma_addr_t *src,
-+		    u32 src_cnt, const u8 *scf, size_t len, unsigned long flags)
-+{
-+	struct sba_request *req = NULL;
-+
-+	/* Alloc new request */
-+	req = sba_alloc_request(sba);
-+	if (!req)
-+		return NULL;
-+	req->fence = (flags & DMA_PREP_FENCE) ? true : false;
-+
-+	/* Fillup request messages */
-+	sba_fillup_pq_msg(req, dmaf_continue(flags),
-+			  req->cmds, &req->msg,
-+			  off, len, dst_p, dst_q, scf, src, src_cnt);
-+
-+	/* Init async_tx descriptor */
-+	req->tx.flags = flags;
-+	req->tx.cookie = -EBUSY;
-+
-+	return req;
-+}
-+
-+static void sba_fillup_pq_single_msg(struct sba_request *req,
-+				bool pq_continue,
-+				struct brcm_sba_command *cmds,
-+				struct brcm_message *msg,
-+				dma_addr_t msg_offset, size_t msg_len,
-+				dma_addr_t *dst_p, dma_addr_t *dst_q,
-+				dma_addr_t src, u8 scf)
-+{
-+	u64 cmd;
-+	u32 c_mdata;
-+	u8 pos, dpos = raid6_gflog[scf];
-+	struct brcm_sba_command *cmdsp = cmds;
-+
-+	if (!dst_p)
-+		goto skip_p;
-+
-+	if (pq_continue) {
-+		/* Type-B command to load old P into buf0 */
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_B,
-+			SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		c_mdata = sba_cmd_load_c_mdata(0);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_CMD_LOAD_BUFFER,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+		cmdsp->data = *dst_p + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+
-+		/*
-+		 * Type-B commands to xor data with buf0 and put it
-+		 * back in buf0
-+		 */
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_B, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		c_mdata = sba_cmd_xor_c_mdata(0, 0);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_CMD_XOR, SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+		cmdsp->data = src + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+	} else {
-+		/* Type-B command to load old P into buf0 */
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_B,
-+			SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+		c_mdata = sba_cmd_load_c_mdata(0);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_CMD_LOAD_BUFFER,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+		cmdsp->data = src + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+	}
-+
-+	/* Type-A command to write buf0 */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_A, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+	SBA_ENC(cmd, 0x1, SBA_RESP_SHIFT, SBA_RESP_MASK);
-+	c_mdata = sba_cmd_write_c_mdata(0);
-+	SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+		SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+	SBA_ENC(cmd, SBA_CMD_WRITE_BUFFER,
-+		SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+	if (req->sba->hw_resp_size) {
-+		cmdsp->flags |= BRCM_SBA_CMD_HAS_RESP;
-+		cmdsp->resp = req->resp_dma;
-+		cmdsp->resp_len = req->sba->hw_resp_size;
-+	}
-+	cmdsp->flags |= BRCM_SBA_CMD_HAS_OUTPUT;
-+	cmdsp->data = *dst_p + msg_offset;
-+	cmdsp->data_len = msg_len;
-+	cmdsp++;
-+
-+skip_p:
-+	if (!dst_q)
-+		goto skip_q;
-+
-+	/* Type-A command to zero all buffers */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_A, SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+	SBA_ENC(cmd, SBA_CMD_ZERO_ALL_BUFFERS,
-+		SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+	cmdsp++;
-+
-+	if (dpos == 255)
-+		goto skip_q_computation;
-+	pos = (dpos < req->sba->max_pq_coefs) ?
-+		dpos : (req->sba->max_pq_coefs - 1);
-+
-+	/*
-+	 * Type-B command to generate initial Q from data
-+	 * and store output into buf0
-+	 */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_B,
-+		SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT, SBA_USER_DEF_MASK);
-+	SBA_ENC(cmd, 0x0, SBA_RESP_SHIFT, SBA_RESP_MASK);
-+	c_mdata = sba_cmd_pq_c_mdata(pos, 0, 0);
-+	SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+		SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+	SBA_ENC(cmd, SBA_C_MDATA_MS(c_mdata),
-+		SBA_C_MDATA_MS_SHIFT, SBA_C_MDATA_MS_MASK);
-+	SBA_ENC(cmd, SBA_CMD_GALOIS, SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+	cmdsp->data = src + msg_offset;
-+	cmdsp->data_len = msg_len;
-+	cmdsp++;
-+
-+	dpos -= pos;
-+
-+	/* Multiple Type-A command to generate final Q */
-+	while (dpos) {
-+		pos = (dpos < req->sba->max_pq_coefs) ?
-+			dpos : (req->sba->max_pq_coefs - 1);
-+
-+		/*
-+		 * Type-A command to generate Q with buf0 and
-+		 * buf1 store result in buf0
-+		 */
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_A,
-+			SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT,
-+			SBA_USER_DEF_MASK);
-+		SBA_ENC(cmd, 0x0,
-+			SBA_RESP_SHIFT, SBA_RESP_MASK);
-+		c_mdata = sba_cmd_pq_c_mdata(pos, 0, 1);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_C_MDATA_MS(c_mdata),
-+			SBA_C_MDATA_MS_SHIFT,
-+			SBA_C_MDATA_MS_MASK);
-+		SBA_ENC(cmd, SBA_CMD_GALOIS,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+		cmdsp++;
-+
-+		dpos -= pos;
-+	};
-+
-+skip_q_computation:
-+	if (pq_continue) {
-+		/*
-+		 * Type-B command to XOR previous output with
-+		 * buf0 and write it into buf0
-+		 */
-+		cmd = 0;
-+		SBA_ENC(cmd, SBA_TYPE_B,
-+			SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+		SBA_ENC(cmd, msg_len,
-+			SBA_USER_DEF_SHIFT,
-+			SBA_USER_DEF_MASK);
-+		SBA_ENC(cmd, 0x0,
-+			SBA_RESP_SHIFT, SBA_RESP_MASK);
-+		c_mdata = sba_cmd_xor_c_mdata(0, 0);
-+		SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+			SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+		SBA_ENC(cmd, SBA_CMD_XOR,
-+			SBA_CMD_SHIFT, SBA_CMD_MASK);
-+		cmdsp->cmd = cmd;
-+		*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+		cmdsp->flags = BRCM_SBA_CMD_TYPE_B;
-+		cmdsp->data = *dst_q + msg_offset;
-+		cmdsp->data_len = msg_len;
-+		cmdsp++;
-+	}
-+
-+	/* Type-A command to write buf0 */
-+	cmd = 0;
-+	SBA_ENC(cmd, SBA_TYPE_A,
-+		SBA_TYPE_SHIFT, SBA_TYPE_MASK);
-+	SBA_ENC(cmd, msg_len,
-+		SBA_USER_DEF_SHIFT,
-+		SBA_USER_DEF_MASK);
-+	SBA_ENC(cmd, 0x1,
-+		SBA_RESP_SHIFT, SBA_RESP_MASK);
-+	c_mdata = sba_cmd_write_c_mdata(0);
-+	SBA_ENC(cmd, SBA_C_MDATA_LS(c_mdata),
-+		SBA_C_MDATA_SHIFT, SBA_C_MDATA_MASK);
-+	SBA_ENC(cmd, SBA_CMD_WRITE_BUFFER,
-+		SBA_CMD_SHIFT, SBA_CMD_MASK);
-+	cmdsp->cmd = cmd;
-+	*cmdsp->cmd_dma = cpu_to_le64(cmd);
-+	cmdsp->flags = BRCM_SBA_CMD_TYPE_A;
-+	if (req->sba->hw_resp_size) {
-+		cmdsp->flags |= BRCM_SBA_CMD_HAS_RESP;
-+		cmdsp->resp = req->resp_dma;
-+		cmdsp->resp_len = req->sba->hw_resp_size;
-+	}
-+	cmdsp->flags |= BRCM_SBA_CMD_HAS_OUTPUT;
-+	cmdsp->data = *dst_q + msg_offset;
-+	cmdsp->data_len = msg_len;
-+	cmdsp++;
-+
-+skip_q:
-+	/* Fillup brcm_message */
-+	msg->type = BRCM_MESSAGE_SBA;
-+	msg->sba.cmds = cmds;
-+	msg->sba.cmds_count = cmdsp - cmds;
-+	msg->ctx = req;
-+	msg->error = 0;
-+}
-+
-+struct sba_request *
-+sba_prep_dma_pq_single_req(struct sba_device *sba, dma_addr_t off,
-+			   dma_addr_t *dst_p, dma_addr_t *dst_q,
-+			   dma_addr_t src, u8 scf, size_t len,
-+			   unsigned long flags)
-+{
-+	struct sba_request *req = NULL;
-+
-+	/* Alloc new request */
-+	req = sba_alloc_request(sba);
-+	if (!req)
-+		return NULL;
-+	req->fence = (flags & DMA_PREP_FENCE) ? true : false;
-+
-+	/* Fillup request messages */
-+	sba_fillup_pq_single_msg(req,  dmaf_continue(flags),
-+				 req->cmds, &req->msg, off, len,
-+				 dst_p, dst_q, src, scf);
-+
-+	/* Init async_tx descriptor */
-+	req->tx.flags = flags;
-+	req->tx.cookie = -EBUSY;
-+
-+	return req;
-+}
-+
-+static struct dma_async_tx_descriptor *
-+sba_prep_dma_pq(struct dma_chan *dchan, dma_addr_t *dst, dma_addr_t *src,
-+		u32 src_cnt, const u8 *scf, size_t len, unsigned long flags)
-+{
-+	u32 i, dst_q_index;
-+	size_t req_len;
-+	bool slow = false;
-+	dma_addr_t off = 0;
-+	dma_addr_t *dst_p = NULL, *dst_q = NULL;
-+	struct sba_device *sba = to_sba_device(dchan);
-+	struct sba_request *first = NULL, *req;
-+
-+	/* Sanity checks */
-+	if (unlikely(src_cnt > sba->max_pq_srcs))
-+		return NULL;
-+	for (i = 0; i < src_cnt; i++)
-+		if (sba->max_pq_coefs <= raid6_gflog[scf[i]])
-+			slow = true;
-+
-+	/* Figure-out P and Q destination addresses */
-+	if (!(flags & DMA_PREP_PQ_DISABLE_P))
-+		dst_p = &dst[0];
-+	if (!(flags & DMA_PREP_PQ_DISABLE_Q))
-+		dst_q = &dst[1];
-+
-+	/* Create chained requests where each request is upto hw_buf_size */
-+	while (len) {
-+		req_len = (len < sba->hw_buf_size) ? len : sba->hw_buf_size;
-+
-+		if (slow) {
-+			dst_q_index = src_cnt;
-+
-+			if (dst_q) {
-+				for (i = 0; i < src_cnt; i++) {
-+					if (*dst_q == src[i]) {
-+						dst_q_index = i;
-+						break;
-+					}
-+				}
-+			}
-+
-+			if (dst_q_index < src_cnt) {
-+				i = dst_q_index;
-+				req = sba_prep_dma_pq_single_req(sba,
-+					off, dst_p, dst_q, src[i], scf[i],
-+					req_len, flags | DMA_PREP_FENCE);
-+				if (!req)
-+					goto fail;
-+
-+				if (first)
-+					sba_chain_request(first, req);
-+				else
-+					first = req;
-+
-+				flags |= DMA_PREP_CONTINUE;
-+			}
-+
-+			for (i = 0; i < src_cnt; i++) {
-+				if (dst_q_index == i)
-+					continue;
-+
-+				req = sba_prep_dma_pq_single_req(sba,
-+					off, dst_p, dst_q, src[i], scf[i],
-+					req_len, flags | DMA_PREP_FENCE);
-+				if (!req)
-+					goto fail;
-+
-+				if (first)
-+					sba_chain_request(first, req);
-+				else
-+					first = req;
-+
-+				flags |= DMA_PREP_CONTINUE;
-+			}
-+		} else {
-+			req = sba_prep_dma_pq_req(sba, off,
-+						  dst_p, dst_q, src, src_cnt,
-+						  scf, req_len, flags);
-+			if (!req)
-+				goto fail;
-+
-+			if (first)
-+				sba_chain_request(first, req);
-+			else
-+				first = req;
-+		}
-+
-+		off += req_len;
-+		len -= req_len;
-+	}
-+
-+	return (first) ? &first->tx : NULL;
-+
-+fail:
-+	if (first)
-+		sba_free_chained_requests(first);
-+	return NULL;
-+}
-+
-+/* ====== Mailbox callbacks ===== */
-+
-+static void sba_dma_tx_actions(struct sba_request *req)
-+{
-+	struct dma_async_tx_descriptor *tx = &req->tx;
-+
-+	WARN_ON(tx->cookie < 0);
-+
-+	if (tx->cookie > 0) {
-+		dma_cookie_complete(tx);
-+
-+		/*
-+		 * Call the callback (must not sleep or submit new
-+		 * operations to this channel)
-+		 */
-+		if (tx->callback)
-+			tx->callback(tx->callback_param);
-+
-+		dma_descriptor_unmap(tx);
-+	}
-+
-+	/* Run dependent operations */
-+	dma_run_dependencies(tx);
-+
-+	/* If waiting for 'ack' then move to completed list */
-+	if (!async_tx_test_ack(&req->tx))
-+		sba_complete_chained_requests(req);
-+	else
-+		sba_free_chained_requests(req);
-+}
-+
-+static void sba_receive_message(struct mbox_client *cl, void *msg)
-+{
-+	unsigned long flags;
-+	struct brcm_message *m = msg;
-+	struct sba_request *req = m->ctx, *req1;
-+	struct sba_device *sba = req->sba;
-+
-+	/* Error count if message has error */
-+	if (m->error < 0) {
-+		dev_err(sba->dev, "%s got message with error %d",
-+			dma_chan_name(&sba->dma_chan), m->error);
-+	}
-+
-+	/* Mark request as received */
-+	sba_received_request(req);
-+
-+	/* Wait for all chained requests to be completed */
-+	if (atomic_dec_return(&req->first->next_pending_count))
-+		goto done;
-+
-+	/* Point to first request */
-+	req = req->first;
-+
-+	/* Update request */
-+	if (req->state == SBA_REQUEST_STATE_RECEIVED)
-+		sba_dma_tx_actions(req);
-+	else
-+		sba_free_chained_requests(req);
-+
-+	spin_lock_irqsave(&sba->reqs_lock, flags);
-+
-+	/* Re-check all completed request waiting for 'ack' */
-+	list_for_each_entry_safe(req, req1, &sba->reqs_completed_list, node) {
-+		spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+		sba_dma_tx_actions(req);
-+		spin_lock_irqsave(&sba->reqs_lock, flags);
-+	}
-+
-+	spin_unlock_irqrestore(&sba->reqs_lock, flags);
-+
-+done:
-+	/* Try to submit pending request */
-+	sba_issue_pending(&sba->dma_chan);
-+}
-+
-+/* ====== Platform driver routines ===== */
-+
-+static int sba_prealloc_channel_resources(struct sba_device *sba)
-+{
-+	int i, j, p, ret = 0;
-+	struct sba_request *req = NULL;
-+
-+	sba->resp_base = dma_alloc_coherent(sba->dma_dev.dev,
-+					    sba->max_resp_pool_size,
-+					    &sba->resp_dma_base, GFP_KERNEL);
-+	if (!sba->resp_base)
-+		return -ENOMEM;
-+
-+	sba->cmds_base = dma_alloc_coherent(sba->dma_dev.dev,
-+					    sba->max_cmds_pool_size,
-+					    &sba->cmds_dma_base, GFP_KERNEL);
-+	if (!sba->cmds_base) {
-+		ret = -ENOMEM;
-+		goto fail_free_resp_pool;
-+	}
-+
-+	spin_lock_init(&sba->reqs_lock);
-+	sba->reqs_fence = false;
-+	INIT_LIST_HEAD(&sba->reqs_alloc_list);
-+	INIT_LIST_HEAD(&sba->reqs_pending_list);
-+	INIT_LIST_HEAD(&sba->reqs_active_list);
-+	INIT_LIST_HEAD(&sba->reqs_received_list);
-+	INIT_LIST_HEAD(&sba->reqs_completed_list);
-+	INIT_LIST_HEAD(&sba->reqs_aborted_list);
-+	INIT_LIST_HEAD(&sba->reqs_free_list);
-+
-+	sba->reqs = devm_kcalloc(sba->dev, sba->max_req,
-+				 sizeof(*req), GFP_KERNEL);
-+	if (!sba->reqs) {
-+		ret = -ENOMEM;
-+		goto fail_free_cmds_pool;
-+	}
-+
-+	for (i = 0, p = 0; i < sba->max_req; i++) {
-+		req = &sba->reqs[i];
-+		INIT_LIST_HEAD(&req->node);
-+		req->sba = sba;
-+		req->state = SBA_REQUEST_STATE_FREE;
-+		INIT_LIST_HEAD(&req->next);
-+		req->next_count = 1;
-+		atomic_set(&req->next_pending_count, 0);
-+		req->fence = false;
-+		req->resp = sba->resp_base + p;
-+		req->resp_dma = sba->resp_dma_base + p;
-+		p += sba->hw_resp_size;
-+		req->cmds = devm_kcalloc(sba->dev, sba->max_cmd_per_req,
-+					 sizeof(*req->cmds), GFP_KERNEL);
-+		if (!req->cmds) {
-+			ret = -ENOMEM;
-+			goto fail_free_cmds_pool;
-+		}
-+		for (j = 0; j < sba->max_cmd_per_req; j++) {
-+			req->cmds[j].cmd = 0;
-+			req->cmds[j].cmd_dma = sba->cmds_base +
-+				(i * sba->max_cmd_per_req + j) * sizeof(u64);
-+			req->cmds[j].cmd_dma_addr = sba->cmds_dma_base +
-+				(i * sba->max_cmd_per_req + j) * sizeof(u64);
-+			req->cmds[j].flags = 0;
-+		}
-+		memset(&req->msg, 0, sizeof(req->msg));
-+		dma_async_tx_descriptor_init(&req->tx, &sba->dma_chan);
-+		req->tx.tx_submit = sba_tx_submit;
-+		req->tx.phys = req->resp_dma;
-+		list_add_tail(&req->node, &sba->reqs_free_list);
-+	}
-+
-+	sba->reqs_free_count = sba->max_req;
-+
-+	return 0;
-+
-+fail_free_cmds_pool:
-+	dma_free_coherent(sba->dma_dev.dev,
-+			  sba->max_cmds_pool_size,
-+			  sba->cmds_base, sba->cmds_dma_base);
-+fail_free_resp_pool:
-+	dma_free_coherent(sba->dma_dev.dev,
-+			  sba->max_resp_pool_size,
-+			  sba->resp_base, sba->resp_dma_base);
-+	return ret;
-+}
-+
-+static void sba_freeup_channel_resources(struct sba_device *sba)
-+{
-+	dmaengine_terminate_all(&sba->dma_chan);
-+	dma_free_coherent(sba->dma_dev.dev, sba->max_cmds_pool_size,
-+			  sba->cmds_base, sba->cmds_dma_base);
-+	dma_free_coherent(sba->dma_dev.dev, sba->max_resp_pool_size,
-+			  sba->resp_base, sba->resp_dma_base);
-+	sba->resp_base = NULL;
-+	sba->resp_dma_base = 0;
-+}
-+
-+static int sba_async_register(struct sba_device *sba)
-+{
-+	int ret;
-+	struct dma_device *dma_dev = &sba->dma_dev;
-+
-+	/* Initialize DMA channel cookie */
-+	sba->dma_chan.device = dma_dev;
-+	dma_cookie_init(&sba->dma_chan);
-+
-+	/* Initialize DMA device capability mask */
-+	dma_cap_zero(dma_dev->cap_mask);
-+	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-+	dma_cap_set(DMA_XOR, dma_dev->cap_mask);
-+	dma_cap_set(DMA_PQ, dma_dev->cap_mask);
-+
-+	/*
-+	 * Set mailbox channel device as the base device of
-+	 * our dma_device because the actual memory accesses
-+	 * will be done by mailbox controller
-+	 */
-+	dma_dev->dev = sba->mbox_dev;
-+
-+	/* Set base prep routines */
-+	dma_dev->device_free_chan_resources = sba_free_chan_resources;
-+	dma_dev->device_terminate_all = sba_device_terminate_all;
-+	dma_dev->device_issue_pending = sba_issue_pending;
-+	dma_dev->device_tx_status = sba_tx_status;
-+
-+	/* Set memcpy routines and capability */
-+	if (dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask))
-+		dma_dev->device_prep_dma_memcpy = sba_prep_dma_memcpy;
-+
-+	/* Set xor routines and capability */
-+	if (dma_has_cap(DMA_XOR, dma_dev->cap_mask)) {
-+		dma_dev->device_prep_dma_xor = sba_prep_dma_xor;
-+		dma_dev->max_xor = sba->max_xor_srcs;
-+	}
-+
-+	/* Set pq routines and capability */
-+	if (dma_has_cap(DMA_PQ, dma_dev->cap_mask)) {
-+		dma_dev->device_prep_dma_pq = sba_prep_dma_pq;
-+		dma_set_maxpq(dma_dev, sba->max_pq_srcs, 0);
-+	}
-+
-+	/* Initialize DMA device channel list */
-+	INIT_LIST_HEAD(&dma_dev->channels);
-+	list_add_tail(&sba->dma_chan.device_node, &dma_dev->channels);
-+
-+	/* Register with Linux async DMA framework*/
-+	ret = dma_async_device_register(dma_dev);
-+	if (ret) {
-+		dev_err(sba->dev, "async device register error %d", ret);
-+		return ret;
-+	}
-+
-+	dev_info(sba->dev, "%s capabilities: %s%s%s\n",
-+		 dma_chan_name(&sba->dma_chan),
-+		 dma_has_cap(DMA_MEMCPY, dma_dev->cap_mask) ? "memcpy " : "",
-+		 dma_has_cap(DMA_XOR, dma_dev->cap_mask) ? "xor " : "",
-+		 dma_has_cap(DMA_PQ, dma_dev->cap_mask) ? "pq " : "");
-+
-+	return 0;
-+}
-+
-+static int sba_probe(struct platform_device *pdev)
-+{
-+	int i, ret = 0, mchans_count;
-+	struct sba_device *sba;
-+	struct platform_device *mbox_pdev;
-+	struct of_phandle_args args;
-+
-+	/* Allocate main SBA struct */
-+	sba = devm_kzalloc(&pdev->dev, sizeof(*sba), GFP_KERNEL);
-+	if (!sba)
-+		return -ENOMEM;
-+
-+	sba->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, sba);
-+
-+	/* Determine SBA version from DT compatible string */
-+	if (of_device_is_compatible(sba->dev->of_node, "brcm,iproc-sba"))
-+		sba->ver = SBA_VER_1;
-+	else if (of_device_is_compatible(sba->dev->of_node,
-+					 "brcm,iproc-sba-v2"))
-+		sba->ver = SBA_VER_2;
-+	else
-+		return -ENODEV;
-+
-+	/* Derived Configuration parameters */
-+	switch (sba->ver) {
-+	case SBA_VER_1:
-+		sba->max_req = 1024;
-+		sba->hw_buf_size = 4096;
-+		sba->hw_resp_size = 8;
-+		sba->max_pq_coefs = 6;
-+		sba->max_pq_srcs = 6;
-+		break;
-+	case SBA_VER_2:
-+		sba->max_req = 1024;
-+		sba->hw_buf_size = 4096;
-+		sba->hw_resp_size = 8;
-+		sba->max_pq_coefs = 30;
-+		/*
-+		 * We can support max_pq_srcs == max_pq_coefs because
-+		 * we are limited by number of SBA commands that we can
-+		 * fit in one message for underlying ring manager HW.
-+		 */
-+		sba->max_pq_srcs = 12;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+	sba->max_cmd_per_req = sba->max_pq_srcs + 3;
-+	sba->max_xor_srcs = sba->max_cmd_per_req - 1;
-+	sba->max_resp_pool_size = sba->max_req * sba->hw_resp_size;
-+	sba->max_cmds_pool_size = sba->max_req *
-+				  sba->max_cmd_per_req * sizeof(u64);
-+
-+	/* Setup mailbox client */
-+	sba->client.dev			= &pdev->dev;
-+	sba->client.rx_callback		= sba_receive_message;
-+	sba->client.tx_block		= false;
-+	sba->client.knows_txdone	= false;
-+	sba->client.tx_tout		= 0;
-+
-+	/* Number of channels equals number of mailbox channels */
-+	ret = of_count_phandle_with_args(pdev->dev.of_node,
-+					 "mboxes", "#mbox-cells");
-+	if (ret <= 0)
-+		return -ENODEV;
-+	mchans_count = ret;
-+	sba->mchans_count = 0;
-+	atomic_set(&sba->mchans_current, 0);
-+
-+	/* Allocate mailbox channel array */
-+	sba->mchans = devm_kcalloc(&pdev->dev, sba->mchans_count,
-+				   sizeof(*sba->mchans), GFP_KERNEL);
-+	if (!sba->mchans)
-+		return -ENOMEM;
-+
-+	/* Request mailbox channels */
-+	for (i = 0; i < mchans_count; i++) {
-+		sba->mchans[i] = mbox_request_channel(&sba->client, i);
-+		if (IS_ERR(sba->mchans[i])) {
-+			ret = PTR_ERR(sba->mchans[i]);
-+			goto fail_free_mchans;
-+		}
-+		sba->mchans_count++;
-+	}
-+
-+	/* Find-out underlying mailbox device */
-+	ret = of_parse_phandle_with_args(pdev->dev.of_node,
-+					 "mboxes", "#mbox-cells", 0, &args);
-+	if (ret)
-+		goto fail_free_mchans;
-+	mbox_pdev = of_find_device_by_node(args.np);
-+	of_node_put(args.np);
-+	if (!mbox_pdev) {
-+		ret = -ENODEV;
-+		goto fail_free_mchans;
-+	}
-+	sba->mbox_dev = &mbox_pdev->dev;
-+
-+	/* All mailbox channels should be of same ring manager device */
-+	for (i = 1; i < mchans_count; i++) {
-+		ret = of_parse_phandle_with_args(pdev->dev.of_node,
-+					 "mboxes", "#mbox-cells", i, &args);
-+		if (ret)
-+			goto fail_free_mchans;
-+		mbox_pdev = of_find_device_by_node(args.np);
-+		of_node_put(args.np);
-+		if (sba->mbox_dev != &mbox_pdev->dev) {
-+			ret = -EINVAL;
-+			goto fail_free_mchans;
-+		}
-+	}
-+
-+	/* Register DMA device with linux async framework */
-+	ret = sba_async_register(sba);
-+	if (ret)
-+		goto fail_free_mchans;
-+
-+	/* Prealloc channel resource */
-+	ret = sba_prealloc_channel_resources(sba);
-+	if (ret)
-+		goto fail_async_dev_unreg;
-+
-+	/* Print device info */
-+	dev_info(sba->dev, "%s using SBAv%d and %d mailbox channels",
-+		 dma_chan_name(&sba->dma_chan), sba->ver+1,
-+		 sba->mchans_count);
-+
-+	return 0;
-+
-+fail_async_dev_unreg:
-+	dma_async_device_unregister(&sba->dma_dev);
-+fail_free_mchans:
-+	for (i = 0; i < sba->mchans_count; i++)
-+		mbox_free_channel(sba->mchans[i]);
-+	return ret;
-+}
-+
-+static int sba_remove(struct platform_device *pdev)
-+{
-+	int i;
-+	struct sba_device *sba = platform_get_drvdata(pdev);
-+
-+	sba_freeup_channel_resources(sba);
-+
-+	dma_async_device_unregister(&sba->dma_dev);
-+
-+	for (i = 0; i < sba->mchans_count; i++)
-+		mbox_free_channel(sba->mchans[i]);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sba_of_match[] = {
-+	{ .compatible = "brcm,iproc-sba", },
-+	{ .compatible = "brcm,iproc-sba-v2", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sba_of_match);
-+
-+static struct platform_driver sba_driver = {
-+	.probe = sba_probe,
-+	.remove = sba_remove,
-+	.driver = {
-+		.name = "bcm-sba-raid",
-+		.of_match_table = sba_of_match,
-+	},
-+};
-+module_platform_driver(sba_driver);
-+
-+MODULE_DESCRIPTION("Broadcom SBA RAID driver");
-+MODULE_AUTHOR("Anup Patel <anup.patel@broadcom.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+Hmm, there isn't one for the AXP806 either.
+
+Some more info about the regulator names:
+
+>> +
+>> +             /* In comments: Initial setup from vendor sys_config.fex. */
+>> +             regulators {
+>> +                     /* 3.0 V (enabled). */
+>
+> This might be disabled though.
+>
+>> +                     reg_aldo1: aldo1 {
+>> +                             regulator-boot-on;
+>> +                             regulator-min-microvolt = <3000000>;
+>> +                             regulator-max-microvolt = <3000000>;
+>> +                             regulator-name = "vcc-3v0";
+>> +                     };
+>> +
+>> +                     /* 1.8 V (enabled). */
+>> +                     reg_aldo2: aldo2 {
+>> +                             regulator-boot-on;
+>> +                             regulator-min-microvolt = <1800000>;
+>> +                             regulator-max-microvolt = <3600000>;
+>> +                             regulator-name = "vcc-pg-pm-wifi+btio-audio";
+>
+> Usually, there is simpler names available on the schematics, or at
+> least simpler names we can come up with.
+>
+> Something like vcc-wifi would be enough her.
+
+It should be vddio-wifi. Looking at the pin groups it names, it likely
+just drives the I/O pins on both ends.
+
+>
+>> +                     };
+>> +
+>> +                     /* 2.5 V (enabled). */
+>> +                     reg_aldo3: aldo3 {
+>> +                             regulator-boot-on;
+>> +                             regulator-min-microvolt = <2500000>;
+>> +                             regulator-max-microvolt = <2500000>;
+>> +                             regulator-name = "vcc-pa-gmac2v5";
+>
+> vcc-gmac
+
+vcc-pa or vddio-gmac. 2.5V is for RGMII I/O. vcc-gmac is the "sw"
+regulator @ 3.3V.
+
+>
+>> +                     };
+>> +
+>> +                     /* 1.8 V (enabled). */
+>> +                     reg_bldo1: bldo1 {
+>> +                             regulator-always-on;    /* Hang if disabled */
+>> +                             regulator-min-microvolt = <1700000>;
+>> +                             regulator-max-microvolt = <1900000>;
+>> +                             regulator-name = "vdd18-dll-vcc18-pll";
+>
+> vdd-dll
+
+PLLs and DLLs are different though. Maybe vcc-pll-dll?
+
+>
+>> +                     };
+>> +
+>> +                     /* 0.9 V (enabled). */
+>> +                     reg_bldo2: bldo2 {
+>> +                             regulator-always-on;    /* Hang if disabled */
+>> +                             regulator-min-microvolt = < 800000>;
+>> +                             regulator-max-microvolt = <1100000>;
+>> +                             regulator-name = "vdd-cpus";
+>> +                     };
+>> +
+>> +                     /* 1.2 V (disabled). */
+>> +                     reg_bldo3: bldo3 {
+>> +                             regulator-min-microvolt = <1100000>;
+>> +                             regulator-max-microvolt = <1300000>;
+>> +                             regulator-name = "vcc12-hsic";
+>
+> vcc-hsic
+
+vcc12-hsic is actually the name listed in the SoC datasheet.
+
+>
+>> +                     };
+>> +
+>> +                     /* 1.1 V (enabled). */
+>> +                     reg_bldo4: bldo4 {
+>> +                             regulator-boot-on;
+>> +                             regulator-min-microvolt = < 800000>;
+>> +                             regulator-max-microvolt = <1100000>;
+>> +                             regulator-name = "vdd09-hdmi";
+>
+> vdd-hdmi
+
+vdd09-hdmi is actually the name listed in the SoC datasheet.
+
+>
+>> +                     };
+>> +
+>> +                     /* 3.3 V (enabled). PLx pins control some regulators. */
+>> +                     reg_cldo1: cldo1 {
+>> +                             regulator-always-on;
+>> +                             regulator-min-microvolt = <3300000>;
+>> +                             regulator-max-microvolt = <3300000>;
+>> +                             regulator-name = "vcc-pl-led";
+>
+> vcc-led, etc...
+
+vcc-pl is probably better... One can figure out the LEDs are connected to the
+PL group and maybe realize they are powered this way. Not that easy the other
+way around.
+
+I used really long names for the other 2 A80 boards though.
+
+
+Regards
+ChenYu
+
+>
+> Thanks,
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
