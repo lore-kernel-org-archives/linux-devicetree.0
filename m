@@ -1,56 +1,47 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/3 v2] usb: host: fotg2: add device tree probing
-Date: Fri, 10 Feb 2017 14:34:19 +0100
-Message-ID: <20170210133419.GA8547@kroah.com>
-References: <20170208200010.21522-1-ulli.kroll@googlemail.com>
- <20170208200010.21522-2-ulli.kroll@googlemail.com>
- <alpine.LNX.2.00.1702091513580.6226@T420s>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Add stmfts touchscreen node
+ for TM2 and TM2E
+Date: Fri, 10 Feb 2017 15:39:53 +0200
+Message-ID: <20170210133953.ejktq2vddb7imsrc@kozik-lap>
+References: <20170210021721.12218-1-andi.shyti@samsung.com>
+ <CGME20170210021729epcas5p4101902873e65e0a8faeb2f9cbea5843c@epcas5p4.samsung.com>
+ <20170210021721.12218-4-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.00.1702091513580.6226@T420s>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20170210021721.12218-4-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 03:20:49PM +0100, Hans Ulli Kroll wrote:
+On Fri, Feb 10, 2017 at 11:17:21AM +0900, Andi Shyti wrote:
+> TM2 and TM2E devices are provided with a ST-Microelectronics
+> Finger Tip S device with small differences:
 > 
-> Add device tree probe for fotg2 driver
+>  - screen size
+>  - TM2E uses the stmfts also as a touchkey for "back" and "menu"
 > 
-> v2:
-> fix in wrong MODULE_DEVICE_TABLE
+> In this commit the initial value of the interrupt line is set to
+> EXYNOS_PIN_PULL_UP as the interrupt is triggered when the line
+> goes down.
 > 
-> Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 > ---
->  drivers/usb/host/fotg210-hcd.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
-> 
-> diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
-> index 9d0b0518290a..2acc51b0be5a 100644
-> --- a/drivers/usb/host/fotg210-hcd.c
-> +++ b/drivers/usb/host/fotg210-hcd.c
-> @@ -23,6 +23,7 @@
->   * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
->   */
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/device.h>
->  #include <linux/dmapool.h>
->  #include <linux/kernel.h>
-> @@ -5600,6 +5601,15 @@ static int fotg210_hcd_probe(struct platform_device *pdev)
->  	if (usb_disabled())
->  		return -ENODEV;
->  
-> +	/* Right now device-tree probed devices don't get dma_mask set.
-> +	 * Since shared usb code relies on it, set it here for now.
-> +	 * Once we have dma capability bindings this can go away.
-> +	 */
-> +
-> +	retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> +	if (retval)
-> +		goto fail_create_hcd;
-> +
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 15 ++++++++++++++-
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts         |  5 +++++
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts        |  7 +++++++
+>  3 files changed, 26 insertions(+), 1 deletion(-)
+>
 
-This change doesn't match up with what the changelog describes :(
+Looks fine. I'll apply after v4.11-rc1 merge window.
+
+Best regards,
+Krzysztof
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
