@@ -1,88 +1,75 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH linux v7 3/6] hwmon: occ: Add I2C transport implementation
- for SCOM operations
-Date: Fri, 10 Feb 2017 15:05:05 -0600
-Message-ID: <4224dbab-d48c-be48-154d-5ed14dd5231e@linux.vnet.ibm.com>
-References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1486509056-25838-4-git-send-email-eajames@linux.vnet.ibm.com>
- <CACPK8XcdsG83HsQW1Pv5zR339mgTzYjfuLQE+gE8yk8Z88MrTA@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Sat, 11 Feb 2017 00:17:42 +0200
+Message-ID: <20170210221742.GI13854@valkosipuli.retiisi.org.uk>
+References: <20161214122451.GB27011@amd>
+ <20161222100104.GA30917@amd>
+ <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd>
+ <20170203123508.GA10286@amd>
+ <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
+ <20170208223017.GA18807@amd>
+ <CAL_JsqKSHvg+iB-SRd=YthauGP8mWeVF0j8X-fgLchwtOppH8A@mail.gmail.com>
+ <CAL_JsqLfbAxBbXOyK0QOCc=wPe6=a+qyrAwtdbt3DtspK6oiaw@mail.gmail.com>
+ <20170210195435.GA1615@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACPK8XcdsG83HsQW1Pv5zR339mgTzYjfuLQE+gE8yk8Z88MrTA@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170210195435.GA1615@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Pavel,
 
+On Fri, Feb 10, 2017 at 08:54:35PM +0100, Pavel Machek wrote:
+> 
+> > >>> > diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+> > >>> > new file mode 100644
+> > >>> > index 0000000..1b9f8e0
+> > >>> > --- /dev/null
+> > >>> > +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+> > >>> > @@ -0,0 +1,63 @@
+> > >>> > +Video Bus Switch Binding
+> > >>> > +========================
+> > >>>
+> > >>> I'd call it a mux rather than switch.
+> > >>
+> > >> It is a switch, not a multiplexor (
+> > >> https://en.wikipedia.org/wiki/Multiplexing ). Only one camera can
+> > >> operate at a time.
+> > >
+> > > It's no different than an i2c mux. It's one at a time.
+> 
+> Take a look at the wikipedia. If you do "one at a time" at 100Hz, you
+> can claim it is time-domain multiplex. But we are plain switching the
+> cameras. It takes second (or so) to setup the pipeline.
+> 
+> This is not multiplex.
 
-On 02/09/2017 11:31 PM, Joel Stanley wrote:
-> On Wed, Feb 8, 2017 at 9:40 AM,<eajames@linux.vnet.ibm.com>  wrote:
->> From: "Edward A. James"<eajames@us.ibm.com>
->>
->> Add functions to send SCOM operations over I2C bus. The BMC can
->> communicate with the Power8 host processor over I2C, but needs to use SCOM
->> operations in order to access the OCC register space.
-> This doesn't need to be separate from the p8_occ_i2c.c file. You can
-> remove a layer of function calls by merging this in and having these
-> be your getscom putscom bus_ops callbacks.
+The functionality is still the same, isn't it? Does it change what it is if
+the frequency might be 100 Hz or 0,01 Hz?
 
-The purpose of having this separate was so that we could do the scom 
-address shift for p8 separately.
+I was a bit annoyed for having to have two drivers for switching the source
+(one for GPIO, another for syscon / register), where both of the drivers
+would be essentially the same with the minor exception of having a slightly
+different means to toggle the mux setting.
 
->> Signed-off-by: Edward A. James<eajames@us.ibm.com>
->> Signed-off-by: Andrew Jeffery<andrew@aj.id.au>
->> ---
->>   drivers/hwmon/occ/occ_scom_i2c.c | 77 ++++++++++++++++++++++++++++++++++++++++
->>   drivers/hwmon/occ/occ_scom_i2c.h | 26 ++++++++++++++
->>   2 files changed, 103 insertions(+)
->>   create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
->>   create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
->>
->> diff --git a/drivers/hwmon/occ/occ_scom_i2c.c b/drivers/hwmon/occ/occ_scom_i2c.c
->> new file mode 100644
->> index 0000000..74bd6ff
->> --- /dev/null
->> +++ b/drivers/hwmon/occ/occ_scom_i2c.c
->> @@ -0,0 +1,77 @@
->> +
->> +int occ_i2c_getscom(void *bus, u32 address, u64 *data)
->> +{
->> +       ssize_t rc;
->> +       u64 buf;
-> If you add endianness annotations sparse can check your types are
-> consistent. The warning looks like this:
->
-> make C=2 drivers/hwmon/occ/occ_scom_i2c.o
-> drivers/hwmon/occ/occ_scom_i2c.c:48:17: warning: cast to restricted __be64
->
-> Which tells you it expects the type you pass to be64_to_cpu to be __be64.
->
->
->> +       struct i2c_client *client = bus;
->> +       struct i2c_msg msgs[2];
->> +
->> +       msgs[0].addr = client->addr;
->> +       msgs[0].flags = client->flags & I2C_M_TEN;
->> +       msgs[0].len = sizeof(u32);
->> +       msgs[0].buf = (char *)&address;
->> +
->> +       msgs[1].addr = client->addr;
->> +       msgs[1].flags = client->flags & I2C_M_TEN;
->> +       msgs[1].flags |= I2C_M_RD;
-> I first thought you had made a mistake here. Instead you could do:
->
->         msgs[1].flags = client->flags & I2C_M_TEN | I2C_M_RD;
+The MUX framework adds an API for controlling the MUX. Thus we'll need only
+a single driver that uses the MUX framework API for V4L2. As an added bonus,
+V4L2 would be in line with the rest of the MUX usage in the kernel.
 
-Sure. Was just copying i2c_master_recv.
+The set appears to already contain a GPIO MUX. What's needed would be to use
+the MUX API instead of direct GPIOs usage.
 
->> +       msgs[1].len = sizeof(u64);
->> +       msgs[1].buf = (char *)&buf;
->> +
->> +       rc = i2c_transfer(client->adapter, msgs, 2);
->> +       if (rc < 0)
->> +               return rc;
->> +
+-- 
+Kind regards,
 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
