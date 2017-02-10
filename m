@@ -1,71 +1,56 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Fri, 10 Feb 2017 15:34:39 +0200
-Message-ID: <20170210133439.qfiuggbuoi7hq6el@kozik-lap>
-References: <20170124134809.23315-1-richard.genoud@gmail.com>
- <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
- <CGME20170125075556epcas1p4b916a6d6acda28f8fc1959a1227520fa@epcas1p4.samsung.com>
- <CAJKOXPesCuYsK23466=6W9PPX7DtztdymZLBfNz0Dmjzwp4qBA@mail.gmail.com>
- <ef6c0d33-73d6-805e-aeab-86190e8b0aa0@samsung.com>
- <CAJKOXPd+CnmVG282NEVCFqS_3YEURCWx41udyQKpL21keGJOWg@mail.gmail.com>
- <4dca1d8e-f955-7791-90c0-4e73a273fe62@gmail.com>
- <CACQ1gAj5ebug28CJ2xiYWKohMhNbGr=tmy6mS-57CFq=K-bqyQ@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/3 v2] usb: host: fotg2: add device tree probing
+Date: Fri, 10 Feb 2017 14:34:19 +0100
+Message-ID: <20170210133419.GA8547@kroah.com>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com>
+ <20170208200010.21522-2-ulli.kroll@googlemail.com>
+ <alpine.LNX.2.00.1702091513580.6226@T420s>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACQ1gAj5ebug28CJ2xiYWKohMhNbGr=tmy6mS-57CFq=K-bqyQ@mail.gmail.com>
+In-Reply-To: <alpine.LNX.2.00.1702091513580.6226@T420s>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Genoud <richard.genoud@gmail.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Anand Moon <linux.amoon@gmail.com>, =?utf-8?Q?Bart=C5=82omiej_=C5=BBo=C5=82nierkiewicz?= <b.zolnierkie@samsung.com>, Felipe Balbi <balbi@kernel.org>, Huang Rui <ray.huang@amd.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Kukjin Kim <kgene@kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 11:26:48AM +0100, Richard Genoud wrote:
-> I did some tests with XU3 and XU4, playing with USB2 and USB3 quirks
-> (snps,dis_u{2,3}_susphy_quirk)
+On Thu, Feb 09, 2017 at 03:20:49PM +0100, Hans Ulli Kroll wrote:
 > 
-> kernel for the tests: next-20170206
-> DTBs: exynos5422-odroidxu3-lite.dtb exynos5422-odroidxu4.dtb
+> Add device tree probe for fotg2 driver
 > 
-> USB devices used for the tests: kingston USB3 key, Akasa sata/USB3
-> +SSD standard USB2 key
-> once recognized, a dd if=/dev/sda bs=1M count=100 of=/dev/null is done.
+> v2:
+> fix in wrong MODULE_DEVICE_TABLE
 > 
+> Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> ---
+>  drivers/usb/host/fotg210-hcd.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> The results are:
-> - On XU4:
->   - adding snps,dis_u2_susphy_quirk doesn't change anything:
->     inserting an USB2 or USB3 device gives the error message:
->     xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec,
-> port status = 0xc400fe3
->   - with snps,dis_u3_susphy_quirk, USB2 and USB3 devices are recognized
-> 
-> - On XU3:
->   - Without changing XU3 dts, USB2 devices are recognized.
->   - With or without the snps,dis_u3_susphy_quirk, USB3 devices are not
-> recognized/not working properly
->   (never seen or disconnected, unable to enumerate, etc.)
->   However, adding an external powered USB3 hub in between works. (with
-> or without the snps,dis_u3_susphy_quirk)
->   Anyway, this problem doesn't seems to be related to the other since
->   addind the quirks doesn't change anything.
+> diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+> index 9d0b0518290a..2acc51b0be5a 100644
+> --- a/drivers/usb/host/fotg210-hcd.c
+> +++ b/drivers/usb/host/fotg210-hcd.c
+> @@ -23,6 +23,7 @@
+>   * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+>   */
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/device.h>
+>  #include <linux/dmapool.h>
+>  #include <linux/kernel.h>
+> @@ -5600,6 +5601,15 @@ static int fotg210_hcd_probe(struct platform_device *pdev)
+>  	if (usb_disabled())
+>  		return -ENODEV;
+>  
+> +	/* Right now device-tree probed devices don't get dma_mask set.
+> +	 * Since shared usb code relies on it, set it here for now.
+> +	 * Once we have dma capability bindings this can go away.
+> +	 */
+> +
+> +	retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> +	if (retval)
+> +		goto fail_create_hcd;
+> +
 
->From this description I am missing where are you inserting the USB
-devices.
-
-Both boards have totally different USB port configuration. On XU3 the
-hub is on USB 2.0 port. On XU4 the opposite - the hub is on USB 3.0
-port.
-
-Best regards,
-Krzysztof
-
-> - On XU3 USB3 device port (dr_mode = "peripheral"):
->   - acting as an ethernet gadget only works with the snps,dis_u3_susphy_quirk.
->     It works well as USB2 or USB3 (tested with ethernet gadget+iperf)
-> 
-> So, at the end, it does seem usefull to add the
-> snps,dis_u3_susphy_quirk at the exynos5420.dtsi level.
-> Adding the snps,dis_u2_susphy_quirk doesn't seems to change anything
-> for XU3/XU4 board,
-> so I don't know if it is necessary or not.
+This change doesn't match up with what the changelog describes :(
