@@ -1,52 +1,80 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
-Subject: [PATCH RESEND] ASoC: sun4i-i2s: Update binding
-	documentation to include A31
-Date: Fri, 10 Feb 2017 11:00:46 +0100
-Message-ID: <20170210100046.32647-1-mylene.josserand@free-electrons.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/2] ARM64: dts: meson-gxbb: Add Mali node
+Date: Fri, 10 Feb 2017 11:04:44 +0100
+Message-ID: <1486721084-1383-3-git-send-email-narmstrong@baylibre.com>
+References: <1486721084-1383-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486721084-1383-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sboyd@codeaurora.org, khilman@baylibre.com, carlo@caione.org
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGEgbmV3IGNvbXBhdGlibGUgZm9yIHN1bjRpLWkycyBkcml2ZXIgdG8gaGFuZGxlIHNvbWUK
-U29DcyB0aGF0IGhhdmUgYSByZXNldCBsaW5lIHRoYXQgbXVzdCBiZSBhc3NlcnRlZC9kZWFzc2Vy
-dGVkLgoKVGhpcyBuZXcgY29tcGF0aWJsZSwgImFsbHdpbm5lcixzdW42aS1hMzEtaTJzIiwgcmVx
-dWlyZXMgdGhlCnByb3BlcnR5ICJyZXNldHMiIHdoaWNoIHNob3VsZCBiZSBhIHBoYW5kbGUgdG8g
-dGhlIHJlc2V0IGxpbmUuCkV4Y2VwdCB0aGVzZSBkaWZmZXJlbmNlcywgdGhlIGNvbXBhdGlibGUg
-aXMgaWRlbnRpY2FsIHRvIHByZXZpb3VzIG9uZQp3aGljaCB3aWxsIG5vdCBoYW5kbGUgYSByZXNl
-dCBsaW5lLgoKU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJh
-bmRAZnJlZS1lbGVjdHJvbnMuY29tPgpBY2tlZC1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJp
-cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
-ZWwub3JnPgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdW40
-aS1pMnMudHh0IHwgNSArKysrKwogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKQoKZGlm
-ZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdW40aS1p
-MnMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3N1bjRpLWky
-cy50eHQKaW5kZXggN2I1MjZlYzY0OTkxLi5mNGFkYzU4ZjgyYmEgMTAwNjQ0Ci0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdW40aS1pMnMudHh0CisrKyBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdW40aS1pMnMudHh0CkBAIC03
-LDYgKzcsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogCiAtIGNvbXBhdGlibGU6IHNob3VsZCBi
-ZSBvbmUgb2YgdGhlIGZvbGxvd2luZ3MKICAgIC0gImFsbHdpbm5lcixzdW40aS1hMTAtaTJzIgor
-ICAgLSAiYWxsd2lubmVyLHN1bjZpLWEzMS1pMnMiCiAtIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRy
-ZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGggb2YgbWVtb3J5IG1hcHBlZAogICByZWdp
-b24uCiAtIGludGVycnVwdHM6IHNob3VsZCBjb250YWluIHRoZSBJMlMgaW50ZXJydXB0LgpAQCAt
-MTksNiArMjAsMTAgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgIC0gIm1vZCIgOiBtb2R1bGUg
-Y2xvY2sgZm9yIHRoZSBJMlMgY29udHJvbGxlcgogLSAjc291bmQtZGFpLWNlbGxzIDogTXVzdCBi
-ZSBlcXVhbCB0byAwCiAKK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIHRoZSBmb2xsb3dpbmcgY29t
-cGF0aWJsZXM6CisJLSAiYWxsd2lubmVyLHN1bjZpLWEzMS1pMnMiCistIHJlc2V0czogcGhhbmRs
-ZSB0byB0aGUgcmVzZXQgbGluZSBmb3IgdGhpcyBjb2RlYworCiBFeGFtcGxlOgogCiBpMnMwOiBp
-MnNAMDFjMjI0MDAgewotLSAKMi4xMS4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2Et
-cHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2Fsc2EtZGV2ZWwK
+Add the Mali-450 MP3 node for GXBB.
+
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 37 +++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index b353073..46d57b4 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -474,6 +474,43 @@
+ 	};
+ };
+ 
++&apb {
++	mali: gpu@c0000 {
++		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
++		reg = <0x0 0xc0000 0x0 0x40000>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "gp", "gpmmu", "pp", "pmu",
++			"pp0", "ppmmu0", "pp1", "ppmmu1",
++			"pp2", "ppmmu2";
++		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
++		clock-names = "bus", "core";
++
++		/*
++		 * Mali clocking is provided by two identical clock paths
++		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
++		 * free mux to safely change frequency while running.
++		 */
++		assigned-clocks = <&clkc CLKID_GP0_PLL>,
++				  <&clkc CLKID_MALI_0>,
++				  <&clkc CLKID_MALI>; /* Glitch free mux */
++		assigned-clock-parents = <0>, /* Do Nothing */
++					 <&clkc CLKID_GP0_PLL>,
++					 <&clkc CLKID_MALI_0>;
++		assigned-clock-rates = <744000000>,
++				       <744000000>,
++				       <0>; /* Do Nothing */
++	};
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
+-- 
+1.9.1
