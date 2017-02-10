@@ -1,53 +1,42 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RESEND 4/5] mtd: nand: atmel: Document the new DT
- bindings
-Date: Fri, 10 Feb 2017 13:55:28 +0100
-Message-ID: <20170210135528.4ee6807b@bbrezillon>
-References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
-        <1485535324-28393-5-git-send-email-boris.brezillon@free-electrons.com>
-        <20170201153920.g26erfzxnxrmsu4z@rob-hp-laptop>
-        <20170201164711.27e4b600@bbrezillon>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3 v2] usb: host: fotg2: add device tree probing
+Date: Fri, 10 Feb 2017 14:12:36 +0100
+Message-ID: <CACRpkdYmfv0XCirnaMSqZ7O9cKp2XAvqJoGQBSXqHN9fSKGnHg@mail.gmail.com>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com>
+ <20170208200010.21522-2-ulli.kroll@googlemail.com> <alpine.LNX.2.00.1702091513580.6226@T420s>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170201164711.27e4b600@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM9gwCICpdfJQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.LNX.2.00.1702091513580.6226@T420s>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Feb 9, 2017 at 3:20 PM, Hans Ulli Kroll
+<ulli.kroll@googlemail.com> wrote:
 
-On Wed, 1 Feb 2017 16:47:11 +0100
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Add device tree probe for fotg2 driver
+>
+> v2:
+> fix in wrong MODULE_DEVICE_TABLE
+>
+> Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
 
-> On Wed, 1 Feb 2017 09:39:20 -0600
-> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> 
-> > On Fri, Jan 27, 2017 at 05:42:03PM +0100, Boris Brezillon wrote:  
-> > > Document the new DT bindings for the Atmel NAND controller and
-> > > deprecate the old ones.    
-> > 
-> > Why?  
-> 
-> Because the existing representation is not only wrong, it also causes
-> pinmux conflicts between the NAND controller and other devices present
-> on the EBI bus.
-> It's explained in the cover letter, but maybe you want me to put that
-> in the commit message.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Do you need more explanation (A.K.A. ping).
+> +       /* Right now device-tree probed devices don't get dma_mask set.
+> +        * Since shared usb code relies on it, set it here for now.
+> +        * Once we have dma capability bindings this can go away.
+> +        */
+> +
+> +       retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> +       if (retval)
+> +               goto fail_create_hcd;
 
-> 
-> >   
-> > > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/mtd/atmel-nand.txt         | 106 ++++++++++++++++++++-
-> > >  1 file changed, 105 insertions(+), 1 deletion(-)    
-> 
+Were you able to test this part? I saw the gemini has some DMA engine
+but I never saw a driver for it. It looks like a reasonable thing to do to
+my untrained DMA eye.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
