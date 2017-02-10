@@ -1,167 +1,48 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2 1/4] dt-bindings: add multidomain support to i.MX GPC
- DT binding
-Date: Fri, 10 Feb 2017 16:43:59 +0100
-Message-ID: <1486741439.3879.7.camel@pengutronix.de>
-References: <20170127183728.26701-1-l.stach@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Make EN2 pin optional in the TRF7970A driver
+Date: Fri, 10 Feb 2017 09:51:14 -0600
+Message-ID: <20170210155114.pvjahqqjqurw5jdc@rob-hp-laptop>
+References: <1486444924-18444-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127183728.26701-1-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1486444924-18444-1-git-send-email-hs@denx.de>
+Sender: netdev-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: netdev@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lauro Ramos Venancio <lauro.venancio@openbossa.org>, Aloisio Almeida Jr <aloisio.almeida@openbossa.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-are you willing to take this series through your tree or do you think we
-need to get this in via some other tree?
-
-It would be good to queue this up somewhere as a reference, as I have
-some upcoming work for MX6SX and MX6QP, which depends on this series.
-
-Regards,
-Lucas
-
-Am Freitag, den 27.01.2017, 19:37 +0100 schrieb Lucas Stach:
-> This adds a new binding for the Freescale i.MX GPC block, which allows
-> to describe multiple power domains in a more natural way. The driver
-> will continue to support the old binding for existing DTBs, but new
-> features like the additional domains present on i.MX6SX will only be
-> usable with the new binding.
+On Tue, Feb 07, 2017 at 06:22:04AM +0100, Heiko Schocher wrote:
+> From: Guan Ben <ben.guan@cn.bosch.com>
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Make the EN2 pin optional. This is useful for boards,
+> which have this pin fix wired, for example to ground.
+> 
+> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> 
 > ---
-> v2:
-> - use 'power-supply' as name for the domain supply
-> - clarify that 'pgc' is a node, not a property
-> ---
->  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 80 ++++++++++++++--------
->  1 file changed, 53 insertions(+), 27 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> index 65cc0345747d..1598c8029add 100644
-> --- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> @@ -1,22 +1,40 @@
->  Freescale i.MX General Power Controller
->  =======================================
->  
-> -The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-> -counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-> -domains.
-> +The i.MX6 General Power Control (GPC) block contains DVFS load tracking
-> +counters and Power Gating Control (PGC).
->  
->  Required properties:
->  - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
->  - reg: should be register base and length as documented in the
->    datasheet
-> -- interrupts: Should contain GPC interrupt request 1
-> -- pu-supply: Link to the LDO regulator powering the PU power domain
-> -- clocks: Clock phandles to devices in the PU power domain that need
-> -	  to be enabled during domain power-up for reset propagation.
-> -- #power-domain-cells: Should be 1, see below:
-> +- interrupts: Should contain one interrupt specifier for the GPC interrupt
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +  - ipg
->  
-> -The gpc node is a power-controller as documented by the generic power domain
-> -bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-> +The power domains are generic power domain providers as documented in
-> +Documentation/devicetree/bindings/power/power_domain.txt. They are described as
-> +subnodes of the power gating controller 'pgc' node of the GPC and should
-> +contain the following:
-> +
-> +Required properties:
-> +- reg: the DOMAIN_INDEX as used by the client devices to refer to this
-> +  power domain
-> +  The following DOMAIN_INDEX values are valid for i.MX6Q:
-> +  ARM_DOMAIN     0
-> +  PU_DOMAIN      1
-> +  The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-> +  DISPLAY_DOMAIN 2
-> +
-> +- #power-domain-cells: Should be 0
-> +
-> +Optional properties:
-> +- clocks: a number of phandles to clocks that need to be enabled during domain
-> +  power-up sequencing to ensure reset propagation into devices located inside
-> +  this power domain
-> +- power-supply: a phandle to the regulator powering this domain
->  
->  Example:
->  
-> @@ -25,14 +43,29 @@ Example:
->  		reg = <0x020dc000 0x4000>;
->  		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
-> -		pu-supply = <&reg_pu>;
-> -		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> -			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> -			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> -			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> -			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> -			 <&clks IMX6QDL_CLK_VPU_AXI>;
-> -		#power-domain-cells = <1>;
-> +		clocks = <&clks IMX6QDL_CLK_IPG>;
-> +		clock-names = "ipg";
-> +		
-> +		pgc {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			power-domain@0 {
-> +				reg = <0>;
-> +				#power-domain-cells = <0>;
-> +			};
-> +			pd_pu: power-domain@1 {
-> +				reg = <1>;
-> +				#power-domain-cells = <0>;
-> +				power-supply = <&reg_pu>;
-> +				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> +				         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> +				         <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> +				         <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> +				         <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> +				         <&clks IMX6QDL_CLK_VPU_AXI>;
-> +			};
-> +		};
->  	};
->  
+>  .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++--
+>  drivers/nfc/trf7970a.c                             | 26 ++++++++++++----------
+>  2 files changed, 16 insertions(+), 14 deletions(-)
 > 
-> @@ -40,20 +73,13 @@ Specifying power domain for IP modules
->  ======================================
->  
->  IP cores belonging to a power domain should contain a 'power-domains' property
-> -that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
-> -the power domain the device belongs to.
-> +that is a phandle pointing to the power domain the device belongs to.
->  
->  Example of a device that is part of the PU power domain:
->  
->  	vpu: vpu@02040000 {
->  		reg = <0x02040000 0x3c000>;
->  		/* ... */
-> -		power-domains = <&gpc 1>;
-> +		power-domains = <&pd_pu>;
->  		/* ... */
->  	};
-> -
-> -The following DOMAIN_INDEX values are valid for i.MX6Q:
-> -ARM_DOMAIN     0
-> -PU_DOMAIN      1
-> -The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-> -DISPLAY_DOMAIN 2
+> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> index 32b35a0..5889a3d 100644
+> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+> @@ -5,8 +5,8 @@ Required properties:
+>  - spi-max-frequency: Maximum SPI frequency (<= 2000000).
+>  - interrupt-parent: phandle of parent interrupt handler.
+>  - interrupts: A single interrupt specifier.
+> -- ti,enable-gpios: Two GPIO entries used for 'EN' and 'EN2' pins on the
+> -  TRF7970A.
+> +- ti,enable-gpios: One or two GPIO entries used for 'EN' and 'EN2' pins on the
+> +  TRF7970A. EN2 is optional.
+
+Could EN ever be optional/fixed? If so, perhaps deprecate this property 
+and do 2 properties, one for each pin.
+
+Rob
