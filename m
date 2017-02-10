@@ -1,47 +1,33 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 2/3] gpio: wm831x: Add basic device tree support
-Date: Fri, 10 Feb 2017 13:53:19 +0000
-Message-ID: <1486734800-10141-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1486734800-10141-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 04/18] drivers/fsi: Add fsi master definition
+Date: Fri, 10 Feb 2017 15:21:19 +0100
+Message-ID: <20170210142119.GA13386@kroah.com>
+References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
+ <20170201165358.45415-5-cbostic@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486734800-10141-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Content-Disposition: inline
+In-Reply-To: <20170201165358.45415-5-cbostic@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Jeremy Kerr <jk@ozlabs.org>, Chris Bostic <cbostic@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Now the wm831x-core has basic DT support we can update this driver to
-allow use of the GPIOs within a device tree system.
+On Wed, Feb 01, 2017 at 10:53:44AM -0600, Christopher Bostic wrote:
+> From: Jeremy Kerr <jk@ozlabs.org>
+> 
+> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
+> ---
+>  drivers/fsi/fsi-core.c   | 28 ++++++++++++++++++++++++++++
+>  drivers/fsi/fsi-master.h | 37 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 65 insertions(+)
+>  create mode 100644 drivers/fsi/fsi-master.h
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- drivers/gpio/gpio-wm831x.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+I can't take patches without any changelog text, so please fix up and
+resend the remaining patches in the series.
 
-diff --git a/drivers/gpio/gpio-wm831x.c b/drivers/gpio/gpio-wm831x.c
-index 533707f..110453c7 100644
---- a/drivers/gpio/gpio-wm831x.c
-+++ b/drivers/gpio/gpio-wm831x.c
-@@ -264,7 +264,7 @@ static const struct gpio_chip template_chip = {
- static int wm831x_gpio_probe(struct platform_device *pdev)
- {
- 	struct wm831x *wm831x = dev_get_drvdata(pdev->dev.parent);
--	struct wm831x_pdata *pdata = dev_get_platdata(wm831x->dev);
-+	struct wm831x_pdata *pdata = &wm831x->pdata;
- 	struct wm831x_gpio *wm831x_gpio;
- 	int ret;
- 
-@@ -281,6 +281,9 @@ static int wm831x_gpio_probe(struct platform_device *pdev)
- 		wm831x_gpio->gpio_chip.base = pdata->gpio_base;
- 	else
- 		wm831x_gpio->gpio_chip.base = -1;
-+#ifdef CONFIG_OF_GPIO
-+	wm831x_gpio->gpio_chip.of_node = wm831x->dev->of_node;
-+#endif
- 
- 	ret = devm_gpiochip_add_data(&pdev->dev, &wm831x_gpio->gpio_chip,
- 				     wm831x_gpio);
--- 
-2.1.4
+thanks,
+
+greg k-h
