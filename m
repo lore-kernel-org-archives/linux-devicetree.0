@@ -1,7 +1,7 @@
 From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH v2 1/2] Documentation: dt: dwc2: amend clocks property
-Date: Fri, 10 Feb 2017 11:06:26 +0800
-Message-ID: <1486695987-7280-2-git-send-email-frank.wang@rock-chips.com>
+Subject: [RESEND PATCH v2 2/2] usb: dwc2: add multiple clocks handling
+Date: Fri, 10 Feb 2017 11:06:27 +0800
+Message-ID: <1486695987-7280-3-git-send-email-frank.wang@rock-chips.com>
 References: <1486695987-7280-1-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,40 +21,124 @@ To: johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbk
 Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Move 'clocks' to optional properties since not every platform
-is going to need to specify it and add pmu/utmi/ulpi/utmifs
-optional clocks into 'clock-names' list.
+Since dwc2 may have one or more input clocks need to manage for some
+platform, so this adds change clk to clk's array of struct dwc2_hsotg
+to handle more clocks operation.
 
 Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/dwc2.txt | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/usb/dwc2/core.h     |  5 ++++-
+ drivers/usb/dwc2/platform.c | 39 ++++++++++++++++++++++++++-------------
+ 2 files changed, 30 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 6c7c2bce..4d8b6dd 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -16,11 +16,18 @@ Required properties:
-   - snps,dwc2: A generic DWC2 USB controller with default parameters.
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
--- clocks: clock provider specifier
--- clock-names: shall be "otg"
--Refer to clk/clock-bindings.txt for generic clock consumer properties
+diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+index 1a7e830..afde8a1 100644
+--- a/drivers/usb/dwc2/core.h
++++ b/drivers/usb/dwc2/core.h
+@@ -121,6 +121,9 @@ static inline void dwc2_writel(u32 value, void __iomem *addr)
+ /* Maximum number of Endpoints/HostChannels */
+ #define MAX_EPS_CHANNELS	16
  
- Optional properties:
-+- clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock-names.
-+- clock-names: Contain the following optional clocks on demand:
-+  - "otg":	AHB clock. It is the scan clock for the core's AHB domain.
-+  - "pmu":	PMU hclk. Clock to PMU module when hibernation and/or ADP is enabled.
-+  - "utmi":	UTMI+ clock. Functionally used only when a UTMI PHY is selected,
-+		but always used as the PHY domain clock during DFT Scan mode.
-+  - "ulpi":	ULPI PHY clock. Present only when a ULPI PHY is selected; negedge
-+		is also used in DDR mode.
-+  - "utmifs":	UTMI FS clock. Present only when OTG_FSPHY_INTERFACE != 0.
-+Refer to clk/clock-bindings.txt for generic clock consumer properties
- - phys: phy provider specifier
- - phy-names: shall be "usb2-phy"
- Refer to phy/phy-bindings.txt for generic phy consumer properties
++/* Maximum number of dwc2 input clocks */
++#define DWC2_MAX_CLKS	5
++
+ /* dwc2-hsotg declarations */
+ static const char * const dwc2_hsotg_supply_names[] = {
+ 	"vusb_d",               /* digital USB supply, 1.2V */
+@@ -913,7 +916,7 @@ struct dwc2_hsotg {
+ 	spinlock_t lock;
+ 	void *priv;
+ 	int     irq;
+-	struct clk *clk;
++	struct clk *clks[DWC2_MAX_CLKS];
+ 	struct reset_control *reset;
+ 
+ 	unsigned int queuing_high_bandwidth:1;
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 9564bc7..795fc43b 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -123,17 +123,20 @@ static int dwc2_get_dr_mode(struct dwc2_hsotg *hsotg)
+ static int __dwc2_lowlevel_hw_enable(struct dwc2_hsotg *hsotg)
+ {
+ 	struct platform_device *pdev = to_platform_device(hsotg->dev);
+-	int ret;
++	int clk, ret;
+ 
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(hsotg->supplies),
+ 				    hsotg->supplies);
+ 	if (ret)
+ 		return ret;
+ 
+-	if (hsotg->clk) {
+-		ret = clk_prepare_enable(hsotg->clk);
+-		if (ret)
++	for (clk = 0; clk < DWC2_MAX_CLKS && hsotg->clks[clk]; clk++) {
++		ret = clk_prepare_enable(hsotg->clks[clk]);
++		if (ret) {
++			while (--clk >= 0)
++				clk_disable_unprepare(hsotg->clks[clk]);
+ 			return ret;
++		}
+ 	}
+ 
+ 	if (hsotg->uphy) {
+@@ -168,7 +171,7 @@ int dwc2_lowlevel_hw_enable(struct dwc2_hsotg *hsotg)
+ static int __dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
+ {
+ 	struct platform_device *pdev = to_platform_device(hsotg->dev);
+-	int ret = 0;
++	int clk, ret = 0;
+ 
+ 	if (hsotg->uphy) {
+ 		usb_phy_shutdown(hsotg->uphy);
+@@ -182,8 +185,9 @@ static int __dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
+ 	if (ret)
+ 		return ret;
+ 
+-	if (hsotg->clk)
+-		clk_disable_unprepare(hsotg->clk);
++	for (clk = DWC2_MAX_CLKS - 1; clk >= 0; clk--)
++		if (hsotg->clks[clk])
++			clk_disable_unprepare(hsotg->clks[clk]);
+ 
+ 	ret = regulator_bulk_disable(ARRAY_SIZE(hsotg->supplies),
+ 				     hsotg->supplies);
+@@ -209,7 +213,7 @@ int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
+ 
+ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+ {
+-	int i, ret;
++	int i, clk, ret;
+ 
+ 	hsotg->reset = devm_reset_control_get_optional(hsotg->dev, "dwc2");
+ 	if (IS_ERR(hsotg->reset)) {
+@@ -282,11 +286,20 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+ 			hsotg->phyif = GUSBCFG_PHYIF8;
+ 	}
+ 
+-	/* Clock */
+-	hsotg->clk = devm_clk_get(hsotg->dev, "otg");
+-	if (IS_ERR(hsotg->clk)) {
+-		hsotg->clk = NULL;
+-		dev_dbg(hsotg->dev, "cannot get otg clock\n");
++	/* Clocks */
++	for (clk = 0; clk < DWC2_MAX_CLKS; clk++) {
++		hsotg->clks[clk] = of_clk_get(hsotg->dev->of_node, clk);
++		if (IS_ERR(hsotg->clks[clk])) {
++			ret = PTR_ERR(hsotg->clks[clk]);
++			if (ret == -EPROBE_DEFER) {
++				while (--clk >= 0)
++					clk_put(hsotg->clks[clk]);
++				return ret;
++			}
++
++			hsotg->clks[clk] = NULL;
++			break;
++		}
+ 	}
+ 
+ 	/* Regulators */
 -- 
 1.9.1
