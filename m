@@ -1,28 +1,88 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] arm64: dts: rockchip: support dwc3 USB for rk3399
-Date: Fri, 10 Feb 2017 23:01:54 +0100
-Message-ID: <2384713.Q7s8nQmdof@phil>
-References: <20170210010521.78872-1-briannorris@chromium.org> <20170210010521.78872-3-briannorris@chromium.org>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH linux v7 3/6] hwmon: occ: Add I2C transport implementation
+ for SCOM operations
+Date: Fri, 10 Feb 2017 15:05:05 -0600
+Message-ID: <4224dbab-d48c-be48-154d-5ed14dd5231e@linux.vnet.ibm.com>
+References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1486509056-25838-4-git-send-email-eajames@linux.vnet.ibm.com>
+ <CACPK8XcdsG83HsQW1Pv5zR339mgTzYjfuLQE+gE8yk8Z88MrTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170210010521.78872-3-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACPK8XcdsG83HsQW1Pv5zR339mgTzYjfuLQE+gE8yk8Z88MrTA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 9. Februar 2017, 17:05:17 CET schrieb Brian Norris:
-> Add the dwc3 usb needed node information for rk3399.
-> 
-> Signed-off-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-applied for 4.12
 
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02/09/2017 11:31 PM, Joel Stanley wrote:
+> On Wed, Feb 8, 2017 at 9:40 AM,<eajames@linux.vnet.ibm.com>  wrote:
+>> From: "Edward A. James"<eajames@us.ibm.com>
+>>
+>> Add functions to send SCOM operations over I2C bus. The BMC can
+>> communicate with the Power8 host processor over I2C, but needs to use SCOM
+>> operations in order to access the OCC register space.
+> This doesn't need to be separate from the p8_occ_i2c.c file. You can
+> remove a layer of function calls by merging this in and having these
+> be your getscom putscom bus_ops callbacks.
+
+The purpose of having this separate was so that we could do the scom 
+address shift for p8 separately.
+
+>> Signed-off-by: Edward A. James<eajames@us.ibm.com>
+>> Signed-off-by: Andrew Jeffery<andrew@aj.id.au>
+>> ---
+>>   drivers/hwmon/occ/occ_scom_i2c.c | 77 ++++++++++++++++++++++++++++++++++++++++
+>>   drivers/hwmon/occ/occ_scom_i2c.h | 26 ++++++++++++++
+>>   2 files changed, 103 insertions(+)
+>>   create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
+>>   create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+>>
+>> diff --git a/drivers/hwmon/occ/occ_scom_i2c.c b/drivers/hwmon/occ/occ_scom_i2c.c
+>> new file mode 100644
+>> index 0000000..74bd6ff
+>> --- /dev/null
+>> +++ b/drivers/hwmon/occ/occ_scom_i2c.c
+>> @@ -0,0 +1,77 @@
+>> +
+>> +int occ_i2c_getscom(void *bus, u32 address, u64 *data)
+>> +{
+>> +       ssize_t rc;
+>> +       u64 buf;
+> If you add endianness annotations sparse can check your types are
+> consistent. The warning looks like this:
+>
+> make C=2 drivers/hwmon/occ/occ_scom_i2c.o
+> drivers/hwmon/occ/occ_scom_i2c.c:48:17: warning: cast to restricted __be64
+>
+> Which tells you it expects the type you pass to be64_to_cpu to be __be64.
+>
+>
+>> +       struct i2c_client *client = bus;
+>> +       struct i2c_msg msgs[2];
+>> +
+>> +       msgs[0].addr = client->addr;
+>> +       msgs[0].flags = client->flags & I2C_M_TEN;
+>> +       msgs[0].len = sizeof(u32);
+>> +       msgs[0].buf = (char *)&address;
+>> +
+>> +       msgs[1].addr = client->addr;
+>> +       msgs[1].flags = client->flags & I2C_M_TEN;
+>> +       msgs[1].flags |= I2C_M_RD;
+> I first thought you had made a mistake here. Instead you could do:
+>
+>         msgs[1].flags = client->flags & I2C_M_TEN | I2C_M_RD;
+
+Sure. Was just copying i2c_master_recv.
+
+>> +       msgs[1].len = sizeof(u64);
+>> +       msgs[1].buf = (char *)&buf;
+>> +
+>> +       rc = i2c_transfer(client->adapter, msgs, 2);
+>> +       if (rc < 0)
+>> +               return rc;
+>> +
+
