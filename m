@@ -1,47 +1,53 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v6 2/4] Documentation: dt: add bindings for ti-cpufreq
-Date: Fri, 10 Feb 2017 13:28 +0100
-Message-ID: <3046998.7dExGlRDb3@aspire.rjw.lan>
-References: <20170203172929.23940-3-d-gerlach@ti.com>
- <CAJZ5v0hT4peuRQUrLHC32GmVSoa6Npv2qutNo2WEhne72hHi6A@mail.gmail.com>
- <20170210031349.GG14503@vireshk-i7>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RESEND 4/5] mtd: nand: atmel: Document the new DT
+ bindings
+Date: Fri, 10 Feb 2017 13:55:28 +0100
+Message-ID: <20170210135528.4ee6807b@bbrezillon>
+References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1485535324-28393-5-git-send-email-boris.brezillon@free-electrons.com>
+        <20170201153920.g26erfzxnxrmsu4z@rob-hp-laptop>
+        <20170201164711.27e4b600@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170210031349.GG14503@vireshk-i7>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>, Tony Lindgren <tony@atomide.com>, Linux PM <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170201164711.27e4b600@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM9gwCICpdfJQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, February 10, 2017 08:43:49 AM Viresh Kumar wrote:
-> On 09-02-17, 23:03, Rafael J. Wysocki wrote:
-> > In particular, Viresh, if you ACK something, please make sure that it
-> > doesn't conflict with your own patches.
+Hi Rob,
+
+On Wed, 1 Feb 2017 16:47:11 +0100
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> On Wed, 1 Feb 2017 09:39:20 -0600
+> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 > 
-> I hope you are talking about the patch 3/4 for which Arnd also sent a
-> fix.  I acked it back on 18th of January and Dave has been carrying my
-> Ack since then. When he posted again, I didn't went into reviewing it
-> again as I saw my Ack being there.
+> > On Fri, Jan 27, 2017 at 05:42:03PM +0100, Boris Brezillon wrote:  
+> > > Document the new DT bindings for the Atmel NAND controller and
+> > > deprecate the old ones.    
+> > 
+> > Why?  
+> 
+> Because the existing representation is not only wrong, it also causes
+> pinmux conflicts between the NAND controller and other devices present
+> on the EBI bus.
+> It's explained in the cover letter, but maybe you want me to put that
+> in the commit message.
 
-Well, OK, but you did know that the OPP API had changed in the meantime,
-so it wouldn't have hurt to double check I suppose?
+Do you need more explanation (A.K.A. ping).
 
-> Yes, he ended up using an API which just got updated after 18th of Jan
-> and yes both me and Dave missed that. But I feel it is difficult to
-> take care of scenarios like this. Perhaps he should have made sure
-> that he base it of pm/linux-next and nothing would have gone wrong.
+> 
+> >   
+> > > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > >  .../devicetree/bindings/mtd/atmel-nand.txt         | 106 ++++++++++++++++++++-
+> > >  1 file changed, 105 insertions(+), 1 deletion(-)    
+> 
 
-Yes, that would help, but then how to enforce that?
-
-Thanks,
-Rafael
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
