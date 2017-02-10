@@ -1,55 +1,64 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v4 0/9] ARM: dts: support I2SE Duckbill devices
-Date: Fri, 10 Feb 2017 15:45:15 +0100
-Message-ID: <a6386810-1e99-130a-5fdf-02cce13d0fc4@i2se.com>
-References: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
+From: Yannick Fertre <yannick.fertre@st.com>
+Subject: [PATCH v2 8/9] ARM: dts: stm32: Enable ltdc & simple panel on
+ stm32f429-Eval board
+Date: Fri, 10 Feb 2017 15:54:48 +0100
+Message-ID: <1486738489-22154-9-git-send-email-yannick.fertre@st.com>
+References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Michael Heimpold <michael.heimpold@i2se.com>, shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: fabio.estevam@nxp.com, devicetree@vger.kernel.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am 09.02.2017 um 08:42 schrieb Michael Heimpold:
-> This series updates/adds Device Tree support for I2SE's Duckbill
-> device family.
->
-> The Duckbill devices are small, pen-drive sized boards based on
-> NXP's i.MX28 SoC. While the initial variants (Duckbill series) were
-> equipped with a micro SD card slot only, the latest generation
-> (Duckbill 2 series) have an additional internal eMMC onboard.
->
-> Both device generations consists of four "family members":
->
-> - Duckbill/Duckbill 2: generic board, intended to be used as
->   baseboard for custom designs and/or as development board
->
-> - Duckbill EnOcean/Duckbill 2 EnOcean: come with an EnOcean
->   daugther board equipped with the popular TCM310 module
->
-> - Duckbill 485/Duckbill 2 485: as the name implies, these
->   devices are intended to be used as Ethernet - RS485 converters
->
-> - Duckbill SPI/Duckbill 2 SPI: not sold separately, but used
->   in I2SE's development kits for Green PHY HomePlug Powerline
->   communication
->
-> Because the Duckbill series is EOL, this patch series only adds
-> support for the latest Duckbill 2 series devices. However,
-> support for the generic Duckbill board was already mainline,
-> so update it to match vendor tree DT.
-
-I'm fine with the complete series.
-
-Regards
+RW5hYmxlIGx0ZGMgJiBlbmFibGUgYW0tNDgwMjcyaDN0bXF3LXQwMWggcGFuZWwuCgpTaWduZWQt
+b2ZmLWJ5OiBZYW5uaWNrIEZlcnRyZSA8eWFubmljay5mZXJ0cmVAc3QuY29tPgotLS0KIGFyY2gv
+YXJtL2Jvb3QvZHRzL3N0bTMyNDI5aS1ldmFsLmR0cyB8IDU5ICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDU5IGluc2VydGlvbnMoKykKCmRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdG0zMjQyOWktZXZhbC5kdHMgYi9hcmNoL2FybS9i
+b290L2R0cy9zdG0zMjQyOWktZXZhbC5kdHMKaW5kZXggNjAxYTIyYS4uNWE1Zjk0MSAxMDA2NDQK
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzI0MjlpLWV2YWwuZHRzCisrKyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3N0bTMyNDI5aS1ldmFsLmR0cwpAQCAtMTEwLDYgKzExMCw1MiBAQAogCQljbG9j
+a3MgPSA8JnJjYyAwIDMwPjsKIAkJY2xvY2stbmFtZXMgPSAibWFpbl9jbGsiOwogCX07CisKKwlw
+YW5lbF9yZ2I6IHBhbmVsLXJnYiB7CisJCWNvbXBhdGlibGUgPSAiYW1waXJlLGFtLTQ4MDI3Mmgz
+dG1xdy10MDFoIjsKKwkJc3RhdHVzID0gIm9rYXkiOworCQlwb3J0IHsKKwkJCXBhbmVsX2luX3Jn
+YjogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbHRkY19vdXRfcmdiPjsKKwkJ
+CX07CisJCX07CisJfTsKK307CisKKyZwaW5jdHJsIHsKKwlwaW5jdHJsX2x0ZGM6IGx0ZGNAMCB7
+CisJCXBpbnMgeworCQkJcGlubXV4ID0gPFNUTTMyRjQyOV9QSTEyX0ZVTkNfTENEX0hTWU5DPiwK
+KwkJCQkgPFNUTTMyRjQyOV9QSTEzX0ZVTkNfTENEX1ZTWU5DPiwKKwkJCQkgPFNUTTMyRjQyOV9Q
+STE0X0ZVTkNfTENEX0NMSz4sCisJCQkJIDxTVE0zMkY0MjlfUEkxNV9GVU5DX0xDRF9SMD4sCisJ
+CQkJIDxTVE0zMkY0MjlfUEowX0ZVTkNfTENEX1IxPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjFfRlVO
+Q19MQ0RfUjI+LAorCQkJCSA8U1RNMzJGNDI5X1BKMl9GVU5DX0xDRF9SMz4sCisJCQkJIDxTVE0z
+MkY0MjlfUEozX0ZVTkNfTENEX1I0PiwKKwkJCQkgPFNUTTMyRjQyOV9QSjRfRlVOQ19MQ0RfUjU+
+LAorCQkJCSA8U1RNMzJGNDI5X1BKNV9GVU5DX0xDRF9SNj4sCisJCQkJIDxTVE0zMkY0MjlfUEo2
+X0ZVTkNfTENEX1I3PiwKKwkJCQkgPFNUTTMyRjQyOV9QSjdfRlVOQ19MQ0RfRzA+LAorCQkJCSA8
+U1RNMzJGNDI5X1BKOF9GVU5DX0xDRF9HMT4sCisJCQkJIDxTVE0zMkY0MjlfUEo5X0ZVTkNfTENE
+X0cyPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjEwX0ZVTkNfTENEX0czPiwKKwkJCQkgPFNUTTMyRjQy
+OV9QSjExX0ZVTkNfTENEX0c0PiwKKwkJCQkgPFNUTTMyRjQyOV9QSjEyX0ZVTkNfTENEX0IwPiwK
+KwkJCQkgPFNUTTMyRjQyOV9QSjEzX0ZVTkNfTENEX0IxPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjE0
+X0ZVTkNfTENEX0IyPiwKKwkJCQkgPFNUTTMyRjQyOV9QSjE1X0ZVTkNfTENEX0IzPiwKKwkJCQkg
+PFNUTTMyRjQyOV9QSzBfRlVOQ19MQ0RfRzU+LAorCQkJCSA8U1RNMzJGNDI5X1BLMV9GVU5DX0xD
+RF9HNj4sCisJCQkJIDxTVE0zMkY0MjlfUEsyX0ZVTkNfTENEX0c3PiwKKwkJCQkgPFNUTTMyRjQy
+OV9QSzNfRlVOQ19MQ0RfQjQ+LAorCQkJCSA8U1RNMzJGNDI5X1BLNF9GVU5DX0xDRF9CNT4sCisJ
+CQkJIDxTVE0zMkY0MjlfUEs1X0ZVTkNfTENEX0I2PiwKKwkJCQkgPFNUTTMyRjQyOV9QSzZfRlVO
+Q19MQ0RfQjc+LAorCQkJCSA8U1RNMzJGNDI5X1BLN19GVU5DX0xDRF9ERT47CisJCQlzbGV3LXJh
+dGUgPSA8Mj47CisJCX07CisJfTsKIH07CiAKICZjbGtfaHNlIHsKQEAgLTE0NiwzICsxOTIsMTYg
+QEAKIAlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwogCXN0YXR1cyA9ICJva2F5IjsKIH07CisK
+KyZsdGRjIHsKKwlzdGF0dXMgPSAib2theSI7CisJcGluY3RybC0wID0gPCZwaW5jdHJsX2x0ZGM+
+OworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJZG1hLXJhbmdlczsKKworCXBvcnQgewor
+CQlsdGRjX291dF9yZ2I6IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwmcGFuZWxf
+aW5fcmdiPjsKKwkJfTsKKwl9OworfTsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
