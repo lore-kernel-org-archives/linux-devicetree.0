@@ -1,45 +1,33 @@
-From: Velibor Markovski <velibor.markovski@broadcom.com>
-Subject: [PATCH INTERNAL 1/2] dt-bindings: arm-ccn: Add bindings info for
- CCN-502 compatible string
-Date: Fri, 10 Feb 2017 12:36:26 -0800
-Message-ID: <1486758987-23769-2-git-send-email-velibor.markovski@broadcom.com>
-References: <1486758987-23769-1-git-send-email-velibor.markovski@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486758987-23769-1-git-send-email-velibor.markovski@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Velibor Markovski <velibor.markovski@broadcom.com>, linux-arm-kernel@lists.infradead.org
+From: Velibor Markovski <velibor.markovski-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] Add support for ARM CCN-502 interconnect
+Date: Fri, 10 Feb 2017 12:36:25 -0800
+Message-ID: <1486758987-23769-1-git-send-email-velibor.markovski@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Velibor Markovski <velibor.markovski-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add CCN-502 to the list of supported devices by ARM CCN PMU driver.
+Add compatible string for ARM CCN-502 interconnect.
+CCN-502 interconnect is already compatible with the 
+existing ARM CCN driver, which supports CCN-504.
 
-Signed-off-by: Velibor Markovski <velibor.markovski@broadcom.com>
----
+This patchset is based on v4.10-rc3 and is available from github:
+repo: https://github.com/Broadcom/arm64-linux
+branch: arm64-ccn502
+
+Velibor Markovski (2):
+  dt-bindings: arm-ccn: Add bindings info for CCN-502 compatible string
+  bus: arm-ccn: Enable stats for CCN-502 interconnect
+
  Documentation/devicetree/bindings/arm/ccn.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bus/arm-ccn.c                         | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/ccn.txt b/Documentation/devicetree/bindings/arm/ccn.txt
-index b100d38..2980145 100644
---- a/Documentation/devicetree/bindings/arm/ccn.txt
-+++ b/Documentation/devicetree/bindings/arm/ccn.txt
-@@ -3,6 +3,7 @@
- Required properties:
- 
- - compatible: (standard compatible string) should be one of:
-+	"arm,ccn-502"
- 	"arm,ccn-504"
- 	"arm,ccn-508"
- 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
