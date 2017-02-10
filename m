@@ -1,8 +1,8 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH 1/4] Documentation: bindings: add uphy-dp-sel for Rockchip USB
- Type-C PHY
-Date: Fri, 10 Feb 2017 15:44:11 +0800
-Message-ID: <1486712654-15431-2-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH 2/4] arm64: dts: rockchip: add rockchip,
+ uphy-dp-sel for Type-C phy
+Date: Fri, 10 Feb 2017 15:44:12 +0800
+Message-ID: <1486712654-15431-3-git-send-email-zyw@rock-chips.com>
 References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -19,36 +19,25 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, kishon@ti.com, robh@kernel.org, linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>, Kever Yang <kever.yang@rock-chips.com>, zyw@rock-chips.com, Rob Herring <robh+dt@kernel.org>, groeck@chromium.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, zyw@rock-chips.com, Rob Herring <robh+dt@kernel.org>, David Wu <david.wu@rock-chips.com>, groeck@chromium.org, William wu <wulf@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 cm9ja2NoaXAsdXBoeS1kcC1zZWwgaXMgdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkgZW5hYmxl
 IERQIGZ1bmN0aW9uLgoKU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBz
-LmNvbT4KLS0tCgogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktcm9j
-a2NoaXAtdHlwZWMudHh0IHwgNSArKysrKwogMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
-KQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5
-LXJvY2tjaGlwLXR5cGVjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9w
-aHkvcGh5LXJvY2tjaGlwLXR5cGVjLnR4dAppbmRleCA2ZWE4NjdlLi5jM2JlODNiIDEwMDY0NAot
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1yb2NrY2hpcC10
-eXBlYy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHkt
-cm9ja2NoaXAtdHlwZWMudHh0CkBAIC0zMyw2ICszMyw5IEBAIG9mZnNldCwgZW5hYmxlIGJpdCwg
-d3JpdGUgbWFzayBiaXQuCiAgLSByb2NrY2hpcCxwaXBlLXN0YXR1cyA6IHRoZSByZWdpc3RlciBv
-ZiB0eXBlLWMgcGh5IHBpcGUgc3RhdHVzLgogICAgZm9yIHR5cGUtYyBwaHkwLCBpdCBtdXN0IGJl
-IDwweGU1YzAgMCAwPjsKICAgIGZvciB0eXBlLWMgcGh5MSwgaXQgbXVzdCBiZSA8MHhlNWMwIDE2
-IDE2PjsKKyAtIHJvY2tjaGlwLHVwaHktZHAtc2VsIDogdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBw
-aHkgZW5hYmxlIERQIGZ1bmN0aW9uCisgICBmb3IgdHlwZS1jIHBoeTAsIGl0IG11c3QgYmUgPDB4
-NjI2OCAxOSAxOT47CisgICBmb3IgdHlwZS1jIHBoeTEsIGl0IG11c3QgYmUgPDB4NjI2OCAzIDE5
-PjsKIAogUmVxdWlyZWQgbm9kZXMgOiBhIHN1Yi1ub2RlIGlzIHJlcXVpcmVkIGZvciBlYWNoIHBv
-cnQgdGhlIHBoeSBwcm92aWRlcy4KIAkJIFRoZSBzdWItbm9kZSBuYW1lIGlzIHVzZWQgdG8gaWRl
-bnRpZnkgZHAgb3IgdXNiMyBwb3J0LApAQCAtNjIsNiArNjUsNyBAQCBFeGFtcGxlOgogCQlyb2Nr
-Y2hpcCx1c2IzdG91c2IyLWVuID0gPDB4ZTU4MCAzIDE5PjsKIAkJcm9ja2NoaXAsZXh0ZXJuYWwt
-cHNtID0gPDB4ZTU4OCAxNCAzMD47CiAJCXJvY2tjaGlwLHBpcGUtc3RhdHVzID0gPDB4ZTVjMCAw
-IDA+OworCQlyb2NrY2hpcCx1cGh5LWRwLXNlbCA9IDwweDYyNjggMTkgMTk+OwogCiAJCXRjcGh5
-MF9kcDogZHAtcG9ydCB7CiAJCQkjcGh5LWNlbGxzID0gPDA+OwpAQCAtOTAsNiArOTQsNyBAQCBF
-eGFtcGxlOgogCQlyb2NrY2hpcCx1c2IzdG91c2IyLWVuID0gPDB4ZTU4YyAzIDE5PjsKIAkJcm9j
-a2NoaXAsZXh0ZXJuYWwtcHNtID0gPDB4ZTU5NCAxNCAzMD47CiAJCXJvY2tjaGlwLHBpcGUtc3Rh
-dHVzID0gPDB4ZTVjMCAxNiAxNj47CisJCXJvY2tjaGlwLHVwaHktZHAtc2VsID0gPDB4NjI2OCAz
-IDE5PjsKIAogCQl0Y3BoeTFfZHA6IGRwLXBvcnQgewogCQkJI3BoeS1jZWxscyA9IDwwPjsKLS0g
-CjIuNi4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+LmNvbT4KLS0tCgogYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaSB8IDIg
+KysKIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9y
+b2NrY2hpcC9yazMzOTkuZHRzaQppbmRleCA4ZTZkMWJkLi43ZThhYThjIDEwMDY0NAotLS0gYS9h
+cmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpCisrKyBiL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0c2kKQEAgLTEyMjUsNiArMTIyNSw3IEBACiAJCXJv
+Y2tjaGlwLHVzYjN0b3VzYjItZW4gPSA8MHhlNTgwIDMgMTk+OwogCQlyb2NrY2hpcCxleHRlcm5h
+bC1wc20gPSA8MHhlNTg4IDE0IDMwPjsKIAkJcm9ja2NoaXAscGlwZS1zdGF0dXMgPSA8MHhlNWMw
+IDAgMD47CisJCXJvY2tjaGlwLHVwaHktZHAtc2VsID0gPDB4NjI2OCAxOSAxOT47CiAJCXN0YXR1
+cyA9ICJkaXNhYmxlZCI7CiAKIAkJdGNwaHkwX2RwOiBkcC1wb3J0IHsKQEAgLTEyNTQsNiArMTI1
+NSw3IEBACiAJCXJvY2tjaGlwLHVzYjN0b3VzYjItZW4gPSA8MHhlNThjIDMgMTk+OwogCQlyb2Nr
+Y2hpcCxleHRlcm5hbC1wc20gPSA8MHhlNTk0IDE0IDMwPjsKIAkJcm9ja2NoaXAscGlwZS1zdGF0
+dXMgPSA8MHhlNWMwIDE2IDE2PjsKKwkJcm9ja2NoaXAsdXBoeS1kcC1zZWwgPSA8MHg2MjY4IDMg
+MTk+OwogCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCiAJCXRjcGh5MV9kcDogZHAtcG9ydCB7Ci0t
+IAoyLjYuMwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
