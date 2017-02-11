@@ -1,12 +1,12 @@
 From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 6/8] drm/sun4i: Add initial LVDS stub
-Date: Sat, 11 Feb 2017 19:44:03 +0200
-Message-ID: <20170211174405.28395-7-plaes@plaes.org>
+Subject: [PATCH 8/8] ARM: dts: sun4i: gemei-g9: Add LVDS display support
+Date: Sat, 11 Feb 2017 19:44:05 +0200
+Message-ID: <20170211174405.28395-9-plaes@plaes.org>
 References: <20170211174405.28395-1-plaes@plaes.org>
 Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJLTBEBXENBB6E27XCAKGQET2QVAVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDJLTBEBXENBB6M27XCAKGQEKYYU3VY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170211174405.28395-1-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,295 +21,154 @@ List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/Makefile     |   1 +
- drivers/gpu/drm/sun4i/sun4i_lvds.c | 247 +++++++++++++++++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_lvds.h |  15 +++
- 3 files changed, 263 insertions(+)
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_lvds.c
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_lvds.h
+ arch/arm/boot/dts/sun4i-a10-gemei-g9.dts | 95 +++++++++++++++++++++++++++++---
+ 1 file changed, 86 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/Makefile b/drivers/gpu/drm/sun4i/Makefile
-index d625a82..5dfbe16 100644
---- a/drivers/gpu/drm/sun4i/Makefile
-+++ b/drivers/gpu/drm/sun4i/Makefile
-@@ -11,3 +11,4 @@ obj-$(CONFIG_DRM_SUN4I)		+= sun4i-drm.o sun4i-tcon.o
- obj-$(CONFIG_DRM_SUN4I)		+= sun4i_backend.o
- obj-$(CONFIG_DRM_SUN4I)		+= sun6i_drc.o
- obj-$(CONFIG_DRM_SUN4I)		+= sun4i_tv.o
-+obj-$(CONFIG_DRM_SUN4I)		+= sun4i_lvds.o
-diff --git a/drivers/gpu/drm/sun4i/sun4i_lvds.c b/drivers/gpu/drm/sun4i/sun4i_lvds.c
-new file mode 100644
-index 0000000..2ba4705
---- /dev/null
-+++ b/drivers/gpu/drm/sun4i/sun4i_lvds.c
-@@ -0,0 +1,247 @@
-+/*
-+ * Copyright (C) 2016 Priit Laes
-+ *
-+ * Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-+ *
-+ * Based on sun4i_rgb.c by Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
+diff --git a/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
+index 9616cde..c19f906 100644
+--- a/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
++++ b/arch/arm/boot/dts/sun4i-a10-gemei-g9.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright 2015 Priit Laes
++ * Copyright 2015-2017 Priit Laes
+  *
+  * Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+  *
+@@ -48,28 +48,69 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pwm/pwm.h>
+ 
+ / {
+ 	model = "Gemei G9 Tablet";
+ 	compatible = "gemei,g9", "allwinner,sun4i-a10";
+ 
++	/*
++	 * TODO:
++	 *   2x cameras via CSI
++	 *   AXP battery management
++	 *   NAND
++	 *   OTG
++	 *   Touchscreen - gt801_2plus1 @ i2c adapter 2 @ 0x48
++	 *   HDMI output
++	 */
 +
-+#include <linux/clk.h>
+ 	aliases {
+ 		serial0 = &uart0;
+ 	};
+ 
++	backlight: backlight {
++		compatible = "pwm-backlight";
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_backlight_pin>;
++		/* TODO: Figure out proper parameters */
++		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
++		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
++		enable-gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>; /* PH7 */
++		default-brightness-level = <8>;
++	};
 +
-+#include <drm/drmP.h>
-+#include <drm/drm_atomic_helper.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_panel.h>
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
 +
-+#include "sun4i_drv.h"
-+#include "sun4i_tcon.h"
++	panel: panel {
++		compatible = "lg,lp097x02-slq2";
++		pinctrl-names = "default";
++		pinctrl-0 = <&lcd_enable_pin &lcd_lvds0_pins>;
++		enable-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+struct sun4i_lvds {
-+	struct drm_connector	connector;
-+	struct drm_encoder	encoder;
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	struct sun4i_drv	*drv;
++			panel_input: endpoint {
++				remote-endpoint = <&tcon0_out_panel>;
++			};
++		};
++	};
++
++	display-engine {
++		compatible = "allwinner,sun5i-a13-display-engine";
++		allwinner,pipelines = <&fe0>;
++	};
 +};
 +
-+static inline struct sun4i_lvds *
-+drm_connector_to_sun4i_lvds(struct drm_connector *connector)
-+{
-+	return container_of(connector, struct sun4i_lvds,
-+			    connector);
-+}
-+
-+static inline struct sun4i_lvds *
-+drm_encoder_to_sun4i_lvds(struct drm_encoder *encoder)
-+{
-+	return container_of(encoder, struct sun4i_lvds,
-+			    encoder);
-+}
-+
-+static int sun4i_lvds_get_modes(struct drm_connector *connector)
-+{
-+	struct sun4i_lvds *lvds =
-+		drm_connector_to_sun4i_lvds(connector);
-+	struct sun4i_drv *drv = lvds->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+
-+	return drm_panel_get_modes(tcon->panel);
-+}
-+
-+static int sun4i_lvds_mode_valid(struct drm_connector *connector,
-+				 struct drm_display_mode *mode)
-+{
-+	DRM_DEBUG_DRIVER("LVDS mode valid!\n");
-+	return MODE_OK;
-+}
-+
-+static struct drm_connector_helper_funcs sun4i_lvds_con_helper_funcs = {
-+	.get_modes	= sun4i_lvds_get_modes,
-+	.mode_valid	= sun4i_lvds_mode_valid,
++&be0 {
++	status = "okay";
+ };
+ 
+-/*
+- * TODO:
+- *   2x cameras via CSI
+- *   AXP battery management
+- *   NAND
+- *   OTG
+- *   Touchscreen - gt801_2plus1 @ i2c adapter 2 @ 0x48
+- */
+ &codec {
+ 	/* PH15 controls power to external amplifier (ft2012q) */
+ 	pinctrl-names = "default";
+@@ -90,6 +131,10 @@
+ 	status = "okay";
+ };
+ 
++&fe0 {
++	status = "okay";
 +};
 +
-+static enum drm_connector_status
-+sun4i_lvds_connector_detect(struct drm_connector *connector, bool force)
-+{
-+	return connector_status_connected;
-+}
+ &i2c0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&i2c0_pins_a>;
+@@ -159,6 +204,27 @@
+ 		pins = "PH15";
+ 		function = "gpio_out";
+ 	};
 +
-+static void
-+sun4i_lvds_connector_destroy(struct drm_connector *connector)
-+{
-+	struct sun4i_lvds *lvds = drm_connector_to_sun4i_lvds(connector);
-+	struct sun4i_drv *drv = lvds->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
++	lcd_backlight_pin: lcd_backlight_pin@0 {
++		pins = "PH7";
++		function = "gpio_out";
++	};
 +
-+	drm_panel_detach(tcon->panel);
-+	drm_connector_cleanup(connector);
-+}
++	lcd_enable_pin: lcd_enable_pin@0 {
++		pins = "PH8";
++		function = "gpio_out";
++	};
 +
-+static struct drm_connector_funcs sun4i_lvds_con_funcs = {
-+	.dpms			= drm_atomic_helper_connector_dpms,
-+	.detect			= sun4i_lvds_connector_detect,
-+	.fill_modes		= drm_helper_probe_single_connector_modes,
-+	.destroy		= sun4i_lvds_connector_destroy,
-+	.reset			= drm_atomic_helper_connector_reset,
-+	.atomic_duplicate_state	= drm_atomic_helper_connector_duplicate_state,
-+	.atomic_destroy_state	= drm_atomic_helper_connector_destroy_state,
++	lcd_lvds0_pins: lcd_lvds0_pins@0 {
++		pins =  "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9";
++		function = "lvds0";
++	};
 +};
 +
-+static int sun4i_lvds_atomic_check(struct drm_encoder *encoder,
-+				  struct drm_crtc_state *crtc_state,
-+				  struct drm_connector_state *conn_state)
-+{
-+	return 0;
-+}
-+
-+static void sun4i_lvds_encoder_enable(struct drm_encoder *encoder)
-+{
-+	struct sun4i_lvds *lvds = drm_encoder_to_sun4i_lvds(encoder);
-+	struct sun4i_drv *drv = lvds->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+
-+	DRM_DEBUG_DRIVER("Enabling LVDS output\n");
-+
-+	if (!IS_ERR(tcon->panel)) {
-+		drm_panel_prepare(tcon->panel);
-+		drm_panel_enable(tcon->panel);
-+	}
-+
-+	/* encoder->bridge can be NULL; drm_bridge_enable checks for it */
-+	drm_bridge_enable(encoder->bridge);
-+
-+	sun4i_tcon_channel_enable(tcon, 0);
-+}
-+
-+static void sun4i_lvds_encoder_disable(struct drm_encoder *encoder)
-+{
-+	struct sun4i_lvds *lvds = drm_encoder_to_sun4i_lvds(encoder);
-+	struct sun4i_drv *drv = lvds->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+
-+	DRM_DEBUG_DRIVER("Disabling LVDS output\n");
-+
-+	sun4i_tcon_channel_disable(tcon, 0);
-+
-+	/* encoder->bridge can be NULL; drm_bridge_disable checks for it */
-+	drm_bridge_disable(encoder->bridge);
-+
-+	if (!IS_ERR(tcon->panel)) {
-+		drm_panel_disable(tcon->panel);
-+		drm_panel_unprepare(tcon->panel);
-+	}
-+}
-+
-+static void sun4i_lvds_encoder_mode_set(struct drm_encoder *encoder,
-+				       struct drm_display_mode *mode,
-+				       struct drm_display_mode *adjusted_mode)
-+{
-+	struct sun4i_lvds *lvds = drm_encoder_to_sun4i_lvds(encoder);
-+	struct sun4i_drv *drv = lvds->drv;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+
-+	sun4i_tcon0_mode_set(tcon, mode, DRM_MODE_ENCODER_LVDS);
-+
-+	clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
-+
-+	/* FIXME: This seems to be board specific */
-+	clk_set_phase(tcon->dclk, 60);
-+}
-+
-+static struct drm_encoder_helper_funcs sun4i_lvds_enc_helper_funcs = {
-+	.atomic_check	= sun4i_lvds_atomic_check,
-+	.mode_set	= sun4i_lvds_encoder_mode_set,
-+	.disable	= sun4i_lvds_encoder_disable,
-+	.enable		= sun4i_lvds_encoder_enable,
++&pwm {
++        pinctrl-names = "default";
++        pinctrl-0 = <&pwm0_pins_a>;
++        status = "okay";
+ };
+ 
+ &reg_dcdc2 {
+@@ -194,6 +260,17 @@
+ 	status = "okay";
+ };
+ 
++&tcon0 {
++	mode = "lvds";
++	status = "okay";
 +};
 +
-+static void sun4i_lvds_enc_destroy(struct drm_encoder *encoder)
-+{
-+	drm_encoder_cleanup(encoder);
-+}
-+
-+static struct drm_encoder_funcs sun4i_lvds_enc_funcs = {
-+	.destroy	= sun4i_lvds_enc_destroy,
++&tcon0_out {
++	tcon0_out_panel: endpoint@1 {
++		reg = <0>;
++		remote-endpoint = <&panel_input>;
++	};
 +};
-+
-+int sun4i_lvds_init(struct drm_device *drm)
-+{
-+	struct sun4i_drv *drv = drm->dev_private;
-+	struct sun4i_tcon *tcon = drv->tcon;
-+	struct drm_encoder *encoder;
-+	struct sun4i_lvds *lvds;
-+	int ret;
-+
-+	lvds = devm_kzalloc(drm->dev, sizeof(*lvds), GFP_KERNEL);
-+	if (!lvds)
-+		return -ENOMEM;
-+	lvds->drv = drv;
-+	encoder = &lvds->encoder;
-+
-+	tcon->panel = sun4i_tcon_find_panel(tcon->dev->of_node);
-+	encoder->bridge = sun4i_tcon_find_bridge(tcon->dev->of_node);
-+	if (IS_ERR(tcon->panel) && IS_ERR(encoder->bridge)) {
-+		dev_info(drm->dev, "No panel or bridge found... LVDS output disabled\n");
-+		return 0;
-+	}
-+
-+	drm_encoder_helper_add(&lvds->encoder,
-+			       &sun4i_lvds_enc_helper_funcs);
-+	ret = drm_encoder_init(drm,
-+			       &lvds->encoder,
-+			       &sun4i_lvds_enc_funcs,
-+			       DRM_MODE_ENCODER_NONE,
-+			       NULL);
-+	if (ret) {
-+		dev_err(drm->dev, "Couldn't initialise the LVDS encoder\n");
-+		goto err_out;
-+	}
-+
-+	/* Hardcode to TCON channel 0 */
-+	lvds->encoder.possible_crtcs = BIT(0);
-+
-+	if (!IS_ERR(tcon->panel)) {
-+		drm_connector_helper_add(&lvds->connector,
-+					 &sun4i_lvds_con_helper_funcs);
-+		ret = drm_connector_init(drm, &lvds->connector,
-+					 &sun4i_lvds_con_funcs,
-+					 DRM_MODE_CONNECTOR_LVDS);
-+		if (ret) {
-+			dev_err(drm->dev, "Couldn't initialise the LVDS connector\n");
-+			goto err_cleanup_connector;
-+		}
-+
-+		drm_mode_connector_attach_encoder(&lvds->connector,
-+						  &lvds->encoder);
-+
-+		ret = drm_panel_attach(tcon->panel, &lvds->connector);
-+		if (ret) {
-+			dev_err(drm->dev, "Couldn't attach our panel\n");
-+			goto err_cleanup_connector;
-+		}
-+	}
-+
-+	if (!IS_ERR(encoder->bridge)) {
-+		encoder->bridge->encoder = &lvds->encoder;
-+
-+		ret = drm_bridge_attach(drm, encoder->bridge);
-+		if (ret) {
-+			dev_err(drm->dev, "Couldn't attach our bridge\n");
-+			goto err_cleanup_connector;
-+		}
-+	} else {
-+		encoder->bridge = NULL;
-+	}
-+
-+	return 0;
-+
-+err_cleanup_connector:
-+	drm_encoder_cleanup(&lvds->encoder);
-+err_out:
-+	return ret;
-+}
-+EXPORT_SYMBOL(sun4i_lvds_init);
-diff --git a/drivers/gpu/drm/sun4i/sun4i_lvds.h b/drivers/gpu/drm/sun4i/sun4i_lvds.h
-new file mode 100644
-index 0000000..1fc9646
---- /dev/null
-+++ b/drivers/gpu/drm/sun4i/sun4i_lvds.h
-@@ -0,0 +1,15 @@
-+/*
-+ * Copyright (C) 2016 Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+#ifndef _SUN4I_LVDS_H_
-+#define _SUN4I_LVDS_H_
-+
-+int sun4i_lvds_init(struct drm_device *drm);
-+
-+#endif /* _SUN4I_LVDS_H_ */
+ 
+ &uart0  {
+ 	pinctrl-names = "default";
 -- 
 2.9.3
