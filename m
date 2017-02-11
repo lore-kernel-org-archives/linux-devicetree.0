@@ -1,153 +1,163 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [RFC PATCH 1/2] usb: host: add a generic platform USB roothub driver
-Date: Sat, 11 Feb 2017 12:41:33 +0100
-Message-ID: <CAFBinCDjU_cHr+AVsm2wr6+wB=_u_Ka-5DRbve3WCuYZcie4hw@mail.gmail.com>
-References: <20170111152947.27088-1-martin.blumenstingl@googlemail.com>
- <20170111152947.27088-2-martin.blumenstingl@googlemail.com>
- <20170113200850.6z3i3b762pkjwlcc@rob-hp-laptop> <CAFBinCBm7bj84HweMSjq+pC7iTKbWo0WBd7gNxWdObX9uygv-g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCBm7bj84HweMSjq+pC7iTKbWo0WBd7gNxWdObX9uygv-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vegard.nossum-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, manjunath.goudar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, ahaslam-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/4] PCI: add DT bindings for Faraday Technology PCI Host Bridge
+Date: Sat, 11 Feb 2017 13:52:17 +0100
+Message-ID: <20170211125220.10273-1-linus.walleij@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Gavin Guo <gavinguo@andestech.com>, Macpaul Lin <macpaul@andestech.com>
+Cc: Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, openwrt-devel@openwrt.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Feng-Hsin Chiang <john453@faraday-tech.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This adds device tree bindings for the Faraday technology PCI
+Host Bridge. This IP is found in the Storlink/Storm/Cortina
+Gemini SoC platform.
 
-On Fri, Jan 13, 2017 at 9:21 PM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Fri, Jan 13, 2017 at 9:08 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Wed, Jan 11, 2017 at 04:29:46PM +0100, Martin Blumenstingl wrote:
->>> Many SoC platforms have separate devices for the USB PHY which are
->>> registered through the generic PHY framework. These PHYs have to be
->>> enabled to make the USB controller actually work. They also have to be
->>> disabled again on shutdown/suspend.
->>>
->>> Currently (at least) the following HCI platform drivers are using custom
->>> code to obtain all PHYs via devicetree for the roothub/controller and
->>> disable/enable them when required:
->>> - ehci-platform.c has ehci_platform_power_{on,off}
->>> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
->>> - ohci-platform.c has ohci_platform_power_{on,off}
->>>
->>> These drivers are not using the generic devicetree USB device bindings
->>> yet which were only introduced recently (documentation is available in
->>> devicetree/bindings/usb/usb-device.txt).
->>> With this new driver the usb2-phy and usb3-phy can be specified directly
->>> in the child-node of the corresponding port of the roothub via
->>> devicetree. This can be extended by not just parsing PHYs (some of the
->>> other drivers listed above are for example also parsing a list of clocks
->>> as well) when required.
->>>
->>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/usb/usb-roothub.txt        |  41 ++++++
->>>  drivers/usb/host/Kconfig                           |   3 +
->>>  drivers/usb/host/Makefile                          |   2 +
->>>  drivers/usb/host/platform-roothub.c                | 146 +++++++++++++++++++++
->>>  drivers/usb/host/platform-roothub.h                |  14 ++
->>>  5 files changed, 206 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
->>>  create mode 100644 drivers/usb/host/platform-roothub.c
->>>  create mode 100644 drivers/usb/host/platform-roothub.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/usb-roothub.txt b/Documentation/devicetree/bindings/usb/usb-roothub.txt
->>> new file mode 100644
->>> index 000000000000..96e152d3901c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/usb-roothub.txt
->>> @@ -0,0 +1,41 @@
->>> +Generic USB root-hub Properties
->>> +
->>> +similar to the USB device bindings (documented in usb-device.txt from the
->>> +current directory) this provides support for configuring the root-hub.
->>> +
->>> +Required properties:
->>> +- compatible: should be at least one of "usb1d6b,3", "usb1d6b,2"
->>> +- reg: must be 0.
->>> +- address-cells: must be 1
->>> +- size-cells: must be 0
->>
->>> +- a sub-node per port supports the following properties:
->>
->> Make this another section with required and optional sections.
-> I can do that, but let's wait for the results if we want the PHYs to
-> be specified at the grand-child or child level
->
->>> +  - reg: the port number on the root-hub (mandatory)
->>> +  - phys: optional, from the *Generic PHY* bindings (mandatory needed when
->>> +    phy-names is given)
->>> +  - phy-names: optional, from the *Generic PHY* bindings; supported names
->>> +    are "usb2-phy" or "usb3-phy"
->>> +
->>> +Example:
->>> +     &usb1 {
->>> +             #address-cells = <1>;
->>> +             #size-cells = <0>;
->>> +
->>> +             roothub@0 {
->>> +                     compatible = "usb1d6b,3", "usb1d6b,2";
->>
->> Is this discoverable? IIRC, we had decided that ports on the root hub
->> are just children of the USB controller node (rather than
->> grandchildren). Why does that not work?
-> if I understand you correctly you are thinking of something like this:
-> &usb1 {
->     ...cells...
->
->     port@1 {
->         reg = <1>;
->         phys = <&phy2>
->     }
->
->     port@2 {
->         reg = <2>;
->         phys = <&phy2>
->     }
-> }
->
-> in that case we need a way to differentiate between "actual device at
-> port 1" and "configuration for root-hub port 1".
-> in that example I also cannot specify a compatible string since I
-> don't know which device might be plugged into that port.
-could you please share your thoughts on this? can you point me to any
-documentation or a discussion on a mailing-list which describes how
-ports on the root hub should be modeled?
+Cc: Janos Laube <janos.dev@gmail.com>
+Cc: Paulius Zaleckas <paulius.zaleckas@gmail.com>
+Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: Gavin Guo <gavinguo@andestech.com>
+Cc: Macpaul Lin <macpaul@andestech.com>
+Cc: Feng-Hsin Chiang <john453@faraday-tech.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Rename from Cortina prefixes to Faraday. This is clearly
+  a Faraday IP block.
+- Support both the version with cascaded interrupts and the
+  "dual" version with 1-to-1 mapped interrupts.
+- Change bus-range to <0x00 0xff>
+- Fix spelling mistake
+- Write a bit about swizzling interrupts on the interrupt
+  controller side
+- Reasonable swizzling in the interrupt mapping example
 
->>> +                     #address-cells = <1>;
->>> +                     #size-cells = <0>;
->>> +                     reg = <0>;
->>> +
->>> +                     port@1 {
->>
->> Wouldn't this normally be 0 and 1. This should probably be usb-port
->> rather than port to avoid OF graph overlap.
-> the USB subsystem starts counting at 1, there can never be a "device
-> with device-number 0" - so I think we should stay with 1 and 2 for a
-> 2-port roothub.
-> I'm fine with changing the name to "usb-port" though
->
->>> +                             reg = <1>;
->>> +                             usb-phy = <&usb2_phy1>, <&usb3_phy1>;
->>
->> s/usb-phy/phys/
-> thanks for spotting this
->
->>> +                             phy-names = "usb2-phy", "usb3-phy";
->>> +                     };
->>> +
->>> +                     port@2 {
->>> +                             reg = <2>;
->>> +                             usb-phy = <&usb2_phy2>, <&usb3_phy2>;
->>> +                             phy-names = "usb2-phy", "usb3-phy";
->>> +                     };
->>> +             };
->>> +     }
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This can be merged to the PCI tree whenever it is considered
+fine for inclusion.
+---
+ .../devicetree/bindings/pci/faraday-pci.txt        | 113 +++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/faraday-pci.txt
+
+diff --git a/Documentation/devicetree/bindings/pci/faraday-pci.txt b/Documentation/devicetree/bindings/pci/faraday-pci.txt
+new file mode 100644
+index 000000000000..5fbb0fc6b758
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/faraday-pci.txt
+@@ -0,0 +1,113 @@
++Faraday Technology PCI Host Bridge
++
++This PCI bridge is found inside that Cortina Systems Gemini SoC platform and
++is a generic IP block from Faraday Technology. It exists in two variants:
++plain and dual PCI. The plain version embeds a cascading interrupt controller
++into the host bridge. The dual version routes the interrupts to the host
++chips interrupt controller.
++
++The host controller appear on the PCI bus with vendor ID 0x159b (Faraday
++Technology) and product ID 0x4321.
++
++Mandatory properties:
++
++- compatible: should be one of
++  "faraday,pci"
++  "faraday,dual-pci"
++- reg: memory base and size for the host bridge
++- #address-cells: set to <3>
++- #size-cells: set to <2>
++- #interrupt-cells: set to <1>
++- bus-range: set to <0x00 0xff>
++- device_type, set to "pci"
++- ranges: see pci.txt
++- interrupt-map-mask: see pci.txt
++- interrupt-map: see pci.txt
++
++Mandatory subnodes:
++- For "faraday,pci" a node representing the interrupt-controller inside the
++  host bridge is mandatory. It has the following mandatory properties:
++  - interrupt: see interrupt-controller/interrupts.txt
++  - interrupt-parent: see interrupt-controller/interrupts.txt
++  - interrupt-controller: see interrupt-controller/interrupts.txt
++  - #address-cells: set to <0>
++  - #interrupt-cells: set to <1>
++
++I/O space considerations:
++
++The plain variant has 128MiB of non-prefetchable memory space, whereas the
++"dual" variant has 64MiB. Take this into account when describing the ranges.
++
++Interrupt map considerations:
++
++The "dual" variant will get INT A, B, C, D from the system interrupt controller
++and should point to respective interrupt in that controller in its
++interrupt-map.
++
++The code which is the only documentation of how the Faraday PCI (the non-dual
++variant) interrupts assigns the default interrupt mapping/swizzling has
++typically been like this, doing the swizzling on the interrupt controller side
++rather than in the interconnect:
++
++interrupt-map-mask = <0xf800 0 0 7>;
++interrupt-map =
++	<0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
++	<0x4800 0 0 2 &pci_intc 1>,
++	<0x4800 0 0 3 &pci_intc 2>,
++	<0x4800 0 0 4 &pci_intc 3>,
++	<0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
++	<0x5000 0 0 2 &pci_intc 2>,
++	<0x5000 0 0 3 &pci_intc 3>,
++	<0x5000 0 0 4 &pci_intc 0>,
++	<0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
++	<0x5800 0 0 2 &pci_intc 3>,
++	<0x5800 0 0 3 &pci_intc 0>,
++	<0x5800 0 0 4 &pci_intc 1>,
++	<0x6000 0 0 1 &pci_intc 3>, /* Slot 12 */
++	<0x6000 0 0 2 &pci_intc 0>,
++	<0x6000 0 0 3 &pci_intc 1>,
++	<0x6000 0 0 4 &pci_intc 2>;
++
++Example:
++
++pci@50000000 {
++	compatible = "faraday,pci";
++	reg = <0x50000000 0x100>;
++	interrupts = <8 IRQ_TYPE_LEVEL_HIGH>, /* PCI A */
++			<26 IRQ_TYPE_LEVEL_HIGH>, /* PCI B */
++			<27 IRQ_TYPE_LEVEL_HIGH>, /* PCI C */
++			<28 IRQ_TYPE_LEVEL_HIGH>; /* PCI D */
++	#address-cells = <3>;
++	#size-cells = <2>;
++	#interrupt-cells = <1>;
++
++	bus-range = <0x00 0xff>;
++	ranges = /* 1MiB I/O space 0x50000000-0x500fffff */
++		 <0x01000000 0 0          0x50000000 0 0x00100000>,
++		 /* 128MiB non-prefetchable memory 0x58000000-0x5fffffff */
++		 <0x02000000 0 0x58000000 0x58000000 0 0x08000000>;
++	interrupt-map-mask = <0xf800 0 0 7>;
++	interrupt-map =
++		<0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
++		<0x4800 0 0 2 &pci_intc 1>,
++		<0x4800 0 0 3 &pci_intc 2>,
++		<0x4800 0 0 4 &pci_intc 3>,
++		<0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
++		<0x5000 0 0 2 &pci_intc 2>,
++		<0x5000 0 0 3 &pci_intc 3>,
++		<0x5000 0 0 4 &pci_intc 0>,
++		<0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
++		<0x5800 0 0 2 &pci_intc 3>,
++		<0x5800 0 0 3 &pci_intc 0>,
++		<0x5800 0 0 4 &pci_intc 1>,
++		<0x6000 0 0 1 &pci_intc 3>, /* Slot 12 */
++		<0x6000 0 0 2 &pci_intc 0>,
++		<0x6000 0 0 3 &pci_intc 0>,
++		<0x6000 0 0 4 &pci_intc 0>;
++	pci_intc: interrupt-controller {
++		interrupt-parent = <&intcon>;
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++	};
++};
+-- 
+2.9.3
