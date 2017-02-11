@@ -1,82 +1,66 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: ARM: dts: rockchip: add the MiQi board's fan definition
-Date: Sat, 11 Feb 2017 17:33:16 +0100
-Message-ID: <3614963.WjR2ddleWK@phil>
-References: <1486803415-14680-1-git-send-email-w@1wt.eu>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: Tracebacks in -next due to 'of: fix of_node leak caused in
+ of_find_node_opts_by_path'
+Date: Sat, 11 Feb 2017 09:38:37 -0800
+Message-ID: <20170211173837.GA25434@roeck-us.net>
+References: <20170211012947.GA3102@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486803415-14680-1-git-send-email-w-K+wRfnb2/UA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170211012947.GA3102-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Willy Tarreau <w@1wt.eu>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Qi Hou <qi.hou-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Willy,
-
-Am Samstag, 11. Februar 2017, 09:56:55 CET schrieb Willy Tarreau:
-> The MiQi board is sold with an enclosure in which a fan is connected
-> to the second LED output, and configured by default in "heartbeat"
-> mode so that it rotates slowly and increases when the CPU load
-> increases, ensuring appropriate cooling by default. This LED output
-> is called "Fan" in the original kernel and connected to GPIO18
-> (gpiochip 0, pin 18). Here we called it "miqi:green:fan" to stay
-> consistent with the kernel's naming conventions.
-
-I tend to disagree with this approach. A fan is not a led and the devicetree 
-is about describing the hardware, not how a specific kernel likes to use things 
-:-) .
-
-The kernel already has a gpio-fan driver (drivers/hwmon) or you could 
-resurrect the gpio-pwm patch [0] from Olliver Schinagl and use the pwm-fan on 
-top of that for more intermediate steps.
-
-
-> It's worth noting that without this patch the fan doesn't work at
-> all, risking to make the board overheat.
-
-At least cpufreq is already hooked to the thermal controller on the rk3288, so 
-even without additional cooling it should select lower cpu frequencies keeping 
-the heat in line and prevent overheating the board.
-
-Both solutions shown above also hook into the thermal framework and act as 
-cooling device according real temperature readings from the chip and not 
-trying to determine some sort of cooling from load in a somewhat hacky way. 
-
-
-Heiko
-
-[0] https://patchwork.kernel.org/patch/7492201/
-
-
+On Fri, Feb 10, 2017 at 05:29:47PM -0800, Guenter Roeck wrote:
+> Hi,
 > 
-> Fixes: 162718c (v4.7)
-> Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Signed-off-by: Willy Tarreau <w@1wt.eu>
-> ---
->  arch/arm/boot/dts/rk3288-miqi.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
+> I see a number of tracebacks in test runs on qemu-next, all related to omap
+> configurations.
 > 
-> diff --git a/arch/arm/boot/dts/rk3288-miqi.dts
-> b/arch/arm/boot/dts/rk3288-miqi.dts index 2f4c635..ef702db 100644
-> --- a/arch/arm/boot/dts/rk3288-miqi.dts
-> +++ b/arch/arm/boot/dts/rk3288-miqi.dts
-> @@ -67,6 +67,12 @@
->  	leds {
->  		compatible = "gpio-leds";
+> Here is an example:
 > 
-> +		fan {
-> +			gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>;
-> +			label = "miqi:green:fan";
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +
->  		work {
->  			gpios = <&gpio7 2 GPIO_ACTIVE_HIGH>;
->  			label = "miqi:green:user";
+> [    0.000000] OF: ERROR: Bad of_node_put() on /ocp@68000000
+> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W 4.10.0-rc7-next-20170210 #1
+> [    0.000000] Hardware name: Generic OMAP3-GP (Flattened Device Tree)
+> [    0.000000] [<c0310604>] (unwind_backtrace) from [<c030bbf4>] (show_stack+0x10/0x14)
+> [    0.000000] [<c030bbf4>] (show_stack) from [<c05add8c>] (dump_stack+0x98/0xac)
+> [    0.000000] [<c05add8c>] (dump_stack) from [<c05af1b0>] (kobject_release+0x48/0x7c)
+> [    0.000000] [<c05af1b0>] (kobject_release) from [<c0ad6138>] (__of_translate_address+0xb0/0x2cc)
+> [    0.000000] [<c0ad6138>] (__of_translate_address) from [<c0ad6388>] (__of_address_to_resource+0x28/0xb4)
+> [    0.000000] [<c0ad6388>] (__of_address_to_resource) from [<c0ad66f8>] (of_address_to_resource+0x70/0x80)
+> [    0.000000] [<c0ad66f8>] (of_address_to_resource) from [<c08485bc>] (of_syscon_register+0x88/0x22c)
+> [    0.000000] [<c08485bc>] (of_syscon_register) from [<c08487f0>] (syscon_node_to_regmap+0x90/0x94)
+> [    0.000000] [<c08487f0>] (syscon_node_to_regmap) from [<c1210184>] (omap_control_init+0x50/0xd8)
+> [    0.000000] [<c1210184>] (omap_control_init) from [<c1210010>] (omap_clk_init+0x3c/0x70)
+> [    0.000000] [<c1210010>] (omap_clk_init) from [<c1210a14>] (__omap_sync32k_timer_init+0x20/0x2b4)
+> [    0.000000] [<c1210a14>] (__omap_sync32k_timer_init) from [<c1210f24>] (omap3_secure_sync32k_timer_init+0x3c/0x48)
+> [    0.000000] [<c1210f24>] (omap3_secure_sync32k_timer_init) from [<c1200b24>] (start_kernel+0x244/0x38c)
+> [    0.000000] [<c1200b24>] (start_kernel) from [<8020807c>] (0x8020807c)
+> [    0.000000] Clocking rate (Crystal/Core/MPU): 26.0/332/500 MHz
+> 
+> There are several such messages with different call paths.
+> 
+> A log with all tracebacks is available at
+> http://kerneltests.org/builders/qemu-arm-next/builds/627/steps/qemubuildcommand/logs/stdio
+> 
+> Bisect points to commit 'of: fix of_node leak caused in
+> of_find_node_opts_by_path'. Bisect log is attached.
+> 
+> It is going to be interesting to learn if the patch introduces a problem
+> or if it exposes one.
+> 
+It exposes a problem. omap3xxx_hwmod_is_hs_ip_block_usable() calls
+of_find_node_by_name(bus, ...), which releases 'bus'. The function
+is called multiple times with the same 'bus' node, meaning 'bus' is
+released multiple times.
 
+There are other instances of the same problem, such as in leon_init_timers()
+or _qcom_cc_register_board_clk(). I'll see if I can submit some patches.
 
+Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
