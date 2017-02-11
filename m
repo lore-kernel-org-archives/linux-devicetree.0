@@ -1,54 +1,29 @@
-From: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
-Subject: [PATCH v4 6/7] dt-bindings: Add Multi-Inno MI0283QT binding
-Date: Sat, 11 Feb 2017 19:48:57 +0100
-Message-ID: <20170211184858.26421-7-noralf@tronnes.org>
-References: <20170211184858.26421-1-noralf@tronnes.org>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v4 0/3] Add Broadcom SPU Crypto Driver
+Date: Sat, 11 Feb 2017 18:54:04 +0800
+Message-ID: <20170211105404.GF855@gondor.apana.org.au>
+References: <1486144534-44887-1-git-send-email-rob.rice@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170211184858.26421-1-noralf@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: thomas.petazzoni@free-electrons.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1486144534-44887-1-git-send-email-rob.rice@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Rice <rob.rice@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGRldmljZS10cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIE1JMDI4M1FUIGRp
-c3BsYXkgcGFuZWwuCgpTaWduZWQtb2ZmLWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9u
-bmVzLm9yZz4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogLi4u
-L2JpbmRpbmdzL2Rpc3BsYXkvbXVsdGktaW5ubyxtaTAyODNxdC50eHQgICAgICAgfCAyNyArKysr
-KysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQogY3Jl
-YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L211bHRpLWlubm8sbWkwMjgzcXQudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXVsdGktaW5ubyxtaTAyODNxdC50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tdWx0aS1pbm5vLG1pMDI4M3F0LnR4
-dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5lZWQ0OGMzCi0tLSAvZGV2L251
-bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXVsdGkt
-aW5ubyxtaTAyODNxdC50eHQKQEAgLTAsMCArMSwyNyBAQAorTXVsdGktSW5ubyBNSTAyODNRVCBk
-aXNwbGF5IHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6CSJtdWx0
-aS1pbm5vLG1pMDI4M3F0Ii4KKworVGhlIG5vZGUgZm9yIHRoaXMgZHJpdmVyIG11c3QgYmUgYSBj
-aGlsZCBub2RlIG9mIGEgU1BJIGNvbnRyb2xsZXIsIGhlbmNlCithbGwgbWFuZGF0b3J5IHByb3Bl
-cnRpZXMgZGVzY3JpYmVkIGluIC4uL3NwaS9zcGktYnVzLnR4dCBtdXN0IGJlIHNwZWNpZmllZC4K
-KworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gZGMtZ3Bpb3M6CUQvQyBwaW4uIFRoZSBwcmVzZW5j
-ZS9hYnNlbmNlIG9mIHRoaXMgR1BJTyBkZXRlcm1pbmVzCisJCXRoZSBwYW5lbCBpbnRlcmZhY2Ug
-bW9kZSAoSU1bMzowXSBwaW5zKToKKwkJLSBwcmVzZW50OiBJTT14MTEwIDQtd2lyZSA4LWJpdCBk
-YXRhIHNlcmlhbCBpbnRlcmZhY2UKKwkJLSBhYnNlbnQ6ICBJTT14MTAxIDMtd2lyZSA5LWJpdCBk
-YXRhIHNlcmlhbCBpbnRlcmZhY2UKKy0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHBpbgorLSBwb3dlci1z
-dXBwbHk6CUEgcmVndWxhdG9yIG5vZGUgZm9yIHRoZSBzdXBwbHkgdm9sdGFnZS4KKy0gYmFja2xp
-Z2h0OglwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5l
-bAorLSByb3RhdGlvbjoJcGFuZWwgcm90YXRpb24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lz
-ZSAoMCw5MCwxODAsMjcwKQorCitFeGFtcGxlOgorCW1pMDI4M3F0QDB7CisJCWNvbXBhdGlibGUg
-PSAibXVsdGktaW5ubyxtaTAyODNxdCI7CisJCXJlZyA9IDwwPjsKKwkJc3BpLW1heC1mcmVxdWVu
-Y3kgPSA8MzIwMDAwMDA+OworCQlyb3RhdGlvbiA9IDw5MD47CisJCWRjLWdwaW9zID0gPCZncGlv
-IDI1IDA+OworCQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47CisJfTsKLS0gCjIuMTAuMgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Feb 03, 2017 at 12:55:31PM -0500, Rob Rice wrote:
+> Changes in v4:
+> - Added Rob Herring's Acked-by to patch 1/3 for bindings doc
+> - In response to Herbert's comment, in ahash_export() and 
+>   ahash_import(), only copy the hash state, not state params
+>   related to cipher or aead algos. 
+> - Noticed that hmac_offset in iproc_reqctx_s and spu_hash_params
+>   wasn't really used. So removed.
+
+Patches 1-2 applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
