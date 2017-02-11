@@ -1,67 +1,42 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: Tracebacks in -next due to 'of: fix of_node leak caused in
- of_find_node_opts_by_path'
-Date: Sat, 11 Feb 2017 09:38:37 -0800
-Message-ID: <20170211173837.GA25434@roeck-us.net>
-References: <20170211012947.GA3102@roeck-us.net>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH 1/8] ARM: sunxi_defconfig: Enable simple panel
+Date: Sat, 11 Feb 2017 19:43:58 +0200
+Message-ID: <20170211174405.28395-2-plaes@plaes.org>
+References: <20170211174405.28395-1-plaes@plaes.org>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170211012947.GA3102-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Qi Hou <qi.hou-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJLTBEBXENBB4E27XCAKGQEKURAIQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170211174405.28395-1-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 05:29:47PM -0800, Guenter Roeck wrote:
-> Hi,
-> 
-> I see a number of tracebacks in test runs on qemu-next, all related to omap
-> configurations.
-> 
-> Here is an example:
-> 
-> [    0.000000] OF: ERROR: Bad of_node_put() on /ocp@68000000
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W 4.10.0-rc7-next-20170210 #1
-> [    0.000000] Hardware name: Generic OMAP3-GP (Flattened Device Tree)
-> [    0.000000] [<c0310604>] (unwind_backtrace) from [<c030bbf4>] (show_stack+0x10/0x14)
-> [    0.000000] [<c030bbf4>] (show_stack) from [<c05add8c>] (dump_stack+0x98/0xac)
-> [    0.000000] [<c05add8c>] (dump_stack) from [<c05af1b0>] (kobject_release+0x48/0x7c)
-> [    0.000000] [<c05af1b0>] (kobject_release) from [<c0ad6138>] (__of_translate_address+0xb0/0x2cc)
-> [    0.000000] [<c0ad6138>] (__of_translate_address) from [<c0ad6388>] (__of_address_to_resource+0x28/0xb4)
-> [    0.000000] [<c0ad6388>] (__of_address_to_resource) from [<c0ad66f8>] (of_address_to_resource+0x70/0x80)
-> [    0.000000] [<c0ad66f8>] (of_address_to_resource) from [<c08485bc>] (of_syscon_register+0x88/0x22c)
-> [    0.000000] [<c08485bc>] (of_syscon_register) from [<c08487f0>] (syscon_node_to_regmap+0x90/0x94)
-> [    0.000000] [<c08487f0>] (syscon_node_to_regmap) from [<c1210184>] (omap_control_init+0x50/0xd8)
-> [    0.000000] [<c1210184>] (omap_control_init) from [<c1210010>] (omap_clk_init+0x3c/0x70)
-> [    0.000000] [<c1210010>] (omap_clk_init) from [<c1210a14>] (__omap_sync32k_timer_init+0x20/0x2b4)
-> [    0.000000] [<c1210a14>] (__omap_sync32k_timer_init) from [<c1210f24>] (omap3_secure_sync32k_timer_init+0x3c/0x48)
-> [    0.000000] [<c1210f24>] (omap3_secure_sync32k_timer_init) from [<c1200b24>] (start_kernel+0x244/0x38c)
-> [    0.000000] [<c1200b24>] (start_kernel) from [<8020807c>] (0x8020807c)
-> [    0.000000] Clocking rate (Crystal/Core/MPU): 26.0/332/500 MHz
-> 
-> There are several such messages with different call paths.
-> 
-> A log with all tracebacks is available at
-> http://kerneltests.org/builders/qemu-arm-next/builds/627/steps/qemubuildcommand/logs/stdio
-> 
-> Bisect points to commit 'of: fix of_node leak caused in
-> of_find_node_opts_by_path'. Bisect log is attached.
-> 
-> It is going to be interesting to learn if the patch introduces a problem
-> or if it exposes one.
-> 
-It exposes a problem. omap3xxx_hwmod_is_hs_ip_block_usable() calls
-of_find_node_by_name(bus, ...), which releases 'bus'. The function
-is called multiple times with the same 'bus' node, meaning 'bus' is
-released multiple times.
+From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-There are other instances of the same problem, such as in leon_init_timers()
-or _qcom_cc_register_board_clk(). I'll see if I can submit some patches.
+Signed-off-by: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/configs/sunxi_defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+index da92c25..7abe6a4 100644
+--- a/arch/arm/configs/sunxi_defconfig
++++ b/arch/arm/configs/sunxi_defconfig
+@@ -153,3 +153,7 @@ CONFIG_NLS_ISO8859_1=y
+ CONFIG_PRINTK_TIME=y
+ CONFIG_DEBUG_FS=y
+ CONFIG_CRYPTO_DEV_SUN4I_SS=y
++CONFIG_BACKLIGHT_CLASS_DEVICE=y
++CONFIG_BACKLIGHT_LCD_SUPPORT=y
++CONFIG_BACKLIGHT_PWM=y
++CONFIG_DRM_PANEL_SIMPLE=y
+-- 
+2.9.3
