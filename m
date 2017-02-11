@@ -1,67 +1,73 @@
 From: Liam Breck <liam@networkimprov.net>
-Subject: Re: [PATCH v5 1/8] devicetree: power: Add battery.txt
-Date: Fri, 10 Feb 2017 18:03:41 -0800
-Message-ID: <CAKvHMgSC9jBz7_RB6MK_jtZFELHwxxqotOk8A2VKOYwqet-kMA@mail.gmail.com>
-References: <20170204091603.32242-1-liam@networkimprov.net>
- <20170204091603.32242-2-liam@networkimprov.net> <20170208215840.w4ptnq2wj4t5eeps@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v6 1/8] devicetree: power: Add battery.txt
+Date: Fri, 10 Feb 2017 18:43:33 -0800
+Message-ID: <20170211024340.19491-2-liam@networkimprov.net>
+References: <20170211024340.19491-1-liam@networkimprov.net>
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170208215840.w4ptnq2wj4t5eeps@rob-hp-laptop>
+In-Reply-To: <20170211024340.19491-1-liam@networkimprov.net>
 Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, "Andrew F. Davis" <afd@ti.com>, Matt Ranostay <matt@ranostay.consulting>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Liam Breck <kernel@networkimprov.net>
+To: Sebastian Reichel <sre@kernel.org>
+Cc: "Andrew F . Davis" <afd@ti.com>, linux-pm@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 1:58 PM, Rob Herring <robh@kernel.org> wrote:
-> On Sat, Feb 04, 2017 at 01:15:56AM -0800, Liam Breck wrote:
->> From: Matt Ranostay <matt@ranostay.consulting>
->>
->> From: Matt Ranostay <matt@ranostay.consulting>
->>
->> Documentation of static battery characteristics that can be defined
->> for batteries which cannot self-identify. This information is required
->> by fuel-gauge and charger chips for proper handling of the battery.
->
-> I hope this is a common binding and not yet another battery binding.
+From: Matt Ranostay <matt@ranostay.consulting>
 
-Yes, Sebastian had us add support for this in power_supply_core with
+Documentation of static battery characteristics that can be defined
+for batteries which cannot self-identify. This information is required
+by fuel-gauge and charger chips for proper handling of the battery.
 
-int power_supply_get_battery_info(
-  struct power_supply *psy,
-  struct power_suppy_battery_info *info)
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+Signed-off-by: Liam Breck <kernel@networkimprov.net>
+---
+ .../devicetree/bindings/power/supply/battery.txt   | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
 
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+new file mode 100644
+index 0000000..d78a4aa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -0,0 +1,37 @@
++Battery Characteristics
++
++Required Properties:
++ - compatible: Must be "fixed-battery"
++
++Optional Properties:
++ - voltage-min-design-microvolt: drained battery voltage
++ - energy-full-design-microwatt-hours: battery design energy
++ - charge-full-design-microamp-hours: battery design capacity
++
++Future Properties must be named for the corresponding elements in
++enum power_supply_property, defined in include/linux/power_supply.h.
++
++Batteries must be referenced by chargers and/or fuel-gauges
++using a phandle. The phandle's property should be named
++"monitored-battery".
++
++Example:
++
++	bat: battery {
++		compatible = "fixed-battery";
++		voltage-min-design-microvolt = <3200000>;
++		energy-full-design-microwatt-hours = <5290000>;
++		charge-full-design-microamp-hours = <1430000>;
++	};
++
++	charger: charger@11 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
++
++	fuel_gauge: fuel-gauge@22 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
+-- 
+2.9.3
 
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
->> Signed-off-by: Liam Breck <kernel@networkimprov.net>
->> ---
->>  .../devicetree/bindings/power/supply/battery.txt   | 39 ++++++++++++++++++++++
->>  1 file changed, 39 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
->>
->> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->> new file mode 100644
->> index 0000000..d663c48
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->> @@ -0,0 +1,39 @@
->> +Battery Characteristics
->> +
->> +Required Properties:
->> + - compatible: Must be "fixed-battery"
->
-> The "fixed" part seems a bit pointless. Just "battery" would be a
-> bit generic. Don't you need to know the battery chemistry typically? Or
-> number of cells?
-
-Sebastian suggested fixed-battery to indicate a non-smart battery,
-i.e. a pack without self-awareness besides a protection circuit.
-
-I don't know what compatible would have for a smart battery. That
-might be useful to establish now...
-
-I'll be posting v6 shortly, with no change re compatible.
-
-~.~
