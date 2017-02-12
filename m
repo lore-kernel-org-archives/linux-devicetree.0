@@ -1,70 +1,29 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V2 1/2] dt-bindings: Add thermal zone to bcm2835-thermal example
-Date: Sun, 12 Feb 2017 19:38:47 +0000
-Message-ID: <1486928328-25870-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, kernel@martin.sperl.org
-Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] DT: add Faraday Tec. as vendor
+Date: Sun, 12 Feb 2017 21:37:37 +0100
+Message-ID: <CACRpkdbqFwRMLd__L3gv-hSv0wNZAQk5gxEJPK=wBQuXjJTK5w@mail.gmail.com>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com> <20170208200010.21522-4-ulli.kroll@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170208200010.21522-4-ulli.kroll@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a thermal zone in order to make the example complete.
+On Wed, Feb 8, 2017 at 9:00 PM, Hans Ulli Kroll
+<ulli.kroll@googlemail.com> wrote:
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
+> add Faraday Technology Corporation as vendor faraday for DT
+>
+> Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
 
-Changes in V2:
-- add missing thermal-sensor-cells property
-- change gpu-thermal to cpu-thermal
+I realized a lot of Gemini IP blocks are actually from Faraday, so now
+I'm editing the drivers a bit...
 
- .../bindings/thermal/brcm,bcm2835-thermal.txt      |   29 +++++++++++++++++---
- 1 file changed, 25 insertions(+), 4 deletions(-)
+Rob could you pick this patch directly to the DT tree so we need
+not worry about the vendor thing?
 
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
-index 474531d..6b8607a 100644
---- a/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
-@@ -3,15 +3,36 @@ Binding for Thermal Sensor driver for BCM2835 SoCs.
- Required parameters:
- -------------------
- 
--compatible: 	should be one of: "brcm,bcm2835-thermal",
--		"brcm,bcm2836-thermal" or "brcm,bcm2837-thermal"
--reg:		Address range of the thermal registers.
--clocks: 	Phandle of the clock used by the thermal sensor.
-+compatible: 		should be one of: "brcm,bcm2835-thermal",
-+			"brcm,bcm2836-thermal" or "brcm,bcm2837-thermal"
-+reg:			Address range of the thermal registers.
-+clocks: 		Phandle of the clock used by the thermal sensor.
-+#thermal-sensor-cells:	should be 0 (see thermal.txt)
- 
- Example:
- 
-+thermal-zones {
-+	cpu_thermal: cpu-thermal {
-+		polling-delay-passive = <0>;
-+		polling-delay = <1000>;
-+
-+		thermal-sensors = <&thermal>;
-+
-+		trips {
-+			cpu-crit {
-+				temperature	= <80000>;
-+				hysteresis	= <0>;
-+				type		= "critical";
-+			};
-+		};
-+		cooling-maps {
-+		};
-+	};
-+};
-+
- thermal: thermal@7e212000 {
- 	compatible = "brcm,bcm2835-thermal";
- 	reg = <0x7e212000 0x8>;
- 	clocks = <&clocks BCM2835_CLOCK_TSENS>;
-+	#thermal-sensor-cells = <0>;
- };
--- 
-1.7.9.5
-
+Yours,
+Linus Walleij
