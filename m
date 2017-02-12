@@ -1,105 +1,35 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v4 1/7] drm: Add DRM support for tiny LCD displays
-Date: Sun, 12 Feb 2017 14:57:49 +0100
-Message-ID: <70190e71-4d5a-7102-418f-09896b57c084@tronnes.org>
-References: <20170211184858.26421-1-noralf@tronnes.org>
- <20170211184858.26421-2-noralf@tronnes.org>
- <CAHp75VeZke=JCosvc3xQ_AiOn64hth=PMJp4X0vLHMS14bkp4w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAHp75VeZke=JCosvc3xQ_AiOn64hth=PMJp4X0vLHMS14bkp4w@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v9 0/8] drivers: touchscreen: tsc2007 and ads7846/tsc2046 improvements (use common touchscreen bindings, pre-calibration, spi fix and provide iio raw values)
+Date: Sun, 12 Feb 2017 16:18:08 +0100
+Message-ID: <3225CF5D-53B7-456F-8128-50BCF31ADD0F@goldelico.com>
+References: <cover.1482936802.git.hns@goldelico.com> <BB8421B2-6626-4A95-BCD0-25C4CAF30F61@goldelico.com> <17d2c23b-6cbb-d365-71cb-fd4d7af7c958@kernel.org> <B04BF50A-A54E-4CA2-BB0E-7B547D40403A@goldelico.com> <85077609-9A95-4DBC-BDC8-649C8692065B@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <85077609-9A95-4DBC-BDC8-649C8692065B@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAxMi4wMi4yMDE3IDEyLjA1LCBza3JldiBBbmR5IFNoZXZjaGVua286Cj4gT24gU2F0LCBG
-ZWIgMTEsIDIwMTcgYXQgODo0OCBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5v
-cmc+IHdyb3RlOgo+PiB0aW55ZHJtIHByb3ZpZGVzIGhlbHBlcnMgZm9yIHZlcnkgc2ltcGxlIGRp
-c3BsYXlzIHRoYXQgY2FuIHVzZQo+PiBDTUEgYmFja2VkIGZyYW1lYnVmZmVycyBhbmQgbmVlZCBm
-bHVzaGluZyBvbiBjaGFuZ2VzLgo+PiArLyoqCj4+ICsgKiB0aW55ZHJtX2dlbV9jbWFfZnJlZV9v
-YmplY3QgLSBGcmVlIHJlc291cmNlcyBhc3NvY2lhdGVkIHdpdGggYSBDTUEgR0VNCj4+ICsgKiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBvYmplY3QKPiBLZWVwIG9uIG9uZSBsaW5lPwoK
-VGhhdCBtZWFucyA4MSBjb2x1bW5zIGFuZCBjaGVja3BhdGNoIGNvbXBsYWludC4KVGhpcyBpbiBv
-bmUgb2YgdGhlIGFubm95aW5nIHRoaW5ncyBhYm91dCBMaW51eAprZXJuZWwgY29kaW5nLiBBbHdh
-eXMgdHJ5aW5nCnRvIGF2b2lkCmJyZWFraW5nIHVwIGxpbmVzLgpCZWNhdXNlIGZvciBtZSBpdCBo
-aW5kZXJzIHJlZGFiaWxpdHkuCgo+PiArY29uc3Qgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyB0aW55
-ZHJtX2ZvcHMgPSB7Cj4+ICsgICAgICAgLm93bmVyICAgICAgICAgID0gVEhJU19NT0RVTEUsCj4g
-RG8gd2Ugc3RpbGwgbmVlZCB0aGlzPwoKTG9va3MgbGlrZSBpdCwgc2VlIGRybV9zdHViX29wZW4o
-KQoKPj4gK3N0YXRpYyBpbnQgdGlueWRybV9pbml0KHN0cnVjdCBkZXZpY2UgKnBhcmVudCwgc3Ry
-dWN0IHRpbnlkcm1fZGV2aWNlICp0ZGV2LAo+PiArICAgICAgICAgICAgICAgICAgICAgICBjb25z
-dCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyX2Z1bmNzICpmYl9mdW5jcywKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgc3RydWN0IGRybV9kcml2ZXIgKmRyaXZlcikKPj4gK3sKPj4gKyAgICAgICBz
-dHJ1Y3QgZHJtX2RldmljZSAqZHJtOwo+PiArCj4+ICsgICAgICAgbXV0ZXhfaW5pdCgmdGRldi0+
-ZGlydHlfbG9jayk7Cj4+ICsgICAgICAgdGRldi0+ZmJfZnVuY3MgPSBmYl9mdW5jczsKPj4gKwo+
-PiArICAgICAgIC8qCj4+ICsgICAgICAgICogV2UgZG9uJ3QgZW1iZWQgZHJtX2RldmljZSwgYmVj
-YXVzZSB0aGF0IHByZXZlbnQgdXMgZnJvbSB1c2luZwo+PiArICAgICAgICAqIGRldm1fa3phbGxv
-YygpIHRvIGFsbG9jYXRlIHRpbnlkcm1fZGV2aWNlIGluIHRoZSBkcml2ZXIgc2luY2UKPj4gKyAg
-ICAgICAgKiBkcm1fZGV2X3VucmVmKCkgZnJlZXMgdGhlIHN0cnVjdHVyZS4gVGhlIGRldm1fIGZ1
-bmN0aW9ucyBwcm92aWRlCj4gImRldm1fIGZ1bmN0aW9ucyIgLT4gImRldm1fa3phbGxvYygpIiA/
-Cj4KPiBPdGhlcndpc2Ugd2hhdCBlbHNlIGRvIHlvdSByZWZlciB0byBhbmQgd2h5IGhlcmU/Cgp5
-ZXMsIHRoYXQgbGFzdCBzZW50ZW5jZSBjYW4gYmUgZHJvcHBlZC4KCj4+ICsgICAgICAgICogZm9y
-IGVhc3kgZXJyb3IgaGFuZGxpbmcuCj4+ICsgICAgICAgICovCj4+ICtzdGF0aWMgaW50IHRpbnlk
-cm1fcmVnaXN0ZXIoc3RydWN0IHRpbnlkcm1fZGV2aWNlICp0ZGV2KQo+PiArewo+PiArICAgICAg
-IHN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSB0ZGV2LT5kcm07Cj4+ICsgICAgICAgaW50IGJwcCA9
-IGRybS0+bW9kZV9jb25maWcucHJlZmVycmVkX2RlcHRoOwo+PiArICAgICAgIHN0cnVjdCBkcm1f
-ZmJkZXZfY21hICpmYmRldjsKPj4gKyAgICAgICBpbnQgcmV0Owo+PiArCj4+ICsgICAgICAgcmV0
-ID0gZHJtX2Rldl9yZWdpc3Rlcih0ZGV2LT5kcm0sIDApOwo+PiArICAgICAgIGlmIChyZXQpCj4+
-ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Owo+PiArCj4+ICsgICAgICAgZmJkZXYgPSBkcm1f
-ZmJkZXZfY21hX2luaXRfd2l0aF9mdW5jcyhkcm0sIGJwcCA/IGJwcCA6IDMyLAo+PiArICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZHJtLT5tb2RlX2NvbmZpZy5u
-dW1fY29ubmVjdG9yLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgdGRldi0+ZmJfZnVuY3MpOwo+PiArICAgICAgIGlmIChJU19FUlIoZmJkZXYpKQo+PiAr
-ICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJGYWlsZWQgdG8gaW5pdGlhbGl6ZSBmYmRldjogJWxk
-XG4iLCBQVFJfRVJSKGZiZGV2KSk7Cj4+ICsgICAgICAgZWxzZQo+PiArICAgICAgICAgICAgICAg
-dGRldi0+ZmJkZXZfY21hID0gZmJkZXY7Cj4gQXBwYXJlbnRseSBJIG1pc3NlZCBwcmV2aW91cyBy
-b3VuZCBvZiByZXZpZXdzLCBjYW4geW91IGp1c3QgcHV0IGluCj4gc2hvcnQgd29yZHMgd2h5IGVy
-cm9yIGlzIG5vdCBwcm9wYWdhdGVkIGhlcmUgdG8gdGhlIGNhbGxlcj8KCkEgY29tbWVudCBtaWdo
-dCBoYXZlIGhlbHBlZCBoZXJlOgovKiBmYmRldiBpcyBvZiBtaW5vciBpbXBvcnRhbmNlLCBkb24n
-dCBsZXQgaXQgc3RvcCB1cyAqLwoKPj4gKwo+PiArICAgICAgIHJldHVybiAwOwo+PiArfQo+PiAr
-LyoqCj4+ICsgKiB0aW55ZHJtX2Rpc3BsYXlfcGlwZV9pbml0IC0gSW5pdGlhbGl6ZSBkaXNwbGF5
-IHBpcGUKPj4gKyAqIEB0ZGV2OiB0aW55ZHJtIGRldmljZQo+PiArICogQGZ1bmNzOiBEaXNwbGF5
-IHBpcGUgZnVuY3Rpb25zCj4+ICsgKiBAY29ubmVjdG9yX3R5cGU6IENvbm5lY3RvciB0eXBlCj4+
-ICsgKiBAZm9ybWF0czogQXJyYXkgb2Ygc3VwcG9ydGVkIGZvcm1hdHMgKERSTV9GT1JNQVRcX1wq
-KQo+IERSTV9GT1JNQVRfKiA/CgpzcGhpbnggd2FudHMgaXQgdGhhdCB3YXkuCgo+PiArICogQGZv
-cm1hdF9jb3VudDogTnVtYmVyIG9mIGVsZW1lbnRzIGluIEBmb3JtYXRzCj4+ICsgKiBAbW9kZTog
-U3VwcG9ydGVkIG1vZGUKPj4gKyAqIEByb3RhdGlvbjogSW5pdGlhbCBAbW9kZSByb3RhdGlvbiBp
-biBkZWdyZWVzIENvdW50ZXIgQ2xvY2sgV2lzZQo+PiArICoKPj4gKyAqIFRoaXMgZnVuY3Rpb24g
-c2V0cyB1cCBhICZkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSB3aXRoIGEgJmRybV9jb25uZWN0b3Ig
-dGhhdAo+PiArICogaGFzIG9uZSBmaXhlZCAmZHJtX2Rpc3BsYXlfbW9kZSB3aGljaCBpcyByb3Rh
-dGVkIGFjY29yZGluZyB0byBAcm90YXRpb24uCj4+ICsgKgo+PiArICogUmV0dXJuczoKPj4gKyAq
-IFplcm8gb24gc3VjY2VzcywgbmVnYXRpdmUgZXJyb3IgY29kZSBvbiBmYWlsdXJlLgo+PiArICov
-Cj4+ICt7Cj4+ICsgICAgICAgc3RydWN0IGRybV9kZXZpY2UgKmRybSA9IHRkZXYtPmRybTsKPj4g
-KyAgICAgICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZV9jb3B5Owo+PiArICAgICAgIHN0
-cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3I7Cj4+ICsgICAgICAgaW50IHJldDsKPj4gKyAg
-ICAgICBjb25uZWN0b3IgPSB0aW55ZHJtX2Nvbm5lY3Rvcl9jcmVhdGUoZHJtLCBtb2RlX2NvcHks
-IGNvbm5lY3Rvcl90eXBlKTsKPj4gKyAgICAgICBpZiAoSVNfRVJSKGNvbm5lY3RvcikpCj4+ICsg
-ICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihjb25uZWN0b3IpOwo+PiArCj4+ICsgICAgICAg
-cmV0ID0gZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfaW5pdChkcm0sICZ0ZGV2LT5waXBlLCBmdW5j
-cywgZm9ybWF0cywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGZvcm1hdF9jb3VudCwgY29ubmVjdG9yKTsKPj4gKyAgICAgICBpZiAocmV0KQo+PiArICAgICAg
-ICAgICAgICAgcmV0dXJuIHJldDsKPj4gKwo+PiArICAgICAgIHJldHVybiAwOwo+IHJldHVybiBk
-cm1fLi4uID8KClllcC4KCgp0aW55ZHJtIHdpbGwgYmUgbWVyZ2VkIHRoZSB3YXkgaXQgaXMgbm93
-LCB1bmxlc3Mgc29tZW9uZSBwb2ludHMgdG8Kc29tZXRoaW5nIHRoYXQgaXMgYnJva2VuLiBCdXQg
-SSBjb2xsZWN0IHlvdXIgY29tbWVudHMgZm9yIGEgbGF0ZXIKY2xlYW51cCBwYXRjaHNldC4gSXQg
-dGFrZXMgYSBsb3Qgb2YgZWZmb3J0IGZvciBtZSBhcyBhbiBhbWF0ZXVyIHRvCmtlZXBzIHRoaXMg
-Y29kZSB1cC10by1kYXRlIG91dC1vZi10cmVlIGZvciBtb250aHMuIEl0J3Mgbm90IGV2ZW4Kc3Vy
-ZSB0aGF0IEkndmUgaGl0IHRoZSBtYXJrIHdpdGggdGhpcywgc28gdGhlcmUgd2lsbCBtb3N0IGxp
-a2VseSBiZQpjaGFuZ2VzIHdoZW4gSSBzdGFydCBjb252ZXJ0aW5nIGZidGZ0IGRyaXZlcnMsIGFu
-ZCBJJ2xsIGltcGxlbWVudCB0aGUKcmVtYWluaW5nIGJpdHMgYW5kIHBpZWNlcyBhcyBJIG1ha2Ug
-Y2hhbmdlcy4gVGhlIGNvcmUgb2YgdGlueWRybSB3b24ndApjaGFuZ2UgYmVjYXVzZSBvZiB1bmZv
-cnNlZW4gZmJ0ZnQgcXVpcmtzLCBidXQgb3RoZXIgcGFydHMgbWlnaHQuCgoKTm9yYWxmLgoKPj4g
-K30KPj4gK0VYUE9SVF9TWU1CT0wodGlueWRybV9kaXNwbGF5X3BpcGVfaW5pdCk7CgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Dmitry,
+
+> Am 28.01.2017 um 19:16 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Dmitry,
+> there have been no further comments/complaints about this patch series =
+in the last month.
+> And it appears as if only your action is needed.
+>=20
+> What is missing for this patch series to be finally accepted?
+
+Did you find time to look into my comment on patch 1/9 and make a =
+decision on patch 6/8?
+
+Is there anything open which prohibits inclusion to (and further testing =
+within) linux/next?
+
+BR and thanks,
+Nikolaus
