@@ -1,23 +1,11 @@
 From: Willy Tarreau <w@1wt.eu>
-Subject: [PATCH v2] ARM: dts: armada-385-synology-ds116: add support for
- Synology DS116 NAS
-Date: Sun, 12 Feb 2017 10:23:53 +0100
-Message-ID: <1486891433-6371-1-git-send-email-w@1wt.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Arnaud Ebalard <arno@natisbad.org>, Willy Tarreau <w@1wt.eu>
+Subject: [PATCH v3] ARM: dts: armada-385-synology-ds116: add support for Synology DS116 NAS
+Date: Sun, 12 Feb 2017 10:30:35 +0100
+Message-ID: <1486891835-6641-1-git-send-email-w@1wt.eu>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>, Willy Tarreau <w@1wt.eu>
 List-Id: devicetree@vger.kernel.org
 
 This commit adds the device tree description for the Synology DS116 NAS.
@@ -39,14 +27,17 @@ device features the following items :
 
 With this DTS, my NAS is 100% functional starting with kernel 4.9.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Signed-off-by: Willy Tarreau <w@1wt.eu>
 
 ---
+v3:
+  - rebased it on master, v2 was accidently sent for 4.9 and conflicts there
+
 v2, after Andrew's review:
   - added a poweroff node in addition to serial1 (tested and works)
   - changed the comment to mention that serial1's speed is 9600 not 115200 bps
-    after a new series of tests, don't know why I believed I tested it at 115k.
+    after a new series of test, don't know why I believed I tested it at 115k.
   - fixed a typo in a comment
 ---
  arch/arm/boot/dts/Makefile                      |   1 +
@@ -55,17 +46,17 @@ v2, after Andrew's review:
  create mode 100644 arch/arm/boot/dts/armada-385-synology-ds116.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8cf288f..94784ef 100644
+index 01d178a..2bc2b33 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -920,6 +920,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+@@ -949,6 +949,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
  	armada-385-db-ap.dtb \
  	armada-385-linksys-caiman.dtb \
  	armada-385-linksys-cobra.dtb \
 +	armada-385-synology-ds116.dtb \
+ 	armada-385-turris-omnia.dtb \
  	armada-388-clearfog.dtb \
- 	armada-388-clearfog-base.dtb \
- 	armada-388-clearfog-pro.dtb \
+ 	armada-388-db.dtb \
 diff --git a/arch/arm/boot/dts/armada-385-synology-ds116.dts b/arch/arm/boot/dts/armada-385-synology-ds116.dts
 new file mode 100644
 index 0000000..31510eb
@@ -395,3 +386,8 @@ index 0000000..31510eb
 +};
 -- 
 2.8.0.rc2.1.gbe9624a
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
