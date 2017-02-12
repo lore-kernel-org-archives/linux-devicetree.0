@@ -1,45 +1,31 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: armada-385-synology-ds116: add support for
- Synology DS116 NAS
-Date: Sun, 12 Feb 2017 18:27:24 +0100
-Message-ID: <20170212182724.4ed100e0@free-electrons.com>
-References: <1486805073-15534-1-git-send-email-w@1wt.eu>
-        <20170212004031.GA7328@lunn.ch>
-        <20170212005350.GA18612@1wt.eu>
-        <20170212011744.GB7328@lunn.ch>
-        <20170212012418.GA17841@1wt.eu>
-        <20170212153855.GA17141@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/2] Add support for HwaCom AmazeTV
+Date: Sun, 12 Feb 2017 20:32:45 +0100
+Message-ID: <20170212193247.22705-1-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170212153855.GA17141-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Willy Tarreau <w@1wt.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnaud Ebalard <arno-LkuqDEemtHBg9hUCZPvPmw@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-On Sun, 12 Feb 2017 16:38:55 +0100, Andrew Lunn wrote:
+Add support for HwaCom AmazeTV, one more S905X board.
 
-> What you have in v2 and v3 looks good. It could be considered a bit of
-> a hack, two nodes for the same hardware block. But they are used at
-> different times, normal runtime, and late in the shutdown. So it works
-> out O.K.
+Carlo Caione (2):
+  devicetree: Add vendor prefix for Hwacom Systems Inc.
+  ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
 
-I don't really mind personally, but IMO this is clearly a hack. It
-completely violates the rule that the DT should represent the HW, and
-the fact that the DT should be operating system agnostic.
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts  | 201 +++++++++++++++++++++
+ 4 files changed, 204 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
 
-But anyway, there are so many things in the DT that violates those
-rules that probably this hack is fine.
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
