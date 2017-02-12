@@ -1,35 +1,154 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v9 0/8] drivers: touchscreen: tsc2007 and ads7846/tsc2046 improvements (use common touchscreen bindings, pre-calibration, spi fix and provide iio raw values)
-Date: Sun, 12 Feb 2017 16:18:08 +0100
-Message-ID: <3225CF5D-53B7-456F-8128-50BCF31ADD0F@goldelico.com>
-References: <cover.1482936802.git.hns@goldelico.com> <BB8421B2-6626-4A95-BCD0-25C4CAF30F61@goldelico.com> <17d2c23b-6cbb-d365-71cb-fd4d7af7c958@kernel.org> <B04BF50A-A54E-4CA2-BB0E-7B547D40403A@goldelico.com> <85077609-9A95-4DBC-BDC8-649C8692065B@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <85077609-9A95-4DBC-BDC8-649C8692065B@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, linux-iio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-input@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v4 2/7] drm/tinydrm: Add helper functions
+Date: Sun, 12 Feb 2017 16:33:04 +0100
+Message-ID: <2ee54d47-ff7e-2f94-9eea-7d75788b3e1c@tronnes.org>
+References: <20170211184858.26421-1-noralf@tronnes.org>
+ <20170211184858.26421-3-noralf@tronnes.org>
+ <CAHp75Vfc+2iUz=2ias5enwbTVd=unu3dEiRgiAwbGFS2KEW+2A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75Vfc+2iUz=2ias5enwbTVd=unu3dEiRgiAwbGFS2KEW+2A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
 
-> Am 28.01.2017 um 19:16 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Hi Dmitry,
-> there have been no further comments/complaints about this patch series =
-in the last month.
-> And it appears as if only your action is needed.
->=20
-> What is missing for this patch series to be finally accepted?
+Den 12.02.2017 12.50, skrev Andy Shevchenko:
+> On Sat, Feb 11, 2017 at 8:48 PM, Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
+>> Add common functionality needed by many tinydrm drivers.
+>> +int tinydrm_enable_backlight(struct backlight_device *backlight)
+>> +{
+>> +       unsigned int old_state;
+>> +       int ret;
+>> +
+>> +       if (!backlight)
+>> +               return 0;
+>> +
+>> +       old_state = backlight->props.state;
+>> +       backlight->props.state &= ~BL_CORE_FBBLANK;
+>> +       DRM_DEBUG_KMS("Backlight state: 0x%x -> 0x%x\n", old_state,
+>> +                     backlight->props.state);
+> "%#x" ?
+> (And elsewhere)
+>
+>> +#if IS_ENABLED(CONFIG_SPI)
+>> +size_t tinydrm_spi_max_transfer_size(struct spi_device *spi, size_t max_len)
+>> +{
+>> +       size_t ret;
+>> +
+>> +       ret = min(spi_max_transfer_size(spi), spi->master->max_dma_len);
+> I don't get why DMA constrain somehow affects this framework?
 
-Did you find time to look into my comment on patch 1/9 and make a =
-decision on patch 6/8?
+The reason is that spi-bcm2835 reverts to PIO on larger buffers.
+Looking at __spi_map_msg() and spi_map_buf() it becomes clear that the
+core breaks up the buffer into manageable parts. So this must be a bug
+in spi-bcm2835 (and spi-pxa2xx) since no other drivers have a upper
+limit in the .can_dma() callback.
+So you're rightly confused, with drivers fixed, this limit can be lifted.
 
-Is there anything open which prohibits inclusion to (and further testing =
-within) linux/next?
+> What if max_dma_len is zero (imagine SPI master that works only by PIO
+> by some reason)?
 
-BR and thanks,
-Nikolaus
+It can't be zero:
+
+int spi_register_master(struct spi_master *master)
+{
+...
+     if (!master->max_dma_len)
+         master->max_dma_len = INT_MAX;
+
+>> +       if (max_len)
+>> +               ret = min(ret, max_len);
+>> +       if (spi_max)
+>> +               ret = min_t(size_t, ret, spi_max);
+>> +       ret &= ~0x3;
+> Why alignment is that? Why do we need it? Isn't a busyness of SPI
+> framework to cope with it?
+
+This minimum capping doesn't look good. I should probably put >16
+instead, that would cover the minimum for the 9-bit emulation code.
+
+The reason I let the user change the transfer size, is that some usb
+audio card on Raspberry Pi stuttered with 4k fbtft transfers.
+
+>> +       if (ret < 4)
+> It's effectively check for 0.
+>
+>> +               ret = 4;
+>> +
+>> +       return ret;
+>> +}
+>> +EXPORT_SYMBOL(tinydrm_spi_max_transfer_size);
+>> +static void
+>> +tinydrm_dbg_spi_print(struct spi_device *spi, struct spi_transfer *tr,
+>> +                     const void *buf, int idx, bool tx)
+>> +{
+>> +       u32 speed_hz = tr->speed_hz ? tr->speed_hz : spi->max_speed_hz;
+>> +       char linebuf[3 * 32];
+>> +
+>> +       hex_dump_to_buffer(buf, tr->len, 16,
+>> +                          DIV_ROUND_UP(tr->bits_per_word, 8),
+>> +                          linebuf, sizeof(linebuf), false);
+>> +
+>> +       printk(KERN_DEBUG
+>> +              "    tr(%i): speed=%u%s, bpw=%i, len=%u, %s_buf=[%s%s]\n", idx,
+>> +              speed_hz > 1000000 ? speed_hz / 1000000 : speed_hz / 1000,
+>> +              speed_hz > 1000000 ? "MHz" : "kHz", tr->bits_per_word, tr->len,
+>> +              tx ? "tx" : "rx", linebuf, tr->len > 16 ? " ..." : "");
+> I hope at some point we will have some extension to print speeds,
+> sizes and so on based on algo in string_get_size().
+>
+>> +}
+>> +int tinydrm_spi_transfer(struct spi_device *spi, u32 speed_hz,
+>> +                        struct spi_transfer *header, u8 bpw, const void *buf,
+>> +                        size_t len)
+>> +{
+>> +       struct spi_transfer tr = {
+>> +               .bits_per_word = bpw,
+>> +               .speed_hz = speed_hz,
+>> +       };
+>> +       struct spi_message m;
+>> +       u16 *swap_buf = NULL;
+>> +       size_t max_chunk;
+>> +       size_t chunk;
+>> +       int ret = 0;
+>> +
+>> +       if (WARN_ON_ONCE(bpw != 8 && bpw != 16))
+>> +               return -EINVAL;
+>> +
+>> +       max_chunk = tinydrm_spi_max_transfer_size(spi, 0);
+>> +
+>> +       if (drm_debug & DRM_UT_DRIVER)
+>> +               pr_debug("[drm:%s] bpw=%u, max_chunk=%zu, transfers:\n",
+>> +                        __func__, bpw, max_chunk);
+> For all of your dev_dbg() / pr_debug() __func__ argument might be
+> redundant. Dynamic Debug may include this by request from user.
+>
+>> +/**
+>> + * tinydrm_machine_little_endian - Machine is little endian
+>> + *
+>> + * Returns:
+>> + * true if *defined(__LITTLE_ENDIAN)*, false otherwise
+>> + */
+>> +static inline bool tinydrm_machine_little_endian(void)
+>> +{
+>> +#if defined(__LITTLE_ENDIAN)
+>> +       return true;
+>> +#else
+>> +       return false;
+>> +#endif
+>> +}
+> Hmm... What is the typical code of a caller for this?
+
+If the bus can't do 16-bit natively, it will have to swap the bytes on
+little endian machines before transfer as 8-bit (Raspberry Pi can't do
+16-bit SPI with it's DMA capable controller).
+So this function is to avoid #ifdef's elsewhere.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
