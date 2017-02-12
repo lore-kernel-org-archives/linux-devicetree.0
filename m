@@ -1,142 +1,91 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] drm: Add DRM support for tiny LCD displays
-Date: Sun, 12 Feb 2017 13:05:03 +0200
-Message-ID: <CAHp75VeZke=JCosvc3xQ_AiOn64hth=PMJp4X0vLHMS14bkp4w@mail.gmail.com>
-References: <20170211184858.26421-1-noralf@tronnes.org> <20170211184858.26421-2-noralf@tronnes.org>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 2/7] drm/tinydrm: Add helper functions
+Date: Sun, 12 Feb 2017 13:50:23 +0200
+Message-ID: <CAHp75Vfc+2iUz=2ias5enwbTVd=unu3dEiRgiAwbGFS2KEW+2A@mail.gmail.com>
+References: <20170211184858.26421-1-noralf@tronnes.org>
+ <20170211184858.26421-3-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170211184858.26421-2-noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170211184858.26421-3-noralf@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 11, 2017 at 8:48 PM, Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> w=
-rote:
-> tinydrm provides helpers for very simple displays that can use
-> CMA backed framebuffers and need flushing on changes.
-
-> +/**
-
-> + * tinydrm_gem_cma_free_object - Free resources associated with a CMA GE=
-M
-> + *                               object
-
-Keep on one line?
-
-> +const struct file_operations tinydrm_fops =3D {
-
-> +       .owner          =3D THIS_MODULE,
-
-Do we still need this?
-
-> +static int tinydrm_init(struct device *parent, struct tinydrm_device *td=
-ev,
-> +                       const struct drm_framebuffer_funcs *fb_funcs,
-> +                       struct drm_driver *driver)
-> +{
-> +       struct drm_device *drm;
-> +
-> +       mutex_init(&tdev->dirty_lock);
-> +       tdev->fb_funcs =3D fb_funcs;
-> +
-> +       /*
-> +        * We don't embed drm_device, because that prevent us from using
-> +        * devm_kzalloc() to allocate tinydrm_device in the driver since
-
-> +        * drm_dev_unref() frees the structure. The devm_ functions provi=
-de
-
-"devm_ functions" -> "devm_kzalloc()" ?
-
-Otherwise what else do you refer to and why here?
-
-> +        * for easy error handling.
-> +        */
-
-> +static int tinydrm_register(struct tinydrm_device *tdev)
-> +{
-> +       struct drm_device *drm =3D tdev->drm;
-> +       int bpp =3D drm->mode_config.preferred_depth;
-> +       struct drm_fbdev_cma *fbdev;
-> +       int ret;
-> +
-> +       ret =3D drm_dev_register(tdev->drm, 0);
-> +       if (ret)
-> +               return ret;
-> +
-> +       fbdev =3D drm_fbdev_cma_init_with_funcs(drm, bpp ? bpp : 32,
-> +                                             drm->mode_config.num_connec=
-tor,
-> +                                             tdev->fb_funcs);
-
-> +       if (IS_ERR(fbdev))
-> +               DRM_ERROR("Failed to initialize fbdev: %ld\n", PTR_ERR(fb=
-dev));
-> +       else
-> +               tdev->fbdev_cma =3D fbdev;
-
-Apparently I missed previous round of reviews, can you just put in
-short words why error is not propagated here to the caller?
-
-> +
-> +       return 0;
-> +}
-
-> +/**
-> + * tinydrm_display_pipe_init - Initialize display pipe
-> + * @tdev: tinydrm device
-> + * @funcs: Display pipe functions
-> + * @connector_type: Connector type
-
-> + * @formats: Array of supported formats (DRM_FORMAT\_\*)
-
-DRM_FORMAT_* ?
-
-> + * @format_count: Number of elements in @formats
-> + * @mode: Supported mode
-> + * @rotation: Initial @mode rotation in degrees Counter Clock Wise
-> + *
-> + * This function sets up a &drm_simple_display_pipe with a &drm_connecto=
-r that
-> + * has one fixed &drm_display_mode which is rotated according to @rotati=
-on.
-> + *
-> + * Returns:
-> + * Zero on success, negative error code on failure.
-> + */
-
-> +{
-> +       struct drm_device *drm =3D tdev->drm;
-> +       struct drm_display_mode *mode_copy;
-> +       struct drm_connector *connector;
-> +       int ret;
-
-> +       connector =3D tinydrm_connector_create(drm, mode_copy, connector_=
-type);
-> +       if (IS_ERR(connector))
-> +               return PTR_ERR(connector);
-> +
-
-> +       ret =3D drm_simple_display_pipe_init(drm, &tdev->pipe, funcs, for=
-mats,
-> +                                          format_count, connector);
-> +       if (ret)
-> +               return ret;
-> +
-> +       return 0;
-
-return drm_... ?
-
-> +}
-> +EXPORT_SYMBOL(tinydrm_display_pipe_init);
-
---=20
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCBGZWIgMTEsIDIwMTcgYXQgODo0OCBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZA
+dHJvbm5lcy5vcmc+IHdyb3RlOgo+IEFkZCBjb21tb24gZnVuY3Rpb25hbGl0eSBuZWVkZWQgYnkg
+bWFueSB0aW55ZHJtIGRyaXZlcnMuCgo+ICtpbnQgdGlueWRybV9lbmFibGVfYmFja2xpZ2h0KHN0
+cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpiYWNrbGlnaHQpCj4gK3sKPiArICAgICAgIHVuc2lnbmVk
+IGludCBvbGRfc3RhdGU7Cj4gKyAgICAgICBpbnQgcmV0Owo+ICsKPiArICAgICAgIGlmICghYmFj
+a2xpZ2h0KQo+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsKPiArCj4gKyAgICAgICBvbGRfc3Rh
+dGUgPSBiYWNrbGlnaHQtPnByb3BzLnN0YXRlOwo+ICsgICAgICAgYmFja2xpZ2h0LT5wcm9wcy5z
+dGF0ZSAmPSB+QkxfQ09SRV9GQkJMQU5LOwo+ICsgICAgICAgRFJNX0RFQlVHX0tNUygiQmFja2xp
+Z2h0IHN0YXRlOiAweCV4IC0+IDB4JXhcbiIsIG9sZF9zdGF0ZSwKPiArICAgICAgICAgICAgICAg
+ICAgICAgYmFja2xpZ2h0LT5wcm9wcy5zdGF0ZSk7CgoiJSN4IiA/CihBbmQgZWxzZXdoZXJlKQoK
+PiArI2lmIElTX0VOQUJMRUQoQ09ORklHX1NQSSkKCj4gK3NpemVfdCB0aW55ZHJtX3NwaV9tYXhf
+dHJhbnNmZXJfc2l6ZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpLCBzaXplX3QgbWF4X2xlbikKPiAr
+ewo+ICsgICAgICAgc2l6ZV90IHJldDsKPiArCgo+ICsgICAgICAgcmV0ID0gbWluKHNwaV9tYXhf
+dHJhbnNmZXJfc2l6ZShzcGkpLCBzcGktPm1hc3Rlci0+bWF4X2RtYV9sZW4pOwoKSSBkb24ndCBn
+ZXQgd2h5IERNQSBjb25zdHJhaW4gc29tZWhvdyBhZmZlY3RzIHRoaXMgZnJhbWV3b3JrPwoKV2hh
+dCBpZiBtYXhfZG1hX2xlbiBpcyB6ZXJvIChpbWFnaW5lIFNQSSBtYXN0ZXIgdGhhdCB3b3JrcyBv
+bmx5IGJ5IFBJTwpieSBzb21lIHJlYXNvbik/Cgo+ICsgICAgICAgaWYgKG1heF9sZW4pCj4gKyAg
+ICAgICAgICAgICAgIHJldCA9IG1pbihyZXQsIG1heF9sZW4pOwo+ICsgICAgICAgaWYgKHNwaV9t
+YXgpCj4gKyAgICAgICAgICAgICAgIHJldCA9IG1pbl90KHNpemVfdCwgcmV0LCBzcGlfbWF4KTsK
+Cj4gKyAgICAgICByZXQgJj0gfjB4MzsKCldoeSBhbGlnbm1lbnQgaXMgdGhhdD8gV2h5IGRvIHdl
+IG5lZWQgaXQ/IElzbid0IGEgYnVzeW5lc3Mgb2YgU1BJCmZyYW1ld29yayB0byBjb3BlIHdpdGgg
+aXQ/Cgo+ICsgICAgICAgaWYgKHJldCA8IDQpCgpJdCdzIGVmZmVjdGl2ZWx5IGNoZWNrIGZvciAw
+LgoKPiArICAgICAgICAgICAgICAgcmV0ID0gNDsKPiArCj4gKyAgICAgICByZXR1cm4gcmV0OwoK
+PiArfQo+ICtFWFBPUlRfU1lNQk9MKHRpbnlkcm1fc3BpX21heF90cmFuc2Zlcl9zaXplKTsKCj4g
+K3N0YXRpYyB2b2lkCj4gK3Rpbnlkcm1fZGJnX3NwaV9wcmludChzdHJ1Y3Qgc3BpX2RldmljZSAq
+c3BpLCBzdHJ1Y3Qgc3BpX3RyYW5zZmVyICp0ciwKPiArICAgICAgICAgICAgICAgICAgICAgY29u
+c3Qgdm9pZCAqYnVmLCBpbnQgaWR4LCBib29sIHR4KQo+ICt7Cj4gKyAgICAgICB1MzIgc3BlZWRf
+aHogPSB0ci0+c3BlZWRfaHogPyB0ci0+c3BlZWRfaHogOiBzcGktPm1heF9zcGVlZF9oejsKPiAr
+ICAgICAgIGNoYXIgbGluZWJ1ZlszICogMzJdOwo+ICsKCj4gKyAgICAgICBoZXhfZHVtcF90b19i
+dWZmZXIoYnVmLCB0ci0+bGVuLCAxNiwKPiArICAgICAgICAgICAgICAgICAgICAgICAgICBESVZf
+Uk9VTkRfVVAodHItPmJpdHNfcGVyX3dvcmQsIDgpLAo+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGxpbmVidWYsIHNpemVvZihsaW5lYnVmKSwgZmFsc2UpOwoKPiArCj4gKyAgICAgICBwcmlu
+dGsoS0VSTl9ERUJVRwo+ICsgICAgICAgICAgICAgICIgICAgdHIoJWkpOiBzcGVlZD0ldSVzLCBi
+cHc9JWksIGxlbj0ldSwgJXNfYnVmPVslcyVzXVxuIiwgaWR4LAo+ICsgICAgICAgICAgICAgIHNw
+ZWVkX2h6ID4gMTAwMDAwMCA/IHNwZWVkX2h6IC8gMTAwMDAwMCA6IHNwZWVkX2h6IC8gMTAwMCwK
+PiArICAgICAgICAgICAgICBzcGVlZF9oeiA+IDEwMDAwMDAgPyAiTUh6IiA6ICJrSHoiLCB0ci0+
+Yml0c19wZXJfd29yZCwgdHItPmxlbiwKPiArICAgICAgICAgICAgICB0eCA/ICJ0eCIgOiAicngi
+LCBsaW5lYnVmLCB0ci0+bGVuID4gMTYgPyAiIC4uLiIgOiAiIik7CgpJIGhvcGUgYXQgc29tZSBw
+b2ludCB3ZSB3aWxsIGhhdmUgc29tZSBleHRlbnNpb24gdG8gcHJpbnQgc3BlZWRzLApzaXplcyBh
+bmQgc28gb24gYmFzZWQgb24gYWxnbyBpbiBzdHJpbmdfZ2V0X3NpemUoKS4KCj4gK30KCj4gK2lu
+dCB0aW55ZHJtX3NwaV90cmFuc2ZlcihzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpLCB1MzIgc3BlZWRf
+aHosCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBzcGlfdHJhbnNmZXIgKmhlYWRl
+ciwgdTggYnB3LCBjb25zdCB2b2lkICpidWYsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIHNp
+emVfdCBsZW4pCj4gK3sKPiArICAgICAgIHN0cnVjdCBzcGlfdHJhbnNmZXIgdHIgPSB7Cj4gKyAg
+ICAgICAgICAgICAgIC5iaXRzX3Blcl93b3JkID0gYnB3LAo+ICsgICAgICAgICAgICAgICAuc3Bl
+ZWRfaHogPSBzcGVlZF9oeiwKPiArICAgICAgIH07Cj4gKyAgICAgICBzdHJ1Y3Qgc3BpX21lc3Nh
+Z2UgbTsKPiArICAgICAgIHUxNiAqc3dhcF9idWYgPSBOVUxMOwo+ICsgICAgICAgc2l6ZV90IG1h
+eF9jaHVuazsKPiArICAgICAgIHNpemVfdCBjaHVuazsKPiArICAgICAgIGludCByZXQgPSAwOwo+
+ICsKPiArICAgICAgIGlmIChXQVJOX09OX09OQ0UoYnB3ICE9IDggJiYgYnB3ICE9IDE2KSkKPiAr
+ICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7Cj4gKwo+ICsgICAgICAgbWF4X2NodW5rID0g
+dGlueWRybV9zcGlfbWF4X3RyYW5zZmVyX3NpemUoc3BpLCAwKTsKPiArCgo+ICsgICAgICAgaWYg
+KGRybV9kZWJ1ZyAmIERSTV9VVF9EUklWRVIpCj4gKyAgICAgICAgICAgICAgIHByX2RlYnVnKCJb
+ZHJtOiVzXSBicHc9JXUsIG1heF9jaHVuaz0lenUsIHRyYW5zZmVyczpcbiIsCj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgIF9fZnVuY19fLCBicHcsIG1heF9jaHVuayk7CgpGb3IgYWxsIG9mIHlv
+dXIgZGV2X2RiZygpIC8gcHJfZGVidWcoKSBfX2Z1bmNfXyBhcmd1bWVudCBtaWdodCBiZQpyZWR1
+bmRhbnQuIER5bmFtaWMgRGVidWcgbWF5IGluY2x1ZGUgdGhpcyBieSByZXF1ZXN0IGZyb20gdXNl
+ci4KCj4gKy8qKgo+ICsgKiB0aW55ZHJtX21hY2hpbmVfbGl0dGxlX2VuZGlhbiAtIE1hY2hpbmUg
+aXMgbGl0dGxlIGVuZGlhbgo+ICsgKgo+ICsgKiBSZXR1cm5zOgo+ICsgKiB0cnVlIGlmICpkZWZp
+bmVkKF9fTElUVExFX0VORElBTikqLCBmYWxzZSBvdGhlcndpc2UKPiArICovCj4gK3N0YXRpYyBp
+bmxpbmUgYm9vbCB0aW55ZHJtX21hY2hpbmVfbGl0dGxlX2VuZGlhbih2b2lkKQo+ICt7Cj4gKyNp
+ZiBkZWZpbmVkKF9fTElUVExFX0VORElBTikKPiArICAgICAgIHJldHVybiB0cnVlOwo+ICsjZWxz
+ZQo+ICsgICAgICAgcmV0dXJuIGZhbHNlOwo+ICsjZW5kaWYKPiArfQoKSG1tLi4uIFdoYXQgaXMg
+dGhlIHR5cGljYWwgY29kZSBvZiBhIGNhbGxlciBmb3IgdGhpcz8KCi0tIApXaXRoIEJlc3QgUmVn
+YXJkcywKQW5keSBTaGV2Y2hlbmtvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
