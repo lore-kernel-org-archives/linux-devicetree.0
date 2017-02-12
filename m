@@ -1,326 +1,2440 @@
-Return-Path: <SRS0=TTA6=ZT=hisilicon.com=liurenzhong@kernel.org>
-From: liurenzhong <liurenzhong@hisilicon.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIXSBhZGM6IGFkZCBhZGMgZHJpdmVyIGZvciBIaXNpbGlj?=
- =?gb2312?Q?on_BVT_SOCs?=
-Date: Mon, 6 Feb 2017 12:19:05 +0000
-Message-ID: <FF07FAC5C99FCA42AD8E3824334A86E0DCC408@DGGEMA503-MBS.china.huawei.com>
-References: <1483784170-228765-1-git-send-email-liurenzhong@hisilicon.com>
- <41fbfc45-9f9a-c2cf-9c27-c4d5a39a400a@kernel.org>
-In-Reply-To: <41fbfc45-9f9a-c2cf-9c27-c4d5a39a400a@kernel.org>
-Content-Language: zh-CN
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=z5Vp=ZZ=gmail.com=slongerbeam@kernel.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 22/24] media: imx: Add MIPI CSI-2 OV5640 sensor subdev
+ driver
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-23-git-send-email-steve_longerbeam@mentor.com>
+ <15482412.XOGz6nc3Rt@avalon>
+Message-ID: <4f8a588d-9667-0fa1-dc84-840d8f5f0efc@gmail.com>
+Date: Sun, 12 Feb 2017 14:46:50 -0800
 MIME-Version: 1.0
-To: Jonathan Cameron <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "akinobu.mita@gmail.com" <akinobu.mita@gmail.com>, "ludovic.desroches@atmel.com" <ludovic.desroches@atmel.com>, "krzk@kernel.org" <krzk@kernel.org>, "vilhelm.gray@gmail.com" <vilhelm.gray@gmail.com>, "ksenija.stanojevic@gmail.com" <ksenija.stanojevic@gmail.com>, "zhiyong.tao@mediatek.com" <zhiyong.tao@mediatek.com>, "daniel.baluta@intel.com" <daniel.baluta@intel.com>, "leonard.crestez@intel.com" <leonard.crestez@intel.com>, "ray.jui@broadcom.com" <ray.jui@broadcom.com>, "raveendra.padasalagi@broadcom.com" <raveendra.padasalagi@broadcom.com>, "mranostay@gmail.com" <mranostay@gmail.com>, "amsfield22@gmail.com" <amsfield22@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xuejiancheng <xuejiancheng@hisilicon.com>, "Lixu (kevin)" <kevin.lixu@hisilicon.com>
+In-Reply-To: <15482412.XOGz6nc3Rt@avalon>
+Content-Type: multipart/alternative;
+ boundary="------------B6339356D7EB75AE990F9013"
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarit.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgSm9uYXRoYW4sDQoNClRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLCAgSSdtIHNvcnJ5IHRv
-IHJlcGx5IGFmdGVyIGEgbG9uZyB0aW1lIC4gVGhpcyBpcyBzb21lIHByb2JsZW1zIGFzayBmb3Ig
-eW91ciBhZHZpY2U6DQoNCjEsIEl0J3MgbmljZSB0byB1c2UganVzdCAicmVzZXQvcmVzZXQudHh0
-IiBvciAiLi4uL3Jlc2V0L3Jlc2V0LnR4dCIgZnJvbSBSb2IncyBzdWdnZXN0aW9uLCBidXQgaW4g
-dGhlIGZpbHRlcmVkIERUIHRyZWUsICIuLi9yZXNldC9yZXNldC50eHQiIGlzIHVzZWQgbW9yZSB0
-aW1lcywgd2hpY2ggb25lIHdlIHNob3VsZCBnZXQsICIuLi8iIG9yICIuLi4vIj8gDQoNCjIsIFRo
-ZSBBREMgb24gaGlzaWxpY29uIEJWVCBzb2NzIGNhbiB3b3JrIGluIHNpbmdsZSBzY2FubmluZyBt
-b2RlIG9yIGNvbnRpbnVvdXMgc2Nhbm5pbmcgbW9kZS4gVGhlIHNpbmdsZSBtb2RlIGdldCBjb252
-ZXJzaW9uIHZhbHVlIG9uZSB0aW1lIGFmdGVyIHN0YXJ0IHRoZSBjb25maWd1cmUsIHdoaWxlIHRo
-ZSBjb250aW51b3VzIHNjYW5uaW5nIG1vZGUgd2lsbCBnZXQgY29udmVyc2lvbiB2YWx1ZSBlYWNo
-IHNjYW4gdGltZSBhZnRlciBzdGFydCB0aGUgY29uZmlndXJlIHdoaWxlIHN0b3BwaW5nIHRoZSBh
-ZGMgY29uZmlndXJlLiBGb3IgbW9yZSBleHBhbnNpYmlsaXR5LCAgdGhlIEFEQyBkcml2ZXIgdXNl
-IHRoZSBjb250aW51b3VzIHNjYW5uaW5nIG1vZGUgYW5kICBzdG9wIHRoZSBhZGMgY29uZmlndXJl
-IGFmdGVyIGdldCBvbmUgdGltZSBjb252ZXJzaW9uIHZhbHVlLiAgSXMgaXQgbmVjZXNzYXJ5IHRv
-IGNoYW5nZSBvdXIgZHJpdmVyIHRvIHNpbmdsZSBzY2FubmluZyBtb2RlIG9yIGp1c3QgYWRkIGEg
-c2hvcnQgZGVzY3JpcHRpb24/DQoNCjMsIFRoaXMgZHJ2aWVyIGlzIG9ubHkgc3VwcG9ydCBBREMg
-SUYgZm91bmQgb24gaGkzNTE2Y3YzMDAgYW5kIGhpMzUxOXYxMDEgbm93ICwgYW5kIGZ1dHVyZSBT
-b0NzIGZyb20gSGlzaWxpY29uIEJWVCB3b3VsZCBnZXQgc29tZSBjaGFuZ2VzIG9uIGNoYW5uZWwg
-bnVtYmVyIG9yIGdldHRpbmcgZGF0YSB3YXlzIGFuZCBzbyBvbiwgIHNvIHRoZSBkcml2ZXIgdXNl
-ICJWMSIgb24gbWF0Y2ggdGFibGUgYW5kIGFkZCBvdGhlciB2ZXJzaW9uIHdoaWxlIGFueSBjaGFu
-Z2UgaGFwcGVucy4gIFdoaWNoIG1hdGNoIHRhYmxlIGNhbiB3ZSBwcm92aWRlIGFuZCAgaXMndCBP
-SyBsaWtlIHRoaXM/DQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBoaWJ2dF9s
-c2FkY19tYXRjaFtdID0gew0KPiArCXsNCj4gKwkJLmNvbXBhdGlibGUgPSAiaGlzaWxpY29uLGhp
-MzUxNmN2MzAwLWxzYWRjIiwNCj4gKwkJLmRhdGEgPSAmbHNhZGNfZGF0YV92MSwNCj4gKwl9LA0K
-PiArCXsNCj4gKwkJLmNvbXBhdGlibGUgPSAiaGlzaWxpY29uLGhpMzUxOXYxMDEtbHNhZGMiLA0K
-PiArCQkuZGF0YSA9ICZsc2FkY19kYXRhX3YxLA0KPiArCX0sDQo+ICsJe30sDQo+ICt9Ow0KDQpB
-d2FpdGluZyBmb3IgeW91ciByZXBseSBUaGFuayB5b3UgdmVyeSBtdWNoIQ0KDQpCZXN0IHJlZ2Fy
-ZHMNCi9BbGxlbg0KDQotLS0tLdPKvP7Urbz+LS0tLS0NCreivP7IyzogSm9uYXRoYW4gQ2FtZXJv
-biBbbWFpbHRvOmppYzIzQGtlcm5lbC5vcmddIA0Kt6LLzcqxvOQ6IDIwMTfE6jHUwjjI1SAxOjUy
-DQrK1bz+yMs6IGxpdXJlbnpob25nIDxsaXVyZW56aG9uZ0BoaXNpbGljb24uY29tPjsga25hYWNr
-LmhAZ214LmRlOyBsYXJzQG1ldGFmb28uZGU7IHBtZWVyd0BwbWVlcncubmV0OyByb2JoK2R0QGtl
-cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tDQqzrcvNOiBha2lub2J1Lm1pdGFAZ21haWwu
-Y29tOyBsdWRvdmljLmRlc3JvY2hlc0BhdG1lbC5jb207IGtyemtAa2VybmVsLm9yZzsgdmlsaGVs
-bS5ncmF5QGdtYWlsLmNvbTsga3NlbmlqYS5zdGFub2pldmljQGdtYWlsLmNvbTsgemhpeW9uZy50
-YW9AbWVkaWF0ZWsuY29tOyBkYW5pZWwuYmFsdXRhQGludGVsLmNvbTsgbGVvbmFyZC5jcmVzdGV6
-QGludGVsLmNvbTsgcmF5Lmp1aUBicm9hZGNvbS5jb207IHJhdmVlbmRyYS5wYWRhc2FsYWdpQGJy
-b2FkY29tLmNvbTsgbXJhbm9zdGF5QGdtYWlsLmNvbTsgYW1zZmllbGQyMkBnbWFpbC5jb207IGxp
-bnV4LWlpb0B2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBYdWVqaWFuY2hlbmcgPHh1ZWppYW5jaGVuZ0BoaXNp
-bGljb24uY29tPjsgTGl4dSAoa2V2aW4pIDxrZXZpbi5saXh1QGhpc2lsaWNvbi5jb20+DQrW98zi
-OiBSZTogW1BBVENIXSBhZGM6IGFkZCBhZGMgZHJpdmVyIGZvciBIaXNpbGljb24gQlZUIFNPQ3MN
-Cg0KT24gMDcvMDEvMTcgMDU6MTYsIEFsbGVuIExpdSB3cm90ZToNCj4gQWRkIEFEQyBkcml2ZXIg
-Zm9yIHRoZSBBREMgY29udHJvbGxlciBmb3VuZCBvbiBIaVNpbGljb24gQlZUIFNPQ3MsIGxpa2Ug
-SGkzNTE2Q1YzMDAsIGV0Yy4NCj4gVGhlIEFEQyBjb250cm9sbGVyIGlzIHByaW1hcmlseSBpbiBj
-aGFyZ2Ugb2YgZGV0ZWN0aW5nIHZvbHRhZ2UuDQo+IA0KPiBSZXZpZXdlZC1ieTogS2V2aW4gTGkg
-PGtldmluLmxpeHVAaGlzaWxpY29uLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogQWxsZW4gTGl1IDxs
-aXVyZW56aG9uZ0BoaXNpbGljb24uY29tPg0KSGkgQWxsZW4sDQoNCk9uZSBxdWljayBzdWJtaXNz
-aW9uIHByb2Nlc3Mgbm90ZSBmaXJzdC4gIEl0IGlzIHZlcnkgaW1wb3J0YW50IHRvIGNsZWFybHkg
-aWRlbnRpZnkgbmV3IHZlcnNpb25zIG9mIGEgcGF0Y2ggYW5kIHdoYXQgY2hhbmdlcyBoYXZlIG9j
-Y3VycmVkIHNpbmNlIHRoZSBwcmV2aW91cyBwb3N0aW5nLg0KDQpTbyB0aGUgZW1haWwgdGl0bGUg
-c2hvdWxkIGhhdmUgYmVlbiBbUEFUQ0ggVjJdIGFkYy4uLg0KDQpBbHNvLCBiZWxvdyB0aGUgLS0t
-IHBsZWFzZSBhZGQgYSBicmllZiBjaGFuZ2UgbG9nLg0KDQpUaGUgZHJpdmVyIGlzIGNvbWluZyB0
-b2dldGhlciBuaWNlbHkuICBBIGZldyBtaW5vciBwb2ludHMgaW5saW5lLg0KDQpKb25hdGhhbg0K
-PiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvaGlidnQtbHNhZGMudHh0
-ICAgIHwgIDIzICsrDQo+ICBkcml2ZXJzL2lpby9hZGMvS2NvbmZpZyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAxMCArDQo+ICBkcml2ZXJzL2lpby9hZGMvTWFrZWZpbGUgICAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgMSArDQo+ICBkcml2ZXJzL2lpby9hZGMvaGlidnRfbHNhZGMu
-YyAgICAgICAgICAgICAgICAgICAgICB8IDMzNSArKysrKysrKysrKysrKysrKysrKysNCj4gIDQg
-ZmlsZXMgY2hhbmdlZCwgMzY5IGluc2VydGlvbnMoKykNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCAN
-Cj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvaGlidnQtbHNhZGMu
-dHh0DQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9paW8vYWRjL2hpYnZ0X2xzYWRjLmMN
-Cj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlv
-L2FkYy9oaWJ2dC1sc2FkYy50eHQgDQo+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2lpby9hZGMvaGlidnQtbHNhZGMudHh0DQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGlu
-ZGV4IDAwMDAwMDAuLmZjZTFmZjQNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaWlvL2FkYy9oaWJ2dC1sc2FkYy50eHQNCj4gQEAgLTAs
-MCArMSwyMyBAQA0KPiArSGlzaWxpY29uIEJWVCBMb3cgU3BlZWQgKExTKSBBL0QgQ29udmVydGVy
-IGJpbmRpbmdzDQo+ICsNCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ICstIGNvbXBhdGlibGU6
-IHNob3VsZCBiZSAiaGlzaWxpY29uLDxuYW1lPi1sc2FkYyINCj4gKyAgIC0gImhpc2lsaWNvbixo
-aTM1MTZjdjMwMC1sc2FkYyI6IGZvciBoaTM1MTZjdjMwMA0KPiArDQo+ICstIHJlZzogcGh5c2lj
-YWwgYmFzZSBhZGRyZXNzIG9mIHRoZSBjb250cm9sbGVyIGFuZCBsZW5ndGggb2YgbWVtb3J5IG1h
-cHBlZCANCj4gKwkgICByZWdpb24uDQo+ICstIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgbnVt
-YmVyIGZvciB0aGUgQURDIGRldmljZS4NCklkZWFsbHkgcmVmZXIgdG8gdGhlIHN0YW5kYXJkIGlu
-dGVycnVwdCBiaW5kaW5nIGRvY3VtZW50Lg0KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2ludGVycnVwdC1jb250cm9sbGVyL2ludGVycnVwdHMudHh0DQoNCj4gKw0KPiArT3B0aW9u
-YWwgcHJvcGVydGllczoNCj4gKy0gcmVzZXRzOiBNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVh
-Y2ggZW50cnkgaW4gcmVzZXQtbmFtZXMgaWYgbmVlZCBzdXBwb3J0DQo+ICsJCSAgdGhpcyBvcHRp
-b24uIFNlZSAuLi8uLi9yZXNldC9yZXNldC50eHQgZm9yIGRldGFpbHMuDQpEb24ndCB1c2UgYSBy
-ZWxhdGl2ZSBwYXRoIGluIGEgYmluZGluZyBkb2N1bWVudC4gSXQncyBmYXIgdG9vIGxpa2VseSB0
-byBiZSBicm9rZW4gYnkgYSByZW9yZ2FuaXphdGlvbiBvZiB0aGUgZG9jcyBhbmQgY2Fubm90IGJl
-IGdyZXBwZWQgZm9yLg0KPiArLSByZXNldC1uYW1lczogTXVzdCBpbmNsdWRlIHRoZSBuYW1lICJs
-c2FkYy1jcmciLg0KPiArDQo+ICtFeGFtcGxlOg0KPiArCWFkYzogYWRjQDEyMGUwMDAwIHsNCj4g
-KwkJCWNvbXBhdGlibGUgPSAiaGlzaWxpY29uLGhpMzUxNmN2MzAwLWxzYWRjIjsNCj4gKwkJCXJl
-ZyA9IDwweDEyMGUwMDAwIDB4MTAwMD47DQo+ICsJCQlpbnRlcnJ1cHRzID0gPDE5PjsNCj4gKwkJ
-CXJlc2V0cyA9IDwmY3JnIDB4N2MgMz47DQo+ICsJCQlyZXNldC1uYW1lcyA9ICJsc2FkYy1jcmci
-Ow0KPiArCX07DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMvS2NvbmZpZyBiL2RyaXZl
-cnMvaWlvL2FkYy9LY29uZmlnIGluZGV4IA0KPiA5OWMwNTE0Li4wNDQzZjUxIDEwMDY0NA0KPiAt
-LS0gYS9kcml2ZXJzL2lpby9hZGMvS2NvbmZpZw0KPiArKysgYi9kcml2ZXJzL2lpby9hZGMvS2Nv
-bmZpZw0KPiBAQCAtMjI1LDYgKzIyNSwxNiBAQCBjb25maWcgSEk4NDM1DQo+ICAJICBUaGlzIGRy
-aXZlciBjYW4gYWxzbyBiZSBidWlsdCBhcyBhIG1vZHVsZS4gSWYgc28sIHRoZSBtb2R1bGUgd2ls
-bCBiZQ0KPiAgCSAgY2FsbGVkIGhpODQzNS4NCj4gIA0KPiArY29uZmlnIEhJQlZUX0xTQURDDQo+
-ICsJdHJpc3RhdGUgIkhJQlZUIExTQURDIGRyaXZlciINCj4gKwlkZXBlbmRzIG9uIEFSQ0hfSElT
-SSB8fCBDT01QSUxFX1RFU1QNCj4gKwloZWxwDQo+ICsJICBTYXkgeWVzIGhlcmUgdG8gYnVpbGQg
-c3VwcG9ydCBmb3IgdGhlIExTQURDIGZvdW5kIGluIFNvQ3MgZnJvbQ0KPiArCSAgaGlzaWxpY29u
-IEJWVCBjaGlwLg0KPiArDQo+ICsJICBUbyBjb21waWxlIHRoaXMgZHJpdmVyIGFzIGEgbW9kdWxl
-LCBjaG9vc2UgTSBoZXJlOiB0aGUNCj4gKwkgIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBoaWJ2dF9s
-c2FkYy4NCj4gKw0KPiAgY29uZmlnIElOQTJYWF9BREMNCj4gIAl0cmlzdGF0ZSAiVGV4YXMgSW5z
-dHJ1bWVudHMgSU5BMnh4IFBvd2VyIE1vbml0b3JzIElJTyBkcml2ZXIiDQo+ICAJZGVwZW5kcyBv
-biBJMkMgJiYgIVNFTlNPUlNfSU5BMlhYDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMv
-TWFrZWZpbGUgYi9kcml2ZXJzL2lpby9hZGMvTWFrZWZpbGUgaW5kZXggDQo+IDdhNDBjMDQuLjY1
-NTRkOTIgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaWlvL2FkYy9NYWtlZmlsZQ0KPiArKysgYi9k
-cml2ZXJzL2lpby9hZGMvTWFrZWZpbGUNCj4gQEAgLTIzLDYgKzIzLDcgQEAgb2JqLSQoQ09ORklH
-X0RBOTE1MF9HUEFEQykgKz0gZGE5MTUwLWdwYWRjLm8NCj4gIG9iai0kKENPTkZJR19FWFlOT1Nf
-QURDKSArPSBleHlub3NfYWRjLm8NCj4gIG9iai0kKENPTkZJR19GU0xfTVgyNV9BREMpICs9IGZz
-bC1pbXgyNS1nY3Eubw0KPiAgb2JqLSQoQ09ORklHX0hJODQzNSkgKz0gaGk4NDM1Lm8NCj4gK29i
-ai0kKENPTkZJR19ISUJWVF9MU0FEQykgKz0gaGlidnRfbHNhZGMubw0KPiAgb2JqLSQoQ09ORklH
-X0lNWDdEX0FEQykgKz0gaW14N2RfYWRjLm8NCj4gIG9iai0kKENPTkZJR19JTkEyWFhfQURDKSAr
-PSBpbmEyeHgtYWRjLm8NCj4gIG9iai0kKENPTkZJR19MUDg3ODhfQURDKSArPSBscDg3ODhfYWRj
-Lm8gZGlmZiAtLWdpdCANCj4gYS9kcml2ZXJzL2lpby9hZGMvaGlidnRfbHNhZGMuYyBiL2RyaXZl
-cnMvaWlvL2FkYy9oaWJ2dF9sc2FkYy5jIG5ldyANCj4gZmlsZSBtb2RlIDEwMDY0NCBpbmRleCAw
-MDAwMDAwLi5hYWYyMDI0DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvZHJpdmVycy9paW8vYWRj
-L2hpYnZ0X2xzYWRjLmMNCj4gQEAgLTAsMCArMSwzMzUgQEANCj4gKy8qDQo+ICsgKiBIaXNpbGlj
-b24gQlZUIExvdyBTcGVlZCAoTFMpIEEvRCBDb252ZXJ0ZXINCj4gKyAqIENvcHlyaWdodCAoQykg
-MjAxNiBIaVNpbGljb24gVGVjaG5vbG9naWVzIENvLiwgTHRkLg0KPiArICoNCj4gKyAqIFRoaXMg
-cHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3Ig
-DQo+ICttb2RpZnkNCj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwg
-UHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIA0KPiArYnkNCj4gKyAqIHRoZSBGcmVlIFNvZnR3
-YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlIExpY2Vuc2UsIG9yDQo+ICsg
-KiAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLg0KPiArICoNCj4gKyAqIFRoaXMg
-cHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUgdXNlZnVs
-LA0KPiArICogYnV0IFdJVEhPVVQgQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2ZW4gdGhlIGltcGxp
-ZWQgd2FycmFudHkgb2YNCj4gKyAqIE1FUkNIQU5UQUJJTElUWSBvciBGSVRORVNTIEZPUiBBIFBB
-UlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUNCj4gKyAqIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNl
-bnNlIGZvciBtb3JlIGRldGFpbHMuDQo+ICsgKi8NCj4gKw0KPiArI2luY2x1ZGUgPGxpbnV4L21v
-ZHVsZS5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L3BsYXRmb3JtX2RldmljZS5oPg0KPiArI2luY2x1
-ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KPiArI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ICsjaW5j
-bHVkZSA8bGludXgvb2YuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gKyNp
-bmNsdWRlIDxsaW51eC9jbGsuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9jb21wbGV0aW9uLmg+DQo+
-ICsjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4gKyNpbmNsdWRlIDxsaW51eC9yZXNldC5oPg0K
-PiArI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9jb25zdW1lci5oPiAjaW5jbHVkZSA8bGludXgv
-aWlvL2lpby5oPg0KPiArDQo+ICsvKiBoaXNpbGljb24gYnZ0IGFkYyByZWdpc3RlcnMgZGVmaW5p
-dGlvbnMgKi8NCj4gKyNkZWZpbmUgSElCVlRfTFNBRENfQ09ORklHCQkweDAwDQo+ICsjZGVmaW5l
-IEhJQlZUX0NPTkZJR19ERUdMSVRDSAlCSVQoMTcpDQo+ICsjZGVmaW5lIEhJQlZUX0NPTkZJR19S
-RVNFVAkJQklUKDE1KQ0KPiArI2RlZmluZSBISUJWVF9DT05GSUdfUE9XRVJET1dOCUJJVCgxNCkN
-Cj4gKyNkZWZpbmUgSElCVlRfQ09ORklHX01PREUJCUJJVCgxMykNCj4gKyNkZWZpbmUgSElCVlRf
-Q09ORklHX0NITkMJCUJJVCgxMCkNCj4gKyNkZWZpbmUgSElCVlRfQ09ORklHX0NITkIJCUJJVCg5
-KQ0KPiArI2RlZmluZSBISUJWVF9DT05GSUdfQ0hOQQkJQklUKDgpDQo+ICsNCj4gKyNkZWZpbmUg
-SElCVlRfTFNBRENfVElNRVNDQU4JMHgwOA0KPiArI2RlZmluZSBISUJWVF9MU0FEQ19JTlRFTgkJ
-MHgxMA0KPiArI2RlZmluZSBISUJWVF9MU0FEQ19JTlRTVEFUVVMJMHgxNA0KPiArI2RlZmluZSBI
-SUJWVF9MU0FEQ19JTlRDTFIJCTB4MTgNCj4gKyNkZWZpbmUgSElCVlRfTFNBRENfU1RBUlQJCTB4
-MUMNCj4gKyNkZWZpbmUgSElCVlRfTFNBRENfU1RPUAkJMHgyMA0KPiArI2RlZmluZSBISUJWVF9M
-U0FEQ19BQ1RCSVQJCTB4MjQNCj4gKyNkZWZpbmUgSElCVlRfTFNBRENfQ0hOREFUQQkJMHgyQw0K
-PiArDQo+ICsjZGVmaW5lIEhJQlZUX0xTQURDX0NPTl9FTgkJKDF1IDw8IDApDQo+ICsjZGVmaW5l
-IEhJQlZUX0xTQURDX0NPTl9ERU4JCSgwdSA8PCAwKQ0KPiArDQo+ICsjZGVmaW5lIEhJQlZUX0xT
-QURDX05VTV9CSVRTX1YxCTEwDQo+ICsjZGVmaW5lIEhJQlZUX0xTQURDX0NITl9NQVNLX3YxCTB4
-Nw0KPiArDQo+ICsvKiBmaXggY2xrOjMwMDAwMDAsIGRlZmF1bHQgdHNjYW4gc2V0IDEwbXMgKi8N
-Cj4gKyNkZWZpbmUgSElCVlRfTFNBRENfVFNDQU5fTVMJKDEwKjMwMDApDQo+ICsNCj4gKyNkZWZp
-bmUgSElCVlRfTFNBRENfVElNRU9VVAkJbXNlY3NfdG9famlmZmllcygxMDApDQo+ICsNCj4gKy8q
-IGRlZmF1bHQgdm9sdGFnZSBzY2FsZSBmb3IgZXZlcnkgY2hhbm5lbCA8bXY+ICovIHN0YXRpYyBp
-bnQgDQo+ICtnX2hpYnZ0X2xzYWRjX3ZvbHRhZ2VbXSA9IHsNCj4gKwkzMzAwLCAzMzAwLCAzMzAw
-DQpJcyBkZWZhdWx0IGR1ZSB0byBhbiBleHRlcm5hbCByZWZlcmVuY2Ugdm9sdGFnZSBvciBpcyB0
-aGVyZSBhbiBpbnRlcm5hbCByZWd1bGF0b3I/ICBJZiBpdCBpcyBleHRlcm5hbCBpdCBzaG91bGQg
-cmVhbGx5IGJlIGRlc2NyaWJlZCB1c2luZyB0aGUgcmVndWxhdG9yIGZyYW1ld29yay4NCg0KQ29u
-c3Q/IA0KPiArfTsNCj4gKw0KPiArc3RydWN0IGhpYnZ0X2xzYWRjIHsNCj4gKwl2b2lkIF9faW9t
-ZW0JCSpyZWdzOw0KPiArCXN0cnVjdCBjb21wbGV0aW9uCWNvbXBsZXRpb247DQo+ICsJc3RydWN0
-IHJlc2V0X2NvbnRyb2wJKnJlc2V0Ow0KPiArCWNvbnN0IHN0cnVjdCBoaWJ2dF9sc2FkY19kYXRh
-CSpkYXRhOw0KPiArCXVuc2lnbmVkIGludAkJY3VyX2NobjsNCj4gKwl1bnNpZ25lZCBpbnQJCXZh
-bHVlOw0KPiArfTsNCj4gKw0KPiArc3RydWN0IGhpYnZ0X2xzYWRjX2RhdGEgew0KPiArCWludAkJ
-CQludW1fYml0czsNCj4gKwljb25zdCBzdHJ1Y3QgaWlvX2NoYW5fc3BlYwkqY2hhbm5lbHM7DQo+
-ICsJaW50CQkJCW51bV9jaGFubmVsczsNCj4gKw0KPiArCXZvaWQgKCpjbGVhcl9pcnEpKHN0cnVj
-dCBoaWJ2dF9sc2FkYyAqaW5mbywgaW50IG1hc2spOw0KPiArCXZvaWQgKCpzdGFydF9jb252KShz
-dHJ1Y3QgaGlidnRfbHNhZGMgKmluZm8pOw0KPiArCXZvaWQgKCpzdG9wX2NvbnYpKHN0cnVjdCBo
-aWJ2dF9sc2FkYyAqaW5mbyk7IH07DQo+ICsNCj4gK3N0YXRpYyBpbnQgaGlidnRfbHNhZGNfcmVh
-ZF9yYXcoc3RydWN0IGlpb19kZXYgKmluZGlvX2RldiwNCj4gKwkJCQkgICAgc3RydWN0IGlpb19j
-aGFuX3NwZWMgY29uc3QgKmNoYW4sDQo+ICsJCQkJICAgIGludCAqdmFsLCBpbnQgKnZhbDIsIGxv
-bmcgbWFzaykgew0KPiArCXN0cnVjdCBoaWJ2dF9sc2FkYyAqaW5mbyA9IGlpb19wcml2KGluZGlv
-X2Rldik7DQo+ICsNCj4gKwlzd2l0Y2ggKG1hc2spIHsNCj4gKwljYXNlIElJT19DSEFOX0lORk9f
-UkFXOg0KPiArCQltdXRleF9sb2NrKCZpbmRpb19kZXYtPm1sb2NrKTsNCj4gKw0KPiArCQlyZWlu
-aXRfY29tcGxldGlvbigmaW5mby0+Y29tcGxldGlvbik7DQo+ICsNCj4gKwkJLyogU2VsZWN0IHRo
-ZSBjaGFubmVsIHRvIGJlIHVzZWQgKi8NCj4gKwkJaW5mby0+Y3VyX2NobiA9IGNoYW4tPmNoYW5u
-ZWw7DQo+ICsNCj4gKwkJaWYgKGluZm8tPmRhdGEtPnN0YXJ0X2NvbnYpDQo+ICsJCQlpbmZvLT5k
-YXRhLT5zdGFydF9jb252KGluZm8pOw0KPiArDQo+ICsJCWlmICghd2FpdF9mb3JfY29tcGxldGlv
-bl90aW1lb3V0KCZpbmZvLT5jb21wbGV0aW9uLA0KPiArCQkJCQkJCUhJQlZUX0xTQURDX1RJTUVP
-VVQpKSB7DQo+ICsJCQlpZiAoaW5mby0+ZGF0YS0+c3RvcF9jb252KQ0KPiArCQkJCWluZm8tPmRh
-dGEtPnN0b3BfY29udihpbmZvKTsNCj4gKwkJCW11dGV4X3VubG9jaygmaW5kaW9fZGV2LT5tbG9j
-ayk7DQo+ICsJCQlyZXR1cm4gLUVUSU1FRE9VVDsNCj4gKwkJfQ0KPiArDQo+ICsJCSp2YWwgPSBp
-bmZvLT52YWx1ZTsNCj4gKwkJbXV0ZXhfdW5sb2NrKCZpbmRpb19kZXYtPm1sb2NrKTsNCj4gKwkJ
-cmV0dXJuIElJT19WQUxfSU5UOw0KPiArCWNhc2UgSUlPX0NIQU5fSU5GT19TQ0FMRToNCj4gKwkJ
-KnZhbCA9IGdfaGlidnRfbHNhZGNfdm9sdGFnZVtjaGFuLT5jaGFubmVsXTsNCj4gKwkJKnZhbDIg
-PSBpbmZvLT5kYXRhLT5udW1fYml0czsNCj4gKwkJcmV0dXJuIElJT19WQUxfRlJBQ1RJT05BTF9M
-T0cyOw0KPiArCWRlZmF1bHQ6DQo+ICsJCXJldHVybiAtRUlOVkFMOw0KPiArCX0NCj4gK30NCj4g
-Kw0KPiArc3RhdGljIGlycXJldHVybl90IGhpYnZ0X2xzYWRjX2lzcihpbnQgaXJxLCB2b2lkICpk
-ZXZfaWQpIHsNCj4gKwlzdHJ1Y3QgaGlidnRfbHNhZGMgKmluZm8gPSAoc3RydWN0IGhpYnZ0X2xz
-YWRjICopZGV2X2lkOw0KPiArCWludCBtYXNrOw0KPiArDQo+ICsJbWFzayA9IHJlYWRsKGluZm8t
-PnJlZ3MgKyBISUJWVF9MU0FEQ19JTlRTVEFUVVMpOw0KPiArCWlmICgobWFzayAmIEhJQlZUX0xT
-QURDX0NITl9NQVNLX3YxKSA9PSAwKQ0KPiArCQlyZXR1cm4gSVJRX05PTkU7DQo+ICsNCj4gKwkv
-KiBDbGVhciBpcnEgKi8NCj4gKwltYXNrICY9IEhJQlZUX0xTQURDX0NITl9NQVNLX3YxOw0KPiAr
-CWlmIChpbmZvLT5kYXRhLT5jbGVhcl9pcnEpDQo+ICsJCWluZm8tPmRhdGEtPmNsZWFyX2lycShp
-bmZvLCBtYXNrKTsNCj4gKw0KPiArCS8qIFJlYWQgdmFsdWUgKi8NCj4gKwlpbmZvLT52YWx1ZSA9
-IHJlYWRsKGluZm8tPnJlZ3MgKw0KPiArCQlISUJWVF9MU0FEQ19DSE5EQVRBICsgKGluZm8tPmN1
-cl9jaG4gPDwgMikpOw0KPiArCWluZm8tPnZhbHVlICY9IEdFTk1BU0soaW5mby0+ZGF0YS0+bnVt
-X2JpdHMgLSAxLCAwKTsNCj4gKw0KPiArCS8qIHN0b3AgYWRjICovDQo+ICsJaWYgKGluZm8tPmRh
-dGEtPnN0b3BfY29udikNCj4gKwkJaW5mby0+ZGF0YS0+c3RvcF9jb252KGluZm8pOw0KPiArDQo+
-ICsJY29tcGxldGUoJmluZm8tPmNvbXBsZXRpb24pOw0KPiArDQo+ICsJcmV0dXJuIElSUV9IQU5E
-TEVEOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGlpb19pbmZvIGhpYnZ0X2xz
-YWRjX2lpb19pbmZvID0gew0KPiArCS5yZWFkX3JhdyA9IGhpYnZ0X2xzYWRjX3JlYWRfcmF3LA0K
-PiArCS5kcml2ZXJfbW9kdWxlID0gVEhJU19NT0RVTEUsDQo+ICt9Ow0KPiArDQo+ICsjZGVmaW5l
-IEhJQlZUX0xTQURDX0NIQU5ORUwoX2luZGV4LCBfaWQpIHsgICAgICBcDQo+ICsJLnR5cGUgPSBJ
-SU9fVk9MVEFHRSwgICAgICAgICAgICAgICAgXA0KPiArCS5pbmRleGVkID0gMSwJCQkJCQlcDQo+
-ICsJLmNoYW5uZWwgPSBfaW5kZXgsCQkJCQlcDQo+ICsJLmluZm9fbWFza19zZXBhcmF0ZSA9IEJJ
-VChJSU9fQ0hBTl9JTkZPX1JBVykgfCAgXA0KPiArCQkJQklUKElJT19DSEFOX0lORk9fU0NBTEUp
-LCAgIFwNCj4gKwkuZGF0YXNoZWV0X25hbWUgPSBfaWQsICAgICAgICAgICAgICBcDQo+ICt9DQo+
-ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaWlvX2NoYW5fc3BlYyBoaWJ2dF9sc2FkY19paW9f
-Y2hhbm5lbHNbXSA9IHsNCj4gKwlISUJWVF9MU0FEQ19DSEFOTkVMKDAsICJhZGMwIiksDQo+ICsJ
-SElCVlRfTFNBRENfQ0hBTk5FTCgxLCAiYWRjMSIpLA0KPiArCUhJQlZUX0xTQURDX0NIQU5ORUwo
-MiwgImFkYzIiKSwNCj4gK307DQo+ICsNCj4gK3N0YXRpYyB2b2lkIGhpYnZ0X2xzYWRjX3YxX2Ns
-ZWFyX2lycShzdHJ1Y3QgaGlidnRfbHNhZGMgKmluZm8sIGludCANCj4gK21hc2spIHsNCj4gKwl3
-cml0ZWwobWFzaywgaW5mby0+cmVncyArIEhJQlZUX0xTQURDX0lOVENMUik7IH0NCj4gKw0KPiAr
-c3RhdGljIHZvaWQgaGlidnRfbHNhZGNfdjFfc3RhcnRfY29udihzdHJ1Y3QgaGlidnRfbHNhZGMg
-KmluZm8pIHsNCj4gKwl1bnNpZ25lZCBpbnQgY29uOw0KPiArDQo+ICsJLyogc2V0IG51bWJlciBi
-aXQgKi8NCnNldCBudW1iZXIgb2YgYml0cz8NCj4gKwljb24gPSBHRU5NQVNLKGluZm8tPmRhdGEt
-Pm51bV9iaXRzIC0gMSwgMCk7DQo+ICsJd3JpdGVsKGNvbiwgKGluZm8tPnJlZ3MgKyBISUJWVF9M
-U0FEQ19BQ1RCSVQpKTsNCj4gKw0KPiArCS8qIGNvbmZpZyAqLw0KPiArCWNvbiA9IHJlYWRsKGlu
-Zm8tPnJlZ3MgKyBISUJWVF9MU0FEQ19DT05GSUcpOw0KPiArCWNvbiAmPSB+SElCVlRfQ09ORklH
-X1JFU0VUOw0KPiArCWNvbiB8PSAoSElCVlRfQ09ORklHX1BPV0VSRE9XTiB8IEhJQlZUX0NPTkZJ
-R19ERUdMSVRDSCB8DQo+ICsJCUhJQlZUX0NPTkZJR19NT0RFKTsNCj4gKwljb24gJj0gfihISUJW
-VF9DT05GSUdfQ0hOQSB8IEhJQlZUX0NPTkZJR19DSE5CIHwgSElCVlRfQ09ORklHX0NITkMpOw0K
-PiArCWNvbiB8PSAoSElCVlRfQ09ORklHX0NITkEgPDwgaW5mby0+Y3VyX2Nobik7DQo+ICsJd3Jp
-dGVsKGNvbiwgKGluZm8tPnJlZ3MgKyBISUJWVF9MU0FEQ19DT05GSUcpKTsNCj4gKw0KPiArCS8q
-IHNldCB0aW1lc2NhbiAqLw0KPiArCXdyaXRlbChISUJWVF9MU0FEQ19UU0NBTl9NUywgKGluZm8t
-PnJlZ3MgKyBISUJWVF9MU0FEQ19USU1FU0NBTikpOw0KPiArDQo+ICsJLyogY2xlYXIgaW50ZXJy
-dXB0ICovDQo+ICsJd3JpdGVsKEhJQlZUX0xTQURDX0NITl9NQVNLX3YxLCBpbmZvLT5yZWdzICsg
-SElCVlRfTFNBRENfSU5UQ0xSKTsNCj4gKw0KPiArCS8qIGVuYWJsZSBpbnRlcnJ1cHQgKi8NCj4g
-Kwl3cml0ZWwoSElCVlRfTFNBRENfQ09OX0VOLCAoaW5mby0+cmVncyArIEhJQlZUX0xTQURDX0lO
-VEVOKSk7DQo+ICsNCj4gKwkvKiBzdGFydCBzY2FuICovDQo+ICsJd3JpdGVsKEhJQlZUX0xTQURD
-X0NPTl9FTiwgKGluZm8tPnJlZ3MgKyBISUJWVF9MU0FEQ19TVEFSVCkpOyB9DQo+ICsNCj4gK3N0
-YXRpYyB2b2lkIGhpYnZ0X2xzYWRjX3YxX3N0b3BfY29udihzdHJ1Y3QgaGlidnRfbHNhZGMgKmlu
-Zm8pIHsNCj4gKwkvKiByZXNldCB0aGUgdGltZXNjYW4gKi8NClRoaXMgaXNuJ3QgYSBwYXJ0aWN1
-bGFybHkgY29tbW9uIHBpY2Ugb2YgdGVybWlub2xvZ3ksIHBlcmhhcHMgYSBzaG9ydCBkZXNjcmlw
-dGlvbiBoZXJlIG9mIHdoYXQgdGltZXNjYW4gaXMgYW5kIHdoeSB3ZSBzaG91bGQgcmVzZXQgaXQg
-d291bGQgbWFrZSB0aGUgY29kZSBlYXNpZXIgdG8gZm9sbG93Lg0KDQo+ICsJd3JpdGVsKEhJQlZU
-X0xTQURDX0NPTl9ERU4sIChpbmZvLT5yZWdzICsgSElCVlRfTFNBRENfVElNRVNDQU4pKTsNCj4g
-Kw0KPiArCS8qIGRpc2FibGUgaW50ZXJydXB0ICovDQo+ICsJd3JpdGVsKEhJQlZUX0xTQURDX0NP
-Tl9ERU4sIChpbmZvLT5yZWdzICsgSElCVlRfTFNBRENfSU5URU4pKTsNCj4gKw0KPiArCS8qIHN0
-b3Agc2NhbiAqLw0KPiArCXdyaXRlbChISUJWVF9MU0FEQ19DT05fRU4sIChpbmZvLT5yZWdzICsg
-SElCVlRfTFNBRENfU1RPUCkpOyB9DQo+ICsNCj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaGlidnRf
-bHNhZGNfZGF0YSBsc2FkY19kYXRhX3YxID0gew0KPiArCS5udW1fYml0cyA9IEhJQlZUX0xTQURD
-X05VTV9CSVRTX1YxLA0KPiArCS5jaGFubmVscyA9IGhpYnZ0X2xzYWRjX2lpb19jaGFubmVscywN
-Cj4gKwkubnVtX2NoYW5uZWxzID0gQVJSQVlfU0laRShoaWJ2dF9sc2FkY19paW9fY2hhbm5lbHMp
-LA0KPiArDQo+ICsJLmNsZWFyX2lycSA9IGhpYnZ0X2xzYWRjX3YxX2NsZWFyX2lycSwNCj4gKwku
-c3RhcnRfY29udiA9IGhpYnZ0X2xzYWRjX3YxX3N0YXJ0X2NvbnYsDQo+ICsJLnN0b3BfY29udiA9
-IGhpYnZ0X2xzYWRjX3YxX3N0b3BfY29udiwgfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVj
-dCBvZl9kZXZpY2VfaWQgaGlidnRfbHNhZGNfbWF0Y2hbXSA9IHsNCj4gKwl7DQo+ICsJCS5jb21w
-YXRpYmxlID0gImhpc2lsaWNvbixoaTM1MTZjdjMwMC1sc2FkYyIsDQo+ICsJCS5kYXRhID0gJmxz
-YWRjX2RhdGFfdjEsDQpUaGUgdXN1YWwgY29udmVudGlvbiBpcyB0byBvbmx5IGludHJvZHVjZSAn
-dmFyaWFudCcgdHlwZSBkYXRhIGFzIGEgcHJlY3Vyc29yIHBhdGNoIHRvIGEgc2VyaWVzIGluY2x1
-ZGluZyB0aGUgc3VwcG9ydCBvZiBuZXcgcGFydHMuDQoNCkl0IGlzIGFjY2VwdGFibGUgdG8gcG9z
-dCBhIHZlcnNpb24gd2l0aCB0aGlzIGluIGlmIHlvdSBhcmUgc2hvcnRseSB0byBzdWJtaXQgdGhl
-IGZvbGxvdyB1cCB0aGF0IGFkZHMgb3RoZXIgZGV2aWNlIHN1cHBvcnQuICBJZiB5b3UgYXJlIGRv
-aW5nIHRoaXMsIHBsZWFzZSBwdXQgYSBub3RlIGluIHRoZSBwYXRjaCBkZXNjcmlwdGlvbiB0byB0
-aGF0IGVmZmVjdC4gIE5vdGUgdGhhdCBpZiB0aGUgYWRkaXRpb25hbCBzdXBwb3J0IGRvZXNuJ3Qg
-dHVybiB1cCwgdGhlIGRyaXZlciBtYXkgd2UgZ2V0ICdzaW1wbGlmaWVkJw0KYnkgc29tZW9uZSBl
-bHNlLg0KDQpJJ2QgYWxzbyBnZW5lcmFsbHkgZXhwZWN0IHRvIHNlZSB0aGlzIG1hdGNoIHRhYmxl
-IGZ1cnRoZXIgZG93biAtIGRpcmVjdGx5IGFib3ZlIHdoZXJlIGl0IGlzIHVzZWQuICBNYWtlcyBm
-b3IgZXZlciBzbyBzbGlnaHRseSBlYXNpZXIgcmV2aWV3aW5nIQ0KPiArCX0sDQo+ICsJe30sDQo+
-ICt9Ow0KPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgaGlidnRfbHNhZGNfbWF0Y2gpOw0KPiAr
-DQo+ICsvKiBSZXNldCBMU0FEQyBDb250cm9sbGVyICovDQo+ICtzdGF0aWMgdm9pZCBoaWJ2dF9s
-c2FkY19yZXNldF9jb250cm9sbGVyKHN0cnVjdCByZXNldF9jb250cm9sICpyZXNldCkgDQo+ICt7
-DQo+ICsJcmVzZXRfY29udHJvbF9hc3NlcnQocmVzZXQpOw0KPiArCXVzbGVlcF9yYW5nZSgxMCwg
-MjApOw0KPiArCXJlc2V0X2NvbnRyb2xfZGVhc3NlcnQocmVzZXQpOw0KPiArfQ0KPiArDQo+ICtz
-dGF0aWMgaW50IGhpYnZ0X2xzYWRjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-IHsNCj4gKwlzdHJ1Y3QgaGlidnRfbHNhZGMgKmluZm8gPSBOVUxMOw0KPiArCXN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsNCj4gKwlzdHJ1Y3QgaWlvX2RldiAqaW5k
-aW9fZGV2ID0gTlVMTDsNCj4gKwlzdHJ1Y3QgcmVzb3VyY2UJKm1lbTsNCj4gKwljb25zdCBzdHJ1
-Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaDsNCj4gKwlpbnQgcmV0Ow0KPiArCWludCBpcnE7DQo+ICsN
-Cj4gKwlpZiAoIW5wKQ0KPiArCQlyZXR1cm4gLUVOT0RFVjsNCj4gKw0KPiArCWluZGlvX2RldiA9
-IGRldm1faWlvX2RldmljZV9hbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmluZm8pKTsNCj4gKwlp
-ZiAoIWluZGlvX2Rldikgew0KPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQgYWxsb2Nh
-dGluZyBpaW8gZGV2aWNlXG4iKTsNCj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ICsJfQ0KPiArCWlu
-Zm8gPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPiArDQo+ICsJbWF0Y2ggPSBvZl9tYXRjaF9kZXZp
-Y2UoaGlidnRfbHNhZGNfbWF0Y2gsICZwZGV2LT5kZXYpOw0KPiArCWluZm8tPmRhdGEgPSBtYXRj
-aC0+ZGF0YTsNCj4gKw0KPiArCW1lbSA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JF
-U09VUkNFX01FTSwgMCk7DQo+ICsJaW5mby0+cmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgm
-cGRldi0+ZGV2LCBtZW0pOw0KPiArCWlmIChJU19FUlIoaW5mby0+cmVncykpDQo+ICsJCXJldHVy
-biBQVFJfRVJSKGluZm8tPnJlZ3MpOw0KPiArDQo+ICsJLyoNCj4gKwkgKiBUaGUgcmVzZXQgc2hv
-dWxkIGJlIGFuIG9wdGlvbmFsIHByb3BlcnR5LCBhcyBpdCBzaG91bGQgd29yaw0KPiArCSAqIHdp
-dGggb2xkIGRldmljZXRyZWVzIGFzIHdlbGwNCj4gKwkgKi8NCj4gKwlpbmZvLT5yZXNldCA9IGRl
-dm1fcmVzZXRfY29udHJvbF9nZXQoJnBkZXYtPmRldiwgImxzYWRjLWNyZyIpOw0KPiArCWlmIChJ
-U19FUlIoaW5mby0+cmVzZXQpKSB7DQo+ICsJCXJldCA9IFBUUl9FUlIoaW5mby0+cmVzZXQpOw0K
-PiArCQlpZiAocmV0ICE9IC1FTk9FTlQpDQo+ICsJCQlyZXR1cm4gcmV0Ow0KPiArDQo+ICsJCWRl
-dl9kYmcoJnBkZXYtPmRldiwgIm5vIHJlc2V0IGNvbnRyb2wgZm91bmRcbiIpOw0KPiArCQlpbmZv
-LT5yZXNldCA9IE5VTEw7DQo+ICsJfQ0KPiArDQo+ICsJaW5pdF9jb21wbGV0aW9uKCZpbmZvLT5j
-b21wbGV0aW9uKTsNCj4gKw0KPiArCWlycSA9IHBsYXRmb3JtX2dldF9pcnEocGRldiwgMCk7DQo+
-ICsJaWYgKGlycSA8IDApIHsNCj4gKwkJZGV2X2VycigmcGRldi0+ZGV2LCAibm8gaXJxIHJlc291
-cmNlP1xuIik7DQo+ICsJCXJldHVybiBpcnE7DQo+ICsJfQ0KPiArDQo+ICsJcmV0ID0gZGV2bV9y
-ZXF1ZXN0X2lycSgmcGRldi0+ZGV2LCBpcnEsIGhpYnZ0X2xzYWRjX2lzciwNCj4gKwkJCSAgICAg
-ICAwLCBkZXZfbmFtZSgmcGRldi0+ZGV2KSwgaW5mbyk7DQo+ICsJaWYgKHJldCA8IDApIHsNCj4g
-KwkJZGV2X2VycigmcGRldi0+ZGV2LCAiZmFpbGVkIHJlcXVlc3RpbmcgaXJxICVkXG4iLCBpcnEp
-Ow0KPiArCQlyZXR1cm4gcmV0Ow0KPiArCX0NCj4gKw0KPiArCWlmIChpbmZvLT5yZXNldCkNCj4g
-KwkJaGlidnRfbHNhZGNfcmVzZXRfY29udHJvbGxlcihpbmZvLT5yZXNldCk7DQo+ICsNCj4gKwlw
-bGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBpbmRpb19kZXYpOw0KPiArDQo+ICsJaW5kaW9fZGV2
-LT5uYW1lID0gZGV2X25hbWUoJnBkZXYtPmRldik7DQo+ICsJaW5kaW9fZGV2LT5kZXYucGFyZW50
-ID0gJnBkZXYtPmRldjsNCj4gKwlpbmRpb19kZXYtPmRldi5vZl9ub2RlID0gcGRldi0+ZGV2Lm9m
-X25vZGU7DQo+ICsJaW5kaW9fZGV2LT5pbmZvID0gJmhpYnZ0X2xzYWRjX2lpb19pbmZvOw0KPiAr
-CWluZGlvX2Rldi0+bW9kZXMgPSBJTkRJT19ESVJFQ1RfTU9ERTsNCj4gKw0KPiArCWluZGlvX2Rl
-di0+Y2hhbm5lbHMgPSBpbmZvLT5kYXRhLT5jaGFubmVsczsNCj4gKwlpbmRpb19kZXYtPm51bV9j
-aGFubmVscyA9IGluZm8tPmRhdGEtPm51bV9jaGFubmVsczsNCj4gKw0KPiArCXJldCA9IGRldm1f
-aWlvX2RldmljZV9yZWdpc3RlcigmcGRldi0+ZGV2LCBpbmRpb19kZXYpOw0KPiArCWlmIChyZXQg
-PCAwKSB7DQo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCByZWdpc3RlciBpaW8gZGV2
-aWNlXG4iKTsNCj4gKwkJcmV0dXJuIHJldDsNCkRyb3AgdGhpcyByZXR1cm4gcmV0IGFuZCBqdXN0
-IHJldHVybiByZXQgaW5zdGVhZCBvZiB0aGUgcmV0dXJuIDAgYmVsb3cuDQo+ICsJfQ0KPiArDQo+
-ICsJcmV0dXJuIDA7DQo+ICt9DQo+ICsNCj4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
-IGhpYnZ0X2xzYWRjX2RyaXZlciA9IHsNCj4gKwkucHJvYmUJCT0gaGlidnRfbHNhZGNfcHJvYmUs
-DQo+ICsJLmRyaXZlcgkJPSB7DQo+ICsJCS5uYW1lCT0gImhpYnZ0LWxzYWRjIiwNCj4gKwkJLm9m
-X21hdGNoX3RhYmxlID0gaGlidnRfbHNhZGNfbWF0Y2gsDQo+ICsJfSwNCj4gK307DQo+ICsNCj4g
-K21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoaGlidnRfbHNhZGNfZHJpdmVyKTsNCj4gKw0KPiArTU9E
-VUxFX0FVVEhPUigiQWxsZW4gTGl1IDxsaXVyZW56aG9uZ0BoaXNpbGljb24uY29tPiIpOyANCj4g
-K01PRFVMRV9ERVNDUklQVElPTigiaGlzaWxpY29uIEJWVCBMU0FEQyBkcml2ZXIiKTsgTU9EVUxF
-X0xJQ0VOU0UoIkdQTCANCj4gK3YyIik7DQo+IA0KDQo=
+This is a multi-part message in MIME format.
+--------------B6339356D7EB75AE990F9013
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+
+
+
+On 02/02/2017 02:36 AM, Laurent Pinchart wrote:
+> Hi Steve,
+>
+> Thank you for the patch. Many of the comments below apply to the ov5642 driver
+> too, please take them into account when reworking patch 23/24.
+>
+> On Friday 06 Jan 2017 18:11:40 Steve Longerbeam wrote:
+>> This driver is based on ov5640_mipi.c from Freescale imx_3.10.17_1.0.0_beta
+>> branch, modified heavily to bring forward to latest interfaces and code
+>> cleanup.
+>>
+>> Signed-off-by: Steve Longerbeam<steve_longerbeam@mentor.com>
+>> ---
+>>   drivers/staging/media/imx/Kconfig       |    8 +
+>>   drivers/staging/media/imx/Makefile      |    2 +
+>>   drivers/staging/media/imx/ov5640-mipi.c | 2348 ++++++++++++++++++++++++++++
+> You're missing DT bindings.
+
+Done, created Documentation/devicetree/bindings/media/i2c/ov5640.txt.
+
+> The driver should go to drivers/media/i2c/ as it should not be specific to the
+> i.MX6, and you can just call it ov5640.c.
+
+Done.
+
+>> diff --git a/drivers/staging/media/imx/Kconfig
+>> b/drivers/staging/media/imx/Kconfig index ce2d2c8..09f373d 100644
+>> --- a/drivers/staging/media/imx/Kconfig
+>> +++ b/drivers/staging/media/imx/Kconfig
+>> @@ -17,5 +17,13 @@ config VIDEO_IMX_CAMERA
+>>   	---help---
+>>   	  A video4linux camera capture driver for i.MX5/6.
+>>
+>> +config IMX_OV5640_MIPI
+>> +       tristate "OmniVision OV5640 MIPI CSI-2 camera support"
+>> +       depends on GPIOLIB && VIDEO_IMX_CAMERA
+> The sensor driver is generic, it shouldn't depend on IMX. It should however
+> depend on at least I2C and OF by the look of it.
+
+Done.
+
+>
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/init.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/ctype.h>
+>> +#include <linux/types.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clkdev.h>
+>> +#include <media/v4l2-device.h>
+>> +#include <media/v4l2-subdev.h>
+>> +#include <media/v4l2-async.h>
+>> +#include <media/v4l2-of.h>
+>> +#include <media/v4l2-ctrls.h>
+> Pet peeve of mine, please sort the headers alphabetically. It makes it easier
+> to locate duplicated.
+
+Fixed.
+
+>> +
+>> +#define OV5640_CHIP_ID  0x300A
+>> +#define OV5640_SLAVE_ID 0x3100
+>> +#define OV5640_DEFAULT_SLAVE_ID 0x3c
+> You're mixing lower-case and upper-case hex constants. Let's pick one. Kernel
+> code usually favours lower-case.
+
+Fixed.
+
+> Please define macros for all the other numerical constants you use in the
+> driver (register addresses and values). The large registers tables can be an
+> exception if you don't have access to the information, but for registers
+> written manually, hardcoding numerical values isn't good.
+
+Done.
+
+>> +
+>> +#define OV5640_MAX_CONTROLS 64
+>> +
+>> +enum ov5640_mode {
+>> +	ov5640_mode_MIN = 0,
+>> +	ov5640_mode_QCIF_176_144 = 0,
+>> +	ov5640_mode_QVGA_320_240,
+>> +	ov5640_mode_VGA_640_480,
+>> +	ov5640_mode_NTSC_720_480,
+>> +	ov5640_mode_PAL_720_576,
+>> +	ov5640_mode_XGA_1024_768,
+>> +	ov5640_mode_720P_1280_720,
+>> +	ov5640_mode_1080P_1920_1080,
+>> +	ov5640_mode_QSXGA_2592_1944,
+>> +	ov5640_num_modes,
+>> +	ov5640_mode_INIT = 0xff, /*only for sensor init*/
+> Please add spaces after /* and before */.
+>
+> Enumerated values should be all upper-case.
+
+Fixed (and ov5640_mode_INIT is removed).
+>> +
+>> +/* image size under 1280 * 960 are SUBSAMPLING
+>> + * image size upper 1280 * 960 are SCALING
+>> + */
+> The kernel multi-line comment style is
+>
+> /*
+>   * text
+>   * text
+>   */
+
+Fixed.
+
+>> +
+>> +struct ov5640_dev {
+>> +	struct i2c_client *i2c_client;
+>> +	struct device *dev;
+>> +	struct v4l2_subdev sd;
+>> +	struct media_pad pad;
+>> +	struct v4l2_ctrl_handler ctrl_hdl;
+>> +	struct v4l2_of_endpoint ep; /* the parsed DT endpoint info */
+>> +	struct v4l2_mbus_framefmt fmt;
+>> +	struct v4l2_captureparm streamcap;
+>> +	struct clk *xclk; /* system clock to OV5640 */
+>> +	int xclk_freq;    /* requested xclk freq from devicetree */
+>> +
+>> +	enum ov5640_mode current_mode;
+> Store a (const) pointer to the corresponding ov5640_mode_info instead, it will
+> simplify the code and allow you to get rid of the ov5640_mode enum.
+
+Done.
+
+>> +
+>> +	int prev_sysclk, prev_hts;
+>> +	int ae_low, ae_high, ae_target;
+> Can't these be unsigned int ?
+
+yep, an old left-over Freescale-ism, fixed.
+
+>> +
+>> +static void ov5640_power(struct ov5640_dev *sensor, bool enable);
+>> +static void ov5640_reset(struct ov5640_dev *sensor);
+>> +static int ov5640_restore_ctrls(struct ov5640_dev *sensor);
+>> +static int ov5640_set_agc(struct ov5640_dev *sensor, int value);
+>> +static int ov5640_set_exposure(struct ov5640_dev *sensor, int value);
+>> +static int ov5640_get_exposure(struct ov5640_dev *sensor);
+>> +static int ov5640_set_gain(struct ov5640_dev *sensor, int value);
+>> +static int ov5640_get_gain(struct ov5640_dev *sensor);
+> No forward declarations please. You should reorder functions as needed (and of
+> course still group related functions together).
+
+Fixed.
+
+>> +static struct reg_value ov5640_init_setting_30fps_VGA[] = {
+>> +
+>> <snip>
+>> +	{0x3a1f, 0x14, 0, 0}, {0x3008, 0x02, 0, 0}, {0x3c00, 0x04, 0, 300},
+>> +};
+> You only use the delay feature of the registers tables twice, once after
+> writing the first two registers (to select the clock source and perform a
+> software reset) and once at the very end.
+
+There is a delay in other places as well. There is a 1 msec delay after
+setting a PLL multiplier register, and another after programming the
+15 fps 2592x1944 mode. I'd prefer to keep the delay support in place
+for now. Later, removing these delays can be experimented with.
+
+>   Remove it, write the first two
+> registers manually in the code with a manual delay afterwards, and add another
+> manual delay after writing the whole table.
+>
+> I'm actually wondering whether you couldn't remove the 300ms delay at the end,
+> the 50/60Hz control register (0x3c00) doesn't look like it needs a delay after
+> being written.
+>
+> [snip]
+>
+>> +static struct reg_value ov5640_setting_15fps_QSXGA_2592_1944[] = {
+>> +	{0x4202, 0x0f, 0, 0},	/* stream off the sensor */
+>> <snip>
+>> +	{0x4202, 0x00, 0, 0},	/* stream on the sensor */
+> Don't turn the stream on in the init sequences, it should only be turned on
+> from the .s_stream() operation.
+
+Fixed. More old FSL-isms.
+
+>> +};
+>> +
+>> +static struct ov5640_mode_info
+>> +ov5640_mode_info_data[ov5640_num_framerates][ov5640_num_modes] = {
+> There's very few differences between the 15fps and 30fps tables. It would be
+> better if you could merge them, and manually write the registers that differ.
+
+Sorting that out will be a lot of work, I don't have the time, it will have
+to wait for future fixes. The register tables are likely bloated with 
+power-on
+reset values that need to be pruned anyway (there is a FIXME added to that
+effect).
+
+>> +
+>> +static int ov5640_probe(struct i2c_client *adapter,
+>> +			const struct i2c_device_id *device_id);
+>> +static int ov5640_remove(struct i2c_client *client);
+> No forward declarations please.
+
+Fixed, more FSL-isms.
+
+>> +
+>> +static int ov5640_read_reg(struct ov5640_dev *sensor, u16 reg, u8 *val)
+>> +{
+>> +	u8 reg_buf[2] = {0};
+>> +	u8 read_val = 0;
+>> +
+>> +	reg_buf[0] = reg >> 8;
+>> +	reg_buf[1] = reg & 0xff;
+>> +
+>> +	if (2 != i2c_master_send(sensor->i2c_client, reg_buf, 2)) {
+>> +		v4l2_err(&sensor->sd, "%s: write reg error: reg=%x\n",
+>> +			__func__, reg);
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	if (1 != i2c_master_recv(sensor->i2c_client, &read_val, 1)) {
+>> +		v4l2_err(&sensor->sd, "%s: read reg error: reg=%x, val=%x\n",
+>> +			__func__, reg, read_val);
+>> +		return -EIO;
+>> +	}
+> Wouldn't i2c_transfer() be more efficient here ?
+
+Yep, done, for every register access function.
+
+>> +	*val = read_val;
+>> +	return 0;
+>> +}
+>> +
+>> +#define OV5640_READ_REG(s, r, v) {				\
+>> +		ret = ov5640_read_reg((s), (r), (v));		\
+>> +		if (ret)					\
+>> +			return ret;				\
+>> +	}
+> No. No. No no no. Don't ever return from a macro. Hiding the return makes
+> following the code flow much more difficult, it's just asking for trouble.
+>
+> And don't use externally defined variables (ret in this case), that's also
+> asking for trouble.
+
+Fixed.
+
+>> +
+>> +static int ov5640_mod_reg(struct ov5640_dev *sensor, u16 reg,
+>> +			  u8 mask, u8 val)
+>> +{
+>> +	u8 readval;
+>> +	int ret;
+>> +
+>> +	OV5640_READ_REG(sensor, reg, &readval);
+>> +
+>> +	readval &= ~mask;
+>> +	val &= mask;
+>> +	val |= readval;
+>> +
+>> +	OV5640_WRITE_REG(sensor, reg, val);
+>> +	return 0;
+>> +}
+>>
+>> If you need to modify registers a lot, switch to regmap for register access.
+>> It will provide you with a cache, removing the need to read registers back
+>> from the device.
+
+ov5640_mod_reg() is only called in a few places. If this needs more use
+later, will convert to regmap.
+
+>> +/* download ov5640 settings to sensor through i2c */
+>> +static int ov5640_load_regs(struct ov5640_dev *sensor,
+>> +			    struct reg_value *regs,
+>> +			    int size)
+> size is never negative.
+
+Fixed, actually new prototype is much simpler:
+
+static int ov5640_load_regs(struct ov5640_dev *sensor,
+                 const struct ov5640_mode_info *mode);
+
+>> +{
+>> +	register u32 delay_ms = 0;
+>> +	register u16 reg_addr = 0;
+>> +	register u8 mask = 0;
+>> +	register u8 val = 0;
+> register ? The compiler is nowadays likely smarter than us when it comes to
+> register allocation.
+
+Yeah, nutty. I didn't write that, more old FSL-isms.
+>> +
+>> +static int ov5640_get_HTS(struct ov5640_dev *sensor)
+>> +{
+>> +	 /* read HTS from register settings */
+>> +	u16 HTS;
+> Function names and variables are lower case.
+
+Fixed.
+
+>> +
+>> +static int ov5640_set_bandingfilter(struct ov5640_dev *sensor)
+>> +{
+>> +	int prev_vts;
+>> +	int band_step60, max_band60, band_step50, max_band50;
+> Aren't these values unsigned ?
+
+Yep, fixed.
+
+>> +
+>> +static int ov5640_set_AE_target(struct ov5640_dev *sensor, int target)
+>> +{
+>> +	/* stable in high */
+>> +	int fast_high, fast_low;
+> Aren't these values unsigned ?
+
+Fixed.
+
+>> +	int ret;
+>> +
+>> +	sensor->ae_low = target * 23 / 25;	/* 0.92 */
+>> +	sensor->ae_high = target * 27 / 25;	/* 1.08 */
+>> +
+>> +	fast_high = sensor->ae_high<<1;
+> Missing spaces around <<
+
+Fixed.
+
+>> +
+>> +static int ov5640_set_virtual_channel(struct ov5640_dev *sensor)
+>> +{
+>> +	u8 temp, channel = sensor->ep.base.id;
+> The endpoint id isn't meant to select a virtual channel. V4L2 has no virtual
+> channel API at the moment, you can hardcode the VC to 0 for now.
+
+Yes, imx-media bridge driver _really_ needs a subdev/V4L2 API to
+set the virtual channel that a CSI-2 sensor will transmit on, because
+it fully supports receiving on any of the 4 virtual channels (via the
+4 source pads from the imx6-mipi-csi2 / CSI2IPU gasket entity).
+
+For now I've hardcoded the ov5640 to transmit over channel 1. This is
+good for the imx-media graph because it allows simultaneous capture
+from a parallel sensor via ipu1_csi0, while the ov5640 captures via
+ipu1_csi1.
+
+Channel 1 may not be good for other bridges though. Maybe this would
+be a good candidate for a module parameter.
+
+>> +	int ret;
+>> +
+>> +	OV5640_READ_REG(sensor, 0x4814, &temp);
+>> +	temp &= ~(3 << 6);
+>> +	temp |= (channel << 6);
+>> +	OV5640_WRITE_REG(sensor, 0x4814, temp);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static enum ov5640_mode
+>> +ov5640_find_nearest_mode(struct ov5640_dev *sensor,
+>> +			 int width, int height)
+> How about using v4l2_find_nearest_format() ?
+
+It doesn't really fit ATM, see below.
+
+>
+>> +
+>> +	ret = ov5640_set_stream(sensor, true);
+> This will turn streaming on when you set the format, which I don't think is
+> correct. You should only turn streaming on in the .s_stream() operation. The
+> same comment applies to the previous function.
+
+Fixed, FSL-ism. Tested and still works fine.
+
+
+>> +
+>> +static int ov5640_change_mode(struct ov5640_dev *sensor,
+>> +			      enum ov5640_frame_rate frame_rate,
+>> +			      enum ov5640_mode mode,
+>> +			      enum ov5640_mode orig_mode)
+>> +{
+>> +	enum ov5640_downsize_mode dn_mode, orig_dn_mode;
+>> +	struct reg_value *mode_data = NULL;
+>> +	int mode_size = 0;
+>> +	int ret = 0;
+> No need to initialize ret to 0.
+
+Fixed.
+
+>> +		sensor->fmt.width = 640;
+>> +		sensor->fmt.height = 480;
+> Don't reset the format here. The format must be preserved across subdev
+> open/close.
+
+Fixed.
+
+>> +
+>> +/* restore the last set video mode after chip power-on */
+>> +static int ov5640_restore_mode(struct ov5640_dev *sensor)
+>> +{
+>> +	int ret = 0;
+> No need to initialize ret to 0.
+
+Fixed.
+
+>> +
+>> +	/* first we need to set some initial register values */
+>> +	ret = ov5640_change_mode(sensor, sensor->current_fr,
+>> +				    ov5640_mode_INIT, ov5640_mode_INIT);
+> I wouldn't use ov5640_change_mode() here. You only need to apply the init
+> register values, just call ov5640_load_regs(). The rest of the
+> ov5640_change_mode() isn't needed, as you're calling it below. This will also
+> allow you to get rid of ov5640_mode_INIT, simplifying the logic.
+
+Fixed. I created an init register table, ov5640_mode_init_data, which is
+loaded by ov5640_restore_mode().
+
+
+>
+>> +
+>> +static int ov5640_regulators_on(struct ov5640_dev *sensor)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (sensor->io_regulator) {
+>> +		ret = regulator_enable(sensor->io_regulator);
+>> +		if (ret) {
+>> +			v4l2_err(&sensor->sd, "io reg enable failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +	if (sensor->core_regulator) {
+>> +		ret = regulator_enable(sensor->core_regulator);
+>> +		if (ret) {
+>> +			v4l2_err(&sensor->sd, "core reg enable failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +	if (sensor->gpo_regulator) {
+>> +		ret = regulator_enable(sensor->gpo_regulator);
+>> +		if (ret) {
+>> +			v4l2_err(&sensor->sd, "gpo reg enable failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+>> +	if (sensor->analog_regulator) {
+>> +		ret = regulator_enable(sensor->analog_regulator);
+>> +		if (ret) {
+>> +			v4l2_err(&sensor->sd, "analog reg enable failed\n");
+>> +			return ret;
+>> +		}
+>> +	}
+> Maybe you should use the bulk regulator API ?
+
+Done.
+
+>> +
+>> +/* --------------- Subdev Operations --------------- */
+>> +
+>> +static int ov5640_s_power(struct v4l2_subdev *sd, int on)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +	int ret;
+>> +
+>> +	v4l2_info(sd, "power %s\n", on ? "ON" : "OFF");
+>> +
+>> +	if (on && !sensor->on) {
+> The .s_power() calls need to be ref-counted, similarly to how the regulator
+> enable/disable calls work. See the mt9p031 sensor driver for an example.
+
+Done.
+
+>> +		if (sensor->xclk)
+>> +			clk_prepare_enable(sensor->xclk);
+>> +
+>> +		ret = ov5640_regulators_on(sensor);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		ov5640_reset(sensor);
+>> +		ov5640_power(sensor, true);
+>> +
+>> +		ret = ov5640_init_slave_id(sensor);
+> Why is this needed ?
+
+Because on SabreLite, the ov5642 is at the same default
+i2c slave address, so they both need to answer to a non-default
+address.
+
+>> +
+>> +static int ov5640_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *a)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +	struct v4l2_fract *timeperframe = &a->parm.capture.timeperframe;
+>> +	enum ov5640_frame_rate frame_rate;
+>> +	u32 tgt_fps;	/* target frames per secound */
+>> +	int ret = 0;
+> No need to initialize ret to 0.
+
+Fixed.
+
+>> +	else {
+>> +		v4l2_err(&sensor->sd, "frame rate %u not supported!\n",
+>> +			 tgt_fps);
+> Don't print an error message that is userspace-triggerable, we have enough
+> ways for applications to flood the kernel log already :-)
+
+Removed.
+
+>> +
+>> +static int ov5640_get_fmt(struct v4l2_subdev *sd,
+>> +			  struct v4l2_subdev_pad_config *cfg,
+>> +			  struct v4l2_subdev_format *format)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +
+>> +	if (format->pad != 0)
+>> +		return -EINVAL;
+>> +
+>> +	format->format = sensor->fmt;
+> You need to handle the TRY format here. You can have a look at the mt9p031
+> driver for an example on how to do so.
+
+Right, that was caught and fixed earlier.
+
+>> +
+>> +static int ov5640_set_fmt(struct v4l2_subdev *sd,
+>> +			  struct v4l2_subdev_pad_config *cfg,
+>> +			  struct v4l2_subdev_format *format)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +	enum ov5640_mode new_mode;
+>> +	int ret;
+>> +
+>> +	if (format->pad != 0)
+>> +		return -EINVAL;
+>> +
+>> +	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
+>> +		ret = ov5640_try_fmt_internal(sd, &format->format, NULL);
+>> +		if (ret)
+>> +			return ret;
+> You can move this code above the test to avoid the duplicated call below.
+
+Fixed.
+
+>> +		cfg->try_fmt = format->format;
+> Please use the v4l2_subdev_get_try_format() function to get the try format,
+> don't dereference cfg directly.
+
+Done.
+
+>> +
+>> +static int ov5640_set_hue(struct ov5640_dev *sensor, int value)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (value) {
+>> +		OV5640_MOD_REG(sensor, 0x5580, 1 << 0, 1 << 0);
+>> +		OV5640_WRITE_REG16(sensor, 0x5581, value);
+>> +	} else
+>> +		OV5640_MOD_REG(sensor, 0x5580, 1 << 0, 0);
+> According to the kernel coding style, you need curly braces around the else
+> branch if you use them around the if branch.
+
+Fixed everywhere.
+
+>
+>
+>> +
+>> +#if 0
+> No compiled-out code please.
+
+Removed ov5640_set_green_balance().
+
+>> +static int ov5640_set_green_balance(struct ov5640_dev *sensor, int value)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (sensor->awb_on)
+>> +		return -EINVAL;
+>> +
+>> +	OV5640_WRITE_REG(sensor, 0x3403, value & 0xff);
+>> +	OV5640_WRITE_REG(sensor, 0x3402, (value & 0xf00) >> 8);
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>> <snip>
+>> +
+>> +static int ov5640_set_gain(struct ov5640_dev *sensor, int value)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (sensor->agc_on)
+>> +		return -EINVAL;
+> You can create a cluster with the autogain and manual gain controls
+> (v4l2_ctrl_auto_cluster) to have the control framework disabling the manual
+> control automatically when autogain is enabled.
+
+Done. Also made white-balance and exposure auto clusters as well.
+And in the process, got rid of the control table as Hans had suggested
+earlier.
+
+
+>> +	OV5640_WRITE_REG16(sensor, 0x350a, value & 0x3ff);
+>> +	return 0;
+>> +}
+>> +
+>> +static int ov5640_get_gain(struct ov5640_dev *sensor)
+>> +{
+>> +	u16 gain;
+>> +	int ret;
+>> +
+>> +	if (sensor->agc_on)
+>> +		return -EINVAL;
+>> +
+>> +	OV5640_READ_REG16(sensor, 0x350a, &gain);
+>> +
+>> +	return gain & 0x3ff;
+>> +}
+>> +
+>> +#if 0
+>> +static int ov5640_set_test_pattern(struct ov5640_dev *sensor, int value)
+>> +{
+>> +	int ret;
+>> +
+>> +	OV5640_MOD_REG(sensor, 0x503d, 0xa4, value ? 0xa4 : 0);
+>> +	return 0;
+>> +}
+>> +#endif
+> You can use a control to expose the test pattern function, it's quite useful.
+
+Done, as a menu control for color bars.
+
+>> +static struct ov5640_control *ov5640_get_ctrl(int id, int *index)
+>> +{
+>> +	struct ov5640_control *ret = NULL;
+>> +	int i;
+> i is never negative, it should be unsigned int.
+
+Fixed.
+
+
+>> +
+>> +static int ov5640_restore_ctrls(struct ov5640_dev *sensor)
+>> +{
+>> +	struct ov5640_control *c;
+>> +	int i;
+> i is never negative, it should be unsigned int.
+
+restore_ctrls is gone from earlier fixes.
+
+>> +
+>> +static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
+>> +{
+>> +	struct ov5640_dev *sensor = ctrl_to_ov5640_dev(ctrl);
+>> +	struct ov5640_control *c;
+>> +	int ret = 0;
+>> +	int i;
+>> +
+>> +	c = ov5640_get_ctrl(ctrl->id, &i);
+> You can inline the function call here as it's not used anywhere else.
+
+Done.
+
+>> +
+>> +static int ov5640_init_controls(struct ov5640_dev *sensor)
+>> +{
+>> +	struct ov5640_control *c;
+> I would name this ctrl or control, c can be a bit confusing. You can also
+> declare it inside the loop.
+
+Done.
+
+>> +	int i;
+> i can never be negative, you can make it an unsigned int.
+
+Done.
+
+>> +
+>> +	v4l2_ctrl_handler_init(&sensor->ctrl_hdl, OV5640_NUM_CONTROLS);
+>> +
+>> +	for (i = 0; i < OV5640_NUM_CONTROLS; i++) {
+>> +		c = &ov5640_ctrls[i];
+>> +
+>> +		v4l2_ctrl_new_std(&sensor->ctrl_hdl, &ov5640_ctrl_ops,
+>> +				  c->ctrl.id, c->ctrl.minimum, c-
+>> ctrl.maximum,
+>> +				  c->ctrl.step, c->ctrl.default_value);
+>> +	}
+>> +
+>> +	sensor->sd.ctrl_handler = &sensor->ctrl_hdl;
+>> +	if (sensor->ctrl_hdl.error) {
+>> +		int err = sensor->ctrl_hdl.error;
+>> +
+>> +		v4l2_ctrl_handler_free(&sensor->ctrl_hdl);
+>> +
+>> +		v4l2_err(&sensor->sd, "%s: error %d\n", __func__, err);
+> I'm not sure this brings much value.
+
+Removed.
+
+>
+>> +
+>> +static int ov5640_enum_frame_interval(
+>> +	struct v4l2_subdev *sd,
+>> +	struct v4l2_subdev_pad_config *cfg,
+>> +	struct v4l2_subdev_frame_interval_enum *fie)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +	enum ov5640_mode mode;
+>> +
+>> +	if (fie->pad != 0)
+>> +		return -EINVAL;
+>> +	if (fie->index < 0 || fie->index >= ov5640_num_framerates)
+>> +		return -EINVAL;
+>> +
+>> +	if (fie->width == 0 || fie->height == 0)
+>> +		return -EINVAL;
+>> +
+>> +	mode = ov5640_find_nearest_mode(sensor, fie->width, fie->height);
+> You should find an exact mode here, not the nearest one. If with and height
+> don't match, return -EINVAL. That will replace with above width == 0 and
+> height == 0 test.
+
+Fixed, I modified ov5640_find_mode() (renamed from 
+ov5640_find_nearest_mode())
+to take a "nearest" boolean, which is passed as false here.
+
+>> +
+>> +	dev_dbg(sensor->dev, "%dx%d: [%d] = %d fps\n",
+>> +		fie->width, fie->height, fie->index, fie-
+>> interval.denominator);
+> I'm not sure this is very useful, you can use ftrace if you want to trace
+> function calls.
+
+Removed.
+>> +	return 0;
+>> +}
+>> +
+>> +static int ov5640_g_input_status(struct v4l2_subdev *sd, u32 *status)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +
+>> +	*status = !sensor->on ? V4L2_IN_ST_NO_POWER : 0;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ov5640_s_routing(struct v4l2_subdev *sd, u32 input,
+>> +			    u32 output, u32 config)
+>> +{
+>> +	return (input != 0) ? -EINVAL : 0;
+>> +}
+> The g_input_status and s_routing subdev operations are not mandatory, you
+> don't have to implement them as the sensor doesn't have multiple inputs.
+
+Removed.
+
+>> +static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +
+>> +	v4l2_info(sd, "stream %s\n", enable ? "ON" : "OFF");
+> You can use ftrace to trace function calls, there's no need to add debugging
+> statements that duplicate the functionality.
+
+Removed.
+
+>> +
+>> +static struct v4l2_subdev_ops ov5640_subdev_ops = {
+>> +	.core = &ov5640_core_ops,
+>> +	.video = &ov5640_video_ops,
+>> +	.pad = &ov5640_pad_ops,
+>> +};
+> All these structures should be static const.
+
+Fixed.
+
+>> +
+>> +static void ov5640_power(struct ov5640_dev *sensor, bool enable)
+>> +{
+>> +	gpiod_set_value(sensor->pwdn_gpio, enable ? 0 : 1);
+>> +}
+>> +
+>> +static void ov5640_reset(struct ov5640_dev *sensor)
+>> +{
+>> +	gpiod_set_value(sensor->reset_gpio, 0);
+>> +
+>> +	/* camera power cycle */
+>> +	ov5640_power(sensor, false);
+>> +	usleep_range(5000, 10000);
+>> +	ov5640_power(sensor, true);
+>> +	usleep_range(5000, 10000);
+>> +
+>> +	gpiod_set_value(sensor->reset_gpio, 1);
+>> +	usleep_range(1000, 2000);
+>> +
+>> +	gpiod_set_value(sensor->reset_gpio, 0);
+>> +	usleep_range(5000, 10000);
+>> +}
+>> +
+>> +static void ov5640_get_regulators(struct ov5640_dev *sensor)
+>> +{
+>> +	sensor->io_regulator = devm_regulator_get(sensor->dev, "DOVDD");
+>> +	if (!IS_ERR(sensor->io_regulator)) {
+>> +		regulator_set_voltage(sensor->io_regulator,
+>> +				      OV5640_VOLTAGE_DIGITAL_IO,
+>> +				      OV5640_VOLTAGE_DIGITAL_IO);
+>> +	} else {
+>> +		dev_dbg(sensor->dev, "%s: no io voltage reg found\n",
+>> +			__func__);
+>> +		sensor->io_regulator = NULL;
+> How about making the power supplies mandatory in DT instead ? They are
+> mandatory after all, if they're not controllable DT should just declare fixed
+> supplies.
+
+I guess that makes sense. They are now mandatory.
+
+>> +
+>> +static int ov5640_probe(struct i2c_client *client,
+>> +			const struct i2c_device_id *id)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct device_node *endpoint;
+>> +	struct ov5640_dev *sensor;
+>> +	int i, xclk, ret;
+> i and xclk are never negative, you can make them unsigned int.
+
+This was removed from earlier cleanups.
+
+>> +
+>> +	sensor = devm_kzalloc(dev, sizeof(struct ov5640_dev), GFP_KERNEL);
+> Please use sizeof(*variable) instead of sizeof(type).
+
+Done.
+
+> devm_kzalloc() doesn't play nicely with dynamic removal of devices. We're in
+> the process of fixing related race conditions in the media subsystem. In order
+> not to make the problem worse, please use kzalloc() instead.
+>
+>> +	if (!sensor)
+>> +		return -ENOMEM;
+>> +
+>> +	sensor->i2c_client = client;
+>> +	sensor->dev = dev;
+> Do you really need to store both i2c_client and dev, given that the latter is
+> just &client->dev ?
+
+It was only for convenience, but sensor->dev was now only used in a
+couple places, so sensor->dev removed.
+
+>
+>> +	sensor->fmt.code = MEDIA_BUS_FMT_UYVY8_2X8;
+>> +	sensor->fmt.width = 640;
+>> +	sensor->fmt.height = 480;
+>> +	sensor->fmt.field = V4L2_FIELD_NONE;
+>> +	sensor->streamcap.capability = V4L2_MODE_HIGHQUALITY |
+>> +					   V4L2_CAP_TIMEPERFRAME;
+> Please fix the indentation.
+
+Fixed.
+
+>> +
+>> +	v4l2_of_parse_endpoint(endpoint, &sensor->ep);
+>> +	if (sensor->ep.bus_type != V4L2_MBUS_CSI2) {
+>> +		dev_err(dev, "invalid bus type, must be MIPI CSI2\n");
+>> +		return -EINVAL;
+> You're leaking endpoint here. You should move the of_node_put() call right
+> after the v4l2_of_parse_endpoint() call.
+
+oops, Fixed.
+
+>> +
+>> +	/* get system clock (xclk) frequency */
+>> +	ret = of_property_read_u32(dev->of_node, "xclk", &xclk);
+> Instead of adding a custom DT property for this, use assigned-clock-rates. You
+> won't need to set it manually in the driver, and can verify its frequency with
+> clk_get_rate().
+
+This was done in earlier fixups.
+
+>> +	if (!ret) {
+>> +		if (xclk < OV5640_XCLK_MIN || xclk > OV5640_XCLK_MAX) {
+> Are your register tables above independent of the clock frequency ? You should
+> ideally compute register values at runtime instead of hardcoding them, but
+> given the lack of information from Omnivision I understand this isn't
+> possible. You thus need to be stricter here and reject any value other than
+> the nominal frequency.
+
+I went back and looked at the original driver from Freescale that these
+register tables are based on, and that driver does allow a range between
+6 and 24 MHz. I've updated the min/max for xclk to that range. I agree
+though that this will need some experimentation to verify these xclk ranges
+actually work.
+
+
+>
+>> +
+>> +	/* get system clock (xclk) */
+>> +	sensor->xclk = devm_clk_get(dev, "xclk");
+>> +	if (!IS_ERR(sensor->xclk)) {
+>> +		if (!sensor->xclk_freq) {
+>> +			dev_err(dev, "xclk requires xclk frequency!\n");
+>> +			return -EINVAL;
+>> +		}
+>> +		clk_set_rate(sensor->xclk, sensor->xclk_freq);
+>> +	} else {
+>> +		/* assume system clock enabled by default */
+>> +		sensor->xclk = NULL;
+> Please don't. The clock should be mandatory.
+
+This was done in earlier fixups.
+
+
+>> +	}
+>> +
+>> +	/* request power down pin */
+>> +	sensor->pwdn_gpio = devm_gpiod_get(dev, "pwdn", GPIOD_OUT_HIGH);
+> Are the GPIOs mandatory or optional ? Can a system tie some of them to ground
+> or a voltage rail, or do they need to always be manually controllable ?
+
+Yes, they could be tied to ground or a rail, and are not required. I
+made both reset and pwdn gpios optional.
+
+>
+>> +
+>> +	ret = ov5640_s_power(&sensor->sd, 1);
+>> +	if (ret)
+>> +		goto entity_cleanup;
+>> +	ret = ov5640_init_controls(sensor);
+>> +	if (ret)
+>> +		goto power_off;
+>> +
+>> +	ret = ov5640_s_power(&sensor->sd, 0);
+>> +	if (ret)
+>> +		goto free_ctrls;
+> Writing the controls here is pointless, as powering the chip down will lose
+> all the values. You shouldn't call v4l2_ctrl_handler_setup() in
+> ov5640_init_controls(), and you can then remove the ov5640_s_power() calls
+> here.
+
+Good idea, done.
+
+>> +
+>> +free_ctrls:
+>> +	v4l2_ctrl_handler_free(&sensor->ctrl_hdl);
+>> +power_off:
+>> +	ov5640_s_power(&sensor->sd, 0);
+>> +entity_cleanup:
+>> +	media_entity_cleanup(&sensor->sd.entity);
+>> +	ov5640_regulators_off(sensor);
+> Won't ov5640_s_power(0) already disable the regulators ?
+
+Not applicable anymore, as there's no need to enable power in probe.
+
+>> +	return ret;
+>> +}
+>> +
+>> +/*!
+>> + * ov5640 I2C detach function
+>> + *
+>> + * @param client            struct i2c_client *
+>> + * @return  Error code indicating success or failure
+>> + */
+> That's not the kerneldoc comment style. Given that this is the only documented
+> function, and that the comment is completely useless, you can just drop it.
+
+yuck, old FSL-isms, removed.
+
+>> +static int ov5640_remove(struct i2c_client *client)
+>> +{
+>> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +
+>> +	ov5640_regulators_off(sensor);
+>> +
+>> +	v4l2_async_unregister_subdev(&sensor->sd);
+>> +	media_entity_cleanup(&sensor->sd.entity);
+>> +	v4l2_device_unregister_subdev(sd);
+> This function is called by v4l2_async_unregister_subdev(), there's no need to
+> duplicate it.
+
+Removed.
+
+>> +MODULE_AUTHOR("Freescale Semiconductor, Inc.");
+> MODULE_AUTHOR isn't a synonym for copyright ownership. I don't think you
+> should add Freescale as an author. If you know who wrote the original code you
+> can list that developer explicitly.
+
+I have no clue who the original author was, I just removed
+MODULE_AUTHOR(s).
+
+>> +MODULE_AUTHOR("Steve Longerbeam<steve_longerbeam@mentor.com>");
+>> +MODULE_DESCRIPTION("OV5640 MIPI Camera Subdev Driver");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_VERSION("1.0");
+> Version numbers are never updated. I wouldn't bother adding one.
+
+Removed.
+
+Steve
+
+
+--------------B6339356D7EB75AE990F9013
+Content-Type: text/html; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=windows-1252"
+      http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <p><br>
+    </p>
+    <br>
+    <div class="moz-cite-prefix">On 02/02/2017 02:36 AM, Laurent
+      Pinchart wrote:<br>
+    </div>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">Hi Steve,
+
+Thank you for the patch. Many of the comments below apply to the ov5642 driver 
+too, please take them into account when reworking patch 23/24.
+
+On Friday 06 Jan 2017 18:11:40 Steve Longerbeam wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">This driver is based on ov5640_mipi.c from Freescale imx_3.10.17_1.0.0_beta
+branch, modified heavily to bring forward to latest interfaces and code
+cleanup.
+
+Signed-off-by: Steve Longerbeam <a class="moz-txt-link-rfc2396E" href="mailto:steve_longerbeam@mentor.com">&lt;steve_longerbeam@mentor.com&gt;</a>
+---
+ drivers/staging/media/imx/Kconfig       |    8 +
+ drivers/staging/media/imx/Makefile      |    2 +
+ drivers/staging/media/imx/ov5640-mipi.c | 2348 ++++++++++++++++++++++++++++
+</pre>
+      </blockquote>
+      <pre wrap="">You're missing DT bindings.</pre>
+    </blockquote>
+    <br>
+    Done, created
+    Documentation/devicetree/bindings/media/i2c/ov5640.txt.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">The driver should go to drivers/media/i2c/ as it should not be specific to the 
+i.MX6, and you can just call it ov5640.c.
+</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">diff --git a/drivers/staging/media/imx/Kconfig
+b/drivers/staging/media/imx/Kconfig index ce2d2c8..09f373d 100644
+--- a/drivers/staging/media/imx/Kconfig
++++ b/drivers/staging/media/imx/Kconfig
+@@ -17,5 +17,13 @@ config VIDEO_IMX_CAMERA
+ 	---help---
+ 	  A video4linux camera capture driver for i.MX5/6.
+
++config IMX_OV5640_MIPI
++       tristate "OmniVision OV5640 MIPI CSI-2 camera support"
++       depends on GPIOLIB &amp;&amp; VIDEO_IMX_CAMERA
+</pre>
+      </blockquote>
+      <pre wrap="">The sensor driver is generic, it shouldn't depend on IMX. It should however 
+depend on at least I2C and OF by the look of it.</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite"> <br>
+      <blockquote type="cite">
+        <pre wrap="">+
++#include &lt;linux/module.h&gt;
++#include &lt;linux/init.h&gt;
++#include &lt;linux/slab.h&gt;
++#include &lt;linux/ctype.h&gt;
++#include &lt;linux/types.h&gt;
++#include &lt;linux/delay.h&gt;
++#include &lt;linux/device.h&gt;
++#include &lt;linux/i2c.h&gt;
++#include &lt;linux/of_device.h&gt;
++#include &lt;linux/gpio/consumer.h&gt;
++#include &lt;linux/regulator/consumer.h&gt;
++#include &lt;linux/clk.h&gt;
++#include &lt;linux/clk-provider.h&gt;
++#include &lt;linux/clkdev.h&gt;
++#include &lt;media/v4l2-device.h&gt;
++#include &lt;media/v4l2-subdev.h&gt;
++#include &lt;media/v4l2-async.h&gt;
++#include &lt;media/v4l2-of.h&gt;
++#include &lt;media/v4l2-ctrls.h&gt;
+</pre>
+      </blockquote>
+      <pre wrap="">Pet peeve of mine, please sort the headers alphabetically. It makes it easier 
+to locate duplicated.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++#define OV5640_CHIP_ID  0x300A
++#define OV5640_SLAVE_ID 0x3100
++#define OV5640_DEFAULT_SLAVE_ID 0x3c
+</pre>
+      </blockquote>
+      <pre wrap="">You're mixing lower-case and upper-case hex constants. Let's pick one. Kernel 
+code usually favours lower-case.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">Please define macros for all the other numerical constants you use in the 
+driver (register addresses and values). The large registers tables can be an 
+exception if you don't have access to the information, but for registers 
+written manually, hardcoding numerical values isn't good.</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++#define OV5640_MAX_CONTROLS 64
++
++enum ov5640_mode {
++	ov5640_mode_MIN = 0,
++	ov5640_mode_QCIF_176_144 = 0,
++	ov5640_mode_QVGA_320_240,
++	ov5640_mode_VGA_640_480,
++	ov5640_mode_NTSC_720_480,
++	ov5640_mode_PAL_720_576,
++	ov5640_mode_XGA_1024_768,
++	ov5640_mode_720P_1280_720,
++	ov5640_mode_1080P_1920_1080,
++	ov5640_mode_QSXGA_2592_1944,
++	ov5640_num_modes,
++	ov5640_mode_INIT = 0xff, /*only for sensor init*/
+</pre>
+      </blockquote>
+      <pre wrap="">Please add spaces after /* and before */.
+
+Enumerated values should be all upper-case.</pre>
+    </blockquote>
+    <br>
+    Fixed (and ov5640_mode_INIT is removed).<br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++/* image size under 1280 * 960 are SUBSAMPLING
++ * image size upper 1280 * 960 are SCALING
++ */
+</pre>
+      </blockquote>
+      <pre wrap="">The kernel multi-line comment style is
+
+/*
+ * text
+ * text
+ */
+</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++struct ov5640_dev {
++	struct i2c_client *i2c_client;
++	struct device *dev;
++	struct v4l2_subdev sd;
++	struct media_pad pad;
++	struct v4l2_ctrl_handler ctrl_hdl;
++	struct v4l2_of_endpoint ep; /* the parsed DT endpoint info */
++	struct v4l2_mbus_framefmt fmt;
++	struct v4l2_captureparm streamcap;
++	struct clk *xclk; /* system clock to OV5640 */
++	int xclk_freq;    /* requested xclk freq from devicetree */
++
++	enum ov5640_mode current_mode;
+</pre>
+      </blockquote>
+      <pre wrap="">Store a (const) pointer to the corresponding ov5640_mode_info instead, it will 
+simplify the code and allow you to get rid of the ov5640_mode enum.</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	int prev_sysclk, prev_hts;
++	int ae_low, ae_high, ae_target;
+</pre>
+      </blockquote>
+      <pre wrap="">Can't these be unsigned int ?</pre>
+    </blockquote>
+    <br>
+    yep, an old left-over Freescale-ism, fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static void ov5640_power(struct ov5640_dev *sensor, bool enable);
++static void ov5640_reset(struct ov5640_dev *sensor);
++static int ov5640_restore_ctrls(struct ov5640_dev *sensor);
++static int ov5640_set_agc(struct ov5640_dev *sensor, int value);
++static int ov5640_set_exposure(struct ov5640_dev *sensor, int value);
++static int ov5640_get_exposure(struct ov5640_dev *sensor);
++static int ov5640_set_gain(struct ov5640_dev *sensor, int value);
++static int ov5640_get_gain(struct ov5640_dev *sensor);
+</pre>
+      </blockquote>
+      <pre wrap="">No forward declarations please. You should reorder functions as needed (and of 
+course still group related functions together).
+</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+static struct reg_value ov5640_init_setting_30fps_VGA[] = {
++
+&lt;snip&gt;
++	{0x3a1f, 0x14, 0, 0}, {0x3008, 0x02, 0, 0}, {0x3c00, 0x04, 0, 300},
++};
+</pre>
+      </blockquote>
+      <pre wrap="">You only use the delay feature of the registers tables twice, once after 
+writing the first two registers (to select the clock source and perform a 
+software reset) and once at the very end.</pre>
+    </blockquote>
+    <br>
+    There is a delay in other places as well. There is a 1 msec delay
+    after <br>
+    setting a PLL multiplier register, and another after programming the<br>
+    15 fps 2592x1944 mode. I'd prefer to keep the delay support in place<br>
+    for now. Later, removing these delays can be experimented with.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap=""> Remove it, write the first two 
+registers manually in the code with a manual delay afterwards, and add another 
+manual delay after writing the whole table.
+
+I'm actually wondering whether you couldn't remove the 300ms delay at the end, 
+the 50/60Hz control register (0x3c00) doesn't look like it needs a delay after 
+being written.
+
+[snip]
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+static struct reg_value ov5640_setting_15fps_QSXGA_2592_1944[] = {
++	{0x4202, 0x0f, 0, 0},	/* stream off the sensor */
+&lt;snip&gt;
++	{0x4202, 0x00, 0, 0},	/* stream on the sensor */
+</pre>
+      </blockquote>
+      <pre wrap="">Don't turn the stream on in the init sequences, it should only be turned on 
+from the .s_stream() operation.</pre>
+    </blockquote>
+    <br>
+    Fixed. More old FSL-isms.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+};
++
++static struct ov5640_mode_info
++ov5640_mode_info_data[ov5640_num_framerates][ov5640_num_modes] = {
+</pre>
+      </blockquote>
+      <pre wrap="">There's very few differences between the 15fps and 30fps tables. It would be 
+better if you could merge them, and manually write the registers that differ.</pre>
+    </blockquote>
+    <br>
+    Sorting that out will be a lot of work, I don't have the time, it
+    will have<br>
+    to wait for future fixes. The register tables are likely bloated
+    with power-on<br>
+    reset values that need to be pruned anyway (there is a FIXME added
+    to that<br>
+    effect).<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_probe(struct i2c_client *adapter,
++			const struct i2c_device_id *device_id);
++static int ov5640_remove(struct i2c_client *client);
+</pre>
+      </blockquote>
+      <pre wrap="">No forward declarations please.</pre>
+    </blockquote>
+    <br>
+    Fixed, more FSL-isms.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_read_reg(struct ov5640_dev *sensor, u16 reg, u8 *val)
++{
++	u8 reg_buf[2] = {0};
++	u8 read_val = 0;
++
++	reg_buf[0] = reg &gt;&gt; 8;
++	reg_buf[1] = reg &amp; 0xff;
++
++	if (2 != i2c_master_send(sensor-&gt;i2c_client, reg_buf, 2)) {
++		v4l2_err(&amp;sensor-&gt;sd, "%s: write reg error: reg=%x\n",
++			__func__, reg);
++		return -EIO;
++	}
++
++	if (1 != i2c_master_recv(sensor-&gt;i2c_client, &amp;read_val, 1)) {
++		v4l2_err(&amp;sensor-&gt;sd, "%s: read reg error: reg=%x, val=%x\n",
++			__func__, reg, read_val);
++		return -EIO;
++	}
+</pre>
+      </blockquote>
+      <pre wrap="">Wouldn't i2c_transfer() be more efficient here ?</pre>
+    </blockquote>
+    <br>
+    Yep, done, for every register access function.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	*val = read_val;
++	return 0;
++}
++
++#define OV5640_READ_REG(s, r, v) {				\
++		ret = ov5640_read_reg((s), (r), (v));		\
++		if (ret)					\
++			return ret;				\
++	}
+</pre>
+      </blockquote>
+      <pre wrap="">No. No. No no no. Don't ever return from a macro. Hiding the return makes 
+following the code flow much more difficult, it's just asking for trouble.
+
+And don't use externally defined variables (ret in this case), that's also 
+asking for trouble.
+</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_mod_reg(struct ov5640_dev *sensor, u16 reg,
++			  u8 mask, u8 val)
++{
++	u8 readval;
++	int ret;
++
++	OV5640_READ_REG(sensor, reg, &amp;readval);
++
++	readval &amp;= ~mask;
++	val &amp;= mask;
++	val |= readval;
++
++	OV5640_WRITE_REG(sensor, reg, val);
++	return 0;
++}
+
+If you need to modify registers a lot, switch to regmap for register access. 
+It will provide you with a cache, removing the need to read registers back 
+from the device.</pre>
+      </blockquote>
+    </blockquote>
+    <br>
+    ov5640_mod_reg() is only called in a few places. If this needs more
+    use<br>
+    later, will convert to regmap.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite"> </blockquote>
+      <blockquote type="cite">
+        <pre wrap="">+/* download ov5640 settings to sensor through i2c */
++static int ov5640_load_regs(struct ov5640_dev *sensor,
++			    struct reg_value *regs,
++			    int size)
+</pre>
+      </blockquote>
+      <pre wrap="">size is never negative.
+</pre>
+    </blockquote>
+    <br>
+    Fixed, actually new prototype is much simpler:<br>
+    <br>
+    static int ov5640_load_regs(struct ov5640_dev *sensor,<br>
+    ��� ��� ��� ��� const struct ov5640_mode_info *mode);<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+{
++	register u32 delay_ms = 0;
++	register u16 reg_addr = 0;
++	register u8 mask = 0;
++	register u8 val = 0;
+</pre>
+      </blockquote>
+      <pre wrap="">register ? The compiler is nowadays likely smarter than us when it comes to 
+register allocation.</pre>
+    </blockquote>
+    <br>
+    Yeah, nutty. I didn't write that, more old FSL-isms.<br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_get_HTS(struct ov5640_dev *sensor)
++{
++	 /* read HTS from register settings */
++	u16 HTS;
+</pre>
+      </blockquote>
+      <pre wrap="">Function names and variables are lower case.
+</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_set_bandingfilter(struct ov5640_dev *sensor)
++{
++	int prev_vts;
++	int band_step60, max_band60, band_step50, max_band50;
+</pre>
+      </blockquote>
+      <pre wrap="">Aren't these values unsigned ?
+</pre>
+    </blockquote>
+    <br>
+    Yep, fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_set_AE_target(struct ov5640_dev *sensor, int target)
++{
++	/* stable in high */
++	int fast_high, fast_low;
+</pre>
+      </blockquote>
+      <pre wrap="">Aren't these values unsigned ?</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	int ret;
++
++	sensor-&gt;ae_low = target * 23 / 25;	/* 0.92 */
++	sensor-&gt;ae_high = target * 27 / 25;	/* 1.08 */
++
++	fast_high = sensor-&gt;ae_high&lt;&lt;1;
+</pre>
+      </blockquote>
+      <pre wrap="">Missing spaces around &lt;&lt;</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_set_virtual_channel(struct ov5640_dev *sensor)
++{
++	u8 temp, channel = sensor-&gt;ep.base.id;
+</pre>
+      </blockquote>
+      <pre wrap="">The endpoint id isn't meant to select a virtual channel. V4L2 has no virtual 
+channel API at the moment, you can hardcode the VC to 0 for now.</pre>
+    </blockquote>
+    <br>
+    Yes, imx-media bridge driver _really_ needs a subdev/V4L2 API to<br>
+    set the virtual channel that a CSI-2 sensor will transmit on,
+    because<br>
+    it fully supports receiving on any of the 4 virtual channels (via
+    the<br>
+    4 source pads from the imx6-mipi-csi2 / CSI2IPU gasket entity).<br>
+    <br>
+    For now I've hardcoded the ov5640 to transmit over channel 1. This
+    is<br>
+    good for the imx-media graph because it allows simultaneous capture<br>
+    from a parallel sensor via ipu1_csi0, while the ov5640 captures via<br>
+    ipu1_csi1.<br>
+    <br>
+    Channel 1 may not be good for other bridges though. Maybe this would<br>
+    be a good candidate for a module parameter.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	int ret;
++
++	OV5640_READ_REG(sensor, 0x4814, &amp;temp);
++	temp &amp;= ~(3 &lt;&lt; 6);
++	temp |= (channel &lt;&lt; 6);
++	OV5640_WRITE_REG(sensor, 0x4814, temp);
++
++	return 0;
++}
++
++static enum ov5640_mode
++ov5640_find_nearest_mode(struct ov5640_dev *sensor,
++			 int width, int height)
+</pre>
+      </blockquote>
+      <pre wrap="">How about using v4l2_find_nearest_format() ?</pre>
+    </blockquote>
+    <br>
+    It doesn't really fit ATM, see below.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite"> <br>
+      <blockquote type="cite">
+        <pre wrap="">+
++	ret = ov5640_set_stream(sensor, true);
+</pre>
+      </blockquote>
+      <pre wrap="">This will turn streaming on when you set the format, which I don't think is 
+correct. You should only turn streaming on in the .s_stream() operation. The 
+same comment applies to the previous function.</pre>
+    </blockquote>
+    <br>
+    Fixed, FSL-ism. Tested and still works fine.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_change_mode(struct ov5640_dev *sensor,
++			      enum ov5640_frame_rate frame_rate,
++			      enum ov5640_mode mode,
++			      enum ov5640_mode orig_mode)
++{
++	enum ov5640_downsize_mode dn_mode, orig_dn_mode;
++	struct reg_value *mode_data = NULL;
++	int mode_size = 0;
++	int ret = 0;
+</pre>
+      </blockquote>
+      <pre wrap="">No need to initialize ret to 0.
+</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+		sensor-&gt;fmt.width = 640;
++		sensor-&gt;fmt.height = 480;
+</pre>
+      </blockquote>
+      <pre wrap="">Don't reset the format here. The format must be preserved across subdev 
+open/close.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++/* restore the last set video mode after chip power-on */
++static int ov5640_restore_mode(struct ov5640_dev *sensor)
++{
++	int ret = 0;
+</pre>
+      </blockquote>
+    </blockquote>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">No need to initialize ret to 0.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	/* first we need to set some initial register values */
++	ret = ov5640_change_mode(sensor, sensor-&gt;current_fr,
++				    ov5640_mode_INIT, ov5640_mode_INIT);
+</pre>
+      </blockquote>
+      <pre wrap="">I wouldn't use ov5640_change_mode() here. You only need to apply the init 
+register values, just call ov5640_load_regs(). The rest of the 
+ov5640_change_mode() isn't needed, as you're calling it below. This will also 
+allow you to get rid of ov5640_mode_INIT, simplifying the logic.</pre>
+    </blockquote>
+    <br>
+    Fixed. I created an init register table, ov5640_mode_init_data,
+    which is<br>
+    loaded by ov5640_restore_mode().<br>
+    <br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite"> <br>
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_regulators_on(struct ov5640_dev *sensor)
++{
++	int ret;
++
++	if (sensor-&gt;io_regulator) {
++		ret = regulator_enable(sensor-&gt;io_regulator);
++		if (ret) {
++			v4l2_err(&amp;sensor-&gt;sd, "io reg enable failed\n");
++			return ret;
++		}
++	}
++	if (sensor-&gt;core_regulator) {
++		ret = regulator_enable(sensor-&gt;core_regulator);
++		if (ret) {
++			v4l2_err(&amp;sensor-&gt;sd, "core reg enable failed\n");
++			return ret;
++		}
++	}
++	if (sensor-&gt;gpo_regulator) {
++		ret = regulator_enable(sensor-&gt;gpo_regulator);
++		if (ret) {
++			v4l2_err(&amp;sensor-&gt;sd, "gpo reg enable failed\n");
++			return ret;
++		}
++	}
++	if (sensor-&gt;analog_regulator) {
++		ret = regulator_enable(sensor-&gt;analog_regulator);
++		if (ret) {
++			v4l2_err(&amp;sensor-&gt;sd, "analog reg enable failed\n");
++			return ret;
++		}
++	}
+</pre>
+      </blockquote>
+      <pre wrap="">Maybe you should use the bulk regulator API ?</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++/* --------------- Subdev Operations --------------- */
++
++static int ov5640_s_power(struct v4l2_subdev *sd, int on)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	int ret;
++
++	v4l2_info(sd, "power %s\n", on ? "ON" : "OFF");
++
++	if (on &amp;&amp; !sensor-&gt;on) {
+</pre>
+      </blockquote>
+      <pre wrap="">The .s_power() calls need to be ref-counted, similarly to how the regulator 
+enable/disable calls work. See the mt9p031 sensor driver for an example.
+</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+		if (sensor-&gt;xclk)
++			clk_prepare_enable(sensor-&gt;xclk);
++
++		ret = ov5640_regulators_on(sensor);
++		if (ret)
++			return ret;
++
++		ov5640_reset(sensor);
++		ov5640_power(sensor, true);
++
++		ret = ov5640_init_slave_id(sensor);
+</pre>
+      </blockquote>
+      <pre wrap="">Why is this needed ?</pre>
+    </blockquote>
+    <br>
+    Because on SabreLite, the ov5642 is at the same default<br>
+    i2c slave address, so they both need to answer to a non-default<br>
+    address.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *a)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	struct v4l2_fract *timeperframe = &amp;a-&gt;parm.capture.timeperframe;
++	enum ov5640_frame_rate frame_rate;
++	u32 tgt_fps;	/* target frames per secound */
++	int ret = 0;
+</pre>
+      </blockquote>
+      <pre wrap="">No need to initialize ret to 0.
+</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	else {
++		v4l2_err(&amp;sensor-&gt;sd, "frame rate %u not supported!\n",
++			 tgt_fps);
+</pre>
+      </blockquote>
+      <pre wrap="">Don't print an error message that is userspace-triggerable, we have enough 
+ways for applications to flood the kernel log already :-)
+</pre>
+    </blockquote>
+    <br>
+    Removed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_get_fmt(struct v4l2_subdev *sd,
++			  struct v4l2_subdev_pad_config *cfg,
++			  struct v4l2_subdev_format *format)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++
++	if (format-&gt;pad != 0)
++		return -EINVAL;
++
++	format-&gt;format = sensor-&gt;fmt;
+</pre>
+      </blockquote>
+      <pre wrap="">You need to handle the TRY format here. You can have a look at the mt9p031 
+driver for an example on how to do so.
+</pre>
+    </blockquote>
+    <br>
+    Right, that was caught and fixed earlier.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_set_fmt(struct v4l2_subdev *sd,
++			  struct v4l2_subdev_pad_config *cfg,
++			  struct v4l2_subdev_format *format)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	enum ov5640_mode new_mode;
++	int ret;
++
++	if (format-&gt;pad != 0)
++		return -EINVAL;
++
++	if (format-&gt;which == V4L2_SUBDEV_FORMAT_TRY) {
++		ret = ov5640_try_fmt_internal(sd, &amp;format-&gt;format, NULL);
++		if (ret)
++			return ret;
+</pre>
+      </blockquote>
+      <pre wrap="">You can move this code above the test to avoid the duplicated call below.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+		cfg-&gt;try_fmt = format-&gt;format;
+</pre>
+      </blockquote>
+      <pre wrap="">Please use the v4l2_subdev_get_try_format() function to get the try format, 
+don't dereference cfg directly.</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_set_hue(struct ov5640_dev *sensor, int value)
++{
++	int ret;
++
++	if (value) {
++		OV5640_MOD_REG(sensor, 0x5580, 1 &lt;&lt; 0, 1 &lt;&lt; 0);
++		OV5640_WRITE_REG16(sensor, 0x5581, value);
++	} else
++		OV5640_MOD_REG(sensor, 0x5580, 1 &lt;&lt; 0, 0);
+</pre>
+      </blockquote>
+      <pre wrap="">According to the kernel coding style, you need curly braces around the else 
+branch if you use them around the if branch.</pre>
+    </blockquote>
+    <br>
+    Fixed everywhere.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite"> <br>
+      <br>
+      <blockquote type="cite">
+        <pre wrap="">+
++#if 0
+</pre>
+      </blockquote>
+      <pre wrap="">No compiled-out code please.</pre>
+    </blockquote>
+    <br>
+    Removed ov5640_set_green_balance().<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+static int ov5640_set_green_balance(struct ov5640_dev *sensor, int value)
++{
++	int ret;
++
++	if (sensor-&gt;awb_on)
++		return -EINVAL;
++
++	OV5640_WRITE_REG(sensor, 0x3403, value &amp; 0xff);
++	OV5640_WRITE_REG(sensor, 0x3402, (value &amp; 0xf00) &gt;&gt; 8);
++	return 0;
++}
++#endif
++
+&lt;snip&gt;
++
++static int ov5640_set_gain(struct ov5640_dev *sensor, int value)
++{
++	int ret;
++
++	if (sensor-&gt;agc_on)
++		return -EINVAL;
+</pre>
+      </blockquote>
+      <pre wrap="">You can create a cluster with the autogain and manual gain controls 
+(v4l2_ctrl_auto_cluster) to have the control framework disabling the manual 
+control automatically when autogain is enabled.</pre>
+    </blockquote>
+    <br>
+    Done. Also made white-balance and exposure auto clusters as well.<br>
+    And in the process, got rid of the control table as Hans had
+    suggested<br>
+    earlier.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	OV5640_WRITE_REG16(sensor, 0x350a, value &amp; 0x3ff);
++	return 0;
++}
++
++static int ov5640_get_gain(struct ov5640_dev *sensor)
++{
++	u16 gain;
++	int ret;
++
++	if (sensor-&gt;agc_on)
++		return -EINVAL;
++
++	OV5640_READ_REG16(sensor, 0x350a, &amp;gain);
++
++	return gain &amp; 0x3ff;
++}
++
++#if 0
++static int ov5640_set_test_pattern(struct ov5640_dev *sensor, int value)
++{
++	int ret;
++
++	OV5640_MOD_REG(sensor, 0x503d, 0xa4, value ? 0xa4 : 0);
++	return 0;
++}
++#endif
+</pre>
+      </blockquote>
+      <pre wrap="">You can use a control to expose the test pattern function, it's quite useful.</pre>
+    </blockquote>
+    <br>
+    Done, as a menu control for color bars.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+static struct ov5640_control *ov5640_get_ctrl(int id, int *index)
++{
++	struct ov5640_control *ret = NULL;
++	int i;
+</pre>
+      </blockquote>
+      <pre wrap="">i is never negative, it should be unsigned int.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_restore_ctrls(struct ov5640_dev *sensor)
++{
++	struct ov5640_control *c;
++	int i;
+</pre>
+      </blockquote>
+      <pre wrap="">i is never negative, it should be unsigned int.</pre>
+    </blockquote>
+    <br>
+    restore_ctrls is gone from earlier fixes.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
++{
++	struct ov5640_dev *sensor = ctrl_to_ov5640_dev(ctrl);
++	struct ov5640_control *c;
++	int ret = 0;
++	int i;
++
++	c = ov5640_get_ctrl(ctrl-&gt;id, &amp;i);
+</pre>
+      </blockquote>
+      <pre wrap="">You can inline the function call here as it's not used anywhere else.</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_init_controls(struct ov5640_dev *sensor)
++{
++	struct ov5640_control *c;
+</pre>
+      </blockquote>
+      <pre wrap="">I would name this ctrl or control, c can be a bit confusing. You can also 
+declare it inside the loop.</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	int i;
+</pre>
+      </blockquote>
+      <pre wrap="">i can never be negative, you can make it an unsigned int.
+</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	v4l2_ctrl_handler_init(&amp;sensor-&gt;ctrl_hdl, OV5640_NUM_CONTROLS);
++
++	for (i = 0; i &lt; OV5640_NUM_CONTROLS; i++) {
++		c = &amp;ov5640_ctrls[i];
++
++		v4l2_ctrl_new_std(&amp;sensor-&gt;ctrl_hdl, &amp;ov5640_ctrl_ops,
++				  c-&gt;ctrl.id, c-&gt;ctrl.minimum, c-
+ctrl.maximum,
++				  c-&gt;ctrl.step, c-&gt;ctrl.default_value);
++	}
++
++	sensor-&gt;sd.ctrl_handler = &amp;sensor-&gt;ctrl_hdl;
++	if (sensor-&gt;ctrl_hdl.error) {
++		int err = sensor-&gt;ctrl_hdl.error;
++
++		v4l2_ctrl_handler_free(&amp;sensor-&gt;ctrl_hdl);
++
++		v4l2_err(&amp;sensor-&gt;sd, "%s: error %d\n", __func__, err);
+</pre>
+      </blockquote>
+      <pre wrap="">I'm not sure this brings much value.</pre>
+    </blockquote>
+    <br>
+    Removed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite"> <br>
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_enum_frame_interval(
++	struct v4l2_subdev *sd,
++	struct v4l2_subdev_pad_config *cfg,
++	struct v4l2_subdev_frame_interval_enum *fie)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	enum ov5640_mode mode;
++
++	if (fie-&gt;pad != 0)
++		return -EINVAL;
++	if (fie-&gt;index &lt; 0 || fie-&gt;index &gt;= ov5640_num_framerates)
++		return -EINVAL;
++
++	if (fie-&gt;width == 0 || fie-&gt;height == 0)
++		return -EINVAL;
++
++	mode = ov5640_find_nearest_mode(sensor, fie-&gt;width, fie-&gt;height);
+</pre>
+      </blockquote>
+      <pre wrap="">You should find an exact mode here, not the nearest one. If with and height 
+don't match, return -EINVAL. That will replace with above width == 0 and 
+height == 0 test.</pre>
+    </blockquote>
+    <br>
+    Fixed, I modified ov5640_find_mode() (renamed from
+    ov5640_find_nearest_mode())<br>
+    to take a "nearest" boolean, which is passed as false here.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	dev_dbg(sensor-&gt;dev, "%dx%d: [%d] = %d fps\n",
++		fie-&gt;width, fie-&gt;height, fie-&gt;index, fie-
+interval.denominator);
+</pre>
+      </blockquote>
+      <pre wrap="">I'm not sure this is very useful, you can use ftrace if you want to trace 
+function calls.
+</pre>
+    </blockquote>
+    <br>
+    Removed.<br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	return 0;
++}
++
++static int ov5640_g_input_status(struct v4l2_subdev *sd, u32 *status)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++
++	*status = !sensor-&gt;on ? V4L2_IN_ST_NO_POWER : 0;
++
++	return 0;
++}
++
++static int ov5640_s_routing(struct v4l2_subdev *sd, u32 input,
++			    u32 output, u32 config)
++{
++	return (input != 0) ? -EINVAL : 0;
++}
+</pre>
+      </blockquote>
+      <pre wrap="">The g_input_status and s_routing subdev operations are not mandatory, you 
+don't have to implement them as the sensor doesn't have multiple inputs.</pre>
+    </blockquote>
+    <br>
+    Removed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++
++	v4l2_info(sd, "stream %s\n", enable ? "ON" : "OFF");
+</pre>
+      </blockquote>
+      <pre wrap="">You can use ftrace to trace function calls, there's no need to add debugging 
+statements that duplicate the functionality.</pre>
+    </blockquote>
+    <br>
+    Removed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static struct v4l2_subdev_ops ov5640_subdev_ops = {
++	.core = &amp;ov5640_core_ops,
++	.video = &amp;ov5640_video_ops,
++	.pad = &amp;ov5640_pad_ops,
++};
+</pre>
+      </blockquote>
+      <pre wrap="">All these structures should be static const.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static void ov5640_power(struct ov5640_dev *sensor, bool enable)
++{
++	gpiod_set_value(sensor-&gt;pwdn_gpio, enable ? 0 : 1);
++}
++
++static void ov5640_reset(struct ov5640_dev *sensor)
++{
++	gpiod_set_value(sensor-&gt;reset_gpio, 0);
++
++	/* camera power cycle */
++	ov5640_power(sensor, false);
++	usleep_range(5000, 10000);
++	ov5640_power(sensor, true);
++	usleep_range(5000, 10000);
++
++	gpiod_set_value(sensor-&gt;reset_gpio, 1);
++	usleep_range(1000, 2000);
++
++	gpiod_set_value(sensor-&gt;reset_gpio, 0);
++	usleep_range(5000, 10000);
++}
++
++static void ov5640_get_regulators(struct ov5640_dev *sensor)
++{
++	sensor-&gt;io_regulator = devm_regulator_get(sensor-&gt;dev, "DOVDD");
++	if (!IS_ERR(sensor-&gt;io_regulator)) {
++		regulator_set_voltage(sensor-&gt;io_regulator,
++				      OV5640_VOLTAGE_DIGITAL_IO,
++				      OV5640_VOLTAGE_DIGITAL_IO);
++	} else {
++		dev_dbg(sensor-&gt;dev, "%s: no io voltage reg found\n",
++			__func__);
++		sensor-&gt;io_regulator = NULL;
+</pre>
+      </blockquote>
+      <pre wrap="">How about making the power supplies mandatory in DT instead ? They are 
+mandatory after all, if they're not controllable DT should just declare fixed 
+supplies.</pre>
+    </blockquote>
+    <br>
+    I guess that makes sense. They are now mandatory.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct device *dev = &amp;client-&gt;dev;
++	struct device_node *endpoint;
++	struct ov5640_dev *sensor;
++	int i, xclk, ret;
+</pre>
+      </blockquote>
+      <pre wrap="">i and xclk are never negative, you can make them unsigned int.</pre>
+    </blockquote>
+    <br>
+    This was removed from earlier cleanups.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	sensor = devm_kzalloc(dev, sizeof(struct ov5640_dev), GFP_KERNEL);
+</pre>
+      </blockquote>
+      <pre wrap="">Please use sizeof(*variable) instead of sizeof(type).</pre>
+    </blockquote>
+    <br>
+    Done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">devm_kzalloc() doesn't play nicely with dynamic removal of devices. We're in 
+the process of fixing related race conditions in the media subsystem. In order 
+not to make the problem worse, please use kzalloc() instead.
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+	if (!sensor)
++		return -ENOMEM;
++
++	sensor-&gt;i2c_client = client;
++	sensor-&gt;dev = dev;
+</pre>
+      </blockquote>
+      <pre wrap="">Do you really need to store both i2c_client and dev, given that the latter is 
+just &amp;client-&gt;dev ?</pre>
+    </blockquote>
+    <br>
+    It was only for convenience, but sensor-&gt;dev was now only used in
+    a<br>
+    couple places, so sensor-&gt;dev removed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+	sensor-&gt;fmt.code = MEDIA_BUS_FMT_UYVY8_2X8;
++	sensor-&gt;fmt.width = 640;
++	sensor-&gt;fmt.height = 480;
++	sensor-&gt;fmt.field = V4L2_FIELD_NONE;
++	sensor-&gt;streamcap.capability = V4L2_MODE_HIGHQUALITY |
++					   V4L2_CAP_TIMEPERFRAME;
+</pre>
+      </blockquote>
+      <pre wrap="">Please fix the indentation.</pre>
+    </blockquote>
+    <br>
+    Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	v4l2_of_parse_endpoint(endpoint, &amp;sensor-&gt;ep);
++	if (sensor-&gt;ep.bus_type != V4L2_MBUS_CSI2) {
++		dev_err(dev, "invalid bus type, must be MIPI CSI2\n");
++		return -EINVAL;
+</pre>
+      </blockquote>
+      <pre wrap="">You're leaking endpoint here. You should move the of_node_put() call right 
+after the v4l2_of_parse_endpoint() call.</pre>
+    </blockquote>
+    <br>
+    oops, Fixed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	/* get system clock (xclk) frequency */
++	ret = of_property_read_u32(dev-&gt;of_node, "xclk", &amp;xclk);
+</pre>
+      </blockquote>
+      <pre wrap="">Instead of adding a custom DT property for this, use assigned-clock-rates. You 
+won't need to set it manually in the driver, and can verify its frequency with 
+clk_get_rate().</pre>
+    </blockquote>
+    <br>
+    This was done in earlier fixups.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	if (!ret) {
++		if (xclk &lt; OV5640_XCLK_MIN || xclk &gt; OV5640_XCLK_MAX) {
+</pre>
+      </blockquote>
+      <pre wrap="">Are your register tables above independent of the clock frequency ? You should 
+ideally compute register values at runtime instead of hardcoding them, but 
+given the lack of information from Omnivision I understand this isn't 
+possible. You thus need to be stricter here and reject any value other than 
+the nominal frequency.</pre>
+    </blockquote>
+    <br>
+    I went back and looked at the original driver from Freescale that
+    these<br>
+    register tables are based on, and that driver does allow a range
+    between<br>
+    6 and 24 MHz. I've updated the min/max for xclk to that range. I
+    agree<br>
+    though that this will need some experimentation to verify these xclk
+    ranges<br>
+    actually work.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+
++	/* get system clock (xclk) */
++	sensor-&gt;xclk = devm_clk_get(dev, "xclk");
++	if (!IS_ERR(sensor-&gt;xclk)) {
++		if (!sensor-&gt;xclk_freq) {
++			dev_err(dev, "xclk requires xclk frequency!\n");
++			return -EINVAL;
++		}
++		clk_set_rate(sensor-&gt;xclk, sensor-&gt;xclk_freq);
++	} else {
++		/* assume system clock enabled by default */
++		sensor-&gt;xclk = NULL;
+</pre>
+      </blockquote>
+      <pre wrap="">Please don't. The clock should be mandatory.</pre>
+    </blockquote>
+    <br>
+    This was done in earlier fixups.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	}
++
++	/* request power down pin */
++	sensor-&gt;pwdn_gpio = devm_gpiod_get(dev, "pwdn", GPIOD_OUT_HIGH);
+</pre>
+      </blockquote>
+      <pre wrap="">Are the GPIOs mandatory or optional ? Can a system tie some of them to ground 
+or a voltage rail, or do they need to always be manually controllable ?</pre>
+    </blockquote>
+    <br>
+    Yes, they could be tied to ground or a rail, and are not required. I<br>
+    made both reset and pwdn gpios optional.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <pre wrap="">
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+
++	ret = ov5640_s_power(&amp;sensor-&gt;sd, 1);
++	if (ret)
++		goto entity_cleanup;
++	ret = ov5640_init_controls(sensor);
++	if (ret)
++		goto power_off;
++
++	ret = ov5640_s_power(&amp;sensor-&gt;sd, 0);
++	if (ret)
++		goto free_ctrls;
+</pre>
+      </blockquote>
+      <pre wrap="">Writing the controls here is pointless, as powering the chip down will lose 
+all the values. You shouldn't call v4l2_ctrl_handler_setup() in 
+ov5640_init_controls(), and you can then remove the ov5640_s_power() calls 
+here.</pre>
+    </blockquote>
+    <br>
+    Good idea, done.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++free_ctrls:
++	v4l2_ctrl_handler_free(&amp;sensor-&gt;ctrl_hdl);
++power_off:
++	ov5640_s_power(&amp;sensor-&gt;sd, 0);
++entity_cleanup:
++	media_entity_cleanup(&amp;sensor-&gt;sd.entity);
++	ov5640_regulators_off(sensor);
+</pre>
+      </blockquote>
+      <pre wrap="">Won't ov5640_s_power(0) already disable the regulators ?</pre>
+    </blockquote>
+    <br>
+    Not applicable anymore, as there's no need to enable power in probe.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+	return ret;
++}
++
++/*!
++ * ov5640 I2C detach function
++ *
++ * @param client            struct i2c_client *
++ * @return  Error code indicating success or failure
++ */
+</pre>
+      </blockquote>
+      <pre wrap="">That's not the kerneldoc comment style. Given that this is the only documented 
+function, and that the comment is completely useless, you can just drop it.
+</pre>
+    </blockquote>
+    <br>
+    yuck, old FSL-isms, removed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+static int ov5640_remove(struct i2c_client *client)
++{
++	struct v4l2_subdev *sd = i2c_get_clientdata(client);
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++
++	ov5640_regulators_off(sensor);
++
++	v4l2_async_unregister_subdev(&amp;sensor-&gt;sd);
++	media_entity_cleanup(&amp;sensor-&gt;sd.entity);
++	v4l2_device_unregister_subdev(sd);
+</pre>
+      </blockquote>
+      <pre wrap="">This function is called by v4l2_async_unregister_subdev(), there's no need to 
+duplicate it.</pre>
+    </blockquote>
+    <br>
+    Removed.<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+MODULE_AUTHOR("Freescale Semiconductor, Inc.");
+</pre>
+      </blockquote>
+      <pre wrap="">MODULE_AUTHOR isn't a synonym for copyright ownership. I don't think you 
+should add Freescale as an author. If you know who wrote the original code you 
+can list that developer explicitly.</pre>
+    </blockquote>
+    <br>
+    I have no clue who the original author was, I just removed<br>
+    MODULE_AUTHOR(s).<br>
+    <br>
+    <blockquote cite="mid:15482412.XOGz6nc3Rt@avalon" type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+MODULE_AUTHOR("Steve Longerbeam <a class="moz-txt-link-rfc2396E" href="mailto:steve_longerbeam@mentor.com">&lt;steve_longerbeam@mentor.com&gt;</a>");
++MODULE_DESCRIPTION("OV5640 MIPI Camera Subdev Driver");
++MODULE_LICENSE("GPL");
++MODULE_VERSION("1.0");
+</pre>
+      </blockquote>
+      <pre wrap="">Version numbers are never updated. I wouldn't bother adding one.</pre>
+    </blockquote>
+    <br>
+    Removed.<br>
+    <br>
+    Steve<br>
+    <br>
+  </body>
+</html>
+
+--------------B6339356D7EB75AE990F9013--
