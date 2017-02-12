@@ -1,52 +1,76 @@
-From: Willy Tarreau <w@1wt.eu>
-Subject: Re: [PATCH] ARM: dts: armada-385-synology-ds116: add support for
- Synology DS116 NAS
-Date: Sun, 12 Feb 2017 16:44:14 +0100
-Message-ID: <20170212154414.GA30384@1wt.eu>
-References: <1486805073-15534-1-git-send-email-w@1wt.eu>
- <20170212004031.GA7328@lunn.ch> <20170212005350.GA18612@1wt.eu>
- <20170212011744.GB7328@lunn.ch> <20170212012418.GA17841@1wt.eu>
- <20170212153855.GA17141@lunn.ch>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/1] media: platform: Renesas IMR driver
+Date: Sun, 12 Feb 2017 17:51:03 +0200
+Message-ID: <1770632.4GFlW6r2cg@avalon>
+References: <20170211200207.273799464@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170212153855.GA17141@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Arnaud Ebalard <arno@natisbad.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170211200207.273799464-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 12, 2017 at 04:38:55PM +0100, Andrew Lunn wrote:
-> On Sun, Feb 12, 2017 at 02:24:18AM +0100, Willy Tarreau wrote:
-> > On Sun, Feb 12, 2017 at 02:17:44AM +0100, Andrew Lunn wrote:
-> > > > But won't that squat the I/O address and prevent me from using all the
-> > > > other codes via the regular serial port ?
-> > > 
-> > > Nope. That driver hijacks the serial port during shutdown to actually
-> > > turn the power off. The rest of the time, it does not touch the serial
-> > > port. Userspace, or the rest of the kernel is free to use it.
-> > 
-> > OK so I should declare both the serial and the power-off device at the
-> > same address ? Excuse-me for the dumb question but I'm not much used to
-> > doing uncommon things in DTS files :-/
-> 
-> Hi Willy
-> 
-> What you have in v2 and v3 looks good. It could be considered a bit of
-> a hack, two nodes for the same hardware block. But they are used at
-> different times, normal runtime, and late in the shutdown. So it works
-> out O.K.
+Hi Sergei,
 
-OK thanks for confirming :-)
+(CC'ing the dri-evel mailing list)
 
-Willy
+Thank you for the patch.
+
+On Saturday 11 Feb 2017 23:02:01 Sergei Shtylyov wrote:
+> From: Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> The image renderer light extended 4 (IMR-LX4) or the distortion correction
+> engine is a drawing processor with a simple  instruction system capable of
+> referencing data on an external memory as 2D texture data and performing
+> texture mapping and drawing with respect to any shape that is split into
+> triangular objects.
+> 
+> This V4L2 memory-to-memory device driver only supports image renderer found
+> in the R-Car gen3 SoCs; the R-Car gen2 support  can be added later...
+
+Let's start with the main question : given that this is a rendering engine, it 
+looks like it should use the DRM subsystem.
+
+> [Sergei: merged 2 original patches, added the patch description, removed
+> unrelated parts,  added the binding document, ported the driver to the
+> modern kernel, renamed the UAPI header file and the guard  macros to match
+> the driver name, extended the copyrights, fixed up Kconfig prompt/depends/
+> help, made use of the BIT()/GENMASK() macros, sorted #include's, removed
+> leading  dots and fixed grammar in the comments, fixed up indentation to
+> use tabs where possible, renamed IMR_DLSR to IMR_DLPR to match the manual,
+> separated the register offset/bit #define's, removed *inline* from .c file,
+> fixed lines over 80 columns, removed useless parens, operators, casts,
+> braces, variables, #include's, (commented out) statements, and even
+> function, inserted empty line after desclaration, removed extra empty
+> lines, reordered some local variable desclarations, removed calls to
+> 4l2_err() on kmalloc() failure, fixed the error returned by imr_default(),
+> avoided code duplication in the IRQ handler, used '__packed' for the UAPI
+> structures, enclosed the macro parameters in parens, exchanged the values
+> of IMR_MAP_AUTO[SD]G macros.]
+> 
+> Signed-off-by: Konstantin Kozhevnikov
+> <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> Signed-off-by: Sergei Shtylyov
+> <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> ---
+> This patch is against the 'media_tree.git' repo's 'master' branch.
+> 
+>  Documentation/devicetree/bindings/media/rcar_imr.txt |   23
+>  drivers/media/platform/Kconfig                       |   13
+>  drivers/media/platform/Makefile                      |    1
+>  drivers/media/platform/rcar_imr.c                    | 1923 +++++++++++++++
+>  include/uapi/linux/rcar_imr.h                        |   94
+>  5 files changed, 2054 insertions(+)
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
