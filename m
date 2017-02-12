@@ -1,8 +1,10 @@
 From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/2] Add support for HwaCom AmazeTV
-Date: Sun, 12 Feb 2017 20:32:45 +0100
-Message-ID: <20170212193247.22705-1-carlo@caione.org>
+Subject: [PATCH 1/2] devicetree: Add vendor prefix for Hwacom Systems Inc.
+Date: Sun, 12 Feb 2017 20:32:46 +0100
+Message-ID: <20170212193247.22705-2-carlo@caione.org>
+References: <20170212193247.22705-1-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170212193247.22705-1-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
 Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
@@ -10,19 +12,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Add support for HwaCom AmazeTV, one more S905X board.
+Hwacom Systems Inc. is a broadband system integrator and supplier of
+mobile, fixed and IP networks related services as well as
+multimedia application. Website: http://www.hwacom.com/
 
-Carlo Caione (2):
-  devicetree: Add vendor prefix for Hwacom Systems Inc.
-  ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
+Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- .../boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts  | 201 +++++++++++++++++++++
- 4 files changed, 204 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 16d3b5e..a1704a6 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -131,6 +131,7 @@ holt	Holt Integrated Circuits, Inc.
+ honeywell	Honeywell
+ hp	Hewlett Packard
+ holtek	Holtek Semiconductor, Inc.
++hwacom	HwaCom Systems Inc.
+ i2se	I2SE GmbH
+ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
 -- 
 2.9.3
 
