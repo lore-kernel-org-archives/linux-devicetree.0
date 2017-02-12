@@ -1,28 +1,43 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/4] ASoC: sun8i-codec: Convert to SOC_MIXER_ARRAY
-Date: Sun, 12 Feb 2017 14:40:41 +0800
-Message-ID: <CAGb2v67sfVaJXYEwzX9c=5Lo0MjnEUcmWd+z_XHEnaSBsjqk7g@mail.gmail.com>
-References: <20170210094133.11382-1-mylene.josserand@free-electrons.com> <20170210094133.11382-4-mylene.josserand@free-electrons.com>
+From: Willy Tarreau <w@1wt.eu>
+Subject: Re: ARM: dts: rockchip: add the MiQi board's fan definition
+Date: Sun, 12 Feb 2017 08:17:01 +0100
+Message-ID: <20170212071701.GA18263@1wt.eu>
+References: <1486803415-14680-1-git-send-email-w@1wt.eu>
+ <3614963.WjR2ddleWK@phil>
+ <20170211174554.GA14513@1wt.eu>
+ <1552549.5mxCAWQDxc@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170210094133.11382-4-mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1552549.5mxCAWQDxc@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 5:41 PM, Mylène Josserand
-<mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> SOC_MIXER_ARRAY is a simplified function of SND_SOC_DAPM_MIXER
-> which handles automatically the ARRAY_SIZE of controls.
->
-> Update the driver to use SOC_MIXER_ARRAY.
->
-> Signed-off-by: Mylène Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Sun, Feb 12, 2017 at 02:41:35AM +0100, Heiko Stuebner wrote:
+> > I find it sad to waste all the performance
+> > of a 3288 that way, otherwise it's easier to use something like a dirt
+> > a much slower and cheaper cortex A5. But I agree with the point regarding
+> > the gpio-pwm.
+> 
+> Even with the gpio-fan you should see results if you simply add the fan as 
+> active trip point somewhere before the cpufreq trip points. So let the fan get 
+> activated at 50/60� or so.
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Better not do it as-is, the small fan is extremely noisy. That was the
+benefit of the heartbeat mode, it was a poor man's pwm. I'll see what I
+can do with the gpio-pwm. BTW, on all my MiQi, I have raised the critical
+points to 90 degrees, one of my workplace build farm made of 4 MiQi, I
+have connected a large slow fan which start to run above 85 degrees and
+it's enough to prevent the critical point from ever being reached. The
+dissipate heat is very low and the heatsink small so with minimal air
+flow, the temperature drops very quickly.
+
+Thanks,
+Willy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
