@@ -1,63 +1,127 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v13 00/12] power: add power sequence library
-Date: Mon, 13 Feb 2017 13:22:23 +0100
-Message-ID: <16530165.MCAOCP1KgW@aspire.rjw.lan>
-References: <1486776443-2280-1-git-send-email-peter.chen@nxp.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 3/7] media: i2c: max2175: Add MAX2175 support
+Date: Mon, 13 Feb 2017 13:40:07 +0100
+Message-ID: <af2baebb-96af-728d-8801-5fe8e2eadca8@xs4all.nl>
+References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1486479757-32128-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486776443-2280-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frank.li-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1486479757-32128-4-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, February 11, 2017 09:27:11 AM Peter Chen wrote:
-> Hi all,
-> 
-> This is a follow-up for my last power sequence framework patch set [1].
-> According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
-> power sequence instances will be added at postcore_initcall, the match
-> criteria is compatible string first, if the compatible string is not
-> matched between dts and library, it will try to use generic power sequence.
-> 	 
-> The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> if only one power sequence instance is needed, for more power sequences
-> are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
-> 
-> In future, if there are special power sequence requirements, the special
-> power sequence library can be created.
-> 
-> This patch set is tested on i.mx6 sabresx evk using a dts change, I use
-> two hot-plug devices to simulate this use case, the related binding
-> change is updated at patch [1/6], The udoo board changes were tested
-> using my last power sequence patch set.[3]
-> 
-> Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
-> need to power on itself before it can be found by ULPI bus.
-> 
-> Changes for v13:
-> - Add more design descriptions at design doc and fix one build error
->   introduced by v12 wrongly [Patch 2/12]
-> - Add the last three dts patches which were forgotten at last series
-> - Move the comment for usb_create_shared_hcd to correct place [Patch 3/12]
-> - Add sysdev for shared hcd too for xhci-plat.c [Patch 6/12]
-> 
-> Rafael, if the first two power sequence patches are ok for you, would you consider
-> accept these first, the other USB patches can go through USB tree at v4.12-rc1?
+Hi Ramesh,
 
-OK, I'll look at the [1-2/12] in the first place, but please give me some time
-and stop sending new versions of the whole patchset continuously for the time
-being.
+A few little nitpicks:
 
-Also I'm not going to take anything from this series without the Greg's consent,
-just to be clear.
+On 02/07/2017 04:02 PM, Ramesh Shanmugasundaram wrote:
+> This patch adds driver support for the MAX2175 chip. This is Maxim
+> Integrated's RF to Bits tuner front end chip designed for software-defined
+> radio solutions. This driver exposes the tuner as a sub-device instance
+> with standard and custom controls to configure the device.
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> ---
+>  Documentation/media/v4l-drivers/index.rst   |    1 +
+>  Documentation/media/v4l-drivers/max2175.rst |   60 ++
+>  drivers/media/i2c/Kconfig                   |    4 +
+>  drivers/media/i2c/Makefile                  |    2 +
+>  drivers/media/i2c/max2175/Kconfig           |    8 +
+>  drivers/media/i2c/max2175/Makefile          |    4 +
+>  drivers/media/i2c/max2175/max2175.c         | 1438 +++++++++++++++++++++++++++
+>  drivers/media/i2c/max2175/max2175.h         |  108 ++
+>  8 files changed, 1625 insertions(+)
+>  create mode 100644 Documentation/media/v4l-drivers/max2175.rst
+>  create mode 100644 drivers/media/i2c/max2175/Kconfig
+>  create mode 100644 drivers/media/i2c/max2175/Makefile
+>  create mode 100644 drivers/media/i2c/max2175/max2175.c
+>  create mode 100644 drivers/media/i2c/max2175/max2175.h
+> 
 
-Thanks,
-Rafael
+<snip>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +static const struct v4l2_ctrl_config max2175_i2s_en = {
+> +	.ops = &max2175_ctrl_ops,
+> +	.id = V4L2_CID_MAX2175_I2S_ENABLE,
+> +	.name = "I2S Enable",
+> +	.type = V4L2_CTRL_TYPE_BOOLEAN,
+> +	.min = 0,
+> +	.max = 1,
+> +	.step = 1,
+> +	.def = 1,
+> +};
+> +
+> +/*
+> + * HSLS value control LO freq adjacent location configuration.
+> + * Refer to Documentation/media/v4l-drivers/max2175 for more details.
+> + */
+> +static const struct v4l2_ctrl_config max2175_hsls = {
+> +	.ops = &max2175_ctrl_ops,
+> +	.id = V4L2_CID_MAX2175_HSLS,
+> +	.name = "HSLS above/below desired",
+
+The convention is that the descriptions of controls follow the English 'title' rules
+w.r.t. caps. See v4l2-ctrls.c.
+
+This would become: "HSLS Above/Below Desired".
+
+> +	.type = V4L2_CTRL_TYPE_INTEGER,
+
+Shouldn't this be a boolean control?
+
+> +	.min = 0,
+> +	.max = 1,
+> +	.step = 1,
+> +	.def = 1,
+> +};
+> +
+> +/*
+> + * Rx modes below are a set of preset configurations that decides the tuner's
+> + * sck and sample rate of transmission. They are separate for EU & NA regions.
+> + * Refer to Documentation/media/v4l-drivers/max2175 for more details.
+> + */
+> +static const char * const max2175_ctrl_eu_rx_modes[] = {
+> +	[MAX2175_EU_FM_1_2]	= "EU FM 1.2",
+> +	[MAX2175_DAB_1_2]	= "DAB 1.2",
+> +};
+> +
+> +static const char * const max2175_ctrl_na_rx_modes[] = {
+> +	[MAX2175_NA_FM_1_0]	= "NA FM 1.0",
+> +	[MAX2175_NA_FM_2_0]	= "NA FM 2.0",
+> +};
+> +
+> +static const struct v4l2_ctrl_config max2175_eu_rx_mode = {
+> +	.ops = &max2175_ctrl_ops,
+> +	.id = V4L2_CID_MAX2175_RX_MODE,
+> +	.name = "RX MODE",
+
+MODE -> Mode.
+
+> +	.type = V4L2_CTRL_TYPE_MENU,
+> +	.max = ARRAY_SIZE(max2175_ctrl_eu_rx_modes) - 1,
+> +	.def = 0,
+> +	.qmenu = max2175_ctrl_eu_rx_modes,
+> +};
+> +
+> +static const struct v4l2_ctrl_config max2175_na_rx_mode = {
+> +	.ops = &max2175_ctrl_ops,
+> +	.id = V4L2_CID_MAX2175_RX_MODE,
+> +	.name = "RX MODE",
+
+Ditto.
+
+> +	.type = V4L2_CTRL_TYPE_MENU,
+> +	.max = ARRAY_SIZE(max2175_ctrl_na_rx_modes) - 1,
+> +	.def = 0,
+> +	.qmenu = max2175_ctrl_na_rx_modes,
+> +};
+> +
+
+Regards,
+
+	Hans
