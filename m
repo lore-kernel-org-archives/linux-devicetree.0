@@ -1,147 +1,134 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] checks: Add bus checks for PCI buses
-Date: Mon, 13 Feb 2017 14:49:45 -0600
-Message-ID: <CAL_JsqLkfbFhL34y=xyKB0ooSWDUKON2may50MH6zfFG_YVEaQ@mail.gmail.com>
-References: <20170210164717.1234-1-robh@kernel.org> <20170210164717.1234-5-robh@kernel.org>
- <20170213050355.GZ25381@umbus>
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH v6 1/8] devicetree: power: Add battery.txt
+Date: Mon, 13 Feb 2017 12:58:37 -0800
+Message-ID: <CAKvHMgSSpbkX1NMwaDmuJwBcgu6Avy65izAaBGTYongqL51kWQ@mail.gmail.com>
+References: <20170211024340.19491-1-liam@networkimprov.net>
+ <20170211024340.19491-2-liam@networkimprov.net> <ce69f358-ac3b-993d-0639-844856362c9d@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170213050355.GZ25381@umbus>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ce69f358-ac3b-993d-0639-844856362c9d-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 12, 2017 at 11:03 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Fri, Feb 10, 2017 at 10:47:17AM -0600, Rob Herring wrote:
->> Add PCI bridge and device node checks. We identify PCI bridges with
->> 'device_type = "pci"' as only PCI bridges should set that property. For
->> bridges, check that ranges is present and #address-cells and
+Hi Andrew, thanks for the drill-down on BQ27* chips.
+
+On Mon, Feb 13, 2017 at 8:06 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+> On 02/10/2017 08:43 PM, Liam Breck wrote:
+>> From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
 >>
->> For devices, the primary check is the reg property and the unit address.
->> Device unit addresses are in the form DD or DD,F where DD is the
->> device 0-0x1f and F is the function 0-7.
->>
->> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Documentation of static battery characteristics that can be defined
+>> for batteries which cannot self-identify. This information is required
+>> by fuel-gauge and charger chips for proper handling of the battery.
+>
+>
+> I think some of the confusion about what a "smart-battery" binding would
+> look like is due to a miss-understanding what it means to
+> "self-identify". Originally the bq27xxx *was* the chip that lived its
+> whole life inside a battery (the iphone battery is one such example and
+> a good way to test the bq27000). This way it could be factory programmed
+> with the battery's basics and then learn about the individual pack over
+> time to provide better info on time to empty, discharge rates, etc..
+>
+> Eventually, people wanted to have the battery become cheap and
+> replaceable, so fuel-gauges were made that are "system side", and ride
+> along with the device, not the battery. Now this has one big problem,
+> how can we learn about a battery when it may be a new battery every time
+> we boot up? So we added programmable memory to the devices, and
+> programming this memory looks to be what this series is about.
+>
+> Only the battery design info is programmed in this series, but much more
+> battery info can be uploaded, including stuff that is not fixed and
+> therefor cannot be added to the DT. Even the design parameters may not
+> be fix if one changes the battery as different manufactures of the same
+> battery type may have different design capacities.
+>
+> The ideal use-case in a system with a system side gauge is the OS should
+> periodically, or just before shutdown, read the battery's learned info
+> and when the device is powered back up, if the battery serial number
+> matches from before, re-upload this learned info to the gauge so it
+> doesn't have to re-learn everything. All of this will need to happen in
+> user-space, so what we really need is a user-space API for manipulating
+> these properties.
+
+We would need a feature in the driver to get/set the blob of pack- or
+cell-unique data. The userspace api is one sysfs file.
+
+However the DT fixed-battery node could indicate when/how-often the
+object is stored, and where, e.g. filename. If the latter is given,
+the driver should write/read the file itself.
+
+Is there some documentation about what registers should go in this blob?
+
+That concept is beyond the scope of this patchset (and doesn't
+supersede it), but is something I'd like to implement for our chip,
+the *425.
+
+
+> The properties added in this series are okay, and it's good to have some
+> sane defaults in DT, but looking forward this may not be enough to get
+> full use out of these devices.
+
+I'm relieved you're not opposed to our patch :-) Now I just need that
+guidance I mentioned re the chip family...
+
+
+>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 >> ---
->> v2:
->> - Remove bus_type functions. Combine test for bus_type and bridge check
->>   into single check.
->> - Add a check that PCI bridge node name is pci or pcie.
+>>  .../devicetree/bindings/power/supply/battery.txt   | 37 ++++++++++++++++++++++
+>>  1 file changed, 37 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
 >>
->>  checks.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>  dtc.h    |  7 ++++++
->>  2 files changed, 90 insertions(+)
+>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> new file mode 100644
+>> index 0000000..d78a4aa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>> @@ -0,0 +1,37 @@
+>> +Battery Characteristics
+>> +
+>> +Required Properties:
+>> + - compatible: Must be "fixed-battery"
+>> +
+>> +Optional Properties:
+>> + - voltage-min-design-microvolt: drained battery voltage
+>> + - energy-full-design-microwatt-hours: battery design energy
+>> + - charge-full-design-microamp-hours: battery design capacity
+>> +
+>> +Future Properties must be named for the corresponding elements in
+>> +enum power_supply_property, defined in include/linux/power_supply.h.
+>> +
+>> +Batteries must be referenced by chargers and/or fuel-gauges
+>> +using a phandle. The phandle's property should be named
+>> +"monitored-battery".
+>> +
+>> +Example:
+>> +
+>> +     bat: battery {
+>> +             compatible = "fixed-battery";
+>> +             voltage-min-design-microvolt = <3200000>;
+>> +             energy-full-design-microwatt-hours = <5290000>;
+>> +             charge-full-design-microamp-hours = <1430000>;
+>> +     };
+>> +
+>> +     charger: charger@11 {
+>> +             ....
+>> +             monitored-battery = <&bat>;
+>> +             ...
+>> +     };
+>> +
+>> +     fuel_gauge: fuel-gauge@22 {
+>> +             ....
+>> +             monitored-battery = <&bat>;
+>> +             ...
+>> +     };
 >>
->> diff --git a/checks.c b/checks.c
->> index 16d17d20caec..9ebb148f947a 100644
->> --- a/checks.c
->> +++ b/checks.c
->> @@ -702,6 +702,86 @@ static void check_ranges_format(struct check *c, struct dt_info *dti,
->>  }
->>  WARNING(ranges_format, check_ranges_format, NULL, &addr_size_cells);
->>
->> +static const struct bus_type pci_bus = {
->> +     .type = PCI_BUS_TYPE,
->
-> Since you can use the struct pointer itself as a handle on the bus
-> type, I don't think there's any value to having the enum-style type
-> value.  What _would_ be useful is a human readable bus type name.
-
-Okay.
-
->> +};
->> +
->> +static void check_pci_bridge(struct check *c, struct dt_info *dti, struct node *node)
->> +{
->> +     struct property *prop;
->> +
->> +     prop = get_property(node, "device_type");
->> +     if (!prop || strcmp(prop->val.val, "pci"))
->> +             return;
->> +
->> +     node->bus = &pci_bus;
->> +
->> +     if (strncmp(node->name, "pci", node->basenamelen) &&
->> +         strncmp(node->name, "pcie", node->basenamelen))
->> +             FAIL(c, "Node %s node name is not \"pci\" or \"pcie\"",
->> +                          node->fullpath);
->
-> Please use the strneq() macro - I frequently get confused about
-> whether strcmp()/strncmp() comparisons need an ! or not for equality
-> testing.  streq() / strneq() help me remember.
->
->> +
->> +     prop = get_property(node, "ranges");
->> +     if (!prop)
->> +             FAIL(c, "Node %s missing ranges for PCI bridge (or not a bridge)",
->> +                          node->fullpath);
->> +
->> +     if (node_addr_cells(node) != 3)
->> +             FAIL(c, "Node %s incorrect #address-cells for PCI bridge",
->> +                          node->fullpath);
->> +     if (node_size_cells(node) != 2)
->> +             FAIL(c, "Node %s incorrect #size-cells for PCI bridge",
->> +                          node->fullpath);
->> +}
->> +WARNING(pci_bridge, check_pci_bridge, NULL,
->> +     &device_type_is_string, &addr_size_cells);
->> +
->> +static void check_pci_device(struct check *c, struct dt_info *dti, struct node *node)
->> +{
->> +     struct property *prop;
->> +     const char *unitname = get_unitname(node);
->> +     char unit_addr[5];
->> +     unsigned int dev, func, reg;
->> +
->> +     if (!node->parent || !node->parent->bus ||
->> +         (node->parent->bus->type != PCI_BUS_TYPE))
->
-> You can just use node->parent->bus != &pci_bus here.
->
->> +             return;
->> +
->> +     prop = get_property(node, "reg");
->> +     if (!prop)
->> +             return;
->> +
->> +     reg = fdt32_to_cpu(*((cell_t *)prop->val.val));
->> +
->> +     dev = (reg & 0xf800) >> 11;
->> +     func = (reg & 0x700) >> 8;
->> +
->> +     if (reg & 0xff000000)
->> +             FAIL(c, "Node %s PCI reg address is not configuration space",
->> +                          node->fullpath);
->> +
->> +     if (dev > 0x1f)
->> +             FAIL(c, "Node %s PCI device number out of range",
->> +                          node->fullpath);
->> +     if (func > 7)
->> +             FAIL(c, "Node %s PCI function number out of range",
->> +                  node->fullpath);
-
-BTW, I just noticed these 2 checks I can drop. They can never be true
-since I'm masking the values.
-
->> +
->> +     if (func == 0) {
->> +             snprintf(unit_addr, sizeof(unit_addr), "%x", dev);
->> +             if (!strcmp(unitname, unit_addr))
->> +                     return;
->> +     }
->> +
->> +     snprintf(unit_addr, sizeof(unit_addr), "%x,%x", dev, func);
->> +     if (!strcmp(unitname, unit_addr))
->> +             return;
->
-> So as mentioned in my comments to 3/4, the test above, I would put
-> back into unit_address_vs_reg, using a callback in the bus_type which
-> formats a reg into the correct unit address.
-
-Humm, that doesn't really work. The unit address can be in 2 different
-forms when func# is 0. We can have either <dev> or <dev>,0.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
