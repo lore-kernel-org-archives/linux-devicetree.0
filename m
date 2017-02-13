@@ -1,90 +1,80 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 7/7] ARM: rockchip: reanme RK1108 to RV1108
-Date: Mon, 13 Feb 2017 19:10:34 +0800
-Message-ID: <1486984234-32693-1-git-send-email-andy.yan@rock-chips.com>
-References: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486983566-32265-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2yhQFI55V6+gNQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: [PATCH v2 3/3] mfd: wm831x: Add device tree binding document
+Date: Mon, 13 Feb 2017 11:15:14 +0000
+Message-ID: <1486984514-29749-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+References: <1486984514-29749-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486984514-29749-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Rockchip finally named the SOC as RV1108, so change it
-for compatible.
+This is just a very simple initial binding, supporting only registering
+the chip and the GPIOs. More features will be added as support for
+device tree in the driver is expanded.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 ---
 
- Documentation/devicetree/bindings/arm/rockchip.txt   | 4 ++--
- arch/arm/boot/dts/Makefile                           | 2 +-
- arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} | 7 ++++---
- 3 files changed, 7 insertions(+), 6 deletions(-)
- rename arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} (89%)
+Changes since v1:
+ - Added MAINTAINERS update
 
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-index cc4ace6..9901cbd 100644
---- a/Documentation/devicetree/bindings/arm/rockchip.txt
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -111,9 +111,9 @@ Rockchip platforms device tree bindings
-     Required root node properties:
-       - compatible = "rockchip,px5-evb", "rockchip,px5", "rockchip,rk3368";
- 
--- Rockchip RK1108 Evaluation board
-+- Rockchip RV1108 Evaluation board
-     Required root node properties:
--      - compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
-+      - compatible = "rockchip,rv1108-evb", "rockchip,rv1108";
- 
- - Rockchip RK3368 evb:
-     Required root node properties:
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f10fe85..7100227 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -658,7 +658,7 @@ dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pba8.dtb \
- 	arm-realview-pbx-a9.dtb
- dtb-$(CONFIG_ARCH_ROCKCHIP) += \
--	rk1108-evb.dtb \
-+	rv1108-evb.dtb \
- 	rk3036-evb.dtb \
- 	rk3036-kylin.dtb \
- 	rk3066a-bqcurie2.dtb \
-diff --git a/arch/arm/boot/dts/rk1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-similarity index 89%
-rename from arch/arm/boot/dts/rk1108-evb.dts
-rename to arch/arm/boot/dts/rv1108-evb.dts
-index 3956cff..2f5d46b 100644
---- a/arch/arm/boot/dts/rk1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -40,11 +40,11 @@
- 
- /dts-v1/;
- 
--#include "rk1108.dtsi"
-+#include "rv1108.dtsi"
- 
- / {
--	model = "Rockchip RK1108 Evaluation board";
--	compatible = "rockchip,rk1108-evb", "rockchip,rk1108";
-+	model = "Rockchip RV1108 Evaluation board";
-+	compatible = "rockchip,rv1108-evb", "rockchip,rv1108";
- 
- 	memory@60000000 {
- 		device_type = "memory";
-@@ -53,6 +53,7 @@
- 
- 	chosen {
- 		stdout-path = "serial2:1500000n8";
- 	};
- };
- 
+ Documentation/devicetree/bindings/mfd/wm831x.txt | 31 ++++++++++++++++++++++++
+ MAINTAINERS                                      |  1 +
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/wm831x.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
+new file mode 100644
+index 0000000..9771022
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
+@@ -0,0 +1,31 @@
++Cirrus Logic/Wolfson Microelectronics wm831x PMICs
++
++System PMICs with a wide range of additional features.
++
++Required properties:
++
++  - compatible : One of the following chip-specific strings:
++        "wlf,wm8310"
++        "wlf,wm8311"
++        "wlf,wm8312"
++        "wlf,wm8320"
++        "wlf,wm8321"
++        "wlf,wm8325"
++        "wlf,wm8326"
++
++  - reg : I2C slave address when connected using I2C, chip select number when
++    using SPI.
++
++  - gpio-controller : Indicates this device is a GPIO controller.
++  - #gpio-cells : Must be 2. The first cell is the pin number and the
++    second cell is used to specify optional parameters (currently unused).
++
++Example:
++
++wm8310: wm8310@36 {
++	compatible = "wlf,wm8310";
++	reg = <0x36>;
++
++	gpio-controller;
++	#gpio-cells = <2>;
++};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2d8ca28..48fdc82 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13363,6 +13363,7 @@ F:	Documentation/hwmon/wm83??
+ F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+ F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+ F:	Documentation/devicetree/bindings/mfd/arizona.txt
++F:	Documentation/devicetree/bindings/mfd/wm831x.txt
+ F:	arch/arm/mach-s3c64xx/mach-crag6410*
+ F:	drivers/clk/clk-wm83*.c
+ F:	drivers/extcon/extcon-arizona.c
 -- 
-2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
