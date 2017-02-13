@@ -1,195 +1,238 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] drm: convert drivers to use
- drm_of_find_panel_or_bridge
-Date: Mon, 13 Feb 2017 08:47:10 +0100
-Message-ID: <20170213084710.4eabcb15@bbrezillon>
-References: <20170209190558.4784-1-robh@kernel.org>
-        <20170209190558.4784-6-robh@kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 7/8] drm/sun4i: Add various bits and pieces
+ to enable LVDS support on sun4i
+Date: Mon, 13 Feb 2017 09:08:27 +0100
+Message-ID: <20170213080827.6c6zhr4e6amcwli5@lukather>
+References: <20170211174405.28395-1-plaes@plaes.org>
+ <20170211174405.28395-8-plaes@plaes.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170209190558.4784-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="w7bnm7jmol4udjdw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7GSQXCQKGQESWQMFGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170211174405.28395-8-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  9 Feb 2017 13:05:57 -0600
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> Similar to the previous commit, convert drivers open coding OF graph
-> parsing to use drm_of_find_panel_or_bridge instead.
+--w7bnm7jmol4udjdw
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Sat, Feb 11, 2017 at 07:44:04PM +0200, Priit Laes wrote:
+> TODO: We still rely on u-boot for lvds reset bit setup :(
+
+That needs to be figured out before merging :/
+
+You also have a number of checkpatch warnings / errors that needs to
+be fixed.
+
 > 
-> This changes some error messages to debug messages (in the graph core).
-> Graph connections are often "no connects" depending on the particular
-> board, so we want to avoid spurious messages. Plus the kernel is not a
-> DT validator.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 > ---
-> v2:
-> - fix wrong node ptr in imx-ldb
-> - build fixes in kirin and imx drivers
+>  drivers/gpu/drm/sun4i/sun4i_lvds.c | 29 ++++++++++++++++++++
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 54 ++++++++++++++++++++++++++++++++------
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h | 15 +++++++++++
+>  3 files changed, 90 insertions(+), 8 deletions(-)
 > 
->  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c | 64 ++++-------------
->  drivers/gpu/drm/bridge/nxp-ptn3460.c             | 16 ++---
->  drivers/gpu/drm/bridge/parade-ps8622.c           | 16 ++---
->  drivers/gpu/drm/bridge/tc358767.c                | 27 +------
->  drivers/gpu/drm/exynos/exynos_dp.c               | 35 ++++-----
->  drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_rgb.c        | 49 ++++---------
->  drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c     | 27 ++-----
->  drivers/gpu/drm/imx/imx-ldb.c                    | 27 ++-----
->  drivers/gpu/drm/imx/parallel-display.c           | 36 ++--------
->  drivers/gpu/drm/mediatek/mtk_dsi.c               | 23 ++----
->  drivers/gpu/drm/mxsfb/mxsfb_out.c                | 36 ++--------
->  drivers/gpu/drm/rockchip/analogix_dp-rockchip.c  | 26 ++-----
->  drivers/gpu/drm/sun4i/sun4i_rgb.c                | 13 ++--
->  drivers/gpu/drm/sun4i/sun4i_tcon.c               | 90 ++----------------------
->  14 files changed, 88 insertions(+), 397 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-> index 6119b5085501..4614048a4935 100644
-> --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-> +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c
-> @@ -22,7 +22,7 @@
->  #include <linux/of_graph.h>
-> 
->  #include <drm/drmP.h>
-> -#include <drm/drm_panel.h>
-> +#include <drm/drm_of.h>
-> 
->  #include "atmel_hlcdc_dc.h"
-> 
-> @@ -152,29 +152,11 @@ static const struct drm_connector_funcs atmel_hlcdc_panel_connector_funcs = {
->  	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
->  };
-> 
-> -static int atmel_hlcdc_check_endpoint(struct drm_device *dev,
-> -				      const struct of_endpoint *ep)
-> -{
-> -	struct device_node *np;
-> -	void *obj;
-> -
-> -	np = of_graph_get_remote_port_parent(ep->local_node);
-> -
-> -	obj = of_drm_find_panel(np);
-> -	if (!obj)
-> -		obj = of_drm_find_bridge(np);
-> -
-> -	of_node_put(np);
-> -
-> -	return obj ? 0 : -EPROBE_DEFER;
-> -}
-> -
->  static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
-> -				       const struct of_endpoint *ep)
-> +				       const struct device_node *np)
->  {
->  	struct atmel_hlcdc_dc *dc = dev->dev_private;
->  	struct atmel_hlcdc_rgb_output *output;
-> -	struct device_node *np;
->  	struct drm_panel *panel;
->  	struct drm_bridge *bridge;
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_lvds.c b/drivers/gpu/drm/sun4i/sun4i_lvds.c
+> index 2ba4705..de738e5 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_lvds.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_lvds.c
+> @@ -114,6 +114,35 @@ static void sun4i_lvds_encoder_enable(struct drm_encoder *encoder)
+>  	/* encoder->bridge can be NULL; drm_bridge_enable checks for it */
+>  	drm_bridge_enable(encoder->bridge);
+>  
+> +	/* Enable the LVDS */
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+> +			   SUN4I_TCON0_LVDS_IF_ENABLE,
+> +			   SUN4I_TCON0_LVDS_IF_ENABLE);
+> +
+> +	/*
+> +	 * TODO: SUN4I_TCON0_LVDS_ANA0_REG_C and SUN4I_TCON0_LVDS_ANA0_PD
+> +	 * registers span 3 bits, but we only set upper 2 for both
+> +	 * of them based on values taken from Allwinner driver.
+> +	 */
+> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+> +		     SUN4I_TCON0_LVDS_ANA0_CK_EN |
+> +		     SUN4I_TCON0_LVDS_ANA0_REG_V |
+> +		     SUN4I_TCON0_LVDS_ANA0_REG_C |
+> +		     SUN4I_TCON0_LVDS_ANA0_EN_MB |
+> +		     SUN4I_TCON0_LVDS_ANA0_PD |
+> +		     SUN4I_TCON0_LVDS_ANA0_DCHS);
+> +
+> +	udelay(2000);
+> +
+> +	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
+> +		     SUN4I_TCON0_LVDS_ANA1_INIT);
+> +
+> +	udelay(1000);
+> +
+> +	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
+> +			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
+> +		           SUN4I_TCON0_LVDS_ANA1_UPDATE);
+> +
+>  	sun4i_tcon_channel_enable(tcon, 0);
+
+This should be merged in your patch 6.
+
+>  }
+>  
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> index 71d0087..468a3ce 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> @@ -18,6 +18,7 @@
+>  #include <drm/drm_panel.h>
+>  
+>  #include <linux/component.h>
+> +#include <linux/delay.h>
+>  #include <linux/ioport.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> @@ -29,6 +30,7 @@
+>  #include "sun4i_crtc.h"
+>  #include "sun4i_dotclock.h"
+>  #include "sun4i_drv.h"
+> +#include "sun4i_lvds.h"
+>  #include "sun4i_rgb.h"
+>  #include "sun4i_tcon.h"
+>  
+> @@ -169,12 +171,29 @@ void sun4i_tcon0_mode_set(struct sun4i_tcon *tcon,
+>  		     SUN4I_TCON0_BASIC2_V_BACKPORCH(bp));
+>  
+>  	/* Set Hsync and Vsync length */
+> -	hsync = mode->crtc_hsync_end - mode->crtc_hsync_start;
+> -	vsync = mode->crtc_vsync_end - mode->crtc_vsync_start;
+> -	DRM_DEBUG_DRIVER("Setting HSYNC %d, VSYNC %d\n", hsync, vsync);
+> -	regmap_write(tcon->regs, SUN4I_TCON0_BASIC3_REG,
+> -		     SUN4I_TCON0_BASIC3_V_SYNC(vsync) |
+> -		     SUN4I_TCON0_BASIC3_H_SYNC(hsync));
+> +	if (type != DRM_MODE_ENCODER_LVDS) {
+> +		// Not needed for LVDS?
+> +		hsync = mode->crtc_hsync_end - mode->crtc_hsync_start;
+> +		vsync = mode->crtc_vsync_end - mode->crtc_vsync_start;
+> +		DRM_DEBUG_DRIVER("Setting HSYNC %d, VSYNC %d\n", hsync, vsync);
+> +		regmap_write(tcon->regs, SUN4I_TCON0_BASIC3_REG,
+> +			     SUN4I_TCON0_BASIC3_V_SYNC(vsync) |
+> +			     SUN4I_TCON0_BASIC3_H_SYNC(hsync));
+> +	}
+
+This is your patch 5 (and it would be better to put the condition on
+what we know rather than what we assume, we know that it's working for
+RGB, but not for anything else).
+
+> +
+> +	if (type == DRM_MODE_ENCODER_LVDS) {
+> +		/* Setup bit depth */
+> +		/* TODO: Figure out where to get display bit depth
+> +		 * val = (1: 18-bit, 0: 24-bit)
+> +		 * TODO: Should we set more registers:
+> +		 * BIT(28) - LVDS_DIRECTION
+> +		 * BIT(27) - LVDS_MODE
+> +		 * BIT(23) - LVDS_CORRECT_MODE
+> +		 */
+> +		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+> +				   SUN4I_TCON0_LVDS_IF_BITWIDTH,
+> +				   SUN4I_TCON0_LVDS_IF_BITWIDTH);
+> +	}
+
+And this in your patch 6
+
+>  
+>  	/* Setup the polarity of the various signals */
+>  	if (!(mode->flags & DRM_MODE_FLAG_PHSYNC))
+> @@ -183,8 +202,15 @@ void sun4i_tcon0_mode_set(struct sun4i_tcon *tcon,
+>  	if (!(mode->flags & DRM_MODE_FLAG_PVSYNC))
+>  		val |= SUN4I_TCON0_IO_POL_VSYNC_POSITIVE;
+>  
+> +
+> +	/* Set proper DCLK phase value */
+> +	if (type == DRM_MODE_ENCODER_LVDS)
+> +		val |= SUN4I_TCON0_IO_POL_DCLK_PHASE(1);
+> +
+>  	regmap_update_bits(tcon->regs, SUN4I_TCON0_IO_POL_REG,
+> -			   SUN4I_TCON0_IO_POL_HSYNC_POSITIVE | SUN4I_TCON0_IO_POL_VSYNC_POSITIVE,
+> +			   SUN4I_TCON0_IO_POL_HSYNC_POSITIVE |
+> +			   SUN4I_TCON0_IO_POL_VSYNC_POSITIVE |
+> +			   SUN4I_TCON0_IO_POL_DCLK_PHASE_MASK,
+>  			   val);
+
+This is covered by your clk_set_phase already.
+
+>  
+>  	/* Map output pins to channel 0 */
+> @@ -480,6 +506,7 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+>  	struct drm_device *drm = data;
+>  	struct sun4i_drv *drv = drm->dev_private;
+>  	struct sun4i_tcon *tcon;
+> +	const char *mode;
 >  	int ret;
-> @@ -195,13 +177,11 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
-> 
->  	output->encoder.possible_crtcs = 0x1;
-> 
-> -	np = of_graph_get_remote_port_parent(ep->local_node);
-> -
-> -	ret = -EPROBE_DEFER;
-> +	ret = drm_of_find_panel_or_bridge(np, 0, 0, &panel, &bridge);
-> +	if (ret)
-> +		return ret;
-> 
-> -	panel = of_drm_find_panel(np);
->  	if (panel) {
-> -		of_node_put(np);
->  		output->connector.dpms = DRM_MODE_DPMS_OFF;
->  		output->connector.polled = DRM_CONNECTOR_POLL_CONNECT;
->  		drm_connector_helper_add(&output->connector,
-> @@ -226,9 +206,6 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
->  		return 0;
+>  
+>  	tcon = devm_kzalloc(dev, sizeof(*tcon), GFP_KERNEL);
+> @@ -525,7 +552,18 @@ static int sun4i_tcon_bind(struct device *dev, struct device *master,
+>  		goto err_free_clocks;
 >  	}
-> 
-> -	bridge = of_drm_find_bridge(np);
-> -	of_node_put(np);
-> -
->  	if (bridge) {
->  		output->encoder.bridge = bridge;
->  		bridge->encoder = &output->encoder;
-> @@ -245,31 +222,14 @@ static int atmel_hlcdc_attach_endpoint(struct drm_device *dev,
-> 
->  int atmel_hlcdc_create_outputs(struct drm_device *dev)
->  {
-> -	struct device_node *ep_np = NULL;
-> -	struct of_endpoint ep;
-> +	struct device_node *remote;
->  	int ret;
-> 
-> -	for_each_endpoint_of_node(dev->dev->of_node, ep_np) {
-> -		ret = of_graph_parse_endpoint(ep_np, &ep);
-> -		if (!ret)
-> -			ret = atmel_hlcdc_check_endpoint(dev, &ep);
-> -
-> -		if (ret) {
-> -			of_node_put(ep_np);
-> -			return ret;
-> -		}
-> -	}
-> -
-> -	for_each_endpoint_of_node(dev->dev->of_node, ep_np) {
-> -		ret = of_graph_parse_endpoint(ep_np, &ep);
-> -		if (!ret)
-> -			ret = atmel_hlcdc_attach_endpoint(dev, &ep);
-> -
-> -		if (ret) {
-> -			of_node_put(ep_np);
-> -			return ret;
-> -		}
-> -	}
-> +	remote = of_graph_get_remote_node(dev->dev->of_node, 0, 0);
-> +	if (!remote)
-> +		return -ENODEV;
+>  
+> -	ret = sun4i_rgb_init(drm);
+> +	/* Check which output mode is set, defaulting to RGB */
+> +	ret = of_property_read_string(dev->of_node, "mode", &mode);
+> +
+> +	if (ret || !strcmp(mode, "rgb"))
+> +		ret = sun4i_rgb_init(drm);
+> +	else if (!strcmp(mode, "lvds"))
+> +		ret = sun4i_lvds_init(drm);
+> +	else {
+> +		dev_err(dev, "Unknown TCON mode: %s\n", mode);
+> +		ret = -1;
+> +	}
+> +
+>  	if (ret < 0)
+>  		goto err_free_clocks;
+>  
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> index b040e10..dc4e350 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+> @@ -69,8 +69,11 @@
+>  #define SUN4I_TCON0_TTL3_REG			0x7c
+>  #define SUN4I_TCON0_TTL4_REG			0x80
+>  #define SUN4I_TCON0_LVDS_IF_REG			0x84
+> +#define SUN4I_TCON0_LVDS_IF_ENABLE			BIT(31)
+> +#define SUN4I_TCON0_LVDS_IF_BITWIDTH			BIT(26)
+>  #define SUN4I_TCON0_IO_POL_REG			0x88
+>  #define SUN4I_TCON0_IO_POL_DCLK_PHASE(phase)		((phase & 3) << 28)
+> +#define SUN4I_TCON0_IO_POL_DCLK_PHASE_MASK		(3 << 28)
+>  #define SUN4I_TCON0_IO_POL_HSYNC_POSITIVE		BIT(25)
+>  #define SUN4I_TCON0_IO_POL_VSYNC_POSITIVE		BIT(24)
+>  
+> @@ -128,6 +131,18 @@
+>  #define SUN4I_TCON_CEU_RANGE_G_REG		0x144
+>  #define SUN4I_TCON_CEU_RANGE_B_REG		0x148
+>  #define SUN4I_TCON_MUX_CTRL_REG			0x200
+> +#define SUN4I_TCON0_LVDS_ANA0_REG		0x220
+> +#define SUN4I_TCON0_LVDS_ANA0_CK_EN			BIT(29) | BIT(28)
+> +#define SUN4I_TCON0_LVDS_ANA0_REG_V			BIT(27) | BIT(26)
+> +/* TODO: BIT(23) also belongs to ANA0_REG_C register set */
+> +#define SUN4I_TCON0_LVDS_ANA0_REG_C			BIT(25) | BIT(24)
+> +#define SUN4I_TCON0_LVDS_ANA0_EN_MB			BIT(22)
+> +/* TODO: BIT(19) also belongs to ANA0_PD register set */
 
-I know you said ports and endpoints should be statically assigned and
-documented in the DT bindings doc, while I agree with the ports part,
-having static endpoints numbering is not possible in some cases.
+Why don't you set them then?
 
-Here the port exposed by the Atmel display controller is a raw RGB (or
-parallel RGB) port, and you can connect as many devices as you want to
-this port. For example, on some atmel boards with have 1 bridge ans 1
-panel connected to the same port (but we could have X bridges and Y
-panels and it would work the same way), hence the
-for_each_endpoint_of_node() loop used to connect panels and bridges to
-the controller.
-With your change, my use case no longer works, I can either have the
-panel or the bridge, but not both.
+Maxime
 
-Something like the following would solve the problem:
-
-	endpoint = 0;
-	while (true) {
-		remote = of_graph_get_remote_node(dev->dev->of_node, 0,
-						  endpoint++);
-		if (!remote)
-			break;
-
-		ret = atmel_hlcdc_attach_endpoint(dev, remote);
-		if (ret)
-			return ret;
-	}
-
-	if (!endpoint)
-		return -ENODEV;
-
-	return 0;
-
-If you're not happy with the 'random number of endpoints' thing, can
-you suggest another approach to handle the raw RGB port case (I'm
-pretty sure I'm not the only one to have this use case).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--w7bnm7jmol4udjdw--
