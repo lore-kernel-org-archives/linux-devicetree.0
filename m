@@ -1,144 +1,552 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv3] Documentation: dt-bindings: Add binding documentation
- for TI clkctrl clocks
-Date: Mon, 13 Feb 2017 17:19:33 +0200
-Message-ID: <dca1ef84-77d1-2b58-7913-91f3b69fde6d@ti.com>
-References: <20170123221702.18420-1-tony@atomide.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2] soc/imx: Add GPCv2 power gating driver
+Date: Mon, 13 Feb 2017 07:33:38 -0800
+Message-ID: <20170213153338.13518-2-andrew.smirnov@gmail.com>
+References: <20170213153338.13518-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170123221702.18420-1-tony@atomide.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170213153338.13518-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/01/17 00:17, Tony Lindgren wrote:
-> Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
-> clock controller instance for each interconnect target module. The clkctrl
-> controls functional and interface clocks for the module.
->
-> The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
-> With this binding and a related clock device driver we can start moving the
-> clkctrl clock handling to live in drivers/clk/ti.
->
-> Note that this binding allows keeping the clockdomain related parts out of
-> drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
-> a separate driver in drivers/soc/ti and genpd. If the clockdomain driver
-> needs to know it's clocks, we can just set the the clkctrl device
-> instances to be children of the related clockdomain device.
->
-> Each clkctrl clock can have multiple optional gate clocks, and multiple
-> optional mux clocks. To represent this in device tree, it seems that
-> it is best done using four clock cells #clock-cells = <2> property.
->
-> The reasons for using #clock-cells = <2> are:
->
-> 1. We need to specify the clkctrl offset from the instance base. Otherwise
->    we end up with a large number of device tree nodes that need to be
->    patched when new clocks are discovered in a clkctrl clock with minor
->    hardware revision changes for example
->
-> 2. On omap5 CM_L3INIT_USB_HOST_HS_CLKCTRL has ten OPTFCLKEN bits. So we
->    need to use a separate cell for optional gate clocks to avoid address
->    space conflicts
->
-> There is probably no need to list input clocks for each clkctrl clock
-> instance in the binding. If we want to add them, the standard clocks
-> binding can be used for that.
->
-> For hardware reference, see omap4430 TRM "Table 3-1312. L4PER_CM2 Registers
-> Mapping Summary" for example. It shows one instance of a clkctrl clock
-> controller with multiple clkctrl registers.
->
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+Add code allowing for control of various power domains managed by GPCv2
+IP block found in i.MX7 series of SoCs. Power domains covered by this
+patch are:
 
-This binding works for me, so:
+    - PCIE PHY
+    - MIPI PHY
+    - USB HSIC PHY
+    - USB OTG1/2 PHY
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
+Support for any other power domain controlled by GPC is not present, and
+can be added at some later point.
 
-> ---
-> Changes from v2 to v3:
->
-> - Changed the #clock-cells from 4 to 2 based on comments from Tero
->   and dropped the related patch description parts. I've kept Rob's
->   ack from v2 as the changes are a subset of v2 and what was discussed
->   already with the v1 patch
->
-> Changes from v1 to v2:
->
-> - Use #clock-cells to avoid address space conflicts
->
-> - Consider also optional mux clocks as pointed out by Tero
->
-> ---
->  .../devicetree/bindings/clock/ti-clkctrl.txt       | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
->
-> diff --git a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-> new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-> @@ -0,0 +1,56 @@
-> +Texas Instruments clkctrl clock binding
-> +
-> +Texas Instruments SoCs can have a clkctrl clock controller for each
-> +interconnect target module. The clkctrl clock controller manages functional
-> +and interface clocks for each module. Each clkctrl controller can also
-> +gate one or more optional functional clocks for a module, and can have one
-> +or more clock muxes. There is a clkctrl clock controller typically for each
-> +interconnect target module on omap4 and later variants.
-> +
-> +The clock consumers can specify the index of the clkctrl clock using
-> +the hardware offset from the clkctrl instance register space. The optional
-> +clocks can be specified by clkctrl hardware offset and the index of the
-> +optional clock.
-> +
-> +For more information, please see the Linux clock framework binding at
-> +Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> +
-> +Required properties :
-> +- compatible : shall be "ti,clkctrl"
-> +- #clock-cells : shall contain 2 with the first entry being the instance
-> +		 offset from the clock domain base and the second being the
-> +		 clock index
-> +
-> +Example: Clock controller node on omap 4430:
-> +
-> +&cm2 {
-> +	l4per: cm@1400 {
-> +		cm_l4per@0 {
-> +			cm_l4per_clkctrl: clk@20 {
-> +				compatible = "ti,clkctrl";
-> +				reg = <0x20 0x1b0>;
-> +				#clock-cells = <4>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +Example: Preprocessor helper macros in dt-bindings/clock/ti-clkctrl.h
-> +
-> +#define OMAP4_CLKCTRL_OFFSET		0x20
-> +#define OMAP4_CLKCTRL_INDEX(offset)	((offset) - OMAP4_CLKCTRL_OFFSET)
-> +#define MODULEMODE_HWCTRL		1
-> +#define MODULEMODE_SWCTRL		2
-> +
-> +#define OMAP4_GPTIMER10_CLKTRL		OMAP4_CLKCTRL_INDEX(0x28)
-> +#define OMAP4_GPTIMER11_CLKTRL		OMAP4_CLKCTRL_INDEX(0x30)
-> +#define OMAP4_GPTIMER2_CLKTRL		OMAP4_CLKCTRL_INDEX(0x38)
-> +...
-> +#define OMAP4_GPIO2_CLKCTRL		OMAP_CLKCTRL_INDEX(0x60)
-> +
-> +Example: Clock consumer node for GPIO2:
-> +
-> +&gpio2 {
-> +       clocks = <&cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL 0
-> +		 &cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL 8>;
-> +};
->
+Testing of this code was done against a PCIe driver.
 
+Cc: yurovsky@gmail.com
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+
+Changes since v1 (see [v1]):
+
+	- Various DT bindings description fixes as per feedback from
+          Rob Herring
+
+[v1] https://lkml.org/lkml/2017/2/6/551
+
+ .../devicetree/bindings/power/fsl,imx-gpcv2.txt    |  71 ++++
+ drivers/soc/imx/Makefile                           |   2 +-
+ drivers/soc/imx/gpcv2.c                            | 380 +++++++++++++++++++++
+ include/dt-bindings/power/imx7-power.h             |  18 +
+ 4 files changed, 470 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+ create mode 100644 drivers/soc/imx/gpcv2.c
+ create mode 100644 include/dt-bindings/power/imx7-power.h
+
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+new file mode 100644
+index 0000000..393f68a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -0,0 +1,71 @@
++Freescale i.MX General Power Controller v2
++==========================================
++
++The i.MX7S/D General Power Control (GPC) block contains Power Gating
++Control (PGC) for various power domains.
++
++Required properties:
++
++- compatible: Should be "fsl,imx7d-gpc"
++
++- reg: should be register base and length as documented in the
++  datasheet
++
++- interrupts: Should contain GPC interrupt request 1
++
++Power domains contained within GPC node are generic power domain
++providers, documented in
++Documentation/devicetree/bindings/power/power_domain.txt, which are
++described as subnodes of the power gating controller 'pgc' node,
++which, in turn, is expected to contain the following:
++
++Required properties:
++
++- reg: Power domain index. Valid values are defined in
++  include/dt-bindings/power/imx7-power.h
++
++- #power-domain-cells: Should be 0
++
++Optional properties:
++
++- power-supply: Power supply used to power the domain
++
++Example:
++
++	gpc: gpc@303a0000 {
++		compatible = "fsl,imx7d-gpc";
++		reg = <0x303a0000 0x1000>;
++		interrupt-controller;
++		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&intc>;
++
++		pgc {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			pgc_pcie_phy: pgc-pcie-phy-domain {
++				#power-domain-cells = <0>;
++
++				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
++				power-supply = <&reg_1p0d>;
++			};
++		};
++	};
++
++
++Specifying power domain for IP modules
++======================================
++
++IP cores belonging to a power domain should contain a 'power-domains'
++property that is a phandle for PGC node representing the domain.
++
++Example of a device that is part of the PCIE_PHY power domain:
++
++	pcie: pcie@0x33800000 {
++	      reg = <0x33800000 0x4000>,
++	            <0x4ff00000 0x80000>;
++		/* ... */
++		power-domains = <&pgc_pcie_phy>;
++		/* ... */
++	};
+diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
+index 35861f5..7bcc933 100644
+--- a/drivers/soc/imx/Makefile
++++ b/drivers/soc/imx/Makefile
+@@ -1 +1 @@
+-obj-y += gpc.o
++obj-y += gpc.o gpcv2.o
+diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+new file mode 100644
+index 0000000..e4a5d16
+--- /dev/null
++++ b/drivers/soc/imx/gpcv2.c
+@@ -0,0 +1,380 @@
++/*
++ * Copyright 2017 Impinj, Inc
++ *
++ * Based on the code of analogus driver:
++ *
++ * Copyright 2015-2017 Pengutronix, Lucas Stach <kernel@pengutronix.de>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <dt-bindings/power/imx7-power.h>
++
++#define GPC_PGC_CPU_MAPPING	0xec
++#define USB_HSIC_PHY_A7_DOMAIN	BIT(6)
++#define USB_OTG2_PHY_A7_DOMAIN	BIT(5)
++#define USB_OTG1_PHY_A7_DOMAIN	BIT(4)
++#define PCIE_PHY_A7_DOMAIN	BIT(3)
++#define MIPI_PHY_A7_DOMAIN	BIT(2)
++
++#define GPC_PU_PGC_SW_PUP_REQ	0xf8
++#define GPC_PU_PGC_SW_PDN_REQ	0x104
++#define USB_HSIC_PHY_SW_Pxx_REQ	BIT(4)
++#define USB_OTG2_PHY_SW_Pxx_REQ	BIT(3)
++#define USB_OTG1_PHY_SW_Pxx_REQ	BIT(2)
++#define PCIE_PHY_SW_Pxx_REQ	BIT(1)
++#define MIPI_PHY_SW_Pxx_REQ	BIT(0)
++
++#define GPC_MAX_REGISTER	GPC_PU_PGC_SW_PDN_REQ
++
++struct imx7_pgc_domain {
++	struct generic_pm_domain genpd;
++	struct regmap *regmap;
++	struct regulator *regulator;
++
++	const struct {
++		u32 pxx;
++		u32 map;
++	} bits;
++
++	const int voltage;
++
++	struct device *dev;
++};
++
++static int imx7_gpc_pu_pgc_sw_pxx_req(struct generic_pm_domain *genpd,
++				      bool on)
++{
++	int ret = 0;
++	unsigned long deadline;
++	struct imx7_pgc_domain *domain = container_of(genpd,
++						      struct imx7_pgc_domain,
++						      genpd);
++	unsigned int offset = (on) ?
++		GPC_PU_PGC_SW_PUP_REQ : GPC_PU_PGC_SW_PDN_REQ;
++
++	const bool has_regulator = !IS_ERR(domain->regulator);
++
++	regmap_update_bits(domain->regmap, GPC_PGC_CPU_MAPPING,
++			   domain->bits.map, domain->bits.map);
++	if (has_regulator && on) {
++		ret = regulator_enable(domain->regulator);
++		if (ret) {
++			dev_err(domain->dev, "failed to enable regulator\n");
++			goto unmap;
++		}
++	}
++
++	regmap_update_bits(domain->regmap, offset,
++			   domain->bits.pxx, domain->bits.pxx);
++	/*
++	 * As per "5.5.9.4 Example Code 4" in IMX7DRM.pdf wait
++	 * for PUP_REQ/PDN_REQ bit to be cleared
++	 */
++	deadline = jiffies + msecs_to_jiffies(1);
++	while (true) {
++		u32 pxx_req;
++
++		regmap_read(domain->regmap, offset, &pxx_req);
++
++		if (pxx_req & domain->bits.pxx)
++			break;
++
++		if (time_after(jiffies, deadline)) {
++			dev_err(domain->dev, "falied to command PGC\n");
++			ret = -ETIMEDOUT;
++			/*
++			 * If we were in a process of enabling a
++			 * domain and failed we might as well disable
++			 * the regulator we just enabled. And if it
++			 * was the opposite situation and we failed to
++			 * power down -- keep the regulator on
++			 */
++			on  = !on;
++			break;
++		}
++
++		cpu_relax();
++	}
++
++	if (has_regulator && !on) {
++		int err;
++
++		err = regulator_disable(domain->regulator);
++		if (err)
++			dev_err(domain->dev,
++				"failed to disable regulator: %d\n", ret);
++		/*
++		 * Preserve earlier error code
++		 */
++		ret = ret ?: err;
++	}
++unmap:
++	regmap_update_bits(domain->regmap, GPC_PGC_CPU_MAPPING,
++			   domain->bits.map, 0);
++	return ret;
++}
++
++static int imx7_gpc_pu_pgc_sw_pup_req(struct generic_pm_domain *genpd)
++{
++	return imx7_gpc_pu_pgc_sw_pxx_req(genpd, true);
++}
++
++static int imx7_gpc_pu_pgc_sw_pdn_req(struct generic_pm_domain *genpd)
++{
++	return imx7_gpc_pu_pgc_sw_pxx_req(genpd, false);
++}
++
++static struct imx7_pgc_domain imx7_pgc_domains[] = {
++	[IMX7_POWER_DOMAIN_USB_HSIC_PHY] = {
++		.genpd = {
++			.name      = "usb-hsic-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = USB_HSIC_PHY_SW_Pxx_REQ,
++			.map = USB_HSIC_PHY_A7_DOMAIN,
++		},
++		.voltage = 1200000,
++	},
++
++	[IMX7_POWER_DOMAIN_USB_OTG2_PHY] = {
++		.genpd = {
++			.name      = "usb-otg2-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = USB_OTG2_PHY_SW_Pxx_REQ,
++			.map = USB_OTG2_PHY_A7_DOMAIN,
++		},
++	},
++
++	[IMX7_POWER_DOMAIN_USB_OTG1_PHY] = {
++		.genpd = {
++			.name      = "usb-otg1-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = USB_OTG1_PHY_SW_Pxx_REQ,
++			.map = USB_OTG1_PHY_A7_DOMAIN,
++		},
++	},
++
++	[IMX7_POWER_DOMAIN_PCIE_PHY] = {
++		.genpd = {
++			.name      = "pcie-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = PCIE_PHY_SW_Pxx_REQ,
++			.map = PCIE_PHY_A7_DOMAIN,
++		},
++		.voltage = 1000000,
++	},
++
++	[IMX7_POWER_DOMAIN_MIPI_PHY] = {
++		.genpd = {
++			.name      = "mipi-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = MIPI_PHY_SW_Pxx_REQ,
++			.map = MIPI_PHY_A7_DOMAIN,
++		},
++		.voltage = 1000000,
++	},
++};
++
++static int imx7_pgc_domain_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct imx7_pgc_domain *domain = pdev->dev.platform_data;
++
++	if (!IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS))
++		return 0;
++
++	domain->dev = &pdev->dev;
++
++	ret = pm_genpd_init(&domain->genpd, NULL, true);
++	if (ret) {
++		dev_err(domain->dev, "Failed to init power domain\n");
++		return ret;
++	}
++
++	domain->regulator = devm_regulator_get_optional(domain->dev, "power");
++	if (IS_ERR(domain->regulator)  &&
++	    PTR_ERR(domain->regulator) != -ENODEV) {
++		dev_err(domain->dev, "Failed to get domain's regulator\n");
++		return PTR_ERR(domain->regulator);
++	}
++
++	if (!IS_ERR(domain->regulator)) {
++		WARN_ON(!domain->voltage);
++		regulator_set_voltage(domain->regulator,
++				      domain->voltage, domain->voltage);
++	}
++
++	ret = of_genpd_add_provider_simple(domain->dev->of_node,
++					   &domain->genpd);
++	if (ret) {
++		dev_err(domain->dev, "Failed to add genpd provider\n");
++		pm_genpd_remove(&domain->genpd);
++	}
++
++	return ret;
++}
++
++static int imx7_pgc_domain_remove(struct platform_device *pdev)
++{
++	struct imx7_pgc_domain *domain = pdev->dev.platform_data;
++
++	if (IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS)) {
++		of_genpd_del_provider(domain->dev->of_node);
++		pm_genpd_remove(&domain->genpd);
++	}
++
++	return 0;
++}
++
++static const struct platform_device_id imx7_pgc_domain_id[] = {
++	{ "imx7-pgc-domain", },
++	{ },
++};
++
++static struct platform_driver imx7_pgc_domain_driver = {
++	.driver = {
++		.name = "imx7-pgc",
++	},
++	.probe    = imx7_pgc_domain_probe,
++	.remove   = imx7_pgc_domain_remove,
++	.id_table = imx7_pgc_domain_id,
++};
++builtin_platform_driver(imx7_pgc_domain_driver)
++
++static bool imx_gpcv2_readable_reg(struct device *dev, unsigned int reg)
++{
++	return reg % 4 == 0 &&
++	       reg <= GPC_MAX_REGISTER;
++}
++
++static bool imx_gpcv2_volatile_reg(struct device *dev, unsigned int reg)
++{
++	return reg == GPC_PU_PGC_SW_PUP_REQ ||
++	       reg == GPC_PU_PGC_SW_PDN_REQ;
++}
++
++static int imx_gpcv2_probe(struct platform_device *pdev)
++{
++	int ret;
++	void __iomem *base;
++	struct resource *res;
++	struct regmap *regmap;
++	struct device *dev = &pdev->dev;
++	struct device_node *pgc_np, *np;
++
++	static const struct regmap_config regmap_config = {
++		.cache_type	= REGCACHE_FLAT,
++		.reg_bits	= 32,
++		.val_bits	= 32,
++		.reg_stride	= 4,
++
++		.readable_reg	= imx_gpcv2_readable_reg,
++		.volatile_reg	= imx_gpcv2_volatile_reg,
++
++		.max_register	= GPC_MAX_REGISTER,
++	};
++
++	pgc_np = of_get_child_by_name(dev->of_node, "pgc");
++	if (!pgc_np) {
++		dev_err(dev, "No power domains specified in DT\n");
++		return -EINVAL;
++	}
++
++	res  = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	regmap = devm_regmap_init_mmio_clk(dev, NULL, base, &regmap_config);
++	if (IS_ERR(regmap)) {
++		ret = PTR_ERR(regmap);
++		dev_err(dev, "failed to init regmap\n");
++		return ret;
++	}
++
++	for_each_child_of_node(pgc_np, np) {
++		u32 domain_index;
++		struct platform_device *pd_pdev;
++		struct imx7_pgc_domain *domain;
++
++		ret = of_property_read_u32(np, "reg", &domain_index);
++		if (ret) {
++			dev_err(dev, "Failed to read 'reg' property\n");
++			of_node_put(np);
++			return ret;
++		}
++
++		if (domain_index >= ARRAY_SIZE(imx7_pgc_domains)) {
++			dev_warn(dev,
++				 "Domain index %d is out of bounds\n",
++				 domain_index);
++			continue;
++		}
++
++		domain = &imx7_pgc_domains[domain_index];
++		domain->regmap = regmap;
++
++		pd_pdev = platform_device_alloc("imx7-pgc-domain",
++						domain_index);
++		if (!pd_pdev) {
++			dev_err(dev, "Failed to allocate platform device\n");
++			of_node_put(np);
++			return -ENOMEM;
++		}
++
++		pd_pdev->dev.platform_data = domain;
++		pd_pdev->dev.parent = dev;
++		pd_pdev->dev.of_node = np;
++
++		ret = platform_device_add(pd_pdev);
++		if (ret) {
++			platform_device_put(pd_pdev);
++			of_node_put(np);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct of_device_id imx_gpcv2_dt_ids[] = {
++	{ .compatible = "fsl,imx7d-gpc" },
++	{ }
++};
++
++static struct platform_driver imx_gpc_driver = {
++	.driver = {
++		.name = "imx-gpcv2",
++		.of_match_table = imx_gpcv2_dt_ids,
++	},
++	.probe = imx_gpcv2_probe,
++};
++builtin_platform_driver(imx_gpc_driver)
+diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
+new file mode 100644
+index 0000000..24dde62
+--- /dev/null
++++ b/include/dt-bindings/power/imx7-power.h
+@@ -0,0 +1,18 @@
++/*
++ *  Copyright © 2017 Impinj
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __DT_BINDINGS_ARM_IMX7_POWER_H__
++#define __DT_BINDINGS_ARM_IMX7_POWER_H__
++
++#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
++#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
++#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
++#define IMX7_POWER_DOMAIN_PCIE_PHY	3
++#define IMX7_POWER_DOMAIN_MIPI_PHY	4
++
++#endif
+-- 
+2.9.3
