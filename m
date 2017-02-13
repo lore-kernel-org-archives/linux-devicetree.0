@@ -1,120 +1,89 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 3/8] v4l: async: Add fwnode match support
-Date: Mon, 13 Feb 2017 15:28:11 +0200
-Message-ID: <1486992496-21078-4-git-send-email-sakari.ailus@linux.intel.com>
-References: <1486992496-21078-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1486992496-21078-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 3/8] mm: cma: Export a few symbols
+Date: Mon, 13 Feb 2017 14:44:16 +0100
+Message-ID: <20170213134416.akgmtv3lv5m65fwx@lukather>
+References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
+ <2dee6c0baaf08e2c7d48ceb7e97e511c914d0f87.1486655917.git-series.maxime.ripard@free-electrons.com>
+ <20170209192046.GB31906@dhcp22.suse.cz>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="iogrnqcox7foauu7"
+Return-path: <owner-linux-mm@kvack.org>
+Content-Disposition: inline
+In-Reply-To: <20170209192046.GB31906@dhcp22.suse.cz>
+Sender: owner-linux-mm@kvack.org
+To: Michal Hocko <mhocko@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Joonsoo Kim <js1304@gmail.com>, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add fwnode matching to complement OF node matching. And fwnode may also be
-an OF node.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
- drivers/media/v4l2-core/v4l2-async.c | 12 ++++++++++++
- include/media/v4l2-async.h           |  5 +++++
- include/media/v4l2-subdev.h          |  3 +++
- 3 files changed, 20 insertions(+)
+--iogrnqcox7foauu7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/media/v4l2-core/v4l2-async.c b/drivers/media/v4l2-core/v4l2-async.c
-index 96cc733..384ad5e 100644
---- a/drivers/media/v4l2-core/v4l2-async.c
-+++ b/drivers/media/v4l2-core/v4l2-async.c
-@@ -46,6 +46,11 @@ static bool match_of(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
- 			    of_node_full_name(asd->match.of.node));
- }
- 
-+static bool match_fwnode(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
-+{
-+	return sd->fwnode == asd->match.fwnode.fwn;
-+}
-+
- static bool match_custom(struct v4l2_subdev *sd, struct v4l2_async_subdev *asd)
- {
- 	if (!asd->match.custom.match)
-@@ -80,6 +85,9 @@ static struct v4l2_async_subdev *v4l2_async_belongs(struct v4l2_async_notifier *
- 		case V4L2_ASYNC_MATCH_OF:
- 			match = match_of;
- 			break;
-+		case V4L2_ASYNC_MATCH_FWNODE:
-+			match = match_fwnode;
-+			break;
- 		default:
- 			/* Cannot happen, unless someone breaks us */
- 			WARN_ON(true);
-@@ -158,6 +166,7 @@ int v4l2_async_notifier_register(struct v4l2_device *v4l2_dev,
- 		case V4L2_ASYNC_MATCH_DEVNAME:
- 		case V4L2_ASYNC_MATCH_I2C:
- 		case V4L2_ASYNC_MATCH_OF:
-+		case V4L2_ASYNC_MATCH_FWNODE:
- 			break;
- 		default:
- 			dev_err(notifier->v4l2_dev ? notifier->v4l2_dev->dev : NULL,
-@@ -282,6 +291,9 @@ int v4l2_async_register_subdev(struct v4l2_subdev *sd)
- 	 */
- 	if (!sd->of_node && sd->dev)
- 		sd->of_node = sd->dev->of_node;
-+	if (!sd->fwnode && sd->dev)
-+		sd->fwnode = sd->dev->of_node ?
-+			&sd->dev->of_node->fwnode : sd->dev->fwnode;
- 
- 	mutex_lock(&list_lock);
- 
-diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
-index 8e2a236..8f552d2 100644
---- a/include/media/v4l2-async.h
-+++ b/include/media/v4l2-async.h
-@@ -32,6 +32,7 @@ struct v4l2_async_notifier;
-  * @V4L2_ASYNC_MATCH_DEVNAME: Match will use the device name
-  * @V4L2_ASYNC_MATCH_I2C: Match will check for I2C adapter ID and address
-  * @V4L2_ASYNC_MATCH_OF: Match will use OF node
-+ * @V4L2_ASYNC_MATCH_FWNODE: Match will use firmware node
-  *
-  * This enum is used by the asyncrhronous sub-device logic to define the
-  * algorithm that will be used to match an asynchronous device.
-@@ -41,6 +42,7 @@ enum v4l2_async_match_type {
- 	V4L2_ASYNC_MATCH_DEVNAME,
- 	V4L2_ASYNC_MATCH_I2C,
- 	V4L2_ASYNC_MATCH_OF,
-+	V4L2_ASYNC_MATCH_FWNODE,
- };
- 
- /**
-@@ -58,6 +60,9 @@ struct v4l2_async_subdev {
- 			const struct device_node *node;
- 		} of;
- 		struct {
-+			struct fwnode_handle *fwn;
-+		} fwnode;
-+		struct {
- 			const char *name;
- 		} device_name;
- 		struct {
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index 0ab1c5d..5f1669c 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -788,6 +788,8 @@ struct v4l2_subdev_platform_data {
-  * @devnode: subdev device node
-  * @dev: pointer to the physical device, if any
-  * @of_node: The device_node of the subdev, usually the same as dev->of_node.
-+ * @fwnode: The fwnode_handle of the subdev, usually the same as
-+ *	    either dev->of_node->fwnode or dev->fwnode (whichever is non-NULL).
-  * @async_list: Links this subdev to a global subdev_list or @notifier->done
-  *	list.
-  * @asd: Pointer to respective &struct v4l2_async_subdev.
-@@ -819,6 +821,7 @@ struct v4l2_subdev {
- 	struct video_device *devnode;
- 	struct device *dev;
- 	struct device_node *of_node;
-+	struct fwnode_handle *fwnode;
- 	struct list_head async_list;
- 	struct v4l2_async_subdev *asd;
- 	struct v4l2_async_notifier *notifier;
--- 
-2.7.4
+Hi Michal,
 
+On Thu, Feb 09, 2017 at 08:20:47PM +0100, Michal Hocko wrote:
+> [CC CMA people]
+>=20
+> On Thu 09-02-17 17:39:17, Maxime Ripard wrote:
+> > Modules might want to check their CMA pool size and address for debuggi=
+ng
+> > and / or have additional checks.
+> >=20
+> > The obvious way to do this would be through dev_get_cma_area and
+> > cma_get_base and cma_get_size, that are currently not exported, which
+> > results in a build failure.
+> >=20
+> > Export them to prevent such a failure.
+>=20
+> Who actually uses those exports. None of the follow up patches does
+> AFAICS.
+
+This is for the ARM Mali GPU driver that is out of tree, unfortunately.
+
+In one case (using the legacy fbdev API), the driver wants to (and
+probably should) validate that the buffer as indeed been allocated
+=66rom the memory allocation pool.
+
+Rob suggested that instead of hardcoding it to cover the whole RAM
+(which defeats the purpose of that check in the first place), we used
+the memory-region bindings in the DT and follow that, which does work
+great, but we still have to retrieve the base address and size of that
+region, hence why this patches are needed.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--iogrnqcox7foauu7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYobgtAAoJEBx+YmzsjxAggxQP/iijuozzzXD86tHgt+etXoXI
+zCed54DPV5qc9UO7p3Xp8zx6YYBXYrp6jfO4Pn8wRAQMeum2MPKhsUbakf1vGQ/T
+U+JNR1hOeB9tQ9tZrVkyGVQ2sQsoHxVjfn6Iqrsbyp5QSEcanoELKX6xPsFNKg7X
+FrGvvugXcp+zIsdi9Tmn5BvFEBM+jf+fDlyMkLEKmdUQ/L1Vg+P2IAKqLNpOeXz0
+fAxq1k2EB+gdWksP3kirfy+A+5l0E1OAWKZyk5+sUmGhToeoWrGw3yTPGNTfj0yA
+Hwaq0yq27KuOSECnLkQ7myjLwDR0CuExuO7HHwG9IiKYd+kOpJAc12eFhEzl0LL+
+X5ugij4mkMjGzh78PaMpH0TsFPBSNlaPzsk3xOfZwa77A/Phpj7IZBxH/7gYG6oS
+vrVIYiJkrfp25rUKSlu1gnH8NjmOMzm9l1n5mcsAe4JCgORbjtDXJ194bl5YMdZv
+JASjOMQpk/ukxeyee8mCRrLgiEkhM0eOKarKyK2ctENjgzq+nDF9syQN7uMqFkFH
+sOAVMbvEw7jnwrJHK4hwNdEv8FGD6QC6SxwGhiH+HIPgFk9AL0whq+x236lT0LRD
+uaMuuVT0dqo1eJG9kmzAMg0Q425Rd49vdNMZlMzaHs0YhsdRuowaxFpZ+yimWBSo
+ik3u+FYdhhh5xxBILxzr
+=Ltyc
+-----END PGP SIGNATURE-----
+
+--iogrnqcox7foauu7--
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
