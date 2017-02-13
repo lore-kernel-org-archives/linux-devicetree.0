@@ -1,84 +1,55 @@
-From: Konstantin Kozhevnikov <konstantin.kozhevnikov@cogentembedded.com>
-Subject: Re: [PATCH RESEND 1/1] media: platform: Renesas IMR driver
-Date: Mon, 13 Feb 2017 22:46:04 +0300
-Message-ID: <15d3888d-e15c-db23-27b4-51d5e2840618@cogentembedded.com>
-References: <20170211200207.273799464@cogentembedded.com>
- <1770632.4GFlW6r2cg@avalon>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] checks: Warn on node name unit-addresses with '0x'
+ or leading 0s
+Date: Mon, 13 Feb 2017 14:11:57 -0600
+Message-ID: <CAL_JsqL772=td67SVxVmXCHq-vEiX3EsSo4x2EcUxRNkfUK83A@mail.gmail.com>
+References: <20170210164717.1234-1-robh@kernel.org> <20170210164717.1234-4-robh@kernel.org>
+ <20170213045241.GY25381@umbus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1770632.4GFlW6r2cg@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170213045241.GY25381@umbus>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Laurent,
-
-regarding your main question, I think the name "image renderer" is 
-misguiding. This IP-block has nothing to do with rendering per se, it is 
-rather an image processing module, designed specifically for image 
-undistortion (lens correction). We use that as a plain memory-to-memory 
-device, and it fits well into V4L2 framework. More complex 
-implementation (the one we thought of, but had no capacity to implement) 
-would allow integration of VIN (as well as other modules like 
-H.264/MPEG4 decoders) and IMR engines into a single processing pipeline 
-(so it would not look like a M2M device but would be a sort of 
-"smart-VIN"). From that perspective it is no more DRM device driver than 
-VSP, which resides in the same "drivers/platform/media" directory.
-
-Sincerely,
-Kostya
-
-On 02/12/2017 06:51 PM, Laurent Pinchart wrote:
-> Hi Sergei,
->
-> (CC'ing the dri-evel mailing list)
->
-> Thank you for the patch.
->
-> On Saturday 11 Feb 2017 23:02:01 Sergei Shtylyov wrote:
->> From: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
+On Sun, Feb 12, 2017 at 10:52 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Fri, Feb 10, 2017 at 10:47:16AM -0600, Rob Herring wrote:
+>> Node name unit-addresses should never begin with 0x or leading 0s
+>> regardless of whether they have a bus specific address (i.e. one with
+>> commas) or not. Add warnings to check for these cases.
 >>
->> The image renderer light extended 4 (IMR-LX4) or the distortion correction
->> engine is a drawing processor with a simple  instruction system capable of
->> referencing data on an external memory as 2D texture data and performing
->> texture mapping and drawing with respect to any shape that is split into
->> triangular objects.
->>
->> This V4L2 memory-to-memory device driver only supports image renderer found
->> in the R-Car gen3 SoCs; the R-Car gen2 support  can be added later...
-> Let's start with the main question : given that this is a rendering engine, it
-> looks like it should use the DRM subsystem.
->
->> [Sergei: merged 2 original patches, added the patch description, removed
->> unrelated parts,  added the binding document, ported the driver to the
->> modern kernel, renamed the UAPI header file and the guard  macros to match
->> the driver name, extended the copyrights, fixed up Kconfig prompt/depends/
->> help, made use of the BIT()/GENMASK() macros, sorted #include's, removed
->> leading  dots and fixed grammar in the comments, fixed up indentation to
->> use tabs where possible, renamed IMR_DLSR to IMR_DLPR to match the manual,
->> separated the register offset/bit #define's, removed *inline* from .c file,
->> fixed lines over 80 columns, removed useless parens, operators, casts,
->> braces, variables, #include's, (commented out) statements, and even
->> function, inserted empty line after desclaration, removed extra empty
->> lines, reordered some local variable desclarations, removed calls to
->> 4l2_err() on kmalloc() failure, fixed the error returned by imr_default(),
->> avoided code duplication in the IRQ handler, used '__packed' for the UAPI
->> structures, enclosed the macro parameters in parens, exchanged the values
->> of IMR_MAP_AUTO[SD]G macros.]
->>
->> Signed-off-by: Konstantin Kozhevnikov
->> <Konstantin.Kozhevnikov@cogentembedded.com> Signed-off-by: Sergei Shtylyov
->> <sergei.shtylyov@cogentembedded.com>
->>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >> ---
->> This patch is against the 'media_tree.git' repo's 'master' branch.
->>
->>   Documentation/devicetree/bindings/media/rcar_imr.txt |   23
->>   drivers/media/platform/Kconfig                       |   13
->>   drivers/media/platform/Makefile                      |    1
->>   drivers/media/platform/rcar_imr.c                    | 1923 +++++++++++++++
->>   include/uapi/linux/rcar_imr.h                        |   94
->>   5 files changed, 2054 insertions(+)
+>> v2:
+>> - Split into separate check from unit_address_vs_reg
+>
+> I'm still not thrilled with applying this test unconditionally -
+> especially when 4/4 introduces pretty much exactly the infrastructure
+> to do this better.  If you add a unit name formatter function to the
+> bus_type structure you really can then extend unit_address_vs_reg to
+> verify them against each other, which will cover this as well more
+> subtle mismatches.
+>
+> Obviously it would only do it for known bus types - but adding a
+> "simple-bus" type would cover a lot of the cases, and a few for i2c
+> and spi would cover most of the rest.
+
+Sigh. Around in circles we go. As we discussed before, this is simple,
+but common problem check. It is not a complete check of the entire
+unit-address. It only checks the first number (in case of ',') and
+doesn't validate the number itself. While in theory we can conceive of
+a unit-address that would be a problem for this check, we have not
+identified one. It's not like there's lots of unknown cases here. We
+know the buses that are out there for the most part. We can always
+blacklist any problematic cases or turn off the check by default if
+the need arises.
+
+As far as bus types, I could easily support simple-bus, but there's no
+way to identify i2c and spi (and others like mdio) buses reliably.
+Maybe go off node names if we got those standardized, but I can't
+check standard node names for the same reason.
+
+Rob
