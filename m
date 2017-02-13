@@ -1,168 +1,156 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/2] hwmon: (sht15) Add DTS support
-Date: Mon, 13 Feb 2017 13:05:38 -0800
-Message-ID: <20170213210538.GA11362@roeck-us.net>
-References: <1486737041-32014-1-git-send-email-marco.franchi@nxp.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 1/8] devicetree: power: Add battery.txt
+Date: Mon, 13 Feb 2017 15:12:59 -0600
+Message-ID: <f38dc321-b32d-1053-75e4-ac9bf3438bb4@ti.com>
+References: <20170211024340.19491-1-liam@networkimprov.net>
+ <20170211024340.19491-2-liam@networkimprov.net>
+ <ce69f358-ac3b-993d-0639-844856362c9d@ti.com>
+ <CAKvHMgSSpbkX1NMwaDmuJwBcgu6Avy65izAaBGTYongqL51kWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1486737041-32014-1-git-send-email-marco.franchi@nxp.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Marco Franchi <marco.franchi@nxp.com>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, marcofrk@gmail.com, FoxPeter@kabelbw.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKvHMgSSpbkX1NMwaDmuJwBcgu6Avy65izAaBGTYongqL51kWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 12:30:41PM -0200, Marco Franchi wrote:
-> Allow the driver to work with dts support.
+On 02/13/2017 02:58 PM, Liam Breck wrote:
+> Hi Andrew, thanks for the drill-down on BQ27* chips.
 > 
-> Based on initial patch submission from Peter Fox.
+> On Mon, Feb 13, 2017 at 8:06 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
+>> On 02/10/2017 08:43 PM, Liam Breck wrote:
+>>> From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>>>
+>>> Documentation of static battery characteristics that can be defined
+>>> for batteries which cannot self-identify. This information is required
+>>> by fuel-gauge and charger chips for proper handling of the battery.
+>>
+>>
+>> I think some of the confusion about what a "smart-battery" binding would
+>> look like is due to a miss-understanding what it means to
+>> "self-identify". Originally the bq27xxx *was* the chip that lived its
+>> whole life inside a battery (the iphone battery is one such example and
+>> a good way to test the bq27000). This way it could be factory programmed
+>> with the battery's basics and then learn about the individual pack over
+>> time to provide better info on time to empty, discharge rates, etc..
+>>
+>> Eventually, people wanted to have the battery become cheap and
+>> replaceable, so fuel-gauges were made that are "system side", and ride
+>> along with the device, not the battery. Now this has one big problem,
+>> how can we learn about a battery when it may be a new battery every time
+>> we boot up? So we added programmable memory to the devices, and
+>> programming this memory looks to be what this series is about.
+>>
+>> Only the battery design info is programmed in this series, but much more
+>> battery info can be uploaded, including stuff that is not fixed and
+>> therefor cannot be added to the DT. Even the design parameters may not
+>> be fix if one changes the battery as different manufactures of the same
+>> battery type may have different design capacities.
+>>
+>> The ideal use-case in a system with a system side gauge is the OS should
+>> periodically, or just before shutdown, read the battery's learned info
+>> and when the device is powered back up, if the battery serial number
+>> matches from before, re-upload this learned info to the gauge so it
+>> doesn't have to re-learn everything. All of this will need to happen in
+>> user-space, so what we really need is a user-space API for manipulating
+>> these properties.
 > 
-> Tested on a imx7d-sdb board connected to a SHT15 board via Mikro Bus.
+> We would need a feature in the driver to get/set the blob of pack- or
+> cell-unique data. The userspace api is one sysfs file.
 > 
-> Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
-> ---
->  Documentation/devicetree/bindings/hwmon/sht15.txt | 25 ++++++++
->  drivers/hwmon/sht15.c                             | 69 +++++++++++++++++++++--
->  2 files changed, 90 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sht15.txt
+> However the DT fixed-battery node could indicate when/how-often the
+> object is stored, and where, e.g. filename. If the latter is given,
+> the driver should write/read the file itself.
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/sht15.txt b/Documentation/devicetree/bindings/hwmon/sht15.txt
-> new file mode 100644
-> index 0000000..6415f52
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/sht15.txt
-> @@ -0,0 +1,25 @@
-> +Sensirion SHT15 Humidity and Temperature Sensor
-> +
-> +Required properties:
-> +
-> + - "compatible": must be "sensirion,sht15".
-> + - "data-gpios": GPIO connected to the data line.
-> + - "clk-gpios": GPIO connected to the clock line.
-> + - "vcc-supply": regulator that drives the VCC pin.
-> +
-> +Optional properties:
-> +
-> + - "checksum": boolean property that when present enables the CRC validation of the readings.
-> + - "no-otp-reload": boolean property that when present indicates not to reload from OTP.
-> + - "low-resolution": boolean property that when present indicates that the device operates in
-> + 		low-resolution mode.
-> +Example:
-> +
-> +	temp_humid_sensor: sht15 {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sensor>;
-> +		compatible = "sensirion,sht15";
-> +		clk-gpios = <&gpio4 12 0>;
-> +		data-gpios = <&gpio4 13 0>;
-> +		vcc-supply = <&reg_sht15>;
-> +	};
-> diff --git a/drivers/hwmon/sht15.c b/drivers/hwmon/sht15.c
-> index f16687c..608ac9e 100644
-> --- a/drivers/hwmon/sht15.c
-> +++ b/drivers/hwmon/sht15.c
-> @@ -34,6 +34,7 @@
->  #include <linux/slab.h>
->  #include <linux/atomic.h>
->  #include <linux/bitrev.h>
-> +#include <linux/of_gpio.h>
->  
->  /* Commands */
->  #define SHT15_MEASURE_TEMP		0x03
-> @@ -911,6 +912,59 @@ static int sht15_invalidate_voltage(struct notifier_block *nb,
->  	return NOTIFY_OK;
->  }
->  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id sht15_dt_match[] = {
-> +	{ .compatible = "sensirion,sht15" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, sht15_dt_match);
-> +
-> +/*
-> + * This function returns 1 if pdev isn't a device instatiated by dt, 0 if it
-> + * could successfully get all information from dt or a negative error number.
-> + */
+> Is there some documentation about what registers should go in this blob?
+> 
 
-Plese rework to not require negative/ 0 / 1 return. One possibility
-would be to return NULL if no dt, PTR_ERR on error, and a pointer
-to the data otherwise. More see below.
+This should all be available in the parts' technical reference (looks
+like page 24 for your device), but the blob isn't meant to be modified,
+the information/format is mostly internal to the part, all we should do
+is save blob / restore blob as needed.
 
-> +static int sht15_probe_dt(struct sht15_data *data, struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct sht15_platform_data *pdata;
-> +
-> +	/* no device tree device */
-> +	if (!np)
-> +		return 1;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return -ENOMEM;
-> +
-> +	data->pdata = pdata;
-> +
-> +	data->pdata->gpio_data = of_get_named_gpio(np, "data-gpios", 0);
+> That concept is beyond the scope of this patchset (and doesn't
+> supersede it), but is something I'd like to implement for our chip,
+> the *425.
+> 
+> 
+>> The properties added in this series are okay, and it's good to have some
+>> sane defaults in DT, but looking forward this may not be enough to get
+>> full use out of these devices.
+> 
+> I'm relieved you're not opposed to our patch :-) Now I just need that
+> guidance I mentioned re the chip family...
+> 
 
-There is a local variable 'pdata'. Dereferencing data->pdata repeatedly
-is not necessary.
+Still looking into it, I think for now would be easiest to add the
+register info to each chip family struct. The un-seal sequence should be
+generic enough already.
 
-> +	if (data->pdata->gpio_data < 0) {
-> +		dev_err(&pdev->dev, "data-gpios not found\n");
-> +		return data->pdata->gpio_data;
-> +	}
-> +
-> +	data->pdata->gpio_sck = of_get_named_gpio(np, "clk-gpios", 0);
-> +	if (data->pdata->gpio_sck < 0) {
-> +		dev_err(&pdev->dev, "clk-gpios not found\n");
-> +		return data->pdata->gpio_sck;
-> +	}
-> +
-> +	data->pdata->checksum = of_property_read_bool(np, "checksum");
-> +	data->pdata->no_otp_reload = of_property_read_bool(np, "no-otp-reload");
-> +	data->pdata->low_resolution = of_property_read_bool(np,
-> +					"low-resolution");
-> +
-> +	return 0;
-> +}
-> +#else
-> +static inline int sht15_probe_dt(struct sht15_data *data,
-> +					struct platform_device *pdev)
-> +{
-> +	return 1;
-> +}
-> +#endif
-> +
->  static int sht15_probe(struct platform_device *pdev)
->  {
->  	int ret;
-> @@ -928,11 +982,17 @@ static int sht15_probe(struct platform_device *pdev)
->  	data->dev = &pdev->dev;
->  	init_waitqueue_head(&data->wait_queue);
->  
-> -	if (dev_get_platdata(&pdev->dev) == NULL) {
-> -		dev_err(&pdev->dev, "no platform data supplied\n");
-> -		return -EINVAL;
-> +	ret = sht15_probe_dt(data, pdev);
+Andrew
 
-I would rather see a clear preference for dt or platform data.
-Also, passing 'data' to sht15_probe_dt() is really unnecessary,
-and sht15_probe_dt() doesn't really need a pointer to the
-platform device.
-
-Example, if DT is preferred:
-	data->pdata = sht15_probe_dt(&pdev->dev);
-	if (IS_ERR(data->pdata))
-		return PTR_ERR(data->pdata);
-	if (data->pdata == NULL) {
-		data->pdata = dev_get_platdata(&pdev->dev);
-		if (data->pdata == NULL) {
-			dev_err(&pdev->dev, "no platform data supplied\n");
-			return -EINVAL;
-		}
-	}
-
-Guenter
+> 
+>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/power/supply/battery.txt   | 37 ++++++++++++++++++++++
+>>>  1 file changed, 37 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> new file mode 100644
+>>> index 0000000..d78a4aa
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> @@ -0,0 +1,37 @@
+>>> +Battery Characteristics
+>>> +
+>>> +Required Properties:
+>>> + - compatible: Must be "fixed-battery"
+>>> +
+>>> +Optional Properties:
+>>> + - voltage-min-design-microvolt: drained battery voltage
+>>> + - energy-full-design-microwatt-hours: battery design energy
+>>> + - charge-full-design-microamp-hours: battery design capacity
+>>> +
+>>> +Future Properties must be named for the corresponding elements in
+>>> +enum power_supply_property, defined in include/linux/power_supply.h.
+>>> +
+>>> +Batteries must be referenced by chargers and/or fuel-gauges
+>>> +using a phandle. The phandle's property should be named
+>>> +"monitored-battery".
+>>> +
+>>> +Example:
+>>> +
+>>> +     bat: battery {
+>>> +             compatible = "fixed-battery";
+>>> +             voltage-min-design-microvolt = <3200000>;
+>>> +             energy-full-design-microwatt-hours = <5290000>;
+>>> +             charge-full-design-microamp-hours = <1430000>;
+>>> +     };
+>>> +
+>>> +     charger: charger@11 {
+>>> +             ....
+>>> +             monitored-battery = <&bat>;
+>>> +             ...
+>>> +     };
+>>> +
+>>> +     fuel_gauge: fuel-gauge@22 {
+>>> +             ....
+>>> +             monitored-battery = <&bat>;
+>>> +             ...
+>>> +     };
+>>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
