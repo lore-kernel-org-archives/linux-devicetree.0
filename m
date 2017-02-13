@@ -1,358 +1,216 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] reset: Add i.MX7 SRC reset driver
-Date: Mon, 13 Feb 2017 17:50:43 +0100
-Message-ID: <1487004643.2873.97.camel@pengutronix.de>
-References: <20170213153338.13518-1-andrew.smirnov@gmail.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH 3/8] pinctrl: sunxi: Add A64 R_PIO
+ controller support
+Date: Tue, 14 Feb 2017 00:57:16 +0800
+Message-ID: <20170213195735.vTIuMNfQ@smtp3h.mail.yandex.net>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170213153338.13518-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBCGLQ7CQKGQE5TNNTUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "	linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrey,
-
-thank you for the driver, I have a few comments below.
-
-On Mon, 2017-02-13 at 07:33 -0800, Andrey Smirnov wrote:
-> This driver exposes various reset faculties, impelented by System Reset
-
-s/impelented/implemented/
-
-> Controller IP block, as a reset driver. Currently only PCIE related
-> reset lines are implemented.
-> 
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
-> 
-> Changes since v1 (see [v1]):
-> 
-> 	- Various small DT bindings description fixes as per feedback
->           from Rob Herring
-> 
-> 
-> [v1] https://lkml.org/lkml/2017/2/6/554
-> 
->  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  47 +++++++
->  drivers/reset/Kconfig                              |   8 ++
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-imx7.c                         | 149 +++++++++++++++++++++
->  include/dt-bindings/reset/imx7-reset.h             |  28 ++++
->  5 files changed, 233 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
->  create mode 100644 drivers/reset/reset-imx7.c
->  create mode 100644 include/dt-bindings/reset/imx7-reset.h
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> new file mode 100644
-> index 0000000..c38f7f0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> @@ -0,0 +1,47 @@
-> +Freescale i.MX7 System Reset Controller
-> +======================================
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx7-src", "syscon"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- interrupts: Should contain SRC interrupt
-> +- #reset-cells: 1, see below
-> +
-> +example:
-> +
-> +src: reset-controller@30390000 {
-> +     compatible = "fsl,imx7d-src", "syscon";
-> +     reg = <0x30390000 0x2000>;
-> +     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +     #reset-cells = <1>;
-> +};
-> +
-> +
-> +Specifying reset lines connected to IP modules
-> +==============================================
-> +
-> +The system reset controller can be used to reset various set of
-> +peripherals. Device nodes that need access to reset lines should
-> +specify them as a reset phandle in their corresponding node as
-> +specified in reset.txt.
-> +
-> +Example:
-> +
-> +	pcie: pcie@33800000 {
-> +
-> +		...
-> +
-> +		resets = <&src IMX7_RESET_PCIEPHY>,
-> +			 <&src IMX7_RESET_PCIE_CTRL_APPS>;
-> +		reset-names = "pciephy", "apps";
-> +
-> +		...
-> +        };
-> +
-> +
-> +For list of all valid reset indicies see
-> +<dt-bindings/reset/imx7-reset.h>
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 172dc96..664a88b 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -92,6 +92,14 @@ config RESET_ZYNQ
->  	help
->  	  This enables the reset controller driver for Xilinx Zynq SoCs.
->  
-> +config RESET_IMX7
-> +	bool "i.MX7 Reset Driver"
-> +	depends on SOC_IMX7D || COMPILE_TEST
-> +	select MFD_SYSCON
-> +	default SOC_IMX7D
-> +	help
-> +	  This enables the reset controller driver for i.MX7 SoCs.
-> +
-
-Alphabetical order, please.
-
->  source "drivers/reset/sti/Kconfig"
->  source "drivers/reset/hisilicon/Kconfig"
->  source "drivers/reset/tegra/Kconfig"
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index 13b346e..417c9d0 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -14,3 +14,4 @@ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
->  obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
->  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
->  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-> +obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-
-See above, those are also in alphabetical order.
-
-> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-> new file mode 100644
-> index 0000000..6d90e57
-> --- /dev/null
-> +++ b/drivers/reset/reset-imx7.c
-> @@ -0,0 +1,149 @@
-> +/*
-> + * Copyright (c) 2017, Impinj, Inc.
-> + *
-> + * i.MX7 System Reset Controller (SRC) driver
-> + *
-> + * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-
-I think this is not be necessary because register access is done via
-regmap. Please cull unnecessary headers.
-
-> +#include <linux/init.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
-> +#include <dt-bindings/reset/imx7-reset.h>
-> +
-> +struct imx7_src {
-> +	struct reset_controller_dev rcdev;
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +};
-> +
-> +enum imx7_src_registers {
-> +	SRC_PCIEPHY_RCR = 0x002c,
-> +	SRC_PCIEPHY_RCR_PCIEPHY_G_RST     = BIT(1),
-
-What about the others resets? There's at least HSICPHY, MIPIPHY and
-USBOPHY registers before the PCIEPHY register.
-
-> +	SRC_PCIEPHY_RCR_PCIEPHY_BTN       = BIT(2),
-> +	SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN = BIT(6),
-
-Are those really resets? At least the PCIE_CTRL_APPS_EN has a bit called
-PCIE_CTRL_APPS_RST right next to it, so this warrants some explanation.
-
-> +};
-> +
-> +static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
-> +{
-> +	return container_of(rcdev, struct imx7_src, rcdev);
-> +}
-> +
-> +static int imx7_reset_assert(struct reset_controller_dev *rcdev,
-> +			     unsigned long id)
-> +{
-> +	struct imx7_src *imx7src = to_imx7_src(rcdev);
-> +
-> +	switch (id) {
-> +	case IMX7_RESET_PCIE_CTRL_APPS:
-> +		regmap_update_bits(imx7src->regmap,
-> +				   SRC_PCIEPHY_RCR,
-> +				   SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN, 0);
-> +		return 0;
-> +
-> +	case IMX7_RESET_PCIEPHY:
-> +		regmap_update_bits(imx7src->regmap,
-> +				   SRC_PCIEPHY_RCR,
-> +				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST,
-> +				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST);
-> +		regmap_update_bits(imx7src->regmap,
-> +				   SRC_PCIEPHY_RCR,
-> +				   SRC_PCIEPHY_RCR_PCIEPHY_BTN,
-> +				   SRC_PCIEPHY_RCR_PCIEPHY_BTN);
-
-What is the PCIE PHY button, and why does it have to be set with the
-reset bit?
-
-> +		return 0;
-> +	default:
-> +		dev_err(imx7src->dev, "Unknown reset ID %lu\n", id);
-> +		break;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int imx7_reset_deassert(struct reset_controller_dev *rcdev,
-> +			       unsigned long id)
-> +{
-> +	struct imx7_src *imx7src = to_imx7_src(rcdev);
-> +
-> +	switch (id) {
-> +	case IMX7_RESET_PCIE_CTRL_APPS:
-> +		regmap_update_bits(imx7src->regmap,
-> +				   SRC_PCIEPHY_RCR,
-> +				   SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN,
-> +				   SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN);
-> +		return 0;
-> +
-> +	case IMX7_RESET_PCIEPHY:
-> +		/* wait for more than 10us to release phy g_rst and btnrst */
-> +		udelay(10);
-> +		regmap_update_bits(imx7src->regmap,
-> +				   SRC_PCIEPHY_RCR,
-> +				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST, 0);
-> +		regmap_update_bits(imx7src->regmap,
-> +				   SRC_PCIEPHY_RCR,
-> +				   SRC_PCIEPHY_RCR_PCIEPHY_BTN, 0);
-> +		return 0;
-> +	default:
-> +		dev_err(imx7src->dev, "Unknown reset ID %lu\n", id);
-> +		break;
-> +	};
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct reset_control_ops imx7_reset_ops = {
-> +	.assert		= imx7_reset_assert,
-> +	.deassert	= imx7_reset_deassert,
-> +};
-> +
-> +static int imx7_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct imx7_src *imx7src;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	imx7src = devm_kzalloc(dev, sizeof(*imx7src), GFP_KERNEL);
-> +	if (!imx7src)
-> +		return -ENOMEM;
-> +
-> +	imx7src->dev = dev;
-> +	imx7src->regmap = syscon_node_to_regmap(dev->of_node);
-> +	if (IS_ERR(imx7src->regmap)) {
-> +		dev_err(dev, "Unable to get imx7-src regmap");
-> +		return PTR_ERR(imx7src->regmap);
-> +	}
-
-You could use regmap_attach_dev to attach the device to the regmap. This
-would improve error messages, regmap debugfs structure, and make
-imx7src->dev unnecessary.
-
-> +
-> +	imx7src->rcdev.owner     = THIS_MODULE;
-> +	imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
-> +	imx7src->rcdev.ops       = &imx7_reset_ops;
-> +	imx7src->rcdev.of_node   = dev->of_node;
-> +
-> +	return devm_reset_controller_register(dev, &imx7src->rcdev);
-> +}
-> +
-> +static const struct of_device_id imx7_reset_dt_ids[] = {
-> +	{ .compatible = "fsl,imx7d-src", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver imx7_reset_driver = {
-> +	.probe	= imx7_reset_probe,
-> +	.driver = {
-> +		.name		= KBUILD_MODNAME,
-> +		.of_match_table	= imx7_reset_dt_ids,
-> +	},
-> +};
-> +builtin_platform_driver(imx7_reset_driver);
-> diff --git a/include/dt-bindings/reset/imx7-reset.h b/include/dt-bindings/reset/imx7-reset.h
-> new file mode 100644
-> index 0000000..e20f2db
-> --- /dev/null
-> +++ b/include/dt-bindings/reset/imx7-reset.h
-> @@ -0,0 +1,28 @@
-> +/*
-> + * Copyright (C) 2017 Impinj, Inc.
-> + *
-> + * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef DT_BINDING_RESET_IMX7_H
-> +#define DT_BINDING_RESET_IMX7_H
-> +
-> +#define IMX7_RESET_PCIE_CTRL_APPS	0
-> +#define IMX7_RESET_PCIEPHY		1
-
-It would expect these to be numbered in the order they appear in the
-register map, not starting from the end. Could you add all available
-peripheral resets to this list, in the correct order?
-
-> +#define IMX7_RESET_NUM			2
-> +
-> +#endif
-> +
-
-regards
-Philipp
+CjIwMTflubQy5pyIMTPml6UgMjM6MDnkuo4gQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPuWG
+memBk++8mgo+Cj4gT24gV2VkLCBGZWIgOCwgMjAxNyBhdCA2OjAwIFBNLCBJY2Vub3d5IFpoZW5n
+IDxpY2Vub3d5QGFvc2MueHl6PiB3cm90ZTogCj4gPiBUaGUgQTY0IGhhcyBhIFJfUElPIHBpbiBj
+b250cm9sbGVyLCBzaW1pbGFyIHRvIHRoZSBvbmUgZm91bmQgb24gdGhlIEgzIFNvQy4gCj4gPiBB
+ZGQgc3VwcG9ydCBmb3IgdGhlIHBpbnMgY29udHJvbGxlZCBieSB0aGUgUl9QSU8gY29udHJvbGxl
+ci4gCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54
+eXo+IAo+ID4gLS0tIAo+ID7CoCBkcml2ZXJzL3BpbmN0cmwvc3VueGkvS2NvbmZpZ8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqDCoCA1ICsgCj4gPsKgIGRyaXZlcnMvcGluY3RybC9z
+dW54aS9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgwqAgMSArIAo+ID7C
+oCBkcml2ZXJzL3BpbmN0cmwvc3VueGkvcGluY3RybC1zdW41MGktYTY0LXIuYyB8IDE0MyArKysr
+KysrKysrKysrKysrKysrKysrKysrKysgCj4gPsKgIDMgZmlsZXMgY2hhbmdlZCwgMTQ5IGluc2Vy
+dGlvbnMoKykgCj4gPsKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BpbmN0cmwvc3VueGkv
+cGluY3RybC1zdW41MGktYTY0LXIuYyAKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGlu
+Y3RybC9zdW54aS9LY29uZmlnIGIvZHJpdmVycy9waW5jdHJsL3N1bnhpL0tjb25maWcgCj4gPiBp
+bmRleCA5MmQ4NDU4Mjc1NzcuLmRmNTA4OTg0MWM2ZSAxMDA2NDQgCj4gPiAtLS0gYS9kcml2ZXJz
+L3BpbmN0cmwvc3VueGkvS2NvbmZpZyAKPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9zdW54aS9L
+Y29uZmlnIAo+ID4gQEAgLTcyLDYgKzcyLDExIEBAIGNvbmZpZyBQSU5DVFJMX1NVTjUwSV9BNjQg
+Cj4gPsKgwqDCoMKgwqDCoMKgwqAgYm9vbCAKPiA+wqDCoMKgwqDCoMKgwqDCoCBzZWxlY3QgUElO
+Q1RSTF9TVU5YSSAKPiA+IAo+ID4gK2NvbmZpZyBQSU5DVFJMX1NVTjUwSV9BNjRfUiAKPiA+ICvC
+oMKgwqDCoMKgwqAgYm9vbCAKPiA+ICvCoMKgwqDCoMKgwqAgZGVwZW5kcyBvbiBSRVNFVF9DT05U
+Uk9MTEVSIAo+ID4gK8KgwqDCoMKgwqDCoCBzZWxlY3QgUElOQ1RSTF9TVU5YSSAKPiA+ICsgCj4g
+PsKgIGNvbmZpZyBQSU5DVFJMX1NVTjUwSV9INSAKPiA+wqDCoMKgwqDCoMKgwqDCoCBib29sIAo+
+ID7CoMKgwqDCoMKgwqDCoMKgIHNlbGVjdCBQSU5DVFJMX1NVTlhJIAo+ID4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvcGluY3RybC9zdW54aS9NYWtlZmlsZSBiL2RyaXZlcnMvcGluY3RybC9zdW54aS9N
+YWtlZmlsZSAKPiA+IGluZGV4IGY5YTM4NTVjNDJmMS4uY2U5NTYyNThjYzM5IDEwMDY0NCAKPiA+
+IC0tLSBhL2RyaXZlcnMvcGluY3RybC9zdW54aS9NYWtlZmlsZSAKPiA+ICsrKyBiL2RyaXZlcnMv
+cGluY3RybC9zdW54aS9NYWtlZmlsZSAKPiA+IEBAIC0xMiw2ICsxMiw3IEBAIG9iai0kKENPTkZJ
+R19QSU5DVFJMX1NVTjhJX0EyMynCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICs9IHBpbmN0
+cmwtc3VuOGktYTIzLm8gCj4gPsKgIG9iai0kKENPTkZJR19QSU5DVFJMX1NVTjhJX0EyM19SKcKg
+wqDCoMKgwqAgKz0gcGluY3RybC1zdW44aS1hMjMtci5vIAo+ID7CoCBvYmotJChDT05GSUdfUElO
+Q1RSTF9TVU44SV9BMzMpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICs9IHBpbmN0cmwt
+c3VuOGktYTMzLm8gCj4gPsKgIG9iai0kKENPTkZJR19QSU5DVFJMX1NVTjUwSV9BNjQpwqDCoMKg
+wqDCoMKgICs9IHBpbmN0cmwtc3VuNTBpLWE2NC5vIAo+ID4gK29iai0kKENPTkZJR19QSU5DVFJM
+X1NVTjUwSV9BNjRfUinCoMKgwqDCoCArPSBwaW5jdHJsLXN1bjUwaS1hNjQtci5vIAo+ID7CoCBv
+YmotJChDT05GSUdfUElOQ1RSTF9TVU44SV9BODNUKcKgwqDCoMKgwqDCoCArPSBwaW5jdHJsLXN1
+bjhpLWE4M3QubyAKPiA+wqAgb2JqLSQoQ09ORklHX1BJTkNUUkxfU1VOOElfSDMpwqDCoMKgwqDC
+oMKgwqDCoCArPSBwaW5jdHJsLXN1bjhpLWgzLm8gCj4gPsKgIG9iai0kKENPTkZJR19QSU5DVFJM
+X1NVTjhJX0gzX1IpwqDCoMKgwqDCoMKgICs9IHBpbmN0cmwtc3VuOGktaDMtci5vIAo+ID4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvcGluY3RybC9zdW54aS9waW5jdHJsLXN1bjUwaS1hNjQtci5jIGIv
+ZHJpdmVycy9waW5jdHJsL3N1bnhpL3BpbmN0cmwtc3VuNTBpLWE2NC1yLmMgCj4gPiBuZXcgZmls
+ZSBtb2RlIDEwMDY0NCAKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uOTA5OTZhNjM2ODliIAo+ID4g
+LS0tIC9kZXYvbnVsbCAKPiA+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9zdW54aS9waW5jdHJsLXN1
+bjUwaS1hNjQtci5jIAo+ID4gQEAgLTAsMCArMSwxNDMgQEAgCj4gPiArLyogCj4gPiArICogQWxs
+d2lubmVyIEE2NCBTb0NzIHNwZWNpYWwgcGlucyBwaW5jdHJsIGRyaXZlci4gCj4gPiArICogCj4g
+PiArICogQmFzZWQgb24gcGluY3RybC1zdW44aS1hMjMtci5jIAo+ID4gKyAqIAo+ID4gKyAqIENv
+cHlyaWdodCAoQykgMjAxNiBJY2Vub3d5IFpoZW5nIAo+ID4gKyAqIEljZW5vd3kgWmhlbmcgPGlj
+ZW5vd3lAYW9zYy54eXo+IAo+ID4gKyAqIAo+ID4gKyAqIENvcHlyaWdodCAoQykgMjAxNCBDaGVu
+LVl1IFRzYWkgCj4gPiArICogQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUub3JnPiAKPiA+ICsgKiAK
+PiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTQgQm9yaXMgQnJlemlsbG9uIAo+ID4gKyAqIEJvcmlz
+IEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4gCj4gPiArICog
+Cj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE0IE1heGltZSBSaXBhcmQgCj4gPiArICogTWF4aW1l
+IFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IAo+ID4gKyAqIAo+ID4g
+KyAqIFRoaXMgZmlsZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5l
+cmFsIFB1YmxpYyAKPiA+ICsgKiBMaWNlbnNlIHZlcnNpb24gMi7CoCBUaGlzIHByb2dyYW0gaXMg
+bGljZW5zZWQgImFzIGlzIiB3aXRob3V0IGFueSAKPiA+ICsgKiB3YXJyYW50eSBvZiBhbnkga2lu
+ZCwgd2hldGhlciBleHByZXNzIG9yIGltcGxpZWQuIAo+ID4gKyAqLyAKPiA+ICsgCj4gPiArI2lu
+Y2x1ZGUgPGxpbnV4L29mLmg+IAo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4gCj4g
+PiArI2luY2x1ZGUgPGxpbnV4L3BpbmN0cmwvcGluY3RybC5oPiAKPiA+ICsjaW5jbHVkZSA8bGlu
+dXgvcGxhdGZvcm1fZGV2aWNlLmg+IAo+ID4gKyNpbmNsdWRlIDxsaW51eC9yZXNldC5oPiAKPiA+
+ICsgCj4gPiArI2luY2x1ZGUgInBpbmN0cmwtc3VueGkuaCIgCj4gPiArIAo+ID4gK3N0YXRpYyBj
+b25zdCBzdHJ1Y3Qgc3VueGlfZGVzY19waW4gc3VuNTBpX2E2NF9yX3BpbnNbXSA9IHsgCj4gPiAr
+wqDCoMKgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAwKSwgCj4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19p
+biIpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElP
+TigweDEsICJncGlvX291dCIpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBTVU5YSV9GVU5DVElPTigweDIsICJzX3JzYiIpLMKgwqDCoMKgwqDCoMKgwqAgLyogU0NLICov
+IAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4
+MywgInNfaTJjIikswqDCoMKgwqDCoMKgwqDCoCAvKiBTQ0sgKi8gCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCAwKSks
+wqAgLyogUExfRUlOVDAgKi8gCj4gPiArwqDCoMKgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5D
+VFJMX1BJTihMLCAxKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VO
+WElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDEsICJncGlvX291dCIpLCAKPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDIsICJzX3JzYiIpLMKg
+wqDCoMKgwqDCoMKgwqAgLyogU0RBICovIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MywgInNfaTJjIikswqDCoMKgwqDCoMKgwqDCoCAvKiBT
+REEgKi8gCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJ
+T05fSVJRX0JBTksoMHg2LCAwLCAxKSkswqAgLyogUExfRUlOVDEgKi8gCj4gPiArwqDCoMKgwqDC
+oMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAyKSwgCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLCAKPiA+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDEsICJn
+cGlvX291dCIpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9G
+VU5DVElPTigweDIsICJzX3VhcnQiKSzCoMKgwqDCoMKgwqDCoCAvKiBUWCAqLyAKPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTl9JUlFfQkFOSygweDYs
+IDAsIDIpKSzCoCAvKiBQTF9FSU5UMiAqLyAKPiA+ICvCoMKgwqDCoMKgwqAgU1VOWElfUElOKFNV
+TlhJX1BJTkNUUkxfUElOKEwsIDMpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiksIAo+ID4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksIAo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MiwgInNf
+dWFydCIpLMKgwqDCoMKgwqDCoMKgIC8qIFJYICovIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5LKDB4NiwgMCwgMykpLMKgIC8qIFBM
+X0VJTlQzICovIAo+ID4gK8KgwqDCoMKgwqDCoCBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4o
+TCwgNCksIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNU
+SU9OKDB4MCwgImdwaW9faW4iKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgzLCAic19qdGFnIikswqDCoMKgwqDC
+oMKgwqAgLyogTVMgKi8gCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VO
+WElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCA0KSkswqAgLyogUExfRUlOVDQgKi8gCj4gPiAr
+wqDCoMKgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCA1KSwgCj4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19p
+biIpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElP
+TigweDEsICJncGlvX291dCIpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBTVU5YSV9GVU5DVElPTigweDMsICJzX2p0YWciKSzCoMKgwqDCoMKgwqDCoCAvKiBDSyAqLyAK
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTl9JUlFf
+QkFOSygweDYsIDAsIDUpKSzCoCAvKiBQTF9FSU5UNSAqLyAKPiA+ICvCoMKgwqDCoMKgwqAgU1VO
+WElfUElOKFNVTlhJX1BJTkNUUkxfUElOKEwsIDYpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiksIAo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0
+IiksIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9O
+KDB4MywgInNfanRhZyIpLMKgwqDCoMKgwqDCoMKgIC8qIERPICovIAo+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5LKDB4NiwgMCwgNikp
+LMKgIC8qIFBMX0VJTlQ2ICovIAo+ID4gK8KgwqDCoMKgwqDCoCBTVU5YSV9QSU4oU1VOWElfUElO
+Q1RSTF9QSU4oTCwgNyksIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNV
+TlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgzLCAic19qdGFnIiks
+wqDCoMKgwqDCoMKgwqAgLyogREkgKi8gCj4KPiBUaGUgZnVuY3Rpb24gSUQgZm9yIEpUQUcgb24g
+cGlucyBQTDQgfiBQTDcgc2hvdWxkIGJlIDB4Miwgbm90IDB4My4gCj4KPiBPdGhlcndpc2UsIAo+
+Cj4gQWNrZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4gCj4KClRoYW5rcyEKCkxp
+bnVzLCBzaG91bGQgSSByZXNlbmQgb25lIG5ldyB2ZXJzaW9uIGFzIHNvb24gYXMgcG9zc2libGU/
+Cgo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OX0lS
+UV9CQU5LKDB4NiwgMCwgNykpLMKgIC8qIFBMX0VJTlQ3ICovIAo+ID4gK8KgwqDCoMKgwqDCoCBT
+VU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oTCwgOCksIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwgCj4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19v
+dXQiKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJ
+T04oMHgyLCAic19pMmMiKSzCoMKgwqDCoMKgwqDCoMKgIC8qIFNDSyAqLyAKPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTl9JUlFfQkFOSygweDYsIDAs
+IDgpKSzCoCAvKiBQTF9FSU5UOCAqLyAKPiA+ICvCoMKgwqDCoMKgwqAgU1VOWElfUElOKFNVTlhJ
+X1BJTkNUUkxfUElOKEwsIDkpLCAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oCBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiksIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksIAo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MiwgInNfaTJj
+IikswqDCoMKgwqDCoMKgwqDCoCAvKiBTREEgKi8gCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCA5KSkswqAgLyogUExf
+RUlOVDkgKi8gCj4gPiArwqDCoMKgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihM
+LCAxMCksIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNU
+SU9OKDB4MCwgImdwaW9faW4iKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgyLCAic19wd20iKSwgCj4gPiArwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2
+LCAwLCAxMCkpLCAvKiBQTF9FSU5UMTAgKi8gCj4gPiArwqDCoMKgwqDCoMKgIFNVTlhJX1BJTihT
+VU5YSV9QSU5DVFJMX1BJTihMLCAxMSksIAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwgCj4gPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4g
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgyLCAi
+c19jaXJfcngiKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElf
+RlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCAxMSkpLCAvKiBQTF9FSU5UMTEgKi8gCj4gPiArwqDC
+oMKgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAxMiksIAo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4i
+KSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04o
+MHgxLCAiZ3Bpb19vdXQiKSwgCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
+U1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCAxMikpLCAvKiBQTF9FSU5UMTIgKi8gCj4g
+PiArfTsgCj4gPiArIAo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VueGlfcGluY3RybF9kZXNj
+IHN1bjUwaV9hNjRfcl9waW5jdHJsX2RhdGEgPSB7IAo+ID4gK8KgwqDCoMKgwqDCoCAucGlucyA9
+IHN1bjUwaV9hNjRfcl9waW5zLCAKPiA+ICvCoMKgwqDCoMKgwqAgLm5waW5zID0gQVJSQVlfU0la
+RShzdW41MGlfYTY0X3JfcGlucyksIAo+ID4gK8KgwqDCoMKgwqDCoCAucGluX2Jhc2UgPSBQTF9C
+QVNFLCAKPiA+ICvCoMKgwqDCoMKgwqAgLmlycV9iYW5rcyA9IDEsIAo+ID4gK307IAo+ID4gKyAK
+PiA+ICtzdGF0aWMgaW50IHN1bjUwaV9hNjRfcl9waW5jdHJsX3Byb2JlKHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXYpIAo+ID4gK3sgCj4gPiArwqDCoMKgwqDCoMKgIHN0cnVjdCByZXNldF9j
+b250cm9sICpyc3RjOyAKPiA+ICvCoMKgwqDCoMKgwqAgaW50IHJldDsgCj4gPiArIAo+ID4gK8Kg
+wqDCoMKgwqDCoCByc3RjID0gZGV2bV9yZXNldF9jb250cm9sX2dldCgmcGRldi0+ZGV2LCBOVUxM
+KTsgCj4gPiArwqDCoMKgwqDCoMKgIGlmIChJU19FUlIocnN0YykpIHsgCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBkZXZfZXJyKCZwZGV2LT5kZXYsICJSZXNldCBjb250cm9sbGVy
+IG1pc3NpbmdcbiIpOyAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiBQ
+VFJfRVJSKHJzdGMpOyAKPiA+ICvCoMKgwqDCoMKgwqAgfSAKPiA+ICsgCj4gPiArwqDCoMKgwqDC
+oMKgIHJldCA9IHJlc2V0X2NvbnRyb2xfZGVhc3NlcnQocnN0Yyk7IAo+ID4gK8KgwqDCoMKgwqDC
+oCBpZiAocmV0KSAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7
+IAo+ID4gKyAKPiA+ICvCoMKgwqDCoMKgwqAgcmV0ID0gc3VueGlfcGluY3RybF9pbml0KHBkZXYs
+IAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgICZzdW41MGlfYTY0X3JfcGluY3RybF9kYXRhKTsgCj4gPiArIAo+ID4gK8Kg
+wqDCoMKgwqDCoCBpZiAocmV0KSAKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJl
+c2V0X2NvbnRyb2xfYXNzZXJ0KHJzdGMpOyAKPiA+ICsgCj4gPiArwqDCoMKgwqDCoMKgIHJldHVy
+biByZXQ7IAo+ID4gK30gCj4gPiArIAo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkIHN1bjUwaV9hNjRfcl9waW5jdHJsX21hdGNoW10gPSB7IAo+ID4gK8KgwqDCoMKgwqDCoCB7
+IC5jb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41MGktYTY0LXItcGluY3RybCIsIH0sIAo+ID4g
+K8KgwqDCoMKgwqDCoCB7fSAKPiA+ICt9OyAKPiA+ICsgCj4gPiArc3RhdGljIHN0cnVjdCBwbGF0
+Zm9ybV9kcml2ZXIgc3VuNTBpX2E2NF9yX3BpbmN0cmxfZHJpdmVyID0geyAKPiA+ICvCoMKgwqDC
+oMKgwqAgLnByb2JlwqAgPSBzdW41MGlfYTY0X3JfcGluY3RybF9wcm9iZSwgCj4gPiArwqDCoMKg
+wqDCoMKgIC5kcml2ZXIgPSB7IAo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLm5h
+bWXCoMKgwqDCoMKgwqDCoMKgwqDCoCA9ICJzdW41MGktYTY0LXItcGluY3RybCIsIAo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLm9mX21hdGNoX3RhYmxlID0gc3VuNTBpX2E2NF9y
+X3BpbmN0cmxfbWF0Y2gsIAo+ID4gK8KgwqDCoMKgwqDCoCB9LCAKPiA+ICt9OyAKPiA+ICtidWls
+dGluX3BsYXRmb3JtX2RyaXZlcihzdW41MGlfYTY0X3JfcGluY3RybF9kcml2ZXIpOyAKPiA+IC0t
+IAo+ID4gMi4xMS4wIAo+ID4gCj4gPiAtLSAKPiA+IFlvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2Ug
+YmVjYXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1
+bnhpIiBncm91cC4gCj4gPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3Ag
+cmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vu
+c3Vic2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uIAo+ID4gRm9yIG1vcmUgb3B0aW9ucywgdmlzaXQg
+aHR0cHM6Ly9ncm91cHMuZ29vZ2xlLmNvbS9kL29wdG91dC4gCg0KLS0gCllvdSByZWNlaXZlZCB0
+aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91
+cHMgImxpbnV4LXN1bnhpIiBncm91cC4KVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFu
+ZCBzdG9wIHJlY2VpdmluZyBlbWFpbHMgZnJvbSBpdCwgc2VuZCBhbiBlbWFpbCB0byBsaW51eC1z
+dW54aSt1bnN1YnNjcmliZUBnb29nbGVncm91cHMuY29tLgpGb3IgbW9yZSBvcHRpb25zLCB2aXNp
+dCBodHRwczovL2dyb3Vwcy5nb29nbGUuY29tL2Qvb3B0b3V0Lgo=
