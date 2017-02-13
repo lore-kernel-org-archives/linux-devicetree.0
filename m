@@ -1,55 +1,63 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH] mm: free reserved area's memmap if possiable
-Date: Mon, 13 Feb 2017 12:24:07 +0000
-Message-ID: <20170213122407.GX27312@n2100.armlinux.org.uk>
-References: <1486987349-58711-1-git-send-email-zhouxianrong@huawei.com>
- <20170213121659.GM1512@arm.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v13 00/12] power: add power sequence library
+Date: Mon, 13 Feb 2017 13:22:23 +0100
+Message-ID: <16530165.MCAOCP1KgW@aspire.rjw.lan>
+References: <1486776443-2280-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <owner-linux-mm@kvack.org>
-Content-Disposition: inline
-In-Reply-To: <20170213121659.GM1512@arm.com>
-Sender: owner-linux-mm@kvack.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: zhouxianrong@huawei.com, mark.rutland@arm.com, wangkefeng.wang@huawei.com, srikar@linux.vnet.ibm.com, Mi.Sophia.Wang@huawei.com, catalin.marinas@arm.com, linux-mm@kvack.org, zhangshiming5@huawei.com, frowand.list@gmail.com, zijun_hu@htc.com, jszhang@marvell.com, won.ho.park@huawei.com, kuleshovmail@gmail.com, devicetree@vger.kernel.org, chengang@emindsoft.com.cn, zhouxiyu@huawei.com, tj@kernel.org, robh+dt@kernel.org, weidu.du@huawei.com, linux-arm-kernel@lists.infradead.org, ard.biesheuvel@linaro.org, steve.capper@arm.com, linux-kernel@vger.kernel.org, joe@perches.com, dennis.chen@arm.com, akpm@linux-foundation.org, gkulkarni@caviumnetworks.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486776443-2280-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frank.li-3arQi8VN3Tc@public.gmane.org, jun.li-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 12:17:00PM +0000, Will Deacon wrote:
-> Adding linux-arm-kernel and devicetree (look for "raw-pfn"), since this
-> impacts directly on those.
+On Saturday, February 11, 2017 09:27:11 AM Peter Chen wrote:
+> Hi all,
 > 
-> On Mon, Feb 13, 2017 at 08:02:29PM +0800, zhouxianrong@huawei.com wrote:
-> > From: zhouxianrong <zhouxianrong@huawei.com>
-> > 
-> > just like freeing no-map area's memmap we could free reserved
-> > area's memmap as well only when user of reserved area indicate
-> > that we can do this in dts or drivers. that is, user of reserved
-> > area know how to use the reserved area who could not memblock_free
-> > or free_reserved_xxx the reserved area and regard the area as raw
-> > pfn usage. the patch supply a way to users who want to utilize the
-> > memmap memory corresponding to raw pfn reserved areas as many as
-> > possible.
+> This is a follow-up for my last power sequence framework patch set [1].
+> According to Rob Herring and Ulf Hansson's comments[2]. The kinds of
+> power sequence instances will be added at postcore_initcall, the match
+> criteria is compatible string first, if the compatible string is not
+> matched between dts and library, it will try to use generic power sequence.
+> 	 
+> The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> if only one power sequence instance is needed, for more power sequences
+> are used, using of_pwrseq_on_list/of_pwrseq_off_list instead (eg, USB hub driver).
 > 
-> I don't really understand this. Can you point me at a specific use-case,
-> please? Is CMA involved here?
+> In future, if there are special power sequence requirements, the special
+> power sequence library can be created.
+> 
+> This patch set is tested on i.mx6 sabresx evk using a dts change, I use
+> two hot-plug devices to simulate this use case, the related binding
+> change is updated at patch [1/6], The udoo board changes were tested
+> using my last power sequence patch set.[3]
+> 
+> Except for hard-wired MMC and USB devices, I find the USB ULPI PHY also
+> need to power on itself before it can be found by ULPI bus.
+> 
+> Changes for v13:
+> - Add more design descriptions at design doc and fix one build error
+>   introduced by v12 wrongly [Patch 2/12]
+> - Add the last three dts patches which were forgotten at last series
+> - Move the comment for usb_create_shared_hcd to correct place [Patch 3/12]
+> - Add sysdev for shared hcd too for xhci-plat.c [Patch 6/12]
+> 
+> Rafael, if the first two power sequence patches are ok for you, would you consider
+> accept these first, the other USB patches can go through USB tree at v4.12-rc1?
 
-You don't need "dt permission" to free the memmap page array for the
-regions between memory areas.  In fact, adding a DT property for that
-goes against the "DT describes the hardware not the implementation"
-requirement, since the memmap page array is a Linux implementation
-detail.
+OK, I'll look at the [1-2/12] in the first place, but please give me some time
+and stop sending new versions of the whole patchset continuously for the time
+being.
 
-32-bit ARM has been freeing the memmap page array between memory areas
-for years since pre-DT days, and continues to do so.  See
-free_unused_memmap().
+Also I'm not going to take anything from this series without the Greg's consent,
+just to be clear.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Thanks,
+Rafael
 
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
