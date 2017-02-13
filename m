@@ -1,64 +1,49 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 0/7] Rename RK1108 to RV1108
-Date: Mon, 13 Feb 2017 13:51:53 +0100
-Message-ID: <2809087.MHZWQWdaOC@phil>
-References: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 2/3] ASoC: zx-i2s: Add the info of pclk
+ to the binding document for zx2967 family
+Date: Mon, 13 Feb 2017 21:05:36 +0800
+Message-ID: <20170213130534.GA4151@dragon>
+References: <1486609978-18482-1-git-send-email-baoyou.xie@linaro.org>
+ <1486609978-18482-2-git-send-email-baoyou.xie@linaro.org>
+ <20170209164645.ztvockrd6jxpybwt@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>, robh+dt@kernel.org
-Cc: linus.walleij@linaro.org, shawn.lin@rock-chips.com, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20170209164645.ztvockrd6jxpybwt@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, shawn.guo@linaro.org, mathieu.poirier@linaro.org, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, sboyd@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, chen.chaokai@zte.com.cn, xie.baoyou@zte.com.cn, wang.qiang01@zte.com.cn, jun.nie@linaro.org, Baoyou Xie <baoyou.xie@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
-
-Am Montag, 13. Februar 2017, 18:59:26 CET schrieb Andy Yan:
-> Rockchip finally named this soc as RV1108, so change
-> RK1108/rk1108 to RV1108/rv1108 for compatible.
-
-renaming existing bindings (that have been in multiple kernel versions 
-already) always is a hot topic. So I'll be hoping for Rob to give a go-ahead 
-for it :-) .
-
-Just to confirm, the rk1108/rv1108 is completely new to the market, so we're 
-not breaking any existing devices, right?
-
-
-Heiko
-
-
-
-> Andy Yan (7):
->   dt-bindings: rockchip-dw-mshc: rename RK1108 to RV1108
->   dt-bindings: rk1108-cru: rename RK1108 to RV1108
->   clk: rockchip: rename RK1108 to RV1108
->   dt-bindings: rockchip,pinctrl: rename RK1108 to RV1108
->   pinctrl: rockchip: rename RK1108 to RV1108
->   ARM: dts: rename RK1108 to RV1108
->   ARM: rockchip: reanme RK1108 to RV1108
+On Thu, Feb 09, 2017 at 04:46:45PM +0000, Mark Brown wrote:
+> On Thu, Feb 09, 2017 at 11:12:57AM +0800, Baoyou Xie wrote:
 > 
->  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +-
->  ...chip,rk1108-cru.txt => rockchip,rv1108-cru.txt} |  12 +-
->  .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   2 +-
->  .../bindings/pinctrl/rockchip,pinctrl.txt          |  16 +-
->  arch/arm/boot/dts/Makefile                         |   2 +-
->  .../boot/dts/{rk1108-evb.dts => rv1108-evb.dts}    |   7 +-
->  arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi}     |  24 +-
->  drivers/clk/rockchip/Makefile                      |   2 +-
->  .../clk/rockchip/{clk-rk1108.c => clk-rv1108.c}    | 414
-> ++++++++++----------- drivers/clk/rockchip/clk.h                         | 
-> 28 +-
->  drivers/pinctrl/pinctrl-rockchip.c                 |  76 ++--
->  .../clock/{rk1108-cru.h => rv1108-cru.h}           |   6 +-
->  12 files changed, 300 insertions(+), 293 deletions(-)
->  rename Documentation/devicetree/bindings/clock/{rockchip,rk1108-cru.txt =>
-> rockchip,rv1108-cru.txt} (83%) rename arch/arm/boot/dts/{rk1108-evb.dts =>
-> rv1108-evb.dts} (89%) rename arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi}
-> (94%)
->  rename drivers/clk/rockchip/{clk-rk1108.c => clk-rv1108.c} (57%)
->  rename include/dt-bindings/clock/{rk1108-cru.h => rv1108-cru.h} (97%)
+> > - - compatible : Must be "zte,zx296702-i2s"
+> > + - compatible : Must be one of:
+> > +	"zte,zx296718-i2s", "zte,zx296702-i2s"
+> > +	"zte,zx296702-i2s"
+> 
+> You've added the new compatible twice here?
 
+It's indeed a bit confusing.  Might be better if we add a couple of
+bullet like below.
 
+ - compatible : Must be one of:
+	- "zte,zx296718-i2s", "zte,zx296702-i2s";
+	- "zte,zx296702-i2s";
+
+In this case, it's more easier for readers to understand that the first
+one is for I2S device on SoC ZX296718, while it's compatible with the
+I2S on ZX296702.
+
+Shawn
