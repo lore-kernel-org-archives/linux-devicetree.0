@@ -1,225 +1,347 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/8] pinctrl: sunxi: Add A64 R_PIO
- controller support
-Date: Mon, 13 Feb 2017 23:09:48 +0800
-Message-ID: <CAGb2v64aGGwac9AfA=_ZgZppcSoi54Os3tix6O==vdJ3Z_UD0Q@mail.gmail.com>
-References: <20170208100009.29362-1-icenowy@aosc.xyz> <20170208100009.29362-3-icenowy@aosc.xyz>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v2 6/9] arm, arm64: factorize common cpu capacity default
+ code
+Date: Mon, 13 Feb 2017 15:09:31 +0000
+Message-ID: <20170213150918.GE3432@e106622-lin>
+References: <20170209092525.6654-1-juri.lelli@arm.com>
+ <20170209092525.6654-7-juri.lelli@arm.com>
+ <20170210142857.GA18321@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVEYQ7CQKGQED5OOOJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170208100009.29362-3-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170210142857.GA18321@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 6:00 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> The A64 has a R_PIO pin controller, similar to the one found on the H3 SoC.
-> Add support for the pins controlled by the R_PIO controller.
->
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  drivers/pinctrl/sunxi/Kconfig                |   5 +
->  drivers/pinctrl/sunxi/Makefile               |   1 +
->  drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c | 143 +++++++++++++++++++++++++++
->  3 files changed, 149 insertions(+)
->  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
->
-> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-> index 92d845827577..df5089841c6e 100644
-> --- a/drivers/pinctrl/sunxi/Kconfig
-> +++ b/drivers/pinctrl/sunxi/Kconfig
-> @@ -72,6 +72,11 @@ config PINCTRL_SUN50I_A64
->         bool
->         select PINCTRL_SUNXI
->
-> +config PINCTRL_SUN50I_A64_R
-> +       bool
-> +       depends on RESET_CONTROLLER
-> +       select PINCTRL_SUNXI
-> +
->  config PINCTRL_SUN50I_H5
->         bool
->         select PINCTRL_SUNXI
-> diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-> index f9a3855c42f1..ce956258cc39 100644
-> --- a/drivers/pinctrl/sunxi/Makefile
-> +++ b/drivers/pinctrl/sunxi/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23)               += pinctrl-sun8i-a23.o
->  obj-$(CONFIG_PINCTRL_SUN8I_A23_R)      += pinctrl-sun8i-a23-r.o
->  obj-$(CONFIG_PINCTRL_SUN8I_A33)                += pinctrl-sun8i-a33.o
->  obj-$(CONFIG_PINCTRL_SUN50I_A64)       += pinctrl-sun50i-a64.o
-> +obj-$(CONFIG_PINCTRL_SUN50I_A64_R)     += pinctrl-sun50i-a64-r.o
->  obj-$(CONFIG_PINCTRL_SUN8I_A83T)       += pinctrl-sun8i-a83t.o
->  obj-$(CONFIG_PINCTRL_SUN8I_H3)         += pinctrl-sun8i-h3.o
->  obj-$(CONFIG_PINCTRL_SUN8I_H3_R)       += pinctrl-sun8i-h3-r.o
-> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-> new file mode 100644
-> index 000000000000..90996a63689b
-> --- /dev/null
-> +++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-> @@ -0,0 +1,143 @@
-> +/*
-> + * Allwinner A64 SoCs special pins pinctrl driver.
-> + *
-> + * Based on pinctrl-sun8i-a23-r.c
-> + *
-> + * Copyright (C) 2016 Icenowy Zheng
-> + * Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * Copyright (C) 2014 Chen-Yu Tsai
-> + * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> + *
-> + * Copyright (C) 2014 Boris Brezillon
-> + * Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * Copyright (C) 2014 Maxime Ripard
-> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset.h>
-> +
-> +#include "pinctrl-sunxi.h"
-> +
-> +static const struct sunxi_desc_pin sun50i_a64_r_pins[] = {
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_rsb"),         /* SCK */
-> +                 SUNXI_FUNCTION(0x3, "s_i2c"),         /* SCK */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),  /* PL_EINT0 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_rsb"),         /* SDA */
-> +                 SUNXI_FUNCTION(0x3, "s_i2c"),         /* SDA */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),  /* PL_EINT1 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_uart"),        /* TX */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),  /* PL_EINT2 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_uart"),        /* RX */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),  /* PL_EINT3 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* MS */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),  /* PL_EINT4 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* CK */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),  /* PL_EINT5 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* DO */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),  /* PL_EINT6 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x3, "s_jtag"),        /* DI */
+Hi Greg,
 
-The function ID for JTAG on pins PL4 ~ PL7 should be 0x2, not 0x3.
+On 10/02/17 15:28, Greg KH wrote:
+> On Thu, Feb 09, 2017 at 09:25:22AM +0000, Juri Lelli wrote:
+> > arm and arm64 share lot of code relative to parsing CPU capacity
+> > information from DT, using that information for appropriate scaling and
+> > exposing a sysfs interface for chaging such values at runtime.
+> > 
+> > Factorize such code in a common place (driver/base/arch_topology.c) in
+> > preparation for further additions.
+> > 
+> > Suggested-by: Will Deacon <will.deacon@arm.com>
+> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> > Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+> > ---
+> > 
+> > Changes from v1:
+> >  - keep the original GPLv2 header
+> > ---
+> >  arch/arm/Kconfig             |   1 +
+> >  arch/arm/kernel/topology.c   | 213 ++------------------------------------
+> >  arch/arm64/Kconfig           |   1 +
+> >  arch/arm64/kernel/topology.c | 219 +--------------------------------------
+> >  drivers/base/Kconfig         |   8 ++
+> >  drivers/base/Makefile        |   1 +
+> >  drivers/base/arch_topology.c | 237 +++++++++++++++++++++++++++++++++++++++++++
+> >  7 files changed, 257 insertions(+), 423 deletions(-)
+> >  create mode 100644 drivers/base/arch_topology.c
+> 
+> Ah, so you want _me_ to maintain this, ok, I better review it...
+> 
 
-Otherwise,
+This has been suggested as a possible way to stop replicating code between arm
+and arm64 (and possibly other archs in the future). Are you in principle OK
+with it?
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Thanks a lot for your comments, please find my answers below.
 
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),  /* PL_EINT7 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_i2c"),         /* SCK */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),  /* PL_EINT8 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_i2c"),         /* SDA */
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),  /* PL_EINT9 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_pwm"),
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)), /* PL_EINT10 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION(0x2, "s_cir_rx"),
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)), /* PL_EINT11 */
-> +       SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 12),
-> +                 SUNXI_FUNCTION(0x0, "gpio_in"),
-> +                 SUNXI_FUNCTION(0x1, "gpio_out"),
-> +                 SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 12)), /* PL_EINT12 */
-> +};
-> +
-> +static const struct sunxi_pinctrl_desc sun50i_a64_r_pinctrl_data = {
-> +       .pins = sun50i_a64_r_pins,
-> +       .npins = ARRAY_SIZE(sun50i_a64_r_pins),
-> +       .pin_base = PL_BASE,
-> +       .irq_banks = 1,
-> +};
-> +
-> +static int sun50i_a64_r_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +       struct reset_control *rstc;
-> +       int ret;
-> +
-> +       rstc = devm_reset_control_get(&pdev->dev, NULL);
-> +       if (IS_ERR(rstc)) {
-> +               dev_err(&pdev->dev, "Reset controller missing\n");
-> +               return PTR_ERR(rstc);
-> +       }
-> +
-> +       ret = reset_control_deassert(rstc);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = sunxi_pinctrl_init(pdev,
-> +                                &sun50i_a64_r_pinctrl_data);
-> +
-> +       if (ret)
-> +               reset_control_assert(rstc);
-> +
-> +       return ret;
-> +}
-> +
-> +static const struct of_device_id sun50i_a64_r_pinctrl_match[] = {
-> +       { .compatible = "allwinner,sun50i-a64-r-pinctrl", },
-> +       {}
-> +};
-> +
-> +static struct platform_driver sun50i_a64_r_pinctrl_driver = {
-> +       .probe  = sun50i_a64_r_pinctrl_probe,
-> +       .driver = {
-> +               .name           = "sun50i-a64-r-pinctrl",
-> +               .of_match_table = sun50i_a64_r_pinctrl_match,
-> +       },
-> +};
-> +builtin_platform_driver(sun50i_a64_r_pinctrl_driver);
-> --
-> 2.11.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+> > --- a/drivers/base/Kconfig
+> > +++ b/drivers/base/Kconfig
+> > @@ -339,4 +339,12 @@ config CMA_ALIGNMENT
+> >  
+> >  endif
+> >  
+> > +config GENERIC_ARCH_TOPOLOGY
+> > +	bool
+> > +	help
+> > +	  Enable support for architectures common topology code: e.g., parsing
+> > +	  CPU capacity information from DT, usage of such information for
+> > +	  appropriate scaling, sysfs interface for changing capacity values at
+> > +          runtime.
+> 
+> Mix of spaces and tabs :(
+> 
+
+Argh. :(
+
+> > +
+> >  endmenu
+> > diff --git a/drivers/base/Makefile b/drivers/base/Makefile
+> > index f2816f6ff76a..397e5c344e6a 100644
+> > --- a/drivers/base/Makefile
+> > +++ b/drivers/base/Makefile
+> > @@ -23,6 +23,7 @@ obj-$(CONFIG_SOC_BUS) += soc.o
+> >  obj-$(CONFIG_PINCTRL) += pinctrl.o
+> >  obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
+> >  obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) += platform-msi.o
+> > +obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
+> >  
+> >  obj-y			+= test/
+> >  
+> > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> > new file mode 100644
+> > index 000000000000..c1dd430adad2
+> > --- /dev/null
+> > +++ b/drivers/base/arch_topology.c
+> > @@ -0,0 +1,237 @@
+> > +/*
+> > + * driver/base/arch_topology.c - Arch specific cpu topology information
+> 
+> No need to keep the filename in the file, you know what it is called :)
+> 
+
+OK, removed.
+
+> > + *
+> > + * Copyright (C) 2016, ARM Ltd.
+> > + * Written by: Juri Lelli, ARM Ltd.
+> > + *
+> > + * This file is subject to the terms and conditions of the GNU General Public
+> > + * License.  See the file "COPYING" in the main directory of this archive
+> > + * for more details.
+> 
+> So, v2 only?  Please be specific.  Even better yet, use a SPDX header if
+> you want to, those are always nice.
+> 
+
+Yes, v2 only.
+
+  * for more details.                                                                                                                                                                                                                    
++ *                                                                                                                                                                                                                                      
++ * Released under the GPLv2 only.                                                                                                                                                                                                       
++ * SPDX-License-Identifier: GPL-2.0 
+
+Would do, right?
+
+> > + */
+> > +
+> > +#include <linux/acpi.h>
+> > +#include <linux/cpu.h>
+> > +#include <linux/cpufreq.h>
+> > +#include <linux/device.h>
+> > +#include <linux/of.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/string.h>
+> > +#include <linux/topology.h>
+> > +
+> > +static DEFINE_MUTEX(cpu_scale_mutex);
+> > +static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
+> > +
+> > +unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
+> 
+> Why do you have sd here?  You never use it:
+> 
+> > +{
+> > +	return per_cpu(cpu_scale, cpu);
+> 
+> See?  What am I missing?
+> 
+
+This is how this function is defined in kernel/sched/sched.h:
+
+#ifndef arch_scale_cpu_capacity
+static __always_inline
+unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
+{
+	if (sd && (sd->flags & SD_SHARE_CPUCAPACITY) && (sd->span_weight > 1))
+		return sd->smt_gain / sd->span_weight;
+
+	return SCHED_CAPACITY_SCALE;
+}
+#endif
+
+and in this case the sd argument is used: there is a call site in fair.c
+that passes a non NULL sd, updated_cpu_capacity().
+
+A following set of patches will re-define the function so that the
+drivers one gets used by the kernel (only arm and arm64 will currently
+want this), with something like this in arch code
+
+#define arch_scale_cpu_capacity atd_scale_cpu_capacity
+
+Please note that last patch of this set renames this function atd_scale_
+cpu_capacity, to (hopefully) make this approach more clear.
+
+Does it make more sense to you?
+
+> > +}
+> > +
+> > +void set_capacity_scale(unsigned int cpu, unsigned long capacity)
+> > +{
+> > +	per_cpu(cpu_scale, cpu) = capacity;
+> > +}
+> > +
+> > +static ssize_t cpu_capacity_show(struct device *dev,
+> > +				 struct device_attribute *attr,
+> > +				 char *buf)
+> > +{
+> > +	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> > +
+> > +	return sprintf(buf, "%lu\n",
+> > +			arch_scale_cpu_capacity(NULL, cpu->dev.id));
+> > +}
+> > +
+> > +static ssize_t cpu_capacity_store(struct device *dev,
+> > +				  struct device_attribute *attr,
+> > +				  const char *buf,
+> > +				  size_t count)
+> > +{
+> > +	struct cpu *cpu = container_of(dev, struct cpu, dev);
+> > +	int this_cpu = cpu->dev.id, i;
+> 
+> new line for:
+> 	int i;
+> please.
+> 
+
+Sure.
+
+> > +	unsigned long new_capacity;
+> > +	ssize_t ret;
+> > +
+> > +	if (count) {
+> 
+> 	if (!count)
+> 		return 0;
+> 
+> then you can get on with the rest of the logic.  Don't indent if you
+> don't have to.
+> 
+
+Right.
+
+> > +		ret = kstrtoul(buf, 0, &new_capacity);
+> > +		if (ret)
+> > +			return ret;
+> > +		if (new_capacity > SCHED_CAPACITY_SCALE)
+> > +			return -EINVAL;
+> > +
+> > +		mutex_lock(&cpu_scale_mutex);
+> > +		for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
+> > +			set_capacity_scale(i, new_capacity);
+> > +		mutex_unlock(&cpu_scale_mutex);
+> > +	}
+> > +
+> > +	return count;
+> > +}
+> 
+> No documentation for these sysfs file?  Not good :(
+> 
+
+Patch 2/9 introduces some documentation. There is already more in
+Documentation/devicetree/bindings/arm/cpu-capacity.txt.
+
+Do you think I should improve further?
+
+> > +
+> > +static DEVICE_ATTR_RW(cpu_capacity);
+> > +
+> > +static int register_cpu_capacity_sysctl(void)
+> > +{
+> > +	int i;
+> > +	struct device *cpu;
+> > +
+> > +	for_each_possible_cpu(i) {
+> > +		cpu = get_cpu_device(i);
+> > +		if (!cpu) {
+> > +			pr_err("%s: too early to get CPU%d device!\n",
+> > +			       __func__, i);
+> 
+> What is this going to help with?
+> 
+
+Not much I guess, I can remove it.
+
+> > +			continue;
+> > +		}
+> > +		device_create_file(cpu, &dev_attr_cpu_capacity);
+> 
+> You realize you just raced userspace, right?  Why do it this way and not
+> register the files when the CPU device is created/removed?
+> 
+
+Humm, my intention for doing it this way is that I'd like to make all
+the code dealing with cpu_capacity confined in a single place (this
+file), without the need to modify other files.
+
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +subsys_initcall(register_cpu_capacity_sysctl);
+
+AFAIU, for both arm and arm64 CPU device is registered with a
+subsys_initcall(topology_init), so I'm doing the same. Other archs seem to do
+similar things. Could you explain a little more why this is a problem?
+
+> > +
+> > +u32 capacity_scale;
+> > +u32 *raw_capacity;
+> > +bool cap_parsing_failed;
+> 
+> globals?  really?  That's bold :(
+> 
+
+Yeah, ugly. However, patch 7/9 is making cap_parsing_failed static. The other
+two can be made static already, I should have done that in the first place. :(
+
+BTW, with this set I'm trying to incrementally fix things (after moving code in
+the new place), does it look reasonable to you or would you prefer to squash
+intermediate steps?
+
+> > +
+> > +void normalize_cpu_capacity(void)
+> 
+> naming is hard, but try to put a good, descriptive, prefix on everything
+> you are exporting in the same file, the same prefix.
+> 
+> cpu_capacity_normalize()?
+> cpu_capacity_register_sysctl()?
+> 
+> and so on.
+> 
+> > +{
+> > +	u64 capacity;
+> > +	int cpu;
+> > +
+> > +	if (!raw_capacity || cap_parsing_failed)
+> > +		return;
+> > +
+> > +	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
+> > +	mutex_lock(&cpu_scale_mutex);
+> > +	for_each_possible_cpu(cpu) {
+> > +		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
+> > +			 cpu, raw_capacity[cpu]);
+> > +		capacity = (raw_capacity[cpu] << SCHED_CAPACITY_SHIFT)
+> > +			/ capacity_scale;
+> > +		set_capacity_scale(cpu, capacity);
+> > +		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
+> > +			cpu, arch_scale_cpu_capacity(NULL, cpu));
+> > +	}
+> > +	mutex_unlock(&cpu_scale_mutex);
+> > +}
+> > +
+> > +int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+> 
+> cpu_capacity_parse()?
+> 
+
+OK, I'll try to fix the naming as you suggest. Thanks!
+
+Best,
+
+- Juri
