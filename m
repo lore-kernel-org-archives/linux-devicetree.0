@@ -1,40 +1,166 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/3] mfd: wm831x: Add basic device tree binding
-Date: Mon, 13 Feb 2017 09:19:58 +0000
-Message-ID: <20170213091958.GX1754@localhost.localdomain>
-References: <1486734800-10141-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170213091603.njdtz43mllwpu6qc@dell>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev
+ driver
+Date: Mon, 13 Feb 2017 10:20:17 +0100
+Message-ID: <1486977617.2873.29.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+         <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
+         <1486036237.2289.37.camel@pengutronix.de>
+         <ca0a2eb3-21b6-d312-c8e0-61da48c4c700@gmail.com>
+         <20170208234235.GA27312@n2100.armlinux.org.uk>
+         <d6dba77e-902c-7a4c-cc70-fe3a5c9649bb@gmail.com>
+         <e9076980-ce84-f9ee-096d-865243b82a9e@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170213091603.njdtz43mllwpu6qc@dell>
+In-Reply-To: <e9076980-ce84-f9ee-096d-865243b82a9e-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 09:16:03AM +0000, Lee Jones wrote:
-> On Fri, 10 Feb 2017, Charles Keepax wrote:
-> 
-> > Add the basic ability to register the device through device tree, more
-> > work is needed to get each individual sub-driver functioning correctly
-> > but this is enough to get the device to probe from device tree.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> > ---
-> >  MAINTAINERS                     |  1 +
-> 
-> Irrelevant change.
-> 
-> Either submit it with patch that introduces the file or on its own.
-> 
+Hi Steve,
 
-Cool I will move it into the binding patch, also will fix up that
-warning from the build bot for v2 as well.
+On Thu, 2017-02-09 at 15:51 -0800, Steve Longerbeam wrote:
+> 
+> On 02/09/2017 03:49 PM, Steve Longerbeam wrote:
+> >
+> >
+> > On 02/08/2017 03:42 PM, Russell King - ARM Linux wrote:
+> >> On Wed, Feb 08, 2017 at 03:23:53PM -0800, Steve Longerbeam wrote:
+> >>>> Actually, this exact function already exists as 
+> >>>> dw_mipi_dsi_phy_write in
+> >>>> drivers/gpu/drm/rockchip/dw-mipi-dsi.c, and it looks like the D-PHY
+> >>>> register 0x44 might contain a field called HSFREQRANGE_SEL.
+> >>> Thanks for pointing out drivers/gpu/drm/rockchip/dw-mipi-dsi.c.
+> >>> It's clear from that driver that there probably needs to be a fuller
+> >>> treatment of the D-PHY programming here, but I don't know where
+> >>> to find the MIPI CSI-2 D-PHY documentation for the i.MX6. The code
+> >>> in imxcsi2_reset() was also pulled from FSL, and that's all I really 
+> >>> have
+> >>> to go on for the D-PHY programming. I assume the D-PHY is also a
+> >>> Synopsys core, like the host controller, but the i.MX6 manual doesn't
+> >>> cover it.
+> >> Why exactly?  What problems are you seeing that would necessitate a
+> >> more detailed programming of the D-PHY?  From my testing, I can wind
+> >> a 2-lane MIPI bus on iMX6D from 912Mbps per lane down to (eg) 308Mbps
+> >> per lane with your existing code without any issues.
+> >
+> > That's good to hear.
+> >
+> > Just from my experience with struggles to get the CSI2 receiver
+> > up and running with an active clock lane, and my suspicions that
+> > some of that could be due to my lack of understanding of the D-PHY
+> > programming.
+> 
+> But I should add that after a re-org of the sequence, it looks more stable
+> now. Tested on both the SabreSD and SabreLite with the OV5640.
 
-Thanks,
-Charles
+It seems the OV5640 driver never puts its the CSI-2 lanes into stop
+state while not streaming. With the recent s_stream reordering,
+streaming from TC358743 does not work anymore, since imx6-mipi-csi2
+s_stream is called before tc358743 s_stream, while all lanes are still
+in stop state. Then it waits for the clock lane to become active and
+fails. I have applied the following patch to revert the reordering
+locally to get it to work again.
+
+The initialization order, as Russell pointed out, should be:
+
+1. reset the D-PHY.
+2. place MIPI sensor in LP-11 state
+3. perform D-PHY initialisation
+4. configure CSI2 lanes and de-assert resets and shutdown signals
+
+So csi2_s_stream should wait for stop state on all lanes (the result of
+2.) before dphy_init (3.), not wait for active clock afterwards. That
+should happen only after sensor_s_stream was called. So unless we are
+allowed to reorder steps 1. and 2., we might need the prepare_stream
+callback after all.
+
+More specifically, the chapter 40.3.1 "Startup Sequence" in the i.MX6DQ
+reference manual states:
+
+1. Deassert presetn signal (global reset)
+   - This is probably the APB global reset, so not something we have to
+     care about.
+2. Configure MIPI Camera Sensor to put all Tx lanes in PL-11 state
+3. D-PHY initialization (write 0x14 to address 0x44)
+4. CSI2 Controller programming
+   - Set N_LANES
+   - Deassert PHY_SHUTDOWNZ
+   - Deassert PHY_RSTZ
+   - Deassert CSI2_RESETN
+5. Read the PHY status register (PHY_STATE) to confirm that all data and
+   clock lanes of the D-PHY are in Stop State
+6. Configure the MIPI Camera Sensor to start transmitting a clock on the
+   D-PHY clock lane
+7. CSI2 Controller programming - Read the PHY status register
+   (PHY_STATE) to confirm that the D-PHY is receiving a clock on the
+   D-PHY clock lane
+
+2. can be done in sensor s_power (which tc358743 currently does) only if
+the sensor can still be configured in step 6.
+Also, 3./4./5. are csi2 code, 6. is sensor code, and 7. is csi2 code
+again. For reliable startup we need csi2 receiver code to be called on
+both sides of the sensor enabling its clock lane.
+
+----------8<----------
+>From f12758caa3e1d05980cd2ac07587d125449fc860 Mon Sep 17 00:00:00 2001
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Date: Mon, 13 Feb 2017 09:28:27 +0100
+Subject: [PATCH] media: imx: revert streamon sequence change
+
+Without this patch, starting streaming from a TC358743 MIPI CSI-2 source
+fails with the following error messages:
+
+    imx6-mipi-csi2: clock lane timeout, phy_state = 0x000006f0
+    ipu1_csi0: pipeline_set_stream failed with -110
+
+The phy state above has the stopstateclk, rxulpsclknot, and
+stopstatedata[3:0] bits set: at this point all lanes are in stop state,
+no lane is in ultra low power state or active.
+This is no suprise, since tc358743 s_stream(sd, 1) has not been called
+due to the recently changed ordering. The imx6-mipi-csi2 s_stream does
+wait for the clock lane to become active, so csi2_s_stream must happen
+after tc358743_s_stream.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/staging/media/imx/imx-media-utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+index 81eabcf76a66f..495ccefa3cd2a 100644
+--- a/drivers/staging/media/imx/imx-media-utils.c
++++ b/drivers/staging/media/imx/imx-media-utils.c
+@@ -782,8 +782,8 @@ static const u32 stream_on_seq[] = {
+ 	IMX_MEDIA_GRP_ID_IC_PRPENC,
+ 	IMX_MEDIA_GRP_ID_IC_PRP,
+ 	IMX_MEDIA_GRP_ID_VDIC,
+-	IMX_MEDIA_GRP_ID_CSI2,
+ 	IMX_MEDIA_GRP_ID_SENSOR,
++	IMX_MEDIA_GRP_ID_CSI2,
+ 	IMX_MEDIA_GRP_ID_VIDMUX,
+ 	IMX_MEDIA_GRP_ID_CSI,
+ };
+@@ -795,8 +795,8 @@ static const u32 stream_off_seq[] = {
+ 	IMX_MEDIA_GRP_ID_VDIC,
+ 	IMX_MEDIA_GRP_ID_CSI,
+ 	IMX_MEDIA_GRP_ID_VIDMUX,
+-	IMX_MEDIA_GRP_ID_SENSOR,
+ 	IMX_MEDIA_GRP_ID_CSI2,
++	IMX_MEDIA_GRP_ID_SENSOR,
+ };
+ 
+ #define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
+-- 
+2.11.0
+---------->8----------
+
+regards
+Philipp
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
