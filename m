@@ -1,50 +1,138 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/3] dt-bindings: power: reset: add document for renesas-reset driver
-Date: Mon, 13 Feb 2017 13:25:31 -0500
-Message-ID: <20170213182532.4042-3-chris.brandt@renesas.com>
-References: <20170213182532.4042-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170213182532.4042-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 02/10] ARM: dts: da850-evm: fix whitespace errors
+Date: Mon, 13 Feb 2017 10:28:00 -0800
+Message-ID: <m24lzyeyj3.fsf@baylibre.com>
+References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
+        <1486485683-11427-3-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486485683-11427-3-git-send-email-bgolaszewski@baylibre.com>
+        (Bartosz Golaszewski's message of "Tue, 7 Feb 2017 17:41:15 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Lad Prabhakar <prabhakar.csengg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings document for renesas-reset driver.
-This driver uses the WDT hardware to issue an immediate reset.
+Bartosz Golaszewski <bgolaszewski@baylibre.com> writes:
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/power/reset/renesas-reset.txt     | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/renesas-reset.txt
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-diff --git a/Documentation/devicetree/bindings/power/reset/renesas-reset.txt b/Documentation/devicetree/bindings/power/reset/renesas-reset.txt
-new file mode 100644
-index 0000000..241722d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/renesas-reset.txt
-@@ -0,0 +1,15 @@
-+Device-Tree bindings for Renesas WDT reset functionality
-+
-+Required properties:
-+  - compatible: must be one or more of the following:
-+    - "renesas,r7s72100-reset" for the r7s72100 SoC
-+    - "renesas,wdt-reset"
-+                This is a fallback for the above renesas,*-reset entries
-+
-+  - reg: base address and length of the WDT register block
-+
-+Example node:
-+	wdt: timer@fcfe0000 {
-+		compatible = "renesas,r7s72100-reset", "renesas,wdt-reset";
-+		reg = <0xfcfe0000 0x6>;
-+	};
--- 
-2.10.1
+Acked-by: Kevin Hilman <khilman@baylibre.com>
 
+> ---
+>  arch/arm/boot/dts/da850-evm.dts | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index c970b6e..94938a3 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -301,14 +301,14 @@
+>  	/* VPIF capture port */
+>  	port {
+>  		vpif_ch0: endpoint@0 {
+> -			  reg = <0>;
+> -			  bus-width = <8>;
+> +			reg = <0>;
+> +			bus-width = <8>;
+>  		};
+>  
+>  		vpif_ch1: endpoint@1 {
+> -			  reg = <1>;
+> -			  bus-width = <8>;
+> -			  data-shift = <8>;
+> +			reg = <1>;
+> +			bus-width = <8>;
+> +			data-shift = <8>;
+>  		};
+>  	};
+>  };
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartosz Golaszewski <bgolaszewski@baylibre.com> writes:
+
+> Extend the vpif node with an output port with a single channel.
+>
+> NOTE: this is still just hardware description - the actual driver
+> is registered using pdata-quirks.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/boot/dts/da850-evm.dts | 14 +++++++++++---
+>  arch/arm/boot/dts/da850.dtsi    |  8 +++++++-
+>  2 files changed, 18 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> index 94938a3..3d6dd66 100644
+> --- a/arch/arm/boot/dts/da850-evm.dts
+> +++ b/arch/arm/boot/dts/da850-evm.dts
+> @@ -299,16 +299,24 @@
+>  	status = "okay";
+>  
+>  	/* VPIF capture port */
+> -	port {
+> -		vpif_ch0: endpoint@0 {
+> +	port@0 {
+> +		vpif_input_ch0: endpoint@0 {
+>  			reg = <0>;
+>  			bus-width = <8>;
+>  		};
+>  
+> -		vpif_ch1: endpoint@1 {
+> +		vpif_input_ch1: endpoint@1 {
+>  			reg = <1>;
+>  			bus-width = <8>;
+>  			data-shift = <8>;
+>  		};
+>  	};
+> +
+> +	/* VPIF display port */
+> +	port@1 {
+> +		vpif_output_ch0: endpoint@0 {
+> +			reg = <0>;
+> +			bus-width = <8>;
+> +		};
+> +	};
+>  };
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 69ec5e7..768a58c 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -494,7 +494,13 @@
+>  			status = "disabled";
+>  
+>  			/* VPIF capture port */
+> -			port {
+> +			port@0 {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +			};
+> +
+> +			/* VPIF display port */
+> +			port@1 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  			};
+
+Bartosz Golaszewski <bgolaszewski@baylibre.com> writes:
+
+> There's a stray tab in da850_vpif_legacy_init(). Remove it.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/mach-davinci/pdata-quirks.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/mach-davinci/pdata-quirks.c b/arch/arm/mach-davinci/pdata-quirks.c
+> index a186513..94948c1 100644
+> --- a/arch/arm/mach-davinci/pdata-quirks.c
+> +++ b/arch/arm/mach-davinci/pdata-quirks.c
+> @@ -111,7 +111,7 @@ static struct vpif_capture_config da850_vpif_capture_config = {
+>  static void __init da850_vpif_legacy_init(void)
+>  {
+>  	int ret;
+> -	
+> +
+>  	/* LCDK doesn't have the 2nd TVP514x on CH1 */
+>  	if (of_machine_is_compatible("ti,da850-lcdk"))
+>  		da850_vpif_capture_config.subdev_count = 1;
