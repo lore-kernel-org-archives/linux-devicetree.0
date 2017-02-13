@@ -1,69 +1,68 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 3/3] mfd: wm831x: Add device tree binding document
-Date: Mon, 13 Feb 2017 08:58:03 +0000
-Message-ID: <20170213085803.GW1754@localhost.localdomain>
-References: <1486734800-10141-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1486734800-10141-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170213083158.j5l2jxkem2xlbrq7@dell>
+From: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] thermal: mt8173: minor mtk_thermal.c cleanups
+Date: Mon, 13 Feb 2017 17:01:58 +0800
+Message-ID: <1486976518.24087.7.camel@mtksdaap41>
+References: <1486531862-31945-1-git-send-email-dawei.chien@mediatek.com>
+         <ebdf54af-6290-9654-c475-53dd580582a0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170213083158.j5l2jxkem2xlbrq7@dell>
+In-Reply-To: <ebdf54af-6290-9654-c475-53dd580582a0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 08:31:58AM +0000, Lee Jones wrote:
-> On Fri, 10 Feb 2017, Charles Keepax wrote:
+Hi, Matthias,
+
+On Thu, 2017-02-09 at 22:25 +0100, Matthias Brugger wrote:
 > 
-> > This is just a very simple initial binding, supporting only registering
-> > the chip and the GPIOs. More features will be added as support for
-> > device tree in the driver is expanded.
-> > 
-> > Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> On 02/08/2017 06:31 AM, Dawei Chien wrote:
+> > Thermal driver should read TEMP_MSR3 if thermal bank with 4 sensors.
+> > However, Currently thermal driver don't need read TEMP_MSR3 since
+> > thermal controller only use 3 sensors for each thermal bank.
+> >
+> > Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > > ---
-> >  Documentation/devicetree/bindings/mfd/wm831x.txt | 31 ++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/wm831x.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
-> > new file mode 100644
-> > index 0000000..9771022
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
-> > @@ -0,0 +1,31 @@
-> > +Cirrus Logic/Wolfson Microelectronics wm831x PMICs
-> > +
-> > +System PMICs with a wide range of additional features.
-> > +
-> > +Required properties:
-> > +
-> > +  - compatible : One of the following chip-specific strings:
-> > +        "wlf,wm8310"
-> > +        "wlf,wm8311"
-> > +        "wlf,wm8312"
-> > +        "wlf,wm8320"
-> > +        "wlf,wm8321"
-> > +        "wlf,wm8325"
-> > +        "wlf,wm8326"
-> > +
-> > +  - reg : I2C slave address when connected using I2C, chip select number when
-> > +    using SPI.
-> > +
-> > +  - gpio-controller : Indicates this device is a GPIO controller.
-> > +  - #gpio-cells : Must be 2. The first cell is the pin number and the
-> > +    second cell is used to specify optional parameters (currently unused).
 > 
-> Will it ever be used?
+> Actually the commit message should state:
+> Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
 > 
+> ...and get backported to v4.9 and v4.10.
+> 
+> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Regards,
+> Matthias
 
-Hopefully, it is used on some hardware that we supply which I am hoping to
-upstream support for shortly.
+Thank you for your review. I would add below commit message on next
+version. However, currently 8173 thermal driver would not read TEMP_MSR3
+since thermal driver only use 3 sensors on each bank, this patch would
+not effect temperature.
+Only if thermal driver use 4 sensors on any thermal bank, would read
+third sensor two times, and lose fourth sensor of vale.
+Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
 
-Thanks,
-Charles
+> >  drivers/thermal/mtk_thermal.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+> > index 34169c3..c124151 100644
+> > --- a/drivers/thermal/mtk_thermal.c
+> > +++ b/drivers/thermal/mtk_thermal.c
+> > @@ -191,7 +191,7 @@ struct mtk_thermal {
+> >  };
+> >
+> >  const int mt8173_msr[MT8173_NUM_SENSORS_PER_ZONE] = {
+> > -	TEMP_MSR0, TEMP_MSR1, TEMP_MSR2, TEMP_MSR2
+> > +	TEMP_MSR0, TEMP_MSR1, TEMP_MSR2, TEMP_MSR3
+> >  };
+> >
+> >  const int mt8173_adcpnp[MT8173_NUM_SENSORS_PER_ZONE] = {
+> >
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
