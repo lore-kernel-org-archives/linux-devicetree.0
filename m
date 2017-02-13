@@ -1,50 +1,83 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: Add thermal zone to bcm2835-thermal example
-Date: Mon, 13 Feb 2017 13:42:11 -0800
-Message-ID: <878tp9kbt8.fsf@eliezer.anholt.net>
-References: <1486928328-25870-1-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: [PATCH v5 3/3] MIPS: ath79: Fix the USB PHY reset names
+Date: Mon, 13 Feb 2017 23:25:46 +0100
+Message-ID: <1487024746-32082-3-git-send-email-albeu@free.fr>
+References: <1487024746-32082-1-git-send-email-albeu@free.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486928328-25870-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <1487024746-32082-1-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 
-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
+The binding for the USB PHY went thru before the driver. However the
+new version of the driver now use the PHY core support for reset, and
+this expect the reset to be named "phy". So remove the "usb-" prefix
+from the the reset names.
 
-> Add a thermal zone in order to make the example complete.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+---
+Changelog:
+v5: * Also fix the AR9331 dtsi
+---
+ Documentation/devicetree/bindings/phy/phy-ath79-usb.txt | 4 ++--
+ arch/mips/boot/dts/qca/ar9132.dtsi                      | 2 +-
+ arch/mips/boot/dts/qca/ar9331.dtsi                      | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-This looks fine to me.  Eduardo, will this be enough to get the driver
-in?
+diff --git a/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+index cafe219..c3a29c5 100644
+--- a/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
++++ b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+@@ -3,7 +3,7 @@
+ Required properties:
+ - compatible: "qca,ar7100-usb-phy"
+ - #phys-cells: should be 0
+-- reset-names: "usb-phy"[, "usb-suspend-override"]
++- reset-names: "phy"[, "suspend-override"]
+ - resets: references to the reset controllers
+ 
+ Example:
+@@ -11,7 +11,7 @@ Example:
+ 	usb-phy {
+ 		compatible = "qca,ar7100-usb-phy";
+ 
+-		reset-names = "usb-phy", "usb-suspend-override";
++		reset-names = "phy", "suspend-override";
+ 		resets = <&rst 4>, <&rst 3>;
+ 
+ 		#phy-cells = <0>;
+diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
+index 302f0a8..808c2bb 100644
+--- a/arch/mips/boot/dts/qca/ar9132.dtsi
++++ b/arch/mips/boot/dts/qca/ar9132.dtsi
+@@ -160,7 +160,7 @@
+ 	usb_phy: usb-phy {
+ 		compatible = "qca,ar7100-usb-phy";
+ 
+-		reset-names = "usb-phy", "usb-suspend-override";
++		reset-names = "phy", "suspend-override";
+ 		resets = <&rst 4>, <&rst 3>;
+ 
+ 		#phy-cells = <0>;
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+index cf47ed4..4ffa3e8 100644
+--- a/arch/mips/boot/dts/qca/ar9331.dtsi
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -145,7 +145,7 @@
+ 	usb_phy: usb-phy {
+ 		compatible = "qca,ar7100-usb-phy";
+ 
+-		reset-names = "usb-phy", "usb-suspend-override";
++		reset-names = "phy", "suspend-override";
+ 		resets = <&rst 4>, <&rst 3>;
+ 
+ 		#phy-cells = <0>;
+-- 
+2.7.4
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliiKDMACgkQtdYpNtH8
-nuhJ0w//bSFsnkjjW+5b7NBjOmlHCMwgArivcxYJzidDPxs8czThyWVsCLQtbvlB
-7d0xIqkf8SpD4b72+W7N7hNmVSGJYP1fIJWgC/5BdueDL7dRHXWl+KH2noU5Nb5T
-250s6KdGSfKJbrJrdlUULLEYxuBOlO8u443q3k5u9hWZ/uAyitidpswxp8VQ/Yy6
-v2ow2zi6wZFTDRbh/y4EiMLKsycIQiCuf+jWyhvolc4AYssc6AfE3eMUSje+66Vg
-pqshOJij28bNvuTW9qPO2tlAFo5Pxhv+5jtk64/YvpBO+Q049ZTEvTm76rT5iHMT
-+Lo81s2hMUjQAit4Ldk0YoJE0Nxpo1b49hQKS320YMZw0jGPSBpYxrtLD+iRVB/8
-2L7gGH/P7/dY/SJm8sTPSTRyN2u11fsehViJCVz+BQ4cvS3fjU6rrMmjGKUuHlhk
-98Jl/HeNmojR8XjLPR5HRupJpqFrkFJwLauXyZXtMUiNs/aKq9tR3MOLpV66xfzt
-gc77TifiDt8Lv5RheMk1TkUQugLdaEDjMTFko3UGph6ACu1bdAXBB4Hrjp6wZ5zF
-U5XIUCSlzy7GmLw+3DJyK820XvxzKb3FKa8cB9VjO8WnmqUhwe3EK4IAAry3ZWDj
-xj3+a9TPzAsAJnVoeqs/QblRlocR/KqPmumYF6YZPG+nuf6fNxM=
-=PKYP
------END PGP SIGNATURE-----
---=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
