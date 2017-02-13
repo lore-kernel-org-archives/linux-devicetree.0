@@ -1,48 +1,61 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH RFC 1/3] coresight: binding for coresight debug driver
-Date: Mon, 13 Feb 2017 14:11:36 +0800
-Message-ID: <1486966298-16767-2-git-send-email-leo.yan@linaro.org>
-References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
+From: Heiko Schocher <hs@denx.de>
+Subject: Re: [PATCH] Input: pwm-beeper: support customized freq for SND_BELL
+Date: Mon, 13 Feb 2017 07:12:09 +0100
+Message-ID: <58A14E39.40905@denx.de>
+References: <1486444894-18321-1-git-send-email-hs@denx.de>
+ <20170210154833.lefb7m4gnxnvvcxo@rob-hp-laptop>
+Reply-To: hs@denx.de
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
+In-Reply-To: <20170210154833.lefb7m4gnxnvvcxo@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Leo Yan <leo.yan@linaro.org>
+To: Rob Herring <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding compatible string for new coresight debug driver.
+Hello Rob,
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- Documentation/devicetree/bindings/arm/coresight.txt | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Am 10.02.2017 um 16:48 schrieb Rob Herring:
+> On Tue, Feb 07, 2017 at 06:21:34AM +0100, Heiko Schocher wrote:
+>> From: Guan Ben <ben.guan@cn.bosch.com>
+>>
+>> extend the pwm-beeper driver to support customized frequency
+>> for SND_BELL from device tree.
+>>
+>> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+>> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+>> [hs@denx.de: adapted to 4.10-rc7]
+>> Signed-off-by: Heiko Schocher <hs@denx.de>
+>>
+>> ---
+>>
+>>   .../devicetree/bindings/input/pwm-beeper.txt       |  3 ++
+>>   drivers/input/misc/pwm-beeper.c                    | 36 ++++++++++++++++------
+>>   2 files changed, 30 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+>> index be332ae..438c6e0 100644
+>> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
+>> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+>> @@ -5,3 +5,6 @@ Registers a PWM device as beeper.
+>>   Required properties:
+>>   - compatible: should be "pwm-beeper"
+>>   - pwms: phandle to the physical PWM device
+>> +
+>> +optional properties:
+>> +- bell-frequency:  bell frequency in Hz
+>
+> Needs a unit suffix:
+> bell-frequency-hz or just bell-hz as hz implies frequency.
+>
+> Or maybe beeper-hz would be more consistant.
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index fcbae6a..3ff15fd 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -40,6 +40,9 @@ its hardware characteristcs.
- 		- System Trace Macrocell:
- 			"arm,coresight-stm", "arm,primecell"; [1]
- 
-+		- Debug Unit:
-+			"arm,coresight-debug", "arm,primecell";
-+
- 	* reg: physical base address and length of the register
- 	  set(s) of the component.
- 
-@@ -78,8 +81,10 @@ its hardware characteristcs.
- 	* arm,cp14: must be present if the system accesses ETM/PTM management
- 	  registers via co-processor 14.
- 
--	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
--	  source is considered to belong to CPU0.
-+* Optional properties for ETM/PTM/Debugs:
-+
-+	* cpu: the cpu phandle this ETM/PTM/Debug is affined to. When omitted
-+	  the source is considered to belong to CPU0.
- 
- * Optional property for TMC:
- 
+Ok, I change it to "beeper-hz". Are this all issues with this patch?
+
+bye,
+Heiko
 -- 
-2.7.4
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
