@@ -1,190 +1,147 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v8 2/2] Add support for OV5647 sensor.
-Date: Mon, 13 Feb 2017 22:19:44 +0200
-Message-ID: <551549a2-bd4d-9aed-b4b0-fa54e851f6ff@mentor.com>
-References: <cover.1486984040.git.roliveir@synopsys.com>
- <6b023e996ec7bcfc84b489f8d700eeff328bef7b.1486984040.git.roliveir@synopsys.com>
- <b947bd60-b08b-1841-eb8c-ee275a234ef3@mentor.com>
- <b44432b0-34aa-dd36-db4c-f154c98932e4@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] checks: Add bus checks for PCI buses
+Date: Mon, 13 Feb 2017 14:49:45 -0600
+Message-ID: <CAL_JsqLkfbFhL34y=xyKB0ooSWDUKON2may50MH6zfFG_YVEaQ@mail.gmail.com>
+References: <20170210164717.1234-1-robh@kernel.org> <20170210164717.1234-5-robh@kernel.org>
+ <20170213050355.GZ25381@umbus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b44432b0-34aa-dd36-db4c-f154c98932e4-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170213050355.GZ25381@umbus>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
-
-On 02/13/2017 09:14 PM, Ramiro Oliveira wrote:
-> Hi Vladimir,
-> 
-> Thank you for your feedback.
-> 
-> On 2/13/2017 12:21 PM, Vladimir Zapolskiy wrote:
->> Hello Ramiro,
+On Sun, Feb 12, 2017 at 11:03 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Fri, Feb 10, 2017 at 10:47:17AM -0600, Rob Herring wrote:
+>> Add PCI bridge and device node checks. We identify PCI bridges with
+>> 'device_type = "pci"' as only PCI bridges should set that property. For
+>> bridges, check that ranges is present and #address-cells and
 >>
->> On 02/13/2017 01:25 PM, Ramiro Oliveira wrote:
->>> Modes supported:
->>>  - 640x480 RAW 8
->>>
-
-[snip]
-
->>> +static int ov5647_probe(struct i2c_client *client,
->>> +			const struct i2c_device_id *id)
->>> +{
->>> +	struct device *dev = &client->dev;
->>> +	struct ov5647 *sensor;
->>> +	int ret;
->>> +	struct v4l2_subdev *sd;
->>> +
->>> +	dev_info(&client->dev, "Installing OmniVision OV5647 camera driver\n");
+>> For devices, the primary check is the reg property and the unit address.
+>> Device unit addresses are in the form DD or DD,F where DD is the
+>> device 0-0x1f and F is the function 0-7.
 >>
->> Please remove the informational line, it will pollute the kernel log for no
->> good reason.
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>> v2:
+>> - Remove bus_type functions. Combine test for bus_type and bridge check
+>>   into single check.
+>> - Add a check that PCI bridge node name is pci or pcie.
 >>
-> 
-> Is it okay if I change it to debug?
-> 
-
-Most probably here it is okay to change it to dev_dbg(), however
-
-1) please note that ftrace functionality should provide all the magic for you,
-   and by the way this makes dev_dbg() calls from ov5647_write(), ov5647_read(),
-   ov5647_stream_on(), ov5647_stream_off() and __sensor_init() all redundant,
-
-2) please move the informational message to the end of the .probe function,
-   right before returning success to avoid duplicates on deferred re-probing:
-
-	dev_dbg(&client->dev, "OmniVision OV5647 camera driver probed\n");
-	                                                      ^^^^^^^^
-[snip]
-
->>> +
->>> +static const struct i2c_device_id ov5647_id[] = {
->>> +	{ "ov5647", 0 },
->>> +	{ }
->>> +};
->>> +MODULE_DEVICE_TABLE(i2c, ov5647_id);
->>> +
->>> +#if IS_ENABLED(CONFIG_OF)
+>>  checks.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  dtc.h    |  7 ++++++
+>>  2 files changed, 90 insertions(+)
 >>
->> From Kconfig the driver depends on OF.
+>> diff --git a/checks.c b/checks.c
+>> index 16d17d20caec..9ebb148f947a 100644
+>> --- a/checks.c
+>> +++ b/checks.c
+>> @@ -702,6 +702,86 @@ static void check_ranges_format(struct check *c, struct dt_info *dti,
+>>  }
+>>  WARNING(ranges_format, check_ranges_format, NULL, &addr_size_cells);
 >>
-> 
-> You're right. Do you think I should remove the dependency in Kconfig or the
-> check here?
-> 
+>> +static const struct bus_type pci_bus = {
+>> +     .type = PCI_BUS_TYPE,
+>
+> Since you can use the struct pointer itself as a handle on the bus
+> type, I don't think there's any value to having the enum-style type
+> value.  What _would_ be useful is a human readable bus type name.
 
-Let see...
+Okay.
 
-I've been able to locate only one place where OF dependency is utterly needed:
+>> +};
+>> +
+>> +static void check_pci_bridge(struct check *c, struct dt_info *dti, struct node *node)
+>> +{
+>> +     struct property *prop;
+>> +
+>> +     prop = get_property(node, "device_type");
+>> +     if (!prop || strcmp(prop->val.val, "pci"))
+>> +             return;
+>> +
+>> +     node->bus = &pci_bus;
+>> +
+>> +     if (strncmp(node->name, "pci", node->basenamelen) &&
+>> +         strncmp(node->name, "pcie", node->basenamelen))
+>> +             FAIL(c, "Node %s node name is not \"pci\" or \"pcie\"",
+>> +                          node->fullpath);
+>
+> Please use the strneq() macro - I frequently get confused about
+> whether strcmp()/strncmp() comparisons need an ! or not for equality
+> testing.  streq() / strneq() help me remember.
+>
+>> +
+>> +     prop = get_property(node, "ranges");
+>> +     if (!prop)
+>> +             FAIL(c, "Node %s missing ranges for PCI bridge (or not a bridge)",
+>> +                          node->fullpath);
+>> +
+>> +     if (node_addr_cells(node) != 3)
+>> +             FAIL(c, "Node %s incorrect #address-cells for PCI bridge",
+>> +                          node->fullpath);
+>> +     if (node_size_cells(node) != 2)
+>> +             FAIL(c, "Node %s incorrect #size-cells for PCI bridge",
+>> +                          node->fullpath);
+>> +}
+>> +WARNING(pci_bridge, check_pci_bridge, NULL,
+>> +     &device_type_is_string, &addr_size_cells);
+>> +
+>> +static void check_pci_device(struct check *c, struct dt_info *dti, struct node *node)
+>> +{
+>> +     struct property *prop;
+>> +     const char *unitname = get_unitname(node);
+>> +     char unit_addr[5];
+>> +     unsigned int dev, func, reg;
+>> +
+>> +     if (!node->parent || !node->parent->bus ||
+>> +         (node->parent->bus->type != PCI_BUS_TYPE))
+>
+> You can just use node->parent->bus != &pci_bus here.
+>
+>> +             return;
+>> +
+>> +     prop = get_property(node, "reg");
+>> +     if (!prop)
+>> +             return;
+>> +
+>> +     reg = fdt32_to_cpu(*((cell_t *)prop->val.val));
+>> +
+>> +     dev = (reg & 0xf800) >> 11;
+>> +     func = (reg & 0x700) >> 8;
+>> +
+>> +     if (reg & 0xff000000)
+>> +             FAIL(c, "Node %s PCI reg address is not configuration space",
+>> +                          node->fullpath);
+>> +
+>> +     if (dev > 0x1f)
+>> +             FAIL(c, "Node %s PCI device number out of range",
+>> +                          node->fullpath);
+>> +     if (func > 7)
+>> +             FAIL(c, "Node %s PCI function number out of range",
+>> +                  node->fullpath);
 
-	ret = of_property_read_u32(dev->of_node, "clock-frequency",
-				    &sensor->xclk_freq);
-	if (ret) {
-		dev_err(dev, "could not get xclk frequency\n");
-		return ret;
-	}
+BTW, I just noticed these 2 checks I can drop. They can never be true
+since I'm masking the values.
 
-It might be preferred to change this snippet of code into something like one
-below:
+>> +
+>> +     if (func == 0) {
+>> +             snprintf(unit_addr, sizeof(unit_addr), "%x", dev);
+>> +             if (!strcmp(unitname, unit_addr))
+>> +                     return;
+>> +     }
+>> +
+>> +     snprintf(unit_addr, sizeof(unit_addr), "%x,%x", dev, func);
+>> +     if (!strcmp(unitname, unit_addr))
+>> +             return;
+>
+> So as mentioned in my comments to 3/4, the test above, I would put
+> back into unit_address_vs_reg, using a callback in the bus_type which
+> formats a reg into the correct unit address.
 
-	sensor->xclk_freq = clk_get_rate(sensor->xclk);
-	if (sensor->xclk_freq != 30000000) {
-		dev_err(dev, "Unsupported clock frequency: %lu\n",
-			sensor->xclk_freq);
-		return -EINVAL;
-	}
+Humm, that doesn't really work. The unit address can be in 2 different
+forms when func# is 0. We can have either <dev> or <dev>,0.
 
-Then
-
-1) in case of an OF platform "xclk" clock frequency can be set directly
-   in a board DTS file, please reference to clock-bindings.txt,
-2) next you can drop 'clock-frequency' property from the sensor bindings,
-3) you can drop 'depends on OF' from drivers/media/i2c/Kconfig,
-4) you can drop 'clk_set_rate()' from sensor_power().
-
-The proposed code is slightly more flexible, at least the change gives
-a little chance to run the driver successfully on a non-OF platform,
-otherwise it is known in advance that the driver is unusable on any
-non-OF platforms and thus an explicit CONFIG_OF build dependency makes
-sense.
-
->>> +static const struct of_device_id ov5647_of_match[] = {
->>> +	{ .compatible = "ovti,ov5647" },
->>> +	{ /* sentinel */ },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, ov5647_of_match);
->>> +#endif
->>> +
->>> +/**
->>> + * @short i2c driver structure
->>> + */
->>> +static struct i2c_driver ov5647_driver = {
->>> +	.driver = {
->>> +		.of_match_table = of_match_ptr(ov5647_of_match),
->>
->> Same comment as above, from Kconfig the driver depends on OF.
->>
-> 
-> I'm sorry but I'm not understanding what you're trying to say.
-> 
-
-You may take a look at of_match_ptr() macro definition from include/linux/of.h:
-
-#ifdef CONFIG_OF
-...
-#define of_match_ptr(_ptr)      (_ptr)
-...
-#else
-...
-#define of_match_ptr(_ptr)      NULL
-...
-#endif
-
-Hence if the code compilation always depends on the enabled CONFIG_OF option,
-then of_match_ptr() macro should be dropped:
-
-	.of_match_table = ov5647_of_match,
-
->>> +		.owner	= THIS_MODULE,
->>
->> .owner is set by the core, please remove it.
->>
-> 
-> Ok.
-> 
->>> +		.name	= "ov5647",
->>
->> May be .name = SENSOR_NAME, ?
->>
->> Otherwise SENSOR_NAME macro is unused and it should be removed.
->>
-> 
-> I'll change it to .name = SENSOR_NAME,
-> 
->>> +	},
->>> +	.probe		= ov5647_probe,
->>> +	.remove		= ov5647_remove,
->>> +	.id_table	= ov5647_id,
->>> +};
->>> +
->>> +module_i2c_driver(ov5647_driver);
->>> +
->>> +MODULE_AUTHOR("Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>");
->>> +MODULE_DESCRIPTION("A low-level driver for OmniVision ov5647 sensors");
->>> +MODULE_LICENSE("GPL v2");
->>>
->>
-
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
