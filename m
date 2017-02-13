@@ -1,156 +1,87 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 1/8] devicetree: power: Add battery.txt
-Date: Mon, 13 Feb 2017 15:12:59 -0600
-Message-ID: <f38dc321-b32d-1053-75e4-ac9bf3438bb4@ti.com>
-References: <20170211024340.19491-1-liam@networkimprov.net>
- <20170211024340.19491-2-liam@networkimprov.net>
- <ce69f358-ac3b-993d-0639-844856362c9d@ti.com>
- <CAKvHMgSSpbkX1NMwaDmuJwBcgu6Avy65izAaBGTYongqL51kWQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Make EN2 pin optional in the TRF7970A driver
+Date: Mon, 13 Feb 2017 15:31:57 -0600
+Message-ID: <CAL_JsqKM4fEcfPekYkt-+TVNXE3nMF1AEfSHWW+3wAgdYDMXEg@mail.gmail.com>
+References: <1486444924-18444-1-git-send-email-hs@denx.de> <20170210155114.pvjahqqjqurw5jdc@rob-hp-laptop>
+ <58A15454.4030602@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKvHMgSSpbkX1NMwaDmuJwBcgu6Avy65izAaBGTYongqL51kWQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <58A15454.4030602@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: netdev <netdev@vger.kernel.org>, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lauro Ramos Venancio <lauro.venancio@openbossa.org>, Aloisio Almeida Jr <aloisio.almeida@openbossa.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/13/2017 02:58 PM, Liam Breck wrote:
-> Hi Andrew, thanks for the drill-down on BQ27* chips.
-> 
-> On Mon, Feb 13, 2017 at 8:06 AM, Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org> wrote:
->> On 02/10/2017 08:43 PM, Liam Breck wrote:
->>> From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+On Mon, Feb 13, 2017 at 12:38 AM, Heiko Schocher <hs@denx.de> wrote:
+> Hello Rob,
+>
+>
+> Am 10.02.2017 um 16:51 schrieb Rob Herring:
+>>
+>> On Tue, Feb 07, 2017 at 06:22:04AM +0100, Heiko Schocher wrote:
 >>>
->>> Documentation of static battery characteristics that can be defined
->>> for batteries which cannot self-identify. This information is required
->>> by fuel-gauge and charger chips for proper handling of the battery.
->>
->>
->> I think some of the confusion about what a "smart-battery" binding would
->> look like is due to a miss-understanding what it means to
->> "self-identify". Originally the bq27xxx *was* the chip that lived its
->> whole life inside a battery (the iphone battery is one such example and
->> a good way to test the bq27000). This way it could be factory programmed
->> with the battery's basics and then learn about the individual pack over
->> time to provide better info on time to empty, discharge rates, etc..
->>
->> Eventually, people wanted to have the battery become cheap and
->> replaceable, so fuel-gauges were made that are "system side", and ride
->> along with the device, not the battery. Now this has one big problem,
->> how can we learn about a battery when it may be a new battery every time
->> we boot up? So we added programmable memory to the devices, and
->> programming this memory looks to be what this series is about.
->>
->> Only the battery design info is programmed in this series, but much more
->> battery info can be uploaded, including stuff that is not fixed and
->> therefor cannot be added to the DT. Even the design parameters may not
->> be fix if one changes the battery as different manufactures of the same
->> battery type may have different design capacities.
->>
->> The ideal use-case in a system with a system side gauge is the OS should
->> periodically, or just before shutdown, read the battery's learned info
->> and when the device is powered back up, if the battery serial number
->> matches from before, re-upload this learned info to the gauge so it
->> doesn't have to re-learn everything. All of this will need to happen in
->> user-space, so what we really need is a user-space API for manipulating
->> these properties.
-> 
-> We would need a feature in the driver to get/set the blob of pack- or
-> cell-unique data. The userspace api is one sysfs file.
-> 
-> However the DT fixed-battery node could indicate when/how-often the
-> object is stored, and where, e.g. filename. If the latter is given,
-> the driver should write/read the file itself.
-> 
-> Is there some documentation about what registers should go in this blob?
-> 
-
-This should all be available in the parts' technical reference (looks
-like page 24 for your device), but the blob isn't meant to be modified,
-the information/format is mostly internal to the part, all we should do
-is save blob / restore blob as needed.
-
-> That concept is beyond the scope of this patchset (and doesn't
-> supersede it), but is something I'd like to implement for our chip,
-> the *425.
-> 
-> 
->> The properties added in this series are okay, and it's good to have some
->> sane defaults in DT, but looking forward this may not be enough to get
->> full use out of these devices.
-> 
-> I'm relieved you're not opposed to our patch :-) Now I just need that
-> guidance I mentioned re the chip family...
-> 
-
-Still looking into it, I think for now would be easiest to add the
-register info to each chip family struct. The un-seal sequence should be
-generic enough already.
-
-Andrew
-
-> 
->>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
->>> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+>>> From: Guan Ben <ben.guan@cn.bosch.com>
+>>>
+>>> Make the EN2 pin optional. This is useful for boards,
+>>> which have this pin fix wired, for example to ground.
+>>>
+>>> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+>>> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+>>> Signed-off-by: Heiko Schocher <hs@denx.de>
+>>>
 >>> ---
->>>  .../devicetree/bindings/power/supply/battery.txt   | 37 ++++++++++++++++++++++
->>>  1 file changed, 37 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
 >>>
->>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>> new file mode 100644
->>> index 0000000..d78a4aa
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>> @@ -0,0 +1,37 @@
->>> +Battery Characteristics
->>> +
->>> +Required Properties:
->>> + - compatible: Must be "fixed-battery"
->>> +
->>> +Optional Properties:
->>> + - voltage-min-design-microvolt: drained battery voltage
->>> + - energy-full-design-microwatt-hours: battery design energy
->>> + - charge-full-design-microamp-hours: battery design capacity
->>> +
->>> +Future Properties must be named for the corresponding elements in
->>> +enum power_supply_property, defined in include/linux/power_supply.h.
->>> +
->>> +Batteries must be referenced by chargers and/or fuel-gauges
->>> +using a phandle. The phandle's property should be named
->>> +"monitored-battery".
->>> +
->>> +Example:
->>> +
->>> +     bat: battery {
->>> +             compatible = "fixed-battery";
->>> +             voltage-min-design-microvolt = <3200000>;
->>> +             energy-full-design-microwatt-hours = <5290000>;
->>> +             charge-full-design-microamp-hours = <1430000>;
->>> +     };
->>> +
->>> +     charger: charger@11 {
->>> +             ....
->>> +             monitored-battery = <&bat>;
->>> +             ...
->>> +     };
->>> +
->>> +     fuel_gauge: fuel-gauge@22 {
->>> +             ....
->>> +             monitored-battery = <&bat>;
->>> +             ...
->>> +     };
+>>>   .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++--
+>>>   drivers/nfc/trf7970a.c                             | 26
+>>> ++++++++++++----------
+>>>   2 files changed, 16 insertions(+), 14 deletions(-)
 >>>
+>>> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>> b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>> index 32b35a0..5889a3d 100644
+>>> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>> @@ -5,8 +5,8 @@ Required properties:
+>>>   - spi-max-frequency: Maximum SPI frequency (<= 2000000).
+>>>   - interrupt-parent: phandle of parent interrupt handler.
+>>>   - interrupts: A single interrupt specifier.
+>>> -- ti,enable-gpios: Two GPIO entries used for 'EN' and 'EN2' pins on the
+>>> -  TRF7970A.
+>>> +- ti,enable-gpios: One or two GPIO entries used for 'EN' and 'EN2' pins
+>>> on the
+>>> +  TRF7970A. EN2 is optional.
+>>
+>>
+>> Could EN ever be optional/fixed? If so, perhaps deprecate this property
+>> and do 2 properties, one for each pin.
+>
+>
+> The hardware I have has the EN2 pin fix connected to ground. Looking
+> into http://www.ti.com/lit/ds/slos743k/slos743k.pdf page 19 table 6-3
+> and 6-4 the EN2 pin is a don;t core if EN = 1. If EN = 0 EN2 pin
+> selects between Power Down and Sleep Mode ... I see no reason why
+> this is not possible/allowed ...
+>
+> Hmm.. I do not like the idea of deprecating the "ti,enable-gpios"
+> property into 2 seperate properties ... but if this would be a reason
+> for not accepting this patch, I can do this ... How should I name
+> the 2 new properties?
+
+I guess if this ever happens, then we just add "ti,enable2-gpios" and
+ti,enable-gpios continues to point to EN. We don't need to deprecate
+anything (or maybe just deprecate having both GPIOs on single
+property).
+
+In that case,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>
+> "ti,pin-enable"  and "ti,pin-enable2" ?
+>
+> bye,
+> Heiko
 > --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
