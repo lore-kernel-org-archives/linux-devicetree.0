@@ -1,117 +1,145 @@
-From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v6 1/8] devicetree: power: Add battery.txt
-Date: Mon, 13 Feb 2017 10:06:36 -0600
-Message-ID: <ce69f358-ac3b-993d-0639-844856362c9d@ti.com>
-References: <20170211024340.19491-1-liam@networkimprov.net>
- <20170211024340.19491-2-liam@networkimprov.net>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Use thermal fuse value for thermal zone
+ 0 on Exynos5420
+Date: Mon, 13 Feb 2017 17:22:48 +0100
+Message-ID: <8266689.kdSZWCWITZ@amdc3058>
+References: <CGME20170211201512epcas2p2a49d26ddfbe2eaa6195927cbf01d48bb@epcas2p2.samsung.com>
+ <20170211201456.27974-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170211024340.19491-2-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20170211201456.27974-1-krzk@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Willy WOLFF <willy.mh.wolff@gmail.com>, Anand Moon <linux.amoon@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2017 08:43 PM, Liam Breck wrote:
-> From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+On Saturday, February 11, 2017 10:14:56 PM Krzysztof Kozlowski wrote:
+> In Odroid XU3 Lite board, the temperature levels reported for thermal
+> zone 0 were weird. In warm room:
+> 	/sys/class/thermal/thermal_zone0/temp:32000
+> 	/sys/class/thermal/thermal_zone1/temp:51000
+> 	/sys/class/thermal/thermal_zone2/temp:55000
+> 	/sys/class/thermal/thermal_zone3/temp:54000
+> 	/sys/class/thermal/thermal_zone4/temp:51000
 > 
-> Documentation of static battery characteristics that can be defined
-> for batteries which cannot self-identify. This information is required
-> by fuel-gauge and charger chips for proper handling of the battery.
-
-
-I think some of the confusion about what a "smart-battery" binding would
-look like is due to a miss-understanding what it means to
-"self-identify". Originally the bq27xxx *was* the chip that lived its
-whole life inside a battery (the iphone battery is one such example and
-a good way to test the bq27000). This way it could be factory programmed
-with the battery's basics and then learn about the individual pack over
-time to provide better info on time to empty, discharge rates, etc..
-
-Eventually, people wanted to have the battery become cheap and
-replaceable, so fuel-gauges were made that are "system side", and ride
-along with the device, not the battery. Now this has one big problem,
-how can we learn about a battery when it may be a new battery every time
-we boot up? So we added programmable memory to the devices, and
-programming this memory looks to be what this series is about.
-
-Only the battery design info is programmed in this series, but much more
-battery info can be uploaded, including stuff that is not fixed and
-therefor cannot be added to the DT. Even the design parameters may not
-be fix if one changes the battery as different manufactures of the same
-battery type may have different design capacities.
-
-The ideal use-case in a system with a system side gauge is the OS should
-periodically, or just before shutdown, read the battery's learned info
-and when the device is powered back up, if the battery serial number
-matches from before, re-upload this learned info to the gauge so it
-doesn't have to re-learn everything. All of this will need to happen in
-user-space, so what we really need is a user-space API for manipulating
-these properties.
-
-The properties added in this series are okay, and it's good to have some
-sane defaults in DT, but looking forward this may not be enough to get
-full use out of these devices.
-
-Andrew
-
+> Sometimes after booting the value was even equal to ambient temperature
+> which is highly unlikely to be a real temperature of sensor in SoC.
 > 
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-> ---
->  .../devicetree/bindings/power/supply/battery.txt   | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+> The thermal sensor's calibration (trimming) is based on fused values.
+> In case of the board above, the fused values are: 35, 52, 43, 58 and 43
+> (corresponding to each TMU device).  However driver defined a minimum value
+> for fused data as 40 and for smaller values it was using a hard-coded 55
+> instead.  This lead to mapping data from sensor to wrong temperatures
+> for thermal zone 0.
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> new file mode 100644
-> index 0000000..d78a4aa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -0,0 +1,37 @@
-> +Battery Characteristics
-> +
-> +Required Properties:
-> + - compatible: Must be "fixed-battery"
-> +
-> +Optional Properties:
-> + - voltage-min-design-microvolt: drained battery voltage
-> + - energy-full-design-microwatt-hours: battery design energy
-> + - charge-full-design-microamp-hours: battery design capacity
-> +
-> +Future Properties must be named for the corresponding elements in
-> +enum power_supply_property, defined in include/linux/power_supply.h.
-> +
-> +Batteries must be referenced by chargers and/or fuel-gauges
-> +using a phandle. The phandle's property should be named
-> +"monitored-battery".
-> +
-> +Example:
-> +
-> +	bat: battery {
-> +		compatible = "fixed-battery";
-> +		voltage-min-design-microvolt = <3200000>;
-> +		energy-full-design-microwatt-hours = <5290000>;
-> +		charge-full-design-microamp-hours = <1430000>;
-> +	};
-> +
-> +	charger: charger@11 {
-> +		....
-> +		monitored-battery = <&bat>;
-> +		...
-> +	};
-> +
-> +	fuel_gauge: fuel-gauge@22 {
-> +		....
-> +		monitored-battery = <&bat>;
-> +		...
-> +	};
+> Various vendor 3.10 trees (Hardkernel's based on Samsung LSI, Artik 10)
+> do not impose any limits on fused values.  Since we do not have any
+> knowledge about these limits, use 0 as a minimum accepted fused value.
+> This should essentially allow accepting any reasonable fused value thus
+> behaving like vendor driver.
 > 
+> The exynos5420-tmu-sensor-conf.dtsi is copied directly from existing
+> exynso4412 with one change - the samsung,tmu_min_efuse_value.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+> ---
+> 
+> Testing on other Exynos542x boards is much appreciated. Especially I
+> wonder what efuse values are there.
+> ---
+>  arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi | 25 +++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi                 | 10 ++++-----
+>  2 files changed, 30 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi b/arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi
+> new file mode 100644
+> index 000000000000..c8771c660550
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi
+> @@ -0,0 +1,25 @@
+> +/*
+> + * Device tree sources for Exynos5420 TMU sensor configuration
+> + *
+> + * Copyright (c) 2014 Lukasz Majewski <l.majewski@samsung.com>
+> + * Copyright (c) 2017 Krzysztof Kozlowski <krzk@kernel.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <dt-bindings/thermal/thermal_exynos.h>
+> +
+> +#thermal-sensor-cells = <0>;
+> +samsung,tmu_gain = <8>;
+> +samsung,tmu_reference_voltage = <16>;
+> +samsung,tmu_noise_cancel_mode = <4>;
+> +samsung,tmu_efuse_value = <55>;
+> +samsung,tmu_min_efuse_value = <0>;
+> +samsung,tmu_max_efuse_value = <100>;
+> +samsung,tmu_first_point_trim = <25>;
+> +samsung,tmu_second_point_trim = <85>;
+> +samsung,tmu_default_temp_offset = <50>;
+> +samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 7dc9dc82afd8..83b3899d228d 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -699,7 +699,7 @@
+>  			interrupts = <0 65 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clock CLK_TMU>;
+>  			clock-names = "tmu_apbif";
+> -			#include "exynos4412-tmu-sensor-conf.dtsi"
+> +			#include "exynos5420-tmu-sensor-conf.dtsi"
+>  		};
+>  
+>  		tmu_cpu1: tmu@10064000 {
+> @@ -708,7 +708,7 @@
+>  			interrupts = <0 183 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clock CLK_TMU>;
+>  			clock-names = "tmu_apbif";
+> -			#include "exynos4412-tmu-sensor-conf.dtsi"
+> +			#include "exynos5420-tmu-sensor-conf.dtsi"
+>  		};
+>  
+>  		tmu_cpu2: tmu@10068000 {
+> @@ -717,7 +717,7 @@
+>  			interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clock CLK_TMU>, <&clock CLK_TMU>;
+>  			clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+> -			#include "exynos4412-tmu-sensor-conf.dtsi"
+> +			#include "exynos5420-tmu-sensor-conf.dtsi"
+>  		};
+>  
+>  		tmu_cpu3: tmu@1006c000 {
+> @@ -726,7 +726,7 @@
+>  			interrupts = <0 185 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clock CLK_TMU>, <&clock CLK_TMU_GPU>;
+>  			clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+> -			#include "exynos4412-tmu-sensor-conf.dtsi"
+> +			#include "exynos5420-tmu-sensor-conf.dtsi"
+>  		};
+>  
+>  		tmu_gpu: tmu@100a0000 {
+> @@ -735,7 +735,7 @@
+>  			interrupts = <0 215 IRQ_TYPE_LEVEL_HIGH>;
+>  			clocks = <&clock CLK_TMU_GPU>, <&clock CLK_TMU>;
+>  			clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+> -			#include "exynos4412-tmu-sensor-conf.dtsi"
+> +			#include "exynos5420-tmu-sensor-conf.dtsi"
+>  		};
+>  
+>  		sysmmu_g2dr: sysmmu@0x10A60000 {
