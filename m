@@ -1,324 +1,117 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v2] reset: Add i.MX7 SRC reset driver
-Date: Mon, 13 Feb 2017 07:33:37 -0800
-Message-ID: <20170213153338.13518-1-andrew.smirnov@gmail.com>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 1/8] devicetree: power: Add battery.txt
+Date: Mon, 13 Feb 2017 10:06:36 -0600
+Message-ID: <ce69f358-ac3b-993d-0639-844856362c9d@ti.com>
+References: <20170211024340.19491-1-liam@networkimprov.net>
+ <20170211024340.19491-2-liam@networkimprov.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170211024340.19491-2-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver exposes various reset faculties, impelented by System Reset
-Controller IP block, as a reset driver. Currently only PCIE related
-reset lines are implemented.
-
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
-
-Changes since v1 (see [v1]):
-
-	- Various small DT bindings description fixes as per feedback
-          from Rob Herring
+On 02/10/2017 08:43 PM, Liam Breck wrote:
+> From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+> 
+> Documentation of static battery characteristics that can be defined
+> for batteries which cannot self-identify. This information is required
+> by fuel-gauge and charger chips for proper handling of the battery.
 
 
-[v1] https://lkml.org/lkml/2017/2/6/554
+I think some of the confusion about what a "smart-battery" binding would
+look like is due to a miss-understanding what it means to
+"self-identify". Originally the bq27xxx *was* the chip that lived its
+whole life inside a battery (the iphone battery is one such example and
+a good way to test the bq27000). This way it could be factory programmed
+with the battery's basics and then learn about the individual pack over
+time to provide better info on time to empty, discharge rates, etc..
 
- .../devicetree/bindings/reset/fsl,imx7-src.txt     |  47 +++++++
- drivers/reset/Kconfig                              |   8 ++
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-imx7.c                         | 149 +++++++++++++++++++++
- include/dt-bindings/reset/imx7-reset.h             |  28 ++++
- 5 files changed, 233 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
- create mode 100644 drivers/reset/reset-imx7.c
- create mode 100644 include/dt-bindings/reset/imx7-reset.h
+Eventually, people wanted to have the battery become cheap and
+replaceable, so fuel-gauges were made that are "system side", and ride
+along with the device, not the battery. Now this has one big problem,
+how can we learn about a battery when it may be a new battery every time
+we boot up? So we added programmable memory to the devices, and
+programming this memory looks to be what this series is about.
 
-diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-new file mode 100644
-index 0000000..c38f7f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-@@ -0,0 +1,47 @@
-+Freescale i.MX7 System Reset Controller
-+======================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+- compatible: Should be "fsl,imx7-src", "syscon"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- interrupts: Should contain SRC interrupt
-+- #reset-cells: 1, see below
-+
-+example:
-+
-+src: reset-controller@30390000 {
-+     compatible = "fsl,imx7d-src", "syscon";
-+     reg = <0x30390000 0x2000>;
-+     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+     #reset-cells = <1>;
-+};
-+
-+
-+Specifying reset lines connected to IP modules
-+==============================================
-+
-+The system reset controller can be used to reset various set of
-+peripherals. Device nodes that need access to reset lines should
-+specify them as a reset phandle in their corresponding node as
-+specified in reset.txt.
-+
-+Example:
-+
-+	pcie: pcie@33800000 {
-+
-+		...
-+
-+		resets = <&src IMX7_RESET_PCIEPHY>,
-+			 <&src IMX7_RESET_PCIE_CTRL_APPS>;
-+		reset-names = "pciephy", "apps";
-+
-+		...
-+        };
-+
-+
-+For list of all valid reset indicies see
-+<dt-bindings/reset/imx7-reset.h>
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 172dc96..664a88b 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -92,6 +92,14 @@ config RESET_ZYNQ
- 	help
- 	  This enables the reset controller driver for Xilinx Zynq SoCs.
- 
-+config RESET_IMX7
-+	bool "i.MX7 Reset Driver"
-+	depends on SOC_IMX7D || COMPILE_TEST
-+	select MFD_SYSCON
-+	default SOC_IMX7D
-+	help
-+	  This enables the reset controller driver for i.MX7 SoCs.
-+
- source "drivers/reset/sti/Kconfig"
- source "drivers/reset/hisilicon/Kconfig"
- source "drivers/reset/tegra/Kconfig"
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 13b346e..417c9d0 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -14,3 +14,4 @@ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
- obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-+obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-new file mode 100644
-index 0000000..6d90e57
---- /dev/null
-+++ b/drivers/reset/reset-imx7.c
-@@ -0,0 +1,149 @@
-+/*
-+ * Copyright (c) 2017, Impinj, Inc.
-+ *
-+ * i.MX7 System Reset Controller (SRC) driver
-+ *
-+ * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/init.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+#include <dt-bindings/reset/imx7-reset.h>
-+
-+struct imx7_src {
-+	struct reset_controller_dev rcdev;
-+	struct device *dev;
-+	struct regmap *regmap;
-+};
-+
-+enum imx7_src_registers {
-+	SRC_PCIEPHY_RCR = 0x002c,
-+	SRC_PCIEPHY_RCR_PCIEPHY_G_RST     = BIT(1),
-+	SRC_PCIEPHY_RCR_PCIEPHY_BTN       = BIT(2),
-+	SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN = BIT(6),
-+};
-+
-+static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct imx7_src, rcdev);
-+}
-+
-+static int imx7_reset_assert(struct reset_controller_dev *rcdev,
-+			     unsigned long id)
-+{
-+	struct imx7_src *imx7src = to_imx7_src(rcdev);
-+
-+	switch (id) {
-+	case IMX7_RESET_PCIE_CTRL_APPS:
-+		regmap_update_bits(imx7src->regmap,
-+				   SRC_PCIEPHY_RCR,
-+				   SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN, 0);
-+		return 0;
-+
-+	case IMX7_RESET_PCIEPHY:
-+		regmap_update_bits(imx7src->regmap,
-+				   SRC_PCIEPHY_RCR,
-+				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST,
-+				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST);
-+		regmap_update_bits(imx7src->regmap,
-+				   SRC_PCIEPHY_RCR,
-+				   SRC_PCIEPHY_RCR_PCIEPHY_BTN,
-+				   SRC_PCIEPHY_RCR_PCIEPHY_BTN);
-+		return 0;
-+	default:
-+		dev_err(imx7src->dev, "Unknown reset ID %lu\n", id);
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int imx7_reset_deassert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct imx7_src *imx7src = to_imx7_src(rcdev);
-+
-+	switch (id) {
-+	case IMX7_RESET_PCIE_CTRL_APPS:
-+		regmap_update_bits(imx7src->regmap,
-+				   SRC_PCIEPHY_RCR,
-+				   SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN,
-+				   SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN);
-+		return 0;
-+
-+	case IMX7_RESET_PCIEPHY:
-+		/* wait for more than 10us to release phy g_rst and btnrst */
-+		udelay(10);
-+		regmap_update_bits(imx7src->regmap,
-+				   SRC_PCIEPHY_RCR,
-+				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST, 0);
-+		regmap_update_bits(imx7src->regmap,
-+				   SRC_PCIEPHY_RCR,
-+				   SRC_PCIEPHY_RCR_PCIEPHY_BTN, 0);
-+		return 0;
-+	default:
-+		dev_err(imx7src->dev, "Unknown reset ID %lu\n", id);
-+		break;
-+	};
-+
-+	return -EINVAL;
-+}
-+
-+static const struct reset_control_ops imx7_reset_ops = {
-+	.assert		= imx7_reset_assert,
-+	.deassert	= imx7_reset_deassert,
-+};
-+
-+static int imx7_reset_probe(struct platform_device *pdev)
-+{
-+	struct imx7_src *imx7src;
-+	struct device *dev = &pdev->dev;
-+
-+	imx7src = devm_kzalloc(dev, sizeof(*imx7src), GFP_KERNEL);
-+	if (!imx7src)
-+		return -ENOMEM;
-+
-+	imx7src->dev = dev;
-+	imx7src->regmap = syscon_node_to_regmap(dev->of_node);
-+	if (IS_ERR(imx7src->regmap)) {
-+		dev_err(dev, "Unable to get imx7-src regmap");
-+		return PTR_ERR(imx7src->regmap);
-+	}
-+
-+	imx7src->rcdev.owner     = THIS_MODULE;
-+	imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
-+	imx7src->rcdev.ops       = &imx7_reset_ops;
-+	imx7src->rcdev.of_node   = dev->of_node;
-+
-+	return devm_reset_controller_register(dev, &imx7src->rcdev);
-+}
-+
-+static const struct of_device_id imx7_reset_dt_ids[] = {
-+	{ .compatible = "fsl,imx7d-src", },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver imx7_reset_driver = {
-+	.probe	= imx7_reset_probe,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= imx7_reset_dt_ids,
-+	},
-+};
-+builtin_platform_driver(imx7_reset_driver);
-diff --git a/include/dt-bindings/reset/imx7-reset.h b/include/dt-bindings/reset/imx7-reset.h
-new file mode 100644
-index 0000000..e20f2db
---- /dev/null
-+++ b/include/dt-bindings/reset/imx7-reset.h
-@@ -0,0 +1,28 @@
-+/*
-+ * Copyright (C) 2017 Impinj, Inc.
-+ *
-+ * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef DT_BINDING_RESET_IMX7_H
-+#define DT_BINDING_RESET_IMX7_H
-+
-+#define IMX7_RESET_PCIE_CTRL_APPS	0
-+#define IMX7_RESET_PCIEPHY		1
-+
-+#define IMX7_RESET_NUM			2
-+
-+#endif
-+
--- 
-2.9.3
+Only the battery design info is programmed in this series, but much more
+battery info can be uploaded, including stuff that is not fixed and
+therefor cannot be added to the DT. Even the design parameters may not
+be fix if one changes the battery as different manufactures of the same
+battery type may have different design capacities.
+
+The ideal use-case in a system with a system side gauge is the OS should
+periodically, or just before shutdown, read the battery's learned info
+and when the device is powered back up, if the battery serial number
+matches from before, re-upload this learned info to the gauge so it
+doesn't have to re-learn everything. All of this will need to happen in
+user-space, so what we really need is a user-space API for manipulating
+these properties.
+
+The properties added in this series are okay, and it's good to have some
+sane defaults in DT, but looking forward this may not be enough to get
+full use out of these devices.
+
+Andrew
+
+> 
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+> ---
+>  .../devicetree/bindings/power/supply/battery.txt   | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+> new file mode 100644
+> index 0000000..d78a4aa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+> @@ -0,0 +1,37 @@
+> +Battery Characteristics
+> +
+> +Required Properties:
+> + - compatible: Must be "fixed-battery"
+> +
+> +Optional Properties:
+> + - voltage-min-design-microvolt: drained battery voltage
+> + - energy-full-design-microwatt-hours: battery design energy
+> + - charge-full-design-microamp-hours: battery design capacity
+> +
+> +Future Properties must be named for the corresponding elements in
+> +enum power_supply_property, defined in include/linux/power_supply.h.
+> +
+> +Batteries must be referenced by chargers and/or fuel-gauges
+> +using a phandle. The phandle's property should be named
+> +"monitored-battery".
+> +
+> +Example:
+> +
+> +	bat: battery {
+> +		compatible = "fixed-battery";
+> +		voltage-min-design-microvolt = <3200000>;
+> +		energy-full-design-microwatt-hours = <5290000>;
+> +		charge-full-design-microamp-hours = <1430000>;
+> +	};
+> +
+> +	charger: charger@11 {
+> +		....
+> +		monitored-battery = <&bat>;
+> +		...
+> +	};
+> +
+> +	fuel_gauge: fuel-gauge@22 {
+> +		....
+> +		monitored-battery = <&bat>;
+> +		...
+> +	};
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
