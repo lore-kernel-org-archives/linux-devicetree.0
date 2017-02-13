@@ -1,47 +1,112 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 07/10] ARM: davinci: fix a whitespace error
-Date: Mon, 13 Feb 2017 10:36:10 -0800
-Message-ID: <m2o9y6djl1.fsf@baylibre.com>
-References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
-        <1486485683-11427-8-git-send-email-bgolaszewski@baylibre.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: sun4i-i2s: Update binding documentation
+	to include A31" to the asoc tree
+Date: Mon, 13 Feb 2017 18:53:54 +0000
+Message-ID: <E1cdLl4-00011Z-FN@debutante>
+References: <20170202092422.5588-2-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486485683-11427-8-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-        (Bartosz Golaszewski's message of "Tue, 7 Feb 2017 17:41:20 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============8992299638091194426=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170202092422.5588-2-mylene.josserand@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, mylene.josserand@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+--===============8992299638091194426==
+Content-Type: text/plain
 
-> There's a stray tab in da850_vpif_legacy_init(). Remove it.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+The patch
 
-Folding into the original,
+   ASoC: sun4i-i2s: Update binding documentation to include A31
 
-Kevin
+has been applied to the asoc tree at
 
-> ---
->  arch/arm/mach-davinci/pdata-quirks.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/mach-davinci/pdata-quirks.c b/arch/arm/mach-davinci/pdata-quirks.c
-> index a186513..94948c1 100644
-> --- a/arch/arm/mach-davinci/pdata-quirks.c
-> +++ b/arch/arm/mach-davinci/pdata-quirks.c
-> @@ -111,7 +111,7 @@ static struct vpif_capture_config da850_vpif_capture_config = {
->  static void __init da850_vpif_legacy_init(void)
->  {
->  	int ret;
-> -	
-> +
->  	/* LCDK doesn't have the 2nd TVP514x on CH1 */
->  	if (of_machine_is_compatible("ti,da850-lcdk"))
->  		da850_vpif_capture_config.subdev_count = 1;
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From f55d404f49194563974f5462f9f4bd7cbc48d9c6 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+ <mylene.josserand@free-electrons.com>
+Date: Fri, 10 Feb 2017 11:00:46 +0100
+Subject: [PATCH] ASoC: sun4i-i2s: Update binding documentation to include A31
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Add a new compatible for sun4i-i2s driver to handle some
+SoCs that have a reset line that must be asserted/deasserted.
+
+This new compatible, "allwinner,sun6i-a31-i2s", requires the
+property "resets" which should be a phandle to the reset line.
+Except these differences, the compatible is identical to previous one
+which will not handle a reset line.
+
+Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/sun4i-i2s.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+index 7b526ec64991..f4adc58f82ba 100644
+--- a/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/sun4i-i2s.txt
+@@ -7,6 +7,7 @@ Required properties:
+ 
+ - compatible: should be one of the followings
+    - "allwinner,sun4i-a10-i2s"
++   - "allwinner,sun6i-a31-i2s"
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - interrupts: should contain the I2S interrupt.
+@@ -19,6 +20,10 @@ Required properties:
+    - "mod" : module clock for the I2S controller
+ - #sound-dai-cells : Must be equal to 0
+ 
++Required properties for the following compatibles:
++	- "allwinner,sun6i-a31-i2s"
++- resets: phandle to the reset line for this codec
++
+ Example:
+ 
+ i2s0: i2s@01c22400 {
+-- 
+2.11.0
+
+
+--===============8992299638091194426==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8992299638091194426==--
