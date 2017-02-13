@@ -1,247 +1,434 @@
-Return-Path: <SRS0=CrIa=Z2=linaro.org=mike.leach@kernel.org>
+Return-Path: <SRS0=gZru=Z2=gmail.com=slongerbeam@kernel.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev
+ driver
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
+ <1486036237.2289.37.camel@pengutronix.de>
+ <ca0a2eb3-21b6-d312-c8e0-61da48c4c700@gmail.com>
+ <20170208234235.GA27312@n2100.armlinux.org.uk>
+ <d6dba77e-902c-7a4c-cc70-fe3a5c9649bb@gmail.com>
+ <e9076980-ce84-f9ee-096d-865243b82a9e@gmail.com>
+ <1486977617.2873.29.camel@pengutronix.de>
+Message-ID: <ade249bc-0a63-6637-8ad2-d6208c684f47@gmail.com>
+Date: Mon, 13 Feb 2017 15:19:04 -0800
 MIME-Version: 1.0
-In-Reply-To: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
-References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Mon, 13 Feb 2017 15:58:47 +0000
-Message-ID: <CAJ9a7VjiEwUEQVvuecYS9aLbe+4-eN-waEWirdv_ctsHPaXxWw@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/3] coresight: enable debug module
-Content-Type: multipart/alternative; boundary=001a1146d146d866c905486b85ba
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>
+In-Reply-To: <1486977617.2873.29.camel@pengutronix.de>
+Content-Type: multipart/alternative;
+ boundary="------------C9DE8933A54EC569559A5F13"
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a1146d146d866c905486b85ba
-Content-Type: text/plain; charset=UTF-8
+This is a multi-part message in MIME format.
+--------------C9DE8933A54EC569559A5F13
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Leo,
-
-A few comments about your driver RFC.
-
-i) As it stands this looks like it will work for v8 cores, but would need
-refining for v7. There are subtle differences in the PC sampling between
-the two architectures.
-
-ii) the routine that dumps the PCSR register values across all the
-available cores, appears to assume that all the cores are powered and as
-such the registers are accessible.
-I think it would be useful in the Kconfig help to point this out.
-
-At ARM we have encountered systems that have quite aggressive power
-management policies which will disable both the core power domain and debug
-power domain for unused cores / clusters. On such a system I think that
-there would be an slave error return provided by the memory access to
-unpowered elements, resulting in undesirable behavior, or even a bus
-lockup. These are both errors we have seen using the external debug
-registers via an external debugger.
-
-At the very least the user needs to be warned so he can adjust his system
-accordingly (e.g. when we are debugging a Juno based Linux system using the
-external debug registers / debugger. we will often disable power management
-using a script to ensure that cores stay up and debuggable.)
-
-iii) I would recommend that you take note of the relevant bits in EDPRSR
-which may indicate that reading EDPCSR will cause an access error.
-Specifically DLK, PU would gate valid access to OSLAR -> the state of which
-you can also determine using EDPRSR.
-
-iv) When running in higher EL levels, such as might be the case with
-trusted firmware, then PC sampling may not be permitted by the OS, when the
-EDPCSR value will return 0xFFFFFFFF. The PCSR dump message should reflect
-this.
-
-v) EDVIDSR - which is sampled at the same time as EDPCSR_lo contains
-interesting information regarding the validity of the EDPCSR_hi registers
-and current EL and security state.
-I think it would be worth reading and interpreting this register in
-addition to the PC sample.
-
-vi) The set of registers you are using are the "PC sample-based profiling
-extension". (ARM v8 manual section H7.) It might be more accurate to
-describe the driver as implementing support for this rather than full debug.
-
-Best Regards
-
-Mike Leach
+Hi Philipp,
 
 
-
-On 13 February 2017 at 06:11, Leo Yan <leo.yan@linaro.org> wrote:
-
-> This patch series is to enable coresight debug module. With debug
-> module we can check CPU state and PC value, etc. So this is helpful for
-> CPU lockup bugs, e.g. if one CPU has run into infinite loop with IRQ
-> disabled. The hang CPU cannot switch context and handle any interrupt,
-> so it cannot handle SMP call for stack dump, etc.
+On 02/13/2017 01:20 AM, Philipp Zabel wrote:
+> Hi Steve,
 >
-> Furthermore, now ARMv8 introduces some runtime firmwares like ARM
-> trusted firmware BL31, so sometime CPU lockup may happen in the
-> firmware and cannot return back to kernel.
->
-> This initial patch series enable debug module and registers call back
-> notifier for PCSR register dumping when panic happens, so we can see
-> below dumping info for panic:
->
-> [   13.751777] Coresight debug module:
-> [   13.755275] CPU[0]: PSCR=0xffff000008090cbc
-> [   13.759469] CPU[1]: PSCR=0xffff0000088bf9e4
-> [   13.763662] CPU[2]: PSCR=0xffff000008090cc0
-> [   13.767856] CPU[3]: PSCR=0xffff000008090cb8
-> [   13.772049] CPU[4]: PSCR=0xffff000008090cc0
-> [   13.776243] CPU[5]: PSCR=0xffff000008090cbc
-> [   13.780436] CPU[6]: PSCR=0xffff000008090cc0
-> [   13.784630] CPU[7]: PSCR=0xffff000008090cbc
->
-> This patch series has been verified on 96boards Hikey.
->
->
-> Leo Yan (3):
->   coresight: binding for coresight debug driver
->   coresight: add support for debug module
->   arm64: dts: register Hi6220's coresight debug module
->
->  .../devicetree/bindings/arm/coresight.txt          |   9 +-
->  .../boot/dts/hisilicon/hikey_6220_coresight.dtsi   |  73 +++++++++
->  drivers/hwtracing/coresight/Kconfig                |   8 +
->  drivers/hwtracing/coresight/Makefile               |   1 +
->  drivers/hwtracing/coresight/coresight-debug.c      | 169
-> +++++++++++++++++++++
->  5 files changed, 258 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
->
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+> On Thu, 2017-02-09 at 15:51 -0800, Steve Longerbeam wrote:
+>> On 02/09/2017 03:49 PM, Steve Longerbeam wrote:
+>>> On 02/08/2017 03:42 PM, Russell King - ARM Linux wrote:
+>>>> On Wed, Feb 08, 2017 at 03:23:53PM -0800, Steve Longerbeam wrote:
+>>>>>> Actually, this exact function already exists as
+>>>>>> dw_mipi_dsi_phy_write in
+>>>>>> drivers/gpu/drm/rockchip/dw-mipi-dsi.c, and it looks like the D-PHY
+>>>>>> register 0x44 might contain a field called HSFREQRANGE_SEL.
+>>>>> Thanks for pointing out drivers/gpu/drm/rockchip/dw-mipi-dsi.c.
+>>>>> It's clear from that driver that there probably needs to be a fuller
+>>>>> treatment of the D-PHY programming here, but I don't know where
+>>>>> to find the MIPI CSI-2 D-PHY documentation for the i.MX6. The code
+>>>>> in imxcsi2_reset() was also pulled from FSL, and that's all I really
+>>>>> have
+>>>>> to go on for the D-PHY programming. I assume the D-PHY is also a
+>>>>> Synopsys core, like the host controller, but the i.MX6 manual doesn't
+>>>>> cover it.
+>>>> Why exactly?  What problems are you seeing that would necessitate a
+>>>> more detailed programming of the D-PHY?  From my testing, I can wind
+>>>> a 2-lane MIPI bus on iMX6D from 912Mbps per lane down to (eg) 308Mbps
+>>>> per lane with your existing code without any issues.
+>>> That's good to hear.
+>>>
+>>> Just from my experience with struggles to get the CSI2 receiver
+>>> up and running with an active clock lane, and my suspicions that
+>>> some of that could be due to my lack of understanding of the D-PHY
+>>> programming.
+>> But I should add that after a re-org of the sequence, it looks more stable
+>> now. Tested on both the SabreSD and SabreLite with the OV5640.
+> It seems the OV5640 driver never puts its the CSI-2 lanes into stop
+> state while not streaming.
+
+Yes I found that as well.
+
+But good news, I finally managed to coax the OV5640's clock lane
+into LP-11 state! It was accomplished by setting bit 5 in OV5640 register
+0x4800. The datasheet describes this bit as "Gate clock lane when no
+packet to transmit". But I may have also got this to work with the 
+additional
+write 1 to bits 4-6 in register 0x3019 ("MIPI CLK/data lane state in sleep
+mode" - setting 1 to these bits selects LP-11 for sleep mode).
+
+So I am now finally able to call csi2_dphy_wait_stopstate() in
+csi2_s_stream(ON).
+
+So for the TC35874, you shouldn't see a timeout in csi2_s_stream(ON)
+any longer.
+
+I have updated both ov5640.c and imx6-mipi-csi2.c in the wip branch.
+Can you try again? I have not applied your patch below, because I
+don't think that is needed anymore.
+
+And speaking of the TC35874, I received this module for the SabreLite
+from Boundary Devices (thanks BD!). So I can finally help you with
+debug/test. Are there any patches you need to send to me (against
+wip branch) for this support, or can I use what exists now in media
+tree? Also any scripts or help with running.
 
 
+>   With the recent s_stream reordering,
+> streaming from TC358743 does not work anymore, since imx6-mipi-csi2
+> s_stream is called before tc358743 s_stream, while all lanes are still
+> in stop state. Then it waits for the clock lane to become active and
+> fails. I have applied the following patch to revert the reordering
+> locally to get it to work again.
+>
+> The initialization order, as Russell pointed out, should be:
+>
+> 1. reset the D-PHY.
+> 2. place MIPI sensor in LP-11 state
+> 3. perform D-PHY initialisation
+> 4. configure CSI2 lanes and de-assert resets and shutdown signals
+>
+> So csi2_s_stream should wait for stop state on all lanes (the result of
+> 2.) before dphy_init (3.), not wait for active clock afterwards. That
+> should happen only after sensor_s_stream was called. So unless we are
+> allowed to reorder steps 1. and 2., we might need the prepare_stream
+> callback after all.
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Blackburn Design Centre. UK
+Agreed!
 
---001a1146d146d866c905486b85ba
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+See my new FIXME comment in imx6-mipi-csi2.c.
 
-<div dir=3D"ltr"><div class=3D"gmail_default" style=3D"font-family:arial,he=
-lvetica,sans-serif">Hi Leo,<br><br></div><div class=3D"gmail_default" style=
-=3D"font-family:arial,helvetica,sans-serif">A few comments about your drive=
-r RFC.<br><br></div><div class=3D"gmail_default" style=3D"font-family:arial=
-,helvetica,sans-serif">i) As it stands this looks like it will work for v8 =
-cores, but would need refining for v7. There are subtle differences in the =
-PC sampling between the two architectures.<br><br></div><div class=3D"gmail=
-_default" style=3D"font-family:arial,helvetica,sans-serif">ii) the routine =
-that dumps the PCSR register values across all the available cores, appears=
- to assume that all the cores are powered and as such the registers are acc=
-essible.<br></div><div class=3D"gmail_default" style=3D"font-family:arial,h=
-elvetica,sans-serif">I think it would be useful in the Kconfig help to poin=
-t this out. <br><br>At ARM we have encountered systems that have quite aggr=
-essive power management policies which will disable both the core power dom=
-ain and debug power domain for unused cores / clusters. On such a system I =
-think that there would be an slave error return provided by the memory acce=
-ss to unpowered elements, resulting in undesirable behavior, or even a bus =
-lockup. These are both errors we have seen using the external debug registe=
-rs via an external debugger.<br><br>At the very least the user needs to be =
-warned so he can adjust his system accordingly (e.g. when we are debugging =
-a Juno based Linux system using the external debug registers / debugger. we=
- will often disable power management using a script to ensure that cores st=
-ay up and debuggable.)<br><br></div><div class=3D"gmail_default" style=3D"f=
-ont-family:arial,helvetica,sans-serif">iii) I would recommend that you take=
- note of the relevant bits in EDPRSR which may indicate that reading EDPCSR=
- will cause an access error. Specifically DLK, PU would gate valid access t=
-o OSLAR -&gt; the state of which you can also determine using EDPRSR.<br><b=
-r></div><div class=3D"gmail_default" style=3D"font-family:arial,helvetica,s=
-ans-serif">iv) When running in higher EL levels, such as might be the case =
-with trusted firmware, then PC sampling may not be permitted by the OS, whe=
-n the EDPCSR value will return 0xFFFFFFFF. The PCSR dump message should ref=
-lect this. <br></div><div class=3D"gmail_default" style=3D"font-family:aria=
-l,helvetica,sans-serif"><br></div><div class=3D"gmail_default" style=3D"fon=
-t-family:arial,helvetica,sans-serif">v) EDVIDSR - which is sampled at the s=
-ame time as EDPCSR_lo contains interesting information regarding the validi=
-ty of the EDPCSR_hi registers and current EL and security state.<br></div><=
-div class=3D"gmail_default" style=3D"font-family:arial,helvetica,sans-serif=
-">I think it would be worth reading and interpreting this register in addit=
-ion to the PC sample.<br><br></div><div class=3D"gmail_default" style=3D"fo=
-nt-family:arial,helvetica,sans-serif">vi) The set of registers you are usin=
-g are the &quot;PC sample-based profiling extension&quot;. (ARM v8 manual s=
-ection H7.) It might be more accurate to describe the driver as implementin=
-g support for this rather than full debug.<br></div><div class=3D"gmail_def=
-ault" style=3D"font-family:arial,helvetica,sans-serif"><br></div><div class=
-=3D"gmail_default" style=3D"font-family:arial,helvetica,sans-serif">Best Re=
-gards<br><br></div><div class=3D"gmail_default" style=3D"font-family:arial,=
-helvetica,sans-serif">Mike Leach<br><br><br></div></div><div class=3D"gmail=
-_extra"><br><div class=3D"gmail_quote">On 13 February 2017 at 06:11, Leo Ya=
-n <span dir=3D"ltr">&lt;<a href=3D"mailto:leo.yan@linaro.org" target=3D"_bl=
-ank">leo.yan@linaro.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail=
-_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:=
-1ex">This patch series is to enable coresight debug module. With debug<br>
-module we can check CPU state and PC value, etc. So this is helpful for<br>
-CPU lockup bugs, e.g. if one CPU has run into infinite loop with IRQ<br>
-disabled. The hang CPU cannot switch context and handle any interrupt,<br>
-so it cannot handle SMP call for stack dump, etc.<br>
-<br>
-Furthermore, now ARMv8 introduces some runtime firmwares like ARM<br>
-trusted firmware BL31, so sometime CPU lockup may happen in the<br>
-firmware and cannot return back to kernel.<br>
-<br>
-This initial patch series enable debug module and registers call back<br>
-notifier for PCSR register dumping when panic happens, so we can see<br>
-below dumping info for panic:<br>
-<br>
-[=C2=A0 =C2=A013.751777] Coresight debug module:<br>
-[=C2=A0 =C2=A013.755275] CPU[0]: PSCR=3D0xffff000008090cbc<br>
-[=C2=A0 =C2=A013.759469] CPU[1]: PSCR=3D0xffff0000088bf9e4<br>
-[=C2=A0 =C2=A013.763662] CPU[2]: PSCR=3D0xffff000008090cc0<br>
-[=C2=A0 =C2=A013.767856] CPU[3]: PSCR=3D0xffff000008090cb8<br>
-[=C2=A0 =C2=A013.772049] CPU[4]: PSCR=3D0xffff000008090cc0<br>
-[=C2=A0 =C2=A013.776243] CPU[5]: PSCR=3D0xffff000008090cbc<br>
-[=C2=A0 =C2=A013.780436] CPU[6]: PSCR=3D0xffff000008090cc0<br>
-[=C2=A0 =C2=A013.784630] CPU[7]: PSCR=3D0xffff000008090cbc<br>
-<br>
-This patch series has been verified on 96boards Hikey.<br>
-<br>
-<br>
-Leo Yan (3):<br>
-=C2=A0 coresight: binding for coresight debug driver<br>
-=C2=A0 coresight: add support for debug module<br>
-=C2=A0 arm64: dts: register Hi6220&#39;s coresight debug module<br>
-<br>
-=C2=A0.../devicetree/bindings/arm/<wbr>coresight.txt=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 |=C2=A0 =C2=A09 +-<br>
-=C2=A0.../boot/dts/hisilicon/hikey_<wbr>6220_coresight.dtsi=C2=A0 =C2=A0|=
-=C2=A0 73 +++++++++<br>
-=C2=A0drivers/hwtracing/coresight/<wbr>Kconfig=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 |=C2=A0 =C2=A08 +<br>
-=C2=A0drivers/hwtracing/coresight/<wbr>Makefile=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A01 +<br>
-=C2=A0drivers/hwtracing/coresight/<wbr>coresight-debug.c=C2=A0 =C2=A0 =C2=
-=A0 | 169 +++++++++++++++++++++<br>
-=C2=A05 files changed, 258 insertions(+), 2 deletions(-)<br>
-=C2=A0create mode 100644 drivers/hwtracing/coresight/<wbr>coresight-debug.c=
-<br>
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
---<br>
-2.7.4<br>
-<br>
-<br>
-______________________________<wbr>_________________<br>
-linux-arm-kernel mailing list<br>
-<a href=3D"mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@li=
-sts.<wbr>infradead.org</a><br>
-<a href=3D"http://lists.infradead.org/mailman/listinfo/linux-arm-kernel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.infradead.org/<wbr>mailman/=
-listinfo/linux-arm-<wbr>kernel</a><br>
-</font></span></blockquote></div><br><br clear=3D"all"><br>-- <br><div clas=
-s=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=3D"ltr"><=
-div>Mike Leach</div><div>Principal Engineer, ARM Ltd.</div><div>Blackburn D=
-esign Centre. UK</div></div></div>
-</div>
+I agree we might need a new subdev op .prepare_stream(). This
+op would be implemented by imx6-mipi-csi2.c, and would carry
+out steps 3, 4, 5 (instead of currently by csi2_s_stream()). Then
+step 6 would finally become available as csi2_s_stream().
 
---001a1146d146d866c905486b85ba--
+And then we must re-order stream on to start sensor first, then
+csi2, as in your patch below.
+
+Steve
+
+>
+> More specifically, the chapter 40.3.1 "Startup Sequence" in the i.MX6DQ
+> reference manual states:
+>
+> 1. Deassert presetn signal (global reset)
+>     - This is probably the APB global reset, so not something we have to
+>       care about.
+> 2. Configure MIPI Camera Sensor to put all Tx lanes in PL-11 state
+> 3. D-PHY initialization (write 0x14 to address 0x44)
+> 4. CSI2 Controller programming
+>     - Set N_LANES
+>     - Deassert PHY_SHUTDOWNZ
+>     - Deassert PHY_RSTZ
+>     - Deassert CSI2_RESETN
+> 5. Read the PHY status register (PHY_STATE) to confirm that all data and
+>     clock lanes of the D-PHY are in Stop State
+> 6. Configure the MIPI Camera Sensor to start transmitting a clock on the
+>     D-PHY clock lane
+> 7. CSI2 Controller programming - Read the PHY status register
+>     (PHY_STATE) to confirm that the D-PHY is receiving a clock on the
+>     D-PHY clock lane
+>
+> 2. can be done in sensor s_power (which tc358743 currently does) only if
+> the sensor can still be configured in step 6.
+> Also, 3./4./5. are csi2 code, 6. is sensor code, and 7. is csi2 code
+> again. For reliable startup we need csi2 receiver code to be called on
+> both sides of the sensor enabling its clock lane.
+> ----------8<----------
+>  From f12758caa3e1d05980cd2ac07587d125449fc860 Mon Sep 17 00:00:00 2001
+> From: Philipp Zabel<p.zabel@pengutronix.de>
+> Date: Mon, 13 Feb 2017 09:28:27 +0100
+> Subject: [PATCH] media: imx: revert streamon sequence change
+>
+> Without this patch, starting streaming from a TC358743 MIPI CSI-2 source
+> fails with the following error messages:
+>
+>      imx6-mipi-csi2: clock lane timeout, phy_state = 0x000006f0
+>      ipu1_csi0: pipeline_set_stream failed with -110
+>
+> The phy state above has the stopstateclk, rxulpsclknot, and
+> stopstatedata[3:0] bits set: at this point all lanes are in stop state,
+> no lane is in ultra low power state or active.
+> This is no suprise, since tc358743 s_stream(sd, 1) has not been called
+> due to the recently changed ordering. The imx6-mipi-csi2 s_stream does
+> wait for the clock lane to become active, so csi2_s_stream must happen
+> after tc358743_s_stream.
+>
+> Signed-off-by: Philipp Zabel<p.zabel@pengutronix.de>
+> ---
+>   drivers/staging/media/imx/imx-media-utils.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+> index 81eabcf76a66f..495ccefa3cd2a 100644
+> --- a/drivers/staging/media/imx/imx-media-utils.c
+> +++ b/drivers/staging/media/imx/imx-media-utils.c
+> @@ -782,8 +782,8 @@ static const u32 stream_on_seq[] = {
+>   	IMX_MEDIA_GRP_ID_IC_PRPENC,
+>   	IMX_MEDIA_GRP_ID_IC_PRP,
+>   	IMX_MEDIA_GRP_ID_VDIC,
+> -	IMX_MEDIA_GRP_ID_CSI2,
+>   	IMX_MEDIA_GRP_ID_SENSOR,
+> +	IMX_MEDIA_GRP_ID_CSI2,
+>   	IMX_MEDIA_GRP_ID_VIDMUX,
+>   	IMX_MEDIA_GRP_ID_CSI,
+>   };
+> @@ -795,8 +795,8 @@ static const u32 stream_off_seq[] = {
+>   	IMX_MEDIA_GRP_ID_VDIC,
+>   	IMX_MEDIA_GRP_ID_CSI,
+>   	IMX_MEDIA_GRP_ID_VIDMUX,
+> -	IMX_MEDIA_GRP_ID_SENSOR,
+>   	IMX_MEDIA_GRP_ID_CSI2,
+> +	IMX_MEDIA_GRP_ID_SENSOR,
+>   };
+>   
+>   #define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
+
+
+--------------C9DE8933A54EC569559A5F13
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+  </head>
+  <body bgcolor="#FFFFFF" text="#000000">
+    <p>Hi Philipp,<br>
+    </p>
+    <br>
+    <div class="moz-cite-prefix">On 02/13/2017 01:20 AM, Philipp Zabel
+      wrote:<br>
+    </div>
+    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">Hi Steve,
+
+On Thu, 2017-02-09 at 15:51 -0800, Steve Longerbeam wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">On 02/09/2017 03:49 PM, Steve Longerbeam wrote:
+</pre>
+        <blockquote type="cite">
+          <pre wrap="">
+On 02/08/2017 03:42 PM, Russell King - ARM Linux wrote:
+</pre>
+          <blockquote type="cite">
+            <pre wrap="">On Wed, Feb 08, 2017 at 03:23:53PM -0800, Steve Longerbeam wrote:
+</pre>
+            <blockquote type="cite">
+              <blockquote type="cite">
+                <pre wrap="">Actually, this exact function already exists as 
+dw_mipi_dsi_phy_write in
+drivers/gpu/drm/rockchip/dw-mipi-dsi.c, and it looks like the D-PHY
+register 0x44 might contain a field called HSFREQRANGE_SEL.
+</pre>
+              </blockquote>
+              <pre wrap="">Thanks for pointing out drivers/gpu/drm/rockchip/dw-mipi-dsi.c.
+It's clear from that driver that there probably needs to be a fuller
+treatment of the D-PHY programming here, but I don't know where
+to find the MIPI CSI-2 D-PHY documentation for the i.MX6. The code
+in imxcsi2_reset() was also pulled from FSL, and that's all I really 
+have
+to go on for the D-PHY programming. I assume the D-PHY is also a
+Synopsys core, like the host controller, but the i.MX6 manual doesn't
+cover it.
+</pre>
+            </blockquote>
+            <pre wrap="">Why exactly?  What problems are you seeing that would necessitate a
+more detailed programming of the D-PHY?  From my testing, I can wind
+a 2-lane MIPI bus on iMX6D from 912Mbps per lane down to (eg) 308Mbps
+per lane with your existing code without any issues.
+</pre>
+          </blockquote>
+          <pre wrap="">That's good to hear.
+
+Just from my experience with struggles to get the CSI2 receiver
+up and running with an active clock lane, and my suspicions that
+some of that could be due to my lack of understanding of the D-PHY
+programming.
+</pre>
+        </blockquote>
+        <pre wrap="">But I should add that after a re-org of the sequence, it looks more stable
+now. Tested on both the SabreSD and SabreLite with the OV5640.
+</pre>
+      </blockquote>
+      <pre wrap="">It seems the OV5640 driver never puts its the CSI-2 lanes into stop
+state while not streaming.</pre>
+    </blockquote>
+    <br>
+    Yes I found that as well.<br>
+    <br>
+    But good news, I finally managed to coax the OV5640's clock lane<br>
+    into LP-11 state! It was accomplished by setting bit 5 in OV5640
+    register<br>
+    0x4800. The datasheet describes this bit as "Gate clock lane when no<br>
+    packet to transmit". But I may have also got this to work with the
+    additional<br>
+    write 1 to bits 4-6 in register 0x3019 ("MIPI CLK/data lane state in
+    sleep<br>
+    mode" - setting 1 to these bits selects LP-11 for sleep mode).<br>
+    <br>
+    So I am now finally able to call csi2_dphy_wait_stopstate() in<br>
+    csi2_s_stream(ON).<br>
+    <br>
+    So for the TC35874, you shouldn't see a timeout in csi2_s_stream(ON)<br>
+    any longer.<br>
+    <br>
+    I have updated both ov5640.c and imx6-mipi-csi2.c in the wip branch.<br>
+    Can you try again? I have not applied your patch below, because I<br>
+    don't think that is needed anymore.<br>
+    <br>
+    And speaking of the TC35874, I received this module for the
+    SabreLite<br>
+    from Boundary Devices (thanks BD!). So I can finally help you with <br>
+    debug/test. Are there any patches you need to send to me (against<br>
+    wip branch) for this support, or can I use what exists now in media<br>
+    tree? Also any scripts or help with running.<br>
+    <br>
+    <br>
+    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
+      type="cite">
+      <pre wrap=""> With the recent s_stream reordering,
+streaming from TC358743 does not work anymore, since imx6-mipi-csi2
+s_stream is called before tc358743 s_stream, while all lanes are still
+in stop state. Then it waits for the clock lane to become active and
+fails. I have applied the following patch to revert the reordering
+locally to get it to work again.
+
+The initialization order, as Russell pointed out, should be:
+
+1. reset the D-PHY.
+2. place MIPI sensor in LP-11 state
+3. perform D-PHY initialisation
+4. configure CSI2 lanes and de-assert resets and shutdown signals
+
+So csi2_s_stream should wait for stop state on all lanes (the result of
+2.) before dphy_init (3.), not wait for active clock afterwards. That
+should happen only after sensor_s_stream was called. So unless we are
+allowed to reorder steps 1. and 2., we might need the prepare_stream
+callback after all.</pre>
+    </blockquote>
+    <br>
+    Agreed!<br>
+    <br>
+    See my new FIXME comment in imx6-mipi-csi2.c.<br>
+    <br>
+    I agree we might need a new subdev op .prepare_stream(). This<br>
+    op would be implemented by imx6-mipi-csi2.c, and would carry<br>
+    out steps 3, 4, 5 (instead of currently by csi2_s_stream()). Then<br>
+    step 6 would finally become available as csi2_s_stream().<br>
+    <br>
+    And then we must re-order stream on to start sensor first, then<br>
+    csi2, as in your patch below.<br>
+    <br>
+    Steve<br>
+    <br>
+    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+
+More specifically, the chapter 40.3.1 "Startup Sequence" in the i.MX6DQ
+reference manual states:
+
+1. Deassert presetn signal (global reset)
+   - This is probably the APB global reset, so not something we have to
+     care about.
+2. Configure MIPI Camera Sensor to put all Tx lanes in PL-11 state
+3. D-PHY initialization (write 0x14 to address 0x44)
+4. CSI2 Controller programming
+   - Set N_LANES
+   - Deassert PHY_SHUTDOWNZ
+   - Deassert PHY_RSTZ
+   - Deassert CSI2_RESETN
+5. Read the PHY status register (PHY_STATE) to confirm that all data and
+   clock lanes of the D-PHY are in Stop State
+6. Configure the MIPI Camera Sensor to start transmitting a clock on the
+   D-PHY clock lane
+7. CSI2 Controller programming - Read the PHY status register
+   (PHY_STATE) to confirm that the D-PHY is receiving a clock on the
+   D-PHY clock lane
+
+2. can be done in sensor s_power (which tc358743 currently does) only if
+the sensor can still be configured in step 6.
+Also, 3./4./5. are csi2 code, 6. is sensor code, and 7. is csi2 code
+again. For reliable startup we need csi2 receiver code to be called on
+both sides of the sensor enabling its clock lane.
+</pre>
+    </blockquote>
+    <blockquote cite="mid:1486977617.2873.29.camel@pengutronix.de"
+      type="cite">
+      <pre wrap="">
+----------8&lt;----------
+>From f12758caa3e1d05980cd2ac07587d125449fc860 Mon Sep 17 00:00:00 2001
+From: Philipp Zabel <a class="moz-txt-link-rfc2396E" href="mailto:p.zabel@pengutronix.de">&lt;p.zabel@pengutronix.de&gt;</a>
+Date: Mon, 13 Feb 2017 09:28:27 +0100
+Subject: [PATCH] media: imx: revert streamon sequence change
+
+Without this patch, starting streaming from a TC358743 MIPI CSI-2 source
+fails with the following error messages:
+
+    imx6-mipi-csi2: clock lane timeout, phy_state = 0x000006f0
+    ipu1_csi0: pipeline_set_stream failed with -110
+
+The phy state above has the stopstateclk, rxulpsclknot, and
+stopstatedata[3:0] bits set: at this point all lanes are in stop state,
+no lane is in ultra low power state or active.
+This is no suprise, since tc358743 s_stream(sd, 1) has not been called
+due to the recently changed ordering. The imx6-mipi-csi2 s_stream does
+wait for the clock lane to become active, so csi2_s_stream must happen
+after tc358743_s_stream.
+
+Signed-off-by: Philipp Zabel <a class="moz-txt-link-rfc2396E" href="mailto:p.zabel@pengutronix.de">&lt;p.zabel@pengutronix.de&gt;</a>
+---
+ drivers/staging/media/imx/imx-media-utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+index 81eabcf76a66f..495ccefa3cd2a 100644
+--- a/drivers/staging/media/imx/imx-media-utils.c
++++ b/drivers/staging/media/imx/imx-media-utils.c
+@@ -782,8 +782,8 @@ static const u32 stream_on_seq[] = {
+ 	IMX_MEDIA_GRP_ID_IC_PRPENC,
+ 	IMX_MEDIA_GRP_ID_IC_PRP,
+ 	IMX_MEDIA_GRP_ID_VDIC,
+-	IMX_MEDIA_GRP_ID_CSI2,
+ 	IMX_MEDIA_GRP_ID_SENSOR,
++	IMX_MEDIA_GRP_ID_CSI2,
+ 	IMX_MEDIA_GRP_ID_VIDMUX,
+ 	IMX_MEDIA_GRP_ID_CSI,
+ };
+@@ -795,8 +795,8 @@ static const u32 stream_off_seq[] = {
+ 	IMX_MEDIA_GRP_ID_VDIC,
+ 	IMX_MEDIA_GRP_ID_CSI,
+ 	IMX_MEDIA_GRP_ID_VIDMUX,
+-	IMX_MEDIA_GRP_ID_SENSOR,
+ 	IMX_MEDIA_GRP_ID_CSI2,
++	IMX_MEDIA_GRP_ID_SENSOR,
+ };
+ 
+ #define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
+</pre>
+    </blockquote>
+    <br>
+  </body>
+</html>
+
+--------------C9DE8933A54EC569559A5F13--
