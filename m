@@ -1,203 +1,144 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev
- driver
-Date: Mon, 13 Feb 2017 15:20:05 -0800
-Message-ID: <04a4d130-0259-cbba-7815-e41c1c80c3c7@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
- <1486036237.2289.37.camel@pengutronix.de>
- <ca0a2eb3-21b6-d312-c8e0-61da48c4c700@gmail.com>
- <20170208234235.GA27312@n2100.armlinux.org.uk>
- <d6dba77e-902c-7a4c-cc70-fe3a5c9649bb@gmail.com>
- <e9076980-ce84-f9ee-096d-865243b82a9e@gmail.com>
- <1486977617.2873.29.camel@pengutronix.de>
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 0/3] coresight: enable debug module
+Date: Tue, 14 Feb 2017 07:37:19 +0800
+Message-ID: <20170213233719.GA4711@leoy-linaro>
+References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
+ <CAJ9a7VjiEwUEQVvuecYS9aLbe+4-eN-waEWirdv_ctsHPaXxWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486977617.2873.29.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ9a7VjiEwUEQVvuecYS9aLbe+4-eN-waEWirdv_ctsHPaXxWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve
+To: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(#!##* Thunderbird! resending text only)
+Hi Mike,
 
-Hi Philipp,
+On Mon, Feb 13, 2017 at 03:58:47PM +0000, Mike Leach wrote:
+> Hi Leo,
+> 
+> A few comments about your driver RFC.
+> 
+> i) As it stands this looks like it will work for v8 cores, but would need
+> refining for v7. There are subtle differences in the PC sampling between
+> the two architectures.
 
+Thanks a lot for your suggestions, I totally accept them.
 
-On 02/13/2017 01:20 AM, Philipp Zabel wrote:
-> Hi Steve,
->
-> On Thu, 2017-02-09 at 15:51 -0800, Steve Longerbeam wrote:
->> On 02/09/2017 03:49 PM, Steve Longerbeam wrote:
->>> On 02/08/2017 03:42 PM, Russell King - ARM Linux wrote:
->>>> On Wed, Feb 08, 2017 at 03:23:53PM -0800, Steve Longerbeam wrote:
->>>>>> Actually, this exact function already exists as
->>>>>> dw_mipi_dsi_phy_write in
->>>>>> drivers/gpu/drm/rockchip/dw-mipi-dsi.c, and it looks like the D-PHY
->>>>>> register 0x44 might contain a field called HSFREQRANGE_SEL.
->>>>> Thanks for pointing out drivers/gpu/drm/rockchip/dw-mipi-dsi.c.
->>>>> It's clear from that driver that there probably needs to be a fuller
->>>>> treatment of the D-PHY programming here, but I don't know where
->>>>> to find the MIPI CSI-2 D-PHY documentation for the i.MX6. The code
->>>>> in imxcsi2_reset() was also pulled from FSL, and that's all I really
->>>>> have
->>>>> to go on for the D-PHY programming. I assume the D-PHY is also a
->>>>> Synopsys core, like the host controller, but the i.MX6 manual doesn't
->>>>> cover it.
->>>> Why exactly?  What problems are you seeing that would necessitate a
->>>> more detailed programming of the D-PHY?  From my testing, I can wind
->>>> a 2-lane MIPI bus on iMX6D from 912Mbps per lane down to (eg) 308Mbps
->>>> per lane with your existing code without any issues.
->>> That's good to hear.
->>>
->>> Just from my experience with struggles to get the CSI2 receiver
->>> up and running with an active clock lane, and my suspicions that
->>> some of that could be due to my lack of understanding of the D-PHY
->>> programming.
->> But I should add that after a re-org of the sequence, it looks more stable
->> now. Tested on both the SabreSD and SabreLite with the OV5640.
-> It seems the OV5640 driver never puts its the CSI-2 lanes into stop
-> state while not streaming.
+For itme i) I can find detailed description in ARM-ARM 'C11.11.34
+DBGPCSR, Program Counter Sampling Register', and below items I can
+find corresponding description in ARMv8-ARM.
 
-Yes I found that as well.
+Will fix code according these comments.
 
-But good news, I finally managed to coax the OV5640's clock lane
-into LP-11 state! It was accomplished by setting bit 5 in OV5640 register
-0x4800. The datasheet describes this bit as "Gate clock lane when no
-packet to transmit". But I may have also got this to work with the 
-additional
-write 1 to bits 4-6 in register 0x3019 ("MIPI CLK/data lane state in sleep
-mode" - setting 1 to these bits selects LP-11 for sleep mode).
+Thanks,
+Leo Yan
 
-So I am now finally able to call csi2_dphy_wait_stopstate() in
-csi2_s_stream(ON).
-
-So for the TC35874, you shouldn't see a timeout in csi2_s_stream(ON)
-any longer.
-
-I have updated both ov5640.c and imx6-mipi-csi2.c in the wip branch.
-Can you try again? I have not applied your patch below, because I
-don't think that is needed anymore.
-
-And speaking of the TC35874, I received this module for the SabreLite
-from Boundary Devices (thanks BD!). So I can finally help you with
-debug/test. Are there any patches you need to send to me (against
-wip branch) for this support, or can I use what exists now in media
-tree? Also any scripts or help with running.
-
-
->   With the recent s_stream reordering,
-> streaming from TC358743 does not work anymore, since imx6-mipi-csi2
-> s_stream is called before tc358743 s_stream, while all lanes are still
-> in stop state. Then it waits for the clock lane to become active and
-> fails. I have applied the following patch to revert the reordering
-> locally to get it to work again.
->
-> The initialization order, as Russell pointed out, should be:
->
-> 1. reset the D-PHY.
-> 2. place MIPI sensor in LP-11 state
-> 3. perform D-PHY initialisation
-> 4. configure CSI2 lanes and de-assert resets and shutdown signals
->
-> So csi2_s_stream should wait for stop state on all lanes (the result of
-> 2.) before dphy_init (3.), not wait for active clock afterwards. That
-> should happen only after sensor_s_stream was called. So unless we are
-> allowed to reorder steps 1. and 2., we might need the prepare_stream
-> callback after all.
-
-Agreed!
-
-See my new FIXME comment in imx6-mipi-csi2.c.
-
-I agree we might need a new subdev op .prepare_stream(). This
-op would be implemented by imx6-mipi-csi2.c, and would carry
-out steps 3, 4, 5 (instead of currently by csi2_s_stream()). Then
-step 6 would finally become available as csi2_s_stream().
-
-And then we must re-order stream on to start sensor first, then
-csi2, as in your patch below.
-
-Steve
-
-> More specifically, the chapter 40.3.1 "Startup Sequence" in the i.MX6DQ
-> reference manual states:
->
-> 1. Deassert presetn signal (global reset)
->     - This is probably the APB global reset, so not something we have to
->       care about.
-> 2. Configure MIPI Camera Sensor to put all Tx lanes in PL-11 state
-> 3. D-PHY initialization (write 0x14 to address 0x44)
-> 4. CSI2 Controller programming
->     - Set N_LANES
->     - Deassert PHY_SHUTDOWNZ
->     - Deassert PHY_RSTZ
->     - Deassert CSI2_RESETN
-> 5. Read the PHY status register (PHY_STATE) to confirm that all data and
->     clock lanes of the D-PHY are in Stop State
-> 6. Configure the MIPI Camera Sensor to start transmitting a clock on the
->     D-PHY clock lane
-> 7. CSI2 Controller programming - Read the PHY status register
->     (PHY_STATE) to confirm that the D-PHY is receiving a clock on the
->     D-PHY clock lane
->
-> 2. can be done in sensor s_power (which tc358743 currently does) only if
-> the sensor can still be configured in step 6.
-> Also, 3./4./5. are csi2 code, 6. is sensor code, and 7. is csi2 code
-> again. For reliable startup we need csi2 receiver code to be called on
-> both sides of the sensor enabling its clock lane.
-> ----------8<----------
->  From f12758caa3e1d05980cd2ac07587d125449fc860 Mon Sep 17 00:00:00 2001
-> From: Philipp Zabel<p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Date: Mon, 13 Feb 2017 09:28:27 +0100
-> Subject: [PATCH] media: imx: revert streamon sequence change
->
-> Without this patch, starting streaming from a TC358743 MIPI CSI-2 source
-> fails with the following error messages:
->
->      imx6-mipi-csi2: clock lane timeout, phy_state = 0x000006f0
->      ipu1_csi0: pipeline_set_stream failed with -110
->
-> The phy state above has the stopstateclk, rxulpsclknot, and
-> stopstatedata[3:0] bits set: at this point all lanes are in stop state,
-> no lane is in ultra low power state or active.
-> This is no suprise, since tc358743 s_stream(sd, 1) has not been called
-> due to the recently changed ordering. The imx6-mipi-csi2 s_stream does
-> wait for the clock lane to become active, so csi2_s_stream must happen
-> after tc358743_s_stream.
->
-> Signed-off-by: Philipp Zabel<p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->   drivers/staging/media/imx/imx-media-utils.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
-> index 81eabcf76a66f..495ccefa3cd2a 100644
-> --- a/drivers/staging/media/imx/imx-media-utils.c
-> +++ b/drivers/staging/media/imx/imx-media-utils.c
-> @@ -782,8 +782,8 @@ static const u32 stream_on_seq[] = {
->   	IMX_MEDIA_GRP_ID_IC_PRPENC,
->   	IMX_MEDIA_GRP_ID_IC_PRP,
->   	IMX_MEDIA_GRP_ID_VDIC,
-> -	IMX_MEDIA_GRP_ID_CSI2,
->   	IMX_MEDIA_GRP_ID_SENSOR,
-> +	IMX_MEDIA_GRP_ID_CSI2,
->   	IMX_MEDIA_GRP_ID_VIDMUX,
->   	IMX_MEDIA_GRP_ID_CSI,
->   };
-> @@ -795,8 +795,8 @@ static const u32 stream_off_seq[] = {
->   	IMX_MEDIA_GRP_ID_VDIC,
->   	IMX_MEDIA_GRP_ID_CSI,
->   	IMX_MEDIA_GRP_ID_VIDMUX,
-> -	IMX_MEDIA_GRP_ID_SENSOR,
->   	IMX_MEDIA_GRP_ID_CSI2,
-> +	IMX_MEDIA_GRP_ID_SENSOR,
->   };
->   
->   #define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
-
+> ii) the routine that dumps the PCSR register values across all the
+> available cores, appears to assume that all the cores are powered and as
+> such the registers are accessible.
+> I think it would be useful in the Kconfig help to point this out.
+> 
+> At ARM we have encountered systems that have quite aggressive power
+> management policies which will disable both the core power domain and debug
+> power domain for unused cores / clusters. On such a system I think that
+> there would be an slave error return provided by the memory access to
+> unpowered elements, resulting in undesirable behavior, or even a bus
+> lockup. These are both errors we have seen using the external debug
+> registers via an external debugger.
+> 
+> At the very least the user needs to be warned so he can adjust his system
+> accordingly (e.g. when we are debugging a Juno based Linux system using the
+> external debug registers / debugger. we will often disable power management
+> using a script to ensure that cores stay up and debuggable.)
+> 
+> iii) I would recommend that you take note of the relevant bits in EDPRSR
+> which may indicate that reading EDPCSR will cause an access error.
+> Specifically DLK, PU would gate valid access to OSLAR -> the state of which
+> you can also determine using EDPRSR.
+> 
+> iv) When running in higher EL levels, such as might be the case with
+> trusted firmware, then PC sampling may not be permitted by the OS, when the
+> EDPCSR value will return 0xFFFFFFFF. The PCSR dump message should reflect
+> this.
+> 
+> v) EDVIDSR - which is sampled at the same time as EDPCSR_lo contains
+> interesting information regarding the validity of the EDPCSR_hi registers
+> and current EL and security state.
+> I think it would be worth reading and interpreting this register in
+> addition to the PC sample.
+> 
+> vi) The set of registers you are using are the "PC sample-based profiling
+> extension". (ARM v8 manual section H7.) It might be more accurate to
+> describe the driver as implementing support for this rather than full debug.
+> 
+> Best Regards
+> 
+> Mike Leach
+> 
+> 
+> 
+> On 13 February 2017 at 06:11, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> 
+> > This patch series is to enable coresight debug module. With debug
+> > module we can check CPU state and PC value, etc. So this is helpful for
+> > CPU lockup bugs, e.g. if one CPU has run into infinite loop with IRQ
+> > disabled. The hang CPU cannot switch context and handle any interrupt,
+> > so it cannot handle SMP call for stack dump, etc.
+> >
+> > Furthermore, now ARMv8 introduces some runtime firmwares like ARM
+> > trusted firmware BL31, so sometime CPU lockup may happen in the
+> > firmware and cannot return back to kernel.
+> >
+> > This initial patch series enable debug module and registers call back
+> > notifier for PCSR register dumping when panic happens, so we can see
+> > below dumping info for panic:
+> >
+> > [   13.751777] Coresight debug module:
+> > [   13.755275] CPU[0]: PSCR=0xffff000008090cbc
+> > [   13.759469] CPU[1]: PSCR=0xffff0000088bf9e4
+> > [   13.763662] CPU[2]: PSCR=0xffff000008090cc0
+> > [   13.767856] CPU[3]: PSCR=0xffff000008090cb8
+> > [   13.772049] CPU[4]: PSCR=0xffff000008090cc0
+> > [   13.776243] CPU[5]: PSCR=0xffff000008090cbc
+> > [   13.780436] CPU[6]: PSCR=0xffff000008090cc0
+> > [   13.784630] CPU[7]: PSCR=0xffff000008090cbc
+> >
+> > This patch series has been verified on 96boards Hikey.
+> >
+> >
+> > Leo Yan (3):
+> >   coresight: binding for coresight debug driver
+> >   coresight: add support for debug module
+> >   arm64: dts: register Hi6220's coresight debug module
+> >
+> >  .../devicetree/bindings/arm/coresight.txt          |   9 +-
+> >  .../boot/dts/hisilicon/hikey_6220_coresight.dtsi   |  73 +++++++++
+> >  drivers/hwtracing/coresight/Kconfig                |   8 +
+> >  drivers/hwtracing/coresight/Makefile               |   1 +
+> >  drivers/hwtracing/coresight/coresight-debug.c      | 169
+> > +++++++++++++++++++++
+> >  5 files changed, 258 insertions(+), 2 deletions(-)
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
+> >
+> > --
+> > 2.7.4
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> >
+> 
+> 
+> 
+> -- 
+> Mike Leach
+> Principal Engineer, ARM Ltd.
+> Blackburn Design Centre. UK
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
