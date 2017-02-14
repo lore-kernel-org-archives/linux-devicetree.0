@@ -1,263 +1,163 @@
-From: Alexander Graf <agraf@suse.de>
-Subject: Re: [PATCH V6 1/5] LIB: Indirect ISA/LPC port IO introduced
-Date: Tue, 14 Feb 2017 14:17:44 +0100
-Message-ID: <ee15da3a-b1d6-2fcb-ddf5-ebe9249fd9ee@suse.de>
-References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
- <1485241525-201782-2-git-send-email-yuanzhichang@hisilicon.com>
- <5dc0dc9c-124e-398f-a3b2-40059268e859@suse.de>
- <6d5523be-1841-18b9-9b83-6f7e591ed66b@huawei.com>
- <1a1f1e70-b6e7-f3c6-2b86-348b3d28edfe@suse.de>
- <58A1BFE5.7050800@hisilicon.com>
+From: Marco Franchi <marco.franchi@nxp.com>
+Subject: [PATCH v2 2/2] hwmon: (sht15) Add device tree support
+Date: Tue, 14 Feb 2017 11:23:24 -0200
+Message-ID: <1487078605-11067-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <58A1BFE5.7050800@hisilicon.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "zhichang.yuan" <yuanzhichang@hisilicon.com>, John Garry <john.garry@huawei.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, brian.starkey@arm.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, gabriele.paoloni@huawei.com, minyard@acm.org, benh@kernel.crashing.org, zhichang.yuan02@gmail.com, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, zourongrong@gmail.com, kantyzc@163.com
+Content-Type: text/plain
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, marcofrk@gmail.com, FoxPeter@kabelbw.de, Marco Franchi <marco.franchi@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Allow the driver to work with device tree support.
 
+Based on initial patch submission from Peter Fox.
 
-On 13/02/2017 15:17, zhichang.yuan wrote:
-> Hi, Alex,
->
->
-> On 2017/2/1 3:37, Alexander Graf wrote:
->>
->>
->> On 31/01/2017 14:32, John Garry wrote:
->>> On 30/01/2017 17:12, Alexander Graf wrote:
->>>> On 01/24/2017 08:05 AM, zhichang.yuan wrote:
->>>>> Low-pin-count interface is integrated into some SoCs. The accesses to
->>>>> those
->>>>> peripherals under LPC make use of I/O ports rather than the memory
->>>>> mapped I/O.
->>>>>
->>>>> To drive these devices, this patch introduces a method named
->>>>> indirect-IO.
->>>>> In this method the in/out() accessor in include/asm-generic/io.h will be
->>>>> redefined. When upper layer drivers call in/out() with those known
->>>>> legacy port
->>>>> addresses to access the peripherals, the I/O operations will be routed
->>>>> to the
->>>>> right hooks which are registered specific to the host device, such as
->>>>> LPC.
->>>>> Then the hardware relevant manupulations are finished by the
->>>>> corresponding
->>>>> host.
->>>>>
->>>>> According to the comments on V5, this patch adds a common indirect-IO
->>>>> driver
->>>>> which support this I/O indirection to the generic directory.
->>>>>
->>>>> In the later pathches, some host-relevant drivers are implemented to
->>>>> support
->>>>> the specific I/O hooks and register them.
->>>>> Based on these, the upper layer drivers which depend on in/out() can
->>>>> work well
->>>>> without any extra work or any changes.
->>>>>
->>>>> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
->>>>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->>>>> Signed-off-by: John Garry <john.garry@huawei.com>
->>>>
->>>> I like the extio idea. That allows us to handle all PIO requests on
->>>> platforms that don't have native PIO support via different routes
->>>> depending on the region they're in. Unfortunately we now we have 2
->>>> frameworks for handling sparse PIO regions: One in extio, one in PCI.
->>>>
->>>> Why don't we just merge the two? Most of the code that has #ifdef
->>>> PCI_IOBASE throughout the code base sounds like an ideal candidate to
->>>> get migrated to extio instead. Then we only have a single framework to
->>>> worry about ...
->>>
->>> To be clear, are you suggesting we merge the functionality from
->>> pci_register_io_range(), pci_pio_to_address(), pci_address_to_pio() into
->>> extio, so extio manages all PIO?
->>
->> Yes, I guess so.
->>
->>> And having a single type of node to
->>> register PIO ranges, by amalgamating struct extio_node and io_range (as
->>> Bjorn mentioned)?
->>
->> I'm not quite sure I follow you here. Basically I think you want a generic "non-x86 PIO" framework that PCI just plugs into.
->>
->> I don't think that necessarily means you want to statically allocate regions of that PIO space to separate (pseudo-)devices. Instead, everyone shares that space and should be able to fail gracefully if some space is already occupied.
->>
->>> It would make sense. We would be somewhat decoupling PIO from PCI.
->>
->> Yes :).
->>
->>> I think that other architectures, like PPC, and other code would need to
->>> be fixed up to handle this.
->>
->> I think only PPC, Microblaze and ARM are using this. Grep for PCI_IOBASE. It's not that many.
->>
->>> We need to consider all the other challenges/obstacles to this.
->>
->> Well, getting our abstraction levels right to me sounds like it's worth the obstacles.
->>
->>>
->>>>
->>>>> ---
->>>>>   include/asm-generic/io.h |  50 ++++++++++++++++
->>>>>   include/linux/extio.h    |  85 +++++++++++++++++++++++++++
->>>>>   include/linux/io.h       |   1 +
->>>>>   lib/Kconfig              |   8 +++
->>>>>   lib/Makefile             |   2 +
->>>>>   lib/extio.c              | 147
->>>>> +++++++++++++++++++++++++++++++++++++++++++++++ xc>>   create mode
->>>>> 100644 include/linux/extio.h
->>>>>   create mode 100644 lib/extio.c
->>>>>
->>>
->>> <snip>
->>>
->>>>> + * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
->>>>> + * Author: Zhichang Yuan <yuanzhichang@hisilicon.com>
->>>>> + *
->>>>> + * This program is free software; you can redistribute it and/or modify
->>>>> + * it under the terms of the GNU General Public License version 2 as
->>>>> + * published by the Free Software Foundation.
->>>>> + *
->>>>> + * This program is distributed in the hope that it will be useful,
->>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>>>> + * GNU General Public License for more details.
->>>>> + *
->>>>> + * You should have received a copy of the GNU General Public License
->>>>> + * along with this program.  If not, see
->>>>> <http://www.gnu.org/licenses/>.
->>>>> + */
->>>>> +
->>>>> +#include <linux/io.h>
->>>>> +#include <linux/spinlock.h>
->>>>> +
->>>>> +static LIST_HEAD(extio_dev_list);
->>>>> +static DEFINE_RWLOCK(extio_list_lock);
->>>>
->>>> Why not just make the list an RCU list? Then you don't need read locks.
->>>> We also wouldn't create potential lock contention between devices that
->>>> could easily have parallel PIO operations (say a PCI device and an LPC
->>>> device).
->>>>
->>>
->>> OK
->>>
->>>>> +
->>>>> +void register_extio(struct extio_node *node)
->>>>> +{
->>>>> +    write_lock(&extio_list_lock);
->>>>> +    list_add_tail(&node->list, &extio_dev_list);
->>>>> +    write_unlock(&extio_list_lock);
->>>>> +}
->>>>> +
->>>>> +static struct extio_node *find_extio_token(unsigned long addr)
->>>>> +{
->>>>> +    struct extio_node *extio_entry;
->>>>> +
->>>>> +    read_lock(&extio_list_lock);
->>>>> +    list_for_each_entry(extio_entry, &extio_dev_list, list) {
->>>>> +        if ((addr < extio_entry->io_start + extio_entry->range_size) &&
->>>>> +            (addr >= extio_entry->io_start))
->>>>> +            break;
->>>>> +    }
->>>>> +    read_unlock(&extio_list_lock);
->>>>> +    return (&extio_entry->list == &extio_dev_list) ? NULL :
->>>>> extio_entry;
->>>>> +}
->>>>> +
->>>>> +struct extio_node *extio_find_node(struct fwnode_handle *node)
->>>>> +{
->>>>> +    struct extio_node *entry;
->>>>> +
->>>>> +    read_lock(&extio_list_lock);
->>>>> +    list_for_each_entry(entry, &extio_dev_list, list) {
->>>>> +        if (entry->fwnode == node)
->>>>> +            break;
->>>>> +    }
->>>>> +    read_unlock(&extio_list_lock);
->>>>> +
->>>>> +    return (&entry->list == &extio_dev_list) ? NULL : entry;
->>>>> +}
->>>>> +
->>>>> +unsigned long extio_translate(struct fwnode_handle *node,
->>>>> +        unsigned long bus_addr)
->>>>> +{
->>>>> +    struct extio_node *entry;
->>>>> +    unsigned long port_id = -1;
->>>>> +
->>>>> +    read_lock(&extio_list_lock);
->>>>> +    list_for_each_entry(entry, &extio_dev_list, list) {
->>>>> +        if (entry->fwnode == node &&
->>>>> +            bus_addr >= entry->bus_start &&
->>>>> +            bus_addr - entry->bus_start < entry->range_size)
->>>>> +            port_id = entry->io_start + bus_addr -
->>>>> +                    entry->bus_start;
->>>>> +    }
->>>>> +    read_unlock(&extio_list_lock);
->>>>> +
->>>>> +    return port_id;
->>>>> +}
->>>>> +
->>>>> +#ifdef PCI_IOBASE
->>>>> +
->>>>> +#define BUILD_EXTIO(bw, type)                        \
->>>>> +type extio_in##bw(unsigned long addr)                    \
->>>>> +{                                    \
->>>>> +    struct extio_node *extio_entry = find_extio_token(addr);    \
->>>>> +                                    \
->>>>> +    if (!extio_entry)                        \
->>>>> +        return read##bw(PCI_IOBASE + addr);            \
->>>>> +    return extio_entry->ops->pfin ?                    \
->>>>> +            extio_entry->ops->pfin(extio_entry->devpara,    \
->>>>> +            addr, sizeof(type)) : -1;            \
->>>>> +}                                    \
->>>>> +                                    \
->>>>> +void extio_out##bw(type value, unsigned long addr)            \
->>>>> +{                                    \
->>>>> +    struct extio_node *extio_entry = find_extio_token(addr);    \
->>>>> +                                    \
->>>>> +    if (!extio_entry)                        \
->>>>> +        write##bw(value, PCI_IOBASE + addr);            \
->>>>
->>>> All of the fallback code would also disappear as a nice side effect of
->>>> making pci pio handling a user of extio :).
->>>
->>> Is your idea that PCI IO space will also register accessors, which would
->>> be the same read{b,w,l}/write{b,w,l}?
->
-> I am not so sure what is your ideas on this. Do you mean the snippet like these:
->
-> #define BUILD_IO(bw, type)					\
-> type extio_in##bw(unsigned long addr) 				\
-> { 								\
-> 	struct io_range *entry = find_io_range(addr); 		\
-> 								\
-> 	if (entry) 						\
-> 		return entry->ops->pfin(entry->devpara, 	\
-> 			addr, sizeof(type)); 			\
-> 	return read##bw(PCI_IOBASE + addr);			\
-> }
->
-> we add the last 'return read##bw(PCI_IOBASE + addr);' to keep the original logic of inX() in asm-generic/io.h;
-> In above snippet, all the hosts applied extio should register their own ops->pfin().
+Tested on a imx7d-sdb board connected to a SHT15 board via Mikro Bus.
 
-Right, PCI would just register its own ops->pfin() which then calls an 
-MMIO read function relative to *its own* PCI PIO window. There's no 
-reason we couldn't have 2 PCI root complexes in a system. Then you would 
-end up with 2 PIO spaces - one for each PCI bus.
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+---
+Changes since v1:
+- reworked to not require int returns in the sht15_probe_dt function;
+- add a clear preference for dt or platform data
+- Use 'device tree' instead of 'dts' in the Subject
+ 
+ Documentation/devicetree/bindings/hwmon/sht15.txt | 25 +++++++++
+ drivers/hwmon/sht15.c                             | 66 +++++++++++++++++++++--
+ 2 files changed, 87 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/sht15.txt
 
+diff --git a/Documentation/devicetree/bindings/hwmon/sht15.txt b/Documentation/devicetree/bindings/hwmon/sht15.txt
+new file mode 100644
+index 0000000..6415f52
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/sht15.txt
+@@ -0,0 +1,25 @@
++Sensirion SHT15 Humidity and Temperature Sensor
++
++Required properties:
++
++ - "compatible": must be "sensirion,sht15".
++ - "data-gpios": GPIO connected to the data line.
++ - "clk-gpios": GPIO connected to the clock line.
++ - "vcc-supply": regulator that drives the VCC pin.
++
++Optional properties:
++
++ - "checksum": boolean property that when present enables the CRC validation of the readings.
++ - "no-otp-reload": boolean property that when present indicates not to reload from OTP.
++ - "low-resolution": boolean property that when present indicates that the device operates in
++		low-resolution mode.
++Example:
++
++	temp_humid_sensor: sht15 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_sensor>;
++		compatible = "sensirion,sht15";
++		clk-gpios = <&gpio4 12 0>;
++		data-gpios = <&gpio4 13 0>;
++		vcc-supply = <&reg_sht15>;
++	};
+diff --git a/drivers/hwmon/sht15.c b/drivers/hwmon/sht15.c
+index f16687c..70906f1 100644
+--- a/drivers/hwmon/sht15.c
++++ b/drivers/hwmon/sht15.c
+@@ -34,6 +34,7 @@
+ #include <linux/slab.h>
+ #include <linux/atomic.h>
+ #include <linux/bitrev.h>
++#include <linux/of_gpio.h>
+ 
+ /* Commands */
+ #define SHT15_MEASURE_TEMP		0x03
+@@ -911,6 +912,56 @@ static int sht15_invalidate_voltage(struct notifier_block *nb,
+ 	return NOTIFY_OK;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id sht15_dt_match[] = {
++	{ .compatible = "sensirion,sht15" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, sht15_dt_match);
++
++/*
++ * This function returns NULL if pdev isn't a device instatiated by dt,
++ * a pointer to the data if it could successfully get all information
++ * from dt or a negative error number.
++ */
++static struct sht15_platform_data *sht15_probe_dt(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct sht15_platform_data *pdata;
++
++	/* no device tree device */
++	if (!np)
++		return NULL;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	pdata->gpio_data = of_get_named_gpio(np, "data-gpios", 0);
++	if (pdata->gpio_data < 0) {
++		dev_err(dev, "data-gpios not found\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pdata->gpio_sck = of_get_named_gpio(np, "clk-gpios", 0);
++	if (pdata->gpio_sck < 0) {
++		dev_err(dev, "clk-gpios not found\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pdata->checksum = of_property_read_bool(np, "checksum");
++	pdata->no_otp_reload = of_property_read_bool(np, "no-otp-reload");
++	pdata->low_resolution = of_property_read_bool(np, "low-resolution");
++
++	return pdata;
++}
++#else
++static inline struct sht15_platform_data *sht15_probe_dt(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ static int sht15_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -928,11 +979,17 @@ static int sht15_probe(struct platform_device *pdev)
+ 	data->dev = &pdev->dev;
+ 	init_waitqueue_head(&data->wait_queue);
+ 
+-	if (dev_get_platdata(&pdev->dev) == NULL) {
+-		dev_err(&pdev->dev, "no platform data supplied\n");
+-		return -EINVAL;
++	data->pdata = sht15_probe_dt(&pdev->dev);
++	if (IS_ERR(data->pdata))
++		return PTR_ERR(data->pdata);
++	if (data->pdata == NULL) {
++		data->pdata = dev_get_platdata(&pdev->dev);
++		if (data->pdata == NULL) {
++			dev_err(&pdev->dev, "no platform data supplied\n");
++			return -EINVAL;
++		}
+ 	}
+-	data->pdata = dev_get_platdata(&pdev->dev);
++
+ 	data->supply_uv = data->pdata->supply_mv * 1000;
+ 	if (data->pdata->checksum)
+ 		data->checksumming = true;
+@@ -1075,6 +1132,7 @@ MODULE_DEVICE_TABLE(platform, sht15_device_ids);
+ static struct platform_driver sht15_driver = {
+ 	.driver = {
+ 		.name = "sht15",
++		.of_match_table = of_match_ptr(sht15_dt_match),
+ 	},
+ 	.probe = sht15_probe,
+ 	.remove = sht15_remove,
+-- 
+2.7.4
 
-Alex
