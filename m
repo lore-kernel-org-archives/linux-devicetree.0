@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v3 1/6] genirq: Export more irq_chip_*_parent() functions.
-Date: Tue, 14 Feb 2017 09:49:31 -0800
-Message-ID: <1487094576-229208-2-git-send-email-david.daney@cavium.com>
+Subject: [PATCH v3 2/6] genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
+Date: Tue, 14 Feb 2017 09:49:32 -0800
+Message-ID: <1487094576-229208-3-git-send-email-david.daney@cavium.com>
 References: <1487094576-229208-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,46 +12,142 @@ To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.co
 Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Many of the family of functions including irq_chip_mask_parent(),
-irq_chip_unmask_parent() are exported, but not all.
-
-Add EXPORT_SYMBOL_GPL to irq_chip_enable_parent,
-irq_chip_disable_parent and irq_chip_set_affinity_parent, so they
-likewise are usable from modules.
+Follow-on patch for gpio-thunderx uses a irqdomain hierarchy which
+requires slightly different flow handlers, add them to chip.c which
+contains most of the other flow handlers.
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- kernel/irq/chip.c | 3 +++
- 1 file changed, 3 insertions(+)
+ include/linux/irq.h |   2 ++
+ kernel/irq/chip.c   | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
 
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 39e3254..545b770 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -518,6 +518,8 @@ static inline int irq_set_parent(int irq, int parent_irq)
+ extern int irq_chip_pm_get(struct irq_data *data);
+ extern int irq_chip_pm_put(struct irq_data *data);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
++extern void handle_fasteoi_edge_irq(struct irq_desc *desc);
++extern void handle_fasteoi_level_irq(struct irq_desc *desc);
+ extern void irq_chip_enable_parent(struct irq_data *data);
+ extern void irq_chip_disable_parent(struct irq_data *data);
+ extern void irq_chip_ack_parent(struct irq_data *data);
 diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index be3c34e..73ea90b 100644
+index 73ea90b..213105d 100644
 --- a/kernel/irq/chip.c
 +++ b/kernel/irq/chip.c
-@@ -993,6 +993,7 @@ void irq_chip_enable_parent(struct irq_data *data)
- 	else
- 		data->chip->irq_unmask(data);
- }
-+EXPORT_SYMBOL_GPL(irq_chip_enable_parent);
+@@ -981,6 +981,108 @@ void irq_cpu_offline(void)
  
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
  /**
-  * irq_chip_disable_parent - Disable the parent interrupt (defaults to mask if
-@@ -1007,6 +1008,7 @@ void irq_chip_disable_parent(struct irq_data *data)
- 	else
- 		data->chip->irq_mask(data);
- }
-+EXPORT_SYMBOL_GPL(irq_chip_disable_parent);
- 
- /**
-  * irq_chip_ack_parent - Acknowledge the parent interrupt
-@@ -1069,6 +1071,7 @@ int irq_chip_set_affinity_parent(struct irq_data *data,
- 
- 	return -ENOSYS;
- }
-+EXPORT_SYMBOL_GPL(irq_chip_set_affinity_parent);
- 
- /**
-  * irq_chip_set_type_parent - Set IRQ type on the parent interrupt
++ *	handle_fasteoi_edge_irq - irq handler for edge hierarchy
++ *	stacked on transparent controllers
++ *
++ *	@desc:	the interrupt description structure for this irq
++ *
++ *	Like handle_fasteoi_irq(), but for use with hierarchy where
++ *	the irq_chip also needs to have its ->irq_ack() function
++ *	called.
++ */
++void handle_fasteoi_edge_irq(struct irq_desc *desc)
++{
++	struct irq_chip *chip = desc->irq_data.chip;
++
++	raw_spin_lock(&desc->lock);
++
++	if (!irq_may_run(desc))
++		goto out;
++
++	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
++
++	/*
++	 * If its disabled or no action available
++	 * then mask it and get out of here:
++	 */
++	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
++		desc->istate |= IRQS_PENDING;
++		mask_irq(desc);
++		goto out;
++	}
++
++	kstat_incr_irqs_this_cpu(desc);
++	if (desc->istate & IRQS_ONESHOT)
++		mask_irq(desc);
++
++	/* Start handling the irq */
++	desc->irq_data.chip->irq_ack(&desc->irq_data);
++
++	preflow_handler(desc);
++	handle_irq_event(desc);
++
++	cond_unmask_eoi_irq(desc, chip);
++
++	raw_spin_unlock(&desc->lock);
++	return;
++out:
++	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
++		chip->irq_eoi(&desc->irq_data);
++	raw_spin_unlock(&desc->lock);
++}
++EXPORT_SYMBOL_GPL(handle_fasteoi_edge_irq);
++
++/**
++ *	handle_fasteoi_level_irq - irq handler for level hierarchy
++ *	stacked on transparent controllers
++ *
++ *	@desc:	the interrupt description structure for this irq
++ *
++ *	Like handle_fasteoi_irq(), but for use with hierarchy where
++ *	the irq_chip also needs to have its ->irq_mask_ack() function
++ *	called.
++ */
++void handle_fasteoi_level_irq(struct irq_desc *desc)
++{
++	struct irq_chip *chip = desc->irq_data.chip;
++
++	raw_spin_lock(&desc->lock);
++	mask_ack_irq(desc);
++
++	if (!irq_may_run(desc))
++		goto out;
++
++	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
++
++	/*
++	 * If its disabled or no action available
++	 * then mask it and get out of here:
++	 */
++	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
++		desc->istate |= IRQS_PENDING;
++		mask_irq(desc);
++		goto out;
++	}
++
++	kstat_incr_irqs_this_cpu(desc);
++	if (desc->istate & IRQS_ONESHOT)
++		mask_irq(desc);
++
++	preflow_handler(desc);
++	handle_irq_event(desc);
++
++	cond_unmask_eoi_irq(desc, chip);
++
++	raw_spin_unlock(&desc->lock);
++	return;
++out:
++	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
++		chip->irq_eoi(&desc->irq_data);
++	raw_spin_unlock(&desc->lock);
++}
++EXPORT_SYMBOL_GPL(handle_fasteoi_level_irq);
++
++/**
+  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
+  * NULL)
+  * @data:	Pointer to interrupt specific data
 -- 
 1.8.3.1
 
