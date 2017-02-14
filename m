@@ -1,54 +1,45 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 net-next 11/16] net: mvpp2: handle misc PPv2.1/PPv2.2
- differences
-Date: Tue, 14 Feb 2017 15:53:13 +0100
-Message-ID: <20170214155313.1e9a497b@free-electrons.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1482943592-12556-12-git-send-email-thomas.petazzoni@free-electrons.com>
-        <20170107093834.GJ14217@n2100.armlinux.org.uk>
+Subject: Re: [PATCHv2 2/3] clk: mvebu: adjust clock handling for the CP110
+ system controller
+Date: Tue, 14 Feb 2017 16:27:18 +0100
+Message-ID: <20170214162718.0777d95f@free-electrons.com>
+References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
+        <1482316017-22154-3-git-send-email-thomas.petazzoni@free-electrons.com>
+        <20161222001456.GX8288@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170107093834.GJ14217@n2100.armlinux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20161222001456.GX8288@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hello Stephen,
 
-On Sat, 7 Jan 2017 09:38:34 +0000, Russell King - ARM Linux wrote:
+On Wed, 21 Dec 2016 16:14:56 -0800, Stephen Boyd wrote:
+> On 12/21, Thomas Petazzoni wrote:
+> > This commit:
+> > 
+> >  - makes the GOP_DP (bit 9) gatable clock a child clock of the
+> >    SD_MMC_GOP (bit 18) clock, as it should have been. The clock for bit
+> >    18 was just named SD_MMC, but since it also covers the GOP block, it
+> >    is renamed SD_MMC_GOP.
+> > 
+> >  - makes the MG (bit 5) gatable clock a child clock of the MG_CORE
+> >    clock (bit 6)
+> > 
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > ---  
+> 
+> Applied to clk-next
 
-> This has the side effect that nothing clears the port reset bit in the
-> GMAC, which means there's no hope of the interface working - with the
-> reset bit set, the port is well and truely held in "link down" state.
+I don't see my patch in clk-next at
+https://git.kernel.org/cgit/linux/kernel/git/clk/linux.git/log/drivers/clk/mvebu/cp110-system-controller.c?h=clk-next,
+nor in linux-next. Am I missing something?
 
-Things were working fine here on Armada 7K/8K even without calling
-mvpp21_port_power_up(port). But I've looked into more details, and in
-fact the whole function makes sense on PPv2.2, except the
-mvpp2_port_fc_adv_enable(port) part of it. So I've replaced this with:
-
-	mvpp2_port_mii_set(port);
-	mvpp2_port_periodic_xon_disable(port);
-
-	if (priv->hw_version == MVPP21)
-		mvpp2_port_fc_adv_enable(port);
-
-	mvpp2_port_reset(port);
-
-This will be in my v3.
-
-> In any case, the GMAC part is much the same as mvneta, and I think
-> that code should be shared rather than writing new versions of it.
-
-Possibly, but it's really a separate thing: this is completely
-independent from introducing PPv2.2 support, it's something that
-already exists. The patch series is already 16 patches long in its v2,
-and is going to even a bit longer in its v3, so I would really like to
-stick to just PPv2.2 support.
-
-Thanks!
+Thanks a lot,
 
 Thomas
 -- 
