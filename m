@@ -1,62 +1,60 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt-bindings: net: generalize moxart-mac to support all
- faraday based ftmac IP
-Date: Tue, 14 Feb 2017 16:56:30 +0800
-Message-ID: <20170214085621.GA11829@app09>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH 0/5] Add Spreadtrum SP9860G support
+Date: Tue, 14 Feb 2017 17:19:07 +0800
+Message-ID: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Andestech and moxa use the same faraday mac IP, so we use faraday,ftmac.txt to describe it.
+SC9860 is a Spreadtrum SoC with eight Cortex A53, which are divided
+into 4 Big cores and 4 little cores.
 
-Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../net/{moxa,moxart-mac.txt => faraday,ftmac.txt} |    7 +++++--
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- 2 files changed, 6 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/net/{moxa,moxart-mac.txt => faraday,ftmac.txt} (68%)
+In this patch-set, patch-1/5 only provides a basic configuration for SC9860
+in device tree to make it run to console.  After this we will continue
+to submit other drivers step by step, which are using on Spreadtrum's SoCs.
 
-diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-similarity index 68%
-rename from Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-rename to Documentation/devicetree/bindings/net/faraday,ftmac.txt
-index 583418b..be4f55e 100644
---- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-+++ b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-@@ -1,8 +1,11 @@
--MOXA ART Ethernet Controller
-+Faraday Ethernet Controller
- 
- Required properties:
- 
--- compatible : Must be "moxa,moxart-mac"
-+- compatible : Must contain "faraday,ftmac", as well as one of
-+		the SoC specific identifiers:
-+		"andestech,atmac100"
-+		"moxa,moxart-mac"
- - reg : Should contain register location and length
- - interrupts : Should contain the mac interrupt number
- 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 16d3b5e..489c336 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -102,6 +102,7 @@ everest	Everest Semiconductor Co. Ltd.
- everspin	Everspin Technologies, Inc.
- excito	Excito
- ezchip	EZchip Semiconductor
-+faraday	Faraday Technology Corporation
- fcs	Fairchild Semiconductor
- firefly	Firefly
- focaltech	FocalTech Systems Co.,Ltd
+This patch-set also adjusted the compatible string of sprd_serial from
+'sc9836-uart' to 'sc-uart', because this serial driver is not only for
+SC9836 but for all Spreadtrum SoCs so far.
+
+Thanks,
+Chunyan
+
+Chunyan Zhang (3):
+  Documentation: sprd: Add bindings for SP9860G
+  devicetree: bindings: revise compatible string of sprd uart
+  sprd_serial: switch comptible string to sc-uart
+
+Orson Zhai (1):
+  arm64: dts: Add basic DT to support Spreadtrum's SP9860G
+
+Wei Qiao (1):
+  serial: sprd: adjust TIMEOUT to a big value
+
+ Documentation/devicetree/bindings/arm/sprd.txt     |  13 +-
+ .../devicetree/bindings/serial/sprd-uart.txt       |   2 +-
+ arch/arm64/boot/dts/sprd/Makefile                  |   3 +-
+ arch/arm64/boot/dts/sprd/sc9860.dtsi               | 534 +++++++++++++++++++++
+ arch/arm64/boot/dts/sprd/sp9860g-1h10.dts          |  58 +++
+ arch/arm64/boot/dts/sprd/whale2.dtsi               |  66 +++
+ drivers/tty/serial/sprd_serial.c                   |   6 +-
+ 7 files changed, 672 insertions(+), 10 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/sprd/sc9860.dtsi
+ create mode 100644 arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+ create mode 100644 arch/arm64/boot/dts/sprd/whale2.dtsi
+
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
