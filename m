@@ -1,51 +1,55 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] Input: pwm-beeper: support customized freq for SND_BELL
-Date: Mon, 13 Feb 2017 20:27:48 -0800
-Message-ID: <20170214042748.GC19688@dtor-ws>
-References: <1486444894-18321-1-git-send-email-hs@denx.de>
- <20170207181309.GC38092@dtor-ws>
- <850c2508720a41b3bfb95cd7093433a4@SI-MBX1030.de.bosch.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [RESEND PATCH v4 0/2] Broadcom FlexRM ring manager support
+Date: Tue, 14 Feb 2017 10:19:39 +0530
+Message-ID: <1487047781-25513-1-git-send-email-anup.patel@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <850c2508720a41b3bfb95cd7093433a4@SI-MBX1030.de.bosch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Jonas Mark (ST-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
-Cc: Heiko Schocher <hs@denx.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "GUAN Ben (ST-FIR/ENG1-Zhu)" <Ben.Guan@cn.bosch.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 08, 2017 at 10:11:21AM +0000, Jonas Mark (ST-FIR/ENG1) wrote:
-> Hello Dmitry,
-> 
-> > > extend the pwm-beeper driver to support customized frequency
-> > > for SND_BELL from device tree.
-> > 
-> > No, SND_BELL is literally SND_TONE @1000Hz. There should be no
-> > customizing. If applications want to use different frequency then should
-> > be using SND_TONE.
-> 
-> We are not aiming for an application shortcut here. Instead, changing
-> the bell frequency shall be a system setting. That is, every
-> application which wants to make a bell sound shall use the alternative
-> frequency.
-> 
-> The reason why we are deviating from the default 1000 Hz is that on
-> our hardware we are using a loudspeaker which is rated for 2.7 kHz.
-> That is, it will only sound at the specified volume and frequency if
-> you feed it with a 2.7 kHz square wave. If you deviate from it, e.g.
-> by using 1000 Hz, the output will be dim and squeaky. Worst case,
-> SND_BELL would be completely silent on our system. So the only bell
-> sound we can reliably generate on our system has 2.7 kHz.
+The Broadcom FlexRM ring manager provides producer-consumer style
+ring interface for offload engines on Broadcom iProc SoCs. We can
+have one or more instances of Broadcom FlexRM ring manager in a SoC.
 
-OK, fair enough. Please address Rob's comments on binding and resend.
+This patchset adds a mailbox driver for Broadcom FlexRM ring manager
+which can be used by offload engine drivers as mailbox clients.
 
-Also I am not sure why you needed to change the switch statement around,
-you only need to replace 1000 with value from the attribute.
+The Broadcom FlexRM mailbox driver is feature complete for RAID and
+Crypto offload engines. We will have incremental patches in-future
+for ring-level statistics using debugfs and minor optimizations.
 
-Oh, and please use device_property_*() API instead of of_*().
+This patchset is based on Linux-4.10-rc2 and it is also available
+at flexrm-v4 branch of https://github.com/Broadcom/arm64-linux.git
 
-Thanks.
+Changes since v3:
+ - Fixed mailbox client example DT node in DT bindings document
+
+Changes since v2:
+ - Rebased patches for Linux-4.10-rc2
+
+Changes since v1:
+ - Use compatile string as brcm,iproc-flexrm-mbox
+ - Rephrase commit message and text in DT bindings patch
+
+Anup Patel (2):
+  mailbox: Add driver for Broadcom FlexRM ring manager
+  dt-bindings: Add DT bindings info for FlexRM ring manager
+
+ .../bindings/mailbox/brcm,iproc-flexrm-mbox.txt    |  59 ++
+ drivers/mailbox/Kconfig                            |  11 +
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/mailbox-flexrm/Makefile            |   6 +
+ drivers/mailbox/mailbox-flexrm/flexrm-desc.c       | 764 +++++++++++++++++++
+ drivers/mailbox/mailbox-flexrm/flexrm-desc.h       |  47 ++
+ drivers/mailbox/mailbox-flexrm/flexrm-main.c       | 829 +++++++++++++++++++++
+ include/linux/mailbox/brcm-message.h               |  14 +-
+ 8 files changed, 1728 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-flexrm-mbox.txt
+ create mode 100644 drivers/mailbox/mailbox-flexrm/Makefile
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-desc.c
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-desc.h
+ create mode 100644 drivers/mailbox/mailbox-flexrm/flexrm-main.c
 
 -- 
-Dmitry
+2.7.4
