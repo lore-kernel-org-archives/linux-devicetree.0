@@ -1,62 +1,49 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: add support for the Linksys WRT1900ACS
- (Shelby)
-Date: Tue, 14 Feb 2017 20:21:16 +0100
-Message-ID: <20170214202116.035ab193@gmail.com>
-References: <20170214085919.3997-1-ralph.sennhauser@gmail.com>
-        <20170214175533.GF25924@io.lakedaemon.net>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v4 1/7] drm: Add DRM support for tiny LCD displays
+Date: Tue, 14 Feb 2017 20:54:28 +0100
+Message-ID: <CAKMK7uF1AYwZGXrpCk01Uy-n8-Wsnr7XX-SxbGgJnMhA28APSw@mail.gmail.com>
+References: <20170211184858.26421-1-noralf@tronnes.org>
+ <20170211184858.26421-2-noralf@tronnes.org>
+ <CAHp75VeZke=JCosvc3xQ_AiOn64hth=PMJp4X0vLHMS14bkp4w@mail.gmail.com>
+ <70190e71-4d5a-7102-418f-09896b57c084@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170214175533.GF25924-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <70190e71-4d5a-7102-418f-09896b57c084@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 14 Feb 2017 17:55:33 +0000
-Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-
-> Hi Ralph, Imre,
-> 
-> On Tue, Feb 14, 2017 at 09:59:17AM +0100, Ralph Sennhauser wrote:
-> > The Linksys WRT1900ACS (Shelby) is another Armada 385 based router
-> > in the Linksys WRT AC Series which got released in October 2015.
-> > 
-> > The file armada-385-linksys-shelby.dts is taken from OpenWrt as-is
-> > and originally authored by Imre Kaloz.
-> > 
-> > URL: http://tinyurl.com/j8lz83a  
-> 
-> Could you please change this to:
-> 
-> https://github.com/openwrt/openwrt/blob/8466384db1154a107b86bf3ca10b166a21bd81d0/target/linux/mvebu/files/arch/arm/boot/dts/armada-385-linksys-shelby.dts
-
-Is what I had first and thought were to long to pass, so I went with
-this one for V2.
-
-Thanks
-Ralph
-
-> 
-> Or, say 'imported from
-> 
->  https://github.com/openwrt/openwrt
-> 
-> commit 8466384db115 "mvebu: add support for 4.1 and switch over"'
-> 
-> or something similar?
-> 
-> Other than that,
-> 
-> Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> 
-> thx,
-> 
-> Jason.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCBGZWIgMTIsIDIwMTcgYXQgMjo1NyBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZA
+dHJvbm5lcy5vcmc+IHdyb3RlOgo+IHRpbnlkcm0gd2lsbCBiZSBtZXJnZWQgdGhlIHdheSBpdCBp
+cyBub3csIHVubGVzcyBzb21lb25lIHBvaW50cyB0bwo+IHNvbWV0aGluZyB0aGF0IGlzIGJyb2tl
+bi4gQnV0IEkgY29sbGVjdCB5b3VyIGNvbW1lbnRzIGZvciBhIGxhdGVyCj4gY2xlYW51cCBwYXRj
+aHNldC4gSXQgdGFrZXMgYSBsb3Qgb2YgZWZmb3J0IGZvciBtZSBhcyBhbiBhbWF0ZXVyIHRvCj4g
+a2VlcHMgdGhpcyBjb2RlIHVwLXRvLWRhdGUgb3V0LW9mLXRyZWUgZm9yIG1vbnRocy4gSXQncyBu
+b3QgZXZlbgo+IHN1cmUgdGhhdCBJJ3ZlIGhpdCB0aGUgbWFyayB3aXRoIHRoaXMsIHNvIHRoZXJl
+IHdpbGwgbW9zdCBsaWtlbHkgYmUKPiBjaGFuZ2VzIHdoZW4gSSBzdGFydCBjb252ZXJ0aW5nIGZi
+dGZ0IGRyaXZlcnMsIGFuZCBJJ2xsIGltcGxlbWVudCB0aGUKPiByZW1haW5pbmcgYml0cyBhbmQg
+cGllY2VzIGFzIEkgbWFrZSBjaGFuZ2VzLiBUaGUgY29yZSBvZiB0aW55ZHJtIHdvbid0Cj4gY2hh
+bmdlIGJlY2F1c2Ugb2YgdW5mb3JzZWVuIGZidGZ0IHF1aXJrcywgYnV0IG90aGVyIHBhcnRzIG1p
+Z2h0LgoKKzEsIHBscyBzZW5kIHB1bGwgcmVxdWVzdCB0byBEYXZlIEFpcmxpZS4gRFQtYWNrcyBh
+cmUgYWxsIHRoZXJlLCBhbmQKVGhpZXJyeSBjb25maXJtZWQgb24gaXJjIHRoYXQgaGlzIHJlcGx5
+IG9uIHRoZSBsYXN0IHRocmVhZCB3YXMgaW5kZWVkCm1lYW50IGFzIGEgZnVsbCBhY2sgZm9yIGdv
+aW5nIGFoZWFkIGFuZCBwb2xpc2hpbmcgbGF0ZXIuIEkgYWxzbwpjaGF0dGVkIHdpdGggRGF2ZSBk
+aXJlY3RseSwgYW5kIGhlJ3MgcGVyZmVjdGx5IGhhcHB5IHRvIHRha2UgdGhpcyBpbgphcy1pcy4g
+SWYgeW91IGRvIHRoaXMgc29vbiwgc2hvdWxkIHN0aWxsIGVhc2lseSBnZXQgaW50byA0LjExIChz
+aW5jZQp0aGUgNC4xMCByZWxlYXNlIGlzIGRlbGF5ZWQpLgoKQ2hlZXJzLCBEYW5pZWwKLS0gCkRh
+bmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCis0MSAoMCkg
+NzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
