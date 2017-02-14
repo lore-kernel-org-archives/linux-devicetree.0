@@ -1,49 +1,174 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCHv2 2/3] clk: mvebu: adjust clock handling for the CP110
- system controller
-Date: Tue, 14 Feb 2017 10:59:12 -0800
-Message-ID: <20170214185912.GT25384@codeaurora.org>
-References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482316017-22154-3-git-send-email-thomas.petazzoni@free-electrons.com>
- <20161222001456.GX8288@codeaurora.org>
- <20170214162718.0777d95f@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170214162718.0777d95f@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, linux-arm-kernel@lists.infradead.org
+From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ARM: mvebu: add support for the Linksys WRT1900ACS (Shelby)
+Date: Tue, 14 Feb 2017 20:17:42 +0100
+Message-ID: <20170214191744.9419-1-ralph.sennhauser@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/14, Thomas Petazzoni wrote:
-> Hello Stephen,
-> 
-> On Wed, 21 Dec 2016 16:14:56 -0800, Stephen Boyd wrote:
-> > On 12/21, Thomas Petazzoni wrote:
-> > > This commit:
-> > > 
-> > >  - makes the GOP_DP (bit 9) gatable clock a child clock of the
-> > >    SD_MMC_GOP (bit 18) clock, as it should have been. The clock for bit
-> > >    18 was just named SD_MMC, but since it also covers the GOP block, it
-> > >    is renamed SD_MMC_GOP.
-> > > 
-> > >  - makes the MG (bit 5) gatable clock a child clock of the MG_CORE
-> > >    clock (bit 6)
-> > > 
-> > > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> > > ---  
-> > 
-> > Applied to clk-next
-> 
-> I don't see my patch in clk-next at
-> https://git.kernel.org/cgit/linux/kernel/git/clk/linux.git/log/drivers/clk/mvebu/cp110-system-controller.c?h=clk-next,
-> nor in linux-next. Am I missing something?
-> 
+The Linksys WRT1900ACS (Shelby) is another Armada 385 based router in
+the Linksys WRT AC Series which got released in October 2015.
 
-Odd. I don't know what happened. I've applied it now.
+The file armada-385-linksys-shelby.dts is taken from OpenWrt as-is and
+originally authored by Imre Kaloz.
 
+URL: https://github.com/openwrt/openwrt/blob/8466384db1154a107b86bf3ca10b166a21bd81d0/target/linux/mvebu/files/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+CC: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+---
+
+Notes:
+    V1 -> V2:
+    - Use full instead of shortened URL in commit message (suggested by Jason Cooper)
+    - add collected tags, thanks to donors ;)
+
+ arch/arm/boot/dts/Makefile                      |   1 +
+ arch/arm/boot/dts/armada-385-linksys-shelby.dts | 114 ++++++++++++++++++++++++
+ 2 files changed, 115 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-385-linksys-shelby.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0118084..16f1748 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -970,6 +970,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+ 	armada-385-db-ap.dtb \
+ 	armada-385-linksys-caiman.dtb \
+ 	armada-385-linksys-cobra.dtb \
++	armada-385-linksys-shelby.dtb \
+ 	armada-385-turris-omnia.dtb \
+ 	armada-388-clearfog.dtb \
+ 	armada-388-clearfog-base.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-linksys-shelby.dts b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+new file mode 100644
+index 0000000..c7a8ddd
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+@@ -0,0 +1,114 @@
++/*
++ * Device Tree file for the Linksys WRT1900ACS (Shelby)
++ *
++ * Copyright (C) 2015 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
++ *
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is licensed under the terms of the GNU General Public
++ *     License version 2.  This program is licensed "as is" without
++ *     any warranty of any kind, whether express or implied.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "armada-385-linksys.dtsi"
++
++/ {
++	model = "Linksys WRT1900ACS";
++	compatible = "linksys,shelby", "linksys,armada385", "marvell,armada385",
++		     "marvell,armada380";
++
++	soc {
++		internal-regs{
++			i2c@11000 {
++
++				pca9635@68 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++					wan_amber@0 {
++						label = "shelby:amber:wan";
++						reg = <0x0>;
++					};
++
++					wan_white@1 {
++						label = "shelby:white:wan";
++						reg = <0x1>;
++					};
++
++					wlan_2g@2 {
++						label = "shelby:white:wlan_2g";
++						reg = <0x2>;
++					};
++
++					wlan_5g@3 {
++						label = "shelby:white:wlan_5g";
++						reg = <0x3>;
++					};
++
++					usb2@5 {
++						label = "shelby:white:usb2";
++						reg = <0x5>;
++					};
++
++					usb3_1@6 {
++						label = "shelby:white:usb3_1";
++						reg = <0x6>;
++					};
++
++					usb3_2@7 {
++						label = "shelby:white:usb3_2";
++						reg = <0x7>;
++					};
++
++					wps_white@8 {
++						label = "shelby:white:wps";
++						reg = <0x8>;
++					};
++
++					wps_amber@9 {
++						label = "shelby:amber:wps";
++						reg = <0x9>;
++					};
++				};
++			};
++		};
++	};
++
++	gpio-leds {
++		power {
++			label = "shelby:white:power";
++		};
++
++		sata {
++			label = "shelby:white:sata";
++		};
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
