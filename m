@@ -1,47 +1,72 @@
-From: Al Stone <ahs3@redhat.com>
-Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
-Date: Tue, 14 Feb 2017 10:09:02 -0700
-Message-ID: <b641764c-5f8c-7a7f-6c4e-86d9a62ef2fd@redhat.com>
-References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
- <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com>
- <6293579.fEEljmGD4Z@aspire.rjw.lan> <7605668.5ZxNsBFnEG@aspire.rjw.lan>
- <cbeeac53-a4e7-56b4-b69c-e2106671c721@redhat.com>
- <068fb4ec-1cb5-60d4-7749-48b89761d53c@linux.intel.com>
-Reply-To: ahs3@redhat.com
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC v2 4/7] ASoC: dmaengine_pcm: add copy support
+Date: Tue, 14 Feb 2017 17:16:30 +0000
+Message-ID: <20170214171630.qgkyoymxyqjiiblh@sirena.org.uk>
+References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
+ <1487003909-11710-5-git-send-email-arnaud.pouliquen@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <068fb4ec-1cb5-60d4-7749-48b89761d53c@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, mika.westerberg@linux.intel.com
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org
+Content-Type: multipart/mixed; boundary="===============3306803402351320719=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1487003909-11710-5-git-send-email-arnaud.pouliquen@st.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lars-Peter Clausen <lars@metafoo.de>, olivier moysan <olivier.moysan@st.com>, kernel@stlinux.com, Liam Girdwood <lgirdwood@gmail.com>, linux-iio@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2017 01:01 AM, Sakari Ailus wrote:
-> Hi Al,
-> 
->> Not sure if I have time, but I can start looking into this.
-> 
-> Let's see who gets there first. :-)
-> 
-> I'm quite busy in the coming few months but after that I may have time
-> for this. Please let me know if you're starting to work on that so we
-> don't end up doing duplicated work; I'll do the same.
-> 
-> Thanks.
-> 
 
-Good plan :-).  Yeah, I'm in the same situation.  If I suddenly get
-bored or all my day job tasks magically disappear, I can get to it
-sooner :).
+--===============3306803402351320719==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hicslhhs4zfgzzsn"
+Content-Disposition: inline
 
--- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Red Hat, Inc.
-ahs3@redhat.com
------------------------------------
+
+--hicslhhs4zfgzzsn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 13, 2017 at 05:38:26PM +0100, Arnaud Pouliquen wrote:
+> From: olivier moysan <olivier.moysan@st.com>
+>=20
+> Add copy support in pcm damengine operations.
+> As example, this allows to:
+> - process data before rendering (IEC status insertion),
+> - process captured sample ( sample mask and shift).
+
+dmaengine with copy...  so not DMA at all?  I'm a bit confused about why
+we're extending the dmaengine code to have a copy operation rather than
+just writing driver code.
+
+--hicslhhs4zfgzzsn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlijO20ACgkQJNaLcl1U
+h9C+ZggAheP4mEFbWQ3/f5hPBO1PLdptmUMpXbC/tiCkGNiK+TmpEsRkG0KgDbZ3
+ybftSnkXa2ayTeaaCYG/MEo4BZM5HRhUY1gSINgV+aLsb858Af16cXkHlYMlbjPj
+U4NYhZvDRZ2BLGS3FNwslIsKSv6dj0ACxypyXF+LVpTXShaE0kVqPXznIVOxtJF4
+Yc2Jo2LcApERM2ulnkAtmsHDjKClEzMtSzJfAyLcyWvHPAWzfm24ZTfxB9keodbM
+DLD80zL3H5dahdUwJAWjxC6T1JXPWR6YQi1NSocvMXv2Z2MHstIhiXPRLEo97zKM
+Tu3E4yzY8FYtambuZQwJzUTIOVIdAQ==
+=xEbl
+-----END PGP SIGNATURE-----
+
+--hicslhhs4zfgzzsn--
+
+--===============3306803402351320719==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3306803402351320719==--
