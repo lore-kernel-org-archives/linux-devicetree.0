@@ -1,13 +1,13 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
 Subject: [PATCH v1.1 5/8] v4l: Switch from V4L2 OF not V4L2 fwnode API
-Date: Tue, 14 Feb 2017 09:07:36 +0200
-Message-ID: <1487056056-4228-1-git-send-email-sakari.ailus@linux.intel.com>
+Date: Tue, 14 Feb 2017 09:12:32 +0200
+Message-ID: <1487056352-4281-1-git-send-email-sakari.ailus@linux.intel.com>
 References: <20170213165746.GB1103@ti.com>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170213165746.GB1103@ti.com>
 Sender: linux-media-owner@vger.kernel.org
 To: bparrot@ti.com
-Cc: linux-media@vger.kernel.org, vger.kernel.org@nauris.fi.intel.com, devicetree@vger.kernel.org
+Cc: linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Switch users of the v4l2_of_ APIs to the more generic v4l2_fwnode_ APIs.
@@ -17,6 +17,8 @@ drivers are converted to fwnode matching as well.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
+Resending because of a mis-copied e-mail address.
+
  drivers/media/i2c/Kconfig                      |  9 ++++
  drivers/media/i2c/adv7604.c                    |  7 +--
  drivers/media/i2c/mt9v032.c                    |  7 +--
