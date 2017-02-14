@@ -1,299 +1,399 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH linux v7 1/6] hwmon: Add core On-Chip Controller support
- for POWER CPUs
-Date: Tue, 14 Feb 2017 09:36:15 -0600
-Message-ID: <1c3b2fec-866f-301e-6fd9-192596ec8117@linux.vnet.ibm.com>
-References: <1486509056-25838-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1486509056-25838-2-git-send-email-eajames@linux.vnet.ibm.com>
- <CACPK8XcPwKN2oEeryXh3909OZs9eF=rjnZVJV3NRo_OAK-Zhcg@mail.gmail.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] reset: Add i.MX7 SRC reset driver
+Date: Tue, 14 Feb 2017 07:46:18 -0800
+Message-ID: <CAHQ1cqFXiu03902jWLkg8X6jdQ3+TiLj02dSDFBAVH98ABo70A@mail.gmail.com>
+References: <20170213153338.13518-1-andrew.smirnov@gmail.com> <1487004643.2873.97.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <CACPK8XcPwKN2oEeryXh3909OZs9eF=rjnZVJV3NRo_OAK-Zhcg@mail.gmail.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487004643.2873.97.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/09/2017 11:31 PM, Joel Stanley wrote:
-> On Wed, Feb 8, 2017 at 9:40 AM,  <eajames@linux.vnet.ibm.com> wrote:
+On Mon, Feb 13, 2017 at 8:50 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> Hi Andrey,
 >
->> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
+> thank you for the driver, I have a few comments below.
+>
+> On Mon, 2017-02-13 at 07:33 -0800, Andrey Smirnov wrote:
+>> This driver exposes various reset faculties, impelented by System Reset
+>
+> s/impelented/implemented/
+
+Thanks for noticing, will fix in v3.
+
+>
+>> Controller IP block, as a reset driver. Currently only PCIE related
+>> reset lines are implemented.
+>>
+>> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>
+>> Changes since v1 (see [v1]):
+>>
+>>       - Various small DT bindings description fixes as per feedback
+>>           from Rob Herring
+>>
+>>
+>> [v1] https://lkml.org/lkml/2017/2/6/554
+>>
+>>  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  47 +++++++
+>>  drivers/reset/Kconfig                              |   8 ++
+>>  drivers/reset/Makefile                             |   1 +
+>>  drivers/reset/reset-imx7.c                         | 149 +++++++++++++++++++++
+>>  include/dt-bindings/reset/imx7-reset.h             |  28 ++++
+>>  5 files changed, 233 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+>>  create mode 100644 drivers/reset/reset-imx7.c
+>>  create mode 100644 include/dt-bindings/reset/imx7-reset.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
 >> new file mode 100644
->> index 0000000..79d1642
+>> index 0000000..c38f7f0
 >> --- /dev/null
->> +++ b/Documentation/hwmon/occ
-> The kernel is using  reStructuredText these days. You should consider
-> following suit:
->
->   https://www.kernel.org/doc/html/latest/doc-guide/sphinx.html#writing-documentation
->
->
->> @@ -0,0 +1,40 @@
->> +Kernel driver occ
->> +=================
->> +
->> +Supported chips:
->> + * ASPEED AST2400
->> + * ASPEED AST2500
-> Not really - this will run on any chip that's connected to a P8 or P9.
->
->
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 5f10c28..193a13b 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -9128,6 +9128,13 @@ T:       git git://linuxtv.org/media_tree.git
->>   S:     Maintained
->>   F:     drivers/media/i2c/ov7670.c
->>
->> +ON-CHIP CONTROLLER HWMON DRIVER
-> Mention P8 and P9?
->
->> +M:     Eddie James <eajames@us.ibm.com>
->> +L:     linux-hwmon@vger.kernel.org
-> Have you subscribed to this list? Would you prefer the mail to come to
-> the openbmc list?
->
->> +S:     Maintained
->> +F:     Documentation/hwmon/occ
->> +F:     drivers/hwmon/occ/
->> +
->>   ONENAND FLASH DRIVER
->>   M:     Kyungmin Park <kyungmin.park@samsung.com>
->>   L:     linux-mtd@lists.infradead.org
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index 190d270..e80ca81 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -1240,6 +1240,8 @@ config SENSORS_NSA320
->>            This driver can also be built as a module. If so, the module
->>            will be called nsa320-hwmon.
->>
->> +source drivers/hwmon/occ/Kconfig
->> +
->>   config SENSORS_PCF8591
->>          tristate "Philips PCF8591 ADC/DAC"
->>          depends on I2C
->> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->> index d2cb7e8..c7ec5d4 100644
->> --- a/drivers/hwmon/Makefile
->> +++ b/drivers/hwmon/Makefile
->> @@ -169,6 +169,7 @@ obj-$(CONFIG_SENSORS_WM831X)        += wm831x-hwmon.o
->>   obj-$(CONFIG_SENSORS_WM8350)   += wm8350-hwmon.o
->>   obj-$(CONFIG_SENSORS_XGENE)    += xgene-hwmon.o
->>
->> +obj-$(CONFIG_SENSORS_PPC_OCC)  += occ/
->>   obj-$(CONFIG_PMBUS)            += pmbus/
->>
->>   ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
->
->> diff --git a/drivers/hwmon/occ/occ.c b/drivers/hwmon/occ/occ.c
->> new file mode 100644
->> index 0000000..af077f2
->> --- /dev/null
->> +++ b/drivers/hwmon/occ/occ.c
->> +               sensors = &resp->data.blocks[b].sensors;
->> +               if (!sensors) {
->> +                       /* first poll response */
->> +                       sensors = driver->ops.alloc_sensor(dev, sensor_type,
->> +                                                          block->num_sensors);
->> +                       if (!sensors)
->> +                               return -ENOMEM;
->> +
->> +                       resp->data.blocks[b].sensors = sensors;
->> +                       resp->data.sensor_block_id[sensor_type] = b;
->> +                       resp->data.blocks[b].header = *block;
->> +               } else if (block->sensor_length !=
->> +                        resp->data.blocks[b].header.sensor_length) {
->> +                       dev_warn(dev,
->> +                                "different sensor length than first poll\n");
-> The driver has changed behaviour from your previous version; now it
-> discards data if the sensors change.
->
-> Under what circumstances does the sensor data change?
->
->> +                       continue;
->> +               }
->> +
->> +               for (s = 0; s < block->num_sensors &&
->> +                    s < resp->data.blocks[b].header.num_sensors; s++) {
->> +                       if (offset + block->sensor_length > num_bytes) {
->> +                               dev_warn(dev, "exceeded data length\n");
->> +                               return 0;
->> +                       }
->> +
->> +                       driver->ops.parse_sensor(data, sensors, sensor_type,
->> +                                                offset, s);
->> +                       offset += block->sensor_length;
->> +               }
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +static u8 occ_send_cmd(struct occ *driver, u8 seq, u8 type, u16 length,
->> +                      const u8 *data, u8 *resp)
->> +{
->> +       u32 cmd1, cmd2 = 0;
->> +       u16 checksum = 0;
->> +       bool retry = false;
->> +       int i, rc, tries = 0;
->> +
->> +       cmd1 = (seq << 24) | (type << 16) | length;
->> +       memcpy(&cmd2, data, length);
->> +       cmd2 <<= ((4 - length) * 8);
->> +
->> +       /* checksum: sum of every bytes of cmd1, cmd2 */
->> +       for (i = 0; i < 4; i++) {
->> +               checksum += (cmd1 >> (i * 8)) & 0xFF;
->> +               checksum += (cmd2 >> (i * 8)) & 0xFF;
->> +       }
->> +
->> +       cmd2 |= checksum << ((2 - length) * 8);
->> +
->> +       /* Init OCB */
-> You should mention what OCB means in your documentation.
->
->> +       rc = driver->bus_ops.putscom(driver->bus, OCB_STATUS_CONTROL_OR,
->> +                                    OCB_OR_INIT0, OCB_OR_INIT1);
->> +       if (rc)
->> +               goto err;
->> +
->> +int occ_set_user_powercap(struct occ *occ, u16 cap)
->> +{
->> +       u8 resp[8];
->> +
->> +       cap = cpu_to_be16(cap);
->> +
->> +       return occ_send_cmd(occ, 0, OCC_SET_USER_POWR_CAP, 2, (const u8 *)&cap,
->> +                           resp);
->> +}
->> +EXPORT_SYMBOL(occ_set_user_powercap);
->> +
->> +struct occ *occ_start(struct device *dev, void *bus,
->  From what I can tell this doesn't start anything. Call it occ_init()
-> or something.
->
->> +                     struct occ_bus_ops *bus_ops, const struct occ_ops *ops,
->> +                     const struct occ_config *config)
-> Create a structure with all of these details in it. Some of them don't
-> need to be broken out into their own, for instance:
->
-> struct occ *occ_start(struct device *dev, const struct occ_init_context *init)
-> {
->
->     driver->dev = dev;
->     driver->bus = init->bus;
->     driver->bus_read = init->bus_read;
->     driver->bus_write = init->bus_write;
->     driver->config = init->config;
->     driver->cmd_addr = init->cmd_addr;
->
-> etc.
-
-Tried this but it doesn't make that much sense, as half the args come 
-from occ_p8.c and the other half from p8_occ_i2c.c. Can't make the 
-structure const then, and it seems strange to init the structure in two 
-places...
-
->
->
->
->> +{
->> +       struct occ *driver = devm_kzalloc(dev, sizeof(struct occ), GFP_KERNEL);
->> +
->> +       if (!driver)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       driver->dev = dev;
->> +       driver->bus = bus;
->> +       driver->bus_ops = *bus_ops;
->> +       driver->ops = *ops;
->> +       driver->config = *config;
->> +       driver->raw_data = devm_kzalloc(dev, OCC_DATA_MAX, GFP_KERNEL);
->> +       if (!driver->raw_data)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       mutex_init(&driver->update_lock);
->> +
->> +       return driver;
->> +}
->> +EXPORT_SYMBOL(occ_start);
->> +
->> +MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
->> +MODULE_DESCRIPTION("OCC hwmon core driver");
->> +MODULE_LICENSE("GPL");
->> diff --git a/drivers/hwmon/occ/scom.h b/drivers/hwmon/occ/scom.h
->> new file mode 100644
->> index 0000000..b0691f3
->> --- /dev/null
->> +++ b/drivers/hwmon/occ/scom.h
+>> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
 >> @@ -0,0 +1,47 @@
+>> +Freescale i.MX7 System Reset Controller
+>> +======================================
+>> +
+>> +Please also refer to reset.txt in this directory for common reset
+>> +controller binding usage.
+>> +
+>> +Required properties:
+>> +- compatible: Should be "fsl,imx7-src", "syscon"
+>> +- reg: should be register base and length as documented in the
+>> +  datasheet
+>> +- interrupts: Should contain SRC interrupt
+>> +- #reset-cells: 1, see below
+>> +
+>> +example:
+>> +
+>> +src: reset-controller@30390000 {
+>> +     compatible = "fsl,imx7d-src", "syscon";
+>> +     reg = <0x30390000 0x2000>;
+>> +     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+>> +     #reset-cells = <1>;
+>> +};
+>> +
+>> +
+>> +Specifying reset lines connected to IP modules
+>> +==============================================
+>> +
+>> +The system reset controller can be used to reset various set of
+>> +peripherals. Device nodes that need access to reset lines should
+>> +specify them as a reset phandle in their corresponding node as
+>> +specified in reset.txt.
+>> +
+>> +Example:
+>> +
+>> +     pcie: pcie@33800000 {
+>> +
+>> +             ...
+>> +
+>> +             resets = <&src IMX7_RESET_PCIEPHY>,
+>> +                      <&src IMX7_RESET_PCIE_CTRL_APPS>;
+>> +             reset-names = "pciephy", "apps";
+>> +
+>> +             ...
+>> +        };
+>> +
+>> +
+>> +For list of all valid reset indicies see
+>> +<dt-bindings/reset/imx7-reset.h>
+>> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+>> index 172dc96..664a88b 100644
+>> --- a/drivers/reset/Kconfig
+>> +++ b/drivers/reset/Kconfig
+>> @@ -92,6 +92,14 @@ config RESET_ZYNQ
+>>       help
+>>         This enables the reset controller driver for Xilinx Zynq SoCs.
+>>
+>> +config RESET_IMX7
+>> +     bool "i.MX7 Reset Driver"
+>> +     depends on SOC_IMX7D || COMPILE_TEST
+>> +     select MFD_SYSCON
+>> +     default SOC_IMX7D
+>> +     help
+>> +       This enables the reset controller driver for i.MX7 SoCs.
+>> +
+>
+> Alphabetical order, please.
+
+OK, will fix in v3.
+
+>
+>>  source "drivers/reset/sti/Kconfig"
+>>  source "drivers/reset/hisilicon/Kconfig"
+>>  source "drivers/reset/tegra/Kconfig"
+>> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+>> index 13b346e..417c9d0 100644
+>> --- a/drivers/reset/Makefile
+>> +++ b/drivers/reset/Makefile
+>> @@ -14,3 +14,4 @@ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+>>  obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
+>>  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+>>  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
+>> +obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>
+> See above, those are also in alphabetical order.
+
+Ditto.
+
+>
+>> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+>> new file mode 100644
+>> index 0000000..6d90e57
+>> --- /dev/null
+>> +++ b/drivers/reset/reset-imx7.c
+>> @@ -0,0 +1,149 @@
 >> +/*
->> + * scom.h - hwmon OCC driver
+>> + * Copyright (c) 2017, Impinj, Inc.
 >> + *
->> + * This file contains data structures for scom operations to the OCC
-> Are these really SCOM operations?
->
-> I think they're better described read and write callbacks, as the
-> operation is may be talking i2c or FSI or in the future some other
-> kind of access.
->
-> They do take scom addresses as parameters, so I can see the argument
-> for calling them getscom/putscom.
->
->
+>> + * i.MX7 System Reset Controller (SRC) driver
 >> + *
->> + * Copyright 2016 IBM Corp.
+>> + * Author: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> + *
 >> + * This program is free software; you can redistribute it and/or modify
 >> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
+>> + * the Free Software Foundation; version 2 of the License.
 >> + *
 >> + * This program is distributed in the hope that it will be useful,
 >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 >> + * GNU General Public License for more details.
 >> + */
 >> +
->> +#ifndef __SCOM_H__
->> +#define __SCOM_H__
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>
+> I think this is not be necessary because register access is done via
+> regmap. Please cull unnecessary headers.
+
+OK, will do for v3.
+
+>
+>> +#include <linux/init.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/reset-controller.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/types.h>
+>> +#include <dt-bindings/reset/imx7-reset.h>
 >> +
->> +/*
->> + * occ_bus_ops - represent the low-level transfer methods to communicate with
->> + * the OCC.
->> + *
->> + * getscom - OCC scom read
->> + * @bus: handle to slave device
->> + * @address: address
->> + * @data: where to store data read from slave; buffer size must be at least
->> + * eight bytes.
-> Are there situations where it's more than 8 bytes?
->
-> Would it be safer to add a length argument so the read call so we
-> don't put more data in the buffer than the caller expects?
->
->
->> + *
->> + * Returns 0 on success or a negative errno on error
->> + *
->> + * putscom - OCC scom write
->> + * @bus: handle to slave device
->> + * @address: address
->> + * @data0: first data word to write
->> + * @data1: second data word to write
->> + *
->> + * Returns 0 on success or a negative errno on error
->> + */
->> +struct occ_bus_ops {
->> +       int (*getscom)(void *bus, u32 address, u64 *data);
->> +       int (*putscom)(void *bus, u32 address, u32 data0, u32 data1);
+>> +struct imx7_src {
+>> +     struct reset_controller_dev rcdev;
+>> +     struct device *dev;
+>> +     struct regmap *regmap;
 >> +};
 >> +
->> +#endif /* __SCOM_H__ */
+>> +enum imx7_src_registers {
+>> +     SRC_PCIEPHY_RCR = 0x002c,
+>> +     SRC_PCIEPHY_RCR_PCIEPHY_G_RST     = BIT(1),
+>
+> What about the others resets? There's at least HSICPHY, MIPIPHY and
+> USBOPHY registers before the PCIEPHY register.
 
+I don't really have any code using anything but PCI reset related
+functionality, so I can't test any of the resets you mention. In light
+of that I didn't want to add any of the definitions that are not going
+to be used anywhere in the code.
+
+>
+>> +     SRC_PCIEPHY_RCR_PCIEPHY_BTN       = BIT(2),
+>> +     SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN = BIT(6),
+>
+> Are those really resets? At least the PCIE_CTRL_APPS_EN has a bit called
+> PCIE_CTRL_APPS_RST right next to it, so this warrants some explanation.
+>
+
+Public documentation for that aspect of i.MX7 is nonexistent and,
+unfortunately, that is my only source of information. Given that, I
+can't really tell you what the difference between PCIE_CTRL_APPS_EN
+and PCIE_CTRL_APPS_RST besides that the former is what downstream PCIe
+driver uses to inhibit LTSSM and the latter is not referenced or used
+by any code (as far as I am aware).
+
+>> +};
+>> +
+>> +static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
+>> +{
+>> +     return container_of(rcdev, struct imx7_src, rcdev);
+>> +}
+>> +
+>> +static int imx7_reset_assert(struct reset_controller_dev *rcdev,
+>> +                          unsigned long id)
+>> +{
+>> +     struct imx7_src *imx7src = to_imx7_src(rcdev);
+>> +
+>> +     switch (id) {
+>> +     case IMX7_RESET_PCIE_CTRL_APPS:
+>> +             regmap_update_bits(imx7src->regmap,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN, 0);
+>> +             return 0;
+>> +
+>> +     case IMX7_RESET_PCIEPHY:
+>> +             regmap_update_bits(imx7src->regmap,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                SRC_PCIEPHY_RCR_PCIEPHY_G_RST,
+>> +                                SRC_PCIEPHY_RCR_PCIEPHY_G_RST);
+>> +             regmap_update_bits(imx7src->regmap,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                SRC_PCIEPHY_RCR_PCIEPHY_BTN,
+>> +                                SRC_PCIEPHY_RCR_PCIEPHY_BTN);
+>
+> What is the PCIE PHY button, and why does it have to be set with the
+> reset bit?
+
+I am sorry, but just as above, I wouldn't be able to enlighten you any
+more about the subject. I have no knowledge about the details of G_RST
+and BTN signal (or even if BTN stands for "button") behavior beyond
+the fact that that is how downstream driver performs PCIEPHY reset.
+
+>
+>> +             return 0;
+>> +     default:
+>> +             dev_err(imx7src->dev, "Unknown reset ID %lu\n", id);
+>> +             break;
+>> +     }
+>> +
+>> +     return -EINVAL;
+>> +}
+>> +
+>> +static int imx7_reset_deassert(struct reset_controller_dev *rcdev,
+>> +                            unsigned long id)
+>> +{
+>> +     struct imx7_src *imx7src = to_imx7_src(rcdev);
+>> +
+>> +     switch (id) {
+>> +     case IMX7_RESET_PCIE_CTRL_APPS:
+>> +             regmap_update_bits(imx7src->regmap,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN,
+>> +                                SRC_PCIEPHY_RCR_PCIE_CTRL_APPS_EN);
+>> +             return 0;
+>> +
+>> +     case IMX7_RESET_PCIEPHY:
+>> +             /* wait for more than 10us to release phy g_rst and btnrst */
+>> +             udelay(10);
+>> +             regmap_update_bits(imx7src->regmap,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                SRC_PCIEPHY_RCR_PCIEPHY_G_RST, 0);
+>> +             regmap_update_bits(imx7src->regmap,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                SRC_PCIEPHY_RCR_PCIEPHY_BTN, 0);
+>> +             return 0;
+>> +     default:
+>> +             dev_err(imx7src->dev, "Unknown reset ID %lu\n", id);
+>> +             break;
+>> +     };
+>> +
+>> +     return -EINVAL;
+>> +}
+>> +
+>> +static const struct reset_control_ops imx7_reset_ops = {
+>> +     .assert         = imx7_reset_assert,
+>> +     .deassert       = imx7_reset_deassert,
+>> +};
+>> +
+>> +static int imx7_reset_probe(struct platform_device *pdev)
+>> +{
+>> +     struct imx7_src *imx7src;
+>> +     struct device *dev = &pdev->dev;
+>> +
+>> +     imx7src = devm_kzalloc(dev, sizeof(*imx7src), GFP_KERNEL);
+>> +     if (!imx7src)
+>> +             return -ENOMEM;
+>> +
+>> +     imx7src->dev = dev;
+>> +     imx7src->regmap = syscon_node_to_regmap(dev->of_node);
+>> +     if (IS_ERR(imx7src->regmap)) {
+>> +             dev_err(dev, "Unable to get imx7-src regmap");
+>> +             return PTR_ERR(imx7src->regmap);
+>> +     }
+>
+> You could use regmap_attach_dev to attach the device to the regmap. This
+> would improve error messages, regmap debugfs structure, and make
+> imx7src->dev unnecessary.
+
+OK, will do that in v3.
+
+>
+>> +
+>> +     imx7src->rcdev.owner     = THIS_MODULE;
+>> +     imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
+>> +     imx7src->rcdev.ops       = &imx7_reset_ops;
+>> +     imx7src->rcdev.of_node   = dev->of_node;
+>> +
+>> +     return devm_reset_controller_register(dev, &imx7src->rcdev);
+>> +}
+>> +
+>> +static const struct of_device_id imx7_reset_dt_ids[] = {
+>> +     { .compatible = "fsl,imx7d-src", },
+>> +     { /* sentinel */ },
+>> +};
+>> +
+>> +static struct platform_driver imx7_reset_driver = {
+>> +     .probe  = imx7_reset_probe,
+>> +     .driver = {
+>> +             .name           = KBUILD_MODNAME,
+>> +             .of_match_table = imx7_reset_dt_ids,
+>> +     },
+>> +};
+>> +builtin_platform_driver(imx7_reset_driver);
+>> diff --git a/include/dt-bindings/reset/imx7-reset.h b/include/dt-bindings/reset/imx7-reset.h
+>> new file mode 100644
+>> index 0000000..e20f2db
+>> --- /dev/null
+>> +++ b/include/dt-bindings/reset/imx7-reset.h
+>> @@ -0,0 +1,28 @@
+>> +/*
+>> + * Copyright (C) 2017 Impinj, Inc.
+>> + *
+>> + * Author: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#ifndef DT_BINDING_RESET_IMX7_H
+>> +#define DT_BINDING_RESET_IMX7_H
+>> +
+>> +#define IMX7_RESET_PCIE_CTRL_APPS    0
+>> +#define IMX7_RESET_PCIEPHY           1
+>
+> It would expect these to be numbered in the order they appear in the
+> register map, not starting from the end. Could you add all available
+> peripheral resets to this list, in the correct order?
+
+The numbering is just a consequence of me adding only resets I could
+exercise with my code and numbering then starting from zero. I also
+was hesitant adding more sources since it seemed to me that some of
+less trivial registers in that IP block might be best represented as a
+single reset source doing something more sophisticated that just
+setting a bit under the hood.
+
+Thanks,
+Andrey Smirnov
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
