@@ -1,91 +1,41 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm64: dts: Add basic DT to support Spreadtrum's
- SP9860G
-Date: Tue, 14 Feb 2017 15:57:43 +0000
-Message-ID: <20170214155743.GG23718@leverpostej>
-References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487063952-7113-2-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 5/7] dt-bindings: display/panel: Add common rotation
+ property
+Date: Tue, 14 Feb 2017 10:19:41 -0600
+Message-ID: <CAL_Jsq+jP_JkdhBM+pbOsEdb5=mnYLqwwQbqj4SoZXjpiR+S8Q@mail.gmail.com>
+References: <20170211184858.26421-1-noralf@tronnes.org>
+ <20170211184858.26421-6-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1487063952-7113-2-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nd-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170211184858.26421-6-noralf@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Tue, Feb 14, 2017 at 05:19:08PM +0800, Chunyan Zhang wrote:
-
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8)
-> +					 | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8)
-> +					 | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8)
-> +					 | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8)
-> +					 | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <26000000>;
-> +	};
-
-Your FW should program CNTFRQ on all CPUs, and this clock-frequency
-property should not be necessary. Please remove it.
-
-> +
-> +	pmu {
-> +		compatible = "arm,armv8-pmuv3";
-
-Please list "arm,cortex-a53-pmu" first.
-
-> +		interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
-> +				<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-
-As you are using SPIs, please add an interrupt-affinity property, per
-Documentation/devicetree/bindings/arm/pmu.txt.
-
-> diff --git a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-> new file mode 100644
-> index 0000000..59390fc
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-> @@ -0,0 +1,58 @@
-> +/*
-> + * Spreadtrum SP9860g board DTS file
-> + *
-> + * Copyright (C) 2017, Spreadtrum Communications Inc.
-> + *
-> + * This file is licensed under a dual GPLv2 or X11 license.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "sc9860.dtsi"
-> +
-> +/ {
-> +	model = "Spreadtrum SP9860G 3GFHD Board";
-> +
-> +	compatible = "sprd,sc9860", "sprd,sp9860g-1h10";
-> +
-> +	sprd,sc-id = <9860 1 0x20000>;
-
-What is this? I can't see any documentation or user of this property in
-mainline.
-
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCBGZWIgMTEsIDIwMTcgYXQgMTI6NDggUE0sIE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxm
+QHRyb25uZXMub3JnPiB3cm90ZToKPiBEaXNwbGF5IHBhbmVscyBjYW4gYmUgb3JpZW50ZWQgbWFu
+eSB3YXlzLCBlc3BlY2lhbGx5IGluIHRoZSBlbWJlZGRlZAo+IHdvcmxkLiBUaGUgcm90YXRpb24g
+cHJvcGVydHkgaXMgYSB3YXkgdG8gZGVzY3JpYmUgdGhpcyBvcmllbnRhdGlvbi4KPiBUaGUgY291
+bnRlciBjbG9ja3dpc2UgZGlyZWN0aW9uIGlzIGNob3NlbiBiZWNhdXNlIHRoYXQncyB3aGF0IGZi
+ZGV2Cj4gYW5kIGRybSB1c2UuCj4KPiBTaWduZWQtb2ZmLWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5v
+cmFsZkB0cm9ubmVzLm9yZz4KPiBBY2tlZC1ieTogVGhpZXJyeSBSZWRpbmcgPHRyZWRpbmdAbnZp
+ZGlhLmNvbT4KPiAtLS0KPgo+IENoYW5nZXMgc2luY2UgdmVyc2lvbiAzOgo+IC0gQ2hhbmdlZCBk
+aXNwbGF5L2Rpc3BsYXkudHh0IC0+IGRpc3BsYXkvcGFuZWwvcGFuZWwudHh0Cj4KPiAgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcGFuZWwudHh0IHwgNCAr
+KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVs
+LnR4dAoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
