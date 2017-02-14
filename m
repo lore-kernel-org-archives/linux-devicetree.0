@@ -1,144 +1,71 @@
-From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH linux v8 3/6] hwmon: occ: Add I2C transport implementation for SCOM operations
-Date: Tue, 14 Feb 2017 14:34:20 -0600
-Message-ID: <1487104463-4253-4-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1487104463-4253-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487104463-4253-1-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 1/1] arm64: dts: r8a7795: add IMR-LX4 support
+Date: Wed, 15 Feb 2017 00:02:53 +0300
+Message-ID: <20170214210301.620322370@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline; filename=arm64-dts-r8a7795-add-IMR-LX4-support.patch
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Describe the IMR-LX4 devices in the R8A7795 device tree.
 
-Add functions to send SCOM operations over I2C bus. The BMC can
-communicate with the Power8 host processor over I2C, but needs to use
-SCOM operations in order to access the OCC register space.
+Based on the original (and large) patch by Konstantin Kozhevnikov
+<Konstantin.Kozhevnikov@cogentembedded.com>.
 
-Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
 ---
- drivers/hwmon/occ/Makefile       |  2 +-
- drivers/hwmon/occ/occ_scom_i2c.c | 69 ++++++++++++++++++++++++++++++++++++++++
- drivers/hwmon/occ/occ_scom_i2c.h | 21 ++++++++++++
- 3 files changed, 91 insertions(+), 1 deletion(-)
- create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
- create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+This patch is against the 'renesas-devel-20170213-v4.10-rc8' tag of Simon
+Horman's 'renesas.git' repo.
 
-diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
-index 67b5367..9cc36e7 100644
---- a/drivers/hwmon/occ/Makefile
-+++ b/drivers/hwmon/occ/Makefile
-@@ -1 +1 @@
--obj-$(CONFIG_SENSORS_IBM_OCC) += occ.o occ_sysfs.o
-+obj-$(CONFIG_SENSORS_IBM_OCC) += occ.o occ_sysfs.o occ_scom_i2c.o
-diff --git a/drivers/hwmon/occ/occ_scom_i2c.c b/drivers/hwmon/occ/occ_scom_i2c.c
-new file mode 100644
-index 0000000..351cbc5
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_scom_i2c.c
-@@ -0,0 +1,69 @@
-+/*
-+ * occ_scom_i2c.c - hwmon OCC driver
-+ *
-+ * This file contains the functions for performing SCOM operations over I2C bus
-+ * to access the OCC.
-+ *
-+ * Copyright 2017 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include "occ_scom_i2c.h"
-+#include "scom.h"
-+
-+int occ_i2c_getscom(void *bus, u32 address, u64 *data)
-+{
-+	ssize_t rc;
-+	__be64 buf;
-+	struct i2c_client *client = bus;
-+	struct i2c_msg msgs[2];
-+
-+	msgs[0].addr = client->addr;
-+	msgs[0].flags = client->flags & I2C_M_TEN;
-+	msgs[0].len = sizeof(u32);
-+	msgs[0].buf = (char *)&address;
-+
-+	msgs[1].addr = client->addr;
-+	msgs[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
-+	msgs[1].len = sizeof(u64);
-+	msgs[1].buf = (char *)&buf;
-+
-+	rc = i2c_transfer(client->adapter, msgs, 2);
-+	if (rc < 0)
-+		return rc;
-+
-+	*data = be64_to_cpu(buf);
-+
-+	return 0;
-+}
-+
-+int occ_i2c_putscom(void *bus, u32 address, u32 data0, u32 data1)
-+{
-+	u32 buf[3];
-+	ssize_t rc;
-+	struct i2c_client *client = bus;
-+
-+	/* send raw data, user can handle endian */
-+	buf[0] = address;
-+	buf[1] = data1;
-+	buf[2] = data0;
-+
-+	rc = i2c_master_send(client, (const char *)buf, sizeof(u32) * 3);
-+	if (rc < 0)
-+		return rc;
-+	else if (rc != sizeof(u32) * 3)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+MODULE_AUTHOR("Eddie James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>");
-+MODULE_DESCRIPTION("I2C OCC SCOM transport");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/occ_scom_i2c.h b/drivers/hwmon/occ/occ_scom_i2c.h
-new file mode 100644
-index 0000000..f84647d
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_scom_i2c.h
-@@ -0,0 +1,21 @@
-+/*
-+ * occ_scom_i2c.h - hwmon OCC driver
-+ *
-+ * This file contains function protoypes for peforming SCOM operations over I2C
-+ * bus to access the OCC.
-+ *
-+ * Copyright 2017 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __OCC_SCOM_I2C_H__
-+#define __OCC_SCOM_I2C_H__
-+
-+int occ_i2c_getscom(void *bus, u32 address, u64 *data);
-+int occ_i2c_putscom(void *bus, u32 address, u32 data0, u32 data1);
-+
-+#endif /* __OCC_SCOM_I2C_H__ */
--- 
-1.8.3.1
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi |   32 +++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Index: renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -1419,6 +1419,38 @@
+ 			status = "disabled";
+ 		};
+ 
++		imr-lx4@fe860000 {
++			compatible = "renesas,imr-lx4";
++			reg = <0 0xfe860000 0 0x2000>;
++			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 823>;
++			power-domains = <&sysc R8A7795_PD_A3VC>;
++		};
++
++		imr-lx4@fe870000 {
++			compatible = "renesas,imr-lx4";
++			reg = <0 0xfe870000 0 0x2000>;
++			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 822>;
++			power-domains = <&sysc R8A7795_PD_A3VC>;
++		};
++
++		imr-lx4@fe880000 {
++			compatible = "renesas,imr-lx4";
++			reg = <0 0xfe880000 0 0x2000>;
++			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 821>;
++			power-domains = <&sysc R8A7795_PD_A3VC>;
++		};
++
++		imr-lx4@fe890000 {
++			compatible = "renesas,imr-lx4";
++			reg = <0 0xfe890000 0 0x2000>;
++			interrupts = <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 820>;
++			power-domains = <&sysc R8A7795_PD_A3VC>;
++		};
++
+ 		vspbc: vsp@fe920000 {
+ 			compatible = "renesas,vsp2";
+ 			reg = <0 0xfe920000 0 0x8000>;
