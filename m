@@ -1,49 +1,44 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v4 1/7] drm: Add DRM support for tiny LCD displays
-Date: Tue, 14 Feb 2017 20:54:28 +0100
-Message-ID: <CAKMK7uF1AYwZGXrpCk01Uy-n8-Wsnr7XX-SxbGgJnMhA28APSw@mail.gmail.com>
-References: <20170211184858.26421-1-noralf@tronnes.org>
- <20170211184858.26421-2-noralf@tronnes.org>
- <CAHp75VeZke=JCosvc3xQ_AiOn64hth=PMJp4X0vLHMS14bkp4w@mail.gmail.com>
- <70190e71-4d5a-7102-418f-09896b57c084@tronnes.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv2 2/3] clk: mvebu: adjust clock handling for the CP110
+ system controller
+Date: Tue, 14 Feb 2017 21:05:37 +0100
+Message-ID: <20170214210537.2c0218dd@free-electrons.com>
+References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
+        <1482316017-22154-3-git-send-email-thomas.petazzoni@free-electrons.com>
+        <20161222001456.GX8288@codeaurora.org>
+        <20170214162718.0777d95f@free-electrons.com>
+        <20170214185912.GT25384@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <70190e71-4d5a-7102-418f-09896b57c084@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170214185912.GT25384@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBGZWIgMTIsIDIwMTcgYXQgMjo1NyBQTSwgTm9yYWxmIFRyw7hubmVzIDxub3JhbGZA
-dHJvbm5lcy5vcmc+IHdyb3RlOgo+IHRpbnlkcm0gd2lsbCBiZSBtZXJnZWQgdGhlIHdheSBpdCBp
-cyBub3csIHVubGVzcyBzb21lb25lIHBvaW50cyB0bwo+IHNvbWV0aGluZyB0aGF0IGlzIGJyb2tl
-bi4gQnV0IEkgY29sbGVjdCB5b3VyIGNvbW1lbnRzIGZvciBhIGxhdGVyCj4gY2xlYW51cCBwYXRj
-aHNldC4gSXQgdGFrZXMgYSBsb3Qgb2YgZWZmb3J0IGZvciBtZSBhcyBhbiBhbWF0ZXVyIHRvCj4g
-a2VlcHMgdGhpcyBjb2RlIHVwLXRvLWRhdGUgb3V0LW9mLXRyZWUgZm9yIG1vbnRocy4gSXQncyBu
-b3QgZXZlbgo+IHN1cmUgdGhhdCBJJ3ZlIGhpdCB0aGUgbWFyayB3aXRoIHRoaXMsIHNvIHRoZXJl
-IHdpbGwgbW9zdCBsaWtlbHkgYmUKPiBjaGFuZ2VzIHdoZW4gSSBzdGFydCBjb252ZXJ0aW5nIGZi
-dGZ0IGRyaXZlcnMsIGFuZCBJJ2xsIGltcGxlbWVudCB0aGUKPiByZW1haW5pbmcgYml0cyBhbmQg
-cGllY2VzIGFzIEkgbWFrZSBjaGFuZ2VzLiBUaGUgY29yZSBvZiB0aW55ZHJtIHdvbid0Cj4gY2hh
-bmdlIGJlY2F1c2Ugb2YgdW5mb3JzZWVuIGZidGZ0IHF1aXJrcywgYnV0IG90aGVyIHBhcnRzIG1p
-Z2h0LgoKKzEsIHBscyBzZW5kIHB1bGwgcmVxdWVzdCB0byBEYXZlIEFpcmxpZS4gRFQtYWNrcyBh
-cmUgYWxsIHRoZXJlLCBhbmQKVGhpZXJyeSBjb25maXJtZWQgb24gaXJjIHRoYXQgaGlzIHJlcGx5
-IG9uIHRoZSBsYXN0IHRocmVhZCB3YXMgaW5kZWVkCm1lYW50IGFzIGEgZnVsbCBhY2sgZm9yIGdv
-aW5nIGFoZWFkIGFuZCBwb2xpc2hpbmcgbGF0ZXIuIEkgYWxzbwpjaGF0dGVkIHdpdGggRGF2ZSBk
-aXJlY3RseSwgYW5kIGhlJ3MgcGVyZmVjdGx5IGhhcHB5IHRvIHRha2UgdGhpcyBpbgphcy1pcy4g
-SWYgeW91IGRvIHRoaXMgc29vbiwgc2hvdWxkIHN0aWxsIGVhc2lseSBnZXQgaW50byA0LjExIChz
-aW5jZQp0aGUgNC4xMCByZWxlYXNlIGlzIGRlbGF5ZWQpLgoKQ2hlZXJzLCBEYW5pZWwKLS0gCkRh
-bmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCis0MSAoMCkg
-NzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hello,
+
+On Tue, 14 Feb 2017 10:59:12 -0800, Stephen Boyd wrote:
+
+> > I don't see my patch in clk-next at
+> > https://git.kernel.org/cgit/linux/kernel/git/clk/linux.git/log/drivers/clk/mvebu/cp110-system-controller.c?h=clk-next,
+> > nor in linux-next. Am I missing something?
+> 
+> Odd. I don't know what happened. I've applied it now.
+
+I think you also forgot to apply:
+
+  [PATCHv2 1/3] dt-bindings: arm: update Armada CP110 system controller binding
+
+from the same series. You told me "Applied to clk-next", but I don't
+see it in linux-next.
+
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
