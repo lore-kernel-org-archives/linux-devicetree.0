@@ -1,163 +1,60 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: mvebu: add support for the Linksys WRT1900ACS (Shelby)
-Date: Tue, 14 Feb 2017 09:59:17 +0100
-Message-ID: <20170214085919.3997-1-ralph.sennhauser@gmail.com>
+From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] dt-bindings: net: generalize moxart-mac to support all
+ faraday based ftmac IP
+Date: Tue, 14 Feb 2017 16:56:30 +0800
+Message-ID: <20170214085621.GA11829@app09>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Linksys WRT1900ACS (Shelby) is another Armada 385 based router in
-the Linksys WRT AC Series which got released in October 2015.
+Andestech and moxa use the same faraday mac IP, so we use faraday,ftmac.txt to describe it.
 
-The file armada-385-linksys-shelby.dts is taken from OpenWrt as-is and
-originally authored by Imre Kaloz.
-
-URL: http://tinyurl.com/j8lz83a
-CC: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                      |   1 +
- arch/arm/boot/dts/armada-385-linksys-shelby.dts | 114 ++++++++++++++++++++++++
- 2 files changed, 115 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-385-linksys-shelby.dts
+ .../net/{moxa,moxart-mac.txt => faraday,ftmac.txt} |    7 +++++--
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 2 files changed, 6 insertions(+), 2 deletions(-)
+ rename Documentation/devicetree/bindings/net/{moxa,moxart-mac.txt => faraday,ftmac.txt} (68%)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0118084..16f1748 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -970,6 +970,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
- 	armada-385-db-ap.dtb \
- 	armada-385-linksys-caiman.dtb \
- 	armada-385-linksys-cobra.dtb \
-+	armada-385-linksys-shelby.dtb \
- 	armada-385-turris-omnia.dtb \
- 	armada-388-clearfog.dtb \
- 	armada-388-clearfog-base.dtb \
-diff --git a/arch/arm/boot/dts/armada-385-linksys-shelby.dts b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
-new file mode 100644
-index 0000000..c7a8ddd
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
-@@ -0,0 +1,114 @@
-+/*
-+ * Device Tree file for the Linksys WRT1900ACS (Shelby)
-+ *
-+ * Copyright (C) 2015 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-+ *
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is licensed under the terms of the GNU General Public
-+ *     License version 2.  This program is licensed "as is" without
-+ *     any warranty of any kind, whether express or implied.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "armada-385-linksys.dtsi"
-+
-+/ {
-+	model = "Linksys WRT1900ACS";
-+	compatible = "linksys,shelby", "linksys,armada385", "marvell,armada385",
-+		     "marvell,armada380";
-+
-+	soc {
-+		internal-regs{
-+			i2c@11000 {
-+
-+				pca9635@68 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+					wan_amber@0 {
-+						label = "shelby:amber:wan";
-+						reg = <0x0>;
-+					};
-+
-+					wan_white@1 {
-+						label = "shelby:white:wan";
-+						reg = <0x1>;
-+					};
-+
-+					wlan_2g@2 {
-+						label = "shelby:white:wlan_2g";
-+						reg = <0x2>;
-+					};
-+
-+					wlan_5g@3 {
-+						label = "shelby:white:wlan_5g";
-+						reg = <0x3>;
-+					};
-+
-+					usb2@5 {
-+						label = "shelby:white:usb2";
-+						reg = <0x5>;
-+					};
-+
-+					usb3_1@6 {
-+						label = "shelby:white:usb3_1";
-+						reg = <0x6>;
-+					};
-+
-+					usb3_2@7 {
-+						label = "shelby:white:usb3_2";
-+						reg = <0x7>;
-+					};
-+
-+					wps_white@8 {
-+						label = "shelby:white:wps";
-+						reg = <0x8>;
-+					};
-+
-+					wps_amber@9 {
-+						label = "shelby:amber:wps";
-+						reg = <0x9>;
-+					};
-+				};
-+			};
-+		};
-+	};
-+
-+	gpio-leds {
-+		power {
-+			label = "shelby:white:power";
-+		};
-+
-+		sata {
-+			label = "shelby:white:sata";
-+		};
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
+similarity index 68%
+rename from Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+rename to Documentation/devicetree/bindings/net/faraday,ftmac.txt
+index 583418b..be4f55e 100644
+--- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
++++ b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
+@@ -1,8 +1,11 @@
+-MOXA ART Ethernet Controller
++Faraday Ethernet Controller
+ 
+ Required properties:
+ 
+-- compatible : Must be "moxa,moxart-mac"
++- compatible : Must contain "faraday,ftmac", as well as one of
++		the SoC specific identifiers:
++		"andestech,atmac100"
++		"moxa,moxart-mac"
+ - reg : Should contain register location and length
+ - interrupts : Should contain the mac interrupt number
+ 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 16d3b5e..489c336 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -102,6 +102,7 @@ everest	Everest Semiconductor Co. Ltd.
+ everspin	Everspin Technologies, Inc.
+ excito	Excito
+ ezchip	EZchip Semiconductor
++faraday	Faraday Technology Corporation
+ fcs	Fairchild Semiconductor
+ firefly	Firefly
+ focaltech	FocalTech Systems Co.,Ltd
 -- 
-2.10.2
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
