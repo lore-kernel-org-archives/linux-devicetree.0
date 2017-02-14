@@ -1,76 +1,64 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] leds-pwm: the startup brightness can be specified
-Date: Tue, 14 Feb 2017 22:13:11 +0100
-Message-ID: <ffb0057e-c35d-fbb9-c50d-95a324b3cf0d@gmail.com>
-References: <aed1129a-993a-91d9-7b14-13c3424ee0f4@solutionsradio.com>
- <c4aebca4-d5a1-aaa7-d69b-8d0e4d4d8ba8@gmail.com> <20170210205614.GA6576@amd>
- <74325158-79f6-ff2a-832e-9f2ece1cf853@youcom.nl>
+From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Subject: Re: [PATCH v6 5/5] ARM: dts: sun9i: Initial support for the Sunchip
+ CX-A99 board
+Date: Wed, 15 Feb 2017 00:35:39 +0100
+Message-ID: <20170214233538.enkffjiw3kkfromu@localhost>
+References: <cover.1486592470.git.rask@formelder.dk>
+ <d4211c5d57f80b0281d7d332edc7d69e66202d3d.1486592471.git.rask@formelder.dk>
+ <20170210085920.7l7gswm6yjuqgdfx@lukather>
+ <CAGb2v64AfBW+CHHkFvvNzCGBG09UK-sPcAZi2QgCR9wM=jguxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74325158-79f6-ff2a-832e-9f2ece1cf853-i3KCcyIX/XtmR6Xm/wNWPw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64AfBW+CHHkFvvNzCGBG09UK-sPcAZi2QgCR9wM=jguxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jelle Martijn Kok <jmkok-i3KCcyIX/XtmR6Xm/wNWPw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jelle.
-
-On 02/14/2017 11:34 AM, Jelle Martijn Kok wrote:
+On Fri, Feb 10, 2017 at 05:22:21PM +0800, Chen-Yu Tsai wrote:
+> On Fri, Feb 10, 2017 at 4:59 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Thu, Feb 09, 2017 at 12:34:06AM +0100, Rask Ingemann Lambertsen wrote:
+[...]
+> >> diff --git a/arch/arm/boot/dts/sun9i-a80-cx-a99.dts b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
+> >> new file mode 100644
+> >> index 0000000..f5496d2
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
+[...]
+> >> +     pmic@745 {
+> >> +             compatible = "x-powers,axp808", "x-powers,axp806";
 > 
-> On 10-02-17 21:56, Pavel Machek wrote:
->> Hi!
->>
->>>> +        led.default_brightness = LED_OFF;
->>>> +        of_property_read_u32(child, "brightness",
->>>> +                     &led.default_brightness);
->>> At first you would have to submit a patch for
->>> Documentation/devicetree/bindings/leds/common.txt that would add
->>> brightness property. The question is whether it is really needed?
->>> You can set brightness from userspace via sysfs API.
->>>
->>> By the way, I have a question to DT maintainers: is DT a proper
->>> place for defining this type of configuration that can be set via
->>> userspace scripts? Shouldn't DT describe only hardware properties and
->>> constraints resulting from board configuration?
->> Well, if the hardware has label "half - power, full - transmitting" on
->> a LED, we might want kernel to turn it to half power on bootup.
->>
->> If you have a "disk activity LED" on a PC, it is driven by
->> hardware. On arm notebook, it would be nice if "disk activity LED"
->> worked, too. Preferably even when running fsck in init=/bin/bash
->> mode. We already provide that, AFAICT, so having ability to set
->> constant brightness sounds sane to me.
-> There is also some delay between kernel and user space where the leds
-> are too bright or simply off... (which is quite ugly for a simple "power
-> on" led)
+> As you mentioned elsewhere, they are not really compatible.
+> You should drop the latter compatible.
 
-It seems to be sufficient justification for introducing the property.
-Please submit a patch adding DT documentation for it. I'd call it
-default-brightness to match the one used already in backlight subsystem.
+The compatibility is good enough that it works fine with the driver that
+went into kernel 4.9 and 4.10. Using this device tree file, I have built and
+booted 4.9.9 and 4.10-rc7 kernels as per the instructions here;
+https://linux-sunxi.org/Sunchip_CX-A99#Linux_kernel
+Likewise any other AXP806 driver which doesn't touch the register at address
+0xff will work fine.
 
-> One thing that I have seen is that several led triggers do not play
-> along with the brightness. For example, the "heartbeat" trigger always
-> sets the brightness to LED_FULL. Which negates the set brightness on
-> each blink... 
+So, the disadvantage of removing the "x-powers,axp806" compatible is that
+it breaks on two kernel versions where it works fine with the compatible.
+What is the advantage of removing the "x-powers,axp806" compatible?
 
-I posted the patch [0] addressing that few months ago, but I must have
-forgotten to reapply it to linux-leds.git after previously withdrawing
-it due to set_brightness_delayed work locking issues.
+As to touching the register at 0xff, it would be interesting to know more
+precisely what goes wrong. The symptom is these messages in the log:
 
-I've just applied this patch to the for-next branch of linux-leds.git.
+[    3.209573] axp20x-rsb sunxi-rsb-745: AXP20x variant AXP806 found
+[    3.210153] axp20x-rsb sunxi-rsb-745: Failed to set masks in 0x40: -5
+[    3.210178] axp20x-rsb sunxi-rsb-745: failed to add irq chip: -5
+[    3.210306] axp20x-rsb: probe of sunxi-rsb-745 failed with error -5
 
-> So would it not be an idea to add a "led_set_on_off(led,
-> state)" function which retains "brightness" and additionally takes an
-> "invert" parameter into account. This might also simplify code in other
-> led triggers.
-
-[0] https://patchwork.kernel.org/patch/9418701/
+I haven't yet looked further into what happens at the RSB bus level.
 
 -- 
-Best regards,
-Jacek Anaszewski
+Rask Ingemann Lambertsen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
