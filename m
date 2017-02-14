@@ -1,144 +1,83 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 0/3] coresight: enable debug module
-Date: Tue, 14 Feb 2017 07:37:19 +0800
-Message-ID: <20170213233719.GA4711@leoy-linaro>
-References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
- <CAJ9a7VjiEwUEQVvuecYS9aLbe+4-eN-waEWirdv_ctsHPaXxWw@mail.gmail.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 0/7] Rename RK1108 to RV1108
+Date: Tue, 14 Feb 2017 08:44:31 +0800
+Message-ID: <0bbc4151-d954-1a27-48c3-1e8c9cb9e16f@rock-chips.com>
+References: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com>
+ <2809087.MHZWQWdaOC@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ9a7VjiEwUEQVvuecYS9aLbe+4-eN-waEWirdv_ctsHPaXxWw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <2809087.MHZWQWdaOC@phil>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Hi Heiko & Rob:
 
-On Mon, Feb 13, 2017 at 03:58:47PM +0000, Mike Leach wrote:
-> Hi Leo,
-> 
-> A few comments about your driver RFC.
-> 
-> i) As it stands this looks like it will work for v8 cores, but would need
-> refining for v7. There are subtle differences in the PC sampling between
-> the two architectures.
 
-Thanks a lot for your suggestions, I totally accept them.
+On 2017年02月13日 20:51, Heiko Stuebner wrote:
+> Hi Andy,
+>
+> Am Montag, 13. Februar 2017, 18:59:26 CET schrieb Andy Yan:
+>> Rockchip finally named this soc as RV1108, so change
+>> RK1108/rk1108 to RV1108/rv1108 for compatible.
+> renaming existing bindings (that have been in multiple kernel versions
+> already) always is a hot topic. So I'll be hoping for Rob to give a go-ahead
+> for it :-) .
+>
+> Just to confirm, the rk1108/rv1108 is completely new to the market, so we're
+> not breaking any existing devices, right?
 
-For itme i) I can find detailed description in ARM-ARM 'C11.11.34
-DBGPCSR, Program Counter Sampling Register', and below items I can
-find corresponding description in ARMv8-ARM.
+     Yes, the 1108 Soc is completely new to market, this change will not 
+breaking any existing devices.
+     Hope more suggestions from you.
+>
+> Heiko
+>
+>
+>
+>> Andy Yan (7):
+>>    dt-bindings: rockchip-dw-mshc: rename RK1108 to RV1108
+>>    dt-bindings: rk1108-cru: rename RK1108 to RV1108
+>>    clk: rockchip: rename RK1108 to RV1108
+>>    dt-bindings: rockchip,pinctrl: rename RK1108 to RV1108
+>>    pinctrl: rockchip: rename RK1108 to RV1108
+>>    ARM: dts: rename RK1108 to RV1108
+>>    ARM: rockchip: reanme RK1108 to RV1108
+>>
+>>   Documentation/devicetree/bindings/arm/rockchip.txt |   4 +-
+>>   ...chip,rk1108-cru.txt => rockchip,rv1108-cru.txt} |  12 +-
+>>   .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   2 +-
+>>   .../bindings/pinctrl/rockchip,pinctrl.txt          |  16 +-
+>>   arch/arm/boot/dts/Makefile                         |   2 +-
+>>   .../boot/dts/{rk1108-evb.dts => rv1108-evb.dts}    |   7 +-
+>>   arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi}     |  24 +-
+>>   drivers/clk/rockchip/Makefile                      |   2 +-
+>>   .../clk/rockchip/{clk-rk1108.c => clk-rv1108.c}    | 414
+>> ++++++++++----------- drivers/clk/rockchip/clk.h                         |
+>> 28 +-
+>>   drivers/pinctrl/pinctrl-rockchip.c                 |  76 ++--
+>>   .../clock/{rk1108-cru.h => rv1108-cru.h}           |   6 +-
+>>   12 files changed, 300 insertions(+), 293 deletions(-)
+>>   rename Documentation/devicetree/bindings/clock/{rockchip,rk1108-cru.txt =>
+>> rockchip,rv1108-cru.txt} (83%) rename arch/arm/boot/dts/{rk1108-evb.dts =>
+>> rv1108-evb.dts} (89%) rename arch/arm/boot/dts/{rk1108.dtsi => rv1108.dtsi}
+>> (94%)
+>>   rename drivers/clk/rockchip/{clk-rk1108.c => clk-rv1108.c} (57%)
+>>   rename include/dt-bindings/clock/{rk1108-cru.h => rv1108-cru.h} (97%)
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+>
+>
 
-Will fix code according these comments.
 
-Thanks,
-Leo Yan
-
-> ii) the routine that dumps the PCSR register values across all the
-> available cores, appears to assume that all the cores are powered and as
-> such the registers are accessible.
-> I think it would be useful in the Kconfig help to point this out.
-> 
-> At ARM we have encountered systems that have quite aggressive power
-> management policies which will disable both the core power domain and debug
-> power domain for unused cores / clusters. On such a system I think that
-> there would be an slave error return provided by the memory access to
-> unpowered elements, resulting in undesirable behavior, or even a bus
-> lockup. These are both errors we have seen using the external debug
-> registers via an external debugger.
-> 
-> At the very least the user needs to be warned so he can adjust his system
-> accordingly (e.g. when we are debugging a Juno based Linux system using the
-> external debug registers / debugger. we will often disable power management
-> using a script to ensure that cores stay up and debuggable.)
-> 
-> iii) I would recommend that you take note of the relevant bits in EDPRSR
-> which may indicate that reading EDPCSR will cause an access error.
-> Specifically DLK, PU would gate valid access to OSLAR -> the state of which
-> you can also determine using EDPRSR.
-> 
-> iv) When running in higher EL levels, such as might be the case with
-> trusted firmware, then PC sampling may not be permitted by the OS, when the
-> EDPCSR value will return 0xFFFFFFFF. The PCSR dump message should reflect
-> this.
-> 
-> v) EDVIDSR - which is sampled at the same time as EDPCSR_lo contains
-> interesting information regarding the validity of the EDPCSR_hi registers
-> and current EL and security state.
-> I think it would be worth reading and interpreting this register in
-> addition to the PC sample.
-> 
-> vi) The set of registers you are using are the "PC sample-based profiling
-> extension". (ARM v8 manual section H7.) It might be more accurate to
-> describe the driver as implementing support for this rather than full debug.
-> 
-> Best Regards
-> 
-> Mike Leach
-> 
-> 
-> 
-> On 13 February 2017 at 06:11, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
-> > This patch series is to enable coresight debug module. With debug
-> > module we can check CPU state and PC value, etc. So this is helpful for
-> > CPU lockup bugs, e.g. if one CPU has run into infinite loop with IRQ
-> > disabled. The hang CPU cannot switch context and handle any interrupt,
-> > so it cannot handle SMP call for stack dump, etc.
-> >
-> > Furthermore, now ARMv8 introduces some runtime firmwares like ARM
-> > trusted firmware BL31, so sometime CPU lockup may happen in the
-> > firmware and cannot return back to kernel.
-> >
-> > This initial patch series enable debug module and registers call back
-> > notifier for PCSR register dumping when panic happens, so we can see
-> > below dumping info for panic:
-> >
-> > [   13.751777] Coresight debug module:
-> > [   13.755275] CPU[0]: PSCR=0xffff000008090cbc
-> > [   13.759469] CPU[1]: PSCR=0xffff0000088bf9e4
-> > [   13.763662] CPU[2]: PSCR=0xffff000008090cc0
-> > [   13.767856] CPU[3]: PSCR=0xffff000008090cb8
-> > [   13.772049] CPU[4]: PSCR=0xffff000008090cc0
-> > [   13.776243] CPU[5]: PSCR=0xffff000008090cbc
-> > [   13.780436] CPU[6]: PSCR=0xffff000008090cc0
-> > [   13.784630] CPU[7]: PSCR=0xffff000008090cbc
-> >
-> > This patch series has been verified on 96boards Hikey.
-> >
-> >
-> > Leo Yan (3):
-> >   coresight: binding for coresight debug driver
-> >   coresight: add support for debug module
-> >   arm64: dts: register Hi6220's coresight debug module
-> >
-> >  .../devicetree/bindings/arm/coresight.txt          |   9 +-
-> >  .../boot/dts/hisilicon/hikey_6220_coresight.dtsi   |  73 +++++++++
-> >  drivers/hwtracing/coresight/Kconfig                |   8 +
-> >  drivers/hwtracing/coresight/Makefile               |   1 +
-> >  drivers/hwtracing/coresight/coresight-debug.c      | 169
-> > +++++++++++++++++++++
-> >  5 files changed, 258 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
-> >
-> > --
-> > 2.7.4
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >
-> 
-> 
-> 
-> -- 
-> Mike Leach
-> Principal Engineer, ARM Ltd.
-> Blackburn Design Centre. UK
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
