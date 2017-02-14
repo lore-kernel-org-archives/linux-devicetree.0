@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v3 6/6] MAINTAINERS: Add entry for THUNDERX GPIO Driver.
-Date: Tue, 14 Feb 2017 09:49:36 -0800
-Message-ID: <1487094576-229208-7-git-send-email-david.daney@cavium.com>
+Subject: [PATCH v3 4/6] dt-bindings: gpio: Add binding documentation for gpio-thunderx
+Date: Tue, 14 Feb 2017 09:49:34 -0800
+Message-ID: <1487094576-229208-5-git-send-email-david.daney@cavium.com>
 References: <1487094576-229208-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,26 +13,45 @@ Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: David Daney <david.daney@cavium.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- MAINTAINERS | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/gpio/gpio-thunderx.txt     | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 107c10e..9238cd0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10904,6 +10904,11 @@ M:	Andreas Noever <andreas.noever@gmail.com>
- S:	Maintained
- F:	drivers/thunderbolt/
- 
-+THUNDERX GPIO DRIVER
-+M:	David Daney <david.daney@cavium.com>
-+S:	Maintained
-+F:	drivers/gpio/gpio-thunderx.c
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt b/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+new file mode 100644
+index 0000000..3f883ae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+@@ -0,0 +1,27 @@
++Cavium ThunderX/OCTEON-TX GPIO controller bindings
 +
- TI BQ27XXX POWER SUPPLY DRIVER
- R:	Andrew F. Davis <afd@ti.com>
- F:	include/linux/power/bq27xxx_battery.h
++Required Properties:
++- reg: The controller bus address.
++- gpio-controller: Marks the device node as a GPIO controller.
++- #gpio-cells: Must be 2.
++  - First cell is the GPIO pin number relative to the controller.
++  - Second cell is a standard generic flag bitfield as described in gpio.txt.
++
++Optional Properties:
++- compatible: "cavium,thunder-8890-gpio", unused as PCI driver binding is used.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: Must be present and have value of 2 if
++                    "interrupt-controller" is present.
++  - First cell is the GPIO pin number relative to the controller.
++  - Second cell is triggering flags as defined in interrupts.txt.
++
++Example:
++
++gpio_6_0: gpio@6,0 {
++	compatible = "cavium,thunder-8890-gpio";
++	reg = <0x3000 0 0 0 0>; /*  DEVFN = 0x30 (6:0) */
++	gpio-controller;
++	#gpio-cells = <2>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++};
 -- 
 1.8.3.1
 
