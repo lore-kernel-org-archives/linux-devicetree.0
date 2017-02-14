@@ -1,74 +1,100 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] drm: of: introduce drm_of_find_panel_or_bridge
-Date: Mon, 13 Feb 2017 19:25:35 -0600
-Message-ID: <CAL_Jsq+p9ZBWTg-H1rtUYJ-cM4E++AO49h-ey916XahiRpkT5Q@mail.gmail.com>
-References: <20170209190558.4784-1-robh@kernel.org> <20170209190558.4784-4-robh@kernel.org>
- <3364e435-c178-0bfc-5c3c-611d27a17d3d@codeaurora.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/3] ASoC: zx-tdm: add documentation for zte's tdm
+ controller
+Date: Tue, 14 Feb 2017 10:25:32 +0800
+Message-ID: <20170214022530.GB4151@dragon>
+References: <1486973853-25291-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3364e435-c178-0bfc-5c3c-611d27a17d3d-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486973853-25291-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 12, 2017 at 10:47 PM, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
->
-> On 02/10/2017 12:35 AM, Rob Herring wrote:
->>
->> Many drivers have a common pattern of searching the OF graph for either an
->> attached panel or bridge and then finding the DRM struct for the panel
->> or bridge. Also, most drivers need to handle deferred probing when the
->> DRM device is not yet instantiated. Create a common function,
->> drm_of_find_panel_or_bridge, to find the connected node and the
->> associated DRM panel or bridge device.
->>
->> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->> v2:
->> - Reworked code flow
->> - Added note that at least one of panel or bridge must not be NULL.
->>
->>  drivers/gpu/drm/drm_of.c | 52
->> ++++++++++++++++++++++++++++++++++++++++++++++++
->>  include/drm/drm_of.h     | 13 ++++++++++++
->>  2 files changed, 65 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
->> index 47848ed8ca48..86b8b959587a 100644
->> --- a/drivers/gpu/drm/drm_of.c
->> +++ b/drivers/gpu/drm/drm_of.c
->> @@ -3,7 +3,9 @@
->>  #include <linux/list.h>
->>  #include <linux/of_graph.h>
->>  #include <drm/drmP.h>
->> +#include <drm/drm_bridge.h>
->>  #include <drm/drm_crtc.h>
->> +#include <drm/drm_panel.h>
->>  #include <drm/drm_of.h>
->>
->>  static void drm_release_of(struct device *dev, void *data)
->> @@ -207,3 +209,53 @@ int drm_of_encoder_active_endpoint(struct device_node
->> *node,
->>         return -EINVAL;
->>  }
->>  EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
->> +
->> +/*
->> + * drm_of_find_panel_or_bridge - return connected panel or bridge device
->> + * @np: device tree node containing encoder input ports
->
->
-> Should this be 'encoder output ports'? It's the encoder's output port(s)
-> that
-> contain the endpoint corresponding to the bridge/panel input port.
+On Mon, Feb 13, 2017 at 04:17:31PM +0800, Baoyou Xie wrote:
+> This patch adds dt-binding documentation for zte's tdm controller.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Yes, indeed.
+"bindings doc" instead of "documentation" in patch subject is more
+clear.
 
-Rob
+> ---
+>  .../devicetree/bindings/sound/zte,tdm.txt          | 32 ++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/zte,tdm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/zte,tdm.txt b/Documentation/devicetree/bindings/sound/zte,tdm.txt
+> new file mode 100644
+> index 0000000..f6e4f7f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/zte,tdm.txt
+> @@ -0,0 +1,32 @@
+> +ZTE TDM DAI driver
+> +
+> +Required properties:
+> +
+> +- compatible : should be one of the following.
+> +       * zte,zx-tdm
+
+We usually use particular SoC name (e.g. zx296702) rather than family
+name (e.g. zx or zx2967) in the compatible string to specify the
+programming model, because that's more explicit.
+
+> +- reg : physical base address of the controller and length of memory mapped
+> +    region.
+> +- clocks : Pairs of phandle and specifier referencing the controller's clocks.
+> +- clock-names: "tdm_wclk" for the wclk.
+> +               "tdm_pclk" for the pclk.
+
+The "tdm_" prefix in the name is redundant, as it's in tdm context
+anyway.
+
+> +-#clock-cells: should be 1.
+> +- zte,tdm-dma-sysctrl : Reference to the sysctrl controller controlling
+> +    the dma. includes:
+> +	phandle of sysctrl.
+> +	register offset in sysctrl for control dma.
+> +	mask of the register that be written to dma.
+> +	value of the register that be written to dma.
+
+written to dma?  I think it gets written to sysctrl block.
+
+> +
+> +Example:
+> +
+> +	tdm: tdm@1487000 {
+> +		compatible = "zte,zx-tdm";
+> +		reg = <0x01487000 0x1000>;
+> +		clocks = <&audiocrm AUDIO_TDM_WCLK>, <&audiocrm AUDIO_TDM_PCLK>;
+> +		clock-names = "tdm_wclk", "tdm_pclk";
+> +		#clock-cells = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&tdm_global_pin>;
+> +		zte,tdm-dma-sysctrl = <&sysctrl 0x10c 0xf 0xf>;
+
+I think we only need to set up bit 2 instead of bits [3:0], since we
+only need to select dma channel 20 and 21 for PCM/TDM from UART5.
+
+> +		status = "ok";
+
+We usually use "okay" instead of "ok" for status.  For example in
+bindings doc, I would suggest that we simply omit 'status' property.
+
+Shawn
+
+> +	};
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
