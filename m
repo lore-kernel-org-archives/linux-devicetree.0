@@ -1,60 +1,66 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v4 4/4] dt-bindings: Add DT bindings document for Broadcom SBA RAID driver
-Date: Tue, 14 Feb 2017 12:21:52 +0530
-Message-ID: <1487055112-5185-5-git-send-email-anup.patel@broadcom.com>
-References: <1487055112-5185-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487055112-5185-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-raid@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 5/8] v4l: Switch from V4L2 OF not V4L2 fwnode API
+Date: Tue, 14 Feb 2017 09:06:59 +0200
+Message-ID: <20170214070658.GJ16975@valkosipuli.retiisi.org.uk>
+References: <1486992496-21078-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1486992496-21078-6-git-send-email-sakari.ailus@linux.intel.com>
+ <20170213165746.GB1103@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170213165746.GB1103@ti.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Benoit Parrot <bparrot@ti.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT bindings document for newly added Broadcom
-SBA RAID driver.
+Hi Benoit,
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- .../devicetree/bindings/dma/brcm,iproc-sba.txt     | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
+On Mon, Feb 13, 2017 at 10:57:47AM -0600, Benoit Parrot wrote:
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote on Mon [2017-Feb-13 15:28:13 +0200]:
+...
+> > @@ -421,6 +423,7 @@ config VIDEO_TI_VPE
+> >  	select VIDEO_TI_VPDMA
+> >  	select VIDEO_TI_SC
+> >  	select VIDEO_TI_CSC
+> > +	select V4L2_FWNODE
+> 
+> Sakari,
+> 
+> TI_VPE does not use async registration, but as you already saw TI_CAL does.
+> So adding "select V4L2_FWNODE" should be moved to the VIDEO_TI_CAL section.
+> Once that's fixed you can add my acked-by for both the TI_CAL and AM437x_VPFE.
 
-diff --git a/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt b/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
-new file mode 100644
-index 0000000..092913a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
-@@ -0,0 +1,29 @@
-+* Broadcom SBA RAID engine
-+
-+Required properties:
-+- compatible: Should be one of the following
-+	      "brcm,iproc-sba"
-+	      "brcm,iproc-sba-v2"
-+  The "brcm,iproc-sba" has support for only 6 PQ coefficients
-+  The "brcm,iproc-sba-v2" has support for only 30 PQ coefficients
-+- mboxes: List of phandle and mailbox channel specifiers
-+
-+Example:
-+
-+raid_mbox: mbox@67400000 {
-+	...
-+	#mbox-cells = <3>;
-+	...
-+};
-+
-+raid0 {
-+	compatible = "brcm,iproc-sba-v2";
-+	mboxes = <&raid_mbox 0 0x1 0xffff>,
-+		 <&raid_mbox 1 0x1 0xffff>,
-+		 <&raid_mbox 2 0x1 0xffff>,
-+		 <&raid_mbox 3 0x1 0xffff>,
-+		 <&raid_mbox 4 0x1 0xffff>,
-+		 <&raid_mbox 5 0x1 0xffff>,
-+		 <&raid_mbox 6 0x1 0xffff>,
-+		 <&raid_mbox 7 0x1 0xffff>;
-+};
+Thanks for the review and for spotting this! I think I just used the name
+of the directory, and assumed that the matching Kconfig option is the right
+one. There don't seem to be other cases such as that one.
+
+diff:
+
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index cced276..2f7792c 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -129,6 +129,7 @@ config VIDEO_TI_CAL
+ 	depends on SOC_DRA7XX || COMPILE_TEST
+ 	depends on HAS_DMA
+ 	select VIDEOBUF2_DMA_CONTIG
++	select V4L2_FWNODE
+ 	default n
+ 	---help---
+ 	  Support for the TI CAL (Camera Adaptation Layer) block
+@@ -423,7 +424,6 @@ config VIDEO_TI_VPE
+ 	select VIDEO_TI_VPDMA
+ 	select VIDEO_TI_SC
+ 	select VIDEO_TI_CSC
+-	select V4L2_FWNODE
+ 	default n
+ 	---help---
+ 	  Support for the TI VPE(Video Processing Engine) block
+
 -- 
-2.7.4
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
