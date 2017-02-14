@@ -1,71 +1,77 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 1/1] arm64: dts: r8a7795: add IMR-LX4 support
-Date: Wed, 15 Feb 2017 00:02:53 +0300
-Message-ID: <20170214210301.620322370@cogentembedded.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] leds-pwm: the startup brightness can be specified
+Date: Tue, 14 Feb 2017 22:13:11 +0100
+Message-ID: <ffb0057e-c35d-fbb9-c50d-95a324b3cf0d@gmail.com>
+References: <aed1129a-993a-91d9-7b14-13c3424ee0f4@solutionsradio.com>
+ <c4aebca4-d5a1-aaa7-d69b-8d0e4d4d8ba8@gmail.com> <20170210205614.GA6576@amd>
+ <74325158-79f6-ff2a-832e-9f2ece1cf853@youcom.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline; filename=arm64-dts-r8a7795-add-IMR-LX4-support.patch
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <74325158-79f6-ff2a-832e-9f2ece1cf853-i3KCcyIX/XtmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jelle Martijn Kok <jmkok-i3KCcyIX/XtmR6Xm/wNWPw@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe the IMR-LX4 devices in the R8A7795 device tree.
+Hi Jelle.
 
-Based on the original (and large) patch by Konstantin Kozhevnikov
-<Konstantin.Kozhevnikov@cogentembedded.com>.
+On 02/14/2017 11:34 AM, Jelle Martijn Kok wrote:
+> 
+> On 10-02-17 21:56, Pavel Machek wrote:
+>> Hi!
+>>
+>>>> +        led.default_brightness = LED_OFF;
+>>>> +        of_property_read_u32(child, "brightness",
+>>>> +                     &led.default_brightness);
+>>> At first you would have to submit a patch for
+>>> Documentation/devicetree/bindings/leds/common.txt that would add
+>>> brightness property. The question is whether it is really needed?
+>>> You can set brightness from userspace via sysfs API.
+>>>
+>>> By the way, I have a question to DT maintainers: is DT a proper
+>>> place for defining this type of configuration that can be set via
+>>> userspace scripts? Shouldn't DT describe only hardware properties and
+>>> constraints resulting from board configuration?
+>> Well, if the hardware has label "half - power, full - transmitting" on
+>> a LED, we might want kernel to turn it to half power on bootup.
+>>
+>> If you have a "disk activity LED" on a PC, it is driven by
+>> hardware. On arm notebook, it would be nice if "disk activity LED"
+>> worked, too. Preferably even when running fsck in init=/bin/bash
+>> mode. We already provide that, AFAICT, so having ability to set
+>> constant brightness sounds sane to me.
+> There is also some delay between kernel and user space where the leds
+> are too bright or simply off... (which is quite ugly for a simple "power
+> on" led)
 
-Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+It seems to be sufficient justification for introducing the property.
+Please submit a patch adding DT documentation for it. I'd call it
+default-brightness to match the one used already in backlight subsystem.
 
----
-This patch is against the 'renesas-devel-20170213-v4.10-rc8' tag of Simon
-Horman's 'renesas.git' repo.
+> One thing that I have seen is that several led triggers do not play
+> along with the brightness. For example, the "heartbeat" trigger always
+> sets the brightness to LED_FULL. Which negates the set brightness on
+> each blink... 
 
- arch/arm64/boot/dts/renesas/r8a7795.dtsi |   32 +++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+I posted the patch [0] addressing that few months ago, but I must have
+forgotten to reapply it to linux-leds.git after previously withdrawing
+it due to set_brightness_delayed work locking issues.
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1419,6 +1419,38 @@
- 			status = "disabled";
- 		};
- 
-+		imr-lx4@fe860000 {
-+			compatible = "renesas,imr-lx4";
-+			reg = <0 0xfe860000 0 0x2000>;
-+			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 823>;
-+			power-domains = <&sysc R8A7795_PD_A3VC>;
-+		};
-+
-+		imr-lx4@fe870000 {
-+			compatible = "renesas,imr-lx4";
-+			reg = <0 0xfe870000 0 0x2000>;
-+			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 822>;
-+			power-domains = <&sysc R8A7795_PD_A3VC>;
-+		};
-+
-+		imr-lx4@fe880000 {
-+			compatible = "renesas,imr-lx4";
-+			reg = <0 0xfe880000 0 0x2000>;
-+			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 821>;
-+			power-domains = <&sysc R8A7795_PD_A3VC>;
-+		};
-+
-+		imr-lx4@fe890000 {
-+			compatible = "renesas,imr-lx4";
-+			reg = <0 0xfe890000 0 0x2000>;
-+			interrupts = <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 820>;
-+			power-domains = <&sysc R8A7795_PD_A3VC>;
-+		};
-+
- 		vspbc: vsp@fe920000 {
- 			compatible = "renesas,vsp2";
- 			reg = <0 0xfe920000 0 0x8000>;
+I've just applied this patch to the for-next branch of linux-leds.git.
+
+> So would it not be an idea to add a "led_set_on_off(led,
+> state)" function which retains "brightness" and additionally takes an
+> "invert" parameter into account. This might also simplify code in other
+> led triggers.
+
+[0] https://patchwork.kernel.org/patch/9418701/
+
+-- 
+Best regards,
+Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
