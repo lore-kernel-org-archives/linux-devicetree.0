@@ -1,68 +1,77 @@
-From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] Input: pwm-beeper: support customized freq for SND_BELL
-Date: Tue, 14 Feb 2017 06:02:22 +0100
-Message-ID: <58A28F5E.1020401@denx.de>
-References: <1486444894-18321-1-git-send-email-hs@denx.de>
- <20170207181309.GC38092@dtor-ws>
- <850c2508720a41b3bfb95cd7093433a4@SI-MBX1030.de.bosch.com>
- <20170214042748.GC19688@dtor-ws>
-Reply-To: hs-ynQEQJNshbs@public.gmane.org
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] dmaengine: Add Broadcom SBA RAID driver
+Date: Tue, 14 Feb 2017 10:54:27 +0530
+Message-ID: <CAALAos-+7kL6C7ZOUgX1AMqzKR6kL82qcz4wvmx5p9Ujj77tuQ@mail.gmail.com>
+References: <1486717628-17580-1-git-send-email-anup.patel@broadcom.com>
+ <1486717628-17580-4-git-send-email-anup.patel@broadcom.com> <CAPcyv4hE5gDiHhfaiHDHbhA2xKa45UdzKcSxnQXK-W92sr3Z1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170214042748.GC19688@dtor-ws>
+In-Reply-To: <CAPcyv4hE5gDiHhfaiHDHbhA2xKa45UdzKcSxnQXK-W92sr3Z1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Jonas Mark (ST-FIR/ENG1)" <Mark.Jonas-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "GUAN Ben (ST-FIR/ENG1-Zhu)" <Ben.Guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Manfred Schlaegl <manfred.schlaegl-RbZlAiThDcE@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-raid <linux-raid-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
-
-Am 14.02.2017 um 05:27 schrieb Dmitry Torokhov:
-> On Wed, Feb 08, 2017 at 10:11:21AM +0000, Jonas Mark (ST-FIR/ENG1) wrote:
->> Hello Dmitry,
+On Fri, Feb 10, 2017 at 11:20 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Feb 10, 2017 at 1:07 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> The Broadcom stream buffer accelerator (SBA) provides offloading
+>> capabilities for RAID operations. This SBA offload engine is
+>> accessible via Broadcom SoC specific ring manager.
 >>
->>>> extend the pwm-beeper driver to support customized frequency
->>>> for SND_BELL from device tree.
->>>
->>> No, SND_BELL is literally SND_TONE @1000Hz. There should be no
->>> customizing. If applications want to use different frequency then should
->>> be using SND_TONE.
+>> This patch adds Broadcom SBA RAID driver which provides one
+>> DMA device with RAID capabilities using one or more Broadcom
+>> SoC specific ring manager channels. The SBA RAID driver in its
+>> current shape implements memcpy, xor, and pq operations.
 >>
->> We are not aiming for an application shortcut here. Instead, changing
->> the bell frequency shall be a system setting. That is, every
->> application which wants to make a bell sound shall use the alternative
->> frequency.
+>> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  drivers/dma/Kconfig        |   13 +
+>>  drivers/dma/Makefile       |    1 +
+>>  drivers/dma/bcm-sba-raid.c | 1711 ++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 1725 insertions(+)
+>>  create mode 100644 drivers/dma/bcm-sba-raid.c
 >>
->> The reason why we are deviating from the default 1000 Hz is that on
->> our hardware we are using a loudspeaker which is rated for 2.7 kHz.
->> That is, it will only sound at the specified volume and frequency if
->> you feed it with a 2.7 kHz square wave. If you deviate from it, e.g.
->> by using 1000 Hz, the output will be dim and squeaky. Worst case,
->> SND_BELL would be completely silent on our system. So the only bell
->> sound we can reliably generate on our system has 2.7 kHz.
+>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>> index 263495d..bf8fb84 100644
+>> --- a/drivers/dma/Kconfig
+>> +++ b/drivers/dma/Kconfig
+>> @@ -99,6 +99,19 @@ config AXI_DMAC
+>>           controller is often used in Analog Device's reference designs for FPGA
+>>           platforms.
+>>
+>> +config BCM_SBA_RAID
+>> +       tristate "Broadcom SBA RAID engine support"
+>> +       depends on (ARM64 && MAILBOX && RAID6_PQ) || COMPILE_TEST
+>> +       select DMA_ENGINE
+>> +       select DMA_ENGINE_RAID
+>> +       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
 >
-> OK, fair enough. Please address Rob's comments on binding and resend.
+> ASYNC_TX_ENABLE_CHANNEL_SWITCH violates the DMA mapping API and
+> Russell has warned it's especially problematic on ARM [1].  If you
+> need channel switching for this offload engine to be useful then you
+> need to move DMA mapping and channel switching responsibilities to MD
+> itself.
+>
+> [1]: http://lists.infradead.org/pipermail/linux-arm-kernel/2011-January/036753.html
 
-Done already, just waited for more comments before sending v2.
+In case of BCM-SBA-RAID, the underlying "struct device" for each
+DMA channel is the mailbox controller "struct device" (i.e. Ring
+Manager device). This is because Ring Manager HW is the front
+facing device which we program to submit work to BCM-SBA-RAID
+HW.
 
-> Also I am not sure why you needed to change the switch statement around,
-> you only need to replace 1000 with value from the attribute.
+This means DMA channels provided by BCM-SBA-RAID driver
+will use same "struct device" for DMA mappings hence channel
+switching between BCM-SBA-RAID DMA channels is safe.
 
-Hmm.. the resulting code looks cleaner to me ... First we check all
-the reasons for returning an error code, after that, we can do
-the functions work ... but I can revert this part ... should I ?
+Due to above, we can safely enable
+ASYNC_TX_ENABLE_CHANNEL_SWITCH option for
+BCM-SBA-RAID driver.
 
-> Oh, and please use device_property_*() API instead of of_*().
-
-Thanks! Good tip, changed.
-
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Regards,
+Anup
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
