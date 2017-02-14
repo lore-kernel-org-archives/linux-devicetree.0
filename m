@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v3 5/6] gpio: Add gpio driver support for ThunderX and OCTEON-TX
-Date: Tue, 14 Feb 2017 09:49:35 -0800
-Message-ID: <1487094576-229208-6-git-send-email-david.daney@cavium.com>
+Subject: [PATCH v3 3/6] irqdomain: Add irq_domain_{push,pop}_irq() functions.
+Date: Tue, 14 Feb 2017 09:49:33 -0800
+Message-ID: <1487094576-229208-4-git-send-email-david.daney@cavium.com>
 References: <1487094576-229208-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,543 +12,185 @@ To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.co
 Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Cavium ThunderX and OCTEON-TX are arm64 based SoCs.  Add driver for
-the on-chip GPIO pins.
+For an already existing irqdomain hierarchy, as might be obtained via
+a call to pci_enable_msix(), a PCI driver wishing to add an additional
+irqdomain to the hierarchy needs to be able to insert the irqdomain to
+that already initialized hierarchy.  Calling
+irq_domain_create_hierarchy() allows the new irqdomain to be created,
+but no existing code allows for initializing the associated irq_data.
+
+Add a couple of helper functions (irq_domain_push_irq()
+irq_domain_pop_irq()) to initialize the irq_data for the new
+irqdomain.
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- drivers/gpio/Kconfig         |   7 +
- drivers/gpio/Makefile        |   1 +
- drivers/gpio/gpio-thunderx.c | 490 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 498 insertions(+)
- create mode 100644 drivers/gpio/gpio-thunderx.c
+ include/linux/irqdomain.h |   3 +
+ kernel/irq/irqdomain.c    | 137 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 140 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index d5d3654..cd55c050 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -421,6 +421,13 @@ config GPIO_TS4800
- 	help
- 	  This driver support TS-4800 FPGA GPIO controllers.
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index ffb8460..d8e60d1 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -418,6 +418,9 @@ extern void irq_domain_free_irqs_common(struct irq_domain *domain,
+ extern void irq_domain_free_irqs_top(struct irq_domain *domain,
+ 				     unsigned int virq, unsigned int nr_irqs);
  
-+config GPIO_THUNDERX
-+	tristate "Cavium ThunderX/OCTEON-TX GPIO"
-+	depends on ARCH_THUNDER || (64BIT && COMPILE_TEST)
-+	help
-+	  Say yes here to support the on-chip GPIO lines on the ThunderX
-+	  and OCTEON-TX families of SoCs.
++extern int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg);
++extern int irq_domain_pop_irq(struct irq_domain *domain, int virq);
 +
- config GPIO_TZ1090
- 	bool "Toumaz Xenif TZ1090 GPIO support"
- 	depends on SOC_TZ1090
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index a7676b8..c62bc72 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -108,6 +108,7 @@ obj-$(CONFIG_GPIO_SYSCON)	+= gpio-syscon.o
- obj-$(CONFIG_GPIO_TB10X)	+= gpio-tb10x.o
- obj-$(CONFIG_GPIO_TC3589X)	+= gpio-tc3589x.o
- obj-$(CONFIG_GPIO_TEGRA)	+= gpio-tegra.o
-+obj-$(CONFIG_GPIO_THUNDERX)	+= gpio-thunderx.o
- obj-$(CONFIG_GPIO_TIMBERDALE)	+= gpio-timberdale.o
- obj-$(CONFIG_GPIO_PALMAS)	+= gpio-palmas.o
- obj-$(CONFIG_GPIO_TPIC2810)	+= gpio-tpic2810.o
-diff --git a/drivers/gpio/gpio-thunderx.c b/drivers/gpio/gpio-thunderx.c
-new file mode 100644
-index 0000000..6afebc9
---- /dev/null
-+++ b/drivers/gpio/gpio-thunderx.c
-@@ -0,0 +1,490 @@
-+/*
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
+ extern int irq_domain_alloc_irqs_parent(struct irq_domain *domain,
+ 					unsigned int irq_base,
+ 					unsigned int nr_irqs, void *arg);
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index b59e676..5266251 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1279,6 +1279,143 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
+ 	return ret;
+ }
+ 
++/* The irq_data was moved, fix the revmap to refer to the new location */
++static void irq_domain_fix_revmap(struct irq_data *d)
++{
++	void **slot;
++
++	if (d->hwirq < d->domain->revmap_size)
++		return; /* Not using radix tree. */
++
++	/* Fix up the revmap. */
++	mutex_lock(&revmap_trees_mutex);
++	slot = radix_tree_lookup_slot(&d->domain->revmap_tree, d->hwirq);
++	if (slot)
++		radix_tree_replace_slot(&d->domain->revmap_tree, slot, d);
++	mutex_unlock(&revmap_trees_mutex);
++}
++
++/**
++ * irq_domain_push_irq() - Push a domain in to the top of a hierarchy.
++ * @domain:	Domain to push.
++ * @virq:	Irq to push the domain in to.
++ * @arg:	Passed to the irq_domain_ops alloc() function.
 + *
-+ * Copyright (C) 2016, 2017 Cavium Inc.
++ * For an already existing irqdomain hierarchy, as might be obtained
++ * via a call to pci_enable_msix(), add an additional domain to the
++ * head of the processing chain.
 + */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/spinlock.h>
-+
-+
-+#define GPIO_RX_DAT	0x0
-+#define GPIO_TX_SET	0x8
-+#define GPIO_TX_CLR	0x10
-+#define GPIO_CONST	0x90
-+#define  GPIO_CONST_GPIOS_MASK 0xff
-+#define GPIO_BIT_CFG	0x400
-+#define  GPIO_BIT_CFG_TX_OE		BIT(0)
-+#define  GPIO_BIT_CFG_PIN_XOR		BIT(1)
-+#define  GPIO_BIT_CFG_INT_EN		BIT(2)
-+#define  GPIO_BIT_CFG_INT_TYPE		BIT(3)
-+#define  GPIO_BIT_CFG_FIL_CNT_SHIFT	4
-+#define  GPIO_BIT_CFG_FIL_SEL_SHIFT	8
-+#define  GPIO_BIT_CFG_TX_OD		BIT(12)
-+#define  GPIO_BIT_CFG_PIN_SEL_MASK	GENMASK(25, 16)
-+#define GPIO_INTR	0x800
-+#define  GPIO_INTR_INTR			BIT(0)
-+#define  GPIO_INTR_INTR_W1S		BIT(1)
-+#define  GPIO_INTR_ENA_W1C		BIT(2)
-+#define  GPIO_INTR_ENA_W1S		BIT(3)
-+#define GPIO_2ND_BANK	0x1400
-+
-+#define GLITCH_FILTER_400NS ((4ull << GPIO_BIT_CFG_FIL_SEL_SHIFT) | \
-+			     (9ull << GPIO_BIT_CFG_FIL_CNT_SHIFT))
-+
-+struct thunderx_gpio;
-+
-+struct thunderx_line {
-+	struct thunderx_gpio	*txgpio;
-+	unsigned int		line;
-+};
-+
-+struct thunderx_gpio {
-+	struct gpio_chip	chip;
-+	u8 __iomem		*register_base;
-+	struct irq_domain	*irqd;
-+	struct msix_entry	*msix_entries;	/* per line MSI-X */
-+	struct thunderx_line	*line_entries;	/* per line irq info */
-+	raw_spinlock_t		lock;
-+	unsigned long		invert_mask[2];
-+	unsigned long		od_mask[2];
-+	int			base_msi;
-+};
-+
-+static unsigned int bit_cfg_reg(unsigned int line)
++int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
 +{
-+	return 8 * line + GPIO_BIT_CFG;
-+}
++	struct irq_data *child_irq_data;
++	struct irq_data *root_irq_data = irq_get_irq_data(virq);
 +
-+static unsigned int intr_reg(unsigned int line)
-+{
-+	return 8 * line + GPIO_INTR;
-+}
-+
-+/*
-+ * Check (and WARN) that the pin is available for GPIO.  We will not
-+ * allow modification of the state of non-GPIO pins from this driver.
-+ */
-+static bool thunderx_gpio_is_gpio(struct thunderx_gpio *txgpio,
-+				  unsigned int line)
-+{
-+	u64 bit_cfg = readq(txgpio->register_base + bit_cfg_reg(line));
-+	bool rv = (bit_cfg & GPIO_BIT_CFG_PIN_SEL_MASK) == 0;
-+
-+	WARN_RATELIMIT(!rv, "Pin %d not available for GPIO\n", line);
-+
-+	return rv;
-+}
-+
-+static int thunderx_gpio_dir_in(struct gpio_chip *chip, unsigned int line)
-+{
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+
-+	if (!thunderx_gpio_is_gpio(txgpio, line))
-+		return -EIO;
-+
-+	raw_spin_lock(&txgpio->lock);
-+	clear_bit(line, txgpio->invert_mask);
-+	clear_bit(line, txgpio->od_mask);
-+	writeq(GLITCH_FILTER_400NS, txgpio->register_base + bit_cfg_reg(line));
-+	raw_spin_unlock(&txgpio->lock);
-+	return 0;
-+}
-+
-+static void thunderx_gpio_set(struct gpio_chip *chip, unsigned int line,
-+			      int value)
-+{
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+	int bank = line / 64;
-+	int bank_bit = line % 64;
-+
-+	void __iomem *reg = txgpio->register_base +
-+		(bank * GPIO_2ND_BANK) + (value ? GPIO_TX_SET : GPIO_TX_CLR);
-+
-+	writeq(BIT_ULL(bank_bit), reg);
-+}
-+
-+static int thunderx_gpio_dir_out(struct gpio_chip *chip, unsigned int line,
-+				 int value)
-+{
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+	u64 bit_cfg = GPIO_BIT_CFG_TX_OE;
-+
-+	if (!thunderx_gpio_is_gpio(txgpio, line))
-+		return -EIO;
-+
-+	raw_spin_lock(&txgpio->lock);
-+
-+	thunderx_gpio_set(chip, line, value);
-+
-+	if (test_bit(line, txgpio->invert_mask))
-+		bit_cfg |= GPIO_BIT_CFG_PIN_XOR;
-+
-+	if (test_bit(line, txgpio->od_mask))
-+		bit_cfg |= GPIO_BIT_CFG_TX_OD;
-+
-+	writeq(bit_cfg, txgpio->register_base + bit_cfg_reg(line));
-+
-+	raw_spin_unlock(&txgpio->lock);
-+	return 0;
-+}
-+
-+/*
-+ * Weird, setting open-drain mode causes signal inversion.  Note this
-+ * so we can compensate in the dir_out function.
-+ */
-+static int thunderx_gpio_set_single_ended(struct gpio_chip *chip,
-+					  unsigned int line,
-+					  enum single_ended_mode mode)
-+{
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+
-+	if (mode == LINE_MODE_OPEN_SOURCE)
-+		return -ENOTSUPP;
-+
-+	if (!thunderx_gpio_is_gpio(txgpio, line))
-+		return -EIO;
-+
-+	raw_spin_lock(&txgpio->lock);
-+	if (mode == LINE_MODE_OPEN_DRAIN) {
-+		set_bit(line, txgpio->invert_mask);
-+		set_bit(line, txgpio->od_mask);
-+	} else {
-+		clear_bit(line, txgpio->invert_mask);
-+		clear_bit(line, txgpio->od_mask);
-+	}
-+	raw_spin_unlock(&txgpio->lock);
-+
-+	return 0;
-+}
-+
-+static int thunderx_gpio_get(struct gpio_chip *chip, unsigned int line)
-+{
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+	int bank = line / 64;
-+	int bank_bit = line % 64;
-+	u64 read_bits = readq(txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_RX_DAT);
-+	u64 masked_bits = read_bits & BIT_ULL(bank_bit);
-+
-+	if (test_bit(line, txgpio->invert_mask))
-+		return masked_bits == 0;
-+	else
-+		return masked_bits != 0;
-+}
-+
-+static void thunderx_gpio_set_multiple(struct gpio_chip *chip,
-+				       unsigned long *mask,
-+				       unsigned long *bits)
-+{
-+	int bank;
-+	u64 set_bits, clear_bits;
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+
-+	for (bank = 0; bank <= chip->ngpio / 64; bank++) {
-+		set_bits = bits[bank] & mask[bank];
-+		clear_bits = ~bits[bank] & mask[bank];
-+		writeq(set_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_SET);
-+		writeq(clear_bits, txgpio->register_base + (bank * GPIO_2ND_BANK) + GPIO_TX_CLR);
-+	}
-+}
-+
-+static void thunderx_gpio_irq_ack(struct irq_data *data)
-+{
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+
-+	writeq(GPIO_INTR_INTR,
-+	       txline->txgpio->register_base + intr_reg(txline->line));
-+}
-+
-+static void thunderx_gpio_irq_mask(struct irq_data *data)
-+{
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+
-+	writeq(GPIO_INTR_ENA_W1C,
-+	       txline->txgpio->register_base + intr_reg(txline->line));
-+}
-+
-+static void thunderx_gpio_irq_mask_ack(struct irq_data *data)
-+{
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+
-+	writeq(GPIO_INTR_ENA_W1C | GPIO_INTR_INTR,
-+	       txline->txgpio->register_base + intr_reg(txline->line));
-+}
-+
-+static void thunderx_gpio_irq_unmask(struct irq_data *data)
-+{
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+
-+	writeq(GPIO_INTR_ENA_W1S,
-+	       txline->txgpio->register_base + intr_reg(txline->line));
-+}
-+
-+static int thunderx_gpio_irq_set_type(struct irq_data *data,
-+				      unsigned int flow_type)
-+{
-+	struct thunderx_line *txline = irq_data_get_irq_chip_data(data);
-+	struct thunderx_gpio *txgpio = txline->txgpio;
-+	u64 bit_cfg;
-+
-+	irqd_set_trigger_type(data, flow_type);
-+
-+	bit_cfg = GLITCH_FILTER_400NS | GPIO_BIT_CFG_INT_EN;
-+
-+	if (flow_type & IRQ_TYPE_EDGE_BOTH) {
-+		irq_set_handler_locked(data, handle_fasteoi_edge_irq);
-+		bit_cfg |= GPIO_BIT_CFG_INT_TYPE;
-+	} else {
-+		irq_set_handler_locked(data, handle_fasteoi_level_irq);
-+	}
-+
-+	raw_spin_lock(&txgpio->lock);
-+	if (flow_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_LEVEL_LOW)) {
-+		bit_cfg |= GPIO_BIT_CFG_PIN_XOR;
-+		set_bit(txline->line, txgpio->invert_mask);
-+	} else {
-+		clear_bit(txline->line, txgpio->invert_mask);
-+	}
-+	clear_bit(txline->line, txgpio->od_mask);
-+	writeq(bit_cfg, txgpio->register_base + bit_cfg_reg(txline->line));
-+	raw_spin_unlock(&txgpio->lock);
-+
-+	return IRQ_SET_MASK_OK;
-+}
-+
-+static void thunderx_gpio_irq_enable(struct irq_data *data)
-+{
-+	irq_chip_enable_parent(data);
-+	thunderx_gpio_irq_unmask(data);
-+}
-+
-+static void thunderx_gpio_irq_disable(struct irq_data *data)
-+{
-+	thunderx_gpio_irq_mask(data);
-+	irq_chip_disable_parent(data);
-+}
-+
-+/*
-+ * Interrupts are chained from underlying MSI-X vectors.  We have
-+ * these irq_chip functions to be able to handle level triggering
-+ * semantics and other acknowledgment tasks associated with the GPIO
-+ * mechanism.
-+ */
-+static struct irq_chip thunderx_gpio_irq_chip = {
-+	.name			= "GPIO",
-+	.irq_enable		= thunderx_gpio_irq_enable,
-+	.irq_disable		= thunderx_gpio_irq_disable,
-+	.irq_ack		= thunderx_gpio_irq_ack,
-+	.irq_mask		= thunderx_gpio_irq_mask,
-+	.irq_mask_ack		= thunderx_gpio_irq_mask_ack,
-+	.irq_unmask		= thunderx_gpio_irq_unmask,
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_set_type		= thunderx_gpio_irq_set_type,
-+
-+	.flags			= IRQCHIP_SET_TYPE_MASKED
-+};
-+
-+static int thunderx_gpio_irq_map(struct irq_domain *d, unsigned int irq,
-+				 irq_hw_number_t hwirq)
-+{
-+	irq_set_irq_type(irq, IRQ_TYPE_LEVEL_LOW);
-+	return 0;
-+}
-+
-+static int thunderx_gpio_irq_translate(struct irq_domain *d,
-+				       struct irq_fwspec *fwspec,
-+				       irq_hw_number_t *hwirq,
-+				       unsigned int *type)
-+{
-+	if (WARN_ON(fwspec->param_count < 2))
++	if (domain == NULL)
 +		return -EINVAL;
-+	*hwirq = fwspec->param[0];
-+	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-+	return 0;
-+}
 +
-+static int thunderx_gpio_irq_alloc(struct irq_domain *d, unsigned int virq,
-+				   unsigned int nr_irqs, void *arg)
-+{
-+	struct thunderx_line *txline = arg;
++	if (WARN_ON(!domain->ops->alloc))
++		return -ENOSYS;
 +
-+	return irq_domain_set_hwirq_and_chip(d, virq, txline->line,
-+					     &thunderx_gpio_irq_chip, txline);
-+}
++	if (!root_irq_data)
++		return -EINVAL;
 +
-+static const struct irq_domain_ops thunderx_gpio_irqd_ops = {
-+	.map		= thunderx_gpio_irq_map,
-+	.alloc		= thunderx_gpio_irq_alloc,
-+	.translate	= thunderx_gpio_irq_translate
-+};
-+
-+static int thunderx_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
-+{
-+	struct thunderx_gpio *txgpio = gpiochip_get_data(chip);
-+
-+	return irq_find_mapping(txgpio->irqd, offset);
-+}
-+
-+static int thunderx_gpio_probe(struct pci_dev *pdev,
-+			       const struct pci_device_id *id)
-+{
-+	void __iomem * const *tbl;
-+	struct device *dev = &pdev->dev;
-+	struct thunderx_gpio *txgpio;
-+	struct gpio_chip *chip;
-+	int ngpio, i;
-+	int err = 0;
-+
-+	txgpio = devm_kzalloc(dev, sizeof(*txgpio), GFP_KERNEL);
-+	if (!txgpio)
++	child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
++				      irq_data_get_node(root_irq_data));
++	if (!child_irq_data)
 +		return -ENOMEM;
 +
-+	raw_spin_lock_init(&txgpio->lock);
-+	chip = &txgpio->chip;
++	mutex_lock(&irq_domain_mutex);
 +
-+	pci_set_drvdata(pdev, txgpio);
++	/* Copy the original irq_data. */
++	*child_irq_data = *root_irq_data;
 +
-+	err = pcim_enable_device(pdev);
-+	if (err) {
-+		dev_err(dev, "Failed to enable PCI device: err %d\n", err);
-+		goto out;
-+	}
-+
-+	err = pcim_iomap_regions(pdev, 1 << 0, KBUILD_MODNAME);
-+	if (err) {
-+		dev_err(dev, "Failed to iomap PCI device: err %d\n", err);
-+		goto out;
-+	}
-+
-+	tbl = pcim_iomap_table(pdev);
-+	txgpio->register_base = tbl[0];
-+	if (!txgpio->register_base) {
-+		dev_err(dev, "Cannot map PCI resource\n");
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	if (pdev->subsystem_device == 0xa10a) {
-+		/* CN88XX has no GPIO_CONST register*/
-+		ngpio = 50;
-+		txgpio->base_msi = 48;
-+	} else {
-+		u64 c = readq(txgpio->register_base + GPIO_CONST);
-+
-+		ngpio = c & GPIO_CONST_GPIOS_MASK;
-+		txgpio->base_msi = (c >> 8) & 0xff;
-+	}
-+
-+	txgpio->msix_entries = devm_kzalloc(dev,
-+					  sizeof(struct msix_entry) * ngpio,
-+					  GFP_KERNEL);
-+	if (!txgpio->msix_entries) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	txgpio->line_entries = devm_kzalloc(dev,
-+					    sizeof(struct thunderx_line) * ngpio,
-+					    GFP_KERNEL);
-+	if (!txgpio->line_entries) {
-+		err = -ENOMEM;
-+		goto out;
-+	}
-+
-+	for (i = 0; i < ngpio; i++) {
-+		txgpio->msix_entries[i].entry = txgpio->base_msi + (2 * i);
-+		txgpio->line_entries[i].line = i;
-+		txgpio->line_entries[i].txgpio = txgpio;
-+	}
-+
-+
-+	/* Enable all MSI-X for interrupts on all possible lines. */
-+	err = pci_enable_msix(pdev, txgpio->msix_entries, ngpio);
-+	if (err < 0)
-+		goto out;
++	irq_domain_fix_revmap(child_irq_data);
 +
 +	/*
-+	 * Push GPIO specific irqdomain on hierarchy created as a side
-+	 * effect of the pci_enable_msix()
++	 * Overwrite the root_irq_data, which is embedded in struct
++	 * irq_desc, with values for this domain.
 +	 */
-+	txgpio->irqd = irq_domain_create_hierarchy(irq_get_irq_data(txgpio->msix_entries[0].vector)->domain,
-+						   0, 0, of_node_to_fwnode(dev->of_node),
-+						   &thunderx_gpio_irqd_ops, txgpio);
-+	if (!txgpio->irqd)
-+		goto out;
++	root_irq_data->parent_data = child_irq_data;
++	root_irq_data->domain = domain;
++	root_irq_data->mask = 0;
++	root_irq_data->hwirq = 0;
++	root_irq_data->chip = NULL;
++	root_irq_data->chip_data = NULL;
++	domain->ops->alloc(domain, virq, 1, arg);
 +
-+	/* Push on irq_data and the domain for each line. */
-+	for (i = 0; i < ngpio; i++) {
-+		err = irq_domain_push_irq(txgpio->irqd,
-+					  txgpio->msix_entries[i].vector,
-+					  &txgpio->line_entries[i]);
-+		if (err < 0)
-+			dev_err(dev, "irq_domain_push_irq: %d\n", err);
++	if (root_irq_data->hwirq < domain->revmap_size) {
++		domain->linear_revmap[root_irq_data->hwirq] = virq;
++	} else {
++		mutex_lock(&revmap_trees_mutex);
++		radix_tree_insert(&domain->revmap_tree,
++				  root_irq_data->hwirq, root_irq_data);
++		mutex_unlock(&revmap_trees_mutex);
 +	}
 +
-+	chip->label = KBUILD_MODNAME;
-+	chip->parent = dev;
-+	chip->owner = THIS_MODULE;
-+	chip->base = -1; /* System allocated */
-+	chip->can_sleep = false;
-+	chip->ngpio = ngpio;
-+	chip->direction_input = thunderx_gpio_dir_in;
-+	chip->get = thunderx_gpio_get;
-+	chip->direction_output = thunderx_gpio_dir_out;
-+	chip->set = thunderx_gpio_set;
-+	chip->set_multiple = thunderx_gpio_set_multiple;
-+	chip->set_single_ended = thunderx_gpio_set_single_ended;
-+	chip->to_irq = thunderx_gpio_to_irq;
-+	err = devm_gpiochip_add_data(dev, chip, txgpio);
-+	if (err)
-+		goto out;
++	mutex_unlock(&irq_domain_mutex);
 +
-+	dev_info(dev, "ThunderX GPIO: %d lines with base %d.\n",
-+		 ngpio, chip->base);
 +	return 0;
-+out:
-+	pci_set_drvdata(pdev, NULL);
-+	return err;
 +}
++EXPORT_SYMBOL_GPL(irq_domain_push_irq);
 +
-+static void thunderx_gpio_remove(struct pci_dev *pdev)
++/**
++ * irq_domain_pop_irq() - Remove a domain from the top of a hierarchy.
++ * @domain:	Domain to remove.
++ * @virq:	Irq to remove the domain from.
++ *
++ * Undo the effects of a call to irq_domain_push_irq().
++ */
++int irq_domain_pop_irq(struct irq_domain *domain, int virq)
 +{
-+	int i;
-+	struct thunderx_gpio *txgpio = pci_get_drvdata(pdev);
++	struct irq_data *root_irq_data = irq_get_irq_data(virq);
++	struct irq_data *child_irq_data;
++	struct irq_data *tmp_irq_data;
 +
-+	for (i = 0; i < txgpio->chip.ngpio; i++)
-+		irq_domain_pop_irq(txgpio->irqd,
-+				   txgpio->msix_entries[i].vector);
++	if (domain == NULL)
++		return -EINVAL;
 +
-+	irq_domain_remove(txgpio->irqd);
++	if (!root_irq_data)
++		return -EINVAL;
 +
-+	pci_set_drvdata(pdev, NULL);
++	tmp_irq_data = irq_domain_get_irq_data(domain, virq);
++
++	/* We can only "pop" if this domain is at the top of the list */
++	if (WARN_ON(root_irq_data != tmp_irq_data))
++		return -ENOSYS;
++
++	if (WARN_ON(root_irq_data->domain != domain))
++		return -ENOSYS;
++
++	child_irq_data = root_irq_data->parent_data;
++	if (WARN_ON(!child_irq_data))
++		return -ENOSYS;
++
++	mutex_lock(&irq_domain_mutex);
++
++	root_irq_data->parent_data = NULL;
++
++	if (root_irq_data->hwirq >= domain->revmap_size) {
++		mutex_lock(&revmap_trees_mutex);
++		radix_tree_delete(&domain->revmap_tree, root_irq_data->hwirq);
++		mutex_unlock(&revmap_trees_mutex);
++	}
++
++	if (domain->ops->free)
++		domain->ops->free(domain, virq, 1);
++
++	/* Restore the original irq_data. */
++	*root_irq_data = *child_irq_data;
++
++	irq_domain_fix_revmap(root_irq_data);
++
++	mutex_unlock(&irq_domain_mutex);
++
++	kfree(child_irq_data);
++
++	return 0;
 +}
++EXPORT_SYMBOL_GPL(irq_domain_pop_irq);
 +
-+static const struct pci_device_id thunderx_gpio_id_table[] = {
-+	{ PCI_DEVICE(PCI_VENDOR_ID_CAVIUM, 0xA00A) },
-+	{ 0, }	/* end of table */
-+};
-+
-+MODULE_DEVICE_TABLE(pci, thunderx_gpio_id_table);
-+
-+static struct pci_driver thunderx_gpio_driver = {
-+	.name = KBUILD_MODNAME,
-+	.id_table = thunderx_gpio_id_table,
-+	.probe = thunderx_gpio_probe,
-+	.remove = thunderx_gpio_remove,
-+};
-+
-+module_pci_driver(thunderx_gpio_driver);
-+
-+MODULE_DESCRIPTION("Cavium Inc. ThunderX/OCTEON-TX GPIO Driver");
-+MODULE_LICENSE("GPL");
+ /**
+  * irq_domain_free_irqs - Free IRQ number and associated data structures
+  * @virq:	base IRQ number
 -- 
 1.8.3.1
 
