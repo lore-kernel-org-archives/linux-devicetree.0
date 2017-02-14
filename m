@@ -1,51 +1,164 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] dt-bindings: rockchip-dw-mshc: rename RK1108 to RV1108
-Date: Tue, 14 Feb 2017 09:51:26 +0100
-Message-ID: <CAPDyKFqcNNEnfgyLg9-+PamstuFJOQ5kEmEcZ3x97XC2qXC54g@mail.gmail.com>
-References: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com> <1486983759-32337-1-git-send-email-andy.yan@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: mvebu: add support for the Linksys WRT1900ACS (Shelby)
+Date: Tue, 14 Feb 2017 09:59:17 +0100
+Message-ID: <20170214085919.3997-1-ralph.sennhauser@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486983759-32337-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 February 2017 at 12:02, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Rockchip finally named the SOC as RV1108, so change it.
->
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->
-> ---
->
->  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> index ea9c1c9..520d61d 100644
-> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> @@ -13,7 +13,7 @@ Required Properties:
->         - "rockchip,rk2928-dw-mshc": for Rockchip RK2928 and following,
->                                                         before RK3288
->         - "rockchip,rk3288-dw-mshc": for Rockchip RK3288
-> -       - "rockchip,rk1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK1108
-> +       - "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RV1108
->         - "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3036
->         - "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3368
->         - "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip RK3399
-> --
-> 2.7.4
->
->
+The Linksys WRT1900ACS (Shelby) is another Armada 385 based router in
+the Linksys WRT AC Series which got released in October 2015.
 
-Seems like we didn't really start to use the previous compatible
-string, so I am fine with changing this. Anyway, I need an ack from
-Rob.
+The file armada-385-linksys-shelby.dts is taken from OpenWrt as-is and
+originally authored by Imre Kaloz.
 
-Kind regards
-Uffe
+URL: http://tinyurl.com/j8lz83a
+CC: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                      |   1 +
+ arch/arm/boot/dts/armada-385-linksys-shelby.dts | 114 ++++++++++++++++++++++++
+ 2 files changed, 115 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-385-linksys-shelby.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0118084..16f1748 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -970,6 +970,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+ 	armada-385-db-ap.dtb \
+ 	armada-385-linksys-caiman.dtb \
+ 	armada-385-linksys-cobra.dtb \
++	armada-385-linksys-shelby.dtb \
+ 	armada-385-turris-omnia.dtb \
+ 	armada-388-clearfog.dtb \
+ 	armada-388-clearfog-base.dtb \
+diff --git a/arch/arm/boot/dts/armada-385-linksys-shelby.dts b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+new file mode 100644
+index 0000000..c7a8ddd
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+@@ -0,0 +1,114 @@
++/*
++ * Device Tree file for the Linksys WRT1900ACS (Shelby)
++ *
++ * Copyright (C) 2015 Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
++ *
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is licensed under the terms of the GNU General Public
++ *     License version 2.  This program is licensed "as is" without
++ *     any warranty of any kind, whether express or implied.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "armada-385-linksys.dtsi"
++
++/ {
++	model = "Linksys WRT1900ACS";
++	compatible = "linksys,shelby", "linksys,armada385", "marvell,armada385",
++		     "marvell,armada380";
++
++	soc {
++		internal-regs{
++			i2c@11000 {
++
++				pca9635@68 {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++					wan_amber@0 {
++						label = "shelby:amber:wan";
++						reg = <0x0>;
++					};
++
++					wan_white@1 {
++						label = "shelby:white:wan";
++						reg = <0x1>;
++					};
++
++					wlan_2g@2 {
++						label = "shelby:white:wlan_2g";
++						reg = <0x2>;
++					};
++
++					wlan_5g@3 {
++						label = "shelby:white:wlan_5g";
++						reg = <0x3>;
++					};
++
++					usb2@5 {
++						label = "shelby:white:usb2";
++						reg = <0x5>;
++					};
++
++					usb3_1@6 {
++						label = "shelby:white:usb3_1";
++						reg = <0x6>;
++					};
++
++					usb3_2@7 {
++						label = "shelby:white:usb3_2";
++						reg = <0x7>;
++					};
++
++					wps_white@8 {
++						label = "shelby:white:wps";
++						reg = <0x8>;
++					};
++
++					wps_amber@9 {
++						label = "shelby:amber:wps";
++						reg = <0x9>;
++					};
++				};
++			};
++		};
++	};
++
++	gpio-leds {
++		power {
++			label = "shelby:white:power";
++		};
++
++		sata {
++			label = "shelby:white:sata";
++		};
++	};
++};
+-- 
+2.10.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
