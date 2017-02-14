@@ -1,14 +1,15 @@
-From: Imre Kaloz <kaloz@openwrt.org>
-Subject: Re: [PATCH] ARM: mvebu: add support for the Linksys WRT1900ACS
- (Shelby)
-Date: Tue, 14 Feb 2017 12:18:59 +0100
-Message-ID: <00318d0e-a564-e6f1-62f2-27b866c32966@openwrt.org>
-References: <20170214085919.3997-1-ralph.sennhauser@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v13 06/12] usb: xhci: use bus->sysdev for DMA configuration
+Date: Tue, 14 Feb 2017 12:44:26 +0100
+Message-ID: <CAK8P3a1D1v=LXrW=-t-fRJjbo_C6OpSuoqiGuZPOaBzQYCT-kA@mail.gmail.com>
+References: <1486776443-2280-1-git-send-email-peter.chen@nxp.com>
+ <1486776443-2280-7-git-send-email-peter.chen@nxp.com>
+ <e532a212-cd15-ab42-6188-fc11a12633af@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170214085919.3997-1-ralph.sennhauser@gmail.com>
+In-Reply-To: <e532a212-cd15-ab42-6188-fc11a12633af@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,21 +19,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Roger Quadros <rogerq@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, stephen.boyd@linaro.org, frank.li@nxp.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, gary.bisson@boundarydevices.com, Vivek Gautam <vivek.gautam@codeaurora.org>, Sriram Dash <sriram.dash@nxp.com>, festevam@gmail.com, stillcompiling@gmail.com, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, Rob Herring <robh+dt@kernel.org>, Alexander Sverdlin <alexander.sverdlin@nokia.com>, oscar@naiandei.net, Linux ARM <linux-arm-kernel@lists.infradead.org>, hverkuil@xs4all.nl, Mathias
 List-Id: devicetree@vger.kernel.org
 
-On 2017-02-14 09:59, Ralph Sennhauser wrote:
+On Tue, Feb 14, 2017 at 11:36 AM, Roger Quadros <rogerq@ti.com> wrote:
+> On 11/02/17 03:27, Peter Chen wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> For xhci-hcd platform device, all the DMA parameters are not
+>> configured properly, notably dma ops for dwc3 devices. So, set
+>> the dma for xhci from sysdev. sysdev is pointing to device that
+>> is known to the system firmware or hardware.
+>>
+>> Cc: Baolin Wang <baolin.wang@linaro.org>
+>> Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+>> Cc: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+>> Cc: Mathias Nyman <mathias.nyman@linux.intel.com>
+>>
+>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+>> ---
+>> Hi, Baolin, Vivek and Alexander,
+>> I removed your tested-by tag due to add one change that adding sysdev
+>> for shared hcd too, if your test shows this change works for you or
+>> has no effect for you, please consider adding tested-by tag again,
+>> thanks.
 
-> The Linksys WRT1900ACS (Shelby) is another Armada 385 based router in
-> the Linksys WRT AC Series which got released in October 2015.
+>> @@ -222,20 +241,20 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>>
+>>       xhci->clk = clk;
+>>       xhci->main_hcd = hcd;
+>> -     xhci->shared_hcd = usb_create_shared_hcd(driver, &pdev->dev,
+>> +     xhci->shared_hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
+>>                       dev_name(&pdev->dev), hcd);
+>>       if (!xhci->shared_hcd) {
+>>               ret = -ENOMEM;
+>>               goto disable_clk;
+>>       }
+>>
+>> -     if (device_property_read_bool(&pdev->dev, "usb3-lpm-capable"))
+>> +     if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
 >
-> The file armada-385-linksys-shelby.dts is taken from OpenWrt as-is and
-> originally authored by Imre Kaloz.
->
-> URL: http://tinyurl.com/j8lz83a
-> CC: Imre Kaloz <kaloz@openwrt.org>
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-> ---
->
-Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+> Why are we using sysdev to read DT property? We should be using the
+> XHCI device (&pdev->dev) here, no?
+
+If I remember correctly, this is one of the cases where pdev does not
+have a device node attached to it because it was created by the driver
+of the parent device on the fly in case of dwc3. When you have a pure xhci
+device in DT, the two pointers are the same.
+
+    Arnd
