@@ -1,61 +1,124 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: [PATCH 1/4] fpga: add config complete timeout
-Date: Wed, 15 Feb 2017 13:10:35 -0800
-Message-ID: <1487193038-3490-2-git-send-email-matthew.gerlach@linux.intel.com>
-References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 3/3] arm64: dts: register Hi6220's coresight debug
+ module
+Date: Wed, 15 Feb 2017 14:19:58 -0700
+Message-ID: <20170215211958.GC29730@linaro.org>
+References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
+ <1486966298-16767-4-git-send-email-leo.yan@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487193038-3490-1-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486966298-16767-4-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+On Mon, Feb 13, 2017 at 02:11:38PM +0800, Leo Yan wrote:
+> Bind coresight debug driver for Hi6220.
 
-Adding timeout for maximum allowed time for FPGA to go to
-operating mode after a FPGA region has been programmed.
+Bindings for the coresight debug driver...
 
-Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
----
- drivers/fpga/fpga-region.c    | 3 +++
- include/linux/fpga/fpga-mgr.h | 3 +++
- 2 files changed, 6 insertions(+)
+> 
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../boot/dts/hisilicon/hikey_6220_coresight.dtsi   | 73 ++++++++++++++++++++++
+>  1 file changed, 73 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi
+> index 77c2aab..e14d75c 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi
+> @@ -15,6 +15,79 @@
+>  		#size-cells = <2>;
+>  		compatible = "arm,amba-bus";
+>  		ranges;
+> +
+> +		debug@0,f6590000 {
 
-diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
-index 3222fdb..28401cb 100644
---- a/drivers/fpga/fpga-region.c
-+++ b/drivers/fpga/fpga-region.c
-@@ -381,6 +381,9 @@ static int fpga_region_notify_pre_apply(struct fpga_region *region,
- 	of_property_read_u32(nd->overlay, "region-freeze-timeout-us",
- 			     &info->disable_timeout_us);
- 
-+	of_property_read_u32(nd->overlay, "config-complete-timeout-us",
-+			     &info->config_complete_timeout_us);
-+
- 	/* If FPGA was externally programmed, don't specify firmware */
- 	if ((info->flags & FPGA_MGR_EXTERNAL_CONFIG) && firmware_name) {
- 		pr_err("error: specified firmware and external-fpga-config");
-diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
-index 57beb5d..fd3f083 100644
---- a/include/linux/fpga/fpga-mgr.h
-+++ b/include/linux/fpga/fpga-mgr.h
-@@ -76,11 +76,14 @@ enum fpga_mgr_states {
-  * @flags: boolean flags as defined above
-  * @enable_timeout_us: maximum time to enable traffic through bridge (uSec)
-  * @disable_timeout_us: maximum time to disable traffic through bridge (uSec)
-+ * @config_complete_timeout_us: maximum time for FPGA to switch to operating
-+ *	   status in the write_complete op.
-  */
- struct fpga_image_info {
- 	u32 flags;
- 	u32 enable_timeout_us;
- 	u32 disable_timeout_us;
-+	u32 config_complete_timeout_us;
- };
- 
- /**
--- 
-2.7.4
+Simply use "debug@f6590000", the "0," isn't required.
 
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf6590000 0 0x1000>;
+> +			default_enable;
+
+What is the "default_enable" for ?
+
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu0>;
+> +		};
+> +
+> +		debug@1,f6592000 {
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf6592000 0 0x1000>;
+> +			default_enable;
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu1>;
+> +		};
+> +
+> +		debug@2,f6594000 {
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf6594000 0 0x1000>;
+> +			default_enable;
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu2>;
+> +		};
+> +
+> +		debug@3,f6596000 {
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf6596000 0 0x1000>;
+> +			default_enable;
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu3>;
+> +		};
+> +
+> +		debug@4,f65d0000 {
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf65d0000 0 0x1000>;
+> +			default_enable;
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu4>;
+> +		};
+> +
+> +		debug@5,f65d2000 {
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf65d2000 0 0x1000>;
+> +			default_enable;
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu5>;
+> +		};
+> +
+> +		debug@6,f65d4000 {
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf65d4000 0 0x1000>;
+> +			default_enable;
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu6>;
+> +		};
+> +
+> +		debug@7,f65d6000 {
+> +			compatible = "arm,coresight-debug","arm,primecell";
+> +			reg = <0 0xf65d6000 0 0x1000>;
+> +			default_enable;
+> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu7>;
+> +		};
+> +
+>  		etm@0,f659c000 {
+>  			compatible = "arm,coresight-etm4x","arm,primecell";
+>  			reg = <0 0xf659c000 0 0x1000>;
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
