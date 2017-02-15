@@ -1,35 +1,29 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 09/11] Documentation: devicetree: Add vendor prefix for uCRobotics
-Date: Wed, 15 Feb 2017 17:55:26 +0100
-Message-ID: <20170215165528.10052-10-afaerber@suse.de>
-References: <20170215165528.10052-1-afaerber@suse.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/7] dt-bindings: media: Add MAX2175 binding
+ description
+Date: Wed, 15 Feb 2017 10:59:32 -0600
+Message-ID: <20170215165932.ptr7oek6eoxmhlyi@rob-hp-laptop>
+References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1486479757-32128-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170215165528.10052-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: contact@linux-xapple.org, mp-cs@actions-semi.com, info@ucrobotics.com, support@lemaker.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1486479757-32128-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi, chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: info@ucrobotics.com
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Feb 07, 2017 at 03:02:32PM +0000, Ramesh Shanmugasundaram wrote:
+> Add device tree binding documentation for MAX2175 Rf to bits tuner
+> device.
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> ---
+>  .../devicetree/bindings/media/i2c/max2175.txt      | 61 ++++++++++++++++++++++
+>  .../devicetree/bindings/property-units.txt         |  1 +
+>  2 files changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 3069c6f..be79cd2 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -319,6 +319,7 @@ tronfy	Tronfy
- tronsmart	Tronsmart
- truly	Truly Semiconductors Limited
- tyan	Tyan Computer Corporation
-+ucrobotics	uCRobotics
- udoo	Udoo
- uniwest	United Western Technologies Corp (UniWest)
- upisemi	uPI Semiconductor Corp.
--- 
-2.10.2
+Acked-by: Rob Herring <robh@kernel.org>
