@@ -1,73 +1,55 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 03/10] media: dt-bindings: vpif: extend the example with
- an output port
-Date: Wed, 15 Feb 2017 16:08:22 -0600
-Message-ID: <20170215220822.nsws6kzrd6ihvmqt@rob-hp-laptop>
-References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
- <1486485683-11427-4-git-send-email-bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 1/3] ARM: l2c: add pl310-no-sideband option
+Date: Wed, 15 Feb 2017 16:14:26 -0600
+Message-ID: <20170215221426.e3dk4zzmhgfuplti@rob-hp-laptop>
+References: <20170207170929.29525-1-chris.brandt@renesas.com>
+ <20170207170929.29525-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486485683-11427-4-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170207170929.29525-2-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Richard Cochran <rcochran-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2017 at 05:41:16PM +0100, Bartosz Golaszewski wrote:
-> This makes the example more or less correspond with the da850-evm
-> hardware setup.
+On Tue, Feb 07, 2017 at 12:09:27PM -0500, Chris Brandt wrote:
+> If a PL310 is added to a system, but the sideband signals are not
+> connected, some Cortex A9 optimizations cannot be used. In particular,
+> enabling Full Line Zeros in the CA9 without sidebands connected will
+> crash the system since the CA9 will expect the L2C to perform operations,
+> yet the L2C never gets the commands.
+
+I assume you are talking about just the AxUSER signals, not the 
+AxCACHE signals too. That would be really broken. IIRC, the other AxUSER 
+signals are just hints and no connection would not be a problem. This is 
+the only one that requires coordination with enabling/disabling in the 
+core. 
+
+I think this should follow existing feature properties and explicitly 
+disable the specific properties rather than have this indirection.
+
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/ti,da850-vpif.txt    | 35 ++++++++++++++++++----
->  1 file changed, 29 insertions(+), 6 deletions(-)
-
-Spoke too soon...
-
+>  Documentation/devicetree/bindings/arm/l2c2x0.txt | 2 ++
+>  arch/arm/mm/cache-l2x0.c                         | 9 +++++++--
+>  2 files changed, 9 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> index 9c7510b..543f6f3 100644
-> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> @@ -28,19 +28,27 @@ I2C-connected TVP5147 decoder:
->  		reg = <0x217000 0x1000>;
->  		interrupts = <92>;
+> diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+> index 917199f..85046d2 100644
+> --- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
+> +++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+> @@ -90,6 +90,8 @@ Optional properties:
+>  - arm,standby-mode: L2 standby mode enable. Value <0> (forcibly disable),
+>    <1> (forcibly enable), property absent (OS specific behavior,
+>    preferably retain firmware settings)
+> +- arm,pl310-no-sideband : disable all features that require sideband signals to
+> +  be connected between the CPU and L2 (PL310 only).
 >  
-> -		port {
-> -			vpif_ch0: endpoint@0 {
-> +		port@0 {
-> +			vpif_input_ch0: endpoint@0 {
->  				reg = <0>;
->  				bus-width = <8>;
-> -				remote-endpoint = <&composite>;
-> +				remote-endpoint = <&composite_in>;
->  			};
+>  Example:
 >  
-> -			vpif_ch1: endpoint@1 {
-> +			vpif_input_ch1: endpoint@1 {
->  				reg = <1>;
->  				bus-width = <8>;
->  				data-shift = <8>;
->  			};
->  		};
-> +
-> +		port@1 {
-
-The binding doc says nothing about supporting a 2nd port. 
-
-
-> +			vpif_output_ch0: endpoint@0 {
-> +				reg = <0>;
-
-Don't need reg here.
-
-> +				bus-width = <8>;
-> +				remote-endpoint = <&composite_out>;
-> +			};
-> +		};
->  	};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
