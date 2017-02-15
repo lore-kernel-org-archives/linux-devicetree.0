@@ -1,92 +1,78 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH v3 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Wed, 15 Feb 2017 09:53:40 +0100
-Message-ID: <6a678b03-124a-76b3-066e-858731fc6c80@free-electrons.com>
-References: <20170215004646.23607-1-liam@networkimprov.net>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2] reset: Add i.MX7 SRC reset driver
+Date: Wed, 15 Feb 2017 10:15:53 +0100
+Message-ID: <1487150153.2433.11.camel@pengutronix.de>
+References: <20170213153338.13518-1-andrew.smirnov@gmail.com>
+         <1487004643.2873.97.camel@pengutronix.de>
+         <CAHQ1cqFXiu03902jWLkg8X6jdQ3+TiLj02dSDFBAVH98ABo70A@mail.gmail.com>
+         <1487089919.2305.22.camel@pengutronix.de>
+         <CAHQ1cqGHujsDsC5dtXk3_1u0kKme8k96jgSctp5XFSHuYKeE=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170215004646.23607-1-liam@networkimprov.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liam Breck <liam@networkimprov.net>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, bonbons@linux-vserver.org, icenowy@aosc.xyz, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHQ1cqGHujsDsC5dtXk3_1u0kKme8k96jgSctp5XFSHuYKeE=A@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 15/02/2017 01:46, Liam Breck wrote:
+On Tue, 2017-02-14 at 12:11 -0800, Andrey Smirnov wrote:
+[...]
+> > Arguably, the A7 resets should not be handled by the peripheral reset
+> > controller, but at least for the others I see no reason not to leave
+> > space for them in the index table.
 > 
-> On Tue, 14 Feb 2017 10:40:55 +0100 Quentin Schulz wrote:
->> This adds the constant-charge-current property to the list of optional
->> properties of the battery.
->>
->> The constant charge current is critical for batteries as they can't
->> handle all charge currents.
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->> ---
->>
->> added in v3
->>
->>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
+> If for some bizarre reason one was to run Linux on M4 and use A7 as
+> applications processor, resetting A7 might be useful. But that's a
+> very unlikely use-case.
+>
+> > In fact, since unused reset controls
+> > don't use space, why not number them all?
 > 
-> Is constant-charge-current dependent on the battery (e.g. capacity, nominal voltage, etc) or the 
-> system (charger chip, input current/voltage, etc)?
+> IMHO because it is unused code and because those numbers constitute an
+> interface which once set will be hard to change if need be.
 > 
-> It belongs in Doc.../power/supply/battery.txt if it's a characteristic of the battery.
+> But that's not that important and I don't feel particularly strong
+> about that point, so I'll add those sources in v3.
+
+Thanks.
+
+> Do you insist that I split what I call IMX7_RESET_PCIEPHY into
+> PCIEPHY_G_RST and PCIEPHY_BTN or can I keep it as a single logical
+> reset?
+
+No, I say keep it as is. For now I'll assume this is not a reset, but
+some other interface signal that just happens to be routed out to the
+SRC and just happens to be toggled around the same time in the enable
+sequence.
+
+[...]
+> >> >> +#define IMX7_RESET_PCIE_CTRL_APPS    0
+> >> >> +#define IMX7_RESET_PCIEPHY           1
+> >> >
+> >> > It would expect these to be numbered in the order they appear in the
+> >> > register map, not starting from the end. Could you add all available
+> >> > peripheral resets to this list, in the correct order?
+> >>
+> >> The numbering is just a consequence of me adding only resets I could
+> >> exercise with my code and numbering then starting from zero. I also
+> >> was hesitant adding more sources since it seemed to me that some of
+> >> less trivial registers in that IP block might be best represented as a
+> >> single reset source doing something more sophisticated that just
+> >> setting a bit under the hood.
+> >
+> > Any in particular?
 > 
-> Note, this page asserts that constant-current charging applies to NiMH batteries:
-> http://power-topics.blogspot.com/2016/05/constant-voltage-constant-current.html
-> 
-> Related properties to be added to battery.txt near-future in a patchset for the BQ24190 
-> charger are as follows. These are not currently in enum power_supply_property, so the actual names 
-> are still to be decided.
-> 
-> precharge-current-microamp:
->    maximum charge current during precharge phase (typically 20% of battery capacity)
-> 
-> termination-current-microamp (or endcharge-current):
->    a charge cycle terminates when the battery voltage is above recharge threshold,
->    and the current is below this setting (typically 10% of battery capacity)
-> 
+> USBPHY1/2 and maybe MIPI resets? But that's no more than a gut feeling.
 
-We have a client with a board whose battery accepts a maximum of 300mA
-for charging. So depending on the battery, we cannot have any charging
-current we want. The AXP PmMICs set constant charge current in a range
-of 300mA-1800mA, so it is enforced by the charger but needs to be
-adapted depending on the battery present in the system.
+Is there any downstream code that already handles these resets? At least
+for the USB PHYs I'd expect there has to be something we could look at.
 
-The AXP PMICs charge battery with constant current (Ichrg) between the
-trickle voltage (Vtrkl which is ~3.0V) and the targeted voltage (Vtrgt;
-which seems to be the voltage telling the battery is fully charged).
+regards
+Philipp
 
-So if I understand correctly, "my" constant-charge-current would be
-located in the charging cycle between your precharge-current-microamp
-and the termination-current-microamp as it is the current for the
-charging process as a whole.
-
-See here[1] for the explanation in the datasheet (page 20).
-
-That would definitely match what is explained in your link for constant
-current.
-
-[1] http://dl.linux-sunxi.org/AXP/AXP209_Datasheet_v1.0en.pdf
-
-Let me know if something seems odd,
-Thanks,
-Quentin
-
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
