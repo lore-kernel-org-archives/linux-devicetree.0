@@ -1,140 +1,75 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: [PATCH 2/2] arm64: dts: mediatek: Add mt8176 device tree
-Date: Wed, 15 Feb 2017 10:13:57 +0800
-Message-ID: <20170215021405.18689-2-djkurtz@chromium.org>
-References: <1486445710-40140-1-git-send-email-yidi.lin@mediatek.com>
- <20170215021405.18689-1-djkurtz@chromium.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170215021405.18689-1-djkurtz@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Yidi Lin <yidi.lin@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Tiffany Lin <tiffany.lin@mediatek.com>, "dawei.chien@mediatek.com" <dawei.chien@mediatek.com>, CK Hu <ck.hu@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
-        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infr
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: How to get related device pointer via DT?
+Date: Wed, 15 Feb 2017 02:21:55 +0000
+Message-ID: <HK2PR06MB054824526D2975ADE8EA0405D85B0@HK2PR06MB0548.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: ja-JP
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The MT8176 is a member of the MT817x family of SoCs.
-Its device tree inherits from mt817x, and only describes the mt8176
-specific cpu map and cooling contributions.
+Hi,
 
-Signed-off-by: Yidi Lin <yidi.lin@mediatek.com>
-Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
----
- arch/arm64/boot/dts/mediatek/mt8176.dtsi | 107 +++++++++++++++++++++++++++++++
- 1 file changed, 107 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt8176.dtsi
+I would like to get a related device pointer on usb EHCI drivers (or USB fr=
+amework)
+because related device (e.g. OHCI or UHCI, called "companion controllers") =
+has to
+finish resuming. I discussed this topic with Alan:
+http://marc.info/?t=3D148653514200001&r=3D1&w=3D2
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8176.dtsi b/arch/arm64/boot/dts/mediatek/mt8176.dtsi
-new file mode 100644
-index 000000000000..79a99ba12ba0
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt8176.dtsi
-@@ -0,0 +1,107 @@
-+/*
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "mt817x.dtsi"
-+
-+/ {
-+	compatible = "mediatek,mt8176";
-+};
-+
-+&cpus {
-+	cpu-map {
-+		cluster0 {
-+			core0 {
-+				cpu = <&cpu0>;
-+			};
-+			core1 {
-+				cpu = <&cpu1>;
-+			};
-+			core2 {
-+				cpu = <&cpu2>;
-+			};
-+			core3 {
-+				cpu = <&cpu3>;
-+			};
-+		};
-+
-+		cluster1 {
-+			core0 {
-+				cpu = <&cpu4>;
-+			};
-+			core1 {
-+				cpu = <&cpu5>;
-+			};
-+		};
-+	};
-+
-+	cpu0: cpu@0 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a53";
-+		reg = <0x000>;
-+		enable-method = "psci";
-+		cpu-idle-states = <&CPU_SLEEP_0>;
-+	};
-+
-+	cpu1: cpu@1 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a53";
-+		reg = <0x001>;
-+		enable-method = "psci";
-+		cpu-idle-states = <&CPU_SLEEP_0>;
-+	};
-+
-+	cpu2: cpu@2 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a53";
-+		reg = <0x002>;
-+		enable-method = "psci";
-+		cpu-idle-states = <&CPU_SLEEP_0>;
-+	};
-+
-+	cpu3: cpu@3 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a53";
-+		reg = <0x003>;
-+		enable-method = "psci";
-+		cpu-idle-states = <&CPU_SLEEP_0>;
-+	};
-+
-+	cpu4: cpu@100 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a57";
-+		reg = <0x100>;
-+		enable-method = "psci";
-+		cpu-idle-states = <&CPU_SLEEP_0>;
-+	};
-+
-+	cpu5: cpu@101 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a57";
-+		reg = <0x101>;
-+		enable-method = "psci";
-+		cpu-idle-states = <&CPU_SLEEP_0>;
-+	};
-+};
-+
-+&cpu_thermal {
-+	cooling-maps {
-+		map@0 {
-+			trip = <&target>;
-+			cooling-device = <&cpu0 0 0>;
-+			contribution = <3072>;
-+		};
-+		map@1 {
-+			trip = <&target>;
-+			cooling-device = <&cpu4 0 0>;
-+			contribution = <1024>;
-+		};
-+	};
-+};
--- 
-2.11.0.483.g087da7b7c-goog
+In PCI bus, USB framework already has such a feature in drivers/usb/core/hc=
+d-pci.c.
+However, in platform devices, we don't have it for now. So, I would like to=
+ add it.
+
+Then, I have 2 ideas to get the related device pointer:
+
+A) We add a new property "companion" as usb-generic.txt and EHCI node(s) ha=
+ve
+   such a property to bind a companion controller.
+B) We assume EHCI controller binds a companion controller if some resources
+   (irq or clock) are the same and it has a compatible strings as "generic-=
+[uo]hci"
+   for instance.
+
+My environment is R-Car H3, and it has 3 EHCI and 3 OHCI controllers.
+For example (I only wrote channel 0 of EHCI and OHCI):
+		ehci0: usb@ee080100 {
+			compatible =3D "generic-ehci";
+			reg =3D <0 0xee080100 0 0x100>;
+			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+			clocks =3D <&cpg CPG_MOD 703>;
+			phys =3D <&usb2_phy0>;
+			phy-names =3D "usb";
+			power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
+			status =3D "disabled";
+		};
+
+		ohci0: usb@ee080000 {
+			compatible =3D "generic-ohci";
+			reg =3D <0 0xee080000 0 0x100>;
+			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+			clocks =3D <&cpg CPG_MOD 703>;
+			phys =3D <&usb2_phy0>;
+			phy-names =3D "usb";
+			power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
+			status =3D "disabled";
+		};
+
+If my idea A), ehci0 will have companion =3D <&ohci>;
+If my idea B), no need to add any property.
+
+What do you think?
+Anyway, I will start to study DT programming :)
+
+Best regards,
+Yoshihiro Shimoda
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
