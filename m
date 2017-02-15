@@ -1,64 +1,101 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/3] Documentation: dt: net: add mt76 wireless device
- binding
-Date: Wed, 15 Feb 2017 16:33:24 -0600
-Message-ID: <20170215223324.r7cgljfqkulyuany@rob-hp-laptop>
-References: <20170207202035.64224-1-nbd@nbd.name>
- <20170207202035.64224-2-nbd@nbd.name>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/6] ARM: dts: armada-xp-98dx3236: combine dfx server
+ nodes
+Date: Wed, 15 Feb 2017 16:40:25 -0600
+Message-ID: <20170215224025.cwxzthotooiuvuq5@rob-hp-laptop>
+References: <20170207202815.20226-1-chris.packham@alliedtelesis.co.nz>
+ <20170207202815.20226-3-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170207202035.64224-2-nbd-Vt+b4OUoWG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sgruszka-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170207202815.20226-3-chris.packham@alliedtelesis.co.nz>
+Sender: netdev-owner@vger.kernel.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2017 at 09:20:33PM +0100, Felix Fietkau wrote:
-> Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+On Wed, Feb 08, 2017 at 09:28:11AM +1300, Chris Packham wrote:
+> Rather than having a separate node for the dfx server add a reg property
+> to the parent node. This give somes compatibility with the Marvell
+> supplied SDK.
 
-Commit msg? Also, use "dt-bindings: net: " for the subject prefix.
+But breaks upstream compatibility. Need to explain why that's okay.
 
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
->  .../bindings/net/wireless/mediatek,mt76.txt        | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> new file mode 100644
-> index 000000000000..19522ab97d62
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
-> @@ -0,0 +1,24 @@
-> +* MediaTek mt76xx devices
-> +
-> +This node provides properties for configuring the MediaTek mt76xx wireless
-> +device. The node is expected to be specified as a child node of the PCI
-> +controller to which the wireless chip is connected.
-> +
-> +Optional properties:
-> +
-> +- mac-address: See ethernet.txt in the parent directory
-> +- local-mac-address: See ethernet.txt in the parent directory
-> +- ieee80211-freq-limit: See ieee80211.txt
-> +- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
-> +
-> +&pcie {
-> +	status = "okay";
-> +
-> +	pcie0 {
-> +		wifi@0,0 {
-> +			reg = <0x0000 0 0 0 0>;
-> +			ieee80211-freq-limit = <5000000 6000000>;
-> +			mediatek,mtd-eeprom = <&factory 0x8000>;
-> +		};
-> +	};
-> +};
+> Notes:
+>     Changes in v2:
+>     - none
+> 
+>  Documentation/devicetree/bindings/net/marvell,prestera.txt | 13 +++++--------
+>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi                  |  8 ++------
+>  2 files changed, 7 insertions(+), 14 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/marvell,prestera.txt b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+> index 5fbab29718e8..c329608fa887 100644
+> --- a/Documentation/devicetree/bindings/net/marvell,prestera.txt
+> +++ b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+> @@ -32,19 +32,16 @@ DFX Server bindings
+>  -------------------
+>  
+>  Required properties:
+> -- compatible: must be "marvell,dfx-server"
+> +- compatible: must be "marvell,dfx-server", "simple-bus"
+> +- ranges: describes the address mapping of a memory-mapped bus.
+>  - reg: address and length of the register set for the device.
+>  
+>  Example:
+>  
+> -dfx-registers {
+> -	compatible = "simple-bus";
+> +dfx-server {
+> +	compatible = "marvell,dfx-server", "simple-bus";
+>  	#address-cells = <1>;
+>  	#size-cells = <1>;
+>  	ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+> -
+> -	dfx: dfx@0 {
+> -		compatible = "marvell,dfx-server";
+> -		reg = <0 0x100000>;
+> -	};
+> +	reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+>  };
+> diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+> index f6a03dcee5ef..bd8261fdec81 100644
+> --- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+> @@ -195,11 +195,12 @@
+>  			};
+>  		};
+>  
+> -		dfxr: dfx-registers@ac000000 {
+> +		dfx: dfx-server@ac000000 {
+>  			compatible = "simple-bus";
+
+Missing marvell,dfx-server?
+
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+> +			reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+>  
+>  			dfx_coredivclk: corediv-clock@f8268 {
+>  				compatible = "marvell,mv98dx3236-corediv-clock";
+> @@ -208,11 +209,6 @@
+>  				clocks = <&mainpll>;
+>  				clock-output-names = "nand";
+>  			};
+> -
+> -			dfx: dfx@0 {
+> -				compatible = "marvell,dfx-server";
+> -				reg = <0 0x100000>;
+> -			};
+>  		};
+>  
+>  		switch: switch@a8000000 {
 > -- 
-> 2.11.0
+> 2.11.0.24.ge6920cf
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
