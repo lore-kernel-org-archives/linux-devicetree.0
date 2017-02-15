@@ -1,75 +1,70 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCH 2/5] dt-bindings: Add Arria10 System Resource reset manager offsets
-Date: Wed, 15 Feb 2017 15:50:13 -0600
-Message-ID: <1487195416-23827-3-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCH 1/5] dt-bindings: mfd: Add Altera Arria10 SR Reset Controller
+ bindings
+Date: Wed, 15 Feb 2017 15:50:12 -0600
+Message-ID: <1487195416-23827-2-git-send-email-thor.thayer@linux.intel.com>
 References: <1487195416-23827-1-git-send-email-thor.thayer@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1487195416-23827-1-git-send-email-thor.thayer@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, linux@armlinux.org.uk, p.zabel@pengutronix.de
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, thor.thayer@linux.intel.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-The Arria10 System Resource reset manager handles the Arria10
-peripheral PHYs. This patch adds the offsets for these PHYs.
+This patch adds documentation for the Altera A10-SR Reset
+Controller DT bindings.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- MAINTAINERS                                    |  1 +
- include/dt-bindings/reset/altr,rst-mgr-a10sr.h | 31 ++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 include/dt-bindings/reset/altr,rst-mgr-a10sr.h
+ Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9daf28b..a2c74db 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -654,6 +654,7 @@ S:	Maintained
- F:	drivers/gpio/gpio-altera-a10sr.c
- F:	drivers/mfd/altera-a10sr.c
- F:	include/linux/mfd/altera-a10sr.h
-+F:	include/dt-bindings/reset/altr,rst-mgr-a10sr.h
+diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+index ea151f2..c8a7365 100644
+--- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
++++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+@@ -18,6 +18,7 @@ The A10SR consists of these sub-devices:
+ Device                   Description
+ ------                   ----------
+ a10sr_gpio               GPIO Controller
++a10sr_rst                Reset Controller
  
- ALTERA TRIPLE SPEED ETHERNET DRIVER
- M:	Vince Bridgers <vbridger@opensource.altera.com>
-diff --git a/include/dt-bindings/reset/altr,rst-mgr-a10sr.h b/include/dt-bindings/reset/altr,rst-mgr-a10sr.h
-new file mode 100644
-index 0000000..252f71a7
---- /dev/null
-+++ b/include/dt-bindings/reset/altr,rst-mgr-a10sr.h
-@@ -0,0 +1,31 @@
-+/*
-+ *  Copyright Intel Corporation (C) 2017. All Rights Reserved
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Reset binding definitions for Altera Arria10 MAX5 System Resource Chip
-+ *
-+ * Adapted from altr,rst-mgr-a10.h
-+ */
+ Arria10 GPIO
+ Required Properties:
+@@ -27,6 +28,11 @@ Required Properties:
+                       the second cell is used to specify flags.
+                       See ../gpio/gpio.txt for more information.
+ 
++Arria10 Peripheral PHY Reset
++Required Properties:
++- compatible        : Should be "altr,a10sr-reset"
++- #reset-cells      : Should be one.
 +
-+#ifndef _DT_BINDINGS_RESET_ALTR_RST_MGR_A10SR_H
-+#define _DT_BINDINGS_RESET_ALTR_RST_MGR_A10SR_H
+ Example:
+ 
+         resource-manager@0 {
+@@ -43,4 +49,9 @@ Example:
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 		};
 +
-+/* Peripheral PHY resets */
-+#define A10SR_RESET_ENET_HPS	0
-+#define A10SR_RESET_PCIE	1
-+#define A10SR_RESET_FILE	2
-+#define A10SR_RESET_BQSPI	3
-+#define A10SR_RESET_USB		4
-+
-+#endif
++		a10sr_rst: reset-controller {
++			compatible = "altr,a10sr-reset";
++			#reset-cells = <1>;
++		};
+ 	};
 -- 
 1.9.1
