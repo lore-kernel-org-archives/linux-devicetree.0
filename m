@@ -1,151 +1,100 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC 2/3] coresight: add support for debug module
-Date: Wed, 15 Feb 2017 11:44:16 +0000
-Message-ID: <20170215114416.GF31733@leverpostej>
-References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
- <1486966298-16767-3-git-send-email-leo.yan@linaro.org>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH v13 06/12] usb: xhci: use bus->sysdev for DMA configuration
+Date: Wed, 15 Feb 2017 13:51:31 +0200
+Message-ID: <87mvdnoenw.fsf@linux.intel.com>
+References: <1486776443-2280-1-git-send-email-peter.chen@nxp.com> <1486776443-2280-7-git-send-email-peter.chen@nxp.com> <e532a212-cd15-ab42-6188-fc11a12633af@ti.com> <CAK8P3a1D1v=LXrW=-t-fRJjbo_C6OpSuoqiGuZPOaBzQYCT-kA@mail.gmail.com> <cb7182c6-0236-26f2-4f96-9bc001994728@ti.com> <CAK8P3a22f=sQXt+3-PeAuBFQN7_4iXDQhu41teExd6bxJXxDAQ@mail.gmail.com> <20170215013514.GA6579@b29397-desktop> <cb3ee971-6d97-fff1-64f7-1b527559b047@ti.com> <20170215085127.GA26227@b29397-desktop> <2a3d2d65-e531-aaca-d5a1-a71f818cec61@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486966298-16767-3-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, nd-5wv7dgnIgG8@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2a3d2d65-e531-aaca-d5a1-a71f818cec61@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Peter Chen <hzpeterchen@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, stephen.boyd@linaro.org, frank.li@nxp.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, gary.bisson@boundarydevices.com, Vivek Gautam <vivek.gautam@codeaurora.org>, Sriram Dash <sriram.dash@nxp.com>, festevam@gmail.com, stillcompiling@gmail.com, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, Rob Herring <robh+dt@kernel.org>, Alexander
 List-Id: devicetree@vger.kernel.org
 
-[resending due to a mail server snafu]
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 13, 2017 at 02:11:37PM +0800, Leo Yan wrote:
-> Coresight includes debug module and usually the module connects with CPU
-> debug logic. ARMv8 architecture reference manual (ARMv8-ARM) has defined
-> the debug registers in the chapter "H9: External Debug Register
-> Descriptions".
 
-This should have been in the binding description also.
+Hi,
 
-The layout of the ARM ARM can change over time, so please refer to the
-full document number, which can be found at the bottom of each page
-(e.g. ARM DDI 0487A.j).
+Roger Quadros <rogerq@ti.com> writes:
+>>>>>>>> Why are we using sysdev to read DT property? We should be using the
+>>>>>>>> XHCI device (&pdev->dev) here, no?
+>>>>>>>
+>>>>>>> If I remember correctly, this is one of the cases where pdev does n=
+ot
+>>>>>>> have a device node attached to it because it was created by the dri=
+ver
+>>>>>>> of the parent device on the fly in case of dwc3. When you have a pu=
+re xhci
+>>>>>>> device in DT, the two pointers are the same.
+>>>>>>
+>>>>>> From drivers/usb/dwc3/host.c
+>>>>>>
+>>>>>>>         if (dwc->usb3_lpm_capable) {
+>>>>>>>                 props[0].name =3D "usb3-lpm-capable";
+>>>>>>>                 ret =3D platform_device_add_properties(xhci, props);
+>>>>>>>                 if (ret) {
+>>>>>>>                         dev_err(dwc->dev, "failed to add properties=
+ to xHCI\n");
+>>>>>>>                         goto err1;
+>>>>>>>                 }
+>>>>>>>         }
+>>>>>>
+>>>>>> So it is setting the usb3-lpm-capable property into the xhci platfor=
+m device
+>>>>>> and we should be reading the property from there.
+>>>>
+>>>> Why dwc3 needs another "snps,usb3_lpm_capable"? Why not using
+>>>> "usb3-lpm-capable" at firmware directly?
+>>>
+>>> dwc3 is not setting "snps,usb3_lpm_capable" but "usb3-lpm-capable" for =
+the
+>>> xhci platform device.
+>>>
+>>> What did you mean by firmware? Did you mean something like BIOS?
+>>> At least TI platforms don't use any firmware like BIOS. So dwc3 driver
+>>> needs to create a platform device for xhci on the fly and set the DT pr=
+operties.
+>>>
+>>=20
+>> By readying code, the dwc3 calls dwc3_get_properties to set
+>> dwc->usb3_lpm_capable, and at dwc3/host.c, it sets property
+>> "usb3-lpm-capable" according to this flag, why not let common
+>> code xhci-plat.c to get this property from sysdev which is DT
+>> nodes for dwc3?
+>>=20
+>
+> Felipe, any comments?
 
-> After enable the debug module we can check CPU state and PC value, etc.
-> So this is helpful for some CPU lockup bugs, e.g. if one CPU has run
-> into infinite loop with IRQ disabled. So the CPU cannot switch context
-> and handle any interrupt, so it cannot handle SMP call for stack dump,
-> etc. Furthermore, now ARMv8 introduces some other runtime firmwares like
-> ARM trusted firmware BL31, so sometime CPU hard lock may happen in the
-> firmware and cannot return back to kernel.
+Won't work. We have quirk flags which are based on DWC3's revision which
+is not accessible by xhci-plat. Also, we can't call
+device_add_property() because it's not really *adding*. It's *setting*,
+meaning that we would loose all other properties.
 
-I would generally expect that the secure world would lock down
-debugging, as this poses a security risk.
+=2D-=20
+balbi
 
-I take it that this is only unlocked on development firmware.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Given that cores can be powered down outside of our control, I'm not
-sure that accesses to these registers is safe in general.
+-----BEGIN PGP SIGNATURE-----
 
-> This patch is to enable coresight debug module and register callback
-> notifier for panic; so when system detect the CPU lockup we can utilize
-> debug module registers to get to know PC value for all CPUs; so we can
-> quickly know the hang address for CPUs.
-> 
-> This is initial driver for coresight debug module and could enhance it
-> later according to debugging requirement.
-
-How does this interact with an external debugger making use of these
-registers?
-
-[...]
-
-> +static struct debug_drvdata *debug_drvdata[NR_CPUS];
-
-A per-cpu variable is preferred to an NR_CPUS sized array.
-
-> +
-> +static void debug_os_unlock(struct debug_drvdata *drvdata)
-> +{
-> +	/* Unlocks the debug registers */
-> +	writel_relaxed(0x0, drvdata->base + EDOSLAR);
-> +	isb();
-> +}
-
-I do not believe this barrier is correct.
-
-[...]
-
-> +static void debug_read_pcsr(struct debug_drvdata *drvdata)
-> +{
-> +	u32 pcsr_hi, pcsr_lo;
-> +
-> +	CS_UNLOCK(drvdata->base);
-> +
-> +	debug_os_unlock(drvdata);
-> +
-> +#ifdef CONFIG_64BIT
-> +	pcsr_lo = readl_relaxed(drvdata->base + EDPCSR_LO);
-> +	pcsr_hi = readl_relaxed(drvdata->base + EDPCSR_HI);
-> +
-> +	pr_emerg("CPU[%d]: PSCR=0x%lx\n", drvdata->cpu,
-> +		 ((unsigned long)pcsr_hi << 32 | (unsigned long)pcsr_lo));
-> +#else
-> +	pcsr_lo = readl_relaxed(drvdata->base + EDPCSR_LO);
-> +
-> +	pr_emerg("CPU[%d]: PSCR=0x%lx\n", drvdata->cpu,	pcsr_lo);
-> +#endif
-> +
-> +	CS_LOCK(drvdata->base);
-> +}
-
-Per ARM DDI 0487A.k_iss10775, H9.2.32, "EDPCSR, External Debug Program
-Counter Sample Register":
-
-	Implemented only if the OPTIONAL PC Sample-based Profiling
-	Extension is implemented.
-
-So even if we have access to an MMIO debug interface, we cannot
-necessarily acecess this register.
-
-[...]
-
-> +/*
-> + * Dump out memory limit information on panic.
-> + */
-> +static int dump_debug(struct notifier_block *self, unsigned long v, void *p)
-> +{
-> +	int i;
-> +
-> +	pr_emerg("Coresight debug module:\n");
-> +
-> +	for_each_possible_cpu(i) {
-> +
-> +		if (!debug_drvdata[i])
-> +			continue;
-> +
-> +		debug_read_pcsr(debug_drvdata[i]);
-> +	}
-
-Is there no potential for deadlock with a CPU reading its own debug
-interface registers?
-
-[...]
-
-> +static struct amba_id debug_ids[] = {
-> +	{       /* Debug for Cortex-A53 */
-> +		.id	= 0x000bbd03,
-> +		.mask	= 0x000fffff,
-> +		.data	= "debug",
-> +	},
-> +	{ 0, 0},
-> +};
-
-The DT binding said nothing about Cortex-A53.
-
-How variable are the MMIO registers in practice? Do we need to know the
-particular CPU?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlikQMMACgkQzL64meEa
+mQZZhw/+PLmXD6TQO67lv7gOh1A0QrX48cqA0ZQr+XfOvreKsJIet6f8FY1XNeDo
+yWfRqHZKmViE2B4MKySBMREV+AV4gALzGNfbZexwUYVdxWZAoBGVJv5WAKWUdLwe
+3+VMyeGeibutjktxy3eQI4gWeVu8v5FGK0zW7uZU7gIyU0mVae8fkxCfUIiYlfft
+xp8KPbN2zovhumgmq9z4Mpc8D/hIyTwRVswsx4BQ693CiAx685lb5VA4MXS28Q+B
+zzIoMZ6b3t8RJPA0bG2DGa88ga88/JIjyXQnpp7ofQXJ3xjUs4D9k2/CFEHp/TZD
+7oBf1tUZQ+jpejCTAwA2Z4gsd6YiE8gB8eRWUU20PeFRMBICJxwWuYyG9hs1+lec
+SwoQfCInmygNBR3uqKmVOuJ+KgO7iHlmEz5xLnYYa9HBIvg9tttP/Nj8pR2tm93N
+IKKL+uWeUsQuutmDTEP2PuVTX0iPTaMIElQQsP1hHvF4PjAcYT6gk1sIcEbxP1vi
+4AuJVfISdc/TPfsNBwKCuncqhBa3qrgKZQirQrOEF1QasW3HPym2SppiPBTqTQeh
+8d6zQzxfD1GsHHdn2gq/5EAq9sX0MvjJyl67CvuTa0jTjlOPBOLFTSTV5vI/0rIa
+XsltXbtHfm1hkpCe9GS2DOFGbDHNdagsdysBT6+CfY95xMfWB2o=
+=EbP5
+-----END PGP SIGNATURE-----
+--=-=-=--
