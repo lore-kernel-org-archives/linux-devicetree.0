@@ -1,186 +1,152 @@
-From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Subject: Re: [PATCH V6 4/5] LPC: Support the device-tree LPC host on
- Hip06/Hip07
-Date: Wed, 15 Feb 2017 19:35:30 +0800
-Message-ID: <58A43D02.9040502@hisilicon.com>
-References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
- <1485241525-201782-5-git-send-email-yuanzhichang@hisilicon.com>
- <a5a24e73-013d-87b5-f65f-324417f4cc60@suse.de>
- <58A1C50F.7090108@hisilicon.com>
- <43b981bc-72c0-c6e7-d6f6-9ba9c63d9bdb@suse.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH RFC 2/3] coresight: add support for debug module
+Date: Wed, 15 Feb 2017 11:43:27 +0000
+Message-ID: <20170215114327.GE31733@leverpostej>
+References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
+ <1486966298-16767-3-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <43b981bc-72c0-c6e7-d6f6-9ba9c63d9bdb@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Graf <agraf@suse.de>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, brian.starkey@arm.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, gabriele.paoloni@huawei.com, minyard@acm.org, benh@kernel.crashing.org, john.garry@huawei.com, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, "Daode Huang(allen)" <huangdaode@hisilicon.com>, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, zourongrong@gmail.com, kantyzc@163.com, zhichang.yuan02@gmail.com
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1486966298-16767-3-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Alex,
+On Mon, Feb 13, 2017 at 02:11:37PM +0800, Leo Yan wrote:
+> Coresight includes debug module and usually the module connects with CPU
+> debug logic. ARMv8 architecture reference manual (ARMv8-ARM) has defined
+> the debug registers in the chapter "H9: External Debug Register
+> Descriptions".
 
+This should have been in the binding description also.
 
-On 2017/2/14 21:29, Alexander Graf wrote:
-> 
-> 
-> On 13/02/2017 15:39, zhichang.yuan wrote:
->> Hi, Alex,
->>
->> Thanks for your review!
->>
->> John had replied most of your comments, I only mentioned those which haven't made clear.
->>
->>
->> On 2017/1/31 4:08, Alexander Graf wrote:
->>>
->>>
->>> On 24/01/2017 08:05, zhichang.yuan wrote:
->>>> The low-pin-count(LPC) interface of Hip06/Hip07 accesses the peripherals in
->>>> I/O port addresses. This patch implements the LPC host controller driver which
->>>> perform the I/O operations on the underlying hardware.
->>>> We don't want to touch those existing peripherals' driver, such as ipmi-bt. So
->>>> this driver applies the indirect-IO introduced in the previous patch after
->>>> registering an indirect-IO node to the indirect-IO devices list which will be
->>>> searched in the I/O accessors.
->>>> As the I/O translations for LPC children depend on the host I/O registration,
->>>> we should ensure the host I/O registration is finished before all the LPC
->>>> children scanning. That is why an arch_init() hook was added in this patch.
->>>>
->>>> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
->>>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->>>> ---
-snip
->>>> +
->>>> +struct lpc_cycle_para {
->>>> +    unsigned int opflags;
->>>> +    unsigned int csize; /* the data length of each operation */
->>>> +};
->>>> +
->>>> +struct hisilpc_dev {
->>>> +    spinlock_t cycle_lock;
->>>> +    void __iomem  *membase;
->>>> +    struct extio_node *extio;
->>>> +};
->>>> +
->>>> +/* bounds of the LPC bus address range */
->>>> +#define LPC_MIN_BUS_RANGE    0x0
->>>> +
->>>> +/*
->>>> + * The maximal IO size for each leagcy bus.
->>>
->>> legacy?
->>>
->>> I don't really understand why this bus is legacy though. It looks like a simple MMIO-to-LPC bridge to me.
->>
->> yes. The LPC bus is MMIO-to-LPC bridge.
->> My comment is not clear.
->>
->> How about "The maximal IO size of LPC bus"?
-> 
-> That sounds better, but doesn't really tell me what it's about yet ;).
-> 
->>
->>>
->>>> + * The port size of legacy I/O devices is normally less than 0x400.
->>>> + * Defining the I/O range size as 0x400 here should be sufficient for
->>>> + * all peripherals under one bus.
->>>> + */
->>>
->>> This comment doesn't make a lot of sense. What is the limit? Is there a hardware limit?
->>>
->>> We don't dynamically allocate devices on the lpc bus, so why imply a limit at all?
->>
->> The limit here is to define an IO window for LPC.
->> It is not acceptable to describe the IO window with 'ranges' property in LPC host node, so we choose a fixable upper IO limit
->> for the static LPC IO space. Without this, LPC can't register its IO space through extio helpers.
->>
->> Why 0x400 is chosen? For our LPC, 0x400 cover all the peripherals under the LPC.
-> 
-> This is information that should come from firmware then. Whether by coincidence addresses 0x0 - 0x400 include all devices is an implementation detail that the driver shouldn't have to know about.
+The layout of the ARM ARM can change over time, so please refer to the
+full document number, which can be found at the bottom of each page
+(e.g. ARM DDI 0487A.j).
 
+> After enable the debug module we can check CPU state and PC value, etc.
+> So this is helpful for some CPU lockup bugs, e.g. if one CPU has run
+> into infinite loop with IRQ disabled. So the CPU cannot switch context
+> and handle any interrupt, so it cannot handle SMP call for stack dump,
+> etc. Furthermore, now ARMv8 introduces some other runtime firmwares like
+> ARM trusted firmware BL31, so sometime CPU hard lock may happen in the
+> firmware and cannot return back to kernel.
 
-> 
-> That said, as mentioned elsewhere, we don't need to define single windows at all. Instead, can't we just do it like PCI BARs and declare all PIO regions we get from firmware as readily allocated? Then we only need to explicitly assign ports 0x80, 0x81, 0x99, etc to the LPC bridge and leave the rest for grabs (by PCI hotplug for example)
-> 
+I would generally expect that the secure world would lock down
+debugging, as this poses a security risk.
 
-I worry I don't completely catch your idea.
->From my understanding, each PCI host can parse its resource windows from firmware(such as ACPI, dts). But for our LPC, firmware configurations only tell kernel what is the IO resource of the peripherals under LPC. But to register the io range in the similar way of pci_register_io_range(), at least, we need to know the IO range size.
-So, how to know this?
-There is no similar BAR design in LPC, do we traverse all the peripherals to calculate that?
+I take it that this is only unlocked on development firmware.
 
+Given that cores can be powered down outside of our control, I'm not
+sure that accesses to these registers is safe in general.
 
->>
->>
->>
->>
->>>
->>>> +#define LPC_BUS_IO_SIZE        0x400
->>>> +
->>>> +/* The maximum continuous operations */
->>>> +#define LPC_MAX_OPCNT    16
->>>> +/* only support IO data unit length is four at maximum */
->>>> +#define LPC_MAX_DULEN    4
-snip
->>>> + */
->>>> +static int
->>>> +hisilpc_target_in(struct hisilpc_dev *lpcdev, struct lpc_cycle_para *para,
->>>> +          unsigned long ptaddr, unsigned char *buf,
->>>> +          unsigned long opcnt)
->>>> +{
->>>> +    unsigned long cnt_per_trans;
->>>> +    unsigned int cmd_word;
->>>> +    unsigned int waitcnt;
->>>> +    int ret;
->>>> +
->>>> +    if (!buf || !opcnt || !para || !para->csize || !lpcdev)
->>>> +        return -EINVAL;
->>>> +
->>>> +    if (opcnt  > LPC_MAX_OPCNT)
->>>> +        return -EINVAL;
->>>> +
->>>> +    cmd_word = LPC_CMD_TYPE_IO | LPC_CMD_READ;
->>>> +    waitcnt = LPC_PEROP_WAITCNT;
->>>> +    if (!(para->opflags & FG_INCRADDR_LPC)) {
->>>> +        cmd_word |= LPC_CMD_SAMEADDR;
->>>> +        waitcnt = LPC_MAX_WAITCNT;
->>>> +    }
->>>> +
->>>> +    ret = 0;
->>>> +    cnt_per_trans = (para->csize == 1) ? opcnt : para->csize;
->>>> +    for (; opcnt && !ret; cnt_per_trans = para->csize) {
->>>> +        unsigned long flags;
->>>> +
->>>> +        /* whole operation must be atomic */
->>>> +        spin_lock_irqsave(&lpcdev->cycle_lock, flags);
->>>
->>> Ouch. This is going to kill your RT jitter. Is there no better way?
->>
->> I think there is no other choices. We have to ensure the I/O cycles triggered in serial mode....
-> 
-> As nobody else accesses the LPC device in the meantime thanks to the lock, you don't need to disable interrupts, right?
+> This patch is to enable coresight debug module and register callback
+> notifier for panic; so when system detect the CPU lockup we can utilize
+> debug module registers to get to know PC value for all CPUs; so we can
+> quickly know the hang address for CPUs.
+>
+> This is initial driver for coresight debug module and could enhance it
+> later according to debugging requirement.
 
-O. Do you mean that we can replace spin_lock_irqsave with spin_lock?
+How does this interact with an external debugger making use of these
+registers?
 
-As we can connect UART to LPC, I worry the LPC can be accessed in the interrupt context.
+[...]
 
+> +static struct debug_drvdata *debug_drvdata[NR_CPUS];
+
+A per-cpu variable is preferred to an NR_CPUS sized array.
+
+> +
+> +static void debug_os_unlock(struct debug_drvdata *drvdata)
+> +{
+> +     /* Unlocks the debug registers */
+> +     writel_relaxed(0x0, drvdata->base + EDOSLAR);
+> +     isb();
+> +}
+
+I do not believe this barrier is correct.
+
+[...]
+
+> +static void debug_read_pcsr(struct debug_drvdata *drvdata)
+> +{
+> +     u32 pcsr_hi, pcsr_lo;
+> +
+> +     CS_UNLOCK(drvdata->base);
+> +
+> +     debug_os_unlock(drvdata);
+> +
+> +#ifdef CONFIG_64BIT
+> +     pcsr_lo =3D readl_relaxed(drvdata->base + EDPCSR_LO);
+> +     pcsr_hi =3D readl_relaxed(drvdata->base + EDPCSR_HI);
+> +
+> +     pr_emerg("CPU[%d]: PSCR=3D0x%lx\n", drvdata->cpu,
+> +              ((unsigned long)pcsr_hi << 32 | (unsigned long)pcsr_lo));
+> +#else
+> +     pcsr_lo =3D readl_relaxed(drvdata->base + EDPCSR_LO);
+> +
+> +     pr_emerg("CPU[%d]: PSCR=3D0x%lx\n", drvdata->cpu, pcsr_lo);
+> +#endif
+> +
+> +     CS_LOCK(drvdata->base);
+> +}
+
+Per ARM DDI 0487A.k_iss10775, H9.2.32, "EDPCSR, External Debug Program
+Counter Sample Register":
+
+        Implemented only if the OPTIONAL PC Sample-based Profiling
+        Extension is implemented.
+
+So even if we have access to an MMIO debug interface, we cannot
+necessarily acecess this register.
+
+[...]
+
+> +/*
+> + * Dump out memory limit information on panic.
+> + */
+> +static int dump_debug(struct notifier_block *self, unsigned long v, void=
+ *p)
+> +{
+> +     int i;
+> +
+> +     pr_emerg("Coresight debug module:\n");
+> +
+> +     for_each_possible_cpu(i) {
+> +
+> +             if (!debug_drvdata[i])
+> +                     continue;
+> +
+> +             debug_read_pcsr(debug_drvdata[i]);
+> +     }
+
+Is there no potential for deadlock with a CPU reading its own debug
+interface registers?
+
+[...]
+
+> +static struct amba_id debug_ids[] =3D {
+> +     {       /* Debug for Cortex-A53 */
+> +             .id     =3D 0x000bbd03,
+> +             .mask   =3D 0x000fffff,
+> +             .data   =3D "debug",
+> +     },
+> +     { 0, 0},
+> +};
+
+The DT binding said nothing about Cortex-A53.
+
+How variable are the MMIO registers in practice? Do we need to know the
+particular CPU?
 
 Thanks,
-Zhichang
-
-> 
-> IIRC in PREEMPT_RT, a normal spinlock becomes a mutex and allows for resched during the LPC transaction.
-> 
-> 
-> Alex
-> 
-> .
-> 
+Mark.
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
