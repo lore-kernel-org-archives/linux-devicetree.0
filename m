@@ -1,52 +1,62 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 4/7] ASoC: dmaengine_pcm: add copy support
-Date: Wed, 15 Feb 2017 14:53:41 +0000
-Message-ID: <20170215145341.sntwx7oqyqmw6azv@sirena.org.uk>
-References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
- <1487003909-11710-5-git-send-email-arnaud.pouliquen@st.com>
- <20170214171630.qgkyoymxyqjiiblh@sirena.org.uk>
- <40633f7c-a2ac-1658-cc9d-b30eaff8a95a@st.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armada-385-linksys: fix DSA compatible property
+Date: Wed, 15 Feb 2017 15:56:03 +0100
+Message-ID: <87r32zcxks.fsf@free-electrons.com>
+References: <20170209152702.23036-1-ralph.sennhauser@gmail.com>
+        <20170209155155.GA29882@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="33ckhs5hsnh4v5h7"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <40633f7c-a2ac-1658-cc9d-b30eaff8a95a-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Olivier MOYSAN <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170209155155.GA29882-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Thu,
+        9 Feb 2017 16:51:55 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ralph and Andrew,
+ 
+ On jeu., févr. 09 2017, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
 
---33ckhs5hsnh4v5h7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Thu, Feb 09, 2017 at 04:27:02PM +0100, Ralph Sennhauser wrote:
+>> The switch to the new DSA binding used "marvell,mv88e6095" for the
+>> compatible property which doesn't exist, use "marvell,mv88e6085"
+>> instead.
+>> 
+>> Fixes: 455b82f03f52 ("ARM: dts: armada-385-linksys: Utilize new DSA binding")
+>> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Hi Ralph
+>
+> Good catch.
+>
+> Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+>
+> Gregory, this is in the mvebu dt branch and need fixing there.
 
-On Wed, Feb 15, 2017 at 02:59:18PM +0100, Arnaud Pouliquen wrote:
 
-> For DFSDM we need to re-arrange samples after DMA transfer, before
-> sending them to application.
-> For this, a copy ops(called in snd_pcm_lib_read_transfer) alreday exists
-> in snd_pcm_ops struct.
+Applied on mvebu/dt if it can't go through arm-soc I will submitted as a
+fix for v4.11-rc1.
 
-No, copy() is an alternative to doing DMA rather than something that
-works with DMA.  If you want to have some sort of post processing
-operation it shoudn't be called copy().  It's probably worth considering
-just making a new format and letting userspace convert things here.
+Thanks,
 
---33ckhs5hsnh4v5h7
-Content-Type: application/pgp-signature; name="signature.asc"
+Gregory
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlika3QACgkQJNaLcl1U
-h9DKrgf/RKMVllUuaZSVpCSv327C4V+u3rtHbhzk50hwN25T16xLJtEr4+Jeuol8
-qab3PO4EkbLfr4VbKZi2c57+2nwRw+XXNiKxIOjkb8t0D2y6UCMvNezepacWnJhM
-pBiT3YmP2y8voF+iXAfM/5EhYIjoTcD7tA4U0tfCH/dDdW3UShgdgm8Tg8C6rh0c
-7JmCH4scZuaqnud2Rwyd8zjdmWXpbQije7TVyc3zmLMxUpx3qgFt5c8Isen6lYRm
-jhPEULoAZslyN8yAzbdFnuRFovFeY2qxfdXmgicNB39yaDNGhcUit5IIxa51NlXZ
-0mnvwj+gqc1sN2/25xIMw4lRnDka7w==
-=iYQi
------END PGP SIGNATURE-----
+>
+> [Goes away to look at the other dts files]
+>
+> O.K. Florian only made this typ0 once in the patchset.
+>
+>      Andrew
 
---33ckhs5hsnh4v5h7--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
