@@ -1,88 +1,55 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v13 06/12] usb: xhci: use bus->sysdev for DMA configuration
-Date: Wed, 15 Feb 2017 12:10:22 +0200
-Message-ID: <2a3d2d65-e531-aaca-d5a1-a71f818cec61@ti.com>
-References: <1486776443-2280-1-git-send-email-peter.chen@nxp.com>
- <1486776443-2280-7-git-send-email-peter.chen@nxp.com>
- <e532a212-cd15-ab42-6188-fc11a12633af@ti.com>
- <CAK8P3a1D1v=LXrW=-t-fRJjbo_C6OpSuoqiGuZPOaBzQYCT-kA@mail.gmail.com>
- <cb7182c6-0236-26f2-4f96-9bc001994728@ti.com>
- <CAK8P3a22f=sQXt+3-PeAuBFQN7_4iXDQhu41teExd6bxJXxDAQ@mail.gmail.com>
- <20170215013514.GA6579@b29397-desktop>
- <cb3ee971-6d97-fff1-64f7-1b527559b047@ti.com>
- <20170215085127.GA26227@b29397-desktop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170215085127.GA26227@b29397-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <hzpeterchen@gmail.com>, Felipe Balbi <balbi@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, stephen.boyd@linaro.org, frank.li@nxp.com, sre@kernel.org, gary.bisson@boundarydevices.com, Vivek Gautam <vivek.gautam@codeaurora.org>, Sriram Dash <sriram.dash@nxp.com>, festevam@gmail.com, stillcompiling@gmail.com, Arnd Bergmann <arnd@arndb.de>, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, Rob Herring <robh+dt@kernel.org>, Alexander Sverdlin <alexander.sverdlin@nokia.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, hverkuil@xs4all.nl
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v1 1/3] ASoC: zx-96p22: add documentation for zte's aud96p22  controller
+Date: Wed, 15 Feb 2017 18:55:08 +0800
+Message-ID: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, yesanishhere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+Felipe,
+This patch adds dt-binding documentation for zte's aud96p22 controller.
 
-On 15/02/17 10:51, Peter Chen wrote:
-> On Wed, Feb 15, 2017 at 10:18:03AM +0200, Roger Quadros wrote:
->> Peter,
->>
->> On 15/02/17 03:35, Peter Chen wrote:
->>> On Tue, Feb 14, 2017 at 01:58:40PM +0100, Arnd Bergmann wrote:
->>>> On Tue, Feb 14, 2017 at 1:26 PM, Roger Quadros <rogerq@ti.com> wrote:
->>>>> On 14/02/17 13:44, Arnd Bergmann wrote:
->>>>>> On Tue, Feb 14, 2017 at 11:36 AM, Roger Quadros <rogerq@ti.com> wrote:
->>>>
->>>>>>> Why are we using sysdev to read DT property? We should be using the
->>>>>>> XHCI device (&pdev->dev) here, no?
->>>>>>
->>>>>> If I remember correctly, this is one of the cases where pdev does not
->>>>>> have a device node attached to it because it was created by the driver
->>>>>> of the parent device on the fly in case of dwc3. When you have a pure xhci
->>>>>> device in DT, the two pointers are the same.
->>>>>
->>>>> From drivers/usb/dwc3/host.c
->>>>>
->>>>>>         if (dwc->usb3_lpm_capable) {
->>>>>>                 props[0].name = "usb3-lpm-capable";
->>>>>>                 ret = platform_device_add_properties(xhci, props);
->>>>>>                 if (ret) {
->>>>>>                         dev_err(dwc->dev, "failed to add properties to xHCI\n");
->>>>>>                         goto err1;
->>>>>>                 }
->>>>>>         }
->>>>>
->>>>> So it is setting the usb3-lpm-capable property into the xhci platform device
->>>>> and we should be reading the property from there.
->>>
->>> Why dwc3 needs another "snps,usb3_lpm_capable"? Why not using
->>> "usb3-lpm-capable" at firmware directly?
->>
->> dwc3 is not setting "snps,usb3_lpm_capable" but "usb3-lpm-capable" for the
->> xhci platform device.
->>
->> What did you mean by firmware? Did you mean something like BIOS?
->> At least TI platforms don't use any firmware like BIOS. So dwc3 driver
->> needs to create a platform device for xhci on the fly and set the DT properties.
->>
-> 
-> By readying code, the dwc3 calls dwc3_get_properties to set
-> dwc->usb3_lpm_capable, and at dwc3/host.c, it sets property
-> "usb3-lpm-capable" according to this flag, why not let common
-> code xhci-plat.c to get this property from sysdev which is DT
-> nodes for dwc3?
-> 
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/sound/zte,zx-96p22.txt     | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/zte,zx-96p22.txt
 
-Felipe, any comments?
-
+diff --git a/Documentation/devicetree/bindings/sound/zte,zx-96p22.txt b/Documentation/devicetree/bindings/sound/zte,zx-96p22.txt
+new file mode 100644
+index 0000000..4184566
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/zte,zx-96p22.txt
+@@ -0,0 +1,24 @@
++ZTE zx96p22 controller
++
++Required properties:
++ - compatible : Must be "zte,zx-aud96p22"
++ - #sound-dai-cells: Should be 0
++ - reg : Offset of I2C register for zx96p22
++
++Example:
++
++	audio_i2c0: audio_i2c0@1486000 {
++		compatible = "zte,zx296718-i2c";
++		reg = <0x01486000 0x1000>;
++		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&audiocrm AUDIO_I2C0_WCLK>;
++		clock-frequency = <1600000>;
++		status = "ok";
++		inner_codec: aud96p22@22 {
++			compatible = "zte,zx-aud96p22";
++			#sound-dai-cells = <0>;
++			reg = <0x22>;
++		};
++	};
 -- 
-cheers,
--roger
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
