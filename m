@@ -1,47 +1,69 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: [PATCH 3/4] fpga dt: bindings for Altera Partial Reconfiguraion IP.
-Date: Wed, 15 Feb 2017 13:10:37 -0800
-Message-ID: <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com>
-References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487193038-3490-1-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH V3 0/4] PCI: exynos: use the PHY generic framework
+Date: Wed, 15 Feb 2017 15:11:20 -0600
+Message-ID: <20170215211120.GC6981@bhelgaas-glaptop.roam.corp.google.com>
+References: <CGME20170213082615epcas5p2f5ecabbd5853a8e27da5f88fcae85158@epcas5p2.samsung.com>
+ <20170213082613.19628-1-jh80.chung@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170213082613.19628-1-jh80.chung@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, krzk@kernel.org, linux-kernel@vger.kernel.org, jingoohan1@gmail.com, javier@osg.samsung.com, kgene@kernel.org, linux-samsung-soc@vger.kernel.org, cpgs@samsung.com, niyas.ahmed@samsung.com, alim.akhtar@samsung.com, pankaj.dubey@samsung.com, kishon@ti.com, devicetree@vger.kernel.org, mark.rutland@arm.com, vivek.gautam@codeaurora.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On Mon, Feb 13, 2017 at 05:26:09PM +0900, Jaehoon Chung wrote:
+> This patcheset is for using PHY generic framework.
+> Current pci-exyns doesn't use the phy framework since there haven't been on
+> PHY subsystem when Exynos5440 had bean upstreamed.
+> It's making a difficult to upstream the other Exynos variants because of different
+> PHY registers.
+> 
+> This patcheset has the below modifications:
+> 1) Introduces the phy-exynos-pcie
+> 2) Handles PHY register from PHY framework for pci-exynos
+> 3) Modifies the dt-binding of pci-exynos
+> 4) Maintains the backward compatibility
+> 
+> Changelog on V3:
+> - Drops "ARM: dts: exynos5440: support the phy-pcie node of pcie"
+>   : Will send this patch after applying this patchset.
+> - Fixes typo
+> - Based on latest PCI git repository (host-exynos branch)
+> - Changes commit message
+> - Removes the dependency
+> 
+> Changelog on V2:
+> - Keep current codes for backward compatibility
+> - Fixes some typos
+> - Split the patches for removing the dependency
+> - Removes the unnecessary codes
+> - Change the patch's sequence
+> - Based on latest PCI git repository.(next branch)
+> 
+> Jaehoon Chung (4):
+>   Documetation: samsung-phy: add the exynos-pcie-phy binding
+>   phy: phy-exynos-pcie: Add support for Exynos PCIe phy
+>   Documetation: binding: modify the exynos5440 pcie binding
+>   PCI: exynos: support the using PHY generic framework
+> 
+>  .../bindings/pci/samsung,exynos5440-pcie.txt       |  29 +++
+>  .../devicetree/bindings/phy/samsung-phy.txt        |  17 ++
+>  drivers/pci/host/pci-exynos.c                      |  54 +++-
+>  drivers/phy/Kconfig                                |   8 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-exynos-pcie.c                      | 285 +++++++++++++++++++++
+>  6 files changed, 390 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/phy/phy-exynos-pcie.c
 
-Device Tree bindings for Altera Partial Reconfiguraion IP?
+I made the updates Vivek suggested and provisionally added these to my
+pci/host-exynos branch to get some build testing.
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+Kishon, I guess it probably makes more sense for me to apply this
+because even though the drivers/pci changes are small, I think they
+depend on other pci-exynos.c changes that are on my branch but not in
+Linus' tree yet.
 
-diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
-new file mode 100644
-index 0000000..ada821f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
-@@ -0,0 +1,12 @@
-+Altera Partial Reconfiguration IP
-+
-+Required properties:
-+- compatible : should contain "altr,pr-ip"
-+- reg        : base address and size for memory mapped io.
-+
-+Example:
-+
-+	fpga_mgr: fpga-mgr@ff20c000 {
-+		compatible = "altr,pr-ip";
-+		reg = <0xff20c000 0x10>;
-+	};
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bjorn
