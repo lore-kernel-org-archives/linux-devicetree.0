@@ -1,62 +1,48 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] PCI: imx6: Add code to support i.MX7D
-Date: Wed, 15 Feb 2017 15:57:51 -0600
-Message-ID: <20170215215751.GD6981@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170207155027.7734-1-andrew.smirnov@gmail.com>
- <20170207155027.7734-4-andrew.smirnov@gmail.com>
- <20170215171700.5vz5seeihgtwn76p@rob-hp-laptop>
- <20170215173850.GH19040@bhelgaas-glaptop.roam.corp.google.com>
- <20170215212624.btdhfn4xvuppv6hq@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] power: reset: syscon-poweroff: add a mask property
+Date: Wed, 15 Feb 2017 16:00:10 -0600
+Message-ID: <20170215220010.psk37r4belykyquy@rob-hp-laptop>
+References: <1486472054-4367-1-git-send-email-guy.shapiro@mobi-wize.com>
+ <1486482966-4497-1-git-send-email-guy.shapiro@mobi-wize.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDJIP47K7MERB3E6SPCQKGQEMAYLCFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170215212624.btdhfn4xvuppv6hq@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1486482966-4497-1-git-send-email-guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 03:26:24PM -0600, Rob Herring wrote:
-> On Wed, Feb 15, 2017 at 11:38:50AM -0600, Bjorn Helgaas wrote:
-> > On Wed, Feb 15, 2017 at 11:17:00AM -0600, Rob Herring wrote:
-> > > On Tue, Feb 07, 2017 at 07:50:27AM -0800, Andrey Smirnov wrote:
-> > > > Add various bits of code needed to support i.MX7D variant of the IP.
+On Tue, Feb 07, 2017 at 05:56:05PM +0200, Guy Shapiro wrote:
+> Make the syscon-poweroff driver accept value and mask instead of
+> just value.
 > 
-> > > 
-> > > [...]
-> > > 
-> > > > @@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
-> > > >  	u32 val, gpr1, gpr12;
-> > > >  
-> > > >  	switch (imx6_pcie->variant) {
-> > > > +	case IMX7D:
-> > > > +		reset_control_assert(imx6_pcie->pciephy_reset);
-> > > > +		reset_control_assert(imx6_pcie->apps_reset);
-> > > > +		break;
-> > > >  	case IMX6SX:
-> > > >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> > > >  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
-> > > 
-> > > So the difference with i.MX7D is not really that it has a reset or not, 
-> > > but some platforms use a reset driver and some do not. The latter should 
-> > > be fixed.
-> > 
-> > I have this patch queued for v4.11.  Are these things that should be
-> > fixed first?  If so, I can drop this.
+> Prior to this patch, the property name for the value was 'mask'. If
+> only the mask property is defined on a node, maintain compatibility
+> by using it as the value.
 > 
-> Well, depends if you trust things will get fixed later and if the PHY 
-> in fact should be separate as that affects the binding. It would affect 
-> how the driver changes are done as instead of "if (IMX7D) ...", you'd 
-> have "if (imx6_pcie->apps_reset) ..." for example. That part depends on
-> how much churn you want there.
+> Signed-off-by: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
+> ---
+>  .../bindings/power/reset/syscon-poweroff.txt          | 11 +++++++++--
+>  drivers/power/reset/syscon-poweroff.c                 | 19 ++++++++++++++++---
+>  2 files changed, 25 insertions(+), 5 deletions(-)
 
-I dropped it for now, not that I don't trust it will get fixed, but it
-sounds like not completely trivial changes and will affect the binding
-as well, so the intermediate state sounds a little messy.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
