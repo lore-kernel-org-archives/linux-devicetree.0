@@ -1,55 +1,61 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [RFC v2 4/7] ASoC: dmaengine_pcm: add copy support
-Date: Wed, 15 Feb 2017 14:59:18 +0100
-Message-ID: <40633f7c-a2ac-1658-cc9d-b30eaff8a95a@st.com>
-References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
- <1487003909-11710-5-git-send-email-arnaud.pouliquen@st.com>
- <20170214171630.qgkyoymxyqjiiblh@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170214171630.qgkyoymxyqjiiblh@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [PATCH v9 0/8] drivers: touchscreen: tsc2007 and ads7846/tsc2046 improvements (use common touchscreen bindings, pre-calibration, spi fix and provide iio raw values)
+Date: Wed, 15 Feb 2017 15:03:07 +0100
+Message-ID: <751454D6-9552-48D9-91EC-37DAD7B1A576@goldelico.com>
+References: <cover.1482936802.git.hns@goldelico.com> <BB8421B2-6626-4A95-BCD0-25C4CAF30F61@goldelico.com> <17d2c23b-6cbb-d365-71cb-fd4d7af7c958@kernel.org> <B04BF50A-A54E-4CA2-BB0E-7B547D40403A@goldelico.com> <85077609-9A95-4DBC-BDC8-649C8692065B@goldelico.com> <3225CF5D-53B7-456F-8128-50BCF31ADD0F@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3225CF5D-53B7-456F-8128-50BCF31ADD0F-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Hi Dmitry,
 
-On 02/14/2017 06:16 PM, Mark Brown wrote:
-> On Mon, Feb 13, 2017 at 05:38:26PM +0100, Arnaud Pouliquen wrote:
->> From: olivier moysan <olivier.moysan@st.com>
->> 
->> Add copy support in pcm damengine operations. As example, this
->> allows to: - process data before rendering (IEC status
->> insertion), - process captured sample ( sample mask and shift).
-> 
-> dmaengine with copy...  so not DMA at all?  I'm a bit confused
-> about why we're extending the dmaengine code to have a copy
-> operation rather than just writing driver code.
-> 
+> Am 12.02.2017 um 16:18 schrieb H. Nikolaus Schaller =
+<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>:
+>=20
+> Hi Dmitry,
+>=20
+>> Am 28.01.2017 um 19:16 schrieb H. Nikolaus Schaller =
+<hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>:
+>>=20
+>> Hi Dmitry,
+>> there have been no further comments/complaints about this patch =
+series in the last month.
+>> And it appears as if only your action is needed.
+>>=20
+>> What is missing for this patch series to be finally accepted?
+>=20
+> Did you find time to look into my comment on patch 1/9 and make a =
+decision on patch 6/8?
+>=20
+> Is there anything open which prohibits inclusion to (and further =
+testing within) linux/next?
 
-For DFSDM we need to re-arrange samples after DMA transfer, before
-sending them to application.
-For this, a copy ops(called in snd_pcm_lib_read_transfer) alreday exists
-in snd_pcm_ops struct.
-This ops is not available at soc dma engine level, so at ASoC driver
-level.
-Aim of this patch is to expose the copy in driver. DMA is still used,
-copy ops just allows to handle the copy_to_user in driver.
-Advantage of this add-on is that we still able to take benefice of the
-generic DMA in DFSDM driver.
-Now if you estimate that it is too stm32 SOC specific, the other
-solution is to handle directly the PCM platform device in DFSDM driver.
+May I ask a question for my fundamental understanding of the Linux =
+integration process.
+Maybe, I have a wrong expectation which you can clarify.
 
-Regards
-Arnaud
+My question is how it does come that patches like
+
+=
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/?i=
+d=3D449aa83e69ff10d77fe088eadacafe1e97937c14
+
+appear within 2 days in linux-next, but our patch series had months of =
+review (we are at v9)
+and there have been no further comments from the community for weeks?
+
+What is still missing what we can do or provide as information?
+
+BR and thanks,
+Nikolaus
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
