@@ -1,99 +1,176 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v4 3/3] PCI: imx6: Add code to support i.MX7D
-Date: Wed, 15 Feb 2017 11:38:50 -0600
-Message-ID: <20170215173850.GH19040@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170207155027.7734-1-andrew.smirnov@gmail.com>
- <20170207155027.7734-4-andrew.smirnov@gmail.com>
- <20170215171700.5vz5seeihgtwn76p@rob-hp-laptop>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 11/11] ARM64: dts: Prepare Actions Semi S900 and
+ Bubblegum-96
+Date: Wed, 15 Feb 2017 19:14:14 +0100
+Message-ID: <267b586e-06ce-f123-b7cc-dc0feb880ca9@suse.de>
+References: <20170215165528.10052-1-afaerber@suse.de>
+ <20170215165528.10052-12-afaerber@suse.de>
+ <20170215171232.GI31733@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170215171700.5vz5seeihgtwn76p@rob-hp-laptop>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pci@vger.kernel.org, yurovsky@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170215171232.GI31733@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com, info@ucrobotics.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, nd@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 11:17:00AM -0600, Rob Herring wrote:
-> On Tue, Feb 07, 2017 at 07:50:27AM -0800, Andrey Smirnov wrote:
-> > Add various bits of code needed to support i.MX7D variant of the IP.
-> > 
-> > Cc: yurovsky@gmail.com
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > ---
-> >  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  13 ++-
-> >  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
-> >  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
-> >  3 files changed, 112 insertions(+), 26 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > index 83aeb1f..11db2ab 100644
-> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
-> >  and thus inherits all the common properties defined in designware-pcie.txt.
-> >  
-> >  Required properties:
-> > -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
-> > +- compatible:
-> > +	- "fsl,imx6q-pcie"
-> > +	- "fsl,imx6sx-pcie",
-> > +	- "fsl,imx6qp-pcie"
-> > +	- "fsl,imx7d-pcie"
-> >  - reg: base address and length of the PCIe controller
-> >  - interrupts: A list of interrupt outputs of the controller. Must contain an
-> >    entry for each entry in the interrupt-names property.
-> > @@ -34,6 +38,13 @@ Additional required properties for imx6sx-pcie:
-> >  - clock names: Must include the following additional entries:
-> >  	- "pcie_inbound_axi"
-> >  
-> > +Additional required properties for imx7d-pcie:
-> > +- power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
-> 
-> This domain is just the PHY? Seems like this needs a separate PHY 
-> driver.
-> 
-> > +- resets: Must contain phandles to PCIE related reset lines exposed by SRC IP block
-> > +- reset-names: Must contain the following entires:
-> > +  	       - "pciephy"
-> 
-> And for this too.
-> 
-> > +	       - "apps"
-> > +
-> >  Example:
-> >  
-> >  	pcie@0x01000000 {
-> 
-> [...]
-> 
-> > @@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
-> >  	u32 val, gpr1, gpr12;
-> >  
-> >  	switch (imx6_pcie->variant) {
-> > +	case IMX7D:
-> > +		reset_control_assert(imx6_pcie->pciephy_reset);
-> > +		reset_control_assert(imx6_pcie->apps_reset);
-> > +		break;
-> >  	case IMX6SX:
-> >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> >  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
-> 
-> So the difference with i.MX7D is not really that it has a reset or not, 
-> but some platforms use a reset driver and some do not. The latter should 
-> be fixed.
+Hi,
 
-I have this patch queued for v4.11.  Are these things that should be
-fixed first?  If so, I can drop this.
+Am 15.02.2017 um 18:12 schrieb Mark Rutland:
+> On Wed, Feb 15, 2017 at 05:55:28PM +0100, Andreas Färber wrote:
+>> +#include "s900.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "ucrobotics,bubblegum-96", "acts,s900";
+>> +	model = "Bubblegum-96";
+>> +
+>> +	aliases {
+>> +		serial5 = &uart5;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial5:115200n8";
+>> +	};
+>> +};
+> 
+> I didn't spot a memory node here or in the dtsi. Does the FW/bootloader
+> create one?
 
-Bjorn
+Heh, apparently... For S500, skeleton.dtsi added that - not entirely
+clean either. I'll add one here in the .dts and think about adding one
+in s500-guitar.dtsi as well.
+
+--- a/arch/arm64/boot/dts/actions/s900-bubblegum96.dts
++++ b/arch/arm64/boot/dts/actions/s900-bubblegum96.dts
+@@ -55,6 +55,11 @@
+        chosen {
+                stdout-path = "serial5:115200n8";
+        };
++
++       memory {
++               device_type = "memory";
++               reg = <0x0 0x0 0x0 0x80000000>;
++       };
+ };
+
+ &uart5 {
+
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +	};
+> 
+> Why have this empty node?
+
+Forgotten about... I see these:
+
+   reserving fdt memory region: addr=19000000 size=3000000
+   reserving fdt memory region: addr=20000000 size=20000000
+   reserving fdt memory region: addr=18fff000 size=1000
+   reserving fdt memory region: addr=1f000000 size=1000000
+
+Vendor tree says 0x1f000000 is for secure monitor; 0x19000000 for fb,
+0x20000000 for ion (ignoring), and 0x20000000 for afinfo - whatever that
+may be (not me! :)).
+
+So as minimum:
+
+--- a/arch/arm64/boot/dts/actions/s900.dtsi
++++ b/arch/arm64/boot/dts/actions/s900.dtsi
+@@ -86,6 +86,11 @@
+                #address-cells = <2>;
+                #size-cells = <2>;
+                ranges;
++
++               secmon@1f000000 {
++                       reg = <0x0 0x1f000000 0x0 0x1000000>;
++                       no-map;
++               };
+        };
+
+        psci {
+
+>> +
+>> +	psci {
+>> +		compatible = "arm,psci-0.2";
+>> +		method = "smc";
+>> +	};
+>> +
+>> +	arm-pmu {
+>> +		compatible = "arm,cortex-a53-pmu";
+>> +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>> +		             <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+>> +		             <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+>> +		             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>> +	};
+> 
+> Please ad an interrupt-affinity property, as described in
+> Documentation/devicetree/bindings/arm/pmu.txt.
+
+I had done my best to check my properties matched the bindings, but you
+caught me not checking for any missing properties.
+
+Again, my guess is:
+
+@@ -99,6 +104,7 @@
+                             <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+                             <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+                             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++               interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+        };
+
+        timer {
+
+>> +
+>> +	timer {
+>> +		compatible = "arm,armv8-timer";
+>> +		interrupts = <GIC_PPI 13
+>> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 14
+>> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 11
+>> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+>> +			     <GIC_PPI 10
+>> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+>> +	};
+>> +
+>> +	soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		gic: interrupt-controller@e00f1000 {
+>> +			compatible = "arm,gic-400";
+>> +			reg = <0x0 0xe00f1000 0x0 0x1000>,
+>> +			      <0x0 0xe00f2000 0x0 0x1000>,
+>> +			      <0x0 0xe00f4000 0x0 0x2000>,
+>> +			      <0x0 0xe00f6000 0x0 0x2000>;
+> 
+> I believe that the second entry should be 0x2000 in length.
+
+The vendor tree does have 0x1000, but that might be a mistake of course.
+I vaguely recall having such discussions elsewhere in the past.
+
+@@ -122,7 +128,7 @@
+                gic: interrupt-controller@e00f1000 {
+                        compatible = "arm,gic-400";
+                        reg = <0x0 0xe00f1000 0x0 0x1000>,
+-                             <0x0 0xe00f2000 0x0 0x1000>,
++                             <0x0 0xe00f2000 0x0 0x2000>,
+                              <0x0 0xe00f4000 0x0 0x2000>,
+                              <0x0 0xe00f6000 0x0 0x2000>;
+                        interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4)
+| IRQ_TYPE_LEVEL_LOW)>;
+
+Thanks for the quick review,
+
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
