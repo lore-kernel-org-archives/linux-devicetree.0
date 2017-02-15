@@ -1,174 +1,203 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/2] hwmon: (sht15) Add device tree support
-Date: Tue, 14 Feb 2017 21:24:45 -0800
-Message-ID: <ffe0d197-0b1c-d3d6-fad9-c89a426a93a2@roeck-us.net>
-References: <1487078605-11067-1-git-send-email-marco.franchi@nxp.com>
+From: <yuantian.tang@nxp.com>
+Subject: [PATCH 2/2] clk: qoriq: Separate root input clock for core PLLs on ls1012a
+Date: Wed, 15 Feb 2017 13:47:36 +0800
+Message-ID: <1487137656-4006-2-git-send-email-yuantian.tang@nxp.com>
+References: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1487078605-11067-1-git-send-email-marco.franchi@nxp.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Marco Franchi <marco.franchi@nxp.com>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, marcofrk@gmail.com, FoxPeter@kabelbw.de
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com
+Cc: sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Tang Yuantian <Yuantian.Tang@nxp.com>, Scott Wood <oss@buserror.net>, Tang Yuantian <yuantian.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2017 05:23 AM, Marco Franchi wrote:
-> Allow the driver to work with device tree support.
->
-> Based on initial patch submission from Peter Fox.
->
-> Tested on a imx7d-sdb board connected to a SHT15 board via Mikro Bus.
->
-> Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
-> ---
-> Changes since v1:
-> - reworked to not require int returns in the sht15_probe_dt function;
-> - add a clear preference for dt or platform data
-> - Use 'device tree' instead of 'dts' in the Subject
->
->  Documentation/devicetree/bindings/hwmon/sht15.txt | 25 +++++++++
->  drivers/hwmon/sht15.c                             | 66 +++++++++++++++++++++--
->  2 files changed, 87 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sht15.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/sht15.txt b/Documentation/devicetree/bindings/hwmon/sht15.txt
-> new file mode 100644
-> index 0000000..6415f52
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/sht15.txt
-> @@ -0,0 +1,25 @@
-> +Sensirion SHT15 Humidity and Temperature Sensor
-> +
-> +Required properties:
-> +
-> + - "compatible": must be "sensirion,sht15".
-> + - "data-gpios": GPIO connected to the data line.
-> + - "clk-gpios": GPIO connected to the clock line.
-> + - "vcc-supply": regulator that drives the VCC pin.
-> +
-> +Optional properties:
-> +
-> + - "checksum": boolean property that when present enables the CRC validation of the readings.
-> + - "no-otp-reload": boolean property that when present indicates not to reload from OTP.
-> + - "low-resolution": boolean property that when present indicates that the device operates in
-> +		low-resolution mode.
-> +Example:
-> +
-> +	temp_humid_sensor: sht15 {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sensor>;
-> +		compatible = "sensirion,sht15";
-> +		clk-gpios = <&gpio4 12 0>;
-> +		data-gpios = <&gpio4 13 0>;
-> +		vcc-supply = <&reg_sht15>;
-> +	};
-> diff --git a/drivers/hwmon/sht15.c b/drivers/hwmon/sht15.c
-> index f16687c..70906f1 100644
-> --- a/drivers/hwmon/sht15.c
-> +++ b/drivers/hwmon/sht15.c
-> @@ -34,6 +34,7 @@
->  #include <linux/slab.h>
->  #include <linux/atomic.h>
->  #include <linux/bitrev.h>
-> +#include <linux/of_gpio.h>
->
->  /* Commands */
->  #define SHT15_MEASURE_TEMP		0x03
-> @@ -911,6 +912,56 @@ static int sht15_invalidate_voltage(struct notifier_block *nb,
->  	return NOTIFY_OK;
->  }
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id sht15_dt_match[] = {
-> +	{ .compatible = "sensirion,sht15" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, sht15_dt_match);
-> +
-> +/*
-> + * This function returns NULL if pdev isn't a device instatiated by dt,
-> + * a pointer to the data if it could successfully get all information
-> + * from dt or a negative error number.
-> + */
-> +static struct sht15_platform_data *sht15_probe_dt(struct device *dev)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	struct sht15_platform_data *pdata;
-> +
-> +	/* no device tree device */
-> +	if (!np)
-> +		return NULL;
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	pdata->gpio_data = of_get_named_gpio(np, "data-gpios", 0);
-> +	if (pdata->gpio_data < 0) {
-> +		dev_err(dev, "data-gpios not found\n");
-> +		return ERR_PTR(-EINVAL);
+From: Tang Yuantian <Yuantian.Tang@nxp.com>
 
-Never replace an error return value with a different one. The called function
-could return -EPROBE_DEFER, which you would want to have returned to the caller.
-In that case, you would also not want to see an error message.
+ls1012a has separate input root clocks for core PLLs versus the
+platform PLL, with the latter described as sysclk in the hw docs.
+If a second input clock, named "coreclk", is present, this clock will be
+used for the core PLLs.
 
-> +	}
-> +
-> +	pdata->gpio_sck = of_get_named_gpio(np, "clk-gpios", 0);
-> +	if (pdata->gpio_sck < 0) {
-> +		dev_err(dev, "clk-gpios not found\n");
-> +		return ERR_PTR(-EINVAL);
+Signed-off-by: Scott Wood <oss@buserror.net>
+Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
+---
+ drivers/clk/clk-qoriq.c | 91 +++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 77 insertions(+), 14 deletions(-)
 
-Same here.
-
-> +	}
-> +
-> +	pdata->checksum = of_property_read_bool(np, "checksum");
-> +	pdata->no_otp_reload = of_property_read_bool(np, "no-otp-reload");
-> +	pdata->low_resolution = of_property_read_bool(np, "low-resolution");
-> +
-> +	return pdata;
-> +}
-> +#else
-> +static inline struct sht15_platform_data *sht15_probe_dt(struct device *dev)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-> +
->  static int sht15_probe(struct platform_device *pdev)
->  {
->  	int ret;
-> @@ -928,11 +979,17 @@ static int sht15_probe(struct platform_device *pdev)
->  	data->dev = &pdev->dev;
->  	init_waitqueue_head(&data->wait_queue);
->
-> -	if (dev_get_platdata(&pdev->dev) == NULL) {
-> -		dev_err(&pdev->dev, "no platform data supplied\n");
-> -		return -EINVAL;
-> +	data->pdata = sht15_probe_dt(&pdev->dev);
-> +	if (IS_ERR(data->pdata))
-> +		return PTR_ERR(data->pdata);
-> +	if (data->pdata == NULL) {
-> +		data->pdata = dev_get_platdata(&pdev->dev);
-> +		if (data->pdata == NULL) {
-> +			dev_err(&pdev->dev, "no platform data supplied\n");
-> +			return -EINVAL;
-> +		}
->  	}
-> -	data->pdata = dev_get_platdata(&pdev->dev);
-> +
->  	data->supply_uv = data->pdata->supply_mv * 1000;
->  	if (data->pdata->checksum)
->  		data->checksumming = true;
-> @@ -1075,6 +1132,7 @@ MODULE_DEVICE_TABLE(platform, sht15_device_ids);
->  static struct platform_driver sht15_driver = {
->  	.driver = {
->  		.name = "sht15",
-> +		.of_match_table = of_match_ptr(sht15_dt_match),
->  	},
->  	.probe = sht15_probe,
->  	.remove = sht15_remove,
->
+diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
+index d0bf8b1..f3931e3 100644
+--- a/drivers/clk/clk-qoriq.c
++++ b/drivers/clk/clk-qoriq.c
+@@ -87,7 +87,7 @@ struct clockgen {
+ 	struct device_node *node;
+ 	void __iomem *regs;
+ 	struct clockgen_chipinfo info; /* mutable copy */
+-	struct clk *sysclk;
++	struct clk *sysclk, *coreclk;
+ 	struct clockgen_pll pll[6];
+ 	struct clk *cmux[NUM_CMUX];
+ 	struct clk *hwaccel[NUM_HWACCEL];
+@@ -904,7 +904,12 @@ static void __init create_muxes(struct clockgen *cg)
+ 
+ static void __init clockgen_init(struct device_node *np);
+ 
+-/* Legacy nodes may get probed before the parent clockgen node */
++/*
++ * Legacy nodes may get probed before the parent clockgen node.
++ * It is assumed that device trees with legacy nodes will not
++ * contain a "clocks" property -- otherwise the input clocks may
++ * not be initialized at this point.
++ */
+ static void __init legacy_init_clockgen(struct device_node *np)
+ {
+ 	if (!clockgen.node)
+@@ -945,18 +950,13 @@ static struct clk __init
+ 	return clk_register_fixed_rate(NULL, name, NULL, 0, rate);
+ }
+ 
+-static struct clk *sysclk_from_parent(const char *name)
++static struct clk __init *input_clock(const char *name, struct clk *clk)
+ {
+-	struct clk *clk;
+-	const char *parent_name;
+-
+-	clk = of_clk_get(clockgen.node, 0);
+-	if (IS_ERR(clk))
+-		return clk;
++	const char *input_name;
+ 
+ 	/* Register the input clock under the desired name. */
+-	parent_name = __clk_get_name(clk);
+-	clk = clk_register_fixed_factor(NULL, name, parent_name,
++	input_name = __clk_get_name(clk);
++	clk = clk_register_fixed_factor(NULL, name, input_name,
+ 					0, 1, 1);
+ 	if (IS_ERR(clk))
+ 		pr_err("%s: Couldn't register %s: %ld\n", __func__, name,
+@@ -965,6 +965,29 @@ static struct clk *sysclk_from_parent(const char *name)
+ 	return clk;
+ }
+ 
++static struct clk __init *input_clock_by_name(const char *name,
++					      const char *dtname)
++{
++	struct clk *clk;
++
++	clk = of_clk_get_by_name(clockgen.node, dtname);
++	if (IS_ERR(clk))
++		return clk;
++
++	return input_clock(name, clk);
++}
++
++static struct clk __init *input_clock_by_index(const char *name, int idx)
++{
++	struct clk *clk;
++
++	clk = of_clk_get(clockgen.node, 0);
++	if (IS_ERR(clk))
++		return clk;
++
++	return input_clock(name, clk);
++}
++
+ static struct clk * __init create_sysclk(const char *name)
+ {
+ 	struct device_node *sysclk;
+@@ -974,7 +997,11 @@ static struct clk * __init create_sysclk(const char *name)
+ 	if (!IS_ERR(clk))
+ 		return clk;
+ 
+-	clk = sysclk_from_parent(name);
++	clk = input_clock_by_name(name, "sysclk");
++	if (!IS_ERR(clk))
++		return clk;
++
++	clk = input_clock_by_index(name, 0);
+ 	if (!IS_ERR(clk))
+ 		return clk;
+ 
+@@ -985,7 +1012,27 @@ static struct clk * __init create_sysclk(const char *name)
+ 			return clk;
+ 	}
+ 
+-	pr_err("%s: No input clock\n", __func__);
++	pr_err("%s: No input sysclk\n", __func__);
++	return NULL;
++}
++
++static struct clk * __init create_coreclk(const char *name)
++{
++	struct clk *clk;
++
++	clk = input_clock_by_name(name, "coreclk");
++	if (!IS_ERR(clk))
++		return clk;
++
++	/*
++	 * This indicates a mix of legacy nodes with the new coreclk
++	 * mechanism, which should never happen.  If this error occurs,
++	 * don't use the wrong input clock just because coreclk isn't
++	 * ready yet.
++	 */
++	if (WARN_ON(PTR_ERR(clk) == -EPROBE_DEFER))
++		return clk;
++
+ 	return NULL;
+ }
+ 
+@@ -1008,11 +1055,19 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
+ 	u32 __iomem *reg;
+ 	u32 mult;
+ 	struct clockgen_pll *pll = &cg->pll[idx];
++	const char *input = "cg-sysclk";
+ 	int i;
+ 
+ 	if (!(cg->info.pll_mask & (1 << idx)))
+ 		return;
+ 
++	if (cg->coreclk && idx != PLATFORM_PLL) {
++		if (IS_ERR(cg->coreclk))
++			return;
++
++		input = "cg-coreclk";
++	}
++
+ 	if (cg->info.flags & CG_VER3) {
+ 		switch (idx) {
+ 		case PLATFORM_PLL:
+@@ -1063,7 +1118,7 @@ static void __init create_one_pll(struct clockgen *cg, int idx)
+ 			 "cg-pll%d-div%d", idx, i + 1);
+ 
+ 		clk = clk_register_fixed_factor(NULL,
+-				pll->div[i].name, "cg-sysclk", 0, mult, i + 1);
++				pll->div[i].name, input, 0, mult, i + 1);
+ 		if (IS_ERR(clk)) {
+ 			pr_err("%s: %s: register failed %ld\n",
+ 			       __func__, pll->div[i].name, PTR_ERR(clk));
+@@ -1200,6 +1255,13 @@ static struct clk *clockgen_clk_get(struct of_phandle_args *clkspec, void *data)
+ 			goto bad_args;
+ 		clk = pll->div[idx].clk;
+ 		break;
++	case 5:
++		if (idx != 0)
++			goto bad_args;
++		clk = cg->coreclk;
++		if (IS_ERR(clk))
++			clk = NULL;
++		break;
+ 	default:
+ 		goto bad_args;
+ 	}
+@@ -1311,6 +1373,7 @@ static void __init clockgen_init(struct device_node *np)
+ 		clockgen.info.flags |= CG_CMUX_GE_PLAT;
+ 
+ 	clockgen.sysclk = create_sysclk("cg-sysclk");
++	clockgen.coreclk = create_coreclk("cg-coreclk");
+ 	create_plls(&clockgen);
+ 	create_muxes(&clockgen);
+ 
+-- 
+2.1.0.27.g96db324
 
