@@ -1,74 +1,76 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v3 0/6] genirq/gpio: Add driver for ThunderX and OCTEON-TX
- SoCs
-Date: Wed, 15 Feb 2017 11:29:43 -0800
-Message-ID: <c259d2a6-23ce-0890-5cd7-f88b594b511c@caviumnetworks.com>
-References: <1487094576-229208-1-git-send-email-david.daney@cavium.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 1/3] coresight: binding for coresight debug driver
+Date: Wed, 15 Feb 2017 13:08:58 -0700
+Message-ID: <20170215200858.GA29730@linaro.org>
+References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
+ <1486966298-16767-2-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487094576-229208-1-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486966298-16767-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The kbuild test robot found a compile problem on sparc64, also Christoph 
-has noted, in a reply to a different patch, that pci_enable_msix() is 
-deprecated.
+On Mon, Feb 13, 2017 at 02:11:36PM +0800, Leo Yan wrote:
+> Adding compatible string for new coresight debug driver.
+> 
 
-I will respin to correct these issues.
+Hi Leo,
 
-David.
+I agree with Mark, this will need a better description.
 
+> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/coresight.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index fcbae6a..3ff15fd 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -40,6 +40,9 @@ its hardware characteristcs.
+>  		- System Trace Macrocell:
+>  			"arm,coresight-stm", "arm,primecell"; [1]
+>  
+> +		- Debug Unit:
+> +			"arm,coresight-debug", "arm,primecell";
+> +
 
+Humm...  The current CoreSight bindings are meant to describe IPs included in
+the HW assisted trace architecture.  This new driver, althought considered to be
+part of the CoreSight umbrella, falls under the debugging domain.
 
-On 02/14/2017 09:49 AM, David Daney wrote:
-> Per the Subject: Add driver for ThunderX and OCTEON-TX SoCs
->
-> This GPIO hardware looks like a PCIe device, with the interrupt signal
-> from each GPIO line being routed to a dedicated MSI-X.  This interrupt
-> routing requires that we add some custom processing to the beginning
-> of the MSI-X irqdomain hierarchy.
->
->
-> Changes from v2:
->
->  - in 4/6: Added Rob Harring's Acked-by
->
->  - Added three patches to genirq/irqdomain to support interrupt code
->    in the driver.
->
->  - Rewrite irq code in driver to use irqdomain hierarchy.
->
->  - Other naming and style changes as recommended by Linus Walleij.
->
-> Changes from v1:
->
->  - in 1/3: Addressed Rob Harring's comments.
->
->  - in 2/3: Trivial cleanups found in internal review + add some
->    comments.
->
-> David Daney (6):
->   genirq: Export more irq_chip_*_parent() functions.
->   genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
->   irqdomain: Add irq_domain_{push,pop}_irq() functions.
->   dt-bindings: gpio: Add binding documentation for gpio-thunderx
->   gpio: Add gpio driver support for ThunderX and OCTEON-TX
->   MAINTAINERS: Add entry for THUNDERX GPIO Driver.
->
->  .../devicetree/bindings/gpio/gpio-thunderx.txt     |  27 ++
->  MAINTAINERS                                        |   5 +
->  drivers/gpio/Kconfig                               |   7 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-thunderx.c                       | 490 +++++++++++++++++++++
->  include/linux/irq.h                                |   2 +
->  include/linux/irqdomain.h                          |   3 +
->  kernel/irq/chip.c                                  | 105 +++++
->  kernel/irq/irqdomain.c                             | 137 ++++++
->  9 files changed, 777 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
->  create mode 100644 drivers/gpio/gpio-thunderx.c
->
+Adding the bindings in this file may lead people to beleive this driver fits
+into the CoreSight framework currently supported, which isn't the case.
+
+As such it is probably a good idea to spin off a new file, "coresight-debug.txt"
+to handle this driver. 
+
+Mark, what's your take on this?
+
+>  	* reg: physical base address and length of the register
+>  	  set(s) of the component.
+>  
+> @@ -78,8 +81,10 @@ its hardware characteristcs.
+>  	* arm,cp14: must be present if the system accesses ETM/PTM management
+>  	  registers via co-processor 14.
+>  
+> -	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
+> -	  source is considered to belong to CPU0.
+> +* Optional properties for ETM/PTM/Debugs:
+> +
+> +	* cpu: the cpu phandle this ETM/PTM/Debug is affined to. When omitted
+> +	  the source is considered to belong to CPU0.
+>  
+>  * Optional property for TMC:
+>  
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
