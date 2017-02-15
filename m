@@ -1,34 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] DT: add Faraday Tec. as vendor
-Date: Wed, 15 Feb 2017 17:02:28 -0600
-Message-ID: <20170215230228.3ihrr625uzj4imya@rob-hp-laptop>
-References: <20170208200010.21522-1-ulli.kroll@googlemail.com>
- <20170208200010.21522-4-ulli.kroll@googlemail.com>
- <CACRpkdbqFwRMLd__L3gv-hSv0wNZAQk5gxEJPK=wBQuXjJTK5w@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH for-4.11 2/2] Revert "dt-bindings: phy: Add documentation
+ for NSP USB3 PHY"
+Date: Wed, 15 Feb 2017 17:04:15 -0600
+Message-ID: <20170215230415.3sap4vr3llazunyd@rob-hp-laptop>
+References: <20170208233023.31922-1-zajec5@gmail.com>
+ <20170208233023.31922-2-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbqFwRMLd__L3gv-hSv0wNZAQk5gxEJPK=wBQuXjJTK5w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20170208233023.31922-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 12, 2017 at 09:37:37PM +0100, Linus Walleij wrote:
-> On Wed, Feb 8, 2017 at 9:00 PM, Hans Ulli Kroll
-> <ulli.kroll@googlemail.com> wrote:
+On Thu, Feb 09, 2017 at 12:30:23AM +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 > 
-> > add Faraday Technology Corporation as vendor faraday for DT
-> >
-> > Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> This reverts commit c8ca631f9480 ("dt-bindings: phy: Add documentation
+> for NSP USB3 PHY") to match reverting commit adding the new PHY driver.
+> Please note we revert this commit before it reached stable release.
 > 
-> I realized a lot of Gemini IP blocks are actually from Faraday, so now
-> I'm editing the drivers a bit...
+> If new compatible string is needed it should be added to the existing
+> bcm-ns-usb3-phy.txt which already describes this PHY.
 > 
-> Rob could you pick this patch directly to the DT tree so we need
-> not worry about the vendor thing?
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  | 39 ----------------------
+>  1 file changed, 39 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
 
-Done.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
