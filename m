@@ -1,67 +1,65 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC 1/3] coresight: binding for coresight debug driver
-Date: Wed, 15 Feb 2017 11:13:44 +0000
-Message-ID: <20170215111343.GD31733@leverpostej>
-References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
- <1486966298-16767-2-git-send-email-leo.yan@linaro.org>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v1 3/3] ASoC: zx-96p22: add zte's aud96p22
+ controller driver
+Date: Wed, 15 Feb 2017 11:24:25 +0000
+Message-ID: <20170215112425.GC30007@localhost.localdomain>
+References: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
+ <1487156110-12840-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <1486966298-16767-2-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, nd-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <1487156110-12840-3-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, kuninori.morimoto.gx@renesas.com, lgirdwood@gmail.com, tiwai@suse.com, srinivas.kandagatla@linaro.org, bardliao@realtek.com, lars@metafoo.de, axel.lin@ingics.com, Paul.Handrigan@cirrus.com, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, devicetree@vger.kernel.org, arnd@arndb.de, yesanishhere@gmail.com, xie.baoyou@zte.com.cn, nh6z@nh6z.net, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, oder_chiou@realtek.com, linux-kernel@vger.kernel.org, petr@barix.com, broonie@kernel.org, jun.nie@linaro.org, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 02:11:36PM +0800, Leo Yan wrote:
-> Adding compatible string for new coresight debug driver.
+On Wed, Feb 15, 2017 at 06:55:10PM +0800, Baoyou Xie wrote:
+> This patch adds aud96p22 controller driver for zte's SoC family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+<snip>
+> +static int zx_aud96p22_i2c_write(struct i2c_client *i2c_client,
+> +				 const void *data, size_t count)
+> +{
+> +	int xfer;
+> +
+> +	xfer = i2c_master_send(i2c_client, data, count);
+> +	if (xfer == count)
+> +		return 0;
+> +	else if (xfer < 0)
+> +		return xfer;
+> +	else
+> +		return -EIO;
+> +}
+> +
+> +static int zx_aud96p22_i2c_read(struct i2c_client *i2c_client,
+> +				unsigned char addr)
+> +{
+> +	int xfer;
+> +
+> +	xfer = i2c_smbus_read_word_data(i2c_client, addr);
+> +	if (xfer < 0)
+> +		dev_warn(&i2c_client->dev, "transfer error %d\n", xfer);
+> +
+> +	return xfer;
+> +}
+> +
 
-Please give a more thorough description of the hardware this binding
-this is intended to describe.
-
-It's not entirely clear which component this binding is intended to
-describe.
+Is there any reason this isn't using regmap? It looks like it
+should be, have a look at any of the other mainline CODECs for an
+example.
 
 Thanks,
-Mark.
-
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index fcbae6a..3ff15fd 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -40,6 +40,9 @@ its hardware characteristcs.
->  		- System Trace Macrocell:
->  			"arm,coresight-stm", "arm,primecell"; [1]
->  
-> +		- Debug Unit:
-> +			"arm,coresight-debug", "arm,primecell";
-> +
->  	* reg: physical base address and length of the register
->  	  set(s) of the component.
->  
-> @@ -78,8 +81,10 @@ its hardware characteristcs.
->  	* arm,cp14: must be present if the system accesses ETM/PTM management
->  	  registers via co-processor 14.
->  
-> -	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
-> -	  source is considered to belong to CPU0.
-> +* Optional properties for ETM/PTM/Debugs:
-> +
-> +	* cpu: the cpu phandle this ETM/PTM/Debug is affined to. When omitted
-> +	  the source is considered to belong to CPU0.
->  
->  * Optional property for TMC:
->  
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Charles
