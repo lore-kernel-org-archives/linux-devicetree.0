@@ -1,48 +1,49 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Subject: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and SMP2P drivers
-Date: Wed, 15 Feb 2017 05:51:57 +0100
-Message-ID: <20170215045157.11659-2-j.neuschaefer@gmx.net>
-References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: [PATCH 1/2] ARM: dts: msm8974: Hook up adsp-pil's xo clock
+Date: Wed, 15 Feb 2017 05:51:56 +0100
+Message-ID: <20170215045157.11659-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170215045157.11659-1-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
----
- arch/arm/configs/qcom_defconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+Without this patch (and with CONFIG_QCOM_ADSP_PIL), I get this error:
 
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index 4ffdd607205d..97b9e9cd2292 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -190,11 +190,16 @@ CONFIG_MDM_LCC_9615=y
- CONFIG_MSM_MMCC_8960=y
- CONFIG_MSM_MMCC_8974=y
- CONFIG_HWSPINLOCK_QCOM=y
-+CONFIG_REMOTEPROC=y
-+CONFIG_QCOM_ADSP_PIL=y
-+CONFIG_QCOM_Q6V5_PIL=y
-+CONFIG_QCOM_WCNSS_PIL=y
- CONFIG_QCOM_GSBI=y
- CONFIG_QCOM_PM=y
- CONFIG_QCOM_SMEM=y
- CONFIG_QCOM_SMD=y
- CONFIG_QCOM_SMD_RPM=y
-+CONFIG_QCOM_SMP2P=y
- CONFIG_IIO=y
- CONFIG_IIO_BUFFER_CB=y
- CONFIG_IIO_SW_TRIGGER=y
+	[    0.711529] qcom_adsp_pil adsp-pil: failed to get xo clock
+	[    0.711540] remoteproc remoteproc0: releasing adsp-pil
+
+With this patch, adsp-pil can initialize correctly.
+
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+
+---
+NOTE: I don't know if I actually chose the right clock source.
+      Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+      suggests that adsp-pil's xo should be controlled by the RPM
+      processor; Existing devicetrees and a recent patch to msm8996.dtsi
+      use &xo_board, though:
+      https://www.spinics.net/lists/linux-arm-msm/msg25711.html
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index d3e1a61b8671..cccd8cba8872 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -250,6 +250,9 @@
+ 
+ 		cx-supply = <&pm8841_s2>;
+ 
++		clocks = <&xo_board>;
++		clock-names = "xo";
++
+ 		memory-region = <&adsp_region>;
+ 
+ 		qcom,smem-states = <&adsp_smp2p_out 0>;
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
