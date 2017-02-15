@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCH 4/5] mfd: altr_a10sr: Add Arria10 DevKit Resource Controller
-Date: Wed, 15 Feb 2017 15:50:15 -0600
-Message-ID: <1487195416-23827-5-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCH 5/5] ARM: socfpga: dts: Add Devkit A10-SR Reset Controller
+Date: Wed, 15 Feb 2017 15:50:16 -0600
+Message-ID: <1487195416-23827-6-git-send-email-thor.thayer@linux.intel.com>
 References: <1487195416-23827-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1487195416-23827-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,27 +12,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Add Arria10 System Resource Manager Reset Controller to MFD.
+Add the Altera Arria10 System Resource Reset Controller to the MFD
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- drivers/mfd/altera-a10sr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-index 06e1f7f..96e7d2c 100644
---- a/drivers/mfd/altera-a10sr.c
-+++ b/drivers/mfd/altera-a10sr.c
-@@ -33,6 +33,10 @@
- 		.name = "altr_a10sr_gpio",
- 		.of_compatible = "altr,a10sr-gpio",
- 	},
-+	{
-+		.name = "altr_a10sr_reset",
-+		.of_compatible = "altr,a10sr-reset",
-+	},
+diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+index c57e6ce..9329025 100644
+--- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+@@ -121,6 +121,11 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 		};
++
++		a10sr_rst: reset-controller {
++			compatible = "altr,a10sr-reset";
++			#reset-cells = <1>;
++		};
+ 	};
  };
  
- static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
 -- 
 1.9.1
