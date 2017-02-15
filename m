@@ -1,129 +1,393 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v7 2/7] drm/rockchip/dsi: dw-mipi: support RK3399 mipi dsi
-Date: Wed, 15 Feb 2017 12:22:00 +0800
-Message-ID: <1487132525-24933-3-git-send-email-zyw@rock-chips.com>
-References: <1487132525-24933-1-git-send-email-zyw@rock-chips.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V3 2/4] phy: phy-exynos-pcie: Add support for Exynos PCIe
+ phy
+Date: Wed, 15 Feb 2017 10:54:31 +0530
+Message-ID: <64f04459-c88e-c479-04fb-267e3f3960c6@codeaurora.org>
+References: <20170213082613.19628-1-jh80.chung@samsung.com>
+ <CGME20170213082615epcas5p2d6bc5521e68adf71bb64d9eb8262274d@epcas5p2.samsung.com>
+ <20170213082613.19628-3-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1487132525-24933-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: john@metanate.com, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170213082613.19628-3-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, niyas.ahmed-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHZvcGIvdm9wbCBzd2l0Y2ggcmVnaXN0ZXIgb2YgUkszMzk5IG1pcGkgaXMgZGlmZmVyZW50
-IGZyb20gUkszMjg4LAp0aGUgZGVmYXVsdCBzZXR0aW5nIGZvciBtaXBpIGRzaSBtb2RlIGlzIGRp
-ZmZlcmVudCB0b28sIHNvIGFkZCBhCm9mX2RldmljZV9pZCBzdHJ1Y3R1cmUgdG8gZGlzdGluZ3Vp
-c2ggdGhlbSwgYW5kIG1ha2Ugc3VyZSBzZXQgdGhlCmNvcnJlY3QgbW9kZSBiZWZvcmUgbWlwaSBw
-aHkgaW5pdC4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+
-ClNpZ25lZC1vZmYtYnk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KUmV2aWV3
-ZWQtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3JnPgoKLS0tCgpDaGFuZ2VzIGlu
-IHY2OgotIG5vIG5lZWQgY2hlY2sgcGh5X2NmZ19jbGsgYmVmb3JlIGVuYWJsZS9kaXNhYmxlCgpD
-aGFuZ2VzIGluIHY1OgotIGNoZWNrIHRoZSBlcnJvciBvZiBwaHlfY2ZnX2NsayBpbiBkd19taXBp
-X2RzaV9iaW5kCgpDaGFuZ2VzIGluIHY0OgotIHJlbW92ZSB0aGUgdW5yZWxhdGVkIGNoYW5nZQoK
-Q2hhbmdlcyBpbiB2MzoKLSBiYXNlIG9uIEpvaG4gS2VlcGluZydzIHBhdGNoIHNlcmllcwoKIGRy
-aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jIHwgNzIgKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystLS0tLQogMSBmaWxlIGNoYW5nZWQsIDYyIGluc2VydGlvbnMoKyksIDEw
-IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
-aXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKaW5kZXgg
-Y2M1OGFkYS4uNGU3NDY4MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3
-LW1pcGktZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMK
-QEAgLTI5LDkgKzI5LDE3IEBACiAKICNkZWZpbmUgRFJJVkVSX05BTUUgICAgImR3LW1pcGktZHNp
-IgogCi0jZGVmaW5lIEdSRl9TT0NfQ09ONiAgICAgICAgICAgICAgICAgICAgMHgwMjVjCi0jZGVm
-aW5lIERTSTBfU0VMX1ZPUF9MSVQgICAgICAgICAgICAgICAgKDEgPDwgNikKLSNkZWZpbmUgRFNJ
-MV9TRUxfVk9QX0xJVCAgICAgICAgICAgICAgICAoMSA8PCA5KQorI2RlZmluZSBSSzMyODhfR1JG
-X1NPQ19DT042CQkweDAyNWMKKyNkZWZpbmUgUkszMjg4X0RTSTBfU0VMX1ZPUF9MSVQJCUJJVCg2
-KQorI2RlZmluZSBSSzMyODhfRFNJMV9TRUxfVk9QX0xJVAkJQklUKDkpCisKKyNkZWZpbmUgUksz
-Mzk5X0dSRl9TT0NfQ09OMTkJCTB4NjI1MAorI2RlZmluZSBSSzMzOTlfRFNJMF9TRUxfVk9QX0xJ
-VAkJQklUKDApCisjZGVmaW5lIFJLMzM5OV9EU0kxX1NFTF9WT1BfTElUCQlCSVQoNCkKKworLyog
-ZGlzYWJsZSB0dXJucmVxdWVzdCwgdHVybmRpc2FibGUsIGZvcmNldHhzdG9wbW9kZSwgZm9yY2Vy
-eG1vZGUgKi8KKyNkZWZpbmUgUkszMzk5X0dSRl9TT0NfQ09OMjIJCTB4NjI1OAorI2RlZmluZSBS
-SzMzOTlfR1JGX0RTSV9NT0RFCQkweGZmZmYwMDAwCiAKICNkZWZpbmUgRFNJX1ZFUlNJT04JCQkw
-eDAwCiAjZGVmaW5lIERTSV9QV1JfVVAJCQkweDA0CkBAIC0yNjUsNiArMjczLDExIEBAIGVudW0g
-ewogfTsKIAogc3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0YSB7CisJdTMyIGRzaTBfZW5fYml0
-OworCXUzMiBkc2kxX2VuX2JpdDsKKwl1MzIgZ3JmX3N3aXRjaF9yZWc7CisJdTMyIGdyZl9kc2kw
-X21vZGU7CisJdTMyIGdyZl9kc2kwX21vZGVfcmVnOwogCXVuc2lnbmVkIGludCBtYXhfZGF0YV9s
-YW5lczsKIAllbnVtIGRybV9tb2RlX3N0YXR1cyAoKm1vZGVfdmFsaWQpKHN0cnVjdCBkcm1fY29u
-bmVjdG9yICpjb25uZWN0b3IsCiAJCQkJCSAgIHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2Rl
-KTsKQEAgLTI4MSw2ICsyOTQsNyBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2kgewogCiAJc3RydWN0IGNs
-ayAqcGxscmVmX2NsazsKIAlzdHJ1Y3QgY2xrICpwY2xrOworCXN0cnVjdCBjbGsgKnBoeV9jZmdf
-Y2xrOwogCiAJdW5zaWduZWQgaW50IGxhbmVfbWJwczsgLyogcGVyIGxhbmUgKi8KIAl1MzIgY2hh
-bm5lbDsKQEAgLTQyNSw2ICs0MzksMTIgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9waHlfaW5p
-dChzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKIAlkc2lfd3JpdGUoZHNpLCBEU0lfUEhZX1RTVF9D
-VFJMMCwgUEhZX1RFU1RDTFIpOwogCWRzaV93cml0ZShkc2ksIERTSV9QSFlfVFNUX0NUUkwwLCBQ
-SFlfVU5URVNUQ0xSKTsKIAorCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBoeV9jZmdf
-Y2xrKTsKKwlpZiAocmV0KSB7CisJCWRldl9lcnIoZHNpLT5kZXYsICJGYWlsZWQgdG8gZW5hYmxl
-IHBoeV9jZmdfY2xrXG4iKTsKKwkJcmV0dXJuIHJldDsKKwl9CisKIAlkd19taXBpX2RzaV9waHlf
-d3JpdGUoZHNpLCAweDEwLCBCWVBBU1NfVkNPX1JBTkdFIHwKIAkJCQkJIFZDT19SQU5HRV9DT05f
-U0VMKHZjbykgfAogCQkJCQkgVkNPX0lOX0NBUF9DT05fTE9XIHwKQEAgLTQ4MSwxNyArNTAxLDE4
-IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfcGh5X2luaXQoc3RydWN0IGR3X21pcGlfZHNpICpk
-c2kpCiAJCQkJIHZhbCwgdmFsICYgTE9DSywgMTAwMCwgUEhZX1NUQVRVU19USU1FT1VUX1VTKTsK
-IAlpZiAocmV0IDwgMCkgewogCQlkZXZfZXJyKGRzaS0+ZGV2LCAiZmFpbGVkIHRvIHdhaXQgZm9y
-IHBoeSBsb2NrIHN0YXRlXG4iKTsKLQkJcmV0dXJuIHJldDsKKwkJZ290byBwaHlfaW5pdF9lbmQ7
-CiAJfQogCiAJcmV0ID0gcmVhZGxfcG9sbF90aW1lb3V0KGRzaS0+YmFzZSArIERTSV9QSFlfU1RB
-VFVTLAogCQkJCSB2YWwsIHZhbCAmIFNUT1BfU1RBVEVfQ0xLX0xBTkUsIDEwMDAsCiAJCQkJIFBI
-WV9TVEFUVVNfVElNRU9VVF9VUyk7Ci0JaWYgKHJldCA8IDApIHsKKwlpZiAocmV0IDwgMCkKIAkJ
-ZGV2X2Vycihkc2ktPmRldiwKIAkJCSJmYWlsZWQgdG8gd2FpdCBmb3IgcGh5IGNsayBsYW5lIHN0
-b3Agc3RhdGVcbiIpOwotCQlyZXR1cm4gcmV0OwotCX0KKworcGh5X2luaXRfZW5kOgorCWNsa19k
-aXNhYmxlX3VucHJlcGFyZShkc2ktPnBoeV9jZmdfY2xrKTsKIAogCXJldHVybiByZXQ7CiB9CkBA
-IC05NjAsNiArOTgxLDcgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9lbmFibGUo
-c3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQogewogCXN0cnVjdCBkd19taXBpX2RzaSAqZHNp
-ID0gZW5jb2Rlcl90b19kc2koZW5jb2Rlcik7CiAJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1v
-ZGUgPSAmZW5jb2Rlci0+Y3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7CisJY29uc3Qgc3RydWN0
-IGR3X21pcGlfZHNpX3BsYXRfZGF0YSAqcGRhdGEgPSBkc2ktPnBkYXRhOwogCWludCBtdXggPSBk
-cm1fb2ZfZW5jb2Rlcl9hY3RpdmVfZW5kcG9pbnRfaWQoZHNpLT5kZXYtPm9mX25vZGUsIGVuY29k
-ZXIpOwogCXUzMiB2YWw7CiAJaW50IHJldDsKQEAgLTk4NSw2ICsxMDA3LDEwIEBAIHN0YXRpYyB2
-b2lkIGR3X21pcGlfZHNpX2VuY29kZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2Rl
-cikKIAlkd19taXBpX2RzaV9kcGh5X2ludGVyZmFjZV9jb25maWcoZHNpKTsKIAlkd19taXBpX2Rz
-aV9jbGVhcl9lcnIoZHNpKTsKIAorCWlmIChwZGF0YS0+Z3JmX2RzaTBfbW9kZV9yZWcpCisJCXJl
-Z21hcF93cml0ZShkc2ktPmdyZl9yZWdtYXAsIHBkYXRhLT5ncmZfZHNpMF9tb2RlX3JlZywKKwkJ
-CSAgICAgcGRhdGEtPmdyZl9kc2kwX21vZGUpOworCiAJZHdfbWlwaV9kc2lfcGh5X2luaXQoZHNp
-KTsKIAlkd19taXBpX2RzaV93YWl0X2Zvcl90d29fZnJhbWVzKG1vZGUpOwogCkBAIC05OTgsMTEg
-KzEwMjQsMTEgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9lbmFibGUoc3RydWN0
-IGRybV9lbmNvZGVyICplbmNvZGVyKQogCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBjbGsp
-OwogCiAJaWYgKG11eCkKLQkJdmFsID0gRFNJMF9TRUxfVk9QX0xJVCB8IChEU0kwX1NFTF9WT1Bf
-TElUIDw8IDE2KTsKKwkJdmFsID0gcGRhdGEtPmRzaTBfZW5fYml0IHwgKHBkYXRhLT5kc2kwX2Vu
-X2JpdCA8PCAxNik7CiAJZWxzZQotCQl2YWwgPSBEU0kwX1NFTF9WT1BfTElUIDw8IDE2OworCQl2
-YWwgPSBwZGF0YS0+ZHNpMF9lbl9iaXQgPDwgMTY7CiAKLQlyZWdtYXBfd3JpdGUoZHNpLT5ncmZf
-cmVnbWFwLCBHUkZfU09DX0NPTjYsIHZhbCk7CisJcmVnbWFwX3dyaXRlKGRzaS0+Z3JmX3JlZ21h
-cCwgcGRhdGEtPmdyZl9zd2l0Y2hfcmVnLCB2YWwpOwogCWRldl9kYmcoZHNpLT5kZXYsICJ2b3Ag
-JXMgb3V0cHV0IHRvIGRzaTBcbiIsIChtdXgpID8gIkxJVCIgOiAiQklHIik7CiB9CiAKQEAgLTEx
-NjEsMTQgKzExODcsMjkgQEAgc3RhdGljIGVudW0gZHJtX21vZGVfc3RhdHVzIHJrMzI4OF9taXBp
-X2RzaV9tb2RlX3ZhbGlkKAogfQogCiBzdGF0aWMgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0
-YSByazMyODhfbWlwaV9kc2lfZHJ2X2RhdGEgPSB7CisJLmRzaTBfZW5fYml0ID0gUkszMjg4X0RT
-STBfU0VMX1ZPUF9MSVQsCisJLmRzaTFfZW5fYml0ID0gUkszMjg4X0RTSTFfU0VMX1ZPUF9MSVQs
-CisJLmdyZl9zd2l0Y2hfcmVnID0gUkszMjg4X0dSRl9TT0NfQ09ONiwKIAkubWF4X2RhdGFfbGFu
-ZXMgPSA0LAogCS5tb2RlX3ZhbGlkID0gcmszMjg4X21pcGlfZHNpX21vZGVfdmFsaWQsCiB9Owog
-CitzdGF0aWMgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0YSByazMzOTlfbWlwaV9kc2lfZHJ2
-X2RhdGEgPSB7CisJLmRzaTBfZW5fYml0ID0gUkszMzk5X0RTSTBfU0VMX1ZPUF9MSVQsCisJLmRz
-aTFfZW5fYml0ID0gUkszMzk5X0RTSTFfU0VMX1ZPUF9MSVQsCisJLmdyZl9zd2l0Y2hfcmVnID0g
-UkszMzk5X0dSRl9TT0NfQ09OMTksCisJLmdyZl9kc2kwX21vZGUgPSBSSzMzOTlfR1JGX0RTSV9N
-T0RFLAorCS5ncmZfZHNpMF9tb2RlX3JlZyA9IFJLMzM5OV9HUkZfU09DX0NPTjIyLAorCS5tYXhf
-ZGF0YV9sYW5lcyA9IDQsCit9OworCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBk
-d19taXBpX2RzaV9kdF9pZHNbXSA9IHsKIAl7CiAJIC5jb21wYXRpYmxlID0gInJvY2tjaGlwLHJr
-MzI4OC1taXBpLWRzaSIsCiAJIC5kYXRhID0gJnJrMzI4OF9taXBpX2RzaV9kcnZfZGF0YSwKKwl9
-LCB7CisJIC5jb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzM5OS1taXBpLWRzaSIsCisJIC5kYXRh
-ID0gJnJrMzM5OV9taXBpX2RzaV9kcnZfZGF0YSwKIAl9LAogCXsgLyogc2VudGluZWwgKi8gfQog
-fTsKQEAgLTEyNDgsNiArMTI4OSwxNyBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX2JpbmQoc3Ry
-dWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAJCWNsa19kaXNhYmxlX3Vu
-cHJlcGFyZShkc2ktPnBjbGspOwogCX0KIAorCWRzaS0+cGh5X2NmZ19jbGsgPSBkZXZtX2Nsa19n
-ZXQoZGV2LCAicGh5X2NmZyIpOworCWlmIChJU19FUlIoZHNpLT5waHlfY2ZnX2NsaykpIHsKKwkJ
-cmV0ID0gUFRSX0VSUihkc2ktPnBoeV9jZmdfY2xrKTsKKwkJaWYgKHJldCAhPSAtRU5PRU5UKSB7
-CisJCQlkZXZfZXJyKGRldiwgIlVuYWJsZSB0byBnZXQgcGh5X2NmZ19jbGs6ICVkXG4iLCByZXQp
-OworCQkJcmV0dXJuIHJldDsKKwkJfQorCQlkc2ktPnBoeV9jZmdfY2xrID0gTlVMTDsKKwkJZGV2
-X2RiZyhkZXYsICJoYXZlIG5vdCBwaHlfY2ZnX2Nsa1xuIik7CisJfQorCiAJcmV0ID0gY2xrX3By
-ZXBhcmVfZW5hYmxlKGRzaS0+cGxscmVmX2Nsayk7CiAJaWYgKHJldCkgewogCQlkZXZfZXJyKGRl
-diwgIiVzOiBGYWlsZWQgdG8gZW5hYmxlIHBsbHJlZl9jbGtcbiIsIF9fZnVuY19fKTsKLS0gCjIu
-Ni4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+On 02/13/2017 01:56 PM, Jaehoon Chung wrote:
+> This patch adds support for Generic PHY framework about Exynos SoCs.
+> Current Exynos PCIe driver doesn't use the PHY framework.
+> It's making a difficult to upstream the other Exynos variants because of
+> different PHY registers.
+>
+> Move the codes relevant to PHY from Exnyos PCIe driver to PHY Exynos PCIe
+> driver.
+>
+> Signed-off-by: Jaehoon Chung<jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Krzysztof Kozlowski<krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Jingoo Han<jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Pankaj Dubey<pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changelog on V3:
+> - Remove the dependency abot PCI_EXYNOS
+> - Adds a depends on COMPILE_TEST
+> - Use the readl_poll_timeout() instead of while()
+> - Fixes const type
+> - Adds MODULE_DESCRIPTION()/LICENCSE()/AUTHOR()
+> - Changes commit message
+>
+> Changelog on V2:
+> - Not include the codes relevant to pci-exynos.
+> - Remove the getting child node.
+>
+>   drivers/phy/Kconfig           |   8 ++
+>   drivers/phy/Makefile          |   1 +
+>   drivers/phy/phy-exynos-pcie.c | 285 ++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 294 insertions(+)
+>   create mode 100644 drivers/phy/phy-exynos-pcie.c
+>
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index e8eb7f2..8659f38 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -331,6 +331,14 @@ config PHY_EXYNOS5_USBDRD
+>   	  This driver provides PHY interface for USB 3.0 DRD controller
+>   	  present on Exynos5 SoC series.
+>   
+> +config PHY_EXYNOS_PCIE
+> +	bool "Exynos PCIe PHY driver"
+> +	depends on (ARCH_EXYNOS && OF) || COMPILE_TEST
+
+this should be other way round if your driver runs only with OF enabled.
+           depends on OF && (ARCH_EXYNOS || COMPILE_TEST)
+
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable PCIe PHY support for Exynos SoC series.
+> +	  This driver provides PHY interface for Exynos PCIe controller.
+> +
+>   config PHY_PISTACHIO_USB
+>   	tristate "IMG Pistachio USB2.0 PHY driver"
+>   	depends on MACH_PISTACHIO
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 65eb2f4..081aeb4 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -37,6 +37,7 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
+>   phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+>   phy-exynos-usb2-$(CONFIG_PHY_S5PV210_USB2)	+= phy-s5pv210-usb2.o
+>   obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+> +obj-$(CONFIG_PHY_EXYNOS_PCIE)	+= phy-exynos-pcie.o
+>   obj-$(CONFIG_PHY_QCOM_APQ8064_SATA)	+= phy-qcom-apq8064-sata.o
+>   obj-$(CONFIG_PHY_ROCKCHIP_USB) += phy-rockchip-usb.o
+>   obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
+> diff --git a/drivers/phy/phy-exynos-pcie.c b/drivers/phy/phy-exynos-pcie.c
+> new file mode 100644
+> index 0000000..9ec1855
+> --- /dev/null
+> +++ b/drivers/phy/phy-exynos-pcie.c
+> @@ -0,0 +1,285 @@
+> +/*
+> + * Samsung EXYNOS SoC series PCIe PHY driver
+> + *
+> + * Phy provider for PCIe controller on Exynos SoC series
+> + *
+> + * Copyright (C) 2016 Samsung Electronics Co., Ltd.
+
+nit: copyright year.
+
+> + * Jaehoon Chung<jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/regmap.h>
+> +
+> +/* PCIe Purple registers */
+> +#define PCIE_PHY_GLOBAL_RESET		0x000
+> +#define PCIE_PHY_COMMON_RESET		0x004
+> +#define PCIE_PHY_CMN_REG		0x008
+> +#define PCIE_PHY_MAC_RESET		0x00c
+> +#define PCIE_PHY_PLL_LOCKED		0x010
+> +#define PCIE_PHY_TRSVREG_RESET		0x020
+> +#define PCIE_PHY_TRSV_RESET		0x024
+> +
+> +/* PCIe PHY registers */
+> +#define PCIE_PHY_IMPEDANCE		0x004
+> +#define PCIE_PHY_PLL_DIV_0		0x008
+> +#define PCIE_PHY_PLL_BIAS		0x00c
+> +#define PCIE_PHY_DCC_FEEDBACK		0x014
+> +#define PCIE_PHY_PLL_DIV_1		0x05c
+> +#define PCIE_PHY_COMMON_POWER		0x064
+> +#define PCIE_PHY_COMMON_PD_CMN		BIT(3)
+> +#define PCIE_PHY_TRSV0_EMP_LVL		0x084
+> +#define PCIE_PHY_TRSV0_DRV_LVL		0x088
+> +#define PCIE_PHY_TRSV0_RXCDR		0x0ac
+> +#define PCIE_PHY_TRSV0_POWER		0x0c4
+> +#define PCIE_PHY_TRSV0_PD_TSV		BIT(7)
+> +#define PCIE_PHY_TRSV0_LVCC		0x0dc
+> +#define PCIE_PHY_TRSV1_EMP_LVL		0x144
+> +#define PCIE_PHY_TRSV1_RXCDR		0x16c
+> +#define PCIE_PHY_TRSV1_POWER		0x184
+> +#define PCIE_PHY_TRSV1_PD_TSV		BIT(7)
+> +#define PCIE_PHY_TRSV1_LVCC		0x19c
+> +#define PCIE_PHY_TRSV2_EMP_LVL		0x204
+> +#define PCIE_PHY_TRSV2_RXCDR		0x22c
+> +#define PCIE_PHY_TRSV2_POWER		0x244
+> +#define PCIE_PHY_TRSV2_PD_TSV		BIT(7)
+> +#define PCIE_PHY_TRSV2_LVCC		0x25c
+> +#define PCIE_PHY_TRSV3_EMP_LVL		0x2c4
+> +#define PCIE_PHY_TRSV3_RXCDR		0x2ec
+> +#define PCIE_PHY_TRSV3_POWER		0x304
+> +#define PCIE_PHY_TRSV3_PD_TSV		BIT(7)
+> +#define PCIE_PHY_TRSV3_LVCC		0x31c
+> +
+> +struct exynos_pcie_phy_data {
+> +	const struct phy_ops	*ops;
+> +};
+> +
+> +/* For Exynos pcie phy */
+> +struct exynos_pcie_phy {
+> +	const struct exynos_pcie_phy_data *drv_data;
+> +	void __iomem *phy_base;
+> +	void __iomem *blk_base; /* For exynos5440 */
+> +};
+> +
+> +static void exynos_pcie_phy_writel(void __iomem *base, u32 val, u32 offset)
+> +{
+> +	writel(val, base + offset);
+> +}
+> +
+> +static u32 exynos_pcie_phy_readl(void __iomem *base, u32 offset)
+> +{
+> +	return readl(base + offset);
+> +}
+> +
+> +/* For Exynos5440 specific functions */
+> +static int exynos5440_pcie_phy_init(struct phy *phy)
+> +{
+> +	struct exynos_pcie_phy *ep = phy_get_drvdata(phy);
+> +
+> +	/* DCC feedback control off */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x29, PCIE_PHY_DCC_FEEDBACK);
+> +
+> +	/* set TX/RX impedance */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0xd5, PCIE_PHY_IMPEDANCE);
+> +
+> +	/* set 50Mhz PHY clock */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x14, PCIE_PHY_PLL_DIV_0);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x12, PCIE_PHY_PLL_DIV_1);
+> +
+> +	/* set TX Differential output for lane 0 */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x7f, PCIE_PHY_TRSV0_DRV_LVL);
+> +
+> +	/* set TX Pre-emphasis Level Control for lane 0 to minimum */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x0, PCIE_PHY_TRSV0_EMP_LVL);
+> +
+> +	/* set RX clock and data recovery bandwidth */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0xe7, PCIE_PHY_PLL_BIAS);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x82, PCIE_PHY_TRSV0_RXCDR);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x82, PCIE_PHY_TRSV1_RXCDR);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x82, PCIE_PHY_TRSV2_RXCDR);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x82, PCIE_PHY_TRSV3_RXCDR);
+> +
+> +	/* change TX Pre-emphasis Level Control for lanes */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x39, PCIE_PHY_TRSV0_EMP_LVL);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x39, PCIE_PHY_TRSV1_EMP_LVL);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x39, PCIE_PHY_TRSV2_EMP_LVL);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x39, PCIE_PHY_TRSV3_EMP_LVL);
+> +
+> +	/* set LVCC */
+> +	exynos_pcie_phy_writel(ep->phy_base, 0x20, PCIE_PHY_TRSV0_LVCC);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0xa0, PCIE_PHY_TRSV1_LVCC);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0xa0, PCIE_PHY_TRSV2_LVCC);
+> +	exynos_pcie_phy_writel(ep->phy_base, 0xa0, PCIE_PHY_TRSV3_LVCC);
+> +
+> +	/* pulse for common reset */
+> +	exynos_pcie_phy_writel(ep->blk_base, 1, PCIE_PHY_COMMON_RESET);
+> +	udelay(500);
+> +	exynos_pcie_phy_writel(ep->blk_base, 0, PCIE_PHY_COMMON_RESET);
+> +
+> +	return 0;
+> +}
+> +
+> +static int exynos5440_pcie_phy_power_on(struct phy *phy)
+> +{
+> +	struct exynos_pcie_phy *ep = phy_get_drvdata(phy);
+> +	u32 val;
+> +
+> +	exynos_pcie_phy_writel(ep->blk_base, 0, PCIE_PHY_COMMON_RESET);
+> +	exynos_pcie_phy_writel(ep->blk_base, 0, PCIE_PHY_CMN_REG);
+> +	exynos_pcie_phy_writel(ep->blk_base, 0, PCIE_PHY_TRSVREG_RESET);
+> +	exynos_pcie_phy_writel(ep->blk_base, 0, PCIE_PHY_TRSV_RESET);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_COMMON_POWER);
+> +	val &= ~PCIE_PHY_COMMON_PD_CMN;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_COMMON_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV0_POWER);
+> +	val &= ~PCIE_PHY_TRSV0_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV0_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV1_POWER);
+> +	val &= ~PCIE_PHY_TRSV1_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV1_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV2_POWER);
+> +	val &= ~PCIE_PHY_TRSV2_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV2_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV3_POWER);
+> +	val &= ~PCIE_PHY_TRSV3_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV3_POWER);
+> +
+> +	return 0;
+> +}
+> +
+> +static int exynos5440_pcie_phy_power_off(struct phy *phy)
+> +{
+> +	struct exynos_pcie_phy *ep = phy_get_drvdata(phy);
+> +	u32 val;
+> +
+> +	if (readl_poll_timeout(ep->phy_base + PCIE_PHY_PLL_LOCKED, val,
+> +				(val != 0), 1, 500)) {
+> +		dev_err(&phy->dev, "PLL Locked: 0x%x\n", val);
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_COMMON_POWER);
+> +	val |= PCIE_PHY_COMMON_PD_CMN;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_COMMON_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV0_POWER);
+> +	val |= PCIE_PHY_TRSV0_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV0_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV1_POWER);
+> +	val |= PCIE_PHY_TRSV1_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV1_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV2_POWER);
+> +	val |= PCIE_PHY_TRSV2_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV2_POWER);
+> +
+> +	val = exynos_pcie_phy_readl(ep->phy_base, PCIE_PHY_TRSV3_POWER);
+> +	val |= PCIE_PHY_TRSV3_PD_TSV;
+> +	exynos_pcie_phy_writel(ep->phy_base, val, PCIE_PHY_TRSV3_POWER);
+> +
+> +	return 0;
+> +}
+> +
+> +static int exynos5440_pcie_phy_reset(struct phy *phy)
+> +{
+> +	struct exynos_pcie_phy *ep = phy_get_drvdata(phy);
+> +
+> +	exynos_pcie_phy_writel(ep->blk_base, 0, PCIE_PHY_MAC_RESET);
+> +	exynos_pcie_phy_writel(ep->blk_base, 1, PCIE_PHY_GLOBAL_RESET);
+> +	exynos_pcie_phy_writel(ep->blk_base, 0, PCIE_PHY_GLOBAL_RESET);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops exynos5440_phy_ops = {
+> +	.init		= exynos5440_pcie_phy_init,
+> +	.power_on	= exynos5440_pcie_phy_power_on,
+> +	.power_off	= exynos5440_pcie_phy_power_off,
+> +	.reset		= exynos5440_pcie_phy_reset,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static const struct exynos_pcie_phy_data exynos5440_pcie_phy_data = {
+> +	.ops		= &exynos5440_phy_ops,
+> +};
+> +
+> +static const struct of_device_id exynos_pcie_phy_match[] = {
+> +	{
+> +		.compatible = "samsung,exynos5440-pcie-phy",
+> +		.data = &exynos5440_pcie_phy_data,
+> +	},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_pcie_phy_match);
+> +
+> +static int exynos_pcie_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct exynos_pcie_phy *exynos_phy;
+> +	struct phy *generic_phy;
+> +	struct phy_provider *phy_provider;
+> +	struct resource *res;
+> +	const struct exynos_pcie_phy_data *drv_data;
+> +
+> +	drv_data = of_device_get_match_data(dev);
+> +	if (!drv_data)
+> +		return -ENODEV;
+> +
+> +	exynos_phy = devm_kzalloc(dev, sizeof(*exynos_phy), GFP_KERNEL);
+> +	if (!exynos_phy)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	exynos_phy->phy_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(exynos_phy->phy_base))
+> +		return PTR_ERR(exynos_phy->phy_base);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	exynos_phy->blk_base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(exynos_phy->phy_base))
+> +		return PTR_ERR(exynos_phy->phy_base);
+> +
+> +	exynos_phy->drv_data = drv_data;
+> +
+> +	generic_phy = devm_phy_create(dev, dev->of_node, drv_data->ops);
+> +	if (IS_ERR(generic_phy)) {
+> +		dev_err(dev, "failed to create PHY\n");
+> +		return PTR_ERR(generic_phy);
+> +	}
+> +
+> +	phy_set_drvdata(generic_phy, exynos_phy);
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +}
+> +
+> +static struct platform_driver exynos_pcie_phy_driver = {
+> +	.probe	= exynos_pcie_phy_probe,
+> +	.driver = {
+> +		.of_match_table	= exynos_pcie_phy_match,
+> +		.name		= "exynos_pcie_phy",
+> +	}
+> +};
+> +module_platform_driver(exynos_pcie_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Samsung S5P/EXYNOS SoC PCIe PHY driver");
+> +MODULE_AUTHOR("Jaehoon Chung<jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+
+rest looks good to me.
+Reviewed-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+-- 
+
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
