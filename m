@@ -1,38 +1,134 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: add multidomain support to i.MX GPC
- DT binding
-Date: Wed, 15 Feb 2017 15:08:32 +0800
-Message-ID: <20170215070830.GA8398@dragon>
-References: <20170127183728.26701-1-l.stach@pengutronix.de>
- <1486741439.3879.7.camel@pengutronix.de>
+From: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dmaengine: Add Broadcom SBA RAID driver
+Date: Tue, 14 Feb 2017 23:25:56 -0800
+Message-ID: <CAPcyv4h83vgeB82KmEEFV196MsWdteRqypY5_tcSyaMM_QwYMA@mail.gmail.com>
+References: <1487055112-5185-1-git-send-email-anup.patel@broadcom.com>
+ <1487055112-5185-4-git-send-email-anup.patel@broadcom.com>
+ <CAPcyv4g5PU1EQWq-SCbt0QB=vSaMyafqa-ThJifDxEoQha-6Hw@mail.gmail.com>
+ <CAALAos_=TN_ZfeJbRQEwuc+t5zaxKVgrgEMNPQQu8K8Q8+8F6A@mail.gmail.com>
+ <CAPcyv4jckb=sbocr3W43NZ2YyUVLbDdhbCAhLfgQwh-bRuvjYQ@mail.gmail.com> <CAALAos-txDCs3QZ4HGBNicOD8t49NPT6E8RpjVMccMn1D-UTgQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486741439.3879.7.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CAALAos-txDCs3QZ4HGBNicOD8t49NPT6E8RpjVMccMn1D-UTgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-raid <linux-raid-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 04:43:59PM +0100, Lucas Stach wrote:
-> Hi Shawn,
-> 
-> are you willing to take this series through your tree or do you think we
-> need to get this in via some other tree?
+On Tue, Feb 14, 2017 at 11:03 PM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On Wed, Feb 15, 2017 at 12:13 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>> On Tue, Feb 14, 2017 at 10:25 PM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>> On Tue, Feb 14, 2017 at 10:04 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Mon, Feb 13, 2017 at 10:51 PM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> The Broadcom stream buffer accelerator (SBA) provides offloading
+>>>>> capabilities for RAID operations. This SBA offload engine is
+>>>>> accessible via Broadcom SoC specific ring manager.
+>>>>>
+>>>>> This patch adds Broadcom SBA RAID driver which provides one
+>>>>> DMA device with RAID capabilities using one or more Broadcom
+>>>>> SoC specific ring manager channels. The SBA RAID driver in its
+>>>>> current shape implements memcpy, xor, and pq operations.
+>>>>>
+>>>>> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>> ---
+>>>>>  drivers/dma/Kconfig        |   13 +
+>>>>>  drivers/dma/Makefile       |    1 +
+>>>>>  drivers/dma/bcm-sba-raid.c | 1694 ++++++++++++++++++++++++++++++++++++++++++++
+>>>>>  3 files changed, 1708 insertions(+)
+>>>>>  create mode 100644 drivers/dma/bcm-sba-raid.c
+>>>>>
+>>>>> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+>>>>> index 263495d..bf8fb84 100644
+>>>>> --- a/drivers/dma/Kconfig
+>>>>> +++ b/drivers/dma/Kconfig
+>>>>> @@ -99,6 +99,19 @@ config AXI_DMAC
+>>>>>           controller is often used in Analog Device's reference designs for FPGA
+>>>>>           platforms.
+>>>>>
+>>>>> +config BCM_SBA_RAID
+>>>>> +       tristate "Broadcom SBA RAID engine support"
+>>>>> +       depends on (ARM64 && MAILBOX && RAID6_PQ) || COMPILE_TEST
+>>>>> +       select DMA_ENGINE
+>>>>> +       select DMA_ENGINE_RAID
+>>>>> +       select ASYNC_TX_ENABLE_CHANNEL_SWITCH
+>>>>
+>>>> I thought you agreed to drop this. Its usage is broken.
+>>>
+>>> If ASYNC_TX_ENABLE_CHANNEL_SWITCH is not selected
+>>> then async_dma_find_channel() will only try to find channel
+>>> with DMA_ASYNC_TX capability.
+>>>
+>>> The DMA_ASYNC_TX capability is set by
+>>> dma_async_device_register() when all Async Tx
+>>> capabilities are supported by a DMA devices namely
+>>> DMA_INTERRUPT, DMA_MEMCPY, DMA_XOR,
+>>> DMA_XOR_VAL, DMA_PQ, and DMA_PQ_VAL.
+>>>
+>>> We only support DMA_MEMCPY, DMA_XOR, and
+>>> DMA_PQ capabilities in BCM-SBA-RAID driver so
+>>> DMA_ASYNC_TX capability is never set for the
+>>> DMA device registered by BCM-SBA-RAID driver.
+>>>
+>>> Due to above, if ASYNC_TX_ENABLE_CHANNEL_SWITCH
+>>> is not selected then Async Tx APIs fail to find DMA
+>>> channel provided by BCM-SBA-RAID hence the
+>>> option ASYNC_TX_ENABLE_CHANNEL_SWITCH is
+>>> required for BCM-SBA-RAID.
+>>>
+>>> The DMA mappings are violated by channel switching
+>>> only if we switch form DMA channel A to DMA channel
+>>> B and both these DMA channels have different underlying
+>>> "struct device". In most of the cases DMA mappings
+>>> are not violated because DMA channels having
+>>> Async Tx capabilities are provided using same
+>>> underlying "struct device".
+>>
+>> No, fix the infrastructure. Do not put local hack in your driver for
+>> this global problem [1].
+>
+> There is no hack in the driver. We need
+> ASYNC_TX_ENABLE_CHANNEL_SWITCH
+> based on current state of dmaengine framework.
+>
+> The framework should be fixed as separate patchset.
+>
+> We have other RAID drivers such as xgene-dma and
+> mv_xor_v2 who also require
+> ASYNC_TX_ENABLE_CHANNEL_SWITCH due
+> to same reason.
+>
+> Fixing the framework and improving framework is
+> a ongoing process. I don't see why that should
+> stop this patchset.
+>
 
-I'm willing to take it.  But I don't think it's been ready yet.  Since
-you insist on keeping the .remove hook for both imx_gpc_driver and
-imx_pgc_power_domain_driver, did you actually test it with manually
-bind/unbind the drivers?  I tested it a bit and found it doesn't work
-well for me.
+Because this driver is turning on a dangerous compile time option and
+is not using the functionality. If this silicon IP block appears in
+another product in the future paired with another DMA engine then the
+assumptions about a safe/single dma-device is violated.
 
-Also, there is a comment from Andrey that is not responded.
+The realization of how async_tx was breaking DMA mapping api
+assumptions came after some of these dma-drivers were added to the
+kernel. We should stop making the problem worse.
 
-Shawn
+I should have submitted a patch like the below at the time we
+discovered this problem, but unfortunately it languished when I
+stopped maintaining the iop-adma and ioat drivers.
 
-> It would be good to queue this up somewhere as a reference, as I have
-> some upcoming work for MX6SX and MX6QP, which depends on this series.
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 263495d0adbd..6b30eb9ad125 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -35,6 +35,7 @@ comment "DMA Devices"
+
+ #core
+ config ASYNC_TX_ENABLE_CHANNEL_SWITCH
++       depends on BROKEN
+        bool
+
+ config ARCH_HAS_ASYNC_TX_FIND_CHANNEL
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
