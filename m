@@ -1,19 +1,20 @@
-From: Mark Rutland <mark.rutland@arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH RFC 2/3] coresight: add support for debug module
-Date: Wed, 15 Feb 2017 11:43:27 +0000
-Message-ID: <20170215114327.GE31733@leverpostej>
+Date: Wed, 15 Feb 2017 11:44:16 +0000
+Message-ID: <20170215114416.GF31733@leverpostej>
 References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
  <1486966298-16767-3-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486966298-16767-3-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>
+In-Reply-To: <1486966298-16767-3-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, nd-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+[resending due to a mail server snafu]
 
 On Mon, Feb 13, 2017 at 02:11:37PM +0800, Leo Yan wrote:
 > Coresight includes debug module and usually the module connects with CPU
@@ -47,7 +48,7 @@ sure that accesses to these registers is safe in general.
 > notifier for panic; so when system detect the CPU lockup we can utilize
 > debug module registers to get to know PC value for all CPUs; so we can
 > quickly know the hang address for CPUs.
->
+> 
 > This is initial driver for coresight debug module and could enhance it
 > later according to debugging requirement.
 
@@ -63,9 +64,9 @@ A per-cpu variable is preferred to an NR_CPUS sized array.
 > +
 > +static void debug_os_unlock(struct debug_drvdata *drvdata)
 > +{
-> +     /* Unlocks the debug registers */
-> +     writel_relaxed(0x0, drvdata->base + EDOSLAR);
-> +     isb();
+> +	/* Unlocks the debug registers */
+> +	writel_relaxed(0x0, drvdata->base + EDOSLAR);
+> +	isb();
 > +}
 
 I do not believe this barrier is correct.
@@ -74,32 +75,32 @@ I do not believe this barrier is correct.
 
 > +static void debug_read_pcsr(struct debug_drvdata *drvdata)
 > +{
-> +     u32 pcsr_hi, pcsr_lo;
+> +	u32 pcsr_hi, pcsr_lo;
 > +
-> +     CS_UNLOCK(drvdata->base);
+> +	CS_UNLOCK(drvdata->base);
 > +
-> +     debug_os_unlock(drvdata);
+> +	debug_os_unlock(drvdata);
 > +
 > +#ifdef CONFIG_64BIT
-> +     pcsr_lo =3D readl_relaxed(drvdata->base + EDPCSR_LO);
-> +     pcsr_hi =3D readl_relaxed(drvdata->base + EDPCSR_HI);
+> +	pcsr_lo = readl_relaxed(drvdata->base + EDPCSR_LO);
+> +	pcsr_hi = readl_relaxed(drvdata->base + EDPCSR_HI);
 > +
-> +     pr_emerg("CPU[%d]: PSCR=3D0x%lx\n", drvdata->cpu,
-> +              ((unsigned long)pcsr_hi << 32 | (unsigned long)pcsr_lo));
+> +	pr_emerg("CPU[%d]: PSCR=0x%lx\n", drvdata->cpu,
+> +		 ((unsigned long)pcsr_hi << 32 | (unsigned long)pcsr_lo));
 > +#else
-> +     pcsr_lo =3D readl_relaxed(drvdata->base + EDPCSR_LO);
+> +	pcsr_lo = readl_relaxed(drvdata->base + EDPCSR_LO);
 > +
-> +     pr_emerg("CPU[%d]: PSCR=3D0x%lx\n", drvdata->cpu, pcsr_lo);
+> +	pr_emerg("CPU[%d]: PSCR=0x%lx\n", drvdata->cpu,	pcsr_lo);
 > +#endif
 > +
-> +     CS_LOCK(drvdata->base);
+> +	CS_LOCK(drvdata->base);
 > +}
 
 Per ARM DDI 0487A.k_iss10775, H9.2.32, "EDPCSR, External Debug Program
 Counter Sample Register":
 
-        Implemented only if the OPTIONAL PC Sample-based Profiling
-        Extension is implemented.
+	Implemented only if the OPTIONAL PC Sample-based Profiling
+	Extension is implemented.
 
 So even if we have access to an MMIO debug interface, we cannot
 necessarily acecess this register.
@@ -109,33 +110,32 @@ necessarily acecess this register.
 > +/*
 > + * Dump out memory limit information on panic.
 > + */
-> +static int dump_debug(struct notifier_block *self, unsigned long v, void=
- *p)
+> +static int dump_debug(struct notifier_block *self, unsigned long v, void *p)
 > +{
-> +     int i;
+> +	int i;
 > +
-> +     pr_emerg("Coresight debug module:\n");
+> +	pr_emerg("Coresight debug module:\n");
 > +
-> +     for_each_possible_cpu(i) {
+> +	for_each_possible_cpu(i) {
 > +
-> +             if (!debug_drvdata[i])
-> +                     continue;
+> +		if (!debug_drvdata[i])
+> +			continue;
 > +
-> +             debug_read_pcsr(debug_drvdata[i]);
-> +     }
+> +		debug_read_pcsr(debug_drvdata[i]);
+> +	}
 
 Is there no potential for deadlock with a CPU reading its own debug
 interface registers?
 
 [...]
 
-> +static struct amba_id debug_ids[] =3D {
-> +     {       /* Debug for Cortex-A53 */
-> +             .id     =3D 0x000bbd03,
-> +             .mask   =3D 0x000fffff,
-> +             .data   =3D "debug",
-> +     },
-> +     { 0, 0},
+> +static struct amba_id debug_ids[] = {
+> +	{       /* Debug for Cortex-A53 */
+> +		.id	= 0x000bbd03,
+> +		.mask	= 0x000fffff,
+> +		.data	= "debug",
+> +	},
+> +	{ 0, 0},
 > +};
 
 The DT binding said nothing about Cortex-A53.
@@ -145,8 +145,7 @@ particular CPU?
 
 Thanks,
 Mark.
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
