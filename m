@@ -1,48 +1,36 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 02/11] Documentation: devicetree: arm: Document Actions Semi S500
-Date: Wed, 15 Feb 2017 17:55:19 +0100
-Message-ID: <20170215165528.10052-3-afaerber@suse.de>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 08/11] ARM: dts: Prepare Actions Semi S500 and LeMaker
+ Guitar
+Date: Wed, 15 Feb 2017 17:07:43 +0000
+Message-ID: <20170215170742.GH31733@leverpostej>
 References: <20170215165528.10052-1-afaerber@suse.de>
+ <20170215165528.10052-9-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170215165528.10052-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: contact@linux-xapple.org, mp-cs@actions-semi.com, info@ucrobotics.com, support@lemaker.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170215165528.10052-9-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, contact-CO9UH4nLugWa1hIE42aguQ@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, info-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nd-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- Documentation/devicetree/bindings/arm/acts.txt | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/acts.txt
+On Wed, Feb 15, 2017 at 05:55:25PM +0100, Andreas Färber wrote:
+> +	arm-pmu {
+> +		compatible = "arm,cortex-a9-pmu";
+> +		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> +		             <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> +		             <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> +		             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
 
-diff --git a/Documentation/devicetree/bindings/arm/acts.txt b/Documentation/devicetree/bindings/arm/acts.txt
-new file mode 100644
-index 0000000..a34d647
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/acts.txt
-@@ -0,0 +1,19 @@
-+Actions Semi platforms device tree bindings
-+-------------------------------------------
-+
-+
-+S500 SoC
-+========
-+
-+Required root node properties:
-+
-+ - compatible :  "acts,s500"
-+
-+
-+Modules:
-+
-+ - LeMaker Guitar: "lemaker,guitar"
-+
-+Boards:
-+
-+ - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
--- 
-2.10.2
+Please add an interrupt-affinity property, as described in
+Documentation/devicetree/bindings/arm/pmu.txt
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
