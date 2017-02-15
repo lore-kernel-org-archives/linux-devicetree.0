@@ -1,96 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v3] Input: gpio_keys - add dt abs/rel button support
-Date: Wed, 15 Feb 2017 17:35:58 -0600
-Message-ID: <20170215233558.eu7wa7zobycelhaj@rob-hp-laptop>
-References: <20170209134128.GA3629@Gaia>
+Subject: Re: [PATCH 2/8] dt-bindings: gpu: mali: Add optional memory-region
+Date: Wed, 15 Feb 2017 17:37:51 -0600
+Message-ID: <20170215233751.2sin5acaylsb5nqf@rob-hp-laptop>
+References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
+ <49fd36f667c5ae46b0724c8204eabc51014aab92.1486655917.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <owner-linux-mm@kvack.org>
 Content-Disposition: inline
-In-Reply-To: <20170209134128.GA3629@Gaia>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Holmberg <hans@pixelmunchies.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <49fd36f667c5ae46b0724c8204eabc51014aab92.1486655917.git-series.maxime.ripard@free-electrons.com>
+Sender: owner-linux-mm@kvack.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 02:41:31PM +0100, Hans Holmberg wrote:
-> This change adds support for specifying device tree buttons emitting
-> abs/rel events.
+On Thu, Feb 09, 2017 at 05:39:16PM +0100, Maxime Ripard wrote:
+> The reserved memory bindings allow us to specify which memory areas our
+> buffers can be allocated from.
 > 
-> ABS events were previously supported, but only via platform data, so add
-> the missing device tree attribute to allow axis values to be emitted with
-> abs/rel events.
+> Let's use it.
+
+You didn't think of this when you just added Mali binding? 
+
 > 
-> Also emit 0 on button releases for REL and ABS keys when all buttons of
-> the same type and axis are released. This is a must-have for supporting
-> digital joysticks.
-> 
-> Finally, report min/max values for abs axes to the input framework.
-> 
-> Signed-off-by: Hans Holmberg <hans@pixelmunchies.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 > ---
-> Thanks for your comments, Rob, Dimitry.
-> 
-> Changes since v2:
-> * 0 is now only reported when no buttons on an axis is pressed. If several
->   buttons on the same axis are pressed simultaneously, the value reported
->   depends on the order the buttons are specified.
-> * joystick example removed from the dt binding doc
-> * rebased on top of next
-> 
-> Changes since v1:
-> * Corrected cc list - now the mailing lists are looped in.
-> 
-> 
-> I've updated the patch to report 0 only when there are no buttons
-> pressed on the same axis and removed the joystick dt binding example.
-> 
-> If there are more than one pressed button on a given axis, only one
-> value is reported, and that value is set depending on which order
-> the buttons have been specified in the device tree. My idea here is 
-> that the priority order is left to the dts-writer.
-> 
-> Note that gpio_keys_polled reports all pressed-button values on an axis
-> but this makes less sense to me, (what value is the user supposed to use?)
-> 
-> It would be nice to have the two drivers behave the same. Let me know
-> what you think.
-> 
-> gpio_keys_polled test: (as a reference)
-> 
-> Buttons defined(in this order)
-> Button A value = 1
-> Button B value = 2
-> 
-> Evtest:
-> 
-> [A down, B up]
-> Event: time 1486029549.621182, type 3 (EV_ABS), code 0 (ABS_X), value 1
-> Event: time 1486029549.621182, -------------- EV_SYN ------------
-> 
-> [A down, B down] 
-> Event: time 1486029558.201182, type 3 (EV_ABS), code 0 (ABS_X), value 2
-> Event: time 1486029558.201182, type 3 (EV_ABS), code 0 (ABS_X), value 1
-> Event: time 1486029558.201182, -------------- EV_SYN ------------
-> Event: time 1486029558.311190, type 3 (EV_ABS), code 0 (ABS_X), value 2
-> Event: time 1486029558.311190, type 3 (EV_ABS), code 0 (ABS_X), value 1
-> ...
-> 
-> (this keeps on repeating)
-> 
-> [A down, B up]
-> <no events>
-> 
-> [A up, B up]
-> Event: time 1486029561.391175, type 3 (EV_ABS), code 0 (ABS_X), value 0
-> Event: time 1486029561.391175, -------------- EV_SYN ------------
-> 
-> 
-> Thanks, Hans
-> 
->  .../devicetree/bindings/input/gpio-keys.txt        |  7 +++
+>  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 4 ++++
+>  1 file changed, 4 insertions(+), 0 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
 
->  drivers/input/keyboard/gpio_keys.c                 | 55 +++++++++++++++++++---
->  2 files changed, 55 insertions(+), 7 deletions(-)
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
