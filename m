@@ -1,57 +1,78 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/1] arm64: dts: r8a7795: add IMR-LX4 support
-Date: Wed, 15 Feb 2017 12:45:09 +0300
-Message-ID: <3f007932-d120-b0c0-2080-ce8eeb9418af@cogentembedded.com>
-References: <20170214210301.620322370@cogentembedded.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: How to get related device pointer via DT?
+Date: Wed, 15 Feb 2017 18:01:36 +0800
+Message-ID: <20170215100136.GB26227@b29397-desktop>
+References: <HK2PR06MB054824526D2975ADE8EA0405D85B0@HK2PR06MB0548.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170214210301.620322370@cogentembedded.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <HK2PR06MB054824526D2975ADE8EA0405D85B0-jAC1QCBx2F3DOGFS7+tQZW0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/15/2017 12:02 AM, Sergei Shtylyov wrote:
+On Wed, Feb 15, 2017 at 02:21:55AM +0000, Yoshihiro Shimoda wrote:
+> Hi,
+> 
+> I would like to get a related device pointer on usb EHCI drivers (or USB framework)
+> because related device (e.g. OHCI or UHCI, called "companion controllers") has to
+> finish resuming. I discussed this topic with Alan:
+> http://marc.info/?t=148653514200001&r=1&w=2
+> 
+> In PCI bus, USB framework already has such a feature in drivers/usb/core/hcd-pci.c.
+> However, in platform devices, we don't have it for now. So, I would like to add it.
+> 
+> Then, I have 2 ideas to get the related device pointer:
+> 
+> A) We add a new property "companion" as usb-generic.txt and EHCI node(s) have
+>    such a property to bind a companion controller.
+> B) We assume EHCI controller binds a companion controller if some resources
+>    (irq or clock) are the same and it has a compatible strings as "generic-[uo]hci"
+>    for instance.
+> 
+> My environment is R-Car H3, and it has 3 EHCI and 3 OHCI controllers.
+> For example (I only wrote channel 0 of EHCI and OHCI):
+> 		ehci0: usb@ee080100 {
+> 			compatible = "generic-ehci";
+> 			reg = <0 0xee080100 0 0x100>;
+> 			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+> 			clocks = <&cpg CPG_MOD 703>;
+> 			phys = <&usb2_phy0>;
+> 			phy-names = "usb";
+> 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> 			status = "disabled";
+> 		};
+> 
+> 		ohci0: usb@ee080000 {
+> 			compatible = "generic-ohci";
+> 			reg = <0 0xee080000 0 0x100>;
+> 			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
+> 			clocks = <&cpg CPG_MOD 703>;
+> 			phys = <&usb2_phy0>;
+> 			phy-names = "usb";
+> 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> 			status = "disabled";
+> 		};
+> 
+> If my idea A), ehci0 will have companion = <&ohci>;
+> If my idea B), no need to add any property.
+> 
+> What do you think?
+> Anyway, I will start to study DT programming :)
+> 
 
-> Describe the IMR-LX4 devices in the R8A7795 device tree.
->
-> Based on the original (and large) patch by Konstantin Kozhevnikov
-> <Konstantin.Kozhevnikov@cogentembedded.com>.
->
-> Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->
-> ---
-> This patch is against the 'renesas-devel-20170213-v4.10-rc8' tag of Simon
-> Horman's 'renesas.git' repo.
+>From my point, idea A is better. It seems you have similar idea when you
+tried Dual-role framework before. [1]
 
-    The binding was documented in the IMR driver patch. I don't expect it to 
-change even if the driver would be rewritten for DRM.
+[1] https://patchwork.kernel.org/patch/9169745/
 
-[...]
-> Index: renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -1419,6 +1419,38 @@
->  			status = "disabled";
->  		};
->
-> +		imr-lx4@fe860000 {
-> +			compatible = "renesas,imr-lx4";
+-- 
 
-    The manual seems to suggest that IMR-LX4 devicec are different between 
-7795 and 7796 SoCs, so we may need SoC specific compatibility. I'll look into 
-this...
-
-MBR, Sergei
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
