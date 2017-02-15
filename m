@@ -1,262 +1,169 @@
-From: yegorslists@googlemail.com
-Subject: [PATCH v3 3/3] can: ti_hecc: Add DT support for TI HECC module
-Date: Wed, 15 Feb 2017 15:48:45 +0100
-Message-ID: <1487170125-10815-4-git-send-email-yegorslists@googlemail.com>
-References: <1487170125-10815-1-git-send-email-yegorslists@googlemail.com>
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1487170125-10815-1-git-send-email-yegorslists@googlemail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: linux-can@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, tony@atomide.com, mkl@pengutronix.de, andrej.skvortzov@gmail.com, hs@denx.de, anton.a.glukhov@gmail.com, Yegor Yefremov <yegorslists@googlemail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ARM: mvebu: Add mv98dx3236-soc-id
+Date: Wed, 15 Feb 2017 15:52:47 +0100
+Message-ID: <87vasbcxq8.fsf@free-electrons.com>
+References: <20170207202815.20226-1-chris.packham@alliedtelesis.co.nz>
+        <20170207202815.20226-5-chris.packham@alliedtelesis.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170207202815.20226-5-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Chris
+        Packham's message of "Wed, 8 Feb 2017 09:28:13 +1300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+Hi Chris,
+ 
+ On mar., févr. 07 2017, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
 
-These patch set adds device tree support for TI HECC module.
+> The DFX server on the 98dx3236 and compatible SoCs has an ID register
+> that provides revision information that the PCI based ID register
+> doesn't have. Use this if it's available.
+>
 
-Signed-off-by: Anton Glukhov <anton.a.glukhov@gmail.com>
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
----
- drivers/net/can/ti_hecc.c | 157 +++++++++++++++++++++++++++++++++-------------
- 1 file changed, 112 insertions(+), 45 deletions(-)
+Could you split this patch in two part: one for device tree and one for
+the C code?
 
-diff --git a/drivers/net/can/ti_hecc.c b/drivers/net/can/ti_hecc.c
-index 6749b18..63056f3 100644
---- a/drivers/net/can/ti_hecc.c
-+++ b/drivers/net/can/ti_hecc.c
-@@ -46,6 +46,8 @@
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <linux/can/dev.h>
- #include <linux/can/error.h>
-@@ -57,6 +59,12 @@
- MODULE_VERSION(HECC_MODULE_VERSION);
- #define DRV_DESC "TI High End CAN Controller Driver " HECC_MODULE_VERSION
- 
-+#define HECC_BASE_SIZE		0x80
-+#define HECC_RAM_OFFSET		0x3000
-+#define HECC_RAM_SIZE		0x180
-+#define MBX_OFFSET		0x2000
-+#define MBX_SIZE		0x200
-+
- /* TX / RX Mailbox Configuration */
- #define HECC_MAX_MAILBOXES	32	/* hardware mailboxes - do not change */
- #define MAX_TX_PRIO		0x3F	/* hardware value - do not change */
-@@ -214,10 +222,9 @@ struct ti_hecc_priv {
- 	struct net_device *ndev;
- 	struct clk *clk;
- 	void __iomem *base;
--	u32 scc_ram_offset;
--	u32 hecc_ram_offset;
--	u32 mbx_offset;
--	u32 int_line;
-+	void __iomem *hecc_ram;
-+	void __iomem *mbx;
-+	bool int_line;
- 	spinlock_t mbx_lock; /* CANME register needs protection */
- 	u32 tx_head;
- 	u32 tx_tail;
-@@ -242,20 +249,18 @@ static inline int get_tx_head_prio(struct ti_hecc_priv *priv)
- 
- static inline void hecc_write_lam(struct ti_hecc_priv *priv, u32 mbxno, u32 val)
- {
--	__raw_writel(val, priv->base + priv->hecc_ram_offset + mbxno * 4);
-+	__raw_writel(val, priv->hecc_ram + mbxno * 4);
- }
- 
- static inline void hecc_write_mbx(struct ti_hecc_priv *priv, u32 mbxno,
- 	u32 reg, u32 val)
- {
--	__raw_writel(val, priv->base + priv->mbx_offset + mbxno * 0x10 +
--			reg);
-+	__raw_writel(val, priv->mbx + mbxno * 0x10 + reg);
- }
- 
- static inline u32 hecc_read_mbx(struct ti_hecc_priv *priv, u32 mbxno, u32 reg)
- {
--	return __raw_readl(priv->base + priv->mbx_offset + mbxno * 0x10 +
--			reg);
-+	return __raw_readl(priv->mbx + mbxno * 0x10 + reg);
- }
- 
- static inline void hecc_write(struct ti_hecc_priv *priv, u32 reg, u32 val)
-@@ -872,56 +877,121 @@ static const struct net_device_ops ti_hecc_netdev_ops = {
- 	.ndo_change_mtu		= can_change_mtu,
- };
- 
-+static const struct of_device_id ti_hecc_dt_ids[] = {
-+	{
-+		.compatible = "ti,am3517-hecc",
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ti_hecc_dt_ids);
-+
-+static struct ti_hecc_platform_data *
-+hecc_of_get_pdata(struct platform_device *pdev)
-+{
-+	struct ti_hecc_platform_data *pdata;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	if (!IS_ENABLED(CONFIG_OF) || !np)
-+		return dev_get_platdata(&pdev->dev);
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pdata->int_line = of_property_read_bool(np, "ti,use-hecc1int");
-+
-+	return pdata;
-+}
-+
- static int ti_hecc_probe(struct platform_device *pdev)
- {
- 	struct net_device *ndev = (struct net_device *)0;
- 	struct ti_hecc_priv *priv;
--	struct ti_hecc_platform_data *pdata;
--	struct resource *mem, *irq;
--	void __iomem *addr;
-+	struct ti_hecc_platform_data *pdata = dev_get_platdata(&pdev->dev);
-+	struct resource temp_res, *res, *irq;
- 	int err = -ENODEV;
- 
--	pdata = dev_get_platdata(&pdev->dev);
-+	pdata = hecc_of_get_pdata(pdev);
- 	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data\n");
--		goto probe_exit;
-+		dev_err(&pdev->dev, "Platform data missing\n");
-+		return -EINVAL;
- 	}
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!mem) {
--		dev_err(&pdev->dev, "No mem resources\n");
--		goto probe_exit;
-+	ndev = alloc_candev(sizeof(struct ti_hecc_priv), HECC_MAX_TX_MBOX);
-+	if (!ndev) {
-+		dev_err(&pdev->dev, "alloc_candev failed\n");
-+		return -ENOMEM;
-+	}
-+	priv = netdev_priv(ndev);
-+
-+	/* handle hecc memory */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hecc");
-+	if (!res) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		if (!res) {
-+			dev_err(&pdev->dev, "can't get IORESOURCE_MEM hecc\n");
-+			return -EINVAL;
-+		}
-+
-+		temp_res.start = res->start;
-+		temp_res.end = temp_res.start + HECC_BASE_SIZE - 1;
-+		res = &temp_res;
-+	}
-+
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (!priv->base) {
-+		dev_err(&pdev->dev, "hecc ioremap failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* handle hecc-ram memory */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hecc-ram");
-+	if (!res) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		if (!res) {
-+			dev_err(&pdev->dev, "can't get IORESOURCE_MEM hecc-ram\n");
-+			return -EINVAL;
-+		}
-+
-+		temp_res.start = res->start + HECC_RAM_OFFSET;
-+		temp_res.end = temp_res.start + HECC_RAM_SIZE - 1;
-+		res = &temp_res;
-+	}
-+
-+	priv->hecc_ram = devm_ioremap_resource(&pdev->dev, res);
-+	if (!priv->hecc_ram) {
-+		dev_err(&pdev->dev, "hecc-ram ioremap failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* handle mbx memory */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mbx");
-+	if (!res) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		if (!res) {
-+			dev_err(&pdev->dev, "can't get IORESOURCE_MEM mbx\n");
-+			return -EINVAL;
-+		}
-+
-+		temp_res.start = res->start + MBX_OFFSET;
-+		temp_res.end = temp_res.start + MBX_SIZE - 1;
-+		res = &temp_res;
- 	}
-+
-+	priv->mbx = devm_ioremap_resource(&pdev->dev, res);
-+	if (!priv->mbx) {
-+		dev_err(&pdev->dev, "mbx ioremap failed\n");
-+		return -ENOMEM;
-+	}
-+
- 	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
- 	if (!irq) {
- 		dev_err(&pdev->dev, "No irq resource\n");
- 		goto probe_exit;
- 	}
--	if (!request_mem_region(mem->start, resource_size(mem), pdev->name)) {
--		dev_err(&pdev->dev, "HECC region already claimed\n");
--		err = -EBUSY;
--		goto probe_exit;
--	}
--	addr = ioremap(mem->start, resource_size(mem));
--	if (!addr) {
--		dev_err(&pdev->dev, "ioremap failed\n");
--		err = -ENOMEM;
--		goto probe_exit_free_region;
--	}
- 
--	ndev = alloc_candev(sizeof(struct ti_hecc_priv), HECC_MAX_TX_MBOX);
--	if (!ndev) {
--		dev_err(&pdev->dev, "alloc_candev failed\n");
--		err = -ENOMEM;
--		goto probe_exit_iounmap;
--	}
- 
--	priv = netdev_priv(ndev);
- 	priv->ndev = ndev;
--	priv->base = addr;
--	priv->scc_ram_offset = pdata->scc_ram_offset;
--	priv->hecc_ram_offset = pdata->hecc_ram_offset;
--	priv->mbx_offset = pdata->mbx_offset;
- 	priv->int_line = pdata->int_line;
- 	priv->transceiver_switch = pdata->transceiver_switch;
- 
-@@ -971,10 +1041,6 @@ static int ti_hecc_probe(struct platform_device *pdev)
- 	clk_put(priv->clk);
- probe_exit_candev:
- 	free_candev(ndev);
--probe_exit_iounmap:
--	iounmap(addr);
--probe_exit_free_region:
--	release_mem_region(mem->start, resource_size(mem));
- probe_exit:
- 	return err;
- }
-@@ -1045,6 +1111,7 @@ static int ti_hecc_resume(struct platform_device *pdev)
- static struct platform_driver ti_hecc_driver = {
- 	.driver = {
- 		.name    = DRV_NAME,
-+		.of_match_table = ti_hecc_dt_ids,
- 	},
- 	.probe = ti_hecc_probe,
- 	.remove = ti_hecc_remove,
+Thanks,
+
+Gregory
+
+> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> ---
+>
+> Notes:
+>     Changes in v2:
+>     - none
+>
+>  .../bindings/arm/marvell/mv98dx3236-soc-id.txt     | 14 +++++++
+>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi          |  5 +++
+>  arch/arm/mach-mvebu/mvebu-soc-id.c                 | 43 ++++++++++++++++++++--
+>  3 files changed, 59 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/marvell/mv98dx3236-soc-id.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/mv98dx3236-soc-id.txt b/Documentation/devicetree/bindings/arm/marvell/mv98dx3236-soc-id.txt
+> new file mode 100644
+> index 000000000000..ed08cb126a83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/marvell/mv98dx3236-soc-id.txt
+> @@ -0,0 +1,14 @@
+> +Marvell 98dx3236 SoC ID
+> +---------------------------------------------------------------
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "marvell,mv98dx3236-soc-id".
+> +
+> +- reg: should be the register base and length as documented in the
+> +  datasheet for the Device ID Status
+> +
+> +soc-id@f8244 {
+> +	compatible = "marvell,mv98dx3236-soc-id";
+> +	reg = <0xf8244 0x4>;
+> +};
+> diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+> index cbf5cd0c6429..e4baa97836e7 100644
+> --- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+> +++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+> @@ -264,6 +264,11 @@
+>  			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+>  			reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+>  
+> +			soc-id@f8244 {
+> +				compatible = "marvell,mv98dx3236-soc-id";
+> +				reg = <0xf8244 0x4>;
+> +			};
+> +
+>  			dfx_coredivclk: corediv-clock@f8268 {
+>  				compatible = "marvell,mv98dx3236-corediv-clock";
+>  				reg = <0xf8268 0xc>;
+> diff --git a/arch/arm/mach-mvebu/mvebu-soc-id.c b/arch/arm/mach-mvebu/mvebu-soc-id.c
+> index a99434bcee84..b4c94a57f358 100644
+> --- a/arch/arm/mach-mvebu/mvebu-soc-id.c
+> +++ b/arch/arm/mach-mvebu/mvebu-soc-id.c
+> @@ -34,6 +34,9 @@
+>  #define SOC_ID_MASK	    0xFFFF0000
+>  #define SOC_REV_MASK	    0xFF
+>  
+> +#define MV98DX3236_DEV_ID_MASK	0xFF00
+> +#define MV98DX3236_REV_MASK	0xF
+> +
+>  static u32 soc_dev_id;
+>  static u32 soc_rev;
+>  static bool is_id_valid;
+> @@ -45,6 +48,11 @@ static const struct of_device_id mvebu_pcie_of_match_table[] = {
+>  	{},
+>  };
+>  
+> +static const struct of_device_id mvebu_mv98dx3236_of_match_table[] = {
+> +	{ .compatible = "marvell,mv98dx3236-soc-id", },
+> +	{},
+> +};
+> +
+>  int mvebu_get_soc_id(u32 *dev, u32 *rev)
+>  {
+>  	if (is_id_valid) {
+> @@ -131,15 +139,44 @@ static int __init get_soc_id_by_pci(void)
+>  	return ret;
+>  }
+>  
+> +static int __init mvebu_dfx_get_soc_id(u32 *dev, u32 *rev)
+> +{
+> +	struct device_node *np;
+> +	void __iomem *base;
+> +
+> +	np = of_find_matching_node(NULL, mvebu_mv98dx3236_of_match_table);
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	base = of_iomap(np, 0);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	/* SoC ID */
+> +	*dev = (readl(base) >> 12) & MV98DX3236_DEV_ID_MASK;
+> +	/* SoC revision */
+> +	*rev = (readl(base) >> 28) & MV98DX3236_REV_MASK;
+> +
+> +	iounmap(base);
+> +	of_node_put(np);
+> +
+> +	return 0;
+> +}
+> +
+>  static int __init mvebu_soc_id_init(void)
+>  {
+>  
+>  	/*
+> -	 * First try to get the ID and the revision by the system
+> -	 * register and use PCI registers only if it is not possible
+> +	 * First try to get the ID and the revision by from system controller
+> +	 * register, then try the DFX register (if applicable), finally read it
+> +	 * from PCI registers.
+>  	 */
+> -	if (!mvebu_system_controller_get_soc_id(&soc_dev_id, &soc_rev)) {
+> +	if (!mvebu_system_controller_get_soc_id(&soc_dev_id, &soc_rev))
+> +		is_id_valid = true;
+> +	else if (!mvebu_dfx_get_soc_id(&soc_dev_id, &soc_rev))
+>  		is_id_valid = true;
+> +
+> +	if (is_id_valid) {
+>  		pr_info("MVEBU SoC ID=0x%X, Rev=0x%X\n", soc_dev_id, soc_rev);
+>  		return 0;
+>  	}
+> -- 
+> 2.11.0.24.ge6920cf
+>
+
 -- 
-2.1.4
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
