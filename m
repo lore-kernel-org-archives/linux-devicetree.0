@@ -1,54 +1,48 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v7 1/7] dt-bindings: add rk3399 support for dw-mipi-rockchip
-Date: Wed, 15 Feb 2017 12:21:59 +0800
-Message-ID: <1487132525-24933-2-git-send-email-zyw@rock-chips.com>
-References: <1487132525-24933-1-git-send-email-zyw@rock-chips.com>
+From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Subject: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and SMP2P drivers
+Date: Wed, 15 Feb 2017 05:51:57 +0100
+Message-ID: <20170215045157.11659-2-j.neuschaefer@gmx.net>
+References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1487132525-24933-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: john@metanate.com, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170215045157.11659-1-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGR3LW1pcGktZHNpIG9mIHJrMzM5OSBpcyBhbG1vc3QgdGhlIHNhbWUgYXMgcmszMjg4LCB0
-aGUgcmszMzk5IGhhcwphZGRpdGlvbmFsIHBoeSBjb25maWcgY2xvY2suCgpTaWduZWQtb2ZmLWJ5
-OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgpBY2tlZC1ieTogUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4KLS0tCgpDaGFuZ2VzIGluIHY2OiBOb25lCkNoYW5nZXMgaW4gdjU6
-IE5vbmUKQ2hhbmdlcyBpbiB2NDogTm9uZQpDaGFuZ2VzIGluIHYzOiBOb25lCgogLi4uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQg
-ICAgIHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9u
-KC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0
-CmluZGV4IDE3NTNmMGMuLjBmODI1NjggMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dAor
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9k
-d19taXBpX2RzaV9yb2NrY2hpcC50eHQKQEAgLTUsMTAgKzUsMTIgQEAgUmVxdWlyZWQgcHJvcGVy
-dGllczoKIC0gI2FkZHJlc3MtY2VsbHM6IFNob3VsZCBiZSA8MT4uCiAtICNzaXplLWNlbGxzOiBT
-aG91bGQgYmUgPDA+LgogLSBjb21wYXRpYmxlOiAicm9ja2NoaXAscmszMjg4LW1pcGktZHNpIiwg
-InNucHMsZHctbWlwaS1kc2kiLgorCSAgICAgICJyb2NrY2hpcCxyazMzOTktbWlwaS1kc2kiLCAi
-c25wcyxkdy1taXBpLWRzaSIuCiAtIHJlZzogUmVwcmVzZW50IHRoZSBwaHlzaWNhbCBhZGRyZXNz
-IHJhbmdlIG9mIHRoZSBjb250cm9sbGVyLgogLSBpbnRlcnJ1cHRzOiBSZXByZXNlbnQgdGhlIGNv
-bnRyb2xsZXIncyBpbnRlcnJ1cHQgdG8gdGhlIENQVShzKS4KIC0gY2xvY2tzLCBjbG9jay1uYW1l
-czogUGhhbmRsZXMgdG8gdGhlIGNvbnRyb2xsZXIncyBwbGwgcmVmZXJlbmNlCi0gIGNsb2NrKHJl
-ZikgYW5kIEFQQiBjbG9jayhwY2xrKSwgYXMgZGVzY3JpYmVkIGluIFsxXS4KKyAgY2xvY2socmVm
-KSBhbmQgQVBCIGNsb2NrKHBjbGspLiBGb3IgUkszMzk5LCBhIHBoeSBjb25maWcgY2xvY2sKKyAg
-KHBoeV9jZmcpIGlzIGFkZGl0aW9uYWwgcmVxdWlyZWQuIEFzIGRlc2NyaWJlZCBpbiBbMV0uCiAt
-IHJvY2tjaGlwLGdyZjogdGhpcyBzb2Mgc2hvdWxkIHNldCBHUkYgcmVncyB0byBtdXggdm9wbC92
-b3BiLgogLSBwb3J0czogY29udGFpbiBhIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRp
-b25zIGFzIGRlZmluZWQgaW4gWzJdLgogICBGb3Igdm9wYixzZXQgdGhlIHJlZyA9IDwwPiBhbmQg
-c2V0IHRoZSByZWcgPSA8MT4gZm9yIHZvcGwuCi0tIAoyLjYuMwoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+---
+ arch/arm/configs/qcom_defconfig | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+index 4ffdd607205d..97b9e9cd2292 100644
+--- a/arch/arm/configs/qcom_defconfig
++++ b/arch/arm/configs/qcom_defconfig
+@@ -190,11 +190,16 @@ CONFIG_MDM_LCC_9615=y
+ CONFIG_MSM_MMCC_8960=y
+ CONFIG_MSM_MMCC_8974=y
+ CONFIG_HWSPINLOCK_QCOM=y
++CONFIG_REMOTEPROC=y
++CONFIG_QCOM_ADSP_PIL=y
++CONFIG_QCOM_Q6V5_PIL=y
++CONFIG_QCOM_WCNSS_PIL=y
+ CONFIG_QCOM_GSBI=y
+ CONFIG_QCOM_PM=y
+ CONFIG_QCOM_SMEM=y
+ CONFIG_QCOM_SMD=y
+ CONFIG_QCOM_SMD_RPM=y
++CONFIG_QCOM_SMP2P=y
+ CONFIG_IIO=y
+ CONFIG_IIO_BUFFER_CB=y
+ CONFIG_IIO_SW_TRIGGER=y
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
