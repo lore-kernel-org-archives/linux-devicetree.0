@@ -1,124 +1,55 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 3/3] arm64: dts: register Hi6220's coresight debug
- module
-Date: Wed, 15 Feb 2017 14:19:58 -0700
-Message-ID: <20170215211958.GC29730@linaro.org>
-References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
- <1486966298-16767-4-git-send-email-leo.yan@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] PCI: imx6: Add code to support i.MX7D
+Date: Wed, 15 Feb 2017 15:26:24 -0600
+Message-ID: <20170215212624.btdhfn4xvuppv6hq@rob-hp-laptop>
+References: <20170207155027.7734-1-andrew.smirnov@gmail.com>
+ <20170207155027.7734-4-andrew.smirnov@gmail.com>
+ <20170215171700.5vz5seeihgtwn76p@rob-hp-laptop>
+ <20170215173850.GH19040@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486966298-16767-4-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170215173850.GH19040-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 02:11:38PM +0800, Leo Yan wrote:
-> Bind coresight debug driver for Hi6220.
+On Wed, Feb 15, 2017 at 11:38:50AM -0600, Bjorn Helgaas wrote:
+> On Wed, Feb 15, 2017 at 11:17:00AM -0600, Rob Herring wrote:
+> > On Tue, Feb 07, 2017 at 07:50:27AM -0800, Andrey Smirnov wrote:
+> > > Add various bits of code needed to support i.MX7D variant of the IP.
 
-Bindings for the coresight debug driver...
-
+> > 
+> > [...]
+> > 
+> > > @@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+> > >  	u32 val, gpr1, gpr12;
+> > >  
+> > >  	switch (imx6_pcie->variant) {
+> > > +	case IMX7D:
+> > > +		reset_control_assert(imx6_pcie->pciephy_reset);
+> > > +		reset_control_assert(imx6_pcie->apps_reset);
+> > > +		break;
+> > >  	case IMX6SX:
+> > >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> > >  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
+> > 
+> > So the difference with i.MX7D is not really that it has a reset or not, 
+> > but some platforms use a reset driver and some do not. The latter should 
+> > be fixed.
 > 
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../boot/dts/hisilicon/hikey_6220_coresight.dtsi   | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi
-> index 77c2aab..e14d75c 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hikey_6220_coresight.dtsi
-> @@ -15,6 +15,79 @@
->  		#size-cells = <2>;
->  		compatible = "arm,amba-bus";
->  		ranges;
-> +
-> +		debug@0,f6590000 {
+> I have this patch queued for v4.11.  Are these things that should be
+> fixed first?  If so, I can drop this.
 
-Simply use "debug@f6590000", the "0," isn't required.
+Well, depends if you trust things will get fixed later and if the PHY 
+in fact should be separate as that affects the binding. It would affect 
+how the driver changes are done as instead of "if (IMX7D) ...", you'd 
+have "if (imx6_pcie->apps_reset) ..." for example. That part depends on
+how much churn you want there.
 
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf6590000 0 0x1000>;
-> +			default_enable;
-
-What is the "default_enable" for ?
-
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu0>;
-> +		};
-> +
-> +		debug@1,f6592000 {
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf6592000 0 0x1000>;
-> +			default_enable;
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu1>;
-> +		};
-> +
-> +		debug@2,f6594000 {
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf6594000 0 0x1000>;
-> +			default_enable;
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu2>;
-> +		};
-> +
-> +		debug@3,f6596000 {
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf6596000 0 0x1000>;
-> +			default_enable;
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu3>;
-> +		};
-> +
-> +		debug@4,f65d0000 {
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf65d0000 0 0x1000>;
-> +			default_enable;
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu4>;
-> +		};
-> +
-> +		debug@5,f65d2000 {
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf65d2000 0 0x1000>;
-> +			default_enable;
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu5>;
-> +		};
-> +
-> +		debug@6,f65d4000 {
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf65d4000 0 0x1000>;
-> +			default_enable;
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu6>;
-> +		};
-> +
-> +		debug@7,f65d6000 {
-> +			compatible = "arm,coresight-debug","arm,primecell";
-> +			reg = <0 0xf65d6000 0 0x1000>;
-> +			default_enable;
-> +			clocks = <&sys_ctrl HI6220_CS_ATB>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&cpu7>;
-> +		};
-> +
->  		etm@0,f659c000 {
->  			compatible = "arm,coresight-etm4x","arm,primecell";
->  			reg = <0 0xf659c000 0 0x1000>;
-> -- 
-> 2.7.4
-> 
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
