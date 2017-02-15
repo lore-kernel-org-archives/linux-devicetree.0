@@ -1,80 +1,103 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add dra7 iodelay configuration and use it for
- MMC
-Date: Wed, 15 Feb 2017 07:50:02 -0800
-Message-ID: <20170215155002.GN21809@atomide.com>
-References: <20161230183732.5595-1-tony@atomide.com>
- <20161230183732.5595-3-tony@atomide.com>
- <20161230184914.GC3940@atomide.com>
- <20170214185120.GL21809@atomide.com>
- <932aa035-27c9-0bb4-ffe2-81959aea6662@ti.com>
- <58A44B02.10204@ti.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [RFC v2 5/7] ASoC: stm32: add DFSDM DAI support
+Date: Wed, 15 Feb 2017 17:39:53 +0100
+Message-ID: <9b875a75-294a-2f59-5830-cc0f6b3b62c7@st.com>
+References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
+ <1487003909-11710-6-git-send-email-arnaud.pouliquen@st.com>
+ <20170214174534.35ytbpax75mxcayg@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <58A44B02.10204-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170214174534.35ytbpax75mxcayg@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170215 04:36]:
-> On Wednesday 15 February 2017 12:27 AM, Nishanth Menon wrote:
-> > On 02/14/2017 12:51 PM, Tony Lindgren wrote:
-> >> Nishanth,
-> >>
-> >> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [161230 10:50]:
-> >>> Add dra7 iodelay configuration and use it for MMC.
-> >>
-> >> I just noticed that this patch should probably be:
-> >>
-> >> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> >>
-> >> I think I just added the description to the patch.
-> >>
-> >> Can you please confirm and reply with your Signed-off-by
-> >> if that's the case?
-> >>
-> > 
-> > Though I had introduced the node [
-> > http://git.ti.com/ti-linux-kernel/ti-linux-kernel/commit/34661cbccc679bb8d91768bc78495e94e6d40f1f
-> > ], the x15 values were first introduced by Kishon.
-> > 
-> > http://git.ti.com/ti-linux-kernel/ti-linux-kernel/commit/1463b1e8facb7180f5679b373411b3fbeb1608fd
-> > 
-> > 
-> > personally, From or not really does'nt matter as long as we can get the
-> > solution in.
-> > 
-> > So, as long as it helps..
-> > Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-...
-> I had to remove the iodelay added here based on datasheet (patch [1]).
 
-OK thanks for the info. So we have multiple authors and as Kishon added
-the working values I suggest we credit the patch for Kishon.
 
-> I also wanted to confirm if "MODE_SELECT" should be added in pinctrl values
-> like [2] for adding manual mode iodelay because that seems to be missing in
-> this patch.
-
-Oh OK. If it's needed then yeah let's update it for that too. Can you
-please check it? And then send an updated version of this patch with
-"From" credited to you? Just update the description to say "Based on
-earlier patches in TI Linux kernel tree done by Nishanth Menon and
-Kishon Vijay Abraham I".
-
-Regards,
-
-Tony
-
-> [1] ->
-> http://git.ti.com/cgit/cgit.cgi/ti-linux-kernel/ti-linux-kernel.git/commit/?h=ti-linux-4.9.y&id=441f799d2d15a1ed2f0a89024bf3f2fd82816dbd
+On 02/14/2017 06:45 PM, Mark Brown wrote:
+> On Mon, Feb 13, 2017 at 05:38:27PM +0100, Arnaud Pouliquen wrote:
 > 
-> [2] ->
-> http://git.ti.com/cgit/cgit.cgi/ti-linux-kernel/ti-linux-kernel.git/commit/?h=ti-linux-4.9.y&id=decd3b433d6485d9176ce069bd66b109fb82fe07
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This looks basically fine as a system specific driver but as some 
+> of the comments in here say there's bits of it could perhaps be 
+> genericised but I'm not sure we need to do that right now.  I'm not
+> sure the abstraction is exactly comfortable but having another bit
+> of hardware doing a bridge to IIO might be the best way to figure
+> out something better.
+> 
+Yes this is one point to clarify. I keep it as a specific API, as i
+don't know if another hardware needs to support it...
+I would say that objective of this version is to highlight interactions.
+Then i can rework it in a way that could be  genericised in future (
+i.e. using void* for params that would depend on platforms)...
+
+Extend IIO customer API would be also another alternative, but i did
+not find a generic way to do it. Some IIO attributes could be used for
+Hw params but DMA and IRQs seems tricky to handle through this IIO
+interface...
+
+
+
+
+>> +	.period_bytes_min = 40, /* 8 khz 5 ms */ +	.period_bytes_max =
+>>  4 * PAGE_SIZE, +	.buffer_bytes_max = 16 * PAGE_SIZE
+> 
+> What's the physical minimum period limit?  The comment makes this 
+> sound like it's just made up.
+I did not find physical minimum period limit, that why i considered
+this value from a scheduling point of view. I will re-check these values.
+
+> 
+>> +	unsigned int shift = 24 -priv->max_scaling; +
+> 
+> Missing space after -.
+> 
+>> +	dev_dbg(dai->dev, "%s: enter\n", __func__); +	return 0; + 
+>> return snd_pcm_hw_constraint_list(substream->runtime, 0, + 
+>> SNDRV_PCM_HW_PARAM_RATE, +					  &priv->rates_const);
+> 
+> Looks like debug changes got left in?
+yes exactly...
+> 
+>> +static int stm32_adfsdm_set_sysclk(struct snd_soc_dai *dai, int
+>>  clk_id, +				   unsigned int freq, int dir) +{ +	struct 
+>> stm32_adfsdm_priv *priv = snd_soc_dai_get_drvdata(dai); +	struct
+>>  stm32_adfsdm_pdata *pdata = priv->pdata; + +	dev_dbg(dai->dev, 
+>> "%s: enter for dai %d\n", __func__, dai->id); +	if (dir == 
+>> SND_SOC_CLOCK_IN) { +		pdata->ops->set_sysclk(pdata->adc, freq); 
+>> +		priv->dmic_clk = freq; +	} + +	/* Determine supported rate 
+>> which depends on SPI/manchester clock */ +	return 
+>> stm32_adfsdm_get_supported_rates(dai, &priv->rates_const.mask);
+> 
+> Since the DAI is unidirectional it doesn't matter but obviously if
+>  it weren't then the fact that getting the supported rates involves
+>  setting the hwparams means this could become disruptive.  If we're
+>  going to genericise this to be a more general IIO/ASoC bridge that
+>  could matter.
+I think that the driver itself can not be generic. ST DFSDM is too
+specific. Only API with IIO could be.
+
+> 
+>> +static int stm32_adfsdm_dai_remove(struct snd_soc_dai *dai) +{ +
+>> dev_dbg(dai->dev, "%s: enter for dai %d\n", __func__, dai->id); +
+>> +	return 0; +}
+> 
+> Remove empty functions, though in this case I think you want to
+> add something to disconnect the XRUN callback just in order to be
+> sure it can't be mistakenly called.
+
+Yes Completely unnecessary here. Furthermore the driver should be
+removed by the IIO driver.
+
+Regards
+Arnaud
