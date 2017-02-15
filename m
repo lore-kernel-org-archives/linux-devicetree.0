@@ -1,50 +1,51 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] ARM: dts: r7s72100: Add reset handler
-Date: Wed, 15 Feb 2017 10:21:19 +0100
-Message-ID: <CAMuHMdWBRJeU+f_Bn9pFPU1_LRG6WHSie8a0v+_qxKftujWAzw@mail.gmail.com>
-References: <20170213182532.4042-1-chris.brandt@renesas.com> <20170213182532.4042-4-chris.brandt@renesas.com>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: add multidomain support to i.MX GPC
+ DT binding
+Date: Wed, 15 Feb 2017 10:26:05 +0100
+Message-ID: <1487150765.2304.65.camel@pengutronix.de>
+References: <20170127183728.26701-1-l.stach@pengutronix.de>
+         <1486741439.3879.7.camel@pengutronix.de> <20170215070830.GA8398@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170213182532.4042-4-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170215070830.GA8398@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 7:25 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> For the RZ/A1, the only way to do a reset is to overflow the WDT.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
->  arch/arm/boot/dts/r7s72100.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index 614ba79..6fb4ef4 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -371,6 +371,11 @@
->                         <0xe8202000 0x1000>;
->         };
->
-> +       wdt: timer@fcfe0000 {
-> +               compatible = "renesas,r7s72100-reset", "renesas,wdt-reset";
-> +               reg = <0xfcfe0000 0x6>;
+Am Mittwoch, den 15.02.2017, 15:08 +0800 schrieb Shawn Guo:
+> On Fri, Feb 10, 2017 at 04:43:59PM +0100, Lucas Stach wrote:
+> > Hi Shawn,
+> > 
+> > are you willing to take this series through your tree or do you think we
+> > need to get this in via some other tree?
+> 
+> I'm willing to take it.  But I don't think it's been ready yet.  Since
+> you insist on keeping the .remove hook for both imx_gpc_driver and
+> imx_pgc_power_domain_driver, did you actually test it with manually
+> bind/unbind the drivers?  I tested it a bit and found it doesn't work
+> well for me.
 
-No clocks property, pointing to p0_clk?
-No interrupts property?
-Yes, those should be documented in the bindings, too.
+It works as well as it could at this point. The driver unloads fine, but
+obviously anything that depends on it is broken at that point. Try
+unloading a regulator driver, it's the same experience.
 
-> +       };
+This will get better once the functional dependency stuff is far enough
+to either block unloading of drivers providing resources to other
+devices, or unload the dependent drivers first.
 
-Gr{oetje,eeting}s,
+> 
+> Also, there is a comment from Andrey that is not responded.
 
-                        Geert
+Yes, I'll take care of this. Just didn't want to roll a new version of
+this series before we know where it is going.
+
+Regards,
+Lucas
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
