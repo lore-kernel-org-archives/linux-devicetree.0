@@ -1,135 +1,77 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [PATCH v2 2/2] arm: dts: mt2701: Add i2c device node
-Date: Wed, 15 Feb 2017 10:32:56 +0800
-Message-ID: <1487125976-25243-3-git-send-email-jun.gao@mediatek.com>
-References: <1487125976-25243-1-git-send-email-jun.gao@mediatek.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH v2 11/11] drm/rockchip/dsi: fix insufficient bandwidth of
+ some panel
+Date: Wed, 15 Feb 2017 12:12:22 +0800
+Message-ID: <58A3D526.7060707@rock-chips.com>
+References: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
+ <1484561311-494-12-git-send-email-zyw@rock-chips.com>
+ <20170116124453.2154def9.john@metanate.com> <587DE489.2010004@rock-chips.com>
+ <20170117105450.360c6c69.john@metanate.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487125976-25243-1-git-send-email-jun.gao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Jun Gao <jun.gao@mediatek.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170117105450.360c6c69.john@metanate.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: John Keeping <john@metanate.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-rockchip@lists.infradead.org, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
-
-Add i2c device node for MT2701.
-
-Change-Id: Idd33ad9010c43809328814350f9c29284891d171
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
----
- arch/arm/boot/dts/mt2701-evb.dts |   44 ++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/mt2701.dtsi    |   42 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-index 082ca88..a908e94 100644
---- a/arch/arm/boot/dts/mt2701-evb.dts
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -24,6 +24,50 @@
- 	};
- };
- 
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&pio {
-+	i2c0_pins_a: i2c0@0 {
-+		pins1 {
-+			pinmux = <MT2701_PIN_75_SDA0__FUNC_SDA0>,
-+				 <MT2701_PIN_76_SCL0__FUNC_SCL0>;
-+			bias-disable;
-+		};
-+	};
-+
-+	i2c1_pins_a: i2c1@0 {
-+		pins1 {
-+			pinmux = <MT2701_PIN_57_SDA1__FUNC_SDA1>,
-+				 <MT2701_PIN_58_SCL1__FUNC_SCL1>;
-+			bias-disable;
-+		};
-+	};
-+
-+	i2c2_pins_a: i2c2@0 {
-+		pins1 {
-+			pinmux = <MT2701_PIN_77_SDA2__FUNC_SDA2>,
-+				 <MT2701_PIN_78_SCL2__FUNC_SCL2>;
-+			bias-disable;
-+		};
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index bdf8954..0d1539f 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -227,6 +227,48 @@
- 		status = "disabled";
- 	};
- 
-+	i2c0: i2c@11007000 {
-+		compatible = "mediatek,mt2701-i2c",
-+			     "mediatek,mt6577-i2c";
-+		reg = <0 0x11007000 0 0x70>,
-+		      <0 0x11000200 0 0x80>;
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-+		clock-div = <16>;
-+		clocks = <&pericfg CLK_PERI_I2C0>, <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "main", "dma";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c1: i2c@11008000 {
-+		compatible = "mediatek,mt2701-i2c",
-+			     "mediatek,mt6577-i2c";
-+		reg = <0 0x11008000 0 0x70>,
-+		      <0 0x11000280 0 0x80>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_LOW>;
-+		clock-div = <16>;
-+		clocks = <&pericfg CLK_PERI_I2C1>, <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "main", "dma";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@11009000 {
-+		compatible = "mediatek,mt2701-i2c",
-+			     "mediatek,mt6577-i2c";
-+		reg = <0 0x11009000 0 0x70>,
-+		      <0 0x11000300 0 0x80>;
-+		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_LOW>;
-+		clock-div = <16>;
-+		clocks = <&pericfg CLK_PERI_I2C2>, <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "main", "dma";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	mmsys: syscon@14000000 {
- 		compatible = "mediatek,mt2701-mmsys", "syscon";
- 		reg = <0 0x14000000 0 0x1000>;
--- 
-1.7.9.5
+SGkgSm9obgoKT24gMDEvMTcvMjAxNyAwNjo1NCBQTSwgSm9obiBLZWVwaW5nIHdyb3RlOgo+IE9u
+IFR1ZSwgMTcgSmFuIDIwMTcgMTc6MzE6NTMgKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+Cj4+
+IE9uIDAxLzE2LzIwMTcgMDg6NDQgUE0sIEpvaG4gS2VlcGluZyB3cm90ZToKPj4+IE9uIE1vbiwg
+MTYgSmFuIDIwMTcgMTg6MDg6MzEgKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+Pj4gICAKPj4+
+PiBTZXQgdGhlIGxhbmVzIGJwcyB0byAxIC8gMC45IHRpbWVzIG9mIHBjbGssIHRoZSBtYXJnaW4g
+aXMgbm90IGVub3VnaAo+Pj4+IGZvciBzb21lIHBhbmVsLCBpdCB3aWxsIGNhdXNlIHRoZSBzY3Jl
+ZW4gZGlzcGxheSBpcyBub3Qgbm9ybWFsLCBzbwo+Pj4+IGluY3JlYXNlcyB0aGUgYmFkbndpZHRo
+IHRvIDEgLyAwLjguCj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJv
+Y2stY2hpcHMuY29tPgo+Pj4+Cj4+Pj4gLS0tCj4+Pj4KPj4+PiAgICBkcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvZHctbWlwaS1kc2kuYyB8IDQgKystLQo+Pj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCAy
+IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvZHctbWlwaS1kc2kuYwo+Pj4+IGluZGV4IDlkZmE3M2QuLjVhOTczZmUgMTAwNjQ0Cj4+
+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKPj4+PiArKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+Pj4+IEBAIC01MDEsOCAr
+NTAxLDggQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9nZXRfbGFuZV9icHMoc3RydWN0IGR3X21p
+cGlfZHNpICpkc2kpCj4+Pj4gICAgCj4+Pj4gICAgCW1wY2xrID0gRElWX1JPVU5EX1VQKGRzaS0+
+bW9kZS0+Y2xvY2ssIE1TRUNfUEVSX1NFQyk7Cj4+Pj4gICAgCWlmIChtcGNsaykgewo+Pj4+IC0J
+CS8qIHRha2UgMSAvIDAuOSwgc2luY2UgbWJwcyBtdXN0IGJpZyB0aGFuIGJhbmR3aWR0aCBvZiBS
+R0IgKi8KPj4+PiAtCQl0bXAgPSBtcGNsayAqIChicHAgLyBkc2ktPmxhbmVzKSAqIDEwIC8gOTsK
+Pj4+PiArCQkvKiB0YWtlIDEgLyAwLjgsIHNpbmNlIG1icHMgbXVzdCBiaWcgdGhhbiBiYW5kd2lk
+dGggb2YgUkdCICovCj4+Pj4gKwkJdG1wID0gbXBjbGsgKiAoYnBwIC8gZHNpLT5sYW5lcykgKiAx
+MCAvIDg7Cj4+PiBUaGlzIGFuZCBwYXRjaCA5IGFyZSBqdXN0IGhhY2tpbmcgYXJvdW5kIHRoZSB1
+bmRlcmx5aW5nIHByb2JsZW0gaW4gb3JkZXIKPj4+IHRvIG1ha2UgcGFydGljdWxhciBwYW5lbHMg
+d29yay4gIEknbSBwcmV0dHkgc3VyZSB0aGUgYWN0dWFsIGlzc3VlIGlzIHRoZQo+Pj4gdXNlIG9m
+IGhhcmRjb2RlZCB2YWx1ZXMgd2hlbiBjb25maWd1cmluZyB0aGUgUEhZLCBzaW5jZSB0aGUgUEhZ
+Cj4+PiBwYXJhbWV0ZXJzIGFyZSBzcGVjaWZpZWQgaW4gY2xvY2sgY3ljbGVzIGJ1dCB0aGUgTUlQ
+SSBzcGVjIHJlcXVpcmVzCj4+PiBhYnNvbHV0ZSB0aW1lIGR1cmF0aW9ucy4KPj4+Cj4+PiBJIHBv
+c3RlZCBhIHNlcmllcyBhZGRyZXNzaW5nIHRoaXMgYSB3aGlsZSBhZ28sIGFsdGhvdWdoIEkgc2Ny
+ZXdlZCB1cAo+Pj4gc2VuZGluZyBpdCBzbyBzb21lIHBhdGNoZXMgd2VyZSBpbmNsdWRlZCB0d2lj
+ZSBhbmQgc2luY2Ugbm8gb25lCj4+PiBleHByZXNzZWQgYW55IGludGVyZXN0IEkgZGlkbid0IHBv
+c3QgYSBjbGVhbmVkIHVwIHZlcnNpb24uCj4+Pgo+Pj4gVGhlIHJlbGV2YW50IHBhdGNoIGlzIGhl
+cmU6Cj4+Pgo+Pj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MzQwMTkzLwo+
+PiBUaGFua3MgdmVyeSBtdWNoLCB5b3VyIHBhdGNoZXMgYXJlIHZlcnkgdXNlZnVsIGZvciBtZS4g
+SXQgbG9va3MgeW91cgo+PiBtZXRob2QgaXMgY29ycmVjdC4KPj4gQW5kIEkgYW0gdmVyeSBjb25m
+dXNlZCB3aHkgTWFyayBZYW8gYW5kIG1lIGRpZCBub3QgcmVjZWl2ZSB5b3VyIHBhdGNoZXMKPj4g
+YmVmb3JlLAo+PiBhbHRob3VnaCB3ZSBoYXZlIHN1YnNjcmliZWQgdGhlIDxsaW51eC1yb2NrY2hp
+cEBsaXN0cy5pbmZyYWRlYWQub3JnPi4KPj4KPj4gSW4gYWRkaXRpb24sIGNvdWxkIHlvdSB0ZWxs
+IG1lIHdoaWNoIGRldmljZSB3YXJlIHlvdSB0ZXN0aW5nIHdpdGggdGhlc2UKPj4gbWlwaSBwYXRj
+aGVzLgo+PiBJIGdvaW5nIHRvIHRlc3QgdGhlbSB0aGVzZSBkYXkuCj4gSSdtIHVzaW5nIFJLMzI4
+OCBhbmQgSSB0ZXN0ZWQgbXkgcGF0Y2hlcyB3aXRoIHRocmVlIGRpZmZlcmVudCBNSVBJCj4gZGlz
+cGxheXMsIHR3byBvZiB3aGljaCByZXF1aXJlIGNvbW1hbmRzIHRvIGJlIHNlbnQgaW4gb3JkZXIg
+dG8gc2V0IHVwCj4gdGhlIHBhbmVsLgo+Cj4gVGhhbmtzIGZvciB0ZXN0aW5nIHRoZSBwYXRjaGVz
+Lgo+Cj4KPiBKb2huCkkgdGhpbmsgd2UgcmVhbGx5IG5lZWQgdGhpcyBwYXRjaCwgb25lIG1pcGkg
+cGFuZWwgaGl0IHRoaXMgcHJvYmxlbSAKYWdhaW4sIHdpdGggYWxsIHlvdXIgMjQgcGF0Y2hlcwph
+bmQgbXkgNiBNSVBJIERTSSBwYXRjaGVzClNvIEkgd2lsbCB1cGRhdGUgbXkgc2VyaWVzIHRvIHY3
+LCBhbmQgYWRkIHRoaXMgcGF0Y2ggaW50byBpdC4KCj4KPgoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
