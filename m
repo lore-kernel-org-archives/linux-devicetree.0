@@ -1,16 +1,13 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 05/18] mfd: axp20x: add ADC cells for AXP20X and
- AXP22X PMICs
-Date: Wed, 15 Feb 2017 09:37:01 +0000
-Message-ID: <20170215093701.k33jmzeu4xz5guet@dell>
-References: <20170214094112.27426-1-quentin.schulz@free-electrons.com>
- <20170214094112.27426-6-quentin.schulz@free-electrons.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/1] arm64: dts: r8a7795: add IMR-LX4 support
+Date: Wed, 15 Feb 2017 12:45:09 +0300
+Message-ID: <3f007932-d120-b0c0-2080-ce8eeb9418af@cogentembedded.com>
+References: <20170214210301.620322370@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170214094112.27426-6-quentin.schulz@free-electrons.com>
+In-Reply-To: <20170214210301.620322370@cogentembedded.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,42 +17,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, sre@kernel.org, linux@armlinux.org.uk, wens@csie.org, robh+dt@kernel.org, icenowy@aosc.xyz, pmeerw@pmeerw.net, knaack.h@gmx.de, maxime.ripard@free-electrons.com, bonbons@linux-vserver.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAxNCBGZWIgMjAxNywgUXVlbnRpbiBTY2h1bHogd3JvdGU6Cgo+IFRoaXMgYWRkcyB0
-aGUgQVhQMjBYL0FYUDIyeCBBRENzIGRyaXZlciB0byB0aGUgbWZkIGNlbGxzIG9mIHRoZSBBWFAy
-MDksCj4gQVhQMjIxIGFuZCBBWFAyMjMgTUZELgo+IAo+IFNpZ25lZC1vZmYtYnk6IFF1ZW50aW4g
-U2NodWx6IDxxdWVudGluLnNjaHVsekBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gQWNrZWQtYnk6IE1h
-eGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IC0tLQo+IAo+
-IHYzOgo+ICAtIHJlbW92ZWQgb2ZfY29tcGF0aWJsZSBhcyBEVCBub2RlIGhhcyBiZWVuIHJlbW92
-ZWQsCj4gIC0gdXNlIGRpZmZlcmVudCBuYW1lcyB0byBwcm9iZSB0aGUgQURDIGRyaXZlciwKPiAK
-PiAgZHJpdmVycy9tZmQvYXhwMjB4LmMgfCA2ICsrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNiBp
-bnNlcnRpb25zKCspCgpGb3IgbXkgb3duIHJlZmVyZW5jZToKICBBY2tlZC1mb3ItTUZELWJ5OiBM
-ZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgoKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9t
-ZmQvYXhwMjB4LmMgYi9kcml2ZXJzL21mZC9heHAyMHguYwo+IGluZGV4IDljMmZkMzcuLmE0NGEy
-ZmUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9tZmQvYXhwMjB4LmMKPiArKysgYi9kcml2ZXJzL21m
-ZC9heHAyMHguYwo+IEBAIC01ODEsNiArNTgxLDggQEAgc3RhdGljIHN0cnVjdCBtZmRfY2VsbCBh
-eHAyMHhfY2VsbHNbXSA9IHsKPiAgCX0sIHsKPiAgCQkubmFtZQkJPSAiYXhwMjB4LXJlZ3VsYXRv
-ciIsCj4gIAl9LCB7Cj4gKwkJLm5hbWUJCT0gImF4cDIweC1hZGMiLAo+ICsJfSwgewo+ICAJCS5u
-YW1lCQk9ICJheHAyMHgtYWMtcG93ZXItc3VwcGx5IiwKPiAgCQkub2ZfY29tcGF0aWJsZQk9ICJ4
-LXBvd2VycyxheHAyMDItYWMtcG93ZXItc3VwcGx5IiwKPiAgCQkubnVtX3Jlc291cmNlcwk9IEFS
-UkFZX1NJWkUoYXhwMjB4X2FjX3Bvd2VyX3N1cHBseV9yZXNvdXJjZXMpLAo+IEBAIC02MDEsNiAr
-NjAzLDggQEAgc3RhdGljIHN0cnVjdCBtZmRfY2VsbCBheHAyMjFfY2VsbHNbXSA9IHsKPiAgCX0s
-IHsKPiAgCQkubmFtZQkJPSAiYXhwMjB4LXJlZ3VsYXRvciIsCj4gIAl9LCB7Cj4gKwkJLm5hbWUJ
-CT0gImF4cDIyeC1hZGMiCj4gKwl9LCB7Cj4gIAkJLm5hbWUJCT0gImF4cDIweC11c2ItcG93ZXIt
-c3VwcGx5IiwKPiAgCQkub2ZfY29tcGF0aWJsZQk9ICJ4LXBvd2VycyxheHAyMjEtdXNiLXBvd2Vy
-LXN1cHBseSIsCj4gIAkJLm51bV9yZXNvdXJjZXMJPSBBUlJBWV9TSVpFKGF4cDIyeF91c2JfcG93
-ZXJfc3VwcGx5X3Jlc291cmNlcyksCj4gQEAgLTYxNCw2ICs2MTgsOCBAQCBzdGF0aWMgc3RydWN0
-IG1mZF9jZWxsIGF4cDIyM19jZWxsc1tdID0gewo+ICAJCS5udW1fcmVzb3VyY2VzCQk9IEFSUkFZ
-X1NJWkUoYXhwMjJ4X3Bla19yZXNvdXJjZXMpLAo+ICAJCS5yZXNvdXJjZXMJCT0gYXhwMjJ4X3Bl
-a19yZXNvdXJjZXMsCj4gIAl9LCB7Cj4gKwkJLm5hbWUJCT0gImF4cDIyeC1hZGMiLAo+ICsJfSwg
-ewo+ICAJCS5uYW1lCQkJPSAiYXhwMjB4LXJlZ3VsYXRvciIsCj4gIAl9LCB7Cj4gIAkJLm5hbWUJ
-CT0gImF4cDIweC11c2ItcG93ZXItc3VwcGx5IiwKCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWlj
-cm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJj
-ZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVy
-IHwgQmxvZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On 2/15/2017 12:02 AM, Sergei Shtylyov wrote:
+
+> Describe the IMR-LX4 devices in the R8A7795 device tree.
+>
+> Based on the original (and large) patch by Konstantin Kozhevnikov
+> <Konstantin.Kozhevnikov@cogentembedded.com>.
+>
+> Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>
+> ---
+> This patch is against the 'renesas-devel-20170213-v4.10-rc8' tag of Simon
+> Horman's 'renesas.git' repo.
+
+    The binding was documented in the IMR driver patch. I don't expect it to 
+change even if the driver would be rewritten for DRM.
+
+[...]
+> Index: renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ renesas/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -1419,6 +1419,38 @@
+>  			status = "disabled";
+>  		};
+>
+> +		imr-lx4@fe860000 {
+> +			compatible = "renesas,imr-lx4";
+
+    The manual seems to suggest that IMR-LX4 devicec are different between 
+7795 and 7796 SoCs, so we may need SoC specific compatibility. I'll look into 
+this...
+
+MBR, Sergei
