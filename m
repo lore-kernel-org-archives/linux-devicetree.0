@@ -1,249 +1,62 @@
-From: thor.thayer@linux.intel.com
-Subject: [PATCH 3/5] reset: Add Altera Arria10 System Resource Reset Controller
-Date: Wed, 15 Feb 2017 15:50:14 -0600
-Message-ID: <1487195416-23827-4-git-send-email-thor.thayer@linux.intel.com>
-References: <1487195416-23827-1-git-send-email-thor.thayer@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487195416-23827-1-git-send-email-thor.thayer@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, linux@armlinux.org.uk, p.zabel@pengutronix.de
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] PCI: imx6: Add code to support i.MX7D
+Date: Wed, 15 Feb 2017 15:57:51 -0600
+Message-ID: <20170215215751.GD6981@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170207155027.7734-1-andrew.smirnov@gmail.com>
+ <20170207155027.7734-4-andrew.smirnov@gmail.com>
+ <20170215171700.5vz5seeihgtwn76p@rob-hp-laptop>
+ <20170215173850.GH19040@bhelgaas-glaptop.roam.corp.google.com>
+ <20170215212624.btdhfn4xvuppv6hq@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170215212624.btdhfn4xvuppv6hq@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Wed, Feb 15, 2017 at 03:26:24PM -0600, Rob Herring wrote:
+> On Wed, Feb 15, 2017 at 11:38:50AM -0600, Bjorn Helgaas wrote:
+> > On Wed, Feb 15, 2017 at 11:17:00AM -0600, Rob Herring wrote:
+> > > On Tue, Feb 07, 2017 at 07:50:27AM -0800, Andrey Smirnov wrote:
+> > > > Add various bits of code needed to support i.MX7D variant of the IP.
+> 
+> > > 
+> > > [...]
+> > > 
+> > > > @@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+> > > >  	u32 val, gpr1, gpr12;
+> > > >  
+> > > >  	switch (imx6_pcie->variant) {
+> > > > +	case IMX7D:
+> > > > +		reset_control_assert(imx6_pcie->pciephy_reset);
+> > > > +		reset_control_assert(imx6_pcie->apps_reset);
+> > > > +		break;
+> > > >  	case IMX6SX:
+> > > >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> > > >  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
+> > > 
+> > > So the difference with i.MX7D is not really that it has a reset or not, 
+> > > but some platforms use a reset driver and some do not. The latter should 
+> > > be fixed.
+> > 
+> > I have this patch queued for v4.11.  Are these things that should be
+> > fixed first?  If so, I can drop this.
+> 
+> Well, depends if you trust things will get fixed later and if the PHY 
+> in fact should be separate as that affects the binding. It would affect 
+> how the driver changes are done as instead of "if (IMX7D) ...", you'd 
+> have "if (imx6_pcie->apps_reset) ..." for example. That part depends on
+> how much churn you want there.
 
-This patch adds the reset controller functionality to the Arria10
-System Resource Manager.
+I dropped it for now, not that I don't trust it will get fixed, but it
+sounds like not completely trivial changes and will affect the binding
+as well, so the intermediate state sounds a little messy.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- MAINTAINERS                 |   1 +
- drivers/reset/Kconfig       |   7 ++
- drivers/reset/Makefile      |   1 +
- drivers/reset/reset-a10sr.c | 176 ++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 185 insertions(+)
- create mode 100644 drivers/reset/reset-a10sr.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a2c74db..3265cb2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -655,6 +655,7 @@ F:	drivers/gpio/gpio-altera-a10sr.c
- F:	drivers/mfd/altera-a10sr.c
- F:	include/linux/mfd/altera-a10sr.h
- F:	include/dt-bindings/reset/altr,rst-mgr-a10sr.h
-+F:	drivers/reset/reset-a10sr.c
- 
- ALTERA TRIPLE SPEED ETHERNET DRIVER
- M:	Vince Bridgers <vbridger@opensource.altera.com>
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index f4cdfe9..b821d1b 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -39,6 +39,13 @@ config RESET_MESON
- 	help
- 	  This enables the reset driver for Amlogic Meson SoCs.
- 
-+config ALTERA_A10SR_RESET
-+	tristate "Altera Arria10 System Resource Reset"
-+	depends on MFD_ALTERA_A10SR
-+	help
-+	  This option enables support for the external reset functions for
-+	  peripheral PHYs on the Altera Arria10 System Resource Chip.
-+
- config RESET_OXNAS
- 	bool
- 
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 2cd3f6c..d6a2a87 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -15,3 +15,4 @@ obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
- obj-$(CONFIG_RESET_ZX2967) += reset-zx2967.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-+obj-$(CONFIG_ALTERA_A10SR_RESET) += reset-a10sr.o
-diff --git a/drivers/reset/reset-a10sr.c b/drivers/reset/reset-a10sr.c
-new file mode 100644
-index 0000000..ed058f3
---- /dev/null
-+++ b/drivers/reset/reset-a10sr.c
-@@ -0,0 +1,176 @@
-+/*
-+ *  Copyright Intel Corporation (C) 2017. All Rights Reserved
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * Reset driver for Altera Arria10 MAX5 System Resource Chip
-+ *
-+ * Adapted from reset-socfpga.c
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/mfd/altera-a10sr.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/types.h>
-+
-+#include <dt-bindings/reset/altr,rst-mgr-a10sr.h>
-+
-+/* Number of A10 System Controller Resets */
-+#define A10SR_RESETS		16
-+
-+struct a10sr_reset {
-+	struct reset_controller_dev     rcdev;
-+	struct regmap *regmap;
-+};
-+
-+static inline struct a10sr_reset *to_a10sr_rst(struct reset_controller_dev *rc)
-+{
-+	return container_of(rc, struct a10sr_reset, rcdev);
-+}
-+
-+static inline int a10sr_reset_shift(unsigned long id)
-+{
-+	switch (id) {
-+	case A10SR_RESET_ENET_HPS:
-+		return 1;
-+	case A10SR_RESET_PCIE:
-+	case A10SR_RESET_FILE:
-+	case A10SR_RESET_BQSPI:
-+	case A10SR_RESET_USB:
-+		return id + 11;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int a10sr_reset_update(struct reset_controller_dev *rcdev,
-+			      unsigned long id, bool assert)
-+{
-+	struct a10sr_reset *a10r = to_a10sr_rst(rcdev);
-+	int offset = a10sr_reset_shift(id);
-+	u8 mask = ALTR_A10SR_REG_BIT_MASK(offset);
-+	int index = ALTR_A10SR_HPS_RST_REG + ALTR_A10SR_REG_OFFSET(offset);
-+
-+	if (id >= rcdev->nr_resets)
-+		return -EINVAL;
-+
-+	return regmap_update_bits(a10r->regmap, index, mask, assert ? 0 : mask);
-+}
-+
-+static int a10sr_reset_assert(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	return a10sr_reset_update(rcdev, id, true);
-+}
-+
-+static int a10sr_reset_deassert(struct reset_controller_dev *rcdev,
-+				unsigned long id)
-+{
-+	return a10sr_reset_update(rcdev, id, false);
-+}
-+
-+static int a10sr_reset_status(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	int error;
-+	struct a10sr_reset *a10r = to_a10sr_rst(rcdev);
-+	int offset = a10sr_reset_shift(id);
-+	u8 mask = ALTR_A10SR_REG_BIT_MASK(offset);
-+	int index = ALTR_A10SR_HPS_RST_REG + ALTR_A10SR_REG_OFFSET(offset);
-+	unsigned int value;
-+
-+	if (id >= rcdev->nr_resets)
-+		return -EINVAL;
-+
-+	error = regmap_read(a10r->regmap, index, &value);
-+	if (error < 0)
-+		return -ENOMEM;
-+
-+	return !!(value & mask);
-+}
-+
-+static const struct reset_control_ops a10sr_reset_ops = {
-+	.assert		= a10sr_reset_assert,
-+	.deassert	= a10sr_reset_deassert,
-+	.status		= a10sr_reset_status,
-+};
-+
-+static const struct of_device_id a10sr_reset_of_match[];
-+static int a10sr_reset_probe(struct platform_device *pdev)
-+{
-+	struct altr_a10sr *a10sr = dev_get_drvdata(pdev->dev.parent);
-+	struct a10sr_reset *a10r;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+
-+	/* Ensure we have a valid DT entry. */
-+	np = of_find_matching_node(NULL, a10sr_reset_of_match);
-+	if (!np) {
-+		dev_err(&pdev->dev, "A10 Reset DT Entry not found\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!of_find_property(np, "#reset-cells", NULL)) {
-+		dev_err(&pdev->dev, "%s missing #reset-cells property\n",
-+			np->full_name);
-+		return -EINVAL;
-+	}
-+
-+	a10r = devm_kzalloc(&pdev->dev, sizeof(struct a10sr_reset),
-+			    GFP_KERNEL);
-+	if (!a10r)
-+		return -ENOMEM;
-+
-+	a10r->rcdev.owner = THIS_MODULE;
-+	a10r->rcdev.nr_resets = A10SR_RESETS;
-+	a10r->rcdev.ops = &a10sr_reset_ops;
-+	a10r->rcdev.of_node = np;
-+	a10r->regmap = a10sr->regmap;
-+
-+	platform_set_drvdata(pdev, a10r);
-+
-+	return devm_reset_controller_register(dev, &a10r->rcdev);
-+}
-+
-+static int a10sr_reset_remove(struct platform_device *pdev)
-+{
-+	struct a10sr_reset *a10r = platform_get_drvdata(pdev);
-+
-+	reset_controller_unregister(&a10r->rcdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id a10sr_reset_of_match[] = {
-+	{ .compatible = "altr,a10sr-reset" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, a10sr_reset_of_match);
-+
-+static struct platform_driver a10sr_reset_driver = {
-+	.probe	= a10sr_reset_probe,
-+	.remove	= a10sr_reset_remove,
-+	.driver = {
-+		.name		= "altr_a10sr_reset",
-+		.owner		= THIS_MODULE,
-+	},
-+};
-+module_platform_driver(a10sr_reset_driver);
-+
-+MODULE_AUTHOR("Thor Thayer <thor.thayer@linux.intel.com>");
-+MODULE_DESCRIPTION("Altera Arria10 System Resource Reset Controller Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
