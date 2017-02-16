@@ -1,54 +1,79 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 00/11] ARM: Initial Actions Semi S500 and S900 enablement
-Date: Thu, 16 Feb 2017 14:46:00 +0100
-Message-ID: <3039198.1W6tLqk8Fp@wuerfel>
-References: <20170215165528.10052-1-afaerber@suse.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] dt-bindings: power: reset: add document for
+ renesas-reset driver
+Date: Thu, 16 Feb 2017 14:51:40 +0100
+Message-ID: <CAMuHMdVUdU4J+cg7V-rMK63TkEKJp_Nyxh=+34rdtuo1wGUNRw@mail.gmail.com>
+References: <20170213182532.4042-1-chris.brandt@renesas.com>
+ <20170213182532.4042-3-chris.brandt@renesas.com> <CAMuHMdWdiosERjUm3ZxZiZL90_4j+CrNm9RU9GaPft7AXbN8kA@mail.gmail.com>
+ <PS1PR06MB1162A82F35F00D18D5D22FC08A5B0@PS1PR06MB1162.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170215165528.10052-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, info-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, contact-CO9UH4nLugWa1hIE42aguQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <PS1PR06MB1162A82F35F00D18D5D22FC08A5B0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, February 15, 2017 5:55:17 PM CET Andreas Färber wrote:
-> Hello,
-> 
-> Based on earlier work of mine for the LeMaker Guitar, this series adds initial
-> support for the Actions Semiconductor S500 (ARMv7) and S900 (ARMv8) SoCs.
-> 
-> Despite Actions Semi being a Linaro member since 2015, sadly I have not seen
-> a single upstream kernel patch submission since. Nor has the XApple community
-> taken any such initiative.
-> 
-> The GitHub LeMaker/linux-actions and xapp-le/kernel trees have 3.10 based S500
-> drivers in arch/arm/mach-owl/, whereas the 96boards-bubblegum/linux tree has
-> new-style but still 3.10 based S900 drivers. I also spotted GPLv2+ vs. GPLv2
-> license differences.
-> 
-> This series therefore provides a proof of concept for a combined S500 and S900
-> mainline implementation. Only earlycon serial output is available for now.
-> 
-> Focusing on Bubblegum-96, no S500 clocksource implementation is provided yet,
-> thus output on Guitar is less than on Bubblegum-96, but still it demonstrates
-> that a single driver can be shared for both, using compatible strings for
-> future differentiation.
+Hi Chris,
 
-Thanks for getting this started! It's unfortunately too late for 4.11 now,
-but there should be no problem getting this merged into arm-soc early on
-after the coming merge window.
+On Wed, Feb 15, 2017 at 6:33 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Tuesday, February 14, 2017, Geert Uytterhoeven wrote:
+>> > +Required properties:
+>> > +  - compatible: must be one or more of the following:
+>> > +    - "renesas,r7s72100-reset" for the r7s72100 SoC
+>> > +    - "renesas,wdt-reset"
+>> > +                This is a fallback for the above renesas,*-reset
+>> > +entries
+>>
+>> Please use "renesas,r7s72100-wdt". DT describes the hardware (watchdog),
+>> not the software policy (use it for reset only, as a max. timeout of 125
+>> ms is too short for a usable watchdog).
+>
+> I had a look at:
+>
+>   Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+>
+> Which has:
+>
+> Required properties:
+> - compatible : Should be "renesas,<soctype>-wdt", and
+>                "renesas,rcar-gen3-wdt" as fallback.
+>                Examples with soctypes are:
+>                  - "renesas,r8a7795-wdt" (R-Car H3)
+>                  - "renesas,r8a7796-wdt" (R-Car M3-W)
+>
+>
+> So in my 'renesas-reset.txt' should I do:
 
-I'd suggest keeping it as a set of patches for the moment, and we'll apply
-them to the respective arm-soc branches as needed, with the exception of
-the tty patch that should go through Greg's tree.
+As "reset" is software policy, perhaps you should instead extend the existing
+binding document Documentation/devicetree/bindings/watchdog/renesas-wdt.txt?
 
-When you have addressed the review comments, please send the updated series
-to arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org
+Nothing says you have to use the same Linux driver for R-Car Gen3 and
+RZ/A1.
 
-	Arnd
+> A. "renesas,r7s72100-wdt", "renesas,rz-wdt"
+
+Please don't use plain "rz", as RZ/A, RZ/G, and RZ/T are completely different
+beasts.
+
+>
+>   or just:
+>
+> B. "renesas,r7s72100-wdt"   (no fallback, change the driver to add new SoCs)
+
+Do you know if future RZ/A SoCs will use the exact same type of WDT?
+If yes, you can document both "renesas,r7s72100-wdt" and "renesas,rza-wdt",
+and let the driver match against the latter.
+Else I'd just document and match against "renesas,r7s72100-wdt".
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
