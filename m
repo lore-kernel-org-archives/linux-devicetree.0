@@ -1,137 +1,232 @@
-From: Long Cheng <long.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 4/4] arm: dts: mt2701: add uart APDMA to device tree
-Date: Thu, 16 Feb 2017 19:07:31 +0800
-Message-ID: <1487243251-964-5-git-send-email-long.cheng@mediatek.com>
-References: <1487243251-964-1-git-send-email-long.cheng@mediatek.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] ASoC: zx-96p22: add zte's aud96p22 controller
+ driver
+Date: Thu, 16 Feb 2017 19:17:58 +0800
+Message-ID: <20170216111756.GD8398@dragon>
+References: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
+ <1487156110-12840-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1487243251-964-1-git-send-email-long.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Long Cheng <long.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487156110-12840-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, axel.lin-8E1dMatC8ynQT0dZR+AlfA@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, yesanishhere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-1. add uart APDMA controller device node
-2. add uart 0/1/2/3 DMA function
-3. uart0 is console, So disable DMA
-4. enable uart2 port to test DMA function.
+On Wed, Feb 15, 2017 at 06:55:10PM +0800, Baoyou Xie wrote:
+> This patch adds aud96p22 controller driver for zte's SoC family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Long Cheng <long.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt2701-evb.dts |   22 ++++++++++++++++++++++
- arch/arm/boot/dts/mt2701.dtsi    |   29 +++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
+s/controller/codec in patch subject.
 
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-index 082ca88..2f92bf9 100644
---- a/arch/arm/boot/dts/mt2701-evb.dts
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -24,6 +24,28 @@
- 	};
- };
- 
-+&pio {
-+	uart2_default_cfg: uart2default {
-+		pins_cmd_dat {
-+			pinmux = <MT2701_PIN_14_URXD2__FUNC_URXD2>,
-+				 <MT2701_PIN_15_UTXD2__FUNC_UTXD2>,
-+				 <MT2701_PIN_242_URTS2__FUNC_URTS2>,
-+				 <MT2701_PIN_243_UCTS2__FUNC_UCTS2>;
-+			bias-pull-up;
-+		};
-+	};
-+};
-+
- &uart0 {
-+	dmas = "";
-+	dma-names = "";
-+
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_default_cfg>;
-+
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 7eab6f4..62b3ec9 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -175,6 +175,23 @@
- 		      <0 0x10216000 0 0x2000>;
- 	};
- 
-+	apdma: dma-controller@11000380 {
-+		compatible = "mediatek,mt2701-uart-dma",
-+			     "mediatek,mt6577-uart-dma";
-+		reg = <0 0x11000380 0 0x400>;
-+		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 65 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 66 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 67 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 69 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "apdma";
-+		#dma-cells = <1>;
-+	};
-+
- 	uart0: serial@11002000 {
- 		compatible = "mediatek,mt2701-uart",
- 			     "mediatek,mt6577-uart";
-@@ -182,6 +199,9 @@
- 		interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&pericfg CLK_PERI_UART0_SEL>, <&pericfg CLK_PERI_UART0>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 0
-+			&apdma 1>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
- 
-@@ -192,6 +212,9 @@
- 		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&pericfg CLK_PERI_UART1_SEL>, <&pericfg CLK_PERI_UART1>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 2
-+			&apdma 3>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
- 
-@@ -202,6 +225,9 @@
- 		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&pericfg CLK_PERI_UART2_SEL>, <&pericfg CLK_PERI_UART2>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 4
-+			&apdma 5>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
- 
-@@ -212,6 +238,9 @@
- 		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_LOW>;
- 		clocks = <&pericfg CLK_PERI_UART3_SEL>, <&pericfg CLK_PERI_UART3>;
- 		clock-names = "baud", "bus";
-+		dmas = <&apdma 6
-+			&apdma 7>;
-+		dma-names = "tx", "rx";
- 		status = "disabled";
- 	};
- };
--- 
-1.7.9.5
+> ---
+>  sound/soc/codecs/Kconfig       |   4 +
+>  sound/soc/codecs/Makefile      |   2 +
+>  sound/soc/codecs/zx_aud96p22.c | 588 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 594 insertions(+)
+>  create mode 100644 sound/soc/codecs/zx_aud96p22.c
+> 
+> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+> index cfc108e..120af32 100644
+> --- a/sound/soc/codecs/Kconfig
+> +++ b/sound/soc/codecs/Kconfig
+> @@ -1116,4 +1116,8 @@ config SND_SOC_TPA6130A2
+>  	tristate "Texas Instruments TPA6130A2 headphone amplifier"
+>  	depends on I2C
+>  
+> +config SND_SOC_ZX96P22
+> +	tristate "ZTE Inner AUD96P22 CODEC"
+> +	depends on I2C
+> +
+>  endmenu
+> diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+> index 2624c73..dbc3818 100644
+> --- a/sound/soc/codecs/Makefile
+> +++ b/sound/soc/codecs/Makefile
+> @@ -219,6 +219,7 @@ snd-soc-wm9705-objs := wm9705.o
+>  snd-soc-wm9712-objs := wm9712.o
+>  snd-soc-wm9713-objs := wm9713.o
+>  snd-soc-wm-hubs-objs := wm_hubs.o
+> +snd-soc-zx96p22-objs := zx_aud96p22.o
+>  # Amp
+>  snd-soc-max9877-objs := max9877.o
+>  snd-soc-max98504-objs := max98504.o
+> @@ -444,6 +445,7 @@ obj-$(CONFIG_SND_SOC_WM9712)	+= snd-soc-wm9712.o
+>  obj-$(CONFIG_SND_SOC_WM9713)	+= snd-soc-wm9713.o
+>  obj-$(CONFIG_SND_SOC_WM_ADSP)	+= snd-soc-wm-adsp.o
+>  obj-$(CONFIG_SND_SOC_WM_HUBS)	+= snd-soc-wm-hubs.o
+> +obj-$(CONFIG_SND_SOC_ZX96P22)	+= snd-soc-zx96p22.o
+>  
+>  # Amp
+>  obj-$(CONFIG_SND_SOC_MAX9877)	+= snd-soc-max9877.o
+> diff --git a/sound/soc/codecs/zx_aud96p22.c b/sound/soc/codecs/zx_aud96p22.c
+> new file mode 100644
+> index 0000000..f2979df
+> --- /dev/null
+> +++ b/sound/soc/codecs/zx_aud96p22.c
+> @@ -0,0 +1,588 @@
+> +/*
+> + * ZTE's audio 96p22 driver
+> + *
+> + * Copyright (C) 2017 ZTE Ltd
+> + *
+> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/gpio.h>
+> +#include <sound/soc.h>
+> +#include <sound/soc-dai.h>
+> +#include <sound/pcm.h>
+> +
+> +#define BGPIO64				(64)
+
+GPIO resource is a board level configuration, which might be different
+from one board to another.  Instead of hard-coding, it should be
+retrieved from device tree.
+
+> +#define snd_kcontrol_dev(kcontrol)	\
+> +		((struct device *)((kcontrol)->private_value))
+> +
+> +struct i2c_reg {
+> +	unsigned char addr;
+> +	unsigned char high_data;
+> +	unsigned char low_data;
+> +};
+> +
+> +struct zx_aud96p22_info {
+> +	struct device   *dev;
+
+One space is good enough between type and variable.
+
+> +	int gpio;
+> +	bool capture;
+> +};
+> +
+> +static struct i2c_reg i2c_dac_master_volume_table[] = {
+> +	{ 0x34, 0xe7, 0xe7 },
+> +};
+> +
+> +static struct i2c_reg i2c_adc_master_volume_table[] = {
+> +	{ 0x24, 0xbf, 0xbf },
+> +};
+> +
+> +static struct i2c_reg i2c_dac_headset_volume_table[] = {
+> +	{ 0x38, 0x0d, 0x0d },
+> +};
+> +
+> +static struct i2c_reg i2c_dac_sleep_table[] = {
+> +	{ 0x18, 0x00, 0x00 }, //play power down
+
+/* single line comment */ please.
+
+> +};
+> +
+> +static struct i2c_reg i2c_dac_wakeup_table[] = {
+> +	{ 0x18, 0x00, 0xff }, //play power up
+> +};
+> +
+> +static struct i2c_reg i2c_adc_sleep_table[] = {
+> +	{ 0x16, 0x00, 0x00 }, //record power down
+> +};
+> +
+> +static struct i2c_reg i2c_adc_wakeup_table[] = {
+> +	{ 0x16, 0x00, 0x0f }, //record power up
+> +};
+> +
+> +static struct i2c_reg i2c_codec_start_table[] = {
+> +	{ 0x15, 0x00, 0x00 }, //power down control
+> +	{ 0x47, 0x00, 0x00 }, //record path slect
+> +	{ 0x24, 0xbf, 0xbf }, //record volume control
+> +	{ 0x26, 0x30, 0x30 }, //record pga volume control
+> +	{ 0xc8, 0x00, 0x00 }, //ALC control
+> +	{ 0xce, 0x00, 0xf5 }, //record noise gate
+> +	{ 0xf3, 0x00, 0xc0 }, //dac noise dithe
+> +	{ 0xcd, 0x00, 0x20 }, //max record volume
+> +	{ 0x15, 0x00, 0x01 }, //power down control
+> +	{ 0x18, 0x00, 0xff }, //play power  control
+> +	{ 0x16, 0x00, 0x0f }, //record power up
+> +	{ 0x19, 0x00, 0x04 }, //power down control
+> +	{ 0x02, 0x00, 0x05 }, //ext clock slect
+> +	{ 0x01, 0x00, 0x05 }, //ext clock slect
+> +	{ 0x00, 0x00, 0x00 }, //adc dpz reset
+> +	{ 0x00, 0x00, 0x03 }, //dac dpz reset
+> +	{ 0x04, 0x00, 0x40 }, //clk div
+> +	{ 0x05, 0x00, 0x04 }, //clk div0x4
+> +	{ 0x06, 0x00, 0x40 }, //clk div
+> +	{ 0x07, 0x00, 0x04 }, //clk div 0x4
+> +	{ 0x03, 0x00, 0x01 }, //slave 16bit i2s
+> +	{ 0x00, 0x00, 0x00 }, //adc dpz reset
+> +	{ 0x00, 0x00, 0x03 }, //dac dpz reset
+> +};
+
+<snip>
+
+I skipped the code in between, and will review them in the next version,
+since most of them needs update anyway to use regmap interface.
+
+> +static int zx_aud96p22_i2c_probe(struct i2c_client *i2c_client,
+> +				const struct i2c_device_id *id)
+> +{
+> +	int ret = 0;
+> +	struct device *pdev = &i2c_client->dev;
+
+'pdev' is usually used for struct platform_device type.  Please use
+'dev' here.
+
+> +
+> +	if (!i2c_client)
+> +		return -ENODEV;
+> +
+> +	ret = snd_soc_register_codec(pdev, &zx_aud96p22_driver,
+> +				&zx_aud96p22_dai, 1);
+> +
+> +	return ret;
+> +}
+> +
+> +static int zx_aud96p22_i2c_remove(struct i2c_client *i2c_client)
+> +{
+> +	struct device *pdev = &i2c_client->dev;
+
+Ditto
+
+Shawn
+
+> +
+> +	snd_soc_unregister_codec(pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +const struct of_device_id zx_aud96p22_of_dt_ids[] = {
+> +	{ .compatible = "zte,zx-aud96p22", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, zx_aud96p22_of_dt_ids);
+> +
+> +static struct i2c_driver aud96p22_i2c_driver = {
+> +	.driver = {
+> +		.name = "zx-aud96p22",
+> +		.of_match_table = zx_aud96p22_of_dt_ids,
+> +	},
+> +	.probe = zx_aud96p22_i2c_probe,
+> +	.remove = zx_aud96p22_i2c_remove,
+> +};
+> +module_i2c_driver(aud96p22_i2c_driver);
+> +
+> +MODULE_DESCRIPTION("ZTE ASoC AUD96P22 driver");
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
