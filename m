@@ -1,82 +1,40 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH 03/10] media: dt-bindings: vpif: extend the example with an output port
-Date: Thu, 16 Feb 2017 09:32:45 +0200
-Message-ID: <3062753.kLFTTf9n8o@avalon>
-References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com> <1486485683-11427-4-git-send-email-bgolaszewski@baylibre.com> <20170215220822.nsws6kzrd6ihvmqt@rob-hp-laptop>
+From: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/3] Documentation: DT: Add entry for FSL LS1088A RDB, QDS
+ boards
+Date: Thu, 16 Feb 2017 07:44:51 +0000
+Message-ID: <VI1PR0402MB2863D1744E831A8B300580D3E65A0@VI1PR0402MB2863.eurprd04.prod.outlook.com>
+References: <1486638251-9688-1-git-send-email-harninder.rai@nxp.com>
+ <20170215233008.ii42ot6mevw2gh76@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170215220822.nsws6kzrd6ihvmqt@rob-hp-laptop>
+In-Reply-To: <20170215233008.ii42ot6mevw2gh76@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>, "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+>=20
+> Some consistency in the subject please "dt-bindings: arm: ..."
+Thanks Rob.
 
-On Wednesday 15 Feb 2017 16:08:22 Rob Herring wrote:
-> On Tue, Feb 07, 2017 at 05:41:16PM +0100, Bartosz Golaszewski wrote:
-> > This makes the example more or less correspond with the da850-evm
-> > hardware setup.
-> > 
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Hello Shawn,
+
+Would you please take care of the subject line while applying the patch or =
+should I send another revision?
+>=20
 > > ---
-> > 
-> >  .../devicetree/bindings/media/ti,da850-vpif.txt    | 35 +++++++++++++----
-> >  1 file changed, 29 insertions(+), 6 deletions(-)
-> 
-> Spoke too soon...
-> 
-> > diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> > b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt index
-> > 9c7510b..543f6f3 100644
-> > --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> > +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> > @@ -28,19 +28,27 @@ I2C-connected TVP5147 decoder:
-> >  		reg = <0x217000 0x1000>;
-> >  		interrupts = <92>;
-> > 
-> > -		port {
-> > -			vpif_ch0: endpoint@0 {
-> > +		port@0 {
-> > +			vpif_input_ch0: endpoint@0 {
-> >  				reg = <0>;
-> >  				bus-width = <8>;
-> > -				remote-endpoint = <&composite>;
-> > +				remote-endpoint = <&composite_in>;
-> >  			};
-> > 
-> > -			vpif_ch1: endpoint@1 {
-> > +			vpif_input_ch1: endpoint@1 {
-> >  				reg = <1>;
-> >  				bus-width = <8>;
-> >  				data-shift = <8>;
-> >  			};
-> >  		};
-> > +
-> > +		port@1 {
-> 
-> The binding doc says nothing about supporting a 2nd port.
-> 
-> > +			vpif_output_ch0: endpoint@0 {
-> > +				reg = <0>;
-> 
-> Don't need reg here.
+> >  Documentation/devicetree/bindings/arm/fsl.txt | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+>=20
+> With that,
+>=20
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-And the node should then be named endpoint, not endpoint@0.
-
-> > +				bus-width = <8>;
-> > +				remote-endpoint = <&composite_out>;
-> > +			};
-> > +		};
-> >  	};
-
--- 
-Regards,
-
-Laurent Pinchart
-
+Regards
+Harry++
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
