@@ -1,71 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] hwmon: (sht15) Add DTS support
-Date: Wed, 15 Feb 2017 20:32:40 -0600
-Message-ID: <20170216023240.okcz6auvirjfihkc@rob-hp-laptop>
-References: <1486737041-32014-1-git-send-email-marco.franchi@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
+Date: Wed, 15 Feb 2017 20:34:08 -0600
+Message-ID: <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
+References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
+ <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486737041-32014-1-git-send-email-marco.franchi@nxp.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Marco Franchi <marco.franchi@nxp.com>
-Cc: linux@roeck-us.net, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, marcofrk@gmail.com, FoxPeter@kabelbw.de
+In-Reply-To: <1486738489-22154-5-git-send-email-yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Cc: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 12:30:41PM -0200, Marco Franchi wrote:
-> Allow the driver to work with dts support.
-> 
-> Based on initial patch submission from Peter Fox.
-> 
-> Tested on a imx7d-sdb board connected to a SHT15 board via Mikro Bus.
-> 
-> Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+On Fri, Feb 10, 2017 at 03:54:44PM +0100, Yannick Fertre wrote:
+> Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/hwmon/sht15.txt | 25 ++++++++
->  drivers/hwmon/sht15.c                             | 69 +++++++++++++++++++++--
->  2 files changed, 90 insertions(+), 4 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/sht15.txt
+>  .../bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt         | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/hwmon/sht15.txt b/Documentation/devicetree/bindings/hwmon/sht15.txt
+> diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
 > new file mode 100644
-> index 0000000..6415f52
+> index 0000000..f59e3c4
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/sht15.txt
-> @@ -0,0 +1,25 @@
-> +Sensirion SHT15 Humidity and Temperature Sensor
+> +++ b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
+> @@ -0,0 +1,7 @@
+> +Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
 > +
 > +Required properties:
-> +
-> + - "compatible": must be "sensirion,sht15".
-> + - "data-gpios": GPIO connected to the data line.
-> + - "clk-gpios": GPIO connected to the clock line.
-> + - "vcc-supply": regulator that drives the VCC pin.
-> +
-> +Optional properties:
-> +
-> + - "checksum": boolean property that when present enables the CRC validation of the readings.
+> +- compatible: should be "ampire,am-480272h3tmqw-t01h"
 
-Seems more like a user setting than h/w setting?
+No GPIO controls or power supply for this panel?
 
-> + - "no-otp-reload": boolean property that when present indicates not to reload from OTP.
-> + - "low-resolution": boolean property that when present indicates that the device operates in
-> + 		low-resolution mode.
-
-Same here.
-
-If they stay, these need vendor prefixes.
-
-> +Example:
-> +
-> +	temp_humid_sensor: sht15 {
-
-sensor {
-
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_sensor>;
-> +		compatible = "sensirion,sht15";
-> +		clk-gpios = <&gpio4 12 0>;
-> +		data-gpios = <&gpio4 13 0>;
-> +		vcc-supply = <&reg_sht15>;
-> +	};
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
