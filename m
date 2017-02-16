@@ -1,81 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] dt-bindings: display: add STM32 LTDC driver
-Date: Wed, 15 Feb 2017 21:15:05 -0600
-Message-ID: <20170216031505.x7gbqivnv7pvdzei@rob-hp-laptop>
-References: <1486740274-25958-1-git-send-email-yannick.fertre@st.com>
- <1486740274-25958-2-git-send-email-yannick.fertre@st.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] reset: Add i.MX7 SRC reset driver
+Date: Wed, 15 Feb 2017 20:58:32 -0800
+Message-ID: <CAHQ1cqGhUFNQ=q6gTXRnkm3QRCstiPtpDQBtCfwZ+Fua+rbrxQ@mail.gmail.com>
+References: <20170213153338.13518-1-andrew.smirnov@gmail.com>
+ <1487004643.2873.97.camel@pengutronix.de> <CAHQ1cqFXiu03902jWLkg8X6jdQ3+TiLj02dSDFBAVH98ABo70A@mail.gmail.com>
+ <1487089919.2305.22.camel@pengutronix.de> <CAHQ1cqGHujsDsC5dtXk3_1u0kKme8k96jgSctp5XFSHuYKeE=A@mail.gmail.com>
+ <1487150153.2433.11.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486740274-25958-2-git-send-email-yannick.fertre-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1487150153.2433.11.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
-Cc: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 04:24:28PM +0100, Yannick Fertre wrote:
-> Signed-off-by: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/display/st,stm32-ltdc.txt  | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> new file mode 100644
-> index 0000000..b93e1c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/st,stm32-ltdc.txt
-> @@ -0,0 +1,37 @@
-> +* STMicroelectronics STM32 lcd-tft display controller
-> +
-> +- ltdc: lcd-tft display controller host
-> +  must be a sub-node of st-display-subsystem
-> +  Required properties:
-> +  - compatible: "st,stm32-ltdc"
+On Wed, Feb 15, 2017 at 1:15 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Tue, 2017-02-14 at 12:11 -0800, Andrey Smirnov wrote:
+> [...]
+>> > Arguably, the A7 resets should not be handled by the peripheral reset
+>> > controller, but at least for the others I see no reason not to leave
+>> > space for them in the index table.
+>>
+>> If for some bizarre reason one was to run Linux on M4 and use A7 as
+>> applications processor, resetting A7 might be useful. But that's a
+>> very unlikely use-case.
+>>
+>> > In fact, since unused reset controls
+>> > don't use space, why not number them all?
+>>
+>> IMHO because it is unused code and because those numbers constitute an
+>> interface which once set will be hard to change if need be.
+>>
+>> But that's not that important and I don't feel particularly strong
+>> about that point, so I'll add those sources in v3.
+>
+> Thanks.
+>
+>> Do you insist that I split what I call IMX7_RESET_PCIEPHY into
+>> PCIEPHY_G_RST and PCIEPHY_BTN or can I keep it as a single logical
+>> reset?
+>
+> No, I say keep it as is. For now I'll assume this is not a reset, but
+> some other interface signal that just happens to be routed out to the
+> SRC and just happens to be toggled around the same time in the enable
+> sequence.
+>
+> [...]
+>> >> >> +#define IMX7_RESET_PCIE_CTRL_APPS    0
+>> >> >> +#define IMX7_RESET_PCIEPHY           1
+>> >> >
+>> >> > It would expect these to be numbered in the order they appear in the
+>> >> > register map, not starting from the end. Could you add all available
+>> >> > peripheral resets to this list, in the correct order?
+>> >>
+>> >> The numbering is just a consequence of me adding only resets I could
+>> >> exercise with my code and numbering then starting from zero. I also
+>> >> was hesitant adding more sources since it seemed to me that some of
+>> >> less trivial registers in that IP block might be best represented as a
+>> >> single reset source doing something more sophisticated that just
+>> >> setting a bit under the hood.
+>> >
+>> > Any in particular?
+>>
+>> USBPHY1/2 and maybe MIPI resets? But that's no more than a gut feeling.
+>
+> Is there any downstream code that already handles these resets? At least
+> for the USB PHYs I'd expect there has to be something we could look at.
 
-Kind of generic. There's only one version for all stm32 parts?
+Just went and double checked. Of the three that I mentioned, couldn't
+find anything besides MIPI and for that only one of the signals was
+being used, nothing fancy. I think I'll just expose all of the signals
+as discussed above and not worry about it in v3.
 
-> +  - reg: Physical base address of the IP registers and length of memory mapped region.
-> +  - clocks: A list of phandle + clock-specifier pairs, one for each
-> +    entry in 'clock-names'.
-> +  - clock-names: A list of clock names. For ltdc it should contain:
-> +      - "clk-lcd" for the clock feeding the output pixel clock & IP clock.
-> +  - resets: reset to be used by the device (defined by use of RCC macro).
-> +  Required nodes:
-> +    - Video port for RGB output.
-> +
-> +Example:
-> +
-> +/ {
-> +	...
-> +	soc {
-> +	...
-> +		ltdc: stm32-ltdc@40016800 {
-
-display-controller@...
-
-> +			compatible = "st,stm32-ltdc";
-> +			reg = <0x40016800 0x200>;
-> +			interrupts = <88>, <89>;
-> +			resets = <&rcc STM32F4_APB2_RESET(LTDC)>;
-> +			clocks = <&rcc 1 CLK_LCD>;
-> +			clock-names = "lcd";
-> +			status = "disabled";
-
-Don't need to show status in examples.
-
-> +
-> +			port {
-> +				ltdc_out_rgb: endpoint {
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 1.9.1
-> 
+Thanks,
+Andrey Smirnov
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
