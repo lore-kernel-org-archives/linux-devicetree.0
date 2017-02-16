@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v4 3/6] irqdomain: Add irq_domain_{push,pop}_irq() functions.
-Date: Wed, 15 Feb 2017 17:01:03 -0800
-Message-ID: <1487206866-4011-4-git-send-email-david.daney@cavium.com>
+Subject: [PATCH v4 6/6] MAINTAINERS: Add entry for THUNDERX GPIO Driver.
+Date: Wed, 15 Feb 2017 17:01:06 -0800
+Message-ID: <1487206866-4011-7-git-send-email-david.daney@cavium.com>
 References: <1487206866-4011-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,184 +12,26 @@ To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.co
 Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-For an already existing irqdomain hierarchy, as might be obtained via
-a call to pci_enable_msix(), a PCI driver wishing to add an additional
-irqdomain to the hierarchy needs to be able to insert the irqdomain to
-that already initialized hierarchy.  Calling
-irq_domain_create_hierarchy() allows the new irqdomain to be created,
-but no existing code allows for initializing the associated irq_data.
-
-Add a couple of helper functions (irq_domain_push_irq()
-irq_domain_pop_irq()) to initialize the irq_data for the new
-irqdomain.
-
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- include/linux/irqdomain.h |   3 +
- kernel/irq/irqdomain.c    | 137 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+)
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index ffb8460..d8e60d1 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -418,6 +418,9 @@ extern void irq_domain_free_irqs_common(struct irq_domain *domain,
- extern void irq_domain_free_irqs_top(struct irq_domain *domain,
- 				     unsigned int virq, unsigned int nr_irqs);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 107c10e..9238cd0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10904,6 +10904,11 @@ M:	Andreas Noever <andreas.noever@gmail.com>
+ S:	Maintained
+ F:	drivers/thunderbolt/
  
-+extern int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg);
-+extern int irq_domain_pop_irq(struct irq_domain *domain, int virq);
++THUNDERX GPIO DRIVER
++M:	David Daney <david.daney@cavium.com>
++S:	Maintained
++F:	drivers/gpio/gpio-thunderx.c
 +
- extern int irq_domain_alloc_irqs_parent(struct irq_domain *domain,
- 					unsigned int irq_base,
- 					unsigned int nr_irqs, void *arg);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index b59e676..5266251 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1279,6 +1279,143 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 	return ret;
- }
- 
-+/* The irq_data was moved, fix the revmap to refer to the new location */
-+static void irq_domain_fix_revmap(struct irq_data *d)
-+{
-+	void **slot;
-+
-+	if (d->hwirq < d->domain->revmap_size)
-+		return; /* Not using radix tree. */
-+
-+	/* Fix up the revmap. */
-+	mutex_lock(&revmap_trees_mutex);
-+	slot = radix_tree_lookup_slot(&d->domain->revmap_tree, d->hwirq);
-+	if (slot)
-+		radix_tree_replace_slot(&d->domain->revmap_tree, slot, d);
-+	mutex_unlock(&revmap_trees_mutex);
-+}
-+
-+/**
-+ * irq_domain_push_irq() - Push a domain in to the top of a hierarchy.
-+ * @domain:	Domain to push.
-+ * @virq:	Irq to push the domain in to.
-+ * @arg:	Passed to the irq_domain_ops alloc() function.
-+ *
-+ * For an already existing irqdomain hierarchy, as might be obtained
-+ * via a call to pci_enable_msix(), add an additional domain to the
-+ * head of the processing chain.
-+ */
-+int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
-+{
-+	struct irq_data *child_irq_data;
-+	struct irq_data *root_irq_data = irq_get_irq_data(virq);
-+
-+	if (domain == NULL)
-+		return -EINVAL;
-+
-+	if (WARN_ON(!domain->ops->alloc))
-+		return -ENOSYS;
-+
-+	if (!root_irq_data)
-+		return -EINVAL;
-+
-+	child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
-+				      irq_data_get_node(root_irq_data));
-+	if (!child_irq_data)
-+		return -ENOMEM;
-+
-+	mutex_lock(&irq_domain_mutex);
-+
-+	/* Copy the original irq_data. */
-+	*child_irq_data = *root_irq_data;
-+
-+	irq_domain_fix_revmap(child_irq_data);
-+
-+	/*
-+	 * Overwrite the root_irq_data, which is embedded in struct
-+	 * irq_desc, with values for this domain.
-+	 */
-+	root_irq_data->parent_data = child_irq_data;
-+	root_irq_data->domain = domain;
-+	root_irq_data->mask = 0;
-+	root_irq_data->hwirq = 0;
-+	root_irq_data->chip = NULL;
-+	root_irq_data->chip_data = NULL;
-+	domain->ops->alloc(domain, virq, 1, arg);
-+
-+	if (root_irq_data->hwirq < domain->revmap_size) {
-+		domain->linear_revmap[root_irq_data->hwirq] = virq;
-+	} else {
-+		mutex_lock(&revmap_trees_mutex);
-+		radix_tree_insert(&domain->revmap_tree,
-+				  root_irq_data->hwirq, root_irq_data);
-+		mutex_unlock(&revmap_trees_mutex);
-+	}
-+
-+	mutex_unlock(&irq_domain_mutex);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_push_irq);
-+
-+/**
-+ * irq_domain_pop_irq() - Remove a domain from the top of a hierarchy.
-+ * @domain:	Domain to remove.
-+ * @virq:	Irq to remove the domain from.
-+ *
-+ * Undo the effects of a call to irq_domain_push_irq().
-+ */
-+int irq_domain_pop_irq(struct irq_domain *domain, int virq)
-+{
-+	struct irq_data *root_irq_data = irq_get_irq_data(virq);
-+	struct irq_data *child_irq_data;
-+	struct irq_data *tmp_irq_data;
-+
-+	if (domain == NULL)
-+		return -EINVAL;
-+
-+	if (!root_irq_data)
-+		return -EINVAL;
-+
-+	tmp_irq_data = irq_domain_get_irq_data(domain, virq);
-+
-+	/* We can only "pop" if this domain is at the top of the list */
-+	if (WARN_ON(root_irq_data != tmp_irq_data))
-+		return -ENOSYS;
-+
-+	if (WARN_ON(root_irq_data->domain != domain))
-+		return -ENOSYS;
-+
-+	child_irq_data = root_irq_data->parent_data;
-+	if (WARN_ON(!child_irq_data))
-+		return -ENOSYS;
-+
-+	mutex_lock(&irq_domain_mutex);
-+
-+	root_irq_data->parent_data = NULL;
-+
-+	if (root_irq_data->hwirq >= domain->revmap_size) {
-+		mutex_lock(&revmap_trees_mutex);
-+		radix_tree_delete(&domain->revmap_tree, root_irq_data->hwirq);
-+		mutex_unlock(&revmap_trees_mutex);
-+	}
-+
-+	if (domain->ops->free)
-+		domain->ops->free(domain, virq, 1);
-+
-+	/* Restore the original irq_data. */
-+	*root_irq_data = *child_irq_data;
-+
-+	irq_domain_fix_revmap(root_irq_data);
-+
-+	mutex_unlock(&irq_domain_mutex);
-+
-+	kfree(child_irq_data);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(irq_domain_pop_irq);
-+
- /**
-  * irq_domain_free_irqs - Free IRQ number and associated data structures
-  * @virq:	base IRQ number
+ TI BQ27XXX POWER SUPPLY DRIVER
+ R:	Andrew F. Davis <afd@ti.com>
+ F:	include/linux/power/bq27xxx_battery.h
 -- 
 1.8.3.1
