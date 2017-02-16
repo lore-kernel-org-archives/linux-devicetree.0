@@ -1,205 +1,91 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] power: reset: Add Renesas reset driver
-Date: Thu, 16 Feb 2017 10:26:44 -0800
-Message-ID: <20170216182644.GA17814@roeck-us.net>
-References: <20170216172320.10897-1-chris.brandt@renesas.com>
- <20170216172320.10897-2-chris.brandt@renesas.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 00/36] i.MX Media Driver
+Date: Thu, 16 Feb 2017 10:30:56 -0800
+Message-ID: <67a4fa15-2745-a5e9-e894-be05150c3dac@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170216113758.GK27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170216172320.10897-2-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170216113758.GK27312@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 12:23:18PM -0500, Chris Brandt wrote:
-> Some Renesas SoCs do not have a reset register and the only way to do a SW
-> controlled reset is to use the watchdog timer. Additionally, since all the
-> WDT timeout options are so quick, a system reset is about the only thing
-> it's good for.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-Wondering - why not use the watchdog driver and the infrastructure
-provided by the watchdog core (ie the restart callback) instead ?
 
-> ---
-> v2:
-> * changed DT bindings from 'wdt-reset' to 'rza-wdt'
-> * changed hard coded register values to defines
-> * added msleep to while(1) loop
+On 02/16/2017 03:37 AM, Russell King - ARM Linux wrote:
+> Two problems.
+>
+> On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
+>>   media: imx: propagate sink pad formats to source pads
+>
+> 1) It looks like all cases aren't being caught:
+>
+> - entity 74: ipu1_csi0 (3 pads, 4 links)
+>              type V4L2 subdev subtype Unknown flags 0
+>              device node name /dev/v4l-subdev13
+>         pad0: Sink
+>                 [fmt:SRGGB8/816x616 field:none]
+>                 <- "ipu1_csi0_mux":2 [ENABLED]
+>         pad1: Source
+>                 [fmt:AYUV32/816x616 field:none
+>                  crop.bounds:(0,0)/816x616
+>                  crop:(0,0)/816x616]
+>                 -> "ipu1_ic_prp":0 []
+>                 -> "ipu1_vdic":0 []
+>         pad2: Source
+>                 [fmt:SRGGB8/816x616 field:none
+>                  crop.bounds:(0,0)/816x616
+>                  crop:(0,0)/816x616]
+>                 -> "ipu1_csi0 capture":0 [ENABLED]
+>
+> While the size has been propagated to pad1, the format has not.
 
-Sure you can sleep here ?
+Right, Philipp also caught this. I need to finish propagating all
+params from sink to source pads (mbus code and field, and colorimetry
+eventually).
 
-Guenter
+>
+> 2) /dev/video* device node assignment
+>
+> I've no idea at the moment how the correct /dev/video* node should be
+> chosen - initially with Philipp and your previous code, it was
+> /dev/video3 after initial boot.  Philipp's was consistently /dev/video3.
+> Yours changed to /dev/video7 when removing and re-inserting the modules
+> (having fixed that locally.)  This version makes CSI0 be /dev/video7,
+> but after a remove+reinsert, it becomes (eg) /dev/video8.
+>
+> /dev/v4l/by-path/platform-capture-subsystem-video-index4 also is not a
+> stable path - the digit changes (it's supposed to be a stable path.)
+> After a remove+reinsert, it becomes (eg)
+> /dev/v4l/by-path/platform-capture-subsystem-video-index5.
+> /dev/v4l/by-id doesn't contain a symlink for this either.
+>
+> What this means is that it's very hard to script the setup, because
+> there's no easy way to know what device is the capture device.  While
+> it may be possible to do:
+>
+> 	media-ctl -d /dev/media1 -p | \
+> 		grep -A2 ': ipu1_csi0 capture' | \
+> 			sed -n 's|.*\(/dev/video[0-9]*\).*|\1|p'
+>
+> that's hardly a nice solution - while it fixes the setup script, it
+> doesn't stop the pain of having to delve around to find the correct
+> device to use for gstreamer to test with.
+>
 
-> * removed unnecessary #include files
-> * added Reviewed-by: Geert Uytterhoeven
-> ---
->  drivers/power/reset/Kconfig         |   9 +++
->  drivers/power/reset/Makefile        |   1 +
->  drivers/power/reset/renesas-reset.c | 112 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 122 insertions(+)
->  create mode 100644 drivers/power/reset/renesas-reset.c
-> 
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index b8caccc..e3100c9 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -130,6 +130,15 @@ config POWER_RESET_QNAP
->  
->  	  Say Y if you have a QNAP NAS.
->  
-> +config POWER_RESET_RENESAS
-> +	tristate "Renesas WDT reset driver"
-> +	depends on ARCH_RENESAS || COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	help
-> +	  Reboot support for Renesas SoCs with WDT reset.
-> +	  Some Renesas SoCs do not have a reset register and the only way
-> +	  to do a SW controlled reset is to use the watchdog timer.
-> +
->  config POWER_RESET_RESTART
->  	bool "Restart power-off driver"
->  	help
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index 11dae3b..a78a56c 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -13,6 +13,7 @@ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
->  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
->  obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
->  obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
-> +obj-$(CONFIG_POWER_RESET_RENESAS) += renesas-reset.o
->  obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
->  obj-$(CONFIG_POWER_RESET_ST) += st-poweroff.o
->  obj-$(CONFIG_POWER_RESET_VERSATILE) += arm-versatile-reboot.o
-> diff --git a/drivers/power/reset/renesas-reset.c b/drivers/power/reset/renesas-reset.c
-> new file mode 100644
-> index 0000000..812cee0
-> --- /dev/null
-> +++ b/drivers/power/reset/renesas-reset.c
-> @@ -0,0 +1,112 @@
-> +/*
-> + * Renesas WDT Reset Driver
-> + *
-> + * Copyright (C) 2017 Renesas Electronics America, Inc.
-> + * Copyright (C) 2017 Chris Brandt
-> + *
-> + * This file is subject to the terms and conditions of the GNU General Public
-> + * License.  See the file "COPYING" in the main directory of this archive
-> + * for more details.
-> + *
-> + * based on rmobile-reset.c
-> + *
-> + */
-> +
-> +#include <linux/platform_device.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/reboot.h>
-> +#include <linux/delay.h>
-> +
-> +/* Watchdog Timer Registers */
-> +#define WTCSR 0
-> +#define WTCSR_MAGIC 0xA500
-> +#define WTSCR_WT (1<<6)
-> +#define WTSCR_TME (1<<5)
-> +
-> +#define WTCNT 2
-> +#define WTCNT_MAGIC 0x5A00
-> +
-> +#define WRCSR 4
-> +#define WRCSR_MAGIC 0x5A00
-> +#define WRCSR_RSTE (1<<6)
-> +#define WRCSR_CLEAR_WOVF 0xA500 /* special value */
-> +
-> +static void __iomem *base;
-> +
-> +static int wdt_reset_handler(struct notifier_block *this,
-> +			     unsigned long mode, void *cmd)
-> +{
-> +	pr_debug("%s %lu\n", __func__, mode);
-> +
-> +	/* Dummy read (must read WRCSR:WOVF at least once before clearing) */
-> +	readb(base + WRCSR);
-> +
-> +	writew(WRCSR_CLEAR_WOVF, base + WRCSR);		/* Clear WOVF */
-> +	writew(WRCSR_MAGIC | WRCSR_RSTE, base + WRCSR);	/* Reset Enable */
-> +	writew(WTCNT_MAGIC, base + WTCNT);		/* Counter to 00 */
-> +
-> +	/* Start timer */
-> +	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME, base + WTCSR);
-> +
-> +	/* Wait for WDT overflow (reset) */
-> +	while (1)
-> +		msleep(1);
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static struct notifier_block wdt_reset_nb = {
-> +	.notifier_call = wdt_reset_handler,
-> +	.priority = 192,
-> +};
-> +
-> +static int wdt_reset_probe(struct platform_device *pdev)
-> +{
-> +	int error;
-> +
-> +	base = of_iomap(pdev->dev.of_node, 0);
-> +	if (!base)
-> +		return -ENODEV;
-> +
-> +	error = register_restart_handler(&wdt_reset_nb);
-> +	if (error) {
-> +		dev_err(&pdev->dev,
-> +			"cannot register restart handler (err=%d)\n", error);
-> +		goto fail_unmap;
-> +	}
-> +
-> +	return 0;
-> +
-> +fail_unmap:
-> +	iounmap(base);
-> +	return error;
-> +}
-> +
-> +static int wdt_reset_remove(struct platform_device *pdev)
-> +{
-> +	unregister_restart_handler(&wdt_reset_nb);
-> +	iounmap(base);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id wdt_reset_of_match[] = {
-> +	{ .compatible = "renesas,rza-wdt", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, wdt_reset_of_match);
-> +
-> +static struct platform_driver wdt_reset_driver = {
-> +	.probe = wdt_reset_probe,
-> +	.remove = wdt_reset_remove,
-> +	.driver = {
-> +		.name = "wdt_reset",
-> +		.of_match_table = wdt_reset_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(wdt_reset_driver);
-> +
-> +MODULE_DESCRIPTION("Renesas WDT Reset Driver");
-> +MODULE_AUTHOR("Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.10.1
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'll try to nail down the main capture node numbers, even after module
+reload.
+
+Steve
