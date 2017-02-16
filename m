@@ -1,46 +1,55 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4/5] sprd_serial: switch comptible string to sc-uart
-Date: Thu, 16 Feb 2017 14:31:38 +0100
-Message-ID: <1761969.45NG6Q1Iyc@wuerfel>
-References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487063952-7113-5-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: [PATCH 1/2] [1/2] mmc: sdhci-cadence: Fix writing PHY delay
+Date: Thu, 16 Feb 2017 13:06:52 +0000
+Message-ID: <1487250413-5769-1-git-send-email-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1487063952-7113-5-git-send-email-chunyan.zhang@spreadtrum.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, gregkh@linuxfoundation.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, catalin.marinas@arm.com, Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, February 14, 2017 5:19:11 PM CET Chunyan Zhang wrote:
->  static const struct of_device_id serial_ids[] = {
-> -       {.compatible = "sprd,sc9836-uart",},
-> +       {.compatible = "sprd,sc-uart",},
->         {}
+Add polling for ACK to be sure that data are written to PHY register.
 
-We really need this to be specific, in case Spreadtrum ever
-makes a slightly different UART that is not 100% compatible
-with this one. Also, you can't remove the string you already have,
-only add to it.
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+---
+ drivers/mmc/host/sdhci-cadence.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Normally when you have a new chip that is compatible with one
-we already have a driver for, we mark the device as compatible
-with the old one and avoid having to change the driver, e.g.
+diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+index 4b0ecb9..c946e45 100644
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -65,11 +65,12 @@ struct sdhci_cdns_priv {
+ 	void __iomem *hrs_addr;
+ };
+ 
+-static void sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
++static int sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
+ 				     u8 addr, u8 data)
+ {
+ 	void __iomem *reg = priv->hrs_addr + SDHCI_CDNS_HRS04;
+ 	u32 tmp;
++	int ret;
+ 
+ 	tmp = (data << SDHCI_CDNS_HRS04_WDATA_SHIFT) |
+ 	      (addr << SDHCI_CDNS_HRS04_ADDR_SHIFT);
+@@ -78,8 +79,14 @@ static void sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
+ 	tmp |= SDHCI_CDNS_HRS04_WR;
+ 	writel(tmp, reg);
+ 
++	ret = readl_poll_timeout(reg, tmp, tmp & SDHCI_CDNS_HRS04_ACK, 0, 10);
++	if (ret)
++		return ret;
++
+ 	tmp &= ~SDHCI_CDNS_HRS04_WR;
+ 	writel(tmp, reg);
++
++	return 0;
+ }
+ 
+ static void sdhci_cdns_phy_init(struct sdhci_cdns_priv *priv)
+-- 
+2.2.2
 
-	compatible = "sprd,sc9995-uart", "sprd,sc9836-uart";
-
-This way, the driver could later be changed to handle anything
-that is compatible with sc9995 differently from sc9836, but
-by default it would match the original string.
-
-	Arnd
