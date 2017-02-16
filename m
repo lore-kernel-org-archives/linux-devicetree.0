@@ -1,222 +1,43 @@
-From: Piotr Sroka <piotrs@cadence.com>
-Subject: [PATCH 2/2] [2/2] mmc: sdhci-cadence: Update PHY delay configuration
-Date: Thu, 16 Feb 2017 13:06:53 +0000
-Message-ID: <1487250413-5769-2-git-send-email-piotrs@cadence.com>
-References: <1487250413-5769-1-git-send-email-piotrs@cadence.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 18/36] media: Add i.MX media core driver
+Date: Thu, 16 Feb 2017 13:44:23 +0000
+Message-ID: <20170216134422.GO27312@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-19-git-send-email-steve_longerbeam@mentor.com>
+ <1487250123.2377.53.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487250413-5769-1-git-send-email-piotrs@cadence.com>
+Content-Disposition: inline
+In-Reply-To: <1487250123.2377.53.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
 List-Id: devicetree@vger.kernel.org
 
-DTS properties are used instead of fixed data
-because PHY settings can be different for different platforms.
-Configuration of new three PHY delays were added
+On Thu, Feb 16, 2017 at 02:02:03PM +0100, Philipp Zabel wrote:
+> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
+> > +- imx-csi subdev is not being autoloaded as a kernel module, probably
+> > +  because ipu_add_client_devices() does not register the IPU client
+> > +  platform devices, but only allocates those devices.
+> 
+> As Russell points out, this is an issue with the ipu-v3 driver, which
+> needs to be fixed to stop setting the ipu client devices' dev->of_node
+> field.
 
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
----
- .../devicetree/bindings/mmc/sdhci-cadence.txt      | 54 ++++++++++++++
- drivers/mmc/host/sdhci-cadence.c                   | 83 +++++++++++++++++++---
- 2 files changed, 129 insertions(+), 8 deletions(-)
+>From my local testing (albiet the shambles that is bits of v4l2) setting
+dev->of_node is not necessary for imx-drm - imx-drm comes up fine without.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-index c0f37cb..221d3fe 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
-@@ -19,6 +19,59 @@ if supported.  See mmc.txt for details.
- - mmc-hs400-1_8v
- - mmc-hs400-1_2v
- 
-+- phy-input-delay-sd-hs:
-+  Value of the delay in the input path for High Speed work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-sd-default:
-+  Value of the delay in the input path for Default Speed work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-sd-sdr12:
-+  Value of the delay in the input path for SDR12 work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-sd-sdr25:
-+  Value of the delay in the input path for SDR25 work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-sd-sdr50:
-+  Value of the delay in the input path for SDR50 work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-sd-ddr50:
-+  Value of the delay in the input path for DDR50 work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-emmc-legacy:
-+  Value of the delay in the input path for eMMC legacy work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-emmc-sdr:
-+  Value of the delay in the input path for eMMC SDR work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-input-delay-emmc-ddr:
-+  Value of the delay in the input path for eMMC DDR work mode.
-+  Valid range = [0:0x1F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-dll-delay-sdclk:
-+  Value of the delay introduced on the sdclk output
-+  for all modes except HS200, HS400 and HS400_ES.
-+  Valid range = [0:0x7F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-dll-delay-sdclk-hsmmc:
-+  Value of the delay introduced on the sdclk output
-+  for HS200, HS400 and HS400_ES speed modes.
-+  Valid range = [0:0x7F].
-+  Delay configuration stay unchanged if this property is not provided.
-+- phy-dll-delay-strobe:
-+  Value of the delay introduced on the dat_strobe input
-+  used in HS400 / HS400_ES speed modes.
-+  Valid range = [0:0x7F].
-+  Delay configuration stay unchanged if this property is not provided.
-+
-+
- Example:
- 	emmc: sdhci@5a000000 {
- 		compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
-@@ -29,4 +82,5 @@ Example:
- 		mmc-ddr-1_8v;
- 		mmc-hs200-1_8v;
- 		mmc-hs400-1_8v;
-+		phy-input-delay-sd-hs = <0>;
- 	};
-diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
-index c946e45..6c338d2 100644
---- a/drivers/mmc/host/sdhci-cadence.c
-+++ b/drivers/mmc/host/sdhci-cadence.c
-@@ -17,6 +17,7 @@
- #include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/mmc/host.h>
-+#include <linux/of.h>
- 
- #include "sdhci-pltfm.h"
- 
-@@ -53,6 +54,9 @@
- #define SDHCI_CDNS_PHY_DLY_EMMC_LEGACY	0x06
- #define SDHCI_CDNS_PHY_DLY_EMMC_SDR	0x07
- #define SDHCI_CDNS_PHY_DLY_EMMC_DDR	0x08
-+#define SDHCI_CDNS_PHY_DLY_SDCLK	0x0b
-+#define SDHCI_CDNS_PHY_DLY_HSMMC	0x0c
-+#define SDHCI_CDNS_PHY_DLY_STROBE	0x0d
- 
- /*
-  * The tuned val register is 6 bit-wide, but not the whole of the range is
-@@ -89,13 +93,73 @@ static int sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
- 	return 0;
- }
- 
--static void sdhci_cdns_phy_init(struct sdhci_cdns_priv *priv)
-+static int sdhci_cdns_phy_parse_dt(struct device_node *np,
-+				   struct sdhci_cdns_priv *priv)
- {
--	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_SD_HS, 4);
--	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_SD_DEFAULT, 4);
--	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_LEGACY, 9);
--	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_SDR, 2);
--	sdhci_cdns_write_phy_reg(priv, SDHCI_CDNS_PHY_DLY_EMMC_DDR, 3);
-+	u32 tmp;
-+	int ret;
-+
-+	if (!of_property_read_u32(np, "phy-input-delay-sd-hs", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_SD_HS, tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-input-delay-sd-default", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_SD_DEFAULT,
-+					       tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-input-delay-sd-sdr12", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_UHS_SDR12,
-+					       tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-input-delay-sd-sdr25", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_UHS_SDR25,
-+					       tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-input-delay-sd-sdr50", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_UHS_SDR50,
-+					       tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-input-delay-sd-ddr50", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_UHS_DDR50,
-+					       tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-dll-delay-sdclk", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_SDCLK, tmp);
-+
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-dll-delay-sdclk-hsmmc", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_HSMMC, tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	if (!of_property_read_u32(np, "phy-dll-delay-strobe", &tmp)) {
-+		ret = sdhci_cdns_write_phy_reg(priv,
-+					       SDHCI_CDNS_PHY_DLY_STROBE, tmp);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
- }
- 
- static inline void *sdhci_cdns_priv(struct sdhci_host *host)
-@@ -224,10 +288,11 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
- 	struct sdhci_host *host;
- 	struct sdhci_pltfm_host *pltfm_host;
- 	struct sdhci_cdns_priv *priv;
-+	struct device *dev = &pdev->dev;
- 	struct clk *clk;
- 	int ret;
- 
--	clk = devm_clk_get(&pdev->dev, NULL);
-+	clk = devm_clk_get(dev, NULL);
- 	if (IS_ERR(clk))
- 		return PTR_ERR(clk);
- 
-@@ -253,7 +318,9 @@ static int sdhci_cdns_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free;
- 
--	sdhci_cdns_phy_init(priv);
-+	ret = sdhci_cdns_phy_parse_dt(dev->of_node, priv);
-+	if (ret)
-+		goto free;
- 
- 	ret = sdhci_add_host(host);
- 	if (ret)
+Fixing _this_ code for that is not too difficult - it's a matter of:
+
+	priv->sd.of_node = pdata->of_node;
+
+in imx_csi_probe().  However, the difficult bit is the poor state of
+code in v4l2, particularly the v4l2-async crap.  Right now, fixing the
+module autoloading will oops the kernel, so it's best that module
+autoloading remains broken for the time being.
+
 -- 
-2.2.2
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
