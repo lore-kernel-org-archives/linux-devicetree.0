@@ -1,82 +1,214 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v1 1/3] ASoC: zx-96p22: add documentation for zte's
- aud96p22 controller
-Date: Thu, 16 Feb 2017 19:00:13 +0800
-Message-ID: <20170216110012.GC8398@dragon>
-References: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH v3 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
+Date: Thu, 16 Feb 2017 11:02:55 +0000
+Message-ID: <HK2PR06MB0545DC72450687BA47610DA6C35A0@HK2PR06MB0545.apcprd06.prod.outlook.com>
+References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1486479757-32128-7-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <20170215170919.lxmqryjxdo3uxil2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, perex@perex.cz, tiwai@suse.com, lars@metafoo.de, arnd@arndb.de, kuninori.morimoto.gx@renesas.com, ckeepax@opensource.wolfsonmicro.com, bardliao@realtek.com, nh6z@nh6z.net, Paul.Handrigan@cirrus.com, oder_chiou@realtek.com, axel.lin@ingics.com, petr@barix.com, yesanishhere@gmail.com, srinivas.kandagatla@linaro.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170215170919.lxmqryjxdo3uxil2@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "crope@iki.fi" <crope@iki.fi>, Chris Paterson <Chris.Paterson2@renesas.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 06:55:08PM +0800, Baoyou Xie wrote:
-> This patch adds dt-binding documentation for zte's aud96p22 controller.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+Hi Rob,
 
-Suggest to replace "documentation" with "bindings doc" in patch subject.
+Thank you for the review comments.
 
-> ---
->  .../devicetree/bindings/sound/zte,zx-96p22.txt     | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/zte,zx-96p22.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/zte,zx-96p22.txt b/Documentation/devicetree/bindings/sound/zte,zx-96p22.txt
-> new file mode 100644
-> index 0000000..4184566
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/zte,zx-96p22.txt
-> @@ -0,0 +1,24 @@
-> +ZTE zx96p22 controller
-> +
-> +Required properties:
-> + - compatible : Must be "zte,zx-aud96p22"
-> + - #sound-dai-cells: Should be 0
-> + - reg : Offset of I2C register for zx96p22
+> Subject: Re: [PATCH v3 6/7] dt-bindings: media: Add Renesas R-Car DRIF
+> binding
+>=20
+> On Tue, Feb 07, 2017 at 03:02:36PM +0000, Ramesh Shanmugasundaram wrote:
+> > Add binding documentation for Renesas R-Car Digital Radio Interface
+> > (DRIF) controller.
+> >
+> > Signed-off-by: Ramesh Shanmugasundaram
+> > <ramesh.shanmugasundaram@bp.renesas.com>
+> > ---
+> >  .../devicetree/bindings/media/renesas,drif.txt     | 186
+> +++++++++++++++++++++
+> >  1 file changed, 186 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/media/renesas,drif.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > new file mode 100644
+> > index 0000000..6315609
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > @@ -0,0 +1,186 @@
+> > +Renesas R-Car Gen3 Digital Radio Interface controller (DRIF)
+> > +------------------------------------------------------------
+> > +
+> > +R-Car Gen3 DRIF is a SPI like receive only slave device. A general
+> > +representation of DRIF interfacing with a master device is shown below=
+.
+> > +
+> > ++---------------------+                +---------------------+
+> > +|                     |-----SCK------->|CLK                  |
+> > +|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
+> > +|                     |-----SD0------->|D0                   |
+> > +|                     |-----SD1------->|D1                   |
+> > ++---------------------+                +---------------------+
+> > +
+> > +As per the datasheet, each DRIF channel (drifn) is made up of two
+> > +internal channels (drifn0 & drifn1). These two internal channels
+> > +share the common CLK & SYNC. Each internal channel has its own
+> > +dedicated resources like irq, dma channels, address space & clock.
+> > +This internal split is not visible to the external master device.
+> > +
+> > +The device tree model represents each internal channel as a separate
+> node.
+> > +The internal channels sharing the CLK & SYNC are tied together by
+> > +their phandles using a new property called "renesas,bonding". For the
+> > +rest of the documentation, unless explicitly stated, the word channel
+> > +implies an internal channel.
+> > +
+> > +When both internal channels are enabled they need to be managed
+> > +together as one (i.e.) they cannot operate alone as independent
+> > +devices. Out of the two, one of them needs to act as a primary device
+> > +that accepts common properties of both the internal channels. This
+> > +channel is identified by a new property called "renesas,primary-bond".
+> > +
+> > +To summarize,
+> > +   - When both the internal channels that are bonded together are
+> enabled,
+> > +     the zeroth channel is selected as primary-bond. This channels
+> accepts
+> > +     properties common to all the members of the bond.
+> > +   - When only one of the bonded channels need to be enabled, the
+> property
+> > +     "renesas,bonding" or "renesas,primary-bond" will have no effect.
+> That
+> > +     enabled channel can act alone as any other independent device.
+> > +
+> > +Required properties of an internal channel:
+> > +-------------------------------------------
+> > +- compatible: "renesas,r8a7795-drif" if DRIF controller is a part of
+> R8A7795 SoC.
+> > +	      "renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible
+> device.
+> > +	      When compatible with the generic version, nodes must list the
+> > +	      SoC-specific version corresponding to the platform first
+> > +	      followed by the generic version.
+> > +- reg: offset and length of that channel.
+> > +- interrupts: associated with that channel.
+> > +- clocks: phandle and clock specifier of that channel.
+> > +- clock-names: clock input name string: "fck".
+> > +- dmas: phandles to the DMA channels.
+> > +- dma-names: names of the DMA channel: "rx".
+> > +- renesas,bonding: phandle to the other channel.
+> > +
+> > +Optional properties of an internal channel:
+> > +-------------------------------------------
+> > +- power-domains: phandle to the respective power domain.
+> > +
+> > +Required properties of an internal channel when:
+> > +	- It is the only enabled channel of the bond (or)
+> > +	- If it acts as primary among enabled bonds
+> > +--------------------------------------------------------
+> > +- pinctrl-0: pin control group to be used for this channel.
+> > +- pinctrl-names: must be "default".
+> > +- renesas,primary-bond: empty property indicating the channel acts as
+> primary
+> > +			among the bonded channels.
+> > +- port: child port node of a channel that defines the local and remote
+> > +	endpoints. The remote endpoint is assumed to be a third party tuner
+> > +	device endpoint.
+> > +
+> > +Optional endpoint property:
+> > +---------------------------
+> > +- renesas,sync-active  : Indicates sync signal polarity, 0/1 for
+> low/high
+> > +			 respectively. This property maps to SYNCAC bit in the
+> > +			 hardware manual. The default is 1 (active high)
+>=20
+> Why does this belong in the endpoint? I'd prefer to not have vendor
+> specific properties in endpoints. Is this a property of the tuner or DRIF=
+?
 
-"zte,zx-96p22.txt", "zte,zx-aud96p22" and "zx96p22".  Can we make these
-names consistent?
+This property is similar to the properties in Documentation/devicetree/bind=
+ings/media/video-interfaces.txt (e.g. hsync-active, vsync-active).Hence, La=
+urent & Hans suggested this to be defined as an endpoint property and try t=
+o standardize it.
 
-> +
-> +Example:
-> +
-> +	audio_i2c0: audio_i2c0@1486000 {
+I think I see your point. As endpoint properties can be defined on both end=
+points, having a vendor specific property is a problem with a third party t=
+uner. We could remove the vendor tag and make it  a generic property "sync-=
+active", if you are OK with it?=20
 
-Node name should be as generic as possible.  I think the following one
-is what we want.
+This property can be defined for both tuner and DRIF. However, it would mos=
+tly be a constant in the case of tuner because as per I2S spec, transmitter=
+ WS (sync) changes from high->low & low->high always. Only DRIF allows the =
+option to latch when WS high->low or low->high - both cases.
 
-	audio_i2c0: i2c@1486000 {
+In a traditional use case it is always WS high->low latching to get the fir=
+st data. However, with DRIF & MAX2175 combo, our latest investigations reve=
+al that latching when WS low->high provided better synchronization on all c=
+ases. There is no loss of data by doing this. Hence, it would be nice to re=
+tain this as a configurable property.
 
-> +		compatible = "zte,zx296718-i2c";
-> +		reg = <0x01486000 0x1000>;
-> +		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clocks = <&audiocrm AUDIO_I2C0_WCLK>;
-> +		clock-frequency = <1600000>;
-> +		status = "ok";
+Please advice.
 
-Drop this 'status' property, which is not so meaningful for example in
-bindings doc.
 
-And have a newline between properties and child node.
+>=20
+> > +
+> > +Example
+> > +--------
+> > +
+> > +SoC common dtsi file
+> > +
+> > +		drif00: rif@e6f40000 {
+> > +			compatible =3D "renesas,r8a7795-drif",
+> > +				     "renesas,rcar-gen3-drif";
+> > +			reg =3D <0 0xe6f40000 0 0x64>;
+> > +			interrupts =3D <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks =3D <&cpg CPG_MOD 515>;
+> > +			clock-names =3D "fck";
+> > +			dmas =3D <&dmac1 0x20>, <&dmac2 0x20>;
+> > +			dma-names =3D "rx", "rx";
+> > +			power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			renesas,bonding =3D <&drif01>;
+> > +			status =3D "disabled";
+>=20
+> Don't put "status" in examples.
 
-> +		inner_codec: aud96p22@22 {
+OK. Will note this down for future patches. Will be corrected in the next v=
+ersion.
 
-		aud96p22: codec@22 {
+>=20
+> > +		};
+> > +
+> > +		drif01: rif@e6f50000 {
+> > +			compatible =3D "renesas,r8a7795-drif",
+> > +				     "renesas,rcar-gen3-drif";
+> > +			reg =3D <0 0xe6f50000 0 0x64>;
+> > +			interrupts =3D <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
+> > +			clocks =3D <&cpg CPG_MOD 514>;
+> > +			clock-names =3D "fck";
+> > +			dmas =3D <&dmac1 0x22>, <&dmac2 0x22>;
+> > +			dma-names =3D "rx", "rx";
+> > +			power-domains =3D <&sysc R8A7795_PD_ALWAYS_ON>;
+> > +			renesas,bonding =3D <&drif00>;
+> > +			status =3D "disabled";
+> > +		};
+> > +
+> > +
+> > +Board specific dts file
+>=20
+> Chip vs. board in not relevant to the binding doc. Please combine them
+> here in your example.
 
-Shawn
+Will do.
 
-> +			compatible = "zte,zx-aud96p22";
-> +			#sound-dai-cells = <0>;
-> +			reg = <0x22>;
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+Thanks,
+Ramesh
+
+>=20
+> Rob
