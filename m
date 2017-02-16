@@ -1,59 +1,66 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 20/36] media: imx: Add CSI subdev driver
-Date: Thu, 16 Feb 2017 19:09:31 +0000
-Message-ID: <20170216190931.GV27312@n2100.armlinux.org.uk>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 01/36] [media] dt-bindings: Add bindings for i.MX media
+ driver
+Date: Thu, 16 Feb 2017 11:20:00 -0800
+Message-ID: <5349304b-1994-f207-e1bc-974999d1acfd@gmail.com>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-21-git-send-email-steve_longerbeam@mentor.com>
- <20170216115206.GL27312@n2100.armlinux.org.uk>
- <20170216124027.GM27312@n2100.armlinux.org.uk>
- <fa52c59e-f582-672c-8df0-2b959f880fa1@gmail.com>
+ <1487211578-11360-2-git-send-email-steve_longerbeam@mentor.com>
+ <1487246051.2377.41.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <fa52c59e-f582-672c-8df0-2b959f880fa1@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, Mauro Carvalho Chehab <mchehab@redhat.com>, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, laurent.pinchart+renesas@ideasonboard.com, horms+renesas@verge.net.au, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, jean-christophe.trotin@st.com, sakar
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487246051.2377.41.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 10:44:16AM -0800, Steve Longerbeam wrote:
-> On 02/16/2017 04:40 AM, Russell King - ARM Linux wrote:
-> >[    8.012191] imx_media_common: module is from the staging directory, the quality is unknown, you have been warned.
-> >[    8.018175] imx_media: module is from the staging directory, the quality is unknown, you have been warned.
-> >[    8.748345] imx-media: Registered subdev ipu1_csi0_mux
-> >[    8.753451] imx-media: Registered subdev ipu2_csi1_mux
-> >[    9.055196] imx219 0-0010: detected IMX219 sensor
-> >[    9.090733] imx6_mipi_csi2: module is from the staging directory, the quality is unknown, you have been warned.
-> >[    9.092247] imx-media: Registered subdev imx219 0-0010
-> >[    9.334338] imx-media: Registered subdev imx6-mipi-csi2
-> >[    9.372452] imx_media_capture: module is from the staging directory, the quality is unknown, you have been warned.
-> >[    9.378163] imx_media_capture: module is from the staging directory, the quality is unknown, you have been warned.
-> >[    9.390033] imx_media_csi: module is from the staging directory, the quality is unknown, you have been warned.
-> >[    9.394362] imx-media: Received unknown subdev ipu1_csi0
-> 
-> The root problem is here. I don't know why the CSI entities are not
-> being recognized. Can you share the changes you made?
 
-No, it's not the root problem that's causing the BUG/etc, but it is
-_a_ problem.  Nevertheless, it's something I fixed - disconnecting
-the of_node from the struct device needed one other change in the
-imx-media code that was missing at this time.
 
-However, that's no excuse what so ever for the BUG_ON() and lack of
-error cleanup (causing use-after-free, which is just another way of
-saying "data corruption waiting to happen") that I identified.
+On 02/16/2017 03:54 AM, Philipp Zabel wrote:
+> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
+>> Add bindings documentation for the i.MX media driver.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/media/imx.txt | 66 +++++++++++++++++++++++++
+>>  1 file changed, 66 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
+>> new file mode 100644
+>> index 0000000..fd5af50
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/imx.txt
+>> @@ -0,0 +1,66 @@
+>> +Freescale i.MX Media Video Device
+>> +=================================
+>> +
+>> +Video Media Controller node
+>> +---------------------------
+>> +
+>> +This is the media controller node for video capture support. It is a
+>> +virtual device that lists the camera serial interface nodes that the
+>> +media device will control.
+>> +
+>> +Required properties:
+>> +- compatible : "fsl,imx-capture-subsystem";
+>> +- ports      : Should contain a list of phandles pointing to camera
+>> +		sensor interface ports of IPU devices
+>> +
+>> +example:
+>> +
+>> +capture-subsystem {
+>> +	compatible = "fsl,capture-subsystem";
+>
+> "fsl,imx-capture-subsystem"
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+
+Fixed.
+
+Steve
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
