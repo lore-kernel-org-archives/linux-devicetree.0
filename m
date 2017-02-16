@@ -1,80 +1,42 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] reset: Add i.MX7 SRC reset driver
-Date: Wed, 15 Feb 2017 20:58:32 -0800
-Message-ID: <CAHQ1cqGhUFNQ=q6gTXRnkm3QRCstiPtpDQBtCfwZ+Fua+rbrxQ@mail.gmail.com>
-References: <20170213153338.13518-1-andrew.smirnov@gmail.com>
- <1487004643.2873.97.camel@pengutronix.de> <CAHQ1cqFXiu03902jWLkg8X6jdQ3+TiLj02dSDFBAVH98ABo70A@mail.gmail.com>
- <1487089919.2305.22.camel@pengutronix.de> <CAHQ1cqGHujsDsC5dtXk3_1u0kKme8k96jgSctp5XFSHuYKeE=A@mail.gmail.com>
- <1487150153.2433.11.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v7 2/3] MAINTAINERS: add zx2967 i2c controller driver to ARM ZTE architecture
+Date: Thu, 16 Feb 2017 14:00:43 +0800
+Message-ID: <1487224844-10973-2-git-send-email-baoyou.xie@linaro.org>
+References: <1487224844-10973-1-git-send-email-baoyou.xie@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487150153.2433.11.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1487224844-10973-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 1:15 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Tue, 2017-02-14 at 12:11 -0800, Andrey Smirnov wrote:
-> [...]
->> > Arguably, the A7 resets should not be handled by the peripheral reset
->> > controller, but at least for the others I see no reason not to leave
->> > space for them in the index table.
->>
->> If for some bizarre reason one was to run Linux on M4 and use A7 as
->> applications processor, resetting A7 might be useful. But that's a
->> very unlikely use-case.
->>
->> > In fact, since unused reset controls
->> > don't use space, why not number them all?
->>
->> IMHO because it is unused code and because those numbers constitute an
->> interface which once set will be hard to change if need be.
->>
->> But that's not that important and I don't feel particularly strong
->> about that point, so I'll add those sources in v3.
->
-> Thanks.
->
->> Do you insist that I split what I call IMX7_RESET_PCIEPHY into
->> PCIEPHY_G_RST and PCIEPHY_BTN or can I keep it as a single logical
->> reset?
->
-> No, I say keep it as is. For now I'll assume this is not a reset, but
-> some other interface signal that just happens to be routed out to the
-> SRC and just happens to be toggled around the same time in the enable
-> sequence.
->
-> [...]
->> >> >> +#define IMX7_RESET_PCIE_CTRL_APPS    0
->> >> >> +#define IMX7_RESET_PCIEPHY           1
->> >> >
->> >> > It would expect these to be numbered in the order they appear in the
->> >> > register map, not starting from the end. Could you add all available
->> >> > peripheral resets to this list, in the correct order?
->> >>
->> >> The numbering is just a consequence of me adding only resets I could
->> >> exercise with my code and numbering then starting from zero. I also
->> >> was hesitant adding more sources since it seemed to me that some of
->> >> less trivial registers in that IP block might be best represented as a
->> >> single reset source doing something more sophisticated that just
->> >> setting a bit under the hood.
->> >
->> > Any in particular?
->>
->> USBPHY1/2 and maybe MIPI resets? But that's no more than a gut feeling.
->
-> Is there any downstream code that already handles these resets? At least
-> for the USB PHYs I'd expect there has to be something we could look at.
+Add the zx2967 i2c controller driver as maintained by ARM ZTE
+architecture maintainers, as they're parts of the core IP.
 
-Just went and double checked. Of the three that I mentioned, couldn't
-find anything besides MIPI and for that only one of the signals was
-being used, nothing fancy. I think I'll just expose all of the signals
-as discussed above and not worry about it in v3.
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Thanks,
-Andrey Smirnov
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e63063b..313fab5 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1987,9 +1987,11 @@ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-zx/
+ F:	drivers/clk/zte/
++F:	drivers/i2c/busses/i2c-zx2967.c
+ F:	drivers/soc/zte/
+ F:	Documentation/devicetree/bindings/arm/zte.txt
+ F:	Documentation/devicetree/bindings/clock/zx296702-clk.txt
++F:	Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
+ F:	Documentation/devicetree/bindings/soc/zte/
+ F:	include/dt-bindings/soc/zx*.h
+ 
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
