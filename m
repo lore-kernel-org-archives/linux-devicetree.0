@@ -1,56 +1,154 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 01/36] [media] dt-bindings: Add bindings for i.MX
- media driver
-Date: Thu, 16 Feb 2017 12:54:11 +0100
-Message-ID: <1487246051.2377.41.camel@pengutronix.de>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-         <1487211578-11360-2-git-send-email-steve_longerbeam@mentor.com>
+From: Marco Franchi <marco.franchi@nxp.com>
+Subject: [PATCH v4 2/2] hwmon: (sht15) Add device tree support
+Date: Thu, 16 Feb 2017 10:23:43 -0200
+Message-ID: <1487247824-10005-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1487211578-11360-2-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, marcofrk@gmail.com, FoxPeter@kabelbw.de, Marco Franchi <marco.franchi@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
-> Add bindings documentation for the i.MX media driver.
-> 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> ---
->  Documentation/devicetree/bindings/media/imx.txt | 66 +++++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
-> new file mode 100644
-> index 0000000..fd5af50
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx.txt
-> @@ -0,0 +1,66 @@
-> +Freescale i.MX Media Video Device
-> +=================================
-> +
-> +Video Media Controller node
-> +---------------------------
-> +
-> +This is the media controller node for video capture support. It is a
-> +virtual device that lists the camera serial interface nodes that the
-> +media device will control.
-> +
-> +Required properties:
-> +- compatible : "fsl,imx-capture-subsystem";
-> +- ports      : Should contain a list of phandles pointing to camera
-> +		sensor interface ports of IPU devices
-> +
-> +example:
-> +
-> +capture-subsystem {
-> +	compatible = "fsl,capture-subsystem";
+Allow the driver to work with device tree support.
 
-"fsl,imx-capture-subsystem"
+Based on initial patch submission from Peter Fox.
 
-regards
-Philipp
+Tested on a imx7d-sdb board connected to a SHT15 board via Mikro Bus.
+
+Signed-off-by: Marco Franchi <marco.franchi@nxp.com>
+---
+Changes since v3:
+-Remove the optional properties because they are not hardware description
+-Change the sensor node name
+
+ Documentation/devicetree/bindings/hwmon/sht15.txt | 19 +++++++
+ drivers/hwmon/sht15.c                             | 64 +++++++++++++++++++++--
+ 2 files changed, 79 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/sht15.txt
+
+diff --git a/Documentation/devicetree/bindings/hwmon/sht15.txt b/Documentation/devicetree/bindings/hwmon/sht15.txt
+new file mode 100644
+index 0000000..6a80277
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/sht15.txt
+@@ -0,0 +1,19 @@
++Sensirion SHT15 Humidity and Temperature Sensor
++
++Required properties:
++
++ - "compatible": must be "sensirion,sht15".
++ - "data-gpios": GPIO connected to the data line.
++ - "clk-gpios": GPIO connected to the clock line.
++ - "vcc-supply": regulator that drives the VCC pin.
++
++Example:
++
++	sensor {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_sensor>;
++		compatible = "sensirion,sht15";
++		clk-gpios = <&gpio4 12 0>;
++		data-gpios = <&gpio4 13 0>;
++		vcc-supply = <&reg_sht15>;
++	};
+diff --git a/drivers/hwmon/sht15.c b/drivers/hwmon/sht15.c
+index f16687c..69141b2 100644
+--- a/drivers/hwmon/sht15.c
++++ b/drivers/hwmon/sht15.c
+@@ -34,6 +34,7 @@
+ #include <linux/slab.h>
+ #include <linux/atomic.h>
+ #include <linux/bitrev.h>
++#include <linux/of_gpio.h>
+ 
+ /* Commands */
+ #define SHT15_MEASURE_TEMP		0x03
+@@ -911,6 +912,54 @@ static int sht15_invalidate_voltage(struct notifier_block *nb,
+ 	return NOTIFY_OK;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id sht15_dt_match[] = {
++	{ .compatible = "sensirion,sht15" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, sht15_dt_match);
++
++/*
++ * This function returns NULL if pdev isn't a device instatiated by dt,
++ * a pointer to pdata if it could successfully get all information
++ * from dt or a negative ERR_PTR() on error.
++ */
++static struct sht15_platform_data *sht15_probe_dt(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct sht15_platform_data *pdata;
++
++	/* no device tree device */
++	if (!np)
++		return NULL;
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	pdata->gpio_data = of_get_named_gpio(np, "data-gpios", 0);
++	if (pdata->gpio_data < 0) {
++		if (pdata->gpio_data != -EPROBE_DEFER)
++			dev_err(dev, "data-gpios not found\n");
++		return ERR_PTR(pdata->gpio_data);
++	}
++
++	pdata->gpio_sck = of_get_named_gpio(np, "clk-gpios", 0);
++	if (pdata->gpio_sck < 0) {
++		if (pdata->gpio_sck != -EPROBE_DEFER)
++			dev_err(dev, "clk-gpios not found\n");
++		return ERR_PTR(pdata->gpio_sck);
++	}
++
++	return pdata;
++}
++#else
++static inline struct sht15_platform_data *sht15_probe_dt(struct device *dev)
++{
++	return NULL;
++}
++#endif
++
+ static int sht15_probe(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -928,11 +977,17 @@ static int sht15_probe(struct platform_device *pdev)
+ 	data->dev = &pdev->dev;
+ 	init_waitqueue_head(&data->wait_queue);
+ 
+-	if (dev_get_platdata(&pdev->dev) == NULL) {
+-		dev_err(&pdev->dev, "no platform data supplied\n");
+-		return -EINVAL;
++	data->pdata = sht15_probe_dt(&pdev->dev);
++	if (IS_ERR(data->pdata))
++		return PTR_ERR(data->pdata);
++	if (data->pdata == NULL) {
++		data->pdata = dev_get_platdata(&pdev->dev);
++		if (data->pdata == NULL) {
++			dev_err(&pdev->dev, "no platform data supplied\n");
++			return -EINVAL;
++		}
+ 	}
+-	data->pdata = dev_get_platdata(&pdev->dev);
++
+ 	data->supply_uv = data->pdata->supply_mv * 1000;
+ 	if (data->pdata->checksum)
+ 		data->checksumming = true;
+@@ -1075,6 +1130,7 @@ MODULE_DEVICE_TABLE(platform, sht15_device_ids);
+ static struct platform_driver sht15_driver = {
+ 	.driver = {
+ 		.name = "sht15",
++		.of_match_table = of_match_ptr(sht15_dt_match),
+ 	},
+ 	.probe = sht15_probe,
+ 	.remove = sht15_remove,
+-- 
+2.7.4
+
