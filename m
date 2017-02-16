@@ -1,65 +1,28 @@
-From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: fpga: add xilinx slave-serial binding
- description
-Date: Thu, 16 Feb 2017 09:24:09 -0800
-Message-ID: <a2403d1f-cb82-70ce-ecff-45e5901dabc2@gmail.com>
-References: <1487257860-31115-1-git-send-email-agust@denx.de>
- <1487257860-31115-2-git-send-email-agust@denx.de>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v4 0/3] ARM: l2c: add l2c support for RZ/A1
+Date: Thu, 16 Feb 2017 17:26:31 +0000
+Message-ID: <PS1PR06MB11629773CBF024D2AE01F2D88A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+References: <20170216161742.29320-1-chris.brandt@renesas.com>
+ <20170216164424.GR27312@n2100.armlinux.org.uk>
+ <CAK8P3a1ri2o4An0svxSG4iSvwTkdpM5jiC=SzBq7mE6TpbdhKQ@mail.gmail.com>
+ <20170216172128.GS27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487257860-31115-2-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170216172128.GS27312@n2100.armlinux.org.uk>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brad Mouring <brad.mouring@ni.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Richard Cochran <rcochran@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday, February 16, 2017, Russell King wrote:
+> Chris, can you put all three in the patch system, preferably with Arnd's
+> ack for the last two please?
+
+Yes, I will do that now.
+Thank you.
 
 
-On 02/16/2017 07:10 AM, Anatolij Gustschin wrote:
-> Add dt binding documentation details for Xilinx FPGA configuration
-> over slave serial interface.
->
-> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-> ---
->  .../bindings/fpga/xilinx-slave-serial.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
->
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> new file mode 100644
-> index 0000000..b5fa6a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> @@ -0,0 +1,24 @@
-> +Xilinx Slave Serial SPI FPGA Manager
-> +
-> +Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
-> +what is referred to as "slave serial" interface.
-> +The slave serial link is not technically SPI, and might require extra
-> +circuits in order to play nicely with other SPI slaves on the same bus.
-> +
-> +See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-> +
-> +Required properties:
-> +- compatible: should contain "xlnx,fpga-slave-serial"
-> +- reg: spi chip select of the FPGA
-> +- prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
-> +- done-gpios: config status pin (referred to as DONE in the manual)
-> +
-> +Example:
-> +	fpga_mgr_spi: fpga-spi@0 {
-> +		compatible = "xlnx,fpga-slave-serial";
-> +		spi-max-frequency = <60000000>;
-> +		spi-cpha;
-> +		reg = <0>;
-> +		done-gpio = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-> +		prog_b-gpio = <&gpio0 29 GPIO_ACTIVE_LOW>;
-> +	};
-nit: you've put prog_b-gpios and done-gpios in the description,
-but the example still has "prog_b-gpio" and "done-gpio"
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chris
