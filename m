@@ -1,71 +1,54 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 2/3] dt-bindings: power: reset: add document for
- renesas-reset driver
-Date: Thu, 16 Feb 2017 14:25:48 +0000
-Message-ID: <PS1PR06MB1162A78E638609BAB38A652C8A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
-References: <20170213182532.4042-1-chris.brandt@renesas.com>
- <20170213182532.4042-3-chris.brandt@renesas.com>
- <CAMuHMdWdiosERjUm3ZxZiZL90_4j+CrNm9RU9GaPft7AXbN8kA@mail.gmail.com>
- <PS1PR06MB1162A82F35F00D18D5D22FC08A5B0@PS1PR06MB1162.apcprd06.prod.outlook.com>
- <CAMuHMdVUdU4J+cg7V-rMK63TkEKJp_Nyxh=+34rdtuo1wGUNRw@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] dt: Add vendor prefix for Sensirion
+Date: Thu, 16 Feb 2017 06:43:51 -0800
+Message-ID: <336e0fa6-3d69-cd16-0480-b62ae68b2de2@roeck-us.net>
+References: <1487247824-10005-1-git-send-email-marco.franchi@nxp.com>
+ <1487247824-10005-2-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVUdU4J+cg7V-rMK63TkEKJp_Nyxh=+34rdtuo1wGUNRw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487247824-10005-2-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, FoxPeter-5t/GDYzpMLSELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFRodXJzZGF5LCBGZWJydWFyeSAxNiwgMjAxNywgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOg0KPiBPbiBXZWQsIEZlYiAxNSwgMjAxNyBhdCA2OjMzIFBNLCBDaHJpcyBC
-cmFuZHQgPENocmlzLkJyYW5kdEByZW5lc2FzLmNvbT4NCj4gd3JvdGU6DQo+ID4gT24gVHVlc2Rh
-eSwgRmVicnVhcnkgMTQsIDIwMTcsIEdlZXJ0IFV5dHRlcmhvZXZlbiB3cm90ZToNCj4gPj4gPiAr
-UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPj4gPiArICAtIGNvbXBhdGlibGU6IG11c3QgYmUgb25l
-IG9yIG1vcmUgb2YgdGhlIGZvbGxvd2luZzoNCj4gPj4gPiArICAgIC0gInJlbmVzYXMscjdzNzIx
-MDAtcmVzZXQiIGZvciB0aGUgcjdzNzIxMDAgU29DDQo+ID4+ID4gKyAgICAtICJyZW5lc2FzLHdk
-dC1yZXNldCINCj4gPj4gPiArICAgICAgICAgICAgICAgIFRoaXMgaXMgYSBmYWxsYmFjayBmb3Ig
-dGhlIGFib3ZlIHJlbmVzYXMsKi1yZXNldA0KPiA+PiA+ICtlbnRyaWVzDQo+ID4+DQo+ID4+IFBs
-ZWFzZSB1c2UgInJlbmVzYXMscjdzNzIxMDAtd2R0Ii4gRFQgZGVzY3JpYmVzIHRoZSBoYXJkd2Fy
-ZQ0KPiA+PiAod2F0Y2hkb2cpLCBub3QgdGhlIHNvZnR3YXJlIHBvbGljeSAodXNlIGl0IGZvciBy
-ZXNldCBvbmx5LCBhcyBhIG1heC4NCj4gPj4gdGltZW91dCBvZiAxMjUgbXMgaXMgdG9vIHNob3J0
-IGZvciBhIHVzYWJsZSB3YXRjaGRvZykuDQo+ID4NCj4gPiBJIGhhZCBhIGxvb2sgYXQ6DQo+ID4N
-Cj4gPiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9yZW5lc2Fz
-LXdkdC50eHQNCj4gPg0KPiA+IFdoaWNoIGhhczoNCj4gPg0KPiA+IFJlcXVpcmVkIHByb3BlcnRp
-ZXM6DQo+ID4gLSBjb21wYXRpYmxlIDogU2hvdWxkIGJlICJyZW5lc2FzLDxzb2N0eXBlPi13ZHQi
-LCBhbmQNCj4gPiAgICAgICAgICAgICAgICAicmVuZXNhcyxyY2FyLWdlbjMtd2R0IiBhcyBmYWxs
-YmFjay4NCj4gPiAgICAgICAgICAgICAgICBFeGFtcGxlcyB3aXRoIHNvY3R5cGVzIGFyZToNCj4g
-PiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5NS13ZHQiIChSLUNhciBIMykNCj4g
-PiAgICAgICAgICAgICAgICAgIC0gInJlbmVzYXMscjhhNzc5Ni13ZHQiIChSLUNhciBNMy1XKQ0K
-PiA+DQo+ID4NCj4gPiBTbyBpbiBteSAncmVuZXNhcy1yZXNldC50eHQnIHNob3VsZCBJIGRvOg0K
-PiANCj4gQXMgInJlc2V0IiBpcyBzb2Z0d2FyZSBwb2xpY3ksIHBlcmhhcHMgeW91IHNob3VsZCBp
-bnN0ZWFkIGV4dGVuZCB0aGUNCj4gZXhpc3RpbmcgYmluZGluZyBkb2N1bWVudA0KPiBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvcmVuZXNhcy13ZHQudHh0Pw0KPiAN
-Cj4gTm90aGluZyBzYXlzIHlvdSBoYXZlIHRvIHVzZSB0aGUgc2FtZSBMaW51eCBkcml2ZXIgZm9y
-IFItQ2FyIEdlbjMgYW5kDQo+IFJaL0ExLg0KDQpUaGF0IGlzIHdoYXQgSSB3YXMgdGhpbmtpbmcg
-YXMgd2VsbC4gSWYgSSdtIGp1c3Qgc3VwcG9zZWQgdG8gZG9jdW1lbnQgaGFyZHdhcmUsDQpJIG1p
-Z2h0IGFzIHdlbGwgZ3JvdXAgaXQgaW4gdGhlIHNhbWUgZmlsZS4uLmJ1dCB0aGVuIGluIFNXIHVz
-ZSBpdCBmb3Igc29tZXRoaW5nDQpjb21wbGV0ZWx5IGRpZmZlcmVudCAocmVzZXQgaW5zdGVhZCBv
-ZiBpdHMgV0RUIGZ1bmN0aW9uYWxpdHkpDQoNCj4gPiBBLiAicmVuZXNhcyxyN3M3MjEwMC13ZHQi
-LCAicmVuZXNhcyxyei13ZHQiDQo+IA0KPiBQbGVhc2UgZG9uJ3QgdXNlIHBsYWluICJyeiIsIGFz
-IFJaL0EsIFJaL0csIGFuZCBSWi9UIGFyZSBjb21wbGV0ZWx5DQo+IGRpZmZlcmVudCBiZWFzdHMu
-DQoNCllhLCBJJ20gc3R1Y2sgb24gYSBuYW1lIGhlcmUuIEludGVybmFsbHksIHRoZXkgZG9uJ3Qg
-cmVhbGx5IGhhdmUgZGVmaW5lZCBJUCBibG9jaw0KbmFtZSBmb3IgdGhlICI4LWJpdCBXRFQgdGhh
-dCBjYW4gYWxzbyBiZSB1c2VkIGFzIGEgc2ltcGxlIHRpbWVyIi4gSSBrbm93IHRoaXMNCldEVCB3
-YXMgYWxzbyB1c2VkIGluIFNINEEgZGV2aWNlcyBsaWtlIFNINzc1NyBhbmQgU0g3NzU4Lg0KDQo+
-ID4gICBvciBqdXN0Og0KPiA+DQo+ID4gQi4gInJlbmVzYXMscjdzNzIxMDAtd2R0IiAgIChubyBm
-YWxsYmFjaywgY2hhbmdlIHRoZSBkcml2ZXIgdG8gYWRkIG5ldw0KPiBTb0NzKQ0KPiANCj4gRG8g
-eW91IGtub3cgaWYgZnV0dXJlIFJaL0EgU29DcyB3aWxsIHVzZSB0aGUgZXhhY3Qgc2FtZSB0eXBl
-IG9mIFdEVD8NCg0KWWVzLCBSWi9BMiB3aWxsIGZvciBzdXJlLiBJIGFzc3VtZSBpdCB3b3VsZCBh
-bHNvIGJlIHVzZWQgZm9yIGFueSBSWi9BMysgYmVjYXVzZQ0KaXQncyBlYXN5IHRvIGhvb2sgdXAg
-ZnJvbSBhIEhXIHBlcnNwZWN0aXZlIChpZiBJIHJlbWVtYmVyIGNvcnJlY3RseSkuIEFsdGhvdWdo
-LA0KSSB3YW50IHRoZW0gdG8gZXh0ZW5kIHRoZSBjb3VudGVyIGZyb20gOC1iaXQgdG8gMTYtYml0
-LiAxMjVtcyBpcyByaWRpY3Vsb3VzbHkNCnRvbyBzaG9ydCENCg0KPiBJZiB5ZXMsIHlvdSBjYW4g
-ZG9jdW1lbnQgYm90aCAicmVuZXNhcyxyN3M3MjEwMC13ZHQiIGFuZCAicmVuZXNhcyxyemEtd2R0
-IiwNCj4gYW5kIGxldCB0aGUgZHJpdmVyIG1hdGNoIGFnYWluc3QgdGhlIGxhdHRlci4NCg0KSSdt
-IGdvaW5nIHRvIGdvIHdpdGggdGhhdC4NCklmIHRoZSB0aW1lb3V0IGRvZXMgZXZlciBnZXQgZXh0
-ZW5kZWQgYW5kIGl0IGRvZXMgYmVjb21lIHVzZWZ1bCB0byBiZSB1c2VkDQphcyBhbiBhY3R1YWwg
-d2F0Y2hkb2csIEknbGwgY3JlYXRlIGEgbmV3IGRyaXZlciBvciBzb21ldGhpbmcuDQoNCg0KQXMg
-YWx3YXlzLCB0aGFuayB5b3UgZm9yIHlvdXIgcmVwbGllcyENCg0KDQpDaHJpcw0KDQo=
+On 02/16/2017 04:23 AM, Marco Franchi wrote:
+> Sensirion is a sensor manufacturer, providing relative humidity sensors,
+> temperature sensor and flow sensor solutions.
+>
+> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+
+Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+
+Wonder who should queue this up. Rob ?
+
+Thanks,
+guenter
+
+> ---
+> Changes since v3:
+> - none
+>
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 7a98c33..43e1799 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -263,6 +263,7 @@ sbs	Smart Battery System
+>  schindler	Schindler
+>  seagate	Seagate Technology PLC
+>  semtech	Semtech Corporation
+> +sensirion	Sensirion AG
+>  sgx	SGX Sensortech
+>  sharp	Sharp Corporation
+>  si-en	Si-En Technology Ltd.
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
