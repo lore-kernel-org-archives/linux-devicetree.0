@@ -1,48 +1,144 @@
-From: "Y.T. Tang" <yuantian.tang@nxp.com>
-Subject: RE: [PATCH 2/2] clk: qoriq: Separate root input clock for core PLLs
- on ls1012a
-Date: Thu, 16 Feb 2017 02:21:09 +0000
-Message-ID: <DB6PR0402MB28374AECE0955BECE2C184E5F05A0@DB6PR0402MB2837.eurprd04.prod.outlook.com>
-References: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
-         <1487137656-4006-2-git-send-email-yuantian.tang@nxp.com>
- <1487183790.5636.13.camel@buserror.net>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit controls
+ from a pipeline
+Date: Wed, 15 Feb 2017 18:19:16 -0800
+Message-ID: <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487183790.5636.13.camel@buserror.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "mturquette@baylibre.com" <mturquette@baylibre.com>
-Cc: "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgW21haWx0
-bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiBTZW50OiBUaHVyc2RheSwgRmVicnVhcnkgMTYsIDIwMTcg
-MjozNyBBTQ0KPiBUbzogWS5ULiBUYW5nIDx5dWFudGlhbi50YW5nQG54cC5jb20+OyBtdHVycXVl
-dHRlQGJheWxpYnJlLmNvbQ0KPiBDYzogc2JveWRAY29kZWF1cm9yYS5vcmc7IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5v
-cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
-bmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggMi8yXSBjbGs6IHFvcmlxOiBTZXBhcmF0ZSByb290IGlucHV0IGNsb2NrIGZv
-ciBjb3JlIFBMTHMgb24NCj4gbHMxMDEyYQ0KPiANCj4gT24gV2VkLCAyMDE3LTAyLTE1IGF0IDEz
-OjQ3ICswODAwLCB5dWFudGlhbi50YW5nQG54cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogVGFuZyBZ
-dWFudGlhbiA8WXVhbnRpYW4uVGFuZ0BueHAuY29tPg0KPiA+DQo+ID4gbHMxMDEyYSBoYXMgc2Vw
-YXJhdGUgaW5wdXQgcm9vdCBjbG9ja3MgZm9yIGNvcmUgUExMcyB2ZXJzdXMgdGhlDQo+ID4gcGxh
-dGZvcm0gUExMLCB3aXRoIHRoZSBsYXR0ZXIgZGVzY3JpYmVkIGFzIHN5c2NsayBpbiB0aGUgaHcg
-ZG9jcy4NCj4gPiBJZiBhIHNlY29uZCBpbnB1dCBjbG9jaywgbmFtZWQgImNvcmVjbGsiLCBpcyBw
-cmVzZW50LCB0aGlzIGNsb2NrIHdpbGwNCj4gPiBiZSB1c2VkIGZvciB0aGUgY29yZSBQTExzLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDx5dWFudGlhbi50YW5nQG54cC5jb20+DQo+
-ID4gLS0tDQo+ID4gwqBkcml2ZXJzL2Nsay9jbGstcW9yaXEuYyB8IDkxDQo+ID4gKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQ0KPiANCj4gV2h5IGRpZCB5b3Ug
-cmVzZXQgdGhlIGF1dGhvciBvbiB0aGVzZSBwYXRjaGVzPyDCoEhhdmUgeW91IGNoYW5nZWQgYW55
-dGhpbmc/DQo+IMKgV2h5IGFyZW4ndCB0aGV5IG1hcmtlZCBlaXRoZXIgdjIgb3IgcmVzZW5kPw0K
-PiANCg0KSSBzaG91bGQgaGF2ZSBtYXJrZWQgYXMgdjIgb3IgcmVzZW5kLiBJZiBhbnl0aGluZyBj
-aGFuZ2VkLCBJIHRha2UgaXQgb3ZlciBhbmQgZHJvcHBlZCB0aGUgMi8zIHBhdGNoIGluIHlvdXIg
-b3JpZ2luYWwgcGF0Y2ggc2V0IHRvIHNwZWVkIHVwIHRoZSBtZXJnZSwgd2hpY2ggSSB0aGluayBz
-by4NClRoaXMgcGF0Y2ggc2V0IGJsb2NrcyBvdGhlciBwYXRjaGVzIGFuZCAyMCBkYXlzIHBhc3Nl
-ZCwgbm8gYW55IGFjdGlvbiBvbiBpdC4gV2UgY2FuJ3QgYWNjb3VudCBvbiB5b3UgdG8gcHVzaCBp
-dC4gVGhhdCdzIHdoeSBJIHRha2UgaXQgb3ZlciBhbmQgcmVzZW5kIGl0Lg0KDQpBbGwgaW4gYWxs
-LCB3aGF0IHlvdSBzdWdnZXN0IHRvIGRvIHRvIG1ha2UgdGhlbSBnZXQgYWNjZXB0ZWQgQVNBUD8N
-Cg0KUmVnYXJkcywNCll1YW50aWFuDQo+IC1TY290dA0KDQo=
+v4l2_pipeline_inherit_controls() will add the v4l2 controls from
+all subdev entities in a pipeline to a given video device.
+
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+---
+ drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
+ include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+
+diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
+index 303980b..09d4d97 100644
+--- a/drivers/media/v4l2-core/v4l2-mc.c
++++ b/drivers/media/v4l2-core/v4l2-mc.c
+@@ -22,6 +22,7 @@
+ #include <linux/usb.h>
+ #include <media/media-device.h>
+ #include <media/media-entity.h>
++#include <media/v4l2-ctrls.h>
+ #include <media/v4l2-fh.h>
+ #include <media/v4l2-mc.h>
+ #include <media/v4l2-subdev.h>
+@@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+ }
+ EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
+ 
++int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
++				     struct media_entity *start_entity)
++{
++	struct media_device *mdev = start_entity->graph_obj.mdev;
++	struct media_entity *entity;
++	struct media_graph graph;
++	struct v4l2_subdev *sd;
++	int ret;
++
++	ret = media_graph_walk_init(&graph, mdev);
++	if (ret)
++		return ret;
++
++	media_graph_walk_start(&graph, start_entity);
++
++	while ((entity = media_graph_walk_next(&graph))) {
++		if (!is_media_entity_v4l2_subdev(entity))
++			continue;
++
++		sd = media_entity_to_v4l2_subdev(entity);
++
++		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
++					    sd->ctrl_handler,
++					    NULL);
++		if (ret)
++			break;
++	}
++
++	media_graph_walk_cleanup(&graph);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(__v4l2_pipeline_inherit_controls);
++
++int v4l2_pipeline_inherit_controls(struct video_device *vfd,
++				   struct media_entity *start_entity)
++{
++	struct media_device *mdev = start_entity->graph_obj.mdev;
++	int ret;
++
++	mutex_lock(&mdev->graph_mutex);
++	ret = __v4l2_pipeline_inherit_controls(vfd, start_entity);
++	mutex_unlock(&mdev->graph_mutex);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(v4l2_pipeline_inherit_controls);
++
+ /* -----------------------------------------------------------------------------
+  * Pipeline power management
+  *
+diff --git a/include/media/v4l2-mc.h b/include/media/v4l2-mc.h
+index 2634d9d..9848e77 100644
+--- a/include/media/v4l2-mc.h
++++ b/include/media/v4l2-mc.h
+@@ -171,6 +171,17 @@ void v4l_disable_media_source(struct video_device *vdev);
+  */
+ int v4l_vb2q_enable_media_source(struct vb2_queue *q);
+ 
++/**
++ * v4l2_pipeline_inherit_controls - Add the v4l2 controls from all
++ *				    subdev entities in a pipeline to
++ *				    the given video device.
++ * @vfd: the video device
++ * @start_entity: Starting entity
++ */
++int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
++				     struct media_entity *start_entity);
++int v4l2_pipeline_inherit_controls(struct video_device *vfd,
++				   struct media_entity *start_entity);
+ 
+ /**
+  * v4l2_pipeline_pm_use - Update the use count of an entity
+@@ -231,6 +242,20 @@ static inline int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+ 	return 0;
+ }
+ 
++static inline int __v4l2_pipeline_inherit_controls(
++	struct video_device *vfd,
++	struct media_entity *start_entity)
++{
++	return 0;
++}
++
++static inline int v4l2_pipeline_inherit_controls(
++	struct video_device *vfd,
++	struct media_entity *start_entity)
++{
++	return 0;
++}
++
+ static inline int v4l2_pipeline_pm_use(struct media_entity *entity, int use)
+ {
+ 	return 0;
+-- 
+2.7.4
