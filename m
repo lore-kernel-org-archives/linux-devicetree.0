@@ -1,181 +1,104 @@
 From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 32/36] media: imx: csi/fim: add support for frame intervals
-Date: Wed, 15 Feb 2017 18:19:34 -0800
-Message-ID: <1487211578-11360-33-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v4 28/36] media: imx: csi: fix crop rectangle changes in set_fmt
+Date: Wed, 15 Feb 2017 18:19:30 -0800
+Message-ID: <1487211578-11360-29-git-send-email-steve_longerbeam@mentor.com>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to CSI for negotiation of frame intervals, and use this
-information to configure the frame interval monitor.
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+The cropping rectangle was being modified by the output pad's
+set_fmt, which is the wrong pad to do this. The crop rectangle
+should not be modified by the output pad set_fmt. It instead
+should be reset to the full input frame when the input pad format
+is set.
+
+The output pad set_fmt should set width/height to the current
+crop dimensions, or 1/2 the crop width/height to enable
+downscaling.
+
+So the other part of this patch is to enable downscaling if
+the output pad dimension(s) are 1/2 the crop dimension(s) at
+csi_setup() time.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/staging/media/imx/imx-media-csi.c | 36 ++++++++++++++++++++++++++++---
- drivers/staging/media/imx/imx-media-fim.c | 28 +++++++++---------------
- drivers/staging/media/imx/imx-media.h     |  2 +-
- 3 files changed, 44 insertions(+), 22 deletions(-)
+ drivers/staging/media/imx/imx-media-csi.c | 35 ++++++++++++++++++++-----------
+ 1 file changed, 23 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index b0aac82..040cca6 100644
+index ae24b42..3cb97e2 100644
 --- a/drivers/staging/media/imx/imx-media-csi.c
 +++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -56,6 +56,7 @@ struct csi_priv {
+@@ -531,6 +531,10 @@ static int csi_setup(struct csi_priv *priv)
  
- 	struct v4l2_mbus_framefmt format_mbus[CSI_NUM_PADS];
- 	const struct imx_media_pixfmt *cc[CSI_NUM_PADS];
-+	struct v4l2_fract frame_interval;
- 	struct v4l2_rect crop;
+ 	ipu_csi_set_window(priv->csi, &priv->crop);
  
- 	/* the video device at IDMAC output pad */
-@@ -565,7 +566,8 @@ static int csi_start(struct csi_priv *priv)
- 
- 	/* start the frame interval monitor */
- 	if (priv->fim) {
--		ret = imx_media_fim_set_stream(priv->fim, priv->sensor, true);
-+		ret = imx_media_fim_set_stream(priv->fim,
-+					       &priv->frame_interval, true);
- 		if (ret)
- 			goto idmac_stop;
- 	}
-@@ -580,7 +582,8 @@ static int csi_start(struct csi_priv *priv)
- 
- fim_off:
- 	if (priv->fim)
--		imx_media_fim_set_stream(priv->fim, priv->sensor, false);
-+		imx_media_fim_set_stream(priv->fim,
-+					 &priv->frame_interval, false);
- idmac_stop:
- 	if (priv->dest == IPU_CSI_DEST_IDMAC)
- 		csi_idmac_stop(priv);
-@@ -594,11 +597,36 @@ static void csi_stop(struct csi_priv *priv)
- 
- 	/* stop the frame interval monitor */
- 	if (priv->fim)
--		imx_media_fim_set_stream(priv->fim, priv->sensor, false);
-+		imx_media_fim_set_stream(priv->fim,
-+					 &priv->frame_interval, false);
- 
- 	ipu_csi_disable(priv->csi);
- }
- 
-+static int csi_g_frame_interval(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_frame_interval *fi)
-+{
-+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
++	ipu_csi_set_downsize(priv->csi,
++			     priv->crop.width == 2 * outfmt->width,
++			     priv->crop.height == 2 * outfmt->height);
 +
-+	fi->interval = priv->frame_interval;
-+
-+	return 0;
-+}
-+
-+static int csi_s_frame_interval(struct v4l2_subdev *sd,
-+				struct v4l2_subdev_frame_interval *fi)
-+{
-+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-+
-+	/* Output pads mirror active input pad, no limits on input pads */
-+	if (fi->pad == CSI_SRC_PAD_IDMAC || fi->pad == CSI_SRC_PAD_DIRECT)
-+		fi->interval = priv->frame_interval;
-+
-+	priv->frame_interval = fi->interval;
-+
-+	return 0;
-+}
-+
- static int csi_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-@@ -1187,6 +1215,8 @@ static struct v4l2_subdev_core_ops csi_core_ops = {
- };
+ 	ipu_csi_init_interface(priv->csi, &sensor_mbus_cfg, &if_fmt);
  
- static struct v4l2_subdev_video_ops csi_video_ops = {
-+	.g_frame_interval = csi_g_frame_interval,
-+	.s_frame_interval = csi_s_frame_interval,
- 	.s_stream = csi_s_stream,
- };
+ 	ipu_csi_set_dest(priv->csi, priv->dest);
+@@ -890,15 +894,15 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	switch (sdformat->pad) {
+ 	case CSI_SRC_PAD_DIRECT:
+ 	case CSI_SRC_PAD_IDMAC:
+-		crop.left = priv->crop.left;
+-		crop.top = priv->crop.top;
+-		crop.width = sdformat->format.width;
+-		crop.height = sdformat->format.height;
+-		ret = csi_try_crop(priv, &crop, sensor);
+-		if (ret)
+-			return ret;
+-		sdformat->format.width = crop.width;
+-		sdformat->format.height = crop.height;
++		if (sdformat->format.width < priv->crop.width * 3 / 4)
++			sdformat->format.width = priv->crop.width / 2;
++		else
++			sdformat->format.width = priv->crop.width;
++
++		if (sdformat->format.height < priv->crop.height * 3 / 4)
++			sdformat->format.height = priv->crop.height / 2;
++		else
++			sdformat->format.height = priv->crop.height;
  
-diff --git a/drivers/staging/media/imx/imx-media-fim.c b/drivers/staging/media/imx/imx-media-fim.c
-index acc7e39..a6ed57e 100644
---- a/drivers/staging/media/imx/imx-media-fim.c
-+++ b/drivers/staging/media/imx/imx-media-fim.c
-@@ -67,26 +67,18 @@ struct imx_media_fim {
- };
- 
- static void update_fim_nominal(struct imx_media_fim *fim,
--			       struct imx_media_subdev *sensor)
-+			       const struct v4l2_fract *fi)
- {
--	struct v4l2_streamparm parm;
--	struct v4l2_fract tpf;
--	int ret;
--
--	parm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
--	ret = v4l2_subdev_call(sensor->sd, video, g_parm, &parm);
--	tpf = parm.parm.capture.timeperframe;
--
--	if (ret || tpf.denominator == 0) {
--		dev_dbg(fim->sd->dev, "no tpf from sensor, FIM disabled\n");
-+	if (fi->denominator == 0) {
-+		dev_dbg(fim->sd->dev, "no frame interval, FIM disabled\n");
- 		fim->enabled = false;
- 		return;
+ 		if (sdformat->pad == CSI_SRC_PAD_IDMAC) {
+ 			cc = imx_media_find_format(0, sdformat->format.code,
+@@ -948,6 +952,14 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 		}
+ 		break;
+ 	case CSI_SINK_PAD:
++		crop.left = 0;
++		crop.top = 0;
++		crop.width = sdformat->format.width;
++		crop.height = sdformat->format.height;
++		ret = csi_try_crop(priv, &crop, sensor);
++		if (ret)
++			return ret;
++
+ 		cc = imx_media_find_format(0, sdformat->format.code,
+ 					   true, false);
+ 		if (!cc) {
+@@ -965,9 +977,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	} else {
+ 		priv->format_mbus[sdformat->pad] = sdformat->format;
+ 		priv->cc[sdformat->pad] = cc;
+-		/* Update the crop window if this is an output pad  */
+-		if (sdformat->pad == CSI_SRC_PAD_DIRECT ||
+-		    sdformat->pad == CSI_SRC_PAD_IDMAC)
++		/* Reset the crop window if this is the input pad */
++		if (sdformat->pad == CSI_SINK_PAD)
+ 			priv->crop = crop;
  	}
  
--	fim->nominal = DIV_ROUND_CLOSEST(1000 * 1000 * tpf.numerator,
--					 tpf.denominator);
-+	fim->nominal = DIV_ROUND_CLOSEST_ULL(1000000ULL * (u64)fi->numerator,
-+					     fi->denominator);
- 
--	dev_dbg(fim->sd->dev, "sensor FI=%lu usec\n", fim->nominal);
-+	dev_dbg(fim->sd->dev, "FI=%lu usec\n", fim->nominal);
- }
- 
- static void reset_fim(struct imx_media_fim *fim, bool curval)
-@@ -130,8 +122,8 @@ static void send_fim_event(struct imx_media_fim *fim, unsigned long error)
- 
- /*
-  * Monitor an averaged frame interval. If the average deviates too much
-- * from the sensor's nominal frame rate, send the frame interval error
-- * event. The frame intervals are averaged in order to quiet noise from
-+ * from the nominal frame rate, send the frame interval error event. The
-+ * frame intervals are averaged in order to quiet noise from
-  * (presumably random) interrupt latency.
-  */
- static void frame_interval_monitor(struct imx_media_fim *fim,
-@@ -422,12 +414,12 @@ EXPORT_SYMBOL_GPL(imx_media_fim_set_power);
- 
- /* Called by the subdev in its s_stream callback */
- int imx_media_fim_set_stream(struct imx_media_fim *fim,
--			     struct imx_media_subdev *sensor,
-+			     const struct v4l2_fract *fi,
- 			     bool on)
- {
- 	if (on) {
- 		reset_fim(fim, true);
--		update_fim_nominal(fim, sensor);
-+		update_fim_nominal(fim, fi);
- 
- 		if (fim->icap_channel >= 0)
- 			fim_acquire_first_ts(fim);
-diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
-index ae3af0d..7f19739 100644
---- a/drivers/staging/media/imx/imx-media.h
-+++ b/drivers/staging/media/imx/imx-media.h
-@@ -259,7 +259,7 @@ struct imx_media_fim;
- void imx_media_fim_eof_monitor(struct imx_media_fim *fim, struct timespec *ts);
- int imx_media_fim_set_power(struct imx_media_fim *fim, bool on);
- int imx_media_fim_set_stream(struct imx_media_fim *fim,
--			     struct imx_media_subdev *sensor,
-+			     const struct v4l2_fract *frame_interval,
- 			     bool on);
- struct imx_media_fim *imx_media_fim_init(struct v4l2_subdev *sd);
- void imx_media_fim_free(struct imx_media_fim *fim);
 -- 
 2.7.4
 
