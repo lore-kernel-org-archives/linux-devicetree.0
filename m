@@ -1,59 +1,102 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 30/37] dt-bindings: PCI: dra7xx: Add dt bindings to enable
- legacy mode
-Date: Thu, 16 Feb 2017 14:03:57 +0530
-Message-ID: <58A563F5.5040504@ti.com>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-31-git-send-email-kishon@ti.com>
- <20170118214603.qnewy3sm6sgw7lbg@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170118214603.qnewy3sm6sgw7lbg@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH v3 2/6] ARM: dts: armada-xp-98dx3236: combine dfx server nodes
+Date: Thu, 16 Feb 2017 21:50:36 +1300
+Message-ID: <20170216085041.28337-3-chris.packham@alliedtelesis.co.nz>
+References: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170216085041.28337-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Rather than having a separate node for the dfx server add a reg property
+to the parent node. This give some compatibility with the Marvell
+supplied SDK.
 
-On Thursday 19 January 2017 03:16 AM, Rob Herring wrote:
-> On Thu, Jan 12, 2017 at 03:56:19PM +0530, Kishon Vijay Abraham I wrote:
->> Update device tree binding documentation of TI's dra7xx PCI
->> controller to include property for enabling legacy mode.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  Documentation/devicetree/bindings/pci/ti-pci.txt |    4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> index 62f5f59..ed85e8e 100644
->> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> @@ -39,6 +39,10 @@ DEVICE MODE
->>   - interrupts : one interrupt entries must be specified for main interrupt.
->>   - num-ib-windows : number of inbound address translation windows
->>   - num-ob-windows : number of outbound address translation windows
->> + - syscon-legacy-mode: phandle to the syscon dt node. The 1st argument should
->> +		       contain the register offset within syscon and the 2nd
->> +		       argument should contain the bit field for setting the
->> +		       legacy mode
-> 
-> What's legacy mode?
+As no upstream driver currently exists for this block and support for
+this SoC is still quite fresh in the kernel it should not be necessary
+to retain a backwards compatible binding.
 
-It's the name of the bit-field defined in TRM used to add workaround for errata
-id i870 (See [PATCH 29/37] PCI: dwc: dra7xx: Workaround for errata id i870 of
-this series). I'm not sure what it does internally.
+Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+---
 
-Thanks
-Kishon
+Notes:
+    Changes in v2:
+    - none
+    Changes in v3:
+    - update commit message to indicate backwards incompatible change and
+      why it's OK
+    - retain dfx-server compatible string
+
+ Documentation/devicetree/bindings/net/marvell,prestera.txt | 13 +++++--------
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi                  | 10 +++-------
+ 2 files changed, 8 insertions(+), 15 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/marvell,prestera.txt b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+index 5fbab29718e8..c329608fa887 100644
+--- a/Documentation/devicetree/bindings/net/marvell,prestera.txt
++++ b/Documentation/devicetree/bindings/net/marvell,prestera.txt
+@@ -32,19 +32,16 @@ DFX Server bindings
+ -------------------
+ 
+ Required properties:
+-- compatible: must be "marvell,dfx-server"
++- compatible: must be "marvell,dfx-server", "simple-bus"
++- ranges: describes the address mapping of a memory-mapped bus.
+ - reg: address and length of the register set for the device.
+ 
+ Example:
+ 
+-dfx-registers {
+-	compatible = "simple-bus";
++dfx-server {
++	compatible = "marvell,dfx-server", "simple-bus";
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+-
+-	dfx: dfx@0 {
+-		compatible = "marvell,dfx-server";
+-		reg = <0 0x100000>;
+-	};
++	reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+ };
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index f6a03dcee5ef..7eaa7da84770 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -195,11 +195,12 @@
+ 			};
+ 		};
+ 
+-		dfxr: dfx-registers@ac000000 {
+-			compatible = "simple-bus";
++		dfx: dfx-server@ac000000 {
++			compatible = "marvell,dfx-server", "simple-bus";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
++			reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+ 
+ 			dfx_coredivclk: corediv-clock@f8268 {
+ 				compatible = "marvell,mv98dx3236-corediv-clock";
+@@ -208,11 +209,6 @@
+ 				clocks = <&mainpll>;
+ 				clock-output-names = "nand";
+ 			};
+-
+-			dfx: dfx@0 {
+-				compatible = "marvell,dfx-server";
+-				reg = <0 0x100000>;
+-			};
+ 		};
+ 
+ 		switch: switch@a8000000 {
+-- 
+2.11.0.24.ge6920cf
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
