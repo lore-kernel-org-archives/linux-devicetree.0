@@ -1,287 +1,228 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v6 5/5] ARM: dts: sun9i: Initial support for the Sunchip
- CX-A99 board
-Date: Thu, 16 Feb 2017 14:31:16 +0800
-Message-ID: <CAGb2v65xEOb5pr5yJY-u7urksNkQvoohFLDVqMdZOy9iRaPMGQ@mail.gmail.com>
-References: <cover.1486592470.git.rask@formelder.dk> <d4211c5d57f80b0281d7d332edc7d69e66202d3d.1486592471.git.rask@formelder.dk>
- <20170210085920.7l7gswm6yjuqgdfx@lukather> <20170216061753.sd7zjs5jzdingufp@localhost>
+From: Richard Leitner <me@g0hl1n.net>
+Subject: Re: [PATCH v5] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Thu, 16 Feb 2017 07:36:48 +0100
+Message-ID: <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
+References: <1486714767-25930-1-git-send-email-richard.leitner@skidata.com>
+ <20170216023004.25dwzy7ppxdoasfz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170216061753.sd7zjs5jzdingufp@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170216023004.25dwzy7ppxdoasfz@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Richard Leitner <richard.leitner@skidata.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 2:17 PM, Rask Ingemann Lambertsen
-<rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org> wrote:
-> On Fri, Feb 10, 2017 at 09:59:20AM +0100, Maxime Ripard wrote:
->> Hi,
+On 02/16/2017 03:30 AM, Rob Herring wrote:
+> On Fri, Feb 10, 2017 at 09:19:27AM +0100, Richard Leitner wrote:
+>> This patch adds a driver for configuration of the Microchip USB251xB/xBi
+>> USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
+>> configuration interface and two to four USB 2.0 downstream ports.
 >>
->> On Thu, Feb 09, 2017 at 12:34:06AM +0100, Rask Ingemann Lambertsen wrote:
->> > The Suncip CX-A99 board is found in at least four brands of media players.
->> > It features an Allwinner A80 ARM SoC and is found in two models:
->> >
->> > 1) 2 GiB DDR3 DRAM and 16 GB eMMC
->> > 2) 4 GiB DDR3 DRAM and 32 GB eMMC
->> >
->> > For details of the board, see the linux-sunxi page
->> > <URL:https://linux-sunxi.org/Sunchip_CX-A99>.
+>> Furthermore add myself as a maintainer for this driver.
 >>
->> Please don't put URLs in commit logs (and the DT).
->
-> OK.
->
->> > Supported features (+ means tested):
->> > + One Cortex-A7 CPU core (or four with experimental U-Boot PSCI patches)
->> > + AXP808 power management chip
->> > + OZ80120 voltage regulator
->> > + Serial console port (internal)
->> > + eMMC and SD card slot
->> > + USB 2.0 host ports on on-board USB hub
->> > + SATA port on on-board SATA-to-USB bridge *
->> > + IEEE 802.11 a/b/g/n/ac SDIO Wifi
->> > + Real-time clock
->> > + LEDs
->> > - IR receiver for remote control
->> >
->> > * Only shows up when a SATA device is connected. Also, if a power source
->> >   is connected to the USB 3.0 connector across power cycles (e.g. FEL
->> >   boot), the bridge may not properly reset and not show up on the USB bus.
->> >   The vendor U-Boot performs some unknown magic which resets the bridge.
+>> The datasheet can be found at the manufacturers website, see [1]. All
+>> device-tree exposed configuration features have been tested on a i.MX6
+>> platform with a USB2512B hub.
 >>
->> Is that magic at the USB level, or specific to the bridge itself?
->
-> I don't know, but since the other USB port connected to the hub comes up
-> fine, I'm assuming it's something to do with the SATA-to-USB bridge.
->
->> > diff --git a/arch/arm/boot/dts/sun9i-a80-cx-a99.dts b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
->> > new file mode 100644
->> > index 0000000..f5496d2
->> > --- /dev/null
->> > +++ b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
-> [...]
->> > +   /* USB 3.0 standard-A receptacle. For now, only Vbus is supported. */
+>> [1] http://ww1.microchip.com/downloads/en/DeviceDoc/00001692C.pdf
 >>
->> I'm not sure what you mean by "only VBUS is supported"? Is there any
->> other signal?
+>> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+>> ---
+>> CHANGES v5:
 >
-> I'm just trying to say that at the moment, all the connector will do is to
-> supply power to a connected device (for charging batteries or whatever).
->
->> > +   reg_usb0_vbus: regulator-usb0-vbus {
->> > +           compatible = "regulator-fixed";
->> > +           regulator-name = "usb0-vbus";
->> > +           regulator-min-microvolt = <5000000>;
->> > +           regulator-max-microvolt = <5000000>;
->> > +           gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;    /* PH15 */
->> > +           enable-active-high;
->>
->> This is redundant with the GPIO flag
->
-> No. I have now tested without "enable-active-high" and then Vbus stays off.
-> This is also in line with the binding documentation:
->
-> "- enable-active-high: Polarity of GPIO is Active high
->  If this property is missing, the default assumed is Active low."
->
-> It also seems to me that the way this is implemented in Linux, the GPIO
-> polarity flag is ignored.
->
->> > +           regulator-always-on;
->>
->> And it shouldn't be always on. The USB driver will enable it if needs
->> be.
->
-> Yes, we just don't have a driver for the A80 USB 3.0 port yet.
->
->> > +   /*
->> > +    * A GL850G hub with two external USB connectors is connected
->> > +    * to ehci0. Each has a Vbus regulator controlled by a GPIO:
->> > +    * PL7 for port 1, closest to the 12 V power connector, and
->> > +    * PL8 for port 2, next to the SD card slot.
->> > +    * Because regulator-fixed doesn't support a GPIO list, and
->> > +    * allwinner,sun9i-a80-usb-phy doesn't support more than one
->> > +    * supply, we have to use regulator-always-on on usb1-2-vbus.
->> > +    * Note that the GPIO pins also need cldo1 to be enabled.
->> > +    */
->>
->> What is the source of those regulators connected then? Some PMIC
->> regulator? AC-IN?
->
-> These two regulators are supplied from a fixed 12 V to 5 V DC-DC converter
-> which can't be controlled in any way.
->
->> > +   reg_usb1_1_vbus: regulator-usb1-1-vbus {
->> > +           compatible = "regulator-fixed";
->> > +           regulator-name = "usb1-1-vbus";
->> > +           regulator-min-microvolt = <5000000>;
->> > +           regulator-max-microvolt = <5000000>;
->> > +           gpio = <&r_pio 0 7 GPIO_ACTIVE_HIGH>;   /* PL7 */
->> > +           enable-active-high;
->> > +   };
->> > +
->> > +   reg_usb1_2_vbus: regulator-usb1-2-vbus {
->> > +           compatible = "regulator-fixed";
->> > +           regulator-name = "usb1-2-vbus";
->> > +           regulator-min-microvolt = <5000000>;
->> > +           regulator-max-microvolt = <5000000>;
->> > +           gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>;   /* PL8 */
->> > +           enable-active-high;
->> > +           regulator-always-on;
->>
->> Same comment about always on. If the driver needs fixing to grab an
->> additional regulator, fix it, but this shouldn't be left that way.
->
-> I agree, but a lot of work is missing to get to that point. To get the USB
-> ports up and running, you need to enable quite a few regulators:
-> 1. VDD09-USB for the controller internals.
-> 2. VCC33-USB for the PHY.
-> 3. Vbus for each connector belonging to the controller.
-> 4. Pin group supply for the GPIO pins controlling each of the Vbus supplies.
->
-> Nobody seems to have thought about the first and the last two supplies when
-> the bindings were written. In this case, 1, 2 and 4 will be connected to
-> always-on regulators anyway. Getting support for multiple Vbus supplies
-> probably needs something along the lines of what was discussed with your
-> coupled regulator patches:
->
-> https://lists.infradead.org/pipermail/linux-arm-kernel/2016-January/398862.html
-> https://lists.infradead.org/pipermail/linux-arm-kernel/2016-February/405401.html
-> https://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/466207.html
->
->> > +   /* OZ80120 voltage regulator for the four Cortex-A15 cores. */
->> > +   reg_vdd_cpub: regulator-vdd-cpub {
->> > +           compatible = "regulator-gpio";
->> > +
->> > +           regulator-always-on;
->> > +           regulator-min-microvolt = < 800000>;
->> > +           regulator-max-microvolt = <1100000>;
->> > +           regulator-name = "vdd-cpub";
->> > +
->> > +           enable-gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>;    /* PL2 */
->> > +           enable-active-high;
->> > +           gpios = <&r_pio 0 3 GPIO_ACTIVE_HIGH>,          /* PL3 */
->> > +                   <&r_pio 0 4 GPIO_ACTIVE_HIGH>,          /* PL4 */
->> > +                   <&r_pio 0 5 GPIO_ACTIVE_HIGH>;          /* PL5 */
->> > +
->> > +           gpios-states = <1 0 0>;
->> > +           states = <       750000 0x7
->> > +                            800000 0x3
->> > +                            850000 0x5
->> > +                            900000 0x1
->> > +                            950000 0x6
->> > +                           1000000 0x2
->> > +                           1100000 0x4
->> > +                           1200000 0x0>;
->>
->> You're listing a minimum state of 750mv, yet your minimum voltage is
->> 800mV.
->
-> Yes. The regulator is capable of outputting the listed voltages in the
-> 750 mV to 1200 mV range, but the permissible range of the consumer is only
-> 800 mV to 1100 mV according to the A80 data sheet. Likewise, the AXP806
-> regulators support a larger voltage range than that of the connected
-> consumers.
->
->> > +/* Ampak AP6335 IEEE 802.11 a/b/g/n/ac "Wifi". */
->>
->> Why "wifi" ? It's not implementing true wifi?
->
-> I put quotes around it because the proper spelling is Wi-Fi, but since that
-> is a trademark, most people use the term Wifi capitalised in one way or
-> another (or sometimes not). Grepping the other dts files, it seems customary
-> to leave out the quotes, so I'll do the same.
->
->> > +&mmc1 {
->> > +   bus-width = <4>;
->> > +   non-removable;
->> > +   pinctrl-names = "default";
->> > +   pinctrl-0 = <&mmc1_pins>;
->> > +   vmmc-supply = <&reg_cldo3>;     /* See cldo2,cldo3 note. */
->> > +   vqmmc-supply = <&reg_aldo2>;
->>
->> So it's able to support 1.2 or 1.8V IO modes? Surely you want to
->> enable those modes here to.
->
-> Thanks for the hint. I thought the driver would automatically detect that.
-> The following modes are supported according to the data sheet:
->
-> * DS: Default speed up to 25MHz (3.3V signaling).
-> * HS: High speed up to 50MHz (3.3V signaling).
-> * SDR12: SDR up to 25MHz (1.8V signaling).
-> * SDR25: SDR up to 50MHz (1.8V signaling).
-> * SDR50: SDR up to 100MHz (1.8V signaling).
-> * SDR104: SDR up to 208MHz (1.8V signaling).
-> * DDR50: DDR up to 50MHz (1.8V signaling).
->
-> Unfortunately, when I enable the 1.8 V modes, or even just SDR-12, the
-> device fails to initialise with error -110 (-ETIMEDOUT). I will take a look
-> at that, but no promises.
+> V5 and the first I see it?
 
-The kernel doesn't support lower I/O voltages for the A80 at the moment.
-The pin controller has voltage level controls that need to match the
-external regulators supplying it power.
+Just double-checked it, you (robh+dt@kernel.org) were on CC since v1.
 
-Rockchip has a similar thing called "Rockchip IO Domain". Look for the
-ROCKCHIP_IODOMAIN Kconfig symbol. My plan is to do something similar,
-as a subdevice to the pin controller.
-
-We cannot have it as part of the pin controller as that leads to a
-circular dependency for the R_PIO, thus blocking device probing for
-the rest of the system.
-
-However this is somewhat low on my todo list as it works fine without.
-
-Regards
-ChenYu
+@greg-kh: I got the notification that v5 was already applied to your usb 
+tree. So how should I proceed here? Send a v6 or send a separate patch 
+fixing the dt issues mentioned by robh?
 
 >
->> > +   pmic@745 {
->> > +           compatible = "x-powers,axp808", "x-powers,axp806";
->> > +           reg = <0x745>;
->> > +           interrupt-parent = <&nmi_intc>;
->> > +           interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
->> > +           interrupt-controller;
->> > +           #interrupt-cells = <1>;
->> > +
->> > +           swin-supply = <&reg_dcdce>;
+>> 	- Put includes in alphabetical order
+>> 	- Fix some indentations
+>> 	- Replace {set,clr}_bit_in_byte with BIT() macros
+>> 	- Fix multiline comments
+>> 	- Use of_property_read_u32() instead of of_get_property() where possible
+>> 	- Use min_t() instead of by-hand implemented if's
+>> 	- Use strlcpy and ternary operator instead of strncpy in if/else
+>> 	- Remove useless & improve some other outputs
+>> 	- Omit i2c remove function
+>> 	- Use module_i2c_driver() instead of module_{init,exit}()
+>> CHANGES v4:
+>> 	- use utf8s_to_utf16s() instead of ascii2utf16le()
+>> 	- remove ascii2utf16le() in lib/string.c again
+>> 	- remove changes in drivers/usb/core/hcd.c again
+>> 	  (I will post a separate patch for using utf8s_to_utf16s()
+>> 	  in there too)
 >>
->> Please use an incude for that PMIC.
->
-> I don't understand. What would that include file contain? Very few lines
-> would be shared between .dts files. You could save < 8 lines total if you
-> #include the 5 lines that are common between the Cubieboard4, the Optimus
-> and this board.
->
->> > +           /* In comments: Initial setup from vendor sys_config.fex. */
->> > +           regulators {
->> > +                   /* 3.0 V (enabled). */
+>> CHANGES v3:
+>> 	- move ascii2utf16le() to lib/string.c and also use it also for
+>> 		ascii2desc in drivers/usb/core/hcd.c
+>> 	- remove platform data support from usb251xb driver
 >>
->> This might be disabled though.
->
-> Indeed it is currently disabled by the kernel during startup, as there are
-> no consumers listed in the device tree. I don't know what that regulator
-> supplies, and it is on my to-do list for probing the next time that I have
-> the heat sink off the board.
->
->> > +                   /* 1.8 V (enabled). */
->> > +                   reg_aldo2: aldo2 {
->> > +                           regulator-boot-on;
->> > +                           regulator-min-microvolt = <1800000>;
->> > +                           regulator-max-microvolt = <3600000>;
->> > +                           regulator-name = "vcc-pg-pm-wifi+btio-audio";
+>> CHANGES v2:
+>> 	- fix max-{b,s}p-current property name
+>> 	- add descriptor string handling from platform_data
+>> 	- fix non-dt handling
+>> ---
+>>  Documentation/devicetree/bindings/usb/usb251xb.txt |  83 +++
+>>  MAINTAINERS                                        |   8 +
+>>  drivers/usb/misc/Kconfig                           |   9 +
+>>  drivers/usb/misc/Makefile                          |   1 +
+>>  drivers/usb/misc/usb251xb.c                        | 605 +++++++++++++++++++++
+>>  5 files changed, 706 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/usb251xb.txt
+>>  create mode 100644 drivers/usb/misc/usb251xb.c
 >>
->> Usually, there is simpler names available on the schematics, or at
->> least simpler names we can come up with.
+>> diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+>> new file mode 100644
+>> index 0000000..0c065f7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+>> @@ -0,0 +1,83 @@
+>> +Microchip USB 2.0 Hi-Speed Hub Controller
+>> +
+>> +The device node for the configuration of a Microchip USB251xB/xBi USB 2.0
+>> +Hi-Speed Controller.
+>> +
+>> +Required properties :
+>> + - compatible : Should be "microchip,usb251xb" or one of the specific types:
+>> +	"microchip,usb2512b", "microchip,usb2512bi", "microchip,usb2513b",
+>> +	"microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi"
+>> + - hub-reset-gpios : Should specify the gpio for hub reset
 >
-> I don't have schematics as it's not a developer board. V1.1 of the PCB,
-> which I have, doesn't even have the component names silkscreened onto it.
+> Just "reset-gpios". And you need to define the active state.
+
+OK.
+
 >
-> --
-> Rask Ingemann Lambertsen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +
+>> +Optional properties :
+>> + - reg : I2C address on the selected bus (default is <0x2C>)
+>
+> Why is this optional?
+
+Due to the fact the address is hardcoded insinde the chip I thought we 
+could set it to 0x2C by default if reg is not given.
+
+Should it be required?
+
+>
+>> + - skip-config : Skip Hub configuration, but only send the USB-Attach command
+>> + - vendor-id : USB Vendor ID of the hub (16 bit, default is 0x0424)
+>> + - product-id : USB Product ID of the hub (16 bit, default depends on type)
+>
+> These are to set the ids or need to match what they are set too?
+
+These are to set the VID/PID of the Hub.
+
+>
+>> + - device-id : USB Device ID of the hub (16 bit, default is 0x0bb3)
+>> + - language-id : USB Language ID (16 bit, default is 0x0000)
+>> + - manufacturer : USB Manufacturer string (max 31 characters long)
+>> + - product : USB Product string (max 31 characters long)
+>> + - serial : USB Serial string (max 31 characters long)
+>> + - {bus,self}-powered : selects between self- and bus-powered operation (default
+>> +	is self-powered)
+>> + - disable-hi-speed : disable USB Hi-Speed support
+>> + - {multi,single}-tt : selects between multi- and single-transaction-translator
+>> +	(default is multi-tt)
+>> + - disable-eop : disable End of Packet generation in full-speed mode
+>> + - {ganged,individual}-sensing : select over-current sense type in self-powered
+>> +	mode (default is individual)
+>> + - {ganged,individual}-port-switching : select port power switching mode
+>> +	(default is individual)
+>> + - dynamic-power-switching : enable auto-switching from self- to bus-powered
+>> +	operation if the local power source is removed or unavailable
+>> + - oc-delay-{100us,4ms,8ms,16ms} : set over current timer delay (default is 8ms)
+>
+> Make the property value be the time (e.g. oc-delay-us).
+
+OK.
+
+>
+>> + - compound-device : indicated the hub is part of a compound device
+>> + - port-mapping-mode : enable port mapping mode
+>> + - string-support : enable string descriptor support (required for manufacturer,
+>> +	product and serial string configuration)
+>> + - non-removable-ports : Should specify the ports which have a non-removable
+>> +	device connected.
+>> + - sp-disabled-ports : Specifies the ports which will be self-power disabled
+>> + - bp-disabled-ports : Specifies the ports which will be bus-power disabled
+>> + - max-sp-power : Specifies the maximum current the hub consumes from an
+>> +	upstream port when operating as self-powered hub including the power
+>> +	consumption of a permanently attached peripheral if the hub is
+>> +	configured as a compound device. The value is given in mA in a 0 - 500
+>> +	range (default is 2).
+>> + - max-bp-power : Specifies the maximum current the hub consumes from an
+>> +	upstream port when operating as bus-powered hub including the power
+>> +	consumption of a permanently attached peripheral if the hub is
+>> +	configured as a compound device. The value is given in mA in a 0 - 500
+>> +	range (default is 100).
+>> + - max-sp-current : Specifies the maximum current the hub consumes from an
+>> +	upstream port when operating as self-powered hub EXCLUDING the power
+>> +	consumption of a permanently attached peripheral if the hub is
+>> +	configured as a compound device. The value is given in mA in a 0 - 500
+>> +	range (default is 2).
+>> + - max-bp-current : Specifies the maximum current the hub consumes from an
+>> +	upstream port when operating as bus-powered hub EXCLUDING the power
+>> +	consumption of a permanently attached peripheral if the hub is
+>> +	configured as a compound device. The value is given in mA in a 0 - 500
+>> +	range (default is 100).
+>> + - power-on-time : Specifies the time it takes from the time the host initiates
+>> +	the power-on sequence to a port until the port has adequate power. The
+>> +	value is given in ms in a 0 - 510 range (default is 100ms).
+>
+> Various properties need unit suffixes (see property-units.txt) and
+> either be common properties or need vendor prefixes.
+
+Ok. What exactly do you mean with common properties? I don't think it's 
+the endianness settings described in common-properties.txt, is it?
+
+Is "microchip," fine as vendor prefix?
+
+>
+> This is a lot of properties. Are you really finding a need for all of
+> them? Is this to handle h/w designers too cheap to put down the EEPROM?
+> Maybe better to just define an eeprom property in the format the h/w
+> expects.
+
+I need about 15 of these properties. I just exposed them all to dt 
+because I thought they could be useful for somebody.
+
+Yes, these are a subset of the settings which can be configured via an 
+external EEPROM (By strapping some pins of the hub you can select if it 
+loads its configuration from an EEPROM or receives it via SMBus).
+
+My first thought was also to define only a byte array in dt, but IMHO 
+these options are much more readable and convenient for everybody. I'd 
+also be fine with removing the properties I don't need from dt. But that 
+may lead to future patches where somebody needs some of the options not 
+already exposed to dt.
+
+>
+>> +
+>> +Examples:
+>> +	usb2512b@2c {
+>> +		compatible = "microchip,usb2512b";
+>> +		hub-reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+>> +	};
+>> +
+>> +	usb2514b@2c {
+>> +		compatible = "microchip,usb2514b";
+>> +		reg = <0x2c>;
+>> +		reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
+>> +		vendor-id = /bits/ 16 <0x0000>;
+>> +		product-id = /bits/ 16 <0x0000>;
+>> +		string-support;
+>> +		manufacturer = "Foo";
+>> +		product = "Foo-Bar";
+>> +		serial = "1234567890A";
+>> +	};
+>
+
+Thanks for your feedback!
