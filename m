@@ -1,36 +1,77 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/8] dt-bindings: gpu: mali: Add optional OPPs
-Date: Wed, 15 Feb 2017 17:42:07 -0600
-Message-ID: <20170215234207.xyuw3wxryi3fdq3o@rob-hp-laptop>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
- <29cb6b892a6e7002d2f6271157a5efa648b0dd9b.1486655917.git-series.maxime.ripard@free-electrons.com>
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: Re: [PATCH v1 3/3] ASoC: zx-96p22: add zte's aud96p22
+	controller driver
+Date: Thu, 16 Feb 2017 08:24:17 +0800
+Message-ID: <CA+DQWkwjCYsKYW-THWHr=qZTRe-f+m_PnX4fM+6tRuQKwkWxWA@mail.gmail.com>
+References: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
+ <1487156110-12840-3-git-send-email-baoyou.xie@linaro.org>
+ <20170215112425.GC30007@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <owner-linux-mm@kvack.org>
-Content-Disposition: inline
-In-Reply-To: <29cb6b892a6e7002d2f6271157a5efa648b0dd9b.1486655917.git-series.maxime.ripard@free-electrons.com>
-Sender: owner-linux-mm@kvack.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170215112425.GC30007@localhost.localdomain>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, tiwai@suse.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, bardliao@realtek.com, lars@metafoo.de, Axel Lin <axel.lin@ingics.com>, Paul.Handrigan@cirrus.com, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, anish kumar <yesanishhere@gmail.com>, "xie.baoyou" <xie.baoyou@zte.com.cn>, nh6z@nh6z.net, Rob Herring <robh+dt@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, oder_chiou@realtek.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, petr@barix.com, broonie@kernel.org, Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 05:39:20PM +0100, Maxime Ripard wrote:
-> The operating-points-v2 binding gives a way to provide the OPP of the GPU.
-> Let's use it.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 4 ++++
->  1 file changed, 4 insertions(+), 0 deletions(-)
+Hi, Charles:
 
-Bindings should not unnecessarily evolve. The h/w does not evolve in 
-this way. This should have been part of the original binding given that 
-it was just added.
+On 15 February 2017 at 19:24, Charles Keepax <
+ckeepax@opensource.wolfsonmicro.com> wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> On Wed, Feb 15, 2017 at 06:55:10PM +0800, Baoyou Xie wrote:
+> > This patch adds aud96p22 controller driver for zte's SoC family.
+> >
+> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> > ---
+> <snip>
+> > +static int zx_aud96p22_i2c_write(struct i2c_client *i2c_client,
+> > +                              const void *data, size_t count)
+> > +{
+> > +     int xfer;
+> > +
+> > +     xfer = i2c_master_send(i2c_client, data, count);
+> > +     if (xfer == count)
+> > +             return 0;
+> > +     else if (xfer < 0)
+> > +             return xfer;
+> > +     else
+> > +             return -EIO;
+> > +}
+> > +
+> > +static int zx_aud96p22_i2c_read(struct i2c_client *i2c_client,
+> > +                             unsigned char addr)
+> > +{
+> > +     int xfer;
+> > +
+> > +     xfer = i2c_smbus_read_word_data(i2c_client, addr);
+> > +     if (xfer < 0)
+> > +             dev_warn(&i2c_client->dev, "transfer error %d\n", xfer);
+> > +
+> > +     return xfer;
+> > +}
+> > +
+>
+> Is there any reason this isn't using regmap? It looks like it
+> should be, have a look at any of the other mainline CODECs for an
+> example.
+>
+> We can not read the i2c register directly, cause of the i2c is responded
+asynchronous, and involves i2c irq.
 
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+I suggest that we access i2c through general i2c interface.
+
+
+> Thanks,
+> Charles
+>
