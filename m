@@ -1,56 +1,125 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v4 10/36] ARM: dts: imx6-sabreauto: add pinctrl for gpt input
- capture
-Date: Wed, 15 Feb 2017 18:19:12 -0800
-Message-ID: <1487211578-11360-11-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 26/36] media: imx: add support for bayer formats
+Date: Wed, 15 Feb 2017 18:19:28 -0800
+Message-ID: <1487211578-11360-27-git-send-email-steve_longerbeam@mentor.com>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl groups for both GPT input capture channels.
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Add the bayer formats to imx-media's list of supported pixel and bus
+formats.
+
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+
+- added a bayer boolean to struct imx_media_pixfmt.
+
+Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/staging/media/imx/imx-media-utils.c | 68 +++++++++++++++++++++++++++++
+ drivers/staging/media/imx/imx-media.h       |  1 +
+ 2 files changed, 69 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index 967c3b8..495709f 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -457,6 +457,18 @@
- 			>;
- 		};
+diff --git a/drivers/staging/media/imx/imx-media-utils.c b/drivers/staging/media/imx/imx-media-utils.c
+index 55603d9..6855560 100644
+--- a/drivers/staging/media/imx/imx-media-utils.c
++++ b/drivers/staging/media/imx/imx-media-utils.c
+@@ -61,6 +61,74 @@ static const struct imx_media_pixfmt imx_media_formats[] = {
+ 		.cs     = IPUV3_COLORSPACE_RGB,
+ 		.bpp    = 32,
+ 		.ipufmt = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SBGGR8,
++		.codes  = {MEDIA_BUS_FMT_SBGGR8_1X8},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 8,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SGBRG8,
++		.codes  = {MEDIA_BUS_FMT_SGBRG8_1X8},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 8,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SGRBG8,
++		.codes  = {MEDIA_BUS_FMT_SGRBG8_1X8},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 8,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SRGGB8,
++		.codes  = {MEDIA_BUS_FMT_SRGGB8_1X8},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 8,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SBGGR16,
++		.codes  = {
++			MEDIA_BUS_FMT_SBGGR10_1X10,
++			MEDIA_BUS_FMT_SBGGR12_1X12,
++			MEDIA_BUS_FMT_SBGGR14_1X14,
++			MEDIA_BUS_FMT_SBGGR16_1X16
++		},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SGBRG16,
++		.codes  = {
++			MEDIA_BUS_FMT_SGBRG10_1X10,
++			MEDIA_BUS_FMT_SGBRG12_1X12,
++			MEDIA_BUS_FMT_SGBRG14_1X14,
++			MEDIA_BUS_FMT_SGBRG16_1X16,
++		},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SGRBG16,
++		.codes  = {
++			MEDIA_BUS_FMT_SGRBG10_1X10,
++			MEDIA_BUS_FMT_SGRBG12_1X12,
++			MEDIA_BUS_FMT_SGRBG14_1X14,
++			MEDIA_BUS_FMT_SGRBG16_1X16,
++		},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
++	}, {
++		.fourcc = V4L2_PIX_FMT_SRGGB16,
++		.codes  = {
++			MEDIA_BUS_FMT_SRGGB10_1X10,
++			MEDIA_BUS_FMT_SRGGB12_1X12,
++			MEDIA_BUS_FMT_SRGGB14_1X14,
++			MEDIA_BUS_FMT_SRGGB16_1X16,
++		},
++		.cs     = IPUV3_COLORSPACE_RGB,
++		.bpp    = 16,
++		.bayer  = true,
+ 	},
+ 	/*** non-mbus formats start here ***/
+ 	{
+diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
+index 3d4f3c7..ae3af0d 100644
+--- a/drivers/staging/media/imx/imx-media.h
++++ b/drivers/staging/media/imx/imx-media.h
+@@ -91,6 +91,7 @@ struct imx_media_pixfmt {
+ 	int     bpp;     /* total bpp */
+ 	enum ipu_color_space cs;
+ 	bool    planar;  /* is a planar format */
++	bool    bayer;   /* is a raw bayer format */
+ 	bool    ipufmt;  /* is one of the IPU internal formats */
+ };
  
-+		pinctrl_gpt_input_capture0: gptinputcapture0grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD1_DAT0__GPT_CAPTURE1	0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_gpt_input_capture1: gptinputcapture1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD1_DAT1__GPT_CAPTURE2	0x1b0b0
-+			>;
-+		};
-+
- 		pinctrl_spdif: spdifgrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_KEY_COL3__SPDIF_IN 0x1b0b0
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
