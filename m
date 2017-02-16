@@ -1,41 +1,37 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v4 02/36] ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
-Date: Wed, 15 Feb 2017 18:19:04 -0800
-Message-ID: <1487211578-11360-3-git-send-email-steve_longerbeam@mentor.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] Documentation: bindings: add uphy-dp-sel for
+ Rockchip USB Type-C PHY
+Date: Wed, 15 Feb 2017 20:20:16 -0600
+Message-ID: <20170216022016.ubspejlr7no7ttgl@rob-hp-laptop>
+References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
+ <1486712654-15431-2-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1486712654-15431-2-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kishon@ti.com, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, groeck@chromium.org, Tomasz Figa <tfiga@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add to the MIPI CSI2 receiver node: compatible strings,
-interrupt sources, and clocks.
-
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 61569c8..aac70b9 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -1125,7 +1125,14 @@
- 			};
- 
- 			mipi_csi: mipi@021dc000 {
-+				compatible = "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
- 				reg = <0x021dc000 0x4000>;
-+				interrupts = <0 100 0x04>, <0 101 0x04>;
-+				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
-+					 <&clks IMX6QDL_CLK_VIDEO_27M>,
-+					 <&clks IMX6QDL_CLK_EIM_PODF>;
-+				clock-names = "dphy", "cfg", "pix";
-+				status = "disabled";
- 			};
- 
- 			mipi_dsi: mipi@021e0000 {
--- 
-2.7.4
+T24gRnJpLCBGZWIgMTAsIDIwMTcgYXQgMDM6NDQ6MTFQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gcm9ja2NoaXAsdXBoeS1kcC1zZWwgaXMgdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkg
+ZW5hYmxlIERQIGZ1bmN0aW9uLgoKImR0LWJpbmRpbmdzOiBwaHk6IiBpcyB0aGUgcHJlZmVycmVk
+IHN1YmplY3QgcHJlZml4LgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJv
+Y2stY2hpcHMuY29tPgo+IC0tLQo+IAo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvcGh5L3BoeS1yb2NrY2hpcC10eXBlYy50eHQgfCA1ICsrKysrCj4gIDEgZmlsZSBjaGFuZ2Vk
+LCA1IGluc2VydGlvbnMoKykKCk90aGVyd2lzZSwKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9i
+aEBrZXJuZWwub3JnPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
