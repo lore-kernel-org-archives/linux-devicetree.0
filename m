@@ -1,153 +1,89 @@
-From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v4 2/6] genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
-Date: Wed, 15 Feb 2017 17:01:02 -0800
-Message-ID: <1487206866-4011-3-git-send-email-david.daney@cavium.com>
-References: <1487206866-4011-1-git-send-email-david.daney@cavium.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v13 06/12] usb: xhci: use bus->sysdev for DMA
+ configuration
+Date: Thu, 16 Feb 2017 09:23:07 +0800
+Message-ID: <20170216012307.GA30290@b29397-desktop>
+References: <1486776443-2280-7-git-send-email-peter.chen@nxp.com>
+ <e532a212-cd15-ab42-6188-fc11a12633af@ti.com>
+ <CAK8P3a1D1v=LXrW=-t-fRJjbo_C6OpSuoqiGuZPOaBzQYCT-kA@mail.gmail.com>
+ <cb7182c6-0236-26f2-4f96-9bc001994728@ti.com>
+ <CAK8P3a22f=sQXt+3-PeAuBFQN7_4iXDQhu41teExd6bxJXxDAQ@mail.gmail.com>
+ <20170215013514.GA6579@b29397-desktop>
+ <cb3ee971-6d97-fff1-64f7-1b527559b047@ti.com>
+ <20170215085127.GA26227@b29397-desktop>
+ <2a3d2d65-e531-aaca-d5a1-a71f818cec61@ti.com>
+ <87mvdnoenw.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1487206866-4011-1-git-send-email-david.daney@cavium.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87mvdnoenw.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, frank.li-3arQi8VN3Tc@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sriram Dash <sriram.dash-3arQi8VN3Tc@public.gmane.org>, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Rob
 List-Id: devicetree@vger.kernel.org
 
-Follow-on patch for gpio-thunderx uses a irqdomain hierarchy which
-requires slightly different flow handlers, add them to chip.c which
-contains most of the other flow handlers.
+On Wed, Feb 15, 2017 at 01:51:31PM +0200, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> writes:
+> >>>>>>>> Why are we using sysdev to read DT property? We should be using the
+> >>>>>>>> XHCI device (&pdev->dev) here, no?
+> >>>>>>>
+> >>>>>>> If I remember correctly, this is one of the cases where pdev does not
+> >>>>>>> have a device node attached to it because it was created by the driver
+> >>>>>>> of the parent device on the fly in case of dwc3. When you have a pure xhci
+> >>>>>>> device in DT, the two pointers are the same.
+> >>>>>>
+> >>>>>> From drivers/usb/dwc3/host.c
+> >>>>>>
+> >>>>>>>         if (dwc->usb3_lpm_capable) {
+> >>>>>>>                 props[0].name = "usb3-lpm-capable";
+> >>>>>>>                 ret = platform_device_add_properties(xhci, props);
+> >>>>>>>                 if (ret) {
+> >>>>>>>                         dev_err(dwc->dev, "failed to add properties to xHCI\n");
+> >>>>>>>                         goto err1;
+> >>>>>>>                 }
+> >>>>>>>         }
+> >>>>>>
+> >>>>>> So it is setting the usb3-lpm-capable property into the xhci platform device
+> >>>>>> and we should be reading the property from there.
+> >>>>
+> >>>> Why dwc3 needs another "snps,usb3_lpm_capable"? Why not using
+> >>>> "usb3-lpm-capable" at firmware directly?
+> >>>
+> >>> dwc3 is not setting "snps,usb3_lpm_capable" but "usb3-lpm-capable" for the
+> >>> xhci platform device.
+> >>>
+> >>> What did you mean by firmware? Did you mean something like BIOS?
+> >>> At least TI platforms don't use any firmware like BIOS. So dwc3 driver
+> >>> needs to create a platform device for xhci on the fly and set the DT properties.
+> >>>
+> >> 
+> >> By readying code, the dwc3 calls dwc3_get_properties to set
+> >> dwc->usb3_lpm_capable, and at dwc3/host.c, it sets property
+> >> "usb3-lpm-capable" according to this flag, why not let common
+> >> code xhci-plat.c to get this property from sysdev which is DT
+> >> nodes for dwc3?
+> >> 
+> >
+> > Felipe, any comments?
+> 
+> Won't work. We have quirk flags which are based on DWC3's revision which
+> is not accessible by xhci-plat. Also, we can't call
+> device_add_property() because it's not really *adding*. It's *setting*,
+> meaning that we would loose all other properties.
+> 
 
-Signed-off-by: David Daney <david.daney@cavium.com>
----
- include/linux/irq.h |   2 ++
- kernel/irq/chip.c   | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
+Sorry, I am not clear by reading the code, here we just discuss
+"usb3-lpm-capable" property from DT or other firmwares.
 
-diff --git a/include/linux/irq.h b/include/linux/irq.h
-index 39e3254..545b770 100644
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -518,6 +518,8 @@ static inline int irq_set_parent(int irq, int parent_irq)
- extern int irq_chip_pm_get(struct irq_data *data);
- extern int irq_chip_pm_put(struct irq_data *data);
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
-+extern void handle_fasteoi_edge_irq(struct irq_desc *desc);
-+extern void handle_fasteoi_level_irq(struct irq_desc *desc);
- extern void irq_chip_enable_parent(struct irq_data *data);
- extern void irq_chip_disable_parent(struct irq_data *data);
- extern void irq_chip_ack_parent(struct irq_data *data);
-diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
-index 73ea90b..213105d 100644
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -981,6 +981,108 @@ void irq_cpu_offline(void)
- 
- #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
- /**
-+ *	handle_fasteoi_edge_irq - irq handler for edge hierarchy
-+ *	stacked on transparent controllers
-+ *
-+ *	@desc:	the interrupt description structure for this irq
-+ *
-+ *	Like handle_fasteoi_irq(), but for use with hierarchy where
-+ *	the irq_chip also needs to have its ->irq_ack() function
-+ *	called.
-+ */
-+void handle_fasteoi_edge_irq(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = desc->irq_data.chip;
-+
-+	raw_spin_lock(&desc->lock);
-+
-+	if (!irq_may_run(desc))
-+		goto out;
-+
-+	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
-+
-+	/*
-+	 * If its disabled or no action available
-+	 * then mask it and get out of here:
-+	 */
-+	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
-+		desc->istate |= IRQS_PENDING;
-+		mask_irq(desc);
-+		goto out;
-+	}
-+
-+	kstat_incr_irqs_this_cpu(desc);
-+	if (desc->istate & IRQS_ONESHOT)
-+		mask_irq(desc);
-+
-+	/* Start handling the irq */
-+	desc->irq_data.chip->irq_ack(&desc->irq_data);
-+
-+	preflow_handler(desc);
-+	handle_irq_event(desc);
-+
-+	cond_unmask_eoi_irq(desc, chip);
-+
-+	raw_spin_unlock(&desc->lock);
-+	return;
-+out:
-+	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
-+		chip->irq_eoi(&desc->irq_data);
-+	raw_spin_unlock(&desc->lock);
-+}
-+EXPORT_SYMBOL_GPL(handle_fasteoi_edge_irq);
-+
-+/**
-+ *	handle_fasteoi_level_irq - irq handler for level hierarchy
-+ *	stacked on transparent controllers
-+ *
-+ *	@desc:	the interrupt description structure for this irq
-+ *
-+ *	Like handle_fasteoi_irq(), but for use with hierarchy where
-+ *	the irq_chip also needs to have its ->irq_mask_ack() function
-+ *	called.
-+ */
-+void handle_fasteoi_level_irq(struct irq_desc *desc)
-+{
-+	struct irq_chip *chip = desc->irq_data.chip;
-+
-+	raw_spin_lock(&desc->lock);
-+	mask_ack_irq(desc);
-+
-+	if (!irq_may_run(desc))
-+		goto out;
-+
-+	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
-+
-+	/*
-+	 * If its disabled or no action available
-+	 * then mask it and get out of here:
-+	 */
-+	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
-+		desc->istate |= IRQS_PENDING;
-+		mask_irq(desc);
-+		goto out;
-+	}
-+
-+	kstat_incr_irqs_this_cpu(desc);
-+	if (desc->istate & IRQS_ONESHOT)
-+		mask_irq(desc);
-+
-+	preflow_handler(desc);
-+	handle_irq_event(desc);
-+
-+	cond_unmask_eoi_irq(desc, chip);
-+
-+	raw_spin_unlock(&desc->lock);
-+	return;
-+out:
-+	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
-+		chip->irq_eoi(&desc->irq_data);
-+	raw_spin_unlock(&desc->lock);
-+}
-+EXPORT_SYMBOL_GPL(handle_fasteoi_level_irq);
-+
-+/**
-  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
-  * NULL)
-  * @data:	Pointer to interrupt specific data
 -- 
-1.8.3.1
 
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
