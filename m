@@ -1,65 +1,58 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 2/4] ARM: dts: da850: add vpif video display pins
-Date: Thu, 16 Feb 2017 19:15:30 +0100
-Message-ID: <1487268932-6469-3-git-send-email-bgolaszewski@baylibre.com>
+Subject: [PATCH 1/4] ARM: dts: da850-evm: fix whitespace errors
+Date: Thu, 16 Feb 2017 19:15:29 +0100
+Message-ID: <1487268932-6469-2-git-send-email-bgolaszewski@baylibre.com>
 References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a new pinctrl sub-node for vpif display pins. Move VP_CLKIN3 and
-VP_CLKIN2 to the display node where they actually belong (vide section
-35.2.2 of the da850 datasheet).
+The da850-evm dts file contains whitespace errors in the vpif node.
+
+This patch fixes them.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/boot/dts/da850-evm.dts |  2 +-
- arch/arm/boot/dts/da850.dtsi    | 17 +++++++++++++++--
- 2 files changed, 16 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/da850-evm.dts | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index dece981..14f6f8ea 100644
+index 8c5671c..dece981 100644
 --- a/arch/arm/boot/dts/da850-evm.dts
 +++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -296,7 +296,7 @@
- 
- &vpif {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&vpif_capture_pins>;
-+	pinctrl-0 = <&vpif_capture_pins>, <&vpif_display_pins>;
- 	status = "okay";
- 
+@@ -302,14 +302,14 @@
  	/* VPIF capture port */
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 92d633d..5150331 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -216,8 +216,21 @@
- 					0x3c 0x11111111 0xffffffff
- 					/* VP_DIN[8..9] */
- 					0x40 0x00000011 0x000000ff
--					/* VP_CLKIN3, VP_CLKIN2 */
--					0x4c 0x00010100 0x000f0f00
-+				>;
-+			};
-+			vpif_display_pins: vpif_display_pins {
-+				pinctrl-single,bits = <
-+					/* VP_DOUT[2..7] */
-+					0x40 0x11111100 0xffffff00
-+					/* VP_DOUT[10..15,0..1] */
-+					0x44 0x11111111 0xffffffff
-+					/*  VP_DOUT[8..9] */
-+					0x48 0x00000011 0x000000ff
-+					/*
-+					 * VP_CLKOUT3, VP_CLKIN3,
-+					 * VP_CLKOUT2, VP_CLKIN2
-+					 */
-+					0x4c 0x00111100 0x00ffff00
- 				>;
- 			};
+ 	port {
+ 		vpif_ch0: endpoint@0 {
+-			  reg = <0>;
+-			  bus-width = <8>;
++			reg = <0>;
++			bus-width = <8>;
  		};
+ 
+ 		vpif_ch1: endpoint@1 {
+-			  reg = <1>;
+-			  bus-width = <8>;
+-			  data-shift = <8>;
++			reg = <1>;
++			bus-width = <8>;
++			data-shift = <8>;
+ 		};
+ 	};
+ };
 -- 
 2.9.3
