@@ -1,68 +1,118 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 18/36] media: Add i.MX media core driver
-Date: Fri, 17 Feb 2017 09:34:36 +0100
-Message-ID: <1487320476.3107.5.camel@pengutronix.de>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-         <1487211578-11360-19-git-send-email-steve_longerbeam@mentor.com>
-         <1487250123.2377.53.camel@pengutronix.de>
-         <c22dfd68-a41c-08d2-4b8d-c7ee1884ea31@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 04/21] ARM: sun8i: dt: Add DT bindings
+ documentation for Allwinner dwmac-sun8i
+Date: Thu, 16 Feb 2017 19:48:18 +0100
+Message-ID: <20170216184818.hwexzuqacbemsxo7@lukather>
+References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
+ <20170216124859.14346-5-clabbe.montjoie@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c22dfd68-a41c-08d2-4b8d-c7ee1884ea31-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="r2d7za65jyewaw3i"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLHNTLCQKGQENQQ5SEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170216124859.14346-5-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-02-16 at 17:33 -0800, Steve Longerbeam wrote:
-> 
-> On 02/16/2017 05:02 AM, Philipp Zabel wrote:
-> > On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
-> <snip>
-> >> +
-> >> +- Clean up and move the ov5642 subdev driver to drivers/media/i2c, and
-> >> +  create the binding docs for it.
-> >
-> > This is done already, right?
-> 
-> 
-> I cleaned up ov5640 and moved it to drivers/media/i2c with binding docs,
-> but not the ov5642 yet.
 
-Ok, thanks.
+--r2d7za65jyewaw3i
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> >> +- The Frame Interval Monitor could be exported to v4l2-core for
-> >> +  general use.
-> >> +
-> >> +- The subdev that is the original source of video data (referred to as
-> >> +  the "sensor" in the code), is called from various subdevs in the
-> >> +  pipeline in order to set/query the video standard ({g|s|enum}_std)
-> >> +  and to get/set the original frame interval from the capture interface
-> >> +  ([gs]_parm). Instead, the entities that need this info should call its
-> >> +  direct neighbor, and the neighbor should propagate the call to its
-> >> +  neighbor in turn if necessary.
-> >
-> > Especially the [gs]_parm fix is necessary to present userspace with the
-> > correct frame interval in case of frame skipping in the CSI.
+Hi,
+
+On Thu, Feb 16, 2017 at 01:48:42PM +0100, Corentin Labbe wrote:
+> This patch adds documentation for Device-Tree bindings for the
+> Allwinner dwmac-sun8i driver.
 > 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/dwmac-sun8i.txt        | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
 > 
-> Right, understood. I've added this to list of fixes for version 5.
-> 
-> What a pain though! It means propagating every call to g_frame_interval
-> upstream until a subdev "that cares" returns ret == 0 or
-> ret != -ENOIOCTLCMD. And that goes for any other chained subdev call
-> as well.
+> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> new file mode 100644
+> index 0000000..ac806c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> @@ -0,0 +1,86 @@
+> +* Allwinner sun8i GMAC ethernet controller
+> +
+> +This device is a platform glue layer for stmmac.
+> +Please see stmmac.txt for the other unchanged properties.
+> +
+> +Required properties:
+> +- compatible: should be one of the following string:
+> +		"allwinner,sun8i-a83t-emac"
+> +		"allwinner,sun8i-h3-emac"
+> +		"allwinner,sun50i-a64-emac"
+> +- reg: address and length of the register for the device.
+> +- interrupts: interrupt for the device
+> +- interrupt-names: should be "macirq"
+> +- clocks: A phandle to the reference clock for this device
+> +- clock-names: should be "stmmaceth"
+> +- resets: A phandle to the reset control for this device
+> +- reset-names: should be "stmmaceth"
+> +- phy-mode: See ethernet.txt
+> +- phy-handle: See ethernet.txt
+> +- #address-cells: shall be 1
+> +- #size-cells: shall be 0
+> +- syscon: A phandle to the syscon of the SoC with one of the following
+> + compatible string:
+> +  - allwinner,sun8i-h3-system-controller
+> +  - allwinner,sun8i-a64-system-controller
+> +  - allwinner,sun8i-a83t-system-controller
+> +
+> +Optional properties:
+> +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
+> +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
+> +Both delay properties does not have units, there are arbitrary value.
+> +The TX/RX clock delay chain settings are board specific and could be found
+> +in vendor FEX files.
+> +
+> +Optional properties for "allwinner,sun8i-h3-emac":
+> +- allwinner,leds-active-low: EPHY LEDs are active low
+> +
+> +Required child node of emac:
+> +- mdio bus node: should be named mdio
+> +
+> +Required properties of the mdio node:
+> +- #address-cells: shall be 1
+> +- #size-cells: shall be 0
+> +
+> +The device node referenced by "phy" or "phy-handle" should be a child node
+> +of the mdio node. See phy.txt for the generic PHY bindings.
+> +
+> +Required properties of the phy node with "allwinner,sun8i-h3-emac":
+> +- clocks: an extra phandle to the reference clock for the EPHY
+> +- resets: an extra phandle to the reset control for the EPHY
+> +
+> +Required properties for the system controller:
+> +- reg: address and length of the register for the device.
+> +- compatible: should be "syscon" and one of the following string:
+> +		"allwinner,sun8i-h3-system-controller"
+> +		"allwinner,sun8i-a64-system-controller"
+> +		"allwinner,sun8i-a83t-system-controller"
 
-Not at all. Since the frame interval is a property of the pad, that had
-to be propagated downstream by media-ctl along with media bus format,
-frame size, and colorimetry earlier.
+This should be in a separate binding document.
 
-regards
-Philipp
+What does it describe / represent?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--r2d7za65jyewaw3i--
