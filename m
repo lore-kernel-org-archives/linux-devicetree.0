@@ -1,28 +1,51 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v4 0/3] ARM: l2c: add l2c support for RZ/A1
-Date: Thu, 16 Feb 2017 17:26:31 +0000
-Message-ID: <PS1PR06MB11629773CBF024D2AE01F2D88A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
-References: <20170216161742.29320-1-chris.brandt@renesas.com>
- <20170216164424.GR27312@n2100.armlinux.org.uk>
- <CAK8P3a1ri2o4An0svxSG4iSvwTkdpM5jiC=SzBq7mE6TpbdhKQ@mail.gmail.com>
- <20170216172128.GS27312@n2100.armlinux.org.uk>
+From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] fpga pr ip: Core driver support for Altera Partial
+ Reconfiguration IP.
+Date: Thu, 16 Feb 2017 09:35:27 -0800
+Message-ID: <CAAtXAHd_uk=9A4H=vjdd9VTiwHo5_zX-hPURW9d70KeWSKO-mg@mail.gmail.com>
+References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com> <1487193038-3490-3-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170216172128.GS27312@n2100.armlinux.org.uk>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brad Mouring <brad.mouring@ni.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Richard Cochran <rcochran@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487193038-3490-3-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, February 16, 2017, Russell King wrote:
-> Chris, can you put all three in the patch system, preferably with Arnd's
-> ack for the last two please?
+Hi Matthew,
 
-Yes, I will do that now.
-Thank you.
+On Wed, Feb 15, 2017 at 1:10 PM,  <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
 
+> +static int alt_pr_fpga_write_complete(struct fpga_manager *mgr,
+> +                                     struct fpga_image_info *info)
+> +{
+> +       u32 i;
+> +
+> +       for (i = 0; i < info->config_complete_timeout_us; i++) {
+> +               switch (alt_pr_fpga_state(mgr)) {
+> +               case FPGA_MGR_STATE_WRITE_ERR:
+> +                       return -EIO;
+> +
+> +               case FPGA_MGR_STATE_OPERATING:
+> +                       dev_info(&mgr->dev,
+> +                                "successful partial reconfiguration\n");
+> +                       return 0;
+> +
+> +               default:
+> +                       break;
+> +               }
+> +               udelay(1);
 
-Chris
+Does this need to be a udelay? would a usleep_range() do maybe?
+
+Could we maybe pull the timeout part into the framework if all drivers are doing
+is to wait / poll for the state to be a certain value?
+
+Thanks,
+
+Moritz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
