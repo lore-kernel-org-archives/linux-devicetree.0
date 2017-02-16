@@ -1,78 +1,70 @@
-From: matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH 2/4] fpga pr ip: Core driver support for Altera Partial
- Reconfiguration IP.
-Date: Thu, 16 Feb 2017 14:47:07 -0800 (PST)
-Message-ID: <alpine.DEB.2.20.1702161427410.2932@mgerlach-VirtualBox>
-References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com> <1487193038-3490-3-git-send-email-matthew.gerlach@linux.intel.com> <CAAtXAHd_uk=9A4H=vjdd9VTiwHo5_zX-hPURW9d70KeWSKO-mg@mail.gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v4 00/36] i.MX Media Driver
+Date: Thu, 16 Feb 2017 22:57:42 +0000
+Message-ID: <20170216225742.GB21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170216222006.GA21222@n2100.armlinux.org.uk>
+ <923326d6-43fe-7328-d959-14fd341e47ae@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHd_uk=9A4H=vjdd9VTiwHo5_zX-hPURW9d70KeWSKO-mg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Alan Tull <atull@opensource.altera.com>, linux-fpga@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <923326d6-43fe-7328-d959-14fd341e47ae-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 16, 2017 at 02:27:41PM -0800, Steve Longerbeam wrote:
+> 
+> 
+> On 02/16/2017 02:20 PM, Russell King - ARM Linux wrote:
+> >On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
+> >>In version 4:
+> >
+> >With this version, I get:
+> >
+> >[28762.892053] imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000000
+> >[28762.899409] ipu1_csi0: pipeline_set_stream failed with -110
+> >
+> 
+> Right, in the imx219, on exit from s_power(), the clock and data lanes
+> must be placed in the LP-11 state. This has been done in the ov5640 and
+> tc358743 subdevs.
 
-Hi Moritz,
+The only way to do that is to enable streaming from the sensor, wait
+an initialisation time, and then disable streaming, and wait for the
+current line to finish.  There is _no_ other way to get the sensor to
+place its clock and data lines into LP-11 state.
 
-Thanks for the feedback.
+For that to happen, we need to program the sensor a bit more than we
+currently do at power on (to a minimal resolution, and setting up the
+PLLs), and introduce another 4ms on top of the 8ms or so that the
+runtime resume function already takes.
 
-On Thu, 16 Feb 2017, Moritz Fischer wrote:
+Looking at the SMIA driver, things are worse, and I suspect that it also
+will not work with the current setup - the SMIA spec shows that the CSI
+clock and data lines are tristated while the sensor is not streaming,
+which means they aren't held at a guaranteed LP-11 state, even if that
+driver momentarily enabled streaming.  Hence, Freescale's (or is it
+Synopsis') requirement may actually be difficult to satisfy.
 
-> Hi Matthew,
->
-> On Wed, Feb 15, 2017 at 1:10 PM,  <matthew.gerlach@linux.intel.com> wrote:
->
->> +static int alt_pr_fpga_write_complete(struct fpga_manager *mgr,
->> +                                     struct fpga_image_info *info)
->> +{
->> +       u32 i;
->> +
->> +       for (i = 0; i < info->config_complete_timeout_us; i++) {
->> +               switch (alt_pr_fpga_state(mgr)) {
->> +               case FPGA_MGR_STATE_WRITE_ERR:
->> +                       return -EIO;
->> +
->> +               case FPGA_MGR_STATE_OPERATING:
->> +                       dev_info(&mgr->dev,
->> +                                "successful partial reconfiguration\n");
->> +                       return 0;
->> +
->> +               default:
->> +                       break;
->> +               }
->> +               udelay(1);
->
-> Does this need to be a udelay? would a usleep_range() do maybe?
+However, I regard runtime PM broken with the current imx-capture setup.
+At the moment, power is controlled at the sensor by whether the media
+links are enabled.  So, if you have an enabled link coming off the
+sensor, the sensor will be powered up, whether you're using it or not.
 
-The actual timeout required is design specific.  The member,
-config_complete_timeout_us, is defined in microseconds, and my experience 
-is that a small number of microseconds (e.g. < 10) is usually plenty. 
-Other FPGAs and designs might be different.  My quick reading of kernel 
-timers says usleep_range() is good for 10 us - 20 ms.  In this driver, if 
-usleep_range(1) can put less pressure on the CPU and schedular at the cost 
-of little accuracy, I will be happy to switch, but at this time I don't 
-know if usleep_range() would be better or not.
+Given that the number of applications out there that know about the
+media subdevs is really quite small, this combination makes having
+runtime PM in sensor devices completely pointless - they can't sleep
+as long as they have an enabled link, which could be persistent over
+many days or weeks.
 
-
->
-> Could we maybe pull the timeout part into the framework if all drivers are doing
-> is to wait / poll for the state to be a certain value?
->
-
-I think it is safe to say that all variations of FPGAs need some amount of 
-time after the bitstream to be delivered before the FPGA is "ready".  If 
-that time is exceeded then the fpga programming has failed.  If all FPGA 
-variations are doing a poll for some amount of time, then it would be good 
-to move the polling up to the framework.  I think such a change would be 
-better in its own patch set.
-
-> Thanks,
->
-> Moritz
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
