@@ -1,67 +1,93 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] input: pwm-beeper: add feature to set volume level
-Date: Thu, 16 Feb 2017 15:44:01 -0600
-Message-ID: <5fc04e9d-7a92-2a34-e9cc-679106481e32@lechnology.com>
-References: <0e2dec4d-7550-9495-f12a-020391183304@exceet.de>
- <cover.1484838551.git.frieder.schrempf@exceet.de>
- <20170119213700.GC13542@dtor-ws>
- <43679b65-8710-4255-2006-8c47dd755497@lechnology.com>
- <fddaa3de-81a3-1078-65ac-29503419f1e6@exceet.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/3] power: reset: Add Renesas reset driver
+Date: Thu, 16 Feb 2017 14:20:15 -0800
+Message-ID: <20170216222014.GA29672@roeck-us.net>
+References: <20170216172320.10897-1-chris.brandt@renesas.com>
+ <20170216172320.10897-2-chris.brandt@renesas.com>
+ <20170216182644.GA17814@roeck-us.net>
+ <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <fddaa3de-81a3-1078-65ac-29503419f1e6-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/2017 03:15 PM, Frieder Schrempf wrote:
-> Hello David,
->
-> On 20.01.2017 20:11, David Lechner wrote:
->> On 01/19/2017 03:37 PM, Dmitry Torokhov wrote:
->>> On Thu, Jan 19, 2017 at 04:24:07PM +0100, Frieder Schrempf wrote:
->>>> Make the driver accept switching volume levels via sysfs.
->>>> This can be helpful if the beep/bell sound intensity needs
->>>> to be adapted to the environment of the device.
->>>>
->>>> The number of volume levels available and their values can
->>>> be specified via device tree (similar to pwm-backlight).
->>>>
->>>> The volume adjustment is done by changing the duty cycle of
->>>> the pwm signal.
->>>
->>> I wonder how this all will mesh up with beepers that have dedicated
->>> amplifiers (support is being added by David Lechner).
->>
->> This will work very well with it. I fact, it is a feature I would like
->> to have but I was not sure about a good way to implement it. Please Cc:
->> me on future revisions of this series and I will be glad to test it.
->
-> I have just send v4.
->>
->> One thing that would be nice would be for a more generic way to change
->> the volume from userspace. Having a sysfs attribute on the platform
->> device will work, but it requires very specific knowledge from any
->> userspace program that wants to control the volume. Would it be possible
->> to add an alsa mixer volume control or something like that?
->
-> An alsa mixer control for the pwm-beeper volume sounds nice, but
-> unfortunately I have no idea how one would implement this, or if this is
-> even possible.
->>
+On Thu, Feb 16, 2017 at 06:40:05PM +0000, Chris Brandt wrote:
+> On Thursday, February 16, 2017, Guenter Roeck wrote:
+> > On Thu, Feb 16, 2017 at 12:23:18PM -0500, Chris Brandt wrote:
+> > > Some Renesas SoCs do not have a reset register and the only way to do a SW
+> > > controlled reset is to use the watchdog timer. Additionally, since all the
+> > > WDT timeout options are so quick, a system reset is about the only thing
+> > > it's good for.
+> > >
+> > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com> Reviewed-by: Geert
+> > > Uytterhoeven <geert+renesas@glider.be>
+> > 
+> > Wondering - why not use the watchdog driver and the infrastructure provided
+> > by the watchdog core (ie the restart callback) instead ?
+> 
+> That was Geert's first suggestion, but then he said:
+> 
+> On Friday, February 10, 2017, Geert Uytterhoeven wrote:
+> > On Fri, Feb 10, 2017 at 3:59 PM, Chris Brandt <Chris.Brandt@renesas.com>
+> > wrote:
+> > > On Friday, February 10, 2017, Geert Uytterhoeven wrote:
+> > >> >  static const char *const r7s72100_boards_compat_dt[] __initconst = {
+> > >> >  "renesas,r7s72100", NULL, @@ -29,4 +58,5 @@
+> > >> >  DT_MACHINE_START(R7S72100_DT, "Generic R7S72100
+> > >> (Flattened Device Tree)")
+> > >> >         .init_early     = shmobile_init_delay, .init_late      =
+> > >> >         shmobile_init_late, .dt_compat      =
+> > >> >         r7s72100_boards_compat_dt, +       .restart        =
+> > >> >         r7s72100_restart, MACHINE_END
+> > >>
+> > >> Perhaps unsurprisingly, I'd recommend writing a watchdog driver instead.
+> > >> drivers/watchdog/renesas_wdt.c (currently supporting R-Car Gen3 only) may
+> > >> serve as an example.
+> > >
+> > > Why do you guys always make things more difficult for me... ;)
+> > >
+> > > To be clear, you are recommending I make a WDT timer driver (and not use
+> > > .restart) and that will reset the system?
+> > >
+> > > Or, make a WDT driver just so I can steal the base address?
+> > 
+> > I meant a WDT timer driver. If the watchdog driver provides a .restart
+> > callback, it will be used for system reset (hmm, renesas_wdt.c no longer has
+> > the .restart callback, as per arm64 "system reset must be implemented using
+> > PSCI"-policy).
+> 
 
+Hmm, ok. Guess I don't have to understand that you can not use the watchdog
+driver because of the above, but implementing exactly the same functionality
+in a separate driver is ok.
 
-I know it is possible because I have done it. ;-)
+[ I am sure I am missing something here, so just ignore what I am saying ]
 
-https://github.com/ev3dev/lego-linux-drivers/blob/master/evb/evb_sound.c
+> 
+> 
+> > > v2: * changed DT bindings from 'wdt-reset' to 'rza-wdt' * changed hard
+> > > coded register values to defines * added msleep to while(1) loop
+> > 
+> > Sure you can sleep here ?
+> 
+> As per Geert's review:
+> 
+> On Wednesday, February 15, 2017, Geert Uytterhoeven wrote:
+> > > + +       /* Wait for WDT overflow */ +       while (1) +               ;
+> > 
+> > This burns CPU, and thus power, albeit for a very short time.  Perhaps add
+> > an msleep() to the loop body?
+> 
+> Note that you only have 7.7us before the restart occurs, so probably not much
+> sleeping will be going on.
+> 
+Let me rephrase my question. Is it guaranteed that you _can_ sleep in this
+function, or in other words that it is guaranteed that interrupts are enabled ?
 
-The driver in the link above does PCM playback using PWM. But, it also 
-included an input device similar to pwm-beeper and it includes an ALSA 
-volume control specifically for the beeper.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Guenter
