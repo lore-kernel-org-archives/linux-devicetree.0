@@ -1,34 +1,97 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/2] media: dt-bindings: extend the vpif bindings
-Date: Thu, 16 Feb 2017 19:03:55 +0100
-Message-ID: <1487268237-4240-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 2/2] media: dt-bindings: vpif: extend the example with an output port
+Date: Thu, 16 Feb 2017 19:03:57 +0100
+Message-ID: <1487268237-4240-3-git-send-email-bgolaszewski@baylibre.com>
+References: <1487268237-4240-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487268237-4240-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The first patch just fixes a couple whitespace errors in the vpif
-bindings.
+This makes the example more or less correspond with the da850-evm
+hardware setup.
 
-The second extends the example with an output port since we want
-to support vpif display too.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../devicetree/bindings/media/ti,da850-vpif.txt    | 36 +++++++++++++++++-----
+ 1 file changed, 29 insertions(+), 7 deletions(-)
 
-These patches were initially a part of a larger series. Resending
-separately with requested fixes i.e. removed the @0 from endpoint
-and unnecessary reg property.
-
-Bartosz Golaszewski (2):
-  media: dt-bindings: vpif: fix whitespace errors
-  media: dt-bindings: vpif: extend the example with an output port
-
- .../devicetree/bindings/media/ti,da850-vpif.txt    | 46 ++++++++++++++++------
- 1 file changed, 34 insertions(+), 12 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+index 9c7510b..d6f93a1 100644
+--- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
++++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+@@ -16,7 +16,7 @@ Required properties:
+ Video Capture:
+ 
+ VPIF has a 16-bit parallel bus input, supporting 2 8-bit channels or a
+-single 16-bit channel.  It should contain at least one port child node
++single 16-bit channel. It should contain one or two port child nodes
+ with child 'endpoint' node. Please refer to the bindings defined in
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
+@@ -28,19 +28,26 @@ I2C-connected TVP5147 decoder:
+ 		reg = <0x217000 0x1000>;
+ 		interrupts = <92>;
+ 
+-		port {
+-			vpif_ch0: endpoint@0 {
++		port@0 {
++			vpif_input_ch0: endpoint@0 {
+ 				reg = <0>;
+ 				bus-width = <8>;
+-				remote-endpoint = <&composite>;
++				remote-endpoint = <&composite_in>;
+ 			};
+ 
+-			vpif_ch1: endpoint@1 {
++			vpif_input_ch1: endpoint@1 {
+ 				reg = <1>;
+ 				bus-width = <8>;
+ 				data-shift = <8>;
+ 			};
+ 		};
++
++		port@1 {
++			vpif_output_ch0: endpoint {
++				bus-width = <8>;
++				remote-endpoint = <&composite_out>;
++			};
++		};
+ 	};
+ 
+ [ ... ]
+@@ -53,13 +60,28 @@ I2C-connected TVP5147 decoder:
+ 		status = "okay";
+ 
+ 		port {
+-			composite: endpoint {
++			composite_in: endpoint {
+ 				hsync-active = <1>;
+ 				vsync-active = <1>;
+ 				pclk-sample = <0>;
+ 
+ 				/* VPIF channel 0 (lower 8-bits) */
+-				remote-endpoint = <&vpif_ch0>;
++				remote-endpoint = <&vpif_input_ch0>;
++				bus-width = <8>;
++			};
++		};
++	};
++
++	adv7343@2a {
++		compatible = "adi,adv7343";
++		reg = <0x2a>;
++
++		port {
++			composite_out: endpoint {
++				adi,dac-enable = <1 1 1>;
++				adi,sd-dac-enable = <1>;
++
++				remote-endpoint = <&vpif_output_ch0>;
+ 				bus-width = <8>;
+ 			};
+ 		};
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
