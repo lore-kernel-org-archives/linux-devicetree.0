@@ -1,106 +1,59 @@
-From: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm64: dts: Add basic DT to support Spreadtrum's
- SP9860G
-Date: Thu, 16 Feb 2017 15:57:14 +0800
-Message-ID: <20170216075713.GA8569@spreadtrum.com>
-References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487063952-7113-2-git-send-email-chunyan.zhang@spreadtrum.com>
- <20170214155743.GG23718@leverpostej>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 30/37] dt-bindings: PCI: dra7xx: Add dt bindings to enable
+ legacy mode
+Date: Thu, 16 Feb 2017 14:03:57 +0530
+Message-ID: <58A563F5.5040504@ti.com>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-31-git-send-email-kishon@ti.com>
+ <20170118214603.qnewy3sm6sgw7lbg@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170214155743.GG23718@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nd-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170118214603.qnewy3sm6sgw7lbg@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 二,  2月 14, 2017 at 03:57:43下午 +0000, Mark Rutland wrote:
-> Hi,
-> 
-> On Tue, Feb 14, 2017 at 05:19:08PM +0800, Chunyan Zhang wrote:
-> 
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>;
-> > +		clock-frequency = <26000000>;
-> > +	};
-> 
-> Your FW should program CNTFRQ on all CPUs, and this clock-frequency
-> property should not be necessary. Please remove it.
->
+Hi,
 
-Will remove it.
- 
-> > +
-> > +	pmu {
-> > +		compatible = "arm,armv8-pmuv3";
+On Thursday 19 January 2017 03:16 AM, Rob Herring wrote:
+> On Thu, Jan 12, 2017 at 03:56:19PM +0530, Kishon Vijay Abraham I wrote:
+>> Update device tree binding documentation of TI's dra7xx PCI
+>> controller to include property for enabling legacy mode.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/ti-pci.txt |    4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> index 62f5f59..ed85e8e 100644
+>> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+>> @@ -39,6 +39,10 @@ DEVICE MODE
+>>   - interrupts : one interrupt entries must be specified for main interrupt.
+>>   - num-ib-windows : number of inbound address translation windows
+>>   - num-ob-windows : number of outbound address translation windows
+>> + - syscon-legacy-mode: phandle to the syscon dt node. The 1st argument should
+>> +		       contain the register offset within syscon and the 2nd
+>> +		       argument should contain the bit field for setting the
+>> +		       legacy mode
 > 
-> Please list "arm,cortex-a53-pmu" first.
-> 
-> > +		interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
-> > +				<GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-> > +	};
-> 
-> As you are using SPIs, please add an interrupt-affinity property, per
-> Documentation/devicetree/bindings/arm/pmu.txt.
+> What's legacy mode?
 
-Added, would appear in the next revision.
+It's the name of the bit-field defined in TRM used to add workaround for errata
+id i870 (See [PATCH 29/37] PCI: dwc: dra7xx: Workaround for errata id i870 of
+this series). I'm not sure what it does internally.
 
-> 
-> > diff --git a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-> > new file mode 100644
-> > index 0000000..59390fc
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-> > @@ -0,0 +1,58 @@
-> > +/*
-> > + * Spreadtrum SP9860g board DTS file
-> > + *
-> > + * Copyright (C) 2017, Spreadtrum Communications Inc.
-> > + *
-> > + * This file is licensed under a dual GPLv2 or X11 license.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sc9860.dtsi"
-> > +
-> > +/ {
-> > +	model = "Spreadtrum SP9860G 3GFHD Board";
-> > +
-> > +	compatible = "sprd,sc9860", "sprd,sp9860g-1h10";
-> > +
-> > +	sprd,sc-id = <9860 1 0x20000>;
-> 
-> What is this? I can't see any documentation or user of this property in
-> mainline.
-> 
-
-I will remove this property in the next iteration, actually this is for Spreadtrum's dtb tools only, I just forgot to remove it before sending this patch out.
-
-Thanks,
-Chunyan
-
-> 
-> Thanks,
-> Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
