@@ -1,68 +1,45 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Thu, 16 Feb 2017 21:02:32 +0530
-Message-ID: <CABb+yY0jCGqnrMLkkTNoEmLX4jDstWh7-UYhDyKjV-gFOnxpsg@mail.gmail.com>
-References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
- <1483499169-16329-3-git-send-email-hs.liao@mediatek.com> <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
- <1485419833.990.1.camel@mtksdaap41> <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
- <1486359476.11424.33.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486359476.11424.33.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Horng-Shyang Liao <hs.liao@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 0/3] ARM: l2c: add l2c support for RZ/A1
+Date: Thu, 16 Feb 2017 10:37:23 -0500
+Message-ID: <20170216153726.22919-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Brad Mouring <brad.mouring@ni.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Richard Cochran <rcochran@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 6, 2017 at 11:07 AM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
-> Hi Jassi,
->
-> On Wed, 2017-02-01 at 10:52 +0530, Jassi Brar wrote:
->> On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
->> > Hi Jassi,
->> >
->> > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
->> >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao@mediatek.com> wrote:
->> >>
->> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
->> >> > new file mode 100644
->> >> > index 0000000..747bcd3
->> >> > --- /dev/null
->> >> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
->> >>
->> >> ...
->> >>
->> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
->> >> > +{
->> >> > +       struct cmdq *cmdq;
->> >> > +       struct cmdq_task *task;
->> >> > +       unsigned long curr_pa, end_pa;
->> >> > +
->> >> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
->> >> > +
->> >> > +       /* Client should not flush new tasks if suspended. */
->> >> > +       WARN_ON(cmdq->suspended);
->> >> > +
->> >> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
->> >> > +       task->cmdq = cmdq;
->> >> > +       INIT_LIST_HEAD(&task->list_entry);
->> >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
->> >> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
->> >> >
->> >> You seem to parse the requests and responses, that should ideally be
->> >> done in client driver.
->> >> Also, we are here in atomic context, can you move it in client driver
->> >> (before the spin_lock)?
->> >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
->> >
->> > will do
->
-> I agree with moving dma_map_single out from spin_lock.
->
-> However, mailbox clients cannot map virtual memory to mailbox
-> controller's device for DMA.
->
-If DMA is a resource used by MBox to transfer data, then yes the
-mapping needs to be done in the Mbox controller driver. To map memory
-outside of spinlock, you could schedule a tasklet in send_data() ?
+The PL310 in the Renesas RZ/A1 SoC (R7S72100) does not have the sideband
+signals connected between the CPU and L2C. According the PL310 TRM,
+sideband signals are optional.
+
+If a PL310 is added to a system, but the sideband signals are not
+connected, some Cortex A9 optimizations cannot be used. In particular,
+enabling Full Line Zeros in the CA9 without sidebands connected will
+crash the system since the CA9 will expect the L2C to perform operations,
+yet the L2C never gets the commands.
+
+This series adds the option to not enable anything in the PL310 that
+uses sidebands, and then adds L2C support to the RZ/A1 DT.
+
+v3:
+* split "arm,pl310-no-sideband" into "arm,early-bresp-disable" and
+  "arm,full-line-zero-disable"
+
+v2:
+* Added "arm,pl310-no-sideband" to cache-l2x0.c instead of hacking in a
+  dummy l2c_write_sec function to keep FLZ from being enabled.
+
+
+Chris Brandt (3):
+  ARM: l2c: allow CA9 optimizations to be disabled
+  ARM: shmobile: r7s72100: Enable L2 cache
+  ARM: dts: r7s72100: add l2 cache
+
+ Documentation/devicetree/bindings/arm/l2c2x0.txt |  3 +++
+ arch/arm/boot/dts/r7s72100.dtsi                  | 11 +++++++++++
+ arch/arm/mach-shmobile/setup-r7s72100.c          |  2 ++
+ arch/arm/mm/cache-l2x0.c                         | 13 +++++++++++--
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+
+-- 
+2.10.1
