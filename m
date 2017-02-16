@@ -1,75 +1,40 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: Re: [PATCH v1 3/3] ASoC: zx-96p22: add zte's aud96p22
-	controller driver
-Date: Thu, 16 Feb 2017 11:09:36 +0800
-Message-ID: <CA+DQWkyi=OyW5yhJ9cvtVw0ZK8t8KV1oEvFWKAY+Cfac4SN29A@mail.gmail.com>
-References: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
- <1487156110-12840-3-git-send-email-baoyou.xie@linaro.org>
- <20170215112425.GC30007@localhost.localdomain>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [PATCH 1/4] Documentation: bindings: add uphy-dp-sel for Rockchip
+ USB Type-C PHY
+Date: Thu, 16 Feb 2017 11:14:10 +0800
+Message-ID: <58A51902.5040508@rock-chips.com>
+References: <1486712654-15431-1-git-send-email-zyw@rock-chips.com>
+ <1486712654-15431-2-git-send-email-zyw@rock-chips.com>
+ <20170216022016.ubspejlr7no7ttgl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170215112425.GC30007@localhost.localdomain>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, tiwai@suse.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, bardliao@realtek.com, lars@metafoo.de, Axel Lin <axel.lin@ingics.com>, Paul.Handrigan@cirrus.com, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, anish kumar <yesanishhere@gmail.com>, "xie.baoyou" <xie.baoyou@zte.com.cn>, nh6z@nh6z.net, Rob Herring <robh+dt@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, oder_chiou@realtek.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, petr@barix.com, broonie@kernel.org, Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170216022016.ubspejlr7no7ttgl@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kishon@ti.com, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, groeck@chromium.org, Tomasz Figa <tfiga@chromium.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 February 2017 at 19:24, Charles Keepax <
-ckeepax@opensource.wolfsonmicro.com> wrote:
-
-> On Wed, Feb 15, 2017 at 06:55:10PM +0800, Baoyou Xie wrote:
-> > This patch adds aud96p22 controller driver for zte's SoC family.
-> >
-> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> > ---
-> <snip>
-> > +static int zx_aud96p22_i2c_write(struct i2c_client *i2c_client,
-> > +                              const void *data, size_t count)
-> > +{
-> > +     int xfer;
-> > +
-> > +     xfer = i2c_master_send(i2c_client, data, count);
-> > +     if (xfer == count)
-> > +             return 0;
-> > +     else if (xfer < 0)
-> > +             return xfer;
-> > +     else
-> > +             return -EIO;
-> > +}
-> > +
-> > +static int zx_aud96p22_i2c_read(struct i2c_client *i2c_client,
-> > +                             unsigned char addr)
-> > +{
-> > +     int xfer;
-> > +
-> > +     xfer = i2c_smbus_read_word_data(i2c_client, addr);
-> > +     if (xfer < 0)
-> > +             dev_warn(&i2c_client->dev, "transfer error %d\n", xfer);
-> > +
-> > +     return xfer;
-> > +}
-> > +
->
-> Is there any reason this isn't using regmap? It looks like it
-> should be, have a look at any of the other mainline CODECs for an
-> example.
->
->
-Hi, Charles:
-
-oh, I understood what you said. Please wait for my next version.
-
-
-Thanks,
-> Charles
->
+SGkgUm9iCgpPbiAwMi8xNi8yMDE3IDEwOjIwIEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBG
+cmksIEZlYiAxMCwgMjAxNyBhdCAwMzo0NDoxMVBNICswODAwLCBDaHJpcyBaaG9uZyB3cm90ZToK
+Pj4gcm9ja2NoaXAsdXBoeS1kcC1zZWwgaXMgdGhlIHJlZ2lzdGVyIG9mIHR5cGUtYyBwaHkgZW5h
+YmxlIERQIGZ1bmN0aW9uLgo+ICJkdC1iaW5kaW5nczogcGh5OiIgaXMgdGhlIHByZWZlcnJlZCBz
+dWJqZWN0IHByZWZpeC4KT0ssIEkgd2lsbCBjaGFuZ2UgdGhlIGhlYWRlciBuZXh0IHZlcnNpb24u
+CmR0LWJpbmRpbmdzOiBwaHk6IGFkZCB1cGh5LWRwLXNlbCBmb3IgUm9ja2NoaXAgVVNCIFR5cGUt
+QyBQSFkuCgo+Cj4+IFNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5j
+b20+Cj4+IC0tLQo+Pgo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkv
+cGh5LXJvY2tjaGlwLXR5cGVjLnR4dCB8IDUgKysrKysKPj4gICAxIGZpbGUgY2hhbmdlZCwgNSBp
+bnNlcnRpb25zKCspCj4gT3RoZXJ3aXNlLAo+Cj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+Cj4KPgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
