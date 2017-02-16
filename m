@@ -1,31 +1,115 @@
-From: Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>
-Subject: Re: [PATCH 03/21] net-next: stmmac: add optional setup function
-Date: Thu, 16 Feb 2017 21:38:33 +0100
-Message-ID: <87mvdlg9bq.fsf@dell.be.48ers.dk>
-References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
-	<20170216124859.14346-4-clabbe.montjoie@gmail.com>
-Reply-To: jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+Subject: Re: [PATCH v3 3/3] input: pwm-beeper: add devicetree bindings to set
+ volume levels
+Date: Thu, 16 Feb 2017 21:40:05 +0100
+Message-ID: <4b9aeb6f-185c-5661-62d0-1466d8c9a24c@exceet.de>
+References: <cover.1484838551.git.frieder.schrempf@exceet.de>
+ <2e483f697e1cd37b56c596b3979ccf1484c8be42.1484838551.git.frieder.schrempf@exceet.de>
+ <20170119213049.GB13542@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDKONJFYSUEBBTE3TDCQKGQEVG63W3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: Peter Korsgaard <jacmet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <20170216124859.14346-4-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Corentin
-	Labbe's message of "Thu, 16 Feb 2017 13:48:41 +0100")
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170119213049.GB13542@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: robh@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, luis@debethencourt.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Corentin" == Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+On 19.01.2017 22:30, Dmitry Torokhov wrote:
+> On Thu, Jan 19, 2017 at 04:24:10PM +0100, Frieder Schrempf wrote:
+>> This patch adds the devicetree bindings to set the volume levels
+>> and the default volume level.
+>>
+>> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
+>> ---
+>> Changes in v3:
+>>  - none
+>>
+>>  drivers/input/misc/pwm-beeper.c | 49 ++++++++++++++++++++++++++++++++++++++---
+>>  1 file changed, 46 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+>> index 3ed21da..a7f9d70 100644
+>> --- a/drivers/input/misc/pwm-beeper.c
+>> +++ b/drivers/input/misc/pwm-beeper.c
+>> @@ -32,7 +32,7 @@ struct pwm_beeper {
+>>  	struct work_struct work;
+>>  	unsigned long period;
+>>  	unsigned int volume;
+>> -	unsigned int volume_levels[] = {0, 8, 20, 40, 500};
+>> +	unsigned int *volume_levels;
+>>  	unsigned int max_volume_level;
+>>  };
+>>
+>> @@ -161,8 +161,11 @@ static void pwm_beeper_close(struct input_dev *input)
+>>  static int pwm_beeper_probe(struct platform_device *pdev)
+>>  {
+>>  	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
+>> +	struct device_node *np = pdev->dev.of_node;
+>>  	struct pwm_beeper *beeper;
+>> -	int error;
+>> +	struct property *prop;
+>> +	int error, length;
+>> +	u32 value;
+>>
+>>  	beeper = kzalloc(sizeof(*beeper), GFP_KERNEL);
+>>  	if (!beeper)
+>> @@ -188,7 +191,47 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+>>
+>>  	INIT_WORK(&beeper->work, pwm_beeper_work);
+>>
+>> -	beeper->max_volume_level = ARRAY_SIZE(beeper->volume_levels) - 1;
+>> +	/* determine the number of volume levels */
+>> +	prop = of_find_property(np, "volume-levels", &length);
+>
+> Please use generic device properties, not OF-specific ones.
 
- > Instead of ading more ifthen login for adding a new mac_device_info
-
-s/login/logic/
-
--- 
-Bye, Peter Korsgaard
+Ok, I will change this in v4.
+>
+>> +	if (!prop) {
+>> +		dev_dbg(&pdev->dev, "no volume levels specified, using max volume\n");
+>> +		beeper->max_volume_level = 1;
+>> +	} else
+>> +		beeper->max_volume_level = length / sizeof(u32);
+>> +
+>> +	/* read volume levels from DT property */
+>> +	if (beeper->max_volume_level > 0) {
+>> +		size_t size = sizeof(*beeper->volume_levels) *
+>> +			beeper->max_volume_level;
+>> +
+>> +		beeper->volume_levels = devm_kzalloc(&(pdev->dev), size,
+>> +			GFP_KERNEL);
+>> +		if (!beeper->volume_levels)
+>> +			return -ENOMEM;
+>> +
+>> +		if (prop) {
+>> +			error = of_property_read_u32_array(np, "volume-levels",
+>> +						beeper->volume_levels,
+>> +						beeper->max_volume_level);
+>> +
+>> +			if (error < 0)
+>> +				return error;
+>> +
+>> +			error = of_property_read_u32(np, "default-volume-level",
+>> +						   &value);
+>> +
+>> +			if (error < 0) {
+>> +				dev_dbg(&pdev->dev, "no default volume specified, using max volume\n");
+>> +				value = beeper->max_volume_level - 1;
+>> +			}
+>> +		} else {
+>> +			beeper->volume_levels[0] = 500;
+>> +			value = 0;
+>> +		}
+>> +
+>> +		beeper->volume = value;
+>> +		beeper->max_volume_level--;
+>> +	}
+>>
+>>  	beeper->input = input_allocate_device();
+>>  	if (!beeper->input) {
+>> --
+>> 2.7.4
+>>
+>
