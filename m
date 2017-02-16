@@ -1,65 +1,70 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 01/36] [media] dt-bindings: Add bindings for i.MX media
- driver
-Date: Thu, 16 Feb 2017 11:20:00 -0800
-Message-ID: <5349304b-1994-f207-e1bc-974999d1acfd@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-2-git-send-email-steve_longerbeam@mentor.com>
- <1487246051.2377.41.camel@pengutronix.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v2 4/7] ASoC: dmaengine_pcm: add copy support
+Date: Thu, 16 Feb 2017 20:14:27 +0000
+Message-ID: <20170216201427.z7ixcwbuyvb7ajgn@sirena.org.uk>
+References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
+ <1487003909-11710-5-git-send-email-arnaud.pouliquen@st.com>
+ <20170214171630.qgkyoymxyqjiiblh@sirena.org.uk>
+ <40633f7c-a2ac-1658-cc9d-b30eaff8a95a@st.com>
+ <20170215145341.sntwx7oqyqmw6azv@sirena.org.uk>
+ <338f8db7-2077-626f-986b-b4e3df40469c@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7tmmzmmcxmah5mqc"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487246051.2377.41.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <338f8db7-2077-626f-986b-b4e3df40469c-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org" <kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Olivier MOYSAN <olivier.moysan-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--7tmmzmmcxmah5mqc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 02/16/2017 03:54 AM, Philipp Zabel wrote:
-> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
->> Add bindings documentation for the i.MX media driver.
->>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/media/imx.txt | 66 +++++++++++++++++++++++++
->>  1 file changed, 66 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
->> new file mode 100644
->> index 0000000..fd5af50
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/imx.txt
->> @@ -0,0 +1,66 @@
->> +Freescale i.MX Media Video Device
->> +=================================
->> +
->> +Video Media Controller node
->> +---------------------------
->> +
->> +This is the media controller node for video capture support. It is a
->> +virtual device that lists the camera serial interface nodes that the
->> +media device will control.
->> +
->> +Required properties:
->> +- compatible : "fsl,imx-capture-subsystem";
->> +- ports      : Should contain a list of phandles pointing to camera
->> +		sensor interface ports of IPU devices
->> +
->> +example:
->> +
->> +capture-subsystem {
->> +	compatible = "fsl,capture-subsystem";
->
-> "fsl,imx-capture-subsystem"
+On Wed, Feb 15, 2017 at 04:46:44PM +0100, Arnaud Pouliquen wrote:
+> On 02/15/2017 03:53 PM, Mark Brown wrote:
+> > On Wed, Feb 15, 2017 at 02:59:18PM +0100, Arnaud Pouliquen wrote:
 
+> > No, copy() is an alternative to doing DMA rather than something
+> > that works with DMA.  If you want to have some sort of post
+> > processing operation it shoudn't be called copy().  It's probably
+> > worth considering just making a new format and letting userspace
+> > convert things here.
 
-Fixed.
+> You mean using a plug-in alsa to do it? this seems not possible with
+> tiny-alsa...
+> Without a plug-in, driver will not be compatible with standard audio
+> application.
 
-Steve
+Right.  But if you're using tinyalsa you've got some open coded system
+specific stuff anyway!
+
+> Do you think this would be reasonable if i implement something similar
+> in my driver, without using the soc generic DMA engine?
+
+Probably.  It might even be possible to fit it elegently into the
+generic dmaengine code, just don't say it's a copy() operation since
+that's a specific thing in ALSA.
+
+--7tmmzmmcxmah5mqc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlimCCIACgkQJNaLcl1U
+h9Cklgf6A8OM/wvcw9Pgv95z65Oh1spkmE78Oc9GpTsn19JugWb9tbmN4sj7XoU0
+2dQgGD/SdYjwd9gnt1S8z7BzRg8xQV8uVkl7tgeJY2hlIxdrSOYsI0zJOfABuC3M
+It+6DdGnpYTCyBCsa388Uhtyc02XI5Wnhg8MFevU/Lqq4kaNqdsA4451ufbejXdV
+NB5JDmFv2nxCS2NYXt/D/eazCZqEJVHUyOW9+3nplJcekrKhRGiAjd68p640kWp3
+OCU0wbUb84G5/M00pl4DzlsLrS1AgztfDP1CJrtJvlsheNzPPUDaqIhlBQVGn/aM
+lxCG+tfZ47koyc0Iz7azf3qxJMfILw==
+=c56f
+-----END PGP SIGNATURE-----
+
+--7tmmzmmcxmah5mqc--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
