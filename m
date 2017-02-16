@@ -1,36 +1,46 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 37/37] ARM: dts: DRA7: Add pcie1 dt node for EP mode
-Date: Thu, 16 Feb 2017 15:30:57 +0530
-Message-ID: <58A57859.5090308@ti.com>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-38-git-send-email-kishon@ti.com>
- <20170120183000.GF7403@atomide.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: How to get related device pointer via DT?
+Date: Thu, 16 Feb 2017 10:26:47 +0000
+Message-ID: <HK2PR06MB0548854946E440AAEFABD526D85A0@HK2PR06MB0548.apcprd06.prod.outlook.com>
+References: <HK2PR06MB054824526D2975ADE8EA0405D85B0@HK2PR06MB0548.apcprd06.prod.outlook.com>
+ <20170215100136.GB26227@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120183000.GF7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170215100136.GB26227@b29397-desktop>
+Content-Language: ja-JP
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Hi Peter,
 
-On Saturday 21 January 2017 12:00 AM, Tony Lindgren wrote:
-> * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170112 02:34]:
->> Add pcie1 dt node in order for the controller to operate in
->> endpoint mode. However since none of the dra7 based boards have
->> slots configured to operate in endpoint mode, keep EP mode
->> disabled.
-> 
-> Can this be merged separately later on without breaking anything?
+> From: Peter Chen
+> Sent: Wednesday, February 15, 2017 7:02 PM
+>=20
+> On Wed, Feb 15, 2017 at 02:21:55AM +0000, Yoshihiro Shimoda wrote:
+< snip >
+> > If my idea A), ehci0 will have companion =3D <&ohci>;
+> > If my idea B), no need to add any property.
+> >
+> > What do you think?
+> > Anyway, I will start to study DT programming :)
+> >
+>=20
+> From my point, idea A is better. It seems you have similar idea when you
+> tried Dual-role framework before. [1]
+>=20
+> [1] https://patchwork.kernel.org/patch/9169745/
 
-yes, I'll resend this once rest of the EP support gets in.
+Thank you for the comment!
+Yes, I remember this. So, I will make patches using idea A.
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Yoshihiro Shimoda
+
+> --
+>=20
+> Best Regards,
+> Peter Chen
