@@ -1,156 +1,205 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 36/36] media: imx: propagate sink pad formats to source
- pads
-Date: Thu, 16 Feb 2017 10:19:25 -0800
-Message-ID: <5512bed2-375b-ae31-f210-3fff4c0417c7@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-37-git-send-email-steve_longerbeam@mentor.com>
- <1487244568.2377.36.camel@pengutronix.de>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] power: reset: Add Renesas reset driver
+Date: Thu, 16 Feb 2017 10:26:44 -0800
+Message-ID: <20170216182644.GA17814@roeck-us.net>
+References: <20170216172320.10897-1-chris.brandt@renesas.com>
+ <20170216172320.10897-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1487244568.2377.36.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170216172320.10897-2-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 16, 2017 at 12:23:18PM -0500, Chris Brandt wrote:
+> Some Renesas SoCs do not have a reset register and the only way to do a SW
+> controlled reset is to use the watchdog timer. Additionally, since all the
+> WDT timeout options are so quick, a system reset is about the only thing
+> it's good for.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
+Wondering - why not use the watchdog driver and the infrastructure
+provided by the watchdog core (ie the restart callback) instead ?
 
-On 02/16/2017 03:29 AM, Philipp Zabel wrote:
-> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
-> [...]
->> diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
->> index dd9d499..c43f85f 100644
->> --- a/drivers/staging/media/imx/imx-ic-prpencvf.c
->> +++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
->> @@ -806,16 +806,22 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
->>  	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
->>  		cfg->try_fmt = sdformat->format;
->>  	} else {
->> -		priv->format_mbus[sdformat->pad] = sdformat->format;
->> +		struct v4l2_mbus_framefmt *f =
->> +			&priv->format_mbus[sdformat->pad];
->> +		struct v4l2_mbus_framefmt *outf =
->> +			&priv->format_mbus[PRPENCVF_SRC_PAD];
->> +
->> +		*f = sdformat->format;
->>  		priv->cc[sdformat->pad] = cc;
->> -		if (sdformat->pad == PRPENCVF_SRC_PAD) {
->> -			/*
->> -			 * update the capture device format if this is
->> -			 * the IDMAC output pad
->> -			 */
->> -			imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix,
->> -						      &sdformat->format, cc);
->> +
->> +		/* propagate format to source pad */
->> +		if (sdformat->pad == PRPENCVF_SINK_PAD) {
->> +			outf->width = f->width;
->> +			outf->height = f->height;
->
-> What about media bus format, field, and colorimetry?
+> ---
+> v2:
+> * changed DT bindings from 'wdt-reset' to 'rza-wdt'
+> * changed hard coded register values to defines
+> * added msleep to while(1) loop
 
-Right, I need to propagate a default media bus format and field
-that works.
+Sure you can sleep here ?
 
-As for colorimtery, I did see the work you are doing in your
-branch, but was not sure if you were finished with that support.
-Can you send me a patch?
+Guenter
 
->
->>  		}
->> +
->> +		/* update the capture device format from output pad */
->> +		imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix, outf, cc);
->>  	}
->>
->>  	return 0;
->> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
->> index 3e6b607..9d9ec03 100644
->> --- a/drivers/staging/media/imx/imx-media-csi.c
->> +++ b/drivers/staging/media/imx/imx-media-csi.c
->> @@ -1161,19 +1161,27 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
->>  	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
->>  		cfg->try_fmt = sdformat->format;
->>  	} else {
->> +		struct v4l2_mbus_framefmt *f_direct, *f_idmac;
->> +
->>  		priv->format_mbus[sdformat->pad] = sdformat->format;
->>  		priv->cc[sdformat->pad] = cc;
->> -		/* Reset the crop window if this is the input pad */
->> -		if (sdformat->pad == CSI_SINK_PAD)
->> +
->> +		f_direct = &priv->format_mbus[CSI_SRC_PAD_DIRECT];
->> +		f_idmac = &priv->format_mbus[CSI_SRC_PAD_IDMAC];
->> +
->> +		if (sdformat->pad == CSI_SINK_PAD) {
->> +			/* reset the crop window */
->>  			priv->crop = crop;
->> -		else if (sdformat->pad == CSI_SRC_PAD_IDMAC) {
->> -			/*
->> -			 * update the capture device format if this is
->> -			 * the IDMAC output pad
->> -			 */
->> -			imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix,
->> -						      &sdformat->format, cc);
->> +
->> +			/* propagate format to source pads */
->> +			f_direct->width = crop.width;
->> +			f_direct->height = crop.height;
->> +			f_idmac->width = crop.width;
->> +			f_idmac->height = crop.height;
->
-> This is missing also media bus format, field and colorimetry
-> propagation.
-
-Yep, will add that.
-
-Steve
-
->
->>  		}
->> +
->> +		/* update the capture device format from IDMAC output pad */
->> +		imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix, f_idmac, cc);
->>  	}
->>
->>  	return 0;
->> diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
->> index 61e6017..55fb522 100644
->> --- a/drivers/staging/media/imx/imx-media-vdic.c
->> +++ b/drivers/staging/media/imx/imx-media-vdic.c
->> @@ -649,8 +649,21 @@ static int vdic_set_fmt(struct v4l2_subdev *sd,
->>  	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
->>  		cfg->try_fmt = sdformat->format;
->>  	} else {
->> -		priv->format_mbus[sdformat->pad] = sdformat->format;
->> +		struct v4l2_mbus_framefmt *f =
->> +			&priv->format_mbus[sdformat->pad];
->> +		struct v4l2_mbus_framefmt *outf =
->> +			&priv->format_mbus[VDIC_SRC_PAD_DIRECT];
->> +
->> +		*f = sdformat->format;
->>  		priv->cc[sdformat->pad] = cc;
->> +
->> +		/* propagate format to source pad */
->> +		if (sdformat->pad == VDIC_SINK_PAD_DIRECT ||
->> +		    sdformat->pad == VDIC_SINK_PAD_IDMAC) {
->> +			outf->width = f->width;
->> +			outf->height = f->height;
->> +			outf->field = V4L2_FIELD_NONE;
->
-> This is missing colorimetry, too.
->
-> regards
-> Philipp
->
+> * removed unnecessary #include files
+> * added Reviewed-by: Geert Uytterhoeven
+> ---
+>  drivers/power/reset/Kconfig         |   9 +++
+>  drivers/power/reset/Makefile        |   1 +
+>  drivers/power/reset/renesas-reset.c | 112 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 122 insertions(+)
+>  create mode 100644 drivers/power/reset/renesas-reset.c
+> 
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index b8caccc..e3100c9 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -130,6 +130,15 @@ config POWER_RESET_QNAP
+>  
+>  	  Say Y if you have a QNAP NAS.
+>  
+> +config POWER_RESET_RENESAS
+> +	tristate "Renesas WDT reset driver"
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Reboot support for Renesas SoCs with WDT reset.
+> +	  Some Renesas SoCs do not have a reset register and the only way
+> +	  to do a SW controlled reset is to use the watchdog timer.
+> +
+>  config POWER_RESET_RESTART
+>  	bool "Restart power-off driver"
+>  	help
+> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> index 11dae3b..a78a56c 100644
+> --- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+> @@ -13,6 +13,7 @@ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_PIIX4_POWEROFF) += piix4-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_LTC2952) += ltc2952-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
+> +obj-$(CONFIG_POWER_RESET_RENESAS) += renesas-reset.o
+>  obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_ST) += st-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_VERSATILE) += arm-versatile-reboot.o
+> diff --git a/drivers/power/reset/renesas-reset.c b/drivers/power/reset/renesas-reset.c
+> new file mode 100644
+> index 0000000..812cee0
+> --- /dev/null
+> +++ b/drivers/power/reset/renesas-reset.c
+> @@ -0,0 +1,112 @@
+> +/*
+> + * Renesas WDT Reset Driver
+> + *
+> + * Copyright (C) 2017 Renesas Electronics America, Inc.
+> + * Copyright (C) 2017 Chris Brandt
+> + *
+> + * This file is subject to the terms and conditions of the GNU General Public
+> + * License.  See the file "COPYING" in the main directory of this archive
+> + * for more details.
+> + *
+> + * based on rmobile-reset.c
+> + *
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/reboot.h>
+> +#include <linux/delay.h>
+> +
+> +/* Watchdog Timer Registers */
+> +#define WTCSR 0
+> +#define WTCSR_MAGIC 0xA500
+> +#define WTSCR_WT (1<<6)
+> +#define WTSCR_TME (1<<5)
+> +
+> +#define WTCNT 2
+> +#define WTCNT_MAGIC 0x5A00
+> +
+> +#define WRCSR 4
+> +#define WRCSR_MAGIC 0x5A00
+> +#define WRCSR_RSTE (1<<6)
+> +#define WRCSR_CLEAR_WOVF 0xA500 /* special value */
+> +
+> +static void __iomem *base;
+> +
+> +static int wdt_reset_handler(struct notifier_block *this,
+> +			     unsigned long mode, void *cmd)
+> +{
+> +	pr_debug("%s %lu\n", __func__, mode);
+> +
+> +	/* Dummy read (must read WRCSR:WOVF at least once before clearing) */
+> +	readb(base + WRCSR);
+> +
+> +	writew(WRCSR_CLEAR_WOVF, base + WRCSR);		/* Clear WOVF */
+> +	writew(WRCSR_MAGIC | WRCSR_RSTE, base + WRCSR);	/* Reset Enable */
+> +	writew(WTCNT_MAGIC, base + WTCNT);		/* Counter to 00 */
+> +
+> +	/* Start timer */
+> +	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME, base + WTCSR);
+> +
+> +	/* Wait for WDT overflow (reset) */
+> +	while (1)
+> +		msleep(1);
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block wdt_reset_nb = {
+> +	.notifier_call = wdt_reset_handler,
+> +	.priority = 192,
+> +};
+> +
+> +static int wdt_reset_probe(struct platform_device *pdev)
+> +{
+> +	int error;
+> +
+> +	base = of_iomap(pdev->dev.of_node, 0);
+> +	if (!base)
+> +		return -ENODEV;
+> +
+> +	error = register_restart_handler(&wdt_reset_nb);
+> +	if (error) {
+> +		dev_err(&pdev->dev,
+> +			"cannot register restart handler (err=%d)\n", error);
+> +		goto fail_unmap;
+> +	}
+> +
+> +	return 0;
+> +
+> +fail_unmap:
+> +	iounmap(base);
+> +	return error;
+> +}
+> +
+> +static int wdt_reset_remove(struct platform_device *pdev)
+> +{
+> +	unregister_restart_handler(&wdt_reset_nb);
+> +	iounmap(base);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id wdt_reset_of_match[] = {
+> +	{ .compatible = "renesas,rza-wdt", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, wdt_reset_of_match);
+> +
+> +static struct platform_driver wdt_reset_driver = {
+> +	.probe = wdt_reset_probe,
+> +	.remove = wdt_reset_remove,
+> +	.driver = {
+> +		.name = "wdt_reset",
+> +		.of_match_table = wdt_reset_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(wdt_reset_driver);
+> +
+> +MODULE_DESCRIPTION("Renesas WDT Reset Driver");
+> +MODULE_AUTHOR("Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.10.1
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
