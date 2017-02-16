@@ -1,59 +1,45 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 0/3] ARM: l2c: add l2c support for RZ/A1
-Date: Thu, 16 Feb 2017 17:21:28 +0000
-Message-ID: <20170216172128.GS27312@n2100.armlinux.org.uk>
-References: <20170216161742.29320-1-chris.brandt@renesas.com>
- <20170216164424.GR27312@n2100.armlinux.org.uk>
- <CAK8P3a1ri2o4An0svxSG4iSvwTkdpM5jiC=SzBq7mE6TpbdhKQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1ri2o4An0svxSG4iSvwTkdpM5jiC=SzBq7mE6TpbdhKQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Chris Brandt <chris.brandt@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brad Mouring <brad.mouring@ni.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Richard Cochran <rcochran@linutronix.de>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 0/3] power: reset: add reset for renesas r7s72100
+Date: Thu, 16 Feb 2017 12:23:17 -0500
+Message-ID: <20170216172320.10897-1-chris.brandt@renesas.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 05:57:53PM +0100, Arnd Bergmann wrote:
-> On Thu, Feb 16, 2017 at 5:44 PM, Russell King - ARM Linux
-> <linux@armlinux.org.uk> wrote:
-> > On Thu, Feb 16, 2017 at 11:17:39AM -0500, Chris Brandt wrote:
-> >> The PL310 in the Renesas RZ/A1 SoC (R7S72100) does not have the sideband
-> >> signals connected between the CPU and L2C. According the PL310 TRM,
-> >> sideband signals are optional.
-> >>
-> >> If a PL310 is added to a system, but the sideband signals are not
-> >> connected, some Cortex A9 optimizations cannot be used. In particular,
-> >> enabling Full Line Zeros in the CA9 without sidebands connected will
-> >> crash the system since the CA9 will expect the L2C to perform operations,
-> >> yet the L2C never gets the commands.
-> >>
-> >> This series adds the option to not enable anything in the PL310 that
-> >> uses sidebands, and then adds L2C support to the RZ/A1 DT.
-> >>
-> >> v4:
-> >> * changed l2x0_bresp_dis to l2x0_bresp_disable
-> >> * changed l2x0_flz_dis to l2x0_flz_disable
-> >
-> > Looks good, thanks.
-> >
-> > I'll want to merge patch 1, but I suspect the other two patches need
-> > to go through arm-soc, which will cause a problem due to being merged
-> > independently...  Arnd?
-> 
-> I just checked what we have queued up in next/dt for this platform,
-> and I'm fairly sure that there are no conflicts, so you can pick up all three
-> and add
-> 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+Some Renesas SoCs do not have a reset register and the only way to do a SW
+controlled reset is to use the watchdog timer.
 
-Chris, can you put all three in the patch system, preferably with
-Arnd's ack for the last two please?
+Additionally, since all the WDT timeout options are so quick, a system
+reset is about the only thing it's good for.
+For example, the longest WDT overflow you can get with a RZ/A1 (R7S72100)
+with its 8-bit wide counter is 125ms.
 
-Thanks.
+v2:
+* added to renesas-wdt.txt instead of creating a new file
+* changed "renesas,r7s72100-reset" to "renesas,r7s72100-wdt"
+* changed "renesas,wdt-reset" to "renesas,rza-wdt"
+* added "renesas,rza-wdt" as a fallback
+* added interupt property (even though it is not used)
+* added clocks property
+* changed hard coded register values to defines
+* added msleep to while(1) loop
+* removed unnecessary #include files
+* added Reviewed-by: Geert Uytterhoeven for renesas-reset.c
+
+Chris Brandt (3):
+  power: reset: Add Renesas reset driver
+  watchdog: renesas-wdt: add support for rza
+  ARM: dts: r7s72100: Add reset handler
+
+ .../devicetree/bindings/watchdog/renesas-wdt.txt   |   4 +-
+ arch/arm/boot/dts/r7s72100.dtsi                    |   7 ++
+ drivers/power/reset/Kconfig                        |   9 ++
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/renesas-reset.c                | 112 +++++++++++++++++++++
+ 5 files changed, 132 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/power/reset/renesas-reset.c
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.10.1
