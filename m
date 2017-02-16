@@ -1,60 +1,34 @@
-From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] Add support for Broadcom iProc mailbox controller
-Date: Thu, 16 Feb 2017 12:08:40 -0800
-Message-ID: <75e8060f-7e9e-8e7c-2eee-a5c9321f3d3f@broadcom.com>
-References: <1485463082-27067-1-git-send-email-jonathan.richardson@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485463082-27067-1-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: slemieux.tyco@gmail.com
+Subject: [RESEND PATCH 0/3] pwm: lpc32xx: switch driver to one phandle argument for PWM consumers
+Date: Thu, 16 Feb 2017 15:27:46 -0500
+Message-ID: <20170216202749.20653-1-slemieux.tyco@gmail.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, vz@mleia.com
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Pinging maintainer. Jassi, have you had a chance to look at this yet? Thanks.
+From: Sylvain Lemieux <slemieux@tycoint.com>
 
-On 17-01-26 12:37 PM, Jonathan Richardson wrote:
-> This patch set contains mailbox support for Broadcom iProc based SoC's. The
-> mailbox controller handles all communication with a Cortex-M0 MCU processor that
-> provides support for power, clock, and reset management. The mailbox controller
-> for Cygnus is enabled in DT.
->
-> Changes from v3:
->  - DT changes merged into one commit.
->
-> Changes from v2:
->  - Fixed binding to remove leading 0 (Rob's comment). Also added more detail as
->    suggested by Jassi.
->  - Added changelog to dt binding and enable dts commits.
->  - Changed year in copyright in bcm_iproc_mailbox.h.
->  - Changes to bcm-cygnus.dtsi were prematurely merged into the mainline after
->    Rob acked the DT changes but Jassi suggested changes to the mailbox driver.
->    The result was that the mailbox controller node and changes to the crmu gpio
->    driver to enable interrupt handling were incorrectly added to the dtsi. A
->    commit is included in this patchset to revert those changes. Enabling
->    interrupt handling in the the crmu gpio driver will be introduced when the
->    interrupt controller driver is added to provide mailbox interrupt support.
->
-> Jonathan Richardson (3):
->   dt-bindings: Document Broadcom iProc mailbox controller driver
->   mailbox: Add iProc mailbox controller driver
->   ARM: dts: Enable Broadcom iProc mailbox controller
->
->  .../bindings/mailbox/brcm,iproc-mailbox.txt        |  18 ++
->  arch/arm/boot/dts/bcm-cygnus.dtsi                  |   8 +-
->  drivers/mailbox/Kconfig                            |  10 ++
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/bcm-iproc-mailbox.c                | 199 +++++++++++++++++++++
->  include/linux/mailbox/bcm_iproc_mailbox.h          |  32 ++++
->  6 files changed, 262 insertions(+), 7 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
->  create mode 100644 drivers/mailbox/bcm-iproc-mailbox.c
->  create mode 100644 include/linux/mailbox/bcm_iproc_mailbox.h
->
+The change adds private of_xlate() function to process one argument given along with a PWM phandle. LPC32xx SoCs have two independent single channel PWM controllers, the argument is used as a description of PWM output frequency, see previous discussion here:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  http://www.spinics.net/lists/arm-kernel/msg534068.html
+
+The changes on actual board dts files are not needed at the moment, because all LPC32xx boards in upstream don't describe any PWM consumers.
+
+Please refer to the following URL to view the previous patch #1 review discussion:
+  http://www.spinics.net/lists/arm-kernel/msg549772.html
+
+The "Reviewed-by" and "Acked-by" from the original posting are added into this resend.
+
+Vladimir Zapolskiy (3):
+  dt: pwm: lpc32xx: add description of clocks and #pwm-cells properties
+  pwm: lpc32xx: switch driver to one phandle argument for PWM consumers
+  pwm: lpc32xx: remove handling of PWM channels
+
+ .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |  7 +++++
+ drivers/pwm/pwm-lpc32xx.c                          | 36 +++++++++++++++-------
+ 2 files changed, 32 insertions(+), 11 deletions(-)
+
+-- 
+2.11.0
