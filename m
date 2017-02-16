@@ -1,52 +1,77 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
- Driver
-Date: Thu, 16 Feb 2017 05:55:18 -0800
-Message-ID: <20170216135518.GA19423@kroah.com>
-References: <1486714767-25930-1-git-send-email-richard.leitner@skidata.com>
- <20170216023004.25dwzy7ppxdoasfz@rob-hp-laptop>
- <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH RFC 1/3] coresight: binding for coresight debug driver
+Date: Thu, 16 Feb 2017 21:55:36 +0800
+Message-ID: <20170216135536.GB544@leoy-linaro>
+References: <1486966298-16767-1-git-send-email-leo.yan@linaro.org>
+ <1486966298-16767-2-git-send-email-leo.yan@linaro.org>
+ <20170215200858.GA29730@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
+In-Reply-To: <20170215200858.GA29730@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Leitner <me@g0hl1n.net>
-Cc: Rob Herring <robh@kernel.org>, Richard Leitner <richard.leitner@skidata.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, dev@g0hl1n.net
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 07:36:48AM +0100, Richard Leitner wrote:
-> On 02/16/2017 03:30 AM, Rob Herring wrote:
-> > On Fri, Feb 10, 2017 at 09:19:27AM +0100, Richard Leitner wrote:
-> > > This patch adds a driver for configuration of the Microchip USB251xB/xBi
-> > > USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
-> > > configuration interface and two to four USB 2.0 downstream ports.
-> > > 
-> > > Furthermore add myself as a maintainer for this driver.
-> > > 
-> > > The datasheet can be found at the manufacturers website, see [1]. All
-> > > device-tree exposed configuration features have been tested on a i.MX6
-> > > platform with a USB2512B hub.
-> > > 
-> > > [1] http://ww1.microchip.com/downloads/en/DeviceDoc/00001692C.pdf
-> > > 
-> > > Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
-> > > ---
-> > > CHANGES v5:
+On Wed, Feb 15, 2017 at 01:08:58PM -0700, Mathieu Poirier wrote:
+> On Mon, Feb 13, 2017 at 02:11:36PM +0800, Leo Yan wrote:
+> > Adding compatible string for new coresight debug driver.
 > > 
-> > V5 and the first I see it?
 > 
-> Just double-checked it, you (robh+dt@kernel.org) were on CC since v1.
+> Hi Leo,
 > 
-> @greg-kh: I got the notification that v5 was already applied to your usb
-> tree. So how should I proceed here? Send a v6 or send a separate patch
-> fixing the dt issues mentioned by robh?
+> I agree with Mark, this will need a better description.
+> 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/coresight.txt | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> > index fcbae6a..3ff15fd 100644
+> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> > @@ -40,6 +40,9 @@ its hardware characteristcs.
+> >  		- System Trace Macrocell:
+> >  			"arm,coresight-stm", "arm,primecell"; [1]
+> >  
+> > +		- Debug Unit:
+> > +			"arm,coresight-debug", "arm,primecell";
+> > +
+> 
+> Humm...  The current CoreSight bindings are meant to describe IPs included in
+> the HW assisted trace architecture.  This new driver, althought considered to be
+> part of the CoreSight umbrella, falls under the debugging domain.
+> 
+> Adding the bindings in this file may lead people to beleive this driver fits
+> into the CoreSight framework currently supported, which isn't the case.
+> 
+> As such it is probably a good idea to spin off a new file, "coresight-debug.txt"
+> to handle this driver. 
 
-A separate patch fixing the issues is fine, I don't think it's worth
-reverting your original patch and then adding an updated one to the
-tree.
+I think this is good suggestion; if Mark has no objection, I will
+follow up it.
 
-thanks,
-
-greg k-h
+> Mark, what's your take on this?
+> 
+> >  	* reg: physical base address and length of the register
+> >  	  set(s) of the component.
+> >  
+> > @@ -78,8 +81,10 @@ its hardware characteristcs.
+> >  	* arm,cp14: must be present if the system accesses ETM/PTM management
+> >  	  registers via co-processor 14.
+> >  
+> > -	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
+> > -	  source is considered to belong to CPU0.
+> > +* Optional properties for ETM/PTM/Debugs:
+> > +
+> > +	* cpu: the cpu phandle this ETM/PTM/Debug is affined to. When omitted
+> > +	  the source is considered to belong to CPU0.
+> >  
+> >  * Optional property for TMC:
+> >  
+> > -- 
+> > 2.7.4
+> > 
