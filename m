@@ -1,87 +1,48 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v4 12/36] add mux and video interface bridge entity functions
-Date: Wed, 15 Feb 2017 18:19:14 -0800
-Message-ID: <1487211578-11360-13-git-send-email-steve_longerbeam@mentor.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+From: "Y.T. Tang" <yuantian.tang@nxp.com>
+Subject: RE: [PATCH 2/2] clk: qoriq: Separate root input clock for core PLLs
+ on ls1012a
+Date: Thu, 16 Feb 2017 02:21:09 +0000
+Message-ID: <DB6PR0402MB28374AECE0955BECE2C184E5F05A0@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+References: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
+         <1487137656-4006-2-git-send-email-yuantian.tang@nxp.com>
+ <1487183790.5636.13.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487183790.5636.13.camel@buserror.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, "mturquette@baylibre.com" <mturquette@baylibre.com>
+Cc: "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-- renamed MEDIA_ENT_F_MUX to MEDIA_ENT_F_VID_MUX
-
-Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
----
- Documentation/media/uapi/mediactl/media-types.rst | 22 ++++++++++++++++++++++
- include/uapi/linux/media.h                        |  6 ++++++
- 2 files changed, 28 insertions(+)
-
-diff --git a/Documentation/media/uapi/mediactl/media-types.rst b/Documentation/media/uapi/mediactl/media-types.rst
-index 3e03dc2..023be29 100644
---- a/Documentation/media/uapi/mediactl/media-types.rst
-+++ b/Documentation/media/uapi/mediactl/media-types.rst
-@@ -298,6 +298,28 @@ Types and flags used to represent the media graph elements
- 	  received on its sink pad and outputs the statistics data on
- 	  its source pad.
- 
-+    -  ..  row 29
-+
-+       ..  _MEDIA-ENT-F-MUX:
-+
-+       -  ``MEDIA_ENT_F_MUX``
-+
-+       - Video multiplexer. An entity capable of multiplexing must have at
-+         least two sink pads and one source pad, and must pass the video
-+         frame(s) received from the active sink pad to the source pad. Video
-+         frame(s) from the inactive sink pads are discarded.
-+
-+    -  ..  row 30
-+
-+       ..  _MEDIA-ENT-F-VID-IF-BRIDGE:
-+
-+       -  ``MEDIA_ENT_F_VID_IF_BRIDGE``
-+
-+       - Video interface bridge. A video interface bridge entity must have at
-+         least one sink pad and one source pad. It receives video frame(s) on
-+         its sink pad in one bus format (HDMI, eDP, MIPI CSI-2, ...) and
-+         converts them and outputs them on its source pad in another bus format
-+         (eDP, MIPI CSI-2, parallel, ...).
- 
- ..  tabularcolumns:: |p{5.5cm}|p{12.0cm}|
- 
-diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
-index 4890787..fac96c6 100644
---- a/include/uapi/linux/media.h
-+++ b/include/uapi/linux/media.h
-@@ -105,6 +105,12 @@ struct media_device_info {
- #define MEDIA_ENT_F_PROC_VIDEO_STATISTICS	(MEDIA_ENT_F_BASE + 0x4006)
- 
- /*
-+ * Switch and bridge entitites
-+ */
-+#define MEDIA_ENT_F_VID_MUX			(MEDIA_ENT_F_BASE + 0x5001)
-+#define MEDIA_ENT_F_VID_IF_BRIDGE		(MEDIA_ENT_F_BASE + 0x5002)
-+
-+/*
-  * Connectors
-  */
- /* It is a responsibility of the entity drivers to add connectors and links */
--- 
-2.7.4
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFNjb3R0IFdvb2QgW21haWx0
+bzpvc3NAYnVzZXJyb3IubmV0XQ0KPiBTZW50OiBUaHVyc2RheSwgRmVicnVhcnkgMTYsIDIwMTcg
+MjozNyBBTQ0KPiBUbzogWS5ULiBUYW5nIDx5dWFudGlhbi50YW5nQG54cC5jb20+OyBtdHVycXVl
+dHRlQGJheWxpYnJlLmNvbQ0KPiBDYzogc2JveWRAY29kZWF1cm9yYS5vcmc7IHJvYmgrZHRAa2Vy
+bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4LWNsa0B2Z2VyLmtlcm5lbC5v
+cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0ggMi8yXSBjbGs6IHFvcmlxOiBTZXBhcmF0ZSByb290IGlucHV0IGNsb2NrIGZv
+ciBjb3JlIFBMTHMgb24NCj4gbHMxMDEyYQ0KPiANCj4gT24gV2VkLCAyMDE3LTAyLTE1IGF0IDEz
+OjQ3ICswODAwLCB5dWFudGlhbi50YW5nQG54cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogVGFuZyBZ
+dWFudGlhbiA8WXVhbnRpYW4uVGFuZ0BueHAuY29tPg0KPiA+DQo+ID4gbHMxMDEyYSBoYXMgc2Vw
+YXJhdGUgaW5wdXQgcm9vdCBjbG9ja3MgZm9yIGNvcmUgUExMcyB2ZXJzdXMgdGhlDQo+ID4gcGxh
+dGZvcm0gUExMLCB3aXRoIHRoZSBsYXR0ZXIgZGVzY3JpYmVkIGFzIHN5c2NsayBpbiB0aGUgaHcg
+ZG9jcy4NCj4gPiBJZiBhIHNlY29uZCBpbnB1dCBjbG9jaywgbmFtZWQgImNvcmVjbGsiLCBpcyBw
+cmVzZW50LCB0aGlzIGNsb2NrIHdpbGwNCj4gPiBiZSB1c2VkIGZvciB0aGUgY29yZSBQTExzLg0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogU2NvdHQgV29vZCA8b3NzQGJ1c2Vycm9yLm5ldD4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDx5dWFudGlhbi50YW5nQG54cC5jb20+DQo+
+ID4gLS0tDQo+ID4gwqBkcml2ZXJzL2Nsay9jbGstcW9yaXEuYyB8IDkxDQo+ID4gKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQ0KPiANCj4gV2h5IGRpZCB5b3Ug
+cmVzZXQgdGhlIGF1dGhvciBvbiB0aGVzZSBwYXRjaGVzPyDCoEhhdmUgeW91IGNoYW5nZWQgYW55
+dGhpbmc/DQo+IMKgV2h5IGFyZW4ndCB0aGV5IG1hcmtlZCBlaXRoZXIgdjIgb3IgcmVzZW5kPw0K
+PiANCg0KSSBzaG91bGQgaGF2ZSBtYXJrZWQgYXMgdjIgb3IgcmVzZW5kLiBJZiBhbnl0aGluZyBj
+aGFuZ2VkLCBJIHRha2UgaXQgb3ZlciBhbmQgZHJvcHBlZCB0aGUgMi8zIHBhdGNoIGluIHlvdXIg
+b3JpZ2luYWwgcGF0Y2ggc2V0IHRvIHNwZWVkIHVwIHRoZSBtZXJnZSwgd2hpY2ggSSB0aGluayBz
+by4NClRoaXMgcGF0Y2ggc2V0IGJsb2NrcyBvdGhlciBwYXRjaGVzIGFuZCAyMCBkYXlzIHBhc3Nl
+ZCwgbm8gYW55IGFjdGlvbiBvbiBpdC4gV2UgY2FuJ3QgYWNjb3VudCBvbiB5b3UgdG8gcHVzaCBp
+dC4gVGhhdCdzIHdoeSBJIHRha2UgaXQgb3ZlciBhbmQgcmVzZW5kIGl0Lg0KDQpBbGwgaW4gYWxs
+LCB3aGF0IHlvdSBzdWdnZXN0IHRvIGRvIHRvIG1ha2UgdGhlbSBnZXQgYWNjZXB0ZWQgQVNBUD8N
+Cg0KUmVnYXJkcywNCll1YW50aWFuDQo+IC1TY290dA0KDQo=
