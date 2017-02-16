@@ -1,51 +1,52 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM64: Initial Realtek RTD1295 enablement
-Date: Thu, 16 Feb 2017 14:51:08 +0100
-Message-ID: <2627010.mZmgFkHdOI@wuerfel>
-References: <20170214033440.18667-1-afaerber@suse.de>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Thu, 16 Feb 2017 05:55:18 -0800
+Message-ID: <20170216135518.GA19423@kroah.com>
+References: <1486714767-25930-1-git-send-email-richard.leitner@skidata.com>
+ <20170216023004.25dwzy7ppxdoasfz@rob-hp-laptop>
+ <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170214033440.18667-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, service-qoVzM6YEWSw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Leitner <me@g0hl1n.net>
+Cc: Rob Herring <robh@kernel.org>, Richard Leitner <richard.leitner@skidata.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, February 14, 2017 4:34:35 AM CET Andreas Färber wrote:
+On Thu, Feb 16, 2017 at 07:36:48AM +0100, Richard Leitner wrote:
+> On 02/16/2017 03:30 AM, Rob Herring wrote:
+> > On Fri, Feb 10, 2017 at 09:19:27AM +0100, Richard Leitner wrote:
+> > > This patch adds a driver for configuration of the Microchip USB251xB/xBi
+> > > USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
+> > > configuration interface and two to four USB 2.0 downstream ports.
+> > > 
+> > > Furthermore add myself as a maintainer for this driver.
+> > > 
+> > > The datasheet can be found at the manufacturers website, see [1]. All
+> > > device-tree exposed configuration features have been tested on a i.MX6
+> > > platform with a USB2512B hub.
+> > > 
+> > > [1] http://ww1.microchip.com/downloads/en/DeviceDoc/00001692C.pdf
+> > > 
+> > > Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+> > > ---
+> > > CHANGES v5:
+> > 
+> > V5 and the first I see it?
 > 
-> This mini-series adds initial support for the Realtek RTD1295 SoC and
-> the Zidoo X9S TV box.
+> Just double-checked it, you (robh+dt@kernel.org) were on CC since v1.
 > 
-> With these patches CPU0 can be booted with earlycon.
-> 
-> PSCI doesn't work despite present in the vendor device tree; as enable-method
-> it instead used a custom "rtk-spin-table" that I sadly have no source code of.
-> 
-> The UARTs use a custom interrupt controller that I again lack source code of;
-> with interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH> it can boot into an initrd.
-> 
-> The boot process is slightly twisted: The files need to be loaded from a
-> 32-bit U-Boot, then boot into 64-bit U-Boot where the kernel can be booted.
-> Similar to my previous Amlogic S905 work, the TEXT_OFFSET poses a problem, so
-> a uImage needs to be used (or the kernel patched) for load address 0x00280000.
-> I haven't succeeded loading an initrd via bootm/booti; but as quick workaround
-> initrd=$rootfs_loadaddr,0x$filesize can manually be specified in $bootargs.
-> 
-> 
+> @greg-kh: I got the notification that v5 was already applied to your usb
+> tree. So how should I proceed here? Send a v6 or send a separate patch
+> fixing the dt issues mentioned by robh?
 
-Nice!
+A separate patch fixing the issues is fine, I don't think it's worth
+reverting your original patch and then adding an updated one to the
+tree.
 
-You can add my
+thanks,
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-please them to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org after the merge window as a patch
-set, so we can add them for 4.12.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
