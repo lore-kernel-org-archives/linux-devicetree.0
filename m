@@ -1,59 +1,55 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 3/3] ARM: dts: r7s72100: add l2 cache
-Date: Thu, 16 Feb 2017 11:17:42 -0500
-Message-ID: <20170216161742.29320-4-chris.brandt@renesas.com>
-References: <20170216161742.29320-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170216161742.29320-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Brad Mouring <brad.mouring@ni.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Richard Cochran <rcochran@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Brandt <chris.brandt@renesas.com>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] Bluetooth: btusb: Configure Marvell to use one of
+ the pins for oob wakeup
+Date: Thu, 16 Feb 2017 17:22:42 +0100
+Message-ID: <B13DDD1D-479B-4B13-BB6B-ED103A59158A@holtmann.org>
+References: <20170201222410.145612-1-rajatja@google.com>
+ <20170201222410.145612-3-rajatja@google.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.2 \(3259\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170201222410.145612-3-rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rajatxjain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Note that early-bresp-disable and full-line-zero-disable are required
-because the sideband signals between the CPU and L2C were not connected
-in this SoC.
+Hi,
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v3:
-* split "arm,pl310-no-sideband" into "arm,early-bresp-disable" and
-  "arm,full-line-zero-disable"
-v2:
-* added "arm,pl310-no-sideband"
----
- arch/arm/boot/dts/r7s72100.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> The Marvell devices may have many gpio pins, and hence for wakeup
+> on these out-of-band pins, the chip needs to be told which pin is
+> to be used for wakeup, using an hci command.
+> 
+> Thus, we read the pin number etc from the device tree node and send
+> a command to the chip.
+> 
+> Signed-off-by: Rajat Jain <rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> v7: Same as v6
+> v6: same as v5
+> v5: same as v5
+> v4: same as v3
+> v3: * remove the Marvell specific id table and check
+>    * Add reference to marvell-bt-8xxx.txt in btusb.txt
+>    * Add "Reviewed-by" and "Acked-by"    
+> v2: Fix the binding document to specify to use "wakeup" interrupt-name
+> 
+> Documentation/devicetree/bindings/net/btusb.txt    |  3 ++
+> .../{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} | 46 +++++++++++++++----
+> drivers/bluetooth/btusb.c                          | 51 ++++++++++++++++++++++
+> 3 files changed, 92 insertions(+), 8 deletions(-)
+> rename Documentation/devicetree/bindings/net/{marvell-bt-sd8xxx.txt => marvell-bt-8xxx.txt} (50%)
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 614ba79..ed62e19 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -180,6 +180,7 @@
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
- 			clock-frequency = <400000000>;
-+			next-level-cache = <&L2>;
- 		};
- 	};
- 
-@@ -371,6 +372,16 @@
- 			<0xe8202000 0x1000>;
- 	};
- 
-+	L2: cache-controller@3ffff000 {
-+		compatible = "arm,pl310-cache";
-+		reg = <0x3ffff000 0x1000>;
-+		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		arm,early-bresp-disable;
-+		arm,full-line-zero-disable;
-+		cache-unified;
-+		cache-level = <2>;
-+	};
-+
- 	i2c0: i2c@fcfee000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--- 
-2.10.1
+all 3 patches have been applied to bluetooth-next tree.
+
+Regards
+
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
