@@ -1,93 +1,31 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 1/3] power: reset: Add Renesas reset driver
-Date: Thu, 16 Feb 2017 14:20:15 -0800
-Message-ID: <20170216222014.GA29672@roeck-us.net>
-References: <20170216172320.10897-1-chris.brandt@renesas.com>
- <20170216172320.10897-2-chris.brandt@renesas.com>
- <20170216182644.GA17814@roeck-us.net>
- <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v4 00/36] i.MX Media Driver
+Date: Thu, 16 Feb 2017 22:20:07 +0000
+Message-ID: <20170216222006.GA21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgde
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 06:40:05PM +0000, Chris Brandt wrote:
-> On Thursday, February 16, 2017, Guenter Roeck wrote:
-> > On Thu, Feb 16, 2017 at 12:23:18PM -0500, Chris Brandt wrote:
-> > > Some Renesas SoCs do not have a reset register and the only way to do a SW
-> > > controlled reset is to use the watchdog timer. Additionally, since all the
-> > > WDT timeout options are so quick, a system reset is about the only thing
-> > > it's good for.
-> > >
-> > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com> Reviewed-by: Geert
-> > > Uytterhoeven <geert+renesas@glider.be>
-> > 
-> > Wondering - why not use the watchdog driver and the infrastructure provided
-> > by the watchdog core (ie the restart callback) instead ?
-> 
-> That was Geert's first suggestion, but then he said:
-> 
-> On Friday, February 10, 2017, Geert Uytterhoeven wrote:
-> > On Fri, Feb 10, 2017 at 3:59 PM, Chris Brandt <Chris.Brandt@renesas.com>
-> > wrote:
-> > > On Friday, February 10, 2017, Geert Uytterhoeven wrote:
-> > >> >  static const char *const r7s72100_boards_compat_dt[] __initconst = {
-> > >> >  "renesas,r7s72100", NULL, @@ -29,4 +58,5 @@
-> > >> >  DT_MACHINE_START(R7S72100_DT, "Generic R7S72100
-> > >> (Flattened Device Tree)")
-> > >> >         .init_early     = shmobile_init_delay, .init_late      =
-> > >> >         shmobile_init_late, .dt_compat      =
-> > >> >         r7s72100_boards_compat_dt, +       .restart        =
-> > >> >         r7s72100_restart, MACHINE_END
-> > >>
-> > >> Perhaps unsurprisingly, I'd recommend writing a watchdog driver instead.
-> > >> drivers/watchdog/renesas_wdt.c (currently supporting R-Car Gen3 only) may
-> > >> serve as an example.
-> > >
-> > > Why do you guys always make things more difficult for me... ;)
-> > >
-> > > To be clear, you are recommending I make a WDT timer driver (and not use
-> > > .restart) and that will reset the system?
-> > >
-> > > Or, make a WDT driver just so I can steal the base address?
-> > 
-> > I meant a WDT timer driver. If the watchdog driver provides a .restart
-> > callback, it will be used for system reset (hmm, renesas_wdt.c no longer has
-> > the .restart callback, as per arm64 "system reset must be implemented using
-> > PSCI"-policy).
-> 
+On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
+> In version 4:
 
-Hmm, ok. Guess I don't have to understand that you can not use the watchdog
-driver because of the above, but implementing exactly the same functionality
-in a separate driver is ok.
+With this version, I get:
 
-[ I am sure I am missing something here, so just ignore what I am saying ]
+[28762.892053] imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000000
+[28762.899409] ipu1_csi0: pipeline_set_stream failed with -110
 
-> 
-> 
-> > > v2: * changed DT bindings from 'wdt-reset' to 'rza-wdt' * changed hard
-> > > coded register values to defines * added msleep to while(1) loop
-> > 
-> > Sure you can sleep here ?
-> 
-> As per Geert's review:
-> 
-> On Wednesday, February 15, 2017, Geert Uytterhoeven wrote:
-> > > + +       /* Wait for WDT overflow */ +       while (1) +               ;
-> > 
-> > This burns CPU, and thus power, albeit for a very short time.  Perhaps add
-> > an msleep() to the loop body?
-> 
-> Note that you only have 7.7us before the restart occurs, so probably not much
-> sleeping will be going on.
-> 
-Let me rephrase my question. Is it guaranteed that you _can_ sleep in this
-function, or in other words that it is guaranteed that interrupts are enabled ?
-
-Thanks,
-Guenter
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
