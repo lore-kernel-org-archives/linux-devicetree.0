@@ -1,361 +1,203 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v3 3/6] ARM: dts: Use armada-370-xp as a base for armada-xp-98dx3236
-Date: Thu, 16 Feb 2017 21:50:37 +1300
-Message-ID: <20170216085041.28337-4-chris.packham@alliedtelesis.co.nz>
-References: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Subject: Re: [PATCH V6 4/5] LPC: Support the device-tree LPC host on
+ Hip06/Hip07
+Date: Thu, 16 Feb 2017 16:59:05 +0800
+Message-ID: <58A569D9.1090701@hisilicon.com>
+References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1485241525-201782-5-git-send-email-yuanzhichang@hisilicon.com>
+ <a5a24e73-013d-87b5-f65f-324417f4cc60@suse.de>
+ <58A1C50F.7090108@hisilicon.com>
+ <43b981bc-72c0-c6e7-d6f6-9ba9c63d9bdb@suse.de>
+ <58A43D02.9040502@hisilicon.com>
+ <acc432d9-f021-4eba-b48b-a8d0b4de1f78@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <acc432d9-f021-4eba-b48b-a8d0b4de1f78@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexander Graf <agraf@suse.de>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, brian.starkey@arm.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, gabriele.paoloni@huawei.com, minyard@acm.org, benh@kernel.crashing.org, john.garry@huawei.com, liviu.dudau@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, "Daode Huang(allen)" <huangdaode@hisilicon.com>, linux-serial@vger.kernel.org, linux-pci@vger.kernel.org, zourongrong@gmail.com, kantyzc@163.com, zhichang.yuan02@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The Marvell datasheets refer to the integrated CPU as "Armada-XP". In
-reality there are a number of differences to the actual Armada-XP so
-rather than including armada-xp.dtsi and disabling many of the IP
-blocks. Include armada-370-xp.dtsi and add the required nodes.
+Hi, Alex,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
+On 2017/2/15 19:53, Alexander Graf wrote:
+> 
+> 
+> On 15/02/2017 12:35, zhichang.yuan wrote:
+>> Hi, Alex,
+>>
+>>
+>> On 2017/2/14 21:29, Alexander Graf wrote:
+>>>
+>>>
+>>> On 13/02/2017 15:39, zhichang.yuan wrote:
+>>>> Hi, Alex,
+>>>>
+>>>> Thanks for your review!
+>>>>
+>>>> John had replied most of your comments, I only mentioned those which haven't made clear.
+>>>>
+>>>>
+>>>> On 2017/1/31 4:08, Alexander Graf wrote:
+>>>>>
+>>>>>
+>>>>> On 24/01/2017 08:05, zhichang.yuan wrote:
+>>>>>> The low-pin-count(LPC) interface of Hip06/Hip07 accesses the peripherals in
+>>>>>> I/O port addresses. This patch implements the LPC host controller driver which
+>>>>>> perform the I/O operations on the underlying hardware.
+>>>>>> We don't want to touch those existing peripherals' driver, such as ipmi-bt. So
+>>>>>> this driver applies the indirect-IO introduced in the previous patch after
+>>>>>> registering an indirect-IO node to the indirect-IO devices list which will be
+>>>>>> searched in the I/O accessors.
+>>>>>> As the I/O translations for LPC children depend on the host I/O registration,
+>>>>>> we should ensure the host I/O registration is finished before all the LPC
+>>>>>> children scanning. That is why an arch_init() hook was added in this patch.
+>>>>>>
+>>>>>> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
+>>>>>> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+>>>>>> ---
+>> snip
+>>>>>> +
+>>>>>> +struct lpc_cycle_para {
+>>>>>> +    unsigned int opflags;
+>>>>>> +    unsigned int csize; /* the data length of each operation */
+>>>>>> +};
+>>>>>> +
+>>>>>> +struct hisilpc_dev {
+>>>>>> +    spinlock_t cycle_lock;
+>>>>>> +    void __iomem  *membase;
+>>>>>> +    struct extio_node *extio;
+>>>>>> +};
+>>>>>> +
+>>>>>> +/* bounds of the LPC bus address range */
+>>>>>> +#define LPC_MIN_BUS_RANGE    0x0
+>>>>>> +
+>>>>>> +/*
+>>>>>> + * The maximal IO size for each leagcy bus.
+>>>>>
+>>>>> legacy?
+>>>>>
+>>>>> I don't really understand why this bus is legacy though. It looks like a simple MMIO-to-LPC bridge to me.
+>>>>
+>>>> yes. The LPC bus is MMIO-to-LPC bridge.
+>>>> My comment is not clear.
+>>>>
+>>>> How about "The maximal IO size of LPC bus"?
+>>>
+>>> That sounds better, but doesn't really tell me what it's about yet ;).
+>>>
+>>>>
+>>>>>
+>>>>>> + * The port size of legacy I/O devices is normally less than 0x400.
+>>>>>> + * Defining the I/O range size as 0x400 here should be sufficient for
+>>>>>> + * all peripherals under one bus.
+>>>>>> + */
+>>>>>
+>>>>> This comment doesn't make a lot of sense. What is the limit? Is there a hardware limit?
+>>>>>
+>>>>> We don't dynamically allocate devices on the lpc bus, so why imply a limit at all?
+>>>>
+>>>> The limit here is to define an IO window for LPC.
+>>>> It is not acceptable to describe the IO window with 'ranges' property in LPC host node, so we choose a fixable upper IO limit
+>>>> for the static LPC IO space. Without this, LPC can't register its IO space through extio helpers.
+>>>>
+>>>> Why 0x400 is chosen? For our LPC, 0x400 cover all the peripherals under the LPC.
+>>>
+>>> This is information that should come from firmware then. Whether by coincidence addresses 0x0 - 0x400 include all devices is an implementation detail that the driver shouldn't have to know about.
+>>
+>>
+>>>
+>>> That said, as mentioned elsewhere, we don't need to define single windows at all. Instead, can't we just do it like PCI BARs and declare all PIO regions we get from firmware as readily allocated? Then we only need to explicitly assign ports 0x80, 0x81, 0x99, etc to the LPC bridge and leave the rest for grabs (by PCI hotplug for example)
+>>>
+>>
+>> I worry I don't completely catch your idea.
+>> From my understanding, each PCI host can parse its resource windows from firmware(such as ACPI, dts). But for our LPC, firmware configurations only tell kernel what is the IO resource of the peripherals under LPC. But to register the io range in the similar way of pci_register_io_range(), at least, we need to know the IO range size.
+>> So, how to know this?
+>> There is no similar BAR design in LPC, do we traverse all the peripherals to calculate that?
+> 
+> Yes, that's probably the most flexible approach. In fact, I would just traverse all peripherals (or have peripherals call register functions for PIO regions) and then dynamically allocate the PIO space for only those regions. I don't see why you should only have 1 window for your LPC bridge.
+> 
+> Alternatively you could just have firmware indicate the region size, similar to how it's done for PCI. Whatever you do, don't hard code it in the driver :).
+> 
+>>
+>>
+>>>>
+>>>>
+>>>>
+>>>>
+>>>>>
+>>>>>> +#define LPC_BUS_IO_SIZE        0x400
+>>>>>> +
+>>>>>> +/* The maximum continuous operations */
+>>>>>> +#define LPC_MAX_OPCNT    16
+>>>>>> +/* only support IO data unit length is four at maximum */
+>>>>>> +#define LPC_MAX_DULEN    4
+>> snip
+>>>>>> + */
+>>>>>> +static int
+>>>>>> +hisilpc_target_in(struct hisilpc_dev *lpcdev, struct lpc_cycle_para *para,
+>>>>>> +          unsigned long ptaddr, unsigned char *buf,
+>>>>>> +          unsigned long opcnt)
+>>>>>> +{
+>>>>>> +    unsigned long cnt_per_trans;
+>>>>>> +    unsigned int cmd_word;
+>>>>>> +    unsigned int waitcnt;
+>>>>>> +    int ret;
+>>>>>> +
+>>>>>> +    if (!buf || !opcnt || !para || !para->csize || !lpcdev)
+>>>>>> +        return -EINVAL;
+>>>>>> +
+>>>>>> +    if (opcnt  > LPC_MAX_OPCNT)
+>>>>>> +        return -EINVAL;
+>>>>>> +
+>>>>>> +    cmd_word = LPC_CMD_TYPE_IO | LPC_CMD_READ;
+>>>>>> +    waitcnt = LPC_PEROP_WAITCNT;
+>>>>>> +    if (!(para->opflags & FG_INCRADDR_LPC)) {
+>>>>>> +        cmd_word |= LPC_CMD_SAMEADDR;
+>>>>>> +        waitcnt = LPC_MAX_WAITCNT;
+>>>>>> +    }
+>>>>>> +
+>>>>>> +    ret = 0;
+>>>>>> +    cnt_per_trans = (para->csize == 1) ? opcnt : para->csize;
+>>>>>> +    for (; opcnt && !ret; cnt_per_trans = para->csize) {
+>>>>>> +        unsigned long flags;
+>>>>>> +
+>>>>>> +        /* whole operation must be atomic */
+>>>>>> +        spin_lock_irqsave(&lpcdev->cycle_lock, flags);
+>>>>>
+>>>>> Ouch. This is going to kill your RT jitter. Is there no better way?
+>>>>
+>>>> I think there is no other choices. We have to ensure the I/O cycles triggered in serial mode....
+>>>
+>>> As nobody else accesses the LPC device in the meantime thanks to the lock, you don't need to disable interrupts, right?
+>>
+>> O. Do you mean that we can replace spin_lock_irqsave with spin_lock?
+> 
+> That would be a good step into the right direction I think, yes.
+> 
+>> As we can connect UART to LPC, I worry the LPC can be accessed in the interrupt context.
+> 
+> In that case IRQs are already disabled for the non-preempt-rt case and in preempt-rt, interrupt context should mostly live in threads which are preemptible again.
+> 
 
-Notes:
-    Changes in v2:
-    - Update root compatible strings in armada-xp-98dx3336.dtsi,
-      armada-xp-98dx4251.dtsi, armada-xp-db-dxbc2.dts and
-      armada-xp-db-xc3-24g4xg.dts
-    Changes in v3:
-    - none
+When the IRQs are disabled? Do you mean the interrupt disable just before kernel enters the interrupt routine?
+It seems this processing can not protect a thread which had owned the LPC spin lock from being preempted.
 
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi     | 194 ++++++++++++++++++++------
- arch/arm/boot/dts/armada-xp-98dx3336.dtsi     |   2 +-
- arch/arm/boot/dts/armada-xp-98dx4251.dtsi     |   2 +-
- arch/arm/boot/dts/armada-xp-db-dxbc2.dts      |   2 +-
- arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts |   2 +-
- 5 files changed, 155 insertions(+), 47 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-index 7eaa7da84770..5e7245524d46 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -45,11 +45,14 @@
-  * common to all Armada XP SoCs.
-  */
- 
--#include "armada-xp.dtsi"
-+#include "armada-370-xp.dtsi"
- 
- / {
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
- 	model = "Marvell 98DX3236 SoC";
--	compatible = "marvell,armadaxp-98dx3236", "marvell,armadaxp", "marvell,armada-370-xp";
-+	compatible = "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
- 
- 	aliases {
- 		gpio0 = &gpio0;
-@@ -72,12 +75,19 @@
- 	};
- 
- 	soc {
-+		compatible = "marvell,armadaxp-mbus", "simple-bus";
-+
- 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
- 			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
- 			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
- 			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
- 			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
- 
-+		bootrom {
-+			compatible = "marvell,bootrom";
-+			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
-+		};
-+
- 		/*
- 		 * 98DX3236 has 1 x1 PCIe unit Gen2.0
- 		 */
-@@ -117,31 +127,92 @@
- 		};
- 
- 		internal-regs {
-+			sdramc@1400 {
-+				compatible = "marvell,armada-xp-sdram-controller";
-+				reg = <0x1400 0x500>;
-+			};
-+
-+			L2: l2-cache@8000 {
-+				compatible = "marvell,aurora-system-cache";
-+				reg = <0x08000 0x1000>;
-+				cache-id-part = <0x100>;
-+				cache-level = <2>;
-+				cache-unified;
-+				wt-override;
-+			};
-+
-+			gpio0: gpio@18100 {
-+				compatible = "marvell,orion-gpio";
-+				reg = <0x18100 0x40>;
-+				ngpios = <32>;
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <82>, <83>, <84>, <85>;
-+			};
-+
-+			/* does not exist */
-+			gpio1: gpio@18140 {
-+				compatible = "marvell,orion-gpio";
-+				reg = <0x18140 0x40>;
-+				status = "disabled";
-+			};
-+
-+			gpio2: gpio@18180 { /* rework some properties */
-+				compatible = "marvell,orion-gpio";
-+				reg = <0x18180 0x40>;
-+				ngpios = <1>; /* only gpio #32 */
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <87>;
-+			};
-+
-+			systemc: system-controller@18200 {
-+				compatible = "marvell,armada-370-xp-system-controller";
-+				reg = <0x18200 0x500>;
-+			};
-+
-+			gateclk: clock-gating-control@18220 {
-+				compatible = "marvell,armada-xp-gating-clock";
-+				reg = <0x18220 0x4>;
-+				clocks = <&coreclk 0>;
-+				#clock-cells = <1>;
-+			};
-+
- 			coreclk: mvebu-sar@18230 {
- 				compatible = "marvell,mv98dx3236-core-clock";
-+				reg = <0x18230 0x08>;
-+				#clock-cells = <1>;
- 			};
- 
- 			cpuclk: clock-complex@18700 {
-+				#clock-cells = <1>;
- 				compatible = "marvell,mv98dx3236-cpu-clock";
-+				reg = <0x18700 0x24>, <0x1c054 0x10>;
-+				clocks = <&coreclk 1>;
- 			};
- 
- 			corediv-clock@18740 {
- 				status = "disabled";
- 			};
- 
--			xor@60900 {
--				status = "disabled";
-+			cpu-config@21000 {
-+				compatible = "marvell,armada-xp-cpu-config";
-+				reg = <0x21000 0x8>;
- 			};
- 
--			crypto@90000 {
--				status = "disabled";
-+			ethernet@70000 {
-+				compatible = "marvell,armada-xp-neta";
- 			};
- 
--			xor@f0900 {
--				status = "disabled";
-+			ethernet@74000 {
-+				compatible = "marvell,armada-xp-neta";
- 			};
- 
--			xor@f0800 {
-+			xor1: xor@f0800 {
- 				compatible = "marvell,orion-xor";
- 				reg = <0xf0800 0x100
- 				       0xf0a00 0x100>;
-@@ -161,37 +232,28 @@
- 				};
- 			};
- 
--			gpio0: gpio@18100 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18100 0x40>;
--				ngpios = <32>;
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--				interrupts = <82>, <83>, <84>, <85>;
--			};
--
--			/* does not exist */
--			gpio1: gpio@18140 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18140 0x40>;
--				status = "disabled";
-+			nand: nand@d0000 {
-+				clocks = <&dfx_coredivclk 0>;
- 			};
- 
--			gpio2: gpio@18180 { /* rework some properties */
--				compatible = "marvell,orion-gpio";
--				reg = <0x18180 0x40>;
--				ngpios = <1>; /* only gpio #32 */
--				gpio-controller;
--				#gpio-cells = <2>;
--				interrupt-controller;
--				#interrupt-cells = <2>;
--				interrupts = <87>;
--			};
-+			xor0: xor@f0900 {
-+				compatible = "marvell,orion-xor";
-+				reg = <0xF0900 0x100
-+				       0xF0B00 0x100>;
-+				clocks = <&gateclk 28>;
-+				status = "okay";
- 
--			nand: nand@d0000 {
--				clocks = <&dfx_coredivclk 0>;
-+				xor00 {
-+					interrupts = <94>;
-+					dmacap,memcpy;
-+					dmacap,xor;
-+				};
-+				xor01 {
-+					interrupts = <95>;
-+					dmacap,memcpy;
-+					dmacap,xor;
-+					dmacap,memset;
-+				};
- 			};
- 		};
- 
-@@ -225,6 +287,53 @@
- 			};
- 		};
- 	};
-+
-+	clocks {
-+		/* 25 MHz reference crystal */
-+		refclk: oscillator {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
-+	reg = <0x11000 0x100>;
-+};
-+
-+&i2c1 {
-+	compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
-+	reg = <0x11100 0x100>;
-+};
-+
-+&mpic {
-+	reg = <0x20a00 0x2d0>, <0x21070 0x58>;
-+};
-+
-+&timer {
-+	compatible = "marvell,armada-xp-timer";
-+	clocks = <&coreclk 2>, <&refclk>;
-+	clock-names = "nbclk", "fixed";
-+};
-+
-+&watchdog {
-+	compatible = "marvell,armada-xp-wdt";
-+	clocks = <&coreclk 2>, <&refclk>;
-+	clock-names = "nbclk", "fixed";
-+};
-+
-+&cpurst {
-+	reg = <0x20800 0x20>;
-+};
-+
-+&usb0 {
-+	clocks = <&gateclk 18>;
-+};
-+
-+&usb1 {
-+	clocks = <&gateclk 19>;
- };
- 
- &pinctrl {
-@@ -237,14 +346,13 @@
- 	};
- };
- 
--&sdio {
--	status = "disabled";
-+&spi0 {
-+	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
-+	pinctrl-0 = <&spi0_pins>;
-+	pinctrl-names = "default";
- };
- 
--&crypto_sram0 {
-+&sdio {
- 	status = "disabled";
- };
- 
--&crypto_sram1 {
--	status = "disabled";
--};
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3336.dtsi b/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
-index e1580afdc260..a0d81bd7312b 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
-@@ -49,7 +49,7 @@
- 
- / {
- 	model = "Marvell 98DX3336 SoC";
--	compatible = "marvell,armadaxp-98dx3336", "marvell,armadaxp-98dx3236", "marvell,armadaxp", "marvell,armada-370-xp";
-+	compatible = "marvell,armadaxp-98dx3336", "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
- 
- 	cpus {
- 		cpu@1 {
-diff --git a/arch/arm/boot/dts/armada-xp-98dx4251.dtsi b/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
-index b9d9b269efb4..51de91b31a9d 100644
---- a/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
-@@ -49,7 +49,7 @@
- 
- / {
- 	model = "Marvell 98DX4251 SoC";
--	compatible = "marvell,armadaxp-98dx4251", "marvell,armadaxp-98dx3236", "marvell,armadaxp", "marvell,armada-370-xp";
-+	compatible = "marvell,armadaxp-98dx4251", "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
- 
- 	cpus {
- 		cpu@1 {
-diff --git a/arch/arm/boot/dts/armada-xp-db-dxbc2.dts b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-index 605d855b0147..f624894c2ab6 100644
---- a/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-+++ b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-@@ -58,7 +58,7 @@
- 
- / {
- 	model = "Marvell Bobcat2 Evaluation Board";
--	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armadaxp", "marvell,armada-370-xp";
-+	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armada-370-xp";
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-index 4e07cb6ed800..06fce35d7491 100644
---- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-+++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-@@ -58,7 +58,7 @@
- 
- / {
- 	model = "DB-XC3-24G4XG";
--	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armadaxp", "marvell,armada-370-xp";
-+	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armada-370-xp";
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
--- 
-2.11.0.24.ge6920cf
+Zhichang
+
+> 
+> Alex
+> 
+> .
+> 
