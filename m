@@ -1,77 +1,63 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: Re: [PATCH v1 3/3] ASoC: zx-96p22: add zte's aud96p22
-	controller driver
-Date: Thu, 16 Feb 2017 08:24:17 +0800
-Message-ID: <CA+DQWkwjCYsKYW-THWHr=qZTRe-f+m_PnX4fM+6tRuQKwkWxWA@mail.gmail.com>
-References: <1487156110-12840-1-git-send-email-baoyou.xie@linaro.org>
- <1487156110-12840-3-git-send-email-baoyou.xie@linaro.org>
- <20170215112425.GC30007@localhost.localdomain>
+From: David Daney <david.daney@cavium.com>
+Subject: [PATCH v4 0/6] genirq/gpio: Add driver for ThunderX and OCTEON-TX SoCs
+Date: Wed, 15 Feb 2017 17:01:00 -0800
+Message-ID: <1487206866-4011-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170215112425.GC30007@localhost.localdomain>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Liam Girdwood <lgirdwood@gmail.com>, tiwai@suse.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, bardliao@realtek.com, lars@metafoo.de, Axel Lin <axel.lin@ingics.com>, Paul.Handrigan@cirrus.com, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, anish kumar <yesanishhere@gmail.com>, "xie.baoyou" <xie.baoyou@zte.com.cn>, nh6z@nh6z.net, Rob Herring <robh+dt@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, oder_chiou@realtek.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, petr@barix.com, broonie@kernel.org, Jun Nie <jun.nie@linaro.org>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Charles:
+The ThunderX/OCTEON-TX GPIO hardware looks like a PCIe device, with
+the interrupt signal from each GPIO line being routed to a dedicated
+MSI-X.  This interrupt routing requires that we add some custom
+processing to the beginning of the MSI-X irqdomain hierarchy.
 
-On 15 February 2017 at 19:24, Charles Keepax <
-ckeepax@opensource.wolfsonmicro.com> wrote:
+Changes from v3:
 
-> On Wed, Feb 15, 2017 at 06:55:10PM +0800, Baoyou Xie wrote:
-> > This patch adds aud96p22 controller driver for zte's SoC family.
-> >
-> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> > ---
-> <snip>
-> > +static int zx_aud96p22_i2c_write(struct i2c_client *i2c_client,
-> > +                              const void *data, size_t count)
-> > +{
-> > +     int xfer;
-> > +
-> > +     xfer = i2c_master_send(i2c_client, data, count);
-> > +     if (xfer == count)
-> > +             return 0;
-> > +     else if (xfer < 0)
-> > +             return xfer;
-> > +     else
-> > +             return -EIO;
-> > +}
-> > +
-> > +static int zx_aud96p22_i2c_read(struct i2c_client *i2c_client,
-> > +                             unsigned char addr)
-> > +{
-> > +     int xfer;
-> > +
-> > +     xfer = i2c_smbus_read_word_data(i2c_client, addr);
-> > +     if (xfer < 0)
-> > +             dev_warn(&i2c_client->dev, "transfer error %d\n", xfer);
-> > +
-> > +     return xfer;
-> > +}
-> > +
->
-> Is there any reason this isn't using regmap? It looks like it
-> should be, have a look at any of the other mainline CODECs for an
-> example.
->
-> We can not read the i2c register directly, cause of the i2c is responded
-asynchronous, and involves i2c irq.
+ - Add some "depends on" to the driver Kconfig to avoid build errors
+   in some architectures when doing COMPILE_TEST builds.
 
-I suggest that we access i2c through general i2c interface.
+Changes from v2:
 
+ - in 4/6: Added Rob Harring's Acked-by
 
-> Thanks,
-> Charles
->
+ - Added three patches to genirq/irqdomain to support interrupt code
+   in the driver.
+
+ - Rewrite irq code in driver to use irqdomain hierarchy.
+
+ - Other naming and style changes as recommended by Linus Walleij.
+
+Changes from v1:
+
+ - in 1/3: Addressed Rob Harring's comments.
+
+ - in 2/3: Trivial cleanups found in internal review + add some
+   comments.
+
+David Daney (6):
+  genirq: Export more irq_chip_*_parent() functions.
+  genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
+  irqdomain: Add irq_domain_{push,pop}_irq() functions.
+  dt-bindings: gpio: Add binding documentation for gpio-thunderx
+  gpio: Add gpio driver support for ThunderX and OCTEON-TX
+  MAINTAINERS: Add entry for THUNDERX GPIO Driver.
+
+ .../devicetree/bindings/gpio/gpio-thunderx.txt     |  27 ++
+ MAINTAINERS                                        |   5 +
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-thunderx.c                       | 490 +++++++++++++++++++++
+ include/linux/irq.h                                |   2 +
+ include/linux/irqdomain.h                          |   3 +
+ kernel/irq/chip.c                                  | 105 +++++
+ kernel/irq/irqdomain.c                             | 137 ++++++
+ 9 files changed, 778 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-thunderx.txt
+ create mode 100644 drivers/gpio/gpio-thunderx.c
+
+-- 
+1.8.3.1
