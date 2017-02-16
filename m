@@ -1,74 +1,48 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH] ARM: imx25: set default phy_type and dr_mode for usbotg port
-Date: Thu, 16 Feb 2017 22:18:58 +0100
-Message-ID: <20170216211858.8563-1-u.kleine-koenig@pengutronix.de>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
+Date: Thu, 16 Feb 2017 21:20:45 +0000
+Message-ID: <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Wolfram Sang <wsa@the-dreams.de>, Peter Robinson <pbrobinson@gmail.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-All currently supported i.MX25-based machines use phy_type = "utmi" and
-dr_mode = "otg".  So this seems to be a sensible default.
+Since commit e2474541032d ("bcm2835: Fix hang for writing messages
+larger than 16 bytes") the interrupt handler is prone to a possible
+NULL pointer dereference. This could happen if an interrupt fires
+before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
+on the RPi 3. Even this is an unexpected behavior the driver must
+handle that with an error instead of a crash.
 
-This also doesn't hurt out-of-tree machines because up to now they had
-to specify these two properties in the machine.dts which still takes
-precedence by just overwriting the defaults added here.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+CC: Noralf Trønnes <noralf@tronnes.org>
+CC: Martin Sperl <kernel@martin.sperl.org>
+Reported-by: Peter Robinson <pbrobinson@gmail.com>
+Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts | 2 --
- arch/arm/boot/dts/imx25-pdk.dts                        | 2 --
- arch/arm/boot/dts/imx25.dtsi                           | 2 ++
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/i2c/busses/i2c-bcm2835.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-index 9300711f1ea3..db39bd6b8e00 100644
---- a/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-+++ b/arch/arm/boot/dts/imx25-eukrea-mbimxsd25-baseboard.dts
-@@ -179,8 +179,6 @@
- };
+diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
+index c3436f6..10e39c8 100644
+--- a/drivers/i2c/busses/i2c-bcm2835.c
++++ b/drivers/i2c/busses/i2c-bcm2835.c
+@@ -195,7 +195,9 @@ static irqreturn_t bcm2835_i2c_isr(int this_irq, void *data)
+ 	}
  
- &usbotg {
--	phy_type = "utmi";
--	dr_mode = "otg";
- 	external-vbus-divider;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx25-pdk.dts b/arch/arm/boot/dts/imx25-pdk.dts
-index 70292101ba03..d921dd2ed676 100644
---- a/arch/arm/boot/dts/imx25-pdk.dts
-+++ b/arch/arm/boot/dts/imx25-pdk.dts
-@@ -309,8 +309,6 @@
- };
- 
- &usbotg {
--	phy_type = "utmi";
--	dr_mode = "otg";
- 	external-vbus-divider;
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-index d9ef338e8af7..6f1c7f82cdaa 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -535,6 +535,8 @@
- 				clock-names = "ipg", "ahb", "per";
- 				fsl,usbmisc = <&usbmisc 0>;
- 				fsl,usbphy = <&usbphy0>;
-+				phy_type = "utmi";
-+				dr_mode = "otg";
- 				status = "disabled";
- 			};
- 
+ 	if (val & BCM2835_I2C_S_DONE) {
+-		if (i2c_dev->curr_msg->flags & I2C_M_RD) {
++		if (!i2c_dev->curr_msg) {
++			dev_err(i2c_dev->dev, "Got unexpected interrupt (from firmware?)\n");
++		} else if (i2c_dev->curr_msg->flags & I2C_M_RD) {
+ 			bcm2835_drain_rxfifo(i2c_dev);
+ 			val = bcm2835_i2c_readl(i2c_dev, BCM2835_I2C_S);
+ 		}
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
