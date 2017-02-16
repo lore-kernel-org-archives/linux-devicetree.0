@@ -1,144 +1,148 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit controls
- from a pipeline
-Date: Wed, 15 Feb 2017 18:19:16 -0800
-Message-ID: <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v4 36/36] media: imx: propagate sink pad formats to source pads
+Date: Wed, 15 Feb 2017 18:19:38 -0800
+Message-ID: <1487211578-11360-37-git-send-email-steve_longerbeam@mentor.com>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
-
-v4l2_pipeline_inherit_controls() will add the v4l2 controls from
-all subdev entities in a pipeline to a given video device.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
- include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
- 2 files changed, 73 insertions(+)
+ drivers/staging/media/imx/imx-ic-prp.c      | 11 ++++++++++-
+ drivers/staging/media/imx/imx-ic-prpencvf.c | 22 ++++++++++++++--------
+ drivers/staging/media/imx/imx-media-csi.c   | 26 +++++++++++++++++---------
+ drivers/staging/media/imx/imx-media-vdic.c  | 15 ++++++++++++++-
+ 4 files changed, 55 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
-index 303980b..09d4d97 100644
---- a/drivers/media/v4l2-core/v4l2-mc.c
-+++ b/drivers/media/v4l2-core/v4l2-mc.c
-@@ -22,6 +22,7 @@
- #include <linux/usb.h>
- #include <media/media-device.h>
- #include <media/media-entity.h>
-+#include <media/v4l2-ctrls.h>
- #include <media/v4l2-fh.h>
- #include <media/v4l2-mc.h>
- #include <media/v4l2-subdev.h>
-@@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
- }
- EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
+diff --git a/drivers/staging/media/imx/imx-ic-prp.c b/drivers/staging/media/imx/imx-ic-prp.c
+index b9ee8fb..5c57d2b 100644
+--- a/drivers/staging/media/imx/imx-ic-prp.c
++++ b/drivers/staging/media/imx/imx-ic-prp.c
+@@ -196,8 +196,17 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
+ 	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
+ 		cfg->try_fmt = sdformat->format;
+ 	} else {
+-		priv->format_mbus[sdformat->pad] = sdformat->format;
++		struct v4l2_mbus_framefmt *f =
++			&priv->format_mbus[sdformat->pad];
++
++		*f = sdformat->format;
+ 		priv->cc[sdformat->pad] = cc;
++
++		/* propagate format to source pads */
++		if (sdformat->pad == PRP_SINK_PAD) {
++			priv->format_mbus[PRP_SRC_PAD_PRPENC] = *f;
++			priv->format_mbus[PRP_SRC_PAD_PRPVF] = *f;
++		}
+ 	}
  
-+int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				     struct media_entity *start_entity)
-+{
-+	struct media_device *mdev = start_entity->graph_obj.mdev;
-+	struct media_entity *entity;
-+	struct media_graph graph;
-+	struct v4l2_subdev *sd;
-+	int ret;
-+
-+	ret = media_graph_walk_init(&graph, mdev);
-+	if (ret)
-+		return ret;
-+
-+	media_graph_walk_start(&graph, start_entity);
-+
-+	while ((entity = media_graph_walk_next(&graph))) {
-+		if (!is_media_entity_v4l2_subdev(entity))
-+			continue;
-+
-+		sd = media_entity_to_v4l2_subdev(entity);
-+
-+		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
-+					    sd->ctrl_handler,
-+					    NULL);
-+		if (ret)
-+			break;
-+	}
-+
-+	media_graph_walk_cleanup(&graph);
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(__v4l2_pipeline_inherit_controls);
-+
-+int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				   struct media_entity *start_entity)
-+{
-+	struct media_device *mdev = start_entity->graph_obj.mdev;
-+	int ret;
-+
-+	mutex_lock(&mdev->graph_mutex);
-+	ret = __v4l2_pipeline_inherit_controls(vfd, start_entity);
-+	mutex_unlock(&mdev->graph_mutex);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_pipeline_inherit_controls);
-+
- /* -----------------------------------------------------------------------------
-  * Pipeline power management
-  *
-diff --git a/include/media/v4l2-mc.h b/include/media/v4l2-mc.h
-index 2634d9d..9848e77 100644
---- a/include/media/v4l2-mc.h
-+++ b/include/media/v4l2-mc.h
-@@ -171,6 +171,17 @@ void v4l_disable_media_source(struct video_device *vdev);
-  */
- int v4l_vb2q_enable_media_source(struct vb2_queue *q);
- 
-+/**
-+ * v4l2_pipeline_inherit_controls - Add the v4l2 controls from all
-+ *				    subdev entities in a pipeline to
-+ *				    the given video device.
-+ * @vfd: the video device
-+ * @start_entity: Starting entity
-+ */
-+int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				     struct media_entity *start_entity);
-+int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-+				   struct media_entity *start_entity);
- 
- /**
-  * v4l2_pipeline_pm_use - Update the use count of an entity
-@@ -231,6 +242,20 @@ static inline int v4l_vb2q_enable_media_source(struct vb2_queue *q)
  	return 0;
- }
+diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
+index dd9d499..c43f85f 100644
+--- a/drivers/staging/media/imx/imx-ic-prpencvf.c
++++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
+@@ -806,16 +806,22 @@ static int prp_set_fmt(struct v4l2_subdev *sd,
+ 	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
+ 		cfg->try_fmt = sdformat->format;
+ 	} else {
+-		priv->format_mbus[sdformat->pad] = sdformat->format;
++		struct v4l2_mbus_framefmt *f =
++			&priv->format_mbus[sdformat->pad];
++		struct v4l2_mbus_framefmt *outf =
++			&priv->format_mbus[PRPENCVF_SRC_PAD];
++
++		*f = sdformat->format;
+ 		priv->cc[sdformat->pad] = cc;
+-		if (sdformat->pad == PRPENCVF_SRC_PAD) {
+-			/*
+-			 * update the capture device format if this is
+-			 * the IDMAC output pad
+-			 */
+-			imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix,
+-						      &sdformat->format, cc);
++
++		/* propagate format to source pad */
++		if (sdformat->pad == PRPENCVF_SINK_PAD) {
++			outf->width = f->width;
++			outf->height = f->height;
+ 		}
++
++		/* update the capture device format from output pad */
++		imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix, outf, cc);
+ 	}
  
-+static inline int __v4l2_pipeline_inherit_controls(
-+	struct video_device *vfd,
-+	struct media_entity *start_entity)
-+{
-+	return 0;
-+}
+ 	return 0;
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 3e6b607..9d9ec03 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -1161,19 +1161,27 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
+ 		cfg->try_fmt = sdformat->format;
+ 	} else {
++		struct v4l2_mbus_framefmt *f_direct, *f_idmac;
 +
-+static inline int v4l2_pipeline_inherit_controls(
-+	struct video_device *vfd,
-+	struct media_entity *start_entity)
-+{
-+	return 0;
-+}
+ 		priv->format_mbus[sdformat->pad] = sdformat->format;
+ 		priv->cc[sdformat->pad] = cc;
+-		/* Reset the crop window if this is the input pad */
+-		if (sdformat->pad == CSI_SINK_PAD)
 +
- static inline int v4l2_pipeline_pm_use(struct media_entity *entity, int use)
- {
++		f_direct = &priv->format_mbus[CSI_SRC_PAD_DIRECT];
++		f_idmac = &priv->format_mbus[CSI_SRC_PAD_IDMAC];
++
++		if (sdformat->pad == CSI_SINK_PAD) {
++			/* reset the crop window */
+ 			priv->crop = crop;
+-		else if (sdformat->pad == CSI_SRC_PAD_IDMAC) {
+-			/*
+-			 * update the capture device format if this is
+-			 * the IDMAC output pad
+-			 */
+-			imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix,
+-						      &sdformat->format, cc);
++
++			/* propagate format to source pads */
++			f_direct->width = crop.width;
++			f_direct->height = crop.height;
++			f_idmac->width = crop.width;
++			f_idmac->height = crop.height;
+ 		}
++
++		/* update the capture device format from IDMAC output pad */
++		imx_media_mbus_fmt_to_pix_fmt(&vdev->fmt.fmt.pix, f_idmac, cc);
+ 	}
+ 
+ 	return 0;
+diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
+index 61e6017..55fb522 100644
+--- a/drivers/staging/media/imx/imx-media-vdic.c
++++ b/drivers/staging/media/imx/imx-media-vdic.c
+@@ -649,8 +649,21 @@ static int vdic_set_fmt(struct v4l2_subdev *sd,
+ 	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
+ 		cfg->try_fmt = sdformat->format;
+ 	} else {
+-		priv->format_mbus[sdformat->pad] = sdformat->format;
++		struct v4l2_mbus_framefmt *f =
++			&priv->format_mbus[sdformat->pad];
++		struct v4l2_mbus_framefmt *outf =
++			&priv->format_mbus[VDIC_SRC_PAD_DIRECT];
++
++		*f = sdformat->format;
+ 		priv->cc[sdformat->pad] = cc;
++
++		/* propagate format to source pad */
++		if (sdformat->pad == VDIC_SINK_PAD_DIRECT ||
++		    sdformat->pad == VDIC_SINK_PAD_IDMAC) {
++			outf->width = f->width;
++			outf->height = f->height;
++			outf->field = V4L2_FIELD_NONE;
++		}
+ 	}
+ 
  	return 0;
 -- 
 2.7.4
