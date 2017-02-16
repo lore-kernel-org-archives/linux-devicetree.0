@@ -1,52 +1,148 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: Re: [PATCH v3 0/3] input: pwm-beeper: add feature to set volume level
-Date: Thu, 16 Feb 2017 22:15:29 +0100
-Message-ID: <fddaa3de-81a3-1078-65ac-29503419f1e6@exceet.de>
-References: <0e2dec4d-7550-9495-f12a-020391183304@exceet.de>
- <cover.1484838551.git.frieder.schrempf@exceet.de>
- <20170119213700.GC13542@dtor-ws>
- <43679b65-8710-4255-2006-8c47dd755497@lechnology.com>
+From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Subject: AXP808 vs. AXP806 debugged, no difference? (Was: [PATCH v6 5/5] ARM:
+ dts: sun9i: Initial support for the Sunchip CX-A99 board)
+Date: Thu, 16 Feb 2017 22:16:32 +0100
+Message-ID: <20170216211630.u3xddzzcpazlodkz@localhost>
+References: <cover.1486592470.git.rask@formelder.dk>
+ <d4211c5d57f80b0281d7d332edc7d69e66202d3d.1486592471.git.rask@formelder.dk>
+ <20170210085920.7l7gswm6yjuqgdfx@lukather>
+ <CAGb2v64AfBW+CHHkFvvNzCGBG09UK-sPcAZi2QgCR9wM=jguxw@mail.gmail.com>
+ <20170214233538.enkffjiw3kkfromu@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <43679b65-8710-4255-2006-8c47dd755497@lechnology.com>
-Sender: linux-input-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: robh@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, luis@debethencourt.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170214233538.enkffjiw3kkfromu@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello David,
+In summary: I'll propose a new property "extended-address" or so to the
+existing "x-powers,axp806" compatible, because the axp808 does seem to have
+the register at 0xff after all, it just needs a value of 0 instead of the 16
+which drivers/mfd/axp20x.c as of recently is now writing unconditionally
+to 0xff. A new "x-powers,axp808" compatible and new AXP808_ID is therefore
+not needed. This should make for a simpler and smaller patch.
 
-On 20.01.2017 20:11, David Lechner wrote:
-> On 01/19/2017 03:37 PM, Dmitry Torokhov wrote:
->> On Thu, Jan 19, 2017 at 04:24:07PM +0100, Frieder Schrempf wrote:
->>> Make the driver accept switching volume levels via sysfs.
->>> This can be helpful if the beep/bell sound intensity needs
->>> to be adapted to the environment of the device.
->>>
->>> The number of volume levels available and their values can
->>> be specified via device tree (similar to pwm-backlight).
->>>
->>> The volume adjustment is done by changing the duty cycle of
->>> the pwm signal.
->>
->> I wonder how this all will mesh up with beepers that have dedicated
->> amplifiers (support is being added by David Lechner).
->
-> This will work very well with it. I fact, it is a feature I would like
-> to have but I was not sure about a good way to implement it. Please Cc:
-> me on future revisions of this series and I will be glad to test it.
+On Wed, Feb 15, 2017 at 12:35:39AM +0100, Rask Ingemann Lambertsen wrote:
+> As to touching the register at 0xff, it would be interesting to know more
+> precisely what goes wrong. The symptom is these messages in the log:
+> 
+> [    3.209573] axp20x-rsb sunxi-rsb-745: AXP20x variant AXP806 found
+> [    3.210153] axp20x-rsb sunxi-rsb-745: Failed to set masks in 0x40: -5
+> [    3.210178] axp20x-rsb sunxi-rsb-745: failed to add irq chip: -5
+> [    3.210306] axp20x-rsb: probe of sunxi-rsb-745 failed with error -5
+> 
+> I haven't yet looked further into what happens at the RSB bus level.
 
-I have just send v4.
->
-> One thing that would be nice would be for a more generic way to change
-> the volume from userspace. Having a sysfs attribute on the platform
-> device will work, but it requires very specific knowledge from any
-> userspace program that wants to control the volume. Would it be possible
-> to add an alsa mixer volume control or something like that?
+With the patch below applied for debugging purposes and using the
+"xpowers,axp806" compatible, I get:
 
-An alsa mixer control for the pwm-beeper volume sounds nice, but 
-unfortunately I have no idea how one would implement this, or if this is 
-even possible.
->
+[    3.209955] axp20x-rsb sunxi-rsb-745: AXP20x variant AXP806 found
+[    3.210065] axp20x-rsb sunxi-rsb-745: Chip ID read 1 = 0x60
+[    3.210119] axp20x-rsb sunxi-rsb-745: Reg addr ext = 0x0
+[    3.210171] axp20x-rsb sunxi-rsb-745: Bus addr ext = 0x0
+[    3.210381] axp20x-rsb sunxi-rsb-745: Chip ID read 2 = 0x60
+(16 written to register 0xff here)
+[    3.210570] sunxi-rsb 8003400.i2c: RSB transfer data error
+[    3.210596] sunxi-rsb 8003400.i2c: RSB error reading dev 58 register 3 length 1.
+[    3.210625] axp20x-rsb sunxi-rsb-745: Chip ID read 3 = 0xffffffff
+(0 written to register 0xff here)
+[    3.210828] axp20x-rsb sunxi-rsb-745: Chip ID read 4 = 0x60
+
+I.e. register 0xff (Reg addr ext) and 0xfe (Bus addr ext) exist with a
+default of 0. After writing 16 to register 0xff, the chip ID (register 3)
+can not be read, but writing 0 to register 0xff makes the AXP808 respond
+again and the board boots up as normal.
+
+Also, can someone with an AXP806 confirm that it does use the same chip ID
+of 0x60 as the AXP808?
+
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 125b470..db557f3 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -910,9 +910,40 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
+ 	 * address.
+ 	 */
+ 	if (axp20x->variant == AXP806_ID)
++	{
++		int dummy;
++
++		dummy = -1;
++		regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
++		dev_info(axp20x->dev, "Chip ID read 1 = 0x%x\n", dummy);
++
++		regmap_read(axp20x->regmap, AXP806_REG_ADDR_EXT, &dummy);
++		dev_info(axp20x->dev, "Reg addr ext = 0x%x\n", dummy);
++		regmap_read(axp20x->regmap, AXP806_BUS_ADDR_EXT, &dummy);
++		dev_info(axp20x->dev, "Bus addr ext = 0x%x\n", dummy);
++
++		regmap_reinit_cache(axp20x->regmap, axp20x->regmap_cfg);
++		dummy = -1;
++		regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
++		dev_info(axp20x->dev, "Chip ID read 2 = 0x%x\n", dummy);
++
+ 		regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
+ 			     AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE);
+ 
++		regmap_reinit_cache(axp20x->regmap, axp20x->regmap_cfg);
++		dummy = -1;
++		regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
++		dev_info(axp20x->dev, "Chip ID read 3 = 0x%x\n", dummy);
++
++		regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
++			     0);
++
++		regmap_reinit_cache(axp20x->regmap, axp20x->regmap_cfg);
++		dummy = -1;
++		regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
++		dev_info(axp20x->dev, "Chip ID read 4 = 0x%x\n", dummy);
++	}
++
+ 	ret = regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
+ 			  IRQF_ONESHOT | IRQF_SHARED | axp20x->irq_flags,
+ 			   -1, axp20x->regmap_irq_chip, &axp20x->regmap_irqc);
+diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+index 795c9d9..85e4926 100644
+--- a/drivers/bus/sunxi-rsb.c
++++ b/drivers/bus/sunxi-rsb.c
+@@ -349,6 +349,10 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ unlock:
+ 	mutex_unlock(&rsb->lock);
+ 
++	if (ret)
++		dev_dbg(rsb->dev, "RSB error reading dev %u register %u length %u.\n",
++			rtaddr, addr, (unsigned int) len);
++
+ 	return ret;
+ }
+ 
+@@ -386,6 +390,10 @@ static int sunxi_rsb_write(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+ 
+ 	mutex_unlock(&rsb->lock);
+ 
++	if (ret)
++		dev_dbg(rsb->dev, "RSB error writing dev %u register %u length %u.\n",
++			rtaddr, addr, (unsigned int) len);
++
+ 	return ret;
+ }
+ 
+diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+index cc6364b..4b81226 100644
+--- a/drivers/bus/Makefile
++++ b/drivers/bus/Makefile
+@@ -24,3 +24,4 @@ obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)	+= uniphier-system-bus.o
+ obj-$(CONFIG_VEXPRESS_CONFIG)	+= vexpress-config.o
+ 
+ obj-$(CONFIG_DA8XX_MSTPRI)	+= da8xx-mstpri.o
++CFLAGS_sunxi-rsb.o		+= -DDEBUG -DEBUG
+
+-- 
+Rask Ingemann Lambertsen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
