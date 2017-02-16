@@ -1,70 +1,83 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt: bindings: fpga: add xilinx slave-serial binding description
-Date: Thu, 16 Feb 2017 09:36:08 -0800
-Message-ID: <CAAtXAHcpcwax-rH3quYF9QTOVfbTyxmpPLLbUyX=-aruQfADDA@mail.gmail.com>
-References: <1487257860-31115-1-git-send-email-agust@denx.de> <1487257860-31115-2-git-send-email-agust@denx.de>
+From: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH] input: arizona-haptics - Add device property for HAP_ACT
+Date: Thu, 16 Feb 2017 17:35:58 +0000
+Message-ID: <1487266558-19040-1-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487257860-31115-2-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anatolij,
+This adds a device property for setting the configuration for the
+HAP_ACT register field so that the connected actuator type can be
+configured on systems that are not using pdata.
 
-On Thu, Feb 16, 2017 at 7:10 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
-> Add dt binding documentation details for Xilinx FPGA configuration
-> over slave serial interface.
->
-> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-> ---
->  .../bindings/fpga/xilinx-slave-serial.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
->
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> new file mode 100644
-> index 0000000..b5fa6a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> @@ -0,0 +1,24 @@
-> +Xilinx Slave Serial SPI FPGA Manager
-> +
-> +Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
-> +what is referred to as "slave serial" interface.
-> +The slave serial link is not technically SPI, and might require extra
-> +circuits in order to play nicely with other SPI slaves on the same bus.
-> +
-> +See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-> +
-> +Required properties:
-> +- compatible: should contain "xlnx,fpga-slave-serial"
-> +- reg: spi chip select of the FPGA
-> +- prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
-> +- done-gpios: config status pin (referred to as DONE in the manual)
-> +
-> +Example:
-> +       fpga_mgr_spi: fpga-spi@0 {
+Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+---
+ Documentation/devicetree/bindings/input/arizona-haptics.txt | 10 ++++++++++
+ MAINTAINERS                                                 |  1 +
+ drivers/input/misc/arizona-haptics.c                        |  7 +++++++
+ 3 files changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/arizona-haptics.txt
 
-Maybe we can standardize them here to be fpga-mgr@X, that being said,
-I don't do what I suggested in the zynq fpga mgr bindings docs.
+diff --git a/Documentation/devicetree/bindings/input/arizona-haptics.txt b/Documentation/devicetree/bindings/input/arizona-haptics.txt
+new file mode 100644
+index 0000000..a3e767b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/arizona-haptics.txt
+@@ -0,0 +1,10 @@
++Cirrus Logic Arizona class audio SoCs
++
++This document lists haptics bindings for these codecs.
++Also see the primary binding document:
++  ../mfd/arizona.txt
++
++Optional properties:
++  - wlf,hap-act : Single value defining the actuator type, as per the HAP_ACT
++    register field. See the codec datasheet for the available HAP_ACT values
++    and their meaning.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 26edd83..be4ea3e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13377,6 +13377,7 @@ W:	https://github.com/CirrusLogic/linux-drivers/wiki
+ S:	Supported
+ F:	Documentation/hwmon/wm83??
+ F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
++F:	Documentation/devicetree/bindings/input/arizona*.txt
+ F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+ F:	Documentation/devicetree/bindings/mfd/arizona.txt
+ F:	arch/arm/mach-s3c64xx/mach-crag6410*
+diff --git a/drivers/input/misc/arizona-haptics.c b/drivers/input/misc/arizona-haptics.c
+index 21dc1b8..0264d95 100644
+--- a/drivers/input/misc/arizona-haptics.c
++++ b/drivers/input/misc/arizona-haptics.c
+@@ -14,6 +14,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/input.h>
+ #include <linux/slab.h>
++#include <linux/property.h>
+ 
+ #include <sound/soc.h>
+ #include <sound/soc-dapm.h>
+@@ -164,6 +165,12 @@ static int arizona_haptics_probe(struct platform_device *pdev)
+ 
+ 	haptics->arizona = arizona;
+ 
++	if (!dev_get_platdata(arizona->dev))
++		device_property_read_u32(arizona->dev, "wlf,hap-act",
++					 &arizona->pdata.hap_act);
++
++	dev_dbg(arizona->dev, "hap_act=%u\n", arizona->pdata.hap_act);
++
+ 	ret = regmap_update_bits(arizona->regmap, ARIZONA_HAPTICS_CONTROL_1,
+ 				 ARIZONA_HAP_ACT, arizona->pdata.hap_act);
+ 	if (ret != 0) {
+-- 
+1.9.1
 
-> +               compatible = "xlnx,fpga-slave-serial";
-> +               spi-max-frequency = <60000000>;
-> +               spi-cpha;
-> +               reg = <0>;
-> +               done-gpio = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-> +               prog_b-gpio = <&gpio0 29 GPIO_ACTIVE_LOW>;
-> +       };
-> --
-> 1.9.1
->
-
-Thanks,
-
-Moritz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
