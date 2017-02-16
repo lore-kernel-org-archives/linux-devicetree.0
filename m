@@ -1,115 +1,142 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: Re: [PATCH v3 3/3] input: pwm-beeper: add devicetree bindings to set
- volume levels
-Date: Thu, 16 Feb 2017 21:40:05 +0100
-Message-ID: <4b9aeb6f-185c-5661-62d0-1466d8c9a24c@exceet.de>
-References: <cover.1484838551.git.frieder.schrempf@exceet.de>
- <2e483f697e1cd37b56c596b3979ccf1484c8be42.1484838551.git.frieder.schrempf@exceet.de>
- <20170119213049.GB13542@dtor-ws>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/21] ARM: sun8i: dt: Add DT bindings
+ documentation for Allwinner dwmac-sun8i
+Date: Thu, 16 Feb 2017 12:58:46 -0800
+Message-ID: <783a717d-f1f4-e265-bf94-0b3080cea542@gmail.com>
+References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
+ <20170216124859.14346-5-clabbe.montjoie@gmail.com>
+Reply-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170119213049.GB13542@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: robh@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, luis@debethencourt.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCH67JWTV4DBBCVFTDCQKGQEKJW6TSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170216124859.14346-5-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19.01.2017 22:30, Dmitry Torokhov wrote:
-> On Thu, Jan 19, 2017 at 04:24:10PM +0100, Frieder Schrempf wrote:
->> This patch adds the devicetree bindings to set the volume levels
->> and the default volume level.
->>
->> Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
->> ---
->> Changes in v3:
->>  - none
->>
->>  drivers/input/misc/pwm-beeper.c | 49 ++++++++++++++++++++++++++++++++++++++---
->>  1 file changed, 46 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
->> index 3ed21da..a7f9d70 100644
->> --- a/drivers/input/misc/pwm-beeper.c
->> +++ b/drivers/input/misc/pwm-beeper.c
->> @@ -32,7 +32,7 @@ struct pwm_beeper {
->>  	struct work_struct work;
->>  	unsigned long period;
->>  	unsigned int volume;
->> -	unsigned int volume_levels[] = {0, 8, 20, 40, 500};
->> +	unsigned int *volume_levels;
->>  	unsigned int max_volume_level;
->>  };
->>
->> @@ -161,8 +161,11 @@ static void pwm_beeper_close(struct input_dev *input)
->>  static int pwm_beeper_probe(struct platform_device *pdev)
->>  {
->>  	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
->> +	struct device_node *np = pdev->dev.of_node;
->>  	struct pwm_beeper *beeper;
->> -	int error;
->> +	struct property *prop;
->> +	int error, length;
->> +	u32 value;
->>
->>  	beeper = kzalloc(sizeof(*beeper), GFP_KERNEL);
->>  	if (!beeper)
->> @@ -188,7 +191,47 @@ static int pwm_beeper_probe(struct platform_device *pdev)
->>
->>  	INIT_WORK(&beeper->work, pwm_beeper_work);
->>
->> -	beeper->max_volume_level = ARRAY_SIZE(beeper->volume_levels) - 1;
->> +	/* determine the number of volume levels */
->> +	prop = of_find_property(np, "volume-levels", &length);
->
-> Please use generic device properties, not OF-specific ones.
+On 02/16/2017 04:48 AM, Corentin Labbe wrote:
+> This patch adds documentation for Device-Tree bindings for the
+> Allwinner dwmac-sun8i driver.
+> 
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/dwmac-sun8i.txt        | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> new file mode 100644
+> index 0000000..ac806c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> @@ -0,0 +1,86 @@
+> +* Allwinner sun8i GMAC ethernet controller
+> +
+> +This device is a platform glue layer for stmmac.
+> +Please see stmmac.txt for the other unchanged properties.
+> +
+> +Required properties:
+> +- compatible: should be one of the following string:
+> +		"allwinner,sun8i-a83t-emac"
+> +		"allwinner,sun8i-h3-emac"
+> +		"allwinner,sun50i-a64-emac"
+> +- reg: address and length of the register for the device.
+> +- interrupts: interrupt for the device
+> +- interrupt-names: should be "macirq"
+> +- clocks: A phandle to the reference clock for this device
+> +- clock-names: should be "stmmaceth"
+> +- resets: A phandle to the reset control for this device
+> +- reset-names: should be "stmmaceth"
+> +- phy-mode: See ethernet.txt
+> +- phy-handle: See ethernet.txt
+> +- #address-cells: shall be 1
+> +- #size-cells: shall be 0
+> +- syscon: A phandle to the syscon of the SoC with one of the following
+> + compatible string:
+> +  - allwinner,sun8i-h3-system-controller
+> +  - allwinner,sun8i-a64-system-controller
+> +  - allwinner,sun8i-a83t-system-controller
+> +
+> +Optional properties:
+> +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
+> +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
 
-Ok, I will change this in v4.
->
->> +	if (!prop) {
->> +		dev_dbg(&pdev->dev, "no volume levels specified, using max volume\n");
->> +		beeper->max_volume_level = 1;
->> +	} else
->> +		beeper->max_volume_level = length / sizeof(u32);
->> +
->> +	/* read volume levels from DT property */
->> +	if (beeper->max_volume_level > 0) {
->> +		size_t size = sizeof(*beeper->volume_levels) *
->> +			beeper->max_volume_level;
->> +
->> +		beeper->volume_levels = devm_kzalloc(&(pdev->dev), size,
->> +			GFP_KERNEL);
->> +		if (!beeper->volume_levels)
->> +			return -ENOMEM;
->> +
->> +		if (prop) {
->> +			error = of_property_read_u32_array(np, "volume-levels",
->> +						beeper->volume_levels,
->> +						beeper->max_volume_level);
->> +
->> +			if (error < 0)
->> +				return error;
->> +
->> +			error = of_property_read_u32(np, "default-volume-level",
->> +						   &value);
->> +
->> +			if (error < 0) {
->> +				dev_dbg(&pdev->dev, "no default volume specified, using max volume\n");
->> +				value = beeper->max_volume_level - 1;
->> +			}
->> +		} else {
->> +			beeper->volume_levels[0] = 500;
->> +			value = 0;
->> +		}
->> +
->> +		beeper->volume = value;
->> +		beeper->max_volume_level--;
->> +	}
->>
->>  	beeper->input = input_allocate_device();
->>  	if (!beeper->input) {
->> --
->> 2.7.4
->>
->
+Delays should be specified in nanosecond units, and should not be a
+value that maps directly to a HW register value, you need to convert the
+property value into the appropriate register value.
+
+> +Both delay properties does not have units, there are arbitrary value.
+> +The TX/RX clock delay chain settings are board specific and could be found
+> +in vendor FEX files.
+> +
+> +Optional properties for "allwinner,sun8i-h3-emac":
+> +- allwinner,leds-active-low: EPHY LEDs are active low
+
+Are you sure this is appropriate at the MAC node level and this is not
+something that follows the PHY instead?
+
+> +
+> +Required child node of emac:
+> +- mdio bus node: should be named mdio
+> +
+> +Required properties of the mdio node:
+> +- #address-cells: shall be 1
+> +- #size-cells: shall be 0
+> +
+> +The device node referenced by "phy" or "phy-handle" should be a child node
+> +of the mdio node. See phy.txt for the generic PHY bindings.
+> +
+> +Required properties of the phy node with "allwinner,sun8i-h3-emac":
+> +- clocks: an extra phandle to the reference clock for the EPHY
+
+s/an extra/a phandle/
+
+> +- resets: an extra phandle to the reset control for the EPHY
+> +
+> +Required properties for the system controller:
+> +- reg: address and length of the register for the device.
+> +- compatible: should be "syscon" and one of the following string:
+> +		"allwinner,sun8i-h3-system-controller"
+> +		"allwinner,sun8i-a64-system-controller"
+> +		"allwinner,sun8i-a83t-system-controller"
+> +
+> +Example:
+> +
+> +emac: ethernet@1c0b000 {
+> +	compatible = "allwinner,sun8i-h3-emac";
+> +	syscon = <&syscon>;
+> +	reg = <0x01c0b000 0x104>;
+> +	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +	interrupt-names = "macirq";
+> +	resets = <&ccu RST_BUS_EMAC>;
+> +	reset-names = "stmmaceth";
+> +	clocks = <&ccu CLK_BUS_EMAC>;
+> +	clock-names = "stmmaceth";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	phy = <&int_mii_phy>;
+> +	phy-mode = "mii";
+> +	allwinner,leds-active-low;
+> +	mdio: mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		int_mii_phy: ethernet-phy@1 {
+> +			reg = <1>;
+> +			clocks = <&ccu CLK_BUS_EPHY>;
+> +			resets = <&ccu RST_BUS_EPHY>;
+> +		};
+> +	};
+> +};
+> 
+
+
+-- 
+Florian
