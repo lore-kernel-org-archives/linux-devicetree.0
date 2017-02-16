@@ -1,142 +1,51 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/21] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner dwmac-sun8i
-Date: Thu, 16 Feb 2017 12:58:46 -0800
-Message-ID: <783a717d-f1f4-e265-bf94-0b3080cea542@gmail.com>
-References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
- <20170216124859.14346-5-clabbe.montjoie@gmail.com>
-Reply-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v4 0/3] input: pwm-beeper: add feature to set volume level
+Date: Thu, 16 Feb 2017 22:08:27 +0100
+Message-ID: <cover.1487278130.git.frieder.schrempf@exceet.de>
+References: <cover.1484838551.git.frieder.schrempf@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCH67JWTV4DBBCVFTDCQKGQEKJW6TSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170216124859.14346-5-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1484838551.git.frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/2017 04:48 AM, Corentin Labbe wrote:
-> This patch adds documentation for Device-Tree bindings for the
-> Allwinner dwmac-sun8i driver.
-> 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/dwmac-sun8i.txt        | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> new file mode 100644
-> index 0000000..ac806c6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> @@ -0,0 +1,86 @@
-> +* Allwinner sun8i GMAC ethernet controller
-> +
-> +This device is a platform glue layer for stmmac.
-> +Please see stmmac.txt for the other unchanged properties.
-> +
-> +Required properties:
-> +- compatible: should be one of the following string:
-> +		"allwinner,sun8i-a83t-emac"
-> +		"allwinner,sun8i-h3-emac"
-> +		"allwinner,sun50i-a64-emac"
-> +- reg: address and length of the register for the device.
-> +- interrupts: interrupt for the device
-> +- interrupt-names: should be "macirq"
-> +- clocks: A phandle to the reference clock for this device
-> +- clock-names: should be "stmmaceth"
-> +- resets: A phandle to the reset control for this device
-> +- reset-names: should be "stmmaceth"
-> +- phy-mode: See ethernet.txt
-> +- phy-handle: See ethernet.txt
-> +- #address-cells: shall be 1
-> +- #size-cells: shall be 0
-> +- syscon: A phandle to the syscon of the SoC with one of the following
-> + compatible string:
-> +  - allwinner,sun8i-h3-system-controller
-> +  - allwinner,sun8i-a64-system-controller
-> +  - allwinner,sun8i-a83t-system-controller
-> +
-> +Optional properties:
-> +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
-> +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
+Make the driver accept switching volume levels via sysfs.
+This can be helpful if the beep/bell sound intensity needs
+to be adapted to the environment of the device.
 
-Delays should be specified in nanosecond units, and should not be a
-value that maps directly to a HW register value, you need to convert the
-property value into the appropriate register value.
+The number of volume levels available and their values can
+be specified via device tree (similar to pwm-backlight).
 
-> +Both delay properties does not have units, there are arbitrary value.
-> +The TX/RX clock delay chain settings are board specific and could be found
-> +in vendor FEX files.
-> +
-> +Optional properties for "allwinner,sun8i-h3-emac":
-> +- allwinner,leds-active-low: EPHY LEDs are active low
+The volume adjustment is done by changing the duty cycle of
+the pwm signal.
 
-Are you sure this is appropriate at the MAC node level and this is not
-something that follows the PHY instead?
+Changes in v4:
+ - move sysfs attributes from class/input to devices/pwm-beeper
+ - rename max_volume_level to max_volume
+ - move array allocation to probe function
+ - rename attribute structs
+ - remove needless code
+ - update date
+ - use generic device properties instead of dt properties
 
-> +
-> +Required child node of emac:
-> +- mdio bus node: should be named mdio
-> +
-> +Required properties of the mdio node:
-> +- #address-cells: shall be 1
-> +- #size-cells: shall be 0
-> +
-> +The device node referenced by "phy" or "phy-handle" should be a child node
-> +of the mdio node. See phy.txt for the generic PHY bindings.
-> +
-> +Required properties of the phy node with "allwinner,sun8i-h3-emac":
-> +- clocks: an extra phandle to the reference clock for the EPHY
+Frieder Schrempf (3):
+  input: pwm-beeper: add feature to set volume via sysfs
+  input: pwm-beeper: add documentation for volume devicetree bindings
+  input: pwm-beeper: add devicetree bindings to set volume levels
 
-s/an extra/a phandle/
-
-> +- resets: an extra phandle to the reset control for the EPHY
-> +
-> +Required properties for the system controller:
-> +- reg: address and length of the register for the device.
-> +- compatible: should be "syscon" and one of the following string:
-> +		"allwinner,sun8i-h3-system-controller"
-> +		"allwinner,sun8i-a64-system-controller"
-> +		"allwinner,sun8i-a83t-system-controller"
-> +
-> +Example:
-> +
-> +emac: ethernet@1c0b000 {
-> +	compatible = "allwinner,sun8i-h3-emac";
-> +	syscon = <&syscon>;
-> +	reg = <0x01c0b000 0x104>;
-> +	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "macirq";
-> +	resets = <&ccu RST_BUS_EMAC>;
-> +	reset-names = "stmmaceth";
-> +	clocks = <&ccu CLK_BUS_EMAC>;
-> +	clock-names = "stmmaceth";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	phy = <&int_mii_phy>;
-> +	phy-mode = "mii";
-> +	allwinner,leds-active-low;
-> +	mdio: mdio {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		int_mii_phy: ethernet-phy@1 {
-> +			reg = <1>;
-> +			clocks = <&ccu CLK_BUS_EPHY>;
-> +			resets = <&ccu RST_BUS_EPHY>;
-> +		};
-> +	};
-> +};
-> 
-
+ Documentation/ABI/testing/sysfs-devices-pwm-beeper |  17 ++++
+ .../devicetree/bindings/input/pwm-beeper.txt       |  20 ++++
+ drivers/input/misc/pwm-beeper.c                    | 111 ++++++++++++++++++++-
+ 3 files changed, 146 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-devices-pwm-beeper
 
 -- 
-Florian
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
