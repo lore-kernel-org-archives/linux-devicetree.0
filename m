@@ -1,43 +1,54 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 18/36] media: Add i.MX media core driver
-Date: Thu, 16 Feb 2017 13:44:23 +0000
-Message-ID: <20170216134422.GO27312@n2100.armlinux.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-19-git-send-email-steve_longerbeam@mentor.com>
- <1487250123.2377.53.camel@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 00/11] ARM: Initial Actions Semi S500 and S900 enablement
+Date: Thu, 16 Feb 2017 14:46:00 +0100
+Message-ID: <3039198.1W6tLqk8Fp@wuerfel>
+References: <20170215165528.10052-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1487250123.2377.53.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170215165528.10052-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, info-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, contact-CO9UH4nLugWa1hIE42aguQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 02:02:03PM +0100, Philipp Zabel wrote:
-> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
-> > +- imx-csi subdev is not being autoloaded as a kernel module, probably
-> > +  because ipu_add_client_devices() does not register the IPU client
-> > +  platform devices, but only allocates those devices.
+On Wednesday, February 15, 2017 5:55:17 PM CET Andreas Färber wrote:
+> Hello,
 > 
-> As Russell points out, this is an issue with the ipu-v3 driver, which
-> needs to be fixed to stop setting the ipu client devices' dev->of_node
-> field.
+> Based on earlier work of mine for the LeMaker Guitar, this series adds initial
+> support for the Actions Semiconductor S500 (ARMv7) and S900 (ARMv8) SoCs.
+> 
+> Despite Actions Semi being a Linaro member since 2015, sadly I have not seen
+> a single upstream kernel patch submission since. Nor has the XApple community
+> taken any such initiative.
+> 
+> The GitHub LeMaker/linux-actions and xapp-le/kernel trees have 3.10 based S500
+> drivers in arch/arm/mach-owl/, whereas the 96boards-bubblegum/linux tree has
+> new-style but still 3.10 based S900 drivers. I also spotted GPLv2+ vs. GPLv2
+> license differences.
+> 
+> This series therefore provides a proof of concept for a combined S500 and S900
+> mainline implementation. Only earlycon serial output is available for now.
+> 
+> Focusing on Bubblegum-96, no S500 clocksource implementation is provided yet,
+> thus output on Guitar is less than on Bubblegum-96, but still it demonstrates
+> that a single driver can be shared for both, using compatible strings for
+> future differentiation.
 
->From my local testing (albiet the shambles that is bits of v4l2) setting
-dev->of_node is not necessary for imx-drm - imx-drm comes up fine without.
+Thanks for getting this started! It's unfortunately too late for 4.11 now,
+but there should be no problem getting this merged into arm-soc early on
+after the coming merge window.
 
-Fixing _this_ code for that is not too difficult - it's a matter of:
+I'd suggest keeping it as a set of patches for the moment, and we'll apply
+them to the respective arm-soc branches as needed, with the exception of
+the tty patch that should go through Greg's tree.
 
-	priv->sd.of_node = pdata->of_node;
+When you have addressed the review comments, please send the updated series
+to arm-DgEjT+Ai2yi4UlQgPVntAg@public.gmane.org
 
-in imx_csi_probe().  However, the difficult bit is the poor state of
-code in v4l2, particularly the v4l2-async crap.  Right now, fixing the
-module autoloading will oops the kernel, so it's best that module
-autoloading remains broken for the time being.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
