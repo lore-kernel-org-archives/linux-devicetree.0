@@ -1,61 +1,33 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
-Date: Fri, 17 Feb 2017 13:20:55 +0000
-Message-ID: <CACvgo51VRwMneHuS2jrM9ug8OEBsh5AD0ncpYfAZkGBFGKYMsg@mail.gmail.com>
-References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
- <20170216184524.cxcy2ux37yrwutla@lukather> <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] fpga dt: bindings for Altera Partial Reconfiguraion IP.
+Date: Fri, 17 Feb 2017 07:31:24 -0600
+Message-ID: <CADhT+wfbD0ET8txd7v90jqHwh0U15LdbY2H5=On4wsLkETVazg@mail.gmail.com>
+References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com> <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
-Sender: owner-linux-mm@kvack.org
-To: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-mm@kvack.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487193038-3490-4-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 February 2017 at 12:45, Tobias Jakobi
-<tjakobi@math.uni-bielefeld.de> wrote:
-> Hello Maxime,
+On Wed, Feb 15, 2017 at 3:10 PM,  <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 >
-> Maxime Ripard wrote:
->> Hi,
->>
->> On Thu, Feb 16, 2017 at 01:43:06PM +0100, Tobias Jakobi wrote:
->>> I was wondering about the following. Wasn't there some strict
->>> requirement about code going upstream, which also included that there
->>> was a full open-source driver stack for it?
->>>
->>> I don't see how this is the case for Mali, neither in the kernel, nor in
->>> userspace. I'm aware that the Mali kernel driver is open-source. But it
->>> is not upstream, maintained out of tree, and won't land upstream in its
->>> current form (no resemblence to a DRM driver at all). And let's not talk
->>> about the userspace part.
->>>
->>> So, why should this be here?
->>
->> The device tree is a representation of the hardware itself. The state
->> of the driver support doesn't change the hardware you're running on,
->> just like your BIOS/UEFI on x86 won't change the device it reports to
->> Linux based on whether it has a driver for it.
-> Like Emil already said, the new bindings and the DT entries are solely
-> introduced to support a proprietary out-of-tree module.
+> Device Tree bindings for Altera Partial Reconfiguraion IP?
 >
-> The current workflow when introducing new DT entries is the following:
-> - upstream a driver that uses the entries
-> - THEN add the new entries
+> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
 >
-That's the ideal route that I was thinking of.
 
-At the same time, if prominent DRM people believe that we can/should
-turn a blind eye, so be it.
-I'm not trying to make Maxime's life hard, but point out that things
-feel iffy IMHO.
+Nit: your commit header s/Reconfiguraion/Reconfiguration
 
-Thanks
-Emil
-
+Dinh
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
