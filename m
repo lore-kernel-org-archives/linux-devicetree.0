@@ -1,137 +1,107 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 04/22] Documentation: PCI: Guide to use pci endpoint
- configfs
-Date: Fri, 17 Feb 2017 15:20:24 +0530
-Message-ID: <1487325042-28227-5-git-send-email-kishon@ti.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+Subject: [PATCH v5 3/3] input: pwm-beeper: add devicetree bindings to set volume levels
+Date: Fri, 17 Feb 2017 10:54:43 +0100
+Message-ID: <b09ca2af5094458f6f92f8e6cacb5976a2d549de.1487323753.git.frieder.schrempf@exceet.de>
+References: <cover.1487278130.git.frieder.schrempf@exceet.de> <cover.1487323753.git.frieder.schrempf@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1487325042-28227-1-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1487323753.git.frieder.schrempf@exceet.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh@kernel.org
+Cc: dmitry.torokhov@gmail.com, david@lechnology.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, luis@debethencourt.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frieder Schrempf <frieder.schrempf@exceet.de>
 List-Id: devicetree@vger.kernel.org
 
-Add Documentation to help users use pci endpoint to configure
-pci endpoint function and to bind the endpoint function
-with endpoint controller.
+This patch adds the devicetree bindings to set the volume levels
+and the default volume level.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Frieder Schrempf <frieder.schrempf@exceet.de>
 ---
- Documentation/PCI/00-INDEX                      |    2 +
- Documentation/PCI/endpoint/pci-endpoint-cfs.txt |   84 +++++++++++++++++++++++
- 2 files changed, 86 insertions(+)
- create mode 100644 Documentation/PCI/endpoint/pci-endpoint-cfs.txt
+Changes in v5:
+ - fix renaming of max_volume_level to max_volume
+ - remove needless variable declaration
 
-diff --git a/Documentation/PCI/00-INDEX b/Documentation/PCI/00-INDEX
-index ba950b2..f84a23c 100644
---- a/Documentation/PCI/00-INDEX
-+++ b/Documentation/PCI/00-INDEX
-@@ -14,3 +14,5 @@ pcieaer-howto.txt
- 	- the PCI Express Advanced Error Reporting Driver Guide HOWTO
- endpoint/pci-endpoint.txt
- 	- guide to add endpoint controller driver and endpoint function driver.
-+endpoint/pci-endpoint-cfs.txt
-+	- guide to use configfs to configure the pci endpoint function.
-diff --git a/Documentation/PCI/endpoint/pci-endpoint-cfs.txt b/Documentation/PCI/endpoint/pci-endpoint-cfs.txt
-new file mode 100644
-index 0000000..d9f8734
---- /dev/null
-+++ b/Documentation/PCI/endpoint/pci-endpoint-cfs.txt
-@@ -0,0 +1,84 @@
-+                   CONFIGURING PCI ENDPOINT USING CONFIGFS
-+                    Kishon Vijay Abraham I <kishon@ti.com>
+ drivers/input/misc/pwm-beeper.c | 60 ++++++++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+index 5fbc198..aee88d6 100644
+--- a/drivers/input/misc/pwm-beeper.c
++++ b/drivers/input/misc/pwm-beeper.c
+@@ -154,8 +154,9 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+ {
+ 	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
+ 	struct pwm_beeper *beeper;
+-	int error;
++	int error, length;
+ 	size_t size;
++	u32 value;
+ 
+ 	beeper = kzalloc(sizeof(*beeper), GFP_KERNEL);
+ 	if (!beeper)
+@@ -181,23 +182,46 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+ 
+ 	INIT_WORK(&beeper->work, pwm_beeper_work);
+ 
+-	beeper->max_volume = 4;
+-
+-	size = sizeof(*beeper->volume_levels) *
+-		(beeper->max_volume + 1);
+-
+-	beeper->volume_levels = devm_kzalloc(&(pdev->dev), size,
+-		GFP_KERNEL);
+-	if (!beeper->volume_levels)
+-		return -ENOMEM;
+-
+-	beeper->volume_levels[0] = 0;
+-	beeper->volume_levels[1] = 8;
+-	beeper->volume_levels[2] = 20;
+-	beeper->volume_levels[3] = 40;
+-	beeper->volume_levels[4] = 500;
+-
+-	beeper->volume = beeper->max_volume;
++	/* determine the number of volume levels */
++	length = device_property_read_u32_array(&pdev->dev, "volume-levels", NULL, 0);
++	if (length <= 0) {
++		dev_dbg(&pdev->dev, "no volume levels specified, using max volume\n");
++		beeper->max_volume = 1;
++	} else
++		beeper->max_volume = length;
 +
-+The PCI Endpoint Core exposes configfs entry (pci_ep) in order to configure the
-+PCI endpoint function and in order to bind the endpoint function
-+with the endpoint controller. (For introducing other mechanisms to
-+configure the PCI Endpoint Function refer [1]).
++	/* read volume levels from DT property */
++	if (beeper->max_volume > 0) {
++		size = sizeof(*beeper->volume_levels) *	beeper->max_volume;
 +
-+*) Mounting configfs
++		beeper->volume_levels = devm_kzalloc(&(pdev->dev), size,
++			GFP_KERNEL);
++		if (!beeper->volume_levels)
++			return -ENOMEM;
 +
-+The PCI Endpoint Core layer creates pci_ep directory in the mounted configfs
-+directory. configfs can be mounted using the following command.
++		if (length > 0) {
++			error = device_property_read_u32_array(&pdev->dev, "volume-levels",
++						beeper->volume_levels,
++						beeper->max_volume);
 +
-+	mount -t configfs none /sys/kernel/config
++			if (error < 0)
++				return error;
 +
-+*) Directory Structure
++			error = device_property_read_u32(&pdev->dev, "default-volume-level",
++						   &value);
 +
-+The pci_ep configfs directory structure has been created to reflect the
-+natural tree like structure of PCI devices. So every directory created
-+inside pci_ep represents a EPC device and every directory created inside
-+epf directory represents EPF device.
++			if (error < 0) {
++				dev_dbg(&pdev->dev, "no default volume specified, using max volume\n");
++				value = beeper->max_volume - 1;
++			}
++		} else {
++			beeper->volume_levels[0] = 500;
++			value = 0;
++		}
 +
-+/sys/kernel/config/pci_ep/
-+			 | <dir>/ --------------------------------------> [2]
-+				| epc
-+				| epf/
-+				     | <dir>/ --------------------------> [3]
-+					    | vendorid
-+					    | deviceid
-+					    | revid
-+					    | progif_code
-+					    | subclass_code
-+					    | baseclass_code
-+					    | cache_line_size
-+					    | subsys_vendor_id
-+					    | subsys_id
-+					    | interrupt_pin
-+					    | function
-+
-+*) Creating configfs entry for EPC
-+
-+Any directory created inside *pci_ep* represents an EPC device. In the above
-+directory structure [2] represents an EPC device. It consists of
-+
-+	*) epc: Use it to associate the configfs entry to an actual EPC device.
-+		The list of valid entries for this field can be obtained from
-+			ls /sys/class/pci_epc/
-+
-+	*) epf: Directory that contains all the endpoint functions. The name
-+		of the created directory determines the driver this particular
-+		epf device will be bound to. The name can be obtained either
-+		from the function binding documentation [4] or
-+			ls /sys/bus/pci-epf/drivers
-+
-+		If more than one endpoint function device has to be bound to
-+		the same driver, then the directory should be created using
-+		the following notation
-+			mkdir <name>.<num>
-+
-+*) Creating configfs entry for EPF
-+
-+Any directory created inside *epf* directory represents an EPF device. In the
-+above directory structure, [3] represents an EPF device. It consists of the
-+following entries that can be used to configure the standard configuration
-+header of the endpoint function. (These entries are created by the
-+framework when any new directory is created inside epf directory.)
-+
-+        | vendorid
-+        | deviceid
-+        | revid
-+        | progif_code
-+        | subclass_code
-+        | baseclass_code
-+        | cache_line_size
-+        | subsys_vendor_id
-+        | subsys_id
-+        | interrupt_pin
-+
-+The following entry identifies the function driver that is bound to the
-+function device
-+	| function
-+
-+[1] -> Documentation/PCI/endpoint/pci-endpoint.txt
-+[4] -> Documentation/PCI/endpoint/function/binding/
++		beeper->volume = value;
++		beeper->max_volume--;
++	}
+ 
+ 	beeper->input = input_allocate_device();
+ 	if (!beeper->input) {
 -- 
-1.7.9.5
+2.7.4
