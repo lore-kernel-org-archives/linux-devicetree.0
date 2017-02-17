@@ -1,82 +1,153 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v2 1/3] power: reset: Add Renesas reset driver
-Date: Fri, 17 Feb 2017 02:00:48 +0000
-Message-ID: <PS1PR06MB11622077DE4673C1879C05278A5D0@PS1PR06MB1162.apcprd06.prod.outlook.com>
-References: <20170216172320.10897-1-chris.brandt@renesas.com>
- <20170216172320.10897-2-chris.brandt@renesas.com>
- <20170216182644.GA17814@roeck-us.net>
- <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
- <20170216222014.GA29672@roeck-us.net>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: AXP808 vs. AXP806 debugged, no difference? (Was: [PATCH v6 5/5]
+ ARM: dts: sun9i: Initial support for the Sunchip CX-A99 board)
+Date: Fri, 17 Feb 2017 11:08:59 +0800
+Message-ID: <CAGb2v65gpJKs8yf35cHkowxjEYNYH33nZGtmM7E6rwfTPfPdug@mail.gmail.com>
+References: <cover.1486592470.git.rask@formelder.dk> <d4211c5d57f80b0281d7d332edc7d69e66202d3d.1486592471.git.rask@formelder.dk>
+ <20170210085920.7l7gswm6yjuqgdfx@lukather> <CAGb2v64AfBW+CHHkFvvNzCGBG09UK-sPcAZi2QgCR9wM=jguxw@mail.gmail.com>
+ <20170214233538.enkffjiw3kkfromu@localhost> <20170216211630.u3xddzzcpazlodkz@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170216222014.GA29672@roeck-us.net>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170216211630.u3xddzzcpazlodkz@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rask Ingemann Lambertsen <rask@formelder.dk>
+Cc: Chen-Yu Tsai <wens@csie.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, February 16, 2017, Guenter Roeck wrote:
-> Hmm, ok. Guess I don't have to understand that you can not use the
-> watchdog driver because of the above, but implementing exactly the same
-> functionality in a separate driver is ok.
->=20
-> [ I am sure I am missing something here, so just ignore what I am saying =
-]
+On Fri, Feb 17, 2017 at 5:16 AM, Rask Ingemann Lambertsen
+<rask@formelder.dk> wrote:
+> In summary: I'll propose a new property "extended-address" or so to the
+> existing "x-powers,axp806" compatible, because the axp808 does seem to have
+> the register at 0xff after all, it just needs a value of 0 instead of the 16
+> which drivers/mfd/axp20x.c as of recently is now writing unconditionally
+> to 0xff. A new "x-powers,axp808" compatible and new AXP808_ID is therefore
+> not needed. This should make for a simpler and smaller patch.
 
-Honestly, I don't have a handle on all the latest 'policies and procedures'
-for all the various subsystems. All I know is that I want to figure out how
-to execute my 5 lines of code to reset the system when the user types "rebo=
-ot"
-on the command line.
+It might be the same core as the AXP806, though without a datasheet to actually
+confirm it, it might be best to stick to a new compatible.
 
-If this WDT had a timeout longer than 125ms, I would make a real watchdog d=
-river
-out of it. But at the moment, it just serves as the only way to reset the c=
-hip.
-Historically, this was the only way to reset a SH4 device...and we just liv=
-ed
-with that fact. When Renesas moved from SH4 to ARM, a lot of the design tea=
-ms
-just kept the same philosophy (and copied the HW blocks they knew already w=
-orked)
+However, we could add a new property "x-powers,master-mode". If the driver
+sees it, it would clear bit 4, instead of setting it. The hardware bit is
+latched from the external pin, so this would be per board.
 
+Regards
+ChenYu
 
-> > > > v2: * changed DT bindings from 'wdt-reset' to 'rza-wdt' * changed
-> > > > hard coded register values to defines * added msleep to while(1)
-> > > > loop
-> > >
-> > > Sure you can sleep here ?
-> >
-> > As per Geert's review:
-> >
-> > On Wednesday, February 15, 2017, Geert Uytterhoeven wrote:
-> > > > + +       /* Wait for WDT overflow */ +       while (1)
-> +               ;
-> > >
-> > > This burns CPU, and thus power, albeit for a very short time.
-> > > Perhaps add an msleep() to the loop body?
-> >
-> > Note that you only have 7.7us before the restart occurs, so probably
-> > not much sleeping will be going on.
-> >
-> Let me rephrase my question. Is it guaranteed that you _can_ sleep in thi=
-s
-> function, or in other words that it is guaranteed that interrupts are
-> enabled ?
-
-Hmm, I'm not sure if will actually 'sleep' or not. Regardless, interrupts o=
-r not,
-in 7.7us, the internal reset circuit is going to get triggered and the whol=
-e system
-is going to reboot not matter what is going on.
-
-I know Geert's suggestion was in reference to saving power...but in reality=
- it's
-probably negligible when we are talking about 7.7us. The reboot is going to
-automatically shut off all the peripherals clocks as well.
-
-
-Chris
+> On Wed, Feb 15, 2017 at 12:35:39AM +0100, Rask Ingemann Lambertsen wrote:
+>> As to touching the register at 0xff, it would be interesting to know more
+>> precisely what goes wrong. The symptom is these messages in the log:
+>>
+>> [    3.209573] axp20x-rsb sunxi-rsb-745: AXP20x variant AXP806 found
+>> [    3.210153] axp20x-rsb sunxi-rsb-745: Failed to set masks in 0x40: -5
+>> [    3.210178] axp20x-rsb sunxi-rsb-745: failed to add irq chip: -5
+>> [    3.210306] axp20x-rsb: probe of sunxi-rsb-745 failed with error -5
+>>
+>> I haven't yet looked further into what happens at the RSB bus level.
+>
+> With the patch below applied for debugging purposes and using the
+> "xpowers,axp806" compatible, I get:
+>
+> [    3.209955] axp20x-rsb sunxi-rsb-745: AXP20x variant AXP806 found
+> [    3.210065] axp20x-rsb sunxi-rsb-745: Chip ID read 1 = 0x60
+> [    3.210119] axp20x-rsb sunxi-rsb-745: Reg addr ext = 0x0
+> [    3.210171] axp20x-rsb sunxi-rsb-745: Bus addr ext = 0x0
+> [    3.210381] axp20x-rsb sunxi-rsb-745: Chip ID read 2 = 0x60
+> (16 written to register 0xff here)
+> [    3.210570] sunxi-rsb 8003400.i2c: RSB transfer data error
+> [    3.210596] sunxi-rsb 8003400.i2c: RSB error reading dev 58 register 3 length 1.
+> [    3.210625] axp20x-rsb sunxi-rsb-745: Chip ID read 3 = 0xffffffff
+> (0 written to register 0xff here)
+> [    3.210828] axp20x-rsb sunxi-rsb-745: Chip ID read 4 = 0x60
+>
+> I.e. register 0xff (Reg addr ext) and 0xfe (Bus addr ext) exist with a
+> default of 0. After writing 16 to register 0xff, the chip ID (register 3)
+> can not be read, but writing 0 to register 0xff makes the AXP808 respond
+> again and the board boots up as normal.
+>
+> Also, can someone with an AXP806 confirm that it does use the same chip ID
+> of 0x60 as the AXP808?
+>
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index 125b470..db557f3 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -910,9 +910,40 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
+>          * address.
+>          */
+>         if (axp20x->variant == AXP806_ID)
+> +       {
+> +               int dummy;
+> +
+> +               dummy = -1;
+> +               regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
+> +               dev_info(axp20x->dev, "Chip ID read 1 = 0x%x\n", dummy);
+> +
+> +               regmap_read(axp20x->regmap, AXP806_REG_ADDR_EXT, &dummy);
+> +               dev_info(axp20x->dev, "Reg addr ext = 0x%x\n", dummy);
+> +               regmap_read(axp20x->regmap, AXP806_BUS_ADDR_EXT, &dummy);
+> +               dev_info(axp20x->dev, "Bus addr ext = 0x%x\n", dummy);
+> +
+> +               regmap_reinit_cache(axp20x->regmap, axp20x->regmap_cfg);
+> +               dummy = -1;
+> +               regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
+> +               dev_info(axp20x->dev, "Chip ID read 2 = 0x%x\n", dummy);
+> +
+>                 regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
+>                              AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE);
+>
+> +               regmap_reinit_cache(axp20x->regmap, axp20x->regmap_cfg);
+> +               dummy = -1;
+> +               regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
+> +               dev_info(axp20x->dev, "Chip ID read 3 = 0x%x\n", dummy);
+> +
+> +               regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
+> +                            0);
+> +
+> +               regmap_reinit_cache(axp20x->regmap, axp20x->regmap_cfg);
+> +               dummy = -1;
+> +               regmap_read(axp20x->regmap, AXP806_CHIP_ID, &dummy);
+> +               dev_info(axp20x->dev, "Chip ID read 4 = 0x%x\n", dummy);
+> +       }
+> +
+>         ret = regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
+>                           IRQF_ONESHOT | IRQF_SHARED | axp20x->irq_flags,
+>                            -1, axp20x->regmap_irq_chip, &axp20x->regmap_irqc);
+> diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
+> index 795c9d9..85e4926 100644
+> --- a/drivers/bus/sunxi-rsb.c
+> +++ b/drivers/bus/sunxi-rsb.c
+> @@ -349,6 +349,10 @@ static int sunxi_rsb_read(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+>  unlock:
+>         mutex_unlock(&rsb->lock);
+>
+> +       if (ret)
+> +               dev_dbg(rsb->dev, "RSB error reading dev %u register %u length %u.\n",
+> +                       rtaddr, addr, (unsigned int) len);
+> +
+>         return ret;
+>  }
+>
+> @@ -386,6 +390,10 @@ static int sunxi_rsb_write(struct sunxi_rsb *rsb, u8 rtaddr, u8 addr,
+>
+>         mutex_unlock(&rsb->lock);
+>
+> +       if (ret)
+> +               dev_dbg(rsb->dev, "RSB error writing dev %u register %u length %u.\n",
+> +                       rtaddr, addr, (unsigned int) len);
+> +
+>         return ret;
+>  }
+>
+> diff --git a/drivers/bus/Makefile b/drivers/bus/Makefile
+> index cc6364b..4b81226 100644
+> --- a/drivers/bus/Makefile
+> +++ b/drivers/bus/Makefile
+> @@ -24,3 +24,4 @@ obj-$(CONFIG_UNIPHIER_SYSTEM_BUS)     += uniphier-system-bus.o
+>  obj-$(CONFIG_VEXPRESS_CONFIG)  += vexpress-config.o
+>
+>  obj-$(CONFIG_DA8XX_MSTPRI)     += da8xx-mstpri.o
+> +CFLAGS_sunxi-rsb.o             += -DDEBUG -DEBUG
+>
+> --
+> Rask Ingemann Lambertsen
