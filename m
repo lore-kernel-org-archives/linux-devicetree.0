@@ -1,102 +1,60 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Adding DT support for TI HECC module
-Date: Fri, 17 Feb 2017 09:51:46 +0100
-Message-ID: <b6c8bfbe-1748-ee2c-2129-96e1bce9b324@pengutronix.de>
-References: <1487170125-10815-1-git-send-email-yegorslists@googlemail.com>
- <7c8fb14d-835b-d1d0-ca4f-4d184b711ae0@pengutronix.de>
- <CAGm1_kuQ1skHayOKu16JdZ3Bah+=CqzZJ5e6j2VDj3WW5No2vw@mail.gmail.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 20/21] ARM: sunxi: Enable dwmac-sun8i driver
+ on sunxi_defconfig
+Date: Fri, 17 Feb 2017 09:55:19 +0100
+Message-ID: <20170217085519.GD22723@Red>
+References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
+ <20170216124859.14346-21-clabbe.montjoie@gmail.com>
+ <20170216190827.jaky5xyzqtuzhy76@lukather>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="KJE84MgWkEnPIPp71bkee9qCqe0c0lu7x"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGm1_kuQ1skHayOKu16JdZ3Bah+=CqzZJ5e6j2VDj3WW5No2vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Andrey Skvortsov <andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, hs-ynQEQJNshbs@public.gmane.org, Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB7HUTLCQKGQESWCXSAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170216190827.jaky5xyzqtuzhy76@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---KJE84MgWkEnPIPp71bkee9qCqe0c0lu7x
-Content-Type: multipart/mixed; boundary="BnV1JKMs08aKXdDITR3QWqxVTVOlAbUir";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: "linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
- Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>,
- Andrey Skvortsov <andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, hs-ynQEQJNshbs@public.gmane.org,
- Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Message-ID: <b6c8bfbe-1748-ee2c-2129-96e1bce9b324-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Adding DT support for TI HECC module
-References: <1487170125-10815-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
- <7c8fb14d-835b-d1d0-ca4f-4d184b711ae0-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
- <CAGm1_kuQ1skHayOKu16JdZ3Bah+=CqzZJ5e6j2VDj3WW5No2vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-In-Reply-To: <CAGm1_kuQ1skHayOKu16JdZ3Bah+=CqzZJ5e6j2VDj3WW5No2vw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+On Thu, Feb 16, 2017 at 08:08:27PM +0100, Maxime Ripard wrote:
+> Hi,
+> 
+> On Thu, Feb 16, 2017 at 01:48:58PM +0100, Corentin Labbe wrote:
+> > From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > Enable the dwmac-sun8i driver in the sunxi default configuration
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  arch/arm/configs/sunxi_defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+> > index da92c25..33bde86 100644
+> > --- a/arch/arm/configs/sunxi_defconfig
+> > +++ b/arch/arm/configs/sunxi_defconfig
+> > @@ -40,6 +40,7 @@ CONFIG_ATA=y
+> >  CONFIG_AHCI_SUNXI=y
+> >  CONFIG_NETDEVICES=y
+> >  CONFIG_SUN4I_EMAC=y
+> > +CONFIG_DWMAC_SUN8I=m
+> 
+> I think I'd prefer to have it compiled statically, just like the other
+> net drivers, and drivers in general.
+> 
+> Thanks!
+> Maxime
+> 
 
---BnV1JKMs08aKXdDITR3QWqxVTVOlAbUir
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+In previous sun8i-emac, someone request that CONFIG must be set as module because kernel went too big.
+But I do not care to set it statically.
 
-On 02/17/2017 09:50 AM, Yegor Yefremov wrote:
-> On Fri, Feb 17, 2017 at 9:46 AM, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>=
- wrote:
->> On 02/15/2017 03:48 PM, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
->>> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>>
->>> This is an attempt to revive DT support for TI HECC that was started =
-in 2015 [1].
->>>
->>> Changes v2 -> v3:
->>>   - rename compatible property to "ti,am3517-hecc" (though there is a=
- stipped
->>>     device named 3505, EMAC driver already uses am3517-emac name, so =
-keep this
->>>     property consistent)
->>>   - use reg-names to specify different HECC I/O mapping (suggested by=
- Tony Lindgren)
->>>   - provide fallback offsets and sizes for board files
->>
->> Are there any board files using te_hecc intree? I don't see any on the=
-
->> first glance. What about making the driver DT only?
->=20
-> Good idea. I aslo wanted to ask this. So this means we could
-> completely get rid of include/linux/can/platform/ti_hecc.h?
-
-If there isn't any in-tree user, thes yes.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---BnV1JKMs08aKXdDITR3QWqxVTVOlAbUir--
-
---KJE84MgWkEnPIPp71bkee9qCqe0c0lu7x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlimuaIACgkQHv7KIOw4
-HPbiUAgAoY6O6B9OhVr7jTtIXm6EhBgBv63UUOzqAbk58LTCoBMwUZaZOit6trMu
-cg4WSPVpnFPg3/HqgY5zAP+MGMTzdR7vn0Ph1xP1iLkSxsaIFAbwwyfKJk2afO//
-alcua84NfCS4Fzeg//f808Nhsygixwnumz3b3Xe4X1M9Vng2ymMqlvEGchgAq6K/
-jY5ZHeTKlvM2LUk3pC46v0lp3mf9fWvxIotUcpAxjs0hYqHxsKr7HYLZw0yueOhV
-zdbvSlg54fyin1FeSL89TX88EuoowwMKNMj0IO1PTXE5UAHKcwQ/tMXZzqHhI4Tn
-zi08in+wqfSYmuFZPoYCDxeanE0j/A==
-=eJI8
------END PGP SIGNATURE-----
-
---KJE84MgWkEnPIPp71bkee9qCqe0c0lu7x--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Corentin Labbe
