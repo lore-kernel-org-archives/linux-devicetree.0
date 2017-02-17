@@ -1,74 +1,65 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 00/36] i.MX Media Driver
-Date: Fri, 17 Feb 2017 11:39:11 +0100
-Message-ID: <1487327951.3107.19.camel@pengutronix.de>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-         <20170216222006.GA21222@n2100.armlinux.org.uk>
-         <923326d6-43fe-7328-d959-14fd341e47ae@gmail.com>
-         <20170216225742.GB21222@n2100.armlinux.org.uk>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: [PATCH v3 0/3] video/sti/cec: add HPD notifier support
+Date: Fri, 17 Feb 2017 11:46:49 +0100
+Message-ID: <1487328412-8305-1-git-send-email-benjamin.gaignard@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170216225742.GB21222@n2100.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@v
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: hverkuil@xs4all.nl
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, javier@osg.samsung.com, hans.verkuil@cisco.com, dri-devel@lists.freedesktop.org, daniel.vetter@intel.com, linux-media@vger.kernel.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-02-16 at 22:57 +0000, Russell King - ARM Linux wrote:
-> On Thu, Feb 16, 2017 at 02:27:41PM -0800, Steve Longerbeam wrote:
-> > 
-> > 
-> > On 02/16/2017 02:20 PM, Russell King - ARM Linux wrote:
-> > >On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
-> > >>In version 4:
-> > >
-> > >With this version, I get:
-> > >
-> > >[28762.892053] imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000000
-> > >[28762.899409] ipu1_csi0: pipeline_set_stream failed with -110
-> > >
-> > 
-> > Right, in the imx219, on exit from s_power(), the clock and data lanes
-> > must be placed in the LP-11 state. This has been done in the ov5640 and
-> > tc358743 subdevs.
-> 
-> The only way to do that is to enable streaming from the sensor, wait
-> an initialisation time, and then disable streaming, and wait for the
-> current line to finish.  There is _no_ other way to get the sensor to
-> place its clock and data lines into LP-11 state.
-
-I thought going through LP-11 is part of the D-PHY transmitter
-initialization, during the LP->HS wakeup sequence. But then I have no
-access to MIPI specs.
-It is unfortunate that the i.MX6 MIPI CSI-2 core needs software
-assistance here, but could it be possible to trigger that sequence in
-the sensor and then without waiting switching to polling for LP-11 state
-in the i.MX6 MIPI CSI-2 receiver?
-
-> For that to happen, we need to program the sensor a bit more than we
-> currently do at power on (to a minimal resolution, and setting up the
-> PLLs), and introduce another 4ms on top of the 8ms or so that the
-> runtime resume function already takes.
-> 
-> Looking at the SMIA driver, things are worse, and I suspect that it also
-> will not work with the current setup - the SMIA spec shows that the CSI
-> clock and data lines are tristated while the sensor is not streaming,
-> which means they aren't held at a guaranteed LP-11 state, even if that
-> driver momentarily enabled streaming.  Hence, Freescale's (or is it
-> Synopsis') requirement may actually be difficult to satisfy.
-> 
-> However, I regard runtime PM broken with the current imx-capture setup.
-> At the moment, power is controlled at the sensor by whether the media
-> links are enabled.  So, if you have an enabled link coming off the
-> sensor, the sensor will be powered up, whether you're using it or not.
-> 
-> Given that the number of applications out there that know about the
-> media subdevs is really quite small, this combination makes having
-> runtime PM in sensor devices completely pointless - they can't sleep
-> as long as they have an enabled link, which could be persistent over
-> many days or weeks.
-
-regards
-Philipp
+VGhpcyBwYXRjaCBzZXJpZXMgZm9sbG93aW5nIHdoYXQgSGFucyBpcyBkb2luZyBvbiBleHlub3Mg
+dG8gc3VwcG9ydApob3RwbHVnIGRldGVjdCBub3RpZmllciBjb2RlLgoKSXQgYWRkIHN1cHBvcnQg
+b2YgSFBEIGluIHN0aV9oZG1pIGRybSBkcml2ZXIgYW5kIHN0aWgtY2VjIGRyaXZlciB3aGljaApt
+b3ZlIG91dCBvZiBzdGFnaW5nLgoKVGhvc2UgcGF0Y2hlcyBzaG91bGQgYmUgYXBwbGllZCBvbiB0
+b3Agb2YgSGFucyBicmFuY2ggZXh5bm9zNC1jZWMuCgpJIGhhdmUgdGVzdGVkIGhkbWkgbm90aWZp
+ZXIgYnkgcGx1Z2luZy91bnBsdWdpbmcgSERNSSBjYWJsZSBhbmQgY2hlY2sKdGhlIHZhbHVlIG9m
+IHRoZSBwaHlzaWNhbCBhZGRyZXNzIHdpdGggImNlYy1jdGwgLS10dW5lciIuCiJjZWMtY29tcGxp
+YW5jZSAtQSIgaXMgYWxzbyBmdW5jdGlvbmFsLgoKdmVyc2lvbiAzOgotIGNoYW5nZSBoZG1pIHBo
+YW5kbGUgZnJvbSAic3QsaGRtaS1oYW5kbGUiIHRvICJoZG1pLWhhbmRsZSIKLSBmaXggdHlwbyBp
+biBiaW5kaW5ncwoKdmVyc2lvbiAyOgotIHVzZSBIUEQgbm90aWZpZXIgaW5zdGVhZCBvZiBIRE1J
+IG5vdGlmaWVyCi0gbW92ZSBzdGloLWNlYyBvdXQgb2Ygc3RhZ2luZwotIHJlYmFzZSBjb2RlIG9u
+IHRvcCBvZiBnaXQ6Ly9saW51eHR2Lm9yZy9odmVya3VpbC9tZWRpYV90cmVlLmdpdCBleHlub3M0
+LWNlYwogIGJyYW5jaAotIHNwbGl0IERUIG1vZGlmaWNhdGlvbnMgaW4gYSBzZXBhcmF0ZSBwYXRj
+aAoKQmVuamFtaW4gR2FpZ25hcmQgKDMpOgogIHN0aTogaGRtaTogYWRkIEhQRCBub3RpZmllciBz
+dXBwb3J0CiAgc3RpaC1jZWM6IGFkZCBIUEQgbm90aWZpZXIgc3VwcG9ydAogIGFybTogc3RpOiB1
+cGRhdGUgc3RpLWNlYyBmb3IgSFBEIG5vdGlmaWVyIHN1cHBvcnQKCiAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tZWRpYS9zdGloLWNlYy50eHQgICAgICAgICB8ICAgMiArCiBhcmNoL2FybS9ib290
+L2R0cy9zdGloNDA3LWZhbWlseS5kdHNpICAgICAgICAgICAgICB8ICAxMiAtCiBhcmNoL2FybS9i
+b290L2R0cy9zdGloNDEwLmR0c2kgICAgICAgICAgICAgICAgICAgICB8ICAxMyArCiBkcml2ZXJz
+L2dwdS9kcm0vc3RpL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2
+ZXJzL2dwdS9kcm0vc3RpL3N0aV9oZG1pLmMgICAgICAgICAgICAgICAgICAgICB8ICAxNCArCiBk
+cml2ZXJzL2dwdS9kcm0vc3RpL3N0aV9oZG1pLmggICAgICAgICAgICAgICAgICAgICB8ICAgMyAr
+CiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAx
+MCArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICB8
+ICAgMSArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9jZWMvTWFrZWZpbGUgICAgICAgICAg
+ICB8ICAgMSArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL3N0aS9jZWMvc3RpaC1jZWMuYyAgICAg
+ICAgICB8IDQwNCArKysrKysrKysrKysrKysrKysrKysKIGRyaXZlcnMvc3RhZ2luZy9tZWRpYS9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICAyIC0KIGRyaXZlcnMvc3RhZ2luZy9tZWRp
+YS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgIHwgICAxIC0KIGRyaXZlcnMvc3RhZ2luZy9t
+ZWRpYS9zdC1jZWMvS2NvbmZpZyAgICAgICAgICAgICAgIHwgICA4IC0KIGRyaXZlcnMvc3RhZ2lu
+Zy9tZWRpYS9zdC1jZWMvTWFrZWZpbGUgICAgICAgICAgICAgIHwgICAxIC0KIGRyaXZlcnMvc3Rh
+Z2luZy9tZWRpYS9zdC1jZWMvVE9ETyAgICAgICAgICAgICAgICAgIHwgICA3IC0KIGRyaXZlcnMv
+c3RhZ2luZy9tZWRpYS9zdC1jZWMvc3RpaC1jZWMuYyAgICAgICAgICAgIHwgMzc5IC0tLS0tLS0t
+LS0tLS0tLS0tLS0KIDE2IGZpbGVzIGNoYW5nZWQsIDQ0OSBpbnNlcnRpb25zKCspLCA0MTAgZGVs
+ZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdGkv
+Y2VjL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9z
+dGkvY2VjL3N0aWgtY2VjLmMKIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3N0YWdpbmcvbWVk
+aWEvc3QtY2VjL0tjb25maWcKIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3N0YWdpbmcvbWVk
+aWEvc3QtY2VjL01ha2VmaWxlCiBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zdGFnaW5nL21l
+ZGlhL3N0LWNlYy9UT0RPCiBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9zdGFnaW5nL21lZGlh
+L3N0LWNlYy9zdGloLWNlYy5jCgotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
