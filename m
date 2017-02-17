@@ -1,56 +1,55 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [RFC 3/4] dt-bindings: iio: add support for GPIO triggers
-Date: Fri, 17 Feb 2017 17:03:48 +0100
-Message-ID: <1487347429-31761-4-git-send-email-fabrice.gasnier@st.com>
-References: <1487347429-31761-1-git-send-email-fabrice.gasnier@st.com>
+Subject: [RFC 0/4] iio: trigger: Add OF support and GPIO based trigger
+Date: Fri, 17 Feb 2017 17:03:45 +0100
+Message-ID: <1487347429-31761-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487347429-31761-1-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com, linus.walleij@linaro.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linus.walleij@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Document Industrial I/O GPIO trigger support.
+Hi,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- .../bindings/iio/trigger/iio-trig-gpio.txt         | 26 ++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+I send this as an RFC, as I'm digging to try to get as generic
+as possible GPIO based trigger support, as discussed earlier in
+other patchset "Add EXTI GPIO trigger support to STM32 ADC":
+https://www.spinics.net/lists/arm-kernel/msg559091.html
+
+Following various comments on this, I sent this RFC to address two
+topics, that I see as possible prerequisite:
+- Add trigger OF support
+- GPIO based trigger
+
+Please feel free to advise.
+Best Regards.
+
+Fabrice Gasnier (4):
+  dt-bindings: iio: introduce trigger providers, consumers
+  iio: trigger: add OF support
+  dt-bindings: iio: add support for GPIO triggers
+  iio: trigger: add GPIO trigger
+
+ .../devicetree/bindings/iio/iio-bindings.txt       |  37 +++++++
+ .../bindings/iio/trigger/iio-trig-gpio.txt         |  26 +++++
+ drivers/iio/industrialio-trigger.c                 | 100 ++++++++++++++++++
+ drivers/iio/trigger/Kconfig                        |   9 ++
+ drivers/iio/trigger/Makefile                       |   1 +
+ drivers/iio/trigger/iio-trig-gpio.c                | 112 +++++++++++++++++++++
+ include/linux/iio/trigger.h                        |   4 +
+ 7 files changed, 289 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/iio/trigger/iio-trig-gpio.txt
+ create mode 100644 drivers/iio/trigger/iio-trig-gpio.c
 
-diff --git a/Documentation/devicetree/bindings/iio/trigger/iio-trig-gpio.txt b/Documentation/devicetree/bindings/iio/trigger/iio-trig-gpio.txt
-new file mode 100644
-index 0000000..a8dbf5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/trigger/iio-trig-gpio.txt
-@@ -0,0 +1,26 @@
-+Industrial I/O - GPIO based trigger
-+
-+GPIOs may be used as IIO trigger provider, when trigger is connected to
-+GPIO lines.
-+
-+Required properties:
-+- compatible: Should be "iio-gpio-trigger"
-+- gpios: Should specify one GPIO line used as trigger source.
-+  See Documentation/devicetree/bindings/gpio/gpio.txt
-+- #io-trigger-cells: Should be 0, as simple trigger provider.
-+  See Documentation/devicetree/bindings/iio/iio-bindings.txt
-+
-+Optional properties:
-+- label: String to specifiy trigger name.
-+- gpio-trigger-rising-edge: A rising edge on GPIO will trigger.
-+- gpio-trigger-falling-edge: A falling edge on GPIO will trigger.
-+  Note: Both rising and falling edge may be used. In case none of
-+  rising or falling edge is selected, rising edge is selected by
-+  default.
-+
-+Example:
-+	gpiotrig0: iio-gpio-trigger0 {
-+		#io-trigger-cells = <0>;
-+		compatible = "iio-gpio-trigger";
-+		gpios = <&gpioa 11 0>;
-+	}
 -- 
 1.9.1
