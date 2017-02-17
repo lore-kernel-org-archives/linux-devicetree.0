@@ -1,91 +1,34 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm64: dts: Add basic DT to support Spreadtrum's
- SP9860G
-Date: Fri, 17 Feb 2017 10:28:00 +0000
-Message-ID: <b5940598-f3e7-b2c5-9914-7bcbe3471f9e@arm.com>
-References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487063952-7113-2-git-send-email-chunyan.zhang@spreadtrum.com>
- <CAPKp9ub35nL8gc_TKx02pSHHNwBhiMacWL=CuEmNGnecWikfGQ@mail.gmail.com>
- <20170217072839.GA8767@spreadtrum.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: dts: r7s72100: Add reset handler
+Date: Fri, 17 Feb 2017 11:29:25 +0100
+Message-ID: <CAMuHMdVMBo9fNMTqz_XdU27FF5TX98r-OE5pJ5atJ1s4XLxcTw@mail.gmail.com>
+References: <20170216172320.10897-1-chris.brandt@renesas.com> <20170216172320.10897-4-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170217072839.GA8767-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+In-Reply-To: <20170216172320.10897-4-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Watchdog Mailing List <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 16, 2017 at 6:23 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> For the RZ/A1, the only way to do a reset is to overflow the WDT.
+>
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-On 17/02/17 07:28, Chunyan Zhang wrote:
-> Hi Sudeep,
-> 
-> On 二,  2月 14, 2017 at 04:44:53下午 +0000, Sudeep Holla wrote:
->> On Tue, Feb 14, 2017 at 9:19 AM, Chunyan Zhang
->> <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+Gr{oetje,eeting}s,
 
-[..]
+                        Geert
 
->>
->>> +       idle-states{
->>> +               entry-method = "arm,psci";
->>> +
->>> +               CORE_PD: core_pd {
->>> +                       compatible = "arm,idle-state";
->>> +                       entry-latency-us = <1000>;
->>> +                       exit-latency-us = <700>;
->>> +                       min-residency-us = <2500>;
->>> +                       local-timer-stop;
->>> +                       arm,psci-suspend-param = <0x00010002>;
->>> +               };
->>> +
->>> +               CLUSTER_PD: cluster_pd {
->>> +                       compatible = "arm,idle-state";
->>> +                       entry-latency-us = <1000>;
->>> +                       exit-latency-us = <1000>;
->>> +                       min-residency-us = <3000>;
->>> +                       local-timer-stop;
->>> +                       arm,psci-suspend-param = <0x01010003>;
->>> +               };
->>> +
->>> +               DEEP_SLEEP: deep_sleep {
->>> +                       compatible = "arm,idle-state";
->>> +                       wakeup-latency-us = <0xffffffff>;
->>
->> A value > 4294 seconds(i.e >1 hour) seems suspicious.
->> Are you working around the firmware issue with high latency value so
->> that it's never entered ? Why not remove advertising the state from DT.
->>
-> 
-> Haved checked with related colleagues, this node 'deep_sleep' was not for working
-> around any firmware issue, but was a trick utilization of idle subsystem, and that
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-Really ? Any latency greater few milliseconds are sounds useless. I
-still don't understand what you mean by "trick utilization of idle
-subsystem".
-
-> was definitely not elegant, the author indeed intendly didn't want CPU entered this
-> state, I will remove this node therefore.
-
-It's quick and dirty "HACK* to retain and advertise the state but
-ensure it's never entered and obstruct the boot. It's not a trick to
-exploit any idle subsystem utilization.
-
->  
->> Can you get me the dump of:
->> grep "" /sys/devices/system/cpu/cpu*/cpuidle/state*/{time,usage}
->>
-> 
-> FYI: https://www.irccloud.com/pastebin/XyEMLzfq/
-> 
-
-As expected, state3(deep_sleep) is never entered.
-
--- 
-Regards,
-Sudeep
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
