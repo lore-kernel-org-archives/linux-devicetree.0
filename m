@@ -1,40 +1,31 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 07/36] ARM: dts: imx6-sabresd: add OV5642 and OV5640
- camera sensors
-Date: Thu, 16 Feb 2017 16:56:56 -0800
-Message-ID: <3b28b30f-55ab-aa5d-6042-146fe2c9e18d@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-8-git-send-email-steve_longerbeam@mentor.com>
- <CAOMZO5AHJ2jSWvF1iZKhYyDAMmpg99R4-gz4ZyDZAcB4b3d0ag@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: imx25: set default phy_type and dr_mode for usbotg port
+Date: Thu, 16 Feb 2017 23:04:31 -0200
+Message-ID: <CAOMZO5ASKSZcdHdZqbdwc12YgJa2gucG5Ww1Uvobjc8MPFTq9A@mail.gmail.com>
+References: <20170216211858.8563-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5AHJ2jSWvF1iZKhYyDAMmpg99R4-gz4ZyDZAcB4b3d0ag@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, mchehab@kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, nick@shmanahar.org, markus.heiser@darmarit.de, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, bparrot@ti.com, Geert Uytterhoeven <geert@linux-m68k.org>, Arnd Bergmann <arnd@arndb.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, Robert Jarzmik <robert.jarzmik@free.>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170216211858.8563-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB list <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/16/2017 04:51 PM, Fabio Estevam wrote:
-> Hi Steve,
+On Thu, Feb 16, 2017 at 7:18 PM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> All currently supported i.MX25-based machines use phy_type =3D "utmi" and
+> dr_mode =3D "otg".  So this seems to be a sensible default.
 >
-> On Thu, Feb 16, 2017 at 12:19 AM, Steve Longerbeam
-> <slongerbeam@gmail.com> wrote:
->> Enables the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
->>
->> The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
->>
->> The OV5640 connects to the input port on the MIPI CSI-2 receiver on
->> mipi_csi.
->>
->> Until the OV5652 sensor module compatible with the SabreSD becomes
->> available for testing, the ov5642 node is currently disabled.
+> This also doesn't hurt out-of-tree machines because up to now they had
+> to specify these two properties in the machine.dts which still takes
+> precedence by just overwriting the defaults added here.
 >
-> You missed your Signed-off-by.
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Thanks, fixed.
-
-Steve
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
