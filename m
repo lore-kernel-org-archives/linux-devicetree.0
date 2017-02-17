@@ -1,64 +1,65 @@
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 0/9] ipu-v3/imx-drm PRG/PRE extension
-Date: Fri, 17 Feb 2017 19:28:21 +0100
-Message-ID: <20170217182830.32618-1-l.stach@pengutronix.de>
+Subject: [PATCH 4/9] gpu: ipu-v3: add DT binding for the Prefetch Resolve Gasket
+Date: Fri, 17 Feb 2017 19:28:25 +0100
+Message-ID: <20170217182830.32618-5-l.stach@pengutronix.de>
+References: <20170217182830.32618-1-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170217182830.32618-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+This adds the the devicetree binding for the Prefetch Resolve Gasket,
+as found on i.MX6 QuadPlus.
+The PRG is fairly simple in that it only has a configuration register
+range and two clocks, one for the AHB slave port and one for the AXI
+ports and the functional units.
 
-this is the first round of patches to enable the Prefetch Resolve Gasket
-and the Prefetch Resolve Engine as found on the i.MX6 QuadPlus. Basically
-those units are external extensions to the IPUv3 that are able to prefetch
-display data from DRAM to an internal SRAM region, transforming the
-periodic realtime requests from the display FIFOs into larger bursts of
-normal memory requests, which do mix better with other DRAM traffic in the
-system.
+The PRE connections need to be described in the DT, as the PRE<->PRG
+assignment is a mix between fixed and muxable connections.
 
-The PRE can do a number of transformations on the fly, like changing
-component and plane ordering, as well resolving the Vivante GPU tiling
-format into linear scanlines. None of those transformations are used
-right now.
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ .../bindings/display/imx/fsl-imx-drm.txt           | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-This initial patchset uses the PRG/PRE units as linear prefetchers only.
-It does however hook up most of the interactions between imx-drm, IPUv3
-and PRG/PRE, so that adding those transformations should be an
-incremental change over that. Also the devicetree binding fully describe
-the devices, so that no further changes should be necessary.
-
-Regards,
-Lucas
-
-Lucas Stach (9):
-  gpu: ipu-v3: remove AXI ID setting for IC channel
-  gpu: ipu-v3: add DT binding for the Prefetch Resolve Engine
-  gpu: ipu-v3: add driver for Prefetch Resolve Engine
-  gpu: ipu-v3: add DT binding for the Prefetch Resolve Gasket
-  gpu: ipu-v3: add driver for Prefetch Resolve Gasket
-  gpu: ipu-v3: extend the IPUv3 DT binding for i.MX6 QuadPlus
-  gpu: ipu-v3: hook up PRG unit
-  drm/imx: enable/disable PRG on CRTC enable/disable
-  drm/imx: use PRG/PRE when possible
-
- .../bindings/display/imx/fsl-imx-drm.txt           |  53 +++
- drivers/gpu/drm/imx/imx-drm-core.c                 |   5 +
- drivers/gpu/drm/imx/imx-drm.h                      |   3 +
- drivers/gpu/drm/imx/ipuv3-crtc.c                   |   2 +
- drivers/gpu/drm/imx/ipuv3-plane.c                  | 122 +++++-
- drivers/gpu/ipu-v3/Makefile                        |   2 +-
- drivers/gpu/ipu-v3/ipu-common.c                    |   7 +
- drivers/gpu/ipu-v3/ipu-image-convert.c             |   2 -
- drivers/gpu/ipu-v3/ipu-pre.c                       | 290 +++++++++++++++
- drivers/gpu/ipu-v3/ipu-prg.c                       | 413 +++++++++++++++++++++
- drivers/gpu/ipu-v3/ipu-prv.h                       |  15 +
- include/video/imx-ipu-v3.h                         |  15 +
- 12 files changed, 923 insertions(+), 6 deletions(-)
- create mode 100644 drivers/gpu/ipu-v3/ipu-pre.c
- create mode 100644 drivers/gpu/ipu-v3/ipu-prg.c
-
+diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
+index 1bd777d7c37d..5e4b8b13b9f8 100644
+--- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
++++ b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
+@@ -79,6 +79,31 @@ pre@021c8000 {
+ 	fsl,ocram = <&ocram2>;
+ };
+ 
++Freescale i.MX PRG (Prefetch Resolve Gasket)
++============================================
++
++Required properties:
++- compatible: should be "fsl,imx6qp-prg"
++- reg: should be register base and length as documented in the
++  datasheet
++- clocks : phandles to the PRG ipg and axi clock inputs, as described
++  in Documentation/devicetree/bindings/clock/clock-bindings.txt and
++  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
++- clock-names: should be "ipg" and "axi"
++- fsl,pres: phandles to the PRE units attached to this PRG, with the fixed
++  PRE as the first entry and the muxable PREs following.
++
++example:
++
++prg@021cc000 {
++	compatible = "fsl,imx6qp-prg";
++	reg = <0x021cc000 0x1000>;
++	clocks = <&clks IMX6QDL_CLK_PRG0_APB>,
++		 <&clks IMX6QDL_CLK_PRG0_AXI>;
++	clock-names = "ipg", "axi";
++	fsl,pres = <&pre1>, <&pre2>, <&pre3>;
++};
++
+ Parallel display support
+ ========================
+ 
 -- 
 2.11.0
 
