@@ -1,58 +1,114 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 03/22] PCI: endpoint: Introduce configfs entry for
- configuring EP functions
-Date: Fri, 17 Feb 2017 17:31:13 +0530
-Message-ID: <58A6E609.9070709@ti.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-4-git-send-email-kishon@ti.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/21] ARM: sun8i: dt: Add DT bindings
+ documentation for Allwinner dwmac-sun8i
+Date: Fri, 17 Feb 2017 13:18:39 +0100
+Message-ID: <20170217121839.GA24993@Red>
+References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
+ <20170216124859.14346-5-clabbe.montjoie@gmail.com>
+ <20170216184818.hwexzuqacbemsxo7@lukather>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1487325042-28227-4-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBJGUTPCQKGQEH7AYEXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170216184818.hwexzuqacbemsxo7@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Friday 17 February 2017 03:20 PM, Kishon Vijay Abraham I wrote:
-> Introduce a new configfs entry to configure the EP function (like
-> configuring the standard configuration header entries) and to
-> bind the EP function with EP controller.
+On Thu, Feb 16, 2017 at 07:48:18PM +0100, Maxime Ripard wrote:
+> Hi,
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/endpoint/Kconfig      |   14 +-
->  drivers/pci/endpoint/Makefile     |    1 +
->  drivers/pci/endpoint/pci-ep-cfs.c |  427 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 440 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/pci/endpoint/pci-ep-cfs.c
+> On Thu, Feb 16, 2017 at 01:48:42PM +0100, Corentin Labbe wrote:
+> > This patch adds documentation for Device-Tree bindings for the
+> > Allwinner dwmac-sun8i driver.
+> > 
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/net/dwmac-sun8i.txt        | 86 ++++++++++++++++++++++
+> >  1 file changed, 86 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> > new file mode 100644
+> > index 0000000..ac806c6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+> > @@ -0,0 +1,86 @@
+> > +* Allwinner sun8i GMAC ethernet controller
+> > +
+> > +This device is a platform glue layer for stmmac.
+> > +Please see stmmac.txt for the other unchanged properties.
+> > +
+> > +Required properties:
+> > +- compatible: should be one of the following string:
+> > +		"allwinner,sun8i-a83t-emac"
+> > +		"allwinner,sun8i-h3-emac"
+> > +		"allwinner,sun50i-a64-emac"
+> > +- reg: address and length of the register for the device.
+> > +- interrupts: interrupt for the device
+> > +- interrupt-names: should be "macirq"
+> > +- clocks: A phandle to the reference clock for this device
+> > +- clock-names: should be "stmmaceth"
+> > +- resets: A phandle to the reset control for this device
+> > +- reset-names: should be "stmmaceth"
+> > +- phy-mode: See ethernet.txt
+> > +- phy-handle: See ethernet.txt
+> > +- #address-cells: shall be 1
+> > +- #size-cells: shall be 0
+> > +- syscon: A phandle to the syscon of the SoC with one of the following
+> > + compatible string:
+> > +  - allwinner,sun8i-h3-system-controller
+> > +  - allwinner,sun8i-a64-system-controller
+> > +  - allwinner,sun8i-a83t-system-controller
+> > +
+> > +Optional properties:
+> > +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
+> > +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
+> > +Both delay properties does not have units, there are arbitrary value.
+> > +The TX/RX clock delay chain settings are board specific and could be found
+> > +in vendor FEX files.
+> > +
+> > +Optional properties for "allwinner,sun8i-h3-emac":
+> > +- allwinner,leds-active-low: EPHY LEDs are active low
+> > +
+> > +Required child node of emac:
+> > +- mdio bus node: should be named mdio
+> > +
+> > +Required properties of the mdio node:
+> > +- #address-cells: shall be 1
+> > +- #size-cells: shall be 0
+> > +
+> > +The device node referenced by "phy" or "phy-handle" should be a child node
+> > +of the mdio node. See phy.txt for the generic PHY bindings.
+> > +
+> > +Required properties of the phy node with "allwinner,sun8i-h3-emac":
+> > +- clocks: an extra phandle to the reference clock for the EPHY
+> > +- resets: an extra phandle to the reset control for the EPHY
+> > +
+> > +Required properties for the system controller:
+> > +- reg: address and length of the register for the device.
+> > +- compatible: should be "syscon" and one of the following string:
+> > +		"allwinner,sun8i-h3-system-controller"
+> > +		"allwinner,sun8i-a64-system-controller"
+> > +		"allwinner,sun8i-a83t-system-controller"
 > 
-> diff --git a/drivers/pci/endpoint/Kconfig b/drivers/pci/endpoint/Kconfig
-> index 7eb1c79..8470f0b 100644
-> --- a/drivers/pci/endpoint/Kconfig
-> +++ b/drivers/pci/endpoint/Kconfig
-> @@ -6,7 +6,6 @@ menu "PCI Endpoint"
->  
->  config PCI_ENDPOINT
->  	bool "PCI Endpoint Support"
-> -	select CONFIGFS_FS
->  	help
->  	   Enable this configuration option to support configurable PCI
->  	   endpoint. This should be enabled if the platform has a PCI
-> @@ -14,8 +13,19 @@ config PCI_ENDPOINT
->  
->  	   Enabling this option will build the endpoint library, which
->  	   includes endpoint controller library and endpoint function
-> -	   library.
-> +	   library. This will also enable the configfs entry required to
-> +	   configure the endpoint function and used to bind the
-> +	   function with a endpoint controller.
+> This should be in a separate binding document.
+> 
+> What does it describe / represent?
+> 
+> Thanks,
+> Maxime
+> 
 
-This chunk shouldn't be added. I've missed removing this (it's added below).
-I'll wait to get other review comments before sending a new revision.
+I agree, I will split it in two one for syscon, one for emac
 
 Thanks
-Kishon
+Corentin Labbe
