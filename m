@@ -1,91 +1,79 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 00/36] i.MX Media Driver
-Date: Fri, 17 Feb 2017 10:56:24 +0000
-Message-ID: <20170217105624.GC21222@n2100.armlinux.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <20170216222006.GA21222@n2100.armlinux.org.uk>
- <923326d6-43fe-7328-d959-14fd341e47ae@gmail.com>
- <20170216225742.GB21222@n2100.armlinux.org.uk>
- <1487327951.3107.19.camel@pengutronix.de>
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Subject: Re: [PATCH 1/3 v2] usb: host: fotg2: add device tree probing
+Date: Fri, 17 Feb 2017 12:02:00 +0100 (CET)
+Message-ID: <alpine.LNX.2.00.1702171121500.12334@T420s>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com> <20170208200010.21522-2-ulli.kroll@googlemail.com> <alpine.LNX.2.00.1702091513580.6226@T420s> <CACRpkdYmfv0XCirnaMSqZ7O9cKp2XAvqJoGQBSXqHN9fSKGnHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1487327951.3107.19.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYmfv0XCirnaMSqZ7O9cKp2XAvqJoGQBSXqHN9fSKGnHg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 17, 2017 at 11:39:11AM +0100, Philipp Zabel wrote:
-> On Thu, 2017-02-16 at 22:57 +0000, Russell King - ARM Linux wrote:
-> > On Thu, Feb 16, 2017 at 02:27:41PM -0800, Steve Longerbeam wrote:
-> > > 
-> > > 
-> > > On 02/16/2017 02:20 PM, Russell King - ARM Linux wrote:
-> > > >On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
-> > > >>In version 4:
-> > > >
-> > > >With this version, I get:
-> > > >
-> > > >[28762.892053] imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000000
-> > > >[28762.899409] ipu1_csi0: pipeline_set_stream failed with -110
-> > > >
-> > > 
-> > > Right, in the imx219, on exit from s_power(), the clock and data lanes
-> > > must be placed in the LP-11 state. This has been done in the ov5640 and
-> > > tc358743 subdevs.
-> > 
-> > The only way to do that is to enable streaming from the sensor, wait
-> > an initialisation time, and then disable streaming, and wait for the
-> > current line to finish.  There is _no_ other way to get the sensor to
-> > place its clock and data lines into LP-11 state.
+Hi Linus
+
+On Fri, 10 Feb 2017, Linus Walleij wrote:
+
+> On Thu, Feb 9, 2017 at 3:20 PM, Hans Ulli Kroll
+> <ulli.kroll@googlemail.com> wrote:
 > 
-> I thought going through LP-11 is part of the D-PHY transmitter
-> initialization, during the LP->HS wakeup sequence. But then I have no
-> access to MIPI specs.
+> > Add device tree probe for fotg2 driver
+> >
+> > v2:
+> > fix in wrong MODULE_DEVICE_TABLE
+> >
+> > Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> 
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> > +       /* Right now device-tree probed devices don't get dma_mask set.
+> > +        * Since shared usb code relies on it, set it here for now.
+> > +        * Once we have dma capability bindings this can go away.
+> > +        */
+> > +
+> > +       retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> > +       if (retval)
+> > +               goto fail_create_hcd;
+> 
+> Were you able to test this part? 
 
-The D-PHY transmitter initialisation *only* happens as part of the
-wake-up from standby to streaming mode.  That is because Sony expect
-that you program the sensor, and then when you switch it to streaming
-mode, it computes the D-PHY parameters from the PLL, input clock rate
-(you have to tell it the clock rate in 1/256 MHz units), number of
-lanes, and other parameters.
+The driver itself is tested on my NAS 4220, which has *two* USB Ports. I 
+transfered about 4 GB from one USB thumb drive to another one.
 
-It is possible to program the D-PHY parameters manually, but that
-doesn't change the above sequence in any way (it just avoids the
-chip computing the values, it doesn't result in any change of
-behaviour on the bus.)
+I must check my Inventory. I can remember of some Samsung SE-208BW.
+It's CD/DVD Wifi device which uses also Gemini SoC, and has one host and 
+gadget port.
 
-The IMX219 specifications are clear: the clock and data lines are
-held low (LP-00 state) after releasing the hardware enable signal.
-There's a period of chip initialisation, and then you can access the
-I2C bus and configure it.  There's a further period of initialisation
-where charge pumps are getting to their operating state.  Then, you
-set the streaming bit, and a load more initialisation happens before
-the CSI bus enters LP-11 state and the first frame pops out.  When
-entering standby, the last frame is completed, and then the CSI bus
-enters LP-11 state.
+And with the handling with the gadget port is odd. If this is connected 
+with an USB host controller all parts are powerd off, only the CD/DVD part 
+is running and the USB lines are passed trough. So there must be some 
+switch device here.
 
-SMIA are slightly different - mostly following what I've said above,
-but the clock and data lines are tristated after releasing the
-xshutdown signal, and they remain tristated until the clock line
-starts toggling before the first frame appears.  There appears to
-be no point that the clock line enters LP-11 state before it starts
-toggling.  When entering standby, the last frame is completed, and
-the CSI bus enters tristate mode (so floating.)  There is no way to
-get these sensors into LP-11 state.
+There is also some VBUS and USB-ID pins controlled by the Gemini SoC, but 
+these are not used on my NAS, maybe the CD/DVD Writer.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> I saw the gemini has some DMA engine
+> but I never saw a driver for it. It looks like a reasonable thing to do to
+> my untrained DMA eye.
+
+I think the DMA engine is used for other stuff.
+Some quick grep with SL2312_GENERAL_DMA_BASE and WRITE_DMA_REG
+in the NAS 4420 sources 
+
+drivers/char/gemini_i2s.c
+drivers/telephony/gemini_ssp.c
+drivers/telephony/gemini_ssp.h
+include/asm-arm/arch-sl2312/gemini_i2s.h
+include/asm-arm/arch-sl2312/gemini_ssp.h
+sound/oss/Storm_ssp.c
+sound/oss/storm_ssp.h
+
+sound (via i2s) and telephone ???
+
+Oh and your powercontroler is in
+drivers/char/gemini_pwr.c
+
+Greetings
+Hans Ulli Kroll
