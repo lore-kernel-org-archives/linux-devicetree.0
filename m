@@ -1,94 +1,66 @@
-From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v9 0/2] Add support for Omnivision OV5647
-Date: Fri, 17 Feb 2017 13:14:14 +0000
-Message-ID: <cover.1487334912.git.roliveir@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: [PATCH v9 1/2] Add OV5647 device tree documentation
+Date: Fri, 17 Feb 2017 13:14:15 +0000
+Message-ID: <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1487334912.git.roliveir@synopsys.com>
+In-Reply-To: <cover.1487334912.git.roliveir@synopsys.com>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Create device tree bindings documentation.
 
-This patchset adds support for the Omnivision OV5647 sensor.
-
-At the moment it only supports 640x480 in RAW 8.
-
-This is the ninth version of the OV5647 camera driver patchset.
-
-v9:
- - Remove unused struct
- - Remove comments
- - Refactor error handling in i2c r/w functions
- - Change declarations to single line.
- - Remove value assignment in variable declarion
- - Refactor configurion write loop 
- - Change the variable type that received ov5647_read() read value
- - Remove print from probe function
- - Remove unused device struct
- - Remove OF dependency from Kconfig
-Suggested-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-
-v8:
- - Remove a part of the initialization procedure which wasn't doing 
- anything
- - Check for i2c read/writes return values
- - Add stream_on/off functions
-Suggested-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-
-v7:
- - Remove "0x" and leading 0 from DT documentation examples
-
-v6:
- - Add example to DT documentation
- - Remove data-lanes and clock-lane property from DT
- - Add external clock property to DT
- - Order includes
- - Remove unused variables and functions
- - Add external clock handling
- - Add power on counter
- - Change from g/s_parm to g/s_frame_interval
-
-v5:
- - Refactor code 
- - Change comments
- - Add missing error handling in some functions
-
-v4: 
- - Add correct license
- - Revert debugging info to generic infrastructure
- - Turn defines into enums
- - Correct code style issues
- - Remove unused defines
- - Make sure all errors where being handled
- - Rename some functions to make code more readable
- - Add some debugging info
-
-v3: 
- - No changes. Re-submitted due to lack of responses
-
-v2: 
- - Corrections in DT documentation
-
-
-Ramiro Oliveira (2):
-  Add OV5647 device tree documentation
-  Add support for OV5647 sensor.
-
- .../devicetree/bindings/media/i2c/ov5647.txt       |  35 ++
- MAINTAINERS                                        |   7 +
- drivers/media/i2c/Kconfig                          |  11 +
- drivers/media/i2c/Makefile                         |   1 +
- drivers/media/i2c/ov5647.c                         | 638 +++++++++++++++++++++
- 5 files changed, 692 insertions(+)
+Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
- create mode 100644 drivers/media/i2c/ov5647.c
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+new file mode 100644
+index 000000000000..31956426d3b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+@@ -0,0 +1,35 @@
++Omnivision OV5647 raw image sensor
++---------------------------------
++
++OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
++and CCI (I2C compatible) control bus.
++
++Required properties:
++
++- compatible		: "ovti,ov5647".
++- reg			: I2C slave address of the sensor.
++- clocks		: Reference to the xclk clock.
++- clock-names		: Should be "xclk".
++- clock-frequency	: Frequency of the xclk clock.
++
++The common video interfaces bindings (see video-interfaces.txt) should be
++used to specify link to the image data receiver. The OV5647 device
++node should contain one 'port' child node with an 'endpoint' subnode.
++
++Example:
++
++	i2c@2000 {
++		...
++		ov: camera@36 {
++			compatible = "ovti,ov5647";
++			reg = <0x36>;
++			clocks = <&camera_clk>;
++			clock-names = "xclk";
++			clock-frequency = <25000000>;
++			port {
++				camera_1: endpoint {
++					remote-endpoint = <&csi1_ep1>;
++				};
++			};
++		};
++	};
 -- 
 2.11.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
