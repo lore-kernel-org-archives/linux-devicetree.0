@@ -1,73 +1,131 @@
-From: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] input: pwm-beeper: add feature to set volume level
-Date: Fri, 17 Feb 2017 11:01:47 +0100
-Message-ID: <4e1df881-0183-933e-4443-601729700f0c@exceet.de>
-References: <0e2dec4d-7550-9495-f12a-020391183304@exceet.de>
- <cover.1484838551.git.frieder.schrempf@exceet.de>
- <20170119213700.GC13542@dtor-ws>
- <43679b65-8710-4255-2006-8c47dd755497@lechnology.com>
- <fddaa3de-81a3-1078-65ac-29503419f1e6@exceet.de>
- <5fc04e9d-7a92-2a34-e9cc-679106481e32@lechnology.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] power: reset: Add Renesas reset driver
+Date: Fri, 17 Feb 2017 02:06:03 -0800
+Message-ID: <fb92af5b-6ed8-ef52-d1d1-4615b5026738@roeck-us.net>
+References: <20170216172320.10897-1-chris.brandt@renesas.com>
+ <20170216172320.10897-2-chris.brandt@renesas.com>
+ <20170216182644.GA17814@roeck-us.net>
+ <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <20170216222014.GA29672@roeck-us.net>
+ <PS1PR06MB11622077DE4673C1879C05278A5D0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <55cf087f-aa70-3660-1186-af9b9b20376d@roeck-us.net>
+ <CAMuHMdUChhntL0Mw2CY7au87WHj11nBi+0Q2mWSi+RcYpHXgAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5fc04e9d-7a92-2a34-e9cc-679106481e32-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUChhntL0Mw2CY7au87WHj11nBi+0Q2mWSi+RcYpHXgAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16.02.2017 22:44, David Lechner wrote:
-> On 02/16/2017 03:15 PM, Frieder Schrempf wrote:
->> Hello David,
+On 02/17/2017 12:09 AM, Geert Uytterhoeven wrote:
+> Hi Günter,
+>
+> On Fri, Feb 17, 2017 at 5:45 AM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>> On 02/16/2017 06:00 PM, Chris Brandt wrote:
+>>> On Thursday, February 16, 2017, Guenter Roeck wrote:
+>>> If this WDT had a timeout longer than 125ms, I would make a real watchdog
+>>> driver
+>>> out of it. But at the moment, it just serves as the only way to reset the
+>>> chip.
+>>> Historically, this was the only way to reset a SH4 device...and we just
+>>> lived
+>>> with that fact. When Renesas moved from SH4 to ARM, a lot of the design
+>>> teams
+>>> just kept the same philosophy (and copied the HW blocks they knew already
+>>> worked)
 >>
->> On 20.01.2017 20:11, David Lechner wrote:
->>> On 01/19/2017 03:37 PM, Dmitry Torokhov wrote:
->>>> On Thu, Jan 19, 2017 at 04:24:07PM +0100, Frieder Schrempf wrote:
->>>>> Make the driver accept switching volume levels via sysfs.
->>>>> This can be helpful if the beep/bell sound intensity needs
->>>>> to be adapted to the environment of the device.
+>> FWIW, the watchdog subsystem should support that easily, even with 125 ms
+>> hardware
+>> timeout. We added that capability for that very purpose. That would only
+>> fail if
+>> the system is stuck with interrupts disabled for more than 125 ms, which
+>> seems
+>> unlikely. I think the gpio watchdog on some systems has a similar low
+>> hardware
+>> timeout.
+>
+> I also thought 125ms was a bit short, but I'm happy to be proven wrong!
+> Let's make a real watchdog driver instead ;-)
+>
+>>>>>>> v2: * changed DT bindings from 'wdt-reset' to 'rza-wdt' * changed
+>>>>>>> hard coded register values to defines * added msleep to while(1)
+>>>>>>> loop
+>>>>>>
+>>>>>> Sure you can sleep here ?
 >>>>>
->>>>> The number of volume levels available and their values can
->>>>> be specified via device tree (similar to pwm-backlight).
+>>>>> As per Geert's review:
 >>>>>
->>>>> The volume adjustment is done by changing the duty cycle of
->>>>> the pwm signal.
+>>>>> On Wednesday, February 15, 2017, Geert Uytterhoeven wrote:
+>>>>>>>
+>>>>>>> + +       /* Wait for WDT overflow */ +       while (1)
 >>>>
->>>> I wonder how this all will mesh up with beepers that have dedicated
->>>> amplifiers (support is being added by David Lechner).
+>>>> +               ;
+>>>>>>
+>>>>>> This burns CPU, and thus power, albeit for a very short time.
+>>>>>> Perhaps add an msleep() to the loop body?
+>>>>>
+>>>>> Note that you only have 7.7us before the restart occurs, so probably
+>>>>> not much sleeping will be going on.
+>>>>>
+>>>> Let me rephrase my question. Is it guaranteed that you _can_ sleep in
+>>>> this
+>>>> function, or in other words that it is guaranteed that interrupts are
+>>>> enabled ?
 >>>
->>> This will work very well with it. I fact, it is a feature I would like
->>> to have but I was not sure about a good way to implement it. Please Cc:
->>> me on future revisions of this series and I will be glad to test it.
+>>> Hmm, I'm not sure if will actually 'sleep' or not. Regardless, interrupts
+>>> or not,
+>>> in 7.7us, the internal reset circuit is going to get triggered and the
+>>> whole system
+>>> is going to reboot not matter what is going on.
+>>>
 >>
->> I have just send v4.
->>>
->>> One thing that would be nice would be for a more generic way to change
->>> the volume from userspace. Having a sysfs attribute on the platform
->>> device will work, but it requires very specific knowledge from any
->>> userspace program that wants to control the volume. Would it be possible
->>> to add an alsa mixer volume control or something like that?
+>> That isn't the point, really. You might get a WARN blob if msleep() is
+>> called
+>> with interrupts disabled, but of course you won't really see that because it
+>> can
+>> not be displayed in 7.7 us.
+>
+> If it's not 100% guaranteed that we cannot sleep, we should not use msleep(),
+> and stick to busy waiting.
+> On ARM, we could also use wfi().
+>
+>>> I know Geert's suggestion was in reference to saving power...but in
+>>> reality it's
+>>> probably negligible when we are talking about 7.7us. The reboot is going
+>>> to
+>>> automatically shut off all the peripherals clocks as well.
 >>
->> An alsa mixer control for the pwm-beeper volume sounds nice, but
->> unfortunately I have no idea how one would implement this, or if this is
->> even possible.
->>>
+>> Maybe udelay(10); would have been more acceptable (and appropriate).
 >
+> Inside the while (1) loop? That's the same as a plain "while (1) ;" ;-)
+> Or just udelay(10) and return, with the latter never happening if everything
+> goes well? Then the next restart handler will be tried, if available.
 >
-> I know it is possible because I have done it. ;-)
->
-> https://github.com/ev3dev/lego-linux-drivers/blob/master/evb/evb_sound.c
->
-> The driver in the link above does PCM playback using PWM. But, it also
-> included an input device similar to pwm-beeper and it includes an ALSA
-> volume control specifically for the beeper.
 
-Aha, thanks. Doesn't look too complicated. I think I will play with this 
-a bit, when I have time. So maybe the sysfs volume control can be 
-replaced with a proper volume mixer control at some point.
+That is what I meant. Or use udelay(20) to be on the safe side.
+
+Guenter
+
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
