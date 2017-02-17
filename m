@@ -1,75 +1,102 @@
-From: Joe Perches <joe@perches.com>
-Subject: [PATCH 25/35] drivers/of: Convert remaining uses of pr_warning to pr_warn
-Date: Thu, 16 Feb 2017 23:11:38 -0800
-Message-ID: <d801f4ad948b5029ae3d482f2a55d05bcf35f91f.1487314667.git.joe@perches.com>
-References: <cover.1487314666.git.joe@perches.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1487314666.git.joe@perches.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: Re: [PATCH 1/5] arm64: dts: Add basic DT to support Spreadtrum's
+ SP9860G
+Date: Fri, 17 Feb 2017 15:28:39 +0800
+Message-ID: <20170217072839.GA8767@spreadtrum.com>
+References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1487063952-7113-2-git-send-email-chunyan.zhang@spreadtrum.com>
+ <CAPKp9ub35nL8gc_TKx02pSHHNwBhiMacWL=CuEmNGnecWikfGQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAPKp9ub35nL8gc_TKx02pSHHNwBhiMacWL=CuEmNGnecWikfGQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-To enable eventual removal of pr_warning
-
-This makes pr_warn use consistent for drivers/of
-
-Prior to this patch, there were 5 uses of pr_warning and
-19 uses of pr_warn in drivers/of
-
-Signed-off-by: Joe Perches <joe@perches.com>
----
- drivers/of/fdt.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index e5ce4b59e162..b9b1dc75e05d 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -514,8 +514,8 @@ static void *__unflatten_device_tree(const void *blob,
- 	/* Second pass, do actual unflattening */
- 	unflatten_dt_nodes(blob, mem, dad, mynodes);
- 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
--		pr_warning("End of tree marker overwritten: %08x\n",
--			   be32_to_cpup(mem + size));
-+		pr_warn("End of tree marker overwritten: %08x\n",
-+			be32_to_cpup(mem + size));
- 
- 	if (detached && mynodes) {
- 		of_node_set_flag(*mynodes, OF_DETACHED);
-@@ -1133,25 +1133,25 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
- 	size &= PAGE_MASK;
- 
- 	if (base > MAX_MEMBLOCK_ADDR) {
--		pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
--				base, base + size);
-+		pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
-+			base, base + size);
- 		return;
- 	}
- 
- 	if (base + size - 1 > MAX_MEMBLOCK_ADDR) {
--		pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
--				((u64)MAX_MEMBLOCK_ADDR) + 1, base + size);
-+		pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
-+			((u64)MAX_MEMBLOCK_ADDR) + 1, base + size);
- 		size = MAX_MEMBLOCK_ADDR - base + 1;
- 	}
- 
- 	if (base + size < phys_offset) {
--		pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
--			   base, base + size);
-+		pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
-+			base, base + size);
- 		return;
- 	}
- 	if (base < phys_offset) {
--		pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
--			   base, phys_offset);
-+		pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
-+			base, phys_offset);
- 		size -= phys_offset - base;
- 		base = phys_offset;
- 	}
--- 
-2.10.0.rc2.1.g053435c
+SGkgU3VkZWVwLAoKT24g5LqMLCAgMuaciCAxNCwgMjAxNyBhdCAwNDo0NDo1M+S4i+WNiCArMDAw
+MCwgU3VkZWVwIEhvbGxhIHdyb3RlOgo+IE9uIFR1ZSwgRmViIDE0LCAyMDE3IGF0IDk6MTkgQU0s
+IENodW55YW4gWmhhbmcKPiA8Y2h1bnlhbi56aGFuZ0BzcHJlYWR0cnVtLmNvbT4gd3JvdGU6Cj4g
+PiBGcm9tOiBPcnNvbiBaaGFpIDxvcnNvbi56aGFpQHNwcmVhZHRydW0uY29tPgo+ID4KPiA+IFND
+OTg2MEcgaXMgYSA4IGNvcmVzIG9mIEE1MyBTb0Mgd2l0aCA0RyBMVEUgc3VwcG9ydCBTb0MgZnJv
+bSBTcHJlYWR0cnVtLgo+ID4KPiA+IEFjY29yZGluZyB0byByZWd1bGFyIGhpZXJhcmNoeSBvZiBz
+cHJkIGR0cywgd2hhbGUyLmR0c2kgY29udGFpbnMgU29DCj4gPiBwZXJpcGhlcmFscyBJUCBub2Rl
+cywgc2M5ODYwLmR0c2kgY29udGFpbnMgc3R1ZmYgcmVsYXRlZCB0byBBUk0gY29yZSBzdHVmZgo+
+ID4gYW5kIHNwOTg2MGcgZHRzIGlzIGZvciB0aGUgYm9hcmQgbGV2ZWwuCj4gPgo+ID4gU2lnbmVk
+LW9mZi1ieTogT3Jzb24gWmhhaSA8b3Jzb24uemhhaUBzcHJlYWR0cnVtLmNvbT4KPiA+IFNpZ25l
+ZC1vZmYtYnk6IENodW55YW4gWmhhbmcgPGNodW55YW4uemhhbmdAc3ByZWFkdHJ1bS5jb20+Cj4g
+PiAtLS0KPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL3NwcmQvTWFrZWZpbGUgICAgICAgICB8ICAg
+MyArLQo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9zYzk4NjAuZHRzaSAgICAgIHwgNTM0
+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+c3ByZC9zcDk4NjBnLTFoMTAuZHRzIHwgIDU4ICsrKysKPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRz
+L3NwcmQvd2hhbGUyLmR0c2kgICAgICB8ICA2NiArKysrCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCA2
+NjAgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBh
+cmNoL2FybTY0L2Jvb3QvZHRzL3NwcmQvc2M5ODYwLmR0c2kKPiA+ICBjcmVhdGUgbW9kZSAxMDA2
+NDQgYXJjaC9hcm02NC9ib290L2R0cy9zcHJkL3NwOTg2MGctMWgxMC5kdHMKPiA+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9zcHJkL3doYWxlMi5kdHNpCj4gPgo+ID4g
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9NYWtlZmlsZSBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvc3ByZC9NYWtlZmlsZQo+ID4gaW5kZXggYjY1OGM1ZS4uZjA1MzVlNiAxMDA2
+NDQKPiA+IC0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9NYWtlZmlsZQo+ID4gKysrIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9zcHJkL01ha2VmaWxlCj4gPiBAQCAtMSw0ICsxLDUgQEAKPiA+
+IC1kdGItJChDT05GSUdfQVJDSF9TUFJEKSArPSBzYzk4MzYtb3BlbnBob25lLmR0Ygo+ID4gK2R0
+Yi0kKENPTkZJR19BUkNIX1NQUkQpICs9IHNjOTgzNi1vcGVucGhvbmUuZHRiIFwKPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIHNwOTg2MGctMWgxMC5kdGIKPiA+Cj4gPiAgYWx3YXlzICAgICAg
+ICAgOj0gJChkdGIteSkKPiA+ICBzdWJkaXIteSAgICAgICA6PSAkKGR0cy1kaXJzKQo+ID4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9zYzk4NjAuZHRzaSBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvc3ByZC9zYzk4NjAuZHRzaQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+
+IGluZGV4IDAwMDAwMDAuLjYwNGE4YzkKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvc3ByZC9zYzk4NjAuZHRzaQo+ID4gQEAgLTAsMCArMSw1MzQgQEAKPiAK
+PiBbLi4uXQo+IAo+ID4gKyAgICAgICBpZGxlLXN0YXRlc3sKPiA+ICsgICAgICAgICAgICAgICBl
+bnRyeS1tZXRob2QgPSAiYXJtLHBzY2kiOwo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgIENPUkVf
+UEQ6IGNvcmVfcGQgewo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJh
+cm0saWRsZS1zdGF0ZSI7Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBlbnRyeS1sYXRlbmN5
+LXVzID0gPDEwMDA+Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZXhpdC1sYXRlbmN5LXVz
+ID0gPDcwMD47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBtaW4tcmVzaWRlbmN5LXVzID0g
+PDI1MDA+Owo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgbG9jYWwtdGltZXItc3RvcDsKPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgIGFybSxwc2NpLXN1c3BlbmQtcGFyYW0gPSA8MHgwMDAx
+MDAwMj47Cj4gPiArICAgICAgICAgICAgICAgfTsKPiA+ICsKPiA+ICsgICAgICAgICAgICAgICBD
+TFVTVEVSX1BEOiBjbHVzdGVyX3BkIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAiYXJtLGlkbGUtc3RhdGUiOwo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZW50
+cnktbGF0ZW5jeS11cyA9IDwxMDAwPjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIGV4aXQt
+bGF0ZW5jeS11cyA9IDwxMDAwPjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIG1pbi1yZXNp
+ZGVuY3ktdXMgPSA8MzAwMD47Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBsb2NhbC10aW1l
+ci1zdG9wOwo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYXJtLHBzY2ktc3VzcGVuZC1wYXJh
+bSA9IDwweDAxMDEwMDAzPjsKPiA+ICsgICAgICAgICAgICAgICB9Owo+ID4gKwo+ID4gKyAgICAg
+ICAgICAgICAgIERFRVBfU0xFRVA6IGRlZXBfc2xlZXAgewo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgY29tcGF0aWJsZSA9ICJhcm0saWRsZS1zdGF0ZSI7Cj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICB3YWtldXAtbGF0ZW5jeS11cyA9IDwweGZmZmZmZmZmPjsKPiAKPiBBIHZhbHVlID4g
+NDI5NCBzZWNvbmRzKGkuZSA+MSBob3VyKSBzZWVtcyBzdXNwaWNpb3VzLgo+IEFyZSB5b3Ugd29y
+a2luZyBhcm91bmQgdGhlIGZpcm13YXJlIGlzc3VlIHdpdGggaGlnaCBsYXRlbmN5IHZhbHVlIHNv
+Cj4gdGhhdCBpdCdzIG5ldmVyIGVudGVyZWQgPyBXaHkgbm90IHJlbW92ZSBhZHZlcnRpc2luZyB0
+aGUgc3RhdGUgZnJvbSBEVC4KPgoKSGF2ZWQgY2hlY2tlZCB3aXRoIHJlbGF0ZWQgY29sbGVhZ3Vl
+cywgdGhpcyBub2RlICdkZWVwX3NsZWVwJyB3YXMgbm90IGZvciB3b3JraW5nCmFyb3VuZCBhbnkg
+ZmlybXdhcmUgaXNzdWUsIGJ1dCB3YXMgYSB0cmljayB1dGlsaXphdGlvbiBvZiBpZGxlIHN1YnN5
+c3RlbSwgYW5kIHRoYXQKd2FzIGRlZmluaXRlbHkgbm90IGVsZWdhbnQsIHRoZSBhdXRob3IgaW5k
+ZWVkIGludGVuZGx5IGRpZG4ndCB3YW50IENQVSBlbnRlcmVkIHRoaXMKc3RhdGUsIEkgd2lsbCBy
+ZW1vdmUgdGhpcyBub2RlIHRoZXJlZm9yZS4KIAo+IENhbiB5b3UgZ2V0IG1lIHRoZSBkdW1wIG9m
+Ogo+IGdyZXAgIiIgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvY3B1Ki9jcHVpZGxlL3N0YXRlKi97
+dGltZSx1c2FnZX0KPiAKCkZZSTogaHR0cHM6Ly93d3cuaXJjY2xvdWQuY29tL3Bhc3RlYmluL1h5
+RU1MemZxLwoKVGhhbmtzLApDaHVueWFuCgo+IElJVUMsIHlvdSBtaWdodCBoYXZlIHNlZW4gYm9v
+dCBpc3N1ZSB3aXRob3V0IHRoaXMgdmFsdWVzIGFuZCB3b3JrYXJvdW5kCj4gdGhlIGlzc3VlIHdp
+dGggc3VjaCBoaWdoIHZhbHVlcyA/IElmIHNvIHBsZWFzZSBkcm9wIHRoaXMgc3RhdGUuCj4gCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICBlbnRyeS1sYXRlbmN5LXVzID0gPDE1MDA+Owo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgZXhpdC1sYXRlbmN5LXVzID0gPDE1MDA+Owo+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgbWluLXJlc2lkZW5jeS11cyA9IDwweGZmZmZmZmZmPjsKPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgIGxvY2FsLXRpbWVyLXN0b3A7Cj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICBhcm0scHNjaS1zdXNwZW5kLXBhcmFtID0gPDB4MDEwMTAwMDU+Owo+ID4g
+KyAgICAgICAgICAgICAgIH07Cj4gPiArICAgICAgIH07Cj4gPgo+IAo+IC0tCj4gUmVnYXJkcywK
+PiBTdWRlZXAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
