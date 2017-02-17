@@ -1,65 +1,46 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 08/21] ARM: dts: sun8i-h3: add dwmac-sun8i
- rgmii pins
-Date: Fri, 17 Feb 2017 10:14:39 +0100
-Message-ID: <20170217091439.GE22723@Red>
-References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
- <20170216124859.14346-9-clabbe.montjoie@gmail.com>
- <20170216190632.hezcacn3hw5uhxcn@lukather>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Yegor Yefremov <yegorslists@googlemail.com>
+Subject: Re: [PATCH v3 0/3] Adding DT support for TI HECC module
+Date: Fri, 17 Feb 2017 10:23:33 +0100
+Message-ID: <CAGm1_kvN_SiFS69aKRsJ-Hm9bjgVskYiONh_bTUGLhRozrKF_A@mail.gmail.com>
+References: <1487170125-10815-1-git-send-email-yegorslists@googlemail.com>
+ <7c8fb14d-835b-d1d0-ca4f-4d184b711ae0@pengutronix.de> <CAGm1_kuQ1skHayOKu16JdZ3Bah+=CqzZJ5e6j2VDj3WW5No2vw@mail.gmail.com>
+ <b6c8bfbe-1748-ee2c-2129-96e1bce9b324@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBBH6TLCQKGQEEK7Q7DY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170216190632.hezcacn3hw5uhxcn@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <b6c8bfbe-1748-ee2c-2129-96e1bce9b324@pengutronix.de>
+Sender: linux-can-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, Tony Lindgren <tony@atomide.com>, Andrey Skvortsov <andrej.skvortzov@gmail.com>, hs@denx.de, Anton Glukhov <anton.a.glukhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 08:06:32PM +0100, Maxime Ripard wrote:
-> On Thu, Feb 16, 2017 at 01:48:46PM +0100, Corentin Labbe wrote:
-> > This patch add pinctrl node for dwmac-sun8i on H3.
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/sun8i-h3.dtsi | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > index 61d56d2..59ed40e 100644
-> > --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> > @@ -349,6 +349,17 @@
-> >  				function = "i2c2";
-> >  			};
-> >  
-> > +			emac_rgmii_pins: emac0@0 {
-> > +				allwinner,pins = "PD0", "PD1", "PD2", "PD3",
-> > +						"PD4", "PD5", "PD7",
-> > +						"PD8", "PD9", "PD10",
-> > +						"PD12", "PD13", "PD15",
-> > +						"PD16", "PD17";
-> > +				allwinner,function = "emac";
-> 
-> Please use the generic pin config properties (ie. pins and functions).
-> 
-> > +				allwinner,drive = <SUN4I_PINCTRL_40_MA>;
-> 
-> Why do you need to use 40mA?
-> 
-> > +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-> 
-> This is the default now.
-> 
+On Fri, Feb 17, 2017 at 9:51 AM, Marc Kleine-Budde <mkl@pengutronix.de> wrote:
+> On 02/17/2017 09:50 AM, Yegor Yefremov wrote:
+>> On Fri, Feb 17, 2017 at 9:46 AM, Marc Kleine-Budde <mkl@pengutronix.de> wrote:
+>>> On 02/15/2017 03:48 PM, yegorslists@googlemail.com wrote:
+>>>> From: Yegor Yefremov <yegorslists@googlemail.com>
+>>>>
+>>>> This is an attempt to revive DT support for TI HECC that was started in 2015 [1].
+>>>>
+>>>> Changes v2 -> v3:
+>>>>   - rename compatible property to "ti,am3517-hecc" (though there is a stipped
+>>>>     device named 3505, EMAC driver already uses am3517-emac name, so keep this
+>>>>     property consistent)
+>>>>   - use reg-names to specify different HECC I/O mapping (suggested by Tony Lindgren)
+>>>>   - provide fallback offsets and sizes for board files
+>>>
+>>> Are there any board files using te_hecc intree? I don't see any on the
+>>> first glance. What about making the driver DT only?
+>>
+>> Good idea. I aslo wanted to ask this. So this means we could
+>> completely get rid of include/linux/can/platform/ti_hecc.h?
+>
+> If there isn't any in-tree user, thes yes.
 
-Will fix that in all DT
+Btw. what should we do about "@transceiver_switch: platform specific
+callback fn for transceiver control"? Model it via something like
+this:
 
-Thanks
-Corentin Labbe
+enable-gpios = <&gpio6 15 GPIO_ACTIVE_HIGH>; /* gpio 175 */
+
+Yegor
