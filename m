@@ -1,35 +1,49 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: pm8994: Add rtc node
-Date: Fri, 17 Feb 2017 00:53:23 -0800
-Message-ID: <20170217085323.4123-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] arm64: dts: r8a7795: Upgrade to PSCI v1.0 to support Suspend-to-RAM
+Date: Fri, 17 Feb 2017 18:00:31 +0100
+Message-ID: <1487350832-29820-2-git-send-email-geert+renesas@glider.be>
+References: <1487350832-29820-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1487350832-29820-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Khiem Nguyen <khiem.nguyen.xt@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/pm8994.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8994.dtsi b/arch/arm64/boot/dts/qcom/pm8994.dtsi
-index 0f1866024ae3..b413e44fd09e 100644
---- a/arch/arm64/boot/dts/qcom/pm8994.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8994.dtsi
-@@ -9,6 +9,13 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+>From PSCI v1.0, Suspend-to-RAM is supported via SYSTEM_SUSPEND PSCI
+function call. Hence, upgrade PSCI version for R-Car H3 to support
+Suspend-to-RAM.
+
+The Suspend-to-RAM is highly dependent on ARM Trusted Firwmare support
+since necessary callback functions will be registered after a query
+to ARM Trusted Firmware about SYSTEM_SUSPEND support.
+
+Since PSCI v1.0 is backward compatible with PSCI v0.2, CPU Hotplug and
+CPUIdle should be able to work normally with this change.
+
+Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Khiem: I've updated your email address.
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 98cd42f586b5fd62..4eae2d471d41ee55 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -29,7 +29,7 @@
+ 	};
  
-+		rtc@6000 {
-+			compatible = "qcom,pm8941-rtc";
-+			reg = <0x6000>, <0x6100>;
-+			reg-names = "rtc", "alarm";
-+			interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-+		};
-+
- 		pm8994_gpios: gpios@c000 {
- 			compatible = "qcom,pm8994-gpio";
- 			reg = <0xc000>;
+ 	psci {
+-		compatible = "arm,psci-0.2";
++		compatible = "arm,psci-1.0";
+ 		method = "smc";
+ 	};
+ 
 -- 
-2.11.1
+1.9.1
