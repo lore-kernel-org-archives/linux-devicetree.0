@@ -1,65 +1,75 @@
-From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
-Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
-Date: Fri, 17 Feb 2017 16:56:44 +0100
-Message-ID: <1c13f7a8-b355-b985-c02f-a50bebfc86a7@math.uni-bielefeld.de>
-References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
- <20170216184524.cxcy2ux37yrwutla@lukather>
- <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
- <20170217154219.d4z2gylzcrzntlt3@piout.net>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] Adding DT support for TI HECC module
+Date: Fri, 17 Feb 2017 17:04:17 +0100
+Message-ID: <6f10284f-2f66-a57b-2344-9df2c26d8dfa@pengutronix.de>
+References: <1487346753-19286-1-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <20170217154219.d4z2gylzcrzntlt3@piout.net>
-Sender: owner-linux-mm@kvack.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-mm@kvack.org, wens@csie.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="3awLx44693rFhKOeqa9SUbDTMBgGUoIQc"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487346753-19286-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Alexandre Belloni wrote:
-> On 17/02/2017 at 13:45:44 +0100, Tobias Jakobi wrote:
->>> The device tree is a representation of the hardware itself. The state
->>> of the driver support doesn't change the hardware you're running on,
->>> just like your BIOS/UEFI on x86 won't change the device it reports to
->>> Linux based on whether it has a driver for it.
->> Like Emil already said, the new bindings and the DT entries are solely
->> introduced to support a proprietary out-of-tree module.
->>
-> 
-> Because device tree describes the hardware, the added binding doesn't
-> support any particular module. The eventually upstreamed drvier will
-> share the same bindings.
-OK, can we then agree that we _only_ merge the bindings and the entries,
-once this driver is upstream?
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--3awLx44693rFhKOeqa9SUbDTMBgGUoIQc
+Content-Type: multipart/mixed; boundary="p4X3epKSM8MuXh2hgVtgaV0V6L4HjGdjd";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
+ tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Message-ID: <6f10284f-2f66-a57b-2344-9df2c26d8dfa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] Adding DT support for TI HECC module
+References: <1487346753-19286-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1487346753-19286-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-Driver upstreaming and DT work go hand-in-hand. It's usually after a lot
-of discussion that new bindings get finalised. And for that discussion
-to happen we need to know how the driver uses the information from the
-DT. Otherwise we have no way to evaluate if the description is in any
-way "appropriate".
+--p4X3epKSM8MuXh2hgVtgaV0V6L4HjGdjd
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-And no, I don't follow the "DT is a separate/independent thing" thought.
-It maybe is in an ideal world, but we've seen it now often enough that
-bindings turned out to be poorly designed, even though they looked fine
-at first.
+On 02/17/2017 04:52 PM, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
+> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>=20
+> This is an attempt to revive DT support for TI HECC that was started in=
+ 2015 [1].
 
-With best wishes,
-Tobias
+Applied to can-next.
+
+Tnx,
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-> 
->> The current workflow when introducing new DT entries is the following:
->> - upstream a driver that uses the entries
->> - THEN add the new entries
->>
-> 
-> Exactly not, if you do that, checkpatch will complain loudly. Because
-> you must not add a driver using bindings that are not documented first.
-> 
-> 
+--p4X3epKSM8MuXh2hgVtgaV0V6L4HjGdjd--
 
+--3awLx44693rFhKOeqa9SUbDTMBgGUoIQc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlinHwEACgkQHv7KIOw4
+HPb2GQf+I9BHcInfkkrT+su+aZVJLoRe9fSDujnTnKuCnlB18KNSLSz0Bp2/Zo0/
+TPgtX0ouAnM/sfNi+6KB4v/iI25NXbuMidH6v3xhfGBEeBobEz7FsgYSkkTUNvdp
+g1FOVb6Wf4ZwN3pG+iRrcngICqcrhmUl2Ky7E+XpiS0De3fB/8/vaGN34d5cuAPx
+4oy6T1hIxG8c2CeDEvKMTHvu5GZV4TbM0p+Gqyn/B2SJN9ixsnAepU01qRlRRMps
+dnk9qccDz1ZFRY0CCkGc9GaA5nx+J9Qf5nd9M25gcPAi66x8PCkFz/PspKqpa4qw
+Sh6O1FqINYd9hPhHMIH4ILp9cV3fBw==
+=K2cC
+-----END PGP SIGNATURE-----
+
+--3awLx44693rFhKOeqa9SUbDTMBgGUoIQc--
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
