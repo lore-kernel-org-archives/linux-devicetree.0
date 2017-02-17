@@ -1,383 +1,65 @@
-From: yegorslists@googlemail.com
-Subject: [PATCH v5 3/3] can: ti_hecc: Add DT support for TI HECC module
-Date: Fri, 17 Feb 2017 16:52:33 +0100
-Message-ID: <1487346753-19286-4-git-send-email-yegorslists@googlemail.com>
-References: <1487346753-19286-1-git-send-email-yegorslists@googlemail.com>
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1487346753-19286-1-git-send-email-yegorslists@googlemail.com>
-Sender: linux-can-owner@vger.kernel.org
-To: linux-can@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, tony@atomide.com, mkl@pengutronix.de, andrej.skvortzov@gmail.com, Yegor Yefremov <yegorslists@googlemail.com>, Anton Glukhov <anton.a.glukhov@gmail.com>
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
+Date: Fri, 17 Feb 2017 16:56:44 +0100
+Message-ID: <1c13f7a8-b355-b985-c02f-a50bebfc86a7@math.uni-bielefeld.de>
+References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
+ <20170216184524.cxcy2ux37yrwutla@lukather>
+ <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
+ <20170217154219.d4z2gylzcrzntlt3@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <20170217154219.d4z2gylzcrzntlt3@piout.net>
+Sender: owner-linux-mm@kvack.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-mm@kvack.org, wens@csie.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+Alexandre Belloni wrote:
+> On 17/02/2017 at 13:45:44 +0100, Tobias Jakobi wrote:
+>>> The device tree is a representation of the hardware itself. The state
+>>> of the driver support doesn't change the hardware you're running on,
+>>> just like your BIOS/UEFI on x86 won't change the device it reports to
+>>> Linux based on whether it has a driver for it.
+>> Like Emil already said, the new bindings and the DT entries are solely
+>> introduced to support a proprietary out-of-tree module.
+>>
+> 
+> Because device tree describes the hardware, the added binding doesn't
+> support any particular module. The eventually upstreamed drvier will
+> share the same bindings.
+OK, can we then agree that we _only_ merge the bindings and the entries,
+once this driver is upstream?
 
-This patch converts TI HECC driver to DT only driver. This results in
-removing ti_hecc.h containing now obsolete platform data.
+Driver upstreaming and DT work go hand-in-hand. It's usually after a lot
+of discussion that new bindings get finalised. And for that discussion
+to happen we need to know how the driver uses the information from the
+DT. Otherwise we have no way to evaluate if the description is in any
+way "appropriate".
 
-Former transceiver_switch callback function will be now modelled via
-regulator API.
+And no, I don't follow the "DT is a separate/independent thing" thought.
+It maybe is in an ideal world, but we've seen it now often enough that
+bindings turned out to be poorly designed, even though they looked fine
+at first.
 
-Signed-off-by: Anton Glukhov <anton.a.glukhov@gmail.com>
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
----
- drivers/net/can/ti_hecc.c            | 170 ++++++++++++++++++-----------------
- include/linux/can/platform/ti_hecc.h |  44 ---------
- 2 files changed, 88 insertions(+), 126 deletions(-)
- delete mode 100644 include/linux/can/platform/ti_hecc.h
+With best wishes,
+Tobias
 
-diff --git a/drivers/net/can/ti_hecc.c b/drivers/net/can/ti_hecc.c
-index 81865a3..b87e8f3 100644
---- a/drivers/net/can/ti_hecc.c
-+++ b/drivers/net/can/ti_hecc.c
-@@ -17,25 +17,6 @@
-  *
-  */
- 
--/*
-- * Your platform definitions should specify module ram offsets and interrupt
-- * number to use as follows:
-- *
-- * static struct ti_hecc_platform_data am3517_evm_hecc_pdata = {
-- *         .scc_hecc_offset        = 0,
-- *         .scc_ram_offset         = 0x3000,
-- *         .hecc_ram_offset        = 0x3000,
-- *         .mbx_offset             = 0x2000,
-- *         .int_line               = 0,
-- *         .revision               = 1,
-- *         .transceiver_switch     = hecc_phy_control,
-- * };
-- *
-- * Please see include/linux/can/platform/ti_hecc.h for description of
-- * above fields.
-- *
-- */
--
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/types.h>
-@@ -46,11 +27,13 @@
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/regulator/consumer.h>
- 
- #include <linux/can/dev.h>
- #include <linux/can/error.h>
- #include <linux/can/led.h>
--#include <linux/can/platform/ti_hecc.h>
- 
- #define DRV_NAME "ti_hecc"
- #define HECC_MODULE_VERSION     "0.7"
-@@ -214,15 +197,14 @@ struct ti_hecc_priv {
- 	struct net_device *ndev;
- 	struct clk *clk;
- 	void __iomem *base;
--	u32 scc_ram_offset;
--	u32 hecc_ram_offset;
--	u32 mbx_offset;
--	u32 int_line;
-+	void __iomem *hecc_ram;
-+	void __iomem *mbx;
-+	bool use_hecc1int;
- 	spinlock_t mbx_lock; /* CANME register needs protection */
- 	u32 tx_head;
- 	u32 tx_tail;
- 	u32 rx_next;
--	void (*transceiver_switch)(int);
-+	struct regulator *reg_xceiver;
- };
- 
- static inline int get_tx_head_mb(struct ti_hecc_priv *priv)
-@@ -242,20 +224,18 @@ static inline int get_tx_head_prio(struct ti_hecc_priv *priv)
- 
- static inline void hecc_write_lam(struct ti_hecc_priv *priv, u32 mbxno, u32 val)
- {
--	__raw_writel(val, priv->base + priv->hecc_ram_offset + mbxno * 4);
-+	__raw_writel(val, priv->hecc_ram + mbxno * 4);
- }
- 
- static inline void hecc_write_mbx(struct ti_hecc_priv *priv, u32 mbxno,
- 	u32 reg, u32 val)
- {
--	__raw_writel(val, priv->base + priv->mbx_offset + mbxno * 0x10 +
--			reg);
-+	__raw_writel(val, priv->mbx + mbxno * 0x10 + reg);
- }
- 
- static inline u32 hecc_read_mbx(struct ti_hecc_priv *priv, u32 mbxno, u32 reg)
- {
--	return __raw_readl(priv->base + priv->mbx_offset + mbxno * 0x10 +
--			reg);
-+	return __raw_readl(priv->mbx + mbxno * 0x10 + reg);
- }
- 
- static inline void hecc_write(struct ti_hecc_priv *priv, u32 reg, u32 val)
-@@ -311,11 +291,16 @@ static int ti_hecc_set_btc(struct ti_hecc_priv *priv)
- 	return 0;
- }
- 
--static void ti_hecc_transceiver_switch(const struct ti_hecc_priv *priv,
--					int on)
-+static int ti_hecc_transceiver_switch(const struct ti_hecc_priv *priv,
-+				      int on)
- {
--	if (priv->transceiver_switch)
--		priv->transceiver_switch(on);
-+	if (!priv->reg_xceiver)
-+		return 0;
-+
-+	if (on)
-+		return regulator_enable(priv->reg_xceiver);
-+	else
-+		return regulator_disable(priv->reg_xceiver);
- }
- 
- static void ti_hecc_reset(struct net_device *ndev)
-@@ -409,7 +394,7 @@ static void ti_hecc_start(struct net_device *ndev)
- 
- 	/* Prevent message over-write & Enable interrupts */
- 	hecc_write(priv, HECC_CANOPC, HECC_SET_REG);
--	if (priv->int_line) {
-+	if (priv->use_hecc1int) {
- 		hecc_write(priv, HECC_CANMIL, HECC_SET_REG);
- 		hecc_write(priv, HECC_CANGIM, HECC_CANGIM_DEF_MASK |
- 			HECC_CANGIM_I1EN | HECC_CANGIM_SIL);
-@@ -759,7 +744,7 @@ static irqreturn_t ti_hecc_interrupt(int irq, void *dev_id)
- 	unsigned long ack, flags;
- 
- 	int_status = hecc_read(priv,
--		(priv->int_line) ? HECC_CANGIF1 : HECC_CANGIF0);
-+		(priv->use_hecc1int) ? HECC_CANGIF1 : HECC_CANGIF0);
- 
- 	if (!int_status)
- 		return IRQ_NONE;
-@@ -805,7 +790,7 @@ static irqreturn_t ti_hecc_interrupt(int irq, void *dev_id)
- 	}
- 
- 	/* clear all interrupt conditions - read back to avoid spurious ints */
--	if (priv->int_line) {
-+	if (priv->use_hecc1int) {
- 		hecc_write(priv, HECC_CANGIF1, HECC_SET_REG);
- 		int_status = hecc_read(priv, HECC_CANGIF1);
- 	} else {
-@@ -871,58 +856,87 @@ static const struct net_device_ops ti_hecc_netdev_ops = {
- 	.ndo_change_mtu		= can_change_mtu,
- };
- 
-+static const struct of_device_id ti_hecc_dt_ids[] = {
-+	{
-+		.compatible = "ti,am3517-hecc",
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ti_hecc_dt_ids);
-+
- static int ti_hecc_probe(struct platform_device *pdev)
- {
- 	struct net_device *ndev = (struct net_device *)0;
- 	struct ti_hecc_priv *priv;
--	struct ti_hecc_platform_data *pdata;
--	struct resource *mem, *irq;
--	void __iomem *addr;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct resource *res, *irq;
-+	struct regulator *reg_xceiver;
- 	int err = -ENODEV;
- 
--	pdata = dev_get_platdata(&pdev->dev);
--	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data\n");
--		goto probe_exit;
-+	if (!IS_ENABLED(CONFIG_OF) || !np)
-+		return -EINVAL;
-+
-+	reg_xceiver = devm_regulator_get(&pdev->dev, "xceiver");
-+	if (PTR_ERR(reg_xceiver) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+	else if (IS_ERR(reg_xceiver))
-+		reg_xceiver = NULL;
-+
-+	ndev = alloc_candev(sizeof(struct ti_hecc_priv), HECC_MAX_TX_MBOX);
-+	if (!ndev) {
-+		dev_err(&pdev->dev, "alloc_candev failed\n");
-+		return -ENOMEM;
- 	}
-+	priv = netdev_priv(ndev);
- 
--	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (!mem) {
--		dev_err(&pdev->dev, "No mem resources\n");
--		goto probe_exit;
-+	/* handle hecc memory */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hecc");
-+	if (!res) {
-+		dev_err(&pdev->dev, "can't get IORESOURCE_MEM hecc\n");
-+		return -EINVAL;
- 	}
--	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "No irq resource\n");
--		goto probe_exit;
-+
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (!priv->base) {
-+		dev_err(&pdev->dev, "hecc ioremap failed\n");
-+		return -ENOMEM;
- 	}
--	if (!request_mem_region(mem->start, resource_size(mem), pdev->name)) {
--		dev_err(&pdev->dev, "HECC region already claimed\n");
--		err = -EBUSY;
--		goto probe_exit;
-+
-+	/* handle hecc-ram memory */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "hecc-ram");
-+	if (!res) {
-+		dev_err(&pdev->dev, "can't get IORESOURCE_MEM hecc-ram\n");
-+		return -EINVAL;
- 	}
--	addr = ioremap(mem->start, resource_size(mem));
--	if (!addr) {
--		dev_err(&pdev->dev, "ioremap failed\n");
--		err = -ENOMEM;
--		goto probe_exit_free_region;
-+
-+	priv->hecc_ram = devm_ioremap_resource(&pdev->dev, res);
-+	if (!priv->hecc_ram) {
-+		dev_err(&pdev->dev, "hecc-ram ioremap failed\n");
-+		return -ENOMEM;
- 	}
- 
--	ndev = alloc_candev(sizeof(struct ti_hecc_priv), HECC_MAX_TX_MBOX);
--	if (!ndev) {
--		dev_err(&pdev->dev, "alloc_candev failed\n");
--		err = -ENOMEM;
--		goto probe_exit_iounmap;
-+	/* handle mbx memory */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mbx");
-+	if (!res) {
-+		dev_err(&pdev->dev, "can't get IORESOURCE_MEM mbx\n");
-+		return -EINVAL;
-+	}
-+
-+	priv->mbx = devm_ioremap_resource(&pdev->dev, res);
-+	if (!priv->mbx) {
-+		dev_err(&pdev->dev, "mbx ioremap failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	if (!irq) {
-+		dev_err(&pdev->dev, "No irq resource\n");
-+		goto probe_exit;
- 	}
- 
--	priv = netdev_priv(ndev);
- 	priv->ndev = ndev;
--	priv->base = addr;
--	priv->scc_ram_offset = pdata->scc_ram_offset;
--	priv->hecc_ram_offset = pdata->hecc_ram_offset;
--	priv->mbx_offset = pdata->mbx_offset;
--	priv->int_line = pdata->int_line;
--	priv->transceiver_switch = pdata->transceiver_switch;
-+	priv->reg_xceiver = reg_xceiver;
-+	priv->use_hecc1int = of_property_read_bool(np, "ti,use-hecc1int");
- 
- 	priv->can.bittiming_const = &ti_hecc_bittiming_const;
- 	priv->can.do_set_mode = ti_hecc_do_set_mode;
-@@ -970,32 +984,23 @@ static int ti_hecc_probe(struct platform_device *pdev)
- 	clk_put(priv->clk);
- probe_exit_candev:
- 	free_candev(ndev);
--probe_exit_iounmap:
--	iounmap(addr);
--probe_exit_free_region:
--	release_mem_region(mem->start, resource_size(mem));
- probe_exit:
- 	return err;
- }
- 
- static int ti_hecc_remove(struct platform_device *pdev)
- {
--	struct resource *res;
- 	struct net_device *ndev = platform_get_drvdata(pdev);
- 	struct ti_hecc_priv *priv = netdev_priv(ndev);
- 
- 	unregister_candev(ndev);
- 	clk_disable_unprepare(priv->clk);
- 	clk_put(priv->clk);
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	iounmap(priv->base);
--	release_mem_region(res->start, resource_size(res));
- 	free_candev(ndev);
- 
- 	return 0;
- }
- 
--
- #ifdef CONFIG_PM
- static int ti_hecc_suspend(struct platform_device *pdev, pm_message_t state)
- {
-@@ -1044,6 +1049,7 @@ static int ti_hecc_resume(struct platform_device *pdev)
- static struct platform_driver ti_hecc_driver = {
- 	.driver = {
- 		.name    = DRV_NAME,
-+		.of_match_table = ti_hecc_dt_ids,
- 	},
- 	.probe = ti_hecc_probe,
- 	.remove = ti_hecc_remove,
-diff --git a/include/linux/can/platform/ti_hecc.h b/include/linux/can/platform/ti_hecc.h
-deleted file mode 100644
-index a52f47c..0000000
---- a/include/linux/can/platform/ti_hecc.h
-+++ /dev/null
-@@ -1,44 +0,0 @@
--#ifndef _CAN_PLATFORM_TI_HECC_H
--#define _CAN_PLATFORM_TI_HECC_H
--
--/*
-- * TI HECC (High End CAN Controller) driver platform header
-- *
-- * Copyright (C) 2009 Texas Instruments Incorporated - http://www.ti.com/
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed as is WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- */
--
--/**
-- * struct hecc_platform_data - HECC Platform Data
-- *
-- * @scc_hecc_offset:	mostly 0 - should really never change
-- * @scc_ram_offset:	SCC RAM offset
-- * @hecc_ram_offset:	HECC RAM offset
-- * @mbx_offset:		Mailbox RAM offset
-- * @int_line:		Interrupt line to use - 0 or 1
-- * @version:		version for future use
-- * @transceiver_switch:	platform specific callback fn for transceiver control
-- *
-- * Platform data structure to get all platform specific settings.
-- * this structure also accounts the fact that the IP may have different
-- * RAM and mailbox offsets for different SOC's
-- */
--struct ti_hecc_platform_data {
--	u32 scc_hecc_offset;
--	u32 scc_ram_offset;
--	u32 hecc_ram_offset;
--	u32 mbx_offset;
--	u32 int_line;
--	u32 version;
--	void (*transceiver_switch) (int);
--};
--#endif /* !_CAN_PLATFORM_TI_HECC_H */
--- 
-2.1.4
 
+> 
+>> The current workflow when introducing new DT entries is the following:
+>> - upstream a driver that uses the entries
+>> - THEN add the new entries
+>>
+> 
+> Exactly not, if you do that, checkpatch will complain loudly. Because
+> you must not add a driver using bindings that are not documented first.
+> 
+> 
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
