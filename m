@@ -1,7 +1,7 @@
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 9/9] drm/imx: use PRG/PRE when possible
-Date: Fri, 17 Feb 2017 19:28:30 +0100
-Message-ID: <20170217182830.32618-10-l.stach@pengutronix.de>
+Subject: [PATCH 5/9] gpu: ipu-v3: add driver for Prefetch Resolve Gasket
+Date: Fri, 17 Feb 2017 19:28:26 +0100
+Message-ID: <20170217182830.32618-6-l.stach@pengutronix.de>
 References: <20170217182830.32618-1-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170217182830.32618-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,237 +10,492 @@ To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allow the planes to use the PRG/PRE units as linear prefetchers when
-possible. This improves DRAM efficiency a bit and reduces the chance
-for display underflow when the memory subsystem is under load.
-
-This does not yet support scanning out tiled buffers directly, as this
-needs more work, but it already wires up the basic interaction between
-imx-drm, the IPUv3 driver and the PRG and PRE drivers.
+This adds support for the i.MX6 QUadPlus PRG unit. It glues together the
+IPU and the PRE units.
 
 Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/gpu/drm/imx/imx-drm-core.c |   5 ++
- drivers/gpu/drm/imx/imx-drm.h      |   3 +
- drivers/gpu/drm/imx/ipuv3-plane.c  | 122 ++++++++++++++++++++++++++++++++++++-
- 3 files changed, 127 insertions(+), 3 deletions(-)
+ drivers/gpu/ipu-v3/Makefile  |   2 +-
+ drivers/gpu/ipu-v3/ipu-prg.c | 413 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/gpu/ipu-v3/ipu-prv.h |   3 +
+ include/video/imx-ipu-v3.h   |  15 ++
+ 4 files changed, 432 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/gpu/ipu-v3/ipu-prg.c
 
-diff --git a/drivers/gpu/drm/imx/imx-drm-core.c b/drivers/gpu/drm/imx/imx-drm-core.c
-index bef76cb0d05d..f3fd94046e3e 100644
---- a/drivers/gpu/drm/imx/imx-drm-core.c
-+++ b/drivers/gpu/drm/imx/imx-drm-core.c
-@@ -147,6 +147,11 @@ static int imx_drm_atomic_check(struct drm_device *dev,
- 	if (ret)
- 		return ret;
+diff --git a/drivers/gpu/ipu-v3/Makefile b/drivers/gpu/ipu-v3/Makefile
+index 8ae90de46b4d..1ab9bceee755 100644
+--- a/drivers/gpu/ipu-v3/Makefile
++++ b/drivers/gpu/ipu-v3/Makefile
+@@ -2,4 +2,4 @@ obj-$(CONFIG_IMX_IPUV3_CORE) += imx-ipu-v3.o
  
-+	/* Assign PRG/PRE channels and check if all constrains are satisfied. */
-+	ret = ipu_planes_assign_pre(dev, state);
+ imx-ipu-v3-objs := ipu-common.o ipu-cpmem.o ipu-csi.o ipu-dc.o ipu-di.o \
+ 		ipu-dp.o ipu-dmfc.o ipu-ic.o ipu-image-convert.o \
+-		ipu-pre.o ipu-smfc.o ipu-vdi.o
++		ipu-pre.o ipu-prg.o ipu-smfc.o ipu-vdi.o
+diff --git a/drivers/gpu/ipu-v3/ipu-prg.c b/drivers/gpu/ipu-v3/ipu-prg.c
+new file mode 100644
+index 000000000000..c1e1ab0ec5c5
+--- /dev/null
++++ b/drivers/gpu/ipu-v3/ipu-prg.c
+@@ -0,0 +1,413 @@
++/*
++ * Copyright (c) 2016-2017 Lucas Stach, Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <drm/drm_fourcc.h>
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/mfd/syscon.h>
++#include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <video/imx-ipu-v3.h>
++
++#include "ipu-prv.h"
++
++#define IPU_PRG_CTL				0x00
++#define  IPU_PRG_CTL_BYPASS(i)			(1 << (0 + i))
++#define  IPU_PRG_CTL_SOFT_ARID_MASK		0x3
++#define  IPU_PRG_CTL_SOFT_ARID_SHIFT(i)		(8 + i * 2)
++#define  IPU_PRG_CTL_SOFT_ARID(i, v)		((v & 0x3) << (8 + 2 * i))
++#define  IPU_PRG_CTL_SO(i)			(1 << (16 + i))
++#define  IPU_PRG_CTL_VFLIP(i)			(1 << (19 + i))
++#define  IPU_PRG_CTL_BLOCK_MODE(i)		(1 << (22 + i))
++#define  IPU_PRG_CTL_CNT_LOAD_EN(i)		(1 << (25 + i))
++#define  IPU_PRG_CTL_SOFTRST			(1 << 30)
++#define  IPU_PRG_CTL_SHADOW_EN			(1 << 31)
++
++#define IPU_PRG_STATUS				0x04
++#define  IPU_PRG_STATUS_BUFFER0_READY(i)	(1 << (0 + i * 2))
++#define  IPU_PRG_STATUS_BUFFER1_READY(i)	(1 << (1 + i * 2))
++
++#define IPU_PRG_QOS				0x08
++#define  IPU_PRG_QOS_ARID_MASK			0xf
++#define  IPU_PRG_QOS_ARID_SHIFT(i)		(0 + i * 4)
++
++#define IPU_PRG_REG_UPDATE			0x0c
++#define  IPU_PRG_REG_UPDATE_REG_UPDATE		(1 << 0)
++
++#define IPU_PRG_STRIDE(i)			(0x10 + i * 0x4)
++#define  IPU_PRG_STRIDE_STRIDE_MASK		0x3fff
++
++#define IPU_PRG_CROP_LINE			0x1c
++
++#define IPU_PRG_THD				0x20
++
++#define IPU_PRG_BADDR(i)			(0x24 + i * 0x4)
++
++#define IPU_PRG_OFFSET(i)			(0x30 + i * 0x4)
++
++#define IPU_PRG_ILO(i)				(0x3c + i * 0x4)
++
++#define IPU_PRG_HEIGHT(i)			(0x48 + i * 0x4)
++#define  IPU_PRG_HEIGHT_PRE_HEIGHT_MASK		0xfff
++#define  IPU_PRG_HEIGHT_PRE_HEIGHT_SHIFT	0
++#define  IPU_PRG_HEIGHT_IPU_HEIGHT_MASK		0xfff
++#define  IPU_PRG_HEIGHT_IPU_HEIGHT_SHIFT	16
++
++struct ipu_prg_channel {
++	bool			enabled;
++	int			used_pre;
++};
++
++struct ipu_prg {
++	struct list_head	list;
++	struct device		*dev;
++	int			id;
++
++	void __iomem		*regs;
++	struct clk		*clk_ipg, *clk_axi;
++	struct regmap		*iomuxc_gpr;
++	struct ipu_pre		*pres[3];
++
++	struct ipu_prg_channel	chan[3];
++};
++
++static DEFINE_MUTEX(ipu_prg_list_mutex);
++static LIST_HEAD(ipu_prg_list);
++
++struct ipu_prg *
++ipu_prg_get_by_ipu_device(struct device *dev)
++{
++	struct device_node *prg_node = of_parse_phandle(dev->of_node,
++							"fsl,prg", 0);
++	struct ipu_prg *prg;
++
++	mutex_lock(&ipu_prg_list_mutex);
++	list_for_each_entry(prg, &ipu_prg_list, list) {
++		if (prg_node == prg->dev->of_node) {
++			mutex_unlock(&ipu_prg_list_mutex);
++			device_link_add(dev, prg->dev, DL_FLAG_AUTOREMOVE);
++			prg->id = of_alias_get_id(dev->of_node, "ipu");
++			return prg;
++		}
++	}
++	mutex_unlock(&ipu_prg_list_mutex);
++
++	return NULL;
++}
++
++int ipu_prg_max_active_channels(void)
++{
++	return ipu_pre_get_available_count();
++}
++
++bool ipu_prg_present(struct ipu_soc *ipu)
++{
++	if (ipu->prg_priv)
++		return true;
++
++	return false;
++}
++
++bool ipu_prg_format_supported(struct ipu_soc *ipu, uint32_t format,
++			      uint64_t modifier)
++{
++	const struct drm_format_info *info = drm_format_info(format);
++
++	if (info->num_planes != 1)
++		return false;
++
++	return true;
++}
++
++int ipu_prg_enable(struct ipu_soc *ipu)
++{
++	struct ipu_prg *prg = ipu->prg_priv;
++	int ret;
++
++	if (!prg)
++		return 0;
++
++	ret = clk_prepare_enable(prg->clk_axi);
++	if (ret)
++		goto fail_disable_ipg;
++
++	return 0;
++
++fail_disable_ipg:
++	clk_disable_unprepare(prg->clk_ipg);
++
++	return ret;
++}
++
++void ipu_prg_disable(struct ipu_soc *ipu)
++{
++	struct ipu_prg *prg = ipu->prg_priv;
++
++	if (!prg)
++		return;
++
++	clk_disable_unprepare(prg->clk_axi);
++}
++
++static int ipu_prg_ipu_to_prg_chan(int ipu_chan)
++{
++	/*
++	 * This isn't clearly documented in the RM, but IPU to PRG channel
++	 * assignment is fixed, as only with this mapping the control signals
++	 * match up.
++	 */
++	switch (ipu_chan) {
++	case IPUV3_CHANNEL_MEM_BG_SYNC:
++		return 0;
++	case IPUV3_CHANNEL_MEM_FG_SYNC:
++		return 1;
++	case IPUV3_CHANNEL_MEM_DC_SYNC:
++		return 2;
++	default:
++		return -EINVAL;
++	}
++}
++
++static int ipu_prg_get_pre(struct ipu_prg *prg, int prg_chan)
++{
++	int i, ret;
++
++	/* channel 0 is special as it is hardwired to one of the PREs */
++	if (prg_chan == 0) {
++		ret = ipu_pre_get(prg->pres[0]);
++		if (ret)
++			goto fail;
++		prg->chan[prg_chan].used_pre = 0;
++		return 0;
++	}
++
++	for (i = 1; i < 3; i++) {
++		ret = ipu_pre_get(prg->pres[i]);
++		if (!ret) {
++			u32 val, mux;
++			int shift;
++
++			prg->chan[prg_chan].used_pre = i;
++
++			/* configure the PRE to PRG channel mux */
++			shift = (i == 1) ? 12 : 14;
++			mux = (prg->id << 1) | (prg_chan - 1);
++			regmap_update_bits(prg->iomuxc_gpr, IOMUXC_GPR5,
++					   0x3 << shift, mux << shift);
++
++			/* check other mux, must not point to same channel */
++			shift = (i == 1) ? 14 : 12;
++			regmap_read(prg->iomuxc_gpr, IOMUXC_GPR5, &val);
++			if (((val >> shift) & 0x3) == mux) {
++				regmap_update_bits(prg->iomuxc_gpr, IOMUXC_GPR5,
++						   0x3 << shift,
++						   (mux ^ 0x1) << shift);
++			}
++
++			return 0;
++		}
++	}
++
++fail:
++	dev_err(prg->dev, "could not get PRE for PRG chan %d", prg_chan);
++	return ret;
++}
++
++static void ipu_prg_put_pre(struct ipu_prg *prg, int prg_chan)
++{
++	struct ipu_prg_channel *chan = &prg->chan[prg_chan];
++
++	ipu_pre_put(prg->pres[chan->used_pre]);
++	chan->used_pre = -1;
++}
++
++void ipu_prg_channel_disable(struct ipuv3_channel *ipu_chan)
++{
++	int prg_chan = ipu_prg_ipu_to_prg_chan(ipu_chan->num);
++	struct ipu_prg *prg = ipu_chan->ipu->prg_priv;
++	struct ipu_prg_channel *chan = &prg->chan[prg_chan];
++	u32 val;
++
++	if (!chan->enabled || prg_chan < 0)
++		return;
++
++	clk_prepare_enable(prg->clk_ipg);
++
++	val = readl(prg->regs + IPU_PRG_CTL);
++	val |= IPU_PRG_CTL_BYPASS(prg_chan);
++	writel(val, prg->regs + IPU_PRG_CTL);
++
++	val = IPU_PRG_REG_UPDATE_REG_UPDATE;
++	writel(val, prg->regs + IPU_PRG_REG_UPDATE);
++
++	clk_disable_unprepare(prg->clk_ipg);
++
++	ipu_prg_put_pre(prg, prg_chan);
++
++	chan->enabled = false;
++}
++
++int ipu_prg_channel_configure(struct ipuv3_channel *ipu_chan,
++			      unsigned int axi_id, unsigned int width,
++			      unsigned int height, unsigned int stride,
++			      u32 format, unsigned long *eba)
++{
++	int prg_chan = ipu_prg_ipu_to_prg_chan(ipu_chan->num);
++	struct ipu_prg *prg = ipu_chan->ipu->prg_priv;
++	struct ipu_prg_channel *chan = &prg->chan[prg_chan];
++	u32 val;
++	int ret;
++
++	if (prg_chan < 0)
++		return prg_chan;
++
++	if (chan->enabled) {
++		ipu_pre_update(prg->pres[chan->used_pre], *eba);
++		return 0;
++	}
++
++	ret = ipu_prg_get_pre(prg, prg_chan);
 +	if (ret)
 +		return ret;
 +
- 	return ret;
- }
- 
-diff --git a/drivers/gpu/drm/imx/imx-drm.h b/drivers/gpu/drm/imx/imx-drm.h
-index 5a91cb16c8fa..485df472fd34 100644
---- a/drivers/gpu/drm/imx/imx-drm.h
-+++ b/drivers/gpu/drm/imx/imx-drm.h
-@@ -52,4 +52,7 @@ int imx_drm_encoder_parse_of(struct drm_device *drm,
- void imx_drm_connector_destroy(struct drm_connector *connector);
- void imx_drm_encoder_destroy(struct drm_encoder *encoder);
- 
-+int ipu_planes_assign_pre(struct drm_device *dev,
-+			  struct drm_atomic_state *state);
++	ipu_pre_configure(prg->pres[chan->used_pre],
++			  width, height, stride, format, *eba);
 +
- #endif /* _IMX_DRM_H_ */
-diff --git a/drivers/gpu/drm/imx/ipuv3-plane.c b/drivers/gpu/drm/imx/ipuv3-plane.c
-index 57130352db3b..6867cd7f2da3 100644
---- a/drivers/gpu/drm/imx/ipuv3-plane.c
-+++ b/drivers/gpu/drm/imx/ipuv3-plane.c
-@@ -23,6 +23,17 @@
- #include "video/imx-ipu-v3.h"
- #include "ipuv3-plane.h"
- 
-+struct ipu_plane_state {
-+	struct drm_plane_state base;
-+	bool use_pre;
-+};
 +
-+static inline struct ipu_plane_state *
-+to_ipu_plane_state(struct drm_plane_state *p)
-+{
-+	return container_of(p, struct ipu_plane_state, base);
-+}
-+
- static inline struct ipu_plane *to_ipu_plane(struct drm_plane *p)
- {
- 	return container_of(p, struct ipu_plane, base);
-@@ -225,6 +236,8 @@ static int ipu_disable_plane(struct drm_plane *plane)
- 	ipu_dmfc_disable_channel(ipu_plane->dmfc);
- 	if (ipu_plane->dp)
- 		ipu_dp_disable(ipu_plane->ipu);
-+	if (ipu_prg_present(ipu_plane->ipu))
-+		ipu_prg_channel_disable(ipu_plane->ipu_ch);
- 
- 	return 0;
- }
-@@ -239,13 +252,56 @@ static void ipu_plane_destroy(struct drm_plane *plane)
- 	kfree(ipu_plane);
- }
- 
-+void ipu_plane_state_reset(struct drm_plane *plane)
-+{
-+	struct ipu_plane_state *ipu_state;
-+
-+	if (plane->state) {
-+		ipu_state = to_ipu_plane_state(plane->state);
-+		__drm_atomic_helper_plane_destroy_state(plane->state);
-+		kfree(ipu_state);
++	ret = clk_prepare_enable(prg->clk_ipg);
++	if (ret) {
++		ipu_prg_put_pre(prg, prg_chan);
++		return ret;
 +	}
 +
-+	ipu_state = kzalloc(sizeof(*ipu_state), GFP_KERNEL);
++	val = (stride - 1) & IPU_PRG_STRIDE_STRIDE_MASK;
++	writel(val, prg->regs + IPU_PRG_STRIDE(prg_chan));
 +
-+	if (ipu_state) {
-+		ipu_state->base.plane = plane;
-+		ipu_state->base.rotation = DRM_ROTATE_0;
-+	}
++	val = ((height & IPU_PRG_HEIGHT_PRE_HEIGHT_MASK) <<
++	       IPU_PRG_HEIGHT_PRE_HEIGHT_SHIFT) |
++	      ((height & IPU_PRG_HEIGHT_IPU_HEIGHT_MASK) <<
++	       IPU_PRG_HEIGHT_IPU_HEIGHT_SHIFT);
++	writel(val, prg->regs + IPU_PRG_HEIGHT(prg_chan));
 +
-+	plane->state = &ipu_state->base;
++	val = ipu_pre_get_baddr(prg->pres[chan->used_pre]);
++	*eba = val;
++	writel(val, prg->regs + IPU_PRG_BADDR(prg_chan));
++
++	val = readl(prg->regs + IPU_PRG_CTL);
++	/* counter load enable */
++	val |= IPU_PRG_CTL_CNT_LOAD_EN(prg_chan);
++	/* config AXI ID */
++	val &= ~(IPU_PRG_CTL_SOFT_ARID_MASK <<
++		 IPU_PRG_CTL_SOFT_ARID_SHIFT(prg_chan));
++	val |= IPU_PRG_CTL_SOFT_ARID(prg_chan, axi_id);
++	/* enable channel */
++	val &= ~IPU_PRG_CTL_BYPASS(prg_chan);
++	writel(val, prg->regs + IPU_PRG_CTL);
++
++	val = IPU_PRG_REG_UPDATE_REG_UPDATE;
++	writel(val, prg->regs + IPU_PRG_REG_UPDATE);
++
++	clk_disable_unprepare(prg->clk_ipg);
++
++	chan->enabled = true;
++	return 0;
 +}
 +
-+struct drm_plane_state *ipu_plane_duplicate_state(struct drm_plane *plane)
++static int ipu_prg_probe(struct platform_device *pdev)
 +{
-+	struct ipu_plane_state *state;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct ipu_prg *prg;
++	u32 val;
++	int i, ret;
 +
-+	if (WARN_ON(!plane->state))
-+		return NULL;
++	prg = devm_kzalloc(dev, sizeof(*prg), GFP_KERNEL);
++	if (!prg)
++		return -ENOMEM;
 +
-+	state = kmalloc(sizeof(*state), GFP_KERNEL);
-+	if (state)
-+		__drm_atomic_helper_plane_duplicate_state(plane, &state->base);
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	prg->regs = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(prg->regs))
++		return PTR_ERR(prg->regs);
 +
-+	return &state->base;
-+}
 +
-+void ipu_plane_destroy_state(struct drm_plane *plane,
-+			     struct drm_plane_state *state)
-+{
-+	struct ipu_plane_state *ipu_state = to_ipu_plane_state(state);
++	prg->clk_ipg = devm_clk_get(dev, "ipg");
++	if (IS_ERR(prg->clk_ipg))
++		return PTR_ERR(prg->clk_ipg);
 +
-+	__drm_atomic_helper_plane_destroy_state(state);
-+	kfree(ipu_state);
-+}
++	prg->clk_axi = devm_clk_get(dev, "axi");
++	if (IS_ERR(prg->clk_axi))
++		return PTR_ERR(prg->clk_axi);
 +
- static const struct drm_plane_funcs ipu_plane_funcs = {
- 	.update_plane	= drm_atomic_helper_update_plane,
- 	.disable_plane	= drm_atomic_helper_disable_plane,
- 	.destroy	= ipu_plane_destroy,
--	.reset		= drm_atomic_helper_plane_reset,
--	.atomic_duplicate_state	= drm_atomic_helper_plane_duplicate_state,
--	.atomic_destroy_state	= drm_atomic_helper_plane_destroy_state,
-+	.reset		= ipu_plane_state_reset,
-+	.atomic_duplicate_state	= ipu_plane_duplicate_state,
-+	.atomic_destroy_state	= ipu_plane_destroy_state,
- };
- 
- static int ipu_plane_atomic_check(struct drm_plane *plane,
-@@ -458,14 +514,30 @@ static void ipu_plane_atomic_disable(struct drm_plane *plane,
- 	ipu_disable_plane(plane);
- }
- 
-+static int ipu_chan_assign_axi_id(int ipu_chan)
-+{
-+	switch (ipu_chan) {
-+	case IPUV3_CHANNEL_MEM_BG_SYNC:
-+		return 1;
-+	case IPUV3_CHANNEL_MEM_FG_SYNC:
-+		return 2;
-+	case IPUV3_CHANNEL_MEM_DC_SYNC:
-+		return 3;
-+	default:
-+		return 0;
-+	}
-+}
++	prg->iomuxc_gpr =
++		syscon_regmap_lookup_by_compatible("fsl,imx6q-iomuxc-gpr");
++	if (IS_ERR(prg->iomuxc_gpr))
++		return PTR_ERR(prg->iomuxc_gpr);
 +
- static void ipu_plane_atomic_update(struct drm_plane *plane,
- 				    struct drm_plane_state *old_state)
- {
- 	struct ipu_plane *ipu_plane = to_ipu_plane(plane);
- 	struct drm_plane_state *state = plane->state;
-+	struct ipu_plane_state *ipu_state = to_ipu_plane_state(state);
- 	struct drm_crtc_state *crtc_state = state->crtc->state;
- 	struct drm_framebuffer *fb = state->fb;
- 	struct drm_rect *dst = &state->dst;
-+	unsigned int axi_id = ipu_chan_assign_axi_id(ipu_plane->dma);
- 	unsigned long eba, ubo, vbo;
- 	unsigned long alpha_eba = 0;
- 	enum ipu_color_space ics;
-@@ -476,7 +548,22 @@ static void ipu_plane_atomic_update(struct drm_plane *plane,
- 
- 	eba = drm_plane_state_to_eba(state, 0);
- 
-+	/*
-+	 * Configure PRG channel and attached PRE, this changes the EBA to an
-+	 * internal SRAM location.
-+	 */
-+	if (ipu_state->use_pre) {
-+		ipu_prg_channel_configure(ipu_plane->ipu_ch, axi_id,
-+					  drm_rect_width(&state->src) >> 16,
-+					  drm_rect_height(&state->src) >> 16,
-+					  state->fb->pitches[0],
-+					  state->fb->pixel_format, &eba);
++	for (i = 0; i < 3; i++) {
++		prg->pres[i] = ipu_pre_get_by_prg_device(dev, i);
++		if (!prg->pres[i])
++			return -EPROBE_DEFER;
 +	}
 +
- 	if (old_state->fb && !drm_atomic_crtc_needs_modeset(crtc_state)) {
-+		/* nothing to do if PRE is used */
-+		if (ipu_state->use_pre)
-+			return;
- 		active = ipu_idmac_get_current_buffer(ipu_plane->ipu_ch);
- 		ipu_cpmem_set_buffer(ipu_plane->ipu_ch, !active, eba);
- 		ipu_idmac_select_buffer(ipu_plane->ipu_ch, !active);
-@@ -535,6 +622,7 @@ static void ipu_plane_atomic_update(struct drm_plane *plane,
- 	ipu_cpmem_set_high_priority(ipu_plane->ipu_ch);
- 	ipu_idmac_set_double_buffer(ipu_plane->ipu_ch, 1);
- 	ipu_cpmem_set_stride(ipu_plane->ipu_ch, state->fb->pitches[0]);
-+	ipu_cpmem_set_axi_id(ipu_plane->ipu_ch, axi_id);
- 	switch (fb->pixel_format) {
- 	case DRM_FORMAT_YUV420:
- 	case DRM_FORMAT_YVU420:
-@@ -610,6 +698,34 @@ static const struct drm_plane_helper_funcs ipu_plane_helper_funcs = {
- 	.atomic_update = ipu_plane_atomic_update,
- };
- 
-+int ipu_planes_assign_pre(struct drm_device *dev,
-+			  struct drm_atomic_state *state)
-+{
-+	struct drm_plane_state *plane_state;
-+	struct drm_plane *plane;
-+	int available_pres = ipu_prg_max_active_channels();
-+	int i;
++	ret = clk_prepare_enable(prg->clk_ipg);
++	if (ret)
++		return ret;
 +
-+	for_each_plane_in_state(state, plane, plane_state, i) {
-+		struct ipu_plane_state *ipu_state =
-+				to_ipu_plane_state(plane_state);
-+		struct ipu_plane *ipu_plane = to_ipu_plane(plane);
++	/* init to free running mode */
++	val = readl(prg->regs + IPU_PRG_CTL);
++	val |= IPU_PRG_CTL_SHADOW_EN;
++	writel(val, prg->regs + IPU_PRG_CTL);
 +
-+		if (ipu_prg_present(ipu_plane->ipu) && available_pres &&
-+		    plane_state->fb &&
-+		    ipu_prg_format_supported(ipu_plane->ipu,
-+					     plane_state->fb->pixel_format,
-+					     plane_state->fb->modifier)) {
-+			ipu_state->use_pre = true;
-+			available_pres--;
-+		} else {
-+			ipu_state->use_pre = false;
-+		}
-+	}
++	/* disable address threshold */
++	writel(0xffffffff, prg->regs + IPU_PRG_THD);
++
++	clk_disable_unprepare(prg->clk_ipg);
++
++	prg->dev = dev;
++	platform_set_drvdata(pdev, prg);
++	mutex_lock(&ipu_prg_list_mutex);
++	list_add(&prg->list, &ipu_prg_list);
++	mutex_unlock(&ipu_prg_list_mutex);
 +
 +	return 0;
 +}
 +
- struct ipu_plane *ipu_plane_init(struct drm_device *dev, struct ipu_soc *ipu,
- 				 int dma, int dp, unsigned int possible_crtcs,
- 				 enum drm_plane_type type)
++static int ipu_prg_remove(struct platform_device *pdev)
++{
++	struct ipu_prg *prg = platform_get_drvdata(pdev);
++
++	mutex_lock(&ipu_prg_list_mutex);
++	list_del(&prg->list);
++	mutex_unlock(&ipu_prg_list_mutex);
++
++	return 0;
++}
++
++static const struct of_device_id ipu_prg_dt_ids[] = {
++	{ .compatible = "fsl,imx6qp-prg", },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver ipu_prg_drv = {
++	.probe		= ipu_prg_probe,
++	.remove		= ipu_prg_remove,
++	.driver		= {
++		.name	= "imx-ipu-prg",
++		.of_match_table = ipu_prg_dt_ids,
++	},
++};
++module_platform_driver(ipu_prg_drv);
+diff --git a/drivers/gpu/ipu-v3/ipu-prv.h b/drivers/gpu/ipu-v3/ipu-prv.h
+index 536a156a5eb6..0d1d2d667f3b 100644
+--- a/drivers/gpu/ipu-v3/ipu-prv.h
++++ b/drivers/gpu/ipu-v3/ipu-prv.h
+@@ -169,6 +169,7 @@ struct ipu_vdi;
+ struct ipu_image_convert_priv;
+ struct ipu_smfc_priv;
+ struct ipu_pre;
++struct ipu_prg;
+ 
+ struct ipu_devtype;
+ 
+@@ -270,4 +271,6 @@ void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
+ 		       unsigned int stride, u32 format, unsigned int bufaddr);
+ void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr);
+ 
++struct ipu_prg *ipu_prg_get_by_ipu_device(struct device *dev);
++
+ #endif				/* __IPU_PRV_H__ */
+diff --git a/include/video/imx-ipu-v3.h b/include/video/imx-ipu-v3.h
+index 228e32082097..3902323f8769 100644
+--- a/include/video/imx-ipu-v3.h
++++ b/include/video/imx-ipu-v3.h
+@@ -331,6 +331,21 @@ int ipu_dp_set_global_alpha(struct ipu_dp *dp, bool enable, u8 alpha,
+ 		bool bg_chan);
+ 
+ /*
++ * IPU Prefetch Resolve Gasket (prg) functions
++ */
++int ipu_prg_max_active_channels(void);
++bool ipu_prg_present(struct ipu_soc *ipu);
++bool ipu_prg_format_supported(struct ipu_soc *ipu, uint32_t format,
++			      uint64_t modifier);
++int ipu_prg_enable(struct ipu_soc *ipu);
++void ipu_prg_disable(struct ipu_soc *ipu);
++void ipu_prg_channel_disable(struct ipuv3_channel *ipu_chan);
++int ipu_prg_channel_configure(struct ipuv3_channel *ipu_chan,
++			      unsigned int axi_id,  unsigned int width,
++			      unsigned int height, unsigned int stride,
++			      u32 format, unsigned long *eba);
++
++/*
+  * IPU CMOS Sensor Interface (csi) functions
+  */
+ struct ipu_csi;
 -- 
 2.11.0
 
