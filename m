@@ -1,57 +1,68 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 23/36] media: imx: Add MIPI CSI-2 Receiver subdev
- driver
-Date: Fri, 17 Feb 2017 10:27:01 -0800
-Message-ID: <c858831f-6ce3-54b7-ef03-857129edb0bf@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-24-git-send-email-steve_longerbeam@mentor.com>
- <1487328479.3107.21.camel@pengutronix.de>
- <1487340970.3107.73.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1487340970.3107.73.camel@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 0/9] ipu-v3/imx-drm PRG/PRE extension
+Date: Fri, 17 Feb 2017 19:28:21 +0100
+Message-ID: <20170217182830.32618-1-l.stach@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
+this is the first round of patches to enable the Prefetch Resolve Gasket
+and the Prefetch Resolve Engine as found on the i.MX6 QuadPlus. Basically
+those units are external extensions to the IPUv3 that are able to prefetch
+display data from DRAM to an internal SRAM region, transforming the
+periodic realtime requests from the display FIFOs into larger bursts of
+normal memory requests, which do mix better with other DRAM traffic in the
+system.
 
-On 02/17/2017 06:16 AM, Philipp Zabel wrote:
-> On Fri, 2017-02-17 at 11:47 +0100, Philipp Zabel wrote:
->> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
->>> +static void csi2_dphy_init(struct csi2_dev *csi2)
->>> +{
->>> +	/*
->>> +	 * FIXME: 0x14 is derived from a fixed D-PHY reference
->>> +	 * clock from the HSI_TX PLL, and a fixed target lane max
->>> +	 * bandwidth of 300 Mbps. This value should be derived
->>
->> If the table in https://community.nxp.com/docs/DOC-94312 is correct,
->> this should be 850 Mbps. Where does this 300 Mbps value come from?
->
-> I got it, the dptdin_map value for 300 Mbps is 0x14 in the Rockchip DSI
-> driver. But that value is written to the register as HSFREQRANGE_SEL(x):
->
-> #define HSFREQRANGE_SEL(val)    (((val) & 0x3f) << 1)
+The PRE can do a number of transformations on the fly, like changing
+component and plane ordering, as well resolving the Vivante GPU tiling
+format into linear scanlines. None of those transformations are used
+right now.
 
-Ah you are right, 0x14 would be a "testdin" value of 0x0a, which from
-the Rockchip table would be 950 MHz per lane.
+This initial patchset uses the PRG/PRE units as linear prefetchers only.
+It does however hook up most of the interactions between imx-drm, IPUv3
+and PRG/PRE, so that adding those transformations should be an
+incremental change over that. Also the devicetree binding fully describe
+the devices, so that no further changes should be necessary.
 
-But thanks for pointing the table at
-https://community.nxp.com/docs/DOC-94312. That table is what
-should be referenced in the above comment (850 MHz per lane
-for a 27MHz reference clock). I will update the comment based
-on that table.
+Regards,
+Lucas
 
-Steve
+Lucas Stach (9):
+  gpu: ipu-v3: remove AXI ID setting for IC channel
+  gpu: ipu-v3: add DT binding for the Prefetch Resolve Engine
+  gpu: ipu-v3: add driver for Prefetch Resolve Engine
+  gpu: ipu-v3: add DT binding for the Prefetch Resolve Gasket
+  gpu: ipu-v3: add driver for Prefetch Resolve Gasket
+  gpu: ipu-v3: extend the IPUv3 DT binding for i.MX6 QuadPlus
+  gpu: ipu-v3: hook up PRG unit
+  drm/imx: enable/disable PRG on CRTC enable/disable
+  drm/imx: use PRG/PRE when possible
 
+ .../bindings/display/imx/fsl-imx-drm.txt           |  53 +++
+ drivers/gpu/drm/imx/imx-drm-core.c                 |   5 +
+ drivers/gpu/drm/imx/imx-drm.h                      |   3 +
+ drivers/gpu/drm/imx/ipuv3-crtc.c                   |   2 +
+ drivers/gpu/drm/imx/ipuv3-plane.c                  | 122 +++++-
+ drivers/gpu/ipu-v3/Makefile                        |   2 +-
+ drivers/gpu/ipu-v3/ipu-common.c                    |   7 +
+ drivers/gpu/ipu-v3/ipu-image-convert.c             |   2 -
+ drivers/gpu/ipu-v3/ipu-pre.c                       | 290 +++++++++++++++
+ drivers/gpu/ipu-v3/ipu-prg.c                       | 413 +++++++++++++++++++++
+ drivers/gpu/ipu-v3/ipu-prv.h                       |  15 +
+ include/video/imx-ipu-v3.h                         |  15 +
+ 12 files changed, 923 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/gpu/ipu-v3/ipu-pre.c
+ create mode 100644 drivers/gpu/ipu-v3/ipu-prg.c
 
+-- 
+2.11.0
 
->
-> which is 0x28. Further, the Rockchip D-PHY probably is another version,
-> as its max_mbps goes up to 1500.
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
