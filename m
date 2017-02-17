@@ -1,57 +1,84 @@
-From: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm64: dts: juno: update definition for programmable replicator.
-Date: Fri, 17 Feb 2017 19:13:10 +0000
-Message-ID: <1487358790-2618-1-git-send-email-mike.leach@linaro.org>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 0/4] PCI: exynos: use the PHY generic framework
+Date: Fri, 17 Feb 2017 13:51:46 -0600
+Message-ID: <20170217195146.GA17762@bhelgaas-glaptop.roam.corp.google.com>
+References: <CGME20170213082615epcas5p2f5ecabbd5853a8e27da5f88fcae85158@epcas5p2.samsung.com>
+ <20170213082613.19628-1-jh80.chung@samsung.com>
+ <20170215211120.GC6981@bhelgaas-glaptop.roam.corp.google.com>
+ <04b568d2-d85e-9cbd-1379-d657f574f279@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <04b568d2-d85e-9cbd-1379-d657f574f279-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, niyas.ahmed-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Juno platforms have a programmable replicator splitting the trace output to
-TPIU and ETR. Currently this is not being programmed as it is being treated
-as a none-programmable replicator - which is the default operational mode
-for these devices. The TPIU in the system is enabled by default, and this
-combination is causing back-pressure in the trace system resulting in
-overflows at the source.
+On Thu, Feb 16, 2017 at 07:33:15AM +0900, Jaehoon Chung wrote:
+> Dear Bjorn,
+> 
+> On 02/16/2017 06:11 AM, Bjorn Helgaas wrote:
+> > On Mon, Feb 13, 2017 at 05:26:09PM +0900, Jaehoon Chung wrote:
+> >> This patcheset is for using PHY generic framework.
+> >> Current pci-exyns doesn't use the phy framework since there haven't been on
+> >> PHY subsystem when Exynos5440 had bean upstreamed.
+> >> It's making a difficult to upstream the other Exynos variants because of different
+> >> PHY registers.
+> >>
+> >> This patcheset has the below modifications:
+> >> 1) Introduces the phy-exynos-pcie
+> >> 2) Handles PHY register from PHY framework for pci-exynos
+> >> 3) Modifies the dt-binding of pci-exynos
+> >> 4) Maintains the backward compatibility
+> >>
+> >> Changelog on V3:
+> >> - Drops "ARM: dts: exynos5440: support the phy-pcie node of pcie"
+> >>   : Will send this patch after applying this patchset.
+> >> - Fixes typo
+> >> - Based on latest PCI git repository (host-exynos branch)
+> >> - Changes commit message
+> >> - Removes the dependency
+> >>
+> >> Changelog on V2:
+> >> - Keep current codes for backward compatibility
+> >> - Fixes some typos
+> >> - Split the patches for removing the dependency
+> >> - Removes the unnecessary codes
+> >> - Change the patch's sequence
+> >> - Based on latest PCI git repository.(next branch)
+> >>
+> >> Jaehoon Chung (4):
+> >>   Documetation: samsung-phy: add the exynos-pcie-phy binding
+> >>   phy: phy-exynos-pcie: Add support for Exynos PCIe phy
+> >>   Documetation: binding: modify the exynos5440 pcie binding
+> >>   PCI: exynos: support the using PHY generic framework
+> >>
+> >>  .../bindings/pci/samsung,exynos5440-pcie.txt       |  29 +++
+> >>  .../devicetree/bindings/phy/samsung-phy.txt        |  17 ++
+> >>  drivers/pci/host/pci-exynos.c                      |  54 +++-
+> >>  drivers/phy/Kconfig                                |   8 +
+> >>  drivers/phy/Makefile                               |   1 +
+> >>  drivers/phy/phy-exynos-pcie.c                      | 285 +++++++++++++++++++++
+> >>  6 files changed, 390 insertions(+), 4 deletions(-)
+> >>  create mode 100644 drivers/phy/phy-exynos-pcie.c
+> > 
+> > I made the updates Vivek suggested and provisionally added these to my
+> > pci/host-exynos branch to get some build testing.
+> 
+> Thanks!
+> 
+> > 
+> > Kishon, I guess it probably makes more sense for me to apply this
+> > because even though the drivers/pci changes are small, I think they
+> > depend on other pci-exynos.c changes that are on my branch but not in
+> > Linus' tree yet.
 
-Replaces the existing definition with one that defines the programmable
-replicator, using the "qcom,coresight-replicator1x" driver that provides
-the correct functionality for CoreSight programmable replicators.
+I haven't heard from Kishon, but I merged these to my -next branch for
+v4.11.
 
-Signed-off-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm64/boot/dts/arm/juno-base.dtsi | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 9d799d9..6546e23 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -372,12 +372,14 @@
- 		};
- 	};
- 
--	coresight-replicator {
--		/*
--		 * Non-configurable replicators don't show up on the
--		 * AMBA bus.  As such no need to add "arm,primecell".
--		 */
--		compatible = "arm,coresight-replicator";
-+	coresight-replicator@20120000 {
-+
-+		compatible = "qcom,coresight-replicator1x", "arm,primecell";
-+		reg = <0 0x20120000 0 0x1000>;
-+
-+		clocks = <&soc_smc50mhz>;
-+		clock-names = "apb_pclk";
-+		power-domains = <&scpi_devpd 0>;
- 
- 		ports {
- 			#address-cells = <1>;
--- 
-2.7.4
-
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
