@@ -1,114 +1,65 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/21] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner dwmac-sun8i
-Date: Fri, 17 Feb 2017 13:18:39 +0100
-Message-ID: <20170217121839.GA24993@Red>
-References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
- <20170216124859.14346-5-clabbe.montjoie@gmail.com>
- <20170216184818.hwexzuqacbemsxo7@lukather>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 00/36] i.MX Media Driver
+Date: Fri, 17 Feb 2017 14:22:14 +0200
+Message-ID: <20170217122213.GQ16975@valkosipuli.retiisi.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170216222006.GA21222@n2100.armlinux.org.uk>
+ <923326d6-43fe-7328-d959-14fd341e47ae@gmail.com>
+ <1487331818.3107.46.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBJGUTPCQKGQEH7AYEXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170216184818.hwexzuqacbemsxo7@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1487331818.3107.46.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 07:48:18PM +0100, Maxime Ripard wrote:
-> Hi,
-> 
-> On Thu, Feb 16, 2017 at 01:48:42PM +0100, Corentin Labbe wrote:
-> > This patch adds documentation for Device-Tree bindings for the
-> > Allwinner dwmac-sun8i driver.
-> > 
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/net/dwmac-sun8i.txt        | 86 ++++++++++++++++++++++
-> >  1 file changed, 86 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> > new file mode 100644
-> > index 0000000..ac806c6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
-> > @@ -0,0 +1,86 @@
-> > +* Allwinner sun8i GMAC ethernet controller
-> > +
-> > +This device is a platform glue layer for stmmac.
-> > +Please see stmmac.txt for the other unchanged properties.
-> > +
-> > +Required properties:
-> > +- compatible: should be one of the following string:
-> > +		"allwinner,sun8i-a83t-emac"
-> > +		"allwinner,sun8i-h3-emac"
-> > +		"allwinner,sun50i-a64-emac"
-> > +- reg: address and length of the register for the device.
-> > +- interrupts: interrupt for the device
-> > +- interrupt-names: should be "macirq"
-> > +- clocks: A phandle to the reference clock for this device
-> > +- clock-names: should be "stmmaceth"
-> > +- resets: A phandle to the reset control for this device
-> > +- reset-names: should be "stmmaceth"
-> > +- phy-mode: See ethernet.txt
-> > +- phy-handle: See ethernet.txt
-> > +- #address-cells: shall be 1
-> > +- #size-cells: shall be 0
-> > +- syscon: A phandle to the syscon of the SoC with one of the following
-> > + compatible string:
-> > +  - allwinner,sun8i-h3-system-controller
-> > +  - allwinner,sun8i-a64-system-controller
-> > +  - allwinner,sun8i-a83t-system-controller
-> > +
-> > +Optional properties:
-> > +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
-> > +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
-> > +Both delay properties does not have units, there are arbitrary value.
-> > +The TX/RX clock delay chain settings are board specific and could be found
-> > +in vendor FEX files.
-> > +
-> > +Optional properties for "allwinner,sun8i-h3-emac":
-> > +- allwinner,leds-active-low: EPHY LEDs are active low
-> > +
-> > +Required child node of emac:
-> > +- mdio bus node: should be named mdio
-> > +
-> > +Required properties of the mdio node:
-> > +- #address-cells: shall be 1
-> > +- #size-cells: shall be 0
-> > +
-> > +The device node referenced by "phy" or "phy-handle" should be a child node
-> > +of the mdio node. See phy.txt for the generic PHY bindings.
-> > +
-> > +Required properties of the phy node with "allwinner,sun8i-h3-emac":
-> > +- clocks: an extra phandle to the reference clock for the EPHY
-> > +- resets: an extra phandle to the reset control for the EPHY
-> > +
-> > +Required properties for the system controller:
-> > +- reg: address and length of the register for the device.
-> > +- compatible: should be "syscon" and one of the following string:
-> > +		"allwinner,sun8i-h3-system-controller"
-> > +		"allwinner,sun8i-a64-system-controller"
-> > +		"allwinner,sun8i-a83t-system-controller"
-> 
-> This should be in a separate binding document.
-> 
-> What does it describe / represent?
-> 
-> Thanks,
-> Maxime
-> 
+Hi Philipp, Steve and Russell,
 
-I agree, I will split it in two one for syscon, one for emac
+On Fri, Feb 17, 2017 at 12:43:38PM +0100, Philipp Zabel wrote:
+> On Thu, 2017-02-16 at 14:27 -0800, Steve Longerbeam wrote:
+> > 
+> > On 02/16/2017 02:20 PM, Russell King - ARM Linux wrote:
+> > > On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
+> > >> In version 4:
+> > >
+> > > With this version, I get:
+> > >
+> > > [28762.892053] imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000000
+> > > [28762.899409] ipu1_csi0: pipeline_set_stream failed with -110
+> > >
+> > 
+> > Right, in the imx219, on exit from s_power(), the clock and data lanes
+> > must be placed in the LP-11 state. This has been done in the ov5640 and
+> > tc358743 subdevs.
+> > 
+> > If we want to bring in the patch that adds a .prepare_stream() op,
+> > the csi-2 bus would need to be placed in LP-11 in that op instead.
+> > 
+> > Philipp, should I go ahead and add your .prepare_stream() patch?
+> 
+> I think with Russell's explanation of how the imx219 sensor operates,
+> we'll have to do something before calling the sensor s_stream, but right
+> now I'm still unsure what exactly.
 
-Thanks
-Corentin Labbe
+Indeed there appears to be no other way to achieve the LP-11 state than
+going through the streaming state for this particular sensor, apart from
+starting streaming.
+
+Is there a particular reason why you're waiting for the transmitter to
+transfer to LP-11 state? That appears to be the last step which is done in
+the csi2_s_stream() callback.
+
+What the sensor does next is to start streaming, and the first thing it does
+in that process is to switch to LP-11 state.
+
+Have you tried what happens if you simply drop the LP-11 check? To me that
+would seem the right thing to do.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
