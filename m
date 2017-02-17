@@ -1,85 +1,46 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 0/4] PCI: exynos: use the PHY generic framework
-Date: Fri, 17 Feb 2017 13:51:46 -0600
-Message-ID: <20170217195146.GA17762@bhelgaas-glaptop.roam.corp.google.com>
-References: <CGME20170213082615epcas5p2f5ecabbd5853a8e27da5f88fcae85158@epcas5p2.samsung.com>
- <20170213082613.19628-1-jh80.chung@samsung.com>
- <20170215211120.GC6981@bhelgaas-glaptop.roam.corp.google.com>
- <04b568d2-d85e-9cbd-1379-d657f574f279@samsung.com>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
+Date: Fri, 17 Feb 2017 20:39:33 +0000
+Message-ID: <CACvgo51vLca_Ji8VQBO5fqCrbhpm_=6mrqx1K-7GddVv5yMKWg@mail.gmail.com>
+References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
+ <CACvgo51p+aqegjkbF6jGggwr+KXq_71w0VFzJvFAF6_egT1-kA@mail.gmail.com> <20170217154419.xr4n2ikp4li3c7co@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <04b568d2-d85e-9cbd-1379-d657f574f279-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, niyas.ahmed-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <owner-linux-mm@kvack.org>
+In-Reply-To: <20170217154419.xr4n2ikp4li3c7co@lukather>
+Sender: owner-linux-mm@kvack.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, ML dri-devel <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-mm@kvack.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 07:33:15AM +0900, Jaehoon Chung wrote:
-> Dear Bjorn,
-> 
-> On 02/16/2017 06:11 AM, Bjorn Helgaas wrote:
-> > On Mon, Feb 13, 2017 at 05:26:09PM +0900, Jaehoon Chung wrote:
-> >> This patcheset is for using PHY generic framework.
-> >> Current pci-exyns doesn't use the phy framework since there haven't been on
-> >> PHY subsystem when Exynos5440 had bean upstreamed.
-> >> It's making a difficult to upstream the other Exynos variants because of different
-> >> PHY registers.
-> >>
-> >> This patcheset has the below modifications:
-> >> 1) Introduces the phy-exynos-pcie
-> >> 2) Handles PHY register from PHY framework for pci-exynos
-> >> 3) Modifies the dt-binding of pci-exynos
-> >> 4) Maintains the backward compatibility
-> >>
-> >> Changelog on V3:
-> >> - Drops "ARM: dts: exynos5440: support the phy-pcie node of pcie"
-> >>   : Will send this patch after applying this patchset.
-> >> - Fixes typo
-> >> - Based on latest PCI git repository (host-exynos branch)
-> >> - Changes commit message
-> >> - Removes the dependency
-> >>
-> >> Changelog on V2:
-> >> - Keep current codes for backward compatibility
-> >> - Fixes some typos
-> >> - Split the patches for removing the dependency
-> >> - Removes the unnecessary codes
-> >> - Change the patch's sequence
-> >> - Based on latest PCI git repository.(next branch)
-> >>
-> >> Jaehoon Chung (4):
-> >>   Documetation: samsung-phy: add the exynos-pcie-phy binding
-> >>   phy: phy-exynos-pcie: Add support for Exynos PCIe phy
-> >>   Documetation: binding: modify the exynos5440 pcie binding
-> >>   PCI: exynos: support the using PHY generic framework
-> >>
-> >>  .../bindings/pci/samsung,exynos5440-pcie.txt       |  29 +++
-> >>  .../devicetree/bindings/phy/samsung-phy.txt        |  17 ++
-> >>  drivers/pci/host/pci-exynos.c                      |  54 +++-
-> >>  drivers/phy/Kconfig                                |   8 +
-> >>  drivers/phy/Makefile                               |   1 +
-> >>  drivers/phy/phy-exynos-pcie.c                      | 285 +++++++++++++++++++++
-> >>  6 files changed, 390 insertions(+), 4 deletions(-)
-> >>  create mode 100644 drivers/phy/phy-exynos-pcie.c
-> > 
-> > I made the updates Vivek suggested and provisionally added these to my
-> > pci/host-exynos branch to get some build testing.
-> 
-> Thanks!
-> 
-> > 
-> > Kishon, I guess it probably makes more sense for me to apply this
-> > because even though the drivers/pci changes are small, I think they
-> > depend on other pci-exynos.c changes that are on my branch but not in
-> > Linus' tree yet.
+Hi Maxime,
 
-I haven't heard from Kishon, but I merged these to my -next branch for
-v4.11.
+As I feared things have taken a turn for the bitter end :-]
 
-Bjorn
+It seems that this is a heated topic, so I'l kindly ask that we try
+the following:
+
+ - For people such as myself/Tobias/others who feel that driver and DT
+bindings should go hand in hand, prove them wrong.
+But please, do so by pointing to the documentation (conclusion of a
+previous discussion). This way you don't have to repeat yourself and
+get [too] annoyed over silly suggestions.
+
+ - The series has code changes which [seemingly] cater for out of tree
+module(s).
+Clearly state in the commit message who is the user, why it's save to
+do so and get an Ack from more prominent [DRM] developers.
+
+Please try to understand that I do not want to annoy/agitate you, I'm
+merely pointing what seems [to me] as incorrect.
+Nobody is perfect, so if I/others are wrong do point me/us to a
+reading to educate ourselves.
+
+Thanks
+Emil
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
