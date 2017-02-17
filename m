@@ -1,37 +1,49 @@
-From: Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH 3/4] fpga dt: bindings for Altera Partial Reconfiguraion IP.
-Date: Fri, 17 Feb 2017 07:20:23 -0800
-Message-ID: <CAAtXAHd-7S=nx4AE05pu4sdGP2tgBYwqxN0sbgg3qThk1qPGhg@mail.gmail.com>
-References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com> <CADhT+wfbD0ET8txd7v90jqHwh0U15LdbY2H5=On4wsLkETVazg@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
+Date: Fri, 17 Feb 2017 16:42:19 +0100
+Message-ID: <20170217154219.d4z2gylzcrzntlt3@piout.net>
+References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
+ <20170216184524.cxcy2ux37yrwutla@lukather>
+ <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADhT+wfbD0ET8txd7v90jqHwh0U15LdbY2H5=On4wsLkETVazg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: matthew.gerlach@linux.intel.com, Alan Tull <atull@opensource.altera.com>, linux-fpga@vger.kernel.org, Linux List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <owner-linux-mm@kvack.org>
+Content-Disposition: inline
+In-Reply-To: <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
+Sender: owner-linux-mm@kvack.org
+To: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-mm@kvack.org, wens@csie.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Matthew,
+On 17/02/2017 at 13:45:44 +0100, Tobias Jakobi wrote:
+> > The device tree is a representation of the hardware itself. The state
+> > of the driver support doesn't change the hardware you're running on,
+> > just like your BIOS/UEFI on x86 won't change the device it reports to
+> > Linux based on whether it has a driver for it.
+> Like Emil already said, the new bindings and the DT entries are solely
+> introduced to support a proprietary out-of-tree module.
+> 
 
-On Fri, Feb 17, 2017 at 5:31 AM, Dinh Nguyen <dinh.linux@gmail.com> wrote:
-> On Wed, Feb 15, 2017 at 3:10 PM,  <matthew.gerlach@linux.intel.com> wrote:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>
->> Device Tree bindings for Altera Partial Reconfiguraion IP?
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-Acked-By: Moritz Fischer <mdf@kernel.org>
->> ---
->>  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
->>
->
-> Nit: your commit header s/Reconfiguraion/Reconfiguration
->
-> Dinh
+Because device tree describes the hardware, the added binding doesn't
+support any particular module. The eventually upstreamed drvier will
+share the same bindings.
 
-Thanks,
-Moritz
+> The current workflow when introducing new DT entries is the following:
+> - upstream a driver that uses the entries
+> - THEN add the new entries
+> 
+
+Exactly not, if you do that, checkpatch will complain loudly. Because
+you must not add a driver using bindings that are not documented first.
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
