@@ -1,66 +1,57 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 1/2] arm64: dts: r8a7795: Upgrade to PSCI v1.0 to support
- Suspend-to-RAM
-Date: Fri, 17 Feb 2017 18:06:10 +0000
-Message-ID: <c35196c7-8b71-a7cf-cb4f-7359855346ee@arm.com>
-References: <1487350832-29820-1-git-send-email-geert+renesas@glider.be>
- <1487350832-29820-2-git-send-email-geert+renesas@glider.be>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 23/36] media: imx: Add MIPI CSI-2 Receiver subdev
+ driver
+Date: Fri, 17 Feb 2017 10:27:01 -0800
+Message-ID: <c858831f-6ce3-54b7-ef03-857129edb0bf@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-24-git-send-email-steve_longerbeam@mentor.com>
+ <1487328479.3107.21.camel@pengutronix.de>
+ <1487340970.3107.73.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1487350832-29820-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Khiem Nguyen <khiem.nguyen.xt@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1487340970.3107.73.camel@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 17/02/17 17:00, Geert Uytterhoeven wrote:
-> From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-> 
-> From PSCI v1.0, Suspend-to-RAM is supported via SYSTEM_SUSPEND PSCI
-> function call. Hence, upgrade PSCI version for R-Car H3 to support
-> Suspend-to-RAM.
-> 
-> The Suspend-to-RAM is highly dependent on ARM Trusted Firwmare support
-> since necessary callback functions will be registered after a query
-> to ARM Trusted Firmware about SYSTEM_SUSPEND support.
-> 
-> Since PSCI v1.0 is backward compatible with PSCI v0.2, CPU Hotplug and
-> CPUIdle should be able to work normally with this change.
-> 
+On 02/17/2017 06:16 AM, Philipp Zabel wrote:
+> On Fri, 2017-02-17 at 11:47 +0100, Philipp Zabel wrote:
+>> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
+>>> +static void csi2_dphy_init(struct csi2_dev *csi2)
+>>> +{
+>>> +	/*
+>>> +	 * FIXME: 0x14 is derived from a fixed D-PHY reference
+>>> +	 * clock from the HSI_TX PLL, and a fixed target lane max
+>>> +	 * bandwidth of 300 Mbps. This value should be derived
+>>
+>> If the table in https://community.nxp.com/docs/DOC-94312 is correct,
+>> this should be 850 Mbps. Where does this 300 Mbps value come from?
+>
+> I got it, the dptdin_map value for 300 Mbps is 0x14 in the Rockchip DSI
+> driver. But that value is written to the register as HSFREQRANGE_SEL(x):
+>
+> #define HSFREQRANGE_SEL(val)    (((val) & 0x3f) << 1)
 
-Why not retain "arm,psci-0.2" and just add "arm,psci-1.0" so that you
-can continue to run older kernel without PSCI v1.0 or system suspend
-support in case you need to backward compatible with older/stable kernel
-versions.
+Ah you are right, 0x14 would be a "testdin" value of 0x0a, which from
+the Rockchip table would be 950 MHz per lane.
 
-> Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-> Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Khiem: I've updated your email address.
-> ---
->  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index 98cd42f586b5fd62..4eae2d471d41ee55 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -29,7 +29,7 @@
->  	};
->  
->  	psci {
-> -		compatible = "arm,psci-0.2";
-> +		compatible = "arm,psci-1.0";
->  		method = "smc";
->  	};
->  
-> 
+But thanks for pointing the table at
+https://community.nxp.com/docs/DOC-94312. That table is what
+should be referenced in the above comment (850 MHz per lane
+for a 27MHz reference clock). I will update the comment based
+on that table.
 
--- 
-Regards,
-Sudeep
+Steve
+
+
+
+>
+> which is 0x28. Further, the Rockchip D-PHY probably is another version,
+> as its max_mbps goes up to 1500.
+>
+>
