@@ -1,49 +1,86 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 00/36] i.MX Media Driver
-Date: Fri, 17 Feb 2017 12:43:38 +0100
-Message-ID: <1487331818.3107.46.camel@pengutronix.de>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-         <20170216222006.GA21222@n2100.armlinux.org.uk>
-         <923326d6-43fe-7328-d959-14fd341e47ae@gmail.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v2 01/22] PCI: endpoint: Add EP core layer to enable EP
+ controller and EP functions
+Date: Fri, 17 Feb 2017 11:39:39 +0000
+Message-ID: <03f543b5-ae86-47cc-e3cf-e3b5cfff5ee4@synopsys.com>
+References: <1487325042-28227-1-git-send-email-kishon@ti.com>
+ <1487325042-28227-2-git-send-email-kishon@ti.com>
+ <ece23395-7ebc-c9f3-bd9f-4f24e44d763a@synopsys.com> <58A6E05D.5010803@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <923326d6-43fe-7328-d959-14fd341e47ae-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orglinux
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <58A6E05D.5010803@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
+Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-02-16 at 14:27 -0800, Steve Longerbeam wrote:
+Às 11:37 AM de 2/17/2017, Kishon Vijay Abraham I escreveu:
+> Hi Joao,
 > 
-> On 02/16/2017 02:20 PM, Russell King - ARM Linux wrote:
-> > On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
-> >> In version 4:
-> >
-> > With this version, I get:
-> >
-> > [28762.892053] imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000000
-> > [28762.899409] ipu1_csi0: pipeline_set_stream failed with -110
-> >
+> On Friday 17 February 2017 04:56 PM, Joao Pinto wrote:
+>>
+>> Hi Kishon,
+>>
+>> Às 9:50 AM de 2/17/2017, Kishon Vijay Abraham I escreveu:
+>>> Introduce a new EP core layer in order to support endpoint functions
+>>> in linux kernel. This comprises of EPC library
+>>> (Endpoint Controller Library) and EPF library (Endpoint
+>>> Function Library). EPC library implements functions that is specific
+>>> to an endpoint controller and EPF library implements functions
+>>> that is specific to an endpoint function.
+>>>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>  drivers/Makefile                    |    2 +
+>>>  drivers/pci/Kconfig                 |    1 +
+>>>  drivers/pci/endpoint/Kconfig        |   21 ++
+>>>  drivers/pci/endpoint/Makefile       |    6 +
+>>>  drivers/pci/endpoint/pci-epc-core.c |  548 +++++++++++++++++++++++++++++++++++
+>>>  drivers/pci/endpoint/pci-epc-mem.c  |  143 +++++++++
+>>>  drivers/pci/endpoint/pci-epf-core.c |  347 ++++++++++++++++++++++
+>>>  include/linux/mod_devicetable.h     |   10 +
+>>>  include/linux/pci-epc.h             |  141 +++++++++
+>>>  include/linux/pci-epf.h             |  160 ++++++++++
+>>>  10 files changed, 1379 insertions(+)
+>>>  create mode 100644 drivers/pci/endpoint/Kconfig
+>>>  create mode 100644 drivers/pci/endpoint/Makefile
+>>>  create mode 100644 drivers/pci/endpoint/pci-epc-core.c
+>>>  create mode 100644 drivers/pci/endpoint/pci-epc-mem.c
+>>>  create mode 100644 drivers/pci/endpoint/pci-epf-core.c
+>>>  create mode 100644 include/linux/pci-epc.h
+>>>  create mode 100644 include/linux/pci-epf.h
+>>>
+>>> diff --git a/drivers/Makefile b/drivers/Makefile
+>>> index f521cb0..a300bb1 100644
+>>> --- a/drivers/Makefile
+>>> +++ b/drivers/Makefile
+>>> @@ -14,7 +14,9 @@ obj-$(CONFIG_GENERIC_PHY)	+= phy/
+>>>  obj-$(CONFIG_PINCTRL)		+= pinctrl/
+>>>  obj-$(CONFIG_GPIOLIB)		+= gpio/
+>>>  obj-y				+= pwm/
+>>> +
+>>>  obj-$(CONFIG_PCI)		+= pci/
+>>> +obj-$(CONFIG_PCI_ENDPOINT)	+= pci/endpoint/
+>>>  # PCI dwc controller drivers
+>>>  obj-y				+= pci/dwc/
+>>
+>> Any special reason to include pci/endpoint and pci/dwc in drivers/Makefile
+>> instead of being inside pci/Makefile? pci/host is still inside pci/Makefile.
 > 
-> Right, in the imx219, on exit from s_power(), the clock and data lanes
-> must be placed in the LP-11 state. This has been done in the ov5640 and
-> tc358743 subdevs.
-> 
-> If we want to bring in the patch that adds a .prepare_stream() op,
-> the csi-2 bus would need to be placed in LP-11 in that op instead.
-> 
-> Philipp, should I go ahead and add your .prepare_stream() patch?
+> CONFIG_PCI enables all the pcie host support. Endpoint support should be
+> enabled independent of the host support. Moving pci/endpoint inside
+> pci/Makefile will build endpoint support only if CONFIG_PCI is enabled. For the
+> same reason kept pci/dwc in drivers/Makefile since dwc drivers can be used
+> either in host mode or device mode (or both).
 
-I think with Russell's explanation of how the imx219 sensor operates,
-we'll have to do something before calling the sensor s_stream, but right
-now I'm still unsure what exactly.
+Good point! Very well.
 
-regards
-Philipp
+Acked-By: Joao Pinto <jpinto@synopsys.com>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks
+> Kishon
+> 
+
