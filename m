@@ -1,60 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 00/35] treewide trivial patches converting pr_warning to
-	pr_warn
-Date: Fri, 17 Feb 2017 13:37:33 +0100
-Message-ID: <CAMuHMdWsG0DboaLqXag53Vejwvc5PPY2k2gy9PSdHWbNEx6nRQ@mail.gmail.com>
-References: <cover.1487314666.git.joe@perches.com>
-	<CAJZ5v0gNcGtnXpE1n6LSq7ey+UDKx+oQfmTg0_PgFwzB0Dd_5A@mail.gmail.com>
+From: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
+Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
+Date: Fri, 17 Feb 2017 13:45:44 +0100
+Message-ID: <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
+References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
+ <20170216184524.cxcy2ux37yrwutla@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-In-Reply-To: <CAJZ5v0gNcGtnXpE1n6LSq7ey+UDKx+oQfmTg0_PgFwzB0Dd_5A@mail.gmail.com>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, nouveau@lists.freedesktop.org, "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>, dri-devel <dri-devel@lists.freedesktop.org>, virtualization@lists.linux-foundation.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, MTD Maling List <linux-mtd@lists.infradead.org>, sparclinux <sparclinux@vger.kernel.org>, Lars Ellenberg <drbd-dev@lists.linbit.com>, "open list:TARGET SUBSYSTEM" <linux-scsi@vger.kernel.org>, Richard Weinberger <richard@nod.at>, sfi-devel@simplefirmware.org, amd-gfx@lists.freedesktop.org, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, tboot-devel@lists.sourceforge.net, oprofil
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170216184524.cxcy2ux37yrwutla@lukather>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-mm@kvack.org, wens@csie.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
-
-On Fri, Feb 17, 2017 at 1:27 PM, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Fri, Feb 17, 2017 at 8:11 AM, Joe Perches <joe@perches.com> wrote:
->> There are ~4300 uses of pr_warn and ~250 uses of the older
->> pr_warning in the kernel source tree.
->>
->> Make the use of pr_warn consistent across all kernel files.
->>
->> This excludes all files in tools/ as there is a separate
->> define pr_warning for that directory tree and pr_warn is
->> not used in tools/.
->>
->> Done with 'sed s/\bpr_warning\b/pr_warn/' and some emacsing.
->
-> Sorry about asking if that has been asked already.
->
-> Wouldn't it be slightly less intrusive to simply redefined
-> pr_warning() as a synonym for pr_warn()?
-
-That's already the case.
-
-This series cleans up the cruft, so we can catch all users with
-"git grep -w pr_warn".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGVsbG8gTWF4aW1lLAoKTWF4aW1lIFJpcGFyZCB3cm90ZToKPiBIaSwKPiAKPiBPbiBUaHUsIEZl
+YiAxNiwgMjAxNyBhdCAwMTo0MzowNlBNICswMTAwLCBUb2JpYXMgSmFrb2JpIHdyb3RlOgo+PiBJ
+IHdhcyB3b25kZXJpbmcgYWJvdXQgdGhlIGZvbGxvd2luZy4gV2Fzbid0IHRoZXJlIHNvbWUgc3Ry
+aWN0Cj4+IHJlcXVpcmVtZW50IGFib3V0IGNvZGUgZ29pbmcgdXBzdHJlYW0sIHdoaWNoIGFsc28g
+aW5jbHVkZWQgdGhhdCB0aGVyZQo+PiB3YXMgYSBmdWxsIG9wZW4tc291cmNlIGRyaXZlciBzdGFj
+ayBmb3IgaXQ/Cj4+Cj4+IEkgZG9uJ3Qgc2VlIGhvdyB0aGlzIGlzIHRoZSBjYXNlIGZvciBNYWxp
+LCBuZWl0aGVyIGluIHRoZSBrZXJuZWwsIG5vciBpbgo+PiB1c2Vyc3BhY2UuIEknbSBhd2FyZSB0
+aGF0IHRoZSBNYWxpIGtlcm5lbCBkcml2ZXIgaXMgb3Blbi1zb3VyY2UuIEJ1dCBpdAo+PiBpcyBu
+b3QgdXBzdHJlYW0sIG1haW50YWluZWQgb3V0IG9mIHRyZWUsIGFuZCB3b24ndCBsYW5kIHVwc3Ry
+ZWFtIGluIGl0cwo+PiBjdXJyZW50IGZvcm0gKG5vIHJlc2VtYmxlbmNlIHRvIGEgRFJNIGRyaXZl
+ciBhdCBhbGwpLiBBbmQgbGV0J3Mgbm90IHRhbGsKPj4gYWJvdXQgdGhlIHVzZXJzcGFjZSBwYXJ0
+Lgo+Pgo+PiBTbywgd2h5IHNob3VsZCB0aGlzIGJlIGhlcmU/Cj4gCj4gVGhlIGRldmljZSB0cmVl
+IGlzIGEgcmVwcmVzZW50YXRpb24gb2YgdGhlIGhhcmR3YXJlIGl0c2VsZi4gVGhlIHN0YXRlCj4g
+b2YgdGhlIGRyaXZlciBzdXBwb3J0IGRvZXNuJ3QgY2hhbmdlIHRoZSBoYXJkd2FyZSB5b3UncmUg
+cnVubmluZyBvbiwKPiBqdXN0IGxpa2UgeW91ciBCSU9TL1VFRkkgb24geDg2IHdvbid0IGNoYW5n
+ZSB0aGUgZGV2aWNlIGl0IHJlcG9ydHMgdG8KPiBMaW51eCBiYXNlZCBvbiB3aGV0aGVyIGl0IGhh
+cyBhIGRyaXZlciBmb3IgaXQuCkxpa2UgRW1pbCBhbHJlYWR5IHNhaWQsIHRoZSBuZXcgYmluZGlu
+Z3MgYW5kIHRoZSBEVCBlbnRyaWVzIGFyZSBzb2xlbHkKaW50cm9kdWNlZCB0byBzdXBwb3J0IGEg
+cHJvcHJpZXRhcnkgb3V0LW9mLXRyZWUgbW9kdWxlLgoKVGhlIGN1cnJlbnQgd29ya2Zsb3cgd2hl
+biBpbnRyb2R1Y2luZyBuZXcgRFQgZW50cmllcyBpcyB0aGUgZm9sbG93aW5nOgotIHVwc3RyZWFt
+IGEgZHJpdmVyIHRoYXQgdXNlcyB0aGUgZW50cmllcwotIFRIRU4gYWRkIHRoZSBuZXcgZW50cmll
+cwoKSSdtIGFnYWluc3QgYWRkaW5nIHN1Y2ggZW50cmllcyB3aXRob3V0IGhhdmluZyBhbnkgdXBz
+dHJlYW0gImNvbnN1bWVyIi4KCgpXaXRoIGJlc3Qgd2lzaGVzLApUb2JpYXMKCgo+IFNvIHllcywg
+dW5mb3J0dW5hdGVseSwgd2UgZG9uJ3QgaGF2ZSBhIGRyaXZlciB1cHN0cmVhbSBhdCB0aGUKPiBt
+b21lbnQuIEJ1dCB0aGF0IGRvZXNuJ3QgcHJldmVudCB1cyBmcm9tIGRlc2NyaWJpbmcgdGhlIGhh
+cmR3YXJlCj4gYWNjdXJhdGVseS4KPiAKPiBNYXhpbWUKPiAKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
