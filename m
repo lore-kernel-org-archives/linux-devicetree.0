@@ -1,182 +1,91 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 23/36] media: imx: Add MIPI CSI-2 Receiver subdev
- driver
-Date: Fri, 17 Feb 2017 11:47:59 +0100
-Message-ID: <1487328479.3107.21.camel@pengutronix.de>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 00/36] i.MX Media Driver
+Date: Fri, 17 Feb 2017 10:56:24 +0000
+Message-ID: <20170217105624.GC21222@n2100.armlinux.org.uk>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-         <1487211578-11360-24-git-send-email-steve_longerbeam@mentor.com>
+ <20170216222006.GA21222@n2100.armlinux.org.uk>
+ <923326d6-43fe-7328-d959-14fd341e47ae@gmail.com>
+ <20170216225742.GB21222@n2100.armlinux.org.uk>
+ <1487327951.3107.19.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487211578-11360-24-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1487327951.3107.19.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
-> Adds MIPI CSI-2 Receiver subdev driver. This subdev is required
-> for sensors with a MIPI CSI2 interface.
+On Fri, Feb 17, 2017 at 11:39:11AM +0100, Philipp Zabel wrote:
+> On Thu, 2017-02-16 at 22:57 +0000, Russell King - ARM Linux wrote:
+> > On Thu, Feb 16, 2017 at 02:27:41PM -0800, Steve Longerbeam wrote:
+> > > 
+> > > 
+> > > On 02/16/2017 02:20 PM, Russell King - ARM Linux wrote:
+> > > >On Wed, Feb 15, 2017 at 06:19:02PM -0800, Steve Longerbeam wrote:
+> > > >>In version 4:
+> > > >
+> > > >With this version, I get:
+> > > >
+> > > >[28762.892053] imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000000
+> > > >[28762.899409] ipu1_csi0: pipeline_set_stream failed with -110
+> > > >
+> > > 
+> > > Right, in the imx219, on exit from s_power(), the clock and data lanes
+> > > must be placed in the LP-11 state. This has been done in the ov5640 and
+> > > tc358743 subdevs.
+> > 
+> > The only way to do that is to enable streaming from the sensor, wait
+> > an initialisation time, and then disable streaming, and wait for the
+> > current line to finish.  There is _no_ other way to get the sensor to
+> > place its clock and data lines into LP-11 state.
 > 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/staging/media/imx/Makefile         |   1 +
->  drivers/staging/media/imx/imx6-mipi-csi2.c | 573 +++++++++++++++++++++++++++++
->  2 files changed, 574 insertions(+)
->  create mode 100644 drivers/staging/media/imx/imx6-mipi-csi2.c
-> 
-> diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
-> index 878a126..3569625 100644
-> --- a/drivers/staging/media/imx/Makefile
-> +++ b/drivers/staging/media/imx/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-vdic.o
->  obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-ic.o
->  
->  obj-$(CONFIG_VIDEO_IMX_CSI) += imx-media-csi.o
-> +obj-$(CONFIG_VIDEO_IMX_CSI) += imx6-mipi-csi2.o
-> diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
-> new file mode 100644
-> index 0000000..23dca80
-> --- /dev/null
-> +++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
-> @@ -0,0 +1,573 @@
-> +/*
-> + * MIPI CSI-2 Receiver Subdev for Freescale i.MX6 SOC.
-> + *
-> + * Copyright (c) 2012-2017 Mentor Graphics Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/irq.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <media/v4l2-device.h>
-> +#include <media/v4l2-of.h>
-> +#include <media/v4l2-subdev.h>
-> +#include "imx-media.h"
-> +
-> +/*
-> + * there must be 5 pads: 1 input pad from sensor, and
-> + * the 4 virtual channel output pads
-> + */
-> +#define CSI2_SINK_PAD       0
-> +#define CSI2_NUM_SINK_PADS  1
-> +#define CSI2_NUM_SRC_PADS   4
-> +#define CSI2_NUM_PADS       5
-> +
-> +struct csi2_dev {
-> +	struct device          *dev;
-> +	struct v4l2_subdev      sd;
-> +	struct media_pad       pad[CSI2_NUM_PADS];
-> +	struct v4l2_mbus_framefmt format_mbus;
-> +	struct clk             *dphy_clk;
-> +	struct clk             *cfg_clk;
-> +	struct clk             *pix_clk; /* what is this? */
-> +	void __iomem           *base;
-> +	struct v4l2_of_bus_mipi_csi2 bus;
-> +	bool                    on;
-> +	bool                    stream_on;
-> +	bool                    src_linked;
-> +	bool                    sink_linked[CSI2_NUM_SRC_PADS];
-> +};
-> +
-> +#define DEVICE_NAME "imx6-mipi-csi2"
-> +
-> +/* Register offsets */
-> +#define CSI2_VERSION            0x000
-> +#define CSI2_N_LANES            0x004
-> +#define CSI2_PHY_SHUTDOWNZ      0x008
-> +#define CSI2_DPHY_RSTZ          0x00c
-> +#define CSI2_RESETN             0x010
-> +#define CSI2_PHY_STATE          0x014
-> +#define PHY_STOPSTATEDATA_BIT   4
-> +#define PHY_STOPSTATEDATA(n)    BIT(PHY_STOPSTATEDATA_BIT + (n))
-> +#define PHY_RXCLKACTIVEHS       BIT(8)
-> +#define PHY_RXULPSCLKNOT        BIT(9)
-> +#define PHY_STOPSTATECLK        BIT(10)
-> +#define CSI2_DATA_IDS_1         0x018
-> +#define CSI2_DATA_IDS_2         0x01c
-> +#define CSI2_ERR1               0x020
-> +#define CSI2_ERR2               0x024
-> +#define CSI2_MSK1               0x028
-> +#define CSI2_MSK2               0x02c
-> +#define CSI2_PHY_TST_CTRL0      0x030
-> +#define PHY_TESTCLR		BIT(0)
-> +#define PHY_TESTCLK		BIT(1)
-> +#define CSI2_PHY_TST_CTRL1      0x034
-> +#define PHY_TESTEN		BIT(16)
-> +#define CSI2_SFT_RESET          0xf00
-> +
-> +static inline struct csi2_dev *sd_to_dev(struct v4l2_subdev *sdev)
-> +{
-> +	return container_of(sdev, struct csi2_dev, sd);
-> +}
-> +
-> +static void csi2_enable(struct csi2_dev *csi2, bool enable)
-> +{
-> +	if (enable) {
-> +		writel(0x1, csi2->base + CSI2_PHY_SHUTDOWNZ);
-> +		writel(0x1, csi2->base + CSI2_DPHY_RSTZ);
-> +		writel(0x1, csi2->base + CSI2_RESETN);
-> +	} else {
-> +		writel(0x0, csi2->base + CSI2_PHY_SHUTDOWNZ);
-> +		writel(0x0, csi2->base + CSI2_DPHY_RSTZ);
-> +		writel(0x0, csi2->base + CSI2_RESETN);
-> +	}
-> +}
-> +
-> +static void csi2_set_lanes(struct csi2_dev *csi2)
-> +{
-> +	int lanes = csi2->bus.num_data_lanes;
-> +
-> +	writel(lanes - 1, csi2->base + CSI2_N_LANES);
-> +}
-> +
-> +static void dw_mipi_csi2_phy_write(struct csi2_dev *csi2,
-> +				   u32 test_code, u32 test_data)
-> +{
-> +	/* Clear PHY test interface */
-> +	writel(PHY_TESTCLR, csi2->base + CSI2_PHY_TST_CTRL0);
-> +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL1);
-> +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL0);
-> +
-> +	/* Raise test interface strobe signal */
-> +	writel(PHY_TESTCLK, csi2->base + CSI2_PHY_TST_CTRL0);
-> +
-> +	/* Configure address write on falling edge and lower strobe signal */
-> +	writel(PHY_TESTEN | test_code, csi2->base + CSI2_PHY_TST_CTRL1);
-> +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL0);
-> +
-> +	/* Configure data write on rising edge and raise strobe signal */
-> +	writel(test_data, csi2->base + CSI2_PHY_TST_CTRL1);
-> +	writel(PHY_TESTCLK, csi2->base + CSI2_PHY_TST_CTRL0);
-> +
-> +	/* Clear strobe signal */
-> +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL0);
-> +}
-> +
-> +static void csi2_dphy_init(struct csi2_dev *csi2)
-> +{
-> +	/*
-> +	 * FIXME: 0x14 is derived from a fixed D-PHY reference
-> +	 * clock from the HSI_TX PLL, and a fixed target lane max
-> +	 * bandwidth of 300 Mbps. This value should be derived
+> I thought going through LP-11 is part of the D-PHY transmitter
+> initialization, during the LP->HS wakeup sequence. But then I have no
+> access to MIPI specs.
 
-If the table in https://community.nxp.com/docs/DOC-94312 is correct,
-this should be 850 Mbps. Where does this 300 Mbps value come from?
+The D-PHY transmitter initialisation *only* happens as part of the
+wake-up from standby to streaming mode.  That is because Sony expect
+that you program the sensor, and then when you switch it to streaming
+mode, it computes the D-PHY parameters from the PLL, input clock rate
+(you have to tell it the clock rate in 1/256 MHz units), number of
+lanes, and other parameters.
 
-regards
-Philipp
+It is possible to program the D-PHY parameters manually, but that
+doesn't change the above sequence in any way (it just avoids the
+chip computing the values, it doesn't result in any change of
+behaviour on the bus.)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The IMX219 specifications are clear: the clock and data lines are
+held low (LP-00 state) after releasing the hardware enable signal.
+There's a period of chip initialisation, and then you can access the
+I2C bus and configure it.  There's a further period of initialisation
+where charge pumps are getting to their operating state.  Then, you
+set the streaming bit, and a load more initialisation happens before
+the CSI bus enters LP-11 state and the first frame pops out.  When
+entering standby, the last frame is completed, and then the CSI bus
+enters LP-11 state.
+
+SMIA are slightly different - mostly following what I've said above,
+but the clock and data lines are tristated after releasing the
+xshutdown signal, and they remain tristated until the clock line
+starts toggling before the first frame appears.  There appears to
+be no point that the clock line enters LP-11 state before it starts
+toggling.  When entering standby, the last frame is completed, and
+the CSI bus enters tristate mode (so floating.)  There is no way to
+get these sensors into LP-11 state.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
