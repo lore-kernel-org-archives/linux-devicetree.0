@@ -1,84 +1,194 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] can: ti_hecc: Add DT support for TI HECC module
-Date: Fri, 17 Feb 2017 14:54:35 +0100
-Message-ID: <5eeddc52-4bdc-6f40-51a4-f8e4d14e6b9b@pengutronix.de>
-References: <1487339158-18809-1-git-send-email-yegorslists@googlemail.com>
- <1487339158-18809-4-git-send-email-yegorslists@googlemail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 23/36] media: imx: Add MIPI CSI-2 Receiver subdev driver
+Date: Fri, 17 Feb 2017 15:16:10 +0100
+Message-ID: <1487340970.3107.73.camel@pengutronix.de>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-24-git-send-email-steve_longerbeam@mentor.com>
+ <1487328479.3107.21.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="4woCS7riNlxXpl4W3aLUTw8klU4GlknPN"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487339158-18809-4-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487328479.3107.21.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---4woCS7riNlxXpl4W3aLUTw8klU4GlknPN
-Content-Type: multipart/mixed; boundary="RI1Dp1huQ4w7CEojVNLIuNSi0Q7ctawrT";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
- tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org,
- Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Message-ID: <5eeddc52-4bdc-6f40-51a4-f8e4d14e6b9b-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] can: ti_hecc: Add DT support for TI HECC module
-References: <1487339158-18809-1-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
- <1487339158-18809-4-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-In-Reply-To: <1487339158-18809-4-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Fri, 2017-02-17 at 11:47 +0100, Philipp Zabel wrote:
+> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
+> > Adds MIPI CSI-2 Receiver subdev driver. This subdev is required
+> > for sensors with a MIPI CSI2 interface.
+> > 
+> > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> > ---
+> >  drivers/staging/media/imx/Makefile         |   1 +
+> >  drivers/staging/media/imx/imx6-mipi-csi2.c | 573 +++++++++++++++++++++++++++++
+> >  2 files changed, 574 insertions(+)
+> >  create mode 100644 drivers/staging/media/imx/imx6-mipi-csi2.c
+> > 
+> > diff --git a/drivers/staging/media/imx/Makefile b/drivers/staging/media/imx/Makefile
+> > index 878a126..3569625 100644
+> > --- a/drivers/staging/media/imx/Makefile
+> > +++ b/drivers/staging/media/imx/Makefile
+> > @@ -9,3 +9,4 @@ obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-vdic.o
+> >  obj-$(CONFIG_VIDEO_IMX_MEDIA) += imx-media-ic.o
+> >  
+> >  obj-$(CONFIG_VIDEO_IMX_CSI) += imx-media-csi.o
+> > +obj-$(CONFIG_VIDEO_IMX_CSI) += imx6-mipi-csi2.o
+> > diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
+> > new file mode 100644
+> > index 0000000..23dca80
+> > --- /dev/null
+> > +++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
+> > @@ -0,0 +1,573 @@
+> > +/*
+> > + * MIPI CSI-2 Receiver Subdev for Freescale i.MX6 SOC.
+> > + *
+> > + * Copyright (c) 2012-2017 Mentor Graphics Inc.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License as published by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + */
+> > +#include <linux/clk.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/io.h>
+> > +#include <linux/iopoll.h>
+> > +#include <linux/irq.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <media/v4l2-device.h>
+> > +#include <media/v4l2-of.h>
+> > +#include <media/v4l2-subdev.h>
+> > +#include "imx-media.h"
+> > +
+> > +/*
+> > + * there must be 5 pads: 1 input pad from sensor, and
+> > + * the 4 virtual channel output pads
+> > + */
+> > +#define CSI2_SINK_PAD       0
+> > +#define CSI2_NUM_SINK_PADS  1
+> > +#define CSI2_NUM_SRC_PADS   4
+> > +#define CSI2_NUM_PADS       5
+> > +
+> > +struct csi2_dev {
+> > +	struct device          *dev;
+> > +	struct v4l2_subdev      sd;
+> > +	struct media_pad       pad[CSI2_NUM_PADS];
+> > +	struct v4l2_mbus_framefmt format_mbus;
+> > +	struct clk             *dphy_clk;
+> > +	struct clk             *cfg_clk;
+> > +	struct clk             *pix_clk; /* what is this? */
+> > +	void __iomem           *base;
+> > +	struct v4l2_of_bus_mipi_csi2 bus;
+> > +	bool                    on;
+> > +	bool                    stream_on;
+> > +	bool                    src_linked;
+> > +	bool                    sink_linked[CSI2_NUM_SRC_PADS];
+> > +};
+> > +
+> > +#define DEVICE_NAME "imx6-mipi-csi2"
+> > +
+> > +/* Register offsets */
+> > +#define CSI2_VERSION            0x000
+> > +#define CSI2_N_LANES            0x004
+> > +#define CSI2_PHY_SHUTDOWNZ      0x008
+> > +#define CSI2_DPHY_RSTZ          0x00c
+> > +#define CSI2_RESETN             0x010
+> > +#define CSI2_PHY_STATE          0x014
+> > +#define PHY_STOPSTATEDATA_BIT   4
+> > +#define PHY_STOPSTATEDATA(n)    BIT(PHY_STOPSTATEDATA_BIT + (n))
+> > +#define PHY_RXCLKACTIVEHS       BIT(8)
+> > +#define PHY_RXULPSCLKNOT        BIT(9)
+> > +#define PHY_STOPSTATECLK        BIT(10)
+> > +#define CSI2_DATA_IDS_1         0x018
+> > +#define CSI2_DATA_IDS_2         0x01c
+> > +#define CSI2_ERR1               0x020
+> > +#define CSI2_ERR2               0x024
+> > +#define CSI2_MSK1               0x028
+> > +#define CSI2_MSK2               0x02c
+> > +#define CSI2_PHY_TST_CTRL0      0x030
+> > +#define PHY_TESTCLR		BIT(0)
+> > +#define PHY_TESTCLK		BIT(1)
+> > +#define CSI2_PHY_TST_CTRL1      0x034
+> > +#define PHY_TESTEN		BIT(16)
+> > +#define CSI2_SFT_RESET          0xf00
+> > +
+> > +static inline struct csi2_dev *sd_to_dev(struct v4l2_subdev *sdev)
+> > +{
+> > +	return container_of(sdev, struct csi2_dev, sd);
+> > +}
+> > +
+> > +static void csi2_enable(struct csi2_dev *csi2, bool enable)
+> > +{
+> > +	if (enable) {
+> > +		writel(0x1, csi2->base + CSI2_PHY_SHUTDOWNZ);
+> > +		writel(0x1, csi2->base + CSI2_DPHY_RSTZ);
+> > +		writel(0x1, csi2->base + CSI2_RESETN);
+> > +	} else {
+> > +		writel(0x0, csi2->base + CSI2_PHY_SHUTDOWNZ);
+> > +		writel(0x0, csi2->base + CSI2_DPHY_RSTZ);
+> > +		writel(0x0, csi2->base + CSI2_RESETN);
+> > +	}
+> > +}
+> > +
+> > +static void csi2_set_lanes(struct csi2_dev *csi2)
+> > +{
+> > +	int lanes = csi2->bus.num_data_lanes;
+> > +
+> > +	writel(lanes - 1, csi2->base + CSI2_N_LANES);
+> > +}
+> > +
+> > +static void dw_mipi_csi2_phy_write(struct csi2_dev *csi2,
+> > +				   u32 test_code, u32 test_data)
+> > +{
+> > +	/* Clear PHY test interface */
+> > +	writel(PHY_TESTCLR, csi2->base + CSI2_PHY_TST_CTRL0);
+> > +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL1);
+> > +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL0);
+> > +
+> > +	/* Raise test interface strobe signal */
+> > +	writel(PHY_TESTCLK, csi2->base + CSI2_PHY_TST_CTRL0);
+> > +
+> > +	/* Configure address write on falling edge and lower strobe signal */
+> > +	writel(PHY_TESTEN | test_code, csi2->base + CSI2_PHY_TST_CTRL1);
+> > +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL0);
+> > +
+> > +	/* Configure data write on rising edge and raise strobe signal */
+> > +	writel(test_data, csi2->base + CSI2_PHY_TST_CTRL1);
+> > +	writel(PHY_TESTCLK, csi2->base + CSI2_PHY_TST_CTRL0);
+> > +
+> > +	/* Clear strobe signal */
+> > +	writel(0x0, csi2->base + CSI2_PHY_TST_CTRL0);
+> > +}
+> > +
+> > +static void csi2_dphy_init(struct csi2_dev *csi2)
+> > +{
+> > +	/*
+> > +	 * FIXME: 0x14 is derived from a fixed D-PHY reference
+> > +	 * clock from the HSI_TX PLL, and a fixed target lane max
+> > +	 * bandwidth of 300 Mbps. This value should be derived
+> 
+> If the table in https://community.nxp.com/docs/DOC-94312 is correct,
+> this should be 850 Mbps. Where does this 300 Mbps value come from?
 
---RI1Dp1huQ4w7CEojVNLIuNSi0Q7ctawrT
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+I got it, the dptdin_map value for 300 Mbps is 0x14 in the Rockchip DSI
+driver. But that value is written to the register as HSFREQRANGE_SEL(x):
 
-On 02/17/2017 02:45 PM, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
-> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->=20
-> This patch converts TI HECC driver to DT only driver. This results in
-> removing ti_hecc.h containing now obsolete platform data.
->=20
-> Former transceiver_switch callback function will be now modelled via
-> regulator API.
->=20
-> Signed-off-by: Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+#define HSFREQRANGE_SEL(val)    (((val) & 0x3f) << 1) 
 
-What about ti_hecc_remove(struct platform_device *pdev)? - As you now
-are using devm_ some manual deallocations will go away.
+which is 0x28. Further, the Rockchip D-PHY probably is another version,
+as its max_mbps goes up to 1500.
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---RI1Dp1huQ4w7CEojVNLIuNSi0Q7ctawrT--
-
---4woCS7riNlxXpl4W3aLUTw8klU4GlknPN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlinAJsACgkQHv7KIOw4
-HPYXcggAmogD1WAlogHGdGvt26l8h9vxDYLechKlJHiT+e6gpZoj2RzJeMV7d90z
-Nr9tgozVPVjmhwQH7Z2cMl2Lns+1FDfsvr6fNT8Wfdm78VSbeYbHGzK8VWQit+jD
-nzJFTpXC+TH/q3nEe/36veBI7A5KzRsY15jcJqOcW7IxfSrMd3Gzs/RjOjRkfMKn
-cI9StccwohV7q6revi2Bg8UIZDmE+vApzpbdQYDw44DMck8p5hKngVT60RBmRQa0
-qPIUIvXadReGagKrQUa7vBkZflSyeF1RGNEJQlurcNygKcoXGbqNVKK6Z/ke3E3n
-qE+CVzY6ZSpujKoc/tk88kGifoSTDQ==
-=3EOY
------END PGP SIGNATURE-----
-
---4woCS7riNlxXpl4W3aLUTw8klU4GlknPN--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
