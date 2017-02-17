@@ -1,105 +1,246 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 08/22] PCI: dwc: designware: Add EP mode support
-Date: Fri, 17 Feb 2017 18:45:03 +0530
-Message-ID: <58A6F757.2060705@ti.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-9-git-send-email-kishon@ti.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 05/21] net-next: stmmac: Add dwmac-sun8i
+Date: Fri, 17 Feb 2017 14:18:02 +0100
+Message-ID: <20170217131802.GB24993@Red>
+References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
+ <20170216124859.14346-6-clabbe.montjoie@gmail.com>
+ <20170216190524.l2ddzhwabzdpdphx@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1487325042-28227-9-git-send-email-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170216190524.l2ddzhwabzdpdphx@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Friday 17 February 2017 03:20 PM, Kishon Vijay Abraham I wrote:
-> Add endpoint mode support to designware driver. This uses the
-> EP Core layer introduced recently to add endpoint mode support.
-> *Any* function driver can now use this designware device
-> in order to achieve the EP functionality.
+On Thu, Feb 16, 2017 at 08:05:24PM +0100, Maxime Ripard wrote:
+> Hi,
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  drivers/pci/dwc/Kconfig              |    5 +
->  drivers/pci/dwc/Makefile             |    1 +
->  drivers/pci/dwc/pcie-designware-ep.c |  342 ++++++++++++++++++++++++++++++++++
->  drivers/pci/dwc/pcie-designware.c    |   51 +++++
->  drivers/pci/dwc/pcie-designware.h    |   72 +++++++
->  5 files changed, 471 insertions(+)
->  create mode 100644 drivers/pci/dwc/pcie-designware-ep.c
+
+[...]
+> > +
+> > +struct emac_variant {
+> > +	u32 default_syscon_value;
 > 
-> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-> index dfb8a69..00335c7 100644
-> --- a/drivers/pci/dwc/Kconfig
-> +++ b/drivers/pci/dwc/Kconfig
-> @@ -9,6 +9,11 @@ config PCIE_DW_HOST
->  	depends on PCI_MSI_IRQ_DOMAIN
->          select PCIE_DW
->  
-> +config PCIE_DW_EP
-> +	bool
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW
-> +
->  config PCI_DRA7XX
->  	bool "TI DRA7xx PCIe controller"
->  	depends on PCI
-> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
-> index a2df13c..b38425d 100644
-> --- a/drivers/pci/dwc/Makefile
-> +++ b/drivers/pci/dwc/Makefile
-> @@ -1,5 +1,6 @@
->  obj-$(CONFIG_PCIE_DW) += pcie-designware.o
->  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
-> +obj-$(CONFIG_PCIE_DW_EP) += pcie-designware-ep.o
->  obj-$(CONFIG_PCIE_DW_PLAT) += pcie-designware-plat.o
->  obj-$(CONFIG_PCI_DRA7XX) += pci-dra7xx.o
->  obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
-> diff --git a/drivers/pci/dwc/pcie-designware-ep.c b/drivers/pci/dwc/pcie-designware-ep.c
-> new file mode 100644
-> index 0000000..e465c5e
-> --- /dev/null
-> +++ b/drivers/pci/dwc/pcie-designware-ep.c
-> @@ -0,0 +1,342 @@
-> +/**
-> + * Synopsys Designware PCIe Endpoint controller driver
-> + *
-> + * Copyright (C) 2017 Texas Instruments
-> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
-> + *
-> + * This program is free software: you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 of
-> + * the License as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/of.h>
-> +
-> +#include "pcie-designware.h"
-> +#include <linux/pci-epc.h>
-> +#include <linux/pci-epf.h>
-> +
-> +void dw_pcie_ep_linkup(struct dw_pcie_ep *ep)
-> +{
-> +	struct pci_epc *epc = ep->epc;
-> +	struct pci_epf *epf;
-> +
-> +	list_for_each_entry(epf, &epc->pci_epf, list)
-> +		pci_epf_linkup(epf);
+> Why do you need a default value? Can't you read it from the syscon
+> directly?
+> 
 
-Just notices, the right place to use this list should be pci-epc-core. Will fix
-this in the next revision.
+Why not, but you can see the default value as "value for disabled state".
+My fear is that something (uboot) modify it (keep it activated) before driver load.
 
-Thanks
-Kishon
+[...]
+> > +static void sun8i_dwmac_dump_regs(void __iomem *ioaddr)
+> > +{
+> > +	int i;
+> > +
+> > +	pr_info(" DMA registers\n");
+> 
+> Logging this as pr_info is bad already...
+> 
+> > +	for (i = 0; i < 0xC8; i += 4) {
+> > +		if (i == 0x32 || i == 0x3C)
+> > +			continue;
+> > +		pr_err("Reg 0x%x: 0x%08x\n", i, readl(ioaddr + i));
+> 
+> ... But this is worse.
+> 
+> Why do you need to do that? Can't you create a file in debugfs
+> instead?
+> 
+
+I just do as other glue does. But yes this is uglyi, no excuse.
+Reworking all stmmac register dump (ethtool, stmmac_ops->dump_regs and stmmac_dma_ops->dump_regs) was on my todo list,
+but I postponed it.
+
+I will propose something better based on debugfs.
+
+[...]
+> > +static void sun8i_dwmac_dma_start_tx(void __iomem *ioaddr)
+> > +{
+> > +	u32 v;
+> > +
+> > +	v = readl(ioaddr + EMAC_TX_CTL0);
+> > +	v |= EMAC_TX_TRANSMITTER_EN;
+> > +	writel(v, ioaddr + EMAC_TX_CTL0);
+> > +
+> > +	v = readl(ioaddr + EMAC_TX_CTL1);
+> > +	v |= EMAC_TX_DMA_START;
+> > +	v |= EMAC_TX_DMA_EN;
+> > +	writel(v, ioaddr + EMAC_TX_CTL1);
+> 
+> This is a bit worrying. There's not a single lock in your driver,
+> while you have a significant number of read / modify / write.
+> 
+> Where is the locking handled?
+> 
+
+All thoses function are handled by the "stmmac_ops framework", all other glue drivers does not lock anything.
+The few functions that need locking already got it on the calling stmmac side.
+
+[...]
+> > +static int sun8i_dwmac_init(struct platform_device *pdev, void *priv)
+> > +{
+> > +	struct sunxi_priv_data *gmac = priv;
+> > +	int ret;
+> > +
+> > +	if (gmac->regulator) {
+> > +		ret = regulator_enable(gmac->regulator);
+> > +		if (ret) {
+> > +			dev_err(&pdev->dev, "Fail to enable regulator\n");
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(gmac->tx_clk);
+> > +	if (ret) {
+> > +		dev_err(&pdev->dev, "Could not enable AHB clock\n");
+> 
+> If that call fails, you leave the regulator (if there was any) enabled.
+> 
+
+I will fix it
+
+> > +		return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void sun8i_dwmac_core_init(struct mac_device_info *hw, int mtu)
+> > +{
+> > +	void __iomem *ioaddr = hw->pcsr;
+> > +	u32 v;
+> > +
+> > +	v = (8 << 24);/* burst len */
+> > +	writel(v, ioaddr + EMAC_BASIC_CTL1);
+> 
+> do you need an intermediate value? you should make a define for that
+> too.
+> 
+
+I will fix it
+
+[...]
+> > +static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
+> > +{
+> > +	struct sunxi_priv_data *gmac = priv->plat->bsp_priv;
+> > +	struct device_node *node = priv->device->of_node;
+> > +	int ret;
+> > +	u32 reg, val;
+> > +
+> > +	reg = gmac->variant->default_syscon_value;
+> > +
+> > +	if (gmac->variant->internal_phy) {
+> > +		if (!gmac->use_internal_phy) {
+> > +			/* switch to external PHY interface */
+> > +			reg &= ~H3_EPHY_SELECT;
+> > +		} else {
+> > +			reg |= H3_EPHY_SELECT;
+> > +			reg &= ~H3_EPHY_SHUTDOWN;
+> > +			dev_info(priv->device, "Select internal_phy %x\n", reg);
+> 
+> The logging level is too high
+> 
+
+I will reduce it
+
+> > +
+> > +			if (of_property_read_bool(priv->plat->phy_node,
+> > +						  "allwinner,leds-active-low"))
+> > +				reg |= H3_EPHY_LED_POL;
+> > +			else
+> > +				reg &= ~H3_EPHY_LED_POL;
+> > +
+> > +			ret = of_mdio_parse_addr(priv->device,
+> > +						 priv->plat->phy_node);
+> > +			if (ret < 0) {
+> > +				dev_err(priv->device, "Could not parse MDIO addr\n");
+> > +				return ret;
+> > +			}
+> > +			/* of_mdio_parse_addr returns a valid (0 ~ 31) PHY
+> > +			 * address. No need to mask it again.
+> > +			 */
+> > +			reg |= ret << H3_EPHY_ADDR_SHIFT;
+> > +		}
+> > +	}
+> > +
+> > +	if (!of_property_read_u32(node, "allwinner,tx-delay", &val)) {
+> 
+> How do you compute it? Can't this be done through auto-training?
+> 
+
+The value is the same as used in vendor BSP kernel.
+I do not understand what you mean by auto-training.
+
+> > +		dev_info(priv->device, "set tx-delay to %x\n", val);
+> 
+> change the logging level here too.
+> 
+
+I agree
+
+> > +		if (val <= SYSCON_ETXDC_MASK) {
+> > +			reg &= ~(SYSCON_ETXDC_MASK << SYSCON_ETXDC_SHIFT);
+> > +			reg |= (val << SYSCON_ETXDC_SHIFT);
+> > +		} else {
+> > +			dev_warn(priv->device, "Invalid TX clock delay: %d\n",
+> > +				 val);
+> 
+> If it's invalid, why don't you treat it as an error and return?
+> 
+
+Ok
+
+[...]
+> > +static struct mac_device_info *sun8i_dwmac_setup(void __iomem *ioaddr,
+> > +						 int mcbins,
+> > +						 int perfect_uc_entries,
+> > +						 int *synopsys_id)
+> > +{
+> > +	struct mac_device_info *mac;
+> > +
+> > +	mac = kzalloc(sizeof(const struct mac_device_info), GFP_KERNEL);
+> > +	if (!mac)
+> > +		return NULL;
+> 
+> Do you ever free that memory?
+> 
+
+Good catch, I believed that the "stmmac framework" would free it.
+I will send a fix for this memory leak.
+
+[...]
+> > diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+> > index 5ff6bc4..11db658 100644
+> > --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+> > +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_ethtool.c
+> > @@ -450,6 +450,9 @@ static void stmmac_ethtool_gregs(struct net_device *dev,
+> >  		for (i = 0; i < 22; i++)
+> >  			reg_space[i + 55] =
+> >  			    readl(priv->ioaddr + (DMA_BUS_MODE + (i * 4)));
+> > +	} else if (priv->plat->has_sun8i) {
+> 
+> Surely we don't want to add a new flag to the common structure for
+> every new platform supported.
+> 
+> Can't you base that on the compatible instead?
+
+This part will be fixed with the debugfs speaked early in the mail.
+
+But yes I have tried to avoid use of has_sun8i at maximum.
+
+> 
+> Thanks a lot for your work,
+> Maxime
+> 
+
+Thanks for the review
+
+Corentin Labbe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
