@@ -1,73 +1,74 @@
-From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Subject: [PATCH 2/2] mfd: axp20x: Add support for dts property
- "xpowers,master-mode"
-Date: Sat, 18 Feb 2017 21:11:32 +0100 (CET)
-Message-ID: <10a2231445e8ccbb83d54bb84d91b4d61b4d642f.1487428239.git.rask@formelder.dk>
-References: <cover.1487428238.git.rask@formelder.dk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1487428238.git.rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Sat, 18 Feb 2017 23:54:35 +0100
+Message-ID: <20170218225435.GA4693@amd>
+References: <cover.1482936802.git.hns@goldelico.com>
+ <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
+ <20170128193342.GB38136@dtor-ws>
+ <1F6355E1-A5E3-41A6-908F-619A15581BEF@goldelico.com>
+ <20170217204041.GE13050@dtor-ws>
+ <20170218091526.GC8937@amd>
+ <61F3C580-4BF2-4EE6-9DEC-FB8634434EC0@goldelico.com>
+ <20170218180811.GB9377@amd>
+ <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>Benjamin Tissoires <be>
 List-Id: devicetree@vger.kernel.org
 
-commit b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
-was intended to fix the case where a board uses an AXP806 in slave mode,
-but the boot loader leaves it in master mode for lack of AXP806 support.
-But now the driver breaks on boards where the PMIC is operating in master
-mode. This patch lets the driver use the new device tree property
-"xpowers,master-mode" to set the correct operating mode for the board.
 
-Fixes: b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
-Signed-off-by: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
----
- drivers/mfd/axp20x.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 25115fe..0512900 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -31,6 +31,7 @@
- 
- #define AXP20X_OFF	0x80
- 
-+#define AXP806_REG_ADDR_EXT_ADDR_MASTER_MODE	0
- #define AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE	BIT(4)
- 
- static const char * const axp20x_model_names[] = {
-@@ -877,15 +878,19 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
- 	 * the these device addressing bits (in the upper 4 bits of the
- 	 * registers) match.
- 	 *
--	 * Since we only support an AXP806 chained to an AXP809 in slave
--	 * mode, and there isn't any existing hardware which uses AXP806
--	 * in master mode, or has 2 AXP806s in the same system, we can
--	 * just program the register address extension to the slave mode
--	 * address.
-+	 * By default we support an AXP806 chained to an AXP809 in slave
-+	 * mode. Boards which use an AXP806 in master mode can set the
-+	 * property "x-powers,master-mode" to override the default.
- 	 */
--	if (axp20x->variant == AXP806_ID)
--		regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
--			     AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE);
-+	if (axp20x->variant == AXP806_ID) {
-+		if (of_property_read_bool(axp20x->dev->of_node,
-+					  "x-powers,master-mode"))
-+			regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
-+				     AXP806_REG_ADDR_EXT_ADDR_MASTER_MODE);
-+		else
-+			regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
-+				     AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE);
-+	}
- 
- 	ret = regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
- 			  IRQF_ONESHOT | IRQF_SHARED | axp20x->irq_flags,
--- 
-2.10.2
+On Sat 2017-02-18 20:17:09, H. Nikolaus Schaller wrote:
+>=20
+> > Am 18.02.2017 um 19:08 schrieb Pavel Machek <pavel@ucw.cz>:
+> >=20
+> >>> And I agree that kernel should _not_ attempt rescaling itself, as it
+> >>> would lose precision.
+> >>=20
+> >> With an almost 1:1 mapping you won't loose precision.
+> >=20
+> > How do you propose to do that?
+>=20
+> something like
+>=20
+> xinput --set-prop --type=3Dfloat "TSC200X touchscreen" "Coordinate Transf=
+ormation Matrix"  1.00 0.00 0.00  0.00 1.00 0.00  0.00 0.00 1.00
+>=20
+> but I think it is the default of X11 if you use no coordinate transformat=
+ion at all.
+> And having the kernel to properly scale from ADC values to screen coordin=
+ates.
+>=20
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No. How do you propose doing rescaling in the kernel without loosing
+precision?
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlio0KsACgkQMOfwapXb+vKsYACff6JGCY0zAbp5649bNBUcEY6L
+vWEAoJFUan3+xi8HWWuWXl18BkBKTbzn
+=kABD
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
