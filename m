@@ -1,56 +1,74 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
- names, pre-calibration, flipping and rotation
-Date: Sat, 18 Feb 2017 19:08:11 +0100
-Message-ID: <20170218180811.GB9377@amd>
-References: <cover.1482936802.git.hns@goldelico.com>
- <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
- <20170128193342.GB38136@dtor-ws>
- <1F6355E1-A5E3-41A6-908F-619A15581BEF@goldelico.com>
- <20170217204041.GE13050@dtor-ws>
- <20170218091526.GC8937@amd>
- <61F3C580-4BF2-4EE6-9DEC-FB8634434EC0@goldelico.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Sat, 18 Feb 2017 18:08:44 +0000
+Message-ID: <20170218180844.GK21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <24d42948-a77d-445f-e3e9-ab595b0cfc3e@gmail.com>
+ <20170218092335.GI21222@n2100.armlinux.org.uk>
+ <e3260548-7fbc-31bc-0b2c-4c11c1e9a7c7@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <61F3C580-4BF2-4EE6-9DEC-FB8634434EC0@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>Benjamin Tissoires <be>
+In-Reply-To: <e3260548-7fbc-31bc-0b2c-4c11c1e9a7c7@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Feb 18, 2017 at 09:29:17AM -0800, Steve Longerbeam wrote:
+> On 02/18/2017 01:23 AM, Russell King - ARM Linux wrote:
+> >On Fri, Feb 17, 2017 at 05:12:44PM -0800, Steve Longerbeam wrote:
+> >>Hi Russell,
+> >>
+> >>I signed-off on this but after more review I'm not sure this is right.
+> >>
+> >>The CSI-2 receiver really has no control over frame rate. It's output
+> >>frame rate is the same as the rate that is delivered to it.
+> >>
+> >>So this subdev should either not implement these ops, or it should
+> >>refer them to the attached source subdev.
+> >
+> >Where in the V4L2 documentation does it say that is permissible?
+> >
+> 
+> https://www.linuxtv.org/downloads/v4l-dvb-apis-old/vidioc-subdev-g-frame-interval.html
+> 
+> "The frame interval only makes sense for sub-devices that can control the
+> frame period on their own. This includes, for instance, image sensors and TV
+> tuners. Sub-devices that don't support frame intervals must not implement
+> these ioctls."
 
---JP+T4n/bALQSJXh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That sounds clear - but the TV tuner example seems odd - the frame rate
+is determined at transmission time, not reception time.  Yes, it's
+possible to skip frames (which would be scaling) but you can't
+_control_ the frame rate per se.
 
-> > And I agree that kernel should _not_ attempt rescaling itself, as it
-> > would lose precision.
->=20
-> With an almost 1:1 mapping you won't loose precision.
+> >If you don't implement these, media-ctl fails to propagate _anything_
+> >to the next sink pad if you specify a frame rate, because media-ctl
+> >throws an error and exits immediately.
+> >
+> 
+> But I agree with you here. I think our only option is to ignore that
+> quoted requirement above and propagate [gs]_frame_interval all the way
+> to the CSI (which can control the frame rate via frame skipping).
 
-How do you propose to do that?
-									Pavel
+Sounds like something to tackle the media maintainers over - the
+documentation vs media-ctl seem to have different ideas on this
+point.
 
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---JP+T4n/bALQSJXh8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAliojYsACgkQMOfwapXb+vL0+ACfb2QPGxYXYTeARY4oPw20WaoR
-sRIAoJr///EzudhHOLoKSH6iEFrdypvq
-=Vi5L
------END PGP SIGNATURE-----
-
---JP+T4n/bALQSJXh8--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
