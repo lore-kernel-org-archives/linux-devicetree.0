@@ -1,53 +1,73 @@
-From: Rask Ingemann Lambertsen <rask@formelder.dk>
-Subject: [PATCH 1/2] dts: mfd: axp20x: Add xpowers,master-mode property for
- AXP806 PMICs
-Date: Sat, 18 Feb 2017 20:51:18 +0100 (CET)
-Message-ID: <112c3e4aa625ce2c550ae7ae4446a61d058455b5.1487428238.git.rask@formelder.dk>
+From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Subject: [PATCH 2/2] mfd: axp20x: Add support for dts property
+ "xpowers,master-mode"
+Date: Sat, 18 Feb 2017 21:11:32 +0100 (CET)
+Message-ID: <10a2231445e8ccbb83d54bb84d91b4d61b4d642f.1487428239.git.rask@formelder.dk>
 References: <cover.1487428238.git.rask@formelder.dk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1487428238.git.rask@formelder.dk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1487428238.git.rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 commit b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
 was intended to fix the case where a board uses an AXP806 in slave mode,
 but the boot loader leaves it in master mode for lack of AXP806 support.
 But now the driver breaks on boards where the PMIC is operating in master
-mode. To let the device tree describe which mode of operation is needed,
-this patch introduces a new property "xpowers,master-mode".
+mode. This patch lets the driver use the new device tree property
+"xpowers,master-mode" to set the correct operating mode for the board.
 
 Fixes: b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
-Signed-off-by: Rask Ingemann Lambertsen <rask@formelder.dk>
+Signed-off-by: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/axp20x.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/axp20x.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index 86ae540..9af3457 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -29,6 +29,9 @@ Optional properties:
- 		  regulator to drive the OTG VBus, rather then as an input pin
- 		  which signals whether the board is driving OTG VBus or not.
+diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+index 25115fe..0512900 100644
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -31,6 +31,7 @@
  
-+- x-powers,master-mode: Boolean (axp806 only). Set this when the PMIC is
-+			wired for master mode. The default is slave mode.
-+
- - <input>-supply: a phandle to the regulator supply node. May be omitted if
- 		  inputs are unregulated, such as using the IPSOUT output
- 		  from the PMIC.
+ #define AXP20X_OFF	0x80
+ 
++#define AXP806_REG_ADDR_EXT_ADDR_MASTER_MODE	0
+ #define AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE	BIT(4)
+ 
+ static const char * const axp20x_model_names[] = {
+@@ -877,15 +878,19 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
+ 	 * the these device addressing bits (in the upper 4 bits of the
+ 	 * registers) match.
+ 	 *
+-	 * Since we only support an AXP806 chained to an AXP809 in slave
+-	 * mode, and there isn't any existing hardware which uses AXP806
+-	 * in master mode, or has 2 AXP806s in the same system, we can
+-	 * just program the register address extension to the slave mode
+-	 * address.
++	 * By default we support an AXP806 chained to an AXP809 in slave
++	 * mode. Boards which use an AXP806 in master mode can set the
++	 * property "x-powers,master-mode" to override the default.
+ 	 */
+-	if (axp20x->variant == AXP806_ID)
+-		regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
+-			     AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE);
++	if (axp20x->variant == AXP806_ID) {
++		if (of_property_read_bool(axp20x->dev->of_node,
++					  "x-powers,master-mode"))
++			regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
++				     AXP806_REG_ADDR_EXT_ADDR_MASTER_MODE);
++		else
++			regmap_write(axp20x->regmap, AXP806_REG_ADDR_EXT,
++				     AXP806_REG_ADDR_EXT_ADDR_SLAVE_MODE);
++	}
+ 
+ 	ret = regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
+ 			  IRQF_ONESHOT | IRQF_SHARED | axp20x->irq_flags,
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
