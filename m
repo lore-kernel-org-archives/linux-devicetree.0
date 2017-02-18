@@ -1,65 +1,42 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [RFC 0/4] iio: trigger: Add OF support and GPIO based trigger
-Date: Sat, 18 Feb 2017 19:07:12 +0000
-Message-ID: <3a2d79be-d39d-10d8-6ff4-d8aea9560263@kernel.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 4/4] iio: trigger: add GPIO trigger
+Date: Sat, 18 Feb 2017 19:19:07 +0000
+Message-ID: <3e2653fe-874c-d761-b274-ffe889df18a7@kernel.org>
 References: <1487347429-31761-1-git-send-email-fabrice.gasnier@st.com>
- <CAEnQRZDey70TR=nU4rpFyVMqDuUFAGc2SpNCmraUO5x29n1+ow@mail.gmail.com>
+ <1487347429-31761-5-git-send-email-fabrice.gasnier@st.com>
+ <06f74b54-91fa-31c5-f015-52a6524059ef@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAEnQRZDey70TR=nU4rpFyVMqDuUFAGc2SpNCmraUO5x29n1+ow@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Baluta <daniel.baluta@gmail.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, benjamin.gaignard@linaro.org, Lars-Peter Clausen <lars@metafoo.de>, alexandre.torgue@st.com, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, linux@armlinux.org.uk, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, mcoquelin.stm32@gmail.com, Hartmut Knaack <knaack.h@gmx.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <06f74b54-91fa-31c5-f015-52a6524059ef-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/02/17 16:23, Daniel Baluta wrote:
-> On Fri, Feb 17, 2017 at 6:03 PM, Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
->> Hi,
->>
->> I send this as an RFC, as I'm digging to try to get as generic
->> as possible GPIO based trigger support, as discussed earlier in
->> other patchset "Add EXTI GPIO trigger support to STM32 ADC":
->> https://www.spinics.net/lists/arm-kernel/msg559091.html
->>
->> Following various comments on this, I sent this RFC to address two
->> topics, that I see as possible prerequisite:
->> - Add trigger OF support
->> - GPIO based trigger
+On 17/02/17 16:16, Lars-Peter Clausen wrote:
+> On 02/17/2017 05:03 PM, Fabrice Gasnier wrote:
+>> GPIOs can be used to generate triggers for any IIO device.
+>> Introduce generic GPIO trigger driver. It offers some options
+>> to tune polarity (e.g. rising/falling edge), and label so trigger
+>> name may be customized.
+>> By default, gpio triggers will be named gpiotrigX, where X is gpio
+>> number as returned by desc_to_gpio() call.
+>> Rising edge is selected if polarity isn't set.
 > 
-> I wonder if we could use configfs to create and configure
-> a GPIO based trigger.
-> 
-> You should just create another trigger type (look into
-> drivers/iio/trigger/iio-trig-hrtimer.c)
-> the userspace API will look like this:
-> 
-> # cd /config/iio/triggers
-> # insert your iio-trig-gpio
-> # setup the global parameters for the GPIO (the local params can be
-> set via dts/acpi)
-> # cd /config/iio/trigers/gpios/
-> 
-> #mkdir t1
-> 
-> And this will create an io-gpio-trigger named t1.
-> 
-> Not sure this fits your usecase but would be nice to consider.
-> 
-It might potentially make sense to support both DT or similar instantiation and
-instantiation from userspace. Primary route seems to me to always be DT based
-though as we are dealing with wiring...
+> If you want to use the GPIO only as an interrupt, just use it as an
+> interrupt directly, no need to go the route via the GPIO.
+Absolutely.  The majority of the bindings will then just become standard
+interrupt bindings and will be effectively handled for you.
 
-So I'm unconvinced on the configfs option, but might be talked round.
-> thanks,
-> Daniel.
-> 
+Please work to extend the existing interrupt trigger driver rather than adding
+this new one.  That one actually started as a gpio trigger then got
+generalised into a interrupt trigger later so lets not do that again ;)
+
+Jonathan
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
