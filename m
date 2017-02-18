@@ -1,111 +1,119 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Fri, 17 Feb 2017 17:12:44 -0800
-Message-ID: <24d42948-a77d-445f-e3e9-ab595b0cfc3e@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Sat, 18 Feb 2017 04:22:33 +0100
+Message-ID: <20170218032233.3qh5xdjbx5kkq5hm@earth>
+References: <cover.1482936802.git.hns@goldelico.com>
+ <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
+ <20170128193342.GB38136@dtor-ws>
+ <1F6355E1-A5E3-41A6-908F-619A15581BEF@goldelico.com>
+ <20170217204041.GE13050@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487211578-11360-30-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5d3kcryff2vvmr7k"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170217204041.GE13050@dtor-ws>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Petr
 List-Id: devicetree@vger.kernel.org
 
 
+--5d3kcryff2vvmr7k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 02/15/2017 06:19 PM, Steve Longerbeam wrote:
-> From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
->
-> Setting and getting frame rates is part of the negotiation mechanism
-> between subdevs.  The lack of support means that a frame rate at the
-> sensor can't be negotiated through the subdev path.
->
-> Add support at MIPI CSI2 level for handling this part of the
-> negotiation.
->
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Hi,
 
+On Fri, Feb 17, 2017 at 12:40:41PM -0800, Dmitry Torokhov wrote:
+> > AFAIK there is no mainline board using the DT except ours (and the upco=
+ming
+> > OMAP5-Pyra), so we shouldn't care too much. If you prefer, you can remo=
+ve this
+> > compatibility property. We don't need it for our devices.
 
-Hi Russell,
+$ cd linux.git/arch
+$ git grep -l tsc2004
+arm/boot/dts/imx6qdl-nit6xlite.dtsi
+arm/boot/dts/imx7d-nitrogen7.dts
+arm/boot/dts/logicpd-torpedo-37xx-devkit.dts
+arm/boot/dts/omap4-var-som-om44.dtsi
+$ git grep -l tsc2005
+arm/boot/dts/omap3-n900.dts
+$ git grep -l tsc2007
+arm/boot/dts/imx28-tx28.dts
+arm/boot/dts/imx35-eukrea-cpuimx35.dtsi
+arm/boot/dts/imx51-eukrea-cpuimx51.dtsi
+arm/boot/dts/imx53-tx53-x03x.dts
+arm/boot/dts/imx6qdl-tx6.dtsi
+arm/boot/dts/imx6ul-tx6ul.dtsi
+arm/boot/dts/omap3-gta04.dtsi
+sh/boards/mach-ecovec24/setup.c
 
-I signed-off on this but after more review I'm not sure this is right.
+> You seem to be treating DT data as something very fluid, which is wrong.
+> You need to treat it as a firmware, unlikely to change once device is
+> shipped. Unlike legacy platform data, the fact that DTS files are not
+> present in mainline does not mean that we can ignore such users and
+> change behavior at will.
+>=20
+> That said, if driver behavior is out of line from the subsystem
+> expectations, we need to fix it.
+>=20
+> =20
+> > That the function name is wrong is a second issue and this double negat=
+ion might
+> > confuse a litte.
+> >=20
+> > Please test on a real device if the patched driver reports pressure now=
+ (unless
+> > ti,report-resistance is specified).
+>=20
+> I unfortunately can not test this driver as I do not have the hardware.
+> So all my observations are from code and data sheets.
+>=20
+> That said, what is the values emitted as ABS_PRESSURE when finger is not
+> touching the device, barely touching the device, or pressing firmly?
+> It seems that between TSC2007, TSC2004, TSC2005, and ADS7846, we have
+> confusion as to what is being reported.
 
-The CSI-2 receiver really has no control over frame rate. It's output
-frame rate is the same as the rate that is delivered to it.
+As far as I can see all calculate Rtouch and ADS7846 reports
+(Rmax - Rtouch), which looks sensible.
 
-So this subdev should either not implement these ops, or it should
-refer them to the attached source subdev.
+> I am adding a few more folks to the CC so we can try and soft this out.
+> Sebastian, Pali, Pavel, any input here?
 
-Steve
+I think tsc200x works, since usually userspace is Xorg and I think
+it only cares for x/y coordinates + boolean pressure. Since
+no-pressure is correctly reported as 0, everything works as
+expected. I currently don't have X running on my N900 due some
+omapdrm bug, so I can't test this, sorry.
 
-> ---
->  drivers/staging/media/imx/imx6-mipi-csi2.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
-> index 23dca80..c62f14e 100644
-> --- a/drivers/staging/media/imx/imx6-mipi-csi2.c
-> +++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
-> @@ -34,6 +34,7 @@ struct csi2_dev {
->  	struct v4l2_subdev      sd;
->  	struct media_pad       pad[CSI2_NUM_PADS];
->  	struct v4l2_mbus_framefmt format_mbus;
-> +	struct v4l2_fract      frame_interval;
->  	struct clk             *dphy_clk;
->  	struct clk             *cfg_clk;
->  	struct clk             *pix_clk; /* what is this? */
-> @@ -397,6 +398,30 @@ static int csi2_set_fmt(struct v4l2_subdev *sd,
->  	return 0;
->  }
->
-> +static int csi2_g_frame_interval(struct v4l2_subdev *sd,
-> +				 struct v4l2_subdev_frame_interval *fi)
-> +{
-> +	struct csi2_dev *csi2 = sd_to_dev(sd);
-> +
-> +	fi->interval = csi2->frame_interval;
-> +
-> +	return 0;
-> +}
-> +
-> +static int csi2_s_frame_interval(struct v4l2_subdev *sd,
-> +				 struct v4l2_subdev_frame_interval *fi)
-> +{
-> +	struct csi2_dev *csi2 = sd_to_dev(sd);
-> +
-> +	/* Output pads mirror active input pad, no limits on input pads */
-> +	if (fi->pad != CSI2_SINK_PAD)
-> +		fi->interval = csi2->frame_interval;
-> +
-> +	csi2->frame_interval = fi->interval;
-> +
-> +	return 0;
-> +}
-> +
->  /*
->   * retrieve our pads parsed from the OF graph by the media device
->   */
-> @@ -430,6 +455,8 @@ static struct v4l2_subdev_core_ops csi2_core_ops = {
->
->  static struct v4l2_subdev_video_ops csi2_video_ops = {
->  	.s_stream = csi2_s_stream,
-> +	.g_frame_interval = csi2_g_frame_interval,
-> +	.s_frame_interval = csi2_s_frame_interval,
->  };
->
->  static struct v4l2_subdev_pad_ops csi2_pad_ops = {
->
+I suggest to put the resistance vs pressure thing in its own patch,
+that also fixes tsc200x-core and merge it to linux-next after the
+merge window.
 
--- 
-Steve Longerbeam | Senior Embedded Engineer, ESD Services
-Mentor Embedded(tm) | 46871 Bayside Parkway, Fremont, CA 94538
-P 510.354.5838 | M 408.410.2735
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- Sebastian
+
+--5d3kcryff2vvmr7k
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlinvfYACgkQ2O7X88g7
++pr1VQ/+NMIi+Md4Bn6yVkswG/Sd+KFLDtCDYylEoaaYxyP4uy+NcmJfBfDyUKeI
+UBjuvPAE+Aav6oLbYCIaN+uHw1eyG2Z43wPIb1xe9P0jYImcPGcqhXZzrS7CVeQH
+CjoKbt/0gv17YAZHSO/mqNKBiu8n1kUB7rY25AkVesLPKm9vnTA6mucn9o1I/BWF
+iPkfKoyfg0hWraR0ZL7YLu8Ha9Juu0aeDOWhd2Mk5Bjz5/7B1qnXAwEhzTQzmcW7
+Edzvp28ag8aPKGIzNL+kw5H8FHnPYEg5IdFN/Apwa+MUhJVCP+ghY5m3W3JiqDuO
+CW6oCDDxO1PDHEZoULyY/+00u1BbrdQi297nRrzgcX2RUEXpQIwBEtmLfbNikkAE
+lC0n4ovQo6Mh53ni0STh9Yo6AzPzr8COyRWRt59fg4Oti+mlNq5o3cMCAn09BgqR
+f1Szb8ix5BzVJdXFP49tjAl2wOKvdMmOeMfy0Rw6ZE8xb2K5+A9T4Q4jEZQy+NLA
+zW5iGwjCx5ZT/IutMqeMYDQgYSLEztaK617nCInFgNeCNx0IvYax5cnNfy4FXPVI
+j885zZisWtVoU7OPqH+0gwkXDO0CYwdkFWhL3iRV6GZiBoRIp48mWdy3A77saslJ
+lm+tMqm6Vd6/Dmy/YIV3M/U5jQh529MQVfuPI+3XbDgaNbQGX4c=
+=dLlo
+-----END PGP SIGNATURE-----
+
+--5d3kcryff2vvmr7k--
