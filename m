@@ -1,58 +1,65 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
-Date: Sat, 18 Feb 2017 19:34:10 +0100
-Message-ID: <48907a31-eaa6-27e2-633f-d36de521e868@tronnes.org>
-References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
- <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [RFC 0/4] iio: trigger: Add OF support and GPIO based trigger
+Date: Sat, 18 Feb 2017 19:07:12 +0000
+Message-ID: <3a2d79be-d39d-10d8-6ff4-d8aea9560263@kernel.org>
+References: <1487347429-31761-1-git-send-email-fabrice.gasnier@st.com>
+ <CAEnQRZDey70TR=nU4rpFyVMqDuUFAGc2SpNCmraUO5x29n1+ow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487280047-29608-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAEnQRZDey70TR=nU4rpFyVMqDuUFAGc2SpNCmraUO5x29n1+ow@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Baluta <daniel.baluta@gmail.com>, Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, benjamin.gaignard@linaro.org, Lars-Peter Clausen <lars@metafoo.de>, alexandre.torgue@st.com, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, linux@armlinux.org.uk, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, mcoquelin.stm32@gmail.com, Hartmut Knaack <knaack.h@gmx.de>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
+On 17/02/17 16:23, Daniel Baluta wrote:
+> On Fri, Feb 17, 2017 at 6:03 PM, Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>> Hi,
+>>
+>> I send this as an RFC, as I'm digging to try to get as generic
+>> as possible GPIO based trigger support, as discussed earlier in
+>> other patchset "Add EXTI GPIO trigger support to STM32 ADC":
+>> https://www.spinics.net/lists/arm-kernel/msg559091.html
+>>
+>> Following various comments on this, I sent this RFC to address two
+>> topics, that I see as possible prerequisite:
+>> - Add trigger OF support
+>> - GPIO based trigger
+> 
+> I wonder if we could use configfs to create and configure
+> a GPIO based trigger.
+> 
+> You should just create another trigger type (look into
+> drivers/iio/trigger/iio-trig-hrtimer.c)
+> the userspace API will look like this:
+> 
+> # cd /config/iio/triggers
+> # insert your iio-trig-gpio
+> # setup the global parameters for the GPIO (the local params can be
+> set via dts/acpi)
+> # cd /config/iio/trigers/gpios/
+> 
+> #mkdir t1
+> 
+> And this will create an io-gpio-trigger named t1.
+> 
+> Not sure this fits your usecase but would be nice to consider.
+> 
+It might potentially make sense to support both DT or similar instantiation and
+instantiation from userspace. Primary route seems to me to always be DT based
+though as we are dealing with wiring...
 
-Den 16.02.2017 22.20, skrev Stefan Wahren:
-> Since commit e2474541032d ("bcm2835: Fix hang for writing messages
-> larger than 16 bytes") the interrupt handler is prone to a possible
-> NULL pointer dereference. This could happen if an interrupt fires
-> before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
-> on the RPi 3. Even this is an unexpected behavior the driver must
-> handle that with an error instead of a crash.
->
-> CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-> CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->   drivers/i2c/busses/i2c-bcm2835.c |    4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
-> index c3436f6..10e39c8 100644
-> --- a/drivers/i2c/busses/i2c-bcm2835.c
-> +++ b/drivers/i2c/busses/i2c-bcm2835.c
-> @@ -195,7 +195,9 @@ static irqreturn_t bcm2835_i2c_isr(int this_irq, void *data)
->   	}
->   
->   	if (val & BCM2835_I2C_S_DONE) {
-> -		if (i2c_dev->curr_msg->flags & I2C_M_RD) {
-> +		if (!i2c_dev->curr_msg) {
-> +			dev_err(i2c_dev->dev, "Got unexpected interrupt (from firmware?)\n");
-> +		} else if (i2c_dev->curr_msg->flags & I2C_M_RD) {
->   			bcm2835_drain_rxfifo(i2c_dev);
->   			val = bcm2835_i2c_readl(i2c_dev, BCM2835_I2C_S);
->   		}
-
-Thanks,
-
-Acked-by: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So I'm unconvinced on the configfs option, but might be talked round.
+> thanks,
+> Daniel.
+> 
