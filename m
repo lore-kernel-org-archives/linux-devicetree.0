@@ -1,42 +1,70 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 4/4] iio: trigger: add GPIO trigger
-Date: Sat, 18 Feb 2017 19:19:07 +0000
-Message-ID: <3e2653fe-874c-d761-b274-ffe889df18a7@kernel.org>
-References: <1487347429-31761-1-git-send-email-fabrice.gasnier@st.com>
- <1487347429-31761-5-git-send-email-fabrice.gasnier@st.com>
- <06f74b54-91fa-31c5-f015-52a6524059ef@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <06f74b54-91fa-31c5-f015-52a6524059ef-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
+Date: Sat, 18 Feb 2017 20:17:09 +0100
+Message-ID: <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com>
+References: <cover.1482936802.git.hns@goldelico.com> <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com> <20170128193342.GB38136@dtor-ws> <1F6355E1-A5E3-41A6-908F-619A15581BEF@goldelico.com> <20170217204041.GE13050@dtor-ws> <20170218091526.GC8937@amd> <61F3C580-4BF2-4EE6-9DEC-FB8634434EC0@goldelico.com> <20170218180811.GB9377@amd>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: multipart/signed; boundary="Apple-Mail=_4F7BA00B-D589-44E0-8928-19071F3C6371"; protocol="application/pgp-signature"; micalg=pgp-sha256
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170218180811.GB9377@amd>
+Sender: linux-input-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjam>
 List-Id: devicetree@vger.kernel.org
 
-On 17/02/17 16:16, Lars-Peter Clausen wrote:
-> On 02/17/2017 05:03 PM, Fabrice Gasnier wrote:
->> GPIOs can be used to generate triggers for any IIO device.
->> Introduce generic GPIO trigger driver. It offers some options
->> to tune polarity (e.g. rising/falling edge), and label so trigger
->> name may be customized.
->> By default, gpio triggers will be named gpiotrigX, where X is gpio
->> number as returned by desc_to_gpio() call.
->> Rising edge is selected if polarity isn't set.
-> 
-> If you want to use the GPIO only as an interrupt, just use it as an
-> interrupt directly, no need to go the route via the GPIO.
-Absolutely.  The majority of the bindings will then just become standard
-interrupt bindings and will be effectively handled for you.
 
-Please work to extend the existing interrupt trigger driver rather than adding
-this new one.  That one actually started as a gpio trigger then got
-generalised into a interrupt trigger later so lets not do that again ;)
+--Apple-Mail=_4F7BA00B-D589-44E0-8928-19071F3C6371
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-Jonathan
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Am 18.02.2017 um 19:08 schrieb Pavel Machek <pavel@ucw.cz>:
+>=20
+>>> And I agree that kernel should _not_ attempt rescaling itself, as it
+>>> would lose precision.
+>>=20
+>> With an almost 1:1 mapping you won't loose precision.
+>=20
+> How do you propose to do that?
+
+something like
+
+xinput --set-prop --type=3Dfloat "TSC200X touchscreen" "Coordinate =
+Transformation Matrix"  1.00 0.00 0.00  0.00 1.00 0.00  0.00 0.00 1.00
+
+but I think it is the default of X11 if you use no coordinate =
+transformation at all.
+And having the kernel to properly scale from ADC values to screen =
+coordinates.
+
+BR,
+Nikolaus
+
+
+--Apple-Mail=_4F7BA00B-D589-44E0-8928-19071F3C6371
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYqJ23AAoJEIl79TGLgAm6CH0P/iM0Z/rF9pXb4SfHXbz4pVKw
+yWrnNohq7Bp3X0GDdfhsWt0mlt+RQ78PTx4Kx5BXApDxzoxgHjwtR1SnqEJ9Ppvy
+OUvxP2l3jFc/YLyRoDok6meMEcmyaHswhR20hVT62mOaSMMzFO7ZUun9VI/y9y8T
+TBocsL8nT1tX3FX2kcnN55Fuy6AXNzGiL2Oavxci2+fN8k2oh9Fs05xoJ/d8bSgG
+5ehu9/pnhFwOOV69xetrUgQppmGRewwMFaDRJS8R6mR8zIwkMalhvDYP7VeQfu1O
+gvld3u3R/Wch1TssQXqY09+1MBYADbjr+g47XYxtQn5wWCUhe5P31Jvd6TGAoLo0
+ykVgipyLi8Gw7DOQfk6gwLQjeYH04ITKLVWQk5UOiuzzBMTAfkoJktGOY0jvh+9k
+j7pRmmOTjYRT8dWDiaicCMzvxYWexNNiCofOQ4gz9FBjyJ5aTTYotUfog++ttVy/
+kdyyxSMdN8kinWPDCy1p76BsjPGG922VkUXp6oCcAo3dSsz8vsm0aNmka3i+drqR
+9JROWWfoILQ996YN9HFLcD9Sc8ueDPGEYnAWUdD8bzkxhev1Q00MiTZXT161gJqx
+7dme7TsnM4xxX7vyLCL385sMakAKezXRyKYpRT+YMShHfKo3hL2D2HIBVak6OC9j
+WrSIi1tLVontrGaE+ut3
+=XF5e
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_4F7BA00B-D589-44E0-8928-19071F3C6371--
