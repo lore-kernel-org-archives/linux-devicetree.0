@@ -1,74 +1,412 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
- names, pre-calibration, flipping and rotation
-Date: Sat, 18 Feb 2017 23:54:35 +0100
-Message-ID: <20170218225435.GA4693@amd>
-References: <cover.1482936802.git.hns@goldelico.com>
- <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
- <20170128193342.GB38136@dtor-ws>
- <1F6355E1-A5E3-41A6-908F-619A15581BEF@goldelico.com>
- <20170217204041.GE13050@dtor-ws>
- <20170218091526.GC8937@amd>
- <61F3C580-4BF2-4EE6-9DEC-FB8634434EC0@goldelico.com>
- <20170218180811.GB9377@amd>
- <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: hisilicon: add dts files for
+ hi3798cv200-poplar board
+Date: Sun, 19 Feb 2017 00:22:43 +0100
+Message-ID: <9f2ee9e4-964a-35e8-6783-c78f7fb93a3e@suse.de>
+References: <1486624027-15156-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>Benjamin Tissoires <be>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486624027-15156-1-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jiancheng,
 
---EeQfGwPcQSOJBaQU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am 09.02.2017 um 08:07 schrieb Jiancheng Xue:
+> Add basic dts files for hi3798cv200-poplar board. Poplar is the
+> first development board compliant with the 96Boards Enterprise
+> Edition TV Platform specification. The board features the
+> Hi3798CV200 with an integrated quad-core 64-bit ARM Cortex A53
+> processor and high performance Mali T720 GPU.
+> 
+> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Reviewed-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-On Sat 2017-02-18 20:17:09, H. Nikolaus Schaller wrote:
->=20
-> > Am 18.02.2017 um 19:08 schrieb Pavel Machek <pavel@ucw.cz>:
-> >=20
-> >>> And I agree that kernel should _not_ attempt rescaling itself, as it
-> >>> would lose precision.
-> >>=20
-> >> With an almost 1:1 mapping you won't loose precision.
-> >=20
-> > How do you propose to do that?
->=20
-> something like
->=20
-> xinput --set-prop --type=3Dfloat "TSC200X touchscreen" "Coordinate Transf=
-ormation Matrix"  1.00 0.00 0.00  0.00 1.00 0.00  0.00 0.00 1.00
->=20
-> but I think it is the default of X11 if you use no coordinate transformat=
-ion at all.
-> And having the kernel to properly scale from ADC values to screen coordin=
-ates.
->=20
+Thanks for this patch! Some comments below. Do you have instructions for
+how to test? In my tries I so far only got resets like for example:
 
-No. How do you propose doing rescaling in the kernel without loosing
-precision?
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+fastboot# bootm 0x01000000 - 0x20000000
+## Booting kernel from Legacy Image at 01000000 ...
+   Image Name:   linux-next
+   Image Type:   AArch64 Linux Kernel Image (uncompressed)
+   Data Size:    8741376 Bytes = 8.3 MiB
+   Load Address: 02000000
+   Entry Point:  02000000
+## Flattened Device Tree blob at 20000000
+   Booting using the fdt blob at 0x20000000
+   Loading Kernel Image from 0x16777280 to 0x33554432 ... OK
+OK
 
---EeQfGwPcQSOJBaQU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Starting kernel ...
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlio0KsACgkQMOfwapXb+vKsYACff6JGCY0zAbp5649bNBUcEY6L
-vWEAoJFUan3+xi8HWWuWXl18BkBKTbzn
-=kABD
------END PGP SIGNATURE-----
+*** irq: undefined instruction
+undefined instruction
+pc : [<600001d3>]          lr : [<00c661ec>]
+sp : 00bfffb8  ip : 00000036     fp : 00000000
+r10: 00000000  r9 : 00000000     r8 : 00000000
+r7 : 00000080  r6 : 005fffc4     r5 : f36e6f75  r4 : 00000000
+r3 : 0000001e  r2 : 00000100     r1 : 00000000  r0 : 00000000
+Flags: nzcv  IRQs off  FIQs off  Mode UK12_32
+Resetting CPU ...
 
---EeQfGwPcQSOJBaQU--
+resetting ...
+
+Does U-Boot need to be updated for this to work?
+
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> index 7df79a7..7d90bf1 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -1,5 +1,9 @@
+>  Hisilicon Platforms Device Tree Bindings
+>  ----------------------------------------------------
+> +Hi3798cv200 Poplar Board
+> +Required root node properties:
+> +	- compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
+> +
+
+Shouldn't this rather be "tocoding,poplar", "hisilicon,hi3798cv200"?
+
+linux-next.git already has Hi3660 here, so you'll need to rebase.
+
+Also, theoretically bindings documentation should be in a separate,
+preceding patch.
+
+>  Hi4511 Board
+>  Required root node properties:
+>  	- compatible = "hisilicon,hi3620-hi4511";
+> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
+> index c8b8f80..96202fe 100644
+> --- a/arch/arm64/boot/dts/hisilicon/Makefile
+> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
+> @@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
+>  dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
+>  dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
+>  dtb-$(CONFIG_ARCH_HISI) += hip07-d05.dtb
+> +dtb-$(CONFIG_ARCH_HISI) += hi3798cv200-poplar.dtb
+
+Please keep this sorted alphabetically.
+
+>  
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> new file mode 100644
+> index 0000000..4e2b1d1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+> @@ -0,0 +1,169 @@
+> +/*
+> + * DTS File for HiSilicon Poplar Development Board
+> + *
+> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "hi3798cv200.dtsi"
+> +
+> +/ {
+> +	model = "HiSilicon Poplar Development Board";
+
+Ditto: HiSilicon?
+
+> +	compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x000000000 0x00000000 0x00000000 0x80000000>;
+
+First one has one zero too much.
+
+> +	};
+> +
+> +	soc {
+[...]
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "ok";
+
+I believe the canonical form is "okay".
+
+> +};
+> +
+> +&uart2 {
+> +	status = "ok";
+> +	label = "LS-UART0";
+> +};
+> +/* No optional LS-UART1 on Low Speed Expansion Connector. */
+> +
+> +&i2c0 {
+> +	status = "ok";
+> +	label = "LS-I2C0";
+> +};
+> +
+> +&i2c2 {
+> +	status = "ok";
+> +	label = "LS-I2C1";
+> +};
+> +
+> +&spi0 {
+> +	status = "ok";
+> +	label = "LS-SPI0";
+> +};
+> +
+> +&gpio1 {
+> +	status = "ok";
+> +	gpio-line-names = "LS-GPIO-E",	"",
+> +			  "",		"",
+> +			  "",		"LS-GPIO-F",
+> +			  "",		"LS-GPIO-J";
+> +};
+> +
+> +&gpio2 {
+> +	status = "ok";
+> +	gpio-line-names = "LS-GPIO-H",	"LS-GPIO-I",
+> +			  "LS-GPIO-L",	"LS-GPIO-G",
+> +			  "LS-GPIO-K",	"",
+> +			  "",		"";
+> +};
+> +
+> +&gpio3 {
+> +	status = "ok";
+> +	gpio-line-names = "",		"",
+> +			  "",		"",
+> +			  "LS-GPIO-C",	"",
+> +			  "",		"LS-GPIO-B";
+> +};
+> +
+> +&gpio4 {
+> +	status = "ok";
+> +	gpio-line-names = "",		"",
+> +			  "",		"",
+> +			  "",		"LS-GPIO-D",
+> +			  "",		"";
+> +};
+> +
+> +&gpio5 {
+> +	status = "ok";
+> +	gpio-line-names = "",		"USER-LED-1",
+> +			  "USER-LED-2",	"",
+> +			  "",		"LS-GPIO-A",
+> +			  "",		"";
+> +};
+> +
+> +&gpio6 {
+> +	status = "ok";
+> +	gpio-line-names = "",		"",
+> +			  "",		"USER-LED-0",
+> +			  "",		"",
+> +			  "",		"";
+> +};
+> +
+> +&gpio10 {
+> +	status = "ok";
+> +	gpio-line-names = "",		"",
+> +			  "",		"",
+> +			  "",		"",
+> +			  "USER-LED-3",	"";
+> +};
+> +
+> +&gmac0 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	phy-handle = <&eth_phy1>;
+> +	phy-mode = "rgmii";
+> +	hisilicon,phy-reset-delays-us = <10000 10000 30000>;
+
+> +	status = "ok";
+
+Move this to the top for consistency?
+
+> +
+> +	eth_phy1: phy@3{
+
+Space before brace missing.
+
+> +		reg = <3>;
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> new file mode 100644
+> index 0000000..ae3ce6d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> @@ -0,0 +1,413 @@
+> +/*
+> + * DTS File for HiSilicon Hi3798cv200 SOC.
+
+"SoC"?
+
+> + *
+> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include <dt-bindings/clock/histb-clock.h>
+> +#include <dt-bindings/reset/ti-syscon.h>
+
+Sort alphabetically?
+
+> +
+> +/ {
+> +	compatible = "hisilicon,hi3798cv200";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+
+Nit: Elsewhere I've seen device_type before compatible?
+
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu@1 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu@2 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+> +			reg = <0x0 0x2>;
+> +			enable-method = "psci";
+> +		};
+> +
+> +		cpu@3 {
+> +			compatible = "arm,cortex-a53";
+> +			device_type = "cpu";
+> +			reg = <0x0 0x3>;
+> +			enable-method = "psci";
+> +		};
+> +	};
+> +
+> +	gic: interrupt-controller@f1001000 {
+> +		compatible = "arm,gic-400";
+> +		reg = <0x0 0xf1001000 0x0 0x1000>,  /*GICD*/
+> +		      <0x0 0xf1002000 0x0 0x100>;   /*GICC*/
+
+Please leave spaces inside the comments for readability.
+
+Are you sure about the size of the second region? And are there really
+only two, not four? (1k, 2k, 2k, 2k elsewhere [0])
+
+[0]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-January/480590.html
+
+> +		#address-cells = <0>;
+
+Unneeded since there are no subnodes?
+
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+
+No interrupts property with PPI 9 here?
+
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x00000000 0x0 0xffffffff>;
+
+ranges = <0x0 0x0 0x00000000 0xffffffff>? (addr, parent addr, size)
+
+> +
+> +		crg: clock-reset-controller@f8a22000 {
+> +			compatible = "hisilicon,hi3798cv200-crg", "simple-mfd";
+> +			reg = <0xf8a22000 0x1000>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <2>;
+> +
+> +			gmacphyrst: reset-controller {
+> +				compatible = "ti,syscon-reset";
+> +				reset-cells = <1>;
+> +				ti,reset-bits = <
+> +					0xcc 12 0xcc 12 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)  /* 0: gmac0-phy-rst */
+> +					0xcc 13 0xcc 13 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)  /* 1: gmac1-phy-rst */
+> +				>;
+
+Use <>, <> tuple syntax for the two lines instead?
+
+> +			};
+> +		};
+[snip]
+
+Regards,
+Andreas
+
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
