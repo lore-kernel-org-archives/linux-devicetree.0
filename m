@@ -1,110 +1,48 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
- names, pre-calibration, flipping and rotation
-Date: Sat, 18 Feb 2017 10:15:27 +0100
-Message-ID: <20170218091526.GC8937@amd>
-References: <cover.1482936802.git.hns@goldelico.com>
- <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com>
- <20170128193342.GB38136@dtor-ws>
- <1F6355E1-A5E3-41A6-908F-619A15581BEF@goldelico.com>
- <20170217204041.GE13050@dtor-ws>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Sat, 18 Feb 2017 09:23:35 +0000
+Message-ID: <20170218092335.GI21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <24d42948-a77d-445f-e3e9-ab595b0cfc3e@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20170217204041.GE13050@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <ben>
+In-Reply-To: <24d42948-a77d-445f-e3e9-ab595b0cfc3e@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 17, 2017 at 05:12:44PM -0800, Steve Longerbeam wrote:
+> Hi Russell,
+> 
+> I signed-off on this but after more review I'm not sure this is right.
+> 
+> The CSI-2 receiver really has no control over frame rate. It's output
+> frame rate is the same as the rate that is delivered to it.
+> 
+> So this subdev should either not implement these ops, or it should
+> refer them to the attached source subdev.
 
---3siQDZowHQqNOShm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Where in the V4L2 documentation does it say that is permissible?
 
-Hi!
+If you don't implement these, media-ctl fails to propagate _anything_
+to the next sink pad if you specify a frame rate, because media-ctl
+throws an error and exits immediately.
 
-> > Well, there is some historic confusion wether this driver reports resis=
-tance
-> > or pressure.
-> >=20
-> > The unpatched tsc2007 driver does it wrong (please test!) and we fix it=
- on
-> > the fly (because a separate patch is much more complex than doing it ri=
-ght
-> > immediately).
-> >=20
-> > This ti,report-resistance property is a means to get the old (wrong) me=
-aning back
-> > in case someone urgently needs it and can't fix the user-space workarou=
-nd which
-> > he must be using.
-> >
-> >=20
-> > AFAIK there is no mainline board using the DT except ours (and the upco=
-ming
-> > OMAP5-Pyra), so we shouldn't care too much. If you prefer, you can remo=
-ve this
-> > compatibility property. We don't need it for our devices.
-
-N900 is mainline and uses DT.
-
-> > That the function name is wrong is a second issue and this double negat=
-ion might
-> > confuse a litte.
-> >=20
-> > Please test on a real device if the patched driver reports pressure now=
- (unless
-> > ti,report-resistance is specified).
->=20
-> I unfortunately can not test this driver as I do not have the hardware.
-> So all my observations are from code and data sheets.
->=20
-> That said, what is the values emitted as ABS_PRESSURE when finger is not
-> touching the device, barely touching the device, or pressing firmly?
-> It seems that between TSC2007, TSC2004, TSC2005, and ADS7846, we have
-> confusion as to what is being reported.
->=20
-> I am adding a few more folks to the CC so we can try and soft this out.
-> Sebastian, Pali, Pavel, any input here?
-
-X work ok on N900. Nikolaus wrote rather long email, but I'm not what
-the meaning is and what is supposed to be broken there.
-
-I do this on X startup:
-
-xinput --set-prop --type=3Dfloat "TSC200X touchscreen" "Coordinate Transfor=
-mation Matrix"  1.10 0.00 -0.05  0.00 1.18 -0.10  0.00 0.00 1.00
-xinput --set-prop --type=3Dint "TSC200X touchscreen" "Evdev Axis Inversion"=
- 0 1
-xinput --set-prop --type=3Dfloat "TSC2005 touchscreen" "Coordinate Transfor=
-mation Matrix"  1\
-=2E10 0.00 -0.05  0.00 1.18 -0.10  0.00 0.00 1.00
-xinput --set-prop --type=3Dint "TSC2005 touchscreen" "Evdev Axis Inversion"=
- 0 1
-
-And I agree that kernel should _not_ attempt rescaling itself, as it
-would lose precision. Providing default calibration info is ok.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---3siQDZowHQqNOShm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlioEK4ACgkQMOfwapXb+vKpyACfVORDGZIe8LFLqpcy4ViME8aF
-za0An3DrjLBBeFbg4YG9+FIWuGTMguag
-=4nCp
------END PGP SIGNATURE-----
-
---3siQDZowHQqNOShm--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
