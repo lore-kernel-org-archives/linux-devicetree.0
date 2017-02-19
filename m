@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v5 1/9] ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
-Date: Sun, 19 Feb 2017 22:41:41 +0100
-Message-ID: <20170219214149.30418-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v5 3/9] ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
+Date: Sun, 19 Feb 2017 22:41:43 +0100
+Message-ID: <20170219214149.30418-4-martin.blumenstingl@googlemail.com>
 References: <20170122181028.5014-1-martin.blumenstingl@googlemail.com>
  <20170219214149.30418-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -12,31 +12,53 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetr
 List-Id: devicetree@vger.kernel.org
 
 This resets the ethernet PHY during boot to get the PHY into a "clean"
-state. While here also explicitly specify the phy-mode instead of
-relying on the default-value from meson-gx.dtsi.
+state.
+While here also specify the phy-handle of the ethmac node to make the
+PHY configuration similar to the one we have on GXL devices. This will
+allow us to specify OF-properties for the PHY itself.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index c59403adb387..6b5579522587 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -152,6 +152,11 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 86709929fd20..aa571970c5e9 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -115,7 +115,6 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+-
+ };
+ 
+ &ir {
+@@ -128,6 +127,24 @@
+ 	status = "okay";
  	pinctrl-0 = <&eth_rgmii_pins>;
  	pinctrl-names = "default";
- 	phy-handle = <&eth_phy0>;
++
++	phy-handle = <&eth_phy0>;
 +	phy-mode = "rgmii";
 +
 +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
 +	snps,reset-delays-us = <0 10000 1000000>;
 +	snps,reset-active-low;
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy0: ethernet-phy@0 {
++			/* Realtek RTL8211F (0x001cc916) */
++			reg = <0>;
++		};
++	};
+ };
  
- 	mdio {
- 		compatible = "snps,dwmac-mdio";
+ &usb0_phy {
 -- 
 2.11.1
 
