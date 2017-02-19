@@ -1,178 +1,115 @@
-From: Anurup M <anurupvasu@gmail.com>
-Subject: [PATCH v4 11/11] dts: arm64: hip07: Add Hisilicon SoC PMU support
-Date: Sun, 19 Feb 2017 13:51:30 -0500
-Message-ID: <1487530290-42774-1-git-send-email-anurup.m@huawei.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, will.deacon@arm.com, robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, huangdaode@hisilicon.com, linuxarm@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Sun, 19 Feb 2017 20:05:47 +0100
+Message-ID: <20170219190547.GA17292@amd>
+References: <20170218091526.GC8937@amd>
+ <61F3C580-4BF2-4EE6-9DEC-FB8634434EC0@goldelico.com>
+ <20170218180811.GB9377@amd>
+ <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com>
+ <20170218225435.GA4693@amd>
+ <CC600A84-A5C8-4A8C-8CF4-B54C57DF73F3@goldelico.com>
+ <20170219141715.GA7159@amd>
+ <05F3816F-46E6-4BC2-9E2E-F20E645F7197@goldelico.com>
+ <20170219171518.GA12833@amd>
+ <B41253A6-95D5-4E0F-ABD6-6909362843C4@goldelico.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <B41253A6-95D5-4E0F-ABD6-6909362843C4@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>Benjamin Tissoires <be>
 List-Id: devicetree@vger.kernel.org
 
-1. Add nodes for hip07 L3 cache to support uncore events.
-2. Add nodes for hip07 support uncore events.
 
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
-Signed-off-by: Anurup M <anurup.m@huawei.com>
----
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 94 ++++++++++++++++++++++----------
- 1 file changed, 64 insertions(+), 30 deletions(-)
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index 12f4b8e..c00512a 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1008,6 +1008,25 @@
- 			#interrupt-cells = <2>;
- 			num-pins = <1>;
- 		};
-+
-+		mbigen_fabric_b: faric_intc_b {
-+			msi-parent = <&p0_its_peri_b 0x120D0>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <27>;
-+		 };
-+	};
-+
-+	p0_mbigen_peri_a: interrupt-controller@40080000 {
-+		compatible = "hisilicon,mbigen-v2";
-+		reg = <0x0 0x40080000 0x0 0x10000>;
-+
-+		mbigen_fabric_a: faric_intc_a {
-+			msi-parent = <&p0_its_peri_a 0x120D0>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			num-pins = <27>;
-+		 };
- 	};
- 
- 	p0_mbigen_pcie_a: interrupt-controller@a0080000 {
-@@ -1085,71 +1104,79 @@
- 	};
- 
- 	djtag0: djtag@60010000 {
--		compatible = "hisilicon,hisi-djtag-v2";
-+		compatible = "hisilicon,hip07-cpu-djtag-v2";
- 		reg = <0x0 0x60010000 0x0 0x10000>;
--		scl-id = <0x02>;
-+		hisilicon,scl-id = <0x03>;
- 
--		/* L3 cache bank 0 for socket0 CPU die scl#2 */
-+		/* L3 cache bank 0 for socket0 CPU die scl#3 */
- 		pmul3c0 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x02>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01 0x01>;
- 		};
- 
--		/* L3 cache bank 1 for socket0 CPU die scl#2 */
-+		/* L3 cache bank 1 for socket0 CPU die scl#3 */
- 		pmul3c1 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x04>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02 0x01>;
- 		};
- 
--		/* L3 cache bank 2 for socket0 CPU die scl#2 */
-+		/* L3 cache bank 2 for socket0 CPU die scl#3 */
- 		pmul3c2 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x01>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03 0x01>;
- 		};
- 
--		/* L3 cache bank 3 for socket0 CPU die scl#2 */
-+		/* L3 cache bank 3 for socket0 CPU die scl#3 */
- 		pmul3c3 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x08>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04 0x01>;
- 		};
- 
- 		/*
- 		 * Miscellaneous node for socket0
--		 * CPU die scl#2
-+		 * CPU die scl#3
- 		 */
- 		pmumn0 {
--			compatible = "hisilicon,hisi-pmu-mn-v1";
--			module-id = <0x0b>;
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+			interrupt-parent = <&mbigen_fabric_b>;
-+			interrupts = <832 1>, <833 1>, <834 1>, <835 1>,
-+					<836 1>, <837 1>, <838 1>, <839 1>,
-+					<840 1>, <841 1>, <842 1>, <843 1>,
-+					<844 1>, <845 1>, <846 1>, <847 1>,
-+					<848 1>, <849 1>, <850 1>, <851 1>,
-+					<852 1>, <853 1>, <854 1>, <855 1>,
-+					<856 1>, <857 1>, <858 1>;
- 		};
- 	};
- 
- 	djtag1: djtag@40010000 {
--		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		compatible = "hisilicon,hip07-djtag-v2";
- 		reg = <0x0 0x40010000 0x0 0x10000>;
--		scl-id = <0x01>;
-+		hisilicon,scl-id = <0x01>;
- 
- 		/* L3 cache bank 0 for socket0 CPU die scl#1 */
- 		pmul3c0 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x02>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01 0x01>;
- 		};
- 
- 		/* L3 cache bank 1 for socket0 CPU die scl#1 */
- 		pmul3c1 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x04>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02 0x01>;
- 		};
- 
- 		/* L3 cache bank 2 for socket0 CPU die scl#1 */
- 		pmul3c2 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x01>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03 0x01>;
- 		};
- 
- 		/* L3 cache bank 3 for socket0 CPU die scl#1 */
- 		pmul3c3 {
--			compatible = "hisilicon,hisi-pmu-l3c-v1";
--			module-id = <0x04 0x08>;
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04 0x01>;
- 		};
- 
- 		/*
-@@ -1157,9 +1184,16 @@
- 		 * CPU die scl#1
- 		 */
- 		pmumn1 {
--			compatible = "hisilicon,hisi-pmu-mn-v1";
--			module-id = <0x0b>;
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+			interrupt-parent = <&mbigen_fabric_a>;
-+			interrupts = <832 1>, <833 1>, <834 1>, <835 1>,
-+					<836 1>, <837 1>, <838 1>, <839 1>,
-+					<840 1>, <841 1>, <842 1>, <843 1>,
-+					<844 1>, <845 1>, <846 1>, <847 1>,
-+					<848 1>, <849 1>, <850 1>, <851 1>,
-+					<852 1>, <853 1>, <854 1>, <855 1>,
-+					<856 1>, <857 1>, <858 1>;
- 		};
- 	};
--
- };
--- 
-2.1.4
+Hi!
+
+> Hi Pavel,
+> I love discussions with you :)
+
+Unfortunately I can't say the same.
+
+> > Am 19.02.2017 um 18:15 schrieb Pavel Machek <pavel@ucw.cz>:
+> >=20
+> >=20
+> >>> Solve it properly. That means passing calibration
+> >>> data from kernel to userland.
+> >>=20
+> >> As written before, the really proper solution would be to provide floa=
+ting
+> >> or fixed point subpixel input events. Not arbitrarily scaling up in ke=
+rnel
+> >> and leaving downscaling to user space (where everybody can make it
+> >> worse).
+> >=20
+> > That has no advantages,
+>=20
+> It has the advantage of providing you with the full precision of raw data=
+ (but
+> properly scaled) so that you don't loose any bit of information. This is =
+what
+> you just asked for - one or two mails before.
+
+Not really, right? No matter what kind of fixed point you introduce,
+you'll still loose precision.
+
+> > and floating point in kernel is hard. Also
+> > you'd either have to invent new interface, or you'd break touchscreen
+> > for people that already have their touchscreens calibrated.
+>=20
+> No, I don't break calibration for people using a different chip.
+
+So you propose your touchscreen to behave differently from all other
+touchscreens in tree? That's just no-go.
+
+> > Yes, that's not really proper solution, that just overengineered. Not
+> > worth implementing. Pass calibration data to userland.
+>=20
+> You seem to repeat yourself and just say which solution you prefer,
+> but I am missing the arguments why your solution (Pass calibration data
+> to userland) is right and the best one.
+> Which problems does it solve?
+
+All you described.
+
+> Which one does it solve better than others?
+
+It is not terminally ugly.
+
+> How can you implement it in
+> a stable and portable way?
+
+Easily.
+
+> How can you make sure that all user-space GUI
+> systems can and will make use of this calibration data?
+
+You can't, and you don't need to.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlip7IsACgkQMOfwapXb+vJz1ACbBm1XiEklbcPpEKAifUTzqcpl
+C7IAnimyfkFxjDaJFywe9TTgBzkYsL1v
+=XerP
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
