@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v5 5/9] ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
-Date: Sun, 19 Feb 2017 22:41:45 +0100
-Message-ID: <20170219214149.30418-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v5 2/9] ARM64: dts: meson-gxbb-p200: add the ethernet PHY's reset GPIO
+Date: Sun, 19 Feb 2017 22:41:42 +0100
+Message-ID: <20170219214149.30418-3-martin.blumenstingl@googlemail.com>
 References: <20170122181028.5014-1-martin.blumenstingl@googlemail.com>
  <20170219214149.30418-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -18,24 +18,23 @@ PHY configuration similar to the one we have on GXL devices. This will
 allow us to specify OF-properties for the PHY itself.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-index 56f855901262..50eb8f06d35b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-@@ -64,3 +64,27 @@
- 		status = "disabled";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+index fc0e86cb4cde..acb035d119d7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+@@ -96,6 +96,29 @@
  	};
  };
-+
+ 
 +&ethmac {
 +	status = "okay";
 +	pinctrl-0 = <&eth_rgmii_pins>;
 +	pinctrl-names = "default";
-+
 +	phy-handle = <&eth_phy0>;
 +	phy-mode = "rgmii";
 +
@@ -48,12 +47,16 @@ index 56f855901262..50eb8f06d35b 100644
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		eth_phy0: ethernet-phy@0 {
-+			/* Realtek RTL8211F (0x001cc916) */
-+			reg = <0>;
++		eth_phy0: ethernet-phy@3 {
++			/* Micrel KSZ9031 (0x00221620) */
++			reg = <3>;
 +		};
 +	};
 +};
++
+ &i2c_B {
+ 	status = "okay";
+ 	pinctrl-0 = <&i2c_b_pins>;
 -- 
 2.11.1
 
