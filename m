@@ -1,14 +1,13 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Sun, 19 Feb 2017 22:44:09 +0100
-Message-ID: <20170219214409.GC32327@amd>
+Subject: Re: [PATCH v4 15/36] platform: add video-multiplexer subdevice driver
+Date: Sun, 19 Feb 2017 23:02:37 +0100
+Message-ID: <20170219220237.GD32327@amd>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0935436368755778717=="
+Content-Type: multipart/mixed; boundary="===============4029579903384657142=="
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+In-Reply-To: <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -19,49 +18,149 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.o
 List-Id: devicetree@vger.kernel.org
 
 
---===============0935436368755778717==
+--===============4029579903384657142==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7gGkHNMELEOhSGF6"
+	protocol="application/pgp-signature"; boundary="bjuZg6miEcdLYP6q"
 Content-Disposition: inline
 
 
---7gGkHNMELEOhSGF6
+--bjuZg6miEcdLYP6q
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed 2017-02-15 18:19:16, Steve Longerbeam wrote:
-> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
-> all subdev entities in a pipeline to a given video device.
+Hi!
+
+> From: Philipp Zabel <p.zabel@pengutronix.de>
 >=20
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> This driver can handle SoC internal and external video bus multiplexers,
+> controlled either by register bit fields or by a GPIO. The subdevice
+> passes through frame interval and mbus configuration of the active input
+> to the output side.
+>=20
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> --
+>
 
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
+Again, this is slightly non-standard format. Normally changes from v1
+go below ---, but in your case it would cut off the signoff...
 
+> diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.tx=
+t b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> new file mode 100644
+> index 0000000..9d133d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> @@ -0,0 +1,59 @@
+> +Video Multiplexer
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Video multiplexers allow to select between multiple input ports. Video r=
+eceived
+> +on the active input port is passed through to the output port. Muxes des=
+cribed
+> +by this binding may be controlled by a syscon register bitfield or by a =
+GPIO.
+> +
+> +Required properties:
+> +- compatible : should be "video-multiplexer"
+> +- reg: should be register base of the register containing the control bi=
+tfield
+> +- bit-mask: bitmask of the control bitfield in the control register
+> +- bit-shift: bit offset of the control bitfield in the control register
+> +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO ph=
+andle
+> +  may be given to switch between two inputs
+> +- #address-cells: should be <1>
+> +- #size-cells: should be <0>
+> +- port@*: at least three port nodes containing endpoints connecting to t=
+he
+> +  source and sink devices according to of_graph bindings. The last port =
+is
+> +  the output port, all others are inputs.
+
+At least three? I guess it is exactly three with the gpio?
+
+Plus you might want to describe which port correspond to which gpio
+state/bitfield values...
+
+> +struct vidsw {
+
+I knew it: it is secretely a switch! :-).
+
+> +static void vidsw_set_active(struct vidsw *vidsw, int active)
+> +{
+> +	vidsw->active =3D active;
+> +	if (active < 0)
+> +		return;
+> +
+> +	dev_dbg(vidsw->subdev.dev, "setting %d active\n", active);
+> +
+> +	if (vidsw->field)
+> +		regmap_field_write(vidsw->field, active);
+> +	else if (vidsw->gpio)
+> +		gpiod_set_value(vidsw->gpio, active);
+
+         else dev_err()...?
+	=20
+> +static int vidsw_async_init(struct vidsw *vidsw, struct device_node *nod=
+e)
+> +{
+> +	struct device_node *ep;
+> +	u32 portno;
+> +	int numports;
+
+numbports is int, so I guess portno should be, too?
+
+> +		portno =3D endpoint.base.port;
+> +		if (portno >=3D numports - 1)
+> +			continue;
+
+
+> +	if (!pad) {
+> +		/* Mirror the input side on the output side */
+> +		cfg->type =3D vidsw->endpoint[vidsw->active].bus_type;
+> +		if (cfg->type =3D=3D V4L2_MBUS_PARALLEL ||
+> +		    cfg->type =3D=3D V4L2_MBUS_BT656)
+> +			cfg->flags =3D vidsw->endpoint[vidsw->active].bus.parallel.flags;
+> +	}
+
+Will this need support for other V4L2_MBUS_ values?
+
+> +MODULE_AUTHOR("Sascha Hauer, Pengutronix");
+> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
+
+Normally, MODULE_AUTHOR contains comma separated names of authors,
+perhaps with <email@addresses>. Not sure two MODULE_AUTHORs per file
+will work.
+
+Thanks,
+								Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---7gGkHNMELEOhSGF6
+--bjuZg6miEcdLYP6q
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAliqEakACgkQMOfwapXb+vJU8ACfXJQl804JHs5CQLR/op1V+0Kk
-sSoAnRLMhRRG6n2Cpsbxa8dqjvLx+QY3
-=9O0F
+iEYEARECAAYFAliqFf0ACgkQMOfwapXb+vLlWgCfW2USB7xbrACrPywn2fBqw1Py
+5K8AoK0xQ5eBKNcm4zkZmogfE9+YF3xM
+=3IO0
 -----END PGP SIGNATURE-----
 
---7gGkHNMELEOhSGF6--
+--bjuZg6miEcdLYP6q--
 
---===============0935436368755778717==
+--===============4029579903384657142==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -72,4 +171,4 @@ devel mailing list
 devel@linuxdriverproject.org
 http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
 
---===============0935436368755778717==--
+--===============4029579903384657142==--
