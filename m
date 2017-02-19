@@ -1,154 +1,77 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] iio: adc: stm32: add dt option to set resolution
-Date: Sun, 19 Feb 2017 12:09:33 +0000
-Message-ID: <616e1280-d315-edbd-64fd-5122ab7969cb@kernel.org>
-References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
- <1487177757-19427-3-git-send-email-fabrice.gasnier@st.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] ARM: dts: bcm283x: Add CPU thermal zone with 1
+ trip point
+Date: Sun, 19 Feb 2017 13:31:49 +0100 (CET)
+Message-ID: <1762674971.70633.1487507509664@email.1und1.de>
+References: <1486928328-25870-1-git-send-email-stefan.wahren@i2se.com>
+ <1486928328-25870-2-git-send-email-stefan.wahren@i2se.com>
+ <20170219011753.GB21016@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1487177757-19427-3-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170219011753.GB21016-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/02/17 16:55, Fabrice Gasnier wrote:
-> stm32 adc supports several resolution. Add 'st,adc-res' dt optional
-> property to set it. Default to maximum resolution in case it isn't set.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Implementation looks fine, just waiting on the binding review.
+Hi Eduardo,
 
-Thanks,
+> Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 19. Februar 2017 um 02:17 geschrieben:
+> 
+> 
+> On Sun, Feb 12, 2017 at 07:38:48PM +0000, Stefan Wahren wrote:
+> > As suggested by Eduardo Valentin this adds the thermal zone for
+> > the bcm2835 SoC with its single thermal sensor. We start with
+> > the criticial trip point and leave the cooling devices empty
+> > since we don't have any at the moment.
+> > 
+> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> > ---
+> > 
+> > Changes in V2:
+> > - add missing thermal-sensor-cells property
+> > - change gpu-thermal to cpu-thermal
+> > 
+> >  arch/arm/boot/dts/bcm283x.dtsi |   20 ++++++++++++++++++++
+> >  1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> > index a3106aa..4dc74f6 100644
+> > --- a/arch/arm/boot/dts/bcm283x.dtsi
+> > +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> > @@ -19,6 +19,25 @@
+> >  		bootargs = "earlyprintk console=ttyAMA0";
+> >  	};
+> >  
+> > +	thermal-zones {
+> > +		cpu_thermal: cpu-thermal {
+> > +			polling-delay-passive = <0>;
+> > +			polling-delay = <1000>;
+> > +
+> 
+> Check the diff I sent and also add the following for differentiating the
+> offsets and slopes depending on which chip the zone describes:
+> 			coefficients = <-538 407000>; /* for the zone on bcm2835 and bcm2836 */
+> 
+> and
+> 
+> 			coefficients = <-538 412000>; /* for the zone on bcm2837 */
+> 
+> 
+> Despite the changes mentioned for the driver and DT, I am ok with the driver and the DTS descriptors.
 
-Jonathan
-> ---
->  drivers/iio/adc/stm32-adc.c | 50 ++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 49 insertions(+), 1 deletion(-)
+thanks for providing the necessary driver changes, but the coefficients above causes a DTC parse error. The Device Tree doesn't provide support for native signed integer. Looking at this old thread [1] suggests to add parentheses which fixed the parse issue. But of-thermal expected u32 for coefficients [2].
+
+Any suggestions?
+
+[1] - http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/159681.html
+[2] - http://elixir.free-electrons.com/source/drivers/thermal/of-thermal.c?v=4.10-rc7#L854
+
 > 
-> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-> index 9b49a6ad..268b457a 100644
-> --- a/drivers/iio/adc/stm32-adc.c
-> +++ b/drivers/iio/adc/stm32-adc.c
-> @@ -60,6 +60,8 @@
->  #define STM32F4_EOC			BIT(1)
->  
->  /* STM32F4_ADC_CR1 - bit fields */
-> +#define STM32F4_RES_SHIFT		24
-> +#define STM32F4_RES_MASK		GENMASK(25, 24)
->  #define STM32F4_SCAN			BIT(8)
->  #define STM32F4_EOCIE			BIT(5)
->  
-> @@ -141,6 +143,7 @@ struct stm32_adc_regs {
->   * @lock:		spinlock
->   * @bufi:		data buffer index
->   * @num_conv:		expected number of scan conversions
-> + * @res:		data resolution (e.g. RES bitfield value)
->   * @trigger_polarity:	external trigger polarity (e.g. exten)
->   * @dma_chan:		dma channel
->   * @rx_buf:		dma rx buffer cpu address
-> @@ -157,6 +160,7 @@ struct stm32_adc {
->  	spinlock_t		lock;		/* interrupt lock */
->  	unsigned int		bufi;
->  	unsigned int		num_conv;
-> +	u32			res;
->  	u32			trigger_polarity;
->  	struct dma_chan		*dma_chan;
->  	u8			*rx_buf;
-> @@ -196,6 +200,11 @@ struct stm32_adc_chan_spec {
->  	{ IIO_VOLTAGE, 15, "in15" },
->  };
->  
-> +static const unsigned int stm32f4_adc_resolutions[] = {
-> +	/* sorted values so the index matches RES[1:0] in STM32F4_ADC_CR1 */
-> +	12, 10, 8, 6,
-> +};
-> +
->  /**
->   * stm32f4_sq - describe regular sequence registers
->   * - L: sequence len (register & bit field)
-> @@ -302,6 +311,14 @@ static void stm32_adc_conv_irq_disable(struct stm32_adc *adc)
->  	stm32_adc_clr_bits(adc, STM32F4_ADC_CR1, STM32F4_EOCIE);
->  }
->  
-> +static void stm32_adc_set_res(struct stm32_adc *adc)
-> +{
-> +	u32 val = stm32_adc_readl(adc, STM32F4_ADC_CR1);
-> +
-> +	val = (val & ~STM32F4_RES_MASK) | (adc->res << STM32F4_RES_SHIFT);
-> +	stm32_adc_writel(adc, STM32F4_ADC_CR1, val);
-> +}
-> +
->  /**
->   * stm32_adc_start_conv() - Start conversions for regular channels.
->   * @adc: stm32 adc instance
-> @@ -870,11 +887,37 @@ static irqreturn_t stm32_adc_trigger_handler(int irq, void *p)
->  	{},
->  };
->  
-> +static int stm32_adc_of_get_resolution(struct iio_dev *indio_dev)
-> +{
-> +	struct device_node *node = indio_dev->dev.of_node;
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +	unsigned int i;
-> +	u32 res;
-> +
-> +	if (of_property_read_u32(node, "st,adc-res", &res))
-> +		res = stm32f4_adc_resolutions[0];
-> +
-> +	for (i = 0; i < ARRAY_SIZE(stm32f4_adc_resolutions); i++)
-> +		if (res == stm32f4_adc_resolutions[i])
-> +			break;
-> +	if (i >= ARRAY_SIZE(stm32f4_adc_resolutions)) {
-> +		dev_err(&indio_dev->dev, "Bad resolution: %u bits\n", res);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_dbg(&indio_dev->dev, "Using %u bits resolution\n", res);
-> +	adc->res = i;
-> +
-> +	return 0;
-> +}
-> +
->  static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
->  				    struct iio_chan_spec *chan,
->  				    const struct stm32_adc_chan_spec *channel,
->  				    int scan_index)
->  {
-> +	struct stm32_adc *adc = iio_priv(indio_dev);
-> +
->  	chan->type = channel->type;
->  	chan->channel = channel->channel;
->  	chan->datasheet_name = channel->name;
-> @@ -883,7 +926,7 @@ static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
->  	chan->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
->  	chan->info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE);
->  	chan->scan_type.sign = 'u';
-> -	chan->scan_type.realbits = 12;
-> +	chan->scan_type.realbits = stm32f4_adc_resolutions[adc->res];
->  	chan->scan_type.storagebits = 16;
->  	chan->ext_info = stm32_adc_ext_info;
->  }
-> @@ -1022,6 +1065,11 @@ static int stm32_adc_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	ret = stm32_adc_of_get_resolution(indio_dev);
-> +	if (ret < 0)
-> +		goto err_clk_disable;
-> +	stm32_adc_set_res(adc);
-> +
->  	ret = stm32_adc_chan_of_init(indio_dev);
->  	if (ret < 0)
->  		goto err_clk_disable;
-> 
+> BR,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
