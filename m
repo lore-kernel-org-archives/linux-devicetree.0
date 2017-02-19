@@ -1,84 +1,101 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: bcm283x: Add CPU thermal zone with 1
- trip point
-Date: Sun, 19 Feb 2017 13:27:01 -0800
-Message-ID: <20170219212659.GA22580@localhost.localdomain>
-References: <1486928328-25870-1-git-send-email-stefan.wahren@i2se.com>
- <1486928328-25870-2-git-send-email-stefan.wahren@i2se.com>
- <20170219011753.GB21016@localhost.localdomain>
- <1762674971.70633.1487507509664@email.1und1.de>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 12/36] add mux and video interface bridge entity
+ functions
+Date: Sun, 19 Feb 2017 22:28:12 +0100
+Message-ID: <20170219212812.GA28347@amd>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-13-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1762674971.70633.1487507509664@email.1und1.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, kernel@martin.sperl.org, Eric Anholt <eric@anholt.net>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1957674402021976102=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487211578-11360-13-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hey Stefan,
+
+--===============1957674402021976102==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
+Content-Disposition: inline
 
 
-On Sun, Feb 19, 2017 at 01:31:49PM +0100, Stefan Wahren wrote:
-> Hi Eduardo,
-> 
-> > Eduardo Valentin <edubezval@gmail.com> hat am 19. Februar 2017 um 02:17 geschrieben:
-> > 
-> > 
-> > On Sun, Feb 12, 2017 at 07:38:48PM +0000, Stefan Wahren wrote:
-> > > As suggested by Eduardo Valentin this adds the thermal zone for
-> > > the bcm2835 SoC with its single thermal sensor. We start with
-> > > the criticial trip point and leave the cooling devices empty
-> > > since we don't have any at the moment.
-> > > 
-> > > Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> > > ---
-> > > 
-> > > Changes in V2:
-> > > - add missing thermal-sensor-cells property
-> > > - change gpu-thermal to cpu-thermal
-> > > 
-> > >  arch/arm/boot/dts/bcm283x.dtsi |   20 ++++++++++++++++++++
-> > >  1 file changed, 20 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> > > index a3106aa..4dc74f6 100644
-> > > --- a/arch/arm/boot/dts/bcm283x.dtsi
-> > > +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> > > @@ -19,6 +19,25 @@
-> > >  		bootargs = "earlyprintk console=ttyAMA0";
-> > >  	};
-> > >  
-> > > +	thermal-zones {
-> > > +		cpu_thermal: cpu-thermal {
-> > > +			polling-delay-passive = <0>;
-> > > +			polling-delay = <1000>;
-> > > +
-> > 
-> > Check the diff I sent and also add the following for differentiating the
-> > offsets and slopes depending on which chip the zone describes:
-> > 			coefficients = <-538 407000>; /* for the zone on bcm2835 and bcm2836 */
-> > 
-> > and
-> > 
-> > 			coefficients = <-538 412000>; /* for the zone on bcm2837 */
-> > 
-> > 
-> > Despite the changes mentioned for the driver and DT, I am ok with the driver and the DTS descriptors.
-> 
-> thanks for providing the necessary driver changes, but the coefficients above causes a DTC parse error. The Device Tree doesn't provide support for native signed integer. Looking at this old thread [1] suggests to add parentheses which fixed the parse issue. But of-thermal expected u32 for coefficients [2].
-> 
-> Any suggestions?
+--sm4nu43k4a2Rpi4c
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am OK if you provide a patch to of-thermal in your series, assuming
-that would fix the  representation issue the data of your driver has.
+On Wed 2017-02-15 18:19:14, Steve Longerbeam wrote:
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+>=20
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+>=20
+> - renamed MEDIA_ENT_F_MUX to MEDIA_ENT_F_VID_MUX
+>=20
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 
-BR,
+This is slightly "interesting" format of changelog. Normally signoffs
+go below.
 
-> 
-> [1] - http://lists.infradead.org/pipermail/linux-arm-kernel/2013-April/159681.html
-> [2] - http://elixir.free-electrons.com/source/drivers/thermal/of-thermal.c?v=4.10-rc7#L854
-> 
-> > 
-> > BR,
+> diff --git a/Documentation/media/uapi/mediactl/media-types.rst b/Document=
+ation/media/uapi/mediactl/media-types.rst
+> index 3e03dc2..023be29 100644
+> --- a/Documentation/media/uapi/mediactl/media-types.rst
+> +++ b/Documentation/media/uapi/mediactl/media-types.rst
+> @@ -298,6 +298,28 @@ Types and flags used to represent the media graph el=
+ements
+>  	  received on its sink pad and outputs the statistics data on
+>  	  its source pad.
+> =20
+> +    -  ..  row 29
+> +
+> +       ..  _MEDIA-ENT-F-MUX:
+> +
+> +       -  ``MEDIA_ENT_F_MUX``
+
+And you probably want to rename it here, too.
+
+With that fixed:
+
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--sm4nu43k4a2Rpi4c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAliqDewACgkQMOfwapXb+vLkHQCgqPGAdmZhbhKck+MMRMGueXfl
+I58An21JP2Gi/i0zBVRtNuj3LmE8XzZk
+=Ep21
+-----END PGP SIGNATURE-----
+
+--sm4nu43k4a2Rpi4c--
+
+
+--===============1957674402021976102==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1957674402021976102==--
