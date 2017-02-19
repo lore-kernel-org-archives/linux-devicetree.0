@@ -1,183 +1,228 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
-Date: Sun, 19 Feb 2017 20:31:25 +0100
-Message-ID: <EB41EEED-0D94-473F-944F-757B25350A4C@goldelico.com>
-References: <20170218091526.GC8937@amd> <61F3C580-4BF2-4EE6-9DEC-FB8634434EC0@goldelico.com> <20170218180811.GB9377@amd> <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com> <20170218225435.GA4693@amd> <CC600A84-A5C8-4A8C-8CF4-B54C57DF73F3@goldelico.com> <20170219141715.GA7159@amd> <05F3816F-46E6-4BC2-9E2E-F20E645F7197@goldelico.com> <20170219171518.GA12833@amd> <B41253A6-95D5-4E0F-ABD6-6909362843C4@goldelico.com> <20170219190547.GA17292@amd>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: multipart/signed; boundary="Apple-Mail=_4135E42D-093A-42E0-B624-E6DB96976C6D"; protocol="application/pgp-signature"; micalg=pgp-sha256
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170219190547.GA17292@amd>
-Sender: linux-input-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjam>
+From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Subject: Re: [PATCH v6 5/5] ARM: dts: sun9i: Initial support for the Sunchip
+ CX-A99 board
+Date: Sun, 19 Feb 2017 21:12:32 +0100
+Message-ID: <20170219201232.uvja5jvqhmltobra@localhost>
+References: <cover.1486592470.git.rask@formelder.dk>
+ <d4211c5d57f80b0281d7d332edc7d69e66202d3d.1486592471.git.rask@formelder.dk>
+ <20170210085920.7l7gswm6yjuqgdfx@lukather>
+ <20170216061753.sd7zjs5jzdingufp@localhost>
+ <20170216182957.zypkvmg7xhwu6geq@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170216182957.zypkvmg7xhwu6geq@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 16, 2017 at 07:29:57PM +0100, Maxime Ripard wrote:
+> On Thu, Feb 16, 2017 at 07:17:54AM +0100, Rask Ingemann Lambertsen wrote:
+> > > > Supported features (+ means tested):
+[...]
+> > > > + SATA port on on-board SATA-to-USB bridge *
+[...]
+> > > > * Only shows up when a SATA device is connected. Also, if a power source
+> > > >   is connected to the USB 3.0 connector across power cycles (e.g. FEL
+> > > >   boot), the bridge may not properly reset and not show up on the USB bus.
+> > > >   The vendor U-Boot performs some unknown magic which resets the bridge.
+> > > 
+> > > Is that magic at the USB level, or specific to the bridge itself?
+> > 
+> > I don't know, but since the other USB port connected to the hub comes up
+> > fine, I'm assuming it's something to do with the SATA-to-USB bridge.
+> 
+> But where is that magic written to then? the USB controller registers,
+> or is it an USB packet?
 
---Apple-Mail=_4135E42D-093A-42E0-B624-E6DB96976C6D
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=us-ascii
+I don't know. Like I said, unknown magic. I haven't found the source code to
+the U-Boot version that the board uses.
 
-Hi Pavel,
+For all I know, it could be a bug in the Linux USB stack. I've always had
+to unplug and replug my USB keyboards after Linux has booted, otherwise
+they are not detected. If the keyboard was connected to a hub, Linux doesn't
+detect that port on the hub, so the hub must be unplugged and replugged.
+If it's an internal hub, tough luck.
 
-> Am 19.02.2017 um 20:05 schrieb Pavel Machek <pavel@ucw.cz>:
->=20
-> Hi!
->=20
->> Hi Pavel,
->> I love discussions with you :)
->=20
-> Unfortunately I can't say the same.
+> > > > +	reg_usb0_vbus: regulator-usb0-vbus {
+> > > > +		compatible = "regulator-fixed";
+> > > > +		regulator-name = "usb0-vbus";
+> > > > +		regulator-min-microvolt = <5000000>;
+> > > > +		regulator-max-microvolt = <5000000>;
+> > > > +		gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;	/* PH15 */
+> > > > +		enable-active-high;
+> > > 
+> > > This is redundant with the GPIO flag
 
->=20
->>> Am 19.02.2017 um 18:15 schrieb Pavel Machek <pavel@ucw.cz>:
->>>=20
->>>=20
->>>>> Solve it properly. That means passing calibration
->>>>> data from kernel to userland.
->>>>=20
->>>> As written before, the really proper solution would be to provide =
-floating
->>>> or fixed point subpixel input events. Not arbitrarily scaling up in =
-kernel
->>>> and leaving downscaling to user space (where everybody can make it
->>>> worse).
->>>=20
->>> That has no advantages,
->>=20
->> It has the advantage of providing you with the full precision of raw =
-data (but
->> properly scaled) so that you don't loose any bit of information. This =
-is what
->> you just asked for - one or two mails before.
->=20
-> Not really, right? No matter what kind of fixed point you introduce,
-> you'll still loose precision.
+The GPIO flag is overridden by the regulator core, which makes it misleading.
+I will remove the GPIO flag and add a comment there that GPIO flags are not
+supported. This is to prevent someone from thinking that
 
-Can you please elaborate?
+gpio = <... GPIO_ACTIVE_HIGH>;
+enable-active-high;
 
-My thoughts:
-
-If the ADC has 12 bit of precision, then let's say 32 bits (16 before =
-and 16
-after the decimal point) of fixed point precision are not loosing =
-anything
-if you scale to screen coordinates (in most cases they are between 480 =
 and
-1280 max).
 
-Theoretically you can loose the LSB of the 16 bits right of the decimal =
-point.
-This is ca. 0.000015259 pixels of precision. I don't care about this =
-loss of
-precision... Do you? If yes, why?
+gpio = <... GPIO_ACTIVE_LOW>;
 
-But as said I don't think we need float or fixed point for practical =
-systems
-at all.
+are equivalent. It would be an easy mistake to make, because in mmc nodes,
 
->=20
->>> and floating point in kernel is hard. Also
->>> you'd either have to invent new interface, or you'd break =
-touchscreen
->>> for people that already have their touchscreens calibrated.
->>=20
->> No, I don't break calibration for people using a different chip.
->=20
-> So you propose your touchscreen to behave differently from all other
-> touchscreens in tree?
+cd-gpios = <...  GPIO_ACTIVE_HIGH>;
 
-No. I only propose that my touch screen behaves properly and in the
-best way it can. If others are worse, they should also be improved at
-some time.
+and
 
-And note that I am not making things different from others in tree, I
-am making the tsc2007 right (incl. following the touchscreen bindings
-which define the touchscreen size in "Pixels").
+cd-gpios = <...  GPIO_ACTIVE_LOW>;
+cd-inverted;
 
-> That's just no-go.
+_are_ equivalent.
 
-In other words: you want to block any improvements unless your favourite
-touchscreen is giving directions...
+> > No. I have now tested without "enable-active-high" and then Vbus stays off.
+> > This is also in line with the binding documentation:
+> > 
+> > "- enable-active-high: Polarity of GPIO is Active high
+> >  If this property is missing, the default assumed is Active low."
+> >
+> > It also seems to me that the way this is implemented in Linux, the GPIO
+> > polarity flag is ignored.
+> 
+> It works just fine if the driver uses the gpiod API. If that driver
+> doesn't, then that driver needs some fixing :)
 
->=20
->>> Yes, that's not really proper solution, that just overengineered. =
-Not
->>> worth implementing. Pass calibration data to userland.
->>=20
->> You seem to repeat yourself and just say which solution you prefer,
->> but I am missing the arguments why your solution (Pass calibration =
-data
->> to userland) is right and the best one.
->> Which problems does it solve?
->=20
-> All you described.
+Take it up with the maintainer of the regulator core, then. :)
+>From of_get_fixed_voltage_config() in drivers/regulator/fixed.c:
+[...]
+	config->gpio = of_get_named_gpio(np, "gpio", 0);
+[...]
+	config->enable_high = of_property_read_bool(np, "enable-active-high");
+	config->gpio_is_open_drain = of_property_read_bool(np,
+							   "gpio-open-drain");
+[...]
 
-I think you are missing one problem: providing already properly scaled =
-touch
-values to user space.
+>From reg_fixed_voltage_probe() in drivers/regulator/fixed.c:
+[...]
+		config = of_get_fixed_voltage_config(&pdev->dev,
+						     &drvdata->desc);
+[...]
+	if (gpio_is_valid(config->gpio)) {
+		cfg.ena_gpio = config->gpio;
+		if (pdev->dev.of_node)
+			cfg.ena_gpio_initialized = true;
+	}
+	cfg.ena_gpio_invert = !config->enable_high;
+	if (config->enabled_at_boot) {
+		if (config->enable_high)
+			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_HIGH;
+		else
+			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_LOW;
+	} else {
+		if (config->enable_high)
+			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_LOW;
+		else
+			cfg.ena_gpio_flags |= GPIOF_OUT_INIT_HIGH;
+	}
+	if (config->gpio_is_open_drain)
+		cfg.ena_gpio_flags |= GPIOF_OPEN_DRAIN;
+[...]
 
-Please look how iio is doing raw and processed data.
+>From regulator_ena_gpio_request() in drivers/regulator/core.c:
+[...]
+	gpiod = gpio_to_desc(config->ena_gpio);
+[...]
+	ret = gpio_request_one(config->ena_gpio,
+				GPIOF_DIR_OUT | config->ena_gpio_flags,
+				rdev_get_name(rdev));
+[...]
+	pin->gpiod = gpiod;
+	pin->ena_gpio_invert = config->ena_gpio_invert;
 
->=20
->> Which one does it solve better than others?
->=20
-> It is not terminally ugly.
+And finally, gpio_request_one() in drivers/gpio/gpiolib-legacy.c:
 
-"ugly" is not a technical or scientific criterion and depends on your =
-personal
-perception. Do you have a better argument?
+int gpio_request_one(unsigned gpio, unsigned long flags, const char *label)
+{
+	struct gpio_desc *desc;
+	int err;
 
->=20
->> How can you implement it in
->> a stable and portable way?
->=20
-> Easily.
+	desc = gpio_to_desc(gpio);
+[...]
+	if (flags & GPIOF_OPEN_DRAIN)
+		set_bit(FLAG_OPEN_DRAIN, &desc->flags);
 
-Please go ahead and show code.
+	if (flags & GPIOF_OPEN_SOURCE)
+		set_bit(FLAG_OPEN_SOURCE, &desc->flags);
 
->=20
->> How can you make sure that all user-space GUI
->> systems can and will make use of this calibration data?
->=20
-> You can't,
+	if (flags & GPIOF_ACTIVE_LOW)
+		set_bit(FLAG_ACTIVE_LOW, &desc->flags);
 
-Exactly. Hence my proposal is superior. Because it avoids asking
-the user-space to use calibration data.
+	if (flags & GPIOF_DIR_IN)
+		err = gpiod_direction_input(desc);
+	else
+		err = gpiod_direction_output_raw(desc,
+				(flags & GPIOF_INIT_HIGH) ? 1 : 0);
+[...]
 
->  and you don't need to.
+> > > > +		regulator-always-on;
+> > > 
+> > > And it shouldn't be always on. The USB driver will enable it if needs
+> > > be.
+> > 
+> > Yes, we just don't have a driver for the A80 USB 3.0 port yet.
+> 
+> Aaah, so that's what you meant. Leave it out of the DT then.
 
-How can you know that I don't have to? Do you know my systems and
-users and what they want?
+OK.
 
-BR and thanks,
-Nikolaus
+> > > You're listing a minimum state of 750mv, yet your minimum voltage is
+> > > 800mV.
+> > 
+> > Yes. The regulator is capable of outputting the listed voltages in the
+> > 750 mV to 1200 mV range, but the permissible range of the consumer is only
+> > 800 mV to 1100 mV according to the A80 data sheet. Likewise, the AXP806
+> > regulators support a larger voltage range than that of the connected
+> > consumers.
+> 
+> Adding a comment stating that would be nice then.
 
+OK.
 
+> > > > +	pmic@745 {
+> > > > +		compatible = "x-powers,axp808", "x-powers,axp806";
+> > > > +		reg = <0x745>;
+> > > > +		interrupt-parent = <&nmi_intc>;
+> > > > +		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> > > > +		interrupt-controller;
+> > > > +		#interrupt-cells = <1>;
+> > > > +
+> > > > +		swin-supply = <&reg_dcdce>;
+> > > 
+> > > Please use an incude for that PMIC.
+> > 
+> > I don't understand. What would that include file contain? Very few lines
+> > would be shared between .dts files. You could save < 8 lines total if you
+> > #include the 5 lines that are common between the Cubieboard4, the Optimus
+> > and this board.
+> 
+> You also have to take into account that the PMIC is barely supported
+> at the moment, you'll also need to define the GPIO controllers, the
+> various power supplies, adc, etc. nodes that are going (hopefully to
+> be added) in the future.
+> 
+> If the include is shared, once it is enabled, every one benefits from
+> it. Otherwise, you have to duplicate that change across all DTs. This
+> is much likely to error, harder to maintain, and you end up in a
+> situation where none of the boards really support the same feature set
+> while being based on the same SoC / PMIC combination.
 
---Apple-Mail=_4135E42D-093A-42E0-B624-E6DB96976C6D
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP using GPGMail
+Fair enough, I'll add an include file the next time around. Like you
+mentioned youself, though, we will only really know how compatible the two
+PMICs are when we have the code to support the other features (or a data
+sheet/user's manual is found). I'm hopeful based on what has been found so
+far.
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYqfKOAAoJEIl79TGLgAm6oxIP+wdL2ORV7dO0FrFyX6sQHHeI
-EEEdMj2wyMIo+kkZ1YwAAzAq+L6HDOBzaD9xKUJbpu2Uef6g4xDAYI3IGuZcu95a
-6D6kZgD/HNfdUrF7AZtgVgStH5aPRToLFWVF9rIpMmLO/CmpT6BjvlUl0fGwbUhF
-xz2PNOlQqm3pKU/LzV2Sv410mgVSXkxLvybmCqNBIBeMbdxcmZ1/a1966iMcPKCh
-h8ZdnePCJpl8iebMEKqJoeola+7cuhzu56YemPkYV7TTR2ENXPjZW6EuDJ/rj8Os
-aZ4NiDnY67au7+OzqNNUYooJJWofI0G2vRcfAU6qPpoNazlYqDwXP0fLT2dHDxOT
-9uFFOB1liIp5K+wpSbNIXKNTb8VcTcFMKqHRUuBjY1Sx/OaAkf2d/tg/pH96A70g
-iIRuqeUTRWJwAvHEnHMauRwkWA9pZmEHlGgVl0/XGGMUBb1SpxYVHbEIx4QVU0ub
-UjsI9GMzZZZDxc3qAtB/GRKZxESusJFp8CkuHAvpcSskQRd7M77/R6FkVspAlTM2
-HStr4e4MsUz++PT5zrD/1HjZqgoB90b7xBp5CGjKxUdVWA/2kyz18500iu5LC5y4
-RETZy+C+vOtNA4fEQp25RAJCjXnY8B+GChWD46SyzRZONverzeFyR2/lJeRJvi+7
-hFUxFLCOKUsI7Fke4mWa
-=lqWV
------END PGP SIGNATURE-----
-
---Apple-Mail=_4135E42D-093A-42E0-B624-E6DB96976C6D--
+-- 
+Rask Ingemann Lambertsen
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
