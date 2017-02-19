@@ -1,158 +1,106 @@
 From: Anurup M <anurupvasu@gmail.com>
-Subject: [PATCH v4 03/11] dt-bindings: perf: hisi: Add Devicetree bindings for Hisilicon SoC PMU
-Date: Sun, 19 Feb 2017 13:50:21 -0500
-Message-ID: <1487530221-42431-1-git-send-email-anurup.m@huawei.com>
+Subject: [PATCH v4 11/11] dts: arm64: hip07: Add Hisilicon SoC PMU support
+Date: Sun, 19 Feb 2017 13:51:30 -0500
+Message-ID: <1487530290-42774-1-git-send-email-anurup.m@huawei.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, xuwei5@hisilicon.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, huangdaode@hisilicon.com, wangkefeng.wang@huawei.com, linuxarm@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
+To: mark.rutland@arm.com, will.deacon@arm.com, robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, anurup.m@huawei.com, zhangshaokun@hisilicon.com, tanxiaojun@huawei.com, sanil.kumar@hisilicon.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, shiju.jose@huawei.com, huangdaode@hisilicon.com, linuxarm@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, anurupvasu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-1) Device tree bindings for Hisilicon SoC PMU.
-2) Add example for Hisilicon L3 cache and MN PMU.
-3) Add child nodes of L3C and MN in djtag bindings example.
+1. Add nodes for hip07 L3 cache to support uncore events.
+2. Add nodes for hip07 support uncore events.
 
-Signed-off-by: Anurup M <anurup.m@huawei.com>
 Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
+Signed-off-by: Anurup M <anurup.m@huawei.com>
 ---
- .../devicetree/bindings/arm/hisilicon/djtag.txt    |  25 +++++
- .../devicetree/bindings/arm/hisilicon/pmu.txt      | 103 +++++++++++++++++++++
- 2 files changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi | 94 ++++++++++++++++++++++----------
+ 1 file changed, 64 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-index 420c2e0..e8a2a99 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-@@ -27,6 +27,31 @@ Example 1: Djtag for CPU die in HiP07
- 		hisilicon,scl-id = <0x02>;
- 
- 		/* All connecting components will appear as child nodes */
+diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+index 12f4b8e..c00512a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+@@ -1008,6 +1008,25 @@
+ 			#interrupt-cells = <2>;
+ 			num-pins = <1>;
+ 		};
 +
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01 0x01>;
-+		};
++		mbigen_fabric_b: faric_intc_b {
++			msi-parent = <&p0_its_peri_b 0x120D0>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <27>;
++		 };
++	};
 +
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02 0x01>;
-+		};
++	p0_mbigen_peri_a: interrupt-controller@40080000 {
++		compatible = "hisilicon,mbigen-v2";
++		reg = <0x0 0x40080000 0x0 0x10000>;
 +
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03 0x01>;
-+		};
-+
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04 0x01>;
-+		};
-+
-+		pmumn0 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x0b>;
-+		};
++		mbigen_fabric_a: faric_intc_a {
++			msi-parent = <&p0_its_peri_a 0x120D0>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			num-pins = <27>;
++		 };
  	};
  
- Hisilicon HiP05/06/07 djtag for IO die
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-new file mode 100644
-index 0000000..6b442c4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-@@ -0,0 +1,103 @@
-+Hisilicon SoC HiP05/06/07 ARMv8 PMU
-+===================================
-+
-+The Hisilicon SoC chips like HiP05/06/07 etc. consist of various independent
-+system device PMUs such as L3 cache (L3C) and Miscellaneous Nodes(MN). These
-+PMU devices are independent and have hardware logic to gather statistics and
-+performance information.
-+
-+HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
-+is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
-+in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
-+4 cpu-cores each.
-+e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
-+The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
-+
-+The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
-+For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
-+the parent node will be the djtag node of the corresponding CPU die (SCCL).
-+
-+L3 cache
-+---------
-+The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
-+L3 cache banks. Each L3 cache bank have separate DT nodes.
-+
-+Required properties:
-+
-+	- compatible : This value should be as follows
-+		(a) "hisilicon,hip05-pmu-l3c-v1" for v1 hw in HiP05 chipset
-+		(b) "hisilicon,hip06-pmu-l3c-v1" for v1 hw in HiP06 chipset
-+		(c) "hisilicon,hip07-pmu-l3c-v2" for v2 hw in HiP07 chipset
-+
-+	- hisilicon,module-id : This property is a combination of two values
-+	    in the below order.
-+		a) Module ID: The module identifier for djtag.
-+		b) Instance or Bank ID: This will identify the L3 cache bank
-+		 or instance.
-+
-+	*The counter overflow IRQ is not supported in v1, v2 hardware (HiP05/06/07).
-+
-+Miscellaneous Node
-+------------------
-+The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
-+for each SCCL.
-+
-+Required properties:
-+
-+	- compatible : This value should be as follows
-+		(a) "hisilicon,hip05-pmu-mn-v1" for v1 hw in HiP05 chipset
-+		(b) "hisilicon,hip06-pmu-mn-v1" for v1 hw in HiP06 chipset
-+		(c) "hisilicon,hip07-pmu-mn-v2" for v2 hw in HiP07 chipset
-+
-+	- hisilicon,module-id : Module ID to input for djtag.
-+
-+Optional properties:
-+
-+	- interrupt-parent : A phandle indicating which interrupt controller
-+		this PMU signals interrupts to. In v2 hardware (HiP07), the
-+		interrupt parent is Hisilicon Mbigen-v2.
-+
-+	- interrupts : Interrupt lines used for MN PMU counter overflow.
-+
-+	*The counter overflow interrupt is not supported in v1 hardware (HiP05/06).
-+
-+Example:
-+
-+	djtag0: djtag@60010000 {
+ 	p0_mbigen_pcie_a: interrupt-controller@a0080000 {
+@@ -1085,71 +1104,79 @@
+ 	};
+ 
+ 	djtag0: djtag@60010000 {
+-		compatible = "hisilicon,hisi-djtag-v2";
 +		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		reg = <0x0 0x80010000 0x0 0x10000>;
+ 		reg = <0x0 0x60010000 0x0 0x10000>;
+-		scl-id = <0x02>;
 +		hisilicon,scl-id = <0x03>;
-+
-+		pmul3c0 {
+ 
+-		/* L3 cache bank 0 for socket0 CPU die scl#2 */
++		/* L3 cache bank 0 for socket0 CPU die scl#3 */
+ 		pmul3c0 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x02>;
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x01 0x01>;
-+		};
-+
-+		pmul3c1 {
+ 		};
+ 
+-		/* L3 cache bank 1 for socket0 CPU die scl#2 */
++		/* L3 cache bank 1 for socket0 CPU die scl#3 */
+ 		pmul3c1 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x04>;
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x02 0x01>;
-+		};
-+
-+		pmul3c2 {
+ 		};
+ 
+-		/* L3 cache bank 2 for socket0 CPU die scl#2 */
++		/* L3 cache bank 2 for socket0 CPU die scl#3 */
+ 		pmul3c2 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x01>;
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x03 0x01>;
-+		};
-+
-+		pmul3c3 {
+ 		};
+ 
+-		/* L3 cache bank 3 for socket0 CPU die scl#2 */
++		/* L3 cache bank 3 for socket0 CPU die scl#3 */
+ 		pmul3c3 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x08>;
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x04 0x01>;
-+		};
-+
-+		pmumn0 {
+ 		};
+ 
+ 		/*
+ 		 * Miscellaneous node for socket0
+-		 * CPU die scl#2
++		 * CPU die scl#3
+ 		 */
+ 		pmumn0 {
+-			compatible = "hisilicon,hisi-pmu-mn-v1";
+-			module-id = <0x0b>;
 +			compatible = "hisilicon,hip07-pmu-mn-v2";
 +			hisilicon,module-id = <0x21>;
 +			interrupt-parent = <&mbigen_fabric_b>;
@@ -163,7 +111,68 @@ index 0000000..6b442c4
 +					<848 1>, <849 1>, <850 1>, <851 1>,
 +					<852 1>, <853 1>, <854 1>, <855 1>,
 +					<856 1>, <857 1>, <858 1>;
-+		};
-+	};
+ 		};
+ 	};
+ 
+ 	djtag1: djtag@40010000 {
+-		compatible = "hisilicon,hip07-cpu-djtag-v2";
++		compatible = "hisilicon,hip07-djtag-v2";
+ 		reg = <0x0 0x40010000 0x0 0x10000>;
+-		scl-id = <0x01>;
++		hisilicon,scl-id = <0x01>;
+ 
+ 		/* L3 cache bank 0 for socket0 CPU die scl#1 */
+ 		pmul3c0 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x02>;
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x01 0x01>;
+ 		};
+ 
+ 		/* L3 cache bank 1 for socket0 CPU die scl#1 */
+ 		pmul3c1 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x04>;
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x02 0x01>;
+ 		};
+ 
+ 		/* L3 cache bank 2 for socket0 CPU die scl#1 */
+ 		pmul3c2 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x01>;
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x03 0x01>;
+ 		};
+ 
+ 		/* L3 cache bank 3 for socket0 CPU die scl#1 */
+ 		pmul3c3 {
+-			compatible = "hisilicon,hisi-pmu-l3c-v1";
+-			module-id = <0x04 0x08>;
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x04 0x01>;
+ 		};
+ 
+ 		/*
+@@ -1157,9 +1184,16 @@
+ 		 * CPU die scl#1
+ 		 */
+ 		pmumn1 {
+-			compatible = "hisilicon,hisi-pmu-mn-v1";
+-			module-id = <0x0b>;
++			compatible = "hisilicon,hip07-pmu-mn-v2";
++			hisilicon,module-id = <0x21>;
++			interrupt-parent = <&mbigen_fabric_a>;
++			interrupts = <832 1>, <833 1>, <834 1>, <835 1>,
++					<836 1>, <837 1>, <838 1>, <839 1>,
++					<840 1>, <841 1>, <842 1>, <843 1>,
++					<844 1>, <845 1>, <846 1>, <847 1>,
++					<848 1>, <849 1>, <850 1>, <851 1>,
++					<852 1>, <853 1>, <854 1>, <855 1>,
++					<856 1>, <857 1>, <858 1>;
+ 		};
+ 	};
+-
+ };
 -- 
 2.1.4
