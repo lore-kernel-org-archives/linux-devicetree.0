@@ -1,463 +1,122 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: [PATCH 3/4] arm: dts: imx: Add iMX6Q-based Kontron SMARC-sAMX6i module
-Date: Sun, 19 Feb 2017 22:28:00 +0200
-Message-ID: <20170219202801.2082-4-plaes@plaes.org>
-References: <20170219202801.2082-1-plaes@plaes.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170219202801.2082-1-plaes@plaes.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Thierry Reding <treding@nvidia.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Priit Laes <plaes@plaes.org>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Sun, 19 Feb 2017 21:57:08 +0100
+Message-ID: <20170219205708.GA9641@amd>
+References: <20170218180811.GB9377@amd>
+ <27287BC5-E4E2-4F50-B140-C74D3CADED5B@goldelico.com>
+ <20170218225435.GA4693@amd>
+ <CC600A84-A5C8-4A8C-8CF4-B54C57DF73F3@goldelico.com>
+ <20170219141715.GA7159@amd>
+ <05F3816F-46E6-4BC2-9E2E-F20E645F7197@goldelico.com>
+ <20170219171518.GA12833@amd>
+ <B41253A6-95D5-4E0F-ABD6-6909362843C4@goldelico.com>
+ <20170219190547.GA17292@amd>
+ <EB41EEED-0D94-473F-944F-757B25350A4C@goldelico.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <EB41EEED-0D94-473F-944F-757B25350A4C-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>Benjamin Tissoires <be>
 List-Id: devicetree@vger.kernel.org
 
-SMARC-sAMX6i is a SMARC (Smart Mobility Architecture) compliant
-module.
 
-Signed-off-by: Priit Laes <plaes@plaes.org>
----
- arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi | 434 ++++++++++++++++++++++++++++++
- 1 file changed, 434 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
-new file mode 100644
-index 0000000..e3d7a35
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
-@@ -0,0 +1,434 @@
-+/*
-+ * Copyright 2017 Priit Laes <plaes@plaes.org>
-+ *
-+ * Based on initial work by Nikita Yushchenko <nyushchenko at dev.rtsoft.ru>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of
-+ *     the License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ *
-+ */
-+
-+#include "imx6q.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	/* TODO: Figure out proper name for this model... */
-+	model = "Kontron SMARC-sAMX6i module";
-+	compatible = "kontron,imx6-smx6", "fsl,imx6q";
-+
-+	memory {
-+		reg = <0x10000000 0x40000000>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_3v3_s5: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "V_3V3_S5";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		reg_1v8_s5: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "V_1V8_S5";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		reg_3v3_s0: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "V_3V3_S0";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+
-+		reg_1v0_s0: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "V_1V0_S0";
-+			regulator-min-microvolt = <1000000>;
-+			regulator-max-microvolt = <1000000>;
-+			regulator-boot-on;
-+			regulator-always-on;
-+		};
-+	};
-+
-+	i2c_pfuze: i2c-gpio-0 {
-+		compatible = "i2c-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_i2c_gpio_0>;
-+		gpios =
-+			<&gpio1 28 0>, // sda
-+			<&gpio1 30 0>; // scl
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		i2c-gpio,delay-us = <2>;
-+	};
-+};
-+
-+&can1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	status = "disabled";
-+};
-+
-+&can2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	status = "disabled";
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet_smarc>;
-+	phy-mode = "rgmii";
-+	status = "disabled";
-+};
-+
-+&i2c_pfuze {
-+	pfuze100@08 {
-+		compatible = "fsl,pfuze100";
-+		reg = <0x08>;
-+
-+		regulators {
-+			reg_v_core_s0: sw1ab {
-+				regulator-name = "V_CORE_S0";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			reg_vddsoc_s0: sw1c {
-+				regulator-name = "V_VDDSOC_S0";
-+				regulator-min-microvolt = <300000>;
-+				regulator-max-microvolt = <1875000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			reg_3v15_s0: sw2 {
-+				regulator-name = "V_3V15_S0";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* sw3a/b is used in dual mode, but driver does not
-+			 * support it? Although, there's no need to control
-+			 * DDR power - so just leaving dummy entries for sw3a
-+			 * and sw3b for now.
-+			 */
-+			sw3a {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3b {
-+				regulator-min-microvolt = <400000>;
-+				regulator-max-microvolt = <1975000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			reg_1v8_s0: sw4 {
-+				regulator-name = "V_1V8_S0";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* Regulator for USB */
-+			reg_5v0_s0: swbst {
-+				regulator-name = "V_5V0_S0";
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+				regulator-boot-on;
-+			};
-+
-+			reg_vsnvs: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			reg_vrefddr: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			/* Per schematics, of all VGEN's, only VGEN5 has some
-+			 * usage ... but even that - over DNI resistor
-+			 */
-+			vgen1 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+			};
-+
-+			vgen3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			reg_2v5_s0: vgen5 {
-+				regulator-name = "V_2V5_S0";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+
-+			vgen6 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "disabled";
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	wake-up-gpio = <&gpio6 18 GPIO_ACTIVE_HIGH>;
-+	reset-gpio = <&gpio3 13 GPIO_ACTIVE_HIGH>;
-+	status = "disabled";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1_smarc>;
-+	fsl,uart-has-rtscts;
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2_smarc>;
-+	status = "disabled";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4_smarc>;
-+	fsl,uart-has-rtscts;
-+	status = "disabled";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5_smarc>;
-+	status = "disabled";
-+};
-+
-+&usbotg {
-+	/*
-+	 * no 'imx6-usb-charger-detection'
-+	 * since USB_OTG_CHD_B pin is not wired
-+	 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg>;
-+	status = "disabled";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_5v0_s0>;
-+	status = "disabled";
-+};
-+
-+&usdhc4 {
-+	/* Internal eMMC, optional on some boards */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc4>;
-+	bus-width = <8>;
-+	no-1-8-v;
-+	non-removable;
-+	status = "disabled";
-+};
-+
-+&iomuxc {
-+	pinctrl_flexcan1: flexcan1-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_7__FLEXCAN1_TX 0x80000000
-+			MX6QDL_PAD_GPIO_8__FLEXCAN1_RX 0x80000000
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL4__FLEXCAN2_TX 0x80000000
-+			MX6QDL_PAD_KEY_ROW4__FLEXCAN2_RX 0x80000000
-+		>;
-+	};
-+
-+	pinctrl_enet_smarc: fecgrp-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_ENET_MDIO__ENET_MDIO       0x1b0b0
-+			MX6QDL_PAD_ENET_MDC__ENET_MDC         0x1b0b0
-+			MX6QDL_PAD_RGMII_TXC__RGMII_TXC       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD0__RGMII_TD0       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD1__RGMII_TD1       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD2__RGMII_TD2       0x1b0b0
-+			MX6QDL_PAD_RGMII_TD3__RGMII_TD3       0x1b0b0
-+			MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL 0x1b0b0
-+			MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK  0x1b0b0
-+			MX6QDL_PAD_RGMII_RXC__RGMII_RXC       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD0__RGMII_RD0       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD1__RGMII_RD1       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD2__RGMII_RD2       0x1b0b0
-+			MX6QDL_PAD_RGMII_RD3__RGMII_RD3       0x1b0b0
-+			MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL 0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c_gpio_0: i2c-gpio-0-smarc {
-+		fsl,pins = <
-+			/* SCL GPIO */
-+			MX6QDL_PAD_ENET_TXD0__GPIO1_IO30  0x80000000
-+			/* SDA GPIO */
-+			MX6QDL_PAD_ENET_TX_EN__GPIO1_IO28 0x80000000
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D17__I2C3_SCL		0x4001b8b1
-+			MX6QDL_PAD_EIM_D18__I2C3_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_pcie: pcie-smarc {
-+		fsl,pins = <
-+			/* RST_PCIE_A# */
-+			MX6QDL_PAD_EIM_DA13__GPIO3_IO13 0x80000000
-+			/* PCIE_WAKE# */
-+			MX6QDL_PAD_SD3_DAT6__GPIO6_IO18 0x80000000
-+		>;
-+	};
-+
-+	pinctrl_uart1_smarc: uart1grp-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA 0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA 0x1b0b1
-+			MX6QDL_PAD_EIM_D20__UART1_RTS_B 0x1b0b1
-+			MX6QDL_PAD_EIM_D19__UART1_CTS_B 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2_smarc: uart2grp-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_EIM_D27__UART2_RX_DATA 0x1b0b1
-+			MX6QDL_PAD_EIM_D26__UART2_TX_DATA 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart4_smarc: uart4grp-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA 0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA 0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B 0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5_smarc: uart5grp-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT15__UART5_RX_DATA 0x1b0b1
-+			MX6QDL_PAD_CSI0_DAT14__UART5_TX_DATA 0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg: usbotg-grp-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x1f8b0
-+			/* TODO: Comment out power and OC gpio's for now, since
-+			 * these are not used by driver
-+			 */
-+			/* USB power */
-+			// MX6QDL_PAD_CSI0_PIXCLK__GPIO5_IO18 0x80000000
-+			/* USB OC */
-+			// MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20 0x80000000
-+		>;
-+	};
-+
-+	pinctrl_usdhc4: usdhc4grp-smarc {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_CLK__SD4_CLK 0x17059
-+			MX6QDL_PAD_SD4_CMD__SD4_CMD 0x17059
-+			MX6QDL_PAD_SD4_DAT0__SD4_DATA0 0x17059
-+			MX6QDL_PAD_SD4_DAT1__SD4_DATA1 0x17059
-+			MX6QDL_PAD_SD4_DAT2__SD4_DATA2 0x17059
-+			MX6QDL_PAD_SD4_DAT3__SD4_DATA3 0x17059
-+			MX6QDL_PAD_SD4_DAT4__SD4_DATA4 0x17059
-+			MX6QDL_PAD_SD4_DAT5__SD4_DATA5 0x17059
-+			MX6QDL_PAD_SD4_DAT6__SD4_DATA6 0x17059
-+			MX6QDL_PAD_SD4_DAT7__SD4_DATA7 0x17059
-+		>;
-+	};
-+};
--- 
-2.9.3
+Hi!
+
+
+> But as said I don't think we need float or fixed point for practical syst=
+ems
+> at all.
+
+So you are going to loose precision. And if userspace decides to
+calibrate it slightly differently from kernel, lost precision will
+matter.
+
+> >>> and floating point in kernel is hard. Also
+> >>> you'd either have to invent new interface, or you'd break touchscreen
+> >>> for people that already have their touchscreens calibrated.
+> >>=20
+> >> No, I don't break calibration for people using a different chip.
+> >=20
+> > So you propose your touchscreen to behave differently from all other
+> > touchscreens in tree?
+>=20
+> No. I only propose that my touch screen behaves properly and in the
+> best way it can. If others are worse, they should also be improved at
+> some time.
+
+Different from all other drivers. Read: broken.
+
+No. You have to design interface such that they _can_ be improved, and
+what you propose does not work that way.=20
+
+> And note that I am not making things different from others in tree, I
+> am making the tsc2007 right (incl. following the touchscreen bindings
+> which define the touchscreen size in "Pixels").
+
+Your touch screen is not in any way special, so it has to behave in
+the same way others do.
+
+> > That's just no-go.
+>=20
+> In other words: you want to block any improvements unless your favourite
+> touchscreen is giving directions...
+
+Yes. I want to prevent you from pushing crap into the kernel.
+
+If you want to improve it in reasonable way, you know what to do.
+
+> >> You seem to repeat yourself and just say which solution you prefer,
+> >> but I am missing the arguments why your solution (Pass calibration data
+> >> to userland) is right and the best one.
+> >> Which problems does it solve?
+> >=20
+> > All you described.
+>=20
+> I think you are missing one problem: providing already properly scaled to=
+uch
+> values to user space.
+
+I'm not. Userspace has to know how to do the calibration _anyway_ (for
+other hardware), so giving scaled values to userspace is useless.
+
+> >> How can you implement it in
+> >> a stable and portable way?
+> >=20
+> > Easily.
+>=20
+> Please go ahead and show code.
+
+You don't get to tell me what to do, unless you pay me.
+
+You want to break kernel, you do coding. Or pay someone else,
+preferably someone who knows how to design kernel code.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAliqBqQACgkQMOfwapXb+vI3EgCfTXHQiQCyMcxM4jU5YBg6ysum
+UmIAoJQdh3wzIYAvltybgJ9v238pFL8C
+=haEX
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
