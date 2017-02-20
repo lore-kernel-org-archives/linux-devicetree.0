@@ -1,81 +1,41 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [RESEND PATCH v7 7/7] drm/rockchip/dsi: add dw-mipi power domain
- support
-Date: Mon, 20 Feb 2017 16:02:23 +0800
-Message-ID: <1487577744-2855-8-git-send-email-zyw@rock-chips.com>
-References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: john@metanate.com, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: [RFC PATCH 0/4] mmc: core: Provide CMD5 awake and partial_init support
+Date: Mon, 20 Feb 2017 13:33:08 +0530
+Message-ID: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com
+Cc: shawn.lin@rock-chips.com, devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com, linux-kernel@vger.kernel.org, Ritesh Harjani <riteshh@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-UmVmZXJlbmNlIHRoZSBwb3dlciBkb21haW4gaW5jYXNlIGR3LW1pcGkgcG93ZXIgZG93biB3aGVu
-CmluIHVzZS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+
-ClJldmlld2VkLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KLS0tCgpDaGFu
-Z2VzIGluIHY2OiBOb25lCkNoYW5nZXMgaW4gdjU6IE5vbmUKQ2hhbmdlcyBpbiB2NDogTm9uZQpD
-aGFuZ2VzIGluIHYzOiBOb25lCgogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNp
-LmMgfCAxNiArKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygr
-KQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jIGIv
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKaW5kZXggYTY1MzM4NC4uYjMy
-ZTRmYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMK
-KysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKQEAgLTEyLDYgKzEy
-LDcgQEAKICNpbmNsdWRlIDxsaW51eC9tYXRoNjQuaD4KICNpbmNsdWRlIDxsaW51eC9tb2R1bGUu
-aD4KICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KKyNpbmNsdWRlIDxsaW51eC9wbV9ydW50
-aW1lLmg+CiAjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+CiAjaW5jbHVkZSA8bGludXgvcmVzZXQu
-aD4KICNpbmNsdWRlIDxsaW51eC9tZmQvc3lzY29uLmg+CkBAIC0yOTMsNiArMjk0LDcgQEAgc3Ry
-dWN0IGR3X21pcGlfZHNpIHsKIAlzdHJ1Y3QgY2xrICpwY2xrOwogCXN0cnVjdCBjbGsgKnBoeV9j
-ZmdfY2xrOwogCisJaW50IGRwbXNfbW9kZTsKIAl1bnNpZ25lZCBpbnQgbGFuZV9tYnBzOyAvKiBw
-ZXIgbGFuZSAqLwogCXUzMiBjaGFubmVsOwogCXUzMiBsYW5lczsKQEAgLTk2MCw2ICs5NjIsOSBA
-QCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9lbmNv
-ZGVyICplbmNvZGVyKQogewogCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gZW5jb2Rlcl90b19k
-c2koZW5jb2Rlcik7CiAKKwlpZiAoZHNpLT5kcG1zX21vZGUgIT0gRFJNX01PREVfRFBNU19PTikK
-KwkJcmV0dXJuOworCiAJaWYgKGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBjbGspKSB7CiAJCWRl
-dl9lcnIoZHNpLT5kZXYsICIlczogRmFpbGVkIHRvIGVuYWJsZSBwY2xrXG4iLCBfX2Z1bmNfXyk7
-CiAJCXJldHVybjsKQEAgLTk3MSw3ICs5NzYsOSBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9l
-bmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQogCWRybV9wYW5lbF91
-bnByZXBhcmUoZHNpLT5wYW5lbCk7CiAKIAlkd19taXBpX2RzaV9kaXNhYmxlKGRzaSk7CisJcG1f
-cnVudGltZV9wdXQoZHNpLT5kZXYpOwogCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBjbGsp
-OworCWRzaS0+ZHBtc19tb2RlID0gRFJNX01PREVfRFBNU19PRkY7CiB9CiAKIHN0YXRpYyB2b2lk
-IGR3X21pcGlfZHNpX2VuY29kZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikK
-QEAgLTk4NywxMSArOTk0LDE1IEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJfZW5h
-YmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIAlpZiAocmV0IDwgMCkKIAkJcmV0dXJu
-OwogCisJaWYgKGRzaS0+ZHBtc19tb2RlID09IERSTV9NT0RFX0RQTVNfT04pCisJCXJldHVybjsK
-KwogCWlmIChjbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5wY2xrKSkgewogCQlkZXZfZXJyKGRzaS0+
-ZGV2LCAiJXM6IEZhaWxlZCB0byBlbmFibGUgcGNsa1xuIiwgX19mdW5jX18pOwogCQlyZXR1cm47
-CiAJfQogCisJcG1fcnVudGltZV9nZXRfc3luYyhkc2ktPmRldik7CiAJZHdfbWlwaV9kc2lfaW5p
-dChkc2kpOwogCWR3X21pcGlfZHNpX2RwaV9jb25maWcoZHNpLCBtb2RlKTsKIAlkd19taXBpX2Rz
-aV9wYWNrZXRfaGFuZGxlcl9jb25maWcoZHNpKTsKQEAgLTEwMjcsNiArMTAzOCw3IEBAIHN0YXRp
-YyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5j
-b2RlcikKIAogCXJlZ21hcF93cml0ZShkc2ktPmdyZl9yZWdtYXAsIHBkYXRhLT5ncmZfc3dpdGNo
-X3JlZywgdmFsKTsKIAlkZXZfZGJnKGRzaS0+ZGV2LCAidm9wICVzIG91dHB1dCB0byBkc2kwXG4i
-LCAobXV4KSA/ICJMSVQiIDogIkJJRyIpOworCWRzaS0+ZHBtc19tb2RlID0gRFJNX01PREVfRFBN
-U19PTjsKIH0KIAogc3RhdGljIGludApAQCAtMTE5NCw2ICsxMjA2LDcgQEAgc3RhdGljIGludCBk
-d19taXBpX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVy
-LAogCiAJZHNpLT5kZXYgPSBkZXY7CiAJZHNpLT5wZGF0YSA9IHBkYXRhOworCWRzaS0+ZHBtc19t
-b2RlID0gRFJNX01PREVfRFBNU19PRkY7CiAKIAlyZXQgPSByb2NrY2hpcF9taXBpX3BhcnNlX2R0
-KGRzaSk7CiAJaWYgKHJldCkKQEAgLTEyNzQsNiArMTI4Nyw4IEBAIHN0YXRpYyBpbnQgZHdfbWlw
-aV9kc2lfYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAog
-CWRldl9zZXRfZHJ2ZGF0YShkZXYsIGRzaSk7CiAKKwlwbV9ydW50aW1lX2VuYWJsZShkZXYpOwor
-CiAJZHNpLT5kc2lfaG9zdC5vcHMgPSAmZHdfbWlwaV9kc2lfaG9zdF9vcHM7CiAJZHNpLT5kc2lf
-aG9zdC5kZXYgPSBkZXY7CiAJcmV0ID0gbWlwaV9kc2lfaG9zdF9yZWdpc3RlcigmZHNpLT5kc2lf
-aG9zdCk7CkBAIC0xMjk2LDYgKzEzMTEsNyBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV91bmJp
-bmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAJc3RydWN0IGR3
-X21pcGlfZHNpICpkc2kgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKIAogCW1pcGlfZHNpX2hvc3Rf
-dW5yZWdpc3RlcigmZHNpLT5kc2lfaG9zdCk7CisJcG1fcnVudGltZV9kaXNhYmxlKGRldik7CiAJ
-Y2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGxscmVmX2Nsayk7CiB9CiAKLS0gCjIuNi4zCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+As per JEDEC spec - CMD5 can be used to awake from sleep mode for emmc.
+This patch series provide CMD5(awake) + mmc_partial_init support to resume
+mmc card device. This is mainly to reduce the resume time.
+
+This was tested on db410c (emmc with HS200 mode) and MS8996 (emmc with HS400ES)
+based internal board. This patch reduced the resume time by ~50% on msm8996
+and ~11% on db410c.
+
+As of now this patch series provides a caps (MMC_CAP2_SLEEP_AWAKE) to enable this feature.
+Since there is no dependency on host platform for this, we can enable this feature by
+default as well. Thoughts?
+
+
+Ritesh Harjani (4):
+  Documentation: mmc: add mmc-sleep-awake
+  mmc: core: add mmc-sleep-awake caps
+  mmc: mmc: add support for CMD5 awake
+  mmc: core: Implement mmc_partial_init during resume
+
+ Documentation/devicetree/bindings/mmc/mmc.txt |   2 +
+ drivers/mmc/core/core.c                       |  13 +++
+ drivers/mmc/core/core.h                       |   1 +
+ drivers/mmc/core/host.c                       |   2 +
+ drivers/mmc/core/mmc.c                        | 160 ++++++++++++++++++++++++--
+ include/linux/mmc/card.h                      |   3 +
+ include/linux/mmc/host.h                      |   2 +
+ 7 files changed, 176 insertions(+), 7 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, 
+a Linux Foundation Collaborative Project.
