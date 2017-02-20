@@ -1,57 +1,65 @@
-From: Yannick FERTRE <yannick.fertre@st.com>
-Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
-Date: Mon, 20 Feb 2017 11:01:25 +0000
-Message-ID: <2b409ff7-54fe-4110-6495-1cc54585e5e2@st.com>
-References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
- <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
- <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] thermal: mt8173: minor mtk_thermal.c cleanups
+Date: Mon, 20 Feb 2017 12:30:44 +0100
+Message-ID: <46d6c448-a669-a748-acfa-8ed129c65b51@gmail.com>
+References: <1486531862-31945-1-git-send-email-dawei.chien@mediatek.com>
+ <ebdf54af-6290-9654-c475-53dd580582a0@gmail.com>
+ <1486976518.24087.7.camel@mtksdaap41>
+ <20170219012306.GA28525@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <14915226CB2B674FA1778EF630895E9C@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170219012306.GA28525-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8xNi8yMDE3IDAzOjM0IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBGcmksIEZl
-YiAxMCwgMjAxNyBhdCAwMzo1NDo0NFBNICswMTAwLCBZYW5uaWNrIEZlcnRyZSB3cm90ZToKPj4g
-U2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KPj4g
-LS0tCj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3
-LXQwMWgudHh0ICAgICAgICAgfCA3ICsrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2Vy
-dGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0Cj4+
-Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10
-MDFoLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5mNTllM2M0
-Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dAo+PiBAQCAt
-MCwwICsxLDcgQEAKPj4gK0FtcGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCA0LjMiIFdRVkdBIFRG
-VCBMQ0QgcGFuZWwKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJs
-ZTogc2hvdWxkIGJlICJhbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgiCj4KPiBObyBHUElPIGNv
-bnRyb2xzIG9yIHBvd2VyIHN1cHBseSBmb3IgdGhpcyBwYW5lbD8KPgo+IFJvYgo+CgpIaSBSb2Is
-CnRoYW5rIGZvciB5b3VyIHJlcGx5LgpUaGVyZSBpcyBubyBncGlvIG9yIHBvd2VyIHN1cHBseSBj
-b250cm9sIGZvciB0aGlzIHBhbmVsIHdpdGggdGhlIGV2YWwgCmJvYXJkIHN0bTQyOXg5aS4KVGhp
-cyBiaW5kaW5nIGlzIHNpbWlsYXIgdG8gYWxsIHBhbmVsIGJpbmRpbmdzIHdoaWNoIGFyZSBsaW5r
-IHRvIHBhbmVsIApzaW1wbGUuIERldGFpbHMgb24gZ3BpbyAmIHBvd2VyIHN1cHBseSBhcmUgZGVz
-Y3JpYmUgd2l0aCBzaW1wbGUtcGFuZWwgCmJpbmRpbmcuCgpCZXN0IHJlZ2FyZHMKCkV4YW1wbGUg
-bnZkLDkxMjgudHh0OgoKTmV3IFZpc2lvbiBEaXNwbGF5IDcuMCIgODAwIFJHQiB4IDQ4MCBURlQg
-TENEIHBhbmVsCgpSZXF1aXJlZCBwcm9wZXJ0aWVzOgotIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
-bnZkLDkxMjgiCgpUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFu
-ZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCmluIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhp
-cyBkaXJlY3RvcnkuCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+
+
+On 19/02/17 02:23, Eduardo Valentin wrote:
+> On Mon, Feb 13, 2017 at 05:01:58PM +0800, Dawei Chien wrote:
+>> Hi, Matthias,
+>>
+>> On Thu, 2017-02-09 at 22:25 +0100, Matthias Brugger wrote:
+>>>
+>>> On 02/08/2017 06:31 AM, Dawei Chien wrote:
+>>>> Thermal driver should read TEMP_MSR3 if thermal bank with 4 sensors.
+>>>> However, Currently thermal driver don't need read TEMP_MSR3 since
+>>>> thermal controller only use 3 sensors for each thermal bank.
+>>>>
+>>>> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>> ---
+>>>
+>>> Actually the commit message should state:
+>>> Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
+>>>
+>>> ...and get backported to v4.9 and v4.10.
+>>>
+>>> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> Regards,
+>>> Matthias
+>>
+>> Thank you for your review. I would add below commit message on next
+>> version. However, currently 8173 thermal driver would not read TEMP_MSR3
+>> since thermal driver only use 3 sensors on each bank, this patch would
+>> not effect temperature.
+>> Only if thermal driver use 4 sensors on any thermal bank, would read
+>> third sensor two times, and lose fourth sensor of vale.
+>> Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
+>>
+>
+> Please send a new version with the tag in the commit message.
+>
+
+And don't forget to add stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org so that the fix ends up 
+in the older kernels as well.
+
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
