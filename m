@@ -1,78 +1,121 @@
-From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove the OF
- graph
-Date: Mon, 20 Feb 2017 17:32:22 +0900
-Message-ID: <58AAA996.3080900@samsung.com>
-References: <CGME20170209012715epcas1p3dbe1788b864c50d339dcfd791c0900ec@epcas1p3.samsung.com>
- <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com>
- <58AA95C1.4020809@samsung.com>
- <CAJKOXPd7Roubdf_5B6pT1PkA9K9dZmjPydYOujXvrz8cVcKVmg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAJKOXPd7Roubdf_5B6pT1PkA9K9dZmjPydYOujXvrz8cVcKVmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH v2] Input: pwm-beeper: support customized freq for SND_BELL
+Date: Mon, 20 Feb 2017 09:37:43 +0100
+Message-ID: <1487579863-7256-1-git-send-email-hs@denx.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, Heiko Schocher <hs@denx.de>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Guan Ben <ben.guan@cn.bosch.com>
 
+extend the pwm-beeper driver to support customized frequency
+for SND_BELL from device tree.
 
-2017년 02월 20일 16:27에 Krzysztof Kozlowski 이(가) 쓴 글:
-> On Mon, Feb 20, 2017 at 9:07 AM, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Hi Krzysztof,
->>
->> Can you merge patch 2 and 5 to your tree so that they can go to mainline? Otherwise, I can merge them to my tree if you give me acked-by.
-> 
-> Hi,
-> 
-> Hm? Why do you need them to be merged? Do you mean that the first
-> patch breaks not only ABI but also bisectability? Then this has to be
-> reworked because:
-> 
-> 1. The DTS patches cannot go through non-DT tree so no, you cannot
-> take them into your branch. I will merge them according to point 4
-> below.
-> 2. Bisectability has to be preserved.
-> 3. DTS changes in general should not be a dependency for driver changes.
+Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+[hs@denx.de: adapted to 4.10-rc7]
+Signed-off-by: Heiko Schocher <hs@denx.de>
 
-Krzysztof,
+---
 
-I know that. I didn't check you gave a comment to Hoegun do rework this patch series. I just checked reviewed-by from Andrzej H. and thought no problem.
+Changes in v2:
+- add comment from Rob Herring:
+  rename property name "bell-frequency" to "beeper-hz"
+- add comment from Dmitry Torokhov:
+  use device_property_read_u32() instead of of_property_read_u32()
+- rebased against c470abd4fde40ea6a0846a2beab642a578c0b8cd
+  Linux 4.10
+
+ .../devicetree/bindings/input/pwm-beeper.txt       |  3 ++
+ drivers/input/misc/pwm-beeper.c                    | 36 ++++++++++++++++------
+ 2 files changed, 30 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+index be332ae..4e4e128 100644
+--- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
++++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+@@ -5,3 +5,6 @@ Registers a PWM device as beeper.
+ Required properties:
+ - compatible: should be "pwm-beeper"
+ - pwms: phandle to the physical PWM device
++
++optional properties:
++- beeper-hz:  bell frequency in Hz
+diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+index 5f9655d..5ea6fda 100644
+--- a/drivers/input/misc/pwm-beeper.c
++++ b/drivers/input/misc/pwm-beeper.c
+@@ -27,6 +27,7 @@ struct pwm_beeper {
+ 	struct pwm_device *pwm;
+ 	struct work_struct work;
+ 	unsigned long period;
++	unsigned int bell_frequency;
+ };
  
-Ideally you are right. DT changes should be no any dependency of driver changes but now Exynos DT is broken.
-So if we have to keep the bisectability between driver and device tree patches - this means that all drivers should always keep the backward compatibility - then the drivers will be messed up.
+ #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
+@@ -58,20 +59,17 @@ static int pwm_beeper_event(struct input_dev *input,
+ 	if (type != EV_SND || value < 0)
+ 		return -EINVAL;
+ 
+-	switch (code) {
+-	case SND_BELL:
+-		value = value ? 1000 : 0;
+-		break;
+-	case SND_TONE:
+-		break;
+-	default:
++	if (code != SND_BELL && code != SND_TONE)
+ 		return -EINVAL;
+-	}
+ 
+ 	if (value == 0)
+ 		beeper->period = 0;
+-	else
++	else {
++		if (code == SND_BELL)
++			value = beeper->bell_frequency;
++
+ 		beeper->period = HZ_TO_NANOSECONDS(value);
++	}
+ 
+ 	schedule_work(&beeper->work);
+ 
+@@ -93,6 +91,25 @@ static void pwm_beeper_close(struct input_dev *input)
+ 	pwm_beeper_stop(beeper);
+ }
+ 
++static void pwm_beeper_init_bell_frequency(struct device *dev,
++					   struct pwm_beeper *beeper)
++{
++	struct device_node *node;
++	unsigned int bell_frequency = 1000;
++	int err;
++
++	if (IS_ENABLED(CONFIG_OF)) {
++		node = dev->of_node;
++		err = device_property_read_u32(dev, "beeper-hz",
++					       &bell_frequency);
++		if (err < 0)
++			dev_dbg(dev, "Failed to read beeper-hz, using default: %u Hz\n",
++				bell_frequency);
++	}
++
++	beeper->bell_frequency = bell_frequency;
++}
++
+ static int pwm_beeper_probe(struct platform_device *pdev)
+ {
+ 	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
+@@ -122,6 +139,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+ 	pwm_apply_args(beeper->pwm);
+ 
+ 	INIT_WORK(&beeper->work, pwm_beeper_work);
++	pwm_beeper_init_bell_frequency(&pdev->dev, beeper);
+ 
+ 	beeper->input = input_allocate_device();
+ 	if (!beeper->input) {
+-- 
+2.7.4
 
-About this, we had a discussion and I think you agreed,
-https://patchwork.kernel.org/patch/9477957/
-
-Do you want the backward compatibility to be kept always when new dt binding relevant patch - which fixes up the wrong usage of dt binding - is posted?
-It would be good for the backward compatibility to be kept as long as we can do but there would be several cases to make the driver to be messed up like this patch series.
-
-> 4 . Usually DTS patches wait for driver to be acked by devicetree
-> maintainers or merging by driver maintainer. This did not happen so
-> DTS patches wait. Also these were sent too late to merge for this
-> cycle so the only chance is v4.12.
-
-Yes, maybe.
-
-
-Thanks,
-Inki Dae
-
-
-> 
-> Best regards,
-> Krzysztof
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
