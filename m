@@ -1,80 +1,71 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove the OF graph
-Date: Mon, 20 Feb 2017 10:55:09 +0200
-Message-ID: <CAJKOXPdqfZ6HG9OKiV9xFw1ybSZXKfGPQJdwdVyH-jjeizpUaw@mail.gmail.com>
-References: <CGME20170209012715epcas1p3dbe1788b864c50d339dcfd791c0900ec@epcas1p3.samsung.com>
- <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com>
- <58AA95C1.4020809@samsung.com> <CAJKOXPd7Roubdf_5B6pT1PkA9K9dZmjPydYOujXvrz8cVcKVmg@mail.gmail.com>
- <58AAA996.3080900@samsung.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 0/9] meson-gx: reset RGMII PHYs and configure TX delay
+Date: Mon, 20 Feb 2017 10:08:39 +0100
+Message-ID: <1487581719.3734.1.camel@baylibre.com>
+References: <20170122181028.5014-1-martin.blumenstingl@googlemail.com>
+         <20170219214149.30418-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <58AAA996.3080900@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170219214149.30418-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 20, 2017 at 10:32 AM, Inki Dae <inki.dae@samsung.com> wrote:
->
->
-> 2017년 02월 20일 16:27에 Krzysztof Kozlowski 이(가) 쓴 글:
->> On Mon, Feb 20, 2017 at 9:07 AM, Inki Dae <inki.dae@samsung.com> wrote:
->>> Hi Krzysztof,
->>>
->>> Can you merge patch 2 and 5 to your tree so that they can go to mainline? Otherwise, I can merge them to my tree if you give me acked-by.
->>
->> Hi,
->>
->> Hm? Why do you need them to be merged? Do you mean that the first
->> patch breaks not only ABI but also bisectability? Then this has to be
->> reworked because:
->>
->> 1. The DTS patches cannot go through non-DT tree so no, you cannot
->> take them into your branch. I will merge them according to point 4
->> below.
->> 2. Bisectability has to be preserved.
->> 3. DTS changes in general should not be a dependency for driver changes.
->
-> Krzysztof,
->
-> I know that. I didn't check you gave a comment to Hoegun do rework this patch series. I just checked reviewed-by from Andrzej H. and thought no problem.
->
-> Ideally you are right. DT changes should be no any dependency of driver changes but now Exynos DT is broken.
+On Sun, 2017-02-19 at 22:41 +0100, Martin Blumenstingl wrote:
+> This series adds the reset GPIOs for the (external) ethernet PHYs on
+> all
+> GXBB boards.
+> Additionally it provides a ethernet PHY node which can be used to
+> specify
+> PHY-specific properties (this may be required if more boards require
+> the
+> "eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board
+> .dts
+> consistent I chose to add the PHY node also for boards which don't
+> have a
+> RTL8211F PHY.
+> 
 
-I didn't receive any bug reports that Exynos DT is broken so I am
-quite surprised hearing that. What do you mean by that?
+Looks good to me. For the patchset:
+Reviewed-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-> So if we have to keep the bisectability between driver and device tree patches - this means that all drivers should always keep the backward compatibility - then the drivers will be messed up.
-
-No, you are mixing two things. Bisectability is different than
-backward compatibility. For the backward DT ABI compatibility, we
-agreed that in this case it can be dropped. However bisectability is
-something totally different. The DTS changes always go through
-separate branch, so the driver has to be *always* ready for such case
-and should still be fully bisectable. This is a general rule existing
-for long time and every deviation from the rule is pointed out by
-arm-soc guys. Whenever I accepted breaking of this rule, I had hard
-times with arm-soc so no - I am no longer giving up basic rule just
-because developer might not care.
-
-There are many ways to solve the bisectability problem. Recently for
-example Marek found nice way to solve the PMU syscon handle dependency
-[1]. One can also merge first DTS changes and in next release, merge
-the driver.
-
-> About this, we had a discussion and I think you agreed,
-> https://patchwork.kernel.org/patch/9477957/
-
-Again, this discussion was about DT ABI. Not bisectability.
-
-> Do you want the backward compatibility to be kept always when new dt binding relevant patch - which fixes up the wrong usage of dt binding - is posted?
-> It would be good for the backward compatibility to be kept as long as we can do but there would be several cases to make the driver to be messed up like this patch series.
-
-Again, DT ABI not bisectability.
-
-Best regards,
-Krzysztof
-
-[1] https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/commit/?h=for-v4.11/drivers-soc-exynos-pmu-the-joy-never-ends&id=76640b84bd7a9d68c70d8bc8ecd02cdc4bd8855e
+> 
+> Martin Blumenstingl (9):
+>   ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
+>   ARM64: dts: meson-gxbb-p200: add the ethernet PHY's reset GPIO
+>   ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
+>   ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset
+> GPIO
+>   ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
+>   ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset
+> GPIO
+>   ARM64: dts: meson-gxbb-p201: fix ethernet support
+>   ARM64: dts: amlogic: add the ethernet TX delay configuration
+>   ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
+> 
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  1 -
+>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 17
+> ++++++++++++++
+>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  7 ++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    | 25
+> +++++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    | 11 +++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 -----
+>  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 21
+> ++++++++++++++++-
+>  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 26
+> ++++++++++++++++++++++
+>  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 26
+> ++++++++++++++++++++++
+>  .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  2 ++
+>  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 ++
+>  arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts     |  2 ++
+>  12 files changed, 138 insertions(+), 8 deletions(-)
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
