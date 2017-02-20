@@ -1,66 +1,53 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [Letux-kernel] [PATCH v9 1/8] drivers:input:tsc2007: add new
- common binding names, pre-calibration, flipping and rotation
-Date: Mon, 20 Feb 2017 20:32:28 +0100
-Message-ID: <20170220193228.GB23745@amd>
-References: <20170219141715.GA7159@amd>
- <05F3816F-46E6-4BC2-9E2E-F20E645F7197@goldelico.com>
- <20170219171518.GA12833@amd>
- <B41253A6-95D5-4E0F-ABD6-6909362843C4@goldelico.com>
- <20170219190547.GA17292@amd>
- <EB41EEED-0D94-473F-944F-757B25350A4C@goldelico.com>
- <20170219205708.GA9641@amd>
- <20170219232918.53801560@aktux>
- <20170219223949.GA2470@amd>
- <EE81034E-C10E-4E8B-B026-B3E92C0DAA19@goldelico.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 00/14] mmc: Add support to Marvell Xenon SD Host Controller
+Date: Mon, 20 Feb 2017 20:32:58 +0100
+Message-ID: <CAPDyKFqXQmuxWFZwcnTgQcKU_t5MKCtBj6s+tv5gzVWS11x0qA@mail.gmail.com>
+References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
+ <87y3x0ajdv.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <EE81034E-C10E-4E8B-B026-B3E92C0DAA19@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Andreas Kemnade <andreas@kemnade.info>, Mark Rutland <mark.rutland@arm.com>, Andrey Gelman <andrey.gelman@compulab.co.il>, Michel Verlaan <michel.verl@gmail.com>, Nick Dyer <nick@shmanahar.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Aaro Koskinen <aaro.koskinen@nokia.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, Hans Verkuil <hans.verkuil@cisco.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87y3x0ajdv.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan
 List-Id: devicetree@vger.kernel.org
 
+On 20 February 2017 at 17:59, Gregory CLEMENT
+<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Ulf,
+>
+>  On mar., f=C3=A9vr. 14 2017, Gregory CLEMENT <gregory.clement@free-elect=
+rons.com> wrote:
+>
+>> Hello,
+>>
+>> This the sixth version of the series adding support for the SDHCI
+>> Xenon controller. It can be currently found on the Armada 37xx and the
+>> Armada 7K/8K but will be also used in more Marvell SoC (and not only
+>> the mvebu ones actually).
+>>
+>> Most of the following changes had been discussed on the mailing list,
+>> except the new compatible string.
+>>
+>
+> I think that with this version we addressed all the concerns expressed
+> about the previous version. Do you think that you will be able to apply
+> this series for 4.11 or do you still see any issues?
+>
+> Thanks,
+>
+> Gregory
 
---E39vaYmALEf/7YXx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We are in the merge window for v4.11, so new material is out of the
+question. I am preparing the PR to Linus as this very moment.
 
-Hi!
+Anyway, I will look into the series as soon as I can.
 
-> > But if you have userspace that depends on touchscreen to be
-> > calibrated... that _is_ wrong.
->=20
-> User-space people and real users have the opposite opinion. They
-> prefer if a touch is plug&play. I.e. without need for calibration.
-
-Some people prefer to calibrate their touchscreens; because of
-per-device variations, that gives better precision.
-
-You can pass default calibration data from device tree to kernel to
-userland. But you can not force people to use that calibration.
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---E39vaYmALEf/7YXx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlirREwACgkQMOfwapXb+vL9WACgv4QUgsdFRlmmfcDNHeF6zy+p
-2ZUAmwb6kpz2iVvbh5rIXETQpOoOaJc5
-=heiN
------END PGP SIGNATURE-----
-
---E39vaYmALEf/7YXx--
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
