@@ -1,136 +1,37 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM64: Initial Marvell IAP140 enablement
-Date: Mon, 20 Feb 2017 14:17:46 +0100
-Message-ID: <87bmtxatmt.fsf@free-electrons.com>
-References: <20170219032000.4674-1-afaerber@suse.de>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v10 3/3] arm64: dts: exynos: Add support for S6E3HA2 panel
+ device on TM2 board
+Date: Mon, 20 Feb 2017 15:20:52 +0200
+Message-ID: <CAJKOXPc6rQVdkydpiykFaXsC5wuW7LdR67v0u7bHBo_vAE9bQQ@mail.gmail.com>
+References: <CGME20170220071001epcas1p3c2b32665942ba55c3ed4e06d2c66d661@epcas1p3.samsung.com>
+ <1487574582-15746-1-git-send-email-hoegeun.kwon@samsung.com> <1487574582-15746-4-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170219032000.4674-1-afaerber-l3A5Bk7waGM@public.gmane.org> ("Andreas
- =?utf-8?Q?F=C3=A4rber=22's?=
-        message of "Sun, 19 Feb 2017 04:19:56 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1487574582-15746-4-git-send-email-hoegeun.kwon@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, a.hajda@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
- 
- On dim., févr. 19 2017, Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org> wrote:
+On Mon, Feb 20, 2017 at 9:09 AM, Hoegeun Kwon <hoegeun.kwon@samsung.com> wrote:
+> From: Hyungwon Hwang <human.hwang@samsung.com>
+>
+> This patch add the panel device tree node for S6E3HA2 display
+> controller to TM2 dts.
+>
+> Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
-> Hello,
->
-> This mini-series adds initial support for the Marvell IAP140 SoC (aka PXA1908)
-> and the Andromeda Box Edge development board.
+Please use scripts/get_maintainer.pl to get the list of people to CC.
+Here you missed Javier, so I am worried that you run this driver not
+on mainline kernel but on some old one...
 
-Given the name of the SoC (PXA1908) and the fact that you reuse driver
-related to PXA, for me these SoC is neither a mvebu nor a berlin SoC. So
-just to avoid any misunderstanding, I don't mind being CC and possibly
-doing review but I don't plan to take this patch ( I don't think the
-berlin maintainer will do it too). 
-
->
-> In order to enable the 8250 UART driver, it reuses ARCH_PXA; but some drivers
-> enabled with ARCH_PXA don't build due to arm assembly or arm64's lack of mach-,
-> so their dependencies need to be limited to ARM alongside (blacklisted). The
-> alternative would of course be to choose a new ARCH_ symbol and to selectively
-> add it to drivers known working (whitelisting). The latter would require
-> finding a suitable name.
-
-For this kind of issue you can have a look on what we did when
-introducing mvebu SoC using ARM64.
-
-Gregory
-
->
-> Both earlycon and serial are working, but an explicit console=ttyS0,115200n8
-> is needed; with just "earlycon" and stdout-path the earlycon stops early and
-> switches to a tty0, long before disabling the bootconsole...
->
-> All four CPUs come up, and an initrd can be reached.
->
-> However, there are errors about CPUs 1-3 having a zero SYS_CNTFRQ_EL0:
->
-> [    0.095812] smp: Bringing up secondary CPUs ...
-> ======pxa1908_pmu_core_pwr_on: mpidr = 0x1
-> ======pxa1908_pmu_core_pwr_on: mpidr = 0x2
-> ======pxa1908_pmu_core_pwr_on: mpidr = 0x3
-> [    0.133419] Detected VIPT I-cache on CPU1
-> [    0.133430] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU1: 0x00000000000000
-> [    0.133447] Unsupported CPU feature variation.
-> ...
-> [    0.133748] CPU1: Booted secondary processor [410fd032]
-> [    0.165465] Detected VIPT I-cache on CPU2
-> [    0.165474] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU2: 0x00000000000000
-> [    0.165505] CPU2: Booted secondary processor [410fd032]
-> [    0.197539] Detected VIPT I-cache on CPU3
-> [    0.197546] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU3: 0x00000000000000
-> [    0.197573] CPU3: Booted secondary processor [410fd032]
-> [    0.197625] smp: Brought up 1 node, 4 CPUs
-> [    0.522514] SMP: Total of 4 processors activated.
-> [    0.527212] CPU features: detected feature: 32-bit EL0 Support
-> [    0.533105] CPU: All CPU(s) started at EL2
->
-> KVM appears to initialize okay, but was not yet tested with guests.
->
-> [    0.865255] kvm [1]: 8-bit VMID
-> [    0.868401] kvm [1]: IDMAP page: d23000
-> [    0.872233] kvm [1]: HYP VA range: 800000000000:ffffffffffff
-> [    0.878262] kvm [1]: Hyp mode initialized successfully
-> [    0.883429] kvm [1]: vgic-v2@d1dfc000
-> [    0.887179] kvm [1]: vgic interrupt IRQ1
-> [    0.891120] kvm [1]: virtual timer IRQ4
->
-> More Marvell drivers may be available in-tree for reuse - besides build errors
-> the limitation is currently the lack of an IAP140 clk driver though. Patch 4/4
-> works around that for UART0 with a fixed-clock.
->
-> A 3.14 based tree is available on GitHub acorn-marvell/brillo_pxa_kernel. No
-> driver comparisons to mainline have been attempted yet.
->
-> Booting required changes to the vendor U-Boot,
-> cf. https://en.opensuse.org/HCL:AndromedaBoxEdge
->
-> https://github.com/afaerber/linux/commits/edge-next
->
-> Have a lot of fun!
->
-> Cheers,
-> Andreas
->
-> Cc: info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->
-> Andreas Färber (4):
->   ARM64: Prepare Marvell IAP140 aka PXA1908
->   Documentation: devicetree: arm: Document Marvell IAP140
->   ARM64: dts: marvell: Add IAP140 and Andromeda Box Edge
->   ARM64: dts: marvell: iap140-andromeda-box-edge: Add uart0 clock
->
->  .../devicetree/bindings/arm/marvell/iap140.txt     |   7 +
->  arch/arm64/Kconfig.platforms                       |   5 +
->  arch/arm64/boot/dts/marvell/Makefile               |   2 +
->  .../boot/dts/marvell/iap140-andromeda-box-edge.dts |  77 ++++++++
->  arch/arm64/boot/dts/marvell/iap140.dtsi            | 195 +++++++++++++++++++++
->  drivers/clk/Kconfig                                |   2 +-
->  drivers/mmc/host/Kconfig                           |   2 +-
->  drivers/tty/serial/Kconfig                         |   2 +-
->  8 files changed, 289 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/marvell/iap140.txt
->  create mode 100644 arch/arm64/boot/dts/marvell/iap140-andromeda-box-edge.dts
->  create mode 100644 arch/arm64/boot/dts/marvell/iap140.dtsi
->
-> -- 
-> 2.10.2
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
