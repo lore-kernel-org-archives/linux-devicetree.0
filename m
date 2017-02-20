@@ -1,35 +1,78 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Tue, 21 Feb 2017 00:04:10 +0200
-Message-ID: <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
+ names, pre-calibration, flipping and rotation
+Date: Mon, 20 Feb 2017 14:24:38 -0800
+Message-ID: <CAKdAkRT2nHC_hdQko46MVdbnjahz65zpBvAWmHFfK72pL2uyiw@mail.gmail.com>
+References: <cover.1482936802.git.hns@goldelico.com> <B30D00D0-1967-4BD5-A304-E2ADC815A805@goldelico.com>
+ <201702202042.15878@pali> <201702202208.50498@pali> <C2E7AC24-75AB-442F-94A2-84904723EE41@goldelico.com>
+ <CAKdAkRRZa-fpv_TKRdY=hFV3GdKxQ3muQORquvV_bTrDzQAhCw@mail.gmail.com> <15339314-8696-f603-d0da-beefe54f0653@tul.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1487211578-11360-30-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-me
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <15339314-8696-f603-d0da-beefe54f0653-qphu/3gb4gc@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Cvek <petr.cvek-qphu/3gb4gc@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?UTF-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+On Mon, Feb 20, 2017 at 2:21 PM, Petr Cvek <petr.cvek-qphu/3gb4gc@public.gmane.org> wrote:
+> Hi,
+>
+> Dne 20.2.2017 v 22:50 Dmitry Torokhov napsal(a):
+>> On Mon, Feb 20, 2017 at 1:27 PM, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org=
+> wrote:
+>>>
+>>>> Am 20.02.2017 um 22:08 schrieb Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>>>>
+>>>> On Monday 20 February 2017 20:42:15 Pali Roh=C3=A1r wrote:
+>>>>> Hi Nikolaus!
+>>>>>
+>>>>> On Monday 20 February 2017 17:50:04 H. Nikolaus Schaller wrote:
+>>>>>> Hi Dmitry,
+>>>>>>
+>>>>>>> Input driver may set resolution for given axis in units per mm
+>>>>>>> (or units per radian for rotational axis ABS_RX, ABS_RY,
+>>>>>>> ABS_RZ), and if you check the binding, you can use
+>>>>>>> "touchscreen-x-mm" and "touchscreen-y-mm" to specify the size of
+>>>>>>> entire touch surface and set resolution from it so that
+>>>>>>> userspace can calculate the proper scaling factor.
+>>>>>>
+>>>>>> How is this information exposed by the kernel to user-space? By
+>>>>>> scanning the DT file or tree?
+>>>>>
+>>>>> Set input_abs_set_res() from kernel. And in userspace call EVIOCGABS
+>>>>> ioctl() on input device. Look at struct input_absinfo, you should
+>>>>> have all needed information here. This is generic input interface,
+>>>>> no DT is needed.
+>>>>
+>>>> Looking at kernel code... via EVIOCSABS ioctl() you can even set
+>>>> resolution from userspace for specified input device.
+>>>>
+>>>> So this could be potentially used for calibrating input device from
+>>>> userspace? (In case DT data will not fully match current HW)
+>>>>
+>>>>> I hope that XServer is already using it for evdev devices...
+>>>>>
+>>>>> For whole implementation look at evtest program. That should be good
+>>>>> starting point for your userspace implementation.
+>>>>>
+>>>>> While I'm watching this discussion... in my opinion kernel should
+>>>>> just invert input axes (when needed)
+>>>
+>>> It is questionable why it should do that at all then.
+>>
+>> Because the task of the kernel is to provide unified view of the
+>> hardware. Axis swapping and inversion is needed to that "up" is always
+>> "up" and "right" is always "right".
+>
+> Actually my Xorg calibration 3x3 matrix is fine with both axis inverted (=
+on TSC2046).
 
-On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
-> From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> 
-> Setting and getting frame rates is part of the negotiation mechanism
-> between subdevs.  The lack of support means that a frame rate at the
-> sensor can't be negotiated through the subdev path.
+Yes, you can make it work for your touchscreen as long as you know
+that it inverted somehow. How you gain this knowledge is the question.
 
-Just wondering --- what do you need this for?
+Thanks.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Dmitry
