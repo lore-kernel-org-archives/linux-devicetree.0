@@ -1,71 +1,115 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Mon, 20 Feb 2017 14:56:15 -0800
-Message-ID: <6892fb15-2d18-4898-c328-3acff9d6cc39@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
- <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
+From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove the OF
+ graph
+Date: Tue, 21 Feb 2017 08:24:52 +0900
+Message-ID: <58AB7AC4.40606@samsung.com>
+References: <CGME20170209012715epcas1p3dbe1788b864c50d339dcfd791c0900ec@epcas1p3.samsung.com>
+ <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com>
+ <58AA95C1.4020809@samsung.com>
+ <CAJKOXPd7Roubdf_5B6pT1PkA9K9dZmjPydYOujXvrz8cVcKVmg@mail.gmail.com>
+ <58AAA996.3080900@samsung.com>
+ <CAJKOXPdqfZ6HG9OKiV9xFw1ybSZXKfGPQJdwdVyH-jjeizpUaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Russell King <rmk+kernel@armlinux.org.uk>, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAJKOXPdqfZ6HG9OKiV9xFw1ybSZXKfGPQJdwdVyH-jjeizpUaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 02/20/2017 02:04 PM, Sakari Ailus wrote:
-> Hi Steve,
->
-> On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
->> From: Russell King <rmk+kernel@armlinux.org.uk>
+2017년 02월 20일 17:55에 Krzysztof Kozlowski 이(가) 쓴 글:
+> On Mon, Feb 20, 2017 at 10:32 AM, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
 >>
->> Setting and getting frame rates is part of the negotiation mechanism
->> between subdevs.  The lack of support means that a frame rate at the
->> sensor can't be negotiated through the subdev path.
->
-> Just wondering --- what do you need this for?
+>>
+>> 2017년 02월 20일 16:27에 Krzysztof Kozlowski 이(가) 쓴 글:
+>>> On Mon, Feb 20, 2017 at 9:07 AM, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>> Hi Krzysztof,
+>>>>
+>>>> Can you merge patch 2 and 5 to your tree so that they can go to mainline? Otherwise, I can merge them to my tree if you give me acked-by.
+>>>
+>>> Hi,
+>>>
+>>> Hm? Why do you need them to be merged? Do you mean that the first
+>>> patch breaks not only ABI but also bisectability? Then this has to be
+>>> reworked because:
+>>>
+>>> 1. The DTS patches cannot go through non-DT tree so no, you cannot
+>>> take them into your branch. I will merge them according to point 4
+>>> below.
+>>> 2. Bisectability has to be preserved.
+>>> 3. DTS changes in general should not be a dependency for driver changes.
+>>
+>> Krzysztof,
+>>
+>> I know that. I didn't check you gave a comment to Hoegun do rework this patch series. I just checked reviewed-by from Andrzej H. and thought no problem.
+>>
+>> Ideally you are right. DT changes should be no any dependency of driver changes but now Exynos DT is broken.
+> 
+> I didn't receive any bug reports that Exynos DT is broken so I am
+> quite surprised hearing that. What do you mean by that?
+
+Wrong usage of Display relevant DT ABI is being fixed without the backward compatibility of the DT ABI. This means device driver doesn't consider old DT binding.
+So the use of old DTB binary will make kernel booting not to work correctly.
+
+> 
+>> So if we have to keep the bisectability between driver and device tree patches - this means that all drivers should always keep the backward compatibility - then the drivers will be messed up.
+> 
+> No, you are mixing two things. Bisectability is different than
+> backward compatibility. For the backward DT ABI compatibility, we
+> agreed that in this case it can be dropped. However bisectability is
+> something totally different. The DTS changes always go through
+> separate branch, so the driver has to be *always* ready for such case
+> and should still be fully bisectable. This is a general rule existing
+
+I meant that if this patch series considers old DT binding to keep the bisectability, then this driver would be messed up because the driver should try to bind same properties at different places and one of these two cases should be bound.
+So this driver doesn't consider the old DT binding, which means that the old DTB binary isn't compatible with this driver - exynos_drm_dsi.c.
+
+This means if only one side is merged then this driver wouldn't work correctly. 
+
+> for long time and every deviation from the rule is pointed out by
+> arm-soc guys. Whenever I accepted breaking of this rule, I had hard
+> times with arm-soc so no - I am no longer giving up basic rule just
+> because developer might not care.
+
+Understood and reasonable. Seems I just hurried up. For the bisectability, this driver will have a little messed up code temporarily, and this messed up code will be removed after dt change is merged.
+This thing was really what I want to avoid - if even the messed up code should be keeped forever for the backward compatibility then it would be really terribble. :(
 
 
-Hi Sakari,
+Do you have a better idea?
 
-i.MX does need the ability to negotiate the frame rates in the
-pipelines. The CSI has the ability to skip frames at the output,
-which is something Philipp added to the CSI subdev. That affects
-frame interval at the CSI output.
+> 
+> There are many ways to solve the bisectability problem. Recently for
+> example Marek found nice way to solve the PMU syscon handle dependency
 
-But as Russell pointed out, the lack of [gs]_frame_interval op
-causes media-ctl to fail:
+Thanks for share but this would be a different case.
 
-media-ctl -v -d /dev/media1 --set-v4l2 
-'"imx6-mipi-csi2":1[fmt:SGBRG8/512x512@1/30]'
+Thanks,
+Inki Dae
 
-Opening media device /dev/media1
-Enumerating entities
-Found 29 entities
-Enumerating pads and links
-Setting up format SGBRG8 512x512 on pad imx6-mipi-csi2/1
-Format set: SGBRG8 512x512
-Setting up frame interval 1/30 on entity imx6-mipi-csi2
-Unable to set frame interval: Inappropriate ioctl for device (-25)Unable 
-to setup formats: Inappropriate ioctl for device (25)
-
-
-So i.MX needs to implement this op in every subdev in the
-pipeline, otherwise it's not possible to configure the
-pipeline with media-ctl.
-
-
-Steve
+> [1]. One can also merge first DTS changes and in next release, merge
+> the driver.
+> 
+>> About this, we had a discussion and I think you agreed,
+>> https://patchwork.kernel.org/patch/9477957/
+> 
+> Again, this discussion was about DT ABI. Not bisectability.
+> 
+>> Do you want the backward compatibility to be kept always when new dt binding relevant patch - which fixes up the wrong usage of dt binding - is posted?
+>> It would be good for the backward compatibility to be kept as long as we can do but there would be several cases to make the driver to be messed up like this patch series.
+> 
+> Again, DT ABI not bisectability.
+> 
+> Best regards,
+> Krzysztof
+> 
+> [1] https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/commit/?h=for-v4.11/drivers-soc-exynos-pmu-the-joy-never-ends&id=76640b84bd7a9d68c70d8bc8ecd02cdc4bd8855e
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
