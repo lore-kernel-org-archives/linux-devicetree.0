@@ -1,125 +1,71 @@
-From: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
-Subject: [PATCH] spi: Add spi-bits-per-word binding.
-Date: Mon, 20 Feb 2017 16:35:12 +0100
-Message-ID: <20170220153512.6563-1-adrian.fiergolski@cern.ch>
-References: <20170217101151.hyzmz5a4lgdy7p5m>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: da850-evm: add the UI expander node
+Date: Mon, 20 Feb 2017 16:38:09 +0100
+Message-ID: <CAMpxmJX3p03YiPL5X9=pKud4A7bXh9bV=qk7qAEAnA3OF3Hgbw@mail.gmail.com>
+References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
+ <1487268932-6469-5-git-send-email-bgolaszewski@baylibre.com> <5f194c6d-0937-bac2-31cd-2f1658f68d0d@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170217101151.hyzmz5a4lgdy7p5m>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5f194c6d-0937-bac2-31cd-2f1658f68d0d-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If an SPI controller doesn't support 8 bit transfers
-(master->bits_per_word_mask), it will be never registered (tested with
-spidev):
-of_register_spi_device calls spi_add_device which calls spi_setup. The last
-takes as an argument spi_device struct, which, in case of spidev, has
-bits_per_word set to 0. Thus, the spi_setup function will set it to default
-8. Further, the same function will call __spi_validate_bits_per_word which
-will fail the whole registration for controllers not supporting 8 bit
-transfers (i.e. xilinx-spi).
+2017-02-20 10:36 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+> On Thursday 16 February 2017 11:45 PM, Bartosz Golaszewski wrote:
+>> If we're using the UI board and want vpif capture, we need to select
+>> the video capture functionality by driving the sel_c pin low on the
+>> tca6416 expander and sel_a & sel_b pins high. Do it statically by
+>> hogging relevant GPIOs in the device tree.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
 
-Signed-off-by: Adrian Fiergolski <adrian.fiergolski-vJEk5272eHo@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/spi-bus.txt | 40 ++++++++++++-----------
- drivers/spi/spi.c                                 | 18 ++++++++++
- 2 files changed, 39 insertions(+), 19 deletions(-)
+[snip]
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index 4b1d6e7..8401741 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -43,26 +43,28 @@ cs3 : &gpio1 2 0
- 
- SPI slave nodes must be children of the SPI master node and can
- contain the following properties.
--- reg             - (required) chip select address of device.
--- compatible      - (required) name of SPI device following generic names
--		recommended practice.
-+- reg               - (required) chip select address of device.
-+- compatible        - (required) name of SPI device following generic names
-+		      recommended practice.
- - spi-max-frequency - (required) Maximum SPI clocking speed of device in Hz.
--- spi-cpol        - (optional) Empty property indicating device requires
--		inverse clock polarity (CPOL) mode.
--- spi-cpha        - (optional) Empty property indicating device requires
--		shifted clock phase (CPHA) mode.
--- spi-cs-high     - (optional) Empty property indicating device requires
--		chip select active high.
--- spi-3wire       - (optional) Empty property indicating device requires
--		3-wire mode.
--- spi-lsb-first   - (optional) Empty property indicating device requires
--		LSB first mode.
--- spi-tx-bus-width - (optional) The bus width (number of data wires) that is
--                      used for MOSI. Defaults to 1 if not present.
--- spi-rx-bus-width - (optional) The bus width (number of data wires) that is
--                      used for MISO. Defaults to 1 if not present.
--- spi-rx-delay-us  - (optional) Microsecond delay after a read transfer.
--- spi-tx-delay-us  - (optional) Microsecond delay after a write transfer.
-+- spi-cpol          - (optional) Empty property indicating device requires
-+		      inverse clock polarity (CPOL) mode.
-+- spi-cpha          - (optional) Empty property indicating device requires
-+		      shifted clock phase (CPHA) mode.
-+- spi-cs-high       - (optional) Empty property indicating device requires
-+		      chip select active high.
-+- spi-3wire         - (optional) Empty property indicating device requires
-+		      3-wire mode.
-+- spi-lsb-first     - (optional) Empty property indicating device requires
-+		      LSB first mode.
-+- spi-tx-bus-width  - (optional) The bus width (number of data wires) that is
-+                       used for MOSI. Defaults to 1 if not present.
-+- spi-rx-bus-width  - (optional) The bus width (number of data wires) that is
-+                       used for MISO. Defaults to 1 if not present.
-+- spi-rx-delay-us   - (optional) Microsecond delay after a read transfer.
-+- spi-tx-delay-us   - (optional) Microsecond delay after a write transfer.
-+- spi-bits-per-word - (optional) Word size for a data transfer. Defaults is 8
-+                      if not present.
- 
- Some SPI controllers and devices support Dual and Quad SPI transfer mode.
- It allows data in the SPI system to be transferred using 2 wires (DUAL) or 4
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 656dd3e..57fe058 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1594,6 +1594,17 @@ of_register_spi_device(struct spi_master *master, struct device_node *nc)
- 	}
- 	spi->max_speed_hz = value;
- 
-+	/* Device bits-per-word */
-+	if (!of_property_read_u32(nc, "spi-bits-per-word", &value)) {
-+		if (value > 32)
-+			dev_warn(&master->dev,
-+				 "bits-per-word %d not supported\n",
-+				 value);
-+		else
-+			spi->bits_per_word = value;
-+	}
-+
-+
- 	/* Store a pointer to the node in the device structure */
- 	of_node_get(nc);
- 	spi->dev.of_node = nc;
-@@ -1673,6 +1684,13 @@ static int acpi_spi_add_resource(struct acpi_resource *ares, void *data)
- 
- 			spi->max_speed_hz = sb->connection_speed;
- 
-+			if (sb->data_bit_length > 32)
-+				dev_warn(&master->dev,
-+					 "bits-per-word %d not supported\n",
-+					 sb->data_bit_length);
-+			else
-+				spi->bits_per_word = sb->data_bit_length;
-+
- 			if (sb->clock_phase == ACPI_SPI_SECOND_PHASE)
- 				spi->mode |= SPI_CPHA;
- 			if (sb->clock_polarity == ACPI_SPI_START_HIGH)
--- 
-2.9.3
+>>
+>> +                             sel_a {
+>> +                                     gpio-hog;
+>> +                                     gpios = <7 GPIO_ACTIVE_HIGH>;
+>> +                                     output-high;
+>> +                                     line-name = "sel_a";
+>> +                             };
+>> +
+>> +                             sel_b {
+>> +                                     gpio-hog;
+>> +                                     gpios = <6 GPIO_ACTIVE_HIGH>;
+>> +                                     output-high;
+>> +                                     line-name = "sel_b";
+>> +                             };
+>> +
+>> +                             sel_c {
+>> +                                     gpio-hog;
+>> +                                     gpios = <5 GPIO_ACTIVE_HIGH>;
+>> +                                     output-low;
+>> +                                     line-name = "sel_c";
+>
+> I think this is better handled by using an enable-gpios property in vpif
+> capture device-tree node. So in the vpif capture node you would have:
+>
+>         enable-gpios =  <&tca6416 7 GPIO_ACTIVE_HIGH
+>                          &tca6416 6 GPIO_ACTIVE_HIGH
+>                          &tca6416 5 GPIO_ACTIVE_LOW>;
+>
+> and in the vpif capture driver, you would request each of these gpios
+> using: devm_gpiod_get_array_optional(.., .., GPIOD_OUT_HIGH);
+>
 
+I'm not sure about this one - the result is the same (function still
+defined statically in the DT) while now it requires changes to the
+vpif driver too.
+
+Is there any other reason we'd prefer this approach?
+
+Thanks,
+Bartosz
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
