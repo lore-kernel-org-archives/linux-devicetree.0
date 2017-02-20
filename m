@@ -1,40 +1,35 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: da850: add vpif video display pins
-Date: Mon, 20 Feb 2017 15:59:36 +0530
-Message-ID: <318d9f87-ad2a-c0e1-255a-097056c0f85f@ti.com>
-References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
- <1487268932-6469-3-git-send-email-bgolaszewski@baylibre.com>
+From: Patrick Vogelaar <Patrick.Vogelaar@gigatronik.com>
+Subject: [PATCH 0/2] add driver for cypress cy8cmbr3102
+Date: Mon, 20 Feb 2017 11:33:31 +0100
+Message-ID: <1487586813-4122-1-git-send-email-Patrick.Vogelaar@gigatronik.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487268932-6469-3-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, Patrick Vogelaar <Patrick.Vogelaar@gigatronik.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 February 2017 11:45 PM, Bartosz Golaszewski wrote:
-> Add a new pinctrl sub-node for vpif display pins. Move VP_CLKIN3 and
-> VP_CLKIN2 to the display node where they actually belong (vide section
-> 35.2.2 of the da850 datasheet).
+* compiles without errors
+* no errors when using checkpatch
+* tested with a connected touch button on HW
 
-You mean 36.2.2. Also, its in the technical reference manual (TRM). The
-datahseet is another document.
+NOTE: This implementation does not implement the full range of functions the
+      Cypress CY8CMBR3102 CapSense Express controller provides. It only 
+      implements its use for connected touch buttons (yet).
 
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/da850-evm.dts |  2 +-
->  arch/arm/boot/dts/da850.dtsi    | 17 +++++++++++++++--
+Patrick Vogelaar (2):
+  add driver for cypress cy8cmbr3102
+  add device tree documentation for cy8cmbr3102
 
-Can you separate out the board and SoC specific changes? The board
-changes could be done in patch 3/4 where other video output parts are added.
+ .../bindings/input/cypress,cy8cmbr3102.txt         |  32 +++
+ drivers/input/misc/Kconfig                         |  12 ++
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/cy8cmbr3102.c                   | 222 +++++++++++++++++++++
+ 4 files changed, 267 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/cypress,cy8cmbr3102.txt
+ create mode 100644 drivers/input/misc/cy8cmbr3102.c
 
-Thanks,
-Sekhar
+-- 
+2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
