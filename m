@@ -1,88 +1,68 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] arm64: dts: exynos: Add missing unit name to
- Exynos7 SoC node
-Date: Mon, 20 Feb 2017 11:00:50 -0300
-Message-ID: <33321d4d-645b-d29a-41dc-c5608cd9d096@osg.samsung.com>
-References: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
- <1484069912-6534-2-git-send-email-javier@osg.samsung.com>
- <20170110184728.2nff4r634ics4wb3@kozik-lap>
- <e60bf634-d60d-7316-76a9-3b2f2f1480e8@osg.samsung.com>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: display: add STM32 LTDC driver
+Date: Mon, 20 Feb 2017 14:23:01 +0000
+Message-ID: <87eb3866-9153-1bcb-222b-f1852bd1095c@st.com>
+References: <1486740274-25958-1-git-send-email-yannick.fertre@st.com>
+ <1486740274-25958-2-git-send-email-yannick.fertre@st.com>
+ <20170216031505.x7gbqivnv7pvdzei@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e60bf634-d60d-7316-76a9-3b2f2f1480e8-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170216031505.x7gbqivnv7pvdzei@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <FE83BA77854ED249B8BFBF1B01E36D9A@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
-
-On 01/10/2017 04:55 PM, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 01/10/2017 03:47 PM, Krzysztof Kozlowski wrote:
->> On Tue, Jan 10, 2017 at 02:38:30PM -0300, Javier Martinez Canillas wrote:
->>> This patch fixes the following DTC warning about a mismatch
->>> between a device node reg property and its unit name:
->>>
->>> Node /soc has a reg or ranges property, but no unit name
->>>
->>> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->>> ---
->>>
->>>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
->>> index 80aa60e38237..0d2fedc6ac2f 100644
->>> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
->>> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
->>> @@ -69,7 +69,7 @@
->>>  		method = "smc";
->>>  	};
->>>  
->>> -	soc: soc {
->>> +	soc: soc@0 {
->>
->> This looks unnatural, like a fix just to silence the DTC. Mostly de do
->> not enumerate soc node, although there are few exceptions.
->>
-> 
-> Yes, but OTOH arm32 Exynos SoCs just have an empty "ranges" property in their
-> soc device node (parent and child address space is the same, no translation)
-> so DTC doesn't complain about the unit address in those.
-> 
-> But others SoCs DTSI with a non-empty ranges property have an unit name in
-> their soc nodes, i.e for arm64 and arm32:
-> 
-> arch/arm64/boot/dts/marvell/berlin4ct.dtsi
-> 
-> arch/arm/boot/dts/da850.dtsi
->  
->> I would prefer ignore the warning... however I am happy to hear other opinions.
->>
-> 
-> If is wrong/unnatural to have addresses for soc nodes then I think DTC should
-> be patched to ignore these (like it will be the case for the OPP nodes AFAIU).
-> 
-
-Any comments about this?
-
->> Best regards,
->> Krzysztof
->>
-> 
-> Best regards,
-> 
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAwMi8xNi8yMDE3IDA0OjE1IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBGcmksIEZl
+YiAxMCwgMjAxNyBhdCAwNDoyNDoyOFBNICswMTAwLCBZYW5uaWNrIEZlcnRyZSB3cm90ZToKPj4g
+U2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KPj4g
+LS0tCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0
+ICB8IDM3ICsrKysrKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNl
+cnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRk
+Yy50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uYjkzZTFjOAo+
+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0Cj4+IEBAIC0wLDAgKzEsMzcgQEAKPj4gKyogU1RN
+aWNyb2VsZWN0cm9uaWNzIFNUTTMyIGxjZC10ZnQgZGlzcGxheSBjb250cm9sbGVyCj4+ICsKPj4g
+Ky0gbHRkYzogbGNkLXRmdCBkaXNwbGF5IGNvbnRyb2xsZXIgaG9zdAo+PiArICBtdXN0IGJlIGEg
+c3ViLW5vZGUgb2Ygc3QtZGlzcGxheS1zdWJzeXN0ZW0KPj4gKyAgUmVxdWlyZWQgcHJvcGVydGll
+czoKPj4gKyAgLSBjb21wYXRpYmxlOiAic3Qsc3RtMzItbHRkYyIKPgo+IEtpbmQgb2YgZ2VuZXJp
+Yy4gVGhlcmUncyBvbmx5IG9uZSB2ZXJzaW9uIGZvciBhbGwgc3RtMzIgcGFydHM/CkhpIFJvYiwK
+bHRkYyBpcyB0aGUgSVAgdXNlIGZvciBhbGwgc3RtMzIuIFNldmVyYWwgb3B0aW9ucyBjb3VsZCBi
+ZSBzZXQgZGVwZW5kaW5nIApvbiBzdG0zMi4KRm9ydHVuYXRlbHksIGx0ZGMgY29udGFpbnMgc2V2
+ZXJhbCByZWdpc3RlcnMgd2hpY2ggZGVzY3JpYmVzIGFsbCBvcHRpb25zLgoKQnIKCj4KPj4gKyAg
+LSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgSVAgcmVnaXN0ZXJzIGFuZCBsZW5n
+dGggb2YgbWVtb3J5IG1hcHBlZCByZWdpb24uCj4+ICsgIC0gY2xvY2tzOiBBIGxpc3Qgb2YgcGhh
+bmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoCj4+ICsgICAgZW50cnkg
+aW4gJ2Nsb2NrLW5hbWVzJy4KPj4gKyAgLSBjbG9jay1uYW1lczogQSBsaXN0IG9mIGNsb2NrIG5h
+bWVzLiBGb3IgbHRkYyBpdCBzaG91bGQgY29udGFpbjoKPj4gKyAgICAgIC0gImNsay1sY2QiIGZv
+ciB0aGUgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IHBpeGVsIGNsb2NrICYgSVAgY2xvY2suCj4+
+ICsgIC0gcmVzZXRzOiByZXNldCB0byBiZSB1c2VkIGJ5IHRoZSBkZXZpY2UgKGRlZmluZWQgYnkg
+dXNlIG9mIFJDQyBtYWNybykuCj4+ICsgIFJlcXVpcmVkIG5vZGVzOgo+PiArICAgIC0gVmlkZW8g
+cG9ydCBmb3IgUkdCIG91dHB1dC4KPj4gKwo+PiArRXhhbXBsZToKPj4gKwo+PiArLyB7Cj4+ICsJ
+Li4uCj4+ICsJc29jIHsKPj4gKwkuLi4KPj4gKwkJbHRkYzogc3RtMzItbHRkY0A0MDAxNjgwMCB7
+Cj4KPiBkaXNwbGF5LWNvbnRyb2xsZXJALi4uCk9LCgo+Cj4+ICsJCQljb21wYXRpYmxlID0gInN0
+LHN0bTMyLWx0ZGMiOwo+PiArCQkJcmVnID0gPDB4NDAwMTY4MDAgMHgyMDA+Owo+PiArCQkJaW50
+ZXJydXB0cyA9IDw4OD4sIDw4OT47Cj4+ICsJCQlyZXNldHMgPSA8JnJjYyBTVE0zMkY0X0FQQjJf
+UkVTRVQoTFREQyk+Owo+PiArCQkJY2xvY2tzID0gPCZyY2MgMSBDTEtfTENEPjsKPj4gKwkJCWNs
+b2NrLW5hbWVzID0gImxjZCI7Cj4+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+Cj4gRG9uJ3Qg
+bmVlZCB0byBzaG93IHN0YXR1cyBpbiBleGFtcGxlcy4KT0sKCj4KPj4gKwo+PiArCQkJcG9ydCB7
+Cj4+ICsJCQkJbHRkY19vdXRfcmdiOiBlbmRwb2ludCB7Cj4+ICsJCQkJfTsKPj4gKwkJCX07Cj4+
+ICsJCX07Cj4+ICsJfTsKPj4gK307Cj4+IC0tCj4+IDEuOS4xCj4+Cl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
