@@ -1,65 +1,80 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] thermal: mt8173: minor mtk_thermal.c cleanups
-Date: Mon, 20 Feb 2017 12:30:44 +0100
-Message-ID: <46d6c448-a669-a748-acfa-8ed129c65b51@gmail.com>
-References: <1486531862-31945-1-git-send-email-dawei.chien@mediatek.com>
- <ebdf54af-6290-9654-c475-53dd580582a0@gmail.com>
- <1486976518.24087.7.camel@mtksdaap41>
- <20170219012306.GA28525@localhost.localdomain>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC PATCH 0/4] mmc: core: Provide CMD5 awake and partial_init support
+Date: Mon, 20 Feb 2017 12:39:21 +0100
+Message-ID: <CAPDyKFrytpFeH5MCLO_GOrLE9YPbbVBTbrsROOF3G-iOu5a_HA@mail.gmail.com>
+References: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170219012306.GA28525-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Shawn Lin <shawn.lin@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Alex Lemberg <alex.lemberg@sandisk.com>, Mateusz Nowak <mateusz.nowak@intel.com>, Yuliy Izrailov <Yuliy.Izrailov@sandisk.com>, Asutosh Das <asutoshd@codeaurora.org>, David Griego <david.griego@linaro.org>, Sahitya Tummala <stummala@codeaurora.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Pramod Gurav <pramod.gurav@linaro.org>, jeremymc@redhat.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 20 February 2017 at 09:03, Ritesh Harjani <riteshh@codeaurora.org> wrote:
+> As per JEDEC spec - CMD5 can be used to awake from sleep mode for emmc.
+> This patch series provide CMD5(awake) + mmc_partial_init support to resume
+> mmc card device. This is mainly to reduce the resume time.
 
+I assume with "resume time" you don't mean "system PM resume time"?
 
-On 19/02/17 02:23, Eduardo Valentin wrote:
-> On Mon, Feb 13, 2017 at 05:01:58PM +0800, Dawei Chien wrote:
->> Hi, Matthias,
->>
->> On Thu, 2017-02-09 at 22:25 +0100, Matthias Brugger wrote:
->>>
->>> On 02/08/2017 06:31 AM, Dawei Chien wrote:
->>>> Thermal driver should read TEMP_MSR3 if thermal bank with 4 sensors.
->>>> However, Currently thermal driver don't need read TEMP_MSR3 since
->>>> thermal controller only use 3 sensors for each thermal bank.
->>>>
->>>> Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>
->>> Actually the commit message should state:
->>> Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
->>>
->>> ...and get backported to v4.9 and v4.10.
->>>
->>> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>
->>> Regards,
->>> Matthias
->>
->> Thank you for your review. I would add below commit message on next
->> version. However, currently 8173 thermal driver would not read TEMP_MSR3
->> since thermal driver only use 3 sensors on each bank, this patch would
->> not effect temperature.
->> Only if thermal driver use 4 sensors on any thermal bank, would read
->> third sensor two times, and lose fourth sensor of vale.
->> Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
->>
+The current approach we have for MMC is to postpone system PM resume
+of the card until it's actually needed, thus via runtime PM instead.
+Then the time it takes to re-initialize the eMMC don't affect the
+system PM resume time at all.
+
+Therefore I am wondering about how big of a problem this really is. Is
+there a specific use case you are optimizing for?
+
 >
-> Please send a new version with the tag in the commit message.
+> This was tested on db410c (emmc with HS200 mode) and MS8996 (emmc with HS400ES)
+> based internal board. This patch reduced the resume time by ~50% on msm8996
+> and ~11% on db410c.
+
+The improved behaviour in percentage is very interesting, but I would
+also like to see real numbers.
+
+Moreover, I would like to know what kind of mechanism the
+corresponding host drivers/controllers are using for card busy
+detection?
+
+>
+> As of now this patch series provides a caps (MMC_CAP2_SLEEP_AWAKE) to enable this feature.
+> Since there is no dependency on host platform for this, we can enable this feature by
+> default as well. Thoughts?
+
+I will look into the series in more detail, however we must not add a
+corresponding DT binding for this as this isn't a HW configuration. I
+guess what you need to know is that VCCQ stays powered on when the
+card is a sleep, else waking up with CMD5 won't work
+(MMC_CAP_FULL_PWR_CYCLE).
+
+The current main concern I can think of, is whether the added
+complexity to the wakeup path can be justified for the improved
+behaviour.
+
+>
+>
+> Ritesh Harjani (4):
+>   Documentation: mmc: add mmc-sleep-awake
+>   mmc: core: add mmc-sleep-awake caps
+>   mmc: mmc: add support for CMD5 awake
+>   mmc: core: Implement mmc_partial_init during resume
+>
+>  Documentation/devicetree/bindings/mmc/mmc.txt |   2 +
+>  drivers/mmc/core/core.c                       |  13 +++
+>  drivers/mmc/core/core.h                       |   1 +
+>  drivers/mmc/core/host.c                       |   2 +
+>  drivers/mmc/core/mmc.c                        | 160 ++++++++++++++++++++++++--
+>  include/linux/mmc/card.h                      |   3 +
+>  include/linux/mmc/host.h                      |   2 +
+>  7 files changed, 176 insertions(+), 7 deletions(-)
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
 >
 
-And don't forget to add stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org so that the fix ends up 
-in the older kernels as well.
-
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
