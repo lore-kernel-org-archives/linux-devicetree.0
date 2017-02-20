@@ -1,49 +1,40 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH] ARM: at91/dt: Disable SPI on at91sam9x5ek to allow MCI1
- to work.
-Date: Mon, 20 Feb 2017 11:20:04 +0100
-Message-ID: <95353208-6734-aec5-a41b-e62d28dd747c@microchip.com>
-References: <1487265388-29390-1-git-send-email-cristian.birsan@microchip.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: dts: da850: add vpif video display pins
+Date: Mon, 20 Feb 2017 15:59:36 +0530
+Message-ID: <318d9f87-ad2a-c0e1-255a-097056c0f85f@ti.com>
+References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
+ <1487268932-6469-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487265388-29390-1-git-send-email-cristian.birsan@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cristian.birsan@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: cyrille.pitchen@atmel.com, boris.brezillon@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487268932-6469-3-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 16/02/2017 à 18:16, cristian.birsan@microchip.com a écrit :
-> From: Cristian Birsan <cristian.birsan@microchip.com>
-> 
-> The A13 hardware line is shared by SPI and MCI1 controller.This patch
-> disables the SPI controller so that the MCI1 (the big MMC card slot) can
-> be used.
-> 
-> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+On Thursday 16 February 2017 11:45 PM, Bartosz Golaszewski wrote:
+> Add a new pinctrl sub-node for vpif display pins. Move VP_CLKIN3 and
+> VP_CLKIN2 to the display node where they actually belong (vide section
+> 35.2.2 of the da850 datasheet).
 
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+You mean 36.2.2. Also, its in the technical reference manual (TRM). The
+datahseet is another document.
 
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/at91sam9x5ek.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts/at91sam9x5ek.dtsi
-> index 696b8ba..9d2bbc4 100644
-> --- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
-> +++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
-> @@ -116,7 +116,7 @@
->  			};
->  
->  			spi0: spi@f0000000 {
-> -				status = "okay";
-> +				status = "disabled"; /* conflicts with mmc1 */
->  				cs-gpios = <&pioA 14 0>, <0>, <0>, <0>;
->  				m25p80@0 {
->  					compatible = "atmel,at25df321a";
-> 
+>  arch/arm/boot/dts/da850-evm.dts |  2 +-
+>  arch/arm/boot/dts/da850.dtsi    | 17 +++++++++++++++--
 
+Can you separate out the board and SoC specific changes? The board
+changes could be done in patch 3/4 where other video output parts are added.
 
--- 
-Nicolas Ferre
+Thanks,
+Sekhar
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
