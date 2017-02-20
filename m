@@ -1,70 +1,71 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 0/9] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Mon, 20 Feb 2017 10:08:39 +0100
-Message-ID: <1487581719.3734.1.camel@baylibre.com>
-References: <20170122181028.5014-1-martin.blumenstingl@googlemail.com>
-         <20170219214149.30418-1-martin.blumenstingl@googlemail.com>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v2 1/2] arm: hisi: add ARCH_MULTI_V5 support
+Date: Mon, 20 Feb 2017 17:14:50 +0800
+Message-ID: <1487582091-24695-2-git-send-email-xuejiancheng@hisilicon.com>
+References: <1487582091-24695-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170219214149.30418-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1487582091-24695-1-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2017-02-19 at 22:41 +0100, Martin Blumenstingl wrote:
-> This series adds the reset GPIOs for the (external) ethernet PHYs on
-> all
-> GXBB boards.
-> Additionally it provides a ethernet PHY node which can be used to
-> specify
-> PHY-specific properties (this may be required if more boards require
-> the
-> "eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board
-> .dts
-> consistent I chose to add the PHY node also for boards which don't
-> have a
-> RTL8211F PHY.
-> 
+From: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-Looks good to me. For the patchset:
-Reviewed-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Add support for some HiSilicon SoCs which depend on ARCH_MULTI_V5.
 
-> 
-> Martin Blumenstingl (9):
->   ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-p200: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset
-> GPIO
->   ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset
-> GPIO
->   ARM64: dts: meson-gxbb-p201: fix ethernet support
->   ARM64: dts: amlogic: add the ethernet TX delay configuration
->   ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
-> 
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  1 -
->  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 17
-> ++++++++++++++
->  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  7 ++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    | 25
-> +++++++++++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    | 11 +++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 -----
->  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 21
-> ++++++++++++++++-
->  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 26
-> ++++++++++++++++++++++
->  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 26
-> ++++++++++++++++++++++
->  .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  2 ++
->  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 ++
->  arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts     |  2 ++
->  12 files changed, 138 insertions(+), 8 deletions(-)
-> 
+Signed-off-by: Pan Wen <wenpan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+
+This patch is same as the first version.
+
+ arch/arm/mach-hisi/Kconfig | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/mach-hisi/Kconfig b/arch/arm/mach-hisi/Kconfig
+index a3b091a..03d8379 100644
+--- a/arch/arm/mach-hisi/Kconfig
++++ b/arch/arm/mach-hisi/Kconfig
+@@ -1,12 +1,14 @@
+ config ARCH_HISI
+ 	bool "Hisilicon SoC Support"
+-	depends on ARCH_MULTI_V7
+ 	select ARM_AMBA
+-	select ARM_GIC
++	select ARM_GIC if ARCH_MULTI_V7
++	select ARM_VIC if ARCH_MULTI_V5
+ 	select ARM_TIMER_SP804
+ 	select POWER_RESET
+ 	select POWER_RESET_HISI
+ 	select POWER_SUPPLY
++	select PINCTRL
++	select PINCTRL_SINGLE
+ 
+ if ARCH_HISI
+ 
+@@ -18,8 +20,6 @@ config ARCH_HI3xxx
+ 	select CACHE_L2X0
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+-	select PINCTRL
+-	select PINCTRL_SINGLE
+ 	help
+ 	  Support for Hisilicon Hi36xx SoC family
+ 
+@@ -48,8 +48,6 @@ config ARCH_HIX5HD2
+ 	select CACHE_L2X0
+ 	select HAVE_ARM_SCU if SMP
+ 	select HAVE_ARM_TWD if SMP
+-	select PINCTRL
+-	select PINCTRL_SINGLE
+ 	help
+ 	  Support for Hisilicon HIX5HD2 SoC family
+ endmenu
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
