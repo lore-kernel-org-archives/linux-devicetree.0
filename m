@@ -1,317 +1,126 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v2.1 11/16] of: No need to include linux/property.h, linux/fwnode.h is sufficient
-Date: Mon, 20 Feb 2017 12:37:09 +0200
-Message-ID: <1487587029-21068-1-git-send-email-sakari.ailus@linux.intel.com>
-References: <1486052546-19257-12-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1486052546-19257-12-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/5] arm64: dts: Add basic DT to support Spreadtrum's
+ SP9860G
+Date: Mon, 20 Feb 2017 10:47:56 +0000
+Message-ID: <c28ee4e9-9abe-c019-2439-f9cb239b67e9@arm.com>
+References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1487063952-7113-2-git-send-email-chunyan.zhang@spreadtrum.com>
+ <CAPKp9ub35nL8gc_TKx02pSHHNwBhiMacWL=CuEmNGnecWikfGQ@mail.gmail.com>
+ <20170217072839.GA8767@spreadtrum.com>
+ <b5940598-f3e7-b2c5-9914-7bcbe3471f9e@arm.com>
+ <20170220093750.GA9600@spreadtrum.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170220093750.GA9600-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-of.h requires a definition of struct fwnode_handle, and for that it
-includes linux/property.h. struct fwnode_handle, however, is defined in
-linux/fwnode.h. Include linux/fwnode.h directly.
 
-A number of users were however depending on linux/property.h, thus fix
-them by including that header directly as well.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-since v2:
+On 20/02/17 09:37, Chunyan Zhang wrote:
+> Hi Sudeep,
+> 
+> On 五,  2月 17, 2017 at 10:28:00上午 +0000, Sudeep Holla wrote:
+>>
+>>
+>> On 17/02/17 07:28, Chunyan Zhang wrote:
+>>> Hi Sudeep,
+>>>
+>>> On 二,  2月 14, 2017 at 04:44:53下午 +0000, Sudeep Holla wrote:
+>>>> On Tue, Feb 14, 2017 at 9:19 AM, Chunyan Zhang
+>>>> <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+>>
+>> [..]
+>>
+>>>>
+>>>>> +       idle-states{
+>>>>> +               entry-method = "arm,psci";
+>>>>> +
+>>>>> +               CORE_PD: core_pd {
+>>>>> +                       compatible = "arm,idle-state";
+>>>>> +                       entry-latency-us = <1000>;
+>>>>> +                       exit-latency-us = <700>;
+>>>>> +                       min-residency-us = <2500>;
+>>>>> +                       local-timer-stop;
+>>>>> +                       arm,psci-suspend-param = <0x00010002>;
+>>>>> +               };
+>>>>> +
+>>>>> +               CLUSTER_PD: cluster_pd {
+>>>>> +                       compatible = "arm,idle-state";
+>>>>> +                       entry-latency-us = <1000>;
+>>>>> +                       exit-latency-us = <1000>;
+>>>>> +                       min-residency-us = <3000>;
+>>>>> +                       local-timer-stop;
+>>>>> +                       arm,psci-suspend-param = <0x01010003>;
+>>>>> +               };
+>>>>> +
+>>>>> +               DEEP_SLEEP: deep_sleep {
+>>>>> +                       compatible = "arm,idle-state";
+>>>>> +                       wakeup-latency-us = <0xffffffff>;
+>>>>
+>>>> A value > 4294 seconds(i.e >1 hour) seems suspicious.
+>>>> Are you working around the firmware issue with high latency value so
+>>>> that it's never entered ? Why not remove advertising the state from DT.
+>>>>
+>>>
+>>> Haved checked with related colleagues, this node 'deep_sleep' was not for working
+>>> around any firmware issue, but was a trick utilization of idle subsystem, and that
+>>
+>> Really ? Any latency greater few milliseconds are sounds useless. I
+>> still don't understand what you mean by "trick utilization of idle
+>> subsystem".
+>>
+> 
+> Sorry for confused expression, I meant it was not a right way to utilize idle mechanism
+> and shouldn't be upstreamed.
+> 
 
-Add changes required for device property API usage in tsc200x-core.c and
-dwc2/debugfs.c . Tested on linux-next and linux-pm.
+No problem.
 
- drivers/base/core.c                       | 1 +
- drivers/input/keyboard/gpio_keys.c        | 1 +
- drivers/input/misc/drv260x.c              | 1 +
- drivers/input/misc/gpio_decoder.c         | 1 +
- drivers/input/touchscreen/ad7879.c        | 1 +
- drivers/input/touchscreen/edt-ft5x06.c    | 1 +
- drivers/input/touchscreen/tsc200x-core.c  | 2 +-
- drivers/net/ethernet/faraday/ftgmac100.c  | 1 +
- drivers/net/ethernet/smsc/smc91x.c        | 1 +
- drivers/phy/phy-tusb1210.c                | 1 +
- drivers/power/supply/bq24735-charger.c    | 1 +
- drivers/usb/common/common.c               | 1 +
- drivers/usb/dwc2/debugfs.c                | 3 ++-
- drivers/usb/dwc2/params.c                 | 1 +
- drivers/usb/dwc2/pci.c                    | 3 ++-
- drivers/usb/dwc3/host.c                   | 1 +
- include/linux/of.h                        | 2 +-
- sound/soc/codecs/rt5514.c                 | 1 +
- sound/soc/codecs/ts3a227e.c               | 1 +
- sound/soc/mediatek/mt8173/mt8173-rt5650.c | 1 +
- sound/soc/rockchip/rk3399_gru_sound.c     | 1 +
- 21 files changed, 23 insertions(+), 4 deletions(-)
+>>> was definitely not elegant, the author indeed intendly didn't want CPU entered this
+>>> state, I will remove this node therefore.
+>>
+>> It's quick and dirty "HACK* to retain and advertise the state but
+>> ensure it's never entered and obstruct the boot. It's not a trick to
+>> exploit any idle subsystem utilization.
+>>
+> 
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index bd87807..ad5a4f7 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -24,6 +24,7 @@
- #include <linux/of.h>
- #include <linux/of_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/property.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/sysfs.h>
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 582462d..a560fad 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -20,6 +20,7 @@
- #include <linux/slab.h>
- #include <linux/sysctl.h>
- #include <linux/proc_fs.h>
-+#include <linux/property.h>
- #include <linux/delay.h>
- #include <linux/platform_device.h>
- #include <linux/input.h>
-diff --git a/drivers/input/misc/drv260x.c b/drivers/input/misc/drv260x.c
-index 0a2b865..1642219 100644
---- a/drivers/input/misc/drv260x.c
-+++ b/drivers/input/misc/drv260x.c
-@@ -22,6 +22,7 @@
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/property.h>
- #include <linux/regulator/consumer.h>
- 
- #include <dt-bindings/input/ti-drv260x.h>
-diff --git a/drivers/input/misc/gpio_decoder.c b/drivers/input/misc/gpio_decoder.c
-index ca7e0ba..a498848 100644
---- a/drivers/input/misc/gpio_decoder.c
-+++ b/drivers/input/misc/gpio_decoder.c
-@@ -22,6 +22,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- 
- struct gpio_decoder {
- 	struct input_polled_dev *poll_dev;
-diff --git a/drivers/input/touchscreen/ad7879.c b/drivers/input/touchscreen/ad7879.c
-index e16a446..38ad365 100644
---- a/drivers/input/touchscreen/ad7879.c
-+++ b/drivers/input/touchscreen/ad7879.c
-@@ -34,6 +34,7 @@
- #include <linux/input/touchscreen.h>
- #include <linux/platform_data/ad7879.h>
- #include <linux/module.h>
-+#include <linux/property.h>
- #include "ad7879.h"
- 
- #define AD7879_REG_ZEROS		0
-diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
-index 28466e3..1978f8b 100644
---- a/drivers/input/touchscreen/edt-ft5x06.c
-+++ b/drivers/input/touchscreen/edt-ft5x06.c
-@@ -39,6 +39,7 @@
- #include <linux/input/mt.h>
- #include <linux/input/touchscreen.h>
- #include <linux/of_device.h>
-+#include <linux/property.h>
- 
- #define WORK_REGISTER_THRESHOLD		0x00
- #define WORK_REGISTER_REPORT_RATE	0x08
-diff --git a/drivers/input/touchscreen/tsc200x-core.c b/drivers/input/touchscreen/tsc200x-core.c
-index b7059ed..8849f51 100644
---- a/drivers/input/touchscreen/tsc200x-core.c
-+++ b/drivers/input/touchscreen/tsc200x-core.c
-@@ -25,11 +25,11 @@
- #include <linux/input/touchscreen.h>
- #include <linux/interrupt.h>
- #include <linux/delay.h>
--#include <linux/pm.h>
- #include <linux/of.h>
- #include <linux/spi/tsc2005.h>
- #include <linux/regulator/consumer.h>
- #include <linux/regmap.h>
-+#include <linux/property.h>
- #include <linux/gpio/consumer.h>
- #include "tsc200x-core.h"
- 
-diff --git a/drivers/net/ethernet/faraday/ftgmac100.c b/drivers/net/ethernet/faraday/ftgmac100.c
-index 2625872..69f2693 100644
---- a/drivers/net/ethernet/faraday/ftgmac100.c
-+++ b/drivers/net/ethernet/faraday/ftgmac100.c
-@@ -30,6 +30,7 @@
- #include <linux/netdevice.h>
- #include <linux/phy.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <net/ip.h>
- #include <net/ncsi.h>
- 
-diff --git a/drivers/net/ethernet/smsc/smc91x.c b/drivers/net/ethernet/smsc/smc91x.c
-index 65077c7..5352a08 100644
---- a/drivers/net/ethernet/smsc/smc91x.c
-+++ b/drivers/net/ethernet/smsc/smc91x.c
-@@ -75,6 +75,7 @@ static const char version[] =
- #include <linux/ioport.h>
- #include <linux/crc32.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/spinlock.h>
- #include <linux/ethtool.h>
- #include <linux/mii.h>
-diff --git a/drivers/phy/phy-tusb1210.c b/drivers/phy/phy-tusb1210.c
-index 4f6d5e7..f7dd21aa 100644
---- a/drivers/phy/phy-tusb1210.c
-+++ b/drivers/phy/phy-tusb1210.c
-@@ -12,6 +12,7 @@
- #include <linux/module.h>
- #include <linux/ulpi/driver.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/property.h>
- 
- #include "ulpi_phy.h"
- 
-diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/supply/bq24735-charger.c
-index eb7783b..038f806 100644
---- a/drivers/power/supply/bq24735-charger.c
-+++ b/drivers/power/supply/bq24735-charger.c
-@@ -27,6 +27,7 @@
- #include <linux/of.h>
- #include <linux/gpio/consumer.h>
- #include <linux/power_supply.h>
-+#include <linux/property.h>
- #include <linux/slab.h>
- 
- #include <linux/power/bq24735-charger.h>
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index 5ef8da6..534a498 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -14,6 +14,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/property.h>
- #include <linux/usb/ch9.h>
- #include <linux/usb/of.h>
- #include <linux/usb/otg.h>
-diff --git a/drivers/usb/dwc2/debugfs.c b/drivers/usb/dwc2/debugfs.c
-index 0a13091..86736e4 100644
---- a/drivers/usb/dwc2/debugfs.c
-+++ b/drivers/usb/dwc2/debugfs.c
-@@ -14,9 +14,10 @@
-  * GNU General Public License for more details.
-  */
- 
--#include <linux/spinlock.h>
- #include <linux/debugfs.h>
-+#include <linux/property.h>
- #include <linux/seq_file.h>
-+#include <linux/spinlock.h>
- #include <linux/uaccess.h>
- 
- #include "core.h"
-diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-index a786256..7e6da29 100644
---- a/drivers/usb/dwc2/params.c
-+++ b/drivers/usb/dwc2/params.c
-@@ -35,6 +35,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/property.h>
- 
- #include "core.h"
- 
-diff --git a/drivers/usb/dwc2/pci.c b/drivers/usb/dwc2/pci.c
-index a23329e..abf6140 100644
---- a/drivers/usb/dwc2/pci.c
-+++ b/drivers/usb/dwc2/pci.c
-@@ -44,8 +44,9 @@
- #include <linux/spinlock.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
--#include <linux/slab.h>
- #include <linux/pci.h>
-+#include <linux/property.h>
-+#include <linux/slab.h>
- #include <linux/usb.h>
- 
- #include <linux/usb/hcd.h>
-diff --git a/drivers/usb/dwc3/host.c b/drivers/usb/dwc3/host.c
-index 487f0ff..562cbde 100644
---- a/drivers/usb/dwc3/host.c
-+++ b/drivers/usb/dwc3/host.c
-@@ -16,6 +16,7 @@
-  */
- 
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- 
- #include "core.h"
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 55eee5d..16b2054 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -23,7 +23,7 @@
- #include <linux/spinlock.h>
- #include <linux/topology.h>
- #include <linux/notifier.h>
--#include <linux/property.h>
-+#include <linux/fwnode.h>
- #include <linux/list.h>
- 
- #include <asm/byteorder.h>
-diff --git a/sound/soc/codecs/rt5514.c b/sound/soc/codecs/rt5514.c
-index b281a46..0749219 100644
---- a/sound/soc/codecs/rt5514.c
-+++ b/sound/soc/codecs/rt5514.c
-@@ -15,6 +15,7 @@
- #include <linux/init.h>
- #include <linux/delay.h>
- #include <linux/pm.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- #include <linux/i2c.h>
- #include <linux/platform_device.h>
-diff --git a/sound/soc/codecs/ts3a227e.c b/sound/soc/codecs/ts3a227e.c
-index 4356843..e80b28b 100644
---- a/sound/soc/codecs/ts3a227e.c
-+++ b/sound/soc/codecs/ts3a227e.c
-@@ -14,6 +14,7 @@
- #include <linux/input.h>
- #include <linux/module.h>
- #include <linux/of_gpio.h>
-+#include <linux/property.h>
- #include <linux/regmap.h>
- 
- #include <sound/core.h>
-diff --git a/sound/soc/mediatek/mt8173/mt8173-rt5650.c b/sound/soc/mediatek/mt8173/mt8173-rt5650.c
-index ba65f41..433ae4f 100644
---- a/sound/soc/mediatek/mt8173/mt8173-rt5650.c
-+++ b/sound/soc/mediatek/mt8173/mt8173-rt5650.c
-@@ -17,6 +17,7 @@
- #include <linux/module.h>
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
-+#include <linux/property.h>
- #include <sound/soc.h>
- #include <sound/jack.h>
- #include "../../codecs/rt5645.h"
-diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
-index 3475c61..9134b46 100644
---- a/sound/soc/rockchip/rk3399_gru_sound.c
-+++ b/sound/soc/rockchip/rk3399_gru_sound.c
-@@ -22,6 +22,7 @@
- #include <linux/gpio.h>
- #include <linux/of_gpio.h>
- #include <linux/delay.h>
-+#include <linux/property.h>
- #include <linux/spi/spi.h>
- #include <linux/input.h>
- #include <sound/core.h>
+> Right, actually deep_sleep was for 'suspend' (forces idleness upon 
+> the OS until a wake-up event resumes the OS from suspend), for 
+> example when users press power key on mobile phone to turn off the
+> screen. So the author implemented 'suspend' using cpu_psci_ops::cpu_suspend
+> I figure that this  way is not correct, I will remove this state from DT.
+
+OK.
+
+> I would appreciate any suggestion for how to implement this kind of
+> function properly.
+
+
+For the 'suspend' functionality you have described above, all you need
+is the firmware to implement PSCI SYSTEM_SUSPEND API in the firmware.
+The kernel psci driver detects the presence of the same and registers
+the suspend ops automatically. You need not add anything in the code or
+DT for the same.
+
 -- 
-2.7.4
+Regards,
+Sudeep
 
+
+
+
+
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
