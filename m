@@ -1,52 +1,68 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 00/14] mmc: Add support to Marvell Xenon SD Host Controller
-Date: Mon, 20 Feb 2017 20:32:58 +0100
-Message-ID: <CAPDyKFqXQmuxWFZwcnTgQcKU_t5MKCtBj6s+tv5gzVWS11x0qA@mail.gmail.com>
-References: <cover.ff78bebe0384f650a51e5e6f0f1dca6e7894b53b.1487091464.git-series.gregory.clement@free-electrons.com>
- <87y3x0ajdv.fsf@free-electrons.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr
+ dereference
+Date: Mon, 20 Feb 2017 20:40:53 +0100 (CET)
+Message-ID: <1983281189.110224.1487619653742@email.1und1.de>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+ <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+ <48907a31-eaa6-27e2-633f-d36de521e868@tronnes.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87y3x0ajdv.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <48907a31-eaa6-27e2-633f-d36de521e868-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan
+To: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 February 2017 at 17:59, Gregory CLEMENT
-<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Ulf,
->
->  On mar., f=C3=A9vr. 14 2017, Gregory CLEMENT <gregory.clement@free-elect=
-rons.com> wrote:
->
->> Hello,
->>
->> This the sixth version of the series adding support for the SDHCI
->> Xenon controller. It can be currently found on the Armada 37xx and the
->> Armada 7K/8K but will be also used in more Marvell SoC (and not only
->> the mvebu ones actually).
->>
->> Most of the following changes had been discussed on the mailing list,
->> except the new compatible string.
->>
->
-> I think that with this version we addressed all the concerns expressed
-> about the previous version. Do you think that you will be able to apply
-> this series for 4.11 or do you still see any issues?
->
+Hi,
+
+> Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> hat am 18. Februar 2017 um 19:34 geschrieben:
+> 
+> 
+> 
+> Den 16.02.2017 22.20, skrev Stefan Wahren:
+> > Since commit e2474541032d ("bcm2835: Fix hang for writing messages
+> > larger than 16 bytes") the interrupt handler is prone to a possible
+> > NULL pointer dereference. This could happen if an interrupt fires
+> > before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
+> > on the RPi 3. Even this is an unexpected behavior the driver must
+> > handle that with an error instead of a crash.
+> >
+> > CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+> > CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> > Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
+> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> > ---
+> >   drivers/i2c/busses/i2c-bcm2835.c |    4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/i2c/busses/i2c-bcm2835.c b/drivers/i2c/busses/i2c-bcm2835.c
+> > index c3436f6..10e39c8 100644
+> > --- a/drivers/i2c/busses/i2c-bcm2835.c
+> > +++ b/drivers/i2c/busses/i2c-bcm2835.c
+> > @@ -195,7 +195,9 @@ static irqreturn_t bcm2835_i2c_isr(int this_irq, void *data)
+> >   	}
+> >   
+> >   	if (val & BCM2835_I2C_S_DONE) {
+> > -		if (i2c_dev->curr_msg->flags & I2C_M_RD) {
+> > +		if (!i2c_dev->curr_msg) {
+> > +			dev_err(i2c_dev->dev, "Got unexpected interrupt (from firmware?)\n");
+> > +		} else if (i2c_dev->curr_msg->flags & I2C_M_RD) {
+> >   			bcm2835_drain_rxfifo(i2c_dev);
+> >   			val = bcm2835_i2c_readl(i2c_dev, BCM2835_I2C_S);
+> >   		}
+> 
 > Thanks,
+> 
+> Acked-by: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
 >
-> Gregory
 
-We are in the merge window for v4.11, so new material is out of the
-question. I am preparing the PR to Linus as this very moment.
+thanks, but i would be more happier to receive feedback for patches 2 and 3.
 
-Anyway, I will look into the series as soon as I can.
-
-Kind regards
-Uffe
+Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
