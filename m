@@ -1,130 +1,103 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
-Date: Mon, 20 Feb 2017 17:49:26 +0100
-Message-ID: <20170220164926.GB15493@ulmo.ba.sec>
-References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
- <20170216184524.cxcy2ux37yrwutla@lukather>
- <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
- <20170217154341.vn7uqvdaijtrj64s@lukather>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
+Date: Mon, 20 Feb 2017 17:49:53 +0100
+Message-ID: <AE27E6D2-732F-47BB-8318-C5A7DF8A88B9@goldelico.com>
+References: <cover.1482936802.git.hns@goldelico.com> <9830dd21e6425e3a866fac6ed4cc73ddd58b719f.1482936802.git.hns@goldelico.com> <20170128193342.GB38136@dtor-ws> <1F6355E1-A5E3-41A6-908F-619A15581BEF@goldelico.com> <20170217204041.GE13050@dtor-ws> <20170218032233.3qh5xdjbx5kkq5hm@earth> <95E59EB0-6F96-40BB-B74C-9CD56DDD7783@goldelico.com> <20170218234422.vza3toc3bphixsdn@earth> <FA96689F-AFD0-4FC9-95D9-639299341C8B@goldelico.com> <20170219201516.qw22o66t6zbolbgt@earth>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: multipart/signed; boundary="Apple-Mail=_42182033-5E06-43DC-9E0A-84CE55B3F722"; protocol="application/pgp-signature"; micalg=pgp-sha256
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170217154341.vn7uqvdaijtrj64s@lukather>
+In-Reply-To: <20170219201516.qw22o66t6zbolbgt@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Tobias Jakobi <tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Petr
 List-Id: devicetree@vger.kernel.org
 
 
---jho1yZJdad60DJr+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Apple-Mail=_42182033-5E06-43DC-9E0A-84CE55B3F722
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-On Fri, Feb 17, 2017 at 04:43:41PM +0100, Maxime Ripard wrote:
-> On Fri, Feb 17, 2017 at 01:45:44PM +0100, Tobias Jakobi wrote:
-> > Hello Maxime,
-> >=20
-> > Maxime Ripard wrote:
-> > > Hi,
-> > >=20
-> > > On Thu, Feb 16, 2017 at 01:43:06PM +0100, Tobias Jakobi wrote:
-> > >> I was wondering about the following. Wasn't there some strict
-> > >> requirement about code going upstream, which also included that there
-> > >> was a full open-source driver stack for it?
-> > >>
-> > >> I don't see how this is the case for Mali, neither in the kernel, no=
-r in
-> > >> userspace. I'm aware that the Mali kernel driver is open-source. But=
- it
-> > >> is not upstream, maintained out of tree, and won't land upstream in =
-its
-> > >> current form (no resemblence to a DRM driver at all). And let's not =
-talk
-> > >> about the userspace part.
-> > >>
-> > >> So, why should this be here?
-> > >=20
-> > > The device tree is a representation of the hardware itself. The state
-> > > of the driver support doesn't change the hardware you're running on,
-> > > just like your BIOS/UEFI on x86 won't change the device it reports to
-> > > Linux based on whether it has a driver for it.
-> >
-> > Like Emil already said, the new bindings and the DT entries are solely
-> > introduced to support a proprietary out-of-tree module.
+Hi Sebastian,
+
+> Am 19.02.2017 um 21:15 schrieb Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
 >=20
-> No. This new binding and the DT entries are solely introduced to
-> describe a device found in a number of SoCs, just like any other DT
-> binding we have.
+> Hi,
 >=20
-> > The current workflow when introducing new DT entries is the following:
-> > - upstream a driver that uses the entries
-> > - THEN add the new entries
+> On Sun, Feb 19, 2017 at 01:07:26PM +0100, H. Nikolaus Schaller wrote:
+>> I don't really remember when we noticed it first. Maybe it was
+>> back in tslib times some years ago where setting the sensitivity
+>> threshold made problems. We then carried along our patch for a
+>> long time in our local repo (and modified it several times) and
+>> only started upstreaming some months ago. [...]
+>>=20
+>> AFAIK, GIMP and for example https://sourceforge.net/projects/xournal/ =
+appear
+>> to be able to handle X pressure, but I haven't running and tested =
+either one
+>> on our devices. Pressure is used in such drawing tools to simulate =
+that some
+>> physical pens make wider strokes on higher pressure.
+>>=20
+>> This seems to indicate that X can handle pressure in a non-boolean =
+way, but rarely does.
+>> Especially I think the usual menu, click, drag, scroll gestures are =
+only based
+>> on BTN_TOUCH status and not on ABS_PRESSURE. So it is rarely noticed =
+to make
+>> a difference.
 >=20
-> And that's never been the preferred workflow, for *any* patches.
+> ok.
+>=20
+>>>>> I suggest to put the resistance vs pressure thing in its own =
+patch,
+>>>>> that also fixes tsc200x-core and merge it to linux-next after the
+>>>>> merge window.
+>>=20
+>> Ok. I will propose a patch.
+>=20
+> Thanks. I suggest to add this in the patch description:
+>=20
+> While this patch changes the values reported to userspace,
+> ABS_PRESSURE is used rarely by userspace. Most software only
+> relies on BTN_TOUCH (boolean), which is not affected by this
+> patch. Some graphics software makes use of the interface and
+> does not work correctly with the currently used inverted
+> behaviour.
 
-Actually it has. How else are you going to test that your driver really
-works? You've got to have both pieces before you can verify that they're
-both adequate. So the typical workflow is to:
+Added. Patch set will come in some minutes (have to run checkpatch
+first).
 
-	1) define the bindings
-	2) write a driver that implements the bindings
-	3) add entries to device tree files
+BR and thanks,
+Nikolaus
 
-Usually it doesn't matter in which order you do the above because they
-are all part of the same patch series. But that's not what you're doing
-here. The more general problem here is that you're providing device tree
-content (and therefore ABI) that's based on a binding which has no
-upstream users. So you don't actually have a way of validating that what
-you merge is going to be an adequate description.
 
-You're probably going to respond: "but DT describes hardware, so it must
-be known already, there won't be a need for changes". Unfortunately that
-is only partially true. We've had a number of occasions where it later
-turned out that a binding was in fact not an adequate description, and
-then we've had to jump through hoops in order to preserve backwards
-compatibility. That's already annoying enough if you've got in-tree
-users, but it's going to be even more painful if you start out with an
-out-of-tree user.
-
-All of that said, you've got an Acked-by from Rob and that's about as
-good as it's going to get. So I'm not going to NAK this. But I will
-caution against this, because I don't think you're doing yourself any
-favours with this.
-
-So perhaps the question that we should ask is this: what do you gain by
-merging this series? The fact remains that you don't have an upstream
-driver that implements this binding, so ultimately you're going to be
-carrying patches in some development tree anyway. Why not simply stash
-these patches into the same tree? That should be about the same amount
-of work for you and your users, but it has the advantage of not locking
-you into something that you may regret.
-
-Thierry
-
---jho1yZJdad60DJr+
-Content-Type: application/pgp-signature; name="signature.asc"
+--Apple-Mail=_42182033-5E06-43DC-9E0A-84CE55B3F722
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlirHhQACgkQ3SOs138+
-s6FTnw/9EJ9tYw2epzLEyhXBwUGr72cbdpBZTYDphMUMwcHlU4xLXARs6jm/LzRu
-GQDgjfki1eh+GwQVFbgnItvTWzIZ061yfczuiHbhJgU8xL8XBNrHgHP4USXLmv/w
-s2Csc7o9+oAptoIlcBp9TJbF76gVs00n7y/Oe8tAaZzgWaJ+TJub0un9B/fpwe9w
-FZb+j7x0LQyf/I5dfV6LpawM/W69a8zWy2NI9AJJPT5XVFml38GoP03O5XPfHkJY
-FAzAFlSgENebLKbRI7bHcBOdvjJXgdmIKUpFm3rqNLpGqjY7YMy2FSjpy89N//u/
-vcLgalLeBs41uHLVEiZeCBw/bu9DQIgnEUQ3459PLZdkrWZlGbb6wfv6syF9jg5O
-JbyupqxrEF3GBcBcF6Y7hZJaaKpy29Y6udHA302TUrpxdl8Ezodg2UhONWNzDHKK
-NGuYNpp7J8TA+r28qjuet0LybpkTc5nHOEw2rRfz6y4YYJJO0IRkw/C7W3wMwF0A
-6oBDsi00Tx8bf0iE8alQthbSF2rS3HHtgJzosALNbV6IPPPbTpw6/og4lC/2PKCo
-PXODwFqewYxir3hd6IING3VuhbfxAP04ReN1HR0d2jEQA57Ox4ixjdKwgvxCpJSQ
-mu4weF/HgANfltzkXWO8C46L3FuzKoNmF9oSYx8QrYjUbFI7r/Y=
-=SM/f
+iQIcBAEBCAAGBQJYqx4yAAoJEIl79TGLgAm67aAQAKpae9JClZrXx/CDUgDnFi+R
+JUWteEZDBKN6/minjuGdk/RKv04X4g0WWhYdr6p2HkGldo6VTz+5bULeJVBTGZGl
+XdpFMvBh9JwbVkxIL4CcyjPn+orCXPChh7OGbVkEkfD/8e2TLpw2gkEVKp8Y4T3L
+3HEaJver3rfb7LbajAt2z/GyQC31RMIDIm90HFFoLo9zfzz7Hpp0TESAXf0bxiOg
+zQxFqW/sI1grlAApmLqs7vYKyP1Upqr2VxCL8goFypribNju+pxbDNyPq7cjtUf2
+geiaNjZuLeznCotltufm0ZjjJeVlvDCDHQiMTfF0vummhDYr7aAHbPvu0Rw5oUTi
+H4wmo211oXUtSbL8pf53KkwixpxwIAkvvvCQ43TJruiZ+V0zWu4zOie8k+HBdv/s
+fiKGv1h3BI7BoS9ItY3oP/zd520TIk7+4+ttAg0IAYwqYIkTy3RtsD4gt2O0DDd0
+V0Qp4L0aUAe+G3ruoECnkDoV8v54th8WSuUT3M3et9u0+rXRiVakcWBUbPBWLRKN
+0SDNiiYxy4VVXk/E02gLXFJjg6g4fc0oDcNF28vkdwORFQey2Rf1KgAhfXm3vFnm
+rIgrsFydFG5ECZiZuKx00Ce09g8pU+xPm1jlZfuLfVXoCfnVWuxg1xhAMh9e5XHK
+/qO76Ikq1cEV7yl6Gnzl
+=eVZS
 -----END PGP SIGNATURE-----
 
---jho1yZJdad60DJr+--
+--Apple-Mail=_42182033-5E06-43DC-9E0A-84CE55B3F722--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
