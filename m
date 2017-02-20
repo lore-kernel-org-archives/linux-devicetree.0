@@ -1,48 +1,143 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 1/9] gpu: ipu-v3: remove AXI ID setting for IC channel
-Date: Mon, 20 Feb 2017 14:04:10 +0100
-Message-ID: <1487595850.3878.3.camel@pengutronix.de>
-References: <20170217182830.32618-1-l.stach@pengutronix.de>
- <20170217182830.32618-2-l.stach@pengutronix.de>
+From: Ritesh Harjani <riteshh@codeaurora.org>
+Subject: Re: [RFC PATCH 0/4] mmc: core: Provide CMD5 awake and partial_init
+ support
+Date: Mon, 20 Feb 2017 18:34:25 +0530
+Message-ID: <fae03aba-c42f-4d1e-52eb-f8421ce45627@codeaurora.org>
+References: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
+ <CAPDyKFrytpFeH5MCLO_GOrLE9YPbbVBTbrsROOF3G-iOu5a_HA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170217182830.32618-2-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrytpFeH5MCLO_GOrLE9YPbbVBTbrsROOF3G-iOu5a_HA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Shawn Lin <shawn.lin@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Georgi Djakov <georgi.djakov@linaro.org>, Alex Lemberg <alex.lemberg@sandisk.com>, Mateusz Nowak <mateusz.nowak@intel.com>, Yuliy Izrailov <Yuliy.Izrailov@sandisk.com>, Asutosh Das <asutoshd@codeaurora.org>, David Griego <david.griego@linaro.org>, Sahitya Tummala <stummala@codeaurora.org>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Pramod Gurav <pramod.gurav@linaro.org>, jeremymc@redhat.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE3LTAyLTE3IGF0IDE5OjI4ICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPiBU
-aGlzIGlzIGEgcHJldHR5IG1pbm9yIG9wdGltaXphdGlvbiBmb3IgdGhlIElDIGNoYW5uZWwgdG8g
-Z2V0Cj4gb3V0LW9mLW9yZGVyIEFYSSByZXR1cm5zLCBidXQgY2xhc2hlcyB3aXRoIHRoZSBBWEkg
-SUQgYXNzaWdubWVudAo+IHRoYXQgbmVlZHMgdG8gYmUgZG9uZSBmb3IgdGhlIGRpc3BsYXkgY2hh
-bm5lbHMgb24gUXVhZFBsdXMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3Rh
-Y2hAcGVuZ3V0cm9uaXguZGU+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2lwdS12My9pcHUtaW1hZ2Ut
-Y29udmVydC5jIHwgMiAtLQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBkZWxldGlvbnMoLSkKPiAKPiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1pbWFnZS1jb252ZXJ0LmMgYi9kcml2
-ZXJzL2dwdS9pcHUtdjMvaXB1LWltYWdlLWNvbnZlcnQuYwo+IGluZGV4IDgwNWI2ZmE3YjVmNC4u
-NWUzY2M2YmQ5OGZjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2lwdS12My9pcHUtaW1hZ2Ut
-Y29udmVydC5jCj4gKysrIGIvZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1pbWFnZS1jb252ZXJ0LmMK
-PiBAQCAtNjcxLDggKzY3MSw2IEBAIHN0YXRpYyB2b2lkIGluaXRfaWRtYWNfY2hhbm5lbChzdHJ1
-Y3QgaXB1X2ltYWdlX2NvbnZlcnRfY3R4ICpjdHgsCj4gIAlpcHVfaWNfdGFza19pZG1hX2luaXQo
-Y2hhbi0+aWMsIGNoYW5uZWwsIHdpZHRoLCBoZWlnaHQsCj4gIAkJCSAgICAgIGJ1cnN0X3NpemUs
-IHJvdF9tb2RlKTsKPiAgCj4gLQlpcHVfY3BtZW1fc2V0X2F4aV9pZChjaGFubmVsLCAxKTsKPiAt
-CgpUaGUgSUMgSURNQUMgY2hhbm5lbHMgd2VyZSBzZXQgdG8gQVhJIElEIDEgdG8gYXZvaWQgc3Rh
-cnZpbmcgdGhlIHNjYW5vdXQKY2hhbm5lbHMuIEFYSSBJRCAwIGlzIHNldCB0byB0aGUgaGlnaGVz
-dCBRb1MgcHJpb3JpdHkgaW4gaW14NnFfYXhpX2luaXQsCkFYSSBJRCAxIGlzIHNldCBzbGlnaHRs
-eSBsb3dlciBmb3IgdGhhdCByZWFzb24uIFRoaXMgc2hvdWxkIGJlIGtlcHQgZm9yCmFsbCB0aGUg
-bm9uLXBsdXMgbW9kZWxzLgoKPiAgCWlwdV9pZG1hY19zZXRfZG91YmxlX2J1ZmZlcihjaGFubmVs
-LCBjdHgtPmRvdWJsZV9idWZmZXJpbmcpOwo+ICB9Cj4gIAoKcmVnYXJkcwpQaGlsaXBwCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Ulf,
+
+On 2/20/2017 5:09 PM, Ulf Hansson wrote:
+> On 20 February 2017 at 09:03, Ritesh Harjani <riteshh@codeaurora.org> wrote:
+>> As per JEDEC spec - CMD5 can be used to awake from sleep mode for emmc.
+>> This patch series provide CMD5(awake) + mmc_partial_init support to resume
+>> mmc card device. This is mainly to reduce the resume time.
+>
+> I assume with "resume time" you don't mean "system PM resume time"?
+I meant mmc_runtime_resume time which will be accounted only in MMC card 
+run-time resume now.
+
+
+>
+> The current approach we have for MMC is to postpone system PM resume
+> of the card until it's actually needed, thus via runtime PM instead.
+> Then the time it takes to re-initialize the eMMC don't affect the
+> system PM resume time at all.
+>
+> Therefore I am wondering about how big of a problem this really is. Is
+> there a specific use case you are optimizing for?
+In general MMC card resume time will be optimized.
+
+>
+>>
+>> This was tested on db410c (emmc with HS200 mode) and MS8996 (emmc with HS400ES)
+>> based internal board. This patch reduced the resume time by ~50% on msm8996
+>> and ~11% on db410c.
+Sorry, I did not enable MMC_CAP_WAIT_WHILE_BUSY on db410c. That's why we 
+see 11% improvement only. After I enabled this cap, I see ~47% 
+improvement in mmc_runtime_resume on db410c.
+
+
+>
+> The improved behaviour in percentage is very interesting, but I would
+> also like to see real numbers.
+
+<DB410c>
+1. ~110ms without the patch on db410c (with MMC_CAP_WAIT_WHILE_BUSY)
+
+2. ~97ms with the patch on db410c (w/o enabling MMC_CAP_WAIT_WHILE_BUSY)
+
+3. ~58ms with the patch (with MMC_CAP_WAIT_WHILE_BUSY capability).= ~47%
+
+<MSM8996>
+1. ~142ms without the patch on msm8996 (with MMC_CAP_WAIT_WHILE_BUSY)
+
+2. ~50ms with the patch on msm8996. (with MMC_CAP_WAIT_WHILE_BUSY)= ~60%
+
+>
+> Moreover, I would like to know what kind of mechanism the
+> corresponding host drivers/controllers are using for card busy
+> detection?
+These controllers have MMC_CAP_WAIT_WHILE_BUSY capability enabled.
+
+I have tested with below caps.
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 10cdc84..2da9c4e 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1283,6 +1283,9 @@ static int sdhci_msm_probe(struct platform_device 
+*pdev)
+         pm_runtime_use_autosuspend(&pdev->dev);
+
+         host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
++       host->mmc->caps |= MMC_CAP_WAIT_WHILE_BUSY;
++       host->mmc->caps |= MMC_CAP_AGGRESSIVE_PM;
++       host->mmc->caps2 |= MMC_CAP2_SLEEP_AWAKE;
+         ret = sdhci_add_host(host);
+         if (ret)
+                 goto pm_runtime_disable;
+
+
+>
+>>
+>> As of now this patch series provides a caps (MMC_CAP2_SLEEP_AWAKE) to enable this feature.
+>> Since there is no dependency on host platform for this, we can enable this feature by
+>> default as well. Thoughts?
+>
+> I will look into the series in more detail, however we must not add a
+Sure, please let me know your feedback.
+
+> corresponding DT binding for this as this isn't a HW configuration. I
+> guess what you need to know is that VCCQ stays powered on when the
+> card is a sleep, else waking up with CMD5 won't work
+> (MMC_CAP_FULL_PWR_CYCLE).
+Ok.
+
+>
+> The current main concern I can think of, is whether the added
+> complexity to the wakeup path can be justified for the improved
+> behaviour.
+This may not be very complex actually.
+
+
+>
+>>
+>>
+>> Ritesh Harjani (4):
+>>   Documentation: mmc: add mmc-sleep-awake
+>>   mmc: core: add mmc-sleep-awake caps
+>>   mmc: mmc: add support for CMD5 awake
+>>   mmc: core: Implement mmc_partial_init during resume
+>>
+>>  Documentation/devicetree/bindings/mmc/mmc.txt |   2 +
+>>  drivers/mmc/core/core.c                       |  13 +++
+>>  drivers/mmc/core/core.h                       |   1 +
+>>  drivers/mmc/core/host.c                       |   2 +
+>>  drivers/mmc/core/mmc.c                        | 160 ++++++++++++++++++++++++--
+>>  include/linux/mmc/card.h                      |   3 +
+>>  include/linux/mmc/host.h                      |   2 +
+>>  7 files changed, 176 insertions(+), 7 deletions(-)
+>>
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+>> a Linux Foundation Collaborative Project.
+>>
+>
+> Kind regards
+> Uffe
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
