@@ -1,84 +1,74 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] gpu: ipu-v3: add DT binding for the Prefetch
- Resolve Engine
-Date: Mon, 20 Feb 2017 16:01:26 +0100
-Message-ID: <1487602886.3878.16.camel@pengutronix.de>
-References: <20170217182830.32618-1-l.stach@pengutronix.de>
-         <20170217182830.32618-3-l.stach@pengutronix.de>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 04/21] ARM: sun8i: dt: Add DT bindings
+ documentation for Allwinner dwmac-sun8i
+Date: Mon, 20 Feb 2017 16:07:51 +0100
+Message-ID: <20170220150751.GB31799@Red>
+References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
+ <20170216124859.14346-5-clabbe.montjoie@gmail.com>
+ <783a717d-f1f4-e265-bf94-0b3080cea542@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170217182830.32618-3-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBTEMVTCQKGQE6CUCKQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <783a717d-f1f4-e265-bf94-0b3080cea542-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-02-17 at 19:28 +0100, Lucas Stach wrote:
-> The Prefetch Resolve Engine is a prefetch and tile resolve engine
-> which prefetches display data from DRAM to an internal SRAM region.
-> It has a single clock for configuration register access and the
-> functional units. A single shared interrupt is used for status and
-> error signaling.
+On Thu, Feb 16, 2017 at 12:58:46PM -0800, Florian Fainelli wrote:
+> On 02/16/2017 04:48 AM, Corentin Labbe wrote:
+> > +
+> > +Optional properties:
+> > +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
+> > +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
 > 
-> The only external dependency is the SRAM region to use for the
-> prefetch double buffer.
+> Delays should be specified in nanosecond units, and should not be a
+> value that maps directly to a HW register value, you need to convert the
+> property value into the appropriate register value.
 > 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../bindings/display/imx/fsl-imx-drm.txt           | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+
+This question already raised multiple times in sun8i-emac development, I do not have any information on how to decode thoses values. (and so the comment below in documentation)
+I will try to contact Allwinner for more details.
+
+> > +Both delay properties does not have units, there are arbitrary value.
+> > +The TX/RX clock delay chain settings are board specific and could be found
+> > +in vendor FEX files.
+> > +
+> > +Optional properties for "allwinner,sun8i-h3-emac":
+> > +- allwinner,leds-active-low: EPHY LEDs are active low
 > 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> index 971c3eedb1c7..1bd777d7c37d 100644
-> --- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> @@ -53,6 +53,32 @@ ipu: ipu@18000000 {
->  	};
->  };
->  
-> +Freescale i.MX PRE (Prefetch Resolve Engine)
-> +============================================
-> +
-> +Required properties:
-> +- compatible: should be "fsl,imx6qp-pre"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- clocks : phandle to the PRE axi clock input, as described
-> +  in Documentation/devicetree/bindings/clock/clock-bindings.txt and
-> +  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-> +- clock-names: should be "axi"
-> +- interrupts: should contain the PRE interrupt
-> +- fsl,ocram: phandle pointing to the mmio-sram device node, that should be
-> +  used for the PRE SRAM double buffer.
-> +
-> +example:
-> +
-> +pre@021c8000 {
-> +	compatible = "fsl,imx6qp-pre";
-> +	reg = <0x021c8000 0x1000>;
-> +	interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
-> +	clocks = <&clks IMX6QDL_CLK_PRE0>;
-> +	clock-names = "axi";
-> +	fsl,ocram = <&ocram2>;
+> Are you sure this is appropriate at the MAC node level and this is not
+> something that follows the PHY instead?
+> 
 
-Nitpick: the CODA property for this is called iram. Should we do the
-same here in case the PRE is later used on other SoCs that call their
-on-chip SRAM differently?
-There is no mention of OCRAM in the PRE chapter in the i.MX6QP reference
-manual, but Figures 38-1 and 38-5 mention an "IRAM Double Buffer".
+As said by MoeIcenowy, an internal PHY is present. At early stage of development, wens tried to create a PHY driver for it, but finaly it was too much over complicated and with few interest to split in two.
 
-> +};
-> +
->  Parallel display support
->  ========================
->  
+> > +
+> > +Required child node of emac:
+> > +- mdio bus node: should be named mdio
+> > +
+> > +Required properties of the mdio node:
+> > +- #address-cells: shall be 1
+> > +- #size-cells: shall be 0
+> > +
+> > +The device node referenced by "phy" or "phy-handle" should be a child node
+> > +of the mdio node. See phy.txt for the generic PHY bindings.
+> > +
+> > +Required properties of the phy node with "allwinner,sun8i-h3-emac":
+> > +- clocks: an extra phandle to the reference clock for the EPHY
+> 
+> s/an extra/a phandle/
+> 
 
-regards
-Philipp
+Thanks, will fix
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Corentin Labbe
