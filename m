@@ -1,35 +1,109 @@
-From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [PATCH v2 0/2] add basic SoC support for HiSilicon Hi3516CV300
-Date: Mon, 20 Feb 2017 17:14:49 +0800
-Message-ID: <1487582091-24695-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: Re: [PATCH 1/5] arm64: dts: Add basic DT to support Spreadtrum's
+ SP9860G
+Date: Mon, 20 Feb 2017 17:37:51 +0800
+Message-ID: <20170220093750.GA9600@spreadtrum.com>
+References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1487063952-7113-2-git-send-email-chunyan.zhang@spreadtrum.com>
+ <CAPKp9ub35nL8gc_TKx02pSHHNwBhiMacWL=CuEmNGnecWikfGQ@mail.gmail.com>
+ <20170217072839.GA8767@spreadtrum.com>
+ <b5940598-f3e7-b2c5-9914-7bcbe3471f9e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b5940598-f3e7-b2c5-9914-7bcbe3471f9e@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, open list <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi3516CV300 is a SoC designed for HD IP camera. It has an integrated ISP and
-H.265 video compression encoder. This patch set is mainly used to add basic SoC
-support for Hi3516CV300.
+Hi Sudeep,
 
-Pan Wen (2):
-  arm: hisi: add ARCH_MULTI_V5 support
-  arm: dts: hisi: add dts files for Hi3516CV300 demo board
+On 五,  2月 17, 2017 at 10:28:00上午 +0000, Sudeep Holla wrote:
+> 
+> 
+> On 17/02/17 07:28, Chunyan Zhang wrote:
+> > Hi Sudeep,
+> > 
+> > On 二,  2月 14, 2017 at 04:44:53下午 +0000, Sudeep Holla wrote:
+> >> On Tue, Feb 14, 2017 at 9:19 AM, Chunyan Zhang
+> >> <chunyan.zhang@spreadtrum.com> wrote:
+> 
+> [..]
+> 
+> >>
+> >>> +       idle-states{
+> >>> +               entry-method = "arm,psci";
+> >>> +
+> >>> +               CORE_PD: core_pd {
+> >>> +                       compatible = "arm,idle-state";
+> >>> +                       entry-latency-us = <1000>;
+> >>> +                       exit-latency-us = <700>;
+> >>> +                       min-residency-us = <2500>;
+> >>> +                       local-timer-stop;
+> >>> +                       arm,psci-suspend-param = <0x00010002>;
+> >>> +               };
+> >>> +
+> >>> +               CLUSTER_PD: cluster_pd {
+> >>> +                       compatible = "arm,idle-state";
+> >>> +                       entry-latency-us = <1000>;
+> >>> +                       exit-latency-us = <1000>;
+> >>> +                       min-residency-us = <3000>;
+> >>> +                       local-timer-stop;
+> >>> +                       arm,psci-suspend-param = <0x01010003>;
+> >>> +               };
+> >>> +
+> >>> +               DEEP_SLEEP: deep_sleep {
+> >>> +                       compatible = "arm,idle-state";
+> >>> +                       wakeup-latency-us = <0xffffffff>;
+> >>
+> >> A value > 4294 seconds(i.e >1 hour) seems suspicious.
+> >> Are you working around the firmware issue with high latency value so
+> >> that it's never entered ? Why not remove advertising the state from DT.
+> >>
+> > 
+> > Haved checked with related colleagues, this node 'deep_sleep' was not for working
+> > around any firmware issue, but was a trick utilization of idle subsystem, and that
+> 
+> Really ? Any latency greater few milliseconds are sounds useless. I
+> still don't understand what you mean by "trick utilization of idle
+> subsystem".
+>
 
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/hi3516cv300-demb.dts |  95 +++++++++
- arch/arm/boot/dts/hi3516cv300.dtsi     | 362 +++++++++++++++++++++++++++++++++
- arch/arm/mach-hisi/Kconfig             |  10 +-
- 4 files changed, 462 insertions(+), 6 deletions(-)
- create mode 100644 arch/arm/boot/dts/hi3516cv300-demb.dts
- create mode 100644 arch/arm/boot/dts/hi3516cv300.dtsi
+Sorry for confused expression, I meant it was not a right way to utilize idle mechanism
+and shouldn't be upstreamed.
+ 
+> > was definitely not elegant, the author indeed intendly didn't want CPU entered this
+> > state, I will remove this node therefore.
+> 
+> It's quick and dirty "HACK* to retain and advertise the state but
+> ensure it's never entered and obstruct the boot. It's not a trick to
+> exploit any idle subsystem utilization.
+>
 
--- 
-1.9.1
+Right, actually deep_sleep was for 'suspend' (forces idleness upon the OS until a wake-up event
+resumes the OS from suspend), for example when users press power key on mobile phone to turn off
+the screen. So the author implemented 'suspend' using cpu_psci_ops::cpu_suspend I figure that this
+way is not correct, I will remove this state from DT.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would appreciate any suggestion for how to implement this kind of function properly.
+
+Thanks,
+Chunyan
+
+ 
+> >  
+> >> Can you get me the dump of:
+> >> grep "" /sys/devices/system/cpu/cpu*/cpuidle/state*/{time,usage}
+> >>
+> > 
+> > FYI: https://www.irccloud.com/pastebin/XyEMLzfq/
+> > 
+> 
+> As expected, state3(deep_sleep) is never entered.
+> 
+> -- 
+> Regards,
+> Sudeep
