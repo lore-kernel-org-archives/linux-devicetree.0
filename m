@@ -1,79 +1,136 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/4] arm: dts: imx6qdl-icore: Add backlight support for lvds
-Date: Tue, 21 Feb 2017 01:35:18 +0530
-Message-ID: <1487621121-6051-1-git-send-email-jagan@openedev.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v2 2/4] arm: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 10.1 initial support
+Date: Tue, 21 Feb 2017 01:35:19 +0530
+Message-ID: <1487621121-6051-2-git-send-email-jagan@openedev.com>
+References: <1487621121-6051-1-git-send-email-jagan@openedev.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487621121-6051-1-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Domenico Acri <domenico.acri@engicam.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-This patch add support for lvds backlight on i.CoreM6 QDL
-variant boards.
+i.CoreM6 Quad/Dual OpenFrame modules are "system on modules plus
+openframe display carriers" which are good solution for develop
+user friendly graphic user interface.
 
-Cc: Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+General features:
+CPU           NXP i.MX6Q rev1.2 at 792 MHz
+RAM           1GB, 32, 64 bit, DDR3-800/1066
+NAND          SLC,512MB
+LVDS Display  TFT 10.1" industrial, 1280x800 resolution
+Backlight     LED backlight, brightness 350 Cd/m2
+Power supply  15 to 30 Vdc
+
+Cc: Domenico Acri <domenico.acri@engicam.com>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
 - none
 
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/Makefile                |  1 +
+ arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 76 +++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap10.dts
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 55bebfc..7dda608 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -48,6 +48,14 @@
- 		reg = <0x10000000 0x80000000>;
- 	};
- 
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm3 0 100000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <7>;
-+		status = "okay";
-+	};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0118084..458ec09 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -398,6 +398,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-h100.dtb \
+ 	imx6q-hummingboard.dtb \
+ 	imx6q-icore.dtb \
++	imx6q-icore-ofcap10.dtb \
+ 	imx6q-icore-rqs.dtb \
+ 	imx6q-marsboard.dtb \
+ 	imx6q-mccmon6.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+new file mode 100644
+index 0000000..70600e2
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+@@ -0,0 +1,76 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -136,6 +144,12 @@
- 	status = "okay";
- };
- 
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>;
-+	status = "okay";
++/dts-v1/;
++
++#include "imx6q.dtsi"
++#include "imx6qdl-icore.dtsi"
++
++/ {
++	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 10.1 Kit";
++	compatible = "engicam,imx6-icore", "fsl,imx6q";
 +};
 +
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart4>;
-@@ -246,6 +260,12 @@
- 		>;
- 	};
- 
-+	pinctrl_pwm3: pwm3grp-1 {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_DAT1__PWM3_OUT 0x1b0b1
-+		>;
-+	};
++&ldb {
++	status = "okay";
 +
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++	lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <24>;
++		status = "okay";
++
++		display-timings {
++                        native-mode = <&timing1>;
++                        timing1: hsd100pxn1 {
++                                clock-frequency = <60000000>;
++                                hactive = <1280>;
++                                vactive = <800>;
++                                hback-porch = <40>;
++                                hfront-porch = <40>;
++                                vback-porch = <10>;
++                                vfront-porch = <3>;
++                                hsync-len = <80>;
++                                vsync-len = <10>;
++                        };
++                };
++	};
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
