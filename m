@@ -1,126 +1,57 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm64: dts: Add basic DT to support Spreadtrum's
- SP9860G
-Date: Mon, 20 Feb 2017 10:47:56 +0000
-Message-ID: <c28ee4e9-9abe-c019-2439-f9cb239b67e9@arm.com>
-References: <1487063952-7113-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487063952-7113-2-git-send-email-chunyan.zhang@spreadtrum.com>
- <CAPKp9ub35nL8gc_TKx02pSHHNwBhiMacWL=CuEmNGnecWikfGQ@mail.gmail.com>
- <20170217072839.GA8767@spreadtrum.com>
- <b5940598-f3e7-b2c5-9914-7bcbe3471f9e@arm.com>
- <20170220093750.GA9600@spreadtrum.com>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
+Date: Mon, 20 Feb 2017 11:01:25 +0000
+Message-ID: <2b409ff7-54fe-4110-6495-1cc54585e5e2@st.com>
+References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
+ <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
+ <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170220093750.GA9600-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <14915226CB2B674FA1778EF630895E9C@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20/02/17 09:37, Chunyan Zhang wrote:
-> Hi Sudeep,
-> 
-> On 五,  2月 17, 2017 at 10:28:00上午 +0000, Sudeep Holla wrote:
->>
->>
->> On 17/02/17 07:28, Chunyan Zhang wrote:
->>> Hi Sudeep,
->>>
->>> On 二,  2月 14, 2017 at 04:44:53下午 +0000, Sudeep Holla wrote:
->>>> On Tue, Feb 14, 2017 at 9:19 AM, Chunyan Zhang
->>>> <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
->>
->> [..]
->>
->>>>
->>>>> +       idle-states{
->>>>> +               entry-method = "arm,psci";
->>>>> +
->>>>> +               CORE_PD: core_pd {
->>>>> +                       compatible = "arm,idle-state";
->>>>> +                       entry-latency-us = <1000>;
->>>>> +                       exit-latency-us = <700>;
->>>>> +                       min-residency-us = <2500>;
->>>>> +                       local-timer-stop;
->>>>> +                       arm,psci-suspend-param = <0x00010002>;
->>>>> +               };
->>>>> +
->>>>> +               CLUSTER_PD: cluster_pd {
->>>>> +                       compatible = "arm,idle-state";
->>>>> +                       entry-latency-us = <1000>;
->>>>> +                       exit-latency-us = <1000>;
->>>>> +                       min-residency-us = <3000>;
->>>>> +                       local-timer-stop;
->>>>> +                       arm,psci-suspend-param = <0x01010003>;
->>>>> +               };
->>>>> +
->>>>> +               DEEP_SLEEP: deep_sleep {
->>>>> +                       compatible = "arm,idle-state";
->>>>> +                       wakeup-latency-us = <0xffffffff>;
->>>>
->>>> A value > 4294 seconds(i.e >1 hour) seems suspicious.
->>>> Are you working around the firmware issue with high latency value so
->>>> that it's never entered ? Why not remove advertising the state from DT.
->>>>
->>>
->>> Haved checked with related colleagues, this node 'deep_sleep' was not for working
->>> around any firmware issue, but was a trick utilization of idle subsystem, and that
->>
->> Really ? Any latency greater few milliseconds are sounds useless. I
->> still don't understand what you mean by "trick utilization of idle
->> subsystem".
->>
-> 
-> Sorry for confused expression, I meant it was not a right way to utilize idle mechanism
-> and shouldn't be upstreamed.
-> 
-
-No problem.
-
->>> was definitely not elegant, the author indeed intendly didn't want CPU entered this
->>> state, I will remove this node therefore.
->>
->> It's quick and dirty "HACK* to retain and advertise the state but
->> ensure it's never entered and obstruct the boot. It's not a trick to
->> exploit any idle subsystem utilization.
->>
-> 
-
-> Right, actually deep_sleep was for 'suspend' (forces idleness upon 
-> the OS until a wake-up event resumes the OS from suspend), for 
-> example when users press power key on mobile phone to turn off the
-> screen. So the author implemented 'suspend' using cpu_psci_ops::cpu_suspend
-> I figure that this  way is not correct, I will remove this state from DT.
-
-OK.
-
-> I would appreciate any suggestion for how to implement this kind of
-> function properly.
-
-
-For the 'suspend' functionality you have described above, all you need
-is the firmware to implement PSCI SYSTEM_SUSPEND API in the firmware.
-The kernel psci driver detects the presence of the same and registers
-the suspend ops automatically. You need not add anything in the code or
-DT for the same.
-
--- 
-Regards,
-Sudeep
-
-
-
-
-
-
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAwMi8xNi8yMDE3IDAzOjM0IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBGcmksIEZl
+YiAxMCwgMjAxNyBhdCAwMzo1NDo0NFBNICswMTAwLCBZYW5uaWNrIEZlcnRyZSB3cm90ZToKPj4g
+U2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KPj4g
+LS0tCj4+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3
+LXQwMWgudHh0ICAgICAgICAgfCA3ICsrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2Vy
+dGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0Cj4+
+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10
+MDFoLnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5mNTllM2M0
+Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dAo+PiBAQCAt
+MCwwICsxLDcgQEAKPj4gK0FtcGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCA0LjMiIFdRVkdBIFRG
+VCBMQ0QgcGFuZWwKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJs
+ZTogc2hvdWxkIGJlICJhbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgiCj4KPiBObyBHUElPIGNv
+bnRyb2xzIG9yIHBvd2VyIHN1cHBseSBmb3IgdGhpcyBwYW5lbD8KPgo+IFJvYgo+CgpIaSBSb2Is
+CnRoYW5rIGZvciB5b3VyIHJlcGx5LgpUaGVyZSBpcyBubyBncGlvIG9yIHBvd2VyIHN1cHBseSBj
+b250cm9sIGZvciB0aGlzIHBhbmVsIHdpdGggdGhlIGV2YWwgCmJvYXJkIHN0bTQyOXg5aS4KVGhp
+cyBiaW5kaW5nIGlzIHNpbWlsYXIgdG8gYWxsIHBhbmVsIGJpbmRpbmdzIHdoaWNoIGFyZSBsaW5r
+IHRvIHBhbmVsIApzaW1wbGUuIERldGFpbHMgb24gZ3BpbyAmIHBvd2VyIHN1cHBseSBhcmUgZGVz
+Y3JpYmUgd2l0aCBzaW1wbGUtcGFuZWwgCmJpbmRpbmcuCgpCZXN0IHJlZ2FyZHMKCkV4YW1wbGUg
+bnZkLDkxMjgudHh0OgoKTmV3IFZpc2lvbiBEaXNwbGF5IDcuMCIgODAwIFJHQiB4IDQ4MCBURlQg
+TENEIHBhbmVsCgpSZXF1aXJlZCBwcm9wZXJ0aWVzOgotIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
+bnZkLDkxMjgiCgpUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFu
+ZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCmluIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhp
+cyBkaXJlY3RvcnkuCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
