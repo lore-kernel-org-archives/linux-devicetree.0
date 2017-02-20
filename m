@@ -1,35 +1,60 @@
 From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v2 0/2] Xilinx Slave Serial FPGA Manager
-Date: Mon, 20 Feb 2017 15:25:22 +0100
-Message-ID: <1487600724-17607-1-git-send-email-agust@denx.de>
+Subject: [PATCH v2 1/2] dt: bindings: fpga: add xilinx slave-serial binding description
+Date: Mon, 20 Feb 2017 15:25:23 +0100
+Message-ID: <1487600724-17607-2-git-send-email-agust@denx.de>
+References: <1487600724-17607-1-git-send-email-agust@denx.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487600724-17607-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds an FPGA manager driver for Xilinx Spartan6 FPGAs
-that can configure them using an SPI port and two GPIOs.
+Add dt binding documentation details for Xilinx FPGA configuration
+over slave serial interface.
 
-Anatolij Gustschin (2):
-  dt: bindings: fpga: add xilinx slave-serial binding description
-  fpga manager: Add Xilinx slave serial SPI driver
-
+Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+---
 Changes in v2:
 
- - corrected gpios properties and node name in example
-   in DT binding document
+ - correct gpios properties in example to match above description
 
- - rebased on v4.10
+ - use fpga-mgr@0 instead of fpga-spi@0 in example
 
- .../bindings/fpga/xilinx-slave-serial.txt          |  24 +++
- drivers/fpga/Kconfig                               |   7 +
- drivers/fpga/Makefile                              |   1 +
- drivers/fpga/xilinx-spi.c                          | 181 +++++++++++++++++++++
- 4 files changed, 213 insertions(+)
+ .../bindings/fpga/xilinx-slave-serial.txt          | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
- create mode 100644 drivers/fpga/xilinx-spi.c
 
+diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+new file mode 100644
+index 0000000..20b0731
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+@@ -0,0 +1,24 @@
++Xilinx Slave Serial SPI FPGA Manager
++
++Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
++what is referred to as "slave serial" interface.
++The slave serial link is not technically SPI, and might require extra
++circuits in order to play nicely with other SPI slaves on the same bus.
++
++See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
++
++Required properties:
++- compatible: should contain "xlnx,fpga-slave-serial"
++- reg: spi chip select of the FPGA
++- prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
++- done-gpios: config status pin (referred to as DONE in the manual)
++
++Example:
++	fpga_mgr_spi: fpga-mgr@0 {
++		compatible = "xlnx,fpga-slave-serial";
++		spi-max-frequency = <60000000>;
++		spi-cpha;
++		reg = <0>;
++		done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
++		prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
++	};
 -- 
 2.7.4
 
