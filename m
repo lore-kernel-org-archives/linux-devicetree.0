@@ -1,81 +1,49 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 2/3] arm64: dts: r8a7796: Add CA53 L2 cache-controller
- node
-Date: Mon, 20 Feb 2017 10:18:48 +0000
-Message-ID: <36fbfe05-5e17-c520-d024-6ae0cbb2e833@arm.com>
-References: <1487345435-1088-1-git-send-email-geert+renesas@glider.be>
- <1487345435-1088-3-git-send-email-geert+renesas@glider.be>
- <05e43b97-eaa3-f1df-1fc8-b7bab05cc89c@arm.com>
- <CAMuHMdXd=u4hdRsfqt5o7-PQ=F4352oj3U3sivACVHv756BYcw@mail.gmail.com>
- <CAMuHMdV1JqRV6AqQDbMQNrkcDpzfUq7DU4NXVvTeCiSeW1-NYw@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH] ARM: at91/dt: Disable SPI on at91sam9x5ek to allow MCI1
+ to work.
+Date: Mon, 20 Feb 2017 11:20:04 +0100
+Message-ID: <95353208-6734-aec5-a41b-e62d28dd747c@microchip.com>
+References: <1487265388-29390-1-git-send-email-cristian.birsan@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV1JqRV6AqQDbMQNrkcDpzfUq7DU4NXVvTeCiSeW1-NYw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487265388-29390-1-git-send-email-cristian.birsan@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: cristian.birsan@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
+Cc: cyrille.pitchen@atmel.com, boris.brezillon@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Le 16/02/2017 à 18:16, cristian.birsan@microchip.com a écrit :
+> From: Cristian Birsan <cristian.birsan@microchip.com>
+> 
+> The A13 hardware line is shared by SPI and MCI1 controller.This patch
+> disables the SPI controller so that the MCI1 (the big MMC card slot) can
+> be used.
+> 
+> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
 
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-On 17/02/17 20:40, Geert Uytterhoeven wrote:
-> On Fri, Feb 17, 2017 at 8:07 PM, Geert Uytterhoeven
-> <geert@linux-m68k.org> wrote:
->> On Fri, Feb 17, 2017 at 6:51 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->>> On 17/02/17 15:30, Geert Uytterhoeven wrote:
->>>> Add a device node for the Cortex-A53 L2 cache-controller.
->>>>
->>>> The L2 cache for the Cortex-A53 CPU cores is 512 KiB large (organized as
->>>> 32 KiB x 16 ways).
->>>>
->>>> Extracted from a patch by Takeshi Kihara in the BSP.
->>>>
->>>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>>> ---
->>>>  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 8 ++++++++
->>>>  1 file changed, 8 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
->>>> index 6c0a65abf9fd09eb..d848e94d7282e5aa 100644
->>>> --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
->>>> +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
->>>> @@ -62,6 +62,14 @@
->>>>                       cache-unified;
->>>>                       cache-level = <2>;
->>>>               };
->>>> +
->>>> +             L2_CA53: cache-controller@100 {
->>>> +                     compatible = "cache";
->>>> +                     reg = <0x100>;
->>>
->>> Is this not integrated L2 cache ? IIUC reg is MPIDR of the cpu and
->>> representing it as cache controller with some reg value doesn't sound
->>> correct IMO.
->>
->> So this should be cache-controller-1, without a reg property?
+> ---
+>  arch/arm/boot/dts/at91sam9x5ek.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> BTW, that means the advice from https://lkml.org/lkml/2016/3/8/80:
-> 
-> | Just add a reg property. The values should probably match the MPIDR in
-> | some way (e.g. 0 and 100).
-> 
-> was wrong, and we should fix all cache-controller nodes that got "fixed"?
+> diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+> index 696b8ba..9d2bbc4 100644
+> --- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
+> +++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+> @@ -116,7 +116,7 @@
+>  			};
+>  
+>  			spi0: spi@f0000000 {
+> -				status = "okay";
+> +				status = "disabled"; /* conflicts with mmc1 */
+>  				cs-gpios = <&pioA 14 0>, <0>, <0>, <0>;
+>  				m25p80@0 {
+>  					compatible = "atmel,at25df321a";
 > 
 
-OK. IMO it's cpu peripheral which has no mmio similar to architected
-timers that are accessed via system registers. So representing them with
-reg = mpidr sounds not correct. If DT maintainers are OK with such
-representation, it should be fine but better to document it.
-
-> Having better DT documentation for caches on ARM would be nice...
-> There's only a (too) minimalist example in
-> Documentation/devicetree/bindings/arm/cpu-capacity.txt
-> 
-
-Agreed as I mentioned above.
 
 -- 
-Regards,
-Sudeep
+Nicolas Ferre
