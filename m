@@ -1,583 +1,276 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3] soc/imx: Add GPCv2 power gating driver
-Date: Mon, 20 Feb 2017 07:27:27 -0800
-Message-ID: <20170220152727.31892-1-andrew.smirnov@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 5/9] gpu: ipu-v3: add driver for Prefetch Resolve Gasket
+Date: Mon, 20 Feb 2017 16:31:32 +0100
+Message-ID: <1487604692.3878.30.camel@pengutronix.de>
+References: <20170217182830.32618-1-l.stach@pengutronix.de>
+ <20170217182830.32618-6-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170217182830.32618-6-l.stach@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add code allowing for control of various power domains managed by GPCv2
-IP block found in i.MX7 series of SoCs. Power domains covered by this
-patch are:
-
-    - PCIE PHY
-    - MIPI PHY
-    - USB HSIC PHY
-    - USB OTG1/2 PHY
-
-Support for any other power domain controlled by GPC is not present, and
-can be added at some later point.
-
-Testing of this code was done against a PCIe driver.
-
-Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-
-Changes since v2 (see [v2]):
-
-	- Fix a critical bug where incorrect state of a bit was
-          expected in a busy wait loop (bit set instead of bit
-          cleared) imx7_gpc_pu_pgc_sw_pxx_req()
-
-	- Add missing step (setting of PCR in GPC_PGC_nCTRL) in power
-          down procedure
-
-Changes since v1 (see [v1]):
-
-	- Various small DT bindings description fixes as per feedback
-          from Rob Herring
-
-
-[v1] https://lkml.org/lkml/2017/2/6/554
-[v2] https://lkml.org/lkml/2017/2/13/489
-
- .../devicetree/bindings/power/fsl,imx-gpcv2.txt    |  71 ++++
- drivers/soc/imx/Makefile                           |   2 +-
- drivers/soc/imx/gpcv2.c                            | 397 +++++++++++++++++++++
- include/dt-bindings/power/imx7-power.h             |  18 +
- 4 files changed, 487 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
- create mode 100644 drivers/soc/imx/gpcv2.c
- create mode 100644 include/dt-bindings/power/imx7-power.h
-
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-new file mode 100644
-index 0000000..393f68a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-@@ -0,0 +1,71 @@
-+Freescale i.MX General Power Controller v2
-+==========================================
-+
-+The i.MX7S/D General Power Control (GPC) block contains Power Gating
-+Control (PGC) for various power domains.
-+
-+Required properties:
-+
-+- compatible: Should be "fsl,imx7d-gpc"
-+
-+- reg: should be register base and length as documented in the
-+  datasheet
-+
-+- interrupts: Should contain GPC interrupt request 1
-+
-+Power domains contained within GPC node are generic power domain
-+providers, documented in
-+Documentation/devicetree/bindings/power/power_domain.txt, which are
-+described as subnodes of the power gating controller 'pgc' node,
-+which, in turn, is expected to contain the following:
-+
-+Required properties:
-+
-+- reg: Power domain index. Valid values are defined in
-+  include/dt-bindings/power/imx7-power.h
-+
-+- #power-domain-cells: Should be 0
-+
-+Optional properties:
-+
-+- power-supply: Power supply used to power the domain
-+
-+Example:
-+
-+	gpc: gpc@303a0000 {
-+		compatible = "fsl,imx7d-gpc";
-+		reg = <0x303a0000 0x1000>;
-+		interrupt-controller;
-+		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&intc>;
-+
-+		pgc {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pgc_pcie_phy: pgc-pcie-phy-domain {
-+				#power-domain-cells = <0>;
-+
-+				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
-+				power-supply = <&reg_1p0d>;
-+			};
-+		};
-+	};
-+
-+
-+Specifying power domain for IP modules
-+======================================
-+
-+IP cores belonging to a power domain should contain a 'power-domains'
-+property that is a phandle for PGC node representing the domain.
-+
-+Example of a device that is part of the PCIE_PHY power domain:
-+
-+	pcie: pcie@0x33800000 {
-+	      reg = <0x33800000 0x4000>,
-+	            <0x4ff00000 0x80000>;
-+		/* ... */
-+		power-domains = <&pgc_pcie_phy>;
-+		/* ... */
-+	};
-diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
-index 35861f5..7bcc933 100644
---- a/drivers/soc/imx/Makefile
-+++ b/drivers/soc/imx/Makefile
-@@ -1 +1 @@
--obj-y += gpc.o
-+obj-y += gpc.o gpcv2.o
-diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
-new file mode 100644
-index 0000000..20f0515
---- /dev/null
-+++ b/drivers/soc/imx/gpcv2.c
-@@ -0,0 +1,397 @@
-+/*
-+ * Copyright 2017 Impinj, Inc
-+ * Author: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * Based on the code of analogus driver:
-+ *
-+ * Copyright 2015-2017 Pengutronix, Lucas Stach <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <dt-bindings/power/imx7-power.h>
-+
-+#define GPC_PGC_CPU_MAPPING	0xec
-+#define USB_HSIC_PHY_A7_DOMAIN	BIT(6)
-+#define USB_OTG2_PHY_A7_DOMAIN	BIT(5)
-+#define USB_OTG1_PHY_A7_DOMAIN	BIT(4)
-+#define PCIE_PHY_A7_DOMAIN	BIT(3)
-+#define MIPI_PHY_A7_DOMAIN	BIT(2)
-+
-+#define GPC_PU_PGC_SW_PUP_REQ	0xf8
-+#define GPC_PU_PGC_SW_PDN_REQ	0x104
-+#define USB_HSIC_PHY_SW_Pxx_REQ	BIT(4)
-+#define USB_OTG2_PHY_SW_Pxx_REQ	BIT(3)
-+#define USB_OTG1_PHY_SW_Pxx_REQ	BIT(2)
-+#define PCIE_PHY_SW_Pxx_REQ	BIT(1)
-+#define MIPI_PHY_SW_Pxx_REQ	BIT(0)
-+
-+#define GPC_MAX_REGISTER	0x1000
-+
-+#define GPC_PGC_nCTRL_PCR	BIT(0)
-+
-+struct imx7_pgc_domain {
-+	struct generic_pm_domain genpd;
-+	struct regmap *regmap;
-+	struct regulator *regulator;
-+
-+	unsigned int pgc_nctrl;
-+
-+	const struct {
-+		u32 pxx;
-+		u32 map;
-+	} bits;
-+
-+	const int voltage;
-+	struct device *dev;
-+};
-+
-+static int imx7_gpc_pu_pgc_sw_pxx_req(struct generic_pm_domain *genpd,
-+				      bool on)
-+{
-+	int ret = 0;
-+	unsigned long deadline;
-+	struct imx7_pgc_domain *domain = container_of(genpd,
-+						      struct imx7_pgc_domain,
-+						      genpd);
-+	unsigned int offset = (on) ?
-+		GPC_PU_PGC_SW_PUP_REQ : GPC_PU_PGC_SW_PDN_REQ;
-+
-+	const bool has_regulator = !IS_ERR(domain->regulator);
-+	const bool enable_power_control = domain->pgc_nctrl && !on;
-+
-+	regmap_update_bits(domain->regmap, GPC_PGC_CPU_MAPPING,
-+			   domain->bits.map, domain->bits.map);
-+	if (has_regulator && on) {
-+		ret = regulator_enable(domain->regulator);
-+		if (ret) {
-+			dev_err(domain->dev, "failed to enable regulator\n");
-+			goto unmap;
-+		}
-+	}
-+
-+	if (enable_power_control)
-+		regmap_update_bits(domain->regmap, domain->pgc_nctrl,
-+				   GPC_PGC_nCTRL_PCR, GPC_PGC_nCTRL_PCR);
-+
-+
-+	regmap_update_bits(domain->regmap, offset,
-+			   domain->bits.pxx, domain->bits.pxx);
-+	/*
-+	 * As per "5.5.9.4 Example Code 4" in IMX7DRM.pdf wait
-+	 * for PUP_REQ/PDN_REQ bit to be cleared
-+	 */
-+	deadline = jiffies + msecs_to_jiffies(1);
-+	while (true) {
-+		u32 pxx_req;
-+
-+		regmap_read(domain->regmap, offset, &pxx_req);
-+
-+		if (!(pxx_req & domain->bits.pxx))
-+			break;
-+
-+		if (time_after(jiffies, deadline)) {
-+			dev_err(domain->dev, "falied to command PGC\n");
-+			ret = -ETIMEDOUT;
-+			/*
-+			 * If we were in a process of enabling a
-+			 * domain and failed we might as well disable
-+			 * the regulator we just enabled. And if it
-+			 * was the opposite situation and we failed to
-+			 * power down -- keep the regulator on
-+			 */
-+			on  = !on;
-+			break;
-+		}
-+
-+		cpu_relax();
-+	}
-+
-+	if (enable_power_control)
-+		regmap_update_bits(domain->regmap, domain->pgc_nctrl,
-+				   GPC_PGC_nCTRL_PCR, 0);
-+
-+	if (has_regulator && !on) {
-+		int err;
-+
-+		err = regulator_disable(domain->regulator);
-+		if (err)
-+			dev_err(domain->dev,
-+				"failed to disable regulator: %d\n", ret);
-+		/*
-+		 * Preserve earlier error code
-+		 */
-+		ret = ret ?: err;
-+	}
-+unmap:
-+	regmap_update_bits(domain->regmap, GPC_PGC_CPU_MAPPING,
-+			   domain->bits.map, 0);
-+	return ret;
-+}
-+
-+static int imx7_gpc_pu_pgc_sw_pup_req(struct generic_pm_domain *genpd)
-+{
-+	return imx7_gpc_pu_pgc_sw_pxx_req(genpd, true);
-+}
-+
-+static int imx7_gpc_pu_pgc_sw_pdn_req(struct generic_pm_domain *genpd)
-+{
-+	return imx7_gpc_pu_pgc_sw_pxx_req(genpd, false);
-+}
-+
-+static struct imx7_pgc_domain imx7_pgc_domains[] = {
-+	[IMX7_POWER_DOMAIN_USB_HSIC_PHY] = {
-+		.genpd = {
-+			.name      = "usb-hsic-phy",
-+			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
-+			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
-+		},
-+		.bits  = {
-+			.pxx = USB_HSIC_PHY_SW_Pxx_REQ,
-+			.map = USB_HSIC_PHY_A7_DOMAIN,
-+		},
-+		.voltage   = 1200000,
-+		.pgc_nctrl = 0x0d00,
-+	},
-+
-+	[IMX7_POWER_DOMAIN_USB_OTG2_PHY] = {
-+		.genpd = {
-+			.name      = "usb-otg2-phy",
-+			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
-+			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
-+		},
-+		.bits  = {
-+			.pxx = USB_OTG2_PHY_SW_Pxx_REQ,
-+			.map = USB_OTG2_PHY_A7_DOMAIN,
-+		},
-+	},
-+
-+	[IMX7_POWER_DOMAIN_USB_OTG1_PHY] = {
-+		.genpd = {
-+			.name      = "usb-otg1-phy",
-+			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
-+			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
-+		},
-+		.bits  = {
-+			.pxx = USB_OTG1_PHY_SW_Pxx_REQ,
-+			.map = USB_OTG1_PHY_A7_DOMAIN,
-+		},
-+	},
-+
-+	[IMX7_POWER_DOMAIN_PCIE_PHY] = {
-+		.genpd = {
-+			.name      = "pcie-phy",
-+			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
-+			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
-+		},
-+		.bits  = {
-+			.pxx = PCIE_PHY_SW_Pxx_REQ,
-+			.map = PCIE_PHY_A7_DOMAIN,
-+		},
-+		.voltage   = 1000000,
-+		.pgc_nctrl = 0x0c40,
-+	},
-+
-+	[IMX7_POWER_DOMAIN_MIPI_PHY] = {
-+		.genpd = {
-+			.name      = "mipi-phy",
-+			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
-+			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
-+		},
-+		.bits  = {
-+			.pxx = MIPI_PHY_SW_Pxx_REQ,
-+			.map = MIPI_PHY_A7_DOMAIN,
-+		},
-+		.voltage   = 1000000,
-+		.pgc_nctrl = 0x0c00,
-+	},
-+};
-+
-+static int imx7_pgc_domain_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct imx7_pgc_domain *domain = pdev->dev.platform_data;
-+
-+	if (!IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS))
-+		return 0;
-+
-+	domain->dev = &pdev->dev;
-+
-+	ret = pm_genpd_init(&domain->genpd, NULL, true);
-+	if (ret) {
-+		dev_err(domain->dev, "Failed to init power domain\n");
-+		return ret;
-+	}
-+
-+	domain->regulator = devm_regulator_get_optional(domain->dev, "power");
-+	if (IS_ERR(domain->regulator)  &&
-+	    PTR_ERR(domain->regulator) != -ENODEV) {
-+		dev_err(domain->dev, "Failed to get domain's regulator\n");
-+		return PTR_ERR(domain->regulator);
-+	}
-+
-+	if (!IS_ERR(domain->regulator)) {
-+		WARN_ON(!domain->voltage);
-+		regulator_set_voltage(domain->regulator,
-+				      domain->voltage, domain->voltage);
-+	}
-+
-+	ret = of_genpd_add_provider_simple(domain->dev->of_node,
-+					   &domain->genpd);
-+	if (ret) {
-+		dev_err(domain->dev, "Failed to add genpd provider\n");
-+		pm_genpd_remove(&domain->genpd);
-+	}
-+
-+	return ret;
-+}
-+
-+static int imx7_pgc_domain_remove(struct platform_device *pdev)
-+{
-+	struct imx7_pgc_domain *domain = pdev->dev.platform_data;
-+
-+	if (IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS)) {
-+		of_genpd_del_provider(domain->dev->of_node);
-+		pm_genpd_remove(&domain->genpd);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct platform_device_id imx7_pgc_domain_id[] = {
-+	{ "imx7-pgc-domain", },
-+	{ },
-+};
-+
-+static struct platform_driver imx7_pgc_domain_driver = {
-+	.driver = {
-+		.name = "imx7-pgc",
-+	},
-+	.probe    = imx7_pgc_domain_probe,
-+	.remove   = imx7_pgc_domain_remove,
-+	.id_table = imx7_pgc_domain_id,
-+};
-+builtin_platform_driver(imx7_pgc_domain_driver)
-+
-+static bool imx_gpcv2_readable_reg(struct device *dev, unsigned int reg)
-+{
-+	return reg % 4 == 0 &&
-+	       reg <= GPC_MAX_REGISTER;
-+}
-+
-+static bool imx_gpcv2_volatile_reg(struct device *dev, unsigned int reg)
-+{
-+	return reg == GPC_PU_PGC_SW_PUP_REQ ||
-+	       reg == GPC_PU_PGC_SW_PDN_REQ;
-+}
-+
-+static int imx_gpcv2_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	void __iomem *base;
-+	struct resource *res;
-+	struct regmap *regmap;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *pgc_np, *np;
-+
-+	static const struct regmap_config regmap_config = {
-+		.cache_type	= REGCACHE_FLAT,
-+		.reg_bits	= 32,
-+		.val_bits	= 32,
-+		.reg_stride	= 4,
-+
-+		.readable_reg	= imx_gpcv2_readable_reg,
-+		.volatile_reg	= imx_gpcv2_volatile_reg,
-+
-+		.max_register	= GPC_MAX_REGISTER,
-+	};
-+
-+	pgc_np = of_get_child_by_name(dev->of_node, "pgc");
-+	if (!pgc_np) {
-+		dev_err(dev, "No power domains specified in DT\n");
-+		return -EINVAL;
-+	}
-+
-+	res  = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	regmap = devm_regmap_init_mmio(dev, base, &regmap_config);
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		dev_err(dev, "failed to init regmap\n");
-+		return ret;
-+	}
-+
-+	for_each_child_of_node(pgc_np, np) {
-+		u32 domain_index;
-+		struct platform_device *pd_pdev;
-+		struct imx7_pgc_domain *domain;
-+
-+		ret = of_property_read_u32(np, "reg", &domain_index);
-+		if (ret) {
-+			dev_err(dev, "Failed to read 'reg' property\n");
-+			of_node_put(np);
-+			return ret;
-+		}
-+
-+		if (domain_index >= ARRAY_SIZE(imx7_pgc_domains)) {
-+			dev_warn(dev,
-+				 "Domain index %d is out of bounds\n",
-+				 domain_index);
-+			continue;
-+		}
-+
-+		domain = &imx7_pgc_domains[domain_index];
-+		domain->regmap = regmap;
-+
-+		pd_pdev = platform_device_alloc("imx7-pgc-domain",
-+						domain_index);
-+		if (!pd_pdev) {
-+			dev_err(dev, "Failed to allocate platform device\n");
-+			of_node_put(np);
-+			return -ENOMEM;
-+		}
-+
-+		pd_pdev->dev.platform_data = domain;
-+		pd_pdev->dev.parent = dev;
-+		pd_pdev->dev.of_node = np;
-+
-+		ret = platform_device_add(pd_pdev);
-+		if (ret) {
-+			platform_device_put(pd_pdev);
-+			of_node_put(np);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id imx_gpcv2_dt_ids[] = {
-+	{ .compatible = "fsl,imx7d-gpc" },
-+	{ }
-+};
-+
-+static struct platform_driver imx_gpc_driver = {
-+	.driver = {
-+		.name = "imx-gpcv2",
-+		.of_match_table = imx_gpcv2_dt_ids,
-+	},
-+	.probe = imx_gpcv2_probe,
-+};
-+builtin_platform_driver(imx_gpc_driver)
-diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
-new file mode 100644
-index 0000000..24dde62
---- /dev/null
-+++ b/include/dt-bindings/power/imx7-power.h
-@@ -0,0 +1,18 @@
-+/*
-+ *  Copyright © 2017 Impinj
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef __DT_BINDINGS_ARM_IMX7_POWER_H__
-+#define __DT_BINDINGS_ARM_IMX7_POWER_H__
-+
-+#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
-+#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
-+#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
-+#define IMX7_POWER_DOMAIN_PCIE_PHY	3
-+#define IMX7_POWER_DOMAIN_MIPI_PHY	4
-+
-+#endif
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMDE3LTAyLTE3IGF0IDE5OjI4ICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPiBU
+aGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIGkuTVg2IFFVYWRQbHVzIFBSRyB1bml0LiBJdCBnbHVl
+cyB0b2dldGhlciB0aGUKPiBJUFUgYW5kIHRoZSBQUkUgdW5pdHMuCj4gCj4gU2lnbmVkLW9mZi1i
+eTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Cj4gLS0tCj4gIGRyaXZlcnMv
+Z3B1L2lwdS12My9NYWtlZmlsZSAgfCAgIDIgKy0KPiAgZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1w
+cmcuYyB8IDQxMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4g
+IGRyaXZlcnMvZ3B1L2lwdS12My9pcHUtcHJ2LmggfCAgIDMgKwo+ICBpbmNsdWRlL3ZpZGVvL2lt
+eC1pcHUtdjMuaCAgIHwgIDE1ICsrCj4gIDQgZmlsZXMgY2hhbmdlZCwgNDMyIGluc2VydGlvbnMo
+KyksIDEgZGVsZXRpb24oLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2lwdS12
+My9pcHUtcHJnLmMKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxl
+IGIvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxlCj4gaW5kZXggOGFlOTBkZTQ2YjRkLi4xYWI5
+YmNlZWU3NTUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxlCj4gKysr
+IGIvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxlCj4gQEAgLTIsNCArMiw0IEBAIG9iai0kKENP
+TkZJR19JTVhfSVBVVjNfQ09SRSkgKz0gaW14LWlwdS12My5vCj4gIAo+ICBpbXgtaXB1LXYzLW9i
+anMgOj0gaXB1LWNvbW1vbi5vIGlwdS1jcG1lbS5vIGlwdS1jc2kubyBpcHUtZGMubyBpcHUtZGku
+byBcCj4gIAkJaXB1LWRwLm8gaXB1LWRtZmMubyBpcHUtaWMubyBpcHUtaW1hZ2UtY29udmVydC5v
+IFwKPiAtCQlpcHUtcHJlLm8gaXB1LXNtZmMubyBpcHUtdmRpLm8KPiArCQlpcHUtcHJlLm8gaXB1
+LXByZy5vIGlwdS1zbWZjLm8gaXB1LXZkaS5vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2lw
+dS12My9pcHUtcHJnLmMgYi9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LXByZy5jCj4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmMxZTFhYjBlYzVjNQo+IC0tLSAvZGV2
+L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LXByZy5jCj4gQEAgLTAsMCArMSw0
+MTMgQEAKPiArLyoKPiArICogQ29weXJpZ2h0IChjKSAyMDE2LTIwMTcgTHVjYXMgU3RhY2gsIFBl
+bmd1dHJvbml4Cj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3Ug
+Y2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5IGl0Cj4gKyAqIHVuZGVyIHRoZSB0ZXJt
+cyBhbmQgY29uZGl0aW9ucyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UsCj4gKyAq
+IHZlcnNpb24gMiwgYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24u
+Cj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSBpdCB3
+aWxsIGJlIHVzZWZ1bCwgYnV0IFdJVEhPVVQKPiArICogQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2
+ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YgTUVSQ0hBTlRBQklMSVRZIG9yCj4gKyAqIEZJVE5F
+U1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMg
+TGljZW5zZSBmb3IKPiArICogbW9yZSBkZXRhaWxzLgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxk
+cm0vZHJtX2ZvdXJjYy5oPgo+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gKyNpbmNsdWRlIDxs
+aW51eC9lcnIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KPiArI2luY2x1ZGUg
+PGxpbnV4L21mZC9zeXNjb24vaW14NnEtaW9tdXhjLWdwci5oPgo+ICsjaW5jbHVkZSA8bGludXgv
+bW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICsjaW5jbHVkZSA8bGludXgvcGxh
+dGZvcm1fZGV2aWNlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KPiArI2luY2x1ZGUg
+PHZpZGVvL2lteC1pcHUtdjMuaD4KPiArCj4gKyNpbmNsdWRlICJpcHUtcHJ2LmgiCj4gKwo+ICsj
+ZGVmaW5lIElQVV9QUkdfQ1RMCQkJCTB4MDAKPiArI2RlZmluZSAgSVBVX1BSR19DVExfQllQQVNT
+KGkpCQkJKDEgPDwgKDAgKyBpKSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfU09GVF9BUklEX01B
+U0sJCTB4Mwo+ICsjZGVmaW5lICBJUFVfUFJHX0NUTF9TT0ZUX0FSSURfU0hJRlQoaSkJCSg4ICsg
+aSAqIDIpCj4gKyNkZWZpbmUgIElQVV9QUkdfQ1RMX1NPRlRfQVJJRChpLCB2KQkJKCh2ICYgMHgz
+KSA8PCAoOCArIDIgKiBpKSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfU08oaSkJCQkoMSA8PCAo
+MTYgKyBpKSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfVkZMSVAoaSkJCQkoMSA8PCAoMTkgKyBp
+KSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfQkxPQ0tfTU9ERShpKQkJKDEgPDwgKDIyICsgaSkp
+Cj4gKyNkZWZpbmUgIElQVV9QUkdfQ1RMX0NOVF9MT0FEX0VOKGkpCQkoMSA8PCAoMjUgKyBpKSkK
+PiArI2RlZmluZSAgSVBVX1BSR19DVExfU09GVFJTVAkJCSgxIDw8IDMwKQo+ICsjZGVmaW5lICBJ
+UFVfUFJHX0NUTF9TSEFET1dfRU4JCQkoMSA8PCAzMSkKPiArCj4gKyNkZWZpbmUgSVBVX1BSR19T
+VEFUVVMJCQkJMHgwNAo+ICsjZGVmaW5lICBJUFVfUFJHX1NUQVRVU19CVUZGRVIwX1JFQURZKGkp
+CSgxIDw8ICgwICsgaSAqIDIpKQo+ICsjZGVmaW5lICBJUFVfUFJHX1NUQVRVU19CVUZGRVIxX1JF
+QURZKGkpCSgxIDw8ICgxICsgaSAqIDIpKQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX1FPUwkJCQkw
+eDA4Cj4gKyNkZWZpbmUgIElQVV9QUkdfUU9TX0FSSURfTUFTSwkJCTB4Zgo+ICsjZGVmaW5lICBJ
+UFVfUFJHX1FPU19BUklEX1NISUZUKGkpCQkoMCArIGkgKiA0KQo+ICsKPiArI2RlZmluZSBJUFVf
+UFJHX1JFR19VUERBVEUJCQkweDBjCj4gKyNkZWZpbmUgIElQVV9QUkdfUkVHX1VQREFURV9SRUdf
+VVBEQVRFCQkoMSA8PCAwKQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX1NUUklERShpKQkJCSgweDEw
+ICsgaSAqIDB4NCkKPiArI2RlZmluZSAgSVBVX1BSR19TVFJJREVfU1RSSURFX01BU0sJCTB4M2Zm
+Zgo+ICsKPiArI2RlZmluZSBJUFVfUFJHX0NST1BfTElORQkJCTB4MWMKPiArCj4gKyNkZWZpbmUg
+SVBVX1BSR19USEQJCQkJMHgyMAo+ICsKPiArI2RlZmluZSBJUFVfUFJHX0JBRERSKGkpCQkJKDB4
+MjQgKyBpICogMHg0KQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX09GRlNFVChpKQkJCSgweDMwICsg
+aSAqIDB4NCkKPiArCj4gKyNkZWZpbmUgSVBVX1BSR19JTE8oaSkJCQkJKDB4M2MgKyBpICogMHg0
+KQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX0hFSUdIVChpKQkJCSgweDQ4ICsgaSAqIDB4NCkKPiAr
+I2RlZmluZSAgSVBVX1BSR19IRUlHSFRfUFJFX0hFSUdIVF9NQVNLCQkweGZmZgo+ICsjZGVmaW5l
+ICBJUFVfUFJHX0hFSUdIVF9QUkVfSEVJR0hUX1NISUZUCTAKPiArI2RlZmluZSAgSVBVX1BSR19I
+RUlHSFRfSVBVX0hFSUdIVF9NQVNLCQkweGZmZgo+ICsjZGVmaW5lICBJUFVfUFJHX0hFSUdIVF9J
+UFVfSEVJR0hUX1NISUZUCTE2Cj4gKwo+ICtzdHJ1Y3QgaXB1X3ByZ19jaGFubmVsIHsKPiArCWJv
+b2wJCQllbmFibGVkOwo+ICsJaW50CQkJdXNlZF9wcmU7Cj4gK307Cj4gKwo+ICtzdHJ1Y3QgaXB1
+X3ByZyB7Cj4gKwlzdHJ1Y3QgbGlzdF9oZWFkCWxpc3Q7Cj4gKwlzdHJ1Y3QgZGV2aWNlCQkqZGV2
+Owo+ICsJaW50CQkJaWQ7Cj4gKwo+ICsJdm9pZCBfX2lvbWVtCQkqcmVnczsKPiArCXN0cnVjdCBj
+bGsJCSpjbGtfaXBnLCAqY2xrX2F4aTsKPiArCXN0cnVjdCByZWdtYXAJCSppb211eGNfZ3ByOwo+
+ICsJc3RydWN0IGlwdV9wcmUJCSpwcmVzWzNdOwo+ICsKPiArCXN0cnVjdCBpcHVfcHJnX2NoYW5u
+ZWwJY2hhblszXTsKPiArfTsKPiArCj4gK3N0YXRpYyBERUZJTkVfTVVURVgoaXB1X3ByZ19saXN0
+X211dGV4KTsKPiArc3RhdGljIExJU1RfSEVBRChpcHVfcHJnX2xpc3QpOwo+ICsKPiArc3RydWN0
+IGlwdV9wcmcgKgo+ICtpcHVfcHJnX2dldF9ieV9pcHVfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRl
+dikKClNhbWUgYXMgZm9yIHRoZSBQUkUsIEknZCBwcmVmZXIgdGhpcyB0byBiZSBjYWxsZWQgImxv
+b2t1cCIgaW5zdGVhZCBvZgoiZ2V0IiwgYW5kIHRvIHBhc3MgdGhlICJmc2wscHJnIiBzdHJpbmcg
+ZnJvbSB0aGUgSVBVIGRyaXZlciwgdG8gd2hvc2UgRFQKYmluZGluZyBpdCBiZWxvbmdzLgoKPiAr
+ewo+ICsJc3RydWN0IGRldmljZV9ub2RlICpwcmdfbm9kZSA9IG9mX3BhcnNlX3BoYW5kbGUoZGV2
+LT5vZl9ub2RlLAo+ICsJCQkJCQkJImZzbCxwcmciLCAwKTsKPiArCXN0cnVjdCBpcHVfcHJnICpw
+cmc7Cj4gKwo+ICsJbXV0ZXhfbG9jaygmaXB1X3ByZ19saXN0X211dGV4KTsKPiArCWxpc3RfZm9y
+X2VhY2hfZW50cnkocHJnLCAmaXB1X3ByZ19saXN0LCBsaXN0KSB7Cj4gKwkJaWYgKHByZ19ub2Rl
+ID09IHByZy0+ZGV2LT5vZl9ub2RlKSB7Cj4gKwkJCW11dGV4X3VubG9jaygmaXB1X3ByZ19saXN0
+X211dGV4KTsKPiArCQkJZGV2aWNlX2xpbmtfYWRkKGRldiwgcHJnLT5kZXYsIERMX0ZMQUdfQVVU
+T1JFTU9WRSk7Cj4gKwkJCXByZy0+aWQgPSBvZl9hbGlhc19nZXRfaWQoZGV2LT5vZl9ub2RlLCAi
+aXB1Iik7Cj4gKwkJCXJldHVybiBwcmc7Cj4gKwkJfQo+ICsJfQo+ICsJbXV0ZXhfdW5sb2NrKCZp
+cHVfcHJnX2xpc3RfbXV0ZXgpOwo+ICsKPiArCXJldHVybiBOVUxMOwo+ICt9Cj4gKwo+ICtpbnQg
+aXB1X3ByZ19tYXhfYWN0aXZlX2NoYW5uZWxzKHZvaWQpCj4gK3sKPiArCXJldHVybiBpcHVfcHJl
+X2dldF9hdmFpbGFibGVfY291bnQoKTsKPiArfQo+ICsKPiArYm9vbCBpcHVfcHJnX3ByZXNlbnQo
+c3RydWN0IGlwdV9zb2MgKmlwdSkKPiArewo+ICsJaWYgKGlwdS0+cHJnX3ByaXYpCj4gKwkJcmV0
+dXJuIHRydWU7Cj4gKwo+ICsJcmV0dXJuIGZhbHNlOwo+ICt9Cj4gKwo+ICtib29sIGlwdV9wcmdf
+Zm9ybWF0X3N1cHBvcnRlZChzdHJ1Y3QgaXB1X3NvYyAqaXB1LCB1aW50MzJfdCBmb3JtYXQsCj4g
+KwkJCSAgICAgIHVpbnQ2NF90IG1vZGlmaWVyKQo+ICt7Cj4gKwljb25zdCBzdHJ1Y3QgZHJtX2Zv
+cm1hdF9pbmZvICppbmZvID0gZHJtX2Zvcm1hdF9pbmZvKGZvcm1hdCk7Cj4gKwo+ICsJaWYgKGlu
+Zm8tPm51bV9wbGFuZXMgIT0gMSkKPiArCQlyZXR1cm4gZmFsc2U7Cj4gKwo+ICsJcmV0dXJuIHRy
+dWU7Cj4gK30KPiArCj4gK2ludCBpcHVfcHJnX2VuYWJsZShzdHJ1Y3QgaXB1X3NvYyAqaXB1KQo+
+ICt7Cj4gKwlzdHJ1Y3QgaXB1X3ByZyAqcHJnID0gaXB1LT5wcmdfcHJpdjsKPiArCWludCByZXQ7
+Cj4gKwo+ICsJaWYgKCFwcmcpCj4gKwkJcmV0dXJuIDA7Cj4gKwo+ICsJcmV0ID0gY2xrX3ByZXBh
+cmVfZW5hYmxlKHByZy0+Y2xrX2F4aSk7Cj4gKwlpZiAocmV0KQo+ICsJCWdvdG8gZmFpbF9kaXNh
+YmxlX2lwZzsKPiArCj4gKwlyZXR1cm4gMDsKPiArCj4gK2ZhaWxfZGlzYWJsZV9pcGc6Cj4gKwlj
+bGtfZGlzYWJsZV91bnByZXBhcmUocHJnLT5jbGtfaXBnKTsKPiArCj4gKwlyZXR1cm4gcmV0Owo+
+ICt9Cj4gKwo+ICt2b2lkIGlwdV9wcmdfZGlzYWJsZShzdHJ1Y3QgaXB1X3NvYyAqaXB1KQo+ICt7
+Cj4gKwlzdHJ1Y3QgaXB1X3ByZyAqcHJnID0gaXB1LT5wcmdfcHJpdjsKPiArCj4gKwlpZiAoIXBy
+ZykKPiArCQlyZXR1cm47Cj4gKwo+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByZy0+Y2xrX2F4
+aSk7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgaXB1X3ByZ19pcHVfdG9fcHJnX2NoYW4oaW50IGlw
+dV9jaGFuKQo+ICt7Cj4gKwkvKgo+ICsJICogVGhpcyBpc24ndCBjbGVhcmx5IGRvY3VtZW50ZWQg
+aW4gdGhlIFJNLCBidXQgSVBVIHRvIFBSRyBjaGFubmVsCj4gKwkgKiBhc3NpZ25tZW50IGlzIGZp
+eGVkLCBhcyBvbmx5IHdpdGggdGhpcyBtYXBwaW5nIHRoZSBjb250cm9sIHNpZ25hbHMKPiArCSAq
+IG1hdGNoIHVwLgo+ICsJICovCj4gKwlzd2l0Y2ggKGlwdV9jaGFuKSB7Cj4gKwljYXNlIElQVVYz
+X0NIQU5ORUxfTUVNX0JHX1NZTkM6Cj4gKwkJcmV0dXJuIDA7Cj4gKwljYXNlIElQVVYzX0NIQU5O
+RUxfTUVNX0ZHX1NZTkM6Cj4gKwkJcmV0dXJuIDE7Cj4gKwljYXNlIElQVVYzX0NIQU5ORUxfTUVN
+X0RDX1NZTkM6Cj4gKwkJcmV0dXJuIDI7Cj4gKwlkZWZhdWx0Ogo+ICsJCXJldHVybiAtRUlOVkFM
+Owo+ICsJfQo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGlwdV9wcmdfZ2V0X3ByZShzdHJ1Y3QgaXB1
+X3ByZyAqcHJnLCBpbnQgcHJnX2NoYW4pCj4gK3sKPiArCWludCBpLCByZXQ7Cj4gKwo+ICsJLyog
+Y2hhbm5lbCAwIGlzIHNwZWNpYWwgYXMgaXQgaXMgaGFyZHdpcmVkIHRvIG9uZSBvZiB0aGUgUFJF
+cyAqLwo+ICsJaWYgKHByZ19jaGFuID09IDApIHsKPiArCQlyZXQgPSBpcHVfcHJlX2dldChwcmct
+PnByZXNbMF0pOwo+ICsJCWlmIChyZXQpCj4gKwkJCWdvdG8gZmFpbDsKPiArCQlwcmctPmNoYW5b
+cHJnX2NoYW5dLnVzZWRfcHJlID0gMDsKPiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gKwlmb3Ig
+KGkgPSAxOyBpIDwgMzsgaSsrKSB7Cj4gKwkJcmV0ID0gaXB1X3ByZV9nZXQocHJnLT5wcmVzW2ld
+KTsKPiArCQlpZiAoIXJldCkgewo+ICsJCQl1MzIgdmFsLCBtdXg7Cj4gKwkJCWludCBzaGlmdDsK
+PiArCj4gKwkJCXByZy0+Y2hhbltwcmdfY2hhbl0udXNlZF9wcmUgPSBpOwo+ICsKPiArCQkJLyog
+Y29uZmlndXJlIHRoZSBQUkUgdG8gUFJHIGNoYW5uZWwgbXV4ICovCj4gKwkJCXNoaWZ0ID0gKGkg
+PT0gMSkgPyAxMiA6IDE0Owo+ICsJCQltdXggPSAocHJnLT5pZCA8PCAxKSB8IChwcmdfY2hhbiAt
+IDEpOwo+ICsJCQlyZWdtYXBfdXBkYXRlX2JpdHMocHJnLT5pb211eGNfZ3ByLCBJT01VWENfR1BS
+NSwKPiArCQkJCQkgICAweDMgPDwgc2hpZnQsIG11eCA8PCBzaGlmdCk7Cj4gKwo+ICsJCQkvKiBj
+aGVjayBvdGhlciBtdXgsIG11c3Qgbm90IHBvaW50IHRvIHNhbWUgY2hhbm5lbCAqLwo+ICsJCQlz
+aGlmdCA9IChpID09IDEpID8gMTQgOiAxMjsKPiArCQkJcmVnbWFwX3JlYWQocHJnLT5pb211eGNf
+Z3ByLCBJT01VWENfR1BSNSwgJnZhbCk7Cj4gKwkJCWlmICgoKHZhbCA+PiBzaGlmdCkgJiAweDMp
+ID09IG11eCkgewo+ICsJCQkJcmVnbWFwX3VwZGF0ZV9iaXRzKHByZy0+aW9tdXhjX2dwciwgSU9N
+VVhDX0dQUjUsCj4gKwkJCQkJCSAgIDB4MyA8PCBzaGlmdCwKPiArCQkJCQkJICAgKG11eCBeIDB4
+MSkgPDwgc2hpZnQpOwo+ICsJCQl9Cj4gKwo+ICsJCQlyZXR1cm4gMDsKPiArCQl9Cj4gKwl9Cj4g
+Kwo+ICtmYWlsOgo+ICsJZGV2X2VycihwcmctPmRldiwgImNvdWxkIG5vdCBnZXQgUFJFIGZvciBQ
+UkcgY2hhbiAlZCIsIHByZ19jaGFuKTsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gK3N0YXRp
+YyB2b2lkIGlwdV9wcmdfcHV0X3ByZShzdHJ1Y3QgaXB1X3ByZyAqcHJnLCBpbnQgcHJnX2NoYW4p
+Cj4gK3sKPiArCXN0cnVjdCBpcHVfcHJnX2NoYW5uZWwgKmNoYW4gPSAmcHJnLT5jaGFuW3ByZ19j
+aGFuXTsKPiArCj4gKwlpcHVfcHJlX3B1dChwcmctPnByZXNbY2hhbi0+dXNlZF9wcmVdKTsKPiAr
+CWNoYW4tPnVzZWRfcHJlID0gLTE7Cj4gK30KPiArCj4gK3ZvaWQgaXB1X3ByZ19jaGFubmVsX2Rp
+c2FibGUoc3RydWN0IGlwdXYzX2NoYW5uZWwgKmlwdV9jaGFuKQo+ICt7Cj4gKwlpbnQgcHJnX2No
+YW4gPSBpcHVfcHJnX2lwdV90b19wcmdfY2hhbihpcHVfY2hhbi0+bnVtKTsKPiArCXN0cnVjdCBp
+cHVfcHJnICpwcmcgPSBpcHVfY2hhbi0+aXB1LT5wcmdfcHJpdjsKPiArCXN0cnVjdCBpcHVfcHJn
+X2NoYW5uZWwgKmNoYW4gPSAmcHJnLT5jaGFuW3ByZ19jaGFuXTsKPiArCXUzMiB2YWw7Cj4gKwo+
+ICsJaWYgKCFjaGFuLT5lbmFibGVkIHx8IHByZ19jaGFuIDwgMCkKPiArCQlyZXR1cm47Cj4gKwo+
+ICsJY2xrX3ByZXBhcmVfZW5hYmxlKHByZy0+Y2xrX2lwZyk7Cj4gKwo+ICsJdmFsID0gcmVhZGwo
+cHJnLT5yZWdzICsgSVBVX1BSR19DVEwpOwo+ICsJdmFsIHw9IElQVV9QUkdfQ1RMX0JZUEFTUyhw
+cmdfY2hhbik7Cj4gKwl3cml0ZWwodmFsLCBwcmctPnJlZ3MgKyBJUFVfUFJHX0NUTCk7Cj4gKwo+
+ICsJdmFsID0gSVBVX1BSR19SRUdfVVBEQVRFX1JFR19VUERBVEU7Cj4gKwl3cml0ZWwodmFsLCBw
+cmctPnJlZ3MgKyBJUFVfUFJHX1JFR19VUERBVEUpOwo+ICsKPiArCWNsa19kaXNhYmxlX3VucHJl
+cGFyZShwcmctPmNsa19pcGcpOwo+ICsKPiArCWlwdV9wcmdfcHV0X3ByZShwcmcsIHByZ19jaGFu
+KTsKPiArCj4gKwljaGFuLT5lbmFibGVkID0gZmFsc2U7Cj4gK30KPiArCj4gK2ludCBpcHVfcHJn
+X2NoYW5uZWxfY29uZmlndXJlKHN0cnVjdCBpcHV2M19jaGFubmVsICppcHVfY2hhbiwKPiArCQkJ
+ICAgICAgdW5zaWduZWQgaW50IGF4aV9pZCwgdW5zaWduZWQgaW50IHdpZHRoLAo+ICsJCQkgICAg
+ICB1bnNpZ25lZCBpbnQgaGVpZ2h0LCB1bnNpZ25lZCBpbnQgc3RyaWRlLAo+ICsJCQkgICAgICB1
+MzIgZm9ybWF0LCB1bnNpZ25lZCBsb25nICplYmEpCj4gK3sKPiArCWludCBwcmdfY2hhbiA9IGlw
+dV9wcmdfaXB1X3RvX3ByZ19jaGFuKGlwdV9jaGFuLT5udW0pOwo+ICsJc3RydWN0IGlwdV9wcmcg
+KnByZyA9IGlwdV9jaGFuLT5pcHUtPnByZ19wcml2Owo+ICsJc3RydWN0IGlwdV9wcmdfY2hhbm5l
+bCAqY2hhbiA9ICZwcmctPmNoYW5bcHJnX2NoYW5dOwo+ICsJdTMyIHZhbDsKPiArCWludCByZXQ7
+Cj4gKwo+ICsJaWYgKHByZ19jaGFuIDwgMCkKPiArCQlyZXR1cm4gcHJnX2NoYW47Cj4gKwo+ICsJ
+aWYgKGNoYW4tPmVuYWJsZWQpIHsKPiArCQlpcHVfcHJlX3VwZGF0ZShwcmctPnByZXNbY2hhbi0+
+dXNlZF9wcmVdLCAqZWJhKTsKPiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gKwlyZXQgPSBpcHVf
+cHJnX2dldF9wcmUocHJnLCBwcmdfY2hhbik7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7
+Cj4gKwo+ICsJaXB1X3ByZV9jb25maWd1cmUocHJnLT5wcmVzW2NoYW4tPnVzZWRfcHJlXSwKPiAr
+CQkJICB3aWR0aCwgaGVpZ2h0LCBzdHJpZGUsIGZvcm1hdCwgKmViYSk7Cj4gKwo+ICsKPiArCXJl
+dCA9IGNsa19wcmVwYXJlX2VuYWJsZShwcmctPmNsa19pcGcpOwo+ICsJaWYgKHJldCkgewo+ICsJ
+CWlwdV9wcmdfcHV0X3ByZShwcmcsIHByZ19jaGFuKTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+
+ICsKPiArCXZhbCA9IChzdHJpZGUgLSAxKSAmIElQVV9QUkdfU1RSSURFX1NUUklERV9NQVNLOwo+
+ICsJd3JpdGVsKHZhbCwgcHJnLT5yZWdzICsgSVBVX1BSR19TVFJJREUocHJnX2NoYW4pKTsKPiAr
+Cj4gKwl2YWwgPSAoKGhlaWdodCAmIElQVV9QUkdfSEVJR0hUX1BSRV9IRUlHSFRfTUFTSykgPDwK
+PiArCSAgICAgICBJUFVfUFJHX0hFSUdIVF9QUkVfSEVJR0hUX1NISUZUKSB8Cj4gKwkgICAgICAo
+KGhlaWdodCAmIElQVV9QUkdfSEVJR0hUX0lQVV9IRUlHSFRfTUFTSykgPDwKPiArCSAgICAgICBJ
+UFVfUFJHX0hFSUdIVF9JUFVfSEVJR0hUX1NISUZUKTsKPiArCXdyaXRlbCh2YWwsIHByZy0+cmVn
+cyArIElQVV9QUkdfSEVJR0hUKHByZ19jaGFuKSk7Cj4gKwo+ICsJdmFsID0gaXB1X3ByZV9nZXRf
+YmFkZHIocHJnLT5wcmVzW2NoYW4tPnVzZWRfcHJlXSk7Cj4gKwkqZWJhID0gdmFsOwo+ICsJd3Jp
+dGVsKHZhbCwgcHJnLT5yZWdzICsgSVBVX1BSR19CQUREUihwcmdfY2hhbikpOwo+ICsKPiArCXZh
+bCA9IHJlYWRsKHByZy0+cmVncyArIElQVV9QUkdfQ1RMKTsKPiArCS8qIGNvdW50ZXIgbG9hZCBl
+bmFibGUgKi8KPiArCXZhbCB8PSBJUFVfUFJHX0NUTF9DTlRfTE9BRF9FTihwcmdfY2hhbik7Cj4g
+KwkvKiBjb25maWcgQVhJIElEICovCj4gKwl2YWwgJj0gfihJUFVfUFJHX0NUTF9TT0ZUX0FSSURf
+TUFTSyA8PAo+ICsJCSBJUFVfUFJHX0NUTF9TT0ZUX0FSSURfU0hJRlQocHJnX2NoYW4pKTsKPiAr
+CXZhbCB8PSBJUFVfUFJHX0NUTF9TT0ZUX0FSSUQocHJnX2NoYW4sIGF4aV9pZCk7Cj4gKwkvKiBl
+bmFibGUgY2hhbm5lbCAqLwo+ICsJdmFsICY9IH5JUFVfUFJHX0NUTF9CWVBBU1MocHJnX2NoYW4p
+Owo+ICsJd3JpdGVsKHZhbCwgcHJnLT5yZWdzICsgSVBVX1BSR19DVEwpOwo+ICsKPiArCXZhbCA9
+IElQVV9QUkdfUkVHX1VQREFURV9SRUdfVVBEQVRFOwo+ICsJd3JpdGVsKHZhbCwgcHJnLT5yZWdz
+ICsgSVBVX1BSR19SRUdfVVBEQVRFKTsKPiArCj4gKwljbGtfZGlzYWJsZV91bnByZXBhcmUocHJn
+LT5jbGtfaXBnKTsKPiArCj4gKwljaGFuLT5lbmFibGVkID0gdHJ1ZTsKPiArCXJldHVybiAwOwo+
+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGlwdV9wcmdfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZSAqcGRldikKPiArewo+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsKPiArCXN0
+cnVjdCByZXNvdXJjZSAqcmVzOwo+ICsJc3RydWN0IGlwdV9wcmcgKnByZzsKPiArCXUzMiB2YWw7
+Cj4gKwlpbnQgaSwgcmV0Owo+ICsKPiArCXByZyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
+cHJnKSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIXByZykKPiArCQlyZXR1cm4gLUVOT01FTTsKPiAr
+Cj4gKwlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDAp
+Owo+ICsJcHJnLT5yZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKCZwZGV2LT5kZXYsIHJlcyk7
+Cj4gKwlpZiAoSVNfRVJSKHByZy0+cmVncykpCj4gKwkJcmV0dXJuIFBUUl9FUlIocHJnLT5yZWdz
+KTsKPiArCj4gKwoKU28gbXVjaCB3aGl0ZXNwYWNlLgoKPiArCXByZy0+Y2xrX2lwZyA9IGRldm1f
+Y2xrX2dldChkZXYsICJpcGciKTsKPiArCWlmIChJU19FUlIocHJnLT5jbGtfaXBnKSkKPiArCQly
+ZXR1cm4gUFRSX0VSUihwcmctPmNsa19pcGcpOwo+ICsKPiArCXByZy0+Y2xrX2F4aSA9IGRldm1f
+Y2xrX2dldChkZXYsICJheGkiKTsKPiArCWlmIChJU19FUlIocHJnLT5jbGtfYXhpKSkKPiArCQly
+ZXR1cm4gUFRSX0VSUihwcmctPmNsa19heGkpOwo+ICsKPiArCXByZy0+aW9tdXhjX2dwciA9Cj4g
+KwkJc3lzY29uX3JlZ21hcF9sb29rdXBfYnlfY29tcGF0aWJsZSgiZnNsLGlteDZxLWlvbXV4Yy1n
+cHIiKTsKPiArCWlmIChJU19FUlIocHJnLT5pb211eGNfZ3ByKSkKPiArCQlyZXR1cm4gUFRSX0VS
+UihwcmctPmlvbXV4Y19ncHIpOwo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCAzOyBpKyspIHsKPiAr
+CQlwcmctPnByZXNbaV0gPSBpcHVfcHJlX2dldF9ieV9wcmdfZGV2aWNlKGRldiwgaSk7Cj4gKwkJ
+aWYgKCFwcmctPnByZXNbaV0pCj4gKwkJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICsJfQo+ICsK
+PiArCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShwcmctPmNsa19pcGcpOwo+ICsJaWYgKHJldCkK
+PiArCQlyZXR1cm4gcmV0Owo+ICsKPiArCS8qIGluaXQgdG8gZnJlZSBydW5uaW5nIG1vZGUgKi8K
+PiArCXZhbCA9IHJlYWRsKHByZy0+cmVncyArIElQVV9QUkdfQ1RMKTsKPiArCXZhbCB8PSBJUFVf
+UFJHX0NUTF9TSEFET1dfRU47Cj4gKwl3cml0ZWwodmFsLCBwcmctPnJlZ3MgKyBJUFVfUFJHX0NU
+TCk7Cj4gKwo+ICsJLyogZGlzYWJsZSBhZGRyZXNzIHRocmVzaG9sZCAqLwo+ICsJd3JpdGVsKDB4
+ZmZmZmZmZmYsIHByZy0+cmVncyArIElQVV9QUkdfVEhEKTsKPiArCj4gKwljbGtfZGlzYWJsZV91
+bnByZXBhcmUocHJnLT5jbGtfaXBnKTsKPiArCj4gKwlwcmctPmRldiA9IGRldjsKPiArCXBsYXRm
+b3JtX3NldF9kcnZkYXRhKHBkZXYsIHByZyk7Cj4gKwltdXRleF9sb2NrKCZpcHVfcHJnX2xpc3Rf
+bXV0ZXgpOwo+ICsJbGlzdF9hZGQoJnByZy0+bGlzdCwgJmlwdV9wcmdfbGlzdCk7Cj4gKwltdXRl
+eF91bmxvY2soJmlwdV9wcmdfbGlzdF9tdXRleCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiAr
+Cj4gK3N0YXRpYyBpbnQgaXB1X3ByZ19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikKPiArewo+ICsJc3RydWN0IGlwdV9wcmcgKnByZyA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBk
+ZXYpOwo+ICsKPiArCW11dGV4X2xvY2soJmlwdV9wcmdfbGlzdF9tdXRleCk7Cj4gKwlsaXN0X2Rl
+bCgmcHJnLT5saXN0KTsKPiArCW11dGV4X3VubG9jaygmaXB1X3ByZ19saXN0X211dGV4KTsKPiAr
+Cj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
+aWQgaXB1X3ByZ19kdF9pZHNbXSA9IHsKPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGlteDZxcC1w
+cmciLCB9LAo+ICsJeyAvKiBzZW50aW5lbCAqLyB9LAo+ICt9Owo+ICsKPiArc3RhdGljIHN0cnVj
+dCBwbGF0Zm9ybV9kcml2ZXIgaXB1X3ByZ19kcnYgPSB7Cj4gKwkucHJvYmUJCT0gaXB1X3ByZ19w
+cm9iZSwKPiArCS5yZW1vdmUJCT0gaXB1X3ByZ19yZW1vdmUsCj4gKwkuZHJpdmVyCQk9IHsKPiAr
+CQkubmFtZQk9ICJpbXgtaXB1LXByZyIsCj4gKwkJLm9mX21hdGNoX3RhYmxlID0gaXB1X3ByZ19k
+dF9pZHMsCj4gKwl9LAo+ICt9Owo+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKGlwdV9wcmdfZHJ2
+KTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1wcnYuaCBiL2RyaXZlcnMv
+Z3B1L2lwdS12My9pcHUtcHJ2LmgKPiBpbmRleCA1MzZhMTU2YTVlYjYuLjBkMWQyZDY2N2YzYiAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LXBydi5oCj4gKysrIGIvZHJpdmVy
+cy9ncHUvaXB1LXYzL2lwdS1wcnYuaAo+IEBAIC0xNjksNiArMTY5LDcgQEAgc3RydWN0IGlwdV92
+ZGk7Cj4gIHN0cnVjdCBpcHVfaW1hZ2VfY29udmVydF9wcml2Owo+ICBzdHJ1Y3QgaXB1X3NtZmNf
+cHJpdjsKPiAgc3RydWN0IGlwdV9wcmU7Cj4gK3N0cnVjdCBpcHVfcHJnOwo+ICAKPiAgc3RydWN0
+IGlwdV9kZXZ0eXBlOwo+ICAKPiBAQCAtMjcwLDQgKzI3MSw2IEBAIHZvaWQgaXB1X3ByZV9jb25m
+aWd1cmUoc3RydWN0IGlwdV9wcmUgKnByZSwgdW5zaWduZWQgaW50IHdpZHRoLAo+ICAJCSAgICAg
+ICB1bnNpZ25lZCBpbnQgc3RyaWRlLCB1MzIgZm9ybWF0LCB1bnNpZ25lZCBpbnQgYnVmYWRkcik7
+Cj4gIHZvaWQgaXB1X3ByZV91cGRhdGUoc3RydWN0IGlwdV9wcmUgKnByZSwgdW5zaWduZWQgaW50
+IGJ1ZmFkZHIpOwo+ICAKPiArc3RydWN0IGlwdV9wcmcgKmlwdV9wcmdfZ2V0X2J5X2lwdV9kZXZp
+Y2Uoc3RydWN0IGRldmljZSAqZGV2KTsKPiArCj4gICNlbmRpZgkJCQkvKiBfX0lQVV9QUlZfSF9f
+ICovCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdmlkZW8vaW14LWlwdS12My5oIGIvaW5jbHVkZS92
+aWRlby9pbXgtaXB1LXYzLmgKPiBpbmRleCAyMjhlMzIwODIwOTcuLjM5MDIzMjNmODc2OSAxMDA2
+NDQKPiAtLS0gYS9pbmNsdWRlL3ZpZGVvL2lteC1pcHUtdjMuaAo+ICsrKyBiL2luY2x1ZGUvdmlk
+ZW8vaW14LWlwdS12My5oCj4gQEAgLTMzMSw2ICszMzEsMjEgQEAgaW50IGlwdV9kcF9zZXRfZ2xv
+YmFsX2FscGhhKHN0cnVjdCBpcHVfZHAgKmRwLCBib29sIGVuYWJsZSwgdTggYWxwaGEsCj4gIAkJ
+Ym9vbCBiZ19jaGFuKTsKPiAgCj4gIC8qCj4gKyAqIElQVSBQcmVmZXRjaCBSZXNvbHZlIEdhc2tl
+dCAocHJnKSBmdW5jdGlvbnMKPiArICovCj4gK2ludCBpcHVfcHJnX21heF9hY3RpdmVfY2hhbm5l
+bHModm9pZCk7Cj4gK2Jvb2wgaXB1X3ByZ19wcmVzZW50KHN0cnVjdCBpcHVfc29jICppcHUpOwo+
+ICtib29sIGlwdV9wcmdfZm9ybWF0X3N1cHBvcnRlZChzdHJ1Y3QgaXB1X3NvYyAqaXB1LCB1aW50
+MzJfdCBmb3JtYXQsCj4gKwkJCSAgICAgIHVpbnQ2NF90IG1vZGlmaWVyKTsKPiAraW50IGlwdV9w
+cmdfZW5hYmxlKHN0cnVjdCBpcHVfc29jICppcHUpOwo+ICt2b2lkIGlwdV9wcmdfZGlzYWJsZShz
+dHJ1Y3QgaXB1X3NvYyAqaXB1KTsKPiArdm9pZCBpcHVfcHJnX2NoYW5uZWxfZGlzYWJsZShzdHJ1
+Y3QgaXB1djNfY2hhbm5lbCAqaXB1X2NoYW4pOwo+ICtpbnQgaXB1X3ByZ19jaGFubmVsX2NvbmZp
+Z3VyZShzdHJ1Y3QgaXB1djNfY2hhbm5lbCAqaXB1X2NoYW4sCj4gKwkJCSAgICAgIHVuc2lnbmVk
+IGludCBheGlfaWQsICB1bnNpZ25lZCBpbnQgd2lkdGgsCj4gKwkJCSAgICAgIHVuc2lnbmVkIGlu
+dCBoZWlnaHQsIHVuc2lnbmVkIGludCBzdHJpZGUsCj4gKwkJCSAgICAgIHUzMiBmb3JtYXQsIHVu
+c2lnbmVkIGxvbmcgKmViYSk7Cj4gKwo+ICsvKgo+ICAgKiBJUFUgQ01PUyBTZW5zb3IgSW50ZXJm
+YWNlIChjc2kpIGZ1bmN0aW9ucwo+ICAgKi8KPiAgc3RydWN0IGlwdV9jc2k7CgpyZWdhcmRzClBo
+aWxpcHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
