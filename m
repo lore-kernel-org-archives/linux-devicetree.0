@@ -1,38 +1,36 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove the OF graph
-Date: Mon, 20 Feb 2017 09:27:34 +0200
-Message-ID: <CAJKOXPd7Roubdf_5B6pT1PkA9K9dZmjPydYOujXvrz8cVcKVmg@mail.gmail.com>
-References: <CGME20170209012715epcas1p3dbe1788b864c50d339dcfd791c0900ec@epcas1p3.samsung.com>
- <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com> <58AA95C1.4020809@samsung.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC 0/2] usb: host: ehci-platform: fix usb 1.1 device is not connected in system resume
+Date: Mon, 20 Feb 2017 16:35:09 +0900
+Message-ID: <1487576111-29287-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <58AA95C1.4020809@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 20, 2017 at 9:07 AM, Inki Dae <inki.dae@samsung.com> wrote:
-> Hi Krzysztof,
->
-> Can you merge patch 2 and 5 to your tree so that they can go to mainline? Otherwise, I can merge them to my tree if you give me acked-by.
+This patch set is based on Greg's usb.git / usb-next branch
+(the commit id = 0df8a3dbacb585bb9c8b2e55de43c6aac9d86488).
 
-Hi,
+This patch set is related to the following email threads:
+ http://marc.info/?t=148653514200001&r=1&w=2
+ http://marc.info/?t=148712534300005&r=1&w=2
 
-Hm? Why do you need them to be merged? Do you mean that the first
-patch breaks not only ABI but also bisectability? Then this has to be
-reworked because:
+Since I'm not sure the helper functions can be in core/of.c,
+I sent the patch set as RFC. I guess if these functions are not needed
+to other codes, the functions should be into ehci-platform.c.
 
-1. The DTS patches cannot go through non-DT tree so no, you cannot
-take them into your branch. I will merge them according to point 4
-below.
-2. Bisectability has to be preserved.
-3. DTS changes in general should not be a dependency for driver changes.
-4 . Usually DTS patches wait for driver to be acked by devicetree
-maintainers or merging by driver maintainer. This did not happen so
-DTS patches wait. Also these were sent too late to merge for this
-cycle so the only chance is v4.12.
+Yoshihiro Shimoda (2):
+  usb: of: add functions to bind a companion controller
+  usb: host: ehci-platform: fix usb 1.1 device is not connected in
+    system resume
 
-Best regards,
-Krzysztof
+ Documentation/devicetree/bindings/usb/generic.txt |  1 +
+ drivers/usb/core/of.c                             | 36 +++++++++++++++++++++++
+ drivers/usb/host/ehci-platform.c                  |  8 +++++
+ include/linux/usb/of.h                            | 10 +++++++
+ 4 files changed, 55 insertions(+)
+
+-- 
+1.9.1
