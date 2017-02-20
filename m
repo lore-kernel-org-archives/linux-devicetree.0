@@ -1,68 +1,44 @@
-From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt: bindings: fpga: add xilinx slave-serial
- binding description
-Date: Mon, 20 Feb 2017 09:28:17 -0800
-Message-ID: <CAAtXAHcAU7UAgruzEAwfcijwzX6hBsJcNa-d_Lp3cs=Xa07xWw@mail.gmail.com>
-References: <1487600724-17607-1-git-send-email-agust@denx.de> <1487600724-17607-2-git-send-email-agust@denx.de>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] drm: convert drivers to use
+ of_graph_get_remote_node
+Date: Mon, 20 Feb 2017 20:00:11 +0200
+Message-ID: <d8cbcbe4-b4a2-1111-173f-6fe593ec1609@ti.com>
+References: <20170209190558.4784-1-robh@kernel.org>
+ <20170209190558.4784-5-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487600724-17607-2-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20170209190558.4784-5-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 20, 2017 at 6:25 AM, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org> wrote:
-> Add dt binding documentation details for Xilinx FPGA configuration
-> over slave serial interface.
->
-> Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Acked-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> Changes in v2:
->
->  - correct gpios properties in example to match above description
->
->  - use fpga-mgr@0 instead of fpga-spi@0 in example
->
->  .../bindings/fpga/xilinx-slave-serial.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
->
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> new file mode 100644
-> index 0000000..20b0731
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-> @@ -0,0 +1,24 @@
-> +Xilinx Slave Serial SPI FPGA Manager
-> +
-> +Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
-> +what is referred to as "slave serial" interface.
-> +The slave serial link is not technically SPI, and might require extra
-> +circuits in order to play nicely with other SPI slaves on the same bus.
-> +
-> +See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-> +
-> +Required properties:
-> +- compatible: should contain "xlnx,fpga-slave-serial"
-> +- reg: spi chip select of the FPGA
-> +- prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
-> +- done-gpios: config status pin (referred to as DONE in the manual)
-> +
-> +Example:
-> +       fpga_mgr_spi: fpga-mgr@0 {
-> +               compatible = "xlnx,fpga-slave-serial";
-> +               spi-max-frequency = <60000000>;
-> +               spi-cpha;
-> +               reg = <0>;
-> +               done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-> +               prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-> +       };
-> --
-> 2.7.4
->
+On 02/09/17 21:05, Rob Herring wrote:
+> Convert drivers to use the new of_graph_get_remote_node() helper
+> instead of parsing the endpoint node and then getting the remote device
+> node. Now drivers can just specify the device node and which
+> port/endpoint and get back the connected remote device node. The details
+> of the graph binding are nicely abstracted into the core OF graph code.
+> 
+> This changes some error messages to debug messages (in the graph core).
+> Graph connections are often "no connects" depending on the particular
+> board, so we want to avoid spurious messages. Plus the kernel is not a
+> DT validator.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Tested-by: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+> Tested-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+
+For tilcdc part:
+
+Tested-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+
+Cheers,
+Jyri
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
