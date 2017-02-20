@@ -1,52 +1,87 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/4] Documentation: devicetree: arm: Document Marvell
- IAP140
-Date: Mon, 20 Feb 2017 14:58:25 +0100
-Message-ID: <20170220145825.5f7cbe74@free-electrons.com>
-References: <20170219032000.4674-1-afaerber@suse.de>
-        <20170219032000.4674-3-afaerber@suse.de>
-        <20170220135646.2b0219c1@free-electrons.com>
-        <cac4ed13-5952-cccc-fee7-d9c29e77d8bb@suse.de>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] arm64: dts: exynos: Add missing unit name to
+ Exynos7 SoC node
+Date: Mon, 20 Feb 2017 11:00:50 -0300
+Message-ID: <33321d4d-645b-d29a-41dc-c5608cd9d096@osg.samsung.com>
+References: <1484069912-6534-1-git-send-email-javier@osg.samsung.com>
+ <1484069912-6534-2-git-send-email-javier@osg.samsung.com>
+ <20170110184728.2nff4r634ics4wb3@kozik-lap>
+ <e60bf634-d60d-7316-76a9-3b2f2f1480e8@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cac4ed13-5952-cccc-fee7-d9c29e77d8bb-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <e60bf634-d60d-7316-76a9-3b2f2f1480e8-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hello Rob,
 
-On Mon, 20 Feb 2017 14:16:13 +0100, Andreas Färber wrote:
+On 01/10/2017 04:55 PM, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
+> 
+> On 01/10/2017 03:47 PM, Krzysztof Kozlowski wrote:
+>> On Tue, Jan 10, 2017 at 02:38:30PM -0300, Javier Martinez Canillas wrote:
+>>> This patch fixes the following DTC warning about a mismatch
+>>> between a device node reg property and its unit name:
+>>>
+>>> Node /soc has a reg or ranges property, but no unit name
+>>>
+>>> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>>> ---
+>>>
+>>>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>>> index 80aa60e38237..0d2fedc6ac2f 100644
+>>> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>>> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>>> @@ -69,7 +69,7 @@
+>>>  		method = "smc";
+>>>  	};
+>>>  
+>>> -	soc: soc {
+>>> +	soc: soc@0 {
+>>
+>> This looks unnatural, like a fix just to silence the DTC. Mostly de do
+>> not enumerate soc node, although there are few exceptions.
+>>
+> 
+> Yes, but OTOH arm32 Exynos SoCs just have an empty "ranges" property in their
+> soc device node (parent and child address space is the same, no translation)
+> so DTC doesn't complain about the unit address in those.
+> 
+> But others SoCs DTSI with a non-empty ranges property have an unit name in
+> their soc nodes, i.e for arm64 and arm32:
+> 
+> arch/arm64/boot/dts/marvell/berlin4ct.dtsi
+> 
+> arch/arm/boot/dts/da850.dtsi
+>  
+>> I would prefer ignore the warning... however I am happy to hear other opinions.
+>>
+> 
+> If is wrong/unnatural to have addresses for soc nodes then I think DTC should
+> be patched to ignore these (like it will be the case for the OPP nodes AFAIU).
+> 
 
-> I'm confused now. According to Marvell IR [0] they are NASDAQ-listed as
-> MRVL. My understanding is that in that case the official vendor prefix
-> becomes mrvl. Why not here?
+Any comments about this?
 
-Not sure why, but as of today, we have a mix of "mrvl" and "marvell" in
-the tree, and "marvell" is the one official listed in
-vendor-prefixes.txt.
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> Best regards,
+> 
 
-> Any comments on the iap140 vs. pxa1908 naming? The Communication
-> Processors section has disappeared from marvell.com, so I couldn't
-> verify whether IAP140 was renamed from PXA1908 or whether both coexist
-> and we should add a second compatible string here?
-
-I don't have an opinion on this because I'm not familiar with this
-family of Marvell SoCs. However, the only thing I would recommend is
-that you send a patch to update Documentation/arm/Marvell/README to
-document this PXA1908/IAP140 thing. This is particularly important
-since this document mentions PXA1908 already.
-
-Thanks!
-
-Thomas
+Best regards,
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
