@@ -1,62 +1,74 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: msm8974: Hook up adsp-pil's xo clock
-Date: Mon, 20 Feb 2017 16:00:41 -0600
-Message-ID: <20170220220041.GA3170@hector>
-References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
+From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar@gmail.com>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
+Date: Mon, 20 Feb 2017 23:04:22 +0100
+Message-ID: <201702202304.22964@pali>
+References: <cover.1482936802.git.hns@goldelico.com> <201702202208.50498@pali> <C2E7AC24-75AB-442F-94A2-84904723EE41@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170215045157.11659-1-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed;
+  boundary="nextPart2309403.p6LOXCOcbl";
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C2E7AC24-75AB-442F-94A2-84904723EE41@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, Mika =?utf-8?q?Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjam>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 05:51:56AM +0100, Jonathan Neuschäfer wrote:
-> Without this patch (and with CONFIG_QCOM_ADSP_PIL), I get this error:
-> 
-> 	[    0.711529] qcom_adsp_pil adsp-pil: failed to get xo clock
-> 	[    0.711540] remoteproc remoteproc0: releasing adsp-pil
-> 
-> With this patch, adsp-pil can initialize correctly.
-> 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-> 
-> ---
-> NOTE: I don't know if I actually chose the right clock source.
->       Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
->       suggests that adsp-pil's xo should be controlled by the RPM
->       processor; Existing devicetrees and a recent patch to msm8996.dtsi
->       use &xo_board, though:
->       https://www.spinics.net/lists/linux-arm-msm/msg25711.html
-> ---
->  arch/arm/boot/dts/qcom-msm8974.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> index d3e1a61b8671..cccd8cba8872 100644
-> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> @@ -250,6 +250,9 @@
->  
->  		cx-supply = <&pm8841_s2>;
->  
-> +		clocks = <&xo_board>;
-> +		clock-names = "xo";
-> +
+--nextPart2309403.p6LOXCOcbl
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-I have to wonder if this wasn't done specifically so that the board specific DTS
-file would specify the XO clock.  If you do it here, it applies to all boards
-using msm8974.
+On Monday 20 February 2017 22:27:39 H. Nikolaus Schaller wrote:
+> > Am 20.02.2017 um 22:08 schrieb Pali Roh=C3=A1r <pali.rohar@gmail.com>:
+> >=20
+> > On Monday 20 February 2017 20:42:15 Pali Roh=C3=A1r wrote:
+> >> While I'm watching this discussion... in my opinion kernel should
+> >> just invert input axes (when needed)
+>=20
+> It is questionable why it should do that at all then.
+>=20
+> User-Space can also easily do it. Either the driver should provide
+> raw data only or if it does pre-processing (scaling by +/-1), why
+> exclude pre-scaling by other factors?
 
-Maybe someone can answer that question.  Adding Bjorn to the CC.
+Via resolution property which is in that EVIOCSABS ioctl() you specify=20
+value which represent unit per mm. So you cannot do full rescaling like=20
+via affine transformation. Specially you cannot swap axes or invert it.
 
-Regards,
+As such thing is not supported by current kernel <--> userspace API it=20
+needs to be done in kernel.
 
-Andy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Moreover I see that this is already handled by kernel's of_touchscreen.c=20
+code via DT properties: touchscreen-inverted-* touchscreen-swapped-x-y
+
+And... I'm not sure but I think that linux exports absolute input=20
+devices with coordinates where point (0,0) is mapped as left upper=20
+corner.
+
+> >> and should not do any other
+> >> normalization or integer/floating-point
+> >> re-calibration/re-calculation. If it correctly exports minimum
+> >> value, maximum value and resolution then userspace can correctly
+> >> re-scale input events to units which userspace needs (e.g. mapping
+> >> into LCD screen pixels or whatever is needed).
+
+=2D-=20
+Pali Roh=C3=A1r
+pali.rohar@gmail.com
+
+--nextPart2309403.p6LOXCOcbl
+Content-Type: application/pgp-signature; name=signature.asc 
+Content-Description: This is a digitally signed message part.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iEYEABECAAYFAlirZ+YACgkQi/DJPQPkQ1Ks2wCgxNMQtw57fTzl/ditMLd0ST0B
+r6sAoMJHlrsFqC28oYWnq42ZfV/sJs4K
+=dTsW
+-----END PGP SIGNATURE-----
+
+--nextPart2309403.p6LOXCOcbl--
