@@ -1,56 +1,131 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [RFC 4/4] iio: trigger: add GPIO trigger
-Date: Mon, 20 Feb 2017 17:24:16 +0100
-Message-ID: <03234803-c75d-bd1a-492b-761c0d5218ff@st.com>
-References: <1487347429-31761-1-git-send-email-fabrice.gasnier@st.com>
- <1487347429-31761-5-git-send-email-fabrice.gasnier@st.com>
- <06f74b54-91fa-31c5-f015-52a6524059ef@metafoo.de>
- <3e2653fe-874c-d761-b274-ffe889df18a7@kernel.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
+Date: Mon, 20 Feb 2017 17:49:26 +0100
+Message-ID: <20170220164926.GB15493@ulmo.ba.sec>
+References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
+ <20170216184524.cxcy2ux37yrwutla@lukather>
+ <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
+ <20170217154341.vn7uqvdaijtrj64s@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3e2653fe-874c-d761-b274-ffe889df18a7-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jho1yZJdad60DJr+"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170217154341.vn7uqvdaijtrj64s@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Tobias Jakobi <tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/18/2017 08:19 PM, Jonathan Cameron wrote:
-> On 17/02/17 16:16, Lars-Peter Clausen wrote:
->> On 02/17/2017 05:03 PM, Fabrice Gasnier wrote:
->>> GPIOs can be used to generate triggers for any IIO device.
->>> Introduce generic GPIO trigger driver. It offers some options
->>> to tune polarity (e.g. rising/falling edge), and label so trigger
->>> name may be customized.
->>> By default, gpio triggers will be named gpiotrigX, where X is gpio
->>> number as returned by desc_to_gpio() call.
->>> Rising edge is selected if polarity isn't set.
->>
->> If you want to use the GPIO only as an interrupt, just use it as an
->> interrupt directly, no need to go the route via the GPIO.
-> Absolutely.  The majority of the bindings will then just become standard
-> interrupt bindings and will be effectively handled for you.
->
-> Please work to extend the existing interrupt trigger driver rather than adding
-> this new one.  That one actually started as a gpio trigger then got
-> generalised into a interrupt trigger later so lets not do that again ;)
 
-Hi Lars, Jonathan
+--jho1yZJdad60DJr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, got it.
-I'll drop this and focus on interrupt trigger, if this is worth having 
-DT for it (e.g. patch 1 & 2 of this RFC).
+On Fri, Feb 17, 2017 at 04:43:41PM +0100, Maxime Ripard wrote:
+> On Fri, Feb 17, 2017 at 01:45:44PM +0100, Tobias Jakobi wrote:
+> > Hello Maxime,
+> >=20
+> > Maxime Ripard wrote:
+> > > Hi,
+> > >=20
+> > > On Thu, Feb 16, 2017 at 01:43:06PM +0100, Tobias Jakobi wrote:
+> > >> I was wondering about the following. Wasn't there some strict
+> > >> requirement about code going upstream, which also included that there
+> > >> was a full open-source driver stack for it?
+> > >>
+> > >> I don't see how this is the case for Mali, neither in the kernel, no=
+r in
+> > >> userspace. I'm aware that the Mali kernel driver is open-source. But=
+ it
+> > >> is not upstream, maintained out of tree, and won't land upstream in =
+its
+> > >> current form (no resemblence to a DRM driver at all). And let's not =
+talk
+> > >> about the userspace part.
+> > >>
+> > >> So, why should this be here?
+> > >=20
+> > > The device tree is a representation of the hardware itself. The state
+> > > of the driver support doesn't change the hardware you're running on,
+> > > just like your BIOS/UEFI on x86 won't change the device it reports to
+> > > Linux based on whether it has a driver for it.
+> >
+> > Like Emil already said, the new bindings and the DT entries are solely
+> > introduced to support a proprietary out-of-tree module.
+>=20
+> No. This new binding and the DT entries are solely introduced to
+> describe a device found in a number of SoCs, just like any other DT
+> binding we have.
+>=20
+> > The current workflow when introducing new DT entries is the following:
+> > - upstream a driver that uses the entries
+> > - THEN add the new entries
+>=20
+> And that's never been the preferred workflow, for *any* patches.
 
-BTW, I figured out there has been this patch a year ago, on interrupt 
-trigger, to add device tree support:
-http://www.spinics.net/lists/linux-iio/msg23126.html
-Any reason why it hasn't found its way in ?
+Actually it has. How else are you going to test that your driver really
+works? You've got to have both pieces before you can verify that they're
+both adequate. So the typical workflow is to:
 
-Thanks for reviewing,
-Best Regards,
-Fabrice
+	1) define the bindings
+	2) write a driver that implements the bindings
+	3) add entries to device tree files
 
->
-> Jonathan
->
+Usually it doesn't matter in which order you do the above because they
+are all part of the same patch series. But that's not what you're doing
+here. The more general problem here is that you're providing device tree
+content (and therefore ABI) that's based on a binding which has no
+upstream users. So you don't actually have a way of validating that what
+you merge is going to be an adequate description.
+
+You're probably going to respond: "but DT describes hardware, so it must
+be known already, there won't be a need for changes". Unfortunately that
+is only partially true. We've had a number of occasions where it later
+turned out that a binding was in fact not an adequate description, and
+then we've had to jump through hoops in order to preserve backwards
+compatibility. That's already annoying enough if you've got in-tree
+users, but it's going to be even more painful if you start out with an
+out-of-tree user.
+
+All of that said, you've got an Acked-by from Rob and that's about as
+good as it's going to get. So I'm not going to NAK this. But I will
+caution against this, because I don't think you're doing yourself any
+favours with this.
+
+So perhaps the question that we should ask is this: what do you gain by
+merging this series? The fact remains that you don't have an upstream
+driver that implements this binding, so ultimately you're going to be
+carrying patches in some development tree anyway. Why not simply stash
+these patches into the same tree? That should be about the same amount
+of work for you and your users, but it has the advantage of not locking
+you into something that you may regret.
+
+Thierry
+
+--jho1yZJdad60DJr+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlirHhQACgkQ3SOs138+
+s6FTnw/9EJ9tYw2epzLEyhXBwUGr72cbdpBZTYDphMUMwcHlU4xLXARs6jm/LzRu
+GQDgjfki1eh+GwQVFbgnItvTWzIZ061yfczuiHbhJgU8xL8XBNrHgHP4USXLmv/w
+s2Csc7o9+oAptoIlcBp9TJbF76gVs00n7y/Oe8tAaZzgWaJ+TJub0un9B/fpwe9w
+FZb+j7x0LQyf/I5dfV6LpawM/W69a8zWy2NI9AJJPT5XVFml38GoP03O5XPfHkJY
+FAzAFlSgENebLKbRI7bHcBOdvjJXgdmIKUpFm3rqNLpGqjY7YMy2FSjpy89N//u/
+vcLgalLeBs41uHLVEiZeCBw/bu9DQIgnEUQ3459PLZdkrWZlGbb6wfv6syF9jg5O
+JbyupqxrEF3GBcBcF6Y7hZJaaKpy29Y6udHA302TUrpxdl8Ezodg2UhONWNzDHKK
+NGuYNpp7J8TA+r28qjuet0LybpkTc5nHOEw2rRfz6y4YYJJO0IRkw/C7W3wMwF0A
+6oBDsi00Tx8bf0iE8alQthbSF2rS3HHtgJzosALNbV6IPPPbTpw6/og4lC/2PKCo
+PXODwFqewYxir3hd6IING3VuhbfxAP04ReN1HR0d2jEQA57Ox4ixjdKwgvxCpJSQ
+mu4weF/HgANfltzkXWO8C46L3FuzKoNmF9oSYx8QrYjUbFI7r/Y=
+=SM/f
+-----END PGP SIGNATURE-----
+
+--jho1yZJdad60DJr+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
