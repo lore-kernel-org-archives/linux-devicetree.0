@@ -1,83 +1,75 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/3] mtd: nand: Rework/cleanup the Atmel NAND driver
-Date: Mon, 20 Feb 2017 13:28:35 +0100
-Message-ID: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 3/3] mtd: nand: Remove unused chip->write_page() hook
+Date: Mon, 20 Feb 2017 13:28:38 +0100
+Message-ID: <1487593718-20752-4-git-send-email-boris.brezillon@free-electrons.com>
+References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a complete rewrite of the driver whose main purpose is to
-support the new DT representation where the NAND controller node is now
-really visible in the DT and appears under the EBI bus. With this new
-representation, we can add other devices under the EBI bus without
-risking pinmuxing conflicts (the NAND controller is under the EBI
-bus logic and as such, share some of its pins with other devices
-connected on this bus).
+The last/only user of the chip->write_page() hook (the Atmel NAND
+controller driver) has been reworked and is no longer specifying a custom
+->write_page() implementation.
+Drop this hook before someone else start abusing it.
 
-Even though the goal of this rework was not necessarily to add new
-features, the new driver has been designed with this in mind. With a
-clearer separation between the different blocks and different IP
-revisions, adding new functionalities should be easier (we already
-have plans to support SMC timing configuration so that we no longer
-have to rely on the configuration done by the bootloader/bootstrap).
+Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+---
+ drivers/mtd/nand/nand_base.c | 10 ++++------
+ include/linux/mtd/nand.h     |  4 ----
+ 2 files changed, 4 insertions(+), 10 deletions(-)
 
-Also note that we no longer have a custom ->cmdfunc() implementation,
-which means we can now benefit from new features added in the core
-implementation for free (support for new NAND operations for example).
-
-The last thing that we gain with this rework is support for multi-chips
-and multi-dies chips, thanks to the clean NAND controller <-> NAND
-devices representation.
-
-This new driver has been tested on several platforms (at91sam9261,
-at91sam9g45, at91sam9x5, sama5d3 and sama5d4) to make sure it did not
-introduce regressions, and it's worth mentioning that old bindings are
-still supported (which partly explain the positive diffstat).
-
-Regards,
-
-Boris
-
-Changes since v1:
-- change function/structure prefixes (asked by Nicolas)
-- drop applied patches
-- use new GPIO helpers
-- set ->chip_delay to 40 as done in the old driver (reported by Nicolas)
-- rework read_page to improve perfs
-- add a better commit message to patch 2
-
-Boris Brezillon (3):
-  mtd: nand: Cleanup/rework the atmel_nand driver
-  mtd: nand: atmel: Document the new DT bindings
-  mtd: nand: Remove unused chip->write_page() hook
-
- .../devicetree/bindings/mtd/atmel-nand.txt         |  107 +-
- MAINTAINERS                                        |    2 +-
- drivers/mtd/nand/Makefile                          |    2 +-
- drivers/mtd/nand/atmel/Makefile                    |    4 +
- drivers/mtd/nand/atmel/nand-controller.c           | 2269 ++++++++++++++++++
- drivers/mtd/nand/atmel/pmecc.c                     | 1020 ++++++++
- drivers/mtd/nand/atmel/pmecc.h                     |   73 +
- drivers/mtd/nand/atmel_nand.c                      | 2479 --------------------
- drivers/mtd/nand/atmel_nand_ecc.h                  |  163 --
- drivers/mtd/nand/atmel_nand_nfc.h                  |  103 -
- drivers/mtd/nand/nand_base.c                       |   10 +-
- include/linux/mtd/nand.h                           |    4 -
- 12 files changed, 3478 insertions(+), 2758 deletions(-)
- create mode 100644 drivers/mtd/nand/atmel/Makefile
- create mode 100644 drivers/mtd/nand/atmel/nand-controller.c
- create mode 100644 drivers/mtd/nand/atmel/pmecc.c
- create mode 100644 drivers/mtd/nand/atmel/pmecc.h
- delete mode 100644 drivers/mtd/nand/atmel_nand.c
- delete mode 100644 drivers/mtd/nand/atmel_nand_ecc.h
- delete mode 100644 drivers/mtd/nand/atmel_nand_nfc.h
-
+diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_base.c
+index ec1c28aaaf23..c8894f31392e 100644
+--- a/drivers/mtd/nand/nand_base.c
++++ b/drivers/mtd/nand/nand_base.c
+@@ -2839,9 +2839,10 @@ static int nand_do_write_ops(struct mtd_info *mtd, loff_t to,
+ 			/* We still need to erase leftover OOB data */
+ 			memset(chip->oob_poi, 0xff, mtd->oobsize);
+ 		}
+-		ret = chip->write_page(mtd, chip, column, bytes, wbuf,
+-					oob_required, page, cached,
+-					(ops->mode == MTD_OPS_RAW));
++
++		ret = nand_write_page(mtd, chip, column, bytes, wbuf,
++				      oob_required, page, cached,
++				      (ops->mode == MTD_OPS_RAW));
+ 		if (ret)
+ 			break;
+ 
+@@ -4623,9 +4624,6 @@ int nand_scan_tail(struct mtd_info *mtd)
+ 		}
+ 	}
+ 
+-	if (!chip->write_page)
+-		chip->write_page = nand_write_page;
+-
+ 	/*
+ 	 * Check ECC mode, default to software if 3byte/512byte hardware ECC is
+ 	 * selected and we have 256 byte pagesize fallback to software ECC
+diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+index c5f3a012ae62..9d51dee53be4 100644
+--- a/include/linux/mtd/nand.h
++++ b/include/linux/mtd/nand.h
+@@ -818,7 +818,6 @@ nand_get_sdr_timings(const struct nand_data_interface *conf)
+  * @errstat:		[OPTIONAL] hardware specific function to perform
+  *			additional error status checks (determine if errors are
+  *			correctable).
+- * @write_page:		[REPLACEABLE] High-level page write function
+  */
+ 
+ struct nand_chip {
+@@ -843,9 +842,6 @@ struct nand_chip {
+ 	int (*scan_bbt)(struct mtd_info *mtd);
+ 	int (*errstat)(struct mtd_info *mtd, struct nand_chip *this, int state,
+ 			int status, int page);
+-	int (*write_page)(struct mtd_info *mtd, struct nand_chip *chip,
+-			uint32_t offset, int data_len, const uint8_t *buf,
+-			int oob_required, int page, int cached, int raw);
+ 	int (*onfi_set_features)(struct mtd_info *mtd, struct nand_chip *chip,
+ 			int feature_addr, uint8_t *subfeature_para);
+ 	int (*onfi_get_features)(struct mtd_info *mtd, struct nand_chip *chip,
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
