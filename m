@@ -1,63 +1,39 @@
-From: Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/8] mm: cma: Export a few symbols
-Date: Mon, 20 Feb 2017 13:35:50 +0100
-Message-ID: <20170220123550.GH2431@dhcp22.suse.cz>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
- <2dee6c0baaf08e2c7d48ceb7e97e511c914d0f87.1486655917.git-series.maxime.ripard@free-electrons.com>
- <20170209192046.GB31906@dhcp22.suse.cz>
- <20170213134416.akgmtv3lv5m65fwx@lukather>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/4] Documentation: devicetree: arm: Document Marvell
+ IAP140
+Date: Mon, 20 Feb 2017 13:56:46 +0100
+Message-ID: <20170220135646.2b0219c1@free-electrons.com>
+References: <20170219032000.4674-1-afaerber@suse.de>
+        <20170219032000.4674-3-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <owner-linux-mm@kvack.org>
-Content-Disposition: inline
-In-Reply-To: <20170213134416.akgmtv3lv5m65fwx@lukather>
-Sender: owner-linux-mm@kvack.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Joonsoo Kim <js1304@gmail.com>, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170219032000.4674-3-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 13-02-17 14:44:16, Maxime Ripard wrote:
-> Hi Michal,
-> 
-> On Thu, Feb 09, 2017 at 08:20:47PM +0100, Michal Hocko wrote:
-> > [CC CMA people]
-> > 
-> > On Thu 09-02-17 17:39:17, Maxime Ripard wrote:
-> > > Modules might want to check their CMA pool size and address for debugging
-> > > and / or have additional checks.
-> > > 
-> > > The obvious way to do this would be through dev_get_cma_area and
-> > > cma_get_base and cma_get_size, that are currently not exported, which
-> > > results in a build failure.
-> > > 
-> > > Export them to prevent such a failure.
-> > 
-> > Who actually uses those exports. None of the follow up patches does
-> > AFAICS.
-> 
-> This is for the ARM Mali GPU driver that is out of tree, unfortunately.
+Hello,
 
-We do not export symbols which do not have any in-tree users.
+On Sun, 19 Feb 2017 04:19:58 +0100, Andreas Färber wrote:
 
-> In one case (using the legacy fbdev API), the driver wants to (and
-> probably should) validate that the buffer as indeed been allocated
-> from the memory allocation pool.
-> 
-> Rob suggested that instead of hardcoding it to cover the whole RAM
-> (which defeats the purpose of that check in the first place), we used
-> the memory-region bindings in the DT and follow that, which does work
-> great, but we still have to retrieve the base address and size of that
-> region, hence why this patches are needed.
+> + - compatible :  must contain "mrvl,iap140"
 
-Anyway I would suggest talking to CMA people to find a better API for
-modules to use...
+Even though there's indeed a good number of existing "mrvl," compatible
+strings in the tree, the official vendor prefix according to
+Documentation/devicetree/bindings/vendor-prefixes.txt is "marvell".
+Probably you should use that instead for new bindings?
 
+Thanks,
+
+Thomas
 -- 
-Michal Hocko
-SUSE Labs
-
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
