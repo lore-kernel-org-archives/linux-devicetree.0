@@ -1,68 +1,254 @@
-From: Yannick FERTRE <yannick.fertre@st.com>
-Subject: Re: [PATCH v2 1/7] dt-bindings: display: add STM32 LTDC driver
-Date: Mon, 20 Feb 2017 14:23:01 +0000
-Message-ID: <87eb3866-9153-1bcb-222b-f1852bd1095c@st.com>
-References: <1486740274-25958-1-git-send-email-yannick.fertre@st.com>
- <1486740274-25958-2-git-send-email-yannick.fertre@st.com>
- <20170216031505.x7gbqivnv7pvdzei@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170216031505.x7gbqivnv7pvdzei@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <FE83BA77854ED249B8BFBF1B01E36D9A@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v2 2/2] fpga manager: Add Xilinx slave serial SPI driver
+Date: Mon, 20 Feb 2017 15:25:24 +0100
+Message-ID: <1487600724-17607-3-git-send-email-agust@denx.de>
+References: <1487600724-17607-1-git-send-email-agust@denx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487600724-17607-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8xNi8yMDE3IDA0OjE1IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBGcmksIEZl
-YiAxMCwgMjAxNyBhdCAwNDoyNDoyOFBNICswMTAwLCBZYW5uaWNrIEZlcnRyZSB3cm90ZToKPj4g
-U2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4KPj4g
-LS0tCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0
-ICB8IDM3ICsrKysrKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAzNyBpbnNl
-cnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRkYy50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzItbHRk
-Yy50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uYjkzZTFjOAo+
-PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0Cj4+IEBAIC0wLDAgKzEsMzcgQEAKPj4gKyogU1RN
-aWNyb2VsZWN0cm9uaWNzIFNUTTMyIGxjZC10ZnQgZGlzcGxheSBjb250cm9sbGVyCj4+ICsKPj4g
-Ky0gbHRkYzogbGNkLXRmdCBkaXNwbGF5IGNvbnRyb2xsZXIgaG9zdAo+PiArICBtdXN0IGJlIGEg
-c3ViLW5vZGUgb2Ygc3QtZGlzcGxheS1zdWJzeXN0ZW0KPj4gKyAgUmVxdWlyZWQgcHJvcGVydGll
-czoKPj4gKyAgLSBjb21wYXRpYmxlOiAic3Qsc3RtMzItbHRkYyIKPgo+IEtpbmQgb2YgZ2VuZXJp
-Yy4gVGhlcmUncyBvbmx5IG9uZSB2ZXJzaW9uIGZvciBhbGwgc3RtMzIgcGFydHM/CkhpIFJvYiwK
-bHRkYyBpcyB0aGUgSVAgdXNlIGZvciBhbGwgc3RtMzIuIFNldmVyYWwgb3B0aW9ucyBjb3VsZCBi
-ZSBzZXQgZGVwZW5kaW5nIApvbiBzdG0zMi4KRm9ydHVuYXRlbHksIGx0ZGMgY29udGFpbnMgc2V2
-ZXJhbCByZWdpc3RlcnMgd2hpY2ggZGVzY3JpYmVzIGFsbCBvcHRpb25zLgoKQnIKCj4KPj4gKyAg
-LSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVzcyBvZiB0aGUgSVAgcmVnaXN0ZXJzIGFuZCBsZW5n
-dGggb2YgbWVtb3J5IG1hcHBlZCByZWdpb24uCj4+ICsgIC0gY2xvY2tzOiBBIGxpc3Qgb2YgcGhh
-bmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoCj4+ICsgICAgZW50cnkg
-aW4gJ2Nsb2NrLW5hbWVzJy4KPj4gKyAgLSBjbG9jay1uYW1lczogQSBsaXN0IG9mIGNsb2NrIG5h
-bWVzLiBGb3IgbHRkYyBpdCBzaG91bGQgY29udGFpbjoKPj4gKyAgICAgIC0gImNsay1sY2QiIGZv
-ciB0aGUgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IHBpeGVsIGNsb2NrICYgSVAgY2xvY2suCj4+
-ICsgIC0gcmVzZXRzOiByZXNldCB0byBiZSB1c2VkIGJ5IHRoZSBkZXZpY2UgKGRlZmluZWQgYnkg
-dXNlIG9mIFJDQyBtYWNybykuCj4+ICsgIFJlcXVpcmVkIG5vZGVzOgo+PiArICAgIC0gVmlkZW8g
-cG9ydCBmb3IgUkdCIG91dHB1dC4KPj4gKwo+PiArRXhhbXBsZToKPj4gKwo+PiArLyB7Cj4+ICsJ
-Li4uCj4+ICsJc29jIHsKPj4gKwkuLi4KPj4gKwkJbHRkYzogc3RtMzItbHRkY0A0MDAxNjgwMCB7
-Cj4KPiBkaXNwbGF5LWNvbnRyb2xsZXJALi4uCk9LCgo+Cj4+ICsJCQljb21wYXRpYmxlID0gInN0
-LHN0bTMyLWx0ZGMiOwo+PiArCQkJcmVnID0gPDB4NDAwMTY4MDAgMHgyMDA+Owo+PiArCQkJaW50
-ZXJydXB0cyA9IDw4OD4sIDw4OT47Cj4+ICsJCQlyZXNldHMgPSA8JnJjYyBTVE0zMkY0X0FQQjJf
-UkVTRVQoTFREQyk+Owo+PiArCQkJY2xvY2tzID0gPCZyY2MgMSBDTEtfTENEPjsKPj4gKwkJCWNs
-b2NrLW5hbWVzID0gImxjZCI7Cj4+ICsJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+Cj4gRG9uJ3Qg
-bmVlZCB0byBzaG93IHN0YXR1cyBpbiBleGFtcGxlcy4KT0sKCj4KPj4gKwo+PiArCQkJcG9ydCB7
-Cj4+ICsJCQkJbHRkY19vdXRfcmdiOiBlbmRwb2ludCB7Cj4+ICsJCQkJfTsKPj4gKwkJCX07Cj4+
-ICsJCX07Cj4+ICsJfTsKPj4gK307Cj4+IC0tCj4+IDEuOS4xCj4+Cl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The driver loads FPGA firmware over SPI, using the "slave serial"
+configuration interface on Xilinx FPGAs.
+
+Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+---
+This patch requires patch https://lkml.org/lkml/2017/2/15/667
+for building
+
+Changes in v2:
+
+ - rebased on v4.10
+
+ drivers/fpga/Kconfig      |   7 ++
+ drivers/fpga/Makefile     |   1 +
+ drivers/fpga/xilinx-spi.c | 181 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 189 insertions(+)
+ create mode 100644 drivers/fpga/xilinx-spi.c
+
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index ce861a2..6b42786 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -33,6 +33,13 @@ config FPGA_MGR_SOCFPGA_A10
+ 	help
+ 	  FPGA manager driver support for Altera Arria10 SoCFPGA.
+ 
++config FPGA_MGR_XILINX_SPI
++	tristate "Xilinx Configuration over Slave Serial (SPI)"
++	depends on SPI
++	help
++	  FPGA manager driver support for Xilinx FPGA configuration
++	  over slave serial interface.
++
+ config FPGA_MGR_ZYNQ_FPGA
+ 	tristate "Xilinx Zynq FPGA"
+ 	depends on ARCH_ZYNQ || COMPILE_TEST
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index 8df07bc..7582c5a 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_FPGA)			+= fpga-mgr.o
+ # FPGA Manager Drivers
+ obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
+ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
++obj-$(CONFIG_FPGA_MGR_XILINX_SPI)	+= xilinx-spi.o
+ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+ 
+ # FPGA Bridge Drivers
+diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+new file mode 100644
+index 0000000..16b3fa2
+--- /dev/null
++++ b/drivers/fpga/xilinx-spi.c
+@@ -0,0 +1,181 @@
++/*
++ * Xilinx Spartan6 Slave Serial SPI Driver
++ *
++ * Copyright (C) 2017 DENX Software Engineering
++ *
++ * Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * Manage Xilinx FPGA firmware that is loaded over SPI using
++ * the slave serial configuration interface.
++ */
++
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/fpga/fpga-mgr.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/of.h>
++#include <linux/spi/spi.h>
++#include <linux/sizes.h>
++
++#define FPGA_MIN_CFG_WAIT_US	10
++
++struct xilinx_spi_conf {
++	struct spi_device *spi;
++	struct gpio_desc *prog_b;
++	struct gpio_desc *done;
++};
++
++static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++
++	if (!gpiod_get_value(conf->done))
++		return FPGA_MGR_STATE_RESET;
++
++	return FPGA_MGR_STATE_UNKNOWN;
++}
++
++static int xilinx_spi_write_init(struct fpga_manager *mgr,
++				 struct fpga_image_info *info,
++				 const char *buf, size_t count)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++
++	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
++		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
++		return -EINVAL;
++	}
++
++	gpiod_set_value(conf->prog_b, 1);
++
++	udelay(1); /* min is 500 ns */
++
++	gpiod_set_value(conf->prog_b, 0);
++
++	if (gpiod_get_value(conf->done)) {
++		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
++		return -EIO;
++	}
++
++	/* program latency */
++	usleep_range(1000, 1500);
++	return 0;
++}
++
++static int xilinx_spi_write(struct fpga_manager *mgr, const char *buf,
++			    size_t count)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++	const char *fw_data = buf;
++	const char *fw_data_end = fw_data + count;
++
++	while (fw_data < fw_data_end) {
++		int ret;
++		size_t stride = min(fw_data_end - fw_data, SZ_4K);
++
++		ret = spi_write(conf->spi, fw_data, stride);
++		if (ret) {
++			dev_err(&mgr->dev, "SPI error in firmware write: %d\n",
++				ret);
++			return ret;
++		}
++		fw_data += stride;
++	}
++
++	return 0;
++}
++
++static int xilinx_spi_write_complete(struct fpga_manager *mgr,
++				     struct fpga_image_info *info)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++	int wait;
++
++	if (gpiod_get_value(conf->done))
++		return 0;
++
++	wait = info->config_complete_timeout_us / FPGA_MIN_CFG_WAIT_US;
++	if (info->config_complete_timeout_us % FPGA_MIN_CFG_WAIT_US)
++		wait += 1;
++
++	while (wait--) {
++		usleep_range(FPGA_MIN_CFG_WAIT_US, FPGA_MIN_CFG_WAIT_US + 5);
++
++		if (gpiod_get_value(conf->done))
++			return 0;
++	}
++
++	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
++	return -ETIMEDOUT;
++}
++
++static const struct fpga_manager_ops xilinx_spi_ops = {
++	.state = xilinx_spi_state,
++	.write_init = xilinx_spi_write_init,
++	.write = xilinx_spi_write,
++	.write_complete = xilinx_spi_write_complete,
++};
++
++static int xilinx_spi_probe(struct spi_device *spi)
++{
++	struct xilinx_spi_conf *conf;
++
++	conf = devm_kzalloc(&spi->dev, sizeof(*conf), GFP_KERNEL);
++	if (!conf)
++		return -ENOMEM;
++
++	conf->spi = spi;
++
++	/* PROGRAM_B is active low */
++	conf->prog_b = devm_gpiod_get(&spi->dev, "prog_b", GPIOD_OUT_LOW);
++	if (IS_ERR(conf->prog_b)) {
++		dev_err(&spi->dev, "Failed to get PROGRAM_B gpio: %ld\n",
++			PTR_ERR(conf->prog_b));
++		return PTR_ERR(conf->prog_b);
++	}
++
++	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
++	if (IS_ERR(conf->done)) {
++		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
++			PTR_ERR(conf->done));
++		return PTR_ERR(conf->done);
++	}
++
++	return fpga_mgr_register(&spi->dev, "Xilinx Slave Serial FPGA Manager",
++				 &xilinx_spi_ops, conf);
++}
++
++static int xilinx_spi_remove(struct spi_device *spi)
++{
++	fpga_mgr_unregister(&spi->dev);
++
++	return 0;
++}
++
++static const struct of_device_id xlnx_spi_of_match[] = {
++	{ .compatible = "xlnx,fpga-slave-serial", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, xlnx_spi_of_match);
++
++static struct spi_driver xilinx_slave_spi_driver = {
++	.driver = {
++		.name = "xlnx-slave-spi",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(xlnx_spi_of_match),
++	},
++	.probe = xilinx_spi_probe,
++	.remove = xilinx_spi_remove,
++};
++
++module_spi_driver(xilinx_slave_spi_driver)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>");
++MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SPI");
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
