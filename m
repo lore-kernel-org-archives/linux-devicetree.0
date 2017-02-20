@@ -1,97 +1,35 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: da850-evm: add the UI expander node
-Date: Mon, 20 Feb 2017 15:06:44 +0530
-Message-ID: <5f194c6d-0937-bac2-31cd-2f1658f68d0d@ti.com>
-References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
- <1487268932-6469-5-git-send-email-bgolaszewski@baylibre.com>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v2 0/2] add basic SoC support for HiSilicon Hi3516CV300
+Date: Mon, 20 Feb 2017 17:14:49 +0800
+Message-ID: <1487582091-24695-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1487268932-6469-5-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, howell.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 16 February 2017 11:45 PM, Bartosz Golaszewski wrote:
-> If we're using the UI board and want vpif capture, we need to select
-> the video capture functionality by driving the sel_c pin low on the
-> tca6416 expander and sel_a & sel_b pins high. Do it statically by
-> hogging relevant GPIOs in the device tree.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  arch/arm/boot/dts/da850-evm.dts | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index b549861..a90c764 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -9,6 +9,7 @@
->   */
->  /dts-v1/;
->  #include "da850.dtsi"
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	compatible = "ti,da850-evm", "ti,da850";
-> @@ -78,7 +79,33 @@
->  				DRVDD-supply = <&vbat>;
->  				DVDD-supply = <&vbat>;
->  			};
+Hi3516CV300 is a SoC designed for HD IP camera. It has an integrated ISP and
+H.265 video compression encoder. This patch set is mainly used to add basic SoC
+support for Hi3516CV300.
 
-> +			ui_expander: tca6416@20 {
+Pan Wen (2):
+  arm: hisi: add ARCH_MULTI_V5 support
+  arm: dts: hisi: add dts files for Hi3516CV300 demo board
 
-This should be called:
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/hi3516cv300-demb.dts |  95 +++++++++
+ arch/arm/boot/dts/hi3516cv300.dtsi     | 362 +++++++++++++++++++++++++++++++++
+ arch/arm/mach-hisi/Kconfig             |  10 +-
+ 4 files changed, 462 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/hi3516cv300-demb.dts
+ create mode 100644 arch/arm/boot/dts/hi3516cv300.dtsi
 
-			tca6416: gpio@20 {
+-- 
+1.9.1
 
-in keeping with ePAPR 1.1 generic node names recommendation.
-
-> +				compatible = "ti,tca6416";
-> +				reg = <0x20>;
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
->  
-> +				sel_a {
-> +					gpio-hog;
-> +					gpios = <7 GPIO_ACTIVE_HIGH>;
-> +					output-high;
-> +					line-name = "sel_a";
-> +				};
-> +
-> +				sel_b {
-> +					gpio-hog;
-> +					gpios = <6 GPIO_ACTIVE_HIGH>;
-> +					output-high;
-> +					line-name = "sel_b";
-> +				};
-> +
-> +				sel_c {
-> +					gpio-hog;
-> +					gpios = <5 GPIO_ACTIVE_HIGH>;
-> +					output-low;
-> +					line-name = "sel_c";
-
-I think this is better handled by using an enable-gpios property in vpif
-capture device-tree node. So in the vpif capture node you would have:
-
-	enable-gpios =  <&tca6416 7 GPIO_ACTIVE_HIGH
-			 &tca6416 6 GPIO_ACTIVE_HIGH
-			 &tca6416 5 GPIO_ACTIVE_LOW>;
-
-and in the vpif capture driver, you would request each of these gpios
-using: devm_gpiod_get_array_optional(.., .., GPIOD_OUT_HIGH);
-
-Thanks,
-Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
