@@ -1,45 +1,65 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] drm: convert drivers to use
- of_graph_get_remote_node
-Date: Mon, 20 Feb 2017 20:00:11 +0200
-Message-ID: <d8cbcbe4-b4a2-1111-173f-6fe593ec1609@ti.com>
-References: <20170209190558.4784-1-robh@kernel.org>
- <20170209190558.4784-5-robh@kernel.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
+Date: Mon, 20 Feb 2017 19:22:15 +0100
+Message-ID: <20170220182214.izi46a7lbzck7q4r@ninjato>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+ <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170209190558.4784-5-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="s6nbjhsjjtgw43x4"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Eric Anholt <eric@anholt.net>, Peter Robinson <pbrobinson@gmail.com>, Martin Sperl <kernel@martin.sperl.org>, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/17 21:05, Rob Herring wrote:
-> Convert drivers to use the new of_graph_get_remote_node() helper
-> instead of parsing the endpoint node and then getting the remote device
-> node. Now drivers can just specify the device node and which
-> port/endpoint and get back the connected remote device node. The details
-> of the graph binding are nicely abstracted into the core OF graph code.
-> 
-> This changes some error messages to debug messages (in the graph core).
-> Graph connections are often "no connects" depending on the particular
-> board, so we want to avoid spurious messages. Plus the kernel is not a
-> DT validator.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Tested-by: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-> Tested-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 
-For tilcdc part:
+--s6nbjhsjjtgw43x4
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
+> Since commit e2474541032d ("bcm2835: Fix hang for writing messages
+> larger than 16 bytes") the interrupt handler is prone to a possible
+> NULL pointer dereference. This could happen if an interrupt fires
+> before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
+> on the RPi 3. Even this is an unexpected behavior the driver must
+> handle that with an error instead of a crash.
+>=20
+> CC: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+> CC: Martin Sperl <kernel@martin.sperl.org>
+> Reported-by: Peter Robinson <pbrobinson@gmail.com>
+> Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than =
+16 bytes")
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Cheers,
-Jyri
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied to for-next, thanks (will be in 4.11)!
+
+Note for patches 2+3: I usually don't take DTS changes via I2C, so this
+likely needs to go via arm-soc or some other bcm tree.
+
+
+--s6nbjhsjjtgw43x4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlirM9YACgkQFA3kzBSg
+KbZDvA/9H3SLoBMp4dbfr6Qk7SI6WGdFdsHe+dh6zv7lb9tQ0vLTB4DTaU+5Ijpd
+gSYudVPZJe60RLS4rYRLB8HW1H9Cq4H9XwIlUuLnOHhMcpQmkW37BW1QsRpvoTIc
+TJKTA+XzEsCWTKAda+jXA5WUOENmNbzKx51a9nCe+lStUtqoDGdEDiW7gRiM4kC8
+3PYlqywfgDNeGHrDsyITL2GdjFIDE3y/B6rrdXTYQxotqVSE6D9PNnQAHBeL7QVO
+LOrrMoaBfI6p9cILKGiIVekpL2e8CBK5XL/f8365GApT/1tsrVRsKnmGFnRZOpbd
+xDsvDc9QNmehRf1zgc+BVXfYo83hlU5wQcKorI4l15KtPBvS89XFCZQhf+/H3Nfd
+36SmWVb6UihfJ9YCzZMQQZbzmNoi+GnaEzldkVALgAGBAHQtet30UVVwTie7QZHz
+9oPsJ+LShxeMSVMcXlK0G4zUdusqZkdYvFJAJ+M74HFxygto+X8uEju20uBus+TL
+qu9fVlpYRoiduoKZ62zzCQrvgT2MMI9bZg2XGNoIwlKbqLVm+96gJQnH6Op4BDqZ
+KONXj+ARMuFPn1VKpwB4Sc+CfYBkNe6IGKxv+PS+nPEyhBQDk4P/dvjWWLbNKoYI
+V7XlQ614onjJkTKeXs0RWXfijbXJNrzsHBFRr8DE6BxJ7Ek4YMM=
+=WcBm
+-----END PGP SIGNATURE-----
+
+--s6nbjhsjjtgw43x4--
