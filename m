@@ -1,50 +1,37 @@
-From: Jerry Huang <jerry.huang@nxp.com>
-Subject: RE: [PATCH v4 3/3] USB3/DWC3: Enable undefined length INCR burst type
-Date: Mon, 20 Feb 2017 08:39:24 +0000
-Message-ID: <DB5PR0401MB18134EB0CFBA8D8CFA73A1A7FE5E0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
-References: <1484727138-3264-1-git-send-email-jerry.huang@nxp.com>
- <1484727138-3264-3-git-send-email-jerry.huang@nxp.com>
- <DB5PR0401MB1813965DDC8CC6CD0BD85980FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com>
- <87y3xeqvsl.fsf@linux.intel.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [RESEND PATCH V5 7/8] thermal: da9062/61: Thermal junction
+ temperature monitoring driver
+Date: Mon, 20 Feb 2017 08:44:25 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD61B94@SW-EX-MBX02.diasemi.com>
+References: <cover.1486026227.git.stwiss.opensource@diasemi.com>
+ <6a1a651530fdaedd3e380aa33749ca5fce1a80a8.1486026227.git.stwiss.opensource@diasemi.com>
+ <20170219014007.GA20845@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170219014007.GA20845@localhost.localdomain>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Lukasz Luba <lukasz.luba@arm.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Jerry Huang
-> Sent: Friday, February 10, 2017 11:30 PM
-> To: 'Felipe Balbi' <balbi@kernel.org>; robh+dt@kernel.org;
-> mark.rutland@arm.com; catalin.marinas@arm.com
-> Cc: linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Rajesh
-> Bhagat <rajesh.bhagat@nxp.com>
-> Subject: RE: [PATCH v4 3/3] USB3/DWC3: Enable undefined length INCR burst
-> type
->=20
-> > >> --
-> > >> 1.7.9.5
-> > > Hi, Balbi and all guys,
-> > > Any comment for these patches? Can they be accepted?
-> >
-> > Rob had comments which you didn't reply yet. I cannot take this
-> > patchset yet ;-)
-> >
-> Balbi,
-> I look into his mail again, which was based v3, and I replied it.
-> He had different understanding for undefined length burst mode.
-> It seems he think for this mode, just setting bit[0] (INCRBrstEna) and do=
-n't
-> need to set other field.
-> However, according to the DWC USB3.0 controller databook, when it is
-> undefined length INCR burst mode, we still need to set one max burst type=
-,
-> such as INCR8, which means controller will use any length less than or eq=
-ual
-> to this INCR8.
-Any comment for it? Ten days passed away again :)
+On 19 February 2017 01:40, Eduardo Valentin wrote:
+> Subject: Re: [RESEND PATCH V5 7/8] thermal: da9062/61: Thermal junction
+> temperature monitoring driver
+> 
+> Steve,
+> 
+> Apologize for the very late answer on your driver. I still have few
+> minor requests, please check then:
+> 
+
+Hi Eduardo,
+
+No problem. I'll check your comments out, rebase to the latest linux-mainline tag and
+then send out a new patch set.
+
+Regards,
+Steve
+
