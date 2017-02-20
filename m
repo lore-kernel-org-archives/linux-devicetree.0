@@ -1,31 +1,33 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 1/2] dt-bindings: arm-ccn: Add bindings info for CCN-502
- compatible string
-Date: Mon, 20 Feb 2017 11:49:07 +0000
-Message-ID: <1487591347.2929.247.camel@arm.com>
-References: <1486759368-24067-1-git-send-email-velibor.markovski@broadcom.com>
-         <1486759368-24067-2-git-send-email-velibor.markovski@broadcom.com>
-         <20170214174833.GK23718@leverpostej>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 1/2] add driver for cypress cy8cmbr3102
+Date: Mon, 20 Feb 2017 20:05:29 +0800
+Message-ID: <201702202015.pVoAzgsD%fengguang.wu@intel.com>
+References: <1487586813-4122-2-git-send-email-Patrick.Vogelaar@gigatronik.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170214174833.GK23718@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <1487586813-4122-2-git-send-email-Patrick.Vogelaar@gigatronik.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Velibor Markovski <velibor.markovski@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, nd@arm.com
+Cc: kbuild-all@01.org, dmitry.torokhov@gmail.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, Patrick Vogelaar <Patrick.Vogelaar@gigatronik.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-02-14 at 17:48 +0000, Mark Rutland wrote:
-> On Fri, Feb 10, 2017 at 12:42:47PM -0800, Velibor Markovski wrote:
-> > 
-> > Add CCN-502 to the list of supported devices by ARM CCN PMU driver.
-> > 
-> > Signed-off-by: Velibor Markovski <velibor.markovski@broadcom.com>
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-> 
-> I assume Pawel will take this along with the driver patch.
+Hi Patrick,
 
-Will do, thanks!
+[auto build test WARNING on input/next]
+[also build test WARNING on v4.10 next-20170220]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Pawel
+url:    https://github.com/0day-ci/linux/commits/Patrick-Vogelaar/add-driver-for-cypress-cy8cmbr3102/20170220-185014
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git next
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/input/misc/cy8cmbr3102.c:210:4-9: No need to set .owner here. The core will do it.
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
