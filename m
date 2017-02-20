@@ -1,78 +1,61 @@
-From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] mailbox: Add iProc mailbox controller driver
-Date: Mon, 20 Feb 2017 13:58:32 -0800
-Message-ID: <f60c80a2-536d-d9c7-26f6-ad0788e6004e@broadcom.com>
-References: <1485463082-27067-1-git-send-email-jonathan.richardson@broadcom.com>
- <1485463082-27067-3-git-send-email-jonathan.richardson@broadcom.com>
- <CABb+yY0rmAFutskhVkQ926QfsvtJ-WnXrQc=+PQNg=7NZEXC+Q@mail.gmail.com>
+From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: msm8974: Hook up adsp-pil's xo clock
+Date: Mon, 20 Feb 2017 16:00:41 -0600
+Message-ID: <20170220220041.GA3170@hector>
+References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY0rmAFutskhVkQ926QfsvtJ-WnXrQc=+PQNg=7NZEXC+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170215045157.11659-1-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 15, 2017 at 05:51:56AM +0100, Jonathan Neuschäfer wrote:
+> Without this patch (and with CONFIG_QCOM_ADSP_PIL), I get this error:
+> 
+> 	[    0.711529] qcom_adsp_pil adsp-pil: failed to get xo clock
+> 	[    0.711540] remoteproc remoteproc0: releasing adsp-pil
+> 
+> With this patch, adsp-pil can initialize correctly.
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+> 
+> ---
+> NOTE: I don't know if I actually chose the right clock source.
+>       Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+>       suggests that adsp-pil's xo should be controlled by the RPM
+>       processor; Existing devicetrees and a recent patch to msm8996.dtsi
+>       use &xo_board, though:
+>       https://www.spinics.net/lists/linux-arm-msm/msg25711.html
+> ---
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index d3e1a61b8671..cccd8cba8872 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -250,6 +250,9 @@
+>  
+>  		cx-supply = <&pm8841_s2>;
+>  
+> +		clocks = <&xo_board>;
+> +		clock-names = "xo";
+> +
 
+I have to wonder if this wasn't done specifically so that the board specific DTS
+file would specify the XO clock.  If you do it here, it applies to all boards
+using msm8974.
 
-On 17-02-16 10:20 PM, Jassi Brar wrote:
-> On Fri, Jan 27, 2017 at 2:08 AM, Jonathan Richardson
-> <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->
->> +static int iproc_mbox_send_data_m0(struct mbox_chan *chan, void *data)
->> +{
->> +       struct iproc_mbox *mbox = dev_get_drvdata(chan->mbox->dev);
->> +       struct iproc_mbox_msg *msg = (struct iproc_mbox_msg *)data;
->> +               unsigned long flags;
->> +       int err = 0;
->> +       const int poll_period_us = 5;
->> +       const int max_retries = (MAX_M0_TIMEOUT_MS * 1000) / poll_period_us;
->> +
->> +       if (!msg)
->> +               return -EINVAL;
->> +
->> +       spin_lock_irqsave(&mbox->lock, flags);
->> +
->> +       dev_dbg(mbox->dev, "Send msg to M0: cmd=0x%x, param=0x%x, wait_ack=%d\n",
->> +               msg->cmd, msg->param, msg->wait_ack);
->> +
-> prints should be outside the spinlocks.
-Will fix.
->
->> +       writel(msg->cmd, mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
->> +       writel(msg->param, mbox->base + IPROC_CRMU_MAILBOX1_OFFSET);
->> +
->> +       if (msg->wait_ack) {
->> +               int retries;
->> +
-> move poll_period_us and max_retries in here or just define' them
-Will fix.
->
->> +               err = msg->reply_code = -ETIMEDOUT;
->> +               for (retries = 0; retries < max_retries; retries++) {
->> +                       u32 val = readl(
->> +                               mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
->> +                       if (val & M0_IPC_CMD_DONE_MASK) {
->> +                               /*
->> +                                * M0 replied - save reply code and
->> +                                * clear error.
->> +                                */
->> +                               msg->reply_code = (val &
->> +                                       M0_IPC_CMD_REPLY_MASK) >>
->> +                                       M0_IPC_CMD_REPLY_SHIFT;
->> +                               err = 0;
->> +                               break;
->> +                       }
->> +                       udelay(poll_period_us);
->>
-> potentially 2ms inside spin_lock_irqsave. Alternative is to implement
-> a simple 'peek_data' and call it for requests with 'wait_ack'
-The M0 responds in very few microseconds. The 2ms is an arbitrary value that came from the clients tx_tout being specified in ms. I can reduce the timeout to something smaller. No need to peek for data.
+Maybe someone can answer that question.  Adding Bjorn to the CC.
 
-Thanks,
-Jon
+Regards,
+
+Andy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
