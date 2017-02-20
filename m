@@ -1,390 +1,419 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/9] gpu: ipu-v3: add driver for Prefetch Resolve Engine
-Date: Mon, 20 Feb 2017 16:20:55 +0100
-Message-ID: <1487604055.3878.25.camel@pengutronix.de>
-References: <20170217182830.32618-1-l.stach@pengutronix.de>
-         <20170217182830.32618-4-l.stach@pengutronix.de>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v3] reset: Add i.MX7 SRC reset driver
+Date: Mon, 20 Feb 2017 07:26:53 -0800
+Message-ID: <20170220152653.31739-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170217182830.32618-4-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-02-17 at 19:28 +0100, Lucas Stach wrote:
-> This adds support for the i.MX6 QuadPlus PRE units. Currently only
-> linear prefetch into SRAM is supported, other modes of operation
-> like the tiled-to-linear conversion will be added later.
-> 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/gpu/ipu-v3/Makefile  |   2 +-
->  drivers/gpu/ipu-v3/ipu-pre.c | 290 +++++++++++++++++++++++++++++++++++++++++++
->  drivers/gpu/ipu-v3/ipu-prv.h |  11 ++
->  3 files changed, 302 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/ipu-v3/ipu-pre.c
-> 
-> diff --git a/drivers/gpu/ipu-v3/Makefile b/drivers/gpu/ipu-v3/Makefile
-> index 5f961416c4ee..8ae90de46b4d 100644
-> --- a/drivers/gpu/ipu-v3/Makefile
-> +++ b/drivers/gpu/ipu-v3/Makefile
-> @@ -2,4 +2,4 @@ obj-$(CONFIG_IMX_IPUV3_CORE) += imx-ipu-v3.o
->  
->  imx-ipu-v3-objs := ipu-common.o ipu-cpmem.o ipu-csi.o ipu-dc.o ipu-di.o \
->  		ipu-dp.o ipu-dmfc.o ipu-ic.o ipu-image-convert.o \
-> -		ipu-smfc.o ipu-vdi.o
-> +		ipu-pre.o ipu-smfc.o ipu-vdi.o
-> diff --git a/drivers/gpu/ipu-v3/ipu-pre.c b/drivers/gpu/ipu-v3/ipu-pre.c
-> new file mode 100644
-> index 000000000000..febe0cb8b094
-> --- /dev/null
-> +++ b/drivers/gpu/ipu-v3/ipu-pre.c
-> @@ -0,0 +1,290 @@
-> +/*
-> + * Copyright (c) 2017 Lucas Stach, Pengutronix
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#include <drm/drm_fourcc.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/genalloc.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <video/imx-ipu-v3.h>
-> +
-> +#include "ipu-prv.h"
-> +
-> +#define IPU_PRE_MAX_WIDTH	2048
-> +#define IPU_PRE_NUM_SCANLINES	8
-> +
-> +#define IPU_PRE_CTRL					0x000
-> +#define IPU_PRE_CTRL_SET				0x004
-> +#define  IPU_PRE_CTRL_ENABLE				(1 << 0)
+Add reset controller driver exposing various reset faculties,
+implemented by System Reset Controller IP block.
 
-Single bit fields could use BIT(0) etc.
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
 
-> +#define  IPU_PRE_CTRL_BLOCK_EN				(1 << 1)
-> +#define  IPU_PRE_CTRL_BLOCK_16				(1 << 2)
-> +#define  IPU_PRE_CTRL_SDW_UPDATE			(1 << 4)
-> +#define  IPU_PRE_CTRL_VFLIP				(1 << 5)
-> +#define  IPU_PRE_CTRL_SO				(1 << 6)
-> +#define  IPU_PRE_CTRL_INTERLACED_FIELD			(1 << 7)
-> +#define  IPU_PRE_CTRL_HANDSHAKE_EN			(1 << 8)
-> +#define  IPU_PRE_CTRL_HANDSHAKE_LINE_NUM(v)		((v & 0x3) << 9)
-> +#define  IPU_PRE_CTRL_HANDSHAKE_ABORT_SKIP_EN		(1 << 11)
-> +#define  IPU_PRE_CTRL_EN_REPEAT				(1 << 28)
-> +#define  IPU_PRE_CTRL_TPR_REST_SEL			(1 << 29)
-> +#define  IPU_PRE_CTRL_CLKGATE				(1 << 30)
-> +#define  IPU_PRE_CTRL_SFTRST				(1 << 31)
-> +
-> +#define IPU_PRE_CUR_BUF					0x030
-> +
-> +#define IPU_PRE_NEXT_BUF				0x040
-> +
-> +#define IPU_PRE_TPR_CTRL				0x070
-> +#define  IPU_PRE_TPR_CTRL_TILE_FORMAT(v)		((v & 0xff) << 0)
-> +#define  IPU_PRE_TPR_CTRL_TILE_FORMAT_MASK		0xff
-> +
-> +#define IPU_PRE_PREFETCH_ENG_CTRL			0x080
-> +#define  IPU_PRE_PREF_ENG_CTRL_PREFETCH_EN		(1 << 0)
-> +#define  IPU_PRE_PREF_ENG_CTRL_RD_NUM_BYTES(v)		((v & 0x7) << 1)
-> +#define  IPU_PRE_PREF_ENG_CTRL_INPUT_ACTIVE_BPP(v)	((v & 0x3) << 4)
-> +#define  IPU_PRE_PREF_ENG_CTRL_INPUT_PIXEL_FORMAT(v)	((v & 0x7) << 8)
-> +#define  IPU_PRE_PREF_ENG_CTRL_SHIFT_BYPASS		(1 << 11)
-> +#define  IPU_PRE_PREF_ENG_CTRL_FIELD_INVERSE		(1 << 12)
-> +#define  IPU_PRE_PREF_ENG_CTRL_PARTIAL_UV_SWAP		(1 << 14)
-> +#define  IPU_PRE_PREF_ENG_CTRL_TPR_COOR_OFFSET_EN	(1 << 15)
-> +
-> +#define IPU_PRE_PREFETCH_ENG_INPUT_SIZE			0x0a0
-> +#define  IPU_PRE_PREFETCH_ENG_INPUT_SIZE_WIDTH(v)	((v & 0xffff) << 0)
-> +#define  IPU_PRE_PREFETCH_ENG_INPUT_SIZE_HEIGHT(v)	((v & 0xffff) << 16)
-> +
-> +#define IPU_PRE_PREFETCH_ENG_PITCH			0x0d0
-> +#define  IPU_PRE_PREFETCH_ENG_PITCH_Y(v)		((v & 0xffff) << 0)
-> +#define  IPU_PRE_PREFETCH_ENG_PITCH_UV(v)		((v & 0xffff) << 16)
-> +
-> +#define IPU_PRE_STORE_ENG_CTRL				0x110
-> +#define  IPU_PRE_STORE_ENG_CTRL_STORE_EN		(1 << 0)
-> +#define  IPU_PRE_STORE_ENG_CTRL_WR_NUM_BYTES(v)		((v & 0x7) << 1)
-> +#define  IPU_PRE_STORE_ENG_CTRL_OUTPUT_ACTIVE_BPP(v)	((v & 0x3) << 4)
-> +
-> +#define IPU_PRE_STORE_ENG_SIZE				0x130
-> +#define  IPU_PRE_STORE_ENG_SIZE_INPUT_WIDTH(v)		((v & 0xffff) << 0)
-> +#define  IPU_PRE_STORE_ENG_SIZE_INPUT_HEIGHT(v)		((v & 0xffff) << 16)
-> +
-> +#define IPU_PRE_STORE_ENG_PITCH				0x140
-> +#define  IPU_PRE_STORE_ENG_PITCH_OUT_PITCH(v)		((v & 0xffff) << 0)
-> +
-> +#define IPU_PRE_STORE_ENG_ADDR				0x150
-> +
-> +struct ipu_pre {
-> +	struct list_head	list;
-> +	struct device		*dev;
-> +
-> +	void __iomem		*regs;
-> +	struct clk		*clk_axi;
-> +	struct gen_pool		*ocram;
-> +
-> +	dma_addr_t		buffer_paddr;
-> +	void			*buffer_virt;
-> +	bool			in_use;
-> +};
-> +
-> +static DEFINE_MUTEX(ipu_pre_list_mutex);
-> +static LIST_HEAD(ipu_pre_list);
-> +static int available_pres;
-> +
-> +int ipu_pre_get_available_count(void)
-> +{
-> +	return available_pres;
-> +}
-> +
-> +struct ipu_pre *
-> +ipu_pre_get_by_prg_device(struct device *dev, int index)
+Changes since v2 (see [v2]):
 
-I'd call this ipu_pre_lookup_by_phandle and pass the device_node and
-property name string parameter.
-That way the name is better separated from ipu_pre_get ...
+	- Fix typos
 
-> +{
-> +	struct device_node *pre_node = of_parse_phandle(dev->of_node,
-> +							"fsl,pres", index);
+	- Kconfig/Makefile chagnes account for alphabetical sorting of
+          those files
 
-... and the PRG specific "fsl,pres" string could move into the PRG
-driver.
+	- Remove redundant includes
 
-> +	struct ipu_pre *pre;
-> +
-> +	mutex_lock(&ipu_pre_list_mutex);
-> +	list_for_each_entry(pre, &ipu_pre_list, list) {
-> +		if (pre_node == pre->dev->of_node) {
-> +			mutex_unlock(&ipu_pre_list_mutex);
-> +			device_link_add(dev, pre->dev, DL_FLAG_AUTOREMOVE);
-> +			return pre;
-> +		}
-> +	}
-> +	mutex_unlock(&ipu_pre_list_mutex);
-> +
-> +	return NULL;
-> +}
-> +
-> +int ipu_pre_get(struct ipu_pre *pre)
-> +{
-> +	u32 val;
-> +
-> +	if (pre->in_use)
-> +		return -EBUSY;
+	- Make use of regmap_attach_dev and avoid storing refernce to
+          struct *dev in private data
 
-This could race for in_use ...
+	- Change code and headers to expose almost all of the reset
+          related bits in SRC IP block
 
-> +	clk_prepare_enable(pre->clk_axi);
-> +
-> +	/* first get the engine out of reset and remove clock gating */
-> +	writel(0, pre->regs + IPU_PRE_CTRL);
-> +
-> +	/* init defaults that should be applied to all streams */
-> +	val = IPU_PRE_CTRL_HANDSHAKE_ABORT_SKIP_EN |
-> +	      IPU_PRE_CTRL_HANDSHAKE_EN |
-> +	      IPU_PRE_CTRL_TPR_REST_SEL |
-> +	      IPU_PRE_CTRL_BLOCK_16 | IPU_PRE_CTRL_SDW_UPDATE;
-> +	writel(val, pre->regs + IPU_PRE_CTRL);
-> +
-> +	pre->in_use = true;
+Changes since v1 (see [v1]):
 
-... until here.
+	- Various small DT bindings description fixes as per feedback
+          from Rob Herring
 
-> +	return 0;
-> +}
-> +
-> +void ipu_pre_put(struct ipu_pre *pre)
-> +{
-> +	u32 val;
-> +
-> +	val = IPU_PRE_CTRL_SFTRST | IPU_PRE_CTRL_CLKGATE;
-> +	writel(val, pre->regs + IPU_PRE_CTRL);
-> +
-> +	clk_disable_unprepare(pre->clk_axi);
-> +
-> +	pre->in_use = false;
-> +}
-> +
-> +void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
-> +		       unsigned int height, unsigned int stride, u32 format,
-> +		       unsigned int bufaddr)
-> +{
-> +	const struct drm_format_info *info = drm_format_info(format);
-> +	u32 active_bpp = info->cpp[0] >> 1;
-> +	u32 val;
-> +
-> +	writel(bufaddr, pre->regs + IPU_PRE_CUR_BUF);
-> +	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
-> +
-> +	val = IPU_PRE_PREF_ENG_CTRL_INPUT_PIXEL_FORMAT(0) |
-> +	      IPU_PRE_PREF_ENG_CTRL_INPUT_ACTIVE_BPP(active_bpp) |
-> +	      IPU_PRE_PREF_ENG_CTRL_RD_NUM_BYTES(4) |
-> +	      IPU_PRE_PREF_ENG_CTRL_SHIFT_BYPASS |
-> +	      IPU_PRE_PREF_ENG_CTRL_PREFETCH_EN;
-> +	writel(val, pre->regs + IPU_PRE_PREFETCH_ENG_CTRL);
-> +
-> +	val = IPU_PRE_PREFETCH_ENG_INPUT_SIZE_WIDTH(width) |
-> +	      IPU_PRE_PREFETCH_ENG_INPUT_SIZE_HEIGHT(height);
-> +	writel(val, pre->regs + IPU_PRE_PREFETCH_ENG_INPUT_SIZE);
-> +
-> +	val = IPU_PRE_PREFETCH_ENG_PITCH_Y(stride);
-> +	writel(val, pre->regs + IPU_PRE_PREFETCH_ENG_PITCH);
-> +
-> +	val = IPU_PRE_STORE_ENG_CTRL_OUTPUT_ACTIVE_BPP(active_bpp) |
-> +	      IPU_PRE_STORE_ENG_CTRL_WR_NUM_BYTES(4) |
-> +	      IPU_PRE_STORE_ENG_CTRL_STORE_EN;
-> +	writel(val, pre->regs + IPU_PRE_STORE_ENG_CTRL);
-> +
-> +	val = IPU_PRE_STORE_ENG_SIZE_INPUT_WIDTH(width) |
-> +	      IPU_PRE_STORE_ENG_SIZE_INPUT_HEIGHT(height);
-> +	writel(val, pre->regs + IPU_PRE_STORE_ENG_SIZE);
-> +
-> +	val = IPU_PRE_STORE_ENG_PITCH_OUT_PITCH(stride);
-> +	writel(val, pre->regs + IPU_PRE_STORE_ENG_PITCH);
-> +
-> +	writel(pre->buffer_paddr, pre->regs + IPU_PRE_STORE_ENG_ADDR);
-> +
-> +	val = readl(pre->regs + IPU_PRE_CTRL);
-> +	val |= IPU_PRE_CTRL_EN_REPEAT | IPU_PRE_CTRL_ENABLE |
-> +	       IPU_PRE_CTRL_SDW_UPDATE;
-> +	writel(val, pre->regs + IPU_PRE_CTRL);
-> +}
-> +
-> +void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr)
-> +{
-> +	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
-> +	writel(IPU_PRE_CTRL_SDW_UPDATE, pre->regs + IPU_PRE_CTRL_SET);
-> +}
-> +
-> +u32 ipu_pre_get_baddr(struct ipu_pre *pre)
-> +{
-> +	return (u32)pre->buffer_paddr;
-> +}
-> +
-> +static int ipu_pre_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct ipu_pre *pre;
-> +
-> +	pre = devm_kzalloc(dev, sizeof(*pre), GFP_KERNEL);
-> +	if (!pre)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	pre->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(pre->regs))
-> +		return PTR_ERR(pre->regs);
-> +
-> +	pre->clk_axi = devm_clk_get(dev, "axi");
-> +	if (IS_ERR(pre->clk_axi))
-> +		return PTR_ERR(pre->clk_axi);
-> +
-> +	pre->ocram = of_gen_pool_get(dev->of_node, "fsl,ocram", 0);
-> +	if (!pre->ocram)
-> +		return -EPROBE_DEFER;
 
-I'd call this iram, from the point of view of the PRE.
+[v1] https://lkml.org/lkml/2017/2/6/554
+[v2] https://lkml.org/lkml/2017/2/13/488
 
-> +
-> +	/*
-> +	 * Allocate OCRAM buffer with maximum size. This could be made dynamic,
-> +	 * but as there is no other user of this OCRAM region and we can fit all
-> +	 * max sized buffers into it, there is no need yet.
-> +	 */
-> +	pre->buffer_virt = gen_pool_dma_alloc(pre->ocram, IPU_PRE_MAX_WIDTH *
-> +					      IPU_PRE_NUM_SCANLINES * 4,
-> +					      &pre->buffer_paddr);
-> +	if (!pre->buffer_virt)
-> +		return -ENOMEM;
-> +
-> +	pre->dev = dev;
-> +	platform_set_drvdata(pdev, pre);
-> +	mutex_lock(&ipu_pre_list_mutex);
-> +	list_add(&pre->list, &ipu_pre_list);
-> +	available_pres++;
-> +	mutex_unlock(&ipu_pre_list_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static int ipu_pre_remove(struct platform_device *pdev)
-> +{
-> +	struct ipu_pre *pre = platform_get_drvdata(pdev);
-> +
-> +	mutex_lock(&ipu_pre_list_mutex);
-> +	list_del(&pre->list);
-> +	available_pres--;
-> +	mutex_unlock(&ipu_pre_list_mutex);
-> +
-> +	if (pre->buffer_virt)
-> +		gen_pool_free(pre->ocram, (unsigned long)pre->buffer_virt,
-> +			      IPU_PRE_MAX_WIDTH * IPU_PRE_NUM_SCANLINES * 4);
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id ipu_pre_dt_ids[] = {
-> +	{ .compatible = "fsl,imx6qp-pre", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver ipu_pre_drv = {
-> +	.probe		= ipu_pre_probe,
-> +	.remove		= ipu_pre_remove,
-> +	.driver		= {
-> +		.name	= "imx-ipu-pre",
-> +		.of_match_table = ipu_pre_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(ipu_pre_drv);
-> diff --git a/drivers/gpu/ipu-v3/ipu-prv.h b/drivers/gpu/ipu-v3/ipu-prv.h
-> index 22e47b68b14a..536a156a5eb6 100644
-> --- a/drivers/gpu/ipu-v3/ipu-prv.h
-> +++ b/drivers/gpu/ipu-v3/ipu-prv.h
-> @@ -168,6 +168,7 @@ struct ipu_ic_priv;
->  struct ipu_vdi;
->  struct ipu_image_convert_priv;
->  struct ipu_smfc_priv;
-> +struct ipu_pre;
->  
->  struct ipu_devtype;
->  
-> @@ -259,4 +260,14 @@ void ipu_cpmem_exit(struct ipu_soc *ipu);
->  int ipu_smfc_init(struct ipu_soc *ipu, struct device *dev, unsigned long base);
->  void ipu_smfc_exit(struct ipu_soc *ipu);
->  
-> +struct ipu_pre *ipu_pre_get_by_prg_device(struct device *dev, int index);
-> +int ipu_pre_get_available_count(void);
-> +int ipu_pre_get(struct ipu_pre *pre);
-> +void ipu_pre_put(struct ipu_pre *pre);
-> +u32 ipu_pre_get_baddr(struct ipu_pre *pre);
-> +void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
-> +		       unsigned int height,
-> +		       unsigned int stride, u32 format, unsigned int bufaddr);
-> +void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr);
-> +
->  #endif				/* __IPU_PRV_H__ */
 
-regards
-Philipp
+ .../devicetree/bindings/reset/fsl,imx7-src.txt     |  47 ++++++
+ drivers/reset/Kconfig                              |   8 +
+ drivers/reset/Makefile                             |   2 +
+ drivers/reset/reset-imx7.c                         | 186 +++++++++++++++++++++
+ include/dt-bindings/reset/imx7-reset.h             |  62 +++++++
+ 5 files changed, 305 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+ create mode 100644 drivers/reset/reset-imx7.c
+ create mode 100644 include/dt-bindings/reset/imx7-reset.h
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+new file mode 100644
+index 0000000..5e1afc3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+@@ -0,0 +1,47 @@
++Freescale i.MX7 System Reset Controller
++======================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++Required properties:
++- compatible: Should be "fsl,imx7-src", "syscon"
++- reg: should be register base and length as documented in the
++  datasheet
++- interrupts: Should contain SRC interrupt
++- #reset-cells: 1, see below
++
++example:
++
++src: reset-controller@30390000 {
++     compatible = "fsl,imx7d-src", "syscon";
++     reg = <0x30390000 0x2000>;
++     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++     #reset-cells = <1>;
++};
++
++
++Specifying reset lines connected to IP modules
++==============================================
++
++The system reset controller can be used to reset various set of
++peripherals. Device nodes that need access to reset lines should
++specify them as a reset phandle in their corresponding node as
++specified in reset.txt.
++
++Example:
++
++	pcie: pcie@33800000 {
++
++		...
++
++		resets = <&src IMX7_RESET_PCIEPHY>,
++			 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
++		reset-names = "pciephy", "apps";
++
++		...
++        };
++
++
++For list of all valid reset indicies see
++<dt-bindings/reset/imx7-reset.h>
+diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+index 172dc96..bea1800 100644
+--- a/drivers/reset/Kconfig
++++ b/drivers/reset/Kconfig
+@@ -27,6 +27,14 @@ config RESET_BERLIN
+ 	help
+ 	  This enables the reset controller driver for Marvell Berlin SoCs.
+ 
++config RESET_IMX7
++	bool "i.MX7 Reset Driver"
++	depends on SOC_IMX7D || COMPILE_TEST
++	select MFD_SYSCON
++	default SOC_IMX7D
++	help
++	  This enables the reset controller driver for i.MX7 SoCs.
++
+ config RESET_LPC18XX
+ 	bool "LPC18xx/43xx Reset Driver" if COMPILE_TEST
+ 	default ARCH_LPC18XX
+diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+index 13b346e..a24aa80 100644
+--- a/drivers/reset/Makefile
++++ b/drivers/reset/Makefile
+@@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_STI) += sti/
+ obj-$(CONFIG_ARCH_TEGRA) += tegra/
+ obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+ obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
++obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+ obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+ obj-$(CONFIG_RESET_MESON) += reset-meson.o
+ obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
+@@ -14,3 +15,4 @@ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+ obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
+ obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+ obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
++
+diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+new file mode 100644
+index 0000000..6e26796
+--- /dev/null
++++ b/drivers/reset/reset-imx7.c
+@@ -0,0 +1,186 @@
++/*
++ * Copyright (c) 2017, Impinj, Inc.
++ *
++ * i.MX7 System Reset Controller (SRC) driver
++ *
++ * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/mfd/syscon.h>
++#include <linux/platform_device.h>
++#include <linux/reset-controller.h>
++#include <linux/regmap.h>
++#include <dt-bindings/reset/imx7-reset.h>
++
++struct imx7_src {
++	struct reset_controller_dev rcdev;
++	struct regmap *regmap;
++};
++
++enum imx7_src_registers {
++	SRC_A7RCR0		= 0x0004,
++	SRC_M4RCR		= 0x000c,
++	SRC_ERCR		= 0x0014,
++	SRC_HSICPHY_RCR		= 0x001c,
++	SRC_USBOPHY1_RCR	= 0x0020,
++	SRC_USBOPHY2_RCR	= 0x0024,
++	SRC_MIPIPHY_RCR		= 0x0028,
++	SRC_PCIEPHY_RCR		= 0x002c,
++	SRC_DDRC_RCR		= 0x1000,
++
++	SRC_PCIEPHY_RCR_PCIEPHY_G_RST   = BIT(1),
++	SRC_PCIEPHY_RCR_PCIEPHY_BTN     = BIT(2),
++};
++
++struct imx7_src_signal {
++	unsigned int offset, bit;
++};
++
++static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
++	[IMX7_RESET_A7_CORE_POR_RESET0] = { SRC_A7RCR0, BIT(0) },
++	[IMX7_RESET_A7_CORE_POR_RESET1] = { SRC_A7RCR0, BIT(1) },
++	[IMX7_RESET_A7_CORE_RESET0]     = { SRC_A7RCR0, BIT(4) },
++	[IMX7_RESET_A7_CORE_RESET1]	= { SRC_A7RCR0, BIT(5) },
++	[IMX7_RESET_A7_DBG_RESET0]	= { SRC_A7RCR0, BIT(8) },
++	[IMX7_RESET_A7_DBG_RESET1]	= { SRC_A7RCR0, BIT(9) },
++	[IMX7_RESET_A7_ETM_RESET0]	= { SRC_A7RCR0, BIT(12) },
++	[IMX7_RESET_A7_ETM_RESET1]	= { SRC_A7RCR0, BIT(13) },
++	[IMX7_RESET_A7_SOC_DBG_RESET]	= { SRC_A7RCR0, BIT(20) },
++	[IMX7_RESET_A7_L2RESET]		= { SRC_A7RCR0, BIT(21) },
++	[IMX7_RESET_SW_M4C_RST]		= { SRC_M4RCR, BIT(1) },
++	[IMX7_RESET_SW_M4P_RST]		= { SRC_M4RCR, BIT(2) },
++	[IMX7_RESET_EIM_RST]		= { SRC_ERCR, BIT(0) },
++	[IMX7_RESET_HSICPHY_PORT_RST]	= { SRC_HSICPHY_RCR, BIT(1) },
++	[IMX7_RESET_USBPHY1_POR]	= { SRC_USBOPHY1_RCR, BIT(0) },
++	[IMX7_RESET_USBPHY1_PORT_RST]	= { SRC_USBOPHY1_RCR, BIT(1) },
++	[IMX7_RESET_USBPHY2_POR]	= { SRC_USBOPHY2_RCR, BIT(0) },
++	[IMX7_RESET_USBPHY2_PORT_RST]	= { SRC_USBOPHY2_RCR, BIT(1) },
++	[IMX7_RESET_MIPI_PHY_MRST]	= { SRC_MIPIPHY_RCR, BIT(1) },
++	[IMX7_RESET_MIPI_PHY_SRST]	= { SRC_MIPIPHY_RCR, BIT(2) },
++	[IMX7_RESET_PCIEPHY]		= { /* Placeholder */ },
++	[IMX7_RESET_PCIEPHY_PERST]	= { SRC_PCIEPHY_RCR, BIT(3) },
++	[IMX7_RESET_PCIE_CTRL_APPS_EN]	= { SRC_PCIEPHY_RCR, BIT(6) },
++	[IMX7_RESET_DDRC_PRST]		= { SRC_DDRC_RCR, BIT(0) },
++	[IMX7_RESET_DDRC_CORE_RST]	= { SRC_DDRC_RCR, BIT(1) },
++};
++
++static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
++{
++	return container_of(rcdev, struct imx7_src, rcdev);
++}
++
++static int imx7_reset_assert(struct reset_controller_dev *rcdev,
++			     unsigned long id)
++{
++	struct imx7_src *imx7src = to_imx7_src(rcdev);
++	const struct imx7_src_signal *signal = &imx7_src_signals[id];
++	unsigned int value = signal->bit;
++
++	switch (id) {
++	case IMX7_RESET_PCIEPHY:
++		regmap_update_bits(imx7src->regmap,
++				   SRC_PCIEPHY_RCR,
++				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST,
++				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST);
++		regmap_update_bits(imx7src->regmap,
++				   SRC_PCIEPHY_RCR,
++				   SRC_PCIEPHY_RCR_PCIEPHY_BTN,
++				   SRC_PCIEPHY_RCR_PCIEPHY_BTN);
++		break;
++
++	case IMX7_RESET_PCIE_CTRL_APPS_EN:
++		value = 0;
++	default:		/* FALLTHROUGH */
++		regmap_update_bits(imx7src->regmap,
++				   signal->offset, signal->bit, value);
++		break;
++	}
++
++	return 0;
++}
++
++static int imx7_reset_deassert(struct reset_controller_dev *rcdev,
++			       unsigned long id)
++{
++	struct imx7_src *imx7src = to_imx7_src(rcdev);
++	const struct imx7_src_signal *signal = &imx7_src_signals[id];
++	unsigned int value = 0;
++
++	switch (id) {
++	case IMX7_RESET_PCIEPHY:
++		/* 
++		 * wait for more than 10us to release phy g_rst and
++		 * btnrst
++		 */
++		udelay(10);
++		regmap_update_bits(imx7src->regmap,
++				   SRC_PCIEPHY_RCR,
++				   SRC_PCIEPHY_RCR_PCIEPHY_G_RST, 0);
++		regmap_update_bits(imx7src->regmap,
++				   SRC_PCIEPHY_RCR,
++				   SRC_PCIEPHY_RCR_PCIEPHY_BTN, 0);
++		break;
++	case IMX7_RESET_PCIE_CTRL_APPS_EN:
++		value = signal->bit;
++	default:		/* FALLTHROUGH */
++		regmap_update_bits(imx7src->regmap,
++				   signal->offset, signal->bit, value);
++
++		break;
++	};
++
++	return 0;
++}
++
++static const struct reset_control_ops imx7_reset_ops = {
++	.assert		= imx7_reset_assert,
++	.deassert	= imx7_reset_deassert,
++};
++
++static int imx7_reset_probe(struct platform_device *pdev)
++{
++	struct imx7_src *imx7src;
++	struct device *dev = &pdev->dev;
++	struct regmap_config config = { .name = "src" };
++
++	imx7src = devm_kzalloc(dev, sizeof(*imx7src), GFP_KERNEL);
++	if (!imx7src)
++		return -ENOMEM;
++
++	imx7src->regmap = syscon_node_to_regmap(dev->of_node);
++	if (IS_ERR(imx7src->regmap)) {
++		dev_err(dev, "Unable to get imx7-src regmap");
++		return PTR_ERR(imx7src->regmap);
++	}
++	regmap_attach_dev(dev, imx7src->regmap, &config);
++
++	imx7src->rcdev.owner     = THIS_MODULE;
++	imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
++	imx7src->rcdev.ops       = &imx7_reset_ops;
++	imx7src->rcdev.of_node   = dev->of_node;
++
++	return devm_reset_controller_register(dev, &imx7src->rcdev);
++}
++
++static const struct of_device_id imx7_reset_dt_ids[] = {
++	{ .compatible = "fsl,imx7d-src", },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver imx7_reset_driver = {
++	.probe	= imx7_reset_probe,
++	.driver = {
++		.name		= KBUILD_MODNAME,
++		.of_match_table	= imx7_reset_dt_ids,
++	},
++};
++builtin_platform_driver(imx7_reset_driver);
+diff --git a/include/dt-bindings/reset/imx7-reset.h b/include/dt-bindings/reset/imx7-reset.h
+new file mode 100644
+index 0000000..6394817
+--- /dev/null
++++ b/include/dt-bindings/reset/imx7-reset.h
+@@ -0,0 +1,62 @@
++/*
++ * Copyright (C) 2017 Impinj, Inc.
++ *
++ * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef DT_BINDING_RESET_IMX7_H
++#define DT_BINDING_RESET_IMX7_H
++
++#define IMX7_RESET_A7_CORE_POR_RESET0	0
++#define IMX7_RESET_A7_CORE_POR_RESET1	1
++#define IMX7_RESET_A7_CORE_RESET0	2
++#define IMX7_RESET_A7_CORE_RESET1	3
++#define IMX7_RESET_A7_DBG_RESET0	4
++#define IMX7_RESET_A7_DBG_RESET1	5
++#define IMX7_RESET_A7_ETM_RESET0	6
++#define IMX7_RESET_A7_ETM_RESET1	7
++#define IMX7_RESET_A7_SOC_DBG_RESET	8
++#define IMX7_RESET_A7_L2RESET		9
++#define IMX7_RESET_SW_M4C_RST		10
++#define IMX7_RESET_SW_M4P_RST		11
++#define IMX7_RESET_EIM_RST		12
++#define IMX7_RESET_HSICPHY_PORT_RST	13
++#define IMX7_RESET_USBPHY1_POR		14
++#define IMX7_RESET_USBPHY1_PORT_RST	15
++#define IMX7_RESET_USBPHY2_POR		16
++#define IMX7_RESET_USBPHY2_PORT_RST	17
++#define IMX7_RESET_MIPI_PHY_MRST	18
++#define IMX7_RESET_MIPI_PHY_SRST	19
++
++/*
++ * IMX7_RESET_PCIEPHY is a logical reset line combining PCIEPHY_BTN
++ * and PCIEPHY_G_RST
++ */
++#define IMX7_RESET_PCIEPHY		20
++#define IMX7_RESET_PCIEPHY_PERST	21
++
++/*
++ * IMX7_RESET_PCIE_CTRL_APPS_EN is not strictly a reset line, but it
++ * can be used to inhibit PCIe LTTSM, so, in a way, it can be thoguht
++ * of as one
++ */
++#define IMX7_RESET_PCIE_CTRL_APPS_EN	22
++#define IMX7_RESET_DDRC_PRST		23
++#define IMX7_RESET_DDRC_CORE_RST	24
++
++#define IMX7_RESET_NUM			25
++
++#endif
++
+-- 
+2.9.3
