@@ -1,83 +1,55 @@
-From: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
-Date: Mon, 20 Feb 2017 16:02:16 +0800
-Message-ID: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [RESEND PATCH v7 1/7] dt-bindings: add rk3399 support for
+ dw-mipi-rockchip
+Date: Mon, 20 Feb 2017 16:02:17 +0800
+Message-ID: <1487577744-2855-2-git-send-email-zyw@rock-chips.com>
+References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: john@metanate.com, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all
-
-[Resend this v7 version series, since there are 5 mails have gone missing, last
-week]
-
-This version does not change the existing v6 patches, just to add the
-"bandwidth fix" patch back, since we really need it.
-
-This patch serial is for RK3399 MIPI DSI. The MIPI DSI controller of
-RK3399 is almost the same as RK3288, except a little bit of difference
-in phy clock controlling and port id selection register. These patches
-add RK3399 support and the power domain support.
-
-And these patches base on John Keeping's v3 patches[0], it fixes many bugs,
-they have been tested on rk3288 evb board.
-
-[0]:
-[01/24] https://patchwork.kernel.org/patch/9544089
-[02/24] https://patchwork.kernel.org/patch/9544061
-[03/24] https://patchwork.kernel.org/patch/9544065
-[04/24] https://patchwork.kernel.org/patch/9544077
-[05/24] https://patchwork.kernel.org/patch/9544033
-[06/24] https://patchwork.kernel.org/patch/9544037
-[07/24] https://patchwork.kernel.org/patch/9544029
-[08/24] https://patchwork.kernel.org/patch/9544031
-[09/24] https://patchwork.kernel.org/patch/9544083
-[10/24] https://patchwork.kernel.org/patch/9544063
-[11/24] https://patchwork.kernel.org/patch/9544085
-[12/24] https://patchwork.kernel.org/patch/9544093
-[13/24] https://patchwork.kernel.org/patch/9544081
-[14/24] https://patchwork.kernel.org/patch/9544057
-[15/24] https://patchwork.kernel.org/patch/9544079
-[16/24] https://patchwork.kernel.org/patch/9544035
-[17/24] https://patchwork.kernel.org/patch/9544105
-[18/24] https://patchwork.kernel.org/patch/9544059
-[21/24] https://patchwork.kernel.org/patch/9544009
-[22/24] https://patchwork.kernel.org/patch/9544049
-[23/24] https://patchwork.kernel.org/patch/9544055
-[24/24] https://patchwork.kernel.org/patch/9544109
-
-
-Changes in v6:
-- no need check phy_cfg_clk before enable/disable
-
-Changes in v5:
-- check the error of phy_cfg_clk in dw_mipi_dsi_bind
-
-Changes in v4:
-- remove the unrelated change
-
-Changes in v3:
-- base on John Keeping's patch series
-
-Chris Zhong (7):
-  dt-bindings: add rk3399 support for dw-mipi-rockchip
-  drm/rockchip/dsi: dw-mipi: support RK3399 mipi dsi
-  drm/rockchip/dsi: dw-mipi: correct the coding style
-  drm/rockchip/dsi: remove mode_valid function
-  dt-bindings: add power domain node for dw-mipi-rockchip
-  drm/rockchip/dsi: fix insufficient bandwidth of some panel
-  drm/rockchip/dsi: add dw-mipi power domain support
-
- .../display/rockchip/dw_mipi_dsi_rockchip.txt      |   7 +-
- drivers/gpu/drm/rockchip/dw-mipi-dsi.c             | 160 ++++++++++++---------
- 2 files changed, 100 insertions(+), 67 deletions(-)
-
--- 
-2.6.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIGR3LW1pcGktZHNpIG9mIHJrMzM5OSBpcyBhbG1vc3QgdGhlIHNhbWUgYXMgcmszMjg4LCB0
+aGUgcmszMzk5IGhhcwphZGRpdGlvbmFsIHBoeSBjb25maWcgY2xvY2suCgpTaWduZWQtb2ZmLWJ5
+OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgpBY2tlZC1ieTogUm9iIEhlcnJpbmcg
+PHJvYmhAa2VybmVsLm9yZz4KLS0tCgpDaGFuZ2VzIGluIHY2OiBOb25lCkNoYW5nZXMgaW4gdjU6
+IE5vbmUKQ2hhbmdlcyBpbiB2NDogTm9uZQpDaGFuZ2VzIGluIHYzOiBOb25lCgogLi4uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQg
+ICAgIHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9u
+KC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0
+CmluZGV4IDE3NTNmMGMuLjBmODI1NjggMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dAor
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9k
+d19taXBpX2RzaV9yb2NrY2hpcC50eHQKQEAgLTUsMTAgKzUsMTIgQEAgUmVxdWlyZWQgcHJvcGVy
+dGllczoKIC0gI2FkZHJlc3MtY2VsbHM6IFNob3VsZCBiZSA8MT4uCiAtICNzaXplLWNlbGxzOiBT
+aG91bGQgYmUgPDA+LgogLSBjb21wYXRpYmxlOiAicm9ja2NoaXAscmszMjg4LW1pcGktZHNpIiwg
+InNucHMsZHctbWlwaS1kc2kiLgorCSAgICAgICJyb2NrY2hpcCxyazMzOTktbWlwaS1kc2kiLCAi
+c25wcyxkdy1taXBpLWRzaSIuCiAtIHJlZzogUmVwcmVzZW50IHRoZSBwaHlzaWNhbCBhZGRyZXNz
+IHJhbmdlIG9mIHRoZSBjb250cm9sbGVyLgogLSBpbnRlcnJ1cHRzOiBSZXByZXNlbnQgdGhlIGNv
+bnRyb2xsZXIncyBpbnRlcnJ1cHQgdG8gdGhlIENQVShzKS4KIC0gY2xvY2tzLCBjbG9jay1uYW1l
+czogUGhhbmRsZXMgdG8gdGhlIGNvbnRyb2xsZXIncyBwbGwgcmVmZXJlbmNlCi0gIGNsb2NrKHJl
+ZikgYW5kIEFQQiBjbG9jayhwY2xrKSwgYXMgZGVzY3JpYmVkIGluIFsxXS4KKyAgY2xvY2socmVm
+KSBhbmQgQVBCIGNsb2NrKHBjbGspLiBGb3IgUkszMzk5LCBhIHBoeSBjb25maWcgY2xvY2sKKyAg
+KHBoeV9jZmcpIGlzIGFkZGl0aW9uYWwgcmVxdWlyZWQuIEFzIGRlc2NyaWJlZCBpbiBbMV0uCiAt
+IHJvY2tjaGlwLGdyZjogdGhpcyBzb2Mgc2hvdWxkIHNldCBHUkYgcmVncyB0byBtdXggdm9wbC92
+b3BiLgogLSBwb3J0czogY29udGFpbiBhIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRp
+b25zIGFzIGRlZmluZWQgaW4gWzJdLgogICBGb3Igdm9wYixzZXQgdGhlIHJlZyA9IDwwPiBhbmQg
+c2V0IHRoZSByZWcgPSA8MT4gZm9yIHZvcGwuCi0tIAoyLjYuMwoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
