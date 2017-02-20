@@ -1,74 +1,40 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 04/21] ARM: sun8i: dt: Add DT bindings
- documentation for Allwinner dwmac-sun8i
-Date: Mon, 20 Feb 2017 16:07:51 +0100
-Message-ID: <20170220150751.GB31799@Red>
-References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
- <20170216124859.14346-5-clabbe.montjoie@gmail.com>
- <783a717d-f1f4-e265-bf94-0b3080cea542@gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBTEMVTCQKGQE6CUCKQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <783a717d-f1f4-e265-bf94-0b3080cea542-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH 0/2] Add support for cros-ec-extcon driver
+Date: Mon, 20 Feb 2017 16:18:52 +0100
+Message-ID: <20170220151854.22859-1-enric.balletbo@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 12:58:46PM -0800, Florian Fainelli wrote:
-> On 02/16/2017 04:48 AM, Corentin Labbe wrote:
-> > +
-> > +Optional properties:
-> > +- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
-> > +- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
-> 
-> Delays should be specified in nanosecond units, and should not be a
-> value that maps directly to a HW register value, you need to convert the
-> property value into the appropriate register value.
-> 
+Dear all,
 
-This question already raised multiple times in sun8i-emac development, I do not have any information on how to decode thoses values. (and so the comment below in documentation)
-I will try to contact Allwinner for more details.
+Now that the drm/rockchip cdn-dp driver is in linux-next and ready to land
+it's time to review the extcon-cros-ec driver. The cdn-dp driver uses this
+extcon driver to get cable status and the presence of display out.
 
-> > +Both delay properties does not have units, there are arbitrary value.
-> > +The TX/RX clock delay chain settings are board specific and could be found
-> > +in vendor FEX files.
-> > +
-> > +Optional properties for "allwinner,sun8i-h3-emac":
-> > +- allwinner,leds-active-low: EPHY LEDs are active low
-> 
-> Are you sure this is appropriate at the MAC node level and this is not
-> something that follows the PHY instead?
-> 
+This driver is based on the one available in chromeos-4.4 kernel but removing
+all the USB switch role stuff, as this depends on other infrastructures like 
+the dwc3 role switch and the Type-C connector.
 
-As said by MoeIcenowy, an internal PHY is present. At early stage of development, wens tried to create a PHY driver for it, but finaly it was too much over complicated and with few interest to split in two.
+Benson Leung (2):
+  extcon: cros-ec: Add extcon-cros-ec driver to support display out.
+  dt-bindings: extcon: Add support for cros-ec device
 
-> > +
-> > +Required child node of emac:
-> > +- mdio bus node: should be named mdio
-> > +
-> > +Required properties of the mdio node:
-> > +- #address-cells: shall be 1
-> > +- #size-cells: shall be 0
-> > +
-> > +The device node referenced by "phy" or "phy-handle" should be a child node
-> > +of the mdio node. See phy.txt for the generic PHY bindings.
-> > +
-> > +Required properties of the phy node with "allwinner,sun8i-h3-emac":
-> > +- clocks: an extra phandle to the reference clock for the EPHY
-> 
-> s/an extra/a phandle/
-> 
+ .../devicetree/bindings/extcon/extcon-cros-ec.txt  |  24 ++
+ drivers/extcon/Kconfig                             |   7 +
+ drivers/extcon/Makefile                            |   1 +
+ drivers/extcon/extcon-cros_ec.c                    | 480 +++++++++++++++++++++
+ include/linux/mfd/cros_ec_commands.h               |  75 ++++
+ 5 files changed, 587 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-cros-ec.txt
+ create mode 100644 drivers/extcon/extcon-cros_ec.c
 
-Thanks, will fix
+-- 
+2.9.3
 
-Regards
-Corentin Labbe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
