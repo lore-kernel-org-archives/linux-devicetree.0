@@ -1,276 +1,315 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 5/9] gpu: ipu-v3: add driver for Prefetch Resolve Gasket
-Date: Mon, 20 Feb 2017 16:31:32 +0100
-Message-ID: <1487604692.3878.30.camel@pengutronix.de>
-References: <20170217182830.32618-1-l.stach@pengutronix.de>
- <20170217182830.32618-6-l.stach@pengutronix.de>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v5 1/4] PCI: imx6: Add code to support i.MX7D
+Date: Mon, 20 Feb 2017 07:30:22 -0800
+Message-ID: <20170220153025.32096-2-andrew.smirnov@gmail.com>
+References: <20170220153025.32096-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170217182830.32618-6-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170220153025.32096-1-andrew.smirnov@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-pci@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, yurovsky@gmail.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE3LTAyLTE3IGF0IDE5OjI4ICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPiBU
-aGlzIGFkZHMgc3VwcG9ydCBmb3IgdGhlIGkuTVg2IFFVYWRQbHVzIFBSRyB1bml0LiBJdCBnbHVl
-cyB0b2dldGhlciB0aGUKPiBJUFUgYW5kIHRoZSBQUkUgdW5pdHMuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Cj4gLS0tCj4gIGRyaXZlcnMv
-Z3B1L2lwdS12My9NYWtlZmlsZSAgfCAgIDIgKy0KPiAgZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1w
-cmcuYyB8IDQxMyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4g
-IGRyaXZlcnMvZ3B1L2lwdS12My9pcHUtcHJ2LmggfCAgIDMgKwo+ICBpbmNsdWRlL3ZpZGVvL2lt
-eC1pcHUtdjMuaCAgIHwgIDE1ICsrCj4gIDQgZmlsZXMgY2hhbmdlZCwgNDMyIGluc2VydGlvbnMo
-KyksIDEgZGVsZXRpb24oLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2lwdS12
-My9pcHUtcHJnLmMKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxl
-IGIvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxlCj4gaW5kZXggOGFlOTBkZTQ2YjRkLi4xYWI5
-YmNlZWU3NTUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxlCj4gKysr
-IGIvZHJpdmVycy9ncHUvaXB1LXYzL01ha2VmaWxlCj4gQEAgLTIsNCArMiw0IEBAIG9iai0kKENP
-TkZJR19JTVhfSVBVVjNfQ09SRSkgKz0gaW14LWlwdS12My5vCj4gIAo+ICBpbXgtaXB1LXYzLW9i
-anMgOj0gaXB1LWNvbW1vbi5vIGlwdS1jcG1lbS5vIGlwdS1jc2kubyBpcHUtZGMubyBpcHUtZGku
-byBcCj4gIAkJaXB1LWRwLm8gaXB1LWRtZmMubyBpcHUtaWMubyBpcHUtaW1hZ2UtY29udmVydC5v
-IFwKPiAtCQlpcHUtcHJlLm8gaXB1LXNtZmMubyBpcHUtdmRpLm8KPiArCQlpcHUtcHJlLm8gaXB1
-LXByZy5vIGlwdS1zbWZjLm8gaXB1LXZkaS5vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2lw
-dS12My9pcHUtcHJnLmMgYi9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LXByZy5jCj4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmMxZTFhYjBlYzVjNQo+IC0tLSAvZGV2
-L251bGwKPiArKysgYi9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LXByZy5jCj4gQEAgLTAsMCArMSw0
-MTMgQEAKPiArLyoKPiArICogQ29weXJpZ2h0IChjKSAyMDE2LTIwMTcgTHVjYXMgU3RhY2gsIFBl
-bmd1dHJvbml4Cj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3Ug
-Y2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5IGl0Cj4gKyAqIHVuZGVyIHRoZSB0ZXJt
-cyBhbmQgY29uZGl0aW9ucyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UsCj4gKyAq
-IHZlcnNpb24gMiwgYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb24u
-Cj4gKyAqCj4gKyAqIFRoaXMgcHJvZ3JhbSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSBpdCB3
-aWxsIGJlIHVzZWZ1bCwgYnV0IFdJVEhPVVQKPiArICogQU5ZIFdBUlJBTlRZOyB3aXRob3V0IGV2
-ZW4gdGhlIGltcGxpZWQgd2FycmFudHkgb2YgTUVSQ0hBTlRBQklMSVRZIG9yCj4gKyAqIEZJVE5F
-U1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMg
-TGljZW5zZSBmb3IKPiArICogbW9yZSBkZXRhaWxzLgo+ICsgKi8KPiArCj4gKyNpbmNsdWRlIDxk
-cm0vZHJtX2ZvdXJjYy5oPgo+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gKyNpbmNsdWRlIDxs
-aW51eC9lcnIuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KPiArI2luY2x1ZGUg
-PGxpbnV4L21mZC9zeXNjb24vaW14NnEtaW9tdXhjLWdwci5oPgo+ICsjaW5jbHVkZSA8bGludXgv
-bW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICsjaW5jbHVkZSA8bGludXgvcGxh
-dGZvcm1fZGV2aWNlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KPiArI2luY2x1ZGUg
-PHZpZGVvL2lteC1pcHUtdjMuaD4KPiArCj4gKyNpbmNsdWRlICJpcHUtcHJ2LmgiCj4gKwo+ICsj
-ZGVmaW5lIElQVV9QUkdfQ1RMCQkJCTB4MDAKPiArI2RlZmluZSAgSVBVX1BSR19DVExfQllQQVNT
-KGkpCQkJKDEgPDwgKDAgKyBpKSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfU09GVF9BUklEX01B
-U0sJCTB4Mwo+ICsjZGVmaW5lICBJUFVfUFJHX0NUTF9TT0ZUX0FSSURfU0hJRlQoaSkJCSg4ICsg
-aSAqIDIpCj4gKyNkZWZpbmUgIElQVV9QUkdfQ1RMX1NPRlRfQVJJRChpLCB2KQkJKCh2ICYgMHgz
-KSA8PCAoOCArIDIgKiBpKSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfU08oaSkJCQkoMSA8PCAo
-MTYgKyBpKSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfVkZMSVAoaSkJCQkoMSA8PCAoMTkgKyBp
-KSkKPiArI2RlZmluZSAgSVBVX1BSR19DVExfQkxPQ0tfTU9ERShpKQkJKDEgPDwgKDIyICsgaSkp
-Cj4gKyNkZWZpbmUgIElQVV9QUkdfQ1RMX0NOVF9MT0FEX0VOKGkpCQkoMSA8PCAoMjUgKyBpKSkK
-PiArI2RlZmluZSAgSVBVX1BSR19DVExfU09GVFJTVAkJCSgxIDw8IDMwKQo+ICsjZGVmaW5lICBJ
-UFVfUFJHX0NUTF9TSEFET1dfRU4JCQkoMSA8PCAzMSkKPiArCj4gKyNkZWZpbmUgSVBVX1BSR19T
-VEFUVVMJCQkJMHgwNAo+ICsjZGVmaW5lICBJUFVfUFJHX1NUQVRVU19CVUZGRVIwX1JFQURZKGkp
-CSgxIDw8ICgwICsgaSAqIDIpKQo+ICsjZGVmaW5lICBJUFVfUFJHX1NUQVRVU19CVUZGRVIxX1JF
-QURZKGkpCSgxIDw8ICgxICsgaSAqIDIpKQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX1FPUwkJCQkw
-eDA4Cj4gKyNkZWZpbmUgIElQVV9QUkdfUU9TX0FSSURfTUFTSwkJCTB4Zgo+ICsjZGVmaW5lICBJ
-UFVfUFJHX1FPU19BUklEX1NISUZUKGkpCQkoMCArIGkgKiA0KQo+ICsKPiArI2RlZmluZSBJUFVf
-UFJHX1JFR19VUERBVEUJCQkweDBjCj4gKyNkZWZpbmUgIElQVV9QUkdfUkVHX1VQREFURV9SRUdf
-VVBEQVRFCQkoMSA8PCAwKQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX1NUUklERShpKQkJCSgweDEw
-ICsgaSAqIDB4NCkKPiArI2RlZmluZSAgSVBVX1BSR19TVFJJREVfU1RSSURFX01BU0sJCTB4M2Zm
-Zgo+ICsKPiArI2RlZmluZSBJUFVfUFJHX0NST1BfTElORQkJCTB4MWMKPiArCj4gKyNkZWZpbmUg
-SVBVX1BSR19USEQJCQkJMHgyMAo+ICsKPiArI2RlZmluZSBJUFVfUFJHX0JBRERSKGkpCQkJKDB4
-MjQgKyBpICogMHg0KQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX09GRlNFVChpKQkJCSgweDMwICsg
-aSAqIDB4NCkKPiArCj4gKyNkZWZpbmUgSVBVX1BSR19JTE8oaSkJCQkJKDB4M2MgKyBpICogMHg0
-KQo+ICsKPiArI2RlZmluZSBJUFVfUFJHX0hFSUdIVChpKQkJCSgweDQ4ICsgaSAqIDB4NCkKPiAr
-I2RlZmluZSAgSVBVX1BSR19IRUlHSFRfUFJFX0hFSUdIVF9NQVNLCQkweGZmZgo+ICsjZGVmaW5l
-ICBJUFVfUFJHX0hFSUdIVF9QUkVfSEVJR0hUX1NISUZUCTAKPiArI2RlZmluZSAgSVBVX1BSR19I
-RUlHSFRfSVBVX0hFSUdIVF9NQVNLCQkweGZmZgo+ICsjZGVmaW5lICBJUFVfUFJHX0hFSUdIVF9J
-UFVfSEVJR0hUX1NISUZUCTE2Cj4gKwo+ICtzdHJ1Y3QgaXB1X3ByZ19jaGFubmVsIHsKPiArCWJv
-b2wJCQllbmFibGVkOwo+ICsJaW50CQkJdXNlZF9wcmU7Cj4gK307Cj4gKwo+ICtzdHJ1Y3QgaXB1
-X3ByZyB7Cj4gKwlzdHJ1Y3QgbGlzdF9oZWFkCWxpc3Q7Cj4gKwlzdHJ1Y3QgZGV2aWNlCQkqZGV2
-Owo+ICsJaW50CQkJaWQ7Cj4gKwo+ICsJdm9pZCBfX2lvbWVtCQkqcmVnczsKPiArCXN0cnVjdCBj
-bGsJCSpjbGtfaXBnLCAqY2xrX2F4aTsKPiArCXN0cnVjdCByZWdtYXAJCSppb211eGNfZ3ByOwo+
-ICsJc3RydWN0IGlwdV9wcmUJCSpwcmVzWzNdOwo+ICsKPiArCXN0cnVjdCBpcHVfcHJnX2NoYW5u
-ZWwJY2hhblszXTsKPiArfTsKPiArCj4gK3N0YXRpYyBERUZJTkVfTVVURVgoaXB1X3ByZ19saXN0
-X211dGV4KTsKPiArc3RhdGljIExJU1RfSEVBRChpcHVfcHJnX2xpc3QpOwo+ICsKPiArc3RydWN0
-IGlwdV9wcmcgKgo+ICtpcHVfcHJnX2dldF9ieV9pcHVfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRl
-dikKClNhbWUgYXMgZm9yIHRoZSBQUkUsIEknZCBwcmVmZXIgdGhpcyB0byBiZSBjYWxsZWQgImxv
-b2t1cCIgaW5zdGVhZCBvZgoiZ2V0IiwgYW5kIHRvIHBhc3MgdGhlICJmc2wscHJnIiBzdHJpbmcg
-ZnJvbSB0aGUgSVBVIGRyaXZlciwgdG8gd2hvc2UgRFQKYmluZGluZyBpdCBiZWxvbmdzLgoKPiAr
-ewo+ICsJc3RydWN0IGRldmljZV9ub2RlICpwcmdfbm9kZSA9IG9mX3BhcnNlX3BoYW5kbGUoZGV2
-LT5vZl9ub2RlLAo+ICsJCQkJCQkJImZzbCxwcmciLCAwKTsKPiArCXN0cnVjdCBpcHVfcHJnICpw
-cmc7Cj4gKwo+ICsJbXV0ZXhfbG9jaygmaXB1X3ByZ19saXN0X211dGV4KTsKPiArCWxpc3RfZm9y
-X2VhY2hfZW50cnkocHJnLCAmaXB1X3ByZ19saXN0LCBsaXN0KSB7Cj4gKwkJaWYgKHByZ19ub2Rl
-ID09IHByZy0+ZGV2LT5vZl9ub2RlKSB7Cj4gKwkJCW11dGV4X3VubG9jaygmaXB1X3ByZ19saXN0
-X211dGV4KTsKPiArCQkJZGV2aWNlX2xpbmtfYWRkKGRldiwgcHJnLT5kZXYsIERMX0ZMQUdfQVVU
-T1JFTU9WRSk7Cj4gKwkJCXByZy0+aWQgPSBvZl9hbGlhc19nZXRfaWQoZGV2LT5vZl9ub2RlLCAi
-aXB1Iik7Cj4gKwkJCXJldHVybiBwcmc7Cj4gKwkJfQo+ICsJfQo+ICsJbXV0ZXhfdW5sb2NrKCZp
-cHVfcHJnX2xpc3RfbXV0ZXgpOwo+ICsKPiArCXJldHVybiBOVUxMOwo+ICt9Cj4gKwo+ICtpbnQg
-aXB1X3ByZ19tYXhfYWN0aXZlX2NoYW5uZWxzKHZvaWQpCj4gK3sKPiArCXJldHVybiBpcHVfcHJl
-X2dldF9hdmFpbGFibGVfY291bnQoKTsKPiArfQo+ICsKPiArYm9vbCBpcHVfcHJnX3ByZXNlbnQo
-c3RydWN0IGlwdV9zb2MgKmlwdSkKPiArewo+ICsJaWYgKGlwdS0+cHJnX3ByaXYpCj4gKwkJcmV0
-dXJuIHRydWU7Cj4gKwo+ICsJcmV0dXJuIGZhbHNlOwo+ICt9Cj4gKwo+ICtib29sIGlwdV9wcmdf
-Zm9ybWF0X3N1cHBvcnRlZChzdHJ1Y3QgaXB1X3NvYyAqaXB1LCB1aW50MzJfdCBmb3JtYXQsCj4g
-KwkJCSAgICAgIHVpbnQ2NF90IG1vZGlmaWVyKQo+ICt7Cj4gKwljb25zdCBzdHJ1Y3QgZHJtX2Zv
-cm1hdF9pbmZvICppbmZvID0gZHJtX2Zvcm1hdF9pbmZvKGZvcm1hdCk7Cj4gKwo+ICsJaWYgKGlu
-Zm8tPm51bV9wbGFuZXMgIT0gMSkKPiArCQlyZXR1cm4gZmFsc2U7Cj4gKwo+ICsJcmV0dXJuIHRy
-dWU7Cj4gK30KPiArCj4gK2ludCBpcHVfcHJnX2VuYWJsZShzdHJ1Y3QgaXB1X3NvYyAqaXB1KQo+
-ICt7Cj4gKwlzdHJ1Y3QgaXB1X3ByZyAqcHJnID0gaXB1LT5wcmdfcHJpdjsKPiArCWludCByZXQ7
-Cj4gKwo+ICsJaWYgKCFwcmcpCj4gKwkJcmV0dXJuIDA7Cj4gKwo+ICsJcmV0ID0gY2xrX3ByZXBh
-cmVfZW5hYmxlKHByZy0+Y2xrX2F4aSk7Cj4gKwlpZiAocmV0KQo+ICsJCWdvdG8gZmFpbF9kaXNh
-YmxlX2lwZzsKPiArCj4gKwlyZXR1cm4gMDsKPiArCj4gK2ZhaWxfZGlzYWJsZV9pcGc6Cj4gKwlj
-bGtfZGlzYWJsZV91bnByZXBhcmUocHJnLT5jbGtfaXBnKTsKPiArCj4gKwlyZXR1cm4gcmV0Owo+
-ICt9Cj4gKwo+ICt2b2lkIGlwdV9wcmdfZGlzYWJsZShzdHJ1Y3QgaXB1X3NvYyAqaXB1KQo+ICt7
-Cj4gKwlzdHJ1Y3QgaXB1X3ByZyAqcHJnID0gaXB1LT5wcmdfcHJpdjsKPiArCj4gKwlpZiAoIXBy
-ZykKPiArCQlyZXR1cm47Cj4gKwo+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByZy0+Y2xrX2F4
-aSk7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQgaXB1X3ByZ19pcHVfdG9fcHJnX2NoYW4oaW50IGlw
-dV9jaGFuKQo+ICt7Cj4gKwkvKgo+ICsJICogVGhpcyBpc24ndCBjbGVhcmx5IGRvY3VtZW50ZWQg
-aW4gdGhlIFJNLCBidXQgSVBVIHRvIFBSRyBjaGFubmVsCj4gKwkgKiBhc3NpZ25tZW50IGlzIGZp
-eGVkLCBhcyBvbmx5IHdpdGggdGhpcyBtYXBwaW5nIHRoZSBjb250cm9sIHNpZ25hbHMKPiArCSAq
-IG1hdGNoIHVwLgo+ICsJICovCj4gKwlzd2l0Y2ggKGlwdV9jaGFuKSB7Cj4gKwljYXNlIElQVVYz
-X0NIQU5ORUxfTUVNX0JHX1NZTkM6Cj4gKwkJcmV0dXJuIDA7Cj4gKwljYXNlIElQVVYzX0NIQU5O
-RUxfTUVNX0ZHX1NZTkM6Cj4gKwkJcmV0dXJuIDE7Cj4gKwljYXNlIElQVVYzX0NIQU5ORUxfTUVN
-X0RDX1NZTkM6Cj4gKwkJcmV0dXJuIDI7Cj4gKwlkZWZhdWx0Ogo+ICsJCXJldHVybiAtRUlOVkFM
-Owo+ICsJfQo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGlwdV9wcmdfZ2V0X3ByZShzdHJ1Y3QgaXB1
-X3ByZyAqcHJnLCBpbnQgcHJnX2NoYW4pCj4gK3sKPiArCWludCBpLCByZXQ7Cj4gKwo+ICsJLyog
-Y2hhbm5lbCAwIGlzIHNwZWNpYWwgYXMgaXQgaXMgaGFyZHdpcmVkIHRvIG9uZSBvZiB0aGUgUFJF
-cyAqLwo+ICsJaWYgKHByZ19jaGFuID09IDApIHsKPiArCQlyZXQgPSBpcHVfcHJlX2dldChwcmct
-PnByZXNbMF0pOwo+ICsJCWlmIChyZXQpCj4gKwkJCWdvdG8gZmFpbDsKPiArCQlwcmctPmNoYW5b
-cHJnX2NoYW5dLnVzZWRfcHJlID0gMDsKPiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gKwlmb3Ig
-KGkgPSAxOyBpIDwgMzsgaSsrKSB7Cj4gKwkJcmV0ID0gaXB1X3ByZV9nZXQocHJnLT5wcmVzW2ld
-KTsKPiArCQlpZiAoIXJldCkgewo+ICsJCQl1MzIgdmFsLCBtdXg7Cj4gKwkJCWludCBzaGlmdDsK
-PiArCj4gKwkJCXByZy0+Y2hhbltwcmdfY2hhbl0udXNlZF9wcmUgPSBpOwo+ICsKPiArCQkJLyog
-Y29uZmlndXJlIHRoZSBQUkUgdG8gUFJHIGNoYW5uZWwgbXV4ICovCj4gKwkJCXNoaWZ0ID0gKGkg
-PT0gMSkgPyAxMiA6IDE0Owo+ICsJCQltdXggPSAocHJnLT5pZCA8PCAxKSB8IChwcmdfY2hhbiAt
-IDEpOwo+ICsJCQlyZWdtYXBfdXBkYXRlX2JpdHMocHJnLT5pb211eGNfZ3ByLCBJT01VWENfR1BS
-NSwKPiArCQkJCQkgICAweDMgPDwgc2hpZnQsIG11eCA8PCBzaGlmdCk7Cj4gKwo+ICsJCQkvKiBj
-aGVjayBvdGhlciBtdXgsIG11c3Qgbm90IHBvaW50IHRvIHNhbWUgY2hhbm5lbCAqLwo+ICsJCQlz
-aGlmdCA9IChpID09IDEpID8gMTQgOiAxMjsKPiArCQkJcmVnbWFwX3JlYWQocHJnLT5pb211eGNf
-Z3ByLCBJT01VWENfR1BSNSwgJnZhbCk7Cj4gKwkJCWlmICgoKHZhbCA+PiBzaGlmdCkgJiAweDMp
-ID09IG11eCkgewo+ICsJCQkJcmVnbWFwX3VwZGF0ZV9iaXRzKHByZy0+aW9tdXhjX2dwciwgSU9N
-VVhDX0dQUjUsCj4gKwkJCQkJCSAgIDB4MyA8PCBzaGlmdCwKPiArCQkJCQkJICAgKG11eCBeIDB4
-MSkgPDwgc2hpZnQpOwo+ICsJCQl9Cj4gKwo+ICsJCQlyZXR1cm4gMDsKPiArCQl9Cj4gKwl9Cj4g
-Kwo+ICtmYWlsOgo+ICsJZGV2X2VycihwcmctPmRldiwgImNvdWxkIG5vdCBnZXQgUFJFIGZvciBQ
-UkcgY2hhbiAlZCIsIHByZ19jaGFuKTsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gK3N0YXRp
-YyB2b2lkIGlwdV9wcmdfcHV0X3ByZShzdHJ1Y3QgaXB1X3ByZyAqcHJnLCBpbnQgcHJnX2NoYW4p
-Cj4gK3sKPiArCXN0cnVjdCBpcHVfcHJnX2NoYW5uZWwgKmNoYW4gPSAmcHJnLT5jaGFuW3ByZ19j
-aGFuXTsKPiArCj4gKwlpcHVfcHJlX3B1dChwcmctPnByZXNbY2hhbi0+dXNlZF9wcmVdKTsKPiAr
-CWNoYW4tPnVzZWRfcHJlID0gLTE7Cj4gK30KPiArCj4gK3ZvaWQgaXB1X3ByZ19jaGFubmVsX2Rp
-c2FibGUoc3RydWN0IGlwdXYzX2NoYW5uZWwgKmlwdV9jaGFuKQo+ICt7Cj4gKwlpbnQgcHJnX2No
-YW4gPSBpcHVfcHJnX2lwdV90b19wcmdfY2hhbihpcHVfY2hhbi0+bnVtKTsKPiArCXN0cnVjdCBp
-cHVfcHJnICpwcmcgPSBpcHVfY2hhbi0+aXB1LT5wcmdfcHJpdjsKPiArCXN0cnVjdCBpcHVfcHJn
-X2NoYW5uZWwgKmNoYW4gPSAmcHJnLT5jaGFuW3ByZ19jaGFuXTsKPiArCXUzMiB2YWw7Cj4gKwo+
-ICsJaWYgKCFjaGFuLT5lbmFibGVkIHx8IHByZ19jaGFuIDwgMCkKPiArCQlyZXR1cm47Cj4gKwo+
-ICsJY2xrX3ByZXBhcmVfZW5hYmxlKHByZy0+Y2xrX2lwZyk7Cj4gKwo+ICsJdmFsID0gcmVhZGwo
-cHJnLT5yZWdzICsgSVBVX1BSR19DVEwpOwo+ICsJdmFsIHw9IElQVV9QUkdfQ1RMX0JZUEFTUyhw
-cmdfY2hhbik7Cj4gKwl3cml0ZWwodmFsLCBwcmctPnJlZ3MgKyBJUFVfUFJHX0NUTCk7Cj4gKwo+
-ICsJdmFsID0gSVBVX1BSR19SRUdfVVBEQVRFX1JFR19VUERBVEU7Cj4gKwl3cml0ZWwodmFsLCBw
-cmctPnJlZ3MgKyBJUFVfUFJHX1JFR19VUERBVEUpOwo+ICsKPiArCWNsa19kaXNhYmxlX3VucHJl
-cGFyZShwcmctPmNsa19pcGcpOwo+ICsKPiArCWlwdV9wcmdfcHV0X3ByZShwcmcsIHByZ19jaGFu
-KTsKPiArCj4gKwljaGFuLT5lbmFibGVkID0gZmFsc2U7Cj4gK30KPiArCj4gK2ludCBpcHVfcHJn
-X2NoYW5uZWxfY29uZmlndXJlKHN0cnVjdCBpcHV2M19jaGFubmVsICppcHVfY2hhbiwKPiArCQkJ
-ICAgICAgdW5zaWduZWQgaW50IGF4aV9pZCwgdW5zaWduZWQgaW50IHdpZHRoLAo+ICsJCQkgICAg
-ICB1bnNpZ25lZCBpbnQgaGVpZ2h0LCB1bnNpZ25lZCBpbnQgc3RyaWRlLAo+ICsJCQkgICAgICB1
-MzIgZm9ybWF0LCB1bnNpZ25lZCBsb25nICplYmEpCj4gK3sKPiArCWludCBwcmdfY2hhbiA9IGlw
-dV9wcmdfaXB1X3RvX3ByZ19jaGFuKGlwdV9jaGFuLT5udW0pOwo+ICsJc3RydWN0IGlwdV9wcmcg
-KnByZyA9IGlwdV9jaGFuLT5pcHUtPnByZ19wcml2Owo+ICsJc3RydWN0IGlwdV9wcmdfY2hhbm5l
-bCAqY2hhbiA9ICZwcmctPmNoYW5bcHJnX2NoYW5dOwo+ICsJdTMyIHZhbDsKPiArCWludCByZXQ7
-Cj4gKwo+ICsJaWYgKHByZ19jaGFuIDwgMCkKPiArCQlyZXR1cm4gcHJnX2NoYW47Cj4gKwo+ICsJ
-aWYgKGNoYW4tPmVuYWJsZWQpIHsKPiArCQlpcHVfcHJlX3VwZGF0ZShwcmctPnByZXNbY2hhbi0+
-dXNlZF9wcmVdLCAqZWJhKTsKPiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gKwlyZXQgPSBpcHVf
-cHJnX2dldF9wcmUocHJnLCBwcmdfY2hhbik7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7
-Cj4gKwo+ICsJaXB1X3ByZV9jb25maWd1cmUocHJnLT5wcmVzW2NoYW4tPnVzZWRfcHJlXSwKPiAr
-CQkJICB3aWR0aCwgaGVpZ2h0LCBzdHJpZGUsIGZvcm1hdCwgKmViYSk7Cj4gKwo+ICsKPiArCXJl
-dCA9IGNsa19wcmVwYXJlX2VuYWJsZShwcmctPmNsa19pcGcpOwo+ICsJaWYgKHJldCkgewo+ICsJ
-CWlwdV9wcmdfcHV0X3ByZShwcmcsIHByZ19jaGFuKTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+
-ICsKPiArCXZhbCA9IChzdHJpZGUgLSAxKSAmIElQVV9QUkdfU1RSSURFX1NUUklERV9NQVNLOwo+
-ICsJd3JpdGVsKHZhbCwgcHJnLT5yZWdzICsgSVBVX1BSR19TVFJJREUocHJnX2NoYW4pKTsKPiAr
-Cj4gKwl2YWwgPSAoKGhlaWdodCAmIElQVV9QUkdfSEVJR0hUX1BSRV9IRUlHSFRfTUFTSykgPDwK
-PiArCSAgICAgICBJUFVfUFJHX0hFSUdIVF9QUkVfSEVJR0hUX1NISUZUKSB8Cj4gKwkgICAgICAo
-KGhlaWdodCAmIElQVV9QUkdfSEVJR0hUX0lQVV9IRUlHSFRfTUFTSykgPDwKPiArCSAgICAgICBJ
-UFVfUFJHX0hFSUdIVF9JUFVfSEVJR0hUX1NISUZUKTsKPiArCXdyaXRlbCh2YWwsIHByZy0+cmVn
-cyArIElQVV9QUkdfSEVJR0hUKHByZ19jaGFuKSk7Cj4gKwo+ICsJdmFsID0gaXB1X3ByZV9nZXRf
-YmFkZHIocHJnLT5wcmVzW2NoYW4tPnVzZWRfcHJlXSk7Cj4gKwkqZWJhID0gdmFsOwo+ICsJd3Jp
-dGVsKHZhbCwgcHJnLT5yZWdzICsgSVBVX1BSR19CQUREUihwcmdfY2hhbikpOwo+ICsKPiArCXZh
-bCA9IHJlYWRsKHByZy0+cmVncyArIElQVV9QUkdfQ1RMKTsKPiArCS8qIGNvdW50ZXIgbG9hZCBl
-bmFibGUgKi8KPiArCXZhbCB8PSBJUFVfUFJHX0NUTF9DTlRfTE9BRF9FTihwcmdfY2hhbik7Cj4g
-KwkvKiBjb25maWcgQVhJIElEICovCj4gKwl2YWwgJj0gfihJUFVfUFJHX0NUTF9TT0ZUX0FSSURf
-TUFTSyA8PAo+ICsJCSBJUFVfUFJHX0NUTF9TT0ZUX0FSSURfU0hJRlQocHJnX2NoYW4pKTsKPiAr
-CXZhbCB8PSBJUFVfUFJHX0NUTF9TT0ZUX0FSSUQocHJnX2NoYW4sIGF4aV9pZCk7Cj4gKwkvKiBl
-bmFibGUgY2hhbm5lbCAqLwo+ICsJdmFsICY9IH5JUFVfUFJHX0NUTF9CWVBBU1MocHJnX2NoYW4p
-Owo+ICsJd3JpdGVsKHZhbCwgcHJnLT5yZWdzICsgSVBVX1BSR19DVEwpOwo+ICsKPiArCXZhbCA9
-IElQVV9QUkdfUkVHX1VQREFURV9SRUdfVVBEQVRFOwo+ICsJd3JpdGVsKHZhbCwgcHJnLT5yZWdz
-ICsgSVBVX1BSR19SRUdfVVBEQVRFKTsKPiArCj4gKwljbGtfZGlzYWJsZV91bnByZXBhcmUocHJn
-LT5jbGtfaXBnKTsKPiArCj4gKwljaGFuLT5lbmFibGVkID0gdHJ1ZTsKPiArCXJldHVybiAwOwo+
-ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGlwdV9wcmdfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
-ZSAqcGRldikKPiArewo+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsKPiArCXN0
-cnVjdCByZXNvdXJjZSAqcmVzOwo+ICsJc3RydWN0IGlwdV9wcmcgKnByZzsKPiArCXUzMiB2YWw7
-Cj4gKwlpbnQgaSwgcmV0Owo+ICsKPiArCXByZyA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigq
-cHJnKSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIXByZykKPiArCQlyZXR1cm4gLUVOT01FTTsKPiAr
-Cj4gKwlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDAp
-Owo+ICsJcHJnLT5yZWdzID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKCZwZGV2LT5kZXYsIHJlcyk7
-Cj4gKwlpZiAoSVNfRVJSKHByZy0+cmVncykpCj4gKwkJcmV0dXJuIFBUUl9FUlIocHJnLT5yZWdz
-KTsKPiArCj4gKwoKU28gbXVjaCB3aGl0ZXNwYWNlLgoKPiArCXByZy0+Y2xrX2lwZyA9IGRldm1f
-Y2xrX2dldChkZXYsICJpcGciKTsKPiArCWlmIChJU19FUlIocHJnLT5jbGtfaXBnKSkKPiArCQly
-ZXR1cm4gUFRSX0VSUihwcmctPmNsa19pcGcpOwo+ICsKPiArCXByZy0+Y2xrX2F4aSA9IGRldm1f
-Y2xrX2dldChkZXYsICJheGkiKTsKPiArCWlmIChJU19FUlIocHJnLT5jbGtfYXhpKSkKPiArCQly
-ZXR1cm4gUFRSX0VSUihwcmctPmNsa19heGkpOwo+ICsKPiArCXByZy0+aW9tdXhjX2dwciA9Cj4g
-KwkJc3lzY29uX3JlZ21hcF9sb29rdXBfYnlfY29tcGF0aWJsZSgiZnNsLGlteDZxLWlvbXV4Yy1n
-cHIiKTsKPiArCWlmIChJU19FUlIocHJnLT5pb211eGNfZ3ByKSkKPiArCQlyZXR1cm4gUFRSX0VS
-UihwcmctPmlvbXV4Y19ncHIpOwo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCAzOyBpKyspIHsKPiAr
-CQlwcmctPnByZXNbaV0gPSBpcHVfcHJlX2dldF9ieV9wcmdfZGV2aWNlKGRldiwgaSk7Cj4gKwkJ
-aWYgKCFwcmctPnByZXNbaV0pCj4gKwkJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICsJfQo+ICsK
-PiArCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShwcmctPmNsa19pcGcpOwo+ICsJaWYgKHJldCkK
-PiArCQlyZXR1cm4gcmV0Owo+ICsKPiArCS8qIGluaXQgdG8gZnJlZSBydW5uaW5nIG1vZGUgKi8K
-PiArCXZhbCA9IHJlYWRsKHByZy0+cmVncyArIElQVV9QUkdfQ1RMKTsKPiArCXZhbCB8PSBJUFVf
-UFJHX0NUTF9TSEFET1dfRU47Cj4gKwl3cml0ZWwodmFsLCBwcmctPnJlZ3MgKyBJUFVfUFJHX0NU
-TCk7Cj4gKwo+ICsJLyogZGlzYWJsZSBhZGRyZXNzIHRocmVzaG9sZCAqLwo+ICsJd3JpdGVsKDB4
-ZmZmZmZmZmYsIHByZy0+cmVncyArIElQVV9QUkdfVEhEKTsKPiArCj4gKwljbGtfZGlzYWJsZV91
-bnByZXBhcmUocHJnLT5jbGtfaXBnKTsKPiArCj4gKwlwcmctPmRldiA9IGRldjsKPiArCXBsYXRm
-b3JtX3NldF9kcnZkYXRhKHBkZXYsIHByZyk7Cj4gKwltdXRleF9sb2NrKCZpcHVfcHJnX2xpc3Rf
-bXV0ZXgpOwo+ICsJbGlzdF9hZGQoJnByZy0+bGlzdCwgJmlwdV9wcmdfbGlzdCk7Cj4gKwltdXRl
-eF91bmxvY2soJmlwdV9wcmdfbGlzdF9tdXRleCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiAr
-Cj4gK3N0YXRpYyBpbnQgaXB1X3ByZ19yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPiArewo+ICsJc3RydWN0IGlwdV9wcmcgKnByZyA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBk
-ZXYpOwo+ICsKPiArCW11dGV4X2xvY2soJmlwdV9wcmdfbGlzdF9tdXRleCk7Cj4gKwlsaXN0X2Rl
-bCgmcHJnLT5saXN0KTsKPiArCW11dGV4X3VubG9jaygmaXB1X3ByZ19saXN0X211dGV4KTsKPiAr
-Cj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2Vf
-aWQgaXB1X3ByZ19kdF9pZHNbXSA9IHsKPiArCXsgLmNvbXBhdGlibGUgPSAiZnNsLGlteDZxcC1w
-cmciLCB9LAo+ICsJeyAvKiBzZW50aW5lbCAqLyB9LAo+ICt9Owo+ICsKPiArc3RhdGljIHN0cnVj
-dCBwbGF0Zm9ybV9kcml2ZXIgaXB1X3ByZ19kcnYgPSB7Cj4gKwkucHJvYmUJCT0gaXB1X3ByZ19w
-cm9iZSwKPiArCS5yZW1vdmUJCT0gaXB1X3ByZ19yZW1vdmUsCj4gKwkuZHJpdmVyCQk9IHsKPiAr
-CQkubmFtZQk9ICJpbXgtaXB1LXByZyIsCj4gKwkJLm9mX21hdGNoX3RhYmxlID0gaXB1X3ByZ19k
-dF9pZHMsCj4gKwl9LAo+ICt9Owo+ICttb2R1bGVfcGxhdGZvcm1fZHJpdmVyKGlwdV9wcmdfZHJ2
-KTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1wcnYuaCBiL2RyaXZlcnMv
-Z3B1L2lwdS12My9pcHUtcHJ2LmgKPiBpbmRleCA1MzZhMTU2YTVlYjYuLjBkMWQyZDY2N2YzYiAx
-MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LXBydi5oCj4gKysrIGIvZHJpdmVy
-cy9ncHUvaXB1LXYzL2lwdS1wcnYuaAo+IEBAIC0xNjksNiArMTY5LDcgQEAgc3RydWN0IGlwdV92
-ZGk7Cj4gIHN0cnVjdCBpcHVfaW1hZ2VfY29udmVydF9wcml2Owo+ICBzdHJ1Y3QgaXB1X3NtZmNf
-cHJpdjsKPiAgc3RydWN0IGlwdV9wcmU7Cj4gK3N0cnVjdCBpcHVfcHJnOwo+ICAKPiAgc3RydWN0
-IGlwdV9kZXZ0eXBlOwo+ICAKPiBAQCAtMjcwLDQgKzI3MSw2IEBAIHZvaWQgaXB1X3ByZV9jb25m
-aWd1cmUoc3RydWN0IGlwdV9wcmUgKnByZSwgdW5zaWduZWQgaW50IHdpZHRoLAo+ICAJCSAgICAg
-ICB1bnNpZ25lZCBpbnQgc3RyaWRlLCB1MzIgZm9ybWF0LCB1bnNpZ25lZCBpbnQgYnVmYWRkcik7
-Cj4gIHZvaWQgaXB1X3ByZV91cGRhdGUoc3RydWN0IGlwdV9wcmUgKnByZSwgdW5zaWduZWQgaW50
-IGJ1ZmFkZHIpOwo+ICAKPiArc3RydWN0IGlwdV9wcmcgKmlwdV9wcmdfZ2V0X2J5X2lwdV9kZXZp
-Y2Uoc3RydWN0IGRldmljZSAqZGV2KTsKPiArCj4gICNlbmRpZgkJCQkvKiBfX0lQVV9QUlZfSF9f
-ICovCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdmlkZW8vaW14LWlwdS12My5oIGIvaW5jbHVkZS92
-aWRlby9pbXgtaXB1LXYzLmgKPiBpbmRleCAyMjhlMzIwODIwOTcuLjM5MDIzMjNmODc2OSAxMDA2
-NDQKPiAtLS0gYS9pbmNsdWRlL3ZpZGVvL2lteC1pcHUtdjMuaAo+ICsrKyBiL2luY2x1ZGUvdmlk
-ZW8vaW14LWlwdS12My5oCj4gQEAgLTMzMSw2ICszMzEsMjEgQEAgaW50IGlwdV9kcF9zZXRfZ2xv
-YmFsX2FscGhhKHN0cnVjdCBpcHVfZHAgKmRwLCBib29sIGVuYWJsZSwgdTggYWxwaGEsCj4gIAkJ
-Ym9vbCBiZ19jaGFuKTsKPiAgCj4gIC8qCj4gKyAqIElQVSBQcmVmZXRjaCBSZXNvbHZlIEdhc2tl
-dCAocHJnKSBmdW5jdGlvbnMKPiArICovCj4gK2ludCBpcHVfcHJnX21heF9hY3RpdmVfY2hhbm5l
-bHModm9pZCk7Cj4gK2Jvb2wgaXB1X3ByZ19wcmVzZW50KHN0cnVjdCBpcHVfc29jICppcHUpOwo+
-ICtib29sIGlwdV9wcmdfZm9ybWF0X3N1cHBvcnRlZChzdHJ1Y3QgaXB1X3NvYyAqaXB1LCB1aW50
-MzJfdCBmb3JtYXQsCj4gKwkJCSAgICAgIHVpbnQ2NF90IG1vZGlmaWVyKTsKPiAraW50IGlwdV9w
-cmdfZW5hYmxlKHN0cnVjdCBpcHVfc29jICppcHUpOwo+ICt2b2lkIGlwdV9wcmdfZGlzYWJsZShz
-dHJ1Y3QgaXB1X3NvYyAqaXB1KTsKPiArdm9pZCBpcHVfcHJnX2NoYW5uZWxfZGlzYWJsZShzdHJ1
-Y3QgaXB1djNfY2hhbm5lbCAqaXB1X2NoYW4pOwo+ICtpbnQgaXB1X3ByZ19jaGFubmVsX2NvbmZp
-Z3VyZShzdHJ1Y3QgaXB1djNfY2hhbm5lbCAqaXB1X2NoYW4sCj4gKwkJCSAgICAgIHVuc2lnbmVk
-IGludCBheGlfaWQsICB1bnNpZ25lZCBpbnQgd2lkdGgsCj4gKwkJCSAgICAgIHVuc2lnbmVkIGlu
-dCBoZWlnaHQsIHVuc2lnbmVkIGludCBzdHJpZGUsCj4gKwkJCSAgICAgIHUzMiBmb3JtYXQsIHVu
-c2lnbmVkIGxvbmcgKmViYSk7Cj4gKwo+ICsvKgo+ICAgKiBJUFUgQ01PUyBTZW5zb3IgSW50ZXJm
-YWNlIChjc2kpIGZ1bmN0aW9ucwo+ICAgKi8KPiAgc3RydWN0IGlwdV9jc2k7CgpyZWdhcmRzClBo
-aWxpcHAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add various bits of code needed to support i.MX7D variant of the IP.
+
+Cc: yurovsky@gmail.com
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+---
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  13 ++-
+ drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
+ include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
+ 3 files changed, 112 insertions(+), 26 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+index 83aeb1f..11db2ab 100644
+--- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+@@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+ and thus inherits all the common properties defined in designware-pcie.txt.
+ 
+ Required properties:
+-- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
++- compatible:
++	- "fsl,imx6q-pcie"
++	- "fsl,imx6sx-pcie",
++	- "fsl,imx6qp-pcie"
++	- "fsl,imx7d-pcie"
+ - reg: base address and length of the PCIe controller
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
+@@ -34,6 +38,13 @@ Additional required properties for imx6sx-pcie:
+ - clock names: Must include the following additional entries:
+ 	- "pcie_inbound_axi"
+ 
++Additional required properties for imx7d-pcie:
++- power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
++- resets: Must contain phandles to PCIE related reset lines exposed by SRC IP block
++- reset-names: Must contain the following entires:
++  	       - "pciephy"
++	       - "apps"
++
+ Example:
+ 
+ 	pcie@0x01000000 {
+diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+index 50a1291..2f3f375 100644
+--- a/drivers/pci/host/pci-imx6.c
++++ b/drivers/pci/host/pci-imx6.c
+@@ -17,6 +17,7 @@
+ #include <linux/kernel.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
++#include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
+ #include <linux/module.h>
+ #include <linux/of_gpio.h>
+ #include <linux/of_device.h>
+@@ -27,6 +28,7 @@
+ #include <linux/signal.h>
+ #include <linux/types.h>
+ #include <linux/interrupt.h>
++#include <linux/reset.h>
+ 
+ #include "pcie-designware.h"
+ 
+@@ -36,6 +38,7 @@ enum imx6_pcie_variants {
+ 	IMX6Q,
+ 	IMX6SX,
+ 	IMX6QP,
++	IMX7D,
+ };
+ 
+ struct imx6_pcie {
+@@ -47,6 +50,8 @@ struct imx6_pcie {
+ 	struct clk		*pcie_inbound_axi;
+ 	struct clk		*pcie;
+ 	struct regmap		*iomuxc_gpr;
++	struct reset_control	*pciephy_reset;
++	struct reset_control	*apps_reset;
+ 	enum imx6_pcie_variants variant;
+ 	u32			tx_deemph_gen1;
+ 	u32			tx_deemph_gen2_3p5db;
+@@ -56,6 +61,11 @@ struct imx6_pcie {
+ 	int			link_gen;
+ };
+ 
++/* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
++#define PHY_PLL_LOCK_WAIT_MAX_RETRIES	2000
++#define PHY_PLL_LOCK_WAIT_USLEEP_MIN	50
++#define PHY_PLL_LOCK_WAIT_USLEEP_MAX	200
++
+ /* PCIe Root Complex registers (memory-mapped) */
+ #define PCIE_RC_LCR				0x7c
+ #define PCIE_RC_LCR_MAX_LINK_SPEEDS_GEN1	0x1
+@@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	u32 val, gpr1, gpr12;
+ 
+ 	switch (imx6_pcie->variant) {
++	case IMX7D:
++		reset_control_assert(imx6_pcie->pciephy_reset);
++		reset_control_assert(imx6_pcie->apps_reset);
++		break;
+ 	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
+@@ -333,11 +347,33 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+ 				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
+ 		break;
++	case IMX7D:
++		break;
+ 	}
+ 
+ 	return ret;
+ }
+ 
++static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
++{
++	u32 val;
++	unsigned int retries;
++	struct pcie_port *pp = &imx6_pcie->pp;
++	struct device *dev = pp->dev;
++
++	for (retries = 0; retries < PHY_PLL_LOCK_WAIT_MAX_RETRIES; retries++) {
++		regmap_read(imx6_pcie->iomuxc_gpr, IOMUXC_GPR22, &val);
++
++		if (val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED)
++			return;
++
++		usleep_range(PHY_PLL_LOCK_WAIT_USLEEP_MIN,
++			     PHY_PLL_LOCK_WAIT_USLEEP_MAX);
++	}
++
++	dev_err(dev, "PCIe PLL lock timeout\n");
++}
++
+ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ {
+ 	struct pcie_port *pp = &imx6_pcie->pp;
+@@ -381,6 +417,10 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	}
+ 
+ 	switch (imx6_pcie->variant) {
++	case IMX7D:
++		reset_control_deassert(imx6_pcie->pciephy_reset);
++		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
++		break;
+ 	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR5,
+ 				   IMX6SX_GPR5_PCIE_BTNRST_RESET, 0);
+@@ -407,35 +447,44 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 
+ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ {
+-	if (imx6_pcie->variant == IMX6SX)
++	switch (imx6_pcie->variant) {
++	case IMX7D:
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
++				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
++		break;
++	case IMX6SX:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
+ 				   IMX6SX_GPR12_PCIE_RX_EQ_2);
++		/* FALLTHROUGH */
++	default:
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
++				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
+ 
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-			IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
++		/* configure constant input signal to the pcie ctrl and phy */
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
++				   IMX6Q_GPR12_LOS_LEVEL, 9 << 4);
++
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
++				   IMX6Q_GPR8_TX_DEEMPH_GEN1,
++				   imx6_pcie->tx_deemph_gen1 << 0);
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
++				   IMX6Q_GPR8_TX_DEEMPH_GEN2_3P5DB,
++				   imx6_pcie->tx_deemph_gen2_3p5db << 6);
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
++				   IMX6Q_GPR8_TX_DEEMPH_GEN2_6DB,
++				   imx6_pcie->tx_deemph_gen2_6db << 12);
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
++				   IMX6Q_GPR8_TX_SWING_FULL,
++				   imx6_pcie->tx_swing_full << 18);
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
++				   IMX6Q_GPR8_TX_SWING_LOW,
++				   imx6_pcie->tx_swing_low << 25);
++		break;
++	}
+ 
+-	/* configure constant input signal to the pcie ctrl and phy */
+ 	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 			IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT << 12);
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-			IMX6Q_GPR12_LOS_LEVEL, 9 << 4);
+-
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+-			   IMX6Q_GPR8_TX_DEEMPH_GEN1,
+-			   imx6_pcie->tx_deemph_gen1 << 0);
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+-			   IMX6Q_GPR8_TX_DEEMPH_GEN2_3P5DB,
+-			   imx6_pcie->tx_deemph_gen2_3p5db << 6);
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+-			   IMX6Q_GPR8_TX_DEEMPH_GEN2_6DB,
+-			   imx6_pcie->tx_deemph_gen2_6db << 12);
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+-			   IMX6Q_GPR8_TX_SWING_FULL,
+-			   imx6_pcie->tx_swing_full << 18);
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+-			   IMX6Q_GPR8_TX_SWING_LOW,
+-			   imx6_pcie->tx_swing_low << 25);
+ }
+ 
+ static int imx6_pcie_wait_for_link(struct imx6_pcie *imx6_pcie)
+@@ -498,8 +547,11 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
+ 	dw_pcie_writel_rc(pp, PCIE_RC_LCR, tmp);
+ 
+ 	/* Start LTSSM. */
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-			IMX6Q_GPR12_PCIE_CTL_2, 1 << 10);
++	if (imx6_pcie->variant == IMX7D)
++		reset_control_deassert(imx6_pcie->apps_reset);
++	else
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
++				   IMX6Q_GPR12_PCIE_CTL_2, 1 << 10);
+ 
+ 	ret = imx6_pcie_wait_for_link(imx6_pcie);
+ 	if (ret) {
+@@ -674,13 +726,31 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+ 		return PTR_ERR(imx6_pcie->pcie);
+ 	}
+ 
+-	if (imx6_pcie->variant == IMX6SX) {
++	switch (imx6_pcie->variant) {
++	case IMX6SX:
+ 		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
+ 							   "pcie_inbound_axi");
+ 		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
+ 			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+ 			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
+ 		}
++		break;
++	case IMX7D:
++		imx6_pcie->pciephy_reset = devm_reset_control_get(dev,
++								  "pciephy");
++		if (IS_ERR(imx6_pcie->pciephy_reset)) {
++			dev_err(dev, "Failed to get PCIEPHY reset contol\n");
++			return PTR_ERR(imx6_pcie->pciephy_reset);
++		}
++
++		imx6_pcie->apps_reset = devm_reset_control_get(dev, "apps");
++		if (IS_ERR(imx6_pcie->apps_reset)) {
++			dev_err(dev, "Failed to get PCIE APPS reset contol\n");
++			return PTR_ERR(imx6_pcie->apps_reset);
++		}
++		break;
++	default:
++		break;
+ 	}
+ 
+ 	/* Grab GPR config register range */
+@@ -738,6 +808,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
+ 	{ .compatible = "fsl,imx6q-pcie",  .data = (void *)IMX6Q,  },
+ 	{ .compatible = "fsl,imx6sx-pcie", .data = (void *)IMX6SX, },
+ 	{ .compatible = "fsl,imx6qp-pcie", .data = (void *)IMX6QP, },
++	{ .compatible = "fsl,imx7d-pcie",  .data = (void *)IMX7D,  },
+ 	{},
+ };
+ 
+diff --git a/include/linux/mfd/syscon/imx7-iomuxc-gpr.h b/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
+index 4585d61..abbd524 100644
+--- a/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
++++ b/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
+@@ -44,4 +44,8 @@
+ 
+ #define IMX7D_GPR5_CSI_MUX_CONTROL_MIPI		(0x1 << 4)
+ 
++#define IMX7D_GPR12_PCIE_PHY_REFCLK_SEL		BIT(5)
++
++#define IMX7D_GPR22_PCIE_PHY_PLL_LOCKED		BIT(31)
++
+ #endif /* __LINUX_IMX7_IOMUXC_GPR_H */
+-- 
+2.9.3
