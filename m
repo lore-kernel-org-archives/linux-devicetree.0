@@ -1,97 +1,110 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove the OF graph
-Date: Tue, 21 Feb 2017 08:59:19 +0200
-Message-ID: <CAJKOXPcHy=5B2eyQ_7hwDdx8QNnANo8qio4KtY-4s6h6WoYYVQ@mail.gmail.com>
-References: <CGME20170209012715epcas1p3dbe1788b864c50d339dcfd791c0900ec@epcas1p3.samsung.com>
- <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com>
- <58AA95C1.4020809@samsung.com> <CAJKOXPd7Roubdf_5B6pT1PkA9K9dZmjPydYOujXvrz8cVcKVmg@mail.gmail.com>
- <58AAA996.3080900@samsung.com> <CAJKOXPdqfZ6HG9OKiV9xFw1ybSZXKfGPQJdwdVyH-jjeizpUaw@mail.gmail.com>
- <58AB7AC4.40606@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
+Date: Tue, 21 Feb 2017 08:14:09 +0100
+Message-ID: <A41872A2-F095-47F8-B122-FFAE430B0D7F@goldelico.com>
+References: <cover.1482936802.git.hns@goldelico.com> <20170220010714.GB8358@dtor-ws> <B30D00D0-1967-4BD5-A304-E2ADC815A805@goldelico.com> <201702202042.15878@pali>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: multipart/signed; boundary="Apple-Mail=_DF78ACF7-0D85-4371-8B6E-2844A89825D8"; protocol="application/pgp-signature"; micalg=pgp-sha256
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58AB7AC4.40606-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <201702202042.15878@pali>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjam>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 1:24 AM, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> Ideally you are right. DT changes should be no any dependency of driver changes but now Exynos DT is broken.
->>
->> I didn't receive any bug reports that Exynos DT is broken so I am
->> quite surprised hearing that. What do you mean by that?
->
-> Wrong usage of Display relevant DT ABI is being fixed without the backward compatibility of the DT ABI. This means device driver doesn't consider old DT binding.
-> So the use of old DTB binary will make kernel booting not to work correctly.
 
-First you wrote that Exynos DT ABI is broken. Now you mention that
-wrong usage is being fixed and old DTB will not be supported. I really
-don't get what was your idea. Either something is broken or not. This
-is not a Shrodinger's cat.
+--Apple-Mail=_DF78ACF7-0D85-4371-8B6E-2844A89825D8
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
->
->>
->>> So if we have to keep the bisectability between driver and device tree patches - this means that all drivers should always keep the backward compatibility - then the drivers will be messed up.
->>
->> No, you are mixing two things. Bisectability is different than
->> backward compatibility. For the backward DT ABI compatibility, we
->> agreed that in this case it can be dropped. However bisectability is
->> something totally different. The DTS changes always go through
->> separate branch, so the driver has to be *always* ready for such case
->> and should still be fully bisectable. This is a general rule existing
->
-> I meant that if this patch series considers old DT binding to keep the bisectability, then this driver would be messed up because the driver should try to bind same properties at different places and one of these two cases should be bound.
-> So this driver doesn't consider the old DT binding, which means that the old DTB binary isn't compatible with this driver - exynos_drm_dsi.c.
+Hi Pali,
 
-Which is wrong. The driver breaks bisectability on first commit.
+> Am 20.02.2017 um 20:42 schrieb Pali Roh=C3=A1r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>=20
+> Hi Nikolaus!
+>=20
+> On Monday 20 February 2017 17:50:04 H. Nikolaus Schaller wrote:
+>> Hi Dmitry,
+>>=20
+>>> Input driver may set resolution for given axis in units per mm (or
+>>> units per radian for rotational axis ABS_RX, ABS_RY, ABS_RZ), and
+>>> if you check the binding, you can use "touchscreen-x-mm" and
+>>> "touchscreen-y-mm" to specify the size of entire touch surface and
+>>> set resolution from it so that userspace can calculate the proper
+>>> scaling factor.
+>>=20
+>> How is this information exposed by the kernel to user-space? By
+>> scanning the DT file or tree?
+>=20
+> Set input_abs_set_res() from kernel.
 
-Let me put it simple:
-1. First commit breaks all existing in-kernel DTS. When someone tries
-such commit during bisect, he will see some kind of failure. This
-means that bisectability is broken on first commit, regardless whether
-the rest of patches is on the same branch or not.
+I can't find this function defined anywhere but used in 101 LOC.
+LXR doesn't know it either: =
+http://lxr.free-electrons.com/ident?i=3Dinput_abs_set_res
 
-2. If the DTS are applied directly after first commit, the
-bisectability breakage gap is one-commit wide.
+What is going on here?
 
-3. DTS commits go to different tree and different branch. This is a
-general rule. This means that bisectability breakage gap will be much
-wider, span over different trees and branches. This is bad. Bad by
-design.
+> And in userspace call EVIOCGABS
+> ioctl() on input device. Look at struct input_absinfo, you should have
+> all needed information here. This is generic input interface, no DT is
+> needed.
 
-4. Overall: these patches will break bisectability *always*. How big
-the breakage will be, depends on way of applying.
+Ok, if this is not set by a driver it is indeed a driver bug.
 
-5. My merge window was closed some weeks ago. I sent an private email
-to Samsung folks, *including you*, on 24th of Jan reminding about
-arm-soc merge cycle and that it will close soon. You did not respond.
-Yesterday, v4.10 was released which opens Linus' merge window and now
-you want to apply these commits. The worst possible timing.
-Irresponsible.
+But we have to define it's value in DT because the tsc2007 does not know
+anything about the panel dimensions.
 
-So let me put it straight. Please fix the first commit so it will not
-break bisectability.
+IMHO something that should be done by generic of_touchscreen.c
 
-> This means if only one side is merged then this driver wouldn't work correctly.
->
->> for long time and every deviation from the rule is pointed out by
->> arm-soc guys. Whenever I accepted breaking of this rule, I had hard
->> times with arm-soc so no - I am no longer giving up basic rule just
->> because developer might not care.
->
-> Understood and reasonable. Seems I just hurried up. For the bisectability, this driver will have a little messed up code temporarily, and this messed up code will be removed after dt change is merged.
+If of_touchscreen would simply pass the touchscreen-size parameters
+to input_abs_set_res() and the bindings would define it to be units/mm
+it might have saved us all a lot of work and discussion.
 
-Not necessarily. Maybe this can be made in a smart way. I believed
-that no one cared to keep it reasonable and that is a problem.
+>=20
+> I hope that XServer is already using it for evdev devices...
+>=20
+> For whole implementation look at evtest program. That should be good
+> starting point for your userspace implementation.
+>=20
+> While I'm watching this discussion... in my opinion kernel should just
+> invert input axes (when needed) and should not do any other
+> normalization or integer/floating-point re-calibration/re-calculation.
+> If it correctly exports minimum value, maximum value and resolution =
+then
+> userspace can correctly re-scale input events to units which userspace
+> needs (e.g. mapping into LCD screen pixels or whatever is needed).
 
-> This thing was really what I want to avoid - if even the messed up code should be keeped forever for the backward compatibility then it would be really terribble. :(
+BR and thanks,
+Nikolaus
 
-Again you are mixing DT ABI backward compatibility with bisectability.
-There is no point of explaining this again...
 
-Best regards,
-Krzysztof
+--Apple-Mail=_DF78ACF7-0D85-4371-8B6E-2844A89825D8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYq+jCAAoJEIl79TGLgAm6oLEQAIKq8AY89cWAIJrRNy2H+rqG
+SHz5Aw7eYmXDbcVp9wubECAJWdIyoZGzGlHScnmgyK8R4RJXG6wa1UVMR0mAIqk3
+zE9cBxnEkEVFyL+d+50Bt5WaolFiyGBJKWn/IeLz1Bxv5gEknqoH5J/A9pjroW0U
+JlZi3uHhG1pUioLEs7SfuDrl3rHrXP5GewJhzk3jSoSq0xtBPtr9ArlwVYNVpC03
+WAqpFdQdIRd99nEEf2fZ/DMKsXiFELQvf+rbmJcDQmH4WE39Iaq9iwLJLGkjwb+t
+v4H5cNKCmKKrKpLjDrYSIrw6M9gApOavICP3kfBKzztALxdFWnp8rY0+89gYumVc
+wqYfFJJsf1hAnMeYLln/zxVP3DGk5UQnaOeu10bLB0gHU11nSc+9cH0rAGy1fcq5
+OaG9FiaSXg5t9nV8lB8hUpAQnlhEp0GeMsMuaVx2kydjvwUfq62Udr/6RkfT5B10
+E5PLCj5dhbtl0HSPnOZ7/OPQcGqSKz/4DWfp+Nxfq8lgTCUuCAELeln5T5JGqbYU
++vL3irsXjUFMKopKosLeqM0FBc4QNvK+TUKdV7heFO6fiADCX/OZMKzxd1K2J9dk
+q6tSpGtB+K8HYEIEk9LThTYRgWsRjIzgv8NKGADr+6IU7JMKqE9Z3Rh2oi5Wd2Bt
+gyDZ+paoXp37jRla9+1o
+=AdSb
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_DF78ACF7-0D85-4371-8B6E-2844A89825D8--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
