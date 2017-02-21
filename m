@@ -1,58 +1,159 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 01/14] Documentation: dt/bindings: Document
- pinctrl-ingenic
-Date: Tue, 21 Feb 2017 12:20:10 +0100
-Message-ID: <f19fea79c2616455f5f08070923428cc@crapouillou.net>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170125185207.23902-1-paul@crapouillou.net>
- <20170125185207.23902-2-paul@crapouillou.net>
- <20170130203617.hpljtcmzava3rq2n@rob-hp-laptop>
- <12dc62a7255bd453ff4e5e89f93ebc58@mail.crapouillou.net>
- <CACRpkdbAgy4sh6NT5DdQD6EQtOZEwevohEA6OGRcVz98yqS52Q@mail.gmail.com>
- <fd3c507484a9ee34a08c9f92e60624db@mail.crapouillou.net>
- <CACRpkdbAA33FFrMgx-eZPmpBBfQ_hF+=dSu0hANVthdbadicDg@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Tue, 21 Feb 2017 12:20:50 +0100
+Message-ID: <20170221122050.421dae48@bbrezillon>
+References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
+        <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
+        <20170220213803.7ba5591e@bbrezillon>
+        <20170220215009.0ecbf5a1@bbrezillon>
+        <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+        <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
+        <20170221090610.6d531b94@bbrezillon>
+        <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
+        <20170221112641.6276c001@bbrezillon>
+        <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbAA33FFrMgx-eZPmpBBfQ_hF+=dSu0hANVthdbadicDg@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 2017-02-20 14:56, Linus Walleij a écrit :
-> On Thu, Feb 9, 2017 at 6:28 PM, Paul Cercueil <paul@crapouillou.net> 
-> wrote:
-> 
->> I was thinking that instead of having one pinctrl-ingenic instance 
->> covering
->> 0x600 of register space, and 6 instances of gpio-ingenic having 0x100 
->> each,
->> I could just have 6 instances of pinctrl-ingenic, each one with an 
->> instance
->> of gpio-ingenic declared as a sub-node, each handling just 0x100 of 
->> memory
->> space.
-> 
-> My head is spinning,  but I think I get it. What is wrong with the 
-> solution
-> I proposed with one pin control instance covering the whole 0x600 and 
-> with 6
-> subnodes of GPIO?
-> 
-> The GPIO nodes do not even have to have an address range associated 
-> with
-> them you know, that can be distributed out with regmap code accessing
-> the parent regmap.
+On Tue, 21 Feb 2017 13:02:21 +0200
+Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-OK, but then each GPIO chip 'X' still need to know its offset in the 
-register
-area, which is (pinctrl_base + X * 0x100).
-What's the best way to pass that info to the driver? (I assume it's not 
-with
-a custom DT binding...).
+> On Tue, Feb 21, 2017 at 12:26 PM, Boris Brezillon
+> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Tue, 21 Feb 2017 12:03:45 +0200
+> > Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:  
+> 
+> >> 1. For example,
+> >>
+> >> #define ATMEL_NFC_CMD(pos, cmd)                        ((cmd) <<
+> >> (((pos) * 8) + 2))  
+> >
+> > Well, I like to explicitly put parenthesis even when operator
+> > precedence guarantees the order of the calculation ('*' is preceding
+> > '+').  
+> 
+> That's my point. I'm not a LISP programmer.
+> Personally I think it makes readability worse.
 
-Regards,
--Paul
+So, it's a matter of taste.
+> >>
+> >> 4. First of all, why do you need this function in the first place?
+> >>
+> >> +struct gpio_desc *
+> >> +atmel_nand_pdata_get_gpio(struct atmel_nand_controller *nc, int gpioid,
+> >> +                         const char *name, bool active_low,
+> >> +                         enum gpiod_flags flags)  
+> >
+> > Because I don't want to duplicate the code done in
+> > atmel_nand_pdata_get_gpio() each time I have to convert a GPIO number
+> > into a GPIO descriptor, and that is needed to support platforms that
+> > haven't moved to DT yet  
+> 
+> They should use GPIO lookup tables.
+> 
+> We don't encourage people to use platform data anymore.
+> 
+> We have unified device properties for something like "timeout-us", we
+> have look up tables when you need specifics like pwm, gpio, pinctrl,
+> ...
+> 
+> Abusing platform data with pointers is also not welcome.
+> 
+> > (in this case, avr32).  
+> 
+> It's dead de facto.
+> 
+> When last time did you compile kernel for it? What was the version of kernel?
+> Did it get successfully?
+> 
+> When are we going to remove avr32 support from kernel completely?
+
+I'll let Nicolas answer that one.
+
+> 
+> >> 5. BIT() macro:  
+> 
+> > We could probably use BIT() in a few places.  
+> 
+> There are more places including data structures assignments.
+
+Yes. These are minor changes. I'll try to fix them.
+Note that I sometime prefer to keep (1 << X).
+
+Example:
+
+#define PMECC_CFG_READ_OP			(0 << 12)
+#define PMECC_CFG_WRITE_OP			(1 << 12)
+
+> 
+> > Again, this has been copied from the old driver. I'll have a closer
+> > look.  
+> 
+> Exactly. You overlooked due to enormous LOC in the one change. See my
+> point below.
+> 
+> >> 7. Question to all that distribution or whatever functions, don't you
+> >> have a common helper? Or each vendor requires different logic behind
+> >> it?  
+> >
+> > What are you talking about? nand_chip hooks?  
+> 
+> That long arithmetic with some data.
+
+Okay, so the code in pmecc.c. See, it's hard to follow a review when
+you don't comment inline.
+
+> 
+> >> 8. Have you checked what kernel library provides?  
+> >
+> > I think so, but again, this is really vague, what kind of
+> > open-coded functions do you think could be replaced with core libraries
+> > helpers?  
+> 
+> I dunno, I'm asking you. Usually if I see a pattern I got a clue to
+> check lib/ and similar places. From time to time I discover something
+> new and interesting there.
+
+If you're talking about the code in pmecc.c, yes, I already mentioned
+in the header that it should be reworked to use some helpers from
+lib/bch.c, but that's not the point of this series, and is left as
+future improvements.
+
+> 
+> >> And I believe there are still issues like those. After, who is on
+> >> topic, might even find some logical and other issues...
+> >>
+> >> P.S. TBH, so big change is unreviewable in meaningful time. To have a
+> >> comprehensive review I, for example, spend ~1h/250LOC, and
+> >> ~2.5h/1000LOC, I would estimate ~4h/2000LOC. Imagine one to spend one
+> >> day for this. Any volunteer? Not me.  
+> >
+> > I'm not asking you to review the whole driver, but you started to
+> > comment on the code without pointing clearly to the things you wanted
+> > me to address.  
+> 
+> Yes, because my point is *split* this to be reviewable.
+> 
+
+And how do you do with new drivers? Do you ask people to split their
+submissions in micro changes? I'm regularly reviewing drivers that are
+several thousands LOC, and I don't ask people to split things just
+because it's too long. When I ask them to split in different commits,
+it's because they are doing several unrelated changes at once.
+
+Note that I considered refactoring the existing driver in smaller
+steps, but it's almost impossible, because the code is too messy and I
+would end up with a huge series of patches that is not easier to review.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
