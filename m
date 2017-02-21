@@ -1,81 +1,91 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 18:05:22 +0100
-Message-ID: <20170221170522.fphb37d266fyg3to@piout.net>
-References: <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
- <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
- <20170221090610.6d531b94@bbrezillon>
- <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
- <20170221112641.6276c001@bbrezillon>
- <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
- <20170221112720.ynehsryprhrhzjla@piout.net>
- <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
- <20170221162133.jch6yzpotj4s7zob@piout.net>
- <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
+From: Andreas Kemnade <andreas-cLv4Z9ELZ06ZuzBka8ofvg@public.gmane.org>
+Subject: Re: [Letux-kernel] [PATCH v9 1/8] drivers:input:tsc2007: add new
+ common binding names, pre-calibration, flipping and rotation
+Date: Tue, 21 Feb 2017 18:07:55 +0100
+Message-ID: <20170221180755.48946fc5@aktux>
+References: <cover.1482936802.git.hns@goldelico.com>
+        <B30D00D0-1967-4BD5-A304-E2ADC815A805@goldelico.com>
+        <201702202042.15878@pali>
+        <201702202208.50498@pali>
+        <C2E7AC24-75AB-442F-94A2-84904723EE41@goldelico.com>
+        <CAKdAkRRZa-fpv_TKRdY=hFV3GdKxQ3muQORquvV_bTrDzQAhCw@mail.gmail.com>
+        <0A33CCEA-448C-4C1D-9563-FDA54743BD01@goldelico.com>
+        <20170221090940.GD9795@pali>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/QBvnUSHLCRUNlOXqJdFJkXU"; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170221090940.GD9795@pali>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
+To: Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrey Gelman <andrey.gelman-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Michel Verlaan <michel.verl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd@arndb>
 List-Id: devicetree@vger.kernel.org
 
-On 21/02/2017 at 18:32:26 +0200, Andy Shevchenko wrote:
-> I did it ~year or so before where another relocation bug was discovered (fixed).
-> 
-> > please feel free to
-> > send a patch to remove the whole architecture.
-> > The benefits for atmel will be: proper big endian support, removal of
-> > platform data from all the drivers, better clocksource handling.
-> 
-> That is good point, but if maintainers don't care, why anyone else should?
-> Neither do I.
-> 
-> >> > It can be frustrating at times to handle that platform but if it is
-> >> > working for someone, I don't see why we would remove it.
-> >>
-> >> How it's working if it's not linked?
-> >>
-> >
-> > Come on, v4.10 has just been release and v4.9 was building just fine. Do
-> > you really expect everybody to closely follow linux-next or update
-> > overnight?
-> 
-> What version do you use as compiler?
-> 
-> Today's linux-next:
-> $ make O=~/prj/TMP/out/avr32 C=1 CF=-D__CHECK_ENDIAN__ -j64 CONFIG_DEBUG_INFO=
-> y CONFIG_DEBUG_SECTION_MISMATCH=y
-> 
->   CC      lib/sbitmap.o
-> {standard input}: Assembler messages:
-> {standard input}:378: Warning: Unary operator + ignored because bad
-> operand follows
-> {standard input}:378: Warning: missing operand; zero assumed
-> {standard input}:378: Internal error!
-> Assertion failure in finish_insn at .././gas/config/tc-avr32.c line 3498.
-> Please report this bug.
-> scripts/Makefile.build:294: recipe for target 'lib/sbitmap.o' failed
-> 
-> $ avr32-linux-gcc --version
-> avr32-linux-gcc (GCC) 4.2.2-atmel.1.0.8
-> 
+--Sig_/QBvnUSHLCRUNlOXqJdFJkXU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-avr32-linux-gcc (GCC) 4.2.4-atmel.1.1.3.avr32linux.1
+Hi,
 
-Today's linux-next built without network support, the issue still being:
-virt/built-in.o: warning: input is not relaxable net/built-in.o: In function `rtnl_fill_vfinfo':
-rtnetlink.c:(.text+0x21974): relocation truncated to fit: R_AVR32_11H_PCREL against `.text'+2156c
-rtnetlink.c:(.text+0x2198a): relocation truncated to fit: R_AVR32_11H_PCREL against `.text'+2156c
-Makefile:983: recipe for target 'vmlinux' failed
+[...]
+> > Hm. Why not touching pixel (0,0) on the touch is always pixel (0,0)
+> > on the screen and touching pixel (639,479) is always (639,479)?
+>=20
+> Important is that there is no 1:1 mapping between input evdev device
+> and drm/fb output device. These are two independent devices. There is
+> no connection between screen and touch. So such presumption should
+> not be done in kernel. You can do that in userspace.
+>=20
+But at least it can be told to userspace that these two devices are
+connected. That information should be specified in devicetree because
+it is not auto-detectable.
 
+> Lets take e.g. touchpad. It acts similarly as touchscreen input device
+> (both reports absolute positioned touch events), but touchpad is not
+> connected with screen. And from kernel point of view these devices are
+> both input and absolute positioned.
+>=20
+> It looks like the whole problem is there that you wanted to do this
+> mapping for your hardware in kernel. And this is not what is kernel
+> doing or should do. Moreover I know people who are using integrated
+> touchscreen on laptop as (touch) input device for external monitor.
+> And in this configuration it does not make any sense to map
+> touchscreen input to pixels of integrated LCD touchscreen (as
+> external monitor could have different resolution as integrated LCD
+> touchcreen).
+>  =20
+Interesting example. But then you also do not need flipping/rotation
+because the angle between your screen and your absolute position device
+is not fixed.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Regards,
+Andreas
+
+>
+
+--Sig_/QBvnUSHLCRUNlOXqJdFJkXU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIbBAEBCAAGBQJYrHQKAAoJEInxNTv1CwY0vlUP9ArqFcdZQ5ZzJURV5SSdM0j3
+c13vY/QJvdBZKmMSKlWaL2ino87ITpbemmrFzknLL5o2FEDBa2jcylOesVyTTZwy
+AoFgU6mg+oxjB2xzjgoqFmvlAFxnVdhUlepkPyvZoqyWUnVAY26VGWwq5Hy5pwZG
+SS8O05ZTztKMc3PS+teXM3q82lpxMDxoxXH/f1faQpo1f5o90MDj4hiDO68gS9fW
+15usLoj+cdoBGxKwCsAc5EJ7HcavBhUW3uodwASZG0CwZtvEpPCkfpCcZgqrJel1
+xc96A2Yh75HnBs4z4S5UGVDHbzUBPq94VGKAd9MzFC43T19vXz3kHEseLmYZDgmZ
+PexyDxoaVOswMH3tthDnchTOCdKTY0MqmR+xvuycp6njkckU+coyH9UJfN9B9QgT
+0a2xSzUmOjRikr4B7dpgFqOSl2cS3KCqG4SGpUUajtyty8b/rwF7oU300tfTPZwU
+BqOKgdBPitKhZfVq/WWlnDCtmcJifiHtU0N8krn+ZW08gSOzNdUpvOzq/MosXRTV
+xSLkiA+WagMFeAWeu4nzZ4WojeovydME1RLVAYFz7Ayru3oVr4MFbbS7zEK8TiEt
+Pamdxz/0mBVXWOMhFXHC5ym66w7BUgHwemvb4L5DntL+JvPhoRUOD22q0HtSR0aG
+2gbFTegr0KpYYExRCf0=
+=osTl
+-----END PGP SIGNATURE-----
+
+--Sig_/QBvnUSHLCRUNlOXqJdFJkXU--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
