@@ -1,68 +1,120 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v1 1/2] dt-bindings: Document the Synopsys DW AXI DMA bindings
-Date: Tue, 21 Feb 2017 23:38:03 +0300
-Message-ID: <1487709484-868-2-git-send-email-Eugeniy.Paltsev@synopsys.com>
-References: <1487709484-868-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487709484-868-1-git-send-email-Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
+Date: Tue, 21 Feb 2017 22:48:09 +0200
+Message-ID: <cc6c914e-c3e7-7703-0405-104e701610cf@mentor.com>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+ <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
+ <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
+ <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: CARLOS.PALMINHA@synopsys.com, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of device tree bindings for the Synopsys
-DesignWare AXI DMA controller.
+Hi Ramiro,
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/dma/snps,axi-dw-dmac.txt   | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/snps,axi-dw-dmac.txt
+On 02/21/2017 10:13 PM, Ramiro Oliveira wrote:
+> Hi Vladimir,
+> 
+> Thank you for your feedback
+> 
+> On 2/21/2017 3:58 PM, Vladimir Zapolskiy wrote:
+>> Hi Ramiro,
+>>
+>> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
+>>> Create device tree bindings documentation.
+>>>
+>>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
+>>>  1 file changed, 35 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>> new file mode 100644
+>>> index 000000000000..31956426d3b9
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>> @@ -0,0 +1,35 @@
+>>> +Omnivision OV5647 raw image sensor
+>>> +---------------------------------
+>>> +
+>>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+>>> +and CCI (I2C compatible) control bus.
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible		: "ovti,ov5647".
+>>> +- reg			: I2C slave address of the sensor.
+>>> +- clocks		: Reference to the xclk clock.
+>>
+>> Is "xclk" clock a pixel clock or something else?
+>>
+> 
+> It's an external oscillator.
 
-diff --git a/Documentation/devicetree/bindings/dma/snps,axi-dw-dmac.txt b/Documentation/devicetree/bindings/dma/snps,axi-dw-dmac.txt
-new file mode 100644
-index 0000000..21666fe
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/snps,axi-dw-dmac.txt
-@@ -0,0 +1,34 @@
-+* Synopsys DesignWare AXI DMA Controller
-+
-+Required properties:
-+- compatible: "snps,axi-dma-1.01a"
-+- reg: Address range of the DMAC registers. This should include
-+  all of the per-channel registers.
-+- interrupt: Should contain the DMAC interrupt number.
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device.
-+- dma-channels: Number of channels supported by hardware.
-+- snps,dma-masters: Number of AXI masters supported by the hardware.
-+- snps,data-width: Maximum AXI data width supported by hardware.
-+  (0 - 8bits, 1 - 16bits, 2 - 32bits, ..., 6 - 512bits)
-+- snps,priority: Priority of channel. Array size is equal to the number of
-+  dma-channels. Priority value must be programmed within [0:dma-channels-1]
-+  range. (0 - minimum priority)
-+- snps,block-size: Maximum block size supported by the controller channel.
-+  Array size is equal to the number of dma-channels.
-+
-+Example:
-+
-+dmac: dma-controller@80000 {
-+	compatible = "snps,axi-dma-1.01a";
-+	reg = <0x80000 0x400>;
-+	clocks = <&core_clk>;
-+	interrupt-parent = <&intc>;
-+	interrupts = <27>;
-+
-+	dma-channels = <4>;
-+	snps,dma-masters = <2>;
-+	snps,data-width = <3>;
-+	snps,block-size = <4096 4096 4096 4096>;
-+	snps,priority = <0 1 2 3>;
-+};
--- 
-2.5.5
+hmm, I suppose a clock of any type could serve as a clock for the sensor.
+It can be an external oscillator on a particular board, or it can be
+something else on another board.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you please describe what for does ov5647 sensor need this clock, what
+is its function?
+
+> 
+>>> +- clock-names		: Should be "xclk".
+>>
+>> You can remove this property, because there is only one source clock.
+>>
+> 
+> Ok.
+> 
+>>> +- clock-frequency	: Frequency of the xclk clock.
+>>
+>> And after the last updates in the driver this property can be removed as well.
+>>
+> 
+> But I'm still using clk_get_rate in the driver, if I remove the frequency here
+> the probing will fail.
+> 
+
+I doubt it, there should be no connection between a custom "clock-frequency"
+device tree property in a clock consumer device node and clk_get_rate() function
+from the CCF, which takes a clock provider as its argument.
+
+>>> +
+>>> +The common video interfaces bindings (see video-interfaces.txt) should be
+>>> +used to specify link to the image data receiver. The OV5647 device
+>>> +node should contain one 'port' child node with an 'endpoint' subnode.
+>>> +
+>>> +Example:
+>>> +
+>>> +	i2c@2000 {
+>>> +		...
+>>> +		ov: camera@36 {
+>>> +			compatible = "ovti,ov5647";
+>>> +			reg = <0x36>;
+>>> +			clocks = <&camera_clk>;
+>>> +			clock-names = "xclk";
+>>> +			clock-frequency = <25000000>;
+>>
+>> When you remove two unused properties, please don't forget to update the
+>> example.
+>>
+> 
+> Ok.
+> 
+>>> +			port {
+>>> +				camera_1: endpoint {
+>>> +					remote-endpoint = <&csi1_ep1>;
+>>> +				};
+>>> +			};
+>>> +		};
+>>> +	};
+>>>
+>>
