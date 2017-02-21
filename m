@@ -1,66 +1,135 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 01:54:37 +0200
-Message-ID: <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
-References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
- <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
- <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
- <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon> <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Tue, 21 Feb 2017 00:13:32 +0000
+Message-ID: <20170221001332.GS21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170220220409.GX16975-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 1:40 AM, Andy Shevchenko
-<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Feb 20, 2017 at 10:50 PM, Boris Brezillon
-> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Mon, 20 Feb 2017 21:38:03 +0100
->> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>
->>> On Mon, 20 Feb 2017 22:27:17 +0200
->>> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>> > On Mon, Feb 20, 2017 at 2:28 PM, Boris Brezillon
->>> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>> >
->>> > >  drivers/mtd/nand/atmel/nand-controller.c | 2269 +++++++++++++++++++++++++++
->>> > >  drivers/mtd/nand/atmel_nand.c            | 2479 ------------------------------
->>> >
->>> > Does -M -C help you?
->>> > At least it would help reviewers
->>> >
->>>
->>> No it doesn't, because files were not just moved around using git mv,
->>> it's a complete rewrite of the driver. IIUC, you're about to review
->>> this submission, or are you just trolling like last time?
->>
->> My bad, I mistaken you with someone else. Sorry for being harsh, but my
->> explanation stands ;-).
->
-> No problem. I was asking since it so big and on first glance looks
-> like a partial copy (I dunno if parameter to -C makes it somehow
-> useful), though I can't review this. It's too big to me. Sorry I'm
-> really not trolling, just didn't read commit message carefully.
+On Tue, Feb 21, 2017 at 12:04:10AM +0200, Sakari Ailus wrote:
+> On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
+> > From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> > 
+> > Setting and getting frame rates is part of the negotiation mechanism
+> > between subdevs.  The lack of support means that a frame rate at the
+> > sensor can't be negotiated through the subdev path.
+> 
+> Just wondering --- what do you need this for?
 
-Okay, I very quickly looked into the code, what I noticed
-- you like extra parens and empty lines in some cases (not big deal)
-- some functions perhaps might have been refactored to have common
-pieces in error handling, though I didn't read core carefully.
+The v4l2 documentation contradicts the media-ctl implementation.
 
-Most important part I have noticed is a GPIO request.
-I didn't get why you almost repeat gpiod_get() in case of platform data?
-Shouldn't we have GPIO look up table?
-Can we use builtin device properties (for GPIO and/or overall)?
+While v4l2 documentation says:
 
+  These ioctls are used to get and set the frame interval at specific
+  subdev pads in the image pipeline. The frame interval only makes sense
+  for sub-devices that can control the frame period on their own. This
+  includes, for instance, image sensors and TV tuners. Sub-devices that
+  don't support frame intervals must not implement these ioctls.
+
+However, when trying to configure the pipeline using media-ctl, eg:
+
+media-ctl -d /dev/media1 --set-v4l2 '"imx219 pixel 0-0010":0[crop:(0,0)/3264x2464]'
+media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":1[fmt:SRGGB10/3264x2464@1/30]'
+media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":0[fmt:SRGGB8/816x616@1/30]'
+media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616@1/30]'
+Unable to setup formats: Inappropriate ioctl for device (25)
+media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0_mux":2[fmt:SRGGB8/816x616@1/30]'
+media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0":2[fmt:SRGGB8/816x616@1/30]'
+
+The problem there is that the format setting for the csi2 does not get
+propagated forward:
+
+$ strace media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616@1/30]'
+...
+open("/dev/v4l-subdev16", O_RDWR)       = 3
+ioctl(3, VIDIOC_SUBDEV_S_FMT, 0xbec16244) = 0
+ioctl(3, VIDIOC_SUBDEV_S_FRAME_INTERVAL, 0xbec162a4) = -1 ENOTTY (Inappropriate
+ioctl for device)
+fstat64(1, {st_mode=S_IFCHR|0600, st_rdev=makedev(136, 2), ...}) = 0
+write(1, "Unable to setup formats: Inappro"..., 61) = 61
+Unable to setup formats: Inappropriate ioctl for device (25)
+close(3)                                = 0
+exit_group(1)                           = ?
++++ exited with 1 +++
+
+because media-ctl exits as soon as it encouters the error while trying
+to set the frame rate.
+
+This makes implementing setup of the media pipeline in shell scripts
+unnecessarily difficult - as you need to then know whether an entity
+is likely not to support the VIDIOC_SUBDEV_S_FRAME_INTERVAL call,
+and either avoid specifying a frame rate:
+
+$ strace media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616]'
+...
+open("/dev/v4l-subdev16", O_RDWR)       = 3
+ioctl(3, VIDIOC_SUBDEV_S_FMT, 0xbeb1a254) = 0
+open("/dev/v4l-subdev0", O_RDWR)        = 4
+ioctl(4, VIDIOC_SUBDEV_S_FMT, 0xbeb1a254) = 0
+close(4)                                = 0
+close(3)                                = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+
+or manually setting the format on the sink.
+
+Allowing the S_FRAME_INTERVAL call seems to me to be more in keeping
+with the negotiation mechanism that is implemented in subdevs, and
+IMHO should be implemented inside the kernel as a pad operation along
+with the format negotiation, especially so as frame skipping is
+defined as scaling, in just the same way as the frame size is also
+scaling:
+
+       -  ``MEDIA_ENT_F_PROC_VIDEO_SCALER``
+
+       -  Video scaler. An entity capable of video scaling must have
+          at least one sink pad and one source pad, and scale the
+          video frame(s) received on its sink pad(s) to a different
+          resolution output on its source pad(s). The range of
+          supported scaling ratios is entity-specific and can differ
+          between the horizontal and vertical directions (in particular
+          scaling can be supported in one direction only). Binning and
+          skipping are considered as scaling.
+
+Although, this is vague, as it doesn't define what it means by "skipping",
+whether that's skipping pixels (iow, sub-sampling) or whether that's
+frame skipping.
+
+Then there's the issue where, if you have this setup:
+
+ camera --> csi2 receiver --> csi --> capture
+
+and the "csi" subdev can skip frames, you need to know (a) at the CSI
+sink pad what the frame rate is of the source (b) what the desired
+source pad frame rate is, so you can configure the frame skipping.
+So, does the csi subdev have to walk back through the media graph
+looking for the frame rate?  Does the capture device have to walk back
+through the media graph looking for some subdev to tell it what the
+frame rate is - the capture device certainly can't go straight to the
+sensor to get an answer to that question, because that bypasses the
+effect of the CSI frame skipping (which will lower the frame rate.)
+
+IMHO, frame rate is just another format property, just like the
+resolution and data format itself, and v4l2 should be treating it no
+differently.
+
+In any case, the documentation vs media-ctl create something of a very
+obscure situation, one that probably needs solving one way or another.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
