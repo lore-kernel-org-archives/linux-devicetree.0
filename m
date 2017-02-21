@@ -1,87 +1,106 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
-Date: Tue, 21 Feb 2017 09:58:16 +0100
-Message-ID: <31b96f29-e369-546a-6270-266daea71062@i2se.com>
-References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
- <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
- <48907a31-eaa6-27e2-633f-d36de521e868@tronnes.org>
- <1983281189.110224.1487619653742@email.1und1.de>
- <5b14ed6d-4db8-abf7-ceba-ef46534b6023@tronnes.org>
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/3] usb: usb251xb: dt: add unit suffix to oc-delay and power-on-time
+Date: Tue, 21 Feb 2017 09:56:18 +0100
+Message-ID: <1487667379-2075-3-git-send-email-richard.leitner@skidata.com>
+References: <1487667379-2075-1-git-send-email-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5b14ed6d-4db8-abf7-ceba-ef46534b6023-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <1487667379-2075-1-git-send-email-richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 20.02.2017 um 22:22 schrieb Noralf Trønnes:
->
-> Den 20.02.2017 20.40, skrev Stefan Wahren:
->> Hi,
->>
->>> Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> hat am 18. Februar 2017 um 19:34 
->>> geschrieben:
->>>
->>>
->>>
->>> Den 16.02.2017 22.20, skrev Stefan Wahren:
->>>> Since commit e2474541032d ("bcm2835: Fix hang for writing messages
->>>> larger than 16 bytes") the interrupt handler is prone to a possible
->>>> NULL pointer dereference. This could happen if an interrupt fires
->>>> before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
->>>> on the RPi 3. Even this is an unexpected behavior the driver must
->>>> handle that with an error instead of a crash.
->>>>
->>>> CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
->>>> CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->>>> Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger 
->>>> than 16 bytes")
->>>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->>>> ---
->>>>    drivers/i2c/busses/i2c-bcm2835.c |    4 +++-
->>>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/i2c/busses/i2c-bcm2835.c 
->>>> b/drivers/i2c/busses/i2c-bcm2835.c
->>>> index c3436f6..10e39c8 100644
->>>> --- a/drivers/i2c/busses/i2c-bcm2835.c
->>>> +++ b/drivers/i2c/busses/i2c-bcm2835.c
->>>> @@ -195,7 +195,9 @@ static irqreturn_t bcm2835_i2c_isr(int 
->>>> this_irq, void *data)
->>>>        }
->>>>           if (val & BCM2835_I2C_S_DONE) {
->>>> -        if (i2c_dev->curr_msg->flags & I2C_M_RD) {
->>>> +        if (!i2c_dev->curr_msg) {
->>>> +            dev_err(i2c_dev->dev, "Got unexpected interrupt (from 
->>>> firmware?)\n");
->>>> +        } else if (i2c_dev->curr_msg->flags & I2C_M_RD) {
->>>>                bcm2835_drain_rxfifo(i2c_dev);
->>>>                val = bcm2835_i2c_readl(i2c_dev, BCM2835_I2C_S);
->>>>            }
->>> Thanks,
->>>
->>> Acked-by: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
->>>
->> thanks, but i would be more happier to receive feedback for patches 2 
->> and 3.
->
-> I have only worked on dts files downstream and never done any arm64
-> stuff, so I'm not up to speed on this.
->
-> Noralf.
->
+Rename oc-delay-* to oc-delay-us and make it expect a time value.
+Furthermore add -ms suffix to power-on-time. These changes were
+suggested by Rob Herring in https://lkml.org/lkml/2017/2/15/1283.
 
-Okay, at the end i only want to know 2 things:
+Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/usb251xb.txt |  9 +++---
+ drivers/usb/misc/usb251xb.c                        | 32 +++++++++++++---------
+ 2 files changed, 24 insertions(+), 17 deletions(-)
 
-Does new message "Got unexpected interrupt" still appear after applying 
-all 3 patches?
-
-Does the annoying message "i2c-bcm2835 3f805000.i2c: i2c transfer timed 
-out" still appear after applying all 3 patches?
+diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+index a5efd10..4d6bd73 100644
+--- a/Documentation/devicetree/bindings/usb/usb251xb.txt
++++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+@@ -31,7 +31,8 @@ Optional properties :
+ 	(default is individual)
+  - dynamic-power-switching : enable auto-switching from self- to bus-powered
+ 	operation if the local power source is removed or unavailable
+- - oc-delay-{100us,4ms,8ms,16ms} : set over current timer delay (default is 8ms)
++ - oc-delay-us : microseconds over current timer delay, valid values are 100,
++	4000, 8000 (default) and 16000. All other values are rounded up.
+  - compound-device : indicated the hub is part of a compound device
+  - port-mapping-mode : enable port mapping mode
+  - string-support : enable string descriptor support (required for manufacturer,
+@@ -40,9 +41,9 @@ Optional properties :
+ 	device connected.
+  - sp-disabled-ports : Specifies the ports which will be self-power disabled
+  - bp-disabled-ports : Specifies the ports which will be bus-power disabled
+- - power-on-time : Specifies the time it takes from the time the host initiates
+-	the power-on sequence to a port until the port has adequate power. The
+-	value is given in ms in a 0 - 510 range (default is 100ms).
++ - power-on-time-ms : Specifies the time it takes from the time the host
++	initiates the power-on sequence to a port until the port has adequate
++	power. The value is given in ms in a 0 - 510 range (default is 100ms).
+ 
+ Examples:
+ 	usb2512b@2c {
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index 3f9c306..58b887a 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -375,18 +375,24 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	if (of_get_property(np, "dynamic-power-switching", NULL))
+ 		hub->conf_data2 |= BIT(7);
+ 
+-	if (of_get_property(np, "oc-delay-100us", NULL)) {
+-		hub->conf_data2 &= ~BIT(5);
+-		hub->conf_data2 &= ~BIT(4);
+-	} else if (of_get_property(np, "oc-delay-4ms", NULL)) {
+-		hub->conf_data2 &= ~BIT(5);
+-		hub->conf_data2 |= BIT(4);
+-	} else if (of_get_property(np, "oc-delay-8ms", NULL)) {
+-		hub->conf_data2 |= BIT(5);
+-		hub->conf_data2 &= ~BIT(4);
+-	} else if (of_get_property(np, "oc-delay-16ms", NULL)) {
+-		hub->conf_data2 |= BIT(5);
+-		hub->conf_data2 |= BIT(4);
++	if (!of_property_read_u32(np, "oc-delay-us", property_u32)) {
++		if (*property_u32 < 100) {
++			/* 100 us*/
++			hub->conf_data2 &= ~BIT(5);
++			hub->conf_data2 &= ~BIT(4);
++		} else if (*property_u32 < 4000) {
++			/* 4 ms */
++			hub->conf_data2 &= ~BIT(5);
++			hub->conf_data2 |= BIT(4);
++		} else if (*property_u32 < 8000) {
++			/* 8 ms */
++			hub->conf_data2 |= BIT(5);
++			hub->conf_data2 &= ~BIT(4);
++		} else {
++			/* 16 ms */
++			hub->conf_data2 |= BIT(5);
++			hub->conf_data2 |= BIT(4);
++		}
+ 	}
+ 
+ 	if (of_get_property(np, "compound-device", NULL))
+@@ -433,7 +439,7 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	}
+ 
+ 	hub->power_on_time = USB251XB_DEF_POWER_ON_TIME;
+-	if (!of_property_read_u32(np, "power-on-time", property_u32))
++	if (!of_property_read_u32(np, "power-on-time-ms", property_u32))
+ 		hub->power_on_time = min_t(u8, be32_to_cpu(*property_u32) / 2,
+ 					   255);
+ 
+-- 
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
