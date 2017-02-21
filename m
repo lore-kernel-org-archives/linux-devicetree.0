@@ -1,149 +1,143 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 4/7] arm: dts: r7s72100: Add pin controller node
-Date: Tue, 21 Feb 2017 11:46:03 +0100
-Message-ID: <3dd69ef5-e8a4-b69c-b4fa-1be6ba777cfa@jmondi.org>
-References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487610788-6939-5-git-send-email-jacopo+renesas@jmondi.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Tue, 21 Feb 2017 11:46:32 +0100
+Message-ID: <ec74f8e0-0ede-714f-fcde-d612d9a26c1c@atmel.com>
+References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
+ <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
+ <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon>
+ <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+ <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
+ <20170221090610.6d531b94@bbrezillon>
+ <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
+ <20170221112641.6276c001@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1487610788-6939-5-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170221112641.6276c001@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-     self-review to save you all some time
+Le 21/02/2017 à 11:26, Boris Brezillon a écrit :
+> On Tue, 21 Feb 2017 12:03:45 +0200
+> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> On Tue, Feb 21, 2017 at 10:06 AM, Boris Brezillon
+>> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>> On Tue, 21 Feb 2017 01:54:37 +0200
+>>> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>  
+>>>> On Tue, Feb 21, 2017 at 1:40 AM, Andy Shevchenko
+>>>> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:  
+>>>>> On Mon, Feb 20, 2017 at 10:50 PM, Boris Brezillon
+>>>>> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:  
+>>>>>> On Mon, 20 Feb 2017 21:38:03 +0100
+>>>>>> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>>>>>  
+>>>>>>> On Mon, 20 Feb 2017 22:27:17 +0200
+>>>>>>> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>>>  
+>>>>>>>> On Mon, Feb 20, 2017 at 2:28 PM, Boris Brezillon
+>>>>>>>> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>>>>>>>  
+>>>>>>>>>  drivers/mtd/nand/atmel/nand-controller.c | 2269 +++++++++++++++++++++++++++
+>>>>>>>>>  drivers/mtd/nand/atmel_nand.c            | 2479 ------------------------------  
+>>>>>>>>
+>>>>>>>> Does -M -C help you?
+>>>>>>>> At least it would help reviewers
+>>>>>>>>  
+>>>>>>>
+>>>>>>> No it doesn't, because files were not just moved around using git mv,
+>>>>>>> it's a complete rewrite of the driver. IIUC, you're about to review
+>>>>>>> this submission, or are you just trolling like last time?  
+>>>>>>
+>>>>>> My bad, I mistaken you with someone else. Sorry for being harsh, but my
+>>>>>> explanation stands ;-).  
+>>>>>
+>>>>> No problem. I was asking since it so big and on first glance looks
+>>>>> like a partial copy (I dunno if parameter to -C makes it somehow
+>>>>> useful), though I can't review this. It's too big to me. Sorry I'm
+>>>>> really not trolling, just didn't read commit message carefully.  
+>>>>
+>>>> Okay, I very quickly looked into the code, what I noticed
+>>>> - you like extra parens and empty lines in some cases (not big deal)  
+>>>
+>>> Can you point specific places where you think these are not needed?  
+>>
+>> 1. For example,
+>>
+>> #define ATMEL_NFC_CMD(pos, cmd)                        ((cmd) <<
+>> (((pos) * 8) + 2))
+> 
+> Well, I like to explicitly put parenthesis even when operator
+> precedence guarantees the order of the calculation ('*' is preceding
+> '+').
 
-On 20/02/2017 18:13, Jacopo Mondi wrote:
-> Add pin controller node with 12 gpio controller sub-nodes to
-> r7s72100 dtsi.
->
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> ---
->  arch/arm/boot/dts/r7s72100.dtsi | 81 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index 3dd427d..a77a431b 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -12,6 +12,7 @@
->  #include <dt-bindings/clock/r7s72100-clock.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/pinctrl/r7s72100-pinctrl.h>
+Yes
 
-I should move this to the board specific .dts file.
-It's not needed here.
+> For the parenthesis around (cmd) and (pos), they are required to
+> guarantee that things like ATMEL_NFC_CMD(x + y, cmd) are working
+> correctly.
 
->
->  / {
->  	compatible = "renesas,r7s72100";
-> @@ -171,6 +172,86 @@
->  		};
->  	};
->
-> +	pinctrl: pinctrl@fcfe3000 {
-> +		compatible = "renesas,r7s72100-ports";
-> +
-> +		#pinctrl-cells = <1>;
-> +
-> +		reg = <0xfcfe3000 0x4248>;
-> +
-> +		port0: gpio@0 {
-
-Geert pointed out offline the if the node has a unit address, it needs a 
-"reg" property.
-I'll change all of these to portX: gpio-X {
-
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 0 16>;
-
-Not all ports have 16 pins available.
-This is one of the differences between different RZ/A1 SoC versions 
-(RZ/A1H, RZ/A1L etc)
-
-I'll change the number of pins to the actual available ones on each port 
-for r7s72100 (RZ/A1H)
-
-Thanks
-    j
+Absolutely.
 
 
-> +		};
-> +
-> +		port1: gpio@1 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 16 16>;
-> +		};
-> +
-> +		port2: gpio@2 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 32 16>;
-> +		};
-> +
-> +		port3: gpio@3 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 48 16>;
-> +		};
-> +
-> +		port4: gpio@4 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 64 16>;
-> +		};
-> +
-> +		port5: gpio@5 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 80 16>;
-> +		};
-> +
-> +		port6: gpio@6 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 96 16>;
-> +		};
-> +
-> +		port7: gpio@7 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 112 16>;
-> +		};
-> +
-> +		port8: gpio@8 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 128 16>;
-> +		};
-> +
-> +		port9: gpio@9 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 144 16>;
-> +		};
-> +
-> +		port10: gpio@10 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 160 16>;
-> +		};
-> +
-> +		port11: gpio@11 {
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			gpio-ranges = <&pinctrl 0 176 16>;
-> +		};
-> +	};
-> +
->  	scif0: serial@e8007000 {
->  		compatible = "renesas,scif-r7s72100", "renesas,scif";
->  		reg = <0xe8007000 64>;
->
+Even when it's not needed, please keep this habit of using more
+parenthesis than required by precedence to make code clearer.
+
+
+>>  *events ^= (status & *events);
+> 
+> I agree with this one, it's uneeded.
+> 
+>>
+>>  (((x) * 0x4) + 0x28)
+> 
+> See my comment about ATMEL_NFC_CMD().
+> 
+>>
+>>   memset(&si[1], 0, sizeof(s16) * ((2 * strength) - 1));
+> 
+> Ditto.
+> 
+>>
+>> Perhaps more in the code. I'm not a LISP programmer.
+
+[..]
+
+>> 8. Have you checked what kernel library provides?
+> 
+> I think so, but again, this is really vague, what kind of
+> open-coded functions do you think could be replaced with core libraries
+> helpers?
+> 
+>> And I believe there are still issues like those. After, who is on
+>> topic, might even find some logical and other issues...
+>>
+>> P.S. TBH, so big change is unreviewable in meaningful time. To have a
+>> comprehensive review I, for example, spend ~1h/250LOC, and
+>> ~2.5h/1000LOC, I would estimate ~4h/2000LOC. Imagine one to spend one
+>> day for this. Any volunteer? Not me.
+> 
+> I'm not asking you to review the whole driver, but you started to
+> comment on the code without pointing clearly to the things you wanted
+> me to address.
+
+Moreover, it's not like if the driver would come without previous code.
+So, this re-factoring comes with the experience of previous driver and
+its aim is to be comparable feature-wise with the old one. So the amount
+of changes doesn't surprise me.
+
+As Boris noted in his patch series, additional optimization and use of
+common BCH code can be studied afterwards.
+
+Best regards,
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
