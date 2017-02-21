@@ -1,165 +1,106 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Tue, 21 Feb 2017 23:48:14 +0200
-Message-ID: <20170221214813.GN16975@valkosipuli.retiisi.org.uk>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
- <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
- <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
- <cc6c914e-c3e7-7703-0405-104e701610cf@mentor.com>
+From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] hwrng: meson: add clock handling to driver
+Date: Tue, 21 Feb 2017 22:53:14 +0100
+Message-ID: <887d5ec7-d568-f304-1f4d-e201e3c32e12@gmail.com>
+References: <daf765e2-1a60-8dea-fee0-8af6ddecdf8e@gmail.com>
+ <989cf7bf-b7ea-0b41-510b-6eab403f0185@gmail.com>
+ <afe93bb2-30de-233d-ed58-d77c018a6d33@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cc6c914e-c3e7-7703-0405-104e701610cf-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <afe93bb2-30de-233d-ed58-d77c018a6d33-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam@g>
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Vladimir!
-
-How do you do? :-)
-
-On Tue, Feb 21, 2017 at 10:48:09PM +0200, Vladimir Zapolskiy wrote:
-> Hi Ramiro,
+Am 21.02.2017 um 22:21 schrieb Neil Armstrong:
+> On 02/21/2017 12:26 PM, Heiner Kallweit wrote:
+>> Add handling of RNG0 clock to the driver.
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>> v2:
+>> - consider that clock is optional
+>> - use managed call to clk_disable_unprepare to ensure that
+>>   cleaning up is done in the right order if driver is removed
+>> ---
+>>  drivers/char/hw_random/meson-rng.c | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>
+>> diff --git a/drivers/char/hw_random/meson-rng.c b/drivers/char/hw_random/meson-rng.c
+>> index 119d6984..2e23be80 100644
+>> --- a/drivers/char/hw_random/meson-rng.c
+>> +++ b/drivers/char/hw_random/meson-rng.c
+>> @@ -62,6 +62,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/types.h>
+>>  #include <linux/of.h>
+>> +#include <linux/clk.h>
+>>  
+>>  #define RNG_DATA 0x00
+>>  
+>> @@ -69,6 +70,7 @@ struct meson_rng_data {
+>>  	void __iomem *base;
+>>  	struct platform_device *pdev;
+>>  	struct hwrng rng;
+>> +	struct clk *core_clk;
+>>  };
+>>  
+>>  static int meson_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+>> @@ -81,11 +83,17 @@ static int meson_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+>>  	return sizeof(u32);
+>>  }
+>>  
+>> +static void meson_rng_clk_disable(void *clk)
+>> +{
+>> +	clk_disable_unprepare(clk);
+>> +}
+>> +
+>>  static int meson_rng_probe(struct platform_device *pdev)
+>>  {
+>>  	struct device *dev = &pdev->dev;
+>>  	struct meson_rng_data *data;
+>>  	struct resource *res;
+>> +	int ret;
+>>  
+>>  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>>  	if (!data)
+>> @@ -98,6 +106,20 @@ static int meson_rng_probe(struct platform_device *pdev)
+>>  	if (IS_ERR(data->base))
+>>  		return PTR_ERR(data->base);
+>>  
+>> +	data->core_clk = devm_clk_get(dev, "core");
+>> +	if (IS_ERR(data->core_clk))
+>> +		data->core_clk = NULL;
+>> +
+>> +	if (data->core_clk) {
 > 
-> On 02/21/2017 10:13 PM, Ramiro Oliveira wrote:
-> > Hi Vladimir,
-> > 
-> > Thank you for your feedback
-> > 
-> > On 2/21/2017 3:58 PM, Vladimir Zapolskiy wrote:
-> >> Hi Ramiro,
-> >>
-> >> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
-> >>> Create device tree bindings documentation.
-> >>>
-> >>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> >>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>> ---
-> >>>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
-> >>>  1 file changed, 35 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>> new file mode 100644
-> >>> index 000000000000..31956426d3b9
-> >>> --- /dev/null
-> >>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>> @@ -0,0 +1,35 @@
-> >>> +Omnivision OV5647 raw image sensor
-> >>> +---------------------------------
-> >>> +
-> >>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> >>> +and CCI (I2C compatible) control bus.
-> >>> +
-> >>> +Required properties:
-> >>> +
-> >>> +- compatible		: "ovti,ov5647".
-> >>> +- reg			: I2C slave address of the sensor.
-> >>> +- clocks		: Reference to the xclk clock.
-> >>
-> >> Is "xclk" clock a pixel clock or something else?
-> >>
-> > 
-> > It's an external oscillator.
+> This "if" is useless, if core_clk is NULL, this will work also.
 > 
-> hmm, I suppose a clock of any type could serve as a clock for the sensor.
-> It can be an external oscillator on a particular board, or it can be
-> something else on another board.
+Regarding clk_prepare_enable you're right. However we need this "if" for
+the call to devm_add_action_or_reset because we can't provide a NULL
+pointer as data argument.
+And including clk_prepare_enable in the if clause creates no overhead
+and is clearer IMHO.
 
-Any clock source could be used I presume.
-
+>> +		ret = clk_prepare_enable(data->core_clk);
+>> +		if (ret)
+>> +			return ret;
+>> +		ret = devm_add_action_or_reset(dev, meson_rng_clk_disable,
+>> +					       data->core_clk);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>>  	data->rng.name = pdev->name;
+>>  	data->rng.read = meson_rng_read;
+>>  
+>>
 > 
-> Can you please describe what for does ov5647 sensor need this clock, what
-> is its function?
-
-Camera modules (sensors) quite commonly require an external clock as they do
-not have an oscillator on their own. A lot of devices under
-Documentation/devicetree/bindings/media/i2c/ have similar properties.
-
 > 
-> > 
-> >>> +- clock-names		: Should be "xclk".
-> >>
-> >> You can remove this property, because there is only one source clock.
-> >>
-> > 
-> > Ok.
-> > 
-> >>> +- clock-frequency	: Frequency of the xclk clock.
-> >>
-> >> And after the last updates in the driver this property can be removed as well.
-> >>
-> > 
-> > But I'm still using clk_get_rate in the driver, if I remove the frequency here
-> > the probing will fail.
-> > 
-> 
-> I doubt it, there should be no connection between a custom "clock-frequency"
-> device tree property in a clock consumer device node and clk_get_rate() function
-> from the CCF, which takes a clock provider as its argument.
 
-The purpose is to make sure the clock frequency is really usable for the
-device, in this particular case the driver can work with one particular
-frequency.
-
-That said, the driver does not appear to use the property at the moment. It
-should.
-
-It'd be good to verify that the rate matches: clk_set_rate() is not
-guaranteed to produce the requested clock rate, and the driver could
-conceivably be updated with support for more frequencies. There are
-typically a few frequencies that a SoC such a sensor is connected can
-support, and 25 MHz is not one of the common frequencies. With this
-property, the frequency would be always there explicitly.
-
-> 
-> >>> +
-> >>> +The common video interfaces bindings (see video-interfaces.txt) should be
-> >>> +used to specify link to the image data receiver. The OV5647 device
-> >>> +node should contain one 'port' child node with an 'endpoint' subnode.
-> >>> +
-> >>> +Example:
-> >>> +
-> >>> +	i2c@2000 {
-> >>> +		...
-> >>> +		ov: camera@36 {
-> >>> +			compatible = "ovti,ov5647";
-> >>> +			reg = <0x36>;
-> >>> +			clocks = <&camera_clk>;
-> >>> +			clock-names = "xclk";
-> >>> +			clock-frequency = <25000000>;
-> >>
-> >> When you remove two unused properties, please don't forget to update the
-> >> example.
-> >>
-> > 
-> > Ok.
-> > 
-> >>> +			port {
-> >>> +				camera_1: endpoint {
-> >>> +					remote-endpoint = <&csi1_ep1>;
-> >>> +				};
-> >>> +			};
-> >>> +		};
-> >>> +	};
-> >>>
-> >>
-> 
-> --
-    ^
-There's a space missing here.
-
-> With best wishes,
-> Vladimir
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
