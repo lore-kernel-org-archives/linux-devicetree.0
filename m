@@ -1,38 +1,103 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v9 2/2] Add support for OV5647 sensor.
-Date: Tue, 21 Feb 2017 16:58:29 +0200
-Message-ID: <20170221145829.GK16975@valkosipuli.retiisi.org.uk>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <412e51e695630281d2084a77c0329fd273ea00d7.1487334912.git.roliveir@synopsys.com>
- <20170221120914.GG16975@valkosipuli.retiisi.org.uk>
- <28e7db42-c324-667d-4d76-ad6dc02f0d3b@synopsys.com>
+From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr
+ dereference
+Date: Tue, 21 Feb 2017 07:07:12 -0800
+Message-ID: <1487689632.14564.1.camel@crowfest.net>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+         <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+         <48907a31-eaa6-27e2-633f-d36de521e868@tronnes.org>
+         <1983281189.110224.1487619653742@email.1und1.de>
+         <5b14ed6d-4db8-abf7-ceba-ef46534b6023@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <28e7db42-c324-667d-4d76-ad6dc02f0d3b@synopsys.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5b14ed6d-4db8-abf7-ceba-ef46534b6023-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Noralf =?ISO-8859-1?Q?Tr=F8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
-
-On Tue, Feb 21, 2017 at 02:49:12PM +0000, Ramiro Oliveira wrote:
-> Hi Sakari,
+On Mon, 2017-02-20 at 22:22 +0100, Noralf Trønnes wrote:
+> Den 20.02.2017 20.40, skrev Stefan Wahren:
+> > Hi,
+> > 
+> > > Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> hat am 18. Februar 2017 um
+> > > 19:34 geschrieben:
+> > > 
+> > > 
+> > > 
+> > > Den 16.02.2017 22.20, skrev Stefan Wahren:
+> > > > Since commit e2474541032d ("bcm2835: Fix hang for writing
+> > > > messages
+> > > > larger than 16 bytes") the interrupt handler is prone to a
+> > > > possible
+> > > > NULL pointer dereference. This could happen if an interrupt
+> > > > fires
+> > > > before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly
+> > > > occurs
+> > > > on the RPi 3. Even this is an unexpected behavior the driver
+> > > > must
+> > > > handle that with an error instead of a crash.
+> > > > 
+> > > > CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+> > > > CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> > > > Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > > Fixes: e2474541032d ("bcm2835: Fix hang for writing messages
+> > > > larger than 16 bytes")
+> > > > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> > > > ---
+> > > >    drivers/i2c/busses/i2c-bcm2835.c |    4 +++-
+> > > >    1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/i2c/busses/i2c-bcm2835.c
+> > > > b/drivers/i2c/busses/i2c-bcm2835.c
+> > > > index c3436f6..10e39c8 100644
+> > > > --- a/drivers/i2c/busses/i2c-bcm2835.c
+> > > > +++ b/drivers/i2c/busses/i2c-bcm2835.c
+> > > > @@ -195,7 +195,9 @@ static irqreturn_t bcm2835_i2c_isr(int
+> > > > this_irq, void *data)
+> > > >    	}
+> > > >    
+> > > >    	if (val & BCM2835_I2C_S_DONE) {
+> > > > -		if (i2c_dev->curr_msg->flags & I2C_M_RD) {
+> > > > +		if (!i2c_dev->curr_msg) {
+> > > > +			dev_err(i2c_dev->dev, "Got unexpected
+> > > > interrupt (from firmware?)\n");
+> > > > +		} else if (i2c_dev->curr_msg->flags &
+> > > > I2C_M_RD) {
+> > > >    			bcm2835_drain_rxfifo(i2c_dev);
+> > > >    			val = bcm2835_i2c_readl(i2c_dev,
+> > > > BCM2835_I2C_S);
+> > > >    		}
+> > > 
+> > > Thanks,
+> > > 
+> > > Acked-by: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+> > > 
+> > 
+> > thanks, but i would be more happier to receive feedback for patches
+> > 2 and 3.
 > 
-> Thank you for your feedback.
+> I have only worked on dts files downstream and never done any arm64
+> stuff, so I'm not up to speed on this.
+> 
+> Noralf.
+> 
 
-You're welcome.
+Just a note, the original downstream driver returns IRQ_NONE in this
+case.  Does that make any difference?
 
-An additional note as you don't implement any controls --- some CSI-2
-receivers may need to know the link frequency to know how to program the
-receiver; they'll simply fail to start streaming if you don't.
+Also, the the original driver has the check at the start of the IRQ and
+it doesn't log an error message.
 
-<URL:http://hverkuil.home.xs4all.nl/spec/uapi/v4l/extended-controls.html#image-process-control-reference>
+I'm wondering if logging at err level is the best since it might make
+people think a serious error has happened.  I think by default this
+would show up on the console, correct?
 
--- 
-Regards,
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
