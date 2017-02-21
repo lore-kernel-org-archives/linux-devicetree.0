@@ -1,82 +1,48 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 09:06:10 +0100
-Message-ID: <20170221090610.6d531b94@bbrezillon>
-References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
-        <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
-        <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
-        <20170220213803.7ba5591e@bbrezillon>
-        <20170220215009.0ecbf5a1@bbrezillon>
-        <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
-        <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
+Date: Tue, 21 Feb 2017 10:17:49 +0200
+Message-ID: <20170221081749.GC16975@valkosipuli.retiisi.org.uk>
+References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
+ <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com>
+ <6293579.fEEljmGD4Z@aspire.rjw.lan>
+ <7605668.5ZxNsBFnEG@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7605668.5ZxNsBFnEG@aspire.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: ahs3@redhat.com, Sakari Ailus <sakari.ailus@linux.intel.com>, mika.westerberg@linux.intel.com, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Feb 2017 01:54:37 +0200
-Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi Rafael,
 
-> On Tue, Feb 21, 2017 at 1:40 AM, Andy Shevchenko
-> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Mon, Feb 20, 2017 at 10:50 PM, Boris Brezillon
-> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:  
-> >> On Mon, 20 Feb 2017 21:38:03 +0100
-> >> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >>  
-> >>> On Mon, 20 Feb 2017 22:27:17 +0200
-> >>> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>>  
-> >>> > On Mon, Feb 20, 2017 at 2:28 PM, Boris Brezillon
-> >>> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >>> >  
-> >>> > >  drivers/mtd/nand/atmel/nand-controller.c | 2269 +++++++++++++++++++++++++++
-> >>> > >  drivers/mtd/nand/atmel_nand.c            | 2479 ------------------------------  
-> >>> >
-> >>> > Does -M -C help you?
-> >>> > At least it would help reviewers
-> >>> >  
-> >>>
-> >>> No it doesn't, because files were not just moved around using git mv,
-> >>> it's a complete rewrite of the driver. IIUC, you're about to review
-> >>> this submission, or are you just trolling like last time?  
-> >>
-> >> My bad, I mistaken you with someone else. Sorry for being harsh, but my
-> >> explanation stands ;-).  
-> >
-> > No problem. I was asking since it so big and on first glance looks
-> > like a partial copy (I dunno if parameter to -C makes it somehow
-> > useful), though I can't review this. It's too big to me. Sorry I'm
-> > really not trolling, just didn't read commit message carefully.  
+On Wed, Feb 08, 2017 at 01:19:57PM +0100, Rafael J. Wysocki wrote:
+...
+> > > I think I agree with Rob's prior comments about making an ops struct for DT
+> > > vs ACPI.  Out of the 16 patches, 2/16, 3/16, 5/16 (multiple times), and this
+> > > patch all end up using the same construct.  Maybe it needs to be a separate
+> > > refactoring effort, but if it's happening this often just in this patch set,
+> > > it seems like it's getting time to clean things up.
+> > 
+> > As long as there are two cases only (ACPI vs DT), an ops struct wouldn't
+> > really make things simpler and it would make the code more difficult to
+> > follow.
+> > 
+> > But we do have a third case (static or built-in properties) and it doesn't
+> > seem to be covered at all.
 > 
-> Okay, I very quickly looked into the code, what I noticed
-> - you like extra parens and empty lines in some cases (not big deal)
-
-Can you point specific places where you think these are not needed?
-
-> - some functions perhaps might have been refactored to have common
-> pieces in error handling, though I didn't read core carefully.
-
-Again, be more precise.
-
+> That said the ops struct could be introduced on top of this series just fine.
+> It even might be cleaner to do it this way, so I'm not asking for a redesign
+> here.
 > 
-> Most important part I have noticed is a GPIO request.
-> I didn't get why you almost repeat gpiod_get() in case of platform data?
-> Shouldn't we have GPIO look up table?
-> Can we use builtin device properties (for GPIO and/or overall)?
+> I'd like the built-in properties to be covered too, however.
 
-Sorry but I don't get it. Can give an example of what you'd like me to
-do?
+That sounds good to me. 
 
-Thanks,
+-- 
+Kind regards,
 
-Boris
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
