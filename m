@@ -1,128 +1,420 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] PCI: imx6: Add code to support i.MX7D
-Date: Tue, 21 Feb 2017 10:38:31 -0600
-Message-ID: <CAL_Jsq+zo9cVEiT3p4oEL8UWqHNEVqszkC3htO-p+C2oFXPuSw@mail.gmail.com>
-References: <20170207155027.7734-1-andrew.smirnov@gmail.com>
- <20170207155027.7734-4-andrew.smirnov@gmail.com> <20170215171700.5vz5seeihgtwn76p@rob-hp-laptop>
- <1487236340.13536.5.camel@pengutronix.de>
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: Re: [PATCH v9 2/2] Add support for OV5647 sensor.
+Date: Tue, 21 Feb 2017 16:42:13 +0000
+Message-ID: <c39814c2-20a0-db08-38c1-ce95ccc49738@synopsys.com>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+ <412e51e695630281d2084a77c0329fd273ea00d7.1487334912.git.roliveir@synopsys.com>
+ <cea82e22-07eb-dd8a-c781-7384ac27823e@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487236340.13536.5.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <cea82e22-07eb-dd8a-c781-7384ac27823e@mentor.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: CARLOS.PALMINHA@synopsys.com, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 3:12 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Am Mittwoch, den 15.02.2017, 11:17 -0600 schrieb Rob Herring:
->> On Tue, Feb 07, 2017 at 07:50:27AM -0800, Andrey Smirnov wrote:
->> > Add various bits of code needed to support i.MX7D variant of the IP.
->> >
->> > Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
->> > Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> > Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> > Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> > Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> > Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  13 ++-
->> >  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
->> >  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
->> >  3 files changed, 112 insertions(+), 26 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
->> > index 83aeb1f..11db2ab 100644
->> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
->> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
->> > @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
->> >  and thus inherits all the common properties defined in designware-pcie.txt.
->> >
->> >  Required properties:
->> > -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
->> > +- compatible:
->> > +   - "fsl,imx6q-pcie"
->> > +   - "fsl,imx6sx-pcie",
->> > +   - "fsl,imx6qp-pcie"
->> > +   - "fsl,imx7d-pcie"
->> >  - reg: base address and length of the PCIe controller
->> >  - interrupts: A list of interrupt outputs of the controller. Must contain an
->> >    entry for each entry in the interrupt-names property.
->> > @@ -34,6 +38,13 @@ Additional required properties for imx6sx-pcie:
->> >  - clock names: Must include the following additional entries:
->> >     - "pcie_inbound_axi"
->> >
->> > +Additional required properties for imx7d-pcie:
->> > +- power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
->>
->> This domain is just the PHY? Seems like this needs a separate PHY
->> driver.
->>
-> No, it's called the PHY power domain, as that is probably the part that
-> draws the most power, but the PCIe core also looses it's state when this
-> domain is powered down. So it's probably the complete core that is
-> inside this domain.
+Hi Vladimir,
 
-A shared domain doesn't mean the phy and core should be 1 node. It is
-the separate reset and clock for the PHY that tell me they should be
-separate. And I'm pretty sure the DW block and PHY are separate. If
-the PHY registers were part of the same register range, then I'd say
-they should be one.
+Thank you for your feedback
 
->> > +- resets: Must contain phandles to PCIE related reset lines exposed by SRC IP block
->> > +- reset-names: Must contain the following entires:
->> > +          - "pciephy"
+On 2/21/2017 3:54 PM, Vladimir Zapolskiy wrote:
+> Hi Ramiro,
+> 
+> please find some review comments below.
+> 
+> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
+>> The OV5647 sensor from Omnivision supports up to 2592x1944 @ 15 fps, RAW 8
+>> and RAW 10 output formats, and MIPI CSI-2 interface.
 >>
->> And for this too.
+>> The driver adds support for 640x480 RAW 8.
 >>
->> > +          - "apps"
->> > +
->> >  Example:
->> >
->> >     pcie@0x01000000 {
->>
->> [...]
->>
->> > @@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->> >     u32 val, gpr1, gpr12;
->> >
->> >     switch (imx6_pcie->variant) {
->> > +   case IMX7D:
->> > +           reset_control_assert(imx6_pcie->pciephy_reset);
->> > +           reset_control_assert(imx6_pcie->apps_reset);
->> > +           break;
->> >     case IMX6SX:
->> >             regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->> >                                IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
->>
->> So the difference with i.MX7D is not really that it has a reset or not,
->> but some platforms use a reset driver and some do not. The latter should
->> be fixed.
->
-> The resets on anything before i.MX7 are not in a separate reset driver,
-> but are just some signals from the PCIe core wired into a syscon (IOMUX
-> GPR) area. While we could invent a reset controller for those, I don't
-> see how this would improve things. Especially as the reset on i.MX6
-> seems to be some side-effect of the "power-down" signal of the core, so
-> not strictly a reset.
->
-> Also I don't see why we should change the binding for the driver with a
-> long history of deployed DTs. That seems like a total waste of manpower.
+>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+>> ---
+> 
+> [snip]
+> 
+>> +
+>> +struct ov5647 {
+>> +	struct v4l2_subdev		sd;
+>> +	struct media_pad		pad;
+>> +	struct mutex			lock;
+>> +	struct v4l2_mbus_framefmt	format;
+>> +	unsigned int			width;
+>> +	unsigned int			height;
+>> +	int				power_count;
+>> +	struct clk			*xclk;
+>> +	/* External clock frequency currently supported is 30MHz */
+>> +	u32				xclk_freq;
+> 
+> See a comment about 25MHz vs 30MHz below.
+> 
+> Also I assume you can remove 'xclk_freq' from the struct fields,
+> it can be replaced by a local variable.
+> 
 
-We can debate whether or not we change existing platforms. Maybe that
-doesn't make sense now. But best practices should be considered when
-adding new bindings rather than just extending existing bindings. We
-didn't split out PHYs at one time and now we generally do. I'm not so
-concerned with just adding i.MX7D, but really the next chip (and the
-next).
+I'll do that.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +};
+> 
+> [snip]
+> 
+>> +
+>> +static int ov5647_read(struct v4l2_subdev *sd, u16 reg, u8 *val)
+>> +{
+>> +	int ret;
+>> +	unsigned char data_w[2] = { reg >> 8, reg & 0xff };
+>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>> +
+>> +	ret = i2c_master_send(client, data_w, 2);
+>> +	if (ret < 0) {
+>> +		dev_dbg(&client->dev, "%s: i2c read error, reg: %x\n",
+> 
+> s/i2c read error/i2c write error/
+> 
+
+I'm not sure I understand what you mean.
+
+>> +			__func__, reg);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = i2c_master_recv(client, val, 1);
+>> +	if (ret < 0)
+>> +		dev_dbg(&client->dev, "%s: i2c read error, reg: %x\n",
+>> +				__func__, reg);
+>> +
+>> +	return ret;
+>> +
+> 
+> Please remove the empty line above.
+> 
+
+Ok.
+
+>> +}
+>> +
+>> +static int ov5647_write_array(struct v4l2_subdev *sd,
+>> +				struct regval_list *regs, int array_size)
+>> +{
+>> +	int i = 0, ret;
+> 
+> Assignment of 'i' on declaration is not needed, please remove.
+> 
+
+Ok.
+
+>> +
+>> +	for (i = 0; i < array_size; i++) {
+>> +		ret = ov5647_write(sd, regs[i].addr, regs[i].data);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
+>> +{
+>> +	u8 channel_id;
+>> +	int ret;
+>> +
+>> +	ret = ov5647_read(sd, 0x4814, &channel_id);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	channel_id &= ~(3 << 6);
+>> +	return ov5647_write(sd, 0x4814, channel_id | (channel << 6));
+>> +}
+>> +
+>> +static int ov5647_stream_on(struct v4l2_subdev *sd)
+>> +{
+>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>> +
+>> +	ov5647_write(sd, 0x4202, 0x00);
+> 
+> Should you add a check of the returned value?
+> 
+
+I'll add it.
+
+>> +
+>> +	dev_dbg(&client->dev, "Stream on");
+> 
+> I would suggest to remove dev_dbg(), because ftrace will report to a user,
+> when this function is called.
+> 
+> Also dev_dbg() in the middle of two I2C transfers in a row looks as being
+> placed improperly.
+> 
+
+I'll remove it.
+
+>> +
+>> +	return ov5647_write(sd, 0x300D, 0x00);
+>> +}
+>> +
+>> +static int ov5647_stream_off(struct v4l2_subdev *sd)
+>> +{
+>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>> +
+>> +	ov5647_write(sd, 0x4202, 0x0f);
+> 
+> Should you add a check of the returned value?
+> 
+
+I'll add it.
+
+>> +
+>> +	dev_dbg(&client->dev, "Stream off");
+> 
+> I would suggest to remove dev_dbg(), because ftrace will report to a user,
+> when this function is called.
+> 
+> Also dev_dbg() in the middle of two I2C transfers in a row looks as being
+> placed improperly.
+> 
+
+I'll remove it.
+
+>> +
+>> +	return ov5647_write(sd, 0x300D, 0x01);
+>> +}
+>> +
+>> +static int set_sw_standby(struct v4l2_subdev *sd, bool standby)
+>> +{
+>> +	int ret;
+>> +	u8 rdval;
+>> +
+>> +	ret = ov5647_read(sd, 0x0100, &rdval);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (standby)
+>> +		rdval &= ~0x01;
+>> +	else
+>> +		rdval |= 0x01;
+>> +
+>> +	return ov5647_write(sd, 0x0100, rdval);
+>> +}
+>> +
+>> +static int __sensor_init(struct v4l2_subdev *sd)
+>> +{
+>> +	int ret;
+>> +	u8 resetval;
+>> +	u8 rdval;
+> 
+> It could be possible to put declarations of 'resetval' and 'rdval' on the same line.
+> 
+
+Sure.
+
+>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>> +
+>> +	dev_dbg(&client->dev, "sensor init\n");
+>> +
+>> +	ret = ov5647_read(sd, 0x0100, &rdval);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = ov5647_write_array(sd, ov5647_640x480,
+>> +					ARRAY_SIZE(ov5647_640x480));
+>> +	if (ret < 0) {
+>> +		dev_err(&client->dev, "write sensor default regs error\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = ov5647_set_virtual_channel(sd, 0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = ov5647_read(sd, 0x0100, &resetval);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (!(resetval & 0x01)) {
+>> +		dev_err(&client->dev, "Device was in SW standby");
+>> +		ret = ov5647_write(sd, 0x0100, 0x01);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+>> +	return ov5647_write(sd, 0x4800, 0x04);
+>> +}
+>> +
+>> +static int sensor_power(struct v4l2_subdev *sd, int on)
+>> +{
+>> +	int ret;
+>> +	struct ov5647 *ov5647 = to_state(sd);
+>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>> +
+>> +	ret = 0;
+>> +	mutex_lock(&ov5647->lock);
+>> +
+>> +	if (on && !ov5647->power_count)	{
+>> +		dev_dbg(&client->dev, "OV5647 power on\n");
+>> +
+>> +		clk_set_rate(ov5647->xclk, ov5647->xclk_freq);
+> 
+> Now clk_set_rate() is redundant, please remove it.
+> 
+> If once it is needed again, please move it to the .probe function, so
+> it is called only once in the runtime.
+> 
+
+Ok. I'll remove it for now.
+
+>> +
+>> +		ret = clk_prepare_enable(ov5647->xclk);
+> 
+> I wonder would it be possible to unload the driver or to unbind the device
+> and leave the clock unintentionally enabled? If yes, then this is a bug.
+> 
+
+You're saying that if the driver was unloaded and the clock was left enabled
+when the driver was loaded again this line would cause an error?
+
+Should I disable the clock when the driver is removed?
+
+>> +		if (ret < 0) {
+>> +			dev_err(&client->dev, "clk prepare enable failed\n");
+>> +			goto out;
+>> +		}
+>> +
+>> +		ret = ov5647_write_array(sd, sensor_oe_enable_regs,
+>> +				ARRAY_SIZE(sensor_oe_enable_regs));
+>> +		if (ret < 0) {
+>> +			clk_disable_unprepare(ov5647->xclk);
+>> +			dev_err(&client->dev,
+>> +				"write sensor_oe_enable_regs error\n");
+>> +			goto out;
+>> +		}
+>> +
+>> +		ret = __sensor_init(sd);
+>> +		if (ret < 0) {
+>> +			clk_disable_unprepare(ov5647->xclk);
+>> +			dev_err(&client->dev,
+>> +				"Camera not available, check Power\n");
+>> +			goto out;
+>> +		}
+>> +	} else if (!on && ov5647->power_count == 1) {
+>> +		dev_dbg(&client->dev, "OV5647 power off\n");
+>> +
+>> +		dev_dbg(&client->dev, "disable oe\n");
+> 
+> One of two dev_dbg()'s above is apparently redundant.
+> 
+
+I'll remove one.
+
+>> +		ret = ov5647_write_array(sd, sensor_oe_disable_regs,
+>> +				ARRAY_SIZE(sensor_oe_disable_regs));
+>> +
+>> +		if (ret < 0)
+>> +			dev_dbg(&client->dev, "disable oe failed\n");
+>> +
+>> +		ret = set_sw_standby(sd, true);
+>> +
+>> +		if (ret < 0)
+>> +			dev_dbg(&client->dev, "soft stby failed\n");
+>> +
+>> +		clk_disable_unprepare(ov5647->xclk);
+>> +	}
+>> +
+>> +	/* Update the power count. */
+>> +	ov5647->power_count += on ? 1 : -1;
+>> +	WARN_ON(ov5647->power_count < 0);
+>> +
+>> +out:
+>> +	mutex_unlock(&ov5647->lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+> 
+> [snip]
+> 
+>> +
+>> +static int ov5647_probe(struct i2c_client *client,
+>> +			const struct i2c_device_id *id)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct ov5647 *sensor;
+>> +	int ret;
+>> +	struct v4l2_subdev *sd;
+>> +
+>> +	sensor = devm_kzalloc(dev, sizeof(*sensor), GFP_KERNEL);
+>> +	if (sensor == NULL)
+> 
+> if (!sensor) is a bit shorter.
+> 
+
+I'll change it.
+
+>> +		return -ENOMEM;
+>> +
+>> +	/* get system clock (xclk) */
+>> +	sensor->xclk = devm_clk_get(dev, "xclk");
+>> +	if (IS_ERR(sensor->xclk)) {
+>> +		dev_err(dev, "could not get xclk");
+>> +		return PTR_ERR(sensor->xclk);
+>> +	}
+>> +
+>> +	sensor->xclk_freq = clk_get_rate(sensor->xclk);
+>> +	if (sensor->xclk_freq != 25000000) {
+> 
+> A comment in "struct ov5647" declaration says about 30MHz, which one is correct?
+> 
+
+25 MHz is the correct one.
+
+>> +		dev_err(dev, "Unsupported clock frequency: %u\n",
+>> +			sensor->xclk_freq);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	mutex_init(&sensor->lock);
+>> +
+>> +	sd = &sensor->sd;
+>> +	v4l2_i2c_subdev_init(sd, client, &subdev_ops);
+>> +	sensor->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+>> +
+>> +	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
+>> +	sd->entity.function = MEDIA_ENT_F_CAM_SENSOR;
+>> +	ret = media_entity_pads_init(&sd->entity, 1, &sensor->pad);
+>> +	if (ret < 0)
+>> +		goto mutex_remove;
+>> +
+>> +	ret = ov5647_detect(sd);
+>> +	if (ret < 0)
+>> +		goto error;
+>> +
+>> +	ret = v4l2_async_register_subdev(sd);
+>> +	if (ret < 0)
+>> +		goto error;
+>> +
+>> +	dev_dbg(&client->dev, "OmniVision OV5647 camera driver probed\n");
+>> +	return 0;
+>> +error:
+>> +	media_entity_cleanup(&sd->entity);
+>> +mutex_remove:
+>> +	mutex_destroy(&sensor->lock);
+>> +	return ret;
+>> +}
+>> +
+> 
+> [snip]
+> 
+> The driver looks good in general IMO.
+> 
+> --
+> With best wishes,
+> Vladimir
+> 
+
+-- 
+Best Regards
+
+Ramiro Oliveira
+Ramiro.Oliveira@synopsys.com
