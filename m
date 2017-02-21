@@ -1,106 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Make EN2 pin optional in the TRF7970A driver
-Date: Tue, 21 Feb 2017 10:43:45 -0600
-Message-ID: <CAL_JsqKo_Y6i5otiEfQASqa4YRdqnr=+Got5XJp+ZfPCGZoxAg@mail.gmail.com>
-References: <1486444924-18444-1-git-send-email-hs@denx.de> <20170210155114.pvjahqqjqurw5jdc@rob-hp-laptop>
- <58A15454.4030602@denx.de> <CAL_JsqKM4fEcfPekYkt-+TVNXE3nMF1AEfSHWW+3wAgdYDMXEg@mail.gmail.com>
- <58AA7C5D.60801@denx.de>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v4 3/3] PCI: imx6: Add code to support i.MX7D
+Date: Tue, 21 Feb 2017 17:44:20 +0100
+Message-ID: <1487695460.2268.21.camel@pengutronix.de>
+References: <20170207155027.7734-1-andrew.smirnov@gmail.com>
+         <20170207155027.7734-4-andrew.smirnov@gmail.com>
+         <20170215171700.5vz5seeihgtwn76p@rob-hp-laptop>
+         <1487236340.13536.5.camel@pengutronix.de>
+         <CAL_Jsq+zo9cVEiT3p4oEL8UWqHNEVqszkC3htO-p+C2oFXPuSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58AA7C5D.60801-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>, Mark Jonas <mark.jonas-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+zo9cVEiT3p4oEL8UWqHNEVqszkC3htO-p+C2oFXPuSw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, yurovsky@gmail.com, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 19, 2017 at 11:19 PM, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
-> Hello all,
->
-> Am 13.02.2017 um 22:31 schrieb Rob Herring:
->>
->> On Mon, Feb 13, 2017 at 12:38 AM, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
->>>
->>> Hello Rob,
->>>
->>>
->>> Am 10.02.2017 um 16:51 schrieb Rob Herring:
->>>>
->>>>
->>>> On Tue, Feb 07, 2017 at 06:22:04AM +0100, Heiko Schocher wrote:
->>>>>
->>>>>
->>>>> From: Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>
->>>>>
->>>>> Make the EN2 pin optional. This is useful for boards,
->>>>> which have this pin fix wired, for example to ground.
->>>>>
->>>>> Signed-off-by: Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>
->>>>> Signed-off-by: Mark Jonas <mark.jonas-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
->>>>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
->>>>>
->>>>> ---
->>>>>
->>>>>    .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++--
->>>>>    drivers/nfc/trf7970a.c                             | 26
->>>>> ++++++++++++----------
->>>>>    2 files changed, 16 insertions(+), 14 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->>>>> b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->>>>> index 32b35a0..5889a3d 100644
->>>>> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->>>>> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
->>>>> @@ -5,8 +5,8 @@ Required properties:
->>>>>    - spi-max-frequency: Maximum SPI frequency (<= 2000000).
->>>>>    - interrupt-parent: phandle of parent interrupt handler.
->>>>>    - interrupts: A single interrupt specifier.
->>>>> -- ti,enable-gpios: Two GPIO entries used for 'EN' and 'EN2' pins on
->>>>> the
->>>>> -  TRF7970A.
->>>>> +- ti,enable-gpios: One or two GPIO entries used for 'EN' and 'EN2'
->>>>> pins
->>>>> on the
->>>>> +  TRF7970A. EN2 is optional.
->>>>
->>>>
->>>>
->>>> Could EN ever be optional/fixed? If so, perhaps deprecate this property
->>>> and do 2 properties, one for each pin.
->>>
->>>
->>>
->>> The hardware I have has the EN2 pin fix connected to ground. Looking
->>> into http://www.ti.com/lit/ds/slos743k/slos743k.pdf page 19 table 6-3
->>> and 6-4 the EN2 pin is a don;t core if EN = 1. If EN = 0 EN2 pin
->>> selects between Power Down and Sleep Mode ... I see no reason why
->>> this is not possible/allowed ...
->>>
->>> Hmm.. I do not like the idea of deprecating the "ti,enable-gpios"
->>> property into 2 seperate properties ... but if this would be a reason
->>> for not accepting this patch, I can do this ... How should I name
->>> the 2 new properties?
->>
->>
->> I guess if this ever happens, then we just add "ti,enable2-gpios" and
->> ti,enable-gpios continues to point to EN. We don't need to deprecate
->> anything (or maybe just deprecate having both GPIOs on single
->> property).
->>
->> In that case,
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
->
-> gentle ping.
->
-> Are there any more comments to this patch? Is it acceptable as it
-> is?
+Am Dienstag, den 21.02.2017, 10:38 -0600 schrieb Rob Herring:
+> On Thu, Feb 16, 2017 at 3:12 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> > Am Mittwoch, den 15.02.2017, 11:17 -0600 schrieb Rob Herring:
+> >> On Tue, Feb 07, 2017 at 07:50:27AM -0800, Andrey Smirnov wrote:
+> >> > Add various bits of code needed to support i.MX7D variant of the IP.
+> >> >
+> >> > Cc: yurovsky@gmail.com
+> >> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> >> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >> > Cc: Rob Herring <robh+dt@kernel.org>
+> >> > Cc: Mark Rutland <mark.rutland@arm.com>
+> >> > Cc: Lee Jones <lee.jones@linaro.org>
+> >> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> >> > Cc: linux-arm-kernel@lists.infradead.org
+> >> > Cc: devicetree@vger.kernel.org
+> >> > Cc: linux-kernel@vger.kernel.org
+> >> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> >> > ---
+> >> >  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  13 ++-
+> >> >  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
+> >> >  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
+> >> >  3 files changed, 112 insertions(+), 26 deletions(-)
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> >> > index 83aeb1f..11db2ab 100644
+> >> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> >> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> >> > @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+> >> >  and thus inherits all the common properties defined in designware-pcie.txt.
+> >> >
+> >> >  Required properties:
+> >> > -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
+> >> > +- compatible:
+> >> > +   - "fsl,imx6q-pcie"
+> >> > +   - "fsl,imx6sx-pcie",
+> >> > +   - "fsl,imx6qp-pcie"
+> >> > +   - "fsl,imx7d-pcie"
+> >> >  - reg: base address and length of the PCIe controller
+> >> >  - interrupts: A list of interrupt outputs of the controller. Must contain an
+> >> >    entry for each entry in the interrupt-names property.
+> >> > @@ -34,6 +38,13 @@ Additional required properties for imx6sx-pcie:
+> >> >  - clock names: Must include the following additional entries:
+> >> >     - "pcie_inbound_axi"
+> >> >
+> >> > +Additional required properties for imx7d-pcie:
+> >> > +- power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
+> >>
+> >> This domain is just the PHY? Seems like this needs a separate PHY
+> >> driver.
+> >>
+> > No, it's called the PHY power domain, as that is probably the part that
+> > draws the most power, but the PCIe core also looses it's state when this
+> > domain is powered down. So it's probably the complete core that is
+> > inside this domain.
+> 
+> A shared domain doesn't mean the phy and core should be 1 node. It is
+> the separate reset and clock for the PHY that tell me they should be
+> separate. And I'm pretty sure the DW block and PHY are separate. If
+> the PHY registers were part of the same register range, then I'd say
+> they should be one.
 
-I acked it, so yes, it is fine.
+Then we are on the same page of _not_ splitting out the PHY. :)
+The DW PCIe PHY has no separate register range on i.MX. In fact the PHY
+registers are only accessible through a indirection register in the PCIe
+host controller register range.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Lucas
