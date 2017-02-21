@@ -1,87 +1,35 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH/RFC 0/6] PSCI: Fix non-PMIC wake-up if SYSTEM_SUSPEND cuts
- power
-Date: Tue, 21 Feb 2017 18:45:13 +0000
-Message-ID: <3c8b3f2d-8604-f999-4208-a82f171b64f2@arm.com>
-References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
- <69ab75a1-2e04-19e2-d1ad-12ca1cfc7625@arm.com>
- <CAMuHMdWjseO3XSOH2XCbM411Aj12RpdZZbHkpfFUfej58myz5Q@mail.gmail.com>
- <445b2f49-5d15-30af-a431-1c4edcd049a4@arm.com>
- <CAMuHMdUS96tPJRqNxG6sJjvC0LN-FjCeKOm7Zg2V_qMeQ_1QSQ@mail.gmail.com>
- <81df65a9-d2f1-26df-a977-5265feba25a3@arm.com>
- <94167d3a-e005-3af0-d290-a1086684d570@arm.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: bug in DT docs vs mcp251x.c driver
+Date: Tue, 21 Feb 2017 15:47:51 -0300
+Message-ID: <CAOMZO5BCcQYNr6qV0qhmRGTBm030kNWyErO66_HOD0A5huYM3A@mail.gmail.com>
+References: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <94167d3a-e005-3af0-d290-a1086684d570-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?UTF-8?Q?Janusz_U=C5=BCycki?= <j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
+Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "l.dalek elpromaelectronics.com" <l.dalek-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Janusz,
 
+On Tue, Feb 21, 2017 at 3:08 PM, Janusz U=C5=BCycki
+<j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org> wrote:
+> Hi,
+>
+> We've noticed the inconsistency in DT which still exist in kernel v4.10:
+>
+> devm_regulator_get(&spi->dev, "vdd") in drivers/net/can/mcp251x.c
+>
+> vs vdd-supply: Regulator that powers the CAN controller. in
+> bindings/net/can/microchip,mcp251x.txt
 
-On 21/02/17 18:27, Sudeep Holla wrote:
-> 
-> 
-> On 21/02/17 17:51, Sudeep Holla wrote:
->>
->>
->> On 21/02/17 17:34, Geert Uytterhoeven wrote:
-> 
-> [...]
-> 
->>>
->>> The SoC can wake-up. It's just not guaranteed that it can wake-up using
->>> the wakeup-source configured from Linux. Which wakeup-sources are available
->>> depends on the actual PSCI implementation.  It's not specified by the PSCI
->>> specification.
->>>
->>>> Just botching whatever shallow state you can enter on a particular SoC
->>>> into standard "mem" state sounds *horrible* to me.
->>>
->>> That's more or less what /sys/power/mem_sleep does, though.
->>>
->>
->> OK, I will go through that in detail.
->>
-> 
-> OK, I went through the patch and the main intention is was added.
-> So I will begin by summarizing my understanding:
-> 
-> A new suspend interface(/sys/power/mem_sleep) is added to allow the
-> "mem" string in /sys/power/state to represent multiple things that can
-> be selected.
-> 
-> Before:
-> A. echo freeze > /sys/power/state ---> Enters s2idle
-> B. echo mem > /sys/power/state ---> Enters s2r(a.k.a now deep mem sleep)
-> 
-> After:
-> 1. echo freeze > /sys/power/state ---> Enters s2idle still same
-> 2. echo s2idle > /sys/power/mem_sleep
->    echo mem > /sys/power/state ---> Also enter s2idle
-> 3. echo deep > /sys/power/mem_sleep
->    echo mem > /sys/power/state ---> Also enter s2r(same as [B] above)
-> 
-> Please note I have carefully dropped standby/shallow as we will not
-> support that state on ARM64 platforms(refer previous discussions for the
-> same)
-> 
-> Now IIUC, you need 2 above. So, since this new interface allow mem to
-> mean "s2idle", we need to fix the core to register default suspend_ops
-> to achieve what you need. 
+This is correct.
 
-I take this back, you have everything you need in place, nothing needs
-to be done. I just checked again. If I don't register PSCI suspend_ops,
-I still get mem in /sys/power/state with s2idle in /sys/power/mem_sleep
-which is exactly what we need. Again we don't support standby/shallow
-state on ARM64/PSCI.
-
--- 
-Regards,
-Sudeep
+When the regulator is retrieved as devm_regulator_get(dev, "xyz") then
+it searches for a xyz-supply in the dts.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
