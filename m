@@ -1,114 +1,141 @@
-From: Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding
- names, pre-calibration, flipping and rotation
-Date: Tue, 21 Feb 2017 10:09:40 +0100
-Message-ID: <20170221090940.GD9795@pali>
-References: <cover.1482936802.git.hns@goldelico.com>
- <B30D00D0-1967-4BD5-A304-E2ADC815A805@goldelico.com>
- <201702202042.15878@pali>
- <201702202208.50498@pali>
- <C2E7AC24-75AB-442F-94A2-84904723EE41@goldelico.com>
- <CAKdAkRRZa-fpv_TKRdY=hFV3GdKxQ3muQORquvV_bTrDzQAhCw@mail.gmail.com>
- <0A33CCEA-448C-4C1D-9563-FDA54743BD01@goldelico.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 15/36] platform: add video-multiplexer subdevice
+ driver
+Date: Tue, 21 Feb 2017 10:11:05 +0100
+Message-ID: <1487668265.2331.23.camel@pengutronix.de>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+         <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
+         <20170219220237.GD32327@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0A33CCEA-448C-4C1D-9563-FDA54743BD01-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjami>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170219220237.GD32327@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 February 2017 07:36:17 H. Nikolaus Schaller wrote:
-> Hi,
+On Sun, 2017-02-19 at 23:02 +0100, Pavel Machek wrote:
+> Hi!
 > 
-> > Am 20.02.2017 um 22:50 schrieb Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > > 
-> > On Mon, Feb 20, 2017 at 1:27 PM, H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org> wrote:
-> >> 
-> >>> Am 20.02.2017 um 22:08 schrieb Pali Rohár <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> >>> 
-> >>> On Monday 20 February 2017 20:42:15 Pali Rohár wrote:
-> >>>> Hi Nikolaus!
-> >>>> 
-> >>>> On Monday 20 February 2017 17:50:04 H. Nikolaus Schaller wrote:
-> >>>>> Hi Dmitry,
-> >>>>> 
-> >>>>>> Input driver may set resolution for given axis in units per mm
-> >>>>>> (or units per radian for rotational axis ABS_RX, ABS_RY,
-> >>>>>> ABS_RZ), and if you check the binding, you can use
-> >>>>>> "touchscreen-x-mm" and "touchscreen-y-mm" to specify the size of
-> >>>>>> entire touch surface and set resolution from it so that
-> >>>>>> userspace can calculate the proper scaling factor.
-> >>>>> 
-> >>>>> How is this information exposed by the kernel to user-space? By
-> >>>>> scanning the DT file or tree?
-> >>>> 
-> >>>> Set input_abs_set_res() from kernel. And in userspace call EVIOCGABS
-> >>>> ioctl() on input device. Look at struct input_absinfo, you should
-> >>>> have all needed information here. This is generic input interface,
-> >>>> no DT is needed.
-> >>> 
-> >>> Looking at kernel code... via EVIOCSABS ioctl() you can even set
-> >>> resolution from userspace for specified input device.
-> >>> 
-> >>> So this could be potentially used for calibrating input device from
-> >>> userspace? (In case DT data will not fully match current HW)
-> >>> 
-> >>>> I hope that XServer is already using it for evdev devices...
-> >>>> 
-> >>>> For whole implementation look at evtest program. That should be good
-> >>>> starting point for your userspace implementation.
-> >>>> 
-> >>>> While I'm watching this discussion... in my opinion kernel should
-> >>>> just invert input axes (when needed)
-> >> 
-> >> It is questionable why it should do that at all then.
+> > This driver can handle SoC internal and external video bus multiplexers,
+> > controlled either by register bit fields or by a GPIO. The subdevice
+> > passes through frame interval and mbus configuration of the active input
+> > to the output side.
 > > 
-> > Because the task of the kernel is to provide unified view of the
-> > hardware. Axis swapping and inversion is needed to that "up" is always
-> > "up" and "right" is always "right".
+> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > --
+> >
 > 
-> Hm. Why not touching pixel (0,0) on the touch is always pixel (0,0) on the
-> screen and touching pixel (639,479) is always (639,479)?
-
-Important is that there is no 1:1 mapping between input evdev device and
-drm/fb output device. These are two independent devices. There is no
-connection between screen and touch. So such presumption should not be
-done in kernel. You can do that in userspace.
-
-Lets take e.g. touchpad. It acts similarly as touchscreen input device
-(both reports absolute positioned touch events), but touchpad is not
-connected with screen. And from kernel point of view these devices are
-both input and absolute positioned.
-
-It looks like the whole problem is there that you wanted to do this
-mapping for your hardware in kernel. And this is not what is kernel
-doing or should do. Moreover I know people who are using integrated
-touchscreen on laptop as (touch) input device for external monitor. And
-in this configuration it does not make any sense to map touchscreen
-input to pixels of integrated LCD touchscreen (as external monitor could
-have different resolution as integrated LCD touchcreen).
-
-> I think it is time to end this discussion.
+> Again, this is slightly non-standard format. Normally changes from v1
+> go below ---, but in your case it would cut off the signoff...
 > 
-> It has show me how much a mess and half-baked area this is, which I did
-> not expect. I read contradicting messages from different people:
+> > diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.txt b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> > new file mode 100644
+> > index 0000000..9d133d9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> > @@ -0,0 +1,59 @@
+> > +Video Multiplexer
+> > +=================
+> > +
+> > +Video multiplexers allow to select between multiple input ports. Video received
+> > +on the active input port is passed through to the output port. Muxes described
+> > +by this binding may be controlled by a syscon register bitfield or by a GPIO.
+> > +
+> > +Required properties:
+> > +- compatible : should be "video-multiplexer"
+> > +- reg: should be register base of the register containing the control bitfield
+> > +- bit-mask: bitmask of the control bitfield in the control register
+> > +- bit-shift: bit offset of the control bitfield in the control register
+> > +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO phandle
+> > +  may be given to switch between two inputs
+> > +- #address-cells: should be <1>
+> > +- #size-cells: should be <0>
+> > +- port@*: at least three port nodes containing endpoints connecting to the
+> > +  source and sink devices according to of_graph bindings. The last port is
+> > +  the output port, all others are inputs.
 > 
-> * don't break user space because it is carved in stone
-> * fix users space if you want to do it properly
-> * scaling by +/-1 and shifting by full range is ok
-> * scaling by ts-size/adc-range and shifting by adc_min is not ok
-> * full numeric ADC resolution is required but subpixel coordinates is not acceptable
-> 
-> I will monitor this to see if this becomes sorted out before submitting anything
-> new.
-> 
-> BR and thanks,
-> Nikolaus
+> At least three? I guess it is exactly three with the gpio?
 
--- 
-Pali Rohár
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Yes. With the mmio bitfield muxes there can be more.
+
+> Plus you might want to describe which port correspond to which gpio
+> state/bitfield values...
+> 
+> > +struct vidsw {
+> 
+> I knew it: it is secretely a switch! :-).
+
+This driver started as a two-input gpio controlled bus switch.
+I changed the name when adding support for bitfield controlled
+multiplexers with more than two inputs.
+
+> > +static void vidsw_set_active(struct vidsw *vidsw, int active)
+> > +{
+> > +	vidsw->active = active;
+> > +	if (active < 0)
+> > +		return;
+> > +
+> > +	dev_dbg(vidsw->subdev.dev, "setting %d active\n", active);
+> > +
+> > +	if (vidsw->field)
+> > +		regmap_field_write(vidsw->field, active);
+> > +	else if (vidsw->gpio)
+> > +		gpiod_set_value(vidsw->gpio, active);
+> 
+>          else dev_err()...?
+
+If neither field nor gpio are set, probe will have failed and this will
+never be called.
+
+> > +static int vidsw_async_init(struct vidsw *vidsw, struct device_node *node)
+> > +{
+> > +	struct device_node *ep;
+> > +	u32 portno;
+> > +	int numports;
+> 
+> numbports is int, so I guess portno should be, too?
+
+We could change both to unsigned int, as both vidsw->num_pads and
+endpoint.base.port are unsigned int, and they are only compared/assigned
+to those and each other.
+
+> > +		portno = endpoint.base.port;
+> > +		if (portno >= numports - 1)
+> > +			continue;
+> 
+     I. 
+> > +	if (!pad) {
+> > +		/* Mirror the input side on the output side */
+> > +		cfg->type = vidsw->endpoint[vidsw->active].bus_type;
+> > +		if (cfg->type == V4L2_MBUS_PARALLEL ||
+> > +		    cfg->type == V4L2_MBUS_BT656)
+> > +			cfg->flags = vidsw->endpoint[vidsw->active].bus.parallel.flags;
+> > +	}
+> 
+> Will this need support for other V4L2_MBUS_ values?
+
+To support CSI-2 multiplexers, yes.
+
+> > +MODULE_AUTHOR("Sascha Hauer, Pengutronix");
+> > +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
+> 
+> Normally, MODULE_AUTHOR contains comma separated names of authors,
+> perhaps with <email@addresses>. Not sure two MODULE_AUTHORs per file
+> will work.
+> 
+> Thanks,
+> 								Pavel
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
