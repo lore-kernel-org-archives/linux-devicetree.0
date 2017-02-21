@@ -1,365 +1,141 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 2/2] Add support for OV5647 sensor.
-Date: Tue, 21 Feb 2017 17:54:14 +0200
-Message-ID: <cea82e22-07eb-dd8a-c781-7384ac27823e@mentor.com>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <412e51e695630281d2084a77c0329fd273ea00d7.1487334912.git.roliveir@synopsys.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Tue, 21 Feb 2017 17:55:15 +0200
+Message-ID: <CAHp75VfHf9qN+sRd6cymr9ziO9Xi7gw+O-yOp+1zEAduxEMfJg@mail.gmail.com>
+References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
+ <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
+ <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon>
+ <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+ <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
+ <20170221090610.6d531b94@bbrezillon> <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
+ <20170221112641.6276c001@bbrezillon> <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
+ <20170221122050.421dae48@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <412e51e695630281d2084a77c0329fd273ea00d7.1487334912.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170221122050.421dae48@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+On Tue, Feb 21, 2017 at 1:20 PM, Boris Brezillon
+<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Tue, 21 Feb 2017 13:02:21 +0200
+> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Tue, Feb 21, 2017 at 12:26 PM, Boris Brezillon
+>> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On Tue, 21 Feb 2017 12:03:45 +0200
+>> > Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-please find some review comments below.
+> So, it's a matter of taste.
 
-On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
-> The OV5647 sensor from Omnivision supports up to 2592x1944 @ 15 fps, RAW 8
-> and RAW 10 output formats, and MIPI CSI-2 interface.
-> 
-> The driver adds support for 640x480 RAW 8.
-> 
-> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
+Yes, and I'm not objecting this.
 
-[snip]
+>> >> 4. First of all, why do you need this function in the first place?
+>> >>
+>> >> +struct gpio_desc *
+>> >> +atmel_nand_pdata_get_gpio(struct atmel_nand_controller *nc, int gpioid,
+>> >> +                         const char *name, bool active_low,
+>> >> +                         enum gpiod_flags flags)
+>> >
+>> > Because I don't want to duplicate the code done in
+>> > atmel_nand_pdata_get_gpio() each time I have to convert a GPIO number
+>> > into a GPIO descriptor, and that is needed to support platforms that
+>> > haven't moved to DT yet
+>>
+>> They should use GPIO lookup tables.
+>>
+>> We don't encourage people to use platform data anymore.
+>>
+>> We have unified device properties for something like "timeout-us", we
+>> have look up tables when you need specifics like pwm, gpio, pinctrl,
+>> ...
+>>
+>> Abusing platform data with pointers is also not welcome.
+>>
+>> > (in this case, avr32).
+>>
+>> It's dead de facto.
+>>
+>> When last time did you compile kernel for it? What was the version of kernel?
+>> Did it get successfully?
+>>
+>> When are we going to remove avr32 support from kernel completely?
+>
+> I'll let Nicolas answer that one.
 
-> +
-> +struct ov5647 {
-> +	struct v4l2_subdev		sd;
-> +	struct media_pad		pad;
-> +	struct mutex			lock;
-> +	struct v4l2_mbus_framefmt	format;
-> +	unsigned int			width;
-> +	unsigned int			height;
-> +	int				power_count;
-> +	struct clk			*xclk;
-> +	/* External clock frequency currently supported is 30MHz */
-> +	u32				xclk_freq;
+In any case it's discouraging to use platform data for GPIOs and plain
+GPIO pin numbering.
 
-See a comment about 25MHz vs 30MHz below.
+> Note that I sometime prefer to keep (1 << X).
+>
+> Example:
+>
+> #define PMECC_CFG_READ_OP                       (0 << 12)
+> #define PMECC_CFG_WRITE_OP                      (1 << 12)
 
-Also I assume you can remove 'xclk_freq' from the struct fields,
-it can be replaced by a local variable.
+I understand that.
 
-> +};
+> Okay, so the code in pmecc.c. See, it's hard to follow a review when
+> you don't comment inline.
 
-[snip]
+It's hard to review (n+1) thousands of LOC.
 
-> +
-> +static int ov5647_read(struct v4l2_subdev *sd, u16 reg, u8 *val)
-> +{
-> +	int ret;
-> +	unsigned char data_w[2] = { reg >> 8, reg & 0xff };
-> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
-> +
-> +	ret = i2c_master_send(client, data_w, 2);
-> +	if (ret < 0) {
-> +		dev_dbg(&client->dev, "%s: i2c read error, reg: %x\n",
+>> >> 8. Have you checked what kernel library provides?
+>> >
+>> > I think so, but again, this is really vague, what kind of
+>> > open-coded functions do you think could be replaced with core libraries
+>> > helpers?
+>>
+>> I dunno, I'm asking you. Usually if I see a pattern I got a clue to
+>> check lib/ and similar places. From time to time I discover something
+>> new and interesting there.
+>
+> If you're talking about the code in pmecc.c, yes, I already mentioned
+> in the header that it should be reworked to use some helpers from
+> lib/bch.c, but that's not the point of this series, and is left as
+> future improvements.
 
-s/i2c read error/i2c write error/
+OK.
 
-> +			__func__, reg);
-> +		return ret;
-> +	}
-> +
-> +	ret = i2c_master_recv(client, val, 1);
-> +	if (ret < 0)
-> +		dev_dbg(&client->dev, "%s: i2c read error, reg: %x\n",
-> +				__func__, reg);
-> +
-> +	return ret;
-> +
+>> Yes, because my point is *split* this to be reviewable.
 
-Please remove the empty line above.
+> And how do you do with new drivers?
 
-> +}
-> +
-> +static int ov5647_write_array(struct v4l2_subdev *sd,
-> +				struct regval_list *regs, int array_size)
-> +{
-> +	int i = 0, ret;
+To be more pedantic the new drivers do not have "minus" thousands LOC.
 
-Assignment of 'i' on declaration is not needed, please remove.
+> Do you ask people to split their
+> submissions in micro changes?
 
-> +
-> +	for (i = 0; i < array_size; i++) {
-> +		ret = ov5647_write(sd, regs[i].addr, regs[i].data);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ov5647_set_virtual_channel(struct v4l2_subdev *sd, int channel)
-> +{
-> +	u8 channel_id;
-> +	int ret;
-> +
-> +	ret = ov5647_read(sd, 0x4814, &channel_id);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	channel_id &= ~(3 << 6);
-> +	return ov5647_write(sd, 0x4814, channel_id | (channel << 6));
-> +}
-> +
-> +static int ov5647_stream_on(struct v4l2_subdev *sd)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
-> +
-> +	ov5647_write(sd, 0x4202, 0x00);
+To logical ones.
 
-Should you add a check of the returned value?
+> I'm regularly reviewing drivers that are
+> several thousands LOC, and I don't ask people to split things just
+> because it's too long. When I ask them to split in different commits,
+> it's because they are doing several unrelated changes at once.
 
-> +
-> +	dev_dbg(&client->dev, "Stream on");
+What did prevent you to:
+1. Introduce new driver
+2. Switch to new driver
+3. Remove old one.
 
-I would suggest to remove dev_dbg(), because ftrace will report to a user,
-when this function is called.
+...if you are not splitting it in the first place?
 
-Also dev_dbg() in the middle of two I2C transfers in a row looks as being
-placed improperly.
+> Note that I considered refactoring the existing driver in smaller
+> steps, but it's almost impossible, because the code is too messy and I
+> would end up with a huge series of patches that is not easier to review.
 
-> +
-> +	return ov5647_write(sd, 0x300D, 0x00);
-> +}
-> +
-> +static int ov5647_stream_off(struct v4l2_subdev *sd)
-> +{
-> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
-> +
-> +	ov5647_write(sd, 0x4202, 0x0f);
+I can object this, but it will be no point except waste of time to
+this discussion.
 
-Should you add a check of the returned value?
+It's good that you considered several options. I suppose someone who
+is on topic can do comprehensive review.
 
-> +
-> +	dev_dbg(&client->dev, "Stream off");
-
-I would suggest to remove dev_dbg(), because ftrace will report to a user,
-when this function is called.
-
-Also dev_dbg() in the middle of two I2C transfers in a row looks as being
-placed improperly.
-
-> +
-> +	return ov5647_write(sd, 0x300D, 0x01);
-> +}
-> +
-> +static int set_sw_standby(struct v4l2_subdev *sd, bool standby)
-> +{
-> +	int ret;
-> +	u8 rdval;
-> +
-> +	ret = ov5647_read(sd, 0x0100, &rdval);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (standby)
-> +		rdval &= ~0x01;
-> +	else
-> +		rdval |= 0x01;
-> +
-> +	return ov5647_write(sd, 0x0100, rdval);
-> +}
-> +
-> +static int __sensor_init(struct v4l2_subdev *sd)
-> +{
-> +	int ret;
-> +	u8 resetval;
-> +	u8 rdval;
-
-It could be possible to put declarations of 'resetval' and 'rdval' on the same line.
-
-> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
-> +
-> +	dev_dbg(&client->dev, "sensor init\n");
-> +
-> +	ret = ov5647_read(sd, 0x0100, &rdval);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = ov5647_write_array(sd, ov5647_640x480,
-> +					ARRAY_SIZE(ov5647_640x480));
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "write sensor default regs error\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = ov5647_set_virtual_channel(sd, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = ov5647_read(sd, 0x0100, &resetval);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (!(resetval & 0x01)) {
-> +		dev_err(&client->dev, "Device was in SW standby");
-> +		ret = ov5647_write(sd, 0x0100, 0x01);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return ov5647_write(sd, 0x4800, 0x04);
-> +}
-> +
-> +static int sensor_power(struct v4l2_subdev *sd, int on)
-> +{
-> +	int ret;
-> +	struct ov5647 *ov5647 = to_state(sd);
-> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
-> +
-> +	ret = 0;
-> +	mutex_lock(&ov5647->lock);
-> +
-> +	if (on && !ov5647->power_count)	{
-> +		dev_dbg(&client->dev, "OV5647 power on\n");
-> +
-> +		clk_set_rate(ov5647->xclk, ov5647->xclk_freq);
-
-Now clk_set_rate() is redundant, please remove it.
-
-If once it is needed again, please move it to the .probe function, so
-it is called only once in the runtime.
-
-> +
-> +		ret = clk_prepare_enable(ov5647->xclk);
-
-I wonder would it be possible to unload the driver or to unbind the device
-and leave the clock unintentionally enabled? If yes, then this is a bug.
-
-> +		if (ret < 0) {
-> +			dev_err(&client->dev, "clk prepare enable failed\n");
-> +			goto out;
-> +		}
-> +
-> +		ret = ov5647_write_array(sd, sensor_oe_enable_regs,
-> +				ARRAY_SIZE(sensor_oe_enable_regs));
-> +		if (ret < 0) {
-> +			clk_disable_unprepare(ov5647->xclk);
-> +			dev_err(&client->dev,
-> +				"write sensor_oe_enable_regs error\n");
-> +			goto out;
-> +		}
-> +
-> +		ret = __sensor_init(sd);
-> +		if (ret < 0) {
-> +			clk_disable_unprepare(ov5647->xclk);
-> +			dev_err(&client->dev,
-> +				"Camera not available, check Power\n");
-> +			goto out;
-> +		}
-> +	} else if (!on && ov5647->power_count == 1) {
-> +		dev_dbg(&client->dev, "OV5647 power off\n");
-> +
-> +		dev_dbg(&client->dev, "disable oe\n");
-
-One of two dev_dbg()'s above is apparently redundant.
-
-> +		ret = ov5647_write_array(sd, sensor_oe_disable_regs,
-> +				ARRAY_SIZE(sensor_oe_disable_regs));
-> +
-> +		if (ret < 0)
-> +			dev_dbg(&client->dev, "disable oe failed\n");
-> +
-> +		ret = set_sw_standby(sd, true);
-> +
-> +		if (ret < 0)
-> +			dev_dbg(&client->dev, "soft stby failed\n");
-> +
-> +		clk_disable_unprepare(ov5647->xclk);
-> +	}
-> +
-> +	/* Update the power count. */
-> +	ov5647->power_count += on ? 1 : -1;
-> +	WARN_ON(ov5647->power_count < 0);
-> +
-> +out:
-> +	mutex_unlock(&ov5647->lock);
-> +
-> +	return ret;
-> +}
-> +
-
-[snip]
-
-> +
-> +static int ov5647_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct ov5647 *sensor;
-> +	int ret;
-> +	struct v4l2_subdev *sd;
-> +
-> +	sensor = devm_kzalloc(dev, sizeof(*sensor), GFP_KERNEL);
-> +	if (sensor == NULL)
-
-if (!sensor) is a bit shorter.
-
-> +		return -ENOMEM;
-> +
-> +	/* get system clock (xclk) */
-> +	sensor->xclk = devm_clk_get(dev, "xclk");
-> +	if (IS_ERR(sensor->xclk)) {
-> +		dev_err(dev, "could not get xclk");
-> +		return PTR_ERR(sensor->xclk);
-> +	}
-> +
-> +	sensor->xclk_freq = clk_get_rate(sensor->xclk);
-> +	if (sensor->xclk_freq != 25000000) {
-
-A comment in "struct ov5647" declaration says about 30MHz, which one is correct?
-
-> +		dev_err(dev, "Unsupported clock frequency: %u\n",
-> +			sensor->xclk_freq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	mutex_init(&sensor->lock);
-> +
-> +	sd = &sensor->sd;
-> +	v4l2_i2c_subdev_init(sd, client, &subdev_ops);
-> +	sensor->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-> +
-> +	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
-> +	sd->entity.function = MEDIA_ENT_F_CAM_SENSOR;
-> +	ret = media_entity_pads_init(&sd->entity, 1, &sensor->pad);
-> +	if (ret < 0)
-> +		goto mutex_remove;
-> +
-> +	ret = ov5647_detect(sd);
-> +	if (ret < 0)
-> +		goto error;
-> +
-> +	ret = v4l2_async_register_subdev(sd);
-> +	if (ret < 0)
-> +		goto error;
-> +
-> +	dev_dbg(&client->dev, "OmniVision OV5647 camera driver probed\n");
-> +	return 0;
-> +error:
-> +	media_entity_cleanup(&sd->entity);
-> +mutex_remove:
-> +	mutex_destroy(&sensor->lock);
-> +	return ret;
-> +}
-> +
-
-[snip]
-
-The driver looks good in general IMO.
-
---
-With best wishes,
-Vladimir
+-- 
+With Best Regards,
+Andy Shevchenko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
