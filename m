@@ -1,141 +1,71 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 17:55:15 +0200
-Message-ID: <CAHp75VfHf9qN+sRd6cymr9ziO9Xi7gw+O-yOp+1zEAduxEMfJg@mail.gmail.com>
-References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
- <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
- <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
- <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon>
- <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
- <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
- <20170221090610.6d531b94@bbrezillon> <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
- <20170221112641.6276c001@bbrezillon> <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
- <20170221122050.421dae48@bbrezillon>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] mmc: bcm2835: add sdhost controller to devicetree
+Date: Tue, 21 Feb 2017 16:57:15 +0100
+Message-ID: <48fcc95e-3a21-f6d0-8073-cae34871656a@i2se.com>
+References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
+ <1487668026-7100-4-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170221122050.421dae48@bbrezillon>
+In-Reply-To: <1487668026-7100-4-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 1:20 PM, Boris Brezillon
-<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, 21 Feb 2017 13:02:21 +0200
-> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Feb 21, 2017 at 12:26 PM, Boris Brezillon
->> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Tue, 21 Feb 2017 12:03:45 +0200
->> > Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> So, it's a matter of taste.
-
-Yes, and I'm not objecting this.
-
->> >> 4. First of all, why do you need this function in the first place?
->> >>
->> >> +struct gpio_desc *
->> >> +atmel_nand_pdata_get_gpio(struct atmel_nand_controller *nc, int gpioid,
->> >> +                         const char *name, bool active_low,
->> >> +                         enum gpiod_flags flags)
->> >
->> > Because I don't want to duplicate the code done in
->> > atmel_nand_pdata_get_gpio() each time I have to convert a GPIO number
->> > into a GPIO descriptor, and that is needed to support platforms that
->> > haven't moved to DT yet
->>
->> They should use GPIO lookup tables.
->>
->> We don't encourage people to use platform data anymore.
->>
->> We have unified device properties for something like "timeout-us", we
->> have look up tables when you need specifics like pwm, gpio, pinctrl,
->> ...
->>
->> Abusing platform data with pointers is also not welcome.
->>
->> > (in this case, avr32).
->>
->> It's dead de facto.
->>
->> When last time did you compile kernel for it? What was the version of kernel?
->> Did it get successfully?
->>
->> When are we going to remove avr32 support from kernel completely?
+Am 21.02.2017 um 10:07 schrieb Gerd Hoffmann:
+> Signed-off-by: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/bcm2835-rpi.dtsi |  6 ++++++
+>   arch/arm/boot/dts/bcm283x.dtsi     | 10 ++++++++++
+>   2 files changed, 16 insertions(+)
 >
-> I'll let Nicolas answer that one.
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> index 0b73f9c..7d89af2 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> @@ -69,6 +69,12 @@
+>   	bus-width = <4>;
+>   };
+>   
+> +&sdhost {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdhost_gpio48>;
+> +	bus-width = <4>;
+> +};
+> +
+>   &pwm {
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio45>;
+> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> index a3106aa..3f4fbff 100644
+> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> @@ -450,6 +450,16 @@
+>   			status = "disabled";
+>   		};
+>   
+> +		sdhost: mmc@7e202000 {
+> +			compatible = "brcm,bcm2835-sdhost";
+> +			reg = <0x7e202000 0x100>;
+> +			interrupts = <2 24>;
+> +			clocks = <&clocks BCM2835_CLOCK_VPU>;
+> +			dmas = <&dma 13>;
+> +			dma-names = "rx-tx";
+> +			status = "disabled";
+> +		};
+> +
+>   		hvs@7e400000 {
+>   			compatible = "brcm,bcm2835-hvs";
+>   			reg = <0x7e400000 0x6000>;
 
-In any case it's discouraging to use platform data for GPIOs and plain
-GPIO pin numbering.
+Unfortunately this is still the wrong place regarding to the register 
+order. So please be placed it between uart0: serial@7e201000 and i2s: 
+i2s@7e203000.
 
-> Note that I sometime prefer to keep (1 << X).
->
-> Example:
->
-> #define PMECC_CFG_READ_OP                       (0 << 12)
-> #define PMECC_CFG_WRITE_OP                      (1 << 12)
-
-I understand that.
-
-> Okay, so the code in pmecc.c. See, it's hard to follow a review when
-> you don't comment inline.
-
-It's hard to review (n+1) thousands of LOC.
-
->> >> 8. Have you checked what kernel library provides?
->> >
->> > I think so, but again, this is really vague, what kind of
->> > open-coded functions do you think could be replaced with core libraries
->> > helpers?
->>
->> I dunno, I'm asking you. Usually if I see a pattern I got a clue to
->> check lib/ and similar places. From time to time I discover something
->> new and interesting there.
->
-> If you're talking about the code in pmecc.c, yes, I already mentioned
-> in the header that it should be reworked to use some helpers from
-> lib/bch.c, but that's not the point of this series, and is left as
-> future improvements.
-
-OK.
-
->> Yes, because my point is *split* this to be reviewable.
-
-> And how do you do with new drivers?
-
-To be more pedantic the new drivers do not have "minus" thousands LOC.
-
-> Do you ask people to split their
-> submissions in micro changes?
-
-To logical ones.
-
-> I'm regularly reviewing drivers that are
-> several thousands LOC, and I don't ask people to split things just
-> because it's too long. When I ask them to split in different commits,
-> it's because they are doing several unrelated changes at once.
-
-What did prevent you to:
-1. Introduce new driver
-2. Switch to new driver
-3. Remove old one.
-
-...if you are not splitting it in the first place?
-
-> Note that I considered refactoring the existing driver in smaller
-> steps, but it's almost impossible, because the code is too messy and I
-> would end up with a huge series of patches that is not easier to review.
-
-I can object this, but it will be no point except waste of time to
-this discussion.
-
-It's good that you considered several options. I suppose someone who
-is on topic can do comprehensive review.
-
--- 
-With Best Regards,
-Andy Shevchenko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
