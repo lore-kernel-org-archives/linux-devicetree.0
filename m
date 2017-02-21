@@ -1,79 +1,38 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] media: dt-bindings: vpif: extend the example with an
- output port
-Date: Tue, 21 Feb 2017 08:57:51 -0600
-Message-ID: <CAL_Jsq+f+H47iFNMZ5+2qG0n=6QDZOLPf2HtFH8SLD77Dq1e7A@mail.gmail.com>
-References: <1487268237-4240-1-git-send-email-bgolaszewski@baylibre.com> <1487268237-4240-3-git-send-email-bgolaszewski@baylibre.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v9 2/2] Add support for OV5647 sensor.
+Date: Tue, 21 Feb 2017 16:58:29 +0200
+Message-ID: <20170221145829.GK16975@valkosipuli.retiisi.org.uk>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+ <412e51e695630281d2084a77c0329fd273ea00d7.1487334912.git.roliveir@synopsys.com>
+ <20170221120914.GG16975@valkosipuli.retiisi.org.uk>
+ <28e7db42-c324-667d-4d76-ad6dc02f0d3b@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487268237-4240-3-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <28e7db42-c324-667d-4d76-ad6dc02f0d3b@synopsys.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 12:03 PM, Bartosz Golaszewski
-<bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> This makes the example more or less correspond with the da850-evm
-> hardware setup.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/ti,da850-vpif.txt    | 36 +++++++++++++++++-----
->  1 file changed, 29 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> index 9c7510b..d6f93a1 100644
-> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> @@ -16,7 +16,7 @@ Required properties:
->  Video Capture:
->
->  VPIF has a 16-bit parallel bus input, supporting 2 8-bit channels or a
-> -single 16-bit channel.  It should contain at least one port child node
-> +single 16-bit channel. It should contain one or two port child nodes
+Hi Ramiro,
 
-When do you not have an output? Seems kind of useless. I'm guessing
-this is an oversight in the binding and there should always be port 1
-and a connector node, so document it that way.
+On Tue, Feb 21, 2017 at 02:49:12PM +0000, Ramiro Oliveira wrote:
+> Hi Sakari,
+> 
+> Thank you for your feedback.
 
-This also needs to state what port 0 and port 1 are (i.e. input or
-output and type of data).
+You're welcome.
 
->  with child 'endpoint' node. Please refer to the bindings defined in
->  Documentation/devicetree/bindings/media/video-interfaces.txt.
->
-> @@ -28,19 +28,26 @@ I2C-connected TVP5147 decoder:
->                 reg = <0x217000 0x1000>;
->                 interrupts = <92>;
->
-> -               port {
-> -                       vpif_ch0: endpoint@0 {
-> +               port@0 {
-> +                       vpif_input_ch0: endpoint@0 {
->                                 reg = <0>;
->                                 bus-width = <8>;
-> -                               remote-endpoint = <&composite>;
-> +                               remote-endpoint = <&composite_in>;
->                         };
->
-> -                       vpif_ch1: endpoint@1 {
-> +                       vpif_input_ch1: endpoint@1 {
->                                 reg = <1>;
->                                 bus-width = <8>;
->                                 data-shift = <8>;
->                         };
->                 };
-> +
-> +               port@1 {
-> +                       vpif_output_ch0: endpoint {
-> +                               bus-width = <8>;
+An additional note as you don't implement any controls --- some CSI-2
+receivers may need to know the link frequency to know how to program the
+receiver; they'll simply fail to start streaming if you don't.
 
-Isn't this an analog input? bus-width doesn't make sense for that.
+<URL:http://hverkuil.home.xs4all.nl/spec/uapi/v4l/extended-controls.html#image-process-control-reference>
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
