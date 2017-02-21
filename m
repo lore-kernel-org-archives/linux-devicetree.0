@@ -1,45 +1,50 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
-Date: Tue, 21 Feb 2017 17:31:03 +0100
-Message-ID: <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
-References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
- <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
- <20170220182214.izi46a7lbzck7q4r@ninjato>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 3/6] drivers: firmware: psci: Implement shallow
+ suspend mode
+Date: Tue, 21 Feb 2017 17:32:50 +0100
+Message-ID: <CAMuHMdVmu4AYZ6MZHd79N2-2gELR6s3oZ46UnEszCfLvHymY1w@mail.gmail.com>
+References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
+ <1487622809-25127-4-git-send-email-geert+renesas@glider.be>
+ <20170221110712.GB5021@amd> <de2a15d4-9ac2-9ba9-a47a-eacbf478f601@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170220182214.izi46a7lbzck7q4r@ninjato>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <de2a15d4-9ac2-9ba9-a47a-eacbf478f601@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
-hi Wolfram,
+Hi Sudeep,
 
-Am 20.02.2017 um 19:22 schrieb Wolfram Sang:
-> On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
->> Since commit e2474541032d ("bcm2835: Fix hang for writing messages
->> larger than 16 bytes") the interrupt handler is prone to a possible
->> NULL pointer dereference. This could happen if an interrupt fires
->> before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
->> on the RPi 3. Even this is an unexpected behavior the driver must
->> handle that with an error instead of a crash.
+On Tue, Feb 21, 2017 at 12:14 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> On 21/02/17 11:07, Pavel Machek wrote:
+>>> Enable support for "shallow" suspend mode, also known as "Standby" or
+>>> "Power-On Suspend".
+>>>
+>>> As secondary CPU cores are taken offline, "shallow" suspend mode saves
+>>> slightly more power than "s2idle", but less than "deep" suspend mode.
+>>> However, unlike "deep" suspend mode, "shallow" suspend mode can be used
+>>> regardless of the presence of support for PSCI_SYSTEM_SUSPEND, which is
+>>> an optional API in PSCI v1.0.
 >>
->> CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
->> CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->> Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
->> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Applied to for-next, thanks (will be in 4.11)!
+>> If system supports "shallow" suspend, why does not PSCI implement it?
 >
+> Yes it can, and IIUC it already does on this platform with CPU_SUSPEND.
+> All it now needs is just to use existing "freeze" suspend mode in Linux.
 
-since this patch is too late for 4.10, should i resent with CC to stable 
-in order to get it into the next 4.10 release?
+How can Linux know if using "deep" suspend will allow to wake-up the system
+according to configured wake-up sources, or not?
 
-Stefan
+Note that "it will not, ever" is an accepted answer.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
