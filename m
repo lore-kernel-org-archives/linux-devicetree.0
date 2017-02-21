@@ -1,79 +1,78 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: bug in DT docs vs mcp251x.c driver
-Date: Tue, 21 Feb 2017 19:46:34 +0100
-Message-ID: <bd9d08e0-4fc3-f07b-7ce6-f9c14397c744@pengutronix.de>
-References: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] fpga manager: Add Xilinx slave serial SPI driver
+Date: Tue, 21 Feb 2017 19:53:40 +0100
+Message-ID: <3a30638c-68f6-8c2b-95b7-c8c700fe4867@xilinx.com>
+References: <1487600724-17607-1-git-send-email-agust@denx.de>
+ <1487600724-17607-3-git-send-email-agust@denx.de>
+ <2d412ae7-4163-9943-6d98-2d6387df7789@xilinx.com>
+ <20170221152444.34b5d9f4@crub>
+ <19e0b5d1-bbf6-25ac-2698-6074ebafcf05@xilinx.com>
+ <20170221161723.358975f7@crub>
+ <ce0d7ba7-fa05-ad55-407c-3903553ace65@xilinx.com>
+ <20170221163907.75ba4330@crub>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="vTEmG71CTDR8ShasB3sDOhi1Uiw17IMK7"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
-Sender: linux-can-owner@vger.kernel.org
-To: =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki@elpromaelectronics.com>, Alexander Shiyan <shc_work@mail.ru>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-can@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "l.dalek elpromaelectronics.com" <l.dalek@elpromaelectronics.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170221163907.75ba4330@crub>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---vTEmG71CTDR8ShasB3sDOhi1Uiw17IMK7
-Content-Type: multipart/mixed; boundary="EnGr2narIkMqPTj9DGfKFdRdxBtGgIHI4";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki@elpromaelectronics.com>,
- Alexander Shiyan <shc_work@mail.ru>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-can@vger.kernel.org,
- Wolfgang Grandegger <wg@grandegger.com>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "l.dalek elpromaelectronics.com" <l.dalek@elpromaelectronics.com>
-Message-ID: <bd9d08e0-4fc3-f07b-7ce6-f9c14397c744@pengutronix.de>
-Subject: Re: bug in DT docs vs mcp251x.c driver
-References: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
-In-Reply-To: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
+On 21.2.2017 16:39, Anatolij Gustschin wrote:
+> On Tue, 21 Feb 2017 16:27:34 +0100
+> Michal Simek michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org wrote:
+> ...
+>> ok. That means only dout (din fpga) and clk out (fpga clk in) and gpio
+>> handling for others signals.
+> 
+> yes, exactly.
+> 
+> ...
+>>> Usage example for full FPGA configuration:
+>>>
+>>> fpga-region0 {
+>>> 	compatible = "fpga-region";
+>>> 	fpga-mgr = <&fpga_mgr_spi>;
+>>> 	#address-cells = <0x1>;
+>>> 	#size-cells = <0x1>;
+>>> };
+>>>
+>>> &spi1 {
+>>> 	status = "okay";
+>>>
+>>> 	fpga_mgr_spi: fpga-mgr@0 {
+>>> 		compatible = "xlnx,fpga-slave-serial";
+>>> 		reg = <0>;
+>>> 		spi-max-frequency = <60000000>;
+>>> 		spi-cpha;
+>>> 		done-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+>>> 		prog_b-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+>>> 	};
+>>> };   
+>>
+>> Right I would even replace &spi1 with full node to see content but this
+>> is also good.
+> 
+> Okay, will add in patch v3.
 
---EnGr2narIkMqPTj9DGfKFdRdxBtGgIHI4
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+There is one thing I have checked ml505 - old virtex 5 board which has
+this interface.
+http://www-inst.eecs.berkeley.edu/~cs150/fa13/resources/ml50x_schematics.pdf
 
-On 02/21/2017 07:08 PM, Janusz U=C5=BCycki wrote:
-> Hi,
->=20
-> We've noticed the inconsistency in DT which still exist in kernel v4.10=
-:
->=20
-> devm_regulator_get(&spi->dev, "vdd") in drivers/net/can/mcp251x.c
->=20
-> vs vdd-supply: Regulator that powers the CAN controller. in
-> bindings/net/can/microchip,mcp251x.txt
-> Eg. https://patchwork.ozlabs.org/patch/304371/ best regards Janusz=20
+And I was chatting with one board guy and I think that done pin should
+be optional not required because not all boards export it.
 
-Can you create a patch to fix the issue?
+Then there is a question how to find out that programming was done and
+that's something what I don't know. But will try to find out if you can
+send any sequence over spi to find it out instead of gpio done pin.
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Thanks,
+Michal
 
 
---EnGr2narIkMqPTj9DGfKFdRdxBtGgIHI4--
-
---vTEmG71CTDR8ShasB3sDOhi1Uiw17IMK7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlisiwoACgkQHv7KIOw4
-HPbK4Qf/fWk4qxauBFl7SVu5ZQe2F+ZgK62GIiRK3p25U/Ov/MT2/AZa9B6OSQtf
-kQTV1hIXKKJv/zCVPIuclKoxZx4kb/o4snTZ339LVVWJn868BmWQ4n2WijTJS8XX
-1x5AzrKcxcJaRzrKk4LtOikwAD5tRvQK2DRvPVeJHkhENbKSzbNWtI+8u9pj0nqC
-p37rjkfUiWGtSoJJFiQUholkbVZIhO9llnR3gv26KfXZgQunzWasOKjZtlogjEZf
-KE3/5Kj2HcduGpzh7ZieEFxWMXFL4ukf0IzGTlMaIaz7FbDdhQlZZb8AxkwZ7nEU
-nIwvx2l4L92ZyvzggUYuY0uofwxNlw==
-=EYHP
------END PGP SIGNATURE-----
-
---vTEmG71CTDR8ShasB3sDOhi1Uiw17IMK7--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
