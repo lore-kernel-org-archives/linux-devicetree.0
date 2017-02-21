@@ -1,76 +1,66 @@
-From: Mike Leach <Mike.Leach-5wv7dgnIgG8@public.gmane.org>
-Subject: RE: [PATCH] arm64: dts: juno: update definition for programmable
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: juno: update definition for programmable
  replicator.
-Date: Tue, 21 Feb 2017 12:34:25 +0000
-Message-ID: <DB6PR0802MB219850A35C8DAD5CB2858C1C8C510@DB6PR0802MB2198.eurprd08.prod.outlook.com>
+Date: Tue, 21 Feb 2017 12:37:31 +0000
+Message-ID: <798053cd-ae5a-dc04-12c9-9df9e0d66b4d@arm.com>
 References: <1487358790-2618-1-git-send-email-mike.leach@linaro.org>
  <2ba59da5-fc79-ab53-2f2a-2ddc6e5e9c3d@arm.com>
+ <DB6PR0802MB219850A35C8DAD5CB2858C1C8C510@DB6PR0802MB2198.eurprd08.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2ba59da5-fc79-ab53-2f2a-2ddc6e5e9c3d-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <DB6PR0802MB219850A35C8DAD5CB2858C1C8C510-Su+keVU6bdiU6P2sXUe/YkdOKmgb957onBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+To: Mike Leach <Mike.Leach-5wv7dgnIgG8@public.gmane.org>, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3VkZWVwDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQ29yZVNp
-Z2h0IFttYWlsdG86Y29yZXNpZ2h0LWJvdW5jZXNAbGlzdHMubGluYXJvLm9yZ10gT24gQmVoYWxm
-IE9mDQo+IFN1ZGVlcCBIb2xsYQ0KPiBTZW50OiAyMSBGZWJydWFyeSAyMDE3IDExOjAzDQo+IFRv
-OiBNaWtlIExlYWNoOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6
-IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBjb3Jlc2lnaHRAbGlzdHMubGluYXJvLm9yZzsN
-Cj4gcm9iaCtkdEBrZXJuZWwub3JnOyBTdWRlZXAgSG9sbGENCj4gU3ViamVjdDogUmU6IFtQQVRD
-SF0gYXJtNjQ6IGR0czoganVubzogdXBkYXRlIGRlZmluaXRpb24gZm9yIHByb2dyYW1tYWJsZQ0K
-PiByZXBsaWNhdG9yLg0KPg0KPiBIaSBNaWtlLA0KPg0KPiBPbiAxNy8wMi8xNyAxOToxMywgTWlr
-ZSBMZWFjaCB3cm90ZToNCj4gPiBKdW5vIHBsYXRmb3JtcyBoYXZlIGEgcHJvZ3JhbW1hYmxlIHJl
-cGxpY2F0b3Igc3BsaXR0aW5nIHRoZSB0cmFjZQ0KPiA+IG91dHB1dCB0byBUUElVIGFuZCBFVFIu
-IEN1cnJlbnRseSB0aGlzIGlzIG5vdCBiZWluZyBwcm9ncmFtbWVkIGFzIGl0DQo+ID4gaXMgYmVp
-bmcgdHJlYXRlZCBhcyBhIG5vbmUtcHJvZ3JhbW1hYmxlIHJlcGxpY2F0b3IgLSB3aGljaCBpcyB0
-aGUNCj4gPiBkZWZhdWx0IG9wZXJhdGlvbmFsIG1vZGUgZm9yIHRoZXNlIGRldmljZXMuIFRoZSBU
-UElVIGluIHRoZSBzeXN0ZW0gaXMNCj4gPiBlbmFibGVkIGJ5IGRlZmF1bHQsIGFuZCB0aGlzIGNv
-bWJpbmF0aW9uIGlzIGNhdXNpbmcgYmFjay1wcmVzc3VyZSBpbg0KPiA+IHRoZSB0cmFjZSBzeXN0
-ZW0gcmVzdWx0aW5nIGluIG92ZXJmbG93cyBhdCB0aGUgc291cmNlLg0KPiA+DQo+ID4gUmVwbGFj
-ZXMgdGhlIGV4aXN0aW5nIGRlZmluaXRpb24gd2l0aCBvbmUgdGhhdCBkZWZpbmVzIHRoZQ0KPiA+
-IHByb2dyYW1tYWJsZSByZXBsaWNhdG9yLCB1c2luZyB0aGUgInFjb20sY29yZXNpZ2h0LXJlcGxp
-Y2F0b3IxeCINCj4gPiBkcml2ZXIgdGhhdCBwcm92aWRlcyB0aGUgY29ycmVjdCBmdW5jdGlvbmFs
-aXR5IGZvciBDb3JlU2lnaHQgcHJvZ3JhbW1hYmxlDQo+IHJlcGxpY2F0b3JzLg0KPiA+DQo+DQo+
-IEkgYXNzdW1lIHRoaXMgaXMganVzdCBlbmhhbmNlbWVudCBhbmQgbm90IGEgZml4Lg0KDQpJIGd1
-ZXNzIGl0IGRlcGVuZHMgb24geW91ciBwb2ludCBvZiB2aWV3IC0gd2l0aCB0aGlzIHVwZGF0ZSB0
-aGUgdHJhY2Ugb3ZlcmZsb3dzIEkgd2FzIHNlZWluZyBkaXNhcHBlYXIsIGFzIHRoZSB0cmFjZSBw
-YXRoIHRvIFRQSVUgaXMgYmxvY2tlZC4NClNvIGl0IGFmZmVjdHMgdGhlIHF1YWxpdHkgb2YgY29s
-bGVjdGVkIHRyYWNlIHVzaW5nIHRoZSBFVFIgcmF0aGVyIHRoYW4gYSBiaW5hcnkgZGlkbid0IHdv
-cmsgLyB3b3JrcyBub3cgY2hhbmdlLg0KDQo+ICBTaW5jZSBpdCdzIHRvbyBsYXRlIGZvcg0KPiB2
-NC4xMSAoYWxyZWFkeSBpbiBtZXJnZSB3aW5kb3cgbm93KSwgSSB3aWxsIHF1ZXVlIHRoaXMgZm9y
-IHY0LjEyDQo+DQoNClRoYW5rcy4NCg0KTWlrZQ0KDQoNCg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1p
-a2UgTGVhY2ggPG1pa2UubGVhY2hAbGluYXJvLm9yZz4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9hcm0vanVuby1iYXNlLmR0c2kgfCAxNCArKysrKysrKy0tLS0tLQ0KPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4g
-ZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvYXJtL2p1bm8tYmFzZS5kdHNpDQo+ID4g
-Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2UuZHRzaQ0KPiA+IGluZGV4IDlkNzk5
-ZDkuLjY1NDZlMjMgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hcm0vanVu
-by1iYXNlLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2FybS9qdW5vLWJhc2Uu
-ZHRzaQ0KPiA+IEBAIC0zNzIsMTIgKzM3MiwxNCBAQA0KPiA+ICB9Ow0KPiA+ICB9Ow0KPiA+DQo+
-ID4gLWNvcmVzaWdodC1yZXBsaWNhdG9yIHsNCj4gPiAtLyoNCj4gPiAtICogTm9uLWNvbmZpZ3Vy
-YWJsZSByZXBsaWNhdG9ycyBkb24ndCBzaG93IHVwIG9uIHRoZQ0KPiA+IC0gKiBBTUJBIGJ1cy4g
-IEFzIHN1Y2ggbm8gbmVlZCB0byBhZGQgImFybSxwcmltZWNlbGwiLg0KPiA+IC0gKi8NCj4gPiAt
-Y29tcGF0aWJsZSA9ICJhcm0sY29yZXNpZ2h0LXJlcGxpY2F0b3IiOw0KPiA+ICtjb3Jlc2lnaHQt
-cmVwbGljYXRvckAyMDEyMDAwMCB7DQo+ID4gKw0KPiA+ICtjb21wYXRpYmxlID0gInFjb20sY29y
-ZXNpZ2h0LXJlcGxpY2F0b3IxeCIsICJhcm0scHJpbWVjZWxsIjsNCj4gPiArcmVnID0gPDAgMHgy
-MDEyMDAwMCAwIDB4MTAwMD47DQo+ID4gKw0KPiA+ICtjbG9ja3MgPSA8JnNvY19zbWM1MG1oej47
-DQo+ID4gK2Nsb2NrLW5hbWVzID0gImFwYl9wY2xrIjsNCj4gPiArcG93ZXItZG9tYWlucyA9IDwm
-c2NwaV9kZXZwZCAwPjsNCj4gPg0KPiA+ICBwb3J0cyB7DQo+ID4gICNhZGRyZXNzLWNlbGxzID0g
-PDE+Ow0KPiA+DQo+DQo+IC0tDQo+IFJlZ2FyZHMsDQo+IFN1ZGVlcA0KPiBfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBDb3JlU2lnaHQgbWFpbGluZyBs
-aXN0DQo+IENvcmVTaWdodEBsaXN0cy5saW5hcm8ub3JnDQo+IGh0dHBzOi8vbGlzdHMubGluYXJv
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2NvcmVzaWdodA0KSU1QT1JUQU5UIE5PVElDRTogVGhlIGNv
-bnRlbnRzIG9mIHRoaXMgZW1haWwgYW5kIGFueSBhdHRhY2htZW50cyBhcmUgY29uZmlkZW50aWFs
-IGFuZCBtYXkgYWxzbyBiZSBwcml2aWxlZ2VkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQg
-cmVjaXBpZW50LCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgaW1tZWRpYXRlbHkgYW5kIGRvIG5v
-dCBkaXNjbG9zZSB0aGUgY29udGVudHMgdG8gYW55IG90aGVyIHBlcnNvbiwgdXNlIGl0IGZvciBh
-bnkgcHVycG9zZSwgb3Igc3RvcmUgb3IgY29weSB0aGUgaW5mb3JtYXRpb24gaW4gYW55IG1lZGl1
-bS4gVGhhbmsgeW91Lg0K
+
+
+On 21/02/17 12:34, Mike Leach wrote:
+> Hi Sudeep
+> 
+>> -----Original Message-----
+>> From: CoreSight [mailto:coresight-bounces-cunTk1MwBs8s++Sfvej+rw@public.gmane.org] On Behalf Of
+>> Sudeep Holla
+>> Sent: 21 February 2017 11:03
+>> To: Mike Leach; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org;
+>> robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; Sudeep Holla
+>> Subject: Re: [PATCH] arm64: dts: juno: update definition for programmable
+>> replicator.
+>>
+>> Hi Mike,
+>>
+>> On 17/02/17 19:13, Mike Leach wrote:
+>>> Juno platforms have a programmable replicator splitting the trace
+>>> output to TPIU and ETR. Currently this is not being programmed as it
+>>> is being treated as a none-programmable replicator - which is the
+>>> default operational mode for these devices. The TPIU in the system is
+>>> enabled by default, and this combination is causing back-pressure in
+>>> the trace system resulting in overflows at the source.
+>>>
+>>> Replaces the existing definition with one that defines the
+>>> programmable replicator, using the "qcom,coresight-replicator1x"
+>>> driver that provides the correct functionality for CoreSight programmable
+>> replicators.
+>>>
+>>
+>> I assume this is just enhancement and not a fix.
+> 
+> I guess it depends on your point of view - with this update the trace
+> overflows I was seeing disappear, as the trace path to TPIU is
+> blocked. So it affects the quality of collected trace using the ETR
+> rather than a binary didn't work / works now change.
+> 
+
+OK, could you add the warning overflow messages if you get, so that it's
+very clear from the change log. Then I can see if it can be pushed as fix.
+
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
