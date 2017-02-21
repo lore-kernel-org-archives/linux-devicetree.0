@@ -1,100 +1,60 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: [PATCH 1/3] usb: usb251xb: remove max_{power,current}_{sp,bp} properties
-Date: Tue, 21 Feb 2017 09:56:17 +0100
-Message-ID: <1487667379-2075-2-git-send-email-richard.leitner@skidata.com>
-References: <1487667379-2075-1-git-send-email-richard.leitner@skidata.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487667379-2075-1-git-send-email-richard.leitner@skidata.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, robh+dt@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, dev@g0hl1n.net, Richard Leitner <richard.leitner@skidata.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH v3 3/7] mmc: bcm2835: add sdhost controller to devicetree
+Date: Tue, 21 Feb 2017 10:07:02 +0100
+Message-ID: <1487668026-7100-4-git-send-email-kraxel@redhat.com>
+References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-rpi-kernel@lists.infradead.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Gerd Hoffmann <kraxel@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove the max_{power,current}_{sp,bp} properties of the usb251xb driver
-from devicetree. This is done to simplify the dt bindings as requested
-by Rob Herring in https://lkml.org/lkml/2017/2/15/1283. If those
-properties are ever needed by somebody they can be enabled again easily.
-
-Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Eric Anholt <eric@anholt.net>
 ---
- Documentation/devicetree/bindings/usb/usb251xb.txt | 20 ------------------
- drivers/usb/misc/usb251xb.c                        | 24 ++++------------------
- 2 files changed, 4 insertions(+), 40 deletions(-)
+ arch/arm/boot/dts/bcm2835-rpi.dtsi |  6 ++++++
+ arch/arm/boot/dts/bcm283x.dtsi     | 10 ++++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-index 0c065f7..a5efd10 100644
---- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-+++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-@@ -40,26 +40,6 @@ Optional properties :
- 	device connected.
-  - sp-disabled-ports : Specifies the ports which will be self-power disabled
-  - bp-disabled-ports : Specifies the ports which will be bus-power disabled
-- - max-sp-power : Specifies the maximum current the hub consumes from an
--	upstream port when operating as self-powered hub including the power
--	consumption of a permanently attached peripheral if the hub is
--	configured as a compound device. The value is given in mA in a 0 - 500
--	range (default is 2).
-- - max-bp-power : Specifies the maximum current the hub consumes from an
--	upstream port when operating as bus-powered hub including the power
--	consumption of a permanently attached peripheral if the hub is
--	configured as a compound device. The value is given in mA in a 0 - 500
--	range (default is 100).
-- - max-sp-current : Specifies the maximum current the hub consumes from an
--	upstream port when operating as self-powered hub EXCLUDING the power
--	consumption of a permanently attached peripheral if the hub is
--	configured as a compound device. The value is given in mA in a 0 - 500
--	range (default is 2).
-- - max-bp-current : Specifies the maximum current the hub consumes from an
--	upstream port when operating as bus-powered hub EXCLUDING the power
--	consumption of a permanently attached peripheral if the hub is
--	configured as a compound device. The value is given in mA in a 0 - 500
--	range (default is 100).
-  - power-on-time : Specifies the time it takes from the time the host initiates
- 	the power-on sequence to a port until the port has adequate power. The
- 	value is given in ms in a 0 - 510 range (default is 100ms).
-diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
-index 4e18600..3f9c306 100644
---- a/drivers/usb/misc/usb251xb.c
-+++ b/drivers/usb/misc/usb251xb.c
-@@ -432,26 +432,6 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 		}
- 	}
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 0b73f9c..7d89af2 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -69,6 +69,12 @@
+ 	bus-width = <4>;
+ };
  
--	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
--	if (!of_property_read_u32(np, "max-sp-power", property_u32))
--		hub->max_power_sp = min_t(u8, be32_to_cpu(*property_u32) / 2,
--					  250);
--
--	hub->max_power_bp = USB251XB_DEF_MAX_POWER_BUS;
--	if (!of_property_read_u32(np, "max-bp-power", property_u32))
--		hub->max_power_bp = min_t(u8, be32_to_cpu(*property_u32) / 2,
--					  250);
--
--	hub->max_current_sp = USB251XB_DEF_MAX_CURRENT_SELF;
--	if (!of_property_read_u32(np, "max-sp-current", property_u32))
--		hub->max_current_sp = min_t(u8, be32_to_cpu(*property_u32) / 2,
--					    250);
--
--	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
--	if (!of_property_read_u32(np, "max-bp-current", property_u32))
--		hub->max_current_bp = min_t(u8, be32_to_cpu(*property_u32) / 2,
--					    250);
--
- 	hub->power_on_time = USB251XB_DEF_POWER_ON_TIME;
- 	if (!of_property_read_u32(np, "power-on-time", property_u32))
- 		hub->power_on_time = min_t(u8, be32_to_cpu(*property_u32) / 2,
-@@ -492,6 +472,10 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
- 	/* The following parameters are currently not exposed to devicetree, but
- 	 * may be as soon as needed.
- 	 */
-+	hub->max_power_sp = USB251XB_DEF_MAX_POWER_SELF;
-+	hub->max_power_bp = USB251XB_DEF_MAX_POWER_BUS;
-+	hub->max_current_sp = USB251XB_DEF_MAX_CURRENT_SELF;
-+	hub->max_current_bp = USB251XB_DEF_MAX_CURRENT_BUS;
- 	hub->bat_charge_en = USB251XB_DEF_BATTERY_CHARGING_ENABLE;
- 	hub->boost_up = USB251XB_DEF_BOOST_UP;
- 	hub->boost_x = USB251XB_DEF_BOOST_X;
++&sdhost {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdhost_gpio48>;
++	bus-width = <4>;
++};
++
+ &pwm {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio45>;
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index a3106aa..3f4fbff 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -450,6 +450,16 @@
+ 			status = "disabled";
+ 		};
+ 
++		sdhost: mmc@7e202000 {
++			compatible = "brcm,bcm2835-sdhost";
++			reg = <0x7e202000 0x100>;
++			interrupts = <2 24>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>;
++			dmas = <&dma 13>;
++			dma-names = "rx-tx";
++			status = "disabled";
++		};
++
+ 		hvs@7e400000 {
+ 			compatible = "brcm,bcm2835-hvs";
+ 			reg = <0x7e400000 0x6000>;
 -- 
-2.1.4
+1.8.3.1
+
