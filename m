@@ -1,46 +1,60 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i-h3: Add mmc2 node to the X2
-Date: Tue, 21 Feb 2017 11:49:50 -0800
-Message-ID: <20170221194950.3dwpppzasdixylf6@lukather>
-References: <20170220162218.22068-1-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
+Date: Tue, 21 Feb 2017 21:11:38 +0100
+Message-ID: <daf765e2-1a60-8dea-fee0-8af6ddecdf8e@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yos4qgkzkmj6ey7d"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYVTWLCQKGQEKLN3LIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170220162218.22068-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Herbert Xu <herbert@gondor.apana.org.au>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Expose clock CLKID_RNG0 which is needed for the HW random number generator.
 
---yos4qgkzkmj6ey7d
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2:
+- added clk and DT maintainers
+- split exposing the clock and using it in DT into two patches
+- comment out clock definition in drivers/clk/meson/gxbb.h
+- silently move CLKID_SPI to the right place
+---
+ drivers/clk/meson/gxbb.h              | 2 +-
+ include/dt-bindings/clock/gxbb-clkc.h | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-On Mon, Feb 20, 2017 at 05:22:18PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The Beelink X2 has an on-board eMMC so add a node enabling
-> the mmc2 controller.
-> 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Applied.
-
-Thanks!
-Maxime
-
+diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+index 8ee2022c..cbd62e46 100644
+--- a/drivers/clk/meson/gxbb.h
++++ b/drivers/clk/meson/gxbb.h
+@@ -193,7 +193,7 @@
+ /* CLKID_I2C */
+ /* #define CLKID_SAR_ADC */
+ #define CLKID_SMART_CARD	  24
+-#define CLKID_RNG0		  25
++/* CLKID_RNG0 */
+ #define CLKID_UART0		  26
+ #define CLKID_SDHC		  27
+ #define CLKID_STREAM		  28
+diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
+index 692846c7..63f4c2c4 100644
+--- a/include/dt-bindings/clock/gxbb-clkc.h
++++ b/include/dt-bindings/clock/gxbb-clkc.h
+@@ -12,9 +12,10 @@
+ #define CLKID_FCLK_DIV4		6
+ #define CLKID_CLK81		12
+ #define CLKID_MPLL2		15
+-#define CLKID_SPI		34
+ #define CLKID_I2C		22
+ #define CLKID_SAR_ADC		23
++#define CLKID_RNG0		25
++#define CLKID_SPI		34
+ #define CLKID_ETH		36
+ #define CLKID_USB0		50
+ #define CLKID_USB1		51
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---yos4qgkzkmj6ey7d--
+2.11.1
+
+
