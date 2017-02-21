@@ -1,117 +1,72 @@
-From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Tue, 21 Feb 2017 20:13:16 +0000
-Message-ID: <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
- <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
+Date: Tue, 21 Feb 2017 21:14:03 +0100
+Message-ID: <20170221201403.GA1481@katana>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+ <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+ <20170220182214.izi46a7lbzck7q4r@ninjato>
+ <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eric Anholt <eric@anholt.net>, Peter Robinson <pbrobinson@gmail.com>, Martin Sperl <kernel@martin.sperl.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
 
-Thank you for your feedback
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/2017 3:58 PM, Vladimir Zapolskiy wrote:
-> Hi Ramiro,
-> 
-> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
->> Create device tree bindings documentation.
->>
->> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
->>  1 file changed, 35 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->> new file mode 100644
->> index 000000000000..31956426d3b9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->> @@ -0,0 +1,35 @@
->> +Omnivision OV5647 raw image sensor
->> +---------------------------------
->> +
->> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
->> +and CCI (I2C compatible) control bus.
->> +
->> +Required properties:
->> +
->> +- compatible		: "ovti,ov5647".
->> +- reg			: I2C slave address of the sensor.
->> +- clocks		: Reference to the xclk clock.
-> 
-> Is "xclk" clock a pixel clock or something else?
-> 
 
-It's an external oscillator.
+> >On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
+> >>Since commit e2474541032d ("bcm2835: Fix hang for writing messages
+> >>larger than 16 bytes") the interrupt handler is prone to a possible
+> >>NULL pointer dereference. This could happen if an interrupt fires
+> >>before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
+> >>on the RPi 3. Even this is an unexpected behavior the driver must
+> >>handle that with an error instead of a crash.
+> >>
+> >>CC: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
+> >>CC: Martin Sperl <kernel@martin.sperl.org>
+> >>Reported-by: Peter Robinson <pbrobinson@gmail.com>
+> >>Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger tha=
+n 16 bytes")
+> >>Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> >Applied to for-next, thanks (will be in 4.11)!
+> >
+>=20
+> since this patch is too late for 4.10, should i resent with CC to stable =
+in
+> order to get it into the next 4.10 release?
 
->> +- clock-names		: Should be "xclk".
-> 
-> You can remove this property, because there is only one source clock.
-> 
+It has the Fixes: tag, that will do.
 
-Ok.
 
->> +- clock-frequency	: Frequency of the xclk clock.
-> 
-> And after the last updates in the driver this property can be removed as well.
-> 
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
 
-But I'm still using clk_get_rate in the driver, if I remove the frequency here
-the probing will fail.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
->> +
->> +The common video interfaces bindings (see video-interfaces.txt) should be
->> +used to specify link to the image data receiver. The OV5647 device
->> +node should contain one 'port' child node with an 'endpoint' subnode.
->> +
->> +Example:
->> +
->> +	i2c@2000 {
->> +		...
->> +		ov: camera@36 {
->> +			compatible = "ovti,ov5647";
->> +			reg = <0x36>;
->> +			clocks = <&camera_clk>;
->> +			clock-names = "xclk";
->> +			clock-frequency = <25000000>;
-> 
-> When you remove two unused properties, please don't forget to update the
-> example.
-> 
+iQIcBAEBAgAGBQJYrJ+LAAoJEBQN5MwUoCm2KBUP/1zD0skX/CfkGhAphN29TXEQ
+xHOTfyQWgUtd9aYas/WJw27pQ29Q2m1C3zW8uXIr0hLbATf0ip5qgocJUXvzXjkl
+Io6eEUxZ0tJHQ/WhMACvKu8stvAWTkTZ8B3hH+HbUXz/Xu4qo9ZbNAcqFi+Bt+xb
+RslVR+3QucRrWCrXgyCMBk5hWbOp1Qq00fFkv5mSNxBYRhwyJkfCMIhG+0t3pwvW
+tGW8WiqA+mRwjNyLwC9oV2VBu92OufP4hkQWwXN8aZVh0CgIDLfnHoEdXJ4jh2N5
+mI2V9ECLN7fGvQ2vXLJgUd1Eq/+JAJZLsEVJ3YJINIQ5RkiryQr0NsUU18feGRmE
+JrgFrmovfOz0YBuj2/vZud2C1aLZ8awln8vGkzIy1SNmLsQj5tiWTOZ4hCvkz0ol
+gmlKl72Pg7XmeIIYjPEOWyVuDQRVfxtnXYEj8rB0W8G7KZfQ2E1dcdcQOwIf66Nm
+7jw0n5QajQbzfelaxuMrUeoolZbNGDSrBdBuc04LOL/foxm9LODfyRuMCMvKgSHa
+EM0mCAu9sTGUFyAC6DHh7asnbUV9oNB35dIenu0M4Wo02xI06Gwkln6BTRpEieXv
+g3l0eOSp7J1bNBtH8QXzi3FteVrQn8XDXpPykv4w2xxFe+VyAt6E5elHOKrKaP35
+FnLXPb4/tJD0b/XvS54O
+=ESxE
+-----END PGP SIGNATURE-----
 
-Ok.
-
->> +			port {
->> +				camera_1: endpoint {
->> +					remote-endpoint = <&csi1_ep1>;
->> +				};
->> +			};
->> +		};
->> +	};
->>
-> 
-> --
-> With best wishes,
-> Vladimir
-> 
-
--- 
-Best Regards
-
-Ramiro Oliveira
-Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--tThc/1wpZn/ma/RB--
