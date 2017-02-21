@@ -1,36 +1,77 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v3 7/7] ARM: dts: bcm2837: add &sdhci and &sdhost
-Date: Tue, 21 Feb 2017 11:25:01 +0200
-Message-ID: <20170221092501.mgov6icwxsobdeqt@tarshish>
-References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
- <1487668026-7100-8-git-send-email-kraxel@redhat.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: am57xx-idk: Add DCAN support
+Date: Tue, 21 Feb 2017 15:30:03 +0530
+Message-ID: <8981d49e7011a7246ff7dc6a9a9da0a56dfe5621.1487670384.git.nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1487668026-7100-8-git-send-email-kraxel@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: linux-rpi-kernel@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, swarren@wwwdotorg.org, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, eric@anholt.net, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gerd,
+From: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
 
-On Tue, Feb 21, 2017 at 10:07:06AM +0100, Gerd Hoffmann wrote:
-> For the raspberry pi 3 we'll need both sdhci (handles sdio wifi) and
-> sdhost (handles sdcard).
-> 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Acked-by: Eric Anholt <eric@anholt.net>
-> ---
->  arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+AM571x IDK and the AM572x IDK use CAN1 interface.
+This patch enables it for both boards.
 
-Subject prefix should be 'arm64:'.
+Tested on AM572x IDK using cansequence.
 
-baruch
+Signed-off-by: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+[nsekhar-l0cyMroinI0@public.gmane.org: move to use DRA7XX_CORE_IOPAD())
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am57xx-idk-common.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index 814a720d5c3d..abdee2e7a18e 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -97,6 +97,22 @@
+ 	};
+ };
+ 
++&dra7_pmx_core {
++	dcan1_pins_default: dcan1_pins_default {
++		pinctrl-single,pins = <
++			DRA7XX_CORE_IOPAD(0x37d0, PIN_OUTPUT_PULLUP | MUX_MODE0)	/* dcan1_tx */
++			DRA7XX_CORE_IOPAD(0x37d4, PIN_INPUT_PULLUP | MUX_MODE0)		/* dcan1_rx */
++		>;
++	};
++
++	dcan1_pins_sleep: dcan1_pins_sleep {
++		pinctrl-single,pins = <
++			DRA7XX_CORE_IOPAD(0x37d0, MUX_MODE15 | PULL_UP)	/* dcan1_tx.off */
++			DRA7XX_CORE_IOPAD(0x37d4, MUX_MODE15 | PULL_UP)	/* dcan1_rx.off */
++		>;
++	};
++};
++
+ &i2c1 {
+ 	status = "okay";
+ 	clock-frequency = <400000>;
+@@ -387,6 +403,14 @@
+ 	max-frequency = <96000000>;
+ };
+ 
++&dcan1 {
++	status = "okay";
++	pinctrl-names = "default", "sleep", "active";
++	pinctrl-0 = <&dcan1_pins_sleep>;
++	pinctrl-1 = <&dcan1_pins_sleep>;
++	pinctrl-2 = <&dcan1_pins_default>;
++};
++
+ &qspi {
+ 	status = "okay";
+ 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
