@@ -1,131 +1,51 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 12:03:45 +0200
-Message-ID: <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
-References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
- <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
- <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
- <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon>
- <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
- <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com> <20170221090610.6d531b94@bbrezillon>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 net-next 01/16] dt-bindings: net: update Marvell PPv2
+ binding for PPv2.2 support
+Date: Tue, 21 Feb 2017 11:12:46 +0100
+Message-ID: <20170221111246.2718c21a@free-electrons.com>
+References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
+        <1482943592-12556-2-git-send-email-thomas.petazzoni@free-electrons.com>
+        <20170103201842.hdg2uzzesog2jund@rob-hp-laptop>
+        <20170202175650.1fc06c2d@free-electrons.com>
+        <20170203164808.GD27312@n2100.armlinux.org.uk>
+        <20170214152503.602878cb@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170221090610.6d531b94@bbrezillon>
+In-Reply-To: <20170214152503.602878cb-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Chulski <stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 10:06 AM, Boris Brezillon
-<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, 21 Feb 2017 01:54:37 +0200
-> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> On Tue, Feb 21, 2017 at 1:40 AM, Andy Shevchenko
->> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > On Mon, Feb 20, 2017 at 10:50 PM, Boris Brezillon
->> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >> On Mon, 20 Feb 2017 21:38:03 +0100
->> >> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >>
->> >>> On Mon, 20 Feb 2017 22:27:17 +0200
->> >>> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> >>>
->> >>> > On Mon, Feb 20, 2017 at 2:28 PM, Boris Brezillon
->> >>> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> >>> >
->> >>> > >  drivers/mtd/nand/atmel/nand-controller.c | 2269 +++++++++++++++++++++++++++
->> >>> > >  drivers/mtd/nand/atmel_nand.c            | 2479 ------------------------------
->> >>> >
->> >>> > Does -M -C help you?
->> >>> > At least it would help reviewers
->> >>> >
->> >>>
->> >>> No it doesn't, because files were not just moved around using git mv,
->> >>> it's a complete rewrite of the driver. IIUC, you're about to review
->> >>> this submission, or are you just trolling like last time?
->> >>
->> >> My bad, I mistaken you with someone else. Sorry for being harsh, but my
->> >> explanation stands ;-).
->> >
->> > No problem. I was asking since it so big and on first glance looks
->> > like a partial copy (I dunno if parameter to -C makes it somehow
->> > useful), though I can't review this. It's too big to me. Sorry I'm
->> > really not trolling, just didn't read commit message carefully.
->>
->> Okay, I very quickly looked into the code, what I noticed
->> - you like extra parens and empty lines in some cases (not big deal)
->
-> Can you point specific places where you think these are not needed?
+Hello,
 
-1. For example,
+On Tue, 14 Feb 2017 15:25:03 +0100, Thomas Petazzoni wrote:
 
-#define ATMEL_NFC_CMD(pos, cmd)                        ((cmd) <<
-(((pos) * 8) + 2))
+> I'll try to get some more information about this, but I suspect this is
+> one case where we don't yet fully understand how all the HW works and
+> what all registers are doing, so it's hard to do a perfect DT binding
+> from day 1.
 
- *events ^= (status & *events);
+So I've looked into this more closely, and after drawing a diagram of
+all the register areas, I came up with a much more reduced area, with
+only networking related registers: starting at 0x129000 for a size of
+0xb000. So now the DT node looks like this:
 
- (((x) * 0x4) + 0x28)
++                       cpm_ethernet: ethernet@0 {
++                               compatible = "marvell,armada-7k-pp22";
++                               reg = <0x0 0x100000>, <0x129000 0xb000>;
 
-  memset(&si[1], 0, sizeof(s16) * ((2 * strength) - 1));
+This will be part of my next iteration.
 
-Perhaps more in the code. I'm not a LISP programmer.
+Thanks!
 
-2. For empty lines it's solely matter of style, I don't care. My motto
-"less LOC better, but keep common sense in mind".
-
->> - some functions perhaps might have been refactored to have common
->> pieces in error handling, though I didn't read core carefully.
->
-> Again, be more precise.
-
-3. I don't remember anymore, sorry. Something I would refactor.
-
->> Most important part I have noticed is a GPIO request.
->> I didn't get why you almost repeat gpiod_get() in case of platform data?
->> Shouldn't we have GPIO look up table?
->> Can we use builtin device properties (for GPIO and/or overall)?
->
-> Sorry but I don't get it. Can give an example of what you'd like me to
-> do?
->
-
-4. First of all, why do you need this function in the first place?
-
-+struct gpio_desc *
-+atmel_nand_pdata_get_gpio(struct atmel_nand_controller *nc, int gpioid,
-+                         const char *name, bool active_low,
-+                         enum gpiod_flags flags)
-
-5. BIT() macro:
-
-   const unsigned int k = 1 << deg(poly);
-   unsigned int nn = (1 << mm) - 1;
-
-6. Why this casting (unsigned int) ?
-
- dev_dbg(pmecc->dev,
-                       "Bit flip in %s area, byte %d: 0x%02x -> 0x%02x\n",
-                       area, byte, *ptr, (unsigned int)(*ptr ^ BIT(bit)));
-
-7. Question to all that distribution or whatever functions, don't you
-have a common helper? Or each vendor requires different logic behind
-it?
-
-8. Have you checked what kernel library provides?
-
-And I believe there are still issues like those. After, who is on
-topic, might even find some logical and other issues...
-
-P.S. TBH, so big change is unreviewable in meaningful time. To have a
-comprehensive review I, for example, spend ~1h/250LOC, and
-~2.5h/1000LOC, I would estimate ~4h/2000LOC. Imagine one to spend one
-day for this. Any volunteer? Not me.
-
+Thomas
 -- 
-With Best Regards,
-Andy Shevchenko
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
