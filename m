@@ -1,73 +1,60 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 3/3] Input: tsc2007 - add a property
- "ti,report-resistance" to restore the old pressure reporting state if
- needed.
-Date: Tue, 21 Feb 2017 18:19:49 +0100
-Message-ID: <20170221171949.5nexrvezlybjbrcs@earth>
-References: <cover.1487609795.git.hns@goldelico.com>
- <991a09fb874c07b03c21a5b38ebade187134539d.1487609795.git.hns@goldelico.com>
- <20170221110708.GA5021@amd>
- <FE6FEEC7-65B8-4C20-9C15-C641A8A8E4CA@goldelico.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH/RFC 3/6] drivers: firmware: psci: Implement shallow
+ suspend mode
+Date: Tue, 21 Feb 2017 17:20:13 +0000
+Message-ID: <20170221172012.GD8605@leverpostej>
+References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
+ <1487622809-25127-4-git-send-email-geert+renesas@glider.be>
+ <20170221110712.GB5021@amd>
+ <de2a15d4-9ac2-9ba9-a47a-eacbf478f601@arm.com>
+ <CAMuHMdVmu4AYZ6MZHd79N2-2gELR6s3oZ46UnEszCfLvHymY1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mnfd3tca7b2lomog"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <FE6FEEC7-65B8-4C20-9C15-C641A8A8E4CA@goldelico.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
-List-Id: devicetree@vger.kernel.org
-
-
---mnfd3tca7b2lomog
 Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAMuHMdVmu4AYZ6MZHd79N2-2gELR6s3oZ46UnEszCfLvHymY1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tue, Feb 21, 2017 at 12:43:28PM +0100, H. Nikolaus Schaller wrote:
-> > Am 21.02.2017 um 12:07 schrieb Pavel Machek <pavel@ucw.cz>:
-> > On Mon 2017-02-20 17:56:36, H. Nikolaus Schaller wrote:
-> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >=20
-> > No. device tree is for hardware description, not kernel configuration.
->=20
-> Yes, I agree. A new Kernel CONFIG would be better in this case.
-> I just did copy&paste from the old patch set without thinking that far.
->=20
-> Would
->=20
-> CONFIG_TSC2007_REPORT_RAW_RESISTANCE_AS_PRESSURE
->=20
-> be ok?
+On Tue, Feb 21, 2017 at 05:32:50PM +0100, Geert Uytterhoeven wrote:
+> On Tue, Feb 21, 2017 at 12:14 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On 21/02/17 11:07, Pavel Machek wrote:
+> >>> Enable support for "shallow" suspend mode, also known as "Standby" or
+> >>> "Power-On Suspend".
+> >>>
+> >>> As secondary CPU cores are taken offline, "shallow" suspend mode saves
+> >>> slightly more power than "s2idle", but less than "deep" suspend mode.
+> >>> However, unlike "deep" suspend mode, "shallow" suspend mode can be used
+> >>> regardless of the presence of support for PSCI_SYSTEM_SUSPEND, which is
+> >>> an optional API in PSCI v1.0.
+> >>
+> >> If system supports "shallow" suspend, why does not PSCI implement it?
+> >
+> > Yes it can, and IIUC it already does on this platform with CPU_SUSPEND.
+> > All it now needs is just to use existing "freeze" suspend mode in Linux.
+> 
+> How can Linux know if using "deep" suspend will allow to wake-up the system
+> according to configured wake-up sources, or not?
 
-I guess either a CONFIG or a module parameter may be used to provide
-the previous (broken) behaviour. I suggest to ignore the problem
-until its reported, though. There is a high chance, that nobody will
-notice the change at all / nobody needs the compat layer.
+My understanding is that if a device can wake the system from
+PSCI_SYSTEM_SUSPEND, it should be described in the DT as a wakeup source
+[1]. So we should be able to determine the set of devices which can wake
+the system from a suspend. We shouldn't assume that other devices can
+(though I don't precisely what we do currently).
 
--- Sebastian
+Otherwise, where PSCI_CPU_SUSPEND, we'd expect that most devices
+(barring cpu-local timers) can wake up CPUs, and hence the system, by
+raising an interrupt.
 
---mnfd3tca7b2lomog
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Mark.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlisdrUACgkQ2O7X88g7
-+pphjw//VOdUBtYjrn8pF2MlVoaTmOSnM+ab0ImKyTkE2Jp5Y5+rBQl4gi7K+5wh
-QMV0rhXLGPIP2xK0KUI39dJPhgrCfTTkv08KeOiFoNtMjzkoQ14Y3pNYoW7TEVxP
-06OK+EmhmP/JS0kdLthdqMT/7xOIS2N5hbNiF5b96K6VbhtFIAtl3eKtcN/Z08OE
-dZbA5gwDHygTxYAyMgBAhqiLwimOY/1Ys4epCDdDSbM+lVqNDEbHCfnB+ooWMWxh
-aHbrbd82yY/JPjofo9h+znNK+v/fbTX/EuH8/rANuU78JtT7Yfvw4Xdm973+svwk
-b1Qb8Sz1m58cfj4usuOqzFudnoZv98Rvfx5VE76wagE1smYfuJAQqSy62JKgKln/
-92ApwuwQ6WW3Ldjn1Y0miVtmk4QOhdZe/y5L+8ZgrqovSs6oSxT2fHoSREnxTc1M
-0PzbwlmPha5Xv9RWXgqiGgaNOKsMNmt3uAdwKD4UfDzN3gRd6E0Y2We7nvdP2vPa
-K0zRS3C2YTD3P5B9HU3Yy7dcXz6C84ouTsDLpu4vsNjoVw/Fpx3rJvRURluPZg4/
-d1MFYWHVcWJL88ukrwkQfnjWXXUA1i+WZN/OToXVIRsF+JRLzTxb9trV7SR4tL+v
-czstLmbj9Px3BAVV6mFZd+dRZWDGZqFrjo2FkRmts7wpZyWt5Jg=
-=A27J
------END PGP SIGNATURE-----
-
---mnfd3tca7b2lomog--
+[1] Documentation/devicetree/bindings/power/wakeup-source.txt
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
