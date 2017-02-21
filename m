@@ -1,83 +1,179 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH/RFC 2/2] usb: host: ehci-platform: fix usb 1.1 device is
- not connected in system resume
-Date: Tue, 21 Feb 2017 10:18:36 +0000
-Message-ID: <SIXPR06MB05591EA8EE8977E5332EFC2CD8510@SIXPR06MB0559.apcprd06.prod.outlook.com>
-References: <1487576111-29287-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1487576111-29287-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20170221085103.GA19659@b29397-desktop>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Tue, 21 Feb 2017 11:26:41 +0100
+Message-ID: <20170221112641.6276c001@bbrezillon>
+References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
+        <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
+        <20170220213803.7ba5591e@bbrezillon>
+        <20170220215009.0ecbf5a1@bbrezillon>
+        <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+        <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
+        <20170221090610.6d531b94@bbrezillon>
+        <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170221085103.GA19659@b29397-desktop>
-Content-Language: ja-JP
+In-Reply-To: <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+On Tue, 21 Feb 2017 12:03:45 +0200
+Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> From: Peter Chen
-> Sent: Tuesday, February 21, 2017 5:51 PM
->=20
-> On Mon, Feb 20, 2017 at 04:35:11PM +0900, Yoshihiro Shimoda wrote:
-< snip >
-> > @@ -297,6 +298,8 @@ static int ehci_platform_probe(struct platform_devi=
-ce *dev)
-> >  		goto err_power;
+> On Tue, Feb 21, 2017 at 10:06 AM, Boris Brezillon
+> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Tue, 21 Feb 2017 01:54:37 +0200
+> > Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >  
+> >> On Tue, Feb 21, 2017 at 1:40 AM, Andy Shevchenko
+> >> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:  
+> >> > On Mon, Feb 20, 2017 at 10:50 PM, Boris Brezillon
+> >> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:  
+> >> >> On Mon, 20 Feb 2017 21:38:03 +0100
+> >> >> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >>  
+> >> >>> On Mon, 20 Feb 2017 22:27:17 +0200
+> >> >>> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> >>>  
+> >> >>> > On Mon, Feb 20, 2017 at 2:28 PM, Boris Brezillon
+> >> >>> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> >>> >  
+> >> >>> > >  drivers/mtd/nand/atmel/nand-controller.c | 2269 +++++++++++++++++++++++++++
+> >> >>> > >  drivers/mtd/nand/atmel_nand.c            | 2479 ------------------------------  
+> >> >>> >
+> >> >>> > Does -M -C help you?
+> >> >>> > At least it would help reviewers
+> >> >>> >  
+> >> >>>
+> >> >>> No it doesn't, because files were not just moved around using git mv,
+> >> >>> it's a complete rewrite of the driver. IIUC, you're about to review
+> >> >>> this submission, or are you just trolling like last time?  
+> >> >>
+> >> >> My bad, I mistaken you with someone else. Sorry for being harsh, but my
+> >> >> explanation stands ;-).  
+> >> >
+> >> > No problem. I was asking since it so big and on first glance looks
+> >> > like a partial copy (I dunno if parameter to -C makes it somehow
+> >> > useful), though I can't review this. It's too big to me. Sorry I'm
+> >> > really not trolling, just didn't read commit message carefully.  
+> >>
+> >> Okay, I very quickly looked into the code, what I noticed
+> >> - you like extra parens and empty lines in some cases (not big deal)  
 > >
-> >  	device_wakeup_enable(hcd->self.controller);
-> > +	if (usb_of_has_companion(hcd->self.controller))
->=20
-> According to Alan's comments, all USB ehci platform device can be async
-> device, so this API can be skipped.
+> > Can you point specific places where you think these are not needed?  
+> 
+> 1. For example,
+> 
+> #define ATMEL_NFC_CMD(pos, cmd)                        ((cmd) <<
+> (((pos) * 8) + 2))
 
-I got it. I will remove this API.
+Well, I like to explicitly put parenthesis even when operator
+precedence guarantees the order of the calculation ('*' is preceding
+'+').
 
-> > +		device_enable_async_suspend(hcd->self.controller);
-> >  	platform_set_drvdata(dev, hcd);
+For the parenthesis around (cmd) and (pos), they are required to
+guarantee that things like ATMEL_NFC_CMD(x + y, cmd) are working
+correctly.
+
+> 
+>  *events ^= (status & *events);
+
+I agree with this one, it's uneeded.
+
+> 
+>  (((x) * 0x4) + 0x28)
+
+See my comment about ATMEL_NFC_CMD().
+
+> 
+>   memset(&si[1], 0, sizeof(s16) * ((2 * strength) - 1));
+
+Ditto.
+
+> 
+> Perhaps more in the code. I'm not a LISP programmer.
+> 
+> 2. For empty lines it's solely matter of style, I don't care. My motto
+> "less LOC better, but keep common sense in mind".
+> 
+> >> - some functions perhaps might have been refactored to have common
+> >> pieces in error handling, though I didn't read core carefully.  
 > >
-> >  	return err;
-> > @@ -370,6 +373,7 @@ static int ehci_platform_resume(struct device *dev)
-> >  	struct usb_ehci_pdata *pdata =3D dev_get_platdata(dev);
-> >  	struct platform_device *pdev =3D to_platform_device(dev);
-> >  	struct ehci_platform_priv *priv =3D hcd_to_ehci_priv(hcd);
-> > +	struct device *companion_dev;
+> > Again, be more precise.  
+> 
+> 3. I don't remember anymore, sorry. Something I would refactor.
+> 
+> >> Most important part I have noticed is a GPIO request.
+> >> I didn't get why you almost repeat gpiod_get() in case of platform data?
+> >> Shouldn't we have GPIO look up table?
+> >> Can we use builtin device properties (for GPIO and/or overall)?  
 > >
-> >  	if (pdata->power_on) {
-> >  		int err =3D pdata->power_on(pdev);
-> > @@ -377,6 +381,10 @@ static int ehci_platform_resume(struct device *dev=
-)
-> >  			return err;
-> >  	}
-> >
-> > +	companion_dev =3D usb_of_get_companion_dev(hcd->self.controller);
->=20
-> Maybe other EHCI controller has companion controller too, so it is ok
-> for you to let it as a common API.
+> > Sorry but I don't get it. Can give an example of what you'd like me to
+> > do?
+> >  
+> 
+> 4. First of all, why do you need this function in the first place?
+> 
+> +struct gpio_desc *
+> +atmel_nand_pdata_get_gpio(struct atmel_nand_controller *nc, int gpioid,
+> +                         const char *name, bool active_low,
+> +                         enum gpiod_flags flags)
 
-I got it.
+Because I don't want to duplicate the code done in
+atmel_nand_pdata_get_gpio() each time I have to convert a GPIO number
+into a GPIO descriptor, and that is needed to support platforms that
+haven't moved to DT yet (in this case, avr32).
 
-> > +	if (companion_dev)
-> > +		device_pm_wait_for_dev(hcd->self.controller, companion_dev);
-> > +
-> >  	ehci_resume(hcd, priv->reset_on_resume);
-> >  	return 0;
-> >  }
->=20
-> You can send formal patch next time.
+> 
+> 5. BIT() macro:
+> 
+>    const unsigned int k = 1 << deg(poly);
+>    unsigned int nn = (1 << mm) - 1;
 
-Thank you for your review! I will send v2 patch set without RFC.
+Yes, I must admit I didn't polish the code in PMECC, and most of it has
+been copied from the old driver.
+We could probably use BIT() in a few places.
 
-Best regards,
-Yoshihiro Shimoda
+> 
+> 6. Why this casting (unsigned int) ?
+> 
+>  dev_dbg(pmecc->dev,
+>                        "Bit flip in %s area, byte %d: 0x%02x -> 0x%02x\n",
+>                        area, byte, *ptr, (unsigned int)(*ptr ^ BIT(bit)));
 
-> --
->=20
-> Best Regards,
-> Peter Chen
+Again, this has been copied from the old driver. I'll have a closer
+look.
+
+> 
+> 7. Question to all that distribution or whatever functions, don't you
+> have a common helper? Or each vendor requires different logic behind
+> it?
+
+What are you talking about? nand_chip hooks?
+
+> 
+> 8. Have you checked what kernel library provides?
+
+I think so, but again, this is really vague, what kind of
+open-coded functions do you think could be replaced with core libraries
+helpers?
+
+> 
+> And I believe there are still issues like those. After, who is on
+> topic, might even find some logical and other issues...
+> 
+> P.S. TBH, so big change is unreviewable in meaningful time. To have a
+> comprehensive review I, for example, spend ~1h/250LOC, and
+> ~2.5h/1000LOC, I would estimate ~4h/2000LOC. Imagine one to spend one
+> day for this. Any volunteer? Not me.
+
+I'm not asking you to review the whole driver, but you started to
+comment on the code without pointing clearly to the things you wanted
+me to address.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
