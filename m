@@ -1,31 +1,53 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: document bcm63xx SPI devicetree
- bindings
-Date: Tue, 21 Feb 2017 15:08:38 -0800
-Message-ID: <e1c6737a-e169-456e-6bd5-b93edbe818b1@gmail.com>
-References: <20170221105822.10437-1-jonas.gorski@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] dt-bindings: net: generalize moxart-mac to support all
+ faraday based ftmac IP
+Date: Wed, 22 Feb 2017 00:09:54 +0100
+Message-ID: <CACRpkdZyP1r6VeFS4z0-_R4Jy89awEaHBSK=ZQcijcj3RS2F=A@mail.gmail.com>
+References: <20170214085621.GA11829@app09>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170221105822.10437-1-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170214085621.GA11829@app09>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Arnd Bergmann <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 14, 2017 at 9:56 AM, Greentime Hu <green.hu@gmail.com> wrote:
 
+> Andestech and moxa use the same faraday mac IP, so we use faraday,ftmac.txt to describe it.
+>
+> Signed-off-by: Greentime Hu <green.hu@gmail.com>
+> ---
+>  .../net/{moxa,moxart-mac.txt => faraday,ftmac.txt} |    7 +++++--
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  2 files changed, 6 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/net/{moxa,moxart-mac.txt => faraday,ftmac.txt} (68%)
+>
+> diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
+> similarity index 68%
+> rename from Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+> rename to Documentation/devicetree/bindings/net/faraday,ftmac.txt
+> index 583418b..be4f55e 100644
+> --- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
+> +++ b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
+> @@ -1,8 +1,11 @@
+> -MOXA ART Ethernet Controller
+> +Faraday Ethernet Controller
+>
+>  Required properties:
+>
+> -- compatible : Must be "moxa,moxart-mac"
+> +- compatible : Must contain "faraday,ftmac", as well as one of
+> +               the SoC specific identifiers:
+> +               "andestech,atmac100"
+> +               "moxa,moxart-mac"
 
-On 02/21/2017 02:58 AM, Jonas Gorski wrote:
-> Add documentation for the bindings of the low speed SPI controller found
-> on most bcm63xx SoCs.
-> 
-> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Looks right to me.
 
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +faraday        Faraday Technology Corporation
+
+I think Rob already has this part on queue.
+
+Yours,
+Linus Walleij
