@@ -1,90 +1,115 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Tue, 21 Feb 2017 17:58:09 +0200
-Message-ID: <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Tue, 21 Feb 2017 16:03:32 +0000
+Message-ID: <20170221160332.GW21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
+ <20170221001332.GS21222@n2100.armlinux.org.uk>
+ <20170221123756.GI16975@valkosipuli.retiisi.org.uk>
+ <20170221132132.GU21222@n2100.armlinux.org.uk>
+ <20170221153834.GL16975@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170221153834.GL16975-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
-
-On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
-> Create device tree bindings documentation.
+On Tue, Feb 21, 2017 at 05:38:34PM +0200, Sakari Ailus wrote:
+> Hi Russell,
 > 
-> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> On Tue, Feb 21, 2017 at 01:21:32PM +0000, Russell King - ARM Linux wrote:
+> > On Tue, Feb 21, 2017 at 02:37:57PM +0200, Sakari Ailus wrote:
+> > > Hi Russell,
+> > > 
+> > > On Tue, Feb 21, 2017 at 12:13:32AM +0000, Russell King - ARM Linux wrote:
+> > > > On Tue, Feb 21, 2017 at 12:04:10AM +0200, Sakari Ailus wrote:
+> > > > > On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
+> > > > > > From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> > > > > > 
+> > > > > > Setting and getting frame rates is part of the negotiation mechanism
+> > > > > > between subdevs.  The lack of support means that a frame rate at the
+> > > > > > sensor can't be negotiated through the subdev path.
+> > > > > 
+> > > > > Just wondering --- what do you need this for?
+> > > > 
+> > > > The v4l2 documentation contradicts the media-ctl implementation.
+> > > > 
+> > > > While v4l2 documentation says:
+> > > > 
+> > > >   These ioctls are used to get and set the frame interval at specific
+> > > >   subdev pads in the image pipeline. The frame interval only makes sense
+> > > >   for sub-devices that can control the frame period on their own. This
+> > > >   includes, for instance, image sensors and TV tuners. Sub-devices that
+> > > >   don't support frame intervals must not implement these ioctls.
+> > > > 
+> > > > However, when trying to configure the pipeline using media-ctl, eg:
+> > > > 
+> > > > media-ctl -d /dev/media1 --set-v4l2 '"imx219 pixel 0-0010":0[crop:(0,0)/3264x2464]'
+> > > > media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":1[fmt:SRGGB10/3264x2464@1/30]'
+> > > > media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":0[fmt:SRGGB8/816x616@1/30]'
+> > > > media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616@1/30]'
+> > > > Unable to setup formats: Inappropriate ioctl for device (25)
+> > > > media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0_mux":2[fmt:SRGGB8/816x616@1/30]'
+> > > > media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0":2[fmt:SRGGB8/816x616@1/30]'
+> > > > 
+> > > > The problem there is that the format setting for the csi2 does not get
+> > > > propagated forward:
+> > > 
+> > > The CSI-2 receivers typically do not implement frame interval IOCTLs as they
+> > > do not control the frame interval. Some sensors or TV tuners typically do,
+> > > so they implement these IOCTLs.
+> > 
+> > No, TV tuners do not.  The frame rate for a TV tuner is set by the
+> > broadcaster, not by the tuner.  The tuner can't change that frame rate.
+> > The tuner may opt to "skip" fields or frames.  That's no different from
+> > what the CSI block in my example below is capable of doing.
+> > 
+> > Treating a tuner differently from the CSI block is inconsistent and
+> > completely wrong.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> new file mode 100644
-> index 000000000000..31956426d3b9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> @@ -0,0 +1,35 @@
-> +Omnivision OV5647 raw image sensor
-> +---------------------------------
-> +
-> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> +and CCI (I2C compatible) control bus.
-> +
-> +Required properties:
-> +
-> +- compatible		: "ovti,ov5647".
-> +- reg			: I2C slave address of the sensor.
-> +- clocks		: Reference to the xclk clock.
-
-Is "xclk" clock a pixel clock or something else?
-
-> +- clock-names		: Should be "xclk".
-
-You can remove this property, because there is only one source clock.
-
-> +- clock-frequency	: Frequency of the xclk clock.
-
-And after the last updates in the driver this property can be removed as well.
-
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should be
-> +used to specify link to the image data receiver. The OV5647 device
-> +node should contain one 'port' child node with an 'endpoint' subnode.
-> +
-> +Example:
-> +
-> +	i2c@2000 {
-> +		...
-> +		ov: camera@36 {
-> +			compatible = "ovti,ov5647";
-> +			reg = <0x36>;
-> +			clocks = <&camera_clk>;
-> +			clock-names = "xclk";
-> +			clock-frequency = <25000000>;
-
-When you remove two unused properties, please don't forget to update the
-example.
-
-> +			port {
-> +				camera_1: endpoint {
-> +					remote-endpoint = <&csi1_ep1>;
-> +				};
-> +			};
-> +		};
-> +	};
+> I agree tuners in that sense are somewhat similar, and they are not treated
+> differently because they are tuners (and not CSI-2 receivers). Neither can
+> control the frame rate of the incoming video stream.
 > 
+> Conceivably a tuner could implement G_FRAME_INTERVAL IOCTL, but based on a
+> quick glance none appears to. Neither do CSI-2 receivers. Only sensor
+> drivers do currently.
 
---
-With best wishes,
-Vladimir
+Please look again.  I am being very careful with "CSI" vs "CSI-2" in my
+emails, you are conflating the two.
+
+In all my emails so far, "CSI" refers to a block of hardware that is
+responsible for receiving an image stream from some kind of source.  It
+contains hardware that supports frame skipping.
+
+"CSI-2" refers to a different block of hardware that is responsible for
+receiving a serially encoded stream from a MIPI-CSI-2 compliant source
+and providing it to the "CSI" block.
+
+I would have thought my diagram that I drew would have made it clear that
+they were different blocks of hardware, but I guess in this case, the old
+saying "a picture is worth 1000 words" is simply not true.
+
+> Images are transmitted as series of lines, with each line ending in a
+> horizontal blanking period, and each frame ending with a similar period of
+
+I'm sorry, are you seriously teaching me to suck rocks?  I am insulted.
+
+I've been involved in TV and video for many years, I don't need you to
+tell me how video is transmitted.
+
+Sorry, you've just lost my interest in further discussion.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
