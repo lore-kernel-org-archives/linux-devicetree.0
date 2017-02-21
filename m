@@ -1,89 +1,91 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 1/2] ARM: dts: msm8974: Hook up adsp-pil's xo clock
-Date: Mon, 20 Feb 2017 21:45:04 -0800
-Message-ID: <20170221054504.GA24291@minitux>
-References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
- <20170220220041.GA3170@hector>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170220220041.GA3170@hector>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Jonathan Neusch?fer <j.neuschaefer@gmx.net>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v9 1/8] drivers:input:tsc2007: add new common binding names, pre-calibration, flipping and rotation
+Date: Tue, 21 Feb 2017 07:36:17 +0100
+Message-ID: <0A33CCEA-448C-4C1D-9563-FDA54743BD01@goldelico.com>
+References: <cover.1482936802.git.hns@goldelico.com> <B30D00D0-1967-4BD5-A304-E2ADC815A805@goldelico.com> <201702202042.15878@pali> <201702202208.50498@pali> <C2E7AC24-75AB-442F-94A2-84904723EE41@goldelico.com> <CAKdAkRRZa-fpv_TKRdY=hFV3GdKxQ3muQORquvV_bTrDzQAhCw@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKdAkRRZa-fpv_TKRdY=hFV3GdKxQ3muQORquvV_bTrDzQAhCw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: =?utf-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin
 List-Id: devicetree@vger.kernel.org
 
-On Mon 20 Feb 14:00 PST 2017, Andy Gross wrote:
+Hi,
 
-> On Wed, Feb 15, 2017 at 05:51:56AM +0100, Jonathan Neuschäfer wrote:
-> > Without this patch (and with CONFIG_QCOM_ADSP_PIL), I get this error:
-> > 
-> > 	[    0.711529] qcom_adsp_pil adsp-pil: failed to get xo clock
-> > 	[    0.711540] remoteproc remoteproc0: releasing adsp-pil
-> > 
-> > With this patch, adsp-pil can initialize correctly.
-> > 
-> > Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> Am 20.02.2017 um 22:50 schrieb Dmitry Torokhov =
+<dmitry.torokhov@gmail.com>:
+>=20
+> On Mon, Feb 20, 2017 at 1:27 PM, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>>=20
+>>> Am 20.02.2017 um 22:08 schrieb Pali Roh=C3=A1r =
+<pali.rohar@gmail.com>:
+>>>=20
+>>> On Monday 20 February 2017 20:42:15 Pali Roh=C3=A1r wrote:
+>>>> Hi Nikolaus!
+>>>>=20
+>>>> On Monday 20 February 2017 17:50:04 H. Nikolaus Schaller wrote:
+>>>>> Hi Dmitry,
+>>>>>=20
+>>>>>> Input driver may set resolution for given axis in units per mm
+>>>>>> (or units per radian for rotational axis ABS_RX, ABS_RY,
+>>>>>> ABS_RZ), and if you check the binding, you can use
+>>>>>> "touchscreen-x-mm" and "touchscreen-y-mm" to specify the size of
+>>>>>> entire touch surface and set resolution from it so that
+>>>>>> userspace can calculate the proper scaling factor.
+>>>>>=20
+>>>>> How is this information exposed by the kernel to user-space? By
+>>>>> scanning the DT file or tree?
+>>>>=20
+>>>> Set input_abs_set_res() from kernel. And in userspace call =
+EVIOCGABS
+>>>> ioctl() on input device. Look at struct input_absinfo, you should
+>>>> have all needed information here. This is generic input interface,
+>>>> no DT is needed.
+>>>=20
+>>> Looking at kernel code... via EVIOCSABS ioctl() you can even set
+>>> resolution from userspace for specified input device.
+>>>=20
+>>> So this could be potentially used for calibrating input device from
+>>> userspace? (In case DT data will not fully match current HW)
+>>>=20
+>>>> I hope that XServer is already using it for evdev devices...
+>>>>=20
+>>>> For whole implementation look at evtest program. That should be =
+good
+>>>> starting point for your userspace implementation.
+>>>>=20
+>>>> While I'm watching this discussion... in my opinion kernel should
+>>>> just invert input axes (when needed)
+>>=20
+>> It is questionable why it should do that at all then.
+>=20
+> Because the task of the kernel is to provide unified view of the
+> hardware. Axis swapping and inversion is needed to that "up" is always
+> "up" and "right" is always "right".
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hm. Why not touching pixel (0,0) on the touch is always pixel (0,0) on =
+the
+screen and touching pixel (639,479) is always (639,479)?
 
-> > 
-> > ---
-> > NOTE: I don't know if I actually chose the right clock source.
-> >       Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> >       suggests that adsp-pil's xo should be controlled by the RPM
-> >       processor; Existing devicetrees and a recent patch to msm8996.dtsi
-> >       use &xo_board, though:
-> >       https://www.spinics.net/lists/linux-arm-msm/msg25711.html
+I think it is time to end this discussion.
 
-The ADSP is running off a clock derived from XO, as such a vote for XO
-must be held while the ADSP is running. It's possible the all
-application CPUs hit idle after launching the ADSP, but before the ADSP
-firmware can communicate this need with the RPM, which would result in
-the votes hitting 0 and the RPM might gate the XO.
+It has show me how much a mess and half-baked area this is, which I did
+not expect. I read contradicting messages from different people:
 
-To prevent this the ADSP remoteproc driver must hold an extra vote with
-the RPM until the ADSP signals that it has cast its vote.
+* don't break user space because it is carved in stone
+* fix users space if you want to do it properly
+* scaling by +/-1 and shifting by full range is ok
+* scaling by ts-size/adc-range and shifting by adc_min is not ok
+* full numeric ADC resolution is required but subpixel coordinates is =
+not acceptable
 
-Unfortunately there are some issues with nested probe deferral in the
-clock framework, so we can't accurately describe the XO today and as
-we're still missing some last pieces of idle mechanism causing above
-events we can survive by faking it and using xo_board - for a little
-bit longer...
+I will monitor this to see if this becomes sorted out before submitting =
+anything
+new.
 
-> > ---
-> >  arch/arm/boot/dts/qcom-msm8974.dtsi | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> > index d3e1a61b8671..cccd8cba8872 100644
-> > --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-> > +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-> > @@ -250,6 +250,9 @@
-> >  
-> >  		cx-supply = <&pm8841_s2>;
-> >  
-> > +		clocks = <&xo_board>;
-> > +		clock-names = "xo";
-> > +
-> 
-> I have to wonder if this wasn't done specifically so that the board specific DTS
-> file would specify the XO clock.  If you do it here, it applies to all boards
-> using msm8974.
-> 
-
-The reason for the adsp node missing the xo reference is that it
-wasn't required originally. It is now and I didn't feel we had wide
-spread usage and omitted backwards compatibility in the driver
-
-> Maybe someone can answer that question.  Adding Bjorn to the CC.
-> 
-
-I forgot that I had sent you the original patch and hence didn't send
-you a fix for it. Sorry about that, perhaps we should flag this for
-stable?
-
-Regards,
-Bjorn
+BR and thanks,
+Nikolaus=
