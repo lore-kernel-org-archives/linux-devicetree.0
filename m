@@ -1,108 +1,100 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
-Date: Tue, 21 Feb 2017 16:37:23 +0100
-Message-ID: <9a264b18-a192-8640-846c-d471712e9236@i2se.com>
-References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
- <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
- <48907a31-eaa6-27e2-633f-d36de521e868@tronnes.org>
- <1983281189.110224.1487619653742@email.1und1.de>
- <5b14ed6d-4db8-abf7-ceba-ef46534b6023@tronnes.org>
- <1487689632.14564.1.camel@crowfest.net>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
+Date: Tue, 21 Feb 2017 10:39:18 -0500
+Message-ID: <20170221153918.GA25168@art_vandelay>
+References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1487689632.14564.1.camel@crowfest.net>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Michael Zoran <mzoran@crowfest.net>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Peter Robinson <pbrobinson@gmail.com>, Eric Anholt <eric@anholt.net>
-Cc: Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Martin Sperl <kernel@martin.sperl.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487577744-2855-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 20, 2017 at 04:02:16PM +0800, Chris Zhong wrote:
+> Hi all
+> 
+> [Resend this v7 version series, since there are 5 mails have gone missing, last
+> week]
+> 
+> This version does not change the existing v6 patches, just to add the
+> "bandwidth fix" patch back, since we really need it.
+> 
+> This patch serial is for RK3399 MIPI DSI. The MIPI DSI controller of
+> RK3399 is almost the same as RK3288, except a little bit of difference
+> in phy clock controlling and port id selection register. These patches
+> add RK3399 support and the power domain support.
+> 
+> And these patches base on John Keeping's v3 patches[0], it fixes many bugs,
+> they have been tested on rk3288 evb board.
 
-Am 21.02.2017 um 16:07 schrieb Michael Zoran:
-> On Mon, 2017-02-20 at 22:22 +0100, Noralf Trønnes wrote:
->> Den 20.02.2017 20.40, skrev Stefan Wahren:
->>> Hi,
->>>
->>>> Noralf Trønnes <noralf@tronnes.org> hat am 18. Februar 2017 um
->>>> 19:34 geschrieben:
->>>>
->>>>
->>>>
->>>> Den 16.02.2017 22.20, skrev Stefan Wahren:
->>>>> Since commit e2474541032d ("bcm2835: Fix hang for writing
->>>>> messages
->>>>> larger than 16 bytes") the interrupt handler is prone to a
->>>>> possible
->>>>> NULL pointer dereference. This could happen if an interrupt
->>>>> fires
->>>>> before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly
->>>>> occurs
->>>>> on the RPi 3. Even this is an unexpected behavior the driver
->>>>> must
->>>>> handle that with an error instead of a crash.
->>>>>
->>>>> CC: Noralf Trønnes <noralf@tronnes.org>
->>>>> CC: Martin Sperl <kernel@martin.sperl.org>
->>>>> Reported-by: Peter Robinson <pbrobinson@gmail.com>
->>>>> Fixes: e2474541032d ("bcm2835: Fix hang for writing messages
->>>>> larger than 16 bytes")
->>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>>>> ---
->>>>>     drivers/i2c/busses/i2c-bcm2835.c |    4 +++-
->>>>>     1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/drivers/i2c/busses/i2c-bcm2835.c
->>>>> b/drivers/i2c/busses/i2c-bcm2835.c
->>>>> index c3436f6..10e39c8 100644
->>>>> --- a/drivers/i2c/busses/i2c-bcm2835.c
->>>>> +++ b/drivers/i2c/busses/i2c-bcm2835.c
->>>>> @@ -195,7 +195,9 @@ static irqreturn_t bcm2835_i2c_isr(int
->>>>> this_irq, void *data)
->>>>>     	}
->>>>>     
->>>>>     	if (val & BCM2835_I2C_S_DONE) {
->>>>> -		if (i2c_dev->curr_msg->flags & I2C_M_RD) {
->>>>> +		if (!i2c_dev->curr_msg) {
->>>>> +			dev_err(i2c_dev->dev, "Got unexpected
->>>>> interrupt (from firmware?)\n");
->>>>> +		} else if (i2c_dev->curr_msg->flags &
->>>>> I2C_M_RD) {
->>>>>     			bcm2835_drain_rxfifo(i2c_dev);
->>>>>     			val = bcm2835_i2c_readl(i2c_dev,
->>>>> BCM2835_I2C_S);
->>>>>     		}
->>>> Thanks,
->>>>
->>>> Acked-by: Noralf Trønnes <noralf@tronnes.org>
->>>>
->>> thanks, but i would be more happier to receive feedback for patches
->>> 2 and 3.
->> I have only worked on dts files downstream and never done any arm64
->> stuff, so I'm not up to speed on this.
->>
->> Noralf.
->>
-> Just a note, the original downstream driver returns IRQ_NONE in this
-> case.  Does that make any difference?
+Do we have an ETA on when John is planning on respinning his patchset based on
+review feedback?
 
-Yes, i decided to handle the IRQ in order to avoid a possible interrupt 
-storm. Please look at the github discussion [1] for more details.
+> 
+> [0]:
+> [01/24] https://patchwork.kernel.org/patch/9544089
+> [02/24] https://patchwork.kernel.org/patch/9544061
+> [03/24] https://patchwork.kernel.org/patch/9544065
+> [04/24] https://patchwork.kernel.org/patch/9544077
+> [05/24] https://patchwork.kernel.org/patch/9544033
+> [06/24] https://patchwork.kernel.org/patch/9544037
+> [07/24] https://patchwork.kernel.org/patch/9544029
+> [08/24] https://patchwork.kernel.org/patch/9544031
+> [09/24] https://patchwork.kernel.org/patch/9544083
+> [10/24] https://patchwork.kernel.org/patch/9544063
+> [11/24] https://patchwork.kernel.org/patch/9544085
+> [12/24] https://patchwork.kernel.org/patch/9544093
+> [13/24] https://patchwork.kernel.org/patch/9544081
+> [14/24] https://patchwork.kernel.org/patch/9544057
+> [15/24] https://patchwork.kernel.org/patch/9544079
+> [16/24] https://patchwork.kernel.org/patch/9544035
+> [17/24] https://patchwork.kernel.org/patch/9544105
+> [18/24] https://patchwork.kernel.org/patch/9544059
+> [21/24] https://patchwork.kernel.org/patch/9544009
+> [22/24] https://patchwork.kernel.org/patch/9544049
+> [23/24] https://patchwork.kernel.org/patch/9544055
+> [24/24] https://patchwork.kernel.org/patch/9544109
+> 
+> 
+> Changes in v6:
+> - no need check phy_cfg_clk before enable/disable
+> 
+> Changes in v5:
+> - check the error of phy_cfg_clk in dw_mipi_dsi_bind
+> 
+> Changes in v4:
+> - remove the unrelated change
+> 
+> Changes in v3:
+> - base on John Keeping's patch series
+> 
+> Chris Zhong (7):
+>   dt-bindings: add rk3399 support for dw-mipi-rockchip
+>   drm/rockchip/dsi: dw-mipi: support RK3399 mipi dsi
+>   drm/rockchip/dsi: dw-mipi: correct the coding style
+>   drm/rockchip/dsi: remove mode_valid function
+>   dt-bindings: add power domain node for dw-mipi-rockchip
+>   drm/rockchip/dsi: fix insufficient bandwidth of some panel
+>   drm/rockchip/dsi: add dw-mipi power domain support
+> 
+>  .../display/rockchip/dw_mipi_dsi_rockchip.txt      |   7 +-
+>  drivers/gpu/drm/rockchip/dw-mipi-dsi.c             | 160 ++++++++++++---------
+>  2 files changed, 100 insertions(+), 67 deletions(-)
+> 
+> -- 
+> 2.6.3
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
->
-> Also, the the original driver has the check at the start of the IRQ and
-> it doesn't log an error message.
->
-> I'm wondering if logging at err level is the best since it might make
-> people think a serious error has happened.
-
-It is a serious error and should be fixed by patch 2, 3 and a possible 
-patch 4 later to disable i2c0.
-But before i disable i2c0 we need the test results of patch 2 and 3. The 
-reason why i don't disable i2c at first is that Gerd [2] reported that 
-disabling the PWM fixed the i2c timeout issue, which doesn't fit to 
-Martins theory.
-
-[1] - https://github.com/anholt/linux/issues/89
-[2] - 
-http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-June/003969.html
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
