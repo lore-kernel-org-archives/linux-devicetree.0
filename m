@@ -1,57 +1,82 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH/RFC 3/6] drivers: firmware: psci: Implement shallow
- suspend mode
-Date: Tue, 21 Feb 2017 16:51:48 +0000
-Message-ID: <016dd5fc-08c2-0084-5332-2992ab95f134@arm.com>
-References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
- <1487622809-25127-4-git-send-email-geert+renesas@glider.be>
- <08c5dcf3-9d7c-33ff-f801-8f94f630f49b@arm.com>
- <CAMuHMdUAcRVLzDZCZucAt0agGZynQtqhWeh7yPaBrogCYhRW4g@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Tue, 21 Feb 2017 18:05:22 +0100
+Message-ID: <20170221170522.fphb37d266fyg3to@piout.net>
+References: <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+ <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
+ <20170221090610.6d531b94@bbrezillon>
+ <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
+ <20170221112641.6276c001@bbrezillon>
+ <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
+ <20170221112720.ynehsryprhrhzjla@piout.net>
+ <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
+ <20170221162133.jch6yzpotj4s7zob@piout.net>
+ <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUAcRVLzDZCZucAt0agGZynQtqhWeh7yPaBrogCYhRW4g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 21/02/17 16:23, Geert Uytterhoeven wrote:
-> Hi Sudeep,
+On 21/02/2017 at 18:32:26 +0200, Andy Shevchenko wrote:
+> I did it ~year or so before where another relocation bug was discovered (fixed).
 > 
-> On Tue, Feb 21, 2017 at 11:42 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
->> On 20/02/17 20:33, Geert Uytterhoeven wrote:
->>> Enable support for "shallow" suspend mode, also known as "Standby" or
->>> "Power-On Suspend".
->>>
->>> As secondary CPU cores are taken offline, "shallow" suspend mode saves
->>> slightly more power than "s2idle", but less than "deep" suspend mode.
->>> However, unlike "deep" suspend mode, "shallow" suspend mode can be used
->>> regardless of the presence of support for PSCI_SYSTEM_SUSPEND, which is
->>> an optional API in PSCI v1.0.
->>>
->>> List the available system suspend modes:
->>>
->>>     $ cat /sys/power/mem_sleep
->>>     s2idle shallow [deep]
->>>
->>> Suspend to "shallow" mode:
->>>
->>>     $ echo shallow > /sys/power/mem_sleep
->>>     $ echo mem > /sys/power/state
->>>
->>
->> I don't have the links to such previous attempts handy, but we have
+> > please feel free to
+> > send a patch to remove the whole architecture.
+> > The benefits for atmel will be: proper big endian support, removal of
+> > platform data from all the drivers, better clocksource handling.
 > 
-> Don't worry, I did read earlier discussions about implementing shallow mode.
+> That is good point, but if maintainers don't care, why anyone else should?
+> Neither do I.
+> 
+> >> > It can be frustrating at times to handle that platform but if it is
+> >> > working for someone, I don't see why we would remove it.
+> >>
+> >> How it's working if it's not linked?
+> >>
+> >
+> > Come on, v4.10 has just been release and v4.9 was building just fine. Do
+> > you really expect everybody to closely follow linux-next or update
+> > overnight?
+> 
+> What version do you use as compiler?
+> 
+> Today's linux-next:
+> $ make O=~/prj/TMP/out/avr32 C=1 CF=-D__CHECK_ENDIAN__ -j64 CONFIG_DEBUG_INFO=
+> y CONFIG_DEBUG_SECTION_MISMATCH=y
+> 
+>   CC      lib/sbitmap.o
+> {standard input}: Assembler messages:
+> {standard input}:378: Warning: Unary operator + ignored because bad
+> operand follows
+> {standard input}:378: Warning: missing operand; zero assumed
+> {standard input}:378: Internal error!
+> Assertion failure in finish_insn at .././gas/config/tc-avr32.c line 3498.
+> Please report this bug.
+> scripts/Makefile.build:294: recipe for target 'lib/sbitmap.o' failed
+> 
+> $ avr32-linux-gcc --version
+> avr32-linux-gcc (GCC) 4.2.2-atmel.1.0.8
 > 
 
-In short or just to summarize in one line, just use "freeze"(a.k.a
-suspend-to-idle suspend mode)
+avr32-linux-gcc (GCC) 4.2.4-atmel.1.1.3.avr32linux.1
+
+Today's linux-next built without network support, the issue still being:
+virt/built-in.o: warning: input is not relaxable net/built-in.o: In function `rtnl_fill_vfinfo':
+rtnetlink.c:(.text+0x21974): relocation truncated to fit: R_AVR32_11H_PCREL against `.text'+2156c
+rtnetlink.c:(.text+0x2198a): relocation truncated to fit: R_AVR32_11H_PCREL against `.text'+2156c
+Makefile:983: recipe for target 'vmlinux' failed
+
 
 -- 
-Regards,
-Sudeep
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
