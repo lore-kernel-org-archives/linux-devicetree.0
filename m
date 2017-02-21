@@ -1,50 +1,73 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 18:14:38 +0100
-Message-ID: <20170221171438.e5hvruoixafpcdps@piout.net>
-References: <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
- <20170221090610.6d531b94@bbrezillon>
- <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
- <20170221112641.6276c001@bbrezillon>
- <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
- <20170221112720.ynehsryprhrhzjla@piout.net>
- <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
- <20170221162133.jch6yzpotj4s7zob@piout.net>
- <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
- <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 3/3] Input: tsc2007 - add a property
+ "ti,report-resistance" to restore the old pressure reporting state if
+ needed.
+Date: Tue, 21 Feb 2017 18:19:49 +0100
+Message-ID: <20170221171949.5nexrvezlybjbrcs@earth>
+References: <cover.1487609795.git.hns@goldelico.com>
+ <991a09fb874c07b03c21a5b38ebade187134539d.1487609795.git.hns@goldelico.com>
+ <20170221110708.GA5021@amd>
+ <FE6FEEC7-65B8-4C20-9C15-C641A8A8E4CA@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mnfd3tca7b2lomog"
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
+In-Reply-To: <FE6FEEC7-65B8-4C20-9C15-C641A8A8E4CA@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/02/2017 at 18:43:35 +0200, Andy Shevchenko wrote:
-> >> Come on, v4.10 has just been release and
-> 
-> It doesn't build anymore. And current case even worse
-> Face it. It's dead.
-> 
 
-I agree it hasn't seen any significant development in a while but I'm
-not the on able to take that decision.
+--mnfd3tca7b2lomog
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A few weeks ago, I was telling Boris to let it not build for a while and
-then remove it. You already went out of your way to make it work. Again,
-feel free to send a patch removing avr32. I can only see a lot of
-benefits for the Atmel ARM SoCs and the many cleanups that will follow.
+Hi,
 
-If nobody complains about the 4.10 breakage, You'll have plenty of time
-to remove it for 4.12
+On Tue, Feb 21, 2017 at 12:43:28PM +0100, H. Nikolaus Schaller wrote:
+> > Am 21.02.2017 um 12:07 schrieb Pavel Machek <pavel@ucw.cz>:
+> > On Mon 2017-02-20 17:56:36, H. Nikolaus Schaller wrote:
+> >> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> >=20
+> > No. device tree is for hardware description, not kernel configuration.
+>=20
+> Yes, I agree. A new Kernel CONFIG would be better in this case.
+> I just did copy&paste from the old patch set without thinking that far.
+>=20
+> Would
+>=20
+> CONFIG_TSC2007_REPORT_RAW_RESISTANCE_AS_PRESSURE
+>=20
+> be ok?
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess either a CONFIG or a module parameter may be used to provide
+the previous (broken) behaviour. I suggest to ignore the problem
+until its reported, though. There is a high chance, that nobody will
+notice the change at all / nobody needs the compat layer.
+
+-- Sebastian
+
+--mnfd3tca7b2lomog
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlisdrUACgkQ2O7X88g7
++pphjw//VOdUBtYjrn8pF2MlVoaTmOSnM+ab0ImKyTkE2Jp5Y5+rBQl4gi7K+5wh
+QMV0rhXLGPIP2xK0KUI39dJPhgrCfTTkv08KeOiFoNtMjzkoQ14Y3pNYoW7TEVxP
+06OK+EmhmP/JS0kdLthdqMT/7xOIS2N5hbNiF5b96K6VbhtFIAtl3eKtcN/Z08OE
+dZbA5gwDHygTxYAyMgBAhqiLwimOY/1Ys4epCDdDSbM+lVqNDEbHCfnB+ooWMWxh
+aHbrbd82yY/JPjofo9h+znNK+v/fbTX/EuH8/rANuU78JtT7Yfvw4Xdm973+svwk
+b1Qb8Sz1m58cfj4usuOqzFudnoZv98Rvfx5VE76wagE1smYfuJAQqSy62JKgKln/
+92ApwuwQ6WW3Ldjn1Y0miVtmk4QOhdZe/y5L+8ZgrqovSs6oSxT2fHoSREnxTc1M
+0PzbwlmPha5Xv9RWXgqiGgaNOKsMNmt3uAdwKD4UfDzN3gRd6E0Y2We7nvdP2vPa
+K0zRS3C2YTD3P5B9HU3Yy7dcXz6C84ouTsDLpu4vsNjoVw/Fpx3rJvRURluPZg4/
+d1MFYWHVcWJL88ukrwkQfnjWXXUA1i+WZN/OToXVIRsF+JRLzTxb9trV7SR4tL+v
+czstLmbj9Px3BAVV6mFZd+dRZWDGZqFrjo2FkRmts7wpZyWt5Jg=
+=A27J
+-----END PGP SIGNATURE-----
+
+--mnfd3tca7b2lomog--
