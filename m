@@ -1,26 +1,82 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [RFC PATCH 4/4] mmc: core: Implement mmc_partial_init during
- resume
-Date: Tue, 21 Feb 2017 09:40:52 +0200
-Message-ID: <42634177-bec7-4968-a313-26714bfa2594@intel.com>
-References: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
- <1487577792-12510-5-git-send-email-riteshh@codeaurora.org>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Tue, 21 Feb 2017 09:06:10 +0100
+Message-ID: <20170221090610.6d531b94@bbrezillon>
+References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
+        <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
+        <20170220213803.7ba5591e@bbrezillon>
+        <20170220215009.0ecbf5a1@bbrezillon>
+        <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+        <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1487577792-12510-5-git-send-email-riteshh@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org
-Cc: shawn.lin@rock-chips.com, devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com, linux-kernel@vger.kernel.org, Talel Shenhar <tatias@codeaurora.org>, Maya Erez <merez@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/02/17 10:03, Ritesh Harjani wrote:
-> This patch adds mmc_partial_init functionality
-> combining with CMD5 awake feature to reduce resume
-> latency for emmc.
-> 
-> This is not enabled for HS400 mode, since tuning
-> in HS400 is required to be done in HS200 timing.
+On Tue, 21 Feb 2017 01:54:37 +0200
+Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-How does that matter?
+> On Tue, Feb 21, 2017 at 1:40 AM, Andy Shevchenko
+> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Mon, Feb 20, 2017 at 10:50 PM, Boris Brezillon
+> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:  
+> >> On Mon, 20 Feb 2017 21:38:03 +0100
+> >> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >>  
+> >>> On Mon, 20 Feb 2017 22:27:17 +0200
+> >>> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>  
+> >>> > On Mon, Feb 20, 2017 at 2:28 PM, Boris Brezillon
+> >>> > <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >>> >  
+> >>> > >  drivers/mtd/nand/atmel/nand-controller.c | 2269 +++++++++++++++++++++++++++
+> >>> > >  drivers/mtd/nand/atmel_nand.c            | 2479 ------------------------------  
+> >>> >
+> >>> > Does -M -C help you?
+> >>> > At least it would help reviewers
+> >>> >  
+> >>>
+> >>> No it doesn't, because files were not just moved around using git mv,
+> >>> it's a complete rewrite of the driver. IIUC, you're about to review
+> >>> this submission, or are you just trolling like last time?  
+> >>
+> >> My bad, I mistaken you with someone else. Sorry for being harsh, but my
+> >> explanation stands ;-).  
+> >
+> > No problem. I was asking since it so big and on first glance looks
+> > like a partial copy (I dunno if parameter to -C makes it somehow
+> > useful), though I can't review this. It's too big to me. Sorry I'm
+> > really not trolling, just didn't read commit message carefully.  
+> 
+> Okay, I very quickly looked into the code, what I noticed
+> - you like extra parens and empty lines in some cases (not big deal)
+
+Can you point specific places where you think these are not needed?
+
+> - some functions perhaps might have been refactored to have common
+> pieces in error handling, though I didn't read core carefully.
+
+Again, be more precise.
+
+> 
+> Most important part I have noticed is a GPIO request.
+> I didn't get why you almost repeat gpiod_get() in case of platform data?
+> Shouldn't we have GPIO look up table?
+> Can we use builtin device properties (for GPIO and/or overall)?
+
+Sorry but I don't get it. Can give an example of what you'd like me to
+do?
+
+Thanks,
+
+Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
