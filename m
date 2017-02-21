@@ -1,495 +1,222 @@
-From: Vlad Zakharov <Vladislav.Zakharov@synopsys.com>
-Subject: [PATCH v2] clk/axs10x: introduce AXS10X pll driver
-Date: Tue, 21 Feb 2017 16:11:10 +0300
-Message-ID: <1487682670-4164-1-git-send-email-vzakhar@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-clk@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, Vlad Zakharov <Vladislav.Zakharov@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Tue, 21 Feb 2017 13:21:32 +0000
+Message-ID: <20170221132132.GU21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
+ <20170221001332.GS21222@n2100.armlinux.org.uk>
+ <20170221123756.GI16975@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170221123756.GI16975-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-AXS10X boards manages it's clocks using various PLLs. These PLL has same
-dividers and corresponding control registers mapped to different addresses.
-So we add one common driver for such PLLs.
+On Tue, Feb 21, 2017 at 02:37:57PM +0200, Sakari Ailus wrote:
+> Hi Russell,
+> 
+> On Tue, Feb 21, 2017 at 12:13:32AM +0000, Russell King - ARM Linux wrote:
+> > On Tue, Feb 21, 2017 at 12:04:10AM +0200, Sakari Ailus wrote:
+> > > On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
+> > > > From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> > > > 
+> > > > Setting and getting frame rates is part of the negotiation mechanism
+> > > > between subdevs.  The lack of support means that a frame rate at the
+> > > > sensor can't be negotiated through the subdev path.
+> > > 
+> > > Just wondering --- what do you need this for?
+> > 
+> > The v4l2 documentation contradicts the media-ctl implementation.
+> > 
+> > While v4l2 documentation says:
+> > 
+> >   These ioctls are used to get and set the frame interval at specific
+> >   subdev pads in the image pipeline. The frame interval only makes sense
+> >   for sub-devices that can control the frame period on their own. This
+> >   includes, for instance, image sensors and TV tuners. Sub-devices that
+> >   don't support frame intervals must not implement these ioctls.
+> > 
+> > However, when trying to configure the pipeline using media-ctl, eg:
+> > 
+> > media-ctl -d /dev/media1 --set-v4l2 '"imx219 pixel 0-0010":0[crop:(0,0)/3264x2464]'
+> > media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":1[fmt:SRGGB10/3264x2464@1/30]'
+> > media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":0[fmt:SRGGB8/816x616@1/30]'
+> > media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616@1/30]'
+> > Unable to setup formats: Inappropriate ioctl for device (25)
+> > media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0_mux":2[fmt:SRGGB8/816x616@1/30]'
+> > media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0":2[fmt:SRGGB8/816x616@1/30]'
+> > 
+> > The problem there is that the format setting for the csi2 does not get
+> > propagated forward:
+> 
+> The CSI-2 receivers typically do not implement frame interval IOCTLs as they
+> do not control the frame interval. Some sensors or TV tuners typically do,
+> so they implement these IOCTLs.
 
-Each PLL on AXS10X board consist of three dividers: IDIV, FBDIV and
-ODIV. Output clock value is managed using these dividers.
+No, TV tuners do not.  The frame rate for a TV tuner is set by the
+broadcaster, not by the tuner.  The tuner can't change that frame rate.
+The tuner may opt to "skip" fields or frames.  That's no different from
+what the CSI block in my example below is capable of doing.
 
-We add pre-defined tables with supported rate values and appropriate
-configurations of IDIV, FBDIV and ODIV for each value.
+Treating a tuner differently from the CSI block is inconsistent and
+completely wrong.
 
-As of today we add support for PLLs that generate clock for the
-following devices:
- * ARC core on AXC CPU tiles.
- * ARC PGU on ARC SDP Mainboard.
-and more to come later.
+> There are alternative ways to specify the frame rate.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vlad Zakharov <vzakhar@synopsys.com>
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
-Cc: Rob Herring <robh@kernel.org>
-Changes v1..v2
- - Replace '_' with '-' in device tree nodes
+Empty statements (or hand-waving type statements) I'm afraid don't
+contribute to the discussion, because they mean nothing to me.  Please
+give an example, or flesh out what you mean.
 
- .../devicetree/bindings/clock/snps,pll-clock.txt   |  28 ++
- MAINTAINERS                                        |   6 +
- drivers/clk/axs10x/Makefile                        |   1 +
- drivers/clk/axs10x/pll_clock.c                     | 384 +++++++++++++++++++++
- 4 files changed, 419 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/snps,pll-clock.txt
- create mode 100644 drivers/clk/axs10x/pll_clock.c
+> > $ strace media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616@1/30]'
+> > ...
+> > open("/dev/v4l-subdev16", O_RDWR)       = 3
+> > ioctl(3, VIDIOC_SUBDEV_S_FMT, 0xbec16244) = 0
+> > ioctl(3, VIDIOC_SUBDEV_S_FRAME_INTERVAL, 0xbec162a4) = -1 ENOTTY (Inappropriate
+> > ioctl for device)
+> > fstat64(1, {st_mode=S_IFCHR|0600, st_rdev=makedev(136, 2), ...}) = 0
+> > write(1, "Unable to setup formats: Inappro"..., 61) = 61
+> > Unable to setup formats: Inappropriate ioctl for device (25)
+> > close(3)                                = 0
+> > exit_group(1)                           = ?
+> > +++ exited with 1 +++
+> > 
+> > because media-ctl exits as soon as it encouters the error while trying
+> > to set the frame rate.
+> > 
+> > This makes implementing setup of the media pipeline in shell scripts
+> > unnecessarily difficult - as you need to then know whether an entity
+> > is likely not to support the VIDIOC_SUBDEV_S_FRAME_INTERVAL call,
+> > and either avoid specifying a frame rate:
+> 
+> You should remove the frame interval setting from sub-devices that do not
+> support it.
 
-diff --git a/Documentation/devicetree/bindings/clock/snps,pll-clock.txt b/Documentation/devicetree/bindings/clock/snps,pll-clock.txt
-new file mode 100644
-index 0000000..5706246
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/snps,pll-clock.txt
-@@ -0,0 +1,28 @@
-+Binding for the AXS10X Generic PLL clock
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible: should be "snps,axs10x-<name>-pll-clock"
-+  "snps,axs10x-arc-pll-clock"
-+  "snps,axs10x-pgu-pll-clock"
-+- reg: should always contain 2 pairs address - length: first for PLL config
-+registers and second for corresponding LOCK CGU register.
-+- clocks: shall be the input parent clock phandle for the PLL.
-+- #clock-cells: from common clock binding; Should always be set to 0.
-+
-+Example:
-+	input-clk: input-clk {
-+		clock-frequency = <33333333>;
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	core-clk: core-clk@80 {
-+		compatible = "snps,axs10x-arc-pll-clock";
-+		reg = <0x80 0x10 0x100 0x10>;
-+		#clock-cells = <0>;
-+		clocks = <&input-clk>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3960e7f..5805833 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11910,6 +11910,12 @@ F:	arch/arc/plat-axs10x
- F:	arch/arc/boot/dts/ax*
- F:	Documentation/devicetree/bindings/arc/axs10*
- 
-+SYNOPSYS ARC SDP clock driver
-+M:	Vlad Zakharov <vzakhar@synopsys.com>
-+S:	Supported
-+F:	drivers/clk/axs10x/*
-+F:	Documentation/devicetree/bindings/clock/snps,pll-clock.txt
-+
- SYSTEM CONFIGURATION (SYSCON)
- M:	Lee Jones <lee.jones@linaro.org>
- M:	Arnd Bergmann <arnd@arndb.de>
-diff --git a/drivers/clk/axs10x/Makefile b/drivers/clk/axs10x/Makefile
-index 01996b8..d747dea 100644
---- a/drivers/clk/axs10x/Makefile
-+++ b/drivers/clk/axs10x/Makefile
-@@ -1 +1,2 @@
- obj-y += i2s_pll_clock.o
-+obj-y += pll_clock.o
-diff --git a/drivers/clk/axs10x/pll_clock.c b/drivers/clk/axs10x/pll_clock.c
-new file mode 100644
-index 0000000..784a0a2
---- /dev/null
-+++ b/drivers/clk/axs10x/pll_clock.c
-@@ -0,0 +1,384 @@
-+/*
-+ * Synopsys AXS10X SDP Generic PLL clock driver
-+ *
-+ * Copyright (C) 2017 Synopsys
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/device.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+
-+/* PLL registers addresses */
-+#define PLL_REG_IDIV	0x0
-+#define PLL_REG_FBDIV	0x4
-+#define PLL_REG_ODIV	0x8
-+
-+/*
-+ * Bit fields of the PLL IDIV/FBDIV/ODIV registers:
-+ *  ________________________________________________________________________
-+ * |31                15|    14    |   13   |  12  |11         6|5         0|
-+ * |-------RESRVED------|-NOUPDATE-|-BYPASS-|-EDGE-|--HIGHTIME--|--LOWTIME--|
-+ * |____________________|__________|________|______|____________|___________|
-+ *
-+ * Following macros detirmine the way of access to these registers
-+ * They should be set up only using the macros.
-+ * reg should be and uint32_t variable.
-+ */
-+
-+#define PLL_REG_GET_LOW(reg)			\
-+	(((reg) & (0x3F << 0)) >> 0)
-+#define PLL_REG_GET_HIGH(reg)			\
-+	(((reg) & (0x3F << 6)) >> 6)
-+#define PLL_REG_GET_EDGE(reg)			\
-+	(((reg) & (BIT(12))) ? 1 : 0)
-+#define PLL_REG_GET_BYPASS(reg)			\
-+	(((reg) & (BIT(13))) ? 1 : 0)
-+#define PLL_REG_GET_NOUPD(reg)			\
-+	(((reg) & (BIT(14))) ? 1 : 0)
-+#define PLL_REG_GET_PAD(reg)			\
-+	(((reg) & (0x1FFFF << 15)) >> 15)
-+
-+#define PLL_REG_SET_LOW(reg, value)		\
-+	{ reg |= (((value) & 0x3F) << 0); }
-+#define PLL_REG_SET_HIGH(reg, value)	\
-+	{ reg |= (((value) & 0x3F) << 6); }
-+#define PLL_REG_SET_EDGE(reg, value)	\
-+	{ reg |= (((value) & 0x01) << 12); }
-+#define PLL_REG_SET_BYPASS(reg, value)	\
-+	{ reg |= (((value) & 0x01) << 13); }
-+#define PLL_REG_SET_NOUPD(reg, value)	\
-+	{ reg |= (((value) & 0x01) << 14); }
-+#define PLL_REG_SET_PAD(reg, value)		\
-+	{ reg |= (((value) & 0x1FFFF) << 15); }
-+
-+#define PLL_LOCK	0x1
-+#define PLL_MAX_LOCK_TIME 100 /* 100 us */
-+
-+struct pll_cfg {
-+	u32 rate;
-+	u32 idiv;
-+	u32 fbdiv;
-+	u32 odiv;
-+};
-+
-+struct pll_of_table {
-+	unsigned long prate;
-+	struct pll_cfg *pll_cfg_table;
-+};
-+
-+struct pll_of_data {
-+	struct pll_of_table *pll_table;
-+};
-+
-+static struct pll_of_data pgu_pll_data = {
-+	.pll_table = (struct pll_of_table []){
-+		{
-+			.prate = 27000000,
-+			.pll_cfg_table = (struct pll_cfg []){
-+				{ 25200000, 1, 84, 90 },
-+				{ 50000000, 1, 100, 54 },
-+				{ 74250000, 1, 44, 16 },
-+				{ },
-+			},
-+		},
-+		/* Used as list limiter */
-+		{ },
-+	},
-+};
-+
-+static struct pll_of_data arc_pll_data = {
-+	.pll_table = (struct pll_of_table []){
-+		{
-+			.prate = 33333333,
-+			.pll_cfg_table = (struct pll_cfg []){
-+				{ 33333333,  1, 1,  1 },
-+				{ 50000000,  1, 30, 20 },
-+				{ 75000000,  2, 45, 10 },
-+				{ 90000000,  2, 54, 10 },
-+				{ 100000000, 1, 30, 10 },
-+				{ 125000000, 2, 45, 6 },
-+				{ },
-+			},
-+		},
-+		/* Used as list limiter */
-+		{ },
-+	},
-+};
-+
-+struct pll_clk {
-+	void __iomem *base;
-+	void __iomem *lock;
-+	const struct pll_of_data *pll_data;
-+	struct clk_hw hw;
-+	struct device *dev;
-+};
-+
-+static inline void pll_write(struct pll_clk *clk, unsigned int reg,
-+		unsigned int val)
-+{
-+	iowrite32(val, clk->base + reg);
-+}
-+
-+static inline u32 pll_read(struct pll_clk *clk,
-+		unsigned int reg)
-+{
-+	return ioread32(clk->base + reg);
-+}
-+
-+static inline struct pll_clk *to_pll_clk(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct pll_clk, hw);
-+}
-+
-+static inline u32 div_get_value(unsigned int reg)
-+{
-+	if (PLL_REG_GET_BYPASS(reg))
-+		return 1;
-+
-+	return (PLL_REG_GET_HIGH(reg) + PLL_REG_GET_LOW(reg));
-+}
-+
-+static inline u32 encode_div(unsigned int id, int upd)
-+{
-+	uint32_t div = 0;
-+
-+	PLL_REG_SET_LOW(div, (id%2 == 0) ? id >> 1 : (id >> 1) + 1);
-+	PLL_REG_SET_HIGH(div, id >> 1);
-+	PLL_REG_SET_EDGE(div, id%2);
-+	PLL_REG_SET_BYPASS(div, id == 1 ? 1 : 0);
-+	PLL_REG_SET_NOUPD(div, !upd);
-+
-+	return div;
-+}
-+
-+static const struct pll_cfg *pll_get_cfg(unsigned long prate,
-+		const struct pll_of_table *pll_table)
-+{
-+	int i;
-+
-+	for (i = 0; pll_table[i].prate != 0; i++)
-+		if (pll_table[i].prate == prate)
-+			return pll_table[i].pll_cfg_table;
-+
-+	return NULL;
-+}
-+
-+static unsigned long pll_recalc_rate(struct clk_hw *hw,
-+			unsigned long parent_rate)
-+{
-+	u64 rate;
-+	u32 idiv, fbdiv, odiv;
-+	struct pll_clk *clk = to_pll_clk(hw);
-+
-+	idiv = div_get_value(pll_read(clk, PLL_REG_IDIV));
-+	fbdiv = div_get_value(pll_read(clk, PLL_REG_FBDIV));
-+	odiv = div_get_value(pll_read(clk, PLL_REG_ODIV));
-+
-+	rate = (u64)parent_rate * fbdiv;
-+	do_div(rate, idiv * odiv);
-+
-+	return (unsigned long)rate;
-+}
-+
-+static long pll_round_rate(struct clk_hw *hw, unsigned long rate,
-+			unsigned long *prate)
-+{
-+	int i;
-+	long best_rate;
-+	struct pll_clk *clk = to_pll_clk(hw);
-+	const struct pll_cfg *pll_cfg = pll_get_cfg(*prate,
-+			clk->pll_data->pll_table);
-+
-+	if (!pll_cfg) {
-+		dev_err(clk->dev, "invalid parent rate=%ld\n", *prate);
-+		return -EINVAL;
-+	}
-+
-+	if (pll_cfg[0].rate == 0)
-+		return -EINVAL;
-+
-+	best_rate = pll_cfg[0].rate;
-+
-+	for (i = 1; pll_cfg[i].rate != 0; i++) {
-+		if (abs(rate - pll_cfg[i].rate) < abs(rate - best_rate))
-+			best_rate = pll_cfg[i].rate;
-+	}
-+
-+	return best_rate;
-+}
-+
-+static int pll_set_rate(struct clk_hw *hw, unsigned long rate,
-+			unsigned long parent_rate)
-+{
-+	int i;
-+	struct pll_clk *clk = to_pll_clk(hw);
-+	const struct pll_cfg *pll_cfg = pll_get_cfg(parent_rate,
-+			clk->pll_data->pll_table);
-+
-+	if (!pll_cfg) {
-+		dev_err(clk->dev, "invalid parent rate=%ld\n", parent_rate);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; pll_cfg[i].rate != 0; i++) {
-+		if (pll_cfg[i].rate == rate) {
-+			pll_write(clk, PLL_REG_IDIV,
-+					encode_div(pll_cfg[i].idiv, 0));
-+			pll_write(clk, PLL_REG_FBDIV,
-+					encode_div(pll_cfg[i].fbdiv, 0));
-+			pll_write(clk, PLL_REG_ODIV,
-+					encode_div(pll_cfg[i].odiv, 1));
-+
-+			/*
-+			 * Wait until CGU relocks.
-+			 * If after timeout CGU is unlocked yet return error
-+			 */
-+			udelay(PLL_MAX_LOCK_TIME);
-+			if (ioread32(clk->lock) & PLL_LOCK)
-+				return 0;
-+			else
-+				return -ETIMEDOUT;
-+		}
-+	}
-+
-+	dev_err(clk->dev, "invalid rate=%ld, parent_rate=%ld\n", rate,
-+			parent_rate);
-+	return -EINVAL;
-+}
-+
-+static const struct clk_ops pll_ops = {
-+	.recalc_rate = pll_recalc_rate,
-+	.round_rate = pll_round_rate,
-+	.set_rate = pll_set_rate,
-+};
-+
-+static int pll_clk_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	const char *parent_name;
-+	struct clk *clk;
-+	struct pll_clk *pll_clk;
-+	struct resource *mem;
-+	struct clk_init_data init = { };
-+
-+	pll_clk = devm_kzalloc(dev, sizeof(*pll_clk), GFP_KERNEL);
-+	if (!pll_clk)
-+		return -ENOMEM;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pll_clk->base = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(pll_clk->base))
-+		return PTR_ERR(pll_clk->base);
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	pll_clk->lock = devm_ioremap_resource(dev, mem);
-+	if (IS_ERR(pll_clk->lock))
-+		return PTR_ERR(pll_clk->base);
-+
-+	init.name = dev->of_node->name;
-+	init.ops = &pll_ops;
-+	parent_name = of_clk_get_parent_name(dev->of_node, 0);
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	pll_clk->hw.init = &init;
-+	pll_clk->dev = dev;
-+	pll_clk->pll_data = of_device_get_match_data(dev);
-+
-+	if (!pll_clk->pll_data) {
-+		dev_err(dev, "No OF match data provided\n");
-+			return -EINVAL;
-+	}
-+
-+	clk = devm_clk_register(dev, &pll_clk->hw);
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "failed to register %s clock (%ld)\n",
-+				init.name, PTR_ERR(clk));
-+		return PTR_ERR(clk);
-+	}
-+
-+	return of_clk_add_provider(dev->of_node, of_clk_src_simple_get, clk);
-+}
-+
-+static int pll_clk_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+	return 0;
-+}
-+
-+static void __init of_pll_clk_setup(struct device_node *node)
-+{
-+	const char *parent_name;
-+	struct clk *clk;
-+	struct pll_clk *pll_clk;
-+	struct clk_init_data init = { };
-+
-+	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
-+	if (!pll_clk)
-+		return;
-+
-+	pll_clk->base = of_iomap(node, 0);
-+	if (!pll_clk->base) {
-+		pr_err("failed to map pll div registers\n");
-+		iounmap(pll_clk->base);
-+		return;
-+	}
-+
-+	pll_clk->lock = of_iomap(node, 1);
-+	if (!pll_clk->lock) {
-+		pr_err("failed to map pll lock register\n");
-+		iounmap(pll_clk->lock);
-+		return;
-+	}
-+
-+	init.name = node->name;
-+	init.ops = &pll_ops;
-+	parent_name = of_clk_get_parent_name(node, 0);
-+	init.parent_names = &parent_name;
-+	init.num_parents = parent_name ? 1 : 0;
-+	pll_clk->hw.init = &init;
-+	pll_clk->pll_data = &arc_pll_data;
-+
-+	clk = clk_register(NULL, &pll_clk->hw);
-+	if (IS_ERR(clk)) {
-+		pr_err("failed to register %s clock (%ld)\n",
-+				node->name, PTR_ERR(clk));
-+		kfree(pll_clk);
-+		return;
-+	}
-+
-+	of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+}
-+
-+CLK_OF_DECLARE(axs10x_pll_clock, "snps,axs10x-arc-pll-clock", of_pll_clk_setup);
-+
-+static const struct of_device_id pll_clk_id[] = {
-+	{ .compatible = "snps,axs10x-arc-pll-clock", .data = &arc_pll_data},
-+	{ .compatible = "snps,axs10x-pgu-pll-clock", .data = &pgu_pll_data},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, pll_clk_id);
-+
-+static struct platform_driver pll_clk_driver = {
-+	.driver = {
-+		.name = "axs10x-pll-clock",
-+		.of_match_table = pll_clk_id,
-+	},
-+	.probe = pll_clk_probe,
-+	.remove = pll_clk_remove,
-+};
-+builtin_platform_driver(pll_clk_driver);
-+
-+MODULE_AUTHOR("Vlad Zakharov <vzakhar@synopsys.com>");
-+MODULE_DESCRIPTION("Synopsys AXS10X SDP Generic PLL Clock Driver");
-+MODULE_LICENSE("GPL v2");
+That means we end up with horribly complex scripts.  This "solution" does
+not scale.  Therefore, it is not a "solution".
+
+It's fine if you want to write a script to setup the media pipeline using
+media-ctl, listing _each_ media-ctl command individually, with arguments
+specific to each step, but as I've already said, that does not scale.
+
+I don't want to end up writing separate scripts to configure the pipeline
+for different parameters or setups.  I don't want to teach users how to
+do that either.
+
+How are users supposed to cope with this craziness?  Are they expected to
+write their own scripts and understand this stuff?
+
+As far as I can see, there are no applications out there at the moment that
+come close to understanding how to configure a media pipeline, so users
+have to understand how to use media-ctl to configure the pipeline manually.
+Are we really expecting users to write scripts to do this, and understand
+all these nuances?
+
+IMHO, this is completely crazy, and hasn't been fully thought out.
+
+> > $ strace media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616]'
+> > ...
+> > open("/dev/v4l-subdev16", O_RDWR)       = 3
+> > ioctl(3, VIDIOC_SUBDEV_S_FMT, 0xbeb1a254) = 0
+> > open("/dev/v4l-subdev0", O_RDWR)        = 4
+> > ioctl(4, VIDIOC_SUBDEV_S_FMT, 0xbeb1a254) = 0
+> > close(4)                                = 0
+> > close(3)                                = 0
+> > exit_group(0)                           = ?
+> > +++ exited with 0 +++
+> > 
+> > or manually setting the format on the sink.
+> > 
+> > Allowing the S_FRAME_INTERVAL call seems to me to be more in keeping
+> > with the negotiation mechanism that is implemented in subdevs, and
+> > IMHO should be implemented inside the kernel as a pad operation along
+> > with the format negotiation, especially so as frame skipping is
+> > defined as scaling, in just the same way as the frame size is also
+> > scaling:
+> 
+> The origins of the S_FRAME_INTERVAL IOCTL for sub-devices are the S_PARM
+> IOCTL for video nodes. It is used to control the frame rate for more simple
+> devices that do not expose the Media controller interface. The similar
+> S_FRAME_INTERVAL was added for sub-devices as well, and it has been so far
+> used to control the frame interval for sensors (and G_FRAME_INTERVAL to
+> obtain the frame interval for TV tuners, for instance).
+> 
+> The pad argument was added there but media-ctl only supported setting the
+> frame interval on pad 0, which, coincidentally, worked well for sensor
+> devices.
+> 
+> The link validation is primarily done in order to ensure the validity of the
+> hardware configuration: streaming may not be started if the hardware
+> configuration is not valid.
+> 
+> Also, frame interval is not a static property during streaming: it may be
+> changed without the knowledge of the other sub-device drivers downstream. It
+> neither is a property of hardware receiving or processing images: if there
+> are limitations in processing pixels, then they in practice are related to
+> pixel rates or image sizes (i.e. not frame rates).
+
+So what about the case where we have a subdev (CSI) that is capable of
+frame rate reduction, that needs to know the input frame rate and the
+desired output frame rate?  It seems to me that this has not been
+thought through...
+
+> >        -  ``MEDIA_ENT_F_PROC_VIDEO_SCALER``
+> > 
+> >        -  Video scaler. An entity capable of video scaling must have
+> >           at least one sink pad and one source pad, and scale the
+> >           video frame(s) received on its sink pad(s) to a different
+> >           resolution output on its source pad(s). The range of
+> >           supported scaling ratios is entity-specific and can differ
+> >           between the horizontal and vertical directions (in particular
+> >           scaling can be supported in one direction only). Binning and
+> >           skipping are considered as scaling.
+> > 
+> > Although, this is vague, as it doesn't define what it means by "skipping",
+> > whether that's skipping pixels (iow, sub-sampling) or whether that's
+> > frame skipping.
+> 
+> Skipping in the context is used to refer to sub-sampling. The term is often
+> used in conjunction of sensors. The documentation could certainly be
+> clarified here.
+
+It definitely needs to be, it's currently mis-leading.
+
+> > Then there's the issue where, if you have this setup:
+> > 
+> >  camera --> csi2 receiver --> csi --> capture
+> > 
+> > and the "csi" subdev can skip frames, you need to know (a) at the CSI
+> > sink pad what the frame rate is of the source (b) what the desired
+> > source pad frame rate is, so you can configure the frame skipping.
+> > So, does the csi subdev have to walk back through the media graph
+> > looking for the frame rate?  Does the capture device have to walk back
+> > through the media graph looking for some subdev to tell it what the
+> > frame rate is - the capture device certainly can't go straight to the
+> > sensor to get an answer to that question, because that bypasses the
+> > effect of the CSI frame skipping (which will lower the frame rate.)
+> > 
+> > IMHO, frame rate is just another format property, just like the
+> > resolution and data format itself, and v4l2 should be treating it no
+> > differently.
+> > 
+> > In any case, the documentation vs media-ctl create something of a very
+> > obscure situation, one that probably needs solving one way or another.
+> 
+> Before going to solutions I need to ask: what do you want to achieve?
+
+Full and consistent support for the hardware, and a sane and consistent
+way to setup a media pipeline that is easy for everyone to understand.
+
 -- 
-2.7.4
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
