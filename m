@@ -1,93 +1,66 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] media: dt-bindings: vpif: extend the example with an
- output port
-Date: Tue, 21 Feb 2017 16:07:40 +0100
-Message-ID: <CAMpxmJUKCjHJGyNAYM_y6kZnwf39O5-1FeiKbA3RUPMdth4J2w@mail.gmail.com>
-References: <1487268237-4240-1-git-send-email-bgolaszewski@baylibre.com>
- <1487268237-4240-3-git-send-email-bgolaszewski@baylibre.com> <CAL_Jsq+f+H47iFNMZ5+2qG0n=6QDZOLPf2HtFH8SLD77Dq1e7A@mail.gmail.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] fpga manager: Add Xilinx slave serial SPI driver
+Date: Tue, 21 Feb 2017 16:17:23 +0100
+Message-ID: <20170221161723.358975f7@crub>
+References: <1487600724-17607-1-git-send-email-agust@denx.de>
+        <1487600724-17607-3-git-send-email-agust@denx.de>
+        <2d412ae7-4163-9943-6d98-2d6387df7789@xilinx.com>
+        <20170221152444.34b5d9f4@crub>
+        <19e0b5d1-bbf6-25ac-2698-6074ebafcf05@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+f+H47iFNMZ5+2qG0n=6QDZOLPf2HtFH8SLD77Dq1e7A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <19e0b5d1-bbf6-25ac-2698-6074ebafcf05-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-02-21 15:57 GMT+01:00 Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Thu, Feb 16, 2017 at 12:03 PM, Bartosz Golaszewski
-> <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> This makes the example more or less correspond with the da850-evm
->> hardware setup.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/media/ti,da850-vpif.txt    | 36 +++++++++++++++++-----
->>  1 file changed, 29 insertions(+), 7 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->> index 9c7510b..d6f93a1 100644
->> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->> @@ -16,7 +16,7 @@ Required properties:
->>  Video Capture:
->>
->>  VPIF has a 16-bit parallel bus input, supporting 2 8-bit channels or a
->> -single 16-bit channel.  It should contain at least one port child node
->> +single 16-bit channel. It should contain one or two port child nodes
+On Tue, 21 Feb 2017 15:51:18 +0100
+Michal Simek michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org wrote:
+...
+>>> What's the hw configuration?  
+>> 
+>> I used Spartan-6 for testing. But the driver might work with other
+>> Xilinx FPGAs, so I didn't add exact hw description.  
 >
-> When do you not have an output? Seems kind of useless. I'm guessing
-> this is an oversight in the binding and there should always be port 1
-> and a connector node, so document it that way.
->
+>ok. I expect this is spartan-6 next to another SoC and you use spi for
+>that another SoC and you connect.
 
-Sometimes the output pins are not hooked up to anything - for example
-on the da850-lcdk board we only use input for camera capture, while on
-da850-evm we have both composite and s-video outputs and inputs. I
-think it makes sens to leave out the output port if we don't use it.
+yes, it is MVEBU SoC, I'm using orion_spi driver. The connection is
+unidirectional SPI.
 
-> This also needs to state what port 0 and port 1 are (i.e. input or
-> output and type of data).
->
+>I think it will be good to extend that example and add also spi device
+>node to see where this should be placed.
 
-I'll fix that.
+You mean the example in the binding description? I can add there
+something like:
 
->>  with child 'endpoint' node. Please refer to the bindings defined in
->>  Documentation/devicetree/bindings/media/video-interfaces.txt.
->>
->> @@ -28,19 +28,26 @@ I2C-connected TVP5147 decoder:
->>                 reg = <0x217000 0x1000>;
->>                 interrupts = <92>;
->>
->> -               port {
->> -                       vpif_ch0: endpoint@0 {
->> +               port@0 {
->> +                       vpif_input_ch0: endpoint@0 {
->>                                 reg = <0>;
->>                                 bus-width = <8>;
->> -                               remote-endpoint = <&composite>;
->> +                               remote-endpoint = <&composite_in>;
->>                         };
->>
->> -                       vpif_ch1: endpoint@1 {
->> +                       vpif_input_ch1: endpoint@1 {
->>                                 reg = <1>;
->>                                 bus-width = <8>;
->>                                 data-shift = <8>;
->>                         };
->>                 };
->> +
->> +               port@1 {
->> +                       vpif_output_ch0: endpoint {
->> +                               bus-width = <8>;
->
-> Isn't this an analog input? bus-width doesn't make sense for that.
->
+Usage example for full FPGA configuration:
 
-Not yet - the signals first go to a video DAC (adv7343 in the example).
+fpga-region0 {
+	compatible = "fpga-region";
+	fpga-mgr = <&fpga_mgr_spi>;
+	#address-cells = <0x1>;
+	#size-cells = <0x1>;
+};
+
+&spi1 {
+	status = "okay";
+
+	fpga_mgr_spi: fpga-mgr@0 {
+		compatible = "xlnx,fpga-slave-serial";
+		reg = <0>;
+		spi-max-frequency = <60000000>;
+		spi-cpha;
+		done-gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+		prog_b-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+	};
+}; 
 
 Thanks,
-Bartosz
+Anatolij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
