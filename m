@@ -1,47 +1,88 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] fpga manager: Add Xilinx slave serial SPI driver
-Date: Tue, 21 Feb 2017 21:24:37 +0100
-Message-ID: <20170221212437.2911d74e@crub>
-References: <1487600724-17607-1-git-send-email-agust@denx.de>
-        <1487600724-17607-3-git-send-email-agust@denx.de>
-        <2d412ae7-4163-9943-6d98-2d6387df7789@xilinx.com>
-        <20170221152444.34b5d9f4@crub>
-        <19e0b5d1-bbf6-25ac-2698-6074ebafcf05@xilinx.com>
-        <20170221161723.358975f7@crub>
-        <ce0d7ba7-fa05-ad55-407c-3903553ace65@xilinx.com>
-        <20170221163907.75ba4330@crub>
-        <3a30638c-68f6-8c2b-95b7-c8c700fe4867@xilinx.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2 3/3] hwrng: meson: add clock handling to driver
+Date: Tue, 21 Feb 2017 21:26:20 +0100
+Message-ID: <989cf7bf-b7ea-0b41-510b-6eab403f0185@gmail.com>
+References: <daf765e2-1a60-8dea-fee0-8af6ddecdf8e@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3a30638c-68f6-8c2b-95b7-c8c700fe4867-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <daf765e2-1a60-8dea-fee0-8af6ddecdf8e@gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Herbert Xu <herbert@gondor.apana.org.au>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Feb 2017 19:53:40 +0100
-Michal Simek michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org wrote:
-...
->There is one thing I have checked ml505 - old virtex 5 board which has
->this interface.
->http://www-inst.eecs.berkeley.edu/~cs150/fa13/resources/ml50x_schematics.pdf
->
->And I was chatting with one board guy and I think that done pin should
->be optional not required because not all boards export it.
->
->Then there is a question how to find out that programming was done and
->that's something what I don't know. But will try to find out if you can
->send any sequence over spi to find it out instead of gpio done pin.
+Add handling of RNG0 clock to the driver.
 
-maybe the boards without DONE pin use INIT_B pin with external pull-up
-for CRC error reporting after configuration? Not sure if this is a
-reliable way to ensure the configuration has completed.
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2:
+- consider that clock is optional
+- use managed call to clk_disable_unprepare to ensure that
+  cleaning up is done in the right order if driver is removed
+---
+ drivers/char/hw_random/meson-rng.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Thanks,
-Anatolij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/char/hw_random/meson-rng.c b/drivers/char/hw_random/meson-rng.c
+index 119d6984..2e23be80 100644
+--- a/drivers/char/hw_random/meson-rng.c
++++ b/drivers/char/hw_random/meson-rng.c
+@@ -62,6 +62,7 @@
+ #include <linux/slab.h>
+ #include <linux/types.h>
+ #include <linux/of.h>
++#include <linux/clk.h>
+ 
+ #define RNG_DATA 0x00
+ 
+@@ -69,6 +70,7 @@ struct meson_rng_data {
+ 	void __iomem *base;
+ 	struct platform_device *pdev;
+ 	struct hwrng rng;
++	struct clk *core_clk;
+ };
+ 
+ static int meson_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+@@ -81,11 +83,17 @@ static int meson_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
+ 	return sizeof(u32);
+ }
+ 
++static void meson_rng_clk_disable(void *clk)
++{
++	clk_disable_unprepare(clk);
++}
++
+ static int meson_rng_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct meson_rng_data *data;
+ 	struct resource *res;
++	int ret;
+ 
+ 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+@@ -98,6 +106,20 @@ static int meson_rng_probe(struct platform_device *pdev)
+ 	if (IS_ERR(data->base))
+ 		return PTR_ERR(data->base);
+ 
++	data->core_clk = devm_clk_get(dev, "core");
++	if (IS_ERR(data->core_clk))
++		data->core_clk = NULL;
++
++	if (data->core_clk) {
++		ret = clk_prepare_enable(data->core_clk);
++		if (ret)
++			return ret;
++		ret = devm_add_action_or_reset(dev, meson_rng_clk_disable,
++					       data->core_clk);
++		if (ret)
++			return ret;
++	}
++
+ 	data->rng.name = pdev->name;
+ 	data->rng.read = meson_rng_read;
+ 
+-- 
+2.11.1
