@@ -1,98 +1,208 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Tue, 21 Feb 2017 14:30:16 +0000
-Message-ID: <3d0b775a-e1de-d957-de72-7751e2c59aea@synopsys.com>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
- <20170221115746.GF16975@valkosipuli.retiisi.org.uk>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller Driver
+Date: Tue, 21 Feb 2017 08:37:15 -0600
+Message-ID: <CAL_JsqJ=ViO+QnTiZXSL7zyO7xu_+f7C4aSkfA7VmqiU92EeHg@mail.gmail.com>
+References: <1486714767-25930-1-git-send-email-richard.leitner@skidata.com>
+ <20170216023004.25dwzy7ppxdoasfz@rob-hp-laptop> <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170221115746.GF16975@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <31fd459f-aed3-9d4a-2a63-651131216542-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Leitner <me-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+Cc: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-Thank you for your feedback.
-
-On 2/21/2017 11:57 AM, Sakari Ailus wrote:
-> Hi Ramiro,
-> 
-> On Fri, Feb 17, 2017 at 01:14:15PM +0000, Ramiro Oliveira wrote:
->> Create device tree bindings documentation.
+On Thu, Feb 16, 2017 at 12:36 AM, Richard Leitner <me-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org> wrote:
+> On 02/16/2017 03:30 AM, Rob Herring wrote:
 >>
->> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
->>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
->>  1 file changed, 35 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>> On Fri, Feb 10, 2017 at 09:19:27AM +0100, Richard Leitner wrote:
+>>>
+>>> This patch adds a driver for configuration of the Microchip USB251xB/xBi
+>>> USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
+>>> configuration interface and two to four USB 2.0 downstream ports.
+>>>
+>>> Furthermore add myself as a maintainer for this driver.
+>>>
+>>> The datasheet can be found at the manufacturers website, see [1]. All
+>>> device-tree exposed configuration features have been tested on a i.MX6
+>>> platform with a USB2512B hub.
+>>>
+>>> [1] http://ww1.microchip.com/downloads/en/DeviceDoc/00001692C.pdf
+>>>
+>>> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>> CHANGES v5:
 >>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->> new file mode 100644
->> index 000000000000..31956426d3b9
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->> @@ -0,0 +1,35 @@
->> +Omnivision OV5647 raw image sensor
->> +---------------------------------
->> +
->> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
->> +and CCI (I2C compatible) control bus.
->> +
->> +Required properties:
->> +
->> +- compatible		: "ovti,ov5647".
->> +- reg			: I2C slave address of the sensor.
->> +- clocks		: Reference to the xclk clock.
->> +- clock-names		: Should be "xclk".
->> +- clock-frequency	: Frequency of the xclk clock.
->> +
->> +The common video interfaces bindings (see video-interfaces.txt) should be
->> +used to specify link to the image data receiver. The OV5647 device
->> +node should contain one 'port' child node with an 'endpoint' subnode.
-> 
-> The remote-endpoint property in endpoint nodes should be mandatory,
-> shouldn't it? Otherwise the sensor isn't connected to anything and hardly
-> useful as such. The list of optional endpoint properties is a long one and
-> it should be documented here which ones are recognised, either as optional
-> or mandatory.
-> 
+>>
+>> V5 and the first I see it?
+>
+>
+> Just double-checked it, you (robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org) were on CC since v1.
 
-I guess you're right, it should be mandatory, although at the moment I'm not
-checking for it's presence in the driver so I'll add it to the driver.
+Indeed. You just sent new versions faster than I get to them. New
+versions puts you at the back of my queue. Sending out 5 versions in a
+week is a lot.
 
-At the moment that's the only property I think it should be mandatory, and I
-don't believe I need any optional one.
+[...]
 
-Do you have a suggestion for any new property I should use?
+>>> +
+>>> +Optional properties :
+>>> + - reg : I2C address on the selected bus (default is <0x2C>)
+>>
+>>
+>> Why is this optional?
+>
+>
+> Due to the fact the address is hardcoded insinde the chip I thought we could
+> set it to 0x2C by default if reg is not given.
 
->> +
->> +Example:
->> +
->> +	i2c@2000 {
->> +		...
->> +		ov: camera@36 {
->> +			compatible = "ovti,ov5647";
->> +			reg = <0x36>;
->> +			clocks = <&camera_clk>;
->> +			clock-names = "xclk";
->> +			clock-frequency = <25000000>;
->> +			port {
->> +				camera_1: endpoint {
->> +					remote-endpoint = <&csi1_ep1>;
->> +				};
->> +			};
->> +		};
->> +	};
-> 
+That's true for pretty much every I2C chip.
 
--- 
-Best Regards
+> Should it be required?
 
-Ramiro Oliveira
-Ramiro.Oliveira@synopsys.com
+Yes. The only time it would not be present is the I2C bus is not
+physically connected. In that case though, this should be a child of
+the USB host node.
+
+>>> + - skip-config : Skip Hub configuration, but only send the USB-Attach
+>>> command
+>>> + - vendor-id : USB Vendor ID of the hub (16 bit, default is 0x0424)
+>>> + - product-id : USB Product ID of the hub (16 bit, default depends on
+>>> type)
+>>
+>>
+>> These are to set the ids or need to match what they are set too?
+>
+>
+> These are to set the VID/PID of the Hub.
+>
+>>
+>>> + - device-id : USB Device ID of the hub (16 bit, default is 0x0bb3)
+>>> + - language-id : USB Language ID (16 bit, default is 0x0000)
+>>> + - manufacturer : USB Manufacturer string (max 31 characters long)
+>>> + - product : USB Product string (max 31 characters long)
+>>> + - serial : USB Serial string (max 31 characters long)
+>>> + - {bus,self}-powered : selects between self- and bus-powered operation
+>>> (default
+>>> +       is self-powered)
+>>> + - disable-hi-speed : disable USB Hi-Speed support
+>>> + - {multi,single}-tt : selects between multi- and
+>>> single-transaction-translator
+>>> +       (default is multi-tt)
+>>> + - disable-eop : disable End of Packet generation in full-speed mode
+>>> + - {ganged,individual}-sensing : select over-current sense type in
+>>> self-powered
+>>> +       mode (default is individual)
+>>> + - {ganged,individual}-port-switching : select port power switching mode
+>>> +       (default is individual)
+>>> + - dynamic-power-switching : enable auto-switching from self- to
+>>> bus-powered
+>>> +       operation if the local power source is removed or unavailable
+>>> + - oc-delay-{100us,4ms,8ms,16ms} : set over current timer delay (default
+>>> is 8ms)
+>>
+>>
+>> Make the property value be the time (e.g. oc-delay-us).
+>
+>
+> OK.
+>
+>
+>>
+>>> + - compound-device : indicated the hub is part of a compound device
+>>> + - port-mapping-mode : enable port mapping mode
+>>> + - string-support : enable string descriptor support (required for
+>>> manufacturer,
+>>> +       product and serial string configuration)
+>>> + - non-removable-ports : Should specify the ports which have a
+>>> non-removable
+>>> +       device connected.
+>>> + - sp-disabled-ports : Specifies the ports which will be self-power
+>>> disabled
+>>> + - bp-disabled-ports : Specifies the ports which will be bus-power
+>>> disabled
+>>> + - max-sp-power : Specifies the maximum current the hub consumes from an
+>>> +       upstream port when operating as self-powered hub including the
+>>> power
+>>> +       consumption of a permanently attached peripheral if the hub is
+>>> +       configured as a compound device. The value is given in mA in a 0
+>>> - 500
+>>> +       range (default is 2).
+>>> + - max-bp-power : Specifies the maximum current the hub consumes from an
+>>> +       upstream port when operating as bus-powered hub including the
+>>> power
+>>> +       consumption of a permanently attached peripheral if the hub is
+>>> +       configured as a compound device. The value is given in mA in a 0
+>>> - 500
+>>> +       range (default is 100).
+>>> + - max-sp-current : Specifies the maximum current the hub consumes from
+>>> an
+>>> +       upstream port when operating as self-powered hub EXCLUDING the
+>>> power
+>>> +       consumption of a permanently attached peripheral if the hub is
+>>> +       configured as a compound device. The value is given in mA in a 0
+>>> - 500
+>>> +       range (default is 2).
+>>> + - max-bp-current : Specifies the maximum current the hub consumes from
+>>> an
+>>> +       upstream port when operating as bus-powered hub EXCLUDING the
+>>> power
+>>> +       consumption of a permanently attached peripheral if the hub is
+>>> +       configured as a compound device. The value is given in mA in a 0
+>>> - 500
+>>> +       range (default is 100).
+>>> + - power-on-time : Specifies the time it takes from the time the host
+>>> initiates
+>>> +       the power-on sequence to a port until the port has adequate
+>>> power. The
+>>> +       value is given in ms in a 0 - 510 range (default is 100ms).
+>>
+>>
+>> Various properties need unit suffixes (see property-units.txt) and
+>> either be common properties or need vendor prefixes.
+>
+>
+> Ok. What exactly do you mean with common properties? I don't think it's the
+> endianness settings described in common-properties.txt, is it?
+
+No, not common-properties.txt (maybe that needs another name). Simply
+documented in a common location that multiple device bindings can
+share. So things that would be common to USB devices or USB hubs in
+particular.
+
+Looking through the list again, probably just the ones corresponding
+to USB descriptors should be common.
+
+> Is "microchip," fine as vendor prefix?
+
+Yes, if that's the correct string for Microchip.
+
+>> This is a lot of properties. Are you really finding a need for all of
+>> them? Is this to handle h/w designers too cheap to put down the EEPROM?
+>> Maybe better to just define an eeprom property in the format the h/w
+>> expects.
+>
+>
+> I need about 15 of these properties. I just exposed them all to dt because I
+> thought they could be useful for somebody.
+>
+> Yes, these are a subset of the settings which can be configured via an
+> external EEPROM (By strapping some pins of the hub you can select if it
+> loads its configuration from an EEPROM or receives it via SMBus).
+>
+> My first thought was also to define only a byte array in dt, but IMHO these
+> options are much more readable and convenient for everybody. I'd also be
+> fine with removing the properties I don't need from dt. But that may lead to
+> future patches where somebody needs some of the options not already exposed
+> to dt.
+
+Okay. It's really a judgement call. If this is most of the settings,
+then it's fine. If it was only a fraction of them, then maybe we'd
+want to do just a byte array. Sounds like it is the former.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
