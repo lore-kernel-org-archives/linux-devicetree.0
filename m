@@ -1,45 +1,134 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 net-next] net: phy: Add LED mode driver for Microsemi PHYs.
-Date: Tue, 21 Feb 2017 10:42:38 -0600
-Message-ID: <CAL_JsqJLCe1O7Bv526zAY-s-R1DcnA2O0bpx48dTFGSgeu-Edw@mail.gmail.com>
-References: <1486474826-29426-1-git-send-email-Raju.Lakkaraju@microsemi.com>
- <20170215164540.eok7bnudfffzoyi4@rob-hp-laptop> <20170216090646.GA29082@microsemi.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Tue, 21 Feb 2017 18:43:35 +0200
+Message-ID: <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
+References: <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon>
+ <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
+ <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
+ <20170221090610.6d531b94@bbrezillon> <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
+ <20170221112641.6276c001@bbrezillon> <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
+ <20170221112720.ynehsryprhrhzjla@piout.net> <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
+ <20170221162133.jch6yzpotj4s7zob@piout.net> <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170216090646.GA29082-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+In-Reply-To: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 3:06 AM, Raju Lakkaraju
-<Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org> wrote:
-> Hi Rob,
+On Tue, Feb 21, 2017 at 6:32 PM, Andy Shevchenko
+<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Feb 21, 2017 at 6:21 PM, Alexandre Belloni
+> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> On 21/02/2017 at 18:09:09 +0200, Andy Shevchenko wrote:
+>>> On Tue, Feb 21, 2017 at 1:27 PM, Alexandre Belloni
+>>> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>> > On 21/02/2017 at 13:02:21 +0200, Andy Shevchenko wrote:
+>>> >> Abusing platform data with pointers is also not welcome.
 >
-> On Wed, Feb 15, 2017 at 10:45:40AM -0600, Rob Herring wrote:
->> EXTERNAL EMAIL
+>>> >> > (in this case, avr32).
+>>> >>
+>>> >> It's dead de facto.
+>>> >>
+>>> >> When last time did you compile kernel for it? What was the version of kernel?
+>>> >> Did it get successfully?
+>>> >>
+>>> >
+>>> > v4.10-rc3 was building successfully but had some issues in the network
+>>> > code.
+>>>
+>>> Newer kernel doesn't link...
+>>>
+>>> >> When are we going to remove avr32 support from kernel completely?
+>>>
+>>> > Ask that to the avr32 maintainers. It still builds and is still booted
+>>> > by some people. And that actually seems to be you as you reported a bug
+>>> > we introduced in 4.3. I don't think we had any other report after that.
+>>>
+>>> https://patchwork.kernel.org/patch/9505727/
+>>>
+>>> After that I gave up on it. Next time I will escalate directly to
+>>> Linus. It's a complete necrophilia. I spent already enough time to
+>>> look at that code. It brings now more burden than supports someone
+>>> somewhere.
+>>>
 >>
->>
->> On Tue, Feb 07, 2017 at 07:10:26PM +0530, Raju Lakkaraju wrote:
->> > From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
->> >
->> > +                       Default value is VSC8531_LINK_1000_ACTIVITY (1).
->> > +- vsc8531,led-1-mode : LED mode. Specify how the LED[1] should behave.
->>
->> You failed to address my comment on v2. vsc8531 is not a vendor prefix.
->> Please fix in a new patch since David already applied it.
->>
+>> As said, it builds fine without networking.
 >
-> Accpeted my fault. i missed your comment.
-> Do i need to change from  "vsc8531, led-0-mode" to "mscc, led-0-mode"
-> Is this your suggestion?
+> It sounds a bit sarcastic. Irony is that I *have* hardware here which
+> was dedicated as Network Gateway (ATNGW100). I'm accessing to it
+> remotely.
+> How useful it would be?
+>
+>> Maybe the first step is to
+>> ask the avr32 maintainers. If you already did so,
+>
+> I did it ~year or so before where another relocation bug was discovered (fixed).
+>
+>> please feel free to
+>> send a patch to remove the whole architecture.
+>> The benefits for atmel will be: proper big endian support, removal of
+>> platform data from all the drivers, better clocksource handling.
+>
+> That is good point, but if maintainers don't care, why anyone else should?
+> Neither do I.
+>
+>>> > It can be frustrating at times to handle that platform but if it is
+>>> > working for someone, I don't see why we would remove it.
+>>>
+>>> How it's working if it's not linked?
+>>>
+>>
+>> Come on, v4.10 has just been release and
 
-Well, there shouldn't be a space there, but yess, mscc is the prefix.
+It doesn't build anymore. And current case even worse
+Face it. It's dead.
 
-Read my original comments. I also suggested combining this to a single property.
+  MODPOST vmlinux.o
+WARNING: vmlinux.o(.text+0x1f2bd4): Section mismatch in reference from
+the variable __param_ops_mtd to the functio
+n .init.text:ubi_mtd_param_parse()
+The function __param_ops_mtd() references
+the function __init ubi_mtd_param_parse().
+This is often because __param_ops_mtd lacks a __init
+annotation or the annotation of ubi_mtd_param_parse is wrong.
 
-Rob
+crypto/built-in.o: warning: input is not relaxable
+virt/built-in.o: warning: input is not relaxable
+net/built-in.o: In function `rtnl_fill_ifinfo':
+net/socket.c:451: relocation truncated to fit: R_AVR32_11H_PCREL
+against `.text'+22768
+Makefile:969: recipe for target 'vmlinux' failed
+
+
+> v4.9 was building just fine. Do
+>> you really expect everybody to closely follow linux-next or update
+>> overnight?
+>
+> What version do you use as compiler?
+>
+> Today's linux-next:
+> $ make O=~/prj/TMP/out/avr32 C=1 CF=-D__CHECK_ENDIAN__ -j64 CONFIG_DEBUG_INFO=
+> y CONFIG_DEBUG_SECTION_MISMATCH=y
+>
+>   CC      lib/sbitmap.o
+> {standard input}: Assembler messages:
+> {standard input}:378: Warning: Unary operator + ignored because bad
+> operand follows
+> {standard input}:378: Warning: missing operand; zero assumed
+> {standard input}:378: Internal error!
+> Assertion failure in finish_insn at .././gas/config/tc-avr32.c line 3498.
+> Please report this bug.
+> scripts/Makefile.build:294: recipe for target 'lib/sbitmap.o' failed
+>
+> $ avr32-linux-gcc --version
+> avr32-linux-gcc (GCC) 4.2.2-atmel.1.0.8
+
+-- 
+With Best Regards,
+Andy Shevchenko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
