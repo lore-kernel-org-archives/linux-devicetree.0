@@ -1,59 +1,137 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 12:27:20 +0100
-Message-ID: <20170221112720.ynehsryprhrhzjla@piout.net>
-References: <1487593718-20752-2-git-send-email-boris.brezillon@free-electrons.com>
- <CAHp75VdwQGP-qa0c0KQwrdpZmCGc3RuEsJ-E-XLbBzQSn4Yxcg@mail.gmail.com>
- <20170220213803.7ba5591e@bbrezillon>
- <20170220215009.0ecbf5a1@bbrezillon>
- <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
- <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
- <20170221090610.6d531b94@bbrezillon>
- <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
- <20170221112641.6276c001@bbrezillon>
- <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/6] Platform driver support for 'amd5536udc' driver
+Date: Tue, 21 Feb 2017 17:12:58 +0530
+Message-ID: <1487677384-6115-1-git-send-email-raviteja.garimella@broadcom.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(adding Hans-Christian)
+Changes from PATCH v1:
+======================
+1. Updated bindings documentation:
+   -- compatibility string for each supported SoC
+   -- removed extcon node
+   -- rename the file name to just iproc-udc.txt
 
-On 21/02/2017 at 13:02:21 +0200, Andy Shevchenko wrote:
-> Abusing platform data with pointers is also not welcome.
-> 
-> > (in this case, avr32).
-> 
-> It's dead de facto.
-> 
-> When last time did you compile kernel for it? What was the version of kernel?
-> Did it get successfully?
-> 
+2. Modified comptability strings in platform driver file
+   to reflect the change made in 1.
 
-v4.10-rc3 was building successfully but had some issues in the network
-code.
+3 Kconfig
+   -- Resolved warnings shown by kbuild-test-robot  
 
-> When are we going to remove avr32 support from kernel completely?
-> 
+<clip: as before>
 
-Ask that to the avr32 maintainers. It still builds and is still booted
-by some people. And that actually seems to be you as you reported a bug
-we introduced in 4.3. I don't think we had any other report after that.
+The changes are being submitted as PATCH this time. Below are the
+details of main changes with respect to previous RFC versions.
 
-It can be frustrating at times to handle that platform but if it is
-working for someone, I don't see why we would remove it.
+Changes from RFC v2:
+===================
+Patch 1/6 now splits the driver into amd5536udc_pci_.c (which
+contains only the PCI device registration part), and amd5536udc.c
+will still be driver that does the rest of UDC driver functionality.
 
+Patch 2/6 renames amd5536udc.c to snps_udc_core.c.
+
+The DT compatibilty string is changed to "brcm,iproc-snps-udc"
+as per review comments for RFCv2. The driver and bindings
+documentation is modified to reflect this.
+
+This is RFC for the changes made as per the review comments made for
+the previous version. I would like to know  if this approach (the way
+the driver is split and the naming and all)looks good to be submitted.
+
+
+Changes from RFC v1:
+===================
+1. Split the driver into platform/pci specific drivers with a core driver
+   file that handles the common driver routines that are exported.
+
+2. Split the driver into number of patches as suggested in previous
+   review comments.
+
+3. Added the devicetree bindings documentation for Synopsys platform
+   driver.
+
+Introduction from previous version:
+===================================
+This patch adds platform device support to the existing 'amd5536udc'
+driver.
+
+The UDC is based on Synopsys Designware core USB (2.0) Device controller
+IP.
+
+The driver so far supports UDCs that are a part of AMD southbridge
+and is connected through PCI bus.
+
+The same driver can be used with UDCs that are integrated into SoCs
+like Broadcom's Northstar2/Cygnus platforms by adding platform device
+suooprt.
+
+This patch contains all the changes that were required to get the driver
+functional on Broadcom's Northstar2 platform. 
+
+This is a request for comments from maintainers/others regarding approach
+on whether to have 2 different drivers (one each for AMD and Broadcom)
+with a common library (3 files in total), or have a single driver like
+it's done in this patch and have the driver filename changed to some
+common name based on ther underlying IP, like snps_udc.c.
+
+Below are the main changes done:
+
+1. Added OF based platform device registration -- so that the driver gets
+   probed based on the device tree entry. Like wise, remove routine and
+   platform PM ops are supported.
+
+2. Modified debug prints to be compatible with both pci and platform
+   devices.
+
+3. Added members to 'struct udc' in header file for extcon and phy support.
+   This is required if the UDC is connected to a Dual Role Device Phy
+   where the Phy can be configured to be in Device mode or Host mode based
+   on the type of external cable that is connected to the port.
+ 
+4. Added checks in udc connect/disconnect routines so as to return if the
+   routine is already called.
+
+5. Modified the arguments passed to dma_pool_create routine -- which
+   expects struct device, whereas NULL is passed in the existing version.
+ 
+6. Kconfig changes are done so that the driver now depends on either of
+   CONFIG_OF or CONFIG_PCI. More description about the Synopsys IP is
+   provided.
+
+Repo: https://github.com/Broadcom/arm64-linux.git
+Branch: snps_udc_v2
+
+Raviteja Garimella (6):
+  UDC: Split the driver into amd (pci) and Synopsys core IP driver
+  UDC: Rename amd5536udc driver file based on IP
+  UDC: make debug prints compatible with both pci and platform devices
+  UDC: Provide correct arguments for 'dma_pool_create'
+  DT bindings documentation for Broadcom IPROC USB Device controller.
+  UDC: Add Synopsys UDC Platform driver
+
+ .../devicetree/bindings/usb/iproc-udc.txt          |   21 +
+ drivers/usb/gadget/udc/Kconfig                     |   33 +
+ drivers/usb/gadget/udc/Makefile                    |    4 +-
+ drivers/usb/gadget/udc/amd5536udc.c                | 3413 --------------------
+ drivers/usb/gadget/udc/amd5536udc.h                |   54 +-
+ drivers/usb/gadget/udc/amd5536udc_pci.c            |  218 ++
+ drivers/usb/gadget/udc/snps_udc_core.c             | 3239 +++++++++++++++++++
+ drivers/usb/gadget/udc/snps_udc_plat.c             |  343 ++
+ 8 files changed, 3910 insertions(+), 3415 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/iproc-udc.txt
+ delete mode 100644 drivers/usb/gadget/udc/amd5536udc.c
+ create mode 100644 drivers/usb/gadget/udc/amd5536udc_pci.c
+ create mode 100644 drivers/usb/gadget/udc/snps_udc_core.c
+ create mode 100644 drivers/usb/gadget/udc/snps_udc_plat.c
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.1.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
