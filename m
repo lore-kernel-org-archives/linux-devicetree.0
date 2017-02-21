@@ -1,88 +1,64 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Tue, 21 Feb 2017 16:40:34 +0200
-Message-ID: <20170221144034.GJ16975@valkosipuli.retiisi.org.uk>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
- <20170221115746.GF16975@valkosipuli.retiisi.org.uk>
- <3d0b775a-e1de-d957-de72-7751e2c59aea@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] usb: add DT bindings for farady fotg2 host controller
+Date: Tue, 21 Feb 2017 08:43:53 -0600
+Message-ID: <CAL_JsqK7VDomXqMz3YJqL5QjnSb-anwXtG+exz4g_BjPLOaiXQ@mail.gmail.com>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com>
+ <20170208200010.21522-3-ulli.kroll@googlemail.com> <20170215230042.4m3niqf5wizbrgb4@rob-hp-laptop>
+ <alpine.LNX.2.00.1702171054320.9178@T420s>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3d0b775a-e1de-d957-de72-7751e2c59aea-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <alpine.LNX.2.00.1702171054320.9178@T420s>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+On Fri, Feb 17, 2017 at 4:07 AM, Hans Ulli Kroll
+<ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Wed, 15 Feb 2017, Rob Herring wrote:
+>
+>> On Wed, Feb 08, 2017 at 09:00:09PM +0100, Hans Ulli Kroll wrote:
+>> > This adds DT bindings for the Faraday FOTG2 host controller.
+>> >
+>> > Signed-off-by: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/usb/fotg2-host.txt | 15 +++++++++++++++
+>> >  1 file changed, 15 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/usb/fotg2-host.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/fotg2-host.txt b/Documentation/devicetree/bindings/usb/fotg2-host.txt
+>> > new file mode 100644
+>> > index 000000000000..4c07566a4bf5
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/usb/fotg2-host.txt
+>> > @@ -0,0 +1,15 @@
+>> > +Faraday FOTG Host controller
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: should be "faraday,fotg210-hcd"
+>>
+>> hcd as in "host controller driver"? Bindings describe h/w not drivers.
+>>
+>> It's an OTG controller or host controller?
+>>
+>
+> here only the host controller part used.
+>
+> faraday fotg2 is a dual role hcd/otg device and here is only the
+> host part used.
 
-On Tue, Feb 21, 2017 at 02:30:16PM +0000, Ramiro Oliveira wrote:
-> Hi Sakari,
-> 
-> Thank you for your feedback.
-> 
-> On 2/21/2017 11:57 AM, Sakari Ailus wrote:
-> > Hi Ramiro,
-> > 
-> > On Fri, Feb 17, 2017 at 01:14:15PM +0000, Ramiro Oliveira wrote:
-> >> Create device tree bindings documentation.
-> >>
-> >> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
-> >>  1 file changed, 35 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >> new file mode 100644
-> >> index 000000000000..31956426d3b9
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >> @@ -0,0 +1,35 @@
-> >> +Omnivision OV5647 raw image sensor
-> >> +---------------------------------
-> >> +
-> >> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> >> +and CCI (I2C compatible) control bus.
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible		: "ovti,ov5647".
-> >> +- reg			: I2C slave address of the sensor.
-> >> +- clocks		: Reference to the xclk clock.
-> >> +- clock-names		: Should be "xclk".
-> >> +- clock-frequency	: Frequency of the xclk clock.
-> >> +
-> >> +The common video interfaces bindings (see video-interfaces.txt) should be
-> >> +used to specify link to the image data receiver. The OV5647 device
-> >> +node should contain one 'port' child node with an 'endpoint' subnode.
-> > 
-> > The remote-endpoint property in endpoint nodes should be mandatory,
-> > shouldn't it? Otherwise the sensor isn't connected to anything and hardly
-> > useful as such. The list of optional endpoint properties is a long one and
-> > it should be documented here which ones are recognised, either as optional
-> > or mandatory.
-> > 
-> 
-> I guess you're right, it should be mandatory, although at the moment I'm not
-> checking for it's presence in the driver so I'll add it to the driver.
-> 
-> At the moment that's the only property I think it should be mandatory, and I
-> don't believe I need any optional one.
-> 
-> Do you have a suggestion for any new property I should use?
+Because you don't care about device mode or restricted by the IP
+configuration or SoC integration? The former is a user choice and
+shouldn't be part of DT. The latter should be implied by an SoC
+specific compatible string. Using only a compatible string for a
+licensed IP is not specific enough as vendors use differing versions
+and integrate them in different ways.
 
-As you don't need any in the driver for the driver to work, you can omit
-them.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
