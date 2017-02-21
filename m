@@ -1,111 +1,44 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 18:32:26 +0200
-Message-ID: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
-References: <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon>
- <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
- <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
- <20170221090610.6d531b94@bbrezillon> <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
- <20170221112641.6276c001@bbrezillon> <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
- <20170221112720.ynehsryprhrhzjla@piout.net> <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
- <20170221162133.jch6yzpotj4s7zob@piout.net>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
+Date: Tue, 21 Feb 2017 17:31:03 +0100
+Message-ID: <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+ <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+ <20170220182214.izi46a7lbzck7q4r@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170221162133.jch6yzpotj4s7zob-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+In-Reply-To: <20170220182214.izi46a7lbzck7q4r@ninjato>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 6:21 PM, Alexandre Belloni
-<alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On 21/02/2017 at 18:09:09 +0200, Andy Shevchenko wrote:
->> On Tue, Feb 21, 2017 at 1:27 PM, Alexandre Belloni
->> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On 21/02/2017 at 13:02:21 +0200, Andy Shevchenko wrote:
->> >> Abusing platform data with pointers is also not welcome.
+Hi Greg,
+hi Wolfram,
 
->> >> > (in this case, avr32).
->> >>
->> >> It's dead de facto.
->> >>
->> >> When last time did you compile kernel for it? What was the version of kernel?
->> >> Did it get successfully?
->> >>
->> >
->> > v4.10-rc3 was building successfully but had some issues in the network
->> > code.
+Am 20.02.2017 um 19:22 schrieb Wolfram Sang:
+> On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
+>> Since commit e2474541032d ("bcm2835: Fix hang for writing messages
+>> larger than 16 bytes") the interrupt handler is prone to a possible
+>> NULL pointer dereference. This could happen if an interrupt fires
+>> before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
+>> on the RPi 3. Even this is an unexpected behavior the driver must
+>> handle that with an error instead of a crash.
 >>
->> Newer kernel doesn't link...
->>
->> >> When are we going to remove avr32 support from kernel completely?
->>
->> > Ask that to the avr32 maintainers. It still builds and is still booted
->> > by some people. And that actually seems to be you as you reported a bug
->> > we introduced in 4.3. I don't think we had any other report after that.
->>
->> https://patchwork.kernel.org/patch/9505727/
->>
->> After that I gave up on it. Next time I will escalate directly to
->> Linus. It's a complete necrophilia. I spent already enough time to
->> look at that code. It brings now more burden than supports someone
->> somewhere.
->>
+>> CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+>> CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+>> Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
+>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Applied to for-next, thanks (will be in 4.11)!
 >
-> As said, it builds fine without networking.
 
-It sounds a bit sarcastic. Irony is that I *have* hardware here which
-was dedicated as Network Gateway (ATNGW100). I'm accessing to it
-remotely.
-How useful it would be?
+since this patch is too late for 4.10, should i resent with CC to stable 
+in order to get it into the next 4.10 release?
 
-> Maybe the first step is to
-> ask the avr32 maintainers. If you already did so,
-
-I did it ~year or so before where another relocation bug was discovered (fixed).
-
-> please feel free to
-> send a patch to remove the whole architecture.
-> The benefits for atmel will be: proper big endian support, removal of
-> platform data from all the drivers, better clocksource handling.
-
-That is good point, but if maintainers don't care, why anyone else should?
-Neither do I.
-
->> > It can be frustrating at times to handle that platform but if it is
->> > working for someone, I don't see why we would remove it.
->>
->> How it's working if it's not linked?
->>
->
-> Come on, v4.10 has just been release and v4.9 was building just fine. Do
-> you really expect everybody to closely follow linux-next or update
-> overnight?
-
-What version do you use as compiler?
-
-Today's linux-next:
-$ make O=~/prj/TMP/out/avr32 C=1 CF=-D__CHECK_ENDIAN__ -j64 CONFIG_DEBUG_INFO=
-y CONFIG_DEBUG_SECTION_MISMATCH=y
-
-  CC      lib/sbitmap.o
-{standard input}: Assembler messages:
-{standard input}:378: Warning: Unary operator + ignored because bad
-operand follows
-{standard input}:378: Warning: missing operand; zero assumed
-{standard input}:378: Internal error!
-Assertion failure in finish_insn at .././gas/config/tc-avr32.c line 3498.
-Please report this bug.
-scripts/Makefile.build:294: recipe for target 'lib/sbitmap.o' failed
-
-$ avr32-linux-gcc --version
-avr32-linux-gcc (GCC) 4.2.2-atmel.1.0.8
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+Stefan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
