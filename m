@@ -1,56 +1,35 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] spi: Add spi-bits-per-word binding.
-Date: Tue, 21 Feb 2017 11:08:30 -0800
-Message-ID: <20170221190830.xyubgimyc2w5p5v6@sirena.org.uk>
-References: <20170217101151.hyzmz5a4lgdy7p5m>
- <20170220153512.6563-1-adrian.fiergolski@cern.ch>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 0/4] ARM64: Initial Marvell IAP140 enablement
+Date: Tue, 21 Feb 2017 20:19:34 +0100
+Message-ID: <20170221191934.GF8852@lunn.ch>
+References: <20170219032000.4674-1-afaerber@suse.de>
+ <87bmtxatmt.fsf@free-electrons.com>
+ <a8a1279c-4978-f612-e4cd-57b8645f3e79@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="asagskmbns337sh2"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170220153512.6563-1-adrian.fiergolski@cern.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Fiergolski <adrian.fiergolski@cern.ch>
-Cc: linux-spi@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, miguel.ojeda.sandonis@gmail.com
+In-Reply-To: <a8a1279c-4978-f612-e4cd-57b8645f3e79@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Jisheng Zhang <jszhang@marvell.com>, info@andromedabox.org, Eric Miao <eric.y.miao@gmail.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-arm-kernel@lists.infradead.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Daniel Mack <daniel@zonque.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+> So MMP would mean Eric and Haojian only - I will drop the other Marvell
+> maintainers for v2 then, except where review comments have been provided.
 
---asagskmbns337sh2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Andreas
 
-On Mon, Feb 20, 2017 at 04:35:12PM +0100, Adrian Fiergolski wrote:
-> If an SPI controller doesn't support 8 bit transfers
-> (master->bits_per_word_mask), it will be never registered (tested with
-> spidev):
-> of_register_spi_device calls spi_add_device which calls spi_setup. The last
-> takes as an argument spi_device struct, which, in case of spidev, has
-> bits_per_word set to 0. Thus, the spi_setup function will set it to default
-> 8. Further, the same function will call __spi_validate_bits_per_word which
-> will fail the whole registration for controllers not supporting 8 bit
-> transfers (i.e. xilinx-spi).
+If you find there are any drivers shared by MVEBU and MMP, please do
+Cc: us if you need to touch them. We have knowledge we can share.
 
-This doens't make much sense, if a device driver requires a given number
-of bits per word forcing a different value via device tree is not going
-to result in the driver actually working.  If you want to use a device
-with a controller with restricted bits per word support you need to
-change the device driver to support the limited capabilities of the
-controller.
-
---asagskmbns337sh2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlisj/IACgkQJNaLcl1U
-h9A4VAf/U2V7Cll5qdDE/CFUkDfvSV0bKnU7aLgA9RHDrhWO6QmyaNmaOehgKb5B
-xWfK1tQ5vRm8fixhH4BJoLkTGmXltg0gAK4L8mRIBCMnVtspvqEuVTt1VyTw8pZx
-CwIwiiNhWNU8UTGxHJyYxUoe0qnfksEVRLh6htvAEMJ5mJL87fBWdZX/haXgM8fm
-1qLrT42Z+g6n1jXsMB5PJzHRdG6AZ8TwgkoQLvUnxJ+zcTiURst1laftkIC9PXb3
-Va4KUi4absozz//xNklTi0CkBwXiXKq0iVvbiRZ1xnM/MwK5YEwHfujghByclWZK
-tmAUJjkCkElKHPujwBcVuLGf1e8n/Q==
-=Kekn
------END PGP SIGNATURE-----
-
---asagskmbns337sh2--
+    Andrew
