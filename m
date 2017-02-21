@@ -1,8 +1,10 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v3 1/4] arm: dts: imx6qdl-icore: Add backlight support for lvds
-Date: Tue, 21 Feb 2017 10:36:30 +0530
-Message-ID: <1487653593-3457-1-git-send-email-jagan@openedev.com>
+Subject: [PATCH v3 3/4] arm: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 12.3 initial support
+Date: Tue, 21 Feb 2017 10:36:32 +0530
+Message-ID: <1487653593-3457-3-git-send-email-jagan@openedev.com>
+References: <1487653593-3457-1-git-send-email-jagan@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487653593-3457-1-git-send-email-jagan@openedev.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Domenico Acri <domenico.acri@engicam.com>
@@ -10,8 +12,17 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-This patch add support for lvds backlight on i.CoreM6 QDL
-variant boards.
+i.CoreM6 Quad/Dual OpenFrame modules are "system on modules plus
+openframe display carriers" which are good solution for develop
+user friendly graphic user interface.
+
+General features:
+CPU           NXP i.MX6Q rev1.2 at 792 MHz
+RAM           1GB, 32, 64 bit, DDR3-800/1066
+NAND          SLC,512MB
+LVDS Display  TFT 12.3" industrial, 1280x480 resolution
+Backlight     LED backlight, brightness 350 Cd/m2
+Power supply  15 to 30 Vdc
 
 Cc: Domenico Acri <domenico.acri@engicam.com>
 Cc: Matteo Lisi <matteo.lisi@engicam.com>
@@ -20,57 +31,110 @@ Cc: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v3:
-- none
+- Use native-mode as timing0 since this is the initial lvds-channel
+- Rename hsd100pxn1 reference as timing0 
+- Update the correct patch author
 Changes for v2:
-- none
+- newly added
 
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/Makefile                |  1 +
+ arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 76 +++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap12.dts
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 55bebfc..7dda608 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -48,6 +48,14 @@
- 		reg = <0x10000000 0x80000000>;
- 	};
- 
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm3 0 100000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <7>;
-+		status = "okay";
-+	};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 458ec09..adfdaee 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -399,6 +399,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-hummingboard.dtb \
+ 	imx6q-icore.dtb \
+ 	imx6q-icore-ofcap10.dtb \
++	imx6q-icore-ofcap12.dtb \
+ 	imx6q-icore-rqs.dtb \
+ 	imx6q-marsboard.dtb \
+ 	imx6q-mccmon6.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap12.dts b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+new file mode 100644
+index 0000000..179facb
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-icore-ofcap12.dts
+@@ -0,0 +1,76 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
 +
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -136,6 +144,12 @@
- 	status = "okay";
- };
- 
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>;
-+	status = "okay";
++/dts-v1/;
++
++#include "imx6q.dtsi"
++#include "imx6qdl-icore.dtsi"
++
++/ {
++	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 12 Kit";
++	compatible = "engicam,imx6-icore", "fsl,imx6q";
 +};
 +
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart4>;
-@@ -246,6 +260,12 @@
- 		>;
- 	};
- 
-+	pinctrl_pwm3: pwm3grp-1 {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_DAT1__PWM3_OUT 0x1b0b1
-+		>;
-+	};
++&ldb {
++	status = "okay";
 +
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++	lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <18>;
++		status = "okay";
++
++		display-timings {
++                        native-mode = <&timing0>;
++                        timing0: timing0 {
++                                clock-frequency = <46800000>;
++                                hactive = <1280>;
++                                vactive = <480>;
++                                hback-porch = <353>;
++                                hfront-porch = <47>;
++                                vback-porch = <39>;
++                                vfront-porch = <4>;
++                                hsync-len = <8>;
++                                vsync-len = <2>;
++                        };
++                };
++	};
++};
 -- 
 1.9.1
