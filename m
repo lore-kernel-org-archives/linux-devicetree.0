@@ -1,44 +1,83 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am57xx-idk: Add DCAN support
-Date: Tue, 21 Feb 2017 15:41:27 +0530
-Message-ID: <f8862417-e9e0-e2ac-865a-9684f96a5128@ti.com>
-References: <8981d49e7011a7246ff7dc6a9a9da0a56dfe5621.1487670384.git.nsekhar@ti.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH/RFC 2/2] usb: host: ehci-platform: fix usb 1.1 device is
+ not connected in system resume
+Date: Tue, 21 Feb 2017 10:18:36 +0000
+Message-ID: <SIXPR06MB05591EA8EE8977E5332EFC2CD8510@SIXPR06MB0559.apcprd06.prod.outlook.com>
+References: <1487576111-29287-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1487576111-29287-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20170221085103.GA19659@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8981d49e7011a7246ff7dc6a9a9da0a56dfe5621.1487670384.git.nsekhar-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170221085103.GA19659@b29397-desktop>
+Content-Language: ja-JP
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, "Quadros, Roger" <rogerq-l0cyMroinI0@public.gmane.org>
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 21 February 2017 03:30 PM, Sekhar Nori wrote:
-> From: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
-> 
-> AM571x IDK and the AM572x IDK use CAN1 interface.
-> This patch enables it for both boards.
-> 
-> Tested on AM572x IDK using cansequence.
-> 
-> Signed-off-by: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> [nsekhar-l0cyMroinI0@public.gmane.org: move to use DRA7XX_CORE_IOPAD())
-> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Hi Peter,
 
-I should have noted that although CAN does function on the IDK with this
-patch, there are "omap_hwmod: dcan1: _wait_target_disable failed"
-messages that come up due to lack of workaround for errata i893[1]
+> From: Peter Chen
+> Sent: Tuesday, February 21, 2017 5:51 PM
+>=20
+> On Mon, Feb 20, 2017 at 04:35:11PM +0900, Yoshihiro Shimoda wrote:
+< snip >
+> > @@ -297,6 +298,8 @@ static int ehci_platform_probe(struct platform_devi=
+ce *dev)
+> >  		goto err_power;
+> >
+> >  	device_wakeup_enable(hcd->self.controller);
+> > +	if (usb_of_has_companion(hcd->self.controller))
+>=20
+> According to Alan's comments, all USB ehci platform device can be async
+> device, so this API can be skipped.
 
-Roger does have some patches to workaround that errata. If you want to
-wait for those patches to be submitted and accepted first, it should be
-fine as well.
+I got it. I will remove this API.
 
-Thanks,
-Sekhar
+> > +		device_enable_async_suspend(hcd->self.controller);
+> >  	platform_set_drvdata(dev, hcd);
+> >
+> >  	return err;
+> > @@ -370,6 +373,7 @@ static int ehci_platform_resume(struct device *dev)
+> >  	struct usb_ehci_pdata *pdata =3D dev_get_platdata(dev);
+> >  	struct platform_device *pdev =3D to_platform_device(dev);
+> >  	struct ehci_platform_priv *priv =3D hcd_to_ehci_priv(hcd);
+> > +	struct device *companion_dev;
+> >
+> >  	if (pdata->power_on) {
+> >  		int err =3D pdata->power_on(pdev);
+> > @@ -377,6 +381,10 @@ static int ehci_platform_resume(struct device *dev=
+)
+> >  			return err;
+> >  	}
+> >
+> > +	companion_dev =3D usb_of_get_companion_dev(hcd->self.controller);
+>=20
+> Maybe other EHCI controller has companion controller too, so it is ok
+> for you to let it as a common API.
 
-[1] http://www.ti.com/lit/er/sprz436b/sprz436b.pdf
+I got it.
+
+> > +	if (companion_dev)
+> > +		device_pm_wait_for_dev(hcd->self.controller, companion_dev);
+> > +
+> >  	ehci_resume(hcd, priv->reset_on_resume);
+> >  	return 0;
+> >  }
+>=20
+> You can send formal patch next time.
+
+Thank you for your review! I will send v2 patch set without RFC.
+
+Best regards,
+Yoshihiro Shimoda
+
+> --
+>=20
+> Best Regards,
+> Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
