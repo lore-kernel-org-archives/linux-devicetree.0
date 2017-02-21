@@ -1,134 +1,105 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Tue, 21 Feb 2017 18:43:35 +0200
-Message-ID: <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
-References: <20170220213803.7ba5591e@bbrezillon> <20170220215009.0ecbf5a1@bbrezillon>
- <CAHp75VczsC9WdZWR9iCRh2JoNLFZyOtodrsDRYQoyaN7nkyf=A@mail.gmail.com>
- <CAHp75Vc_q-bEzA2-hVpHyR0GZ8mXxwJ8-UjECe31T04mb67q4w@mail.gmail.com>
- <20170221090610.6d531b94@bbrezillon> <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
- <20170221112641.6276c001@bbrezillon> <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
- <20170221112720.ynehsryprhrhzjla@piout.net> <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
- <20170221162133.jch6yzpotj4s7zob@piout.net> <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Make EN2 pin optional in the TRF7970A driver
+Date: Tue, 21 Feb 2017 10:43:45 -0600
+Message-ID: <CAL_JsqKo_Y6i5otiEfQASqa4YRdqnr=+Got5XJp+ZfPCGZoxAg@mail.gmail.com>
+References: <1486444924-18444-1-git-send-email-hs@denx.de> <20170210155114.pvjahqqjqurw5jdc@rob-hp-laptop>
+ <58A15454.4030602@denx.de> <CAL_JsqKM4fEcfPekYkt-+TVNXE3nMF1AEfSHWW+3wAgdYDMXEg@mail.gmail.com>
+ <58AA7C5D.60801@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <58AA7C5D.60801-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian
+To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>, Mark Jonas <mark.jonas-V5te9oGctAVWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 6:32 PM, Andy Shevchenko
-<andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Feb 21, 2017 at 6:21 PM, Alexandre Belloni
-> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On 21/02/2017 at 18:09:09 +0200, Andy Shevchenko wrote:
->>> On Tue, Feb 21, 2017 at 1:27 PM, Alexandre Belloni
->>> <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>> > On 21/02/2017 at 13:02:21 +0200, Andy Shevchenko wrote:
->>> >> Abusing platform data with pointers is also not welcome.
+On Sun, Feb 19, 2017 at 11:19 PM, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
+> Hello all,
 >
->>> >> > (in this case, avr32).
->>> >>
->>> >> It's dead de facto.
->>> >>
->>> >> When last time did you compile kernel for it? What was the version of kernel?
->>> >> Did it get successfully?
->>> >>
->>> >
->>> > v4.10-rc3 was building successfully but had some issues in the network
->>> > code.
->>>
->>> Newer kernel doesn't link...
->>>
->>> >> When are we going to remove avr32 support from kernel completely?
->>>
->>> > Ask that to the avr32 maintainers. It still builds and is still booted
->>> > by some people. And that actually seems to be you as you reported a bug
->>> > we introduced in 4.3. I don't think we had any other report after that.
->>>
->>> https://patchwork.kernel.org/patch/9505727/
->>>
->>> After that I gave up on it. Next time I will escalate directly to
->>> Linus. It's a complete necrophilia. I spent already enough time to
->>> look at that code. It brings now more burden than supports someone
->>> somewhere.
->>>
+> Am 13.02.2017 um 22:31 schrieb Rob Herring:
 >>
->> As said, it builds fine without networking.
->
-> It sounds a bit sarcastic. Irony is that I *have* hardware here which
-> was dedicated as Network Gateway (ATNGW100). I'm accessing to it
-> remotely.
-> How useful it would be?
->
->> Maybe the first step is to
->> ask the avr32 maintainers. If you already did so,
->
-> I did it ~year or so before where another relocation bug was discovered (fixed).
->
->> please feel free to
->> send a patch to remove the whole architecture.
->> The benefits for atmel will be: proper big endian support, removal of
->> platform data from all the drivers, better clocksource handling.
->
-> That is good point, but if maintainers don't care, why anyone else should?
-> Neither do I.
->
->>> > It can be frustrating at times to handle that platform but if it is
->>> > working for someone, I don't see why we would remove it.
+>> On Mon, Feb 13, 2017 at 12:38 AM, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org> wrote:
 >>>
->>> How it's working if it's not linked?
+>>> Hello Rob,
 >>>
+>>>
+>>> Am 10.02.2017 um 16:51 schrieb Rob Herring:
+>>>>
+>>>>
+>>>> On Tue, Feb 07, 2017 at 06:22:04AM +0100, Heiko Schocher wrote:
+>>>>>
+>>>>>
+>>>>> From: Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>
+>>>>>
+>>>>> Make the EN2 pin optional. This is useful for boards,
+>>>>> which have this pin fix wired, for example to ground.
+>>>>>
+>>>>> Signed-off-by: Guan Ben <ben.guan-dUNdQdTMQaZWk0Htik3J/w@public.gmane.org>
+>>>>> Signed-off-by: Mark Jonas <mark.jonas-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+>>>>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>>>>>
+>>>>> ---
+>>>>>
+>>>>>    .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++--
+>>>>>    drivers/nfc/trf7970a.c                             | 26
+>>>>> ++++++++++++----------
+>>>>>    2 files changed, 16 insertions(+), 14 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>> b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>> index 32b35a0..5889a3d 100644
+>>>>> --- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>> +++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
+>>>>> @@ -5,8 +5,8 @@ Required properties:
+>>>>>    - spi-max-frequency: Maximum SPI frequency (<= 2000000).
+>>>>>    - interrupt-parent: phandle of parent interrupt handler.
+>>>>>    - interrupts: A single interrupt specifier.
+>>>>> -- ti,enable-gpios: Two GPIO entries used for 'EN' and 'EN2' pins on
+>>>>> the
+>>>>> -  TRF7970A.
+>>>>> +- ti,enable-gpios: One or two GPIO entries used for 'EN' and 'EN2'
+>>>>> pins
+>>>>> on the
+>>>>> +  TRF7970A. EN2 is optional.
+>>>>
+>>>>
+>>>>
+>>>> Could EN ever be optional/fixed? If so, perhaps deprecate this property
+>>>> and do 2 properties, one for each pin.
+>>>
+>>>
+>>>
+>>> The hardware I have has the EN2 pin fix connected to ground. Looking
+>>> into http://www.ti.com/lit/ds/slos743k/slos743k.pdf page 19 table 6-3
+>>> and 6-4 the EN2 pin is a don;t core if EN = 1. If EN = 0 EN2 pin
+>>> selects between Power Down and Sleep Mode ... I see no reason why
+>>> this is not possible/allowed ...
+>>>
+>>> Hmm.. I do not like the idea of deprecating the "ti,enable-gpios"
+>>> property into 2 seperate properties ... but if this would be a reason
+>>> for not accepting this patch, I can do this ... How should I name
+>>> the 2 new properties?
 >>
->> Come on, v4.10 has just been release and
-
-It doesn't build anymore. And current case even worse
-Face it. It's dead.
-
-  MODPOST vmlinux.o
-WARNING: vmlinux.o(.text+0x1f2bd4): Section mismatch in reference from
-the variable __param_ops_mtd to the functio
-n .init.text:ubi_mtd_param_parse()
-The function __param_ops_mtd() references
-the function __init ubi_mtd_param_parse().
-This is often because __param_ops_mtd lacks a __init
-annotation or the annotation of ubi_mtd_param_parse is wrong.
-
-crypto/built-in.o: warning: input is not relaxable
-virt/built-in.o: warning: input is not relaxable
-net/built-in.o: In function `rtnl_fill_ifinfo':
-net/socket.c:451: relocation truncated to fit: R_AVR32_11H_PCREL
-against `.text'+22768
-Makefile:969: recipe for target 'vmlinux' failed
-
-
-> v4.9 was building just fine. Do
->> you really expect everybody to closely follow linux-next or update
->> overnight?
+>>
+>> I guess if this ever happens, then we just add "ti,enable2-gpios" and
+>> ti,enable-gpios continues to point to EN. We don't need to deprecate
+>> anything (or maybe just deprecate having both GPIOs on single
+>> property).
+>>
+>> In that case,
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
-> What version do you use as compiler?
 >
-> Today's linux-next:
-> $ make O=~/prj/TMP/out/avr32 C=1 CF=-D__CHECK_ENDIAN__ -j64 CONFIG_DEBUG_INFO=
-> y CONFIG_DEBUG_SECTION_MISMATCH=y
+> gentle ping.
 >
->   CC      lib/sbitmap.o
-> {standard input}: Assembler messages:
-> {standard input}:378: Warning: Unary operator + ignored because bad
-> operand follows
-> {standard input}:378: Warning: missing operand; zero assumed
-> {standard input}:378: Internal error!
-> Assertion failure in finish_insn at .././gas/config/tc-avr32.c line 3498.
-> Please report this bug.
-> scripts/Makefile.build:294: recipe for target 'lib/sbitmap.o' failed
->
-> $ avr32-linux-gcc --version
-> avr32-linux-gcc (GCC) 4.2.2-atmel.1.0.8
+> Are there any more comments to this patch? Is it acceptable as it
+> is?
 
--- 
-With Best Regards,
-Andy Shevchenko
+I acked it, so yes, it is fine.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
