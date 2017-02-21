@@ -1,58 +1,98 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] fpga manager: Add Xilinx slave serial SPI driver
-Date: Tue, 21 Feb 2017 15:24:44 +0100
-Message-ID: <20170221152444.34b5d9f4@crub>
-References: <1487600724-17607-1-git-send-email-agust@denx.de>
-        <1487600724-17607-3-git-send-email-agust@denx.de>
-        <2d412ae7-4163-9943-6d98-2d6387df7789@xilinx.com>
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
+Date: Tue, 21 Feb 2017 14:30:16 +0000
+Message-ID: <3d0b775a-e1de-d957-de72-7751e2c59aea@synopsys.com>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+ <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
+ <20170221115746.GF16975@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2d412ae7-4163-9943-6d98-2d6387df7789-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170221115746.GF16975@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, vladimir_zapolskiy@mentor.com, CARLOS.PALMINHA@synopsys.com, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 21 Feb 2017 15:01:32 +0100
-Michal Simek michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org wrote:
-...
->> +static struct spi_driver xilinx_slave_spi_driver = {
->> +	.driver = {
->> +		.name = "xlnx-slave-spi",
->> +		.owner = THIS_MODULE,  
->
->This should be done by core and it is checked by testing system.
+Hi Sakari,
 
-Okay, will remove it.
+Thank you for your feedback.
 
-...
->> +MODULE_LICENSE("GPL");  
->
->Above you have GPL v2 and here v2 or later.
->
->include/linux/module.h
-> *      "GPL"                           [GNU Public License v2 or later]
-> *      "GPL v2"                        [GNU Public License v2]
->
->What's the license then?
+On 2/21/2017 11:57 AM, Sakari Ailus wrote:
+> Hi Ramiro,
+> 
+> On Fri, Feb 17, 2017 at 01:14:15PM +0000, Ramiro Oliveira wrote:
+>> Create device tree bindings documentation.
+>>
+>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>> new file mode 100644
+>> index 000000000000..31956426d3b9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+>> @@ -0,0 +1,35 @@
+>> +Omnivision OV5647 raw image sensor
+>> +---------------------------------
+>> +
+>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+>> +and CCI (I2C compatible) control bus.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible		: "ovti,ov5647".
+>> +- reg			: I2C slave address of the sensor.
+>> +- clocks		: Reference to the xclk clock.
+>> +- clock-names		: Should be "xclk".
+>> +- clock-frequency	: Frequency of the xclk clock.
+>> +
+>> +The common video interfaces bindings (see video-interfaces.txt) should be
+>> +used to specify link to the image data receiver. The OV5647 device
+>> +node should contain one 'port' child node with an 'endpoint' subnode.
+> 
+> The remote-endpoint property in endpoint nodes should be mandatory,
+> shouldn't it? Otherwise the sensor isn't connected to anything and hardly
+> useful as such. The list of optional endpoint properties is a long one and
+> it should be documented here which ones are recognised, either as optional
+> or mandatory.
+> 
 
-should be "GPL v2", I'll fix it next patch version.
+I guess you're right, it should be mandatory, although at the moment I'm not
+checking for it's presence in the driver so I'll add it to the driver.
 
-...
->> +MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SPI");
->>   
->
->What's the hw configuration?
+At the moment that's the only property I think it should be mandatory, and I
+don't believe I need any optional one.
 
-I used Spartan-6 for testing. But the driver might work with other
-Xilinx FPGAs, so I didn't add exact hw description.
+Do you have a suggestion for any new property I should use?
 
-Thanks for review and comments!
+>> +
+>> +Example:
+>> +
+>> +	i2c@2000 {
+>> +		...
+>> +		ov: camera@36 {
+>> +			compatible = "ovti,ov5647";
+>> +			reg = <0x36>;
+>> +			clocks = <&camera_clk>;
+>> +			clock-names = "xclk";
+>> +			clock-frequency = <25000000>;
+>> +			port {
+>> +				camera_1: endpoint {
+>> +					remote-endpoint = <&csi1_ep1>;
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+> 
 
-Anatolij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards
+
+Ramiro Oliveira
+Ramiro.Oliveira@synopsys.com
