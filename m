@@ -1,120 +1,99 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Tue, 21 Feb 2017 22:48:09 +0200
-Message-ID: <cc6c914e-c3e7-7703-0405-104e701610cf@mentor.com>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
- <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
- <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] ARM64: dts: meson-gx: add clock CLKID_RNG0 to
+ hwrng node
+Date: Tue, 21 Feb 2017 13:20:44 -0800
+Message-ID: <a80f9487-b385-b886-5a4c-e8f5da506b7f@baylibre.com>
+References: <daf765e2-1a60-8dea-fee0-8af6ddecdf8e@gmail.com>
+ <8bf052e3-de8f-dbdf-be76-369a7bb1ed15@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: CARLOS.PALMINHA@synopsys.com, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Steve Longerbeam <slongerbeam@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8bf052e3-de8f-dbdf-be76-369a7bb1ed15-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+On 02/21/2017 12:18 PM, Heiner Kallweit wrote:
+> Add clock CLKID_RNG0 to HW randon number generator node and
+> extend the DT binding documentation accordingly.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> v2:
+> - splitted first version of patch into two
+> - add DT binding documentation
 
-On 02/21/2017 10:13 PM, Ramiro Oliveira wrote:
-> Hi Vladimir,
-> 
-> Thank you for your feedback
-> 
-> On 2/21/2017 3:58 PM, Vladimir Zapolskiy wrote:
->> Hi Ramiro,
->>
->> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
->>> Create device tree bindings documentation.
->>>
->>> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>> ---
->>>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
->>>  1 file changed, 35 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>> new file mode 100644
->>> index 000000000000..31956426d3b9
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
->>> @@ -0,0 +1,35 @@
->>> +Omnivision OV5647 raw image sensor
->>> +---------------------------------
->>> +
->>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
->>> +and CCI (I2C compatible) control bus.
->>> +
->>> +Required properties:
->>> +
->>> +- compatible		: "ovti,ov5647".
->>> +- reg			: I2C slave address of the sensor.
->>> +- clocks		: Reference to the xclk clock.
->>
->> Is "xclk" clock a pixel clock or something else?
->>
-> 
-> It's an external oscillator.
+Hi Heiner,
 
-hmm, I suppose a clock of any type could serve as a clock for the sensor.
-It can be an external oscillator on a particular board, or it can be
-something else on another board.
+Can you move the dt-bindings to a separate patch ?
 
-Can you please describe what for does ov5647 sensor need this clock, what
-is its function?
+> - mention that clock is optional
+> - replace spaces with tabs in DT binding example
+> ---
+>  Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt | 8 ++++++--
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi                   | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi                 | 5 +++++
+>  3 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+> index 202f2d09..4c012a04 100644
+> --- a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+> +++ b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+> @@ -5,10 +5,14 @@ Required properties:
+>  
+>  - compatible : should be "amlogic,meson-rng"
+>  - reg : Specifies base physical address and size of the registers.
+> +- clocks : Optional core clock
+> +- clock-names: Name of core clock, must be "core"
 
-> 
->>> +- clock-names		: Should be "xclk".
->>
->> You can remove this property, because there is only one source clock.
->>
-> 
-> Ok.
-> 
->>> +- clock-frequency	: Frequency of the xclk clock.
->>
->> And after the last updates in the driver this property can be removed as well.
->>
-> 
-> But I'm still using clk_get_rate in the driver, if I remove the frequency here
-> the probing will fail.
+Please put these in a separate "Optional Properties" :
+
+Optional Properties:
+- clocks : phandle to the following named clocks
+- clock-names: Name of core clock, must be "core"
+
+>  
+>  Example:
+>  
+>  rng {
+> -        compatible = "amlogic,meson-rng";
+> -        reg = <0x0 0xc8834000 0x0 0x4>;
+> +	compatible = "amlogic,meson-rng";
+> +	reg = <0x0 0xc8834000 0x0 0x4>;
+> +	clocks = <&clkc CLKID_RNG0>;
+> +	clock-names = "core";
+>  };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> index 5d995f77..620495a4 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -380,7 +380,7 @@
+>  			#size-cells = <2>;
+>  			ranges = <0x0 0x0 0x0 0xc8834000 0x0 0x2000>;
+>  
+> -			rng {
+> +			hwrng: rng {
+>  				compatible = "amlogic,meson-rng";
+>  				reg = <0x0 0x0 0x0 0x4>;
+>  			};
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 04b3324b..a375cb21 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -524,3 +524,8 @@
+>  &vpu {
+>  	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
+>  };
+> +
+> +&hwrng {
+> +	clocks = <&clkc CLKID_RNG0>;
+> +	clock-names = "core";
+> +};
 > 
 
-I doubt it, there should be no connection between a custom "clock-frequency"
-device tree property in a clock consumer device node and clk_get_rate() function
-from the CCF, which takes a clock provider as its argument.
-
->>> +
->>> +The common video interfaces bindings (see video-interfaces.txt) should be
->>> +used to specify link to the image data receiver. The OV5647 device
->>> +node should contain one 'port' child node with an 'endpoint' subnode.
->>> +
->>> +Example:
->>> +
->>> +	i2c@2000 {
->>> +		...
->>> +		ov: camera@36 {
->>> +			compatible = "ovti,ov5647";
->>> +			reg = <0x36>;
->>> +			clocks = <&camera_clk>;
->>> +			clock-names = "xclk";
->>> +			clock-frequency = <25000000>;
->>
->> When you remove two unused properties, please don't forget to update the
->> example.
->>
-> 
-> Ok.
-> 
->>> +			port {
->>> +				camera_1: endpoint {
->>> +					remote-endpoint = <&csi1_ep1>;
->>> +				};
->>> +			};
->>> +		};
->>> +	};
->>>
->>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
