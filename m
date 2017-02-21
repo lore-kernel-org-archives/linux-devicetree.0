@@ -1,96 +1,76 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: da850-evm: add the UI expander node
-Date: Tue, 21 Feb 2017 10:33:10 +0530
-Message-ID: <2d708416-401a-d2df-5694-9896df47a673@ti.com>
-References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
- <1487268932-6469-5-git-send-email-bgolaszewski@baylibre.com>
- <5f194c6d-0937-bac2-31cd-2f1658f68d0d@ti.com>
- <CAMpxmJX3p03YiPL5X9=pKud4A7bXh9bV=qk7qAEAnA3OF3Hgbw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v3 1/4] arm: dts: imx6qdl-icore: Add backlight support for lvds
+Date: Tue, 21 Feb 2017 10:36:30 +0530
+Message-ID: <1487653593-3457-1-git-send-email-jagan@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJX3p03YiPL5X9=pKud4A7bXh9bV=qk7qAEAnA3OF3Hgbw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Domenico Acri <domenico.acri@engicam.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 20 February 2017 09:08 PM, Bartosz Golaszewski wrote:
-> 2017-02-20 10:36 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
->> On Thursday 16 February 2017 11:45 PM, Bartosz Golaszewski wrote:
->>> If we're using the UI board and want vpif capture, we need to select
->>> the video capture functionality by driving the sel_c pin low on the
->>> tca6416 expander and sel_a & sel_b pins high. Do it statically by
->>> hogging relevant GPIOs in the device tree.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> ---
-> 
-> [snip]
-> 
->>>
->>> +                             sel_a {
->>> +                                     gpio-hog;
->>> +                                     gpios = <7 GPIO_ACTIVE_HIGH>;
->>> +                                     output-high;
->>> +                                     line-name = "sel_a";
->>> +                             };
->>> +
->>> +                             sel_b {
->>> +                                     gpio-hog;
->>> +                                     gpios = <6 GPIO_ACTIVE_HIGH>;
->>> +                                     output-high;
->>> +                                     line-name = "sel_b";
->>> +                             };
->>> +
->>> +                             sel_c {
->>> +                                     gpio-hog;
->>> +                                     gpios = <5 GPIO_ACTIVE_HIGH>;
->>> +                                     output-low;
->>> +                                     line-name = "sel_c";
->>
->> I think this is better handled by using an enable-gpios property in vpif
->> capture device-tree node. So in the vpif capture node you would have:
->>
->>         enable-gpios =  <&tca6416 7 GPIO_ACTIVE_HIGH
->>                          &tca6416 6 GPIO_ACTIVE_HIGH
->>                          &tca6416 5 GPIO_ACTIVE_LOW>;
->>
->> and in the vpif capture driver, you would request each of these gpios
->> using: devm_gpiod_get_array_optional(.., .., GPIOD_OUT_HIGH);
->>
-> 
-> I'm not sure about this one - the result is the same (function still
-> defined statically in the DT) while now it requires changes to the
-> vpif driver too.
-> 
-> Is there any other reason we'd prefer this approach?
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-The GPIO hog functionality can race with driver probe. Based on probe
-order, you may have a situation where VPIF probes before tca6416 so we
-have an erroneous situation where probe is successful, but hardware is
-not really available.
+This patch add support for lvds backlight on i.CoreM6 QDL
+variant boards.
 
-Using enable-gpios lets you handle probe deferral so VPIF capture probe
-completes only when hardware is ready. So if for some reason tca6416
-driver or hardware is misbehaving, VPIF will know about it through some
-error value rather than just assuming that everything went well.
+Cc: Domenico Acri <domenico.acri@engicam.com>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v3:
+- none
+Changes for v2:
+- none
 
-So, yes, in the "all goes well" scenario, there is not much difference
-in the two approaches. But the difference will be apparent when
-something goes wrong.
+ arch/arm/boot/dts/imx6qdl-icore.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Probe order will also influence the shutdown and suspend order. So
-kernel will automatically make sure that shutdown happens in reverse
-probe order. This may or may not matter in this case. But in  general,
-it will be nice to make sure VPIF shuts down before tca6416 does so that
-hardware is available for VPIF to cleanly shutdown (and not disconnected
-behind its back because tca6416 decided to put all its lines to off as
-part of its shutdown).
-
-I think GPIO hog should only be used for pins which are really "system
-level". IOW, not related to any driver functionality.
-
-Thanks,
-Sekhar
+diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+index 55bebfc..7dda608 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
+@@ -48,6 +48,14 @@
+ 		reg = <0x10000000 0x80000000>;
+ 	};
+ 
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm3 0 100000>;
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <7>;
++		status = "okay";
++	};
++
+ 	reg_3p3v: regulator-3p3v {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "3P3V";
+@@ -136,6 +144,12 @@
+ 	status = "okay";
+ };
+ 
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>;
++	status = "okay";
++};
++
+ &uart4 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart4>;
+@@ -246,6 +260,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_pwm3: pwm3grp-1 {
++		fsl,pins = <
++			MX6QDL_PAD_SD4_DAT1__PWM3_OUT 0x1b0b1
++		>;
++	};
++
+ 	pinctrl_usbotg: usbotggrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
+-- 
+1.9.1
