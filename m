@@ -1,292 +1,108 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Tue, 21 Feb 2017 17:38:34 +0200
-Message-ID: <20170221153834.GL16975@valkosipuli.retiisi.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
- <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
- <20170221001332.GS21222@n2100.armlinux.org.uk>
- <20170221123756.GI16975@valkosipuli.retiisi.org.uk>
- <20170221132132.GU21222@n2100.armlinux.org.uk>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
+Date: Tue, 21 Feb 2017 16:37:23 +0100
+Message-ID: <9a264b18-a192-8640-846c-d471712e9236@i2se.com>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+ <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+ <48907a31-eaa6-27e2-633f-d36de521e868@tronnes.org>
+ <1983281189.110224.1487619653742@email.1und1.de>
+ <5b14ed6d-4db8-abf7-ceba-ef46534b6023@tronnes.org>
+ <1487689632.14564.1.camel@crowfest.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170221132132.GU21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1487689632.14564.1.camel@crowfest.net>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Michael Zoran <mzoran@crowfest.net>, =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, Peter Robinson <pbrobinson@gmail.com>, Eric Anholt <eric@anholt.net>
+Cc: Will Deacon <will.deacon@arm.com>, Frank Rowand <frowand.list@gmail.com>, Martin Sperl <kernel@martin.sperl.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
 
-On Tue, Feb 21, 2017 at 01:21:32PM +0000, Russell King - ARM Linux wrote:
-> On Tue, Feb 21, 2017 at 02:37:57PM +0200, Sakari Ailus wrote:
-> > Hi Russell,
-> > 
-> > On Tue, Feb 21, 2017 at 12:13:32AM +0000, Russell King - ARM Linux wrote:
-> > > On Tue, Feb 21, 2017 at 12:04:10AM +0200, Sakari Ailus wrote:
-> > > > On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
-> > > > > From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> > > > > 
-> > > > > Setting and getting frame rates is part of the negotiation mechanism
-> > > > > between subdevs.  The lack of support means that a frame rate at the
-> > > > > sensor can't be negotiated through the subdev path.
-> > > > 
-> > > > Just wondering --- what do you need this for?
-> > > 
-> > > The v4l2 documentation contradicts the media-ctl implementation.
-> > > 
-> > > While v4l2 documentation says:
-> > > 
-> > >   These ioctls are used to get and set the frame interval at specific
-> > >   subdev pads in the image pipeline. The frame interval only makes sense
-> > >   for sub-devices that can control the frame period on their own. This
-> > >   includes, for instance, image sensors and TV tuners. Sub-devices that
-> > >   don't support frame intervals must not implement these ioctls.
-> > > 
-> > > However, when trying to configure the pipeline using media-ctl, eg:
-> > > 
-> > > media-ctl -d /dev/media1 --set-v4l2 '"imx219 pixel 0-0010":0[crop:(0,0)/3264x2464]'
-> > > media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":1[fmt:SRGGB10/3264x2464@1/30]'
-> > > media-ctl -d /dev/media1 --set-v4l2 '"imx219 0-0010":0[fmt:SRGGB8/816x616@1/30]'
-> > > media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616@1/30]'
-> > > Unable to setup formats: Inappropriate ioctl for device (25)
-> > > media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0_mux":2[fmt:SRGGB8/816x616@1/30]'
-> > > media-ctl -d /dev/media1 --set-v4l2 '"ipu1_csi0":2[fmt:SRGGB8/816x616@1/30]'
-> > > 
-> > > The problem there is that the format setting for the csi2 does not get
-> > > propagated forward:
-> > 
-> > The CSI-2 receivers typically do not implement frame interval IOCTLs as they
-> > do not control the frame interval. Some sensors or TV tuners typically do,
-> > so they implement these IOCTLs.
-> 
-> No, TV tuners do not.  The frame rate for a TV tuner is set by the
-> broadcaster, not by the tuner.  The tuner can't change that frame rate.
-> The tuner may opt to "skip" fields or frames.  That's no different from
-> what the CSI block in my example below is capable of doing.
-> 
-> Treating a tuner differently from the CSI block is inconsistent and
-> completely wrong.
+Am 21.02.2017 um 16:07 schrieb Michael Zoran:
+> On Mon, 2017-02-20 at 22:22 +0100, Noralf Trønnes wrote:
+>> Den 20.02.2017 20.40, skrev Stefan Wahren:
+>>> Hi,
+>>>
+>>>> Noralf Trønnes <noralf@tronnes.org> hat am 18. Februar 2017 um
+>>>> 19:34 geschrieben:
+>>>>
+>>>>
+>>>>
+>>>> Den 16.02.2017 22.20, skrev Stefan Wahren:
+>>>>> Since commit e2474541032d ("bcm2835: Fix hang for writing
+>>>>> messages
+>>>>> larger than 16 bytes") the interrupt handler is prone to a
+>>>>> possible
+>>>>> NULL pointer dereference. This could happen if an interrupt
+>>>>> fires
+>>>>> before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly
+>>>>> occurs
+>>>>> on the RPi 3. Even this is an unexpected behavior the driver
+>>>>> must
+>>>>> handle that with an error instead of a crash.
+>>>>>
+>>>>> CC: Noralf Trønnes <noralf@tronnes.org>
+>>>>> CC: Martin Sperl <kernel@martin.sperl.org>
+>>>>> Reported-by: Peter Robinson <pbrobinson@gmail.com>
+>>>>> Fixes: e2474541032d ("bcm2835: Fix hang for writing messages
+>>>>> larger than 16 bytes")
+>>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>>>> ---
+>>>>>     drivers/i2c/busses/i2c-bcm2835.c |    4 +++-
+>>>>>     1 file changed, 3 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/i2c/busses/i2c-bcm2835.c
+>>>>> b/drivers/i2c/busses/i2c-bcm2835.c
+>>>>> index c3436f6..10e39c8 100644
+>>>>> --- a/drivers/i2c/busses/i2c-bcm2835.c
+>>>>> +++ b/drivers/i2c/busses/i2c-bcm2835.c
+>>>>> @@ -195,7 +195,9 @@ static irqreturn_t bcm2835_i2c_isr(int
+>>>>> this_irq, void *data)
+>>>>>     	}
+>>>>>     
+>>>>>     	if (val & BCM2835_I2C_S_DONE) {
+>>>>> -		if (i2c_dev->curr_msg->flags & I2C_M_RD) {
+>>>>> +		if (!i2c_dev->curr_msg) {
+>>>>> +			dev_err(i2c_dev->dev, "Got unexpected
+>>>>> interrupt (from firmware?)\n");
+>>>>> +		} else if (i2c_dev->curr_msg->flags &
+>>>>> I2C_M_RD) {
+>>>>>     			bcm2835_drain_rxfifo(i2c_dev);
+>>>>>     			val = bcm2835_i2c_readl(i2c_dev,
+>>>>> BCM2835_I2C_S);
+>>>>>     		}
+>>>> Thanks,
+>>>>
+>>>> Acked-by: Noralf Trønnes <noralf@tronnes.org>
+>>>>
+>>> thanks, but i would be more happier to receive feedback for patches
+>>> 2 and 3.
+>> I have only worked on dts files downstream and never done any arm64
+>> stuff, so I'm not up to speed on this.
+>>
+>> Noralf.
+>>
+> Just a note, the original downstream driver returns IRQ_NONE in this
+> case.  Does that make any difference?
 
-I agree tuners in that sense are somewhat similar, and they are not treated
-differently because they are tuners (and not CSI-2 receivers). Neither can
-control the frame rate of the incoming video stream.
+Yes, i decided to handle the IRQ in order to avoid a possible interrupt 
+storm. Please look at the github discussion [1] for more details.
 
-Conceivably a tuner could implement G_FRAME_INTERVAL IOCTL, but based on a
-quick glance none appears to. Neither do CSI-2 receivers. Only sensor
-drivers do currently.
+>
+> Also, the the original driver has the check at the start of the IRQ and
+> it doesn't log an error message.
+>
+> I'm wondering if logging at err level is the best since it might make
+> people think a serious error has happened.
 
-> 
-> > There are alternative ways to specify the frame rate.
-> 
-> Empty statements (or hand-waving type statements) I'm afraid don't
-> contribute to the discussion, because they mean nothing to me.  Please
-> give an example, or flesh out what you mean.
+It is a serious error and should be fixed by patch 2, 3 and a possible 
+patch 4 later to disable i2c0.
+But before i disable i2c0 we need the test results of patch 2 and 3. The 
+reason why i don't disable i2c at first is that Gerd [2] reported that 
+disabling the PWM fixed the i2c timeout issue, which doesn't fit to 
+Martins theory.
 
-Images are transmitted as series of lines, with each line ending in a
-horizontal blanking period, and each frame ending with a similar period of
-vertical blanking. The blanking configuration in the units of pixels and
-lines at their pixel clock is a native unit which sensors typically use, and
-some drivers expose the blanking controls directly to the user.
-
-<URL:http://hverkuil.home.xs4all.nl/spec/uapi/v4l/extended-controls.html#image-source-control-ids>
-
-> 
-> > > $ strace media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616@1/30]'
-> > > ...
-> > > open("/dev/v4l-subdev16", O_RDWR)       = 3
-> > > ioctl(3, VIDIOC_SUBDEV_S_FMT, 0xbec16244) = 0
-> > > ioctl(3, VIDIOC_SUBDEV_S_FRAME_INTERVAL, 0xbec162a4) = -1 ENOTTY (Inappropriate
-> > > ioctl for device)
-> > > fstat64(1, {st_mode=S_IFCHR|0600, st_rdev=makedev(136, 2), ...}) = 0
-> > > write(1, "Unable to setup formats: Inappro"..., 61) = 61
-> > > Unable to setup formats: Inappropriate ioctl for device (25)
-> > > close(3)                                = 0
-> > > exit_group(1)                           = ?
-> > > +++ exited with 1 +++
-> > > 
-> > > because media-ctl exits as soon as it encouters the error while trying
-> > > to set the frame rate.
-> > > 
-> > > This makes implementing setup of the media pipeline in shell scripts
-> > > unnecessarily difficult - as you need to then know whether an entity
-> > > is likely not to support the VIDIOC_SUBDEV_S_FRAME_INTERVAL call,
-> > > and either avoid specifying a frame rate:
-> > 
-> > You should remove the frame interval setting from sub-devices that do not
-> > support it.
-> 
-> That means we end up with horribly complex scripts.  This "solution" does
-> not scale.  Therefore, it is not a "solution".
-
-I have to disagree with that: if a piece of hardware does not offer to
-control or, if a concept is not even relevant for a piece of hardware, then
-a driver for that piece of hardware should not expose an interface to
-control such a feature. Doing so would provide no value and at the same time
-would be simply confusing for the user space.
-
-> 
-> It's fine if you want to write a script to setup the media pipeline using
-> media-ctl, listing _each_ media-ctl command individually, with arguments
-> specific to each step, but as I've already said, that does not scale.
-
-Pipeline configuration as such is highly hardware specific. There are rules,
-but there are details in hardware that have to be taken into account, such
-as mandated cropping in certain situations. You have to simply accept that:
-when it comes to camera Image Signal Processors, there are no standard
-pipelines. Each ISP is different from the rest, more or less, and often more
-so.
-
-As the interface is generic, you can write generic programs that use that
-interface, but you need to be able to adapt to the differences in the
-functionality of the hardware.
-
-Frankly, I think this is just needless noise stemming from a problem that's
-not really difficult to solve --- if that technical problem really even
-exists. But let's not debate that; I accept that dropping frames is what
-you're willing to do.
-
-> 
-> I don't want to end up writing separate scripts to configure the pipeline
-> for different parameters or setups.  I don't want to teach users how to
-> do that either.
-> 
-> How are users supposed to cope with this craziness?  Are they expected to
-> write their own scripts and understand this stuff?
-> 
-> As far as I can see, there are no applications out there at the moment that
-> come close to understanding how to configure a media pipeline, so users
-> have to understand how to use media-ctl to configure the pipeline manually.
-> Are we really expecting users to write scripts to do this, and understand
-> all these nuances?
-> 
-> IMHO, this is completely crazy, and hasn't been fully thought out.
-> 
-> > > $ strace media-ctl -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SRGGB8/816x616]'
-> > > ...
-> > > open("/dev/v4l-subdev16", O_RDWR)       = 3
-> > > ioctl(3, VIDIOC_SUBDEV_S_FMT, 0xbeb1a254) = 0
-> > > open("/dev/v4l-subdev0", O_RDWR)        = 4
-> > > ioctl(4, VIDIOC_SUBDEV_S_FMT, 0xbeb1a254) = 0
-> > > close(4)                                = 0
-> > > close(3)                                = 0
-> > > exit_group(0)                           = ?
-> > > +++ exited with 0 +++
-> > > 
-> > > or manually setting the format on the sink.
-> > > 
-> > > Allowing the S_FRAME_INTERVAL call seems to me to be more in keeping
-> > > with the negotiation mechanism that is implemented in subdevs, and
-> > > IMHO should be implemented inside the kernel as a pad operation along
-> > > with the format negotiation, especially so as frame skipping is
-> > > defined as scaling, in just the same way as the frame size is also
-> > > scaling:
-> > 
-> > The origins of the S_FRAME_INTERVAL IOCTL for sub-devices are the S_PARM
-> > IOCTL for video nodes. It is used to control the frame rate for more simple
-> > devices that do not expose the Media controller interface. The similar
-> > S_FRAME_INTERVAL was added for sub-devices as well, and it has been so far
-> > used to control the frame interval for sensors (and G_FRAME_INTERVAL to
-> > obtain the frame interval for TV tuners, for instance).
-> > 
-> > The pad argument was added there but media-ctl only supported setting the
-> > frame interval on pad 0, which, coincidentally, worked well for sensor
-> > devices.
-> > 
-> > The link validation is primarily done in order to ensure the validity of the
-> > hardware configuration: streaming may not be started if the hardware
-> > configuration is not valid.
-> > 
-> > Also, frame interval is not a static property during streaming: it may be
-> > changed without the knowledge of the other sub-device drivers downstream. It
-> > neither is a property of hardware receiving or processing images: if there
-> > are limitations in processing pixels, then they in practice are related to
-> > pixel rates or image sizes (i.e. not frame rates).
-> 
-> So what about the case where we have a subdev (CSI) that is capable of
-> frame rate reduction, that needs to know the input frame rate and the
-> desired output frame rate?  It seems to me that this has not been
-> thought through...
-
-That's because I believe you're the first one wanting to willfully throw
-away perfectly good frames. :-)
-
-If you want to do that, a simple option could be to just support
-[GS]_FRAME_INTERVAL on all pads of a sub-device that can drop frames. But it
-should not be include in pipeline validation, it simply does not belong
-there for the reasons stated previously.
-
-The user would be responsible for configuring the frame rates right. That
-information would simply be used to configure frame dropping frequency.
-
-I'd like to have a comment from Laurent and Hans on this.
-
-> 
-> > >        -  ``MEDIA_ENT_F_PROC_VIDEO_SCALER``
-> > > 
-> > >        -  Video scaler. An entity capable of video scaling must have
-> > >           at least one sink pad and one source pad, and scale the
-> > >           video frame(s) received on its sink pad(s) to a different
-> > >           resolution output on its source pad(s). The range of
-> > >           supported scaling ratios is entity-specific and can differ
-> > >           between the horizontal and vertical directions (in particular
-> > >           scaling can be supported in one direction only). Binning and
-> > >           skipping are considered as scaling.
-> > > 
-> > > Although, this is vague, as it doesn't define what it means by "skipping",
-> > > whether that's skipping pixels (iow, sub-sampling) or whether that's
-> > > frame skipping.
-> > 
-> > Skipping in the context is used to refer to sub-sampling. The term is often
-> > used in conjunction of sensors. The documentation could certainly be
-> > clarified here.
-> 
-> It definitely needs to be, it's currently mis-leading.
-
-If you're not familiar with terminology typically used with many camera
-sensor, perhaps so. The documentation should indeed not assume that; I'll
-submit a patch to fix that.
-
-> 
-> > > Then there's the issue where, if you have this setup:
-> > > 
-> > >  camera --> csi2 receiver --> csi --> capture
-> > > 
-> > > and the "csi" subdev can skip frames, you need to know (a) at the CSI
-> > > sink pad what the frame rate is of the source (b) what the desired
-> > > source pad frame rate is, so you can configure the frame skipping.
-> > > So, does the csi subdev have to walk back through the media graph
-> > > looking for the frame rate?  Does the capture device have to walk back
-> > > through the media graph looking for some subdev to tell it what the
-> > > frame rate is - the capture device certainly can't go straight to the
-> > > sensor to get an answer to that question, because that bypasses the
-> > > effect of the CSI frame skipping (which will lower the frame rate.)
-> > > 
-> > > IMHO, frame rate is just another format property, just like the
-> > > resolution and data format itself, and v4l2 should be treating it no
-> > > differently.
-> > > 
-> > > In any case, the documentation vs media-ctl create something of a very
-> > > obscure situation, one that probably needs solving one way or another.
-> > 
-> > Before going to solutions I need to ask: what do you want to achieve?
-> 
-> Full and consistent support for the hardware, and a sane and consistent
-> way to setup a media pipeline that is easy for everyone to understand.
-
-That's essentially what we do have: the same interface is supported on a
-large variety of different hardware devices. However, not all IOCTLs are
-supported by all device drivers.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] - https://github.com/anholt/linux/issues/89
+[2] - 
+http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-June/003969.html
