@@ -1,40 +1,36 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/4] ARM: dts: da850: add vpif video display pins
-Date: Tue, 21 Feb 2017 10:19:12 +0530
-Message-ID: <e6988d47-00e1-e4b6-e343-1f358faa5556@ti.com>
-References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
- <1487268932-6469-3-git-send-email-bgolaszewski@baylibre.com>
- <318d9f87-ad2a-c0e1-255a-097056c0f85f@ti.com>
- <CAMpxmJXjRYG5tteGNbG3gxAqeoB9Qx9bND6PHJih7dyU+ZuD4w@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 14/18] mfd: axp20x: add MFD cells for AXP20X and AXP22X
+ battery driver
+Date: Tue, 21 Feb 2017 12:46:55 +0800
+Message-ID: <CAGb2v64e_nJQaZ14W3W-4DsTpytjaLgq8RUD+5RVQ6LTYxgx_g@mail.gmail.com>
+References: <20170214094112.27426-1-quentin.schulz@free-electrons.com>
+ <20170214094112.27426-15-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJXjRYG5tteGNbG3gxAqeoB9Qx9bND6PHJih7dyU+ZuD4w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170214094112.27426-15-quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 20 February 2017 09:12 PM, Bartosz Golaszewski wrote:
-> 2017-02-20 11:29 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
->> On Thursday 16 February 2017 11:45 PM, Bartosz Golaszewski wrote:
->>> Add a new pinctrl sub-node for vpif display pins. Move VP_CLKIN3 and
->>> VP_CLKIN2 to the display node where they actually belong (vide section
->>> 35.2.2 of the da850 datasheet).
->>
->> You mean 36.2.2. Also, its in the technical reference manual (TRM). The
->> datahseet is another document.
->>
-> 
-> I'm looking at the revision from September 2016 and it's 35.2.2: VPIF
-> -> Architecture -> signal descriptions.
+On Tue, Feb 14, 2017 at 5:41 PM, Quentin Schulz
+<quentin.schulz@free-electrons.com> wrote:
+> The X-Powers AXP20X and AXP22X PMICs can have a battery as power supply.
+>
+> This patch adds the AXP20X/AXP22X battery driver to the MFD cells of the
+> AXP209, AXP221 and AXP223 MFD.
+>
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Is this the document ?
-
-http://www.ti.com/lit/ug/spruh77c/spruh77c.pdf
-
-In this VPIF is chapter 36.
-
-Thanks,
-Sekhar
+Acked-by: Chen-Yu Tsai <wens@csie.org>
