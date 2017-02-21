@@ -1,85 +1,49 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Tue, 21 Feb 2017 14:15:42 +0200
-Message-ID: <20170221121542.GH16975@valkosipuli.retiisi.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
- <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
- <6892fb15-2d18-4898-c328-3acff9d6cc39@gmail.com>
+From: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/1] thermal: mt8173: minor mtk_thermal.c cleanups
+Date: Tue, 21 Feb 2017 20:26:52 +0800
+Message-ID: <1487680012-61948-2-git-send-email-dawei.chien@mediatek.com>
+References: <1487680012-61948-1-git-send-email-dawei.chien@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6892fb15-2d18-4898-c328-3acff9d6cc39-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1487680012-61948-1-git-send-email-dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-me
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fan Chen <fan.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Stable <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+If thermal bank with 4 sensors, thermal driver should read TEMP_MSR3.
 
-On Mon, Feb 20, 2017 at 02:56:15PM -0800, Steve Longerbeam wrote:
-> 
-> 
-> On 02/20/2017 02:04 PM, Sakari Ailus wrote:
-> >Hi Steve,
-> >
-> >On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
-> >>From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> >>
-> >>Setting and getting frame rates is part of the negotiation mechanism
-> >>between subdevs.  The lack of support means that a frame rate at the
-> >>sensor can't be negotiated through the subdev path.
-> >
-> >Just wondering --- what do you need this for?
-> 
-> 
-> Hi Sakari,
-> 
-> i.MX does need the ability to negotiate the frame rates in the
-> pipelines. The CSI has the ability to skip frames at the output,
-> which is something Philipp added to the CSI subdev. That affects
-> frame interval at the CSI output.
-> 
-> But as Russell pointed out, the lack of [gs]_frame_interval op
-> causes media-ctl to fail:
-> 
-> media-ctl -v -d /dev/media1 --set-v4l2
-> '"imx6-mipi-csi2":1[fmt:SGBRG8/512x512@1/30]'
-> 
-> Opening media device /dev/media1
-> Enumerating entities
-> Found 29 entities
-> Enumerating pads and links
-> Setting up format SGBRG8 512x512 on pad imx6-mipi-csi2/1
-> Format set: SGBRG8 512x512
-> Setting up frame interval 1/30 on entity imx6-mipi-csi2
-> Unable to set frame interval: Inappropriate ioctl for device (-25)Unable to
-> setup formats: Inappropriate ioctl for device (25)
-> 
-> 
-> So i.MX needs to implement this op in every subdev in the
-> pipeline, otherwise it's not possible to configure the
-> pipeline with media-ctl.
+However, currently thermal driver would not read TEMP_MSR3 since mt8173
+thermal driver only use 3 sensors on each thermal bank at the same time,
+so this patch would not effect temperature.
+Only if mt mt8173 thermal driver use 4 sensors on any thermal bank, would
+read third sensor two times, and lose fourth sensor of vale.
 
-The frame rate is only set on the sub-device which you explicitly set it.
-I.e. setting the frame rate fails if it's not supported on a pad.
+cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Fixes: b7cf0053738c ("thermal: Add Mediatek thermal driver for mt2701.")
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/thermal/mtk_thermal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Philipp recently posted patches that add frame rate propagation to
-media-ctl.
-
-Frame rate is typically settable (and gettable) only on sensor sub-device's
-source pad, which means it normally would not be propagated by the kernel
-but with Philipp's patches, on the sink pad of the bus receiver. Receivers
-don't have a way to control it nor they implement the IOCTLs, so that would
-indeed result in an error.
-
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index 34169c3..c124151 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -191,7 +191,7 @@ struct mtk_thermal {
+ };
+ 
+ const int mt8173_msr[MT8173_NUM_SENSORS_PER_ZONE] = {
+-	TEMP_MSR0, TEMP_MSR1, TEMP_MSR2, TEMP_MSR2
++	TEMP_MSR0, TEMP_MSR1, TEMP_MSR2, TEMP_MSR3
+ };
+ 
+ const int mt8173_adcpnp[MT8173_NUM_SENSORS_PER_ZONE] = {
 -- 
-Kind regards,
+1.9.1
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
