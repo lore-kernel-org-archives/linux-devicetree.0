@@ -1,161 +1,495 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] mtd: nand: atmel: Document the new DT bindings
-Date: Tue, 21 Feb 2017 14:11:31 +0100
-Message-ID: <09a60016-5256-2ef2-c786-278c47d8c559@atmel.com>
-References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
- <1487593718-20752-3-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487593718-20752-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Vlad Zakharov <Vladislav.Zakharov@synopsys.com>
+Subject: [PATCH v2] clk/axs10x: introduce AXS10X pll driver
+Date: Tue, 21 Feb 2017 16:11:10 +0300
+Message-ID: <1487682670-4164-1-git-send-email-vzakhar@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-clk@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, Vlad Zakharov <Vladislav.Zakharov@synopsys.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 20/02/2017 à 13:28, Boris Brezillon a écrit :
-> The old NAND bindings were not exactly describing the hardware topology
-> and were preventing definitions of several NAND chips under the same
-> NAND controller.
-> 
-> New bindings address these limitations and should be preferred over the
-> old ones for new SoCs/boards.
-> Old bindings are still supported for backward compatibility but are
-> marked deprecated in the doc.
-> 
-> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+AXS10X boards manages it's clocks using various PLLs. These PLL has same
+dividers and corresponding control registers mapped to different addresses.
+So we add one common driver for such PLLs.
 
+Each PLL on AXS10X board consist of three dividers: IDIV, FBDIV and
+ODIV. Output clock value is managed using these dividers.
 
-I think I already added it but here is my:
-Reviewed-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+We add pre-defined tables with supported rate values and appropriate
+configurations of IDIV, FBDIV and ODIV for each value.
 
+As of today we add support for PLLs that generate clock for the
+following devices:
+ * ARC core on AXC CPU tiles.
+ * ARC PGU on ARC SDP Mainboard.
+and more to come later.
 
-> ---
->  .../devicetree/bindings/mtd/atmel-nand.txt         | 107 ++++++++++++++++++++-
->  1 file changed, 106 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> index 3e7ee99d3949..f6bee57e453a 100644
-> --- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
-> @@ -1,4 +1,109 @@
-> -Atmel NAND flash
-> +Atmel NAND flash controller bindings
-> +
-> +The NAND flash controller node should be defined under the EBI bus (see
-> +Documentation/devicetree/bindings/memory-controllers/atmel,ebi.txt).
-> +One or several NAND devices can be defined under this NAND controller.
-> +The NAND controller might be connected to an ECC engine.
-> +
-> +* NAND controller bindings:
-> +
-> +Required properties:
-> +- compatible: should be one of the following
-> +	"atmel,at91rm9200-nand-controller"
-> +	"atmel,at91sam9260-nand-controller"
-> +	"atmel,at91sam9261-nand-controller"
-> +	"atmel,at91sam9g45-nand-controller"
-> +	"atmel,sama5d3-nand-controller"
-> +- ranges: empty ranges property to forward EBI ranges definitions.
-> +- #address-cells: should be set to 2.
-> +- #size-cells: should be set to 1.
-> +- atmel,nfc-io: phandle to the NFC IO block. Only required for sama5d3
-> +		controllers.
-> +- atmel,nfc-sram: phandle to the NFC SRAM block. Only required for sama5d3
-> +		  controllers.
-> +
-> +Optional properties:
-> +- ecc-engine: phandle to the PMECC block. Only meaningful if the SoC embeds
-> +	      a PMECC engine.
-> +
-> +* NAND device/chip bindings:
-> +
-> +Required properties:
-> +- reg: describes the CS lines assigned to the NAND device. If the NAND device
-> +       exposes multiple CS lines (multi-dies chips), your reg property will
-> +       contain X tuples of 3 entries.
-> +       1st entry: the CS line this NAND chip is connected to
-> +       2nd entry: the base offset of the memory region assigned to this
-> +		  device (always 0)
-> +       3rd entry: the memory region size (always 0x800000)
-> +
-> +Optional properties:
-> +- rb-gpios: the GPIO(s) used to check the Ready/Busy status of the NAND.
-> +- cs-gpios: the GPIO(s) used to control the CS line.
-> +- det-gpios: the GPIO used to detect if a Smartmedia Card is present.
-> +- atmel,rb: an integer identifying the native Ready/Busy pin. Only meaningful
-> +	    on sama5 SoCs.
-> +
-> +All generic properties described in
-> +Documentation/devicetree/bindings/mtd/{common,nand}.txt also apply to the NAND
-> +device node, and NAND partitions should be defined under the NAND node as
-> +described in Documentation/devicetree/bindings/mtd/partition.txt.
-> +
-> +* ECC engine (PMECC) bindings:
-> +
-> +Required properties:
-> +- compatible: should be one of the following
-> +	"atmel,at91sam9g45-pmecc"
-> +	"atmel,sama5d4-pmecc"
-> +	"atmel,sama5d2-pmecc"
-> +- reg: should contain 2 register ranges. The first one is pointing to the PMECC
-> +       block, and the second one to the PMECC_ERRLOC block.
-> +
-> +Example:
-> +
-> +	pmecc: ecc-engine@ffffc070 {
-> +		compatible = "atmel,at91sam9g45-pmecc";
-> +                reg = <0xffffc070 0x490>,
-> +                      <0xffffc500 0x100>;
-> +	};
-> +
-> +	ebi: ebi@10000000 {
-> +		compatible = "atmel,sama5d3-ebi";
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		atmel,smc = <&hsmc>;
-> +		reg = <0x10000000 0x10000000
-> +		       0x40000000 0x30000000>;
-> +		ranges = <0x0 0x0 0x10000000 0x10000000
-> +			  0x1 0x0 0x40000000 0x10000000
-> +			  0x2 0x0 0x50000000 0x10000000
-> +			  0x3 0x0 0x60000000 0x10000000>;
-> +		clocks = <&mck>;
-> +
-> +                nand_controller: nand-controller {
-> +			compatible = "atmel,sama5d3-nand-controller";
-> +			atmel,nfc-sram = <&nfc_sram>;
-> +			atmel,nfc-io = <&nfc_io>;
-> +			ecc-engine = <&pmecc>;
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +
-> +			nand@3 {
-> +				reg = <0x3 0x0 0x800000>;
-> +				atmel,rb = <0>;
-> +
-> +				/*
-> +				 * Put generic NAND/MTD properties and
-> +				 * subnodes here.
-> +				 */
-> +			};
-> +		};
-> +	};
-> +
-> +-----------------------------------------------------------------------
-> +
-> +Deprecated bindings (should not be used in new device trees):
->  
->  Required properties:
->  - compatible: The possible values are:
-> 
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Vlad Zakharov <vzakhar@synopsys.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+---
+Cc: Rob Herring <robh@kernel.org>
+Changes v1..v2
+ - Replace '_' with '-' in device tree nodes
 
+ .../devicetree/bindings/clock/snps,pll-clock.txt   |  28 ++
+ MAINTAINERS                                        |   6 +
+ drivers/clk/axs10x/Makefile                        |   1 +
+ drivers/clk/axs10x/pll_clock.c                     | 384 +++++++++++++++++++++
+ 4 files changed, 419 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/snps,pll-clock.txt
+ create mode 100644 drivers/clk/axs10x/pll_clock.c
 
+diff --git a/Documentation/devicetree/bindings/clock/snps,pll-clock.txt b/Documentation/devicetree/bindings/clock/snps,pll-clock.txt
+new file mode 100644
+index 0000000..5706246
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/snps,pll-clock.txt
+@@ -0,0 +1,28 @@
++Binding for the AXS10X Generic PLL clock
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible: should be "snps,axs10x-<name>-pll-clock"
++  "snps,axs10x-arc-pll-clock"
++  "snps,axs10x-pgu-pll-clock"
++- reg: should always contain 2 pairs address - length: first for PLL config
++registers and second for corresponding LOCK CGU register.
++- clocks: shall be the input parent clock phandle for the PLL.
++- #clock-cells: from common clock binding; Should always be set to 0.
++
++Example:
++	input-clk: input-clk {
++		clock-frequency = <33333333>;
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++
++	core-clk: core-clk@80 {
++		compatible = "snps,axs10x-arc-pll-clock";
++		reg = <0x80 0x10 0x100 0x10>;
++		#clock-cells = <0>;
++		clocks = <&input-clk>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3960e7f..5805833 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11910,6 +11910,12 @@ F:	arch/arc/plat-axs10x
+ F:	arch/arc/boot/dts/ax*
+ F:	Documentation/devicetree/bindings/arc/axs10*
+ 
++SYNOPSYS ARC SDP clock driver
++M:	Vlad Zakharov <vzakhar@synopsys.com>
++S:	Supported
++F:	drivers/clk/axs10x/*
++F:	Documentation/devicetree/bindings/clock/snps,pll-clock.txt
++
+ SYSTEM CONFIGURATION (SYSCON)
+ M:	Lee Jones <lee.jones@linaro.org>
+ M:	Arnd Bergmann <arnd@arndb.de>
+diff --git a/drivers/clk/axs10x/Makefile b/drivers/clk/axs10x/Makefile
+index 01996b8..d747dea 100644
+--- a/drivers/clk/axs10x/Makefile
++++ b/drivers/clk/axs10x/Makefile
+@@ -1 +1,2 @@
+ obj-y += i2s_pll_clock.o
++obj-y += pll_clock.o
+diff --git a/drivers/clk/axs10x/pll_clock.c b/drivers/clk/axs10x/pll_clock.c
+new file mode 100644
+index 0000000..784a0a2
+--- /dev/null
++++ b/drivers/clk/axs10x/pll_clock.c
+@@ -0,0 +1,384 @@
++/*
++ * Synopsys AXS10X SDP Generic PLL clock driver
++ *
++ * Copyright (C) 2017 Synopsys
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/clk-provider.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/device.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/slab.h>
++#include <linux/of.h>
++
++/* PLL registers addresses */
++#define PLL_REG_IDIV	0x0
++#define PLL_REG_FBDIV	0x4
++#define PLL_REG_ODIV	0x8
++
++/*
++ * Bit fields of the PLL IDIV/FBDIV/ODIV registers:
++ *  ________________________________________________________________________
++ * |31                15|    14    |   13   |  12  |11         6|5         0|
++ * |-------RESRVED------|-NOUPDATE-|-BYPASS-|-EDGE-|--HIGHTIME--|--LOWTIME--|
++ * |____________________|__________|________|______|____________|___________|
++ *
++ * Following macros detirmine the way of access to these registers
++ * They should be set up only using the macros.
++ * reg should be and uint32_t variable.
++ */
++
++#define PLL_REG_GET_LOW(reg)			\
++	(((reg) & (0x3F << 0)) >> 0)
++#define PLL_REG_GET_HIGH(reg)			\
++	(((reg) & (0x3F << 6)) >> 6)
++#define PLL_REG_GET_EDGE(reg)			\
++	(((reg) & (BIT(12))) ? 1 : 0)
++#define PLL_REG_GET_BYPASS(reg)			\
++	(((reg) & (BIT(13))) ? 1 : 0)
++#define PLL_REG_GET_NOUPD(reg)			\
++	(((reg) & (BIT(14))) ? 1 : 0)
++#define PLL_REG_GET_PAD(reg)			\
++	(((reg) & (0x1FFFF << 15)) >> 15)
++
++#define PLL_REG_SET_LOW(reg, value)		\
++	{ reg |= (((value) & 0x3F) << 0); }
++#define PLL_REG_SET_HIGH(reg, value)	\
++	{ reg |= (((value) & 0x3F) << 6); }
++#define PLL_REG_SET_EDGE(reg, value)	\
++	{ reg |= (((value) & 0x01) << 12); }
++#define PLL_REG_SET_BYPASS(reg, value)	\
++	{ reg |= (((value) & 0x01) << 13); }
++#define PLL_REG_SET_NOUPD(reg, value)	\
++	{ reg |= (((value) & 0x01) << 14); }
++#define PLL_REG_SET_PAD(reg, value)		\
++	{ reg |= (((value) & 0x1FFFF) << 15); }
++
++#define PLL_LOCK	0x1
++#define PLL_MAX_LOCK_TIME 100 /* 100 us */
++
++struct pll_cfg {
++	u32 rate;
++	u32 idiv;
++	u32 fbdiv;
++	u32 odiv;
++};
++
++struct pll_of_table {
++	unsigned long prate;
++	struct pll_cfg *pll_cfg_table;
++};
++
++struct pll_of_data {
++	struct pll_of_table *pll_table;
++};
++
++static struct pll_of_data pgu_pll_data = {
++	.pll_table = (struct pll_of_table []){
++		{
++			.prate = 27000000,
++			.pll_cfg_table = (struct pll_cfg []){
++				{ 25200000, 1, 84, 90 },
++				{ 50000000, 1, 100, 54 },
++				{ 74250000, 1, 44, 16 },
++				{ },
++			},
++		},
++		/* Used as list limiter */
++		{ },
++	},
++};
++
++static struct pll_of_data arc_pll_data = {
++	.pll_table = (struct pll_of_table []){
++		{
++			.prate = 33333333,
++			.pll_cfg_table = (struct pll_cfg []){
++				{ 33333333,  1, 1,  1 },
++				{ 50000000,  1, 30, 20 },
++				{ 75000000,  2, 45, 10 },
++				{ 90000000,  2, 54, 10 },
++				{ 100000000, 1, 30, 10 },
++				{ 125000000, 2, 45, 6 },
++				{ },
++			},
++		},
++		/* Used as list limiter */
++		{ },
++	},
++};
++
++struct pll_clk {
++	void __iomem *base;
++	void __iomem *lock;
++	const struct pll_of_data *pll_data;
++	struct clk_hw hw;
++	struct device *dev;
++};
++
++static inline void pll_write(struct pll_clk *clk, unsigned int reg,
++		unsigned int val)
++{
++	iowrite32(val, clk->base + reg);
++}
++
++static inline u32 pll_read(struct pll_clk *clk,
++		unsigned int reg)
++{
++	return ioread32(clk->base + reg);
++}
++
++static inline struct pll_clk *to_pll_clk(struct clk_hw *hw)
++{
++	return container_of(hw, struct pll_clk, hw);
++}
++
++static inline u32 div_get_value(unsigned int reg)
++{
++	if (PLL_REG_GET_BYPASS(reg))
++		return 1;
++
++	return (PLL_REG_GET_HIGH(reg) + PLL_REG_GET_LOW(reg));
++}
++
++static inline u32 encode_div(unsigned int id, int upd)
++{
++	uint32_t div = 0;
++
++	PLL_REG_SET_LOW(div, (id%2 == 0) ? id >> 1 : (id >> 1) + 1);
++	PLL_REG_SET_HIGH(div, id >> 1);
++	PLL_REG_SET_EDGE(div, id%2);
++	PLL_REG_SET_BYPASS(div, id == 1 ? 1 : 0);
++	PLL_REG_SET_NOUPD(div, !upd);
++
++	return div;
++}
++
++static const struct pll_cfg *pll_get_cfg(unsigned long prate,
++		const struct pll_of_table *pll_table)
++{
++	int i;
++
++	for (i = 0; pll_table[i].prate != 0; i++)
++		if (pll_table[i].prate == prate)
++			return pll_table[i].pll_cfg_table;
++
++	return NULL;
++}
++
++static unsigned long pll_recalc_rate(struct clk_hw *hw,
++			unsigned long parent_rate)
++{
++	u64 rate;
++	u32 idiv, fbdiv, odiv;
++	struct pll_clk *clk = to_pll_clk(hw);
++
++	idiv = div_get_value(pll_read(clk, PLL_REG_IDIV));
++	fbdiv = div_get_value(pll_read(clk, PLL_REG_FBDIV));
++	odiv = div_get_value(pll_read(clk, PLL_REG_ODIV));
++
++	rate = (u64)parent_rate * fbdiv;
++	do_div(rate, idiv * odiv);
++
++	return (unsigned long)rate;
++}
++
++static long pll_round_rate(struct clk_hw *hw, unsigned long rate,
++			unsigned long *prate)
++{
++	int i;
++	long best_rate;
++	struct pll_clk *clk = to_pll_clk(hw);
++	const struct pll_cfg *pll_cfg = pll_get_cfg(*prate,
++			clk->pll_data->pll_table);
++
++	if (!pll_cfg) {
++		dev_err(clk->dev, "invalid parent rate=%ld\n", *prate);
++		return -EINVAL;
++	}
++
++	if (pll_cfg[0].rate == 0)
++		return -EINVAL;
++
++	best_rate = pll_cfg[0].rate;
++
++	for (i = 1; pll_cfg[i].rate != 0; i++) {
++		if (abs(rate - pll_cfg[i].rate) < abs(rate - best_rate))
++			best_rate = pll_cfg[i].rate;
++	}
++
++	return best_rate;
++}
++
++static int pll_set_rate(struct clk_hw *hw, unsigned long rate,
++			unsigned long parent_rate)
++{
++	int i;
++	struct pll_clk *clk = to_pll_clk(hw);
++	const struct pll_cfg *pll_cfg = pll_get_cfg(parent_rate,
++			clk->pll_data->pll_table);
++
++	if (!pll_cfg) {
++		dev_err(clk->dev, "invalid parent rate=%ld\n", parent_rate);
++		return -EINVAL;
++	}
++
++	for (i = 0; pll_cfg[i].rate != 0; i++) {
++		if (pll_cfg[i].rate == rate) {
++			pll_write(clk, PLL_REG_IDIV,
++					encode_div(pll_cfg[i].idiv, 0));
++			pll_write(clk, PLL_REG_FBDIV,
++					encode_div(pll_cfg[i].fbdiv, 0));
++			pll_write(clk, PLL_REG_ODIV,
++					encode_div(pll_cfg[i].odiv, 1));
++
++			/*
++			 * Wait until CGU relocks.
++			 * If after timeout CGU is unlocked yet return error
++			 */
++			udelay(PLL_MAX_LOCK_TIME);
++			if (ioread32(clk->lock) & PLL_LOCK)
++				return 0;
++			else
++				return -ETIMEDOUT;
++		}
++	}
++
++	dev_err(clk->dev, "invalid rate=%ld, parent_rate=%ld\n", rate,
++			parent_rate);
++	return -EINVAL;
++}
++
++static const struct clk_ops pll_ops = {
++	.recalc_rate = pll_recalc_rate,
++	.round_rate = pll_round_rate,
++	.set_rate = pll_set_rate,
++};
++
++static int pll_clk_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const char *parent_name;
++	struct clk *clk;
++	struct pll_clk *pll_clk;
++	struct resource *mem;
++	struct clk_init_data init = { };
++
++	pll_clk = devm_kzalloc(dev, sizeof(*pll_clk), GFP_KERNEL);
++	if (!pll_clk)
++		return -ENOMEM;
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	pll_clk->base = devm_ioremap_resource(dev, mem);
++	if (IS_ERR(pll_clk->base))
++		return PTR_ERR(pll_clk->base);
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	pll_clk->lock = devm_ioremap_resource(dev, mem);
++	if (IS_ERR(pll_clk->lock))
++		return PTR_ERR(pll_clk->base);
++
++	init.name = dev->of_node->name;
++	init.ops = &pll_ops;
++	parent_name = of_clk_get_parent_name(dev->of_node, 0);
++	init.parent_names = &parent_name;
++	init.num_parents = 1;
++	pll_clk->hw.init = &init;
++	pll_clk->dev = dev;
++	pll_clk->pll_data = of_device_get_match_data(dev);
++
++	if (!pll_clk->pll_data) {
++		dev_err(dev, "No OF match data provided\n");
++			return -EINVAL;
++	}
++
++	clk = devm_clk_register(dev, &pll_clk->hw);
++	if (IS_ERR(clk)) {
++		dev_err(dev, "failed to register %s clock (%ld)\n",
++				init.name, PTR_ERR(clk));
++		return PTR_ERR(clk);
++	}
++
++	return of_clk_add_provider(dev->of_node, of_clk_src_simple_get, clk);
++}
++
++static int pll_clk_remove(struct platform_device *pdev)
++{
++	of_clk_del_provider(pdev->dev.of_node);
++	return 0;
++}
++
++static void __init of_pll_clk_setup(struct device_node *node)
++{
++	const char *parent_name;
++	struct clk *clk;
++	struct pll_clk *pll_clk;
++	struct clk_init_data init = { };
++
++	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
++	if (!pll_clk)
++		return;
++
++	pll_clk->base = of_iomap(node, 0);
++	if (!pll_clk->base) {
++		pr_err("failed to map pll div registers\n");
++		iounmap(pll_clk->base);
++		return;
++	}
++
++	pll_clk->lock = of_iomap(node, 1);
++	if (!pll_clk->lock) {
++		pr_err("failed to map pll lock register\n");
++		iounmap(pll_clk->lock);
++		return;
++	}
++
++	init.name = node->name;
++	init.ops = &pll_ops;
++	parent_name = of_clk_get_parent_name(node, 0);
++	init.parent_names = &parent_name;
++	init.num_parents = parent_name ? 1 : 0;
++	pll_clk->hw.init = &init;
++	pll_clk->pll_data = &arc_pll_data;
++
++	clk = clk_register(NULL, &pll_clk->hw);
++	if (IS_ERR(clk)) {
++		pr_err("failed to register %s clock (%ld)\n",
++				node->name, PTR_ERR(clk));
++		kfree(pll_clk);
++		return;
++	}
++
++	of_clk_add_provider(node, of_clk_src_simple_get, clk);
++}
++
++CLK_OF_DECLARE(axs10x_pll_clock, "snps,axs10x-arc-pll-clock", of_pll_clk_setup);
++
++static const struct of_device_id pll_clk_id[] = {
++	{ .compatible = "snps,axs10x-arc-pll-clock", .data = &arc_pll_data},
++	{ .compatible = "snps,axs10x-pgu-pll-clock", .data = &pgu_pll_data},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, pll_clk_id);
++
++static struct platform_driver pll_clk_driver = {
++	.driver = {
++		.name = "axs10x-pll-clock",
++		.of_match_table = pll_clk_id,
++	},
++	.probe = pll_clk_probe,
++	.remove = pll_clk_remove,
++};
++builtin_platform_driver(pll_clk_driver);
++
++MODULE_AUTHOR("Vlad Zakharov <vzakhar@synopsys.com>");
++MODULE_DESCRIPTION("Synopsys AXS10X SDP Generic PLL Clock Driver");
++MODULE_LICENSE("GPL v2");
 -- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
