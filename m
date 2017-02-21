@@ -1,72 +1,83 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
-Date: Tue, 21 Feb 2017 21:14:03 +0100
-Message-ID: <20170221201403.GA1481@katana>
-References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
- <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
- <20170220182214.izi46a7lbzck7q4r@ninjato>
- <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v2 2/3] ARM64: dts: meson-gx: add clock CLKID_RNG0 to hwrng
+ node
+Date: Tue, 21 Feb 2017 21:18:16 +0100
+Message-ID: <8bf052e3-de8f-dbdf-be76-369a7bb1ed15@gmail.com>
+References: <daf765e2-1a60-8dea-fee0-8af6ddecdf8e@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Eric Anholt <eric@anholt.net>, Peter Robinson <pbrobinson@gmail.com>, Martin Sperl <kernel@martin.sperl.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <daf765e2-1a60-8dea-fee0-8af6ddecdf8e@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Herbert Xu <herbert@gondor.apana.org.au>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add clock CLKID_RNG0 to HW randon number generator node and
+extend the DT binding documentation accordingly.
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2:
+- splitted first version of patch into two
+- add DT binding documentation
+- mention that clock is optional
+- replace spaces with tabs in DT binding example
+---
+ Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt | 8 ++++++--
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi                   | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi                 | 5 +++++
+ 3 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+index 202f2d09..4c012a04 100644
+--- a/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
++++ b/Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt
+@@ -5,10 +5,14 @@ Required properties:
+ 
+ - compatible : should be "amlogic,meson-rng"
+ - reg : Specifies base physical address and size of the registers.
++- clocks : Optional core clock
++- clock-names: Name of core clock, must be "core"
+ 
+ Example:
+ 
+ rng {
+-        compatible = "amlogic,meson-rng";
+-        reg = <0x0 0xc8834000 0x0 0x4>;
++	compatible = "amlogic,meson-rng";
++	reg = <0x0 0xc8834000 0x0 0x4>;
++	clocks = <&clkc CLKID_RNG0>;
++	clock-names = "core";
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 5d995f77..620495a4 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -380,7 +380,7 @@
+ 			#size-cells = <2>;
+ 			ranges = <0x0 0x0 0x0 0xc8834000 0x0 0x2000>;
+ 
+-			rng {
++			hwrng: rng {
+ 				compatible = "amlogic,meson-rng";
+ 				reg = <0x0 0x0 0x0 0x4>;
+ 			};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 04b3324b..a375cb21 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -524,3 +524,8 @@
+ &vpu {
+ 	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
+ };
++
++&hwrng {
++	clocks = <&clkc CLKID_RNG0>;
++	clock-names = "core";
++};
+-- 
+2.11.1
 
 
-> >On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
-> >>Since commit e2474541032d ("bcm2835: Fix hang for writing messages
-> >>larger than 16 bytes") the interrupt handler is prone to a possible
-> >>NULL pointer dereference. This could happen if an interrupt fires
-> >>before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
-> >>on the RPi 3. Even this is an unexpected behavior the driver must
-> >>handle that with an error instead of a crash.
-> >>
-> >>CC: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
-> >>CC: Martin Sperl <kernel@martin.sperl.org>
-> >>Reported-by: Peter Robinson <pbrobinson@gmail.com>
-> >>Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger tha=
-n 16 bytes")
-> >>Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> >Applied to for-next, thanks (will be in 4.11)!
-> >
->=20
-> since this patch is too late for 4.10, should i resent with CC to stable =
-in
-> order to get it into the next 4.10 release?
-
-It has the Fixes: tag, that will do.
-
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYrJ+LAAoJEBQN5MwUoCm2KBUP/1zD0skX/CfkGhAphN29TXEQ
-xHOTfyQWgUtd9aYas/WJw27pQ29Q2m1C3zW8uXIr0hLbATf0ip5qgocJUXvzXjkl
-Io6eEUxZ0tJHQ/WhMACvKu8stvAWTkTZ8B3hH+HbUXz/Xu4qo9ZbNAcqFi+Bt+xb
-RslVR+3QucRrWCrXgyCMBk5hWbOp1Qq00fFkv5mSNxBYRhwyJkfCMIhG+0t3pwvW
-tGW8WiqA+mRwjNyLwC9oV2VBu92OufP4hkQWwXN8aZVh0CgIDLfnHoEdXJ4jh2N5
-mI2V9ECLN7fGvQ2vXLJgUd1Eq/+JAJZLsEVJ3YJINIQ5RkiryQr0NsUU18feGRmE
-JrgFrmovfOz0YBuj2/vZud2C1aLZ8awln8vGkzIy1SNmLsQj5tiWTOZ4hCvkz0ol
-gmlKl72Pg7XmeIIYjPEOWyVuDQRVfxtnXYEj8rB0W8G7KZfQ2E1dcdcQOwIf66Nm
-7jw0n5QajQbzfelaxuMrUeoolZbNGDSrBdBuc04LOL/foxm9LODfyRuMCMvKgSHa
-EM0mCAu9sTGUFyAC6DHh7asnbUV9oNB35dIenu0M4Wo02xI06Gwkln6BTRpEieXv
-g3l0eOSp7J1bNBtH8QXzi3FteVrQn8XDXpPykv4w2xxFe+VyAt6E5elHOKrKaP35
-FnLXPb4/tJD0b/XvS54O
-=ESxE
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
