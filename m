@@ -1,102 +1,139 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 01/18] dt-bindings: power: battery: add
- constant-charge-current property
-Date: Tue, 21 Feb 2017 12:55:44 +0800
-Message-ID: <CAGb2v67913XnRNv9bYty5WcGLAWHYMM6=M9BVmTZ3wjReh_UBg@mail.gmail.com>
-References: <20170215004646.23607-1-liam@networkimprov.net>
- <6a678b03-124a-76b3-066e-858731fc6c80@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6a678b03-124a-76b3-066e-858731fc6c80@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree <devicetree@vger.kernel.org>, Liam Breck <liam@networkimprov.net>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, Sebastian Reichel <sre@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-iio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Bruno_Pr=C3=A9mont?= <bonbons@linux-vserver.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v3 2/4] arm: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 10.1 initial support
+Date: Tue, 21 Feb 2017 10:36:31 +0530
+Message-ID: <1487653593-3457-2-git-send-email-jagan@openedev.com>
+References: <1487653593-3457-1-git-send-email-jagan@openedev.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487653593-3457-1-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Domenico Acri <domenico.acri@engicam.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 4:53 PM, Quentin Schulz
-<quentin.schulz@free-electrons.com> wrote:
-> Hi,
->
-> On 15/02/2017 01:46, Liam Breck wrote:
->>
->> On Tue, 14 Feb 2017 10:40:55 +0100 Quentin Schulz wrote:
->>> This adds the constant-charge-current property to the list of optional
->>> properties of the battery.
->>>
->>> The constant charge current is critical for batteries as they can't
->>> handle all charge currents.
->>>
->>> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
->>> ---
->>>
->>> added in v3
->>>
->>>  Documentation/devicetree/bindings/power/supply/battery.txt | 2 ++
->>
->> Is constant-charge-current dependent on the battery (e.g. capacity, nominal voltage, etc) or the
->> system (charger chip, input current/voltage, etc)?
->>
->> It belongs in Doc.../power/supply/battery.txt if it's a characteristic of the battery.
->>
->> Note, this page asserts that constant-current charging applies to NiMH batteries:
->> http://power-topics.blogspot.com/2016/05/constant-voltage-constant-current.html
->>
->> Related properties to be added to battery.txt near-future in a patchset for the BQ24190
->> charger are as follows. These are not currently in enum power_supply_property, so the actual names
->> are still to be decided.
->>
->> precharge-current-microamp:
->>    maximum charge current during precharge phase (typically 20% of battery capacity)
->>
->> termination-current-microamp (or endcharge-current):
->>    a charge cycle terminates when the battery voltage is above recharge threshold,
->>    and the current is below this setting (typically 10% of battery capacity)
->>
->
-> We have a client with a board whose battery accepts a maximum of 300mA
-> for charging. So depending on the battery, we cannot have any charging
-> current we want. The AXP PmMICs set constant charge current in a range
-> of 300mA-1800mA, so it is enforced by the charger but needs to be
-> adapted depending on the battery present in the system.
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-May I ask the capacity of the battery in question?
+i.CoreM6 Quad/Dual OpenFrame modules are "system on modules plus
+openframe display carriers" which are good solution for develop
+user friendly graphic user interface.
 
-Typically one charges LiPo batteries at no more than 1C. So if it's
-a 1800 mAh battery, the charge current should be no more than 1800 mA.
+General features:
+CPU           NXP i.MX6Q rev1.2 at 792 MHz
+RAM           1GB, 32, 64 bit, DDR3-800/1066
+NAND          SLC,512MB
+LVDS Display  TFT 10.1" industrial, 1280x800 resolution
+Backlight     LED backlight, brightness 350 Cd/m2
+Power supply  15 to 30 Vdc
 
-ChenYu
+Cc: Domenico Acri <domenico.acri@engicam.com>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v3:
+- Use native-mode as timing0 since this is the initial lvds-channel
+- Rename hsd100pxn1 reference as timing0 
+Changes for v2:
+- none
 
-> The AXP PMICs charge battery with constant current (Ichrg) between the
-> trickle voltage (Vtrkl which is ~3.0V) and the targeted voltage (Vtrgt;
-> which seems to be the voltage telling the battery is fully charged).
->
-> So if I understand correctly, "my" constant-charge-current would be
-> located in the charging cycle between your precharge-current-microamp
-> and the termination-current-microamp as it is the current for the
-> charging process as a whole.
->
-> See here[1] for the explanation in the datasheet (page 20).
->
-> That would definitely match what is explained in your link for constant
-> current.
->
-> [1] http://dl.linux-sunxi.org/AXP/AXP209_Datasheet_v1.0en.pdf
->
-> Let me know if something seems odd,
-> Thanks,
-> Quentin
->
-> --
-> Quentin Schulz, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+ arch/arm/boot/dts/Makefile                |  1 +
+ arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 76 +++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0118084..458ec09 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -398,6 +398,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-h100.dtb \
+ 	imx6q-hummingboard.dtb \
+ 	imx6q-icore.dtb \
++	imx6q-icore-ofcap10.dtb \
+ 	imx6q-icore-rqs.dtb \
+ 	imx6q-marsboard.dtb \
+ 	imx6q-mccmon6.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+new file mode 100644
+index 0000000..8f40812
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+@@ -0,0 +1,76 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "imx6q.dtsi"
++#include "imx6qdl-icore.dtsi"
++
++/ {
++	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 10.1 Kit";
++	compatible = "engicam,imx6-icore", "fsl,imx6q";
++};
++
++&ldb {
++	status = "okay";
++
++	lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <24>;
++		status = "okay";
++
++		display-timings {
++                        native-mode = <&timing0>;
++                        timing0: timing0 {
++                                clock-frequency = <60000000>;
++                                hactive = <1280>;
++                                vactive = <800>;
++                                hback-porch = <40>;
++                                hfront-porch = <40>;
++                                vback-porch = <10>;
++                                vfront-porch = <3>;
++                                hsync-len = <80>;
++                                vsync-len = <10>;
++                        };
++                };
++	};
++};
+-- 
+1.9.1
