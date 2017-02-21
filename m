@@ -1,91 +1,102 @@
-From: Andreas Kemnade <andreas-cLv4Z9ELZ06ZuzBka8ofvg@public.gmane.org>
-Subject: Re: [Letux-kernel] [PATCH v9 1/8] drivers:input:tsc2007: add new
- common binding names, pre-calibration, flipping and rotation
-Date: Tue, 21 Feb 2017 18:07:55 +0100
-Message-ID: <20170221180755.48946fc5@aktux>
-References: <cover.1482936802.git.hns@goldelico.com>
-        <B30D00D0-1967-4BD5-A304-E2ADC815A805@goldelico.com>
-        <201702202042.15878@pali>
-        <201702202208.50498@pali>
-        <C2E7AC24-75AB-442F-94A2-84904723EE41@goldelico.com>
-        <CAKdAkRRZa-fpv_TKRdY=hFV3GdKxQ3muQORquvV_bTrDzQAhCw@mail.gmail.com>
-        <0A33CCEA-448C-4C1D-9563-FDA54743BD01@goldelico.com>
-        <20170221090940.GD9795@pali>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] Input: tsc2007 - correctly report pressure and not
+ resistance to user space
+Date: Tue, 21 Feb 2017 18:13:32 +0100
+Message-ID: <20170221171332.w6dh7ccd2eyg5dgu@earth>
+References: <cover.1487609795.git.hns@goldelico.com>
+ <9e249276be9e20aab1a74617373bf6587f1acd4b.1487609795.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/QBvnUSHLCRUNlOXqJdFJkXU"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="jrj3fvfo5r3wuigf"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170221090940.GD9795@pali>
+Content-Disposition: inline
+In-Reply-To: <9e249276be9e20aab1a74617373bf6587f1acd4b.1487609795.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pali =?UTF-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrey Gelman <andrey.gelman-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Michel Verlaan <michel.verl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Aaro Koskinen <aaro.koskinen-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd@arndb>
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/QBvnUSHLCRUNlOXqJdFJkXU
-Content-Type: text/plain; charset=US-ASCII
+
+--jrj3fvfo5r3wuigf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-[...]
-> > Hm. Why not touching pixel (0,0) on the touch is always pixel (0,0)
-> > on the screen and touching pixel (639,479) is always (639,479)?
+On Mon, Feb 20, 2017 at 05:56:35PM +0100, H. Nikolaus Schaller wrote:
+> previously, tsc2007 will report as ABS_PRESSURE:
+> 0              for no pressure (resistance infinite)
+> high value     for soft pressure (high resistance)
+> low value      for firm pressure (lower resistance)
 >=20
-> Important is that there is no 1:1 mapping between input evdev device
-> and drm/fb output device. These are two independent devices. There is
-> no connection between screen and touch. So such presumption should
-> not be done in kernel. You can do that in userspace.
+> This does not matter for most applications (e.g. GUI, Menu, Scrolling
+> etc.) where the ABS_PRESSURE is ignored and only BTN_TOUCH is processed
+> to detect screen taps.
 >=20
-But at least it can be told to userspace that these two devices are
-connected. That information should be specified in devicetree because
-it is not auto-detectable.
-
-> Lets take e.g. touchpad. It acts similarly as touchscreen input device
-> (both reports absolute positioned touch events), but touchpad is not
-> connected with screen. And from kernel point of view these devices are
-> both input and absolute positioned.
+> Only some special graphics applications read the pressure channel and
+> they will be mixed up by this non-monotonic relation.
 >=20
-> It looks like the whole problem is there that you wanted to do this
-> mapping for your hardware in kernel. And this is not what is kernel
-> doing or should do. Moreover I know people who are using integrated
-> touchscreen on laptop as (touch) input device for external monitor.
-> And in this configuration it does not make any sense to map
-> touchscreen input to pixels of integrated LCD touchscreen (as
-> external monitor could have different resolution as integrated LCD
-> touchcreen).
->  =20
-Interesting example. But then you also do not need flipping/rotation
-because the angle between your screen and your absolute position device
-is not fixed.
+> So we fix it to become:
+> 0              for no pressure (resistance infinite)
+> low value      for soft pressure (high resistance)
+> high value     for firm pressure (lower resistance)
+>=20
+> While this patch changes the values reported to userspace,
+> ABS_PRESSURE is used rarely by userspace. Most software only
+> relies on BTN_TOUCH (boolean), which is not affected by this
+> patch. Some graphics software makes use of the interface and
+> does not work correctly with the currently used inverted
+> behaviour.
+>=20
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> ---
+>  drivers/input/touchscreen/tsc2007_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/input/touchscreen/tsc2007_core.c b/drivers/input/tou=
+chscreen/tsc2007_core.c
+> index 30b53ca..fc73849 100644
+> --- a/drivers/input/touchscreen/tsc2007_core.c
+> +++ b/drivers/input/touchscreen/tsc2007_core.c
+> @@ -141,6 +141,8 @@ static irqreturn_t tsc2007_soft_irq(int irq, void *ha=
+ndle)
+>  				"DOWN point(%4d,%4d), resistance (%4u)\n",
+>  				tc.x, tc.y, rt);
+> =20
+> +			rt =3D ts->max_rt - rt;
+> +
+>  			input_report_key(input, BTN_TOUCH, 1);
+>  			input_report_abs(input, ABS_X, tc.x);
+>  			input_report_abs(input, ABS_Y, tc.y);
 
-Regards,
-Andreas
+Reviewed-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->
+We should add the same to ts200x-core.
 
---Sig_/QBvnUSHLCRUNlOXqJdFJkXU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- Sebastian
+
+--jrj3fvfo5r3wuigf
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQIbBAEBCAAGBQJYrHQKAAoJEInxNTv1CwY0vlUP9ArqFcdZQ5ZzJURV5SSdM0j3
-c13vY/QJvdBZKmMSKlWaL2ino87ITpbemmrFzknLL5o2FEDBa2jcylOesVyTTZwy
-AoFgU6mg+oxjB2xzjgoqFmvlAFxnVdhUlepkPyvZoqyWUnVAY26VGWwq5Hy5pwZG
-SS8O05ZTztKMc3PS+teXM3q82lpxMDxoxXH/f1faQpo1f5o90MDj4hiDO68gS9fW
-15usLoj+cdoBGxKwCsAc5EJ7HcavBhUW3uodwASZG0CwZtvEpPCkfpCcZgqrJel1
-xc96A2Yh75HnBs4z4S5UGVDHbzUBPq94VGKAd9MzFC43T19vXz3kHEseLmYZDgmZ
-PexyDxoaVOswMH3tthDnchTOCdKTY0MqmR+xvuycp6njkckU+coyH9UJfN9B9QgT
-0a2xSzUmOjRikr4B7dpgFqOSl2cS3KCqG4SGpUUajtyty8b/rwF7oU300tfTPZwU
-BqOKgdBPitKhZfVq/WWlnDCtmcJifiHtU0N8krn+ZW08gSOzNdUpvOzq/MosXRTV
-xSLkiA+WagMFeAWeu4nzZ4WojeovydME1RLVAYFz7Ayru3oVr4MFbbS7zEK8TiEt
-Pamdxz/0mBVXWOMhFXHC5ym66w7BUgHwemvb4L5DntL+JvPhoRUOD22q0HtSR0aG
-2gbFTegr0KpYYExRCf0=
-=osTl
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlisdToACgkQ2O7X88g7
++prGIhAAiqzs41a0/KNleApeI2E+A65QhQhHhrDCfYdMUnMZhZPGNWUB+VbXHg4T
+syFtB4xox1qRoGihsFCG+O1RiMTZA3JliXSg+yxyBc2apYkAUH4dOV1KTrnn98gQ
+h1LiMKnXZRw5lrhocOciZ+KgvGIHCIAr6AKTthK1y15KutZgbqCokIK+M2x3krDZ
+8AxmR9shSCOIfxk8oxJZNg+NUqWFaUGnTxoM8m2E+m4uajfjY999fD82i7CBYgxS
+AaGYfo565KN1azjsWEQXzV85gBkhUSDzF8rxWzEJZsMBfwvFl7BCnjxoOh60oNqs
+XgyAC1CQsdK3RcVdyDhTkOcbJbs5NPGqYevqHLP6VmjYBSeMfTIUIAwn6YqQXAqV
+cdx4vLIRwBZSpKSvLDZb40eXp7X6Uwf5y07zbX0+tfLz8r3QdA7JA1cYXnX42T0h
+rFD81aWhPGQhs81o82x7WPp9v/g0fumhFTg/uWtPZesGVLkwSc9woMrIO+jXHNOP
+a4mRP3MWOzelbS6Eulbr+Wh23xHhOWtnZyRS0A501JfW9XXR7ligIKMe4ArwRKY4
+tZvvDfDHj2Uz7CF0ALQK2SFv7SNqwlqYzgBBgjDKvquW9jV2xtzrJva0wl3knD/K
+S5kBhD0GbZ/OX7DWqCo2S6GLgim7X3geTBZEnl8I5zhwm3q2j/Y=
+=pttn
 -----END PGP SIGNATURE-----
 
---Sig_/QBvnUSHLCRUNlOXqJdFJkXU--
+--jrj3fvfo5r3wuigf--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
