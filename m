@@ -1,107 +1,131 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Tue, 21 Feb 2017 14:21:03 -0800
-Message-ID: <f9cfbde0-de54-6603-f0bf-9a7086840fda@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
- <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
- <6892fb15-2d18-4898-c328-3acff9d6cc39@gmail.com>
- <20170221121542.GH16975@valkosipuli.retiisi.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 05/21] net-next: stmmac: Add dwmac-sun8i
+Date: Tue, 21 Feb 2017 14:22:17 -0800
+Message-ID: <20170221222217.62barcu445stewvr@lukather>
+References: <20170216124859.14346-1-clabbe.montjoie@gmail.com>
+ <20170216124859.14346-6-clabbe.montjoie@gmail.com>
+ <20170216190524.l2ddzhwabzdpdphx@lukather>
+ <20170217131802.GB24993@Red>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170221121542.GH16975@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Russell King <rmk+kernel@armlinux.org.uk>, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zzcjb24ogs6xglso"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHH3WLCQKGQERQ3JUVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170217131802.GB24993@Red>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--zzcjb24ogs6xglso
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On 02/21/2017 04:15 AM, Sakari Ailus wrote:
-> Hi Steve,
->
-> On Mon, Feb 20, 2017 at 02:56:15PM -0800, Steve Longerbeam wrote:
->>
->>
->> On 02/20/2017 02:04 PM, Sakari Ailus wrote:
->>> Hi Steve,
->>>
->>> On Wed, Feb 15, 2017 at 06:19:31PM -0800, Steve Longerbeam wrote:
->>>> From: Russell King <rmk+kernel@armlinux.org.uk>
->>>>
->>>> Setting and getting frame rates is part of the negotiation mechanism
->>>> between subdevs.  The lack of support means that a frame rate at the
->>>> sensor can't be negotiated through the subdev path.
->>>
->>> Just wondering --- what do you need this for?
->>
->>
->> Hi Sakari,
->>
->> i.MX does need the ability to negotiate the frame rates in the
->> pipelines. The CSI has the ability to skip frames at the output,
->> which is something Philipp added to the CSI subdev. That affects
->> frame interval at the CSI output.
->>
->> But as Russell pointed out, the lack of [gs]_frame_interval op
->> causes media-ctl to fail:
->>
->> media-ctl -v -d /dev/media1 --set-v4l2
->> '"imx6-mipi-csi2":1[fmt:SGBRG8/512x512@1/30]'
->>
->> Opening media device /dev/media1
->> Enumerating entities
->> Found 29 entities
->> Enumerating pads and links
->> Setting up format SGBRG8 512x512 on pad imx6-mipi-csi2/1
->> Format set: SGBRG8 512x512
->> Setting up frame interval 1/30 on entity imx6-mipi-csi2
->> Unable to set frame interval: Inappropriate ioctl for device (-25)Unable to
->> setup formats: Inappropriate ioctl for device (25)
->>
->>
->> So i.MX needs to implement this op in every subdev in the
->> pipeline, otherwise it's not possible to configure the
->> pipeline with media-ctl.
->
-> The frame rate is only set on the sub-device which you explicitly set it.
-> I.e. setting the frame rate fails if it's not supported on a pad.
->
-> Philipp recently posted patches that add frame rate propagation to
-> media-ctl.
->
-> Frame rate is typically settable (and gettable) only on sensor sub-device's
-> source pad,  which means it normally would not be propagated by the kernel
-> but with Philipp's patches, on the sink pad of the bus receiver. Receivers
-> don't have a way to control it nor they implement the IOCTLs, so that would
-> indeed result in an error.
->
+On Fri, Feb 17, 2017 at 02:18:02PM +0100, Corentin Labbe wrote:
+> On Thu, Feb 16, 2017 at 08:05:24PM +0100, Maxime Ripard wrote:
+> > Hi,
+> > 
+> 
+> [...]
+> > > +
+> > > +struct emac_variant {
+> > > +	u32 default_syscon_value;
+> > 
+> > Why do you need a default value? Can't you read it from the syscon
+> > directly?
+> > 
+> 
+> Why not, but you can see the default value as "value for disabled
+> state".
 
-Frame rate is really an essential piece of information. The spatial
-dimensions and data type provided by set_fmt are really only half the
-equation, the other is temporal, i.e. the data rate.
+i'm not sure what you mean here, sorry.
 
-It's true that subdevices have no control over the frame rate at their
-sink pads, but the same argument applies to set_fmt. Even if it has
-no control over the data format it receives, it still needs that
-information in order to determine the correct format at the source.
-The same argument applies to frame rate.
+> My fear is that something (uboot) modify it (keep it activated)
+> before driver load.
 
-So in my opinion, the behavior of [gs]_frame_interval should be, if a
-subdevice is capable of modifying the frame rate, then it should
-implement [gs]_frame_interval at _all_ of its pads, similar to set_fmt.
-And frame rate should really be part of link validation the same as
-set_fmt is.
+You could have the same argument there then for the board that require
+reading it. What if U-boot modified it to some non-functional state?
 
-Steve
+Either you trust the value there, and you read it, or you don't, and
+then you never read it. But being stuck in between doesn't seem that
+great.
+
+> > > +static void sun8i_dwmac_dma_start_tx(void __iomem *ioaddr)
+> > > +{
+> > > +	u32 v;
+> > > +
+> > > +	v = readl(ioaddr + EMAC_TX_CTL0);
+> > > +	v |= EMAC_TX_TRANSMITTER_EN;
+> > > +	writel(v, ioaddr + EMAC_TX_CTL0);
+> > > +
+> > > +	v = readl(ioaddr + EMAC_TX_CTL1);
+> > > +	v |= EMAC_TX_DMA_START;
+> > > +	v |= EMAC_TX_DMA_EN;
+> > > +	writel(v, ioaddr + EMAC_TX_CTL1);
+> > 
+> > This is a bit worrying. There's not a single lock in your driver,
+> > while you have a significant number of read / modify / write.
+> > 
+> > Where is the locking handled?
+> 
+> All thoses function are handled by the "stmmac_ops framework", all
+> other glue drivers does not lock anything.
+
+Most of them seem to use regmap though, that has an internal lock.
+
+> The few functions that need locking already got it on the calling
+> stmmac side.
+
+Ok.
+
+> > > +
+> > > +			if (of_property_read_bool(priv->plat->phy_node,
+> > > +						  "allwinner,leds-active-low"))
+> > > +				reg |= H3_EPHY_LED_POL;
+> > > +			else
+> > > +				reg &= ~H3_EPHY_LED_POL;
+> > > +
+> > > +			ret = of_mdio_parse_addr(priv->device,
+> > > +						 priv->plat->phy_node);
+> > > +			if (ret < 0) {
+> > > +				dev_err(priv->device, "Could not parse MDIO addr\n");
+> > > +				return ret;
+> > > +			}
+> > > +			/* of_mdio_parse_addr returns a valid (0 ~ 31) PHY
+> > > +			 * address. No need to mask it again.
+> > > +			 */
+> > > +			reg |= ret << H3_EPHY_ADDR_SHIFT;
+> > > +		}
+> > > +	}
+> > > +
+> > > +	if (!of_property_read_u32(node, "allwinner,tx-delay", &val)) {
+> > 
+> > How do you compute it? Can't this be done through auto-training?
+> 
+> The value is the same as used in vendor BSP kernel.
+
+This is not really usable though. I've had already three boards that
+never got any BSP kernel. You need to be able at least to document
+some way to compute it (even if it's based on manual, trial and error
+process).
+
+> I do not understand what you mean by auto-training.
+
+Being able to automatically detect the optimal settings at boot time.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--zzcjb24ogs6xglso--
