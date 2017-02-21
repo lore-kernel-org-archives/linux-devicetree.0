@@ -1,139 +1,96 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v3 2/4] arm: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 10.1 initial support
-Date: Tue, 21 Feb 2017 10:36:31 +0530
-Message-ID: <1487653593-3457-2-git-send-email-jagan@openedev.com>
-References: <1487653593-3457-1-git-send-email-jagan@openedev.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: da850-evm: add the UI expander node
+Date: Tue, 21 Feb 2017 10:33:10 +0530
+Message-ID: <2d708416-401a-d2df-5694-9896df47a673@ti.com>
+References: <1487268932-6469-1-git-send-email-bgolaszewski@baylibre.com>
+ <1487268932-6469-5-git-send-email-bgolaszewski@baylibre.com>
+ <5f194c6d-0937-bac2-31cd-2f1658f68d0d@ti.com>
+ <CAMpxmJX3p03YiPL5X9=pKud4A7bXh9bV=qk7qAEAnA3OF3Hgbw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487653593-3457-1-git-send-email-jagan@openedev.com>
+In-Reply-To: <CAMpxmJX3p03YiPL5X9=pKud4A7bXh9bV=qk7qAEAnA3OF3Hgbw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Domenico Acri <domenico.acri@engicam.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+On Monday 20 February 2017 09:08 PM, Bartosz Golaszewski wrote:
+> 2017-02-20 10:36 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
+>> On Thursday 16 February 2017 11:45 PM, Bartosz Golaszewski wrote:
+>>> If we're using the UI board and want vpif capture, we need to select
+>>> the video capture functionality by driving the sel_c pin low on the
+>>> tca6416 expander and sel_a & sel_b pins high. Do it statically by
+>>> hogging relevant GPIOs in the device tree.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>> ---
+> 
+> [snip]
+> 
+>>>
+>>> +                             sel_a {
+>>> +                                     gpio-hog;
+>>> +                                     gpios = <7 GPIO_ACTIVE_HIGH>;
+>>> +                                     output-high;
+>>> +                                     line-name = "sel_a";
+>>> +                             };
+>>> +
+>>> +                             sel_b {
+>>> +                                     gpio-hog;
+>>> +                                     gpios = <6 GPIO_ACTIVE_HIGH>;
+>>> +                                     output-high;
+>>> +                                     line-name = "sel_b";
+>>> +                             };
+>>> +
+>>> +                             sel_c {
+>>> +                                     gpio-hog;
+>>> +                                     gpios = <5 GPIO_ACTIVE_HIGH>;
+>>> +                                     output-low;
+>>> +                                     line-name = "sel_c";
+>>
+>> I think this is better handled by using an enable-gpios property in vpif
+>> capture device-tree node. So in the vpif capture node you would have:
+>>
+>>         enable-gpios =  <&tca6416 7 GPIO_ACTIVE_HIGH
+>>                          &tca6416 6 GPIO_ACTIVE_HIGH
+>>                          &tca6416 5 GPIO_ACTIVE_LOW>;
+>>
+>> and in the vpif capture driver, you would request each of these gpios
+>> using: devm_gpiod_get_array_optional(.., .., GPIOD_OUT_HIGH);
+>>
+> 
+> I'm not sure about this one - the result is the same (function still
+> defined statically in the DT) while now it requires changes to the
+> vpif driver too.
+> 
+> Is there any other reason we'd prefer this approach?
 
-i.CoreM6 Quad/Dual OpenFrame modules are "system on modules plus
-openframe display carriers" which are good solution for develop
-user friendly graphic user interface.
+The GPIO hog functionality can race with driver probe. Based on probe
+order, you may have a situation where VPIF probes before tca6416 so we
+have an erroneous situation where probe is successful, but hardware is
+not really available.
 
-General features:
-CPU           NXP i.MX6Q rev1.2 at 792 MHz
-RAM           1GB, 32, 64 bit, DDR3-800/1066
-NAND          SLC,512MB
-LVDS Display  TFT 10.1" industrial, 1280x800 resolution
-Backlight     LED backlight, brightness 350 Cd/m2
-Power supply  15 to 30 Vdc
+Using enable-gpios lets you handle probe deferral so VPIF capture probe
+completes only when hardware is ready. So if for some reason tca6416
+driver or hardware is misbehaving, VPIF will know about it through some
+error value rather than just assuming that everything went well.
 
-Cc: Domenico Acri <domenico.acri@engicam.com>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v3:
-- Use native-mode as timing0 since this is the initial lvds-channel
-- Rename hsd100pxn1 reference as timing0 
-Changes for v2:
-- none
+So, yes, in the "all goes well" scenario, there is not much difference
+in the two approaches. But the difference will be apparent when
+something goes wrong.
 
- arch/arm/boot/dts/Makefile                |  1 +
- arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 76 +++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+Probe order will also influence the shutdown and suspend order. So
+kernel will automatically make sure that shutdown happens in reverse
+probe order. This may or may not matter in this case. But in  general,
+it will be nice to make sure VPIF shuts down before tca6416 does so that
+hardware is available for VPIF to cleanly shutdown (and not disconnected
+behind its back because tca6416 decided to put all its lines to off as
+part of its shutdown).
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0118084..458ec09 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -398,6 +398,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-h100.dtb \
- 	imx6q-hummingboard.dtb \
- 	imx6q-icore.dtb \
-+	imx6q-icore-ofcap10.dtb \
- 	imx6q-icore-rqs.dtb \
- 	imx6q-marsboard.dtb \
- 	imx6q-mccmon6.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-new file mode 100644
-index 0000000..8f40812
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-@@ -0,0 +1,76 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-icore.dtsi"
-+
-+/ {
-+	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 10.1 Kit";
-+	compatible = "engicam,imx6-icore", "fsl,imx6q";
-+};
-+
-+&ldb {
-+	status = "okay";
-+
-+	lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <24>;
-+		status = "okay";
-+
-+		display-timings {
-+                        native-mode = <&timing0>;
-+                        timing0: timing0 {
-+                                clock-frequency = <60000000>;
-+                                hactive = <1280>;
-+                                vactive = <800>;
-+                                hback-porch = <40>;
-+                                hfront-porch = <40>;
-+                                vback-porch = <10>;
-+                                vfront-porch = <3>;
-+                                hsync-len = <80>;
-+                                vsync-len = <10>;
-+                        };
-+                };
-+	};
-+};
--- 
-1.9.1
+I think GPIO hog should only be used for pins which are really "system
+level". IOW, not related to any driver functionality.
+
+Thanks,
+Sekhar
