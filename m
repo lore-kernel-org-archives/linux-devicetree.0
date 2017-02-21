@@ -1,60 +1,756 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 3/6] drivers: firmware: psci: Implement shallow
- suspend mode
-Date: Tue, 21 Feb 2017 17:23:48 +0100
-Message-ID: <CAMuHMdUAcRVLzDZCZucAt0agGZynQtqhWeh7yPaBrogCYhRW4g@mail.gmail.com>
-References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
- <1487622809-25127-4-git-send-email-geert+renesas@glider.be> <08c5dcf3-9d7c-33ff-f801-8f94f630f49b@arm.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] arm64: dts: Add basic DT to support Spreadtrum's
+ SP9860G
+Date: Tue, 21 Feb 2017 09:27:44 -0700
+Message-ID: <20170221162744.GA29581@linaro.org>
+References: <1487660104-15693-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1487660104-15693-2-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <08c5dcf3-9d7c-33ff-f801-8f94f630f49b@arm.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487660104-15693-2-git-send-email-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
+On Tue, Feb 21, 2017 at 02:55:02PM +0800, Chunyan Zhang wrote:
+> From: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 
-On Tue, Feb 21, 2017 at 11:42 AM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> On 20/02/17 20:33, Geert Uytterhoeven wrote:
->> Enable support for "shallow" suspend mode, also known as "Standby" or
->> "Power-On Suspend".
->>
->> As secondary CPU cores are taken offline, "shallow" suspend mode saves
->> slightly more power than "s2idle", but less than "deep" suspend mode.
->> However, unlike "deep" suspend mode, "shallow" suspend mode can be used
->> regardless of the presence of support for PSCI_SYSTEM_SUSPEND, which is
->> an optional API in PSCI v1.0.
->>
->> List the available system suspend modes:
->>
->>     $ cat /sys/power/mem_sleep
->>     s2idle shallow [deep]
->>
->> Suspend to "shallow" mode:
->>
->>     $ echo shallow > /sys/power/mem_sleep
->>     $ echo mem > /sys/power/state
->>
->
-> I don't have the links to such previous attempts handy, but we have
+Hello Chunyan,
 
-Don't worry, I did read earlier discussions about implementing shallow mode.
+> 
+> SC9860G is a 8 cores of A53 SoC with 4G LTE support SoC from Spreadtrum.
+> 
+> According to regular hierarchy of sprd dts, whale2.dtsi contains SoC
+> peripherals IP nodes, sc9860.dtsi contains stuff related to ARM core stuff
+> and sp9860g dts is for the board level.
+> 
+> Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/sprd/Makefile         |   3 +-
+>  arch/arm64/boot/dts/sprd/sc9860.dtsi      | 531 ++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/sprd/sp9860g-1h10.dts |  56 ++++
+>  arch/arm64/boot/dts/sprd/whale2.dtsi      |  70 ++++
+>  4 files changed, 659 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm64/boot/dts/sprd/sc9860.dtsi
+>  create mode 100644 arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+>  create mode 100644 arch/arm64/boot/dts/sprd/whale2.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
+> index b658c5e..f0535e6 100644
+> --- a/arch/arm64/boot/dts/sprd/Makefile
+> +++ b/arch/arm64/boot/dts/sprd/Makefile
+> @@ -1,4 +1,5 @@
+> -dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb
+> +dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
+> +			sp9860g-1h10.dtb
+>  
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> new file mode 100644
+> index 0000000..73deb4e
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
+> @@ -0,0 +1,531 @@
+> +/*
+> + * Spreadtrum SP9860 SoC DTS file
+> + *
+> + * Copyright (C) 2016, Spreadtrum Communications Inc.
+> + *
+> + * This file is licensed under a dual GPLv2 or X11 license.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "whale2.dtsi"
+> +
+> +/ {
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu-map {
+> +			cluster0 {
+> +				core0 {
+> +					cpu = <&CPU0>;
+> +				};
+> +				core1 {
+> +					cpu = <&CPU1>;
+> +				};
+> +				core2 {
+> +					cpu = <&CPU2>;
+> +				};
+> +				core3 {
+> +					cpu = <&CPU3>;
+> +				};
+> +			};
+> +
+> +			cluster1 {
+> +				core0 {
+> +					cpu = <&CPU4>;
+> +				};
+> +				core1 {
+> +					cpu = <&CPU5>;
+> +				};
+> +				core2 {
+> +					cpu = <&CPU6>;
+> +				};
+> +				core3 {
+> +					cpu = <&CPU7>;
+> +				};
+> +			};
+> +		};
+> +
+> +		CPU0: cpu@530000 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530000>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +
+> +		CPU1: cpu@530001 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530001>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +
+> +		CPU2: cpu@530002 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530002>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +
+> +		CPU3: cpu@530003 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530003>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +
+> +		CPU4: cpu@530100 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530100>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +
+> +		CPU5: cpu@530101 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530101>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +
+> +		CPU6: cpu@530102 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530102>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +
+> +		CPU7: cpu@530103 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x530103>;
+> +			enable-method = "psci";
+> +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
+> +		};
+> +	};
+> +
+> +	idle-states{
+> +		entry-method = "arm,psci";
+> +
+> +		CORE_PD: core_pd {
+> +			compatible = "arm,idle-state";
+> +			entry-latency-us = <1000>;
+> +			exit-latency-us = <700>;
+> +			min-residency-us = <2500>;
+> +			local-timer-stop;
+> +			arm,psci-suspend-param = <0x00010002>;
+> +		};
+> +
+> +		CLUSTER_PD: cluster_pd {
+> +			compatible = "arm,idle-state";
+> +			entry-latency-us = <1000>;
+> +			exit-latency-us = <1000>;
+> +			min-residency-us = <3000>;
+> +			local-timer-stop;
+> +			arm,psci-suspend-param = <0x01010003>;
+> +		};
+> +	};
+> +
+> +	gic: interrupt-controller@12001000 {
+> +		compatible = "arm,gic-400";
+> +		reg = <0 0x12001000 0 0x1000>,
+> +		      <0 0x12002000 0 0x2000>,
+> +		      <0 0x12004000 0 0x2000>,
+> +		      <0 0x12006000 0 0x2000>;
+> +		#interrupt-cells = <3>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8)
+> +					| IRQ_TYPE_LEVEL_HIGH)>;
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8)
+> +					 | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8)
+> +					 | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8)
+> +					 | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8)
+> +					 | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +
+> +	pmu {
+> +		compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";
+> +		interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-affinity = <&CPU0>,
+> +				     <&CPU1>,
+> +				     <&CPU2>,
+> +				     <&CPU3>,
+> +				     <&CPU4>,
+> +				     <&CPU5>,
+> +				     <&CPU6>,
+> +				     <&CPU7>;
+> +	};
+> +
+> +	soc {
+> +		soc_funnel: funnel@10001000 {
 
-> more elegant alternative options(suspend-to-idle) and any such attempts
-> to hack around the PSCI will be NACKed.
+There is no need for a label ("soc_funnel) before the device name if that
+device is not referenced elsewhere in the DTS.  The same comment applies to most
+of the component listed below.
 
-"s2idle" does not power down secondary CPU cores, so this is an improvement.
-"deep" may not support configured wake-up sources, which is a bug.
+> +			compatible = "arm,coresight-funnel", "arm,primecell";
+> +			reg = <0 0x10001000 0 0x1000>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					soc_funnel_out_port: endpoint {
+> +						remote-endpoint = <&etb_in>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <0>;
+> +					soc_funnel_in_port: endpoint {
+> +						slave-mode;
+> +						remote-endpoint =
+> +						<&main_funnel_out_port>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etb@10003000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0x10003000 0 0x1000>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +			port {
+> +				etb_in: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =
+> +						<&soc_funnel_out_port>;
+> +				};
+> +			};
+> +		};
+> +
+> +		cluster0_funnel: funnel@11001000 {
+> +			compatible = "arm,coresight-funnel", "arm,primecell";
+> +			reg = <0 0x11001000 0 0x1000>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					cluster0_funnel_out_port: endpoint {
+> +						remote-endpoint =
+> +							<&cluster0_etf_in>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <0>;
+> +					cluster0_funnel_in_port0: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm0_out>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <1>;
+> +					cluster0_funnel_in_port1: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm1_out>;
+> +					};
+> +				};
+> +
+> +				port@3 {
+> +					reg = <2>;
+> +					cluster0_funnel_in_port2: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm2_out>;
+> +					};
+> +				};
+> +
+> +				port@4 {
+> +					reg = <4>;
+> +					cluster0_funnel_in_port3: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm3_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		cluster1_funnel: funnel@11002000 {
+> +			compatible = "arm,coresight-funnel", "arm,primecell";
+> +			reg = <0 0x11002000 0 0x1000>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					cluster1_funnel_out_port: endpoint {
+> +						remote-endpoint =
+> +							<&cluster1_etf_in>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <0>;
+> +					cluster1_funnel_in_port0: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm4_out>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <1>;
+> +					cluster1_funnel_in_port1: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm5_out>;
+> +					};
+> +				};
+> +
+> +				port@3 {
+> +					reg = <2>;
+> +					cluster1_funnel_in_port2: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm6_out>;
+> +					};
+> +				};
+> +
+> +				port@4 {
+> +					reg = <3>;
+> +					cluster1_funnel_in_port3: endpoint {
+> +						slave-mode;
+> +						remote-endpoint = <&etm7_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		cluster0_etf: etf@11003000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0x11003000 0 0x1000>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port@0 {
+> +				cluster0_etf_out: endpoint {
+> +					remote-endpoint =
+> +						<&main_funnel_in_port0>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				cluster0_etf_in: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =
+> +						<&cluster0_funnel_out_port>;
+> +				};
+> +			};
+> +		};
+> +
+> +		cluster1_etf: etf@11004000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0x11004000 0 0x1000>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port@0 {
+> +				cluster1_etf_out: endpoint {
+> +					remote-endpoint =
+> +						<&main_funnel_in_port1>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				cluster1_etf_in: endpoint {
+> +					slave-mode;
+> +					remote-endpoint =
+> +						<&cluster1_funnel_out_port>;
+> +				};
+> +			};
+> +		};
 
-Gr{oetje,eeting}s,
+When more than one port is present it is customary to add another level of
+imbrication like it is done for funnels above:
+                         "ports {"
+                                port@0 {
+                                ...
+                                port@1 {
+                                ...
+                        }
 
-                        Geert
+The same comment applies to both etf. 
 
+> +
+> +		main_funnel: funnel@11005000 {
+> +			compatible = "arm,coresight-funnel", "arm,primecell";
+> +			reg = <0 0x11005000 0 0x1000>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+> +					reg = <0>;
+> +					main_funnel_out_port: endpoint {
+> +						remote-endpoint =
+> +							<&soc_funnel_in_port>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <0>;
+> +					main_funnel_in_port0: endpoint {
+> +						slave-mode;
+> +						remote-endpoint =
+> +							<&cluster0_etf_out>;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <1>;
+> +					main_funnel_in_port1: endpoint {
+> +						slave-mode;
+> +						remote-endpoint =
+> +							<&cluster1_etf_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11440000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11440000 0 0x1000>;
+> +			cpu = <&CPU0>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm0_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster0_funnel_in_port0>;
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11540000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11540000 0 0x1000>;
+> +			cpu = <&CPU1>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm1_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster0_funnel_in_port1>;
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11640000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11640000 0 0x1000>;
+> +			cpu = <&CPU2>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm2_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster0_funnel_in_port2>;
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11740000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11740000 0 0x1000>;
+> +			cpu = <&CPU3>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm3_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster0_funnel_in_port3>;
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11840000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11840000 0 0x1000>;
+> +			cpu = <&CPU4>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm4_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster1_funnel_in_port0>;
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11940000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11940000 0 0x1000>;
+> +			cpu = <&CPU5>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm5_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster1_funnel_in_port1>;
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11a40000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11a40000 0 0x1000>;
+> +			cpu = <&CPU6>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm6_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster1_funnel_in_port2>;
+> +				};
+> +			};
+> +		};
+> +
+> +		etm@11b40000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			reg = <0 0x11b40000 0 0x1000>;
+> +			cpu = <&CPU7>;
+> +			clocks = <&ext_26m>;
+> +			clock-names = "apb_pclk";
+> +
+> +			port {
+> +				etm7_out: endpoint {
+> +					remote-endpoint =
+> +						<&cluster1_funnel_in_port3>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+> new file mode 100644
+> index 0000000..5faa452
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
+> @@ -0,0 +1,56 @@
+> +/*
+> + * Spreadtrum SP9860g board DTS file
+> + *
+> + * Copyright (C) 2017, Spreadtrum Communications Inc.
+> + *
+> + * This file is licensed under a dual GPLv2 or X11 license.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sc9860.dtsi"
+> +
+> +/ {
+> +	model = "Spreadtrum SP9860G 3GFHD Board";
+> +
+> +	compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
+> +
+> +	aliases {
+> +		serial0 = &uart0; /* for Bluetooth */
+> +		serial1 = &uart1; /* UART console */
+> +		serial2 = &uart2; /* Reserved */
+> +		serial3 = &uart3; /* for GPS */
+> +	};
+> +
+> +	memory{
+> +		device_type = "memory";
+> +		reg = <0x0 0x80000000 0 0x60000000>,
+> +		      <0x1 0x80000000 0 0x60000000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial1:115200n8";
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +};
+> diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
+> new file mode 100644
+> index 0000000..64f06d9
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
+> @@ -0,0 +1,70 @@
+> +/*
+> + * Spreadtrum Whale2 SoC platform peripherals DTS file
+> + *
+> + * Copyright (C) 2016, Spreadtrum Communications Inc.
+> + *
+> + * This file is licensed under a dual GPLv2 or X11 license.
+> + */
+> +
+> +/ {
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	soc: soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		ap-apb {
+> +			compatible = "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0x0 0x70000000 0x10000000>;
+> +
+> +			uart0: serial@70000000 {
+> +				compatible = "sprd,sc9838-uart",
+> +					     "sprd,sc9836-uart";
+> +				reg = <0x000000 0x100>;
+> +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&ext_26m>;
+> +				status = "disabled";
+> +			};
+> +
+> +			uart1: serial@70100000 {
+> +				compatible = "sprd,sc9838-uart",
+> +					     "sprd,sc9836-uart";
+> +				reg = <0x100000 0x100>;
+> +				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&ext_26m>;
+> +				status = "disabled";
+> +			};
+> +
+> +			uart2: serial@70200000 {
+> +				compatible = "sprd,sc9838-uart",
+> +					     "sprd,sc9836-uart";
+> +				reg = <0x200000 0x100>;
+> +				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&ext_26m>;
+> +				status = "disabled";
+> +			};
+> +
+> +			uart3: serial@70300000 {
+> +				compatible = "sprd,sc9838-uart",
+> +					     "sprd,sc9836-uart";
+> +				reg = <0x300000 0x100>;
+> +				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&ext_26m>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		ext_26m: ext-26m {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <26000000>;
+> +			clock-output-names = "ext_26m";
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
