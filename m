@@ -1,71 +1,90 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] mmc: bcm2835: add sdhost controller to devicetree
-Date: Tue, 21 Feb 2017 16:57:15 +0100
-Message-ID: <48fcc95e-3a21-f6d0-8073-cae34871656a@i2se.com>
-References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
- <1487668026-7100-4-git-send-email-kraxel@redhat.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
+Date: Tue, 21 Feb 2017 17:58:09 +0200
+Message-ID: <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+ <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487668026-7100-4-git-send-email-kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ramiro,
 
-Am 21.02.2017 um 10:07 schrieb Gerd Hoffmann:
-> Signed-off-by: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
+> Create device tree bindings documentation.
+> 
+> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->   arch/arm/boot/dts/bcm2835-rpi.dtsi |  6 ++++++
->   arch/arm/boot/dts/bcm283x.dtsi     | 10 ++++++++++
->   2 files changed, 16 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> index 0b73f9c..7d89af2 100644
-> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> @@ -69,6 +69,12 @@
->   	bus-width = <4>;
->   };
->   
-> +&sdhost {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdhost_gpio48>;
-> +	bus-width = <4>;
-> +};
+>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> new file mode 100644
+> index 000000000000..31956426d3b9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> @@ -0,0 +1,35 @@
+> +Omnivision OV5647 raw image sensor
+> +---------------------------------
 > +
->   &pwm {
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio45>;
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index a3106aa..3f4fbff 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -450,6 +450,16 @@
->   			status = "disabled";
->   		};
->   
-> +		sdhost: mmc@7e202000 {
-> +			compatible = "brcm,bcm2835-sdhost";
-> +			reg = <0x7e202000 0x100>;
-> +			interrupts = <2 24>;
-> +			clocks = <&clocks BCM2835_CLOCK_VPU>;
-> +			dmas = <&dma 13>;
-> +			dma-names = "rx-tx";
-> +			status = "disabled";
+> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+> +and CCI (I2C compatible) control bus.
+> +
+> +Required properties:
+> +
+> +- compatible		: "ovti,ov5647".
+> +- reg			: I2C slave address of the sensor.
+> +- clocks		: Reference to the xclk clock.
+
+Is "xclk" clock a pixel clock or something else?
+
+> +- clock-names		: Should be "xclk".
+
+You can remove this property, because there is only one source clock.
+
+> +- clock-frequency	: Frequency of the xclk clock.
+
+And after the last updates in the driver this property can be removed as well.
+
+> +
+> +The common video interfaces bindings (see video-interfaces.txt) should be
+> +used to specify link to the image data receiver. The OV5647 device
+> +node should contain one 'port' child node with an 'endpoint' subnode.
+> +
+> +Example:
+> +
+> +	i2c@2000 {
+> +		...
+> +		ov: camera@36 {
+> +			compatible = "ovti,ov5647";
+> +			reg = <0x36>;
+> +			clocks = <&camera_clk>;
+> +			clock-names = "xclk";
+> +			clock-frequency = <25000000>;
+
+When you remove two unused properties, please don't forget to update the
+example.
+
+> +			port {
+> +				camera_1: endpoint {
+> +					remote-endpoint = <&csi1_ep1>;
+> +				};
+> +			};
 > +		};
-> +
->   		hvs@7e400000 {
->   			compatible = "brcm,bcm2835-hvs";
->   			reg = <0x7e400000 0x6000>;
+> +	};
+> 
 
-Unfortunately this is still the wrong place regarding to the register 
-order. So please be placed it between uart0: serial@7e201000 and i2s: 
-i2s@7e203000.
-
+--
+With best wishes,
+Vladimir
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
