@@ -1,72 +1,65 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: juno: update definition for programmable
- replicator.
-Date: Tue, 21 Feb 2017 11:02:49 +0000
-Message-ID: <2ba59da5-fc79-ab53-2f2a-2ddc6e5e9c3d@arm.com>
-References: <1487358790-2618-1-git-send-email-mike.leach@linaro.org>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH/RFC 3/6] drivers: firmware: psci: Implement shallow
+ suspend mode
+Date: Tue, 21 Feb 2017 12:07:12 +0100
+Message-ID: <20170221110712.GB5021@amd>
+References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
+ <1487622809-25127-4-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="i9LlY+UWpKt15+FH"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487358790-2618-1-git-send-email-mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487622809-25127-4-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
 
-On 17/02/17 19:13, Mike Leach wrote:
-> Juno platforms have a programmable replicator splitting the trace output to
-> TPIU and ETR. Currently this is not being programmed as it is being treated
-> as a none-programmable replicator - which is the default operational mode
-> for these devices. The TPIU in the system is enabled by default, and this
-> combination is causing back-pressure in the trace system resulting in
-> overflows at the source.
-> 
-> Replaces the existing definition with one that defines the programmable
-> replicator, using the "qcom,coresight-replicator1x" driver that provides
-> the correct functionality for CoreSight programmable replicators.
-> 
+--i9LlY+UWpKt15+FH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I assume this is just enhancement and not a fix. Since it's too late for
-v4.11 (already in merge window now), I will queue this for v4.12
+Hi!
 
-> Signed-off-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi | 14 ++++++++------
->  1 file changed, 8 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> index 9d799d9..6546e23 100644
-> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> @@ -372,12 +372,14 @@
->  		};
->  	};
->  
-> -	coresight-replicator {
-> -		/*
-> -		 * Non-configurable replicators don't show up on the
-> -		 * AMBA bus.  As such no need to add "arm,primecell".
-> -		 */
-> -		compatible = "arm,coresight-replicator";
-> +	coresight-replicator@20120000 {
-> +
-> +		compatible = "qcom,coresight-replicator1x", "arm,primecell";
-> +		reg = <0 0x20120000 0 0x1000>;
-> +
-> +		clocks = <&soc_smc50mhz>;
-> +		clock-names = "apb_pclk";
-> +		power-domains = <&scpi_devpd 0>;
->  
->  		ports {
->  			#address-cells = <1>;
-> 
+> Enable support for "shallow" suspend mode, also known as "Standby" or
+> "Power-On Suspend".
+>=20
+> As secondary CPU cores are taken offline, "shallow" suspend mode saves
+> slightly more power than "s2idle", but less than "deep" suspend mode.
+> However, unlike "deep" suspend mode, "shallow" suspend mode can be used
+> regardless of the presence of support for PSCI_SYSTEM_SUSPEND, which is
+> an optional API in PSCI v1.0.
 
--- 
-Regards,
-Sudeep
+If system supports "shallow" suspend, why does not PSCI implement it?
+
+In the past, I was told PSCI will not turn into ACPI-like mess, and
+that we'll be able to fix PSCI and will not have to work around its
+problems in kernel :-(.
+
+Not your fault, Mark made those promises.
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--i9LlY+UWpKt15+FH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlisH2AACgkQMOfwapXb+vL47QCeMEtnQeR77gPJgALoVZZgYNzi
+N7MAnjSylRHLAOXHzQ4x8iQfRP9DAR32
+=hO/e
+-----END PGP SIGNATURE-----
+
+--i9LlY+UWpKt15+FH--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
