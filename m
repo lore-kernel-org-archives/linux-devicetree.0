@@ -1,170 +1,72 @@
-From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 3/6] UDC: make debug prints compatible with both pci and platform devices
-Date: Tue, 21 Feb 2017 17:13:01 +0530
-Message-ID: <1487677384-6115-4-git-send-email-raviteja.garimella@broadcom.com>
-References: <1487677384-6115-1-git-send-email-raviteja.garimella@broadcom.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487677384-6115-1-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [PATCH 3/3] Input: tsc2007 - add a property "ti,report-resistance" to restore the old pressure reporting state if needed.
+Date: Tue, 21 Feb 2017 12:43:28 +0100
+Message-ID: <FE6FEEC7-65B8-4C20-9C15-C641A8A8E4CA@goldelico.com>
+References: <cover.1487609795.git.hns@goldelico.com> <991a09fb874c07b03c21a5b38ebade187134539d.1487609795.git.hns@goldelico.com> <20170221110708.GA5021@amd>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: multipart/signed; boundary="Apple-Mail=_A31398BE-69F6-41BA-8E85-2280B2B21214"; protocol="application/pgp-signature"; micalg=pgp-sha256
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170221110708.GA5021@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a struct device member to UDC data structure and
-makes changes to the arguments of dev_err and dev_dbg calls so that
-the debug prints work for both pci and platform devices.
 
-Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- drivers/usb/gadget/udc/amd5536udc.h     |  4 +++-
- drivers/usb/gadget/udc/amd5536udc_pci.c |  1 +
- drivers/usb/gadget/udc/snps_udc_core.c  | 28 ++++++++++++++--------------
- 3 files changed, 18 insertions(+), 15 deletions(-)
+--Apple-Mail=_A31398BE-69F6-41BA-8E85-2280B2B21214
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
 
-diff --git a/drivers/usb/gadget/udc/amd5536udc.h b/drivers/usb/gadget/udc/amd5536udc.h
-index bd2a18e..c252457 100644
---- a/drivers/usb/gadget/udc/amd5536udc.h
-+++ b/drivers/usb/gadget/udc/amd5536udc.h
-@@ -563,6 +563,8 @@ struct udc {
- 	u16				cur_config;
- 	u16				cur_intf;
- 	u16				cur_alt;
-+
-+	struct device			*dev;
- };
- 
- #define to_amd5536_udc(g)	(container_of((g), struct udc, gadget))
-@@ -639,7 +641,7 @@ MODULE_PARM_DESC(use_fullspeed, "true for fullspeed only");
- 
- /* debug macros ------------------------------------------------------------*/
- 
--#define DBG(udc , args...)	dev_dbg(&(udc)->pdev->dev, args)
-+#define DBG(udc , args...)	dev_dbg(udc->dev, args)
- 
- #ifdef UDC_VERBOSE
- #define VDBG			DBG
-diff --git a/drivers/usb/gadget/udc/amd5536udc_pci.c b/drivers/usb/gadget/udc/amd5536udc_pci.c
-index 2a2d0a9..57a13f0 100644
---- a/drivers/usb/gadget/udc/amd5536udc_pci.c
-+++ b/drivers/usb/gadget/udc/amd5536udc_pci.c
-@@ -168,6 +168,7 @@ static int udc_pci_probe(
- 	dev->phys_addr = resource;
- 	dev->irq = pdev->irq;
- 	dev->pdev = pdev;
-+	dev->dev = &pdev->dev;
- 
- 	/* general probing */
- 	if (udc_probe(dev)) {
-diff --git a/drivers/usb/gadget/udc/snps_udc_core.c b/drivers/usb/gadget/udc/snps_udc_core.c
-index 72f3c8f..c778d51 100644
---- a/drivers/usb/gadget/udc/snps_udc_core.c
-+++ b/drivers/usb/gadget/udc/snps_udc_core.c
-@@ -209,18 +209,18 @@ static void print_regs(struct udc *dev)
- 	if (use_dma && use_dma_ppb && !use_dma_ppb_du) {
- 		DBG(dev, "DMA mode       = PPBNDU (packet per buffer "
- 			"WITHOUT desc. update)\n");
--		dev_info(&dev->pdev->dev, "DMA mode (%s)\n", "PPBNDU");
-+		dev_info(dev->dev, "DMA mode (%s)\n", "PPBNDU");
- 	} else if (use_dma && use_dma_ppb && use_dma_ppb_du) {
- 		DBG(dev, "DMA mode       = PPBDU (packet per buffer "
- 			"WITH desc. update)\n");
--		dev_info(&dev->pdev->dev, "DMA mode (%s)\n", "PPBDU");
-+		dev_info(dev->dev, "DMA mode (%s)\n", "PPBDU");
- 	}
- 	if (use_dma && use_dma_bufferfill_mode) {
- 		DBG(dev, "DMA mode       = BF (buffer fill mode)\n");
--		dev_info(&dev->pdev->dev, "DMA mode (%s)\n", "BF");
-+		dev_info(dev->dev, "DMA mode (%s)\n", "BF");
- 	}
- 	if (!use_dma)
--		dev_info(&dev->pdev->dev, "FIFO mode\n");
-+		dev_info(dev->dev, "FIFO mode\n");
- 	DBG(dev, "-------------------------------------------------------\n");
- }
- 
-@@ -1628,7 +1628,7 @@ static void udc_setup_endpoints(struct udc *dev)
- static void usb_connect(struct udc *dev)
- {
- 
--	dev_info(&dev->pdev->dev, "USB Connect\n");
-+	dev_info(dev->dev, "USB Connect\n");
- 
- 	dev->connected = 1;
- 
-@@ -1646,7 +1646,7 @@ static void usb_connect(struct udc *dev)
- static void usb_disconnect(struct udc *dev)
- {
- 
--	dev_info(&dev->pdev->dev, "USB Disconnect\n");
-+	dev_info(dev->dev, "USB Disconnect\n");
- 
- 	dev->connected = 0;
- 
-@@ -2110,7 +2110,7 @@ static irqreturn_t udc_data_out_isr(struct udc *dev, int ep_ix)
- 	}
- 	/* HE event ? */
- 	if (tmp & AMD_BIT(UDC_EPSTS_HE)) {
--		dev_err(&dev->pdev->dev, "HE ep%dout occurred\n", ep->num);
-+		dev_err(dev->dev, "HE ep%dout occurred\n", ep->num);
- 
- 		/* clear HE */
- 		writel(tmp | AMD_BIT(UDC_EPSTS_HE), &ep->regs->sts);
-@@ -2309,7 +2309,7 @@ static irqreturn_t udc_data_in_isr(struct udc *dev, int ep_ix)
- 	if (use_dma) {
- 		/* BNA ? */
- 		if (epsts & AMD_BIT(UDC_EPSTS_BNA)) {
--			dev_err(&dev->pdev->dev,
-+			dev_err(dev->dev,
- 				"BNA ep%din occurred - DESPTR = %08lx\n",
- 				ep->num,
- 				(unsigned long) readl(&ep->regs->desptr));
-@@ -2322,7 +2322,7 @@ static irqreturn_t udc_data_in_isr(struct udc *dev, int ep_ix)
- 	}
- 	/* HE event ? */
- 	if (epsts & AMD_BIT(UDC_EPSTS_HE)) {
--		dev_err(&dev->pdev->dev,
-+		dev_err(dev->dev,
- 			"HE ep%dn occurred - DESPTR = %08lx\n",
- 			ep->num, (unsigned long) readl(&ep->regs->desptr));
- 
-@@ -2960,7 +2960,7 @@ __acquires(dev->lock)
- 
- 		/* link up all endpoints */
- 		udc_setup_endpoints(dev);
--		dev_info(&dev->pdev->dev, "Connect: %s\n",
-+		dev_info(dev->dev, "Connect: %s\n",
- 			 usb_speed_string(dev->gadget.speed));
- 
- 		/* init ep 0 */
-@@ -3172,20 +3172,20 @@ int udc_probe(struct udc *dev)
- 	/* init registers, interrupts, ... */
- 	startup_registers(dev);
- 
--	dev_info(&dev->pdev->dev, "%s\n", mod_desc);
-+	dev_info(dev->dev, "%s\n", mod_desc);
- 
- 	snprintf(tmp, sizeof(tmp), "%d", dev->irq);
--	dev_info(&dev->pdev->dev,
-+	dev_info(dev->dev,
- 		 "irq %s, pci mem %08lx, chip rev %02x(Geode5536 %s)\n",
- 		 tmp, dev->phys_addr, dev->chiprev,
- 		 (dev->chiprev == UDC_HSA0_REV) ? "A0" : "B1");
- 	strcpy(tmp, UDC_DRIVER_VERSION_STRING);
- 	if (dev->chiprev == UDC_HSA0_REV) {
--		dev_err(&dev->pdev->dev, "chip revision is A0; too old\n");
-+		dev_err(dev->dev, "chip revision is A0; too old\n");
- 		retval = -ENODEV;
- 		goto finished;
- 	}
--	dev_info(&dev->pdev->dev,
-+	dev_info(dev->dev,
- 		 "driver version: %s(for Geode5536 B1)\n", tmp);
- 	udc = dev;
- 
--- 
-2.1.0
+Hi Pavel,
 
+> Am 21.02.2017 um 12:07 schrieb Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>:
+> 
+> On Mon 2017-02-20 17:56:36, H. Nikolaus Schaller wrote:
+>> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> 
+> No. device tree is for hardware description, not kernel configuration.
+
+Yes, I agree. A new Kernel CONFIG would be better in this case.
+I just did copy&paste from the old patch set without thinking that far.
+
+Would
+
+CONFIG_TSC2007_REPORT_RAW_RESISTANCE_AS_PRESSURE
+
+be ok?
+
+BR and thanks,
+Nikolaus
+
+
+--Apple-Mail=_A31398BE-69F6-41BA-8E85-2280B2B21214
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYrCfgAAoJEIl79TGLgAm6kSAP/1g0xgNyujvK3Bp/32lAkkVX
+wU4w2siekWrIB3rOGAM1bimsvbd7MxfkXQD7uHrJdREsquX5mEkTXuP+W22mRuPe
+C7v/Ina1RtAApQ5fgwPWYGDLiSLatPX9ODuTSStfswNLsKdAoNX86mIUVYTVR6mO
+sqYVC4zVC2j5uwqSSqB1ZzPi2zCXtyOlFELHXiF7vlp2JrJ6TCh6lyygeJHKD1uU
+pwQOSWfI8T7HJ4EhvTcYFaYKZK9imzB/IUWSprKKOGSxem07OL5uNEC1Ifsky//P
+o5+TKH7d1j9muhH+70QnlAh3myEqFYvvEJ/Wi9QYYyM/v4/wuY2+pZElk2BfVoaw
+1DTGH1k6PrxS4We3U5+TUacexzIJhiemfeDVt/2rLFIuVOOgtZRuPyZc5ABxY7Vy
+mNBNGLL5LPMzqulwFSRACSVRGQfxNZ7ErCyA+tSo5xpdxKNXx7V2jDdcb0PvR/q7
+wj3FUE5h28oRkakAoRk8qa4+SeqhkXX0JLswY7iGig3mQUH+mHx3YoUYifx+zkpP
+huROgo+DsTJRWb1oi+PgFuHCsTJsec2o/qkW+CyI+i/z0lny6i6N4yrXD9cTZkgY
+xaawHFqcL0+DgSgVTvfW7ozAUE+nQUYyQHZSMUyf609w+NqQhI/kbopH8gIjcDpK
+WZSav1gnaAuWzzAVZamq
+=MkPM
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_A31398BE-69F6-41BA-8E85-2280B2B21214--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
