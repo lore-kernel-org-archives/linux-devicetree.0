@@ -1,80 +1,54 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 0/8] ARM64: Initial Marvell IAP140 enablement
-Date: Wed, 22 Feb 2017 13:27:29 -0600
-Message-ID: <CAL_JsqJhH7hqfdU9t8m=gY8c2qcA2aHNhmTTdV_HTFPp+YdF_Q@mail.gmail.com>
-References: <20170222022929.10540-1-afaerber@suse.de>
- <CAL_JsqJmv--wP+gEt27ZbTT+8GeqKhYc=x3MTPBiz2Jr2wys8A@mail.gmail.com>
- <22850768-8ea8-3d56-5c34-31f24ca3b487@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <22850768-8ea8-3d56-5c34-31f24ca3b487@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, info@andromedabox.org, Eric Miao <eric.y.miao@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Subject: [PATCH v2 0/2] mfd: axp20x: Restore master mode support on AXP806
+Date: Wed, 22 Feb 2017 20:40:02 +0100 (CET)
+Message-ID: <cover.1487791328.git.rask@formelder.dk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgMTA6NDMgQU0sIEFuZHJlYXMgRsOkcmJlciA8YWZhZXJi
-ZXJAc3VzZS5kZT4gd3JvdGU6Cj4gSGkgUm9iLAo+Cj4gQW0gMjIuMDIuMjAxNyB1bSAxNDozNCBz
-Y2hyaWViIFJvYiBIZXJyaW5nOgo+PiBPbiBUdWUsIEZlYiAyMSwgMjAxNyBhdCA4OjI5IFBNLCBB
-bmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+IHdyb3RlOgo+Pj4gT25lIGxpbWl0YXRp
-b24gaXMgY3VycmVudGx5IHRoZSBsYWNrIG9mIGFuIElBUDE0MCBjbGsgZHJpdmVyLiBQYXRjaCA0
-LzQgd29ya3MKPj4+IGFyb3VuZCB0aGF0IGZvciBVQVJUMCB3aXRoIGEgZml4ZWQtY2xvY2suCj4+
-Cj4+IFRoZSBQWEExOTI4IGNsb2NrIGRyaXZlciBzaG91bGQgYmUgY2xvc2UgdG8gd2hhdCB5b3Ug
-bmVlZC4gVGhleSBhcmUKPj4gc3VwcG9zZWQgdG8gYmUgdmVyeSBzaW1pbGFyLgo+Cj4gV2hlcmUg
-ZG8geW91IHNlZSB0aGF0IGluIG1haW5saW5lPyBOb3QgaW4gZHJpdmVycy9jbGsvcHhhLyBhdCBs
-ZWFzdC4gSSdtCj4gY2VydGFpbiB0aGUgYWNvcm4tbWFydmVsbCB0cmVlIGhhcyBhIFBYQTE5MDgg
-Y2xrIGRyaXZlciBzb21ld2hlcmUsIHRvbywKPiBJIGp1c3QgaGF2ZW4ndCBwb3J0ZWQgaXQgeWV0
-LgoKZHJpdmVycy9jbGsvbW1wL2Nsay1vZi1weGExOTI4LmMKCkkgcG9ydGVkL3Jld3JvdGUgdGhh
-dCBmcm9tIE1hcnZlbGwncyAzLjEwIHZlbmRvciB0cmVlLgoKPj4+IEFuZHJlYXMgRsOkcmJlciAo
-OCk6Cj4+PiAgIERvY3VtZW50YXRpb246IGFybTogTWFydmVsbDogRG9jdW1lbnQgSUFQMTQwCj4+
-PiAgIHR0eTogc2VyaWFsOiBTdXBwcmVzcyBkZXByZWNhdGVkIFNFUklBTF9QWEEgb24gYXJtNjQK
-Pj4+ICAgdHR5OiBzZXJpYWw6IDgyNTBfcHhhOiBJbXBsZW1lbnQgbW1wIGVhcmx5Y29uCj4+Cj4+
-IFlvdSBzaG91bGQgbm90IHVzZSB0aGUgcHhhIHNlcmlhbCBkcml2ZXIuIEFGQUlDVCwgaXQgd2Fz
-IHNlcGFyYXRlIHRvCj4+IGFkZCBETUEgc3VwcG9ydCwgYnV0IG5vdyB0aGUgYmFzZSA4MjUwIGRy
-aXZlciBzdXBwb3J0cyBETUEuIFRoZSBiYXNlCj4+IDgyNTAgZHJpdmVyIHdvcmtzIHdpdGggdGhl
-IFBYQTE5MjggYW5kIHNob3VsZCBhbHNvIHdvcmsgd2l0aCB0aGUKPj4gUFhBMTkwOC4KPgo+IERv
-IHlvdSBwZXJzb25hbGx5IGhhdmUgb25lPyBJIGRpZG4ndCBzcG90IGEgcHhhMTkyOCBEVCBpbiBt
-YWlubGluZS4KClllcy4gSXQgbmV2ZXIgZ290IHJlbGVhc2VkIGFuZCBnb3QgYWJhbmRvbmVkLiBJ
-IGdvdCBzZXZlcmFsIGRyaXZlcnMKY2xlYW5lZCB1cCB0byBzdXBwb3J0IGl0IGFuZCB0aGUgY2xv
-Y2sgY29kZSBpbiBiZWZvcmUgdGhhdCBoYXBwZW5lZC4gSQpoYWQgYSBpbi1wcm9ncmVzcyBEUk0g
-ZHJpdmVyIHRvby4gSSB3YXMgZGVidWdnaW5nIHdoeSBzb21lIG1vbml0b3JzCndvcmtlZCBhbmQg
-b3RoZXJzIGRpZG4ndCB3aGVuIEkgc3RvcHBlZCB3b3JraW5nIG9uIGl0LiBJIHRoaW5rIHRoZQpi
-b2FyZCB5b3UgYXJlIHdvcmtpbmcgb24gaGFzIHRoZSBzYW1lIEFEVjc1MzM/CgpJdCdzIGFsbCB1
-cCBvbiBteSBMaW5hcm8gdHJlZToKaHR0cHM6Ly9naXQubGluYXJvLm9yZy9wZW9wbGUvcm9iLmhl
-cnJpbmcvbGludXguZ2l0Cgo+IFNvLCBieSBteSByZWFkaW5nIGJvdGggODI1MF9vZi5jIGFuZCA4
-MjUwX3B4YS5jIGxpc3QgIm1ydmwsbW1wLXVhcnQiIGZvcgo+IHRoZSBwbGF0Zm9ybSBkcml2ZXIu
-IElzIHRoYXQgcmVhbGx5IGludGVudGlvbmFsPwoKSHVtbSwgd2VsbCBJIGFkZGVkIHN1cHBvcnQg
-aW4gY29tbWl0IDZhZDk5MWI2OTliNGUgdG8gb2Zfc2VyaWFsLmMgYW5kCnRoZW4gaXQgbG9va3Mg
-bGlrZSBpdCBnb3QgY29waWVkIHRvIDgyNTBfcHhhLmMgcmVjZW50bHkuIE5vdCBzdXJlIGlmCnRo
-YXQgcmVhbGx5IG1hZGUgc2Vuc2Ugb3Igbm90LiBXZSBzaG91bGQgcmVtb3ZlIG9uZSBvZiB0aGVt
-Lgo4MjUwX3B4YS5jIGxvb2tzIGZhaXJseSBwb2ludGxlc3MgdG8gbWUuIFR1cm5pbmcgYSBjbG9j
-ayBvbi9vZmYgaW4KcmVzdW1lL3N1c3BlbmQgaXMgYWxyZWFkeSBzdXBwb3J0ZWQgYnkgODI1MF9v
-Zi5jICh3aGljaCBkb2Vzbid0IGhhdmUKdGhlIGJ1ZyBvZiB0dXJuaW5nIG9mZiB0aGUgY29uc29s
-ZSdzIGNsb2NrIGluIHN1c3BlbmQpLiBUaGUgb25seSBvdGhlcgp0aGluZyBpcyB0aGUgZXJyYXRh
-IGluIHNlcmlhbF9weGFfZGxfd3JpdGUuCgo+IFdoYXQgdGhlIGVhcmx5X3B4YSBlYXJseWNvbiBk
-b2VzIGlzIHNldCB0aGUgcmVnaXN0ZXIgc2hpZnQgYW5kIHRoZW4KPiByZXVzZSB0aGUgODI1MCBj
-b3JlIC0gdGhhdCBsb29rcyBwZXJmZWN0bHkgdmFsaWQgdG8gbWUuIEFyZSB5b3UgcG9zc2libHkK
-PiBtaXhpbmcgdGhhdCB1cCB3aXRoIHRoZSBub24tODI1MCBweGEgc2VyaWFsIGRyaXZlciB0aGF0
-IEkgYW0gYWxyZWFkeQo+IHN1cHByZXNzaW5nIG9uZSBwYXRjaCBlYXJsaWVyPwoKVGhlIGVhcmx5
-Y29uIGNvcmUgYWxyZWFkeSBzZXRzIHVwIHJlZy1zaGlmdCBmb3IgeW91LgoKSSBhZGRlZCBlYXJs
-eWNvbiBzdXBwb3J0IGluIGNvbW1pdCBhNGM2MzliMDRmMzAxZC4gSSB1c2VkICJuczE2NjUwYSIK
-YXMgYSBmYWxsYmFjayBjb21wYXRpYmxlIHN0cmluZywgc28gdGhlcmUncyBub3QgYW4gZXhwbGlj
-aXQgUFhBL01NUApjb21wYXRpYmxlIHN0cmluZyB0aGVyZS4KCj4gV2hpbGUgYXQgaXQsIGFyZSB5
-b3UgYXdhcmUgdGhhdCB3ZSBoYXZlIHR3byBkcml2ZXJzLCBvbmUgcHhhIGFuZCBvbmUKPiBtbXAs
-IHRoYXQgYmluZCB0byAibWFydmVsbCxwZG1hLTEuMCI/IFRoYXQgc2VlbWVkIHdyb25nIHRvIG1l
-LCB0b28uCgpZZWFoLCBpdCB3YXMgZHJpdmVycy90dHkvc2VyaWFsL3B4YS5jIHRoYXQgSSB3YXMg
-dGhpbmtpbmcgb2YuIEkgd2FzCmluY29ycmVjdGx5IHRoaW5raW5nIDgyNTBfcHhhLmMgd2FzIHRo
-YXQgb25lLgoKUm9iCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+The AXP806 (and very similar AXP808) PMICs can be wired to either master
+mode or slave mode on a board-by-board basis. A register on the PMIC needs
+to be set accordingly for the PMIC to respond to other register accesses.
+The "xpowers,master-mode" property introduced in this patch series lets a
+board's device tree specify the correct operating mode to use.
+
+Known boards with the Allwinner A80 SoC include an AXP806 or AXP808.
+The AXP806 support used to rely on the vendor boot loader to set the
+operating mode, but nowadays, mainline U-Boot (since V2016.11) is usable
+on boards using the A80 SoC, but doesn't yet have any support for the
+AXP806 PMIC. So for kernel 4.11, a patch went in to always set the
+AXP806 to slave mode to keep those two boards working (see below). That,
+however, broke support for boards where the PMIC is wired for master mode.
+
+There are so far three boards using the AXP806 PMIC support:
+- Merrii A80 Optimus and Cubieboard4 developer boards with an AXP809
+  paired with an AXP806 in slave mode. A device tree for each of these
+  boards have been in the tree for a while now.
+- Sunchip CX-A99 which uses just an AXP808 in master mode. An
+  out-of-tree device tree works with the 4.9.9 and 4.10-rc7 kernels.
+  A device tree will be submitted along with support for *-supply
+  properties taking a regulator list.
+
+The default needs to be slave mode for compatibility with the two boards'
+device trees that are using the "xpowers,axp806" compatible since kernel
+4.9 when the AXP806 support was added.
+
+Patch 1 adds the "xpowers,master-mode" property to the AXP806 binding.
+Patch 2 adds support for it to the axp20x driver.
+
+Rask Ingemann Lambertsen (2):
+  dts: mfd: axp20x: Add "xpowers,master-mode" property for AXP806 PMICs
+  mfd: axp20x: Add support for dts property "xpowers,master-mode"
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt |  3 +++
+ drivers/mfd/axp20x.c                             | 21 +++++++++++++--------
+ 2 files changed, 16 insertions(+), 8 deletions(-)
+
+-- 
+2.10.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
