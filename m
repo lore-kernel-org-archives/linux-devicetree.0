@@ -1,169 +1,47 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 3/4] iio: accel: adxl345: Split driver into core and I2C
-Date: Wed, 22 Feb 2017 18:23:00 +0800
-Message-ID: <68ce56410416b439bd59a8e2f4fe294a48cb5fad.1487757223.git.eraretuya@gmail.com>
-References: <cover.1487757223.git.eraretuya@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1487757223.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1487757223.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1487757223.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: [PATCH v3 0/2] Xilinx Slave Serial FPGA Manager
+Date: Wed, 22 Feb 2017 11:39:09 +0100
+Message-ID: <1487759951-20711-1-git-send-email-agust@denx.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move I2C-specific code into its own file and rely on regmap to access
-registers. The core code provides access to x, y, z and scale readings.
+This series adds an FPGA manager driver for Xilinx Spartan6 FPGAs
+that can configure them using an SPI port and two GPIOs.
 
-Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Change from v2:
-* Add OF match table on both I2C and SPI files and document them
+Anatolij Gustschin (2):
+  dt: bindings: fpga: add xilinx slave-serial binding description
+  fpga manager: Add Xilinx slave serial SPI driver
 
-Changes from v1:
-* Update Kconfig to Jonathan's preferred style
-* Improve similarity index from 78% to 100% (rename detection)
+Changes in v3:
 
- drivers/iio/accel/Kconfig                       | 13 ++--
- drivers/iio/accel/Makefile                      |  3 +-
- drivers/iio/accel/{adxl345.c => adxl345_core.c} |  0
- drivers/iio/accel/adxl345_i2c.c                 | 81 +++++++++++++++++++++++++
- 4 files changed, 92 insertions(+), 5 deletions(-)
- rename drivers/iio/accel/{adxl345.c => adxl345_core.c} (100%)
- create mode 100644 drivers/iio/accel/adxl345_i2c.c
+ - extend example to show the usage in SPI master node, connected
+   to the fpga-region node
+ - use named constant for udelay()/usleep_range() arguments
+ - drop not needed .owner init
+ - correct module licence (GPL v2)
+ - fix build warning with newer gcc (in min() macro)
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 26b8614..ffb0a63 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -8,14 +8,19 @@ menu "Accelerometers"
- config ADXL345
- 	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer Driver"
- 	depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
--	depends on I2C
--	select REGMAP_I2C
-+	select REGMAP
-+	select ADXL345_I2C if I2C
- 	help
- 	  Say Y here if you want to build support for the Analog Devices
- 	  ADXL345 3-axis digital accelerometer.
- 
--	  To compile this driver as a module, choose M here: the
--	  module will be called adxl345.
-+	  To compile this driver as a module, choose M here: the core
-+	  module will be called adxl345_core and you will also get
-+	  adxl345_i2c for I2C.
-+
-+config ADXL345_I2C
-+	tristate
-+	select REGMAP_I2C
- 
- config BMA180
- 	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
-diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
-index 618488d..3f4a6d6 100644
---- a/drivers/iio/accel/Makefile
-+++ b/drivers/iio/accel/Makefile
-@@ -3,7 +3,8 @@
- #
- 
- # When adding new entries keep the list in alphabetical order
--obj-$(CONFIG_ADXL345) += adxl345.o
-+obj-$(CONFIG_ADXL345) += adxl345_core.o
-+obj-$(CONFIG_ADXL345_I2C) += adxl345_i2c.o
- obj-$(CONFIG_BMA180) += bma180.o
- obj-$(CONFIG_BMA220) += bma220_spi.o
- obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
-diff --git a/drivers/iio/accel/adxl345.c b/drivers/iio/accel/adxl345_core.c
-similarity index 100%
-rename from drivers/iio/accel/adxl345.c
-rename to drivers/iio/accel/adxl345_core.c
-diff --git a/drivers/iio/accel/adxl345_i2c.c b/drivers/iio/accel/adxl345_i2c.c
-new file mode 100644
-index 0000000..df01bd1
---- /dev/null
-+++ b/drivers/iio/accel/adxl345_i2c.c
-@@ -0,0 +1,81 @@
-+/*
-+ * ADXL345 3-Axis Digital Accelerometer
-+ *
-+ * Copyright (c) 2017 Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License. See the file COPYING in the main
-+ * directory of this archive for more details.
-+ *
-+ * I2C driver for ADXL345
-+ * 7-bit I2C slave address: 0x1D (ALT ADDRESS pin tied to VDDIO) or
-+ * 0x53 (ALT ADDRESS pin grounded)
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+
-+#include "adxl345.h"
-+
-+static const struct regmap_config adxl345_i2c_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int adxl345_i2c_probe(struct i2c_client *client,
-+			     const struct i2c_device_id *id)
-+{
-+	struct regmap *regmap;
-+	const char *name = NULL;
-+
-+	regmap = devm_regmap_init_i2c(client, &adxl345_i2c_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "Error initializing i2c regmap: %d\n",
-+			(int)PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
-+	}
-+
-+	if (id)
-+		name = id->name;
-+
-+	return adxl345_common_probe(&client->dev, regmap, name);
-+}
-+
-+static int adxl345_i2c_remove(struct i2c_client *client)
-+{
-+	return adxl345_common_remove(&client->dev);
-+}
-+
-+static const struct i2c_device_id adxl345_i2c_id[] = {
-+	{ "adxl345", 0 },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, adxl345_i2c_id);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id adxl345_of_match[] = {
-+	{ .compatible = "adi,adxl345" },
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, adxl345_of_match);
-+#endif
-+
-+static struct i2c_driver adxl345_i2c_driver = {
-+	.driver = {
-+		.name	= "adxl345_i2c",
-+		.of_match_table = of_match_ptr(adxl345_of_match),
-+	},
-+	.probe		= adxl345_i2c_probe,
-+	.remove		= adxl345_i2c_remove,
-+	.id_table	= adxl345_i2c_id,
-+};
-+
-+module_i2c_driver(adxl345_i2c_driver);
-+
-+MODULE_AUTHOR("Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer I2C driver");
-+MODULE_LICENSE("GPL v2");
+Changes in v2:
+
+ - corrected gpios properties and node name in example
+   in DT binding document
+ - rebased on v4.10
+
+ .../bindings/fpga/xilinx-slave-serial.txt          |  24 +++
+ drivers/fpga/Kconfig                               |   7 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/xilinx-spi.c                          | 181 +++++++++++++++++++++
+ 4 files changed, 213 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+ create mode 100644 drivers/fpga/xilinx-spi.c
+
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
