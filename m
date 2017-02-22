@@ -1,115 +1,80 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/1] media: platform: Renesas IMR driver
-Date: Wed, 22 Feb 2017 22:05:21 +0300
-Message-ID: <cccaf6f7-0ff3-539c-5b60-e28858018b97@cogentembedded.com>
-References: <20170211200207.273799464@cogentembedded.com>
- <20170222142515.i54xtgyvxysd2qsr@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 0/8] ARM64: Initial Marvell IAP140 enablement
+Date: Wed, 22 Feb 2017 13:27:29 -0600
+Message-ID: <CAL_JsqJhH7hqfdU9t8m=gY8c2qcA2aHNhmTTdV_HTFPp+YdF_Q@mail.gmail.com>
+References: <20170222022929.10540-1-afaerber@suse.de>
+ <CAL_JsqJmv--wP+gEt27ZbTT+8GeqKhYc=x3MTPBiz2Jr2wys8A@mail.gmail.com>
+ <22850768-8ea8-3d56-5c34-31f24ca3b487@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170222142515.i54xtgyvxysd2qsr@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <22850768-8ea8-3d56-5c34-31f24ca3b487@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, info@andromedabox.org, Eric Miao <eric.y.miao@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 02/22/2017 05:25 PM, Rob Herring wrote:
-
->> From: Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>
->> The image renderer light extended 4 (IMR-LX4) or the distortion correction
->> engine is a drawing processor with a simple  instruction system capable of
->> referencing data on an external memory as 2D texture data and performing
->> texture mapping and drawing with respect to any shape that is split into
->> triangular objects.
->>
->> This V4L2 memory-to-memory device driver only supports image renderer found
->> in the R-Car gen3 SoCs; the R-Car gen2 support  can be added later...
->>
->> [Sergei: merged 2 original patches, added the patch description, removed
->> unrelated parts,  added the binding document, ported the driver to the
->> modern kernel, renamed the UAPI header file and the guard  macros to match
->> the driver name, extended the copyrights, fixed up Kconfig prompt/depends/
->> help, made use of the BIT()/GENMASK() macros, sorted #include's, removed
->> leading  dots and fixed grammar in the comments, fixed up indentation to
->> use tabs where possible, renamed IMR_DLSR to IMR_DLPR to match the manual,
->> separated the register offset/bit #define's, removed *inline* from .c file,
->> fixed lines over 80 columns, removed useless parens, operators, casts,
->> braces, variables, #include's, (commented out) statements, and even
->> function, inserted empty line after desclaration, removed extra empty
->> lines, reordered some local variable desclarations, removed calls to
->> 4l2_err() on kmalloc() failure, fixed the error returned by imr_default(),
->> avoided code duplication in the IRQ handler, used '__packed' for the UAPI
->> structures, enclosed the macro parameters in parens, exchanged the values
->> of IMR_MAP_AUTO[SD]G macros.]
->>
->> Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>
->> ---
->> This patch is against the 'media_tree.git' repo's 'master' branch.
->>
->>  Documentation/devicetree/bindings/media/rcar_imr.txt |   23
->>  drivers/media/platform/Kconfig                       |   13
->>  drivers/media/platform/Makefile                      |    1
->>  drivers/media/platform/rcar_imr.c                    | 1923 +++++++++++++++++++
->>  include/uapi/linux/rcar_imr.h                        |   94
->>  5 files changed, 2054 insertions(+)
->>
->> Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
->> ===================================================================
->> --- /dev/null
->> +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
->> @@ -0,0 +1,23 @@
->> +Renesas R-Car Image Renderer (Distortion Correction Engine)
->> +-----------------------------------------------------------
->> +
->> +The image renderer  or the distortion correction  engine is a drawing processor
->> +with a simple  instruction system capable of referencing data in external memory
->> +as  2D texture data and performing texture mapping and drawing with respect to
->> +any shape that is split into triangular objects.
->
-> Please fix extra spaces in here.
-
-    OK. Seems to be your pet peeve? :-)
-
->> +
->> +Required properties:
->> +- compatible: must be "renesas,imr-lx4" for the image renderer light extended 4
->> +  (IMR-LX4)  found in the R-Car gen3 SoCs;
->
-> Needs an SoC specific compatible string too.
-
-    Strings, to be precise -- there are several SoCs but the IMR-LX4 core 
-seems the same among them. Well, if you say so...
-
-> The description is above, so you just need to list the compatible
-> strings.
-
-    There's (most probably) gonna be other versions of the IMR core supported, 
-(this core can be forund in gen2 SoCs too)...
-
->> +- reg: offset and length of the register block;
->> +- interrupts: interrupt specifier;
->
-> How many interrupts?
-
-    I thought it was clear from using singular.
-
->> +- clocks: clock phandle and specifier pair.
->
-> How many clocks?
-
-    Two, perhaps. I meant a single clock by using singular again.
-
-[...]
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgMTA6NDMgQU0sIEFuZHJlYXMgRsOkcmJlciA8YWZhZXJi
+ZXJAc3VzZS5kZT4gd3JvdGU6Cj4gSGkgUm9iLAo+Cj4gQW0gMjIuMDIuMjAxNyB1bSAxNDozNCBz
+Y2hyaWViIFJvYiBIZXJyaW5nOgo+PiBPbiBUdWUsIEZlYiAyMSwgMjAxNyBhdCA4OjI5IFBNLCBB
+bmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+IHdyb3RlOgo+Pj4gT25lIGxpbWl0YXRp
+b24gaXMgY3VycmVudGx5IHRoZSBsYWNrIG9mIGFuIElBUDE0MCBjbGsgZHJpdmVyLiBQYXRjaCA0
+LzQgd29ya3MKPj4+IGFyb3VuZCB0aGF0IGZvciBVQVJUMCB3aXRoIGEgZml4ZWQtY2xvY2suCj4+
+Cj4+IFRoZSBQWEExOTI4IGNsb2NrIGRyaXZlciBzaG91bGQgYmUgY2xvc2UgdG8gd2hhdCB5b3Ug
+bmVlZC4gVGhleSBhcmUKPj4gc3VwcG9zZWQgdG8gYmUgdmVyeSBzaW1pbGFyLgo+Cj4gV2hlcmUg
+ZG8geW91IHNlZSB0aGF0IGluIG1haW5saW5lPyBOb3QgaW4gZHJpdmVycy9jbGsvcHhhLyBhdCBs
+ZWFzdC4gSSdtCj4gY2VydGFpbiB0aGUgYWNvcm4tbWFydmVsbCB0cmVlIGhhcyBhIFBYQTE5MDgg
+Y2xrIGRyaXZlciBzb21ld2hlcmUsIHRvbywKPiBJIGp1c3QgaGF2ZW4ndCBwb3J0ZWQgaXQgeWV0
+LgoKZHJpdmVycy9jbGsvbW1wL2Nsay1vZi1weGExOTI4LmMKCkkgcG9ydGVkL3Jld3JvdGUgdGhh
+dCBmcm9tIE1hcnZlbGwncyAzLjEwIHZlbmRvciB0cmVlLgoKPj4+IEFuZHJlYXMgRsOkcmJlciAo
+OCk6Cj4+PiAgIERvY3VtZW50YXRpb246IGFybTogTWFydmVsbDogRG9jdW1lbnQgSUFQMTQwCj4+
+PiAgIHR0eTogc2VyaWFsOiBTdXBwcmVzcyBkZXByZWNhdGVkIFNFUklBTF9QWEEgb24gYXJtNjQK
+Pj4+ICAgdHR5OiBzZXJpYWw6IDgyNTBfcHhhOiBJbXBsZW1lbnQgbW1wIGVhcmx5Y29uCj4+Cj4+
+IFlvdSBzaG91bGQgbm90IHVzZSB0aGUgcHhhIHNlcmlhbCBkcml2ZXIuIEFGQUlDVCwgaXQgd2Fz
+IHNlcGFyYXRlIHRvCj4+IGFkZCBETUEgc3VwcG9ydCwgYnV0IG5vdyB0aGUgYmFzZSA4MjUwIGRy
+aXZlciBzdXBwb3J0cyBETUEuIFRoZSBiYXNlCj4+IDgyNTAgZHJpdmVyIHdvcmtzIHdpdGggdGhl
+IFBYQTE5MjggYW5kIHNob3VsZCBhbHNvIHdvcmsgd2l0aCB0aGUKPj4gUFhBMTkwOC4KPgo+IERv
+IHlvdSBwZXJzb25hbGx5IGhhdmUgb25lPyBJIGRpZG4ndCBzcG90IGEgcHhhMTkyOCBEVCBpbiBt
+YWlubGluZS4KClllcy4gSXQgbmV2ZXIgZ290IHJlbGVhc2VkIGFuZCBnb3QgYWJhbmRvbmVkLiBJ
+IGdvdCBzZXZlcmFsIGRyaXZlcnMKY2xlYW5lZCB1cCB0byBzdXBwb3J0IGl0IGFuZCB0aGUgY2xv
+Y2sgY29kZSBpbiBiZWZvcmUgdGhhdCBoYXBwZW5lZC4gSQpoYWQgYSBpbi1wcm9ncmVzcyBEUk0g
+ZHJpdmVyIHRvby4gSSB3YXMgZGVidWdnaW5nIHdoeSBzb21lIG1vbml0b3JzCndvcmtlZCBhbmQg
+b3RoZXJzIGRpZG4ndCB3aGVuIEkgc3RvcHBlZCB3b3JraW5nIG9uIGl0LiBJIHRoaW5rIHRoZQpi
+b2FyZCB5b3UgYXJlIHdvcmtpbmcgb24gaGFzIHRoZSBzYW1lIEFEVjc1MzM/CgpJdCdzIGFsbCB1
+cCBvbiBteSBMaW5hcm8gdHJlZToKaHR0cHM6Ly9naXQubGluYXJvLm9yZy9wZW9wbGUvcm9iLmhl
+cnJpbmcvbGludXguZ2l0Cgo+IFNvLCBieSBteSByZWFkaW5nIGJvdGggODI1MF9vZi5jIGFuZCA4
+MjUwX3B4YS5jIGxpc3QgIm1ydmwsbW1wLXVhcnQiIGZvcgo+IHRoZSBwbGF0Zm9ybSBkcml2ZXIu
+IElzIHRoYXQgcmVhbGx5IGludGVudGlvbmFsPwoKSHVtbSwgd2VsbCBJIGFkZGVkIHN1cHBvcnQg
+aW4gY29tbWl0IDZhZDk5MWI2OTliNGUgdG8gb2Zfc2VyaWFsLmMgYW5kCnRoZW4gaXQgbG9va3Mg
+bGlrZSBpdCBnb3QgY29waWVkIHRvIDgyNTBfcHhhLmMgcmVjZW50bHkuIE5vdCBzdXJlIGlmCnRo
+YXQgcmVhbGx5IG1hZGUgc2Vuc2Ugb3Igbm90LiBXZSBzaG91bGQgcmVtb3ZlIG9uZSBvZiB0aGVt
+Lgo4MjUwX3B4YS5jIGxvb2tzIGZhaXJseSBwb2ludGxlc3MgdG8gbWUuIFR1cm5pbmcgYSBjbG9j
+ayBvbi9vZmYgaW4KcmVzdW1lL3N1c3BlbmQgaXMgYWxyZWFkeSBzdXBwb3J0ZWQgYnkgODI1MF9v
+Zi5jICh3aGljaCBkb2Vzbid0IGhhdmUKdGhlIGJ1ZyBvZiB0dXJuaW5nIG9mZiB0aGUgY29uc29s
+ZSdzIGNsb2NrIGluIHN1c3BlbmQpLiBUaGUgb25seSBvdGhlcgp0aGluZyBpcyB0aGUgZXJyYXRh
+IGluIHNlcmlhbF9weGFfZGxfd3JpdGUuCgo+IFdoYXQgdGhlIGVhcmx5X3B4YSBlYXJseWNvbiBk
+b2VzIGlzIHNldCB0aGUgcmVnaXN0ZXIgc2hpZnQgYW5kIHRoZW4KPiByZXVzZSB0aGUgODI1MCBj
+b3JlIC0gdGhhdCBsb29rcyBwZXJmZWN0bHkgdmFsaWQgdG8gbWUuIEFyZSB5b3UgcG9zc2libHkK
+PiBtaXhpbmcgdGhhdCB1cCB3aXRoIHRoZSBub24tODI1MCBweGEgc2VyaWFsIGRyaXZlciB0aGF0
+IEkgYW0gYWxyZWFkeQo+IHN1cHByZXNzaW5nIG9uZSBwYXRjaCBlYXJsaWVyPwoKVGhlIGVhcmx5
+Y29uIGNvcmUgYWxyZWFkeSBzZXRzIHVwIHJlZy1zaGlmdCBmb3IgeW91LgoKSSBhZGRlZCBlYXJs
+eWNvbiBzdXBwb3J0IGluIGNvbW1pdCBhNGM2MzliMDRmMzAxZC4gSSB1c2VkICJuczE2NjUwYSIK
+YXMgYSBmYWxsYmFjayBjb21wYXRpYmxlIHN0cmluZywgc28gdGhlcmUncyBub3QgYW4gZXhwbGlj
+aXQgUFhBL01NUApjb21wYXRpYmxlIHN0cmluZyB0aGVyZS4KCj4gV2hpbGUgYXQgaXQsIGFyZSB5
+b3UgYXdhcmUgdGhhdCB3ZSBoYXZlIHR3byBkcml2ZXJzLCBvbmUgcHhhIGFuZCBvbmUKPiBtbXAs
+IHRoYXQgYmluZCB0byAibWFydmVsbCxwZG1hLTEuMCI/IFRoYXQgc2VlbWVkIHdyb25nIHRvIG1l
+LCB0b28uCgpZZWFoLCBpdCB3YXMgZHJpdmVycy90dHkvc2VyaWFsL3B4YS5jIHRoYXQgSSB3YXMg
+dGhpbmtpbmcgb2YuIEkgd2FzCmluY29ycmVjdGx5IHRoaW5raW5nIDgyNTBfcHhhLmMgd2FzIHRo
+YXQgb25lLgoKUm9iCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
