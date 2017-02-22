@@ -1,65 +1,91 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
-Date: Wed, 22 Feb 2017 15:12:47 +0200
-Message-ID: <20170222131246.GP16975@valkosipuli.retiisi.org.uk>
-References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
- <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com>
- <6293579.fEEljmGD4Z@aspire.rjw.lan>
- <7605668.5ZxNsBFnEG@aspire.rjw.lan>
- <20170221081749.GC16975@valkosipuli.retiisi.org.uk>
- <CAJZ5v0iWj1gBThCAbY2m+R6VEp-88Pn=5FckvKv9Q=d2cidYyQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 0/6] PSCI: Fix non-PMIC wake-up if SYSTEM_SUSPEND cuts power
+Date: Wed, 22 Feb 2017 14:14:42 +0100
+Message-ID: <CAMuHMdUWMN1ZyRn=eL6MQZeZHOf5zOC=njdnuL9-9CDS2h8CMQ@mail.gmail.com>
+References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
+ <94167d3a-e005-3af0-d290-a1086684d570@arm.com> <3c8b3f2d-8604-f999-4208-a82f171b64f2@arm.com>
+ <1975396.x0czmkNPOW@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0iWj1gBThCAbY2m+R6VEp-88Pn=5FckvKv9Q=d2cidYyQ@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Al Stone <ahs3@redhat.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1975396.x0czmkNPOW@aspire.rjw.lan>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Rafael,
 
-On Wed, Feb 22, 2017 at 12:00:07AM +0100, Rafael J. Wysocki wrote:
-> On Tue, Feb 21, 2017 at 9:17 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > Hi Rafael,
-> >
-> > On Wed, Feb 08, 2017 at 01:19:57PM +0100, Rafael J. Wysocki wrote:
-> > ...
-> >> > > I think I agree with Rob's prior comments about making an ops struct for DT
-> >> > > vs ACPI.  Out of the 16 patches, 2/16, 3/16, 5/16 (multiple times), and this
-> >> > > patch all end up using the same construct.  Maybe it needs to be a separate
-> >> > > refactoring effort, but if it's happening this often just in this patch set,
-> >> > > it seems like it's getting time to clean things up.
-> >> >
-> >> > As long as there are two cases only (ACPI vs DT), an ops struct wouldn't
-> >> > really make things simpler and it would make the code more difficult to
-> >> > follow.
-> >> >
-> >> > But we do have a third case (static or built-in properties) and it doesn't
-> >> > seem to be covered at all.
-> >>
-> >> That said the ops struct could be introduced on top of this series just fine.
-> >> It even might be cleaner to do it this way, so I'm not asking for a redesign
-> >> here.
-> >>
-> >> I'd like the built-in properties to be covered too, however.
-> >
-> > That sounds good to me.
-> 
-> OK
-> 
-> Please update the patches to built-in properties into account, then. :-)
+On Wed, Feb 22, 2017 at 2:14 AM, Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> On Tuesday, February 21, 2017 06:45:13 PM Sudeep Holla wrote:
+>> On 21/02/17 18:27, Sudeep Holla wrote:
+>> > On 21/02/17 17:51, Sudeep Holla wrote:
+>> >> On 21/02/17 17:34, Geert Uytterhoeven wrote:
+>> >>> That's more or less what /sys/power/mem_sleep does, though.
+>> >>
+>> >> OK, I will go through that in detail.
+>> >
+>> > OK, I went through the patch and the main intention is was added.
+>> > So I will begin by summarizing my understanding:
+>> >
+>> > A new suspend interface(/sys/power/mem_sleep) is added to allow the
+>> > "mem" string in /sys/power/state to represent multiple things that can
+>> > be selected.
+>> >
+>> > Before:
+>> > A. echo freeze > /sys/power/state ---> Enters s2idle
+>> > B. echo mem > /sys/power/state ---> Enters s2r(a.k.a now deep mem sleep)
+>> >
+>> > After:
+>> > 1. echo freeze > /sys/power/state ---> Enters s2idle still same
+>> > 2. echo s2idle > /sys/power/mem_sleep
+>> >    echo mem > /sys/power/state ---> Also enter s2idle
+>> > 3. echo deep > /sys/power/mem_sleep
+>> >    echo mem > /sys/power/state ---> Also enter s2r(same as [B] above)
+>> >
+>> > Please note I have carefully dropped standby/shallow as we will not
+>> > support that state on ARM64 platforms(refer previous discussions for the
+>> > same)
+>> >
+>> > Now IIUC, you need 2 above. So, since this new interface allow mem to
+>> > mean "s2idle", we need to fix the core to register default suspend_ops
+>> > to achieve what you need.
+>>
+>> I take this back, you have everything you need in place, nothing needs
+>> to be done. I just checked again. If I don't register PSCI suspend_ops,
+>> I still get mem in /sys/power/state with s2idle in /sys/power/mem_sleep
+>> which is exactly what we need. Again we don't support standby/shallow
+>> state on ARM64/PSCI.
+>
+> Except for one thing which may or may not be a concern here.
+>
+> Suspend to idle should only go into states in which all of the available wakeup
+> devices work.  If there are devices that cannot wake you up from a given state,
+> this isn't "idle" any more, is it?
 
-Will do.
+Indeed. And I have no problem with handling wake-up sources from Linux,
+as Linux knows how to handle them.
 
-I also noticed that I had accidentally merged two patches from RFC v1 to
-PATCH v1 sets (device property: Obtain device's fwnode independently of FW
-type). There's a redundant patch adding device_fwnode_handle() function as
-well, I'll drop that patch (the same subject).
+> As for the device wakeup disable/enable interface, it is for controlling
+> whether or not a given device should be allowed to generate wakeup signals at
+> all.
 
--- 
-Kind regards,
+OK. So it's not guaranteed that it will actually work...
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+> The information on what states a given device can wake up the system from is
+> platform-specific and generally would need to be taken into consideration at
+> the platform level.
+
+So that's PSCI on arm64?
+But the PSCI specification doesn't handle that.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
