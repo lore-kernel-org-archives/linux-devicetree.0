@@ -1,192 +1,65 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 2/2] Add support for OV5647 sensor.
-Date: Wed, 22 Feb 2017 13:43:09 +0200
-Message-ID: <822b6916-3de8-70f2-7a86-2723f31c76ba@mentor.com>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <412e51e695630281d2084a77c0329fd273ea00d7.1487334912.git.roliveir@synopsys.com>
- <cea82e22-07eb-dd8a-c781-7384ac27823e@mentor.com>
- <c39814c2-20a0-db08-38c1-ce95ccc49738@synopsys.com>
- <21847f33-901c-7d26-15d8-6b92f10c8b15@mentor.com>
- <94622194-78dc-ad6f-3f6e-4d7df0ac5383@synopsys.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
+Date: Wed, 22 Feb 2017 15:12:47 +0200
+Message-ID: <20170222131246.GP16975@valkosipuli.retiisi.org.uk>
+References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
+ <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com>
+ <6293579.fEEljmGD4Z@aspire.rjw.lan>
+ <7605668.5ZxNsBFnEG@aspire.rjw.lan>
+ <20170221081749.GC16975@valkosipuli.retiisi.org.uk>
+ <CAJZ5v0iWj1gBThCAbY2m+R6VEp-88Pn=5FckvKv9Q=d2cidYyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <94622194-78dc-ad6f-3f6e-4d7df0ac5383-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0iWj1gBThCAbY2m+R6VEp-88Pn=5FckvKv9Q=d2cidYyQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Al Stone <ahs3@redhat.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/22/2017 12:51 PM, Ramiro Oliveira wrote:
-> Hi Zakari,
-> 
-> On 2/21/2017 8:36 PM, Vladimir Zapolskiy wrote:
->> Hi Ramiro,
->>
->> On 02/21/2017 06:42 PM, Ramiro Oliveira wrote:
->>> Hi Vladimir,
->>>
->>> Thank you for your feedback
->>>
->>> On 2/21/2017 3:54 PM, Vladimir Zapolskiy wrote:
->>>> Hi Ramiro,
->>>>
->>>> please find some review comments below.
->>>>
->>>> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
->>>>> The OV5647 sensor from Omnivision supports up to 2592x1944 @ 15 fps, RAW 8
->>>>> and RAW 10 output formats, and MIPI CSI-2 interface.
->>>>>
->>>>> The driver adds support for 640x480 RAW 8.
->>>>>
->>>>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->>>>> ---
->>>>
->>>> [snip]
->>>>
->>>>> +
->>>>> +struct ov5647 {
->>>>> +	struct v4l2_subdev		sd;
->>>>> +	struct media_pad		pad;
->>>>> +	struct mutex			lock;
->>>>> +	struct v4l2_mbus_framefmt	format;
->>>>> +	unsigned int			width;
->>>>> +	unsigned int			height;
->>>>> +	int				power_count;
->>>>> +	struct clk			*xclk;
->>>>> +	/* External clock frequency currently supported is 30MHz */
->>>>> +	u32				xclk_freq;
->>>>
->>>> See a comment about 25MHz vs 30MHz below.
->>>>
->>>> Also I assume you can remove 'xclk_freq' from the struct fields,
->>>> it can be replaced by a local variable.
->>>>
->>>
->>> I'll do that.
->>>
->>>>> +};
->>>>
->>>> [snip]
->>>>
->>>>> +
->>>>> +static int ov5647_read(struct v4l2_subdev *sd, u16 reg, u8 *val)
->>>>> +{
->>>>> +	int ret;
->>>>> +	unsigned char data_w[2] = { reg >> 8, reg & 0xff };
->>>>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
->>>>> +
->>>>> +	ret = i2c_master_send(client, data_w, 2);
->>>>> +	if (ret < 0) {
->>>>> +		dev_dbg(&client->dev, "%s: i2c read error, reg: %x\n",
->>>>
->>>> s/i2c read error/i2c write error/
->>>>
->>>
->>> I'm not sure I understand what you mean.
->>
->> That's a sed expression for string substitution. Here you do i2c_master_send()
->> but dev_dbg() comment says "i2c read error". It's a simple copy-paste typo to fix.
->>
-> 
-> Ohh... now I see. I'll change it.
-> 
->>>>> +			__func__, reg);
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>
->> [snip]
->>
->>>>> +
->>>>> +static int sensor_power(struct v4l2_subdev *sd, int on)
->>
->> On the caller's side (functions ov5647_open() and ov5647_close()) the second
->> argument of the function is of 'bool' type, however .s_power callback from
->> struct v4l2_subdev_core_ops (see include/media/v4l2-subdev.h) defines it as
->> 'int'.
->>
->> It's just a nitpicking, please feel free to ignore the comment above or
->> please consider to change the arguments on callers' side to integers.
->>
->> Also you may consider to add 'ov5647_' prefix to the function name to
->> distinguish it from a potentially added in future sensor_power() function,
->> the original name sounds too generic.
->>
-> 
-> OK. I'll add the prefix and change the variable type from int to bool.
-> 
+Hi Rafael,
 
-Just to eliminate any potential misunderstanding, if you consider to reuse
-the current sensor_power() function, please change variables from bool to int
-on a caller's side, the signature of the function shall not be changed to
-match .s_power type.
-
->>>>> +{
->>>>> +	int ret;
->>>>> +	struct ov5647 *ov5647 = to_state(sd);
->>>>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
->>>>> +
->>>>> +	ret = 0;
->>>>> +	mutex_lock(&ov5647->lock);
->>>>> +
->>>>> +	if (on && !ov5647->power_count)	{
->>>>> +		dev_dbg(&client->dev, "OV5647 power on\n");
->>>>> +
->>>>> +		clk_set_rate(ov5647->xclk, ov5647->xclk_freq);
->>>>
->>>> Now clk_set_rate() is redundant, please remove it.
->>>>
->>>> If once it is needed again, please move it to the .probe function, so
->>>> it is called only once in the runtime.
->>>>
->>>
->>> Ok. I'll remove it for now.
->>>
->>>>> +
->>>>> +		ret = clk_prepare_enable(ov5647->xclk);
->>>>
->>>> I wonder would it be possible to unload the driver or to unbind the device
->>>> and leave the clock unintentionally enabled? If yes, then this is a bug.
->>>>
->>>
->>> You're saying that if the driver was unloaded and the clock was left enabled
->>> when the driver was loaded again this line would cause an error?
->>
->> Not exactly, here I saw a potential resource leak, namely a potentially left
->> prepared/enabled clock.
->>
->>>
->>> Should I disable the clock when the driver is removed?
->>>
->>
->> The driver (and framework) shall guarantee that when it is detached from
->> device(s) (e.g. by unloading "ov5647" kernel module or unbinding ov5647 device),
->> all acquired resources are released.
->>
->> But in this particular case most probably I've been overly alert, I believe
->> that V4L2 framework correcly handles device power states, so please ignore my
->> comment.
->>
->> To add something valuable to the review, could you please confirm that
->> ov5647_subdev_internal_ops data is in use by the driver?
->>
->> E.g. shouldn't it be registered by
->>
->>   sd->internal_ops = &ov5647_subdev_internal_ops;
->>
->> before calling v4l2_async_register_subdev(sd) ?
->>
+On Wed, Feb 22, 2017 at 12:00:07AM +0100, Rafael J. Wysocki wrote:
+> On Tue, Feb 21, 2017 at 9:17 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > Hi Rafael,
+> >
+> > On Wed, Feb 08, 2017 at 01:19:57PM +0100, Rafael J. Wysocki wrote:
+> > ...
+> >> > > I think I agree with Rob's prior comments about making an ops struct for DT
+> >> > > vs ACPI.  Out of the 16 patches, 2/16, 3/16, 5/16 (multiple times), and this
+> >> > > patch all end up using the same construct.  Maybe it needs to be a separate
+> >> > > refactoring effort, but if it's happening this often just in this patch set,
+> >> > > it seems like it's getting time to clean things up.
+> >> >
+> >> > As long as there are two cases only (ACPI vs DT), an ops struct wouldn't
+> >> > really make things simpler and it would make the code more difficult to
+> >> > follow.
+> >> >
+> >> > But we do have a third case (static or built-in properties) and it doesn't
+> >> > seem to be covered at all.
+> >>
+> >> That said the ops struct could be introduced on top of this series just fine.
+> >> It even might be cleaner to do it this way, so I'm not asking for a redesign
+> >> here.
+> >>
+> >> I'd like the built-in properties to be covered too, however.
+> >
+> > That sounds good to me.
 > 
-> You're right, it's not being registered. I think I'll remove them since they
-> aren't being used.
+> OK
 > 
+> Please update the patches to built-in properties into account, then. :-)
 
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will do.
+
+I also noticed that I had accidentally merged two patches from RFC v1 to
+PATCH v1 sets (device property: Obtain device's fwnode independently of FW
+type). There's a redundant patch adding device_fwnode_handle() function as
+well, I'll drop that patch (the same subject).
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
