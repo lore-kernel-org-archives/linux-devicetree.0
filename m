@@ -1,44 +1,32 @@
-From: =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
-Subject: Re: bug in DT docs vs mcp251x.c driver
-Date: Wed, 22 Feb 2017 09:00:06 +0100
-Message-ID: <2858a28c-4502-3779-f518-f499770bab28@elpromaelectronics.com>
-References: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
- <1487742799.631389473@f418.i.mail.ru>
+From: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH v2 0/2] add dts files for hi3798cv200-Poplar board
+Date: Wed, 22 Feb 2017 16:38:34 +0800
+Message-ID: <1487752716-14824-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487742799.631389473-OruIP1U3PUxsdVUOrk1QfQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "l.dalek elpromaelectronics.com" <l.dalek-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.gregotski-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander.
+This patch set mainly adds dts files for hi3798cv200-Poplar board.
 
-You are right.
-According to the source code printf adds the "-supply" indeed.
-I've not verified the code as I got a report for 3.14 that the driver
-does not work with vdd-supply in DT, works with vdd property
-and the supply was verified electrically.
-Now I have to investigate the problem better.
+Jiancheng Xue (2):
+  dt-bindings: arm: hisilicon: add bindings for hi3798cv200 SoC and
+    Poplar board
+  arm64: dts: hisilicon: add dts files for hi3798cv200-poplar board
 
-best regards
+ .../bindings/arm/hisilicon/hisilicon.txt           |   4 +
+ arch/arm64/boot/dts/hisilicon/Makefile             |   1 +
+ .../boot/dts/hisilicon/hi3798cv200-poplar.dts      | 171 +++++++++
+ arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 415 +++++++++++++++++++++
+ 4 files changed, 591 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
 
-Janusz
-
-
-W dniu 2017-02-22 o 06:53, Alexander Shiyan pisze:
->> Вторник, 21 февраля 2017, 21:08 +03:00 от Janusz Użycki <j.uzycki-cjVIcFy54eMe9JSWTWOYM+658FiBabzs@public.gmane.org>:
->> We've noticed the inconsistency in DT which still exist in kernel v4.10:
->>
->> devm_regulator_get(&spi->dev, "vdd") in drivers/net/can/mcp251x.c
->>
->> vs vdd-supply: Regulator that powers the CAN controller. in
->> bindings/net/can/microchip,mcp251x.txt
-> I do not see the bug here, could you clarify?
->
-> ---
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
