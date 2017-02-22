@@ -1,134 +1,87 @@
-From: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v10 0/3] Add support for the S6E3HA2 panel on TM2 board
-Date: Wed, 22 Feb 2017 10:40:14 +0900
-Message-ID: <f73ca3a7-8562-c561-95e6-3bec90a52223@samsung.com>
-References: <CGME20170220071000epcas1p38e002e5064bdf4c3b1b4886207dcaaf4@epcas1p3.samsung.com>
- <50768133-aabc-6050-c9b2-8898bb8046a6@samsung.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
+Date: Wed, 22 Feb 2017 09:44:11 +0800
+Message-ID: <58ACECEB.2080406@rock-chips.com>
+References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
+ <20170221153918.GA25168@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <50768133-aabc-6050-c9b2-8898bb8046a6-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170221153918.GA25168@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-
-This patchset is resent patchset.
-
-Because I have a missing TO, CC, I sent it again.
-
-Sorry, I will send it in the correct format next time.
-
-
-Best Regards,
-
-Hoegeun
-
-
-On 02/22/2017 10:09 AM, Hoegeun Kwon wrote:
-> Dear Thierry,
->
-> I understand that your opinion is:
-> It is better to handle the error every time it is input to the
-> register, rather than error handling at once in the struct using
-> error. This not only makes the code easier to maintain, but also
-> reduces unnecessary computation.
->
-> So I modified the panel driver to code-by-code error handling.
-> If this is not your opinion, could you tell me what your opinion?
->
-> Best Regards,
-> Hoegeun
->
->
-> Changes for V10:
-> - Fixed code-by-code error handling.
->
-> Changes for V9:
-> - Fixed the te-gpio to optional in bindings
->
-> Changes for V8:
-> - Applied below two patches: (drm/exynos)
->   : drm/exynos: mic: Add mode_set callback function
->   : drm/exynos: mic: Fix parse_dt function
-> - The dt-binding patch and driver patch were divided.
-> - Rebase these patches on samsung SoC tree[1] and tm2 touckey patch[2].
->
-> Change for V7:
-> - Fixed the mode_set callback function of mic device driver.
->   because the mic register is initialized when entering suspend
->   mode, so should set the reg value whenever pre_enable is
->   called.
->
-> Changes for V6:
-> - Fixed the parse_dt function of dsi device driver.
-> - Removed OF graph of panel in DT and DT binding document.
-> - Fixed the s6e3ha2 panel device driver.
->   - Fixed from number size to ARRAY_SIZE().
->   - Fixed error handling in mipi_dsi_dcs_* functions.
->   - Fixed the clock of display_mode.
->   - Removed unnecessary casting and error log.
->
-> Change for V5:
-> - The V5 has only one fix in V4 below.
-> - Removed the enable check of the mic driver in mode_set
->   callback, because mode_set should be performed every time.
->
-> Changes for V4:
-> - Removed display-timings in devicetree, the display-timings has
->   been fixed to be provided by the device driver.
-> - Added the mode_set callback function into exynos_drm_mic,
->   because the exynos_drm_mic driver can not parse a videomode
->   struct by removing the display-timings from the devicetree.
->
-> Changes for V3:
-> - In the DT binding document, made it clearly that the panel is a
->   child node of dsi.
-> - Fix reset-gpio active from high to low.
-> - Is the OF graph saying related to patch2?
->   Althogh the panel is a child of dsi, I think OF graph necessary.
->   because if a remote-endpoint is not specified, the dsi also
->   panel is not probed.
-> - The display-timings has been fixed to be provided by the device
->   driver. however, I think display-timings is necessary in dts.
->   because if dts does not have display-timings, dsi will not load.
->
-> Changes for V2:
-> - Fixed the samsung,s6e3ha2.txt DT document.
->   - Added active high or low after the description of the GPIOs.
->   - Removed the reg and added a description of the virtual
->     channel number of a DSI peripheral.
->
-> Depends on:
-> [1] https://git.kernel.org/cgit/linux/kernel/git/krzk/linux.git/ 
-> (for-next branch)
-> [2] https://patchwork.kernel.org/patch/9504131/
->     - ("arm64: dts: exynos: Add tm2 touchkey node")
->
-> Hoegeun Kwon (2):
->   dt-bindings: Add support for samsung s6e3ha2 panel binding
->   drm/panel: Add support for S6E3HA2 panel driver on TM2 board
->
-> Hyungwon Hwang (1):
->   arm64: dts: exynos: Add support for S6E3HA2 panel device on TM2 board
->
->  .../bindings/display/panel/samsung,s6e3ha2.txt     |  28 +
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      |  12 +
->  drivers/gpu/drm/panel/Kconfig                      |   6 +
->  drivers/gpu/drm/panel/Makefile                     |   1 +
->  drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 739 
-> +++++++++++++++++++++
->  5 files changed, 786 insertions(+)
->  create mode 100644 
-> Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
->  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU2VhbgoKT24gMDIvMjEvMjAxNyAxMTozOSBQTSwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIE1v
+biwgRmViIDIwLCAyMDE3IGF0IDA0OjAyOjE2UE0gKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+
+PiBIaSBhbGwKPj4KPj4gW1Jlc2VuZCB0aGlzIHY3IHZlcnNpb24gc2VyaWVzLCBzaW5jZSB0aGVy
+ZSBhcmUgNSBtYWlscyBoYXZlIGdvbmUgbWlzc2luZywgbGFzdAo+PiB3ZWVrXQo+Pgo+PiBUaGlz
+IHZlcnNpb24gZG9lcyBub3QgY2hhbmdlIHRoZSBleGlzdGluZyB2NiBwYXRjaGVzLCBqdXN0IHRv
+IGFkZCB0aGUKPj4gImJhbmR3aWR0aCBmaXgiIHBhdGNoIGJhY2ssIHNpbmNlIHdlIHJlYWxseSBu
+ZWVkIGl0Lgo+Pgo+PiBUaGlzIHBhdGNoIHNlcmlhbCBpcyBmb3IgUkszMzk5IE1JUEkgRFNJLiBU
+aGUgTUlQSSBEU0kgY29udHJvbGxlciBvZgo+PiBSSzMzOTkgaXMgYWxtb3N0IHRoZSBzYW1lIGFz
+IFJLMzI4OCwgZXhjZXB0IGEgbGl0dGxlIGJpdCBvZiBkaWZmZXJlbmNlCj4+IGluIHBoeSBjbG9j
+ayBjb250cm9sbGluZyBhbmQgcG9ydCBpZCBzZWxlY3Rpb24gcmVnaXN0ZXIuIFRoZXNlIHBhdGNo
+ZXMKPj4gYWRkIFJLMzM5OSBzdXBwb3J0IGFuZCB0aGUgcG93ZXIgZG9tYWluIHN1cHBvcnQuCj4+
+Cj4+IEFuZCB0aGVzZSBwYXRjaGVzIGJhc2Ugb24gSm9obiBLZWVwaW5nJ3MgdjMgcGF0Y2hlc1sw
+XSwgaXQgZml4ZXMgbWFueSBidWdzLAo+PiB0aGV5IGhhdmUgYmVlbiB0ZXN0ZWQgb24gcmszMjg4
+IGV2YiBib2FyZC4KPiBEbyB3ZSBoYXZlIGFuIEVUQSBvbiB3aGVuIEpvaG4gaXMgcGxhbm5pbmcg
+b24gcmVzcGlubmluZyBoaXMgcGF0Y2hzZXQgYmFzZWQgb24KPiByZXZpZXcgZmVlZGJhY2s/Cj4K
+SSBndWVzcyBKb2huIHdpbGwgc2VuZCB0aGUgdjQgcGF0Y2ggc29vbiwgc2luY2UgdGhlcmUgYXJl
+IG5vdCBtYW55IHBvaW50IApuZWVkIHRvIGNoYW5nZS4KQW5kIGFzIEkga25vdywgTWFyayBZYW8g
+aXMgZ29pbmcgdG8gbWVyZ2UgSm9obidzIHY0IHNlcmllcyB0byBoaXMgCmJyYW5jaCwgYW5kIHRo
+aXMgdjcgc2VyaWVzCndpbGwgYmUgbWVyZ2VkIGFmdGVyIHRoYXQuCgoKPj4gWzBdOgo+PiBbMDEv
+MjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA4OQo+PiBbMDIvMjRd
+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA2MQo+PiBbMDMvMjRdIGh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA2NQo+PiBbMDQvMjRdIGh0dHBz
+Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA3Nwo+PiBbMDUvMjRdIGh0dHBzOi8v
+cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMwo+PiBbMDYvMjRdIGh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzNwo+PiBbMDcvMjRdIGh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAyOQo+PiBbMDgvMjRdIGh0dHBzOi8vcGF0Y2h3b3Jr
+Lmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMQo+PiBbMDkvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvOTU0NDA4Mwo+PiBbMTAvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
+bC5vcmcvcGF0Y2gvOTU0NDA2Mwo+PiBbMTEvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvOTU0NDA4NQo+PiBbMTIvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvOTU0NDA5Mwo+PiBbMTMvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
+Y2gvOTU0NDA4MQo+PiBbMTQvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
+OTU0NDA1Nwo+PiBbMTUvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0
+NDA3OQo+PiBbMTYvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAz
+NQo+PiBbMTcvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDEwNQo+
+PiBbMTgvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA1OQo+PiBb
+MjEvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAwOQo+PiBbMjIv
+MjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA0OQo+PiBbMjMvMjRd
+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA1NQo+PiBbMjQvMjRdIGh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDEwOQo+Pgo+Pgo+PiBDaGFuZ2Vz
+IGluIHY2Ogo+PiAtIG5vIG5lZWQgY2hlY2sgcGh5X2NmZ19jbGsgYmVmb3JlIGVuYWJsZS9kaXNh
+YmxlCj4+Cj4+IENoYW5nZXMgaW4gdjU6Cj4+IC0gY2hlY2sgdGhlIGVycm9yIG9mIHBoeV9jZmdf
+Y2xrIGluIGR3X21pcGlfZHNpX2JpbmQKPj4KPj4gQ2hhbmdlcyBpbiB2NDoKPj4gLSByZW1vdmUg
+dGhlIHVucmVsYXRlZCBjaGFuZ2UKPj4KPj4gQ2hhbmdlcyBpbiB2MzoKPj4gLSBiYXNlIG9uIEpv
+aG4gS2VlcGluZydzIHBhdGNoIHNlcmllcwo+Pgo+PiBDaHJpcyBaaG9uZyAoNyk6Cj4+ICAgIGR0
+LWJpbmRpbmdzOiBhZGQgcmszMzk5IHN1cHBvcnQgZm9yIGR3LW1pcGktcm9ja2NoaXAKPj4gICAg
+ZHJtL3JvY2tjaGlwL2RzaTogZHctbWlwaTogc3VwcG9ydCBSSzMzOTkgbWlwaSBkc2kKPj4gICAg
+ZHJtL3JvY2tjaGlwL2RzaTogZHctbWlwaTogY29ycmVjdCB0aGUgY29kaW5nIHN0eWxlCj4+ICAg
+IGRybS9yb2NrY2hpcC9kc2k6IHJlbW92ZSBtb2RlX3ZhbGlkIGZ1bmN0aW9uCj4+ICAgIGR0LWJp
+bmRpbmdzOiBhZGQgcG93ZXIgZG9tYWluIG5vZGUgZm9yIGR3LW1pcGktcm9ja2NoaXAKPj4gICAg
+ZHJtL3JvY2tjaGlwL2RzaTogZml4IGluc3VmZmljaWVudCBiYW5kd2lkdGggb2Ygc29tZSBwYW5l
+bAo+PiAgICBkcm0vcm9ja2NoaXAvZHNpOiBhZGQgZHctbWlwaSBwb3dlciBkb21haW4gc3VwcG9y
+dAo+Pgo+PiAgIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAg
+ICAgIHwgICA3ICstCj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMg
+ICAgICAgICAgICAgfCAxNjAgKysrKysrKysrKysrLS0tLS0tLS0tCj4+ICAgMiBmaWxlcyBjaGFu
+Z2VkLCAxMDAgaW5zZXJ0aW9ucygrKSwgNjcgZGVsZXRpb25zKC0pCj4+Cj4+IC0tIAo+PiAyLjYu
+Mwo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+
+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKPj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwKCi0tIApDaHJpcyBaaG9uZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
