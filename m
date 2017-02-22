@@ -1,94 +1,70 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v3 4/8] phy: phy-mt65xx-usb3: move clock from phy node into port nodes
-Date: Wed, 22 Feb 2017 16:55:01 +0800
-Message-ID: <1487753705-6745-4-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 6/8] arm64: dts: mt8173: split usb SuperSpeed port into two ports
+Date: Wed, 22 Feb 2017 16:55:03 +0800
+Message-ID: <1487753705-6745-6-git-send-email-chunfeng.yun@mediatek.com>
 References: <1487753705-6745-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487753705-6745-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487753705-6745-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-the reference clock of HighSpeed port is 48M which comes from PLL;
-the reference clock of SuperSpeed port is 26M which usually comes
-from 26M oscillator directly, but some SoCs are not, add it for
-compatibility, and put them into port node for flexibility.
+split the old SuperSpeed port node into a HighSpeed one and a new
+SuperSpeed one.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/phy/phy-mt65xx-usb3.c |   21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-index 7fff482..f4a3505 100644
---- a/drivers/phy/phy-mt65xx-usb3.c
-+++ b/drivers/phy/phy-mt65xx-usb3.c
-@@ -153,6 +153,7 @@ struct mt65xx_phy_pdata {
- struct mt65xx_phy_instance {
- 	struct phy *phy;
- 	void __iomem *port_base;
-+	struct clk *ref_clk;	/* reference clock of anolog phy */
- 	u32 index;
- 	u8 type;
- };
-@@ -160,7 +161,6 @@ struct mt65xx_phy_instance {
- struct mt65xx_u3phy {
- 	struct device *dev;
- 	void __iomem *sif_base;	/* only shared sif */
--	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
- 	const struct mt65xx_phy_pdata *pdata;
- 	struct mt65xx_phy_instance **phys;
- 	int nphys;
-@@ -449,9 +449,9 @@ static int mt65xx_phy_init(struct phy *phy)
- 	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
- 	int ret;
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index 12e7027..12c90e5 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -724,8 +724,9 @@
+ 			      <0 0x11280700 0 0x0100>;
+ 			reg-names = "mac", "ippc";
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
+-			phys = <&phy_port0 PHY_TYPE_USB3>,
+-			       <&phy_port1 PHY_TYPE_USB2>;
++			phys = <&u2port0 PHY_TYPE_USB2>,
++			       <&u3port0 PHY_TYPE_USB3>,
++			       <&u2port1 PHY_TYPE_USB2>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+ 			clocks = <&topckgen CLK_TOP_USB30_SEL>,
+ 				 <&pericfg CLK_PERI_USB0>,
+@@ -761,14 +762,20 @@
+ 			ranges;
+ 			status = "okay";
  
--	ret = clk_prepare_enable(u3phy->u3phya_ref);
-+	ret = clk_prepare_enable(instance->ref_clk);
- 	if (ret) {
--		dev_err(u3phy->dev, "failed to enable u3phya_ref\n");
-+		dev_err(u3phy->dev, "failed to enable ref_clk\n");
- 		return ret;
- 	}
+-			phy_port0: port@11290800 {
+-				reg = <0 0x11290800 0 0x800>;
++			u2port0: usb-phy@11290800 {
++				reg = <0 0x11290800 0 0x100>;
+ 				#phy-cells = <1>;
+ 				status = "okay";
+ 			};
  
-@@ -494,7 +494,7 @@ static int mt65xx_phy_exit(struct phy *phy)
- 	if (instance->type == PHY_TYPE_USB2)
- 		phy_instance_exit(u3phy, instance);
- 
--	clk_disable_unprepare(u3phy->u3phya_ref);
-+	clk_disable_unprepare(instance->ref_clk);
- 	return 0;
- }
- 
-@@ -594,12 +594,6 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(u3phy->sif_base);
- 	}
- 
--	u3phy->u3phya_ref = devm_clk_get(dev, "u3phya_ref");
--	if (IS_ERR(u3phy->u3phya_ref)) {
--		dev_err(dev, "error to get u3phya_ref\n");
--		return PTR_ERR(u3phy->u3phya_ref);
--	}
--
- 	port = 0;
- 	for_each_child_of_node(np, child_np) {
- 		struct mt65xx_phy_instance *instance;
-@@ -634,6 +628,13 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
- 			goto put_child;
- 		}
- 
-+		instance->ref_clk = devm_clk_get(&phy->dev, "ref");
-+		if (IS_ERR(instance->ref_clk)) {
-+			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
-+			retval = PTR_ERR(instance->ref_clk);
-+			goto put_child;
-+		}
+-			phy_port1: port@11291000 {
+-				reg = <0 0x11291000 0 0x800>;
++			u3port0: usb-phy@11290900 {
++				reg = <0 0x11290900 0 0x700>;
++				#phy-cells = <1>;
++				status = "okay";
++			};
 +
- 		instance->phy = phy;
- 		instance->index = port;
- 		phy_set_drvdata(phy, instance);
++			u2port1: usb-phy@11291000 {
++				reg = <0 0x11291000 0 0x100>;
+ 				#phy-cells = <1>;
+ 				status = "okay";
+ 			};
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
