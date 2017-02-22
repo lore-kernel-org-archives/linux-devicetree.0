@@ -1,121 +1,95 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1] regulator: Add driver for voltage controlled
- regulators
-Date: Tue, 21 Feb 2017 18:22:14 -0600
-Message-ID: <20170222002214.sejshtotyiobn6n2@rob-hp-laptop>
-References: <20170210204348.107871-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: zx-tdm: add bindings doc for zte's tdm controller" to the asoc tree
+Date: Tue, 21 Feb 2017 16:26:08 -0800
+Message-ID: <E1cgKky-0005Tb-3E@finisterre>
+References: <1487243106-22841-1-git-send-email-baoyou.xie@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170210204348.107871-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1487243106-22841-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 12:43:48PM -0800, Matthias Kaehlcke wrote:
-> The output voltage of a voltage controlled regulator can be controlled
-> through the voltage of another regulator. The current version of this
-> driver assumes that the output voltage is a linear function of the control
-> voltage.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Note: The current version of the driver has a known limitation: If an
-> input supply is configured besides the control supply the two regulators
-> must have no common ancestor, otherwise the spinlock of the ancestor
-> would be acquired twice by the core code. One possible solution would be
-> to configure the control regulator through a string instead of a phandle,
-> i.e. not specifying it as supply.
-> 
->  .../devicetree/bindings/regulator/vctrl.txt        |  56 +++
+The patch
 
-Please split bindings to separate patch.
+   ASoC: zx-tdm: add bindings doc for zte's tdm controller
 
->  drivers/regulator/Kconfig                          |   7 +
->  drivers/regulator/Makefile                         |   1 +
->  drivers/regulator/vctrl-regulator.c                | 525 +++++++++++++++++++++
->  4 files changed, 589 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/vctrl.txt
->  create mode 100644 drivers/regulator/vctrl-regulator.c
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/vctrl.txt b/Documentation/devicetree/bindings/regulator/vctrl.txt
-> new file mode 100644
-> index 000000000000..ba3c9b2f61b1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/vctrl.txt
-> @@ -0,0 +1,56 @@
-> +Bindings for Voltage controlled regulators
-> +==========================================
-> +
-> +Required properties:
-> +--------------------
-> +- compatible		: must be "vctrl-regulator".
-> +- ctrl-supply:		: a phandle for the regulator supplying the control
-> +			  voltage.
-> +- output-voltage-range	: an array of two integer values specifying the range
-> +			  (min/max) of the output voltage. The min/max voltage
-> +			  constraints of the regulator (if specified) must not
-> +			  exceed this range.
-> +- ctrl-voltage-range	: an array of two integer values specifying the range
-> +			  (min/max) of the control voltage. The values of
-> +			  ctrl-voltage-range and output-voltage-range are used
-> +			  for the conversion between output and control voltage.
-> +			  The min/max values of ctrl-voltage-range must specify
-> +			  the control voltage needed to generate the min/max
-> +			  output voltage.
-> +
-> +Optional properties:
-> +--------------------
-> +- ovp-threshold-percent	: overvoltage protection (OVP) threshold of the
-> +			  regulator in percent. Some regulators have an OVP
-> +			  circuitry which shuts down the regulator when the
-> +			  actual output voltage deviates beyond a certain
-> +			  margin from the expected value for a given control
-> +			  voltage. On larger voltage decreases this can occur
-> +			  undesiredly since the output voltage does not adjust
-> +			  inmediately to changes in the control voltage. To
-> +			  avoid this situation the vctrl driver breaks down
-> +			  larger voltage decreases into multiple steps, where
-> +			  each step is within the OVP threshold.
-> +- min-slew-down-rate	: Describes how slowly the regulator voltage will decay
-> +			  down in the worst case (lightest expected load).
-> +			  Specified in uV / us (like main regulator ramp rate).
-> +			  This value is required when ovp-threshold-percent is
-> +			  specified.
+has been applied to the asoc tree at
 
-Don't we have a standard prop for this or that's just for ramp? Perhaps 
-this should be common?
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> +
-> +Example:
-> +
-> +	vctrl_reg {
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-Don't use '_' in node names.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> +		compatible = "vctrl-regulator";
-> +		regulator-name = "vctrl_reg";
-> +
-> +		ctrl-supply = <&ctrl_supply>;
-> +
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> +		regulator-min-microvolt = <800000>;
-> +		regulator-max-microvolt = <1500000>;
-> +
-> +		output-voltage-range = <800000 1500000>;
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-Why do you need both?
+Thanks,
+Mark
 
-> +		ctrl-voltage-range = <200000 500000>;
-> +
-> +		slew-rate = <225>;
+>From 5949dae3a4512fa1ca61eac947c349442acc12b0 Mon Sep 17 00:00:00 2001
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Thu, 16 Feb 2017 19:05:04 +0800
+Subject: [PATCH] ASoC: zx-tdm: add bindings doc for zte's tdm controller
 
-Not documented.
+This patch adds dt-binding documentation for zte's tdm controller.
 
-> +		ovp-threshold-percent = <16>;
-> +	};
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/sound/zte,tdm.txt          | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/zte,tdm.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/zte,tdm.txt b/Documentation/devicetree/bindings/sound/zte,tdm.txt
+new file mode 100644
+index 000000000000..2a07ca655264
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/zte,tdm.txt
+@@ -0,0 +1,30 @@
++ZTE TDM DAI driver
++
++Required properties:
++
++- compatible : should be one of the following.
++       * zte,zx296718-tdm
++- reg : physical base address of the controller and length of memory mapped
++    region.
++- clocks : Pairs of phandle and specifier referencing the controller's clocks.
++- clock-names: "wclk" for the wclk.
++               "pclk" for the pclk.
++-#clock-cells: should be 1.
++- zte,tdm-dma-sysctrl : Reference to the sysctrl controller controlling
++    the dma. includes:
++	phandle of sysctrl.
++	register offset in sysctrl for control dma.
++	mask of the register that be written to sysctrl.
++
++Example:
++
++	tdm: tdm@1487000 {
++		compatible = "zte,zx296718-tdm";
++		reg = <0x01487000 0x1000>;
++		clocks = <&audiocrm AUDIO_TDM_WCLK>, <&audiocrm AUDIO_TDM_PCLK>;
++		clock-names = "wclk", "pclk";
++		#clock-cells = <1>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&tdm_global_pin>;
++		zte,tdm-dma-sysctrl = <&sysctrl 0x10c 4>;
++	};
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
