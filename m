@@ -1,111 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] ARM64: Initial Marvell IAP140 enablement
-Date: Wed, 22 Feb 2017 07:34:25 -0600
-Message-ID: <CAL_JsqJmv--wP+gEt27ZbTT+8GeqKhYc=x3MTPBiz2Jr2wys8A@mail.gmail.com>
-References: <20170222022929.10540-1-afaerber@suse.de>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v2 1/3] power: reset: Add Renesas reset driver
+Date: Wed, 22 Feb 2017 13:35:12 +0000
+Message-ID: <SG2PR06MB11650D5EE485C0F44A77E0EA8A500@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170216172320.10897-1-chris.brandt@renesas.com>
+ <20170216172320.10897-2-chris.brandt@renesas.com>
+ <20170216182644.GA17814@roeck-us.net>
+ <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <20170216222014.GA29672@roeck-us.net>
+ <PS1PR06MB11622077DE4673C1879C05278A5D0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <55cf087f-aa70-3660-1186-af9b9b20376d@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170222022929.10540-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <55cf087f-aa70-3660-1186-af9b9b20376d@roeck-us.net>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 8:29 PM, Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org> wrote:
-> Hello,
->
-> This series adds initial support for the Marvell IAP140 SoC (aka PXA1908)
-> and the Andromeda Box Edge development board.
->
-> v2 reuses ARCH_MMP.
->
-> Both earlycon and serial are working, but an explicit console=ttyS0,115200n8
-> is needed; with just "earlycon" and stdout-path the earlycon stops early and
-> switches to a tty0, long before disabling the bootconsole...
->
-> All four CPUs come up, and an initrd can be reached.
->
-> However, there are errors about CPUs 1-3 having a zero SYS_CNTFRQ_EL0:
->
-> [    0.095812] smp: Bringing up secondary CPUs ...
-> ======pxa1908_pmu_core_pwr_on: mpidr = 0x1
-> ======pxa1908_pmu_core_pwr_on: mpidr = 0x2
-> ======pxa1908_pmu_core_pwr_on: mpidr = 0x3
-> [    0.133419] Detected VIPT I-cache on CPU1
-> [    0.133430] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU1: 0x00000000000000
-> [    0.133447] Unsupported CPU feature variation.
-> ...
-> [    0.133748] CPU1: Booted secondary processor [410fd032]
-> [    0.165465] Detected VIPT I-cache on CPU2
-> [    0.165474] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU2: 0x00000000000000
-> [    0.165505] CPU2: Booted secondary processor [410fd032]
-> [    0.197539] Detected VIPT I-cache on CPU3
-> [    0.197546] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU3: 0x00000000000000
-> [    0.197573] CPU3: Booted secondary processor [410fd032]
-> [    0.197625] smp: Brought up 1 node, 4 CPUs
-> [    0.522514] SMP: Total of 4 processors activated.
-> [    0.527212] CPU features: detected feature: 32-bit EL0 Support
-> [    0.533105] CPU: All CPU(s) started at EL2
->
-> KVM appears to initialize okay, but was not yet tested with guests.
->
-> [    0.865255] kvm [1]: 8-bit VMID
-> [    0.868401] kvm [1]: IDMAP page: d23000
-> [    0.872233] kvm [1]: HYP VA range: 800000000000:ffffffffffff
-> [    0.878262] kvm [1]: Hyp mode initialized successfully
-> [    0.883429] kvm [1]: vgic-v2@d1dfc000
-> [    0.887179] kvm [1]: vgic interrupt IRQ1
-> [    0.891120] kvm [1]: virtual timer IRQ4
->
-> One limitation is currently the lack of an IAP140 clk driver. Patch 4/4 works
-> around that for UART0 with a fixed-clock.
+Hello Geert and Guenter,
 
-The PXA1928 clock driver should be close to what you need. They are
-supposed to be very similar.
+On Thursday, February 16, 2017, Guenter Roeck wrote:
+> FWIW, the watchdog subsystem should support that easily, even with 125 ms
+> hardware timeout. We added that capability for that very purpose. That
+> would only fail if the system is stuck with interrupts disabled for more
+> than 125 ms, which seems unlikely. I think the gpio watchdog on some
+> systems has a similar low hardware timeout.
 
-> A 3.14 based tree is available on GitHub acorn-marvell/brillo_pxa_kernel.
->
-> Booting required changes to the vendor U-Boot,
-> cf. https://en.opensuse.org/HCL:AndromedaBoxEdge
->
-> https://github.com/afaerber/linux/commits/edge-next
->
-> Have a lot of fun!
->
-> Cheers,
-> Andreas
->
-> v1 -> v2:
-> * Add non-DT documentation
-> * Use ARCH_MMP instead of ARCH_PXA
-> * Split off Kconfig cleanups per subsystem
-> * Drop "mrvl,pxa-uart" and instead implement mmp earlycon
-> * Add some more DT nodes
->
-> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->
-> Andreas Färber (8):
->   Documentation: arm: Marvell: Document IAP140
->   tty: serial: Suppress deprecated SERIAL_PXA on arm64
->   tty: serial: 8250_pxa: Implement mmp earlycon
 
-You should not use the pxa serial driver. AFAICT, it was separate to
-add DMA support, but now the base 8250 driver supports DMA. The base
-8250 driver works with the PXA1928 and should also work with the
-PXA1908.
+While I'm going to try that for the RZ/A1, I have a question for you guys
+(or anyone else that has an opinion about end applications)
 
->   sound: soc: pxa: Suppress SND_MMP_SOC for arm64
->   ARM64: Prepare Marvell IAP140 aka PXA1908
->   Documentation: devicetree: arm: marvell: Document IAP140
->   ARM64: dts: marvell: Add IAP140 and Andromeda Box Edge
->   ARM64: dts: marvell: iap140-andromeda-box-edge: Add uart0 clock
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+If I were going to make a request to the chip designers to make the timeout=
+ longer
+for the next RZ/A chip, what would be a good max timeout for common Linux a=
+pplications?
+
+Looking through the drivers in the watchdog directly, I see default timeout=
+s of 20,
+30, 60, and 120 seconds.
+
+Thank you,
+Chris
