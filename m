@@ -1,20 +1,19 @@
 From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: BCM953012HR: Initial Checkin
-Date: Wed, 22 Feb 2017 18:29:11 -0500
-Message-ID: <CAC3K-4osnSkbOid_nABySEtioJkAbho+H_hmJcXeLmjB6KYxFg@mail.gmail.com>
-References: <1487798092-8631-1-git-send-email-steven.lin1@broadcom.com>
+Subject: Re: [PATCH 1/1] ARM: dts: NSP: Add crypto (SPU) to dtsi
+Date: Wed, 22 Feb 2017 18:32:15 -0500
+Message-ID: <CAC3K-4oaFiP43wGWTqqeB-Hcr0Ov07Xu1RONCi+NAXqf9hr2-g@mail.gmail.com>
+References: <1487798543-34229-1-git-send-email-steven.lin1@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487798092-8631-1-git-send-email-steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1487798543-34229-1-git-send-email-steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 4:14 PM, Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Initial version of DTS to support Broadcom BCM953012HR Northstar
-> HR platform, similar to, but not the same as existing 953012K.
+On Wed, Feb 22, 2017 at 4:22 PM, Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> Adds crypto hardware (SPU) to Northstar Plus device tree file.
 >
 > Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
@@ -22,145 +21,31 @@ Looks good to me!
 
 Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-> ---
->  arch/arm/boot/dts/Makefile        |   1 +
->  arch/arm/boot/dts/bcm953012hr.dts | 115 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 116 insertions(+)
->  create mode 100644 arch/arm/boot/dts/bcm953012hr.dts
 >
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 01d178a..c64ca3d 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -94,6 +94,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
->         bcm94708.dtb \
->         bcm94709.dtb \
->         bcm953012er.dtb \
-> +       bcm953012hr.dtb \
->         bcm953012k.dtb
->  dtb-$(CONFIG_ARCH_BCM_53573) += \
->         bcm47189-tenda-ac9.dtb
-> diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
-> new file mode 100644
-> index 0000000..c332277
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm953012hr.dts
-> @@ -0,0 +1,115 @@
-> +/*
-> + *  BSD LICENSE
-> + *
-> + *  Copyright(c) 2017 Broadcom
-> + *
-> + *  Redistribution and use in source and binary forms, with or without
-> + *  modification, are permitted provided that the following conditions
-> + *  are met:
-> + *
-> + *    * Redistributions of source code must retain the above copyright
-> + *      notice, this list of conditions and the following disclaimer.
-> + *    * Redistributions in binary form must reproduce the above copyright
-> + *      notice, this list of conditions and the following disclaimer in
-> + *      the documentation and/or other materials provided with the
-> + *      distribution.
-> + *    * Neither the name of Broadcom nor the names of its contributors
-> + *      may be used to endorse or promote products derived from this
-> + *      software without specific prior written permission.
-> + *
-> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "bcm4708.dtsi"
-> +
-> +/ {
-> +       model = "NorthStar HR (BCM953012HR)";
-> +       compatible = "brcm,bcm953012hr", "brcm,brcm53012", "brcm,bcm4708";
-> +
-> +       aliases {
-> +               serial0 = &uart0;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
-> +
-> +       memory {
-> +               reg = <0x80000000 0x10000000>;
-> +       };
-> +};
-> +
-> +&uart0 {
-> +       status = "okay";
-> +};
-> +
-> +&nand {
-> +       nandcs@0 {
-> +               compatible = "brcm,nandcs";
-> +               reg = <0>;
-> +               nand-on-flash-bbt;
-> +
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +
-> +               nand-ecc-strength = <4>;
-> +               nand-ecc-step-size = <512>;
-> +
-> +               partition@0 {
-> +                       label = "nboot";
-> +                       reg = <0x00000000 0x00200000>;
-> +                       read-only;
+> ---
+> Code changes for this addition were submitted previously by Rob
+> Rice: https://git.kernel.org/cgit/linux/kernel/git/herbert/cryptodev-2.6.git/commit/?id=9d12ba86f818aa9cfe9f01b750336aa441f2ffa2
+> ---
+>  arch/arm/boot/dts/bcm-nsp.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> index b6142bd..9bac0c8 100644
+> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -241,6 +241,12 @@
+>                         brcm,nand-has-wp;
+>                 };
+>
+> +               crypto@2f000 {
+> +                       compatible = "brcm,spum-nsp-crypto";
+> +                       reg = <0x2f000 0x900>;
+> +                       mboxes = <&mailbox 0>;
 > +               };
-> +               partition@200000 {
-> +                       label = "nenv";
-> +                       reg = <0x00200000 0x00400000>;
-> +               };
-> +               partition@600000 {
-> +                       label = "nsystem";
-> +                       reg = <0x00600000 0x00a00000>;
-> +               };
-> +               partition@1000000 {
-> +                       label = "nrootfs";
-> +                       reg = <0x01000000 0x07000000>;
-> +               };
-> +       };
-> +};
 > +
-> +&spi_nor {
-> +       status = "okay";
-> +       spi-max-frequency = <62500000>;
-> +       m25p,default-addr-width = <3>;
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +
-> +       partition@0 {
-> +               label = "boot";
-> +               reg = <0x00000000 0x000d0000>;
-> +       };
-> +       partition@d000 {
-> +               label = "env";
-> +               reg = <0x000d0000 0x00030000>;
-> +       };
-> +       partition@100000 {
-> +               label = "system";
-> +               reg = <0x00100000 0x00600000>;
-> +       };
-> +       partition@700000 {
-> +               label = "rootfs";
-> +               reg = <0x00700000 0x00900000>;
-> +       };
-> +};
-> +
+>                 gpiob: gpio@30000 {
+>                         compatible = "brcm,iproc-nsp-gpio", "brcm,iproc-gpio";
+>                         reg = <0x30000 0x50>;
 > --
 > 2.1.0
 >
