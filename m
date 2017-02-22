@@ -1,73 +1,30 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] ARM64: Initial Marvell IAP140 enablement
-Date: Wed, 22 Feb 2017 17:48:47 +0100
-Message-ID: <482be055-0c8d-ac55-dae8-191f8f45bf06@suse.de>
-References: <20170222022929.10540-1-afaerber@suse.de>
- <CAL_JsqJmv--wP+gEt27ZbTT+8GeqKhYc=x3MTPBiz2Jr2wys8A@mail.gmail.com>
- <22850768-8ea8-3d56-5c34-31f24ca3b487@suse.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] binding: irqchip: mtk-cirq: Add binding document
+Date: Wed, 22 Feb 2017 10:53:26 -0600
+Message-ID: <20170222165326.upw5ptpbqbsqrbnj@rob-hp-laptop>
+References: <1487040961-18319-1-git-send-email-youlin.pei@mediatek.com>
+ <1487040961-18319-2-git-send-email-youlin.pei@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <22850768-8ea8-3d56-5c34-31f24ca3b487-l3A5Bk7waGM@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487040961-18319-2-git-send-email-youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 22.02.2017 um 17:43 schrieb Andreas Färber:
-> Hi Rob,
+On Tue, Feb 14, 2017 at 10:55:59AM +0800, Youlin Pei wrote:
+> This commit adds the device tree binding document for
+> the mediatek cirq.
 > 
-> Am 22.02.2017 um 14:34 schrieb Rob Herring:
->> On Tue, Feb 21, 2017 at 8:29 PM, Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org> wrote:
->>> One limitation is currently the lack of an IAP140 clk driver. Patch 4/4 works
->>> around that for UART0 with a fixed-clock.
->>
->> The PXA1928 clock driver should be close to what you need. They are
->> supposed to be very similar.
-> 
-> Where do you see that in mainline? Not in drivers/clk/pxa/ at least. I'm
-> certain the acorn-marvell tree has a PXA1908 clk driver somewhere, too,
-> I just haven't ported it yet.
-> 
->>> Andreas Färber (8):
->>>   Documentation: arm: Marvell: Document IAP140
->>>   tty: serial: Suppress deprecated SERIAL_PXA on arm64
->>>   tty: serial: 8250_pxa: Implement mmp earlycon
->>
->> You should not use the pxa serial driver. AFAICT, it was separate to
->> add DMA support, but now the base 8250 driver supports DMA. The base
->> 8250 driver works with the PXA1928 and should also work with the
->> PXA1908.
-> 
-> Do you personally have one? I didn't spot a pxa1928 DT in mainline.
-> 
-> So, by my reading both 8250_of.c and 8250_pxa.c list "mrvl,mmp-uart" for
-> the platform driver. Is that really intentional?
-> 
-> What the early_pxa earlycon does is set the register shift and then
-> reuse the 8250 core - that looks perfectly valid to me. Are you possibly
-> mixing that up with the non-8250 pxa serial driver that I am already
-> suppressing one patch earlier?
+> Signed-off-by: Youlin Pei <youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../interrupt-controller/mediatek,cirq.txt         |   35 ++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/mediatek,cirq.txt
 
-Hit send too early: There's also 8250_early.c, but that does not appear
-to use the reg-shift property (which is not mentioned in the
-mrvl,mmp-uart binding) and thus omap has a custom earlycon driver there,
-similar to what is in 8250_pxa.c.
-
-> 
-> While at it, are you aware that we have two drivers, one pxa and one
-> mmp, that bind to "marvell,pdma-1.0"? That seemed wrong to me, too.
-> 
-> Regards,
-> Andreas
-> 
-
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
