@@ -1,553 +1,177 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: zx-tdm: add zte's tdm controller driver" to the asoc tree
-Date: Tue, 21 Feb 2017 16:26:07 -0800
-Message-ID: <E1cgKkx-0005SJ-4h@finisterre>
-References: <1487243106-22841-3-git-send-email-baoyou.xie@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487243106-22841-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] PCI: add DT bindings for Faraday Technology PCI Host
+ Bridge
+Date: Tue, 21 Feb 2017 18:26:40 -0600
+Message-ID: <20170222002640.y2uhumje5csioure@rob-hp-laptop>
+References: <20170211125220.10273-1-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170211125220.10273-1-linus.walleij@linaro.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Gavin Guo <gavinguo@andestech.com>, Macpaul Lin <macpaul@andestech.com>, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, openwrt-devel@openwrt.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Feng-Hsin Chiang <john453@faraday-tech.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Sat, Feb 11, 2017 at 01:52:17PM +0100, Linus Walleij wrote:
+> This adds device tree bindings for the Faraday technology PCI
+> Host Bridge. This IP is found in the Storlink/Storm/Cortina
+> Gemini SoC platform.
+> 
+> Cc: Janos Laube <janos.dev@gmail.com>
+> Cc: Paulius Zaleckas <paulius.zaleckas@gmail.com>
+> Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Gavin Guo <gavinguo@andestech.com>
+> Cc: Macpaul Lin <macpaul@andestech.com>
+> Cc: Feng-Hsin Chiang <john453@faraday-tech.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v1->v2:
+> - Rename from Cortina prefixes to Faraday. This is clearly
+>   a Faraday IP block.
+> - Support both the version with cascaded interrupts and the
+>   "dual" version with 1-to-1 mapped interrupts.
+> - Change bus-range to <0x00 0xff>
+> - Fix spelling mistake
+> - Write a bit about swizzling interrupts on the interrupt
+>   controller side
+> - Reasonable swizzling in the interrupt mapping example
+> 
+> This can be merged to the PCI tree whenever it is considered
+> fine for inclusion.
+> ---
+>  .../devicetree/bindings/pci/faraday-pci.txt        | 113 +++++++++++++++++++++
+>  1 file changed, 113 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/faraday-pci.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/faraday-pci.txt b/Documentation/devicetree/bindings/pci/faraday-pci.txt
+> new file mode 100644
+> index 000000000000..5fbb0fc6b758
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/faraday-pci.txt
+> @@ -0,0 +1,113 @@
+> +Faraday Technology PCI Host Bridge
+> +
+> +This PCI bridge is found inside that Cortina Systems Gemini SoC platform and
+> +is a generic IP block from Faraday Technology. It exists in two variants:
+> +plain and dual PCI. The plain version embeds a cascading interrupt controller
+> +into the host bridge. The dual version routes the interrupts to the host
+> +chips interrupt controller.
+> +
+> +The host controller appear on the PCI bus with vendor ID 0x159b (Faraday
+> +Technology) and product ID 0x4321.
+> +
+> +Mandatory properties:
+> +
+> +- compatible: should be one of
+> +  "faraday,pci"
+> +  "faraday,dual-pci"
 
-   ASoC: zx-tdm: add zte's tdm controller driver
+Probably should still have a Cortina specific compatible.
 
-has been applied to the asoc tree at
+> +- reg: memory base and size for the host bridge
+> +- #address-cells: set to <3>
+> +- #size-cells: set to <2>
+> +- #interrupt-cells: set to <1>
+> +- bus-range: set to <0x00 0xff>
+> +- device_type, set to "pci"
+> +- ranges: see pci.txt
+> +- interrupt-map-mask: see pci.txt
+> +- interrupt-map: see pci.txt
+> +
+> +Mandatory subnodes:
+> +- For "faraday,pci" a node representing the interrupt-controller inside the
+> +  host bridge is mandatory. It has the following mandatory properties:
+> +  - interrupt: see interrupt-controller/interrupts.txt
+> +  - interrupt-parent: see interrupt-controller/interrupts.txt
+> +  - interrupt-controller: see interrupt-controller/interrupts.txt
+> +  - #address-cells: set to <0>
+> +  - #interrupt-cells: set to <1>
+> +
+> +I/O space considerations:
+> +
+> +The plain variant has 128MiB of non-prefetchable memory space, whereas the
+> +"dual" variant has 64MiB. Take this into account when describing the ranges.
+> +
+> +Interrupt map considerations:
+> +
+> +The "dual" variant will get INT A, B, C, D from the system interrupt controller
+> +and should point to respective interrupt in that controller in its
+> +interrupt-map.
+> +
+> +The code which is the only documentation of how the Faraday PCI (the non-dual
+> +variant) interrupts assigns the default interrupt mapping/swizzling has
+> +typically been like this, doing the swizzling on the interrupt controller side
+> +rather than in the interconnect:
+> +
+> +interrupt-map-mask = <0xf800 0 0 7>;
+> +interrupt-map =
+> +	<0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
+> +	<0x4800 0 0 2 &pci_intc 1>,
+> +	<0x4800 0 0 3 &pci_intc 2>,
+> +	<0x4800 0 0 4 &pci_intc 3>,
+> +	<0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
+> +	<0x5000 0 0 2 &pci_intc 2>,
+> +	<0x5000 0 0 3 &pci_intc 3>,
+> +	<0x5000 0 0 4 &pci_intc 0>,
+> +	<0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
+> +	<0x5800 0 0 2 &pci_intc 3>,
+> +	<0x5800 0 0 3 &pci_intc 0>,
+> +	<0x5800 0 0 4 &pci_intc 1>,
+> +	<0x6000 0 0 1 &pci_intc 3>, /* Slot 12 */
+> +	<0x6000 0 0 2 &pci_intc 0>,
+> +	<0x6000 0 0 3 &pci_intc 1>,
+> +	<0x6000 0 0 4 &pci_intc 2>;
+> +
+> +Example:
+> +
+> +pci@50000000 {
+> +	compatible = "faraday,pci";
+> +	reg = <0x50000000 0x100>;
+> +	interrupts = <8 IRQ_TYPE_LEVEL_HIGH>, /* PCI A */
+> +			<26 IRQ_TYPE_LEVEL_HIGH>, /* PCI B */
+> +			<27 IRQ_TYPE_LEVEL_HIGH>, /* PCI C */
+> +			<28 IRQ_TYPE_LEVEL_HIGH>; /* PCI D */
+> +	#address-cells = <3>;
+> +	#size-cells = <2>;
+> +	#interrupt-cells = <1>;
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+This doesn't belong here (I think).
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 870e0ddc4345e71239bfe4af03ad47976b5fa502 Mon Sep 17 00:00:00 2001
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Thu, 16 Feb 2017 19:05:06 +0800
-Subject: [PATCH] ASoC: zx-tdm: add zte's tdm controller driver
-
-This patch adds tdm controller driver for zte's SoC family.
-
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- sound/soc/zte/Kconfig  |   8 +
- sound/soc/zte/Makefile |   1 +
- sound/soc/zte/zx-tdm.c | 461 +++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 470 insertions(+)
- create mode 100644 sound/soc/zte/zx-tdm.c
-
-diff --git a/sound/soc/zte/Kconfig b/sound/soc/zte/Kconfig
-index 6d8a90d36315..75f67a5d23ea 100644
---- a/sound/soc/zte/Kconfig
-+++ b/sound/soc/zte/Kconfig
-@@ -15,3 +15,11 @@ config ZX_I2S
- 	help
- 	  Say Y or M if you want to add support for codecs attached to the
- 	  ZTE ZX I2S interface
-+
-+config ZX_TDM
-+        tristate "ZTE ZX TDM Driver Support"
-+        depends on COMMON_CLK
-+        select SND_SOC_GENERIC_DMAENGINE_PCM
-+        help
-+          Say Y or M if you want to add support for codecs attached to the
-+          ZTE ZX TDM interface
-diff --git a/sound/soc/zte/Makefile b/sound/soc/zte/Makefile
-index 77768f5fd10c..1fc841acdfdd 100644
---- a/sound/soc/zte/Makefile
-+++ b/sound/soc/zte/Makefile
-@@ -1,2 +1,3 @@
- obj-$(CONFIG_ZX_SPDIF)	+= zx-spdif.o
- obj-$(CONFIG_ZX_I2S)	+= zx-i2s.o
-+obj-$(CONFIG_ZX_TDM)	+= zx-tdm.o
-diff --git a/sound/soc/zte/zx-tdm.c b/sound/soc/zte/zx-tdm.c
-new file mode 100644
-index 000000000000..bd632cc503b3
---- /dev/null
-+++ b/sound/soc/zte/zx-tdm.c
-@@ -0,0 +1,461 @@
-+/*
-+ * ZTE's TDM driver
-+ *
-+ * Copyright (C) 2017 ZTE Ltd
-+ *
-+ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <sound/dmaengine_pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <sound/soc-dai.h>
-+
-+#define	REG_TIMING_CTRL		0x04
-+#define	REG_TX_FIFO_CTRL	0x0C
-+#define	REG_RX_FIFO_CTRL	0x10
-+#define REG_INT_EN		0x1C
-+#define REG_INT_STATUS		0x20
-+#define REG_DATABUF		0x24
-+#define REG_TS_MASK0		0x44
-+#define REG_PROCESS_CTRL	0x54
-+
-+#define FIFO_CTRL_TX_RST	BIT(0)
-+#define FIFO_CTRL_RX_RST	BIT(0)
-+#define DEAGULT_FIFO_THRES	GENMASK(4, 2)
-+
-+#define FIFO_CTRL_TX_DMA_EN	BIT(1)
-+#define FIFO_CTRL_RX_DMA_EN	BIT(1)
-+
-+#define TX_FIFO_RST_MASK	BIT(0)
-+#define RX_FIFO_RST_MASK	BIT(0)
-+
-+#define FIFOCTRL_TX_FIFO_RST	BIT(0)
-+#define FIFOCTRL_RX_FIFO_RST	BIT(0)
-+
-+#define TXTH_MASK		GENMASK(5, 2)
-+#define RXTH_MASK		GENMASK(5, 2)
-+
-+#define FIFOCTRL_THRESHOLD(x)	((x) << 2)
-+
-+#define TIMING_MS_MASK		BIT(1)
-+/*
-+ * 00: 8 clk cycles every timeslot
-+ * 01: 16 clk cycles every timeslot
-+ * 10: 32 clk cycles every timeslot
-+ */
-+#define TIMING_SYNC_WIDTH_MASK	GENMASK(6, 5)
-+#define TIMING_WIDTH_SHIFT      5
-+#define TIMING_DEFAULT_WIDTH    0
-+#define TIMING_TS_WIDTH(x)	((x) << TIMING_WIDTH_SHIFT)
-+#define TIMING_WIDTH_FACTOR     8
-+
-+#define TIMING_MASTER_MODE	BIT(21)
-+#define TIMING_LSB_FIRST	BIT(20)
-+#define TIMING_TS_NUM(x)	(((x) - 1) << 7)
-+#define TIMING_CLK_SEL_MASK	GENMASK(2, 0)
-+#define TIMING_CLK_SEL_DEF	BIT(2)
-+
-+#define PROCESS_TX_EN		BIT(0)
-+#define PROCESS_RX_EN		BIT(1)
-+#define PROCESS_TDM_EN		BIT(2)
-+#define PROCESS_DISABLE_ALL	0
-+
-+#define INT_DISABLE_ALL		0
-+#define INT_STATUS_MASK		GENMASK(6, 0)
-+
-+struct zx_tdm_info {
-+	struct snd_dmaengine_dai_dma_data	dma_playback;
-+	struct snd_dmaengine_dai_dma_data	dma_capture;
-+	resource_size_t				phy_addr;
-+	void __iomem				*regbase;
-+	struct clk				*dai_wclk;
-+	struct clk				*dai_pclk;
-+	int					master;
-+	struct device				*dev;
-+};
-+
-+static inline u32 zx_tdm_readl(struct zx_tdm_info *tdm, u16 reg)
-+{
-+	return readl_relaxed(tdm->regbase + reg);
-+}
-+
-+static inline void zx_tdm_writel(struct zx_tdm_info *tdm, u16 reg, u32 val)
-+{
-+	writel_relaxed(val, tdm->regbase + reg);
-+}
-+
-+static void zx_tdm_tx_en(struct zx_tdm_info *tdm, bool on)
-+{
-+	unsigned long val;
-+
-+	val = zx_tdm_readl(tdm, REG_PROCESS_CTRL);
-+	if (on)
-+		val |= PROCESS_TX_EN | PROCESS_TDM_EN;
-+	else
-+		val &= ~(PROCESS_TX_EN | PROCESS_TDM_EN);
-+	zx_tdm_writel(tdm, REG_PROCESS_CTRL, val);
-+}
-+
-+static void zx_tdm_rx_en(struct zx_tdm_info *tdm, bool on)
-+{
-+	unsigned long val;
-+
-+	val = zx_tdm_readl(tdm, REG_PROCESS_CTRL);
-+	if (on)
-+		val |= PROCESS_RX_EN | PROCESS_TDM_EN;
-+	else
-+		val &= ~(PROCESS_RX_EN | PROCESS_TDM_EN);
-+	zx_tdm_writel(tdm, REG_PROCESS_CTRL, val);
-+}
-+
-+static void zx_tdm_tx_dma_en(struct zx_tdm_info *tdm, bool on)
-+{
-+	unsigned long val;
-+
-+	val = zx_tdm_readl(tdm, REG_TX_FIFO_CTRL);
-+	val |= FIFO_CTRL_TX_RST | DEAGULT_FIFO_THRES;
-+	if (on)
-+		val |= FIFO_CTRL_TX_DMA_EN;
-+	else
-+		val &= ~FIFO_CTRL_TX_DMA_EN;
-+	zx_tdm_writel(tdm, REG_TX_FIFO_CTRL, val);
-+}
-+
-+static void zx_tdm_rx_dma_en(struct zx_tdm_info *tdm, bool on)
-+{
-+	unsigned long val;
-+
-+	val = zx_tdm_readl(tdm, REG_RX_FIFO_CTRL);
-+	val |= FIFO_CTRL_RX_RST | DEAGULT_FIFO_THRES;
-+	if (on)
-+		val |= FIFO_CTRL_RX_DMA_EN;
-+	else
-+		val &= ~FIFO_CTRL_RX_DMA_EN;
-+	zx_tdm_writel(tdm, REG_RX_FIFO_CTRL, val);
-+}
-+
-+#define ZX_TDM_RATES	(SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000)
-+
-+#define ZX_TDM_FMTBIT \
-+	(SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FORMAT_MU_LAW | \
-+	SNDRV_PCM_FORMAT_A_LAW)
-+
-+static int zx_tdm_dai_probe(struct snd_soc_dai *dai)
-+{
-+	struct zx_tdm_info *zx_tdm = dev_get_drvdata(dai->dev);
-+
-+	snd_soc_dai_set_drvdata(dai, zx_tdm);
-+	zx_tdm->dma_playback.addr = zx_tdm->phy_addr + REG_DATABUF;
-+	zx_tdm->dma_playback.maxburst = 16;
-+	zx_tdm->dma_capture.addr = zx_tdm->phy_addr + REG_DATABUF;
-+	zx_tdm->dma_capture.maxburst = 16;
-+	snd_soc_dai_init_dma_data(dai, &zx_tdm->dma_playback,
-+				  &zx_tdm->dma_capture);
-+	return 0;
-+}
-+
-+static int zx_tdm_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
-+{
-+	struct zx_tdm_info *tdm = snd_soc_dai_get_drvdata(cpu_dai);
-+	unsigned long val;
-+
-+	val = zx_tdm_readl(tdm, REG_TIMING_CTRL);
-+	val &= ~(TIMING_SYNC_WIDTH_MASK | TIMING_MS_MASK);
-+	val |= TIMING_DEFAULT_WIDTH << TIMING_WIDTH_SHIFT;
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		tdm->master = 1;
-+		val |= TIMING_MASTER_MODE;
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		tdm->master = 0;
-+		val &= ~TIMING_MASTER_MODE;
-+		break;
-+	default:
-+		dev_err(cpu_dai->dev, "Unknown master/slave format\n");
-+		return -EINVAL;
-+	}
-+
-+
-+	zx_tdm_writel(tdm, REG_TIMING_CTRL, val);
-+
-+	return 0;
-+}
-+
-+static int zx_tdm_hw_params(struct snd_pcm_substream *substream,
-+			    struct snd_pcm_hw_params *params,
-+			    struct snd_soc_dai *socdai)
-+{
-+	struct zx_tdm_info *tdm = snd_soc_dai_get_drvdata(socdai);
-+	struct snd_dmaengine_dai_dma_data *dma_data;
-+	unsigned int ts_width = TIMING_DEFAULT_WIDTH;
-+	unsigned int ch_num = 32;
-+	unsigned int mask = 0;
-+	unsigned int ret = 0;
-+	unsigned long val;
-+
-+	dma_data = snd_soc_dai_get_dma_data(socdai, substream);
-+	dma_data->addr_width = ch_num >> 3;
-+
-+	switch (params_format(params)) {
-+	case SNDRV_PCM_FORMAT_MU_LAW:
-+	case SNDRV_PCM_FORMAT_A_LAW:
-+	case SNDRV_PCM_FORMAT_S16_LE:
-+		ts_width = 1;
-+		break;
-+	default:
-+		ts_width = 0;
-+		dev_err(socdai->dev, "Unknown data format\n");
-+		return -EINVAL;
-+	}
-+
-+	val = zx_tdm_readl(tdm, REG_TIMING_CTRL);
-+	val |= TIMING_TS_WIDTH(ts_width) | TIMING_TS_NUM(1);
-+	zx_tdm_writel(tdm, REG_TIMING_CTRL, val);
-+	zx_tdm_writel(tdm, REG_TS_MASK0, mask);
-+
-+	if (tdm->master)
-+		ret = clk_set_rate(tdm->dai_wclk,
-+			params_rate(params) * TIMING_WIDTH_FACTOR * ch_num);
-+
-+	return ret;
-+}
-+
-+static int zx_tdm_trigger(struct snd_pcm_substream *substream, int cmd,
-+			  struct snd_soc_dai *dai)
-+{
-+	int capture = (substream->stream == SNDRV_PCM_STREAM_CAPTURE);
-+	struct zx_tdm_info *zx_tdm = dev_get_drvdata(dai->dev);
-+	unsigned int val;
-+	int ret = 0;
-+
-+	switch (cmd) {
-+	case SNDRV_PCM_TRIGGER_START:
-+		if (capture) {
-+			val = zx_tdm_readl(zx_tdm, REG_RX_FIFO_CTRL);
-+			val |= FIFOCTRL_RX_FIFO_RST;
-+			zx_tdm_writel(zx_tdm, REG_RX_FIFO_CTRL, val);
-+
-+			zx_tdm_rx_dma_en(zx_tdm, true);
-+		} else {
-+			val = zx_tdm_readl(zx_tdm, REG_TX_FIFO_CTRL);
-+			val |= FIFOCTRL_TX_FIFO_RST;
-+			zx_tdm_writel(zx_tdm, REG_TX_FIFO_CTRL, val);
-+
-+			zx_tdm_tx_dma_en(zx_tdm, true);
-+		}
-+		break;
-+	case SNDRV_PCM_TRIGGER_RESUME:
-+	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		if (capture)
-+			zx_tdm_rx_en(zx_tdm, true);
-+		else
-+			zx_tdm_tx_en(zx_tdm, true);
-+		break;
-+	case SNDRV_PCM_TRIGGER_STOP:
-+		if (capture)
-+			zx_tdm_rx_dma_en(zx_tdm, false);
-+		else
-+			zx_tdm_tx_dma_en(zx_tdm, false);
-+		break;
-+	case SNDRV_PCM_TRIGGER_SUSPEND:
-+	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		if (capture)
-+			zx_tdm_rx_en(zx_tdm, false);
-+		else
-+			zx_tdm_tx_en(zx_tdm, false);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int zx_tdm_startup(struct snd_pcm_substream *substream,
-+			  struct snd_soc_dai *dai)
-+{
-+	struct zx_tdm_info *zx_tdm = dev_get_drvdata(dai->dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(zx_tdm->dai_wclk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(zx_tdm->dai_pclk);
-+	if (ret) {
-+		clk_disable_unprepare(zx_tdm->dai_wclk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void zx_tdm_shutdown(struct snd_pcm_substream *substream,
-+			    struct snd_soc_dai *dai)
-+{
-+	struct zx_tdm_info *zx_tdm = dev_get_drvdata(dai->dev);
-+
-+	clk_disable_unprepare(zx_tdm->dai_pclk);
-+	clk_disable_unprepare(zx_tdm->dai_wclk);
-+}
-+
-+static struct snd_soc_dai_ops zx_tdm_dai_ops = {
-+	.trigger	= zx_tdm_trigger,
-+	.hw_params	= zx_tdm_hw_params,
-+	.set_fmt	= zx_tdm_set_fmt,
-+	.startup	= zx_tdm_startup,
-+	.shutdown	= zx_tdm_shutdown,
-+};
-+
-+static const struct snd_soc_component_driver zx_tdm_component = {
-+	.name			= "zx-tdm",
-+};
-+
-+static void zx_tdm_init_state(struct zx_tdm_info *tdm)
-+{
-+	unsigned int val;
-+
-+	zx_tdm_writel(tdm, REG_PROCESS_CTRL, PROCESS_DISABLE_ALL);
-+
-+	val = zx_tdm_readl(tdm, REG_TIMING_CTRL);
-+	val |= TIMING_LSB_FIRST;
-+	val &= ~TIMING_CLK_SEL_MASK;
-+	val |= TIMING_CLK_SEL_DEF;
-+	zx_tdm_writel(tdm, REG_TIMING_CTRL, val);
-+
-+	zx_tdm_writel(tdm, REG_INT_EN, INT_DISABLE_ALL);
-+	/*
-+	 * write INT_STATUS register to clear it.
-+	 */
-+	zx_tdm_writel(tdm, REG_INT_STATUS, INT_STATUS_MASK);
-+	zx_tdm_writel(tdm, REG_RX_FIFO_CTRL, FIFOCTRL_RX_FIFO_RST);
-+	zx_tdm_writel(tdm, REG_TX_FIFO_CTRL, FIFOCTRL_TX_FIFO_RST);
-+
-+	val = zx_tdm_readl(tdm, REG_RX_FIFO_CTRL);
-+	val &= ~(RXTH_MASK | RX_FIFO_RST_MASK);
-+	val |= FIFOCTRL_THRESHOLD(8);
-+	zx_tdm_writel(tdm, REG_RX_FIFO_CTRL, val);
-+
-+	val = zx_tdm_readl(tdm, REG_TX_FIFO_CTRL);
-+	val &= ~(TXTH_MASK | TX_FIFO_RST_MASK);
-+	val |= FIFOCTRL_THRESHOLD(8);
-+	zx_tdm_writel(tdm, REG_TX_FIFO_CTRL, val);
-+}
-+
-+static struct snd_soc_dai_driver zx_tdm_dai = {
-+	.name	= "zx-tdm-dai",
-+	.id	= 0,
-+	.probe	= zx_tdm_dai_probe,
-+	.playback   = {
-+		.channels_min	= 1,
-+		.channels_max	= 4,
-+		.rates		= ZX_TDM_RATES,
-+		.formats	= ZX_TDM_FMTBIT,
-+	},
-+	.capture = {
-+		.channels_min	= 1,
-+		.channels_max	= 4,
-+		.rates		= ZX_TDM_RATES,
-+		.formats	= ZX_TDM_FMTBIT,
-+	},
-+	.ops	= &zx_tdm_dai_ops,
-+};
-+
-+static int zx_tdm_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct of_phandle_args out_args;
-+	unsigned int dma_reg_offset;
-+	struct zx_tdm_info *zx_tdm;
-+	unsigned int dma_mask;
-+	struct resource *res;
-+	struct regmap *regmap_sysctrl;
-+	int ret;
-+
-+	zx_tdm = devm_kzalloc(&pdev->dev, sizeof(*zx_tdm), GFP_KERNEL);
-+	if (!zx_tdm)
-+		return -ENOMEM;
-+
-+	zx_tdm->dev = dev;
-+
-+	zx_tdm->dai_wclk = devm_clk_get(&pdev->dev, "wclk");
-+	if (IS_ERR(zx_tdm->dai_wclk)) {
-+		dev_err(&pdev->dev, "Fail to get wclk\n");
-+		return PTR_ERR(zx_tdm->dai_wclk);
-+	}
-+
-+	zx_tdm->dai_pclk = devm_clk_get(&pdev->dev, "pclk");
-+	if (IS_ERR(zx_tdm->dai_pclk)) {
-+		dev_err(&pdev->dev, "Fail to get pclk\n");
-+		return PTR_ERR(zx_tdm->dai_pclk);
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	zx_tdm->phy_addr = res->start;
-+	zx_tdm->regbase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(zx_tdm->regbase))
-+		return PTR_ERR(zx_tdm->regbase);
-+
-+	ret = of_parse_phandle_with_fixed_args(pdev->dev.of_node,
-+				"zte,tdm-dma-sysctrl", 2, 0, &out_args);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Fail to get zte,tdm-dma-sysctrl\n");
-+		return ret;
-+	}
-+
-+	dma_reg_offset = out_args.args[0];
-+	dma_mask = out_args.args[1];
-+	regmap_sysctrl = syscon_node_to_regmap(out_args.np);
-+	if (IS_ERR(regmap_sysctrl)) {
-+		of_node_put(out_args.np);
-+		return PTR_ERR(regmap_sysctrl);
-+	}
-+
-+	regmap_update_bits(regmap_sysctrl, dma_reg_offset, dma_mask, dma_mask);
-+	of_node_put(out_args.np);
-+
-+	zx_tdm_init_state(zx_tdm);
-+	platform_set_drvdata(pdev, zx_tdm);
-+
-+	ret = devm_snd_soc_register_component(&pdev->dev, &zx_tdm_component,
-+						&zx_tdm_dai, 1);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Register DAI failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, NULL, 0);
-+	if (ret)
-+		dev_err(&pdev->dev, "Register platform PCM failed: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id zx_tdm_dt_ids[] = {
-+	{ .compatible = "zte,zx296718-tdm", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zx_tdm_dt_ids);
-+
-+static struct platform_driver tdm_driver = {
-+	.probe = zx_tdm_probe,
-+	.driver = {
-+		.name = "zx-tdm",
-+		.of_match_table = zx_tdm_dt_ids,
-+	},
-+};
-+module_platform_driver(tdm_driver);
-+
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
-+MODULE_DESCRIPTION("ZTE TDM DAI driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +	bus-range = <0x00 0xff>;
+> +	ranges = /* 1MiB I/O space 0x50000000-0x500fffff */
+> +		 <0x01000000 0 0          0x50000000 0 0x00100000>,
+> +		 /* 128MiB non-prefetchable memory 0x58000000-0x5fffffff */
+> +		 <0x02000000 0 0x58000000 0x58000000 0 0x08000000>;
+> +	interrupt-map-mask = <0xf800 0 0 7>;
+> +	interrupt-map =
+> +		<0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
+> +		<0x4800 0 0 2 &pci_intc 1>,
+> +		<0x4800 0 0 3 &pci_intc 2>,
+> +		<0x4800 0 0 4 &pci_intc 3>,
+> +		<0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
+> +		<0x5000 0 0 2 &pci_intc 2>,
+> +		<0x5000 0 0 3 &pci_intc 3>,
+> +		<0x5000 0 0 4 &pci_intc 0>,
+> +		<0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
+> +		<0x5800 0 0 2 &pci_intc 3>,
+> +		<0x5800 0 0 3 &pci_intc 0>,
+> +		<0x5800 0 0 4 &pci_intc 1>,
+> +		<0x6000 0 0 1 &pci_intc 3>, /* Slot 12 */
+> +		<0x6000 0 0 2 &pci_intc 0>,
+> +		<0x6000 0 0 3 &pci_intc 0>,
+> +		<0x6000 0 0 4 &pci_intc 0>;
+> +	pci_intc: interrupt-controller {
+> +		interrupt-parent = <&intcon>;
+> +		interrupt-controller;
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +	};
+> +};
+> -- 
+> 2.9.3
+> 
