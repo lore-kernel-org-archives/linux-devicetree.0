@@ -1,51 +1,90 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 2/4] ARM: dts: da850: add vpif video display pins
-Date: Wed, 22 Feb 2017 15:01:47 +0100
-Message-ID: <1487772109-10014-3-git-send-email-bgolaszewski@baylibre.com>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 4/4] ARM: dts: da850-evm: add the output port to the vpif node
+Date: Wed, 22 Feb 2017 15:01:49 +0100
+Message-ID: <1487772109-10014-5-git-send-email-bgolaszewski@baylibre.com>
 References: <1487772109-10014-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487772109-10014-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487772109-10014-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a new pinctrl sub-node for vpif display pins. Move VP_CLKIN3 and
-VP_CLKIN2 to the display node where they actually belong (vide section
-36.2.2 of the OMAP-L138 technical reference manual).
+Extend the vpif node with an output port with a single channel.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+NOTE: this is still mostly just hardware description - the actual
+driver is registered using pdata-quirks. We need the node however
+for correct pin control function selection.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/da850.dtsi | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/da850-evm.dts | 19 +++++++++++++++----
+ arch/arm/boot/dts/da850.dtsi    |  8 +++++++-
+ 2 files changed, 22 insertions(+), 5 deletions(-)
 
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index 3968a18..0298734 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -300,20 +300,31 @@
+ 
+ &vpif {
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&vpif_capture_pins>;
++	pinctrl-0 = <&vpif_capture_pins>, <&vpif_display_pins>;
+ 	status = "okay";
+ 
++	enable-gpios = <&tca6416 7 GPIO_ACTIVE_HIGH
++			&tca6416 6 GPIO_ACTIVE_HIGH
++			&tca6416 5 GPIO_ACTIVE_LOW>;
++
+ 	/* VPIF capture port */
+-	port {
+-		vpif_ch0: endpoint@0 {
++	port@0 {
++		vpif_input_ch0: endpoint@0 {
+ 			reg = <0>;
+ 			bus-width = <8>;
+ 		};
+ 
+-		vpif_ch1: endpoint@1 {
++		vpif_input_ch1: endpoint@1 {
+ 			reg = <1>;
+ 			bus-width = <8>;
+ 			data-shift = <8>;
+ 		};
+ 	};
++
++	/* VPIF display port */
++	port@1 {
++		vpif_output_ch0: endpoint {
++			bus-width = <8>;
++		};
++	};
+ };
 diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 92d633d..5150331 100644
+index 5150331..c708155 100644
 --- a/arch/arm/boot/dts/da850.dtsi
 +++ b/arch/arm/boot/dts/da850.dtsi
-@@ -216,8 +216,21 @@
- 					0x3c 0x11111111 0xffffffff
- 					/* VP_DIN[8..9] */
- 					0x40 0x00000011 0x000000ff
--					/* VP_CLKIN3, VP_CLKIN2 */
--					0x4c 0x00010100 0x000f0f00
-+				>;
+@@ -358,7 +358,13 @@
+ 			status = "disabled";
+ 
+ 			/* VPIF capture port */
+-			port {
++			port@0 {
++				#address-cells = <1>;
++				#size-cells = <0>;
 +			};
-+			vpif_display_pins: vpif_display_pins {
-+				pinctrl-single,bits = <
-+					/* VP_DOUT[2..7] */
-+					0x40 0x11111100 0xffffff00
-+					/* VP_DOUT[10..15,0..1] */
-+					0x44 0x11111111 0xffffffff
-+					/*  VP_DOUT[8..9] */
-+					0x48 0x00000011 0x000000ff
-+					/*
-+					 * VP_CLKOUT3, VP_CLKIN3,
-+					 * VP_CLKOUT2, VP_CLKIN2
-+					 */
-+					0x4c 0x00111100 0x00ffff00
- 				>;
++
++			/* VPIF display port */
++			port@1 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
  			};
- 		};
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
