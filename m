@@ -1,90 +1,78 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 4/4] ARM: dts: da850-evm: add the output port to the vpif node
-Date: Wed, 22 Feb 2017 15:01:49 +0100
-Message-ID: <1487772109-10014-5-git-send-email-bgolaszewski@baylibre.com>
-References: <1487772109-10014-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487772109-10014-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 4/6] drivers: firmware: psci: Fix non-PMIC wake-up if
+ SYSTEM_SUSPEND cuts power
+Date: Wed, 22 Feb 2017 15:05:44 +0100
+Message-ID: <CAMuHMdW8JAYrgvWxi8c_ZLtsUWBYFGZ=V7pu2p+cO=NdwLas2w@mail.gmail.com>
+References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
+ <1487622809-25127-5-git-send-email-geert+renesas@glider.be> <20170221174844.GE8605@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170221174844.GE8605@leverpostej>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Extend the vpif node with an output port with a single channel.
+Hi Mark,
 
-NOTE: this is still mostly just hardware description - the actual
-driver is registered using pdata-quirks. We need the node however
-for correct pin control function selection.
+On Tue, Feb 21, 2017 at 6:48 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Mon, Feb 20, 2017 at 09:33:27PM +0100, Geert Uytterhoeven wrote:
+>> @@ -440,12 +442,14 @@ static int psci_system_suspend_valid(suspend_state_t state)
+>>  static int psci_system_suspend_enter(suspend_state_t state)
+>>  {
+>>       switch (state) {
+>> +     case PM_SUSPEND_MEM:
+>> +             if (!psci_system_suspend_is_power_down ||
+>> +                 !wakeup_source_available())
+>> +                     return cpu_suspend(0, psci_system_suspend);
+>> +             /* fall through */
+>
+> I don't believe that this is the correct place to handle this.
+>
+> The wakeup_source_available() check *might* be ok, though even with that
+> I'd rather we rejected the request rather than trying to fall back to a
+> PSCI_CPU_SUSPEND. Otherwise we have a potential silent power regression.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/da850-evm.dts | 19 +++++++++++++++----
- arch/arm/boot/dts/da850.dtsi    |  8 +++++++-
- 2 files changed, 22 insertions(+), 5 deletions(-)
+If we reject the request here, I think the PM core has to be modified to
+try again using a shallower state. Note that it would be better to reject
+the state in the .valid() callback instead of in .enter().
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 3968a18..0298734 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -300,20 +300,31 @@
- 
- &vpif {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&vpif_capture_pins>;
-+	pinctrl-0 = <&vpif_capture_pins>, <&vpif_display_pins>;
- 	status = "okay";
- 
-+	enable-gpios = <&tca6416 7 GPIO_ACTIVE_HIGH
-+			&tca6416 6 GPIO_ACTIVE_HIGH
-+			&tca6416 5 GPIO_ACTIVE_LOW>;
-+
- 	/* VPIF capture port */
--	port {
--		vpif_ch0: endpoint@0 {
-+	port@0 {
-+		vpif_input_ch0: endpoint@0 {
- 			reg = <0>;
- 			bus-width = <8>;
- 		};
- 
--		vpif_ch1: endpoint@1 {
-+		vpif_input_ch1: endpoint@1 {
- 			reg = <1>;
- 			bus-width = <8>;
- 			data-shift = <8>;
- 		};
- 	};
-+
-+	/* VPIF display port */
-+	port@1 {
-+		vpif_output_ch0: endpoint {
-+			bus-width = <8>;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 5150331..c708155 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -358,7 +358,13 @@
- 			status = "disabled";
- 
- 			/* VPIF capture port */
--			port {
-+			port@0 {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			/* VPIF display port */
-+			port@1 {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 			};
--- 
-2.9.3
+You also have to consider this is dynamic not static.
+I.e. the availability of other wake-up sources may change at runtime (cfr.
+the "wakeup" files in sysfs). Currently pm_sleep_states[] (which controls
+which states are available) is initialized from suspend_set_ops(), and not
+changed later.
+
+Perhaps pm_sleep_states[] should be updated every time the wakeup_sources
+list is changed?
+
+> I can imagine that there are cases where the wakeup source is completely
+> external and invisible to Linux (e.g. a power button that has no
+> programming interface, and isn't desscribed at all). In that case, even
+> the wakeup_source_available() check might be too much. :/
+
+You mean the wakeup source that actually wakes up the system from PSCI
+SYSTEM_SUSPEND? On Renesas boards, that's a switch wired to the PMIC,
+and currently not described in DT.  Describing it in DT could indeed interfere
+with wakeup_source_available() :-(
+
+> What we could/should do is expose to userspace which suspend cases a
+> device can wake up the system from and/or whether a wakeup source is
+> suitable configured for a state currently. That way userspace can
+> determine whether it is gauranteed to be woken.
+
+Right.  And that information should come from DT?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
