@@ -1,47 +1,47 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 2/4] Documentation: devicetree: arm: Add Realtek RTD1295
- bindings
-Date: Wed, 22 Feb 2017 18:03:35 +0100
-Message-ID: <4bfe4a87-6530-ce4f-5017-132159734fa2@suse.de>
-References: <20170214033440.18667-1-afaerber@suse.de>
- <20170214033440.18667-3-afaerber@suse.de>
- <20170222165638.u5uemzsbldzoytvv@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170222165638.u5uemzsbldzoytvv@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, service@zidoo.tv, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCHv2 5/5] ARM: dts: socfpga: Add Devkit A10-SR Reset Controller
+Date: Wed, 22 Feb 2017 11:10:19 -0600
+Message-ID: <1487783419-10912-6-git-send-email-thor.thayer@linux.intel.com>
+References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487783419-10912-1-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 22.02.2017 um 17:56 schrieb Rob Herring:
-> On Tue, Feb 14, 2017 at 04:34:37AM +0100, Andreas F=E4rber wrote:
->> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
-> =
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-> Commit message?
+Add the Altera Arria10 System Resource Reset Controller to the MFD
 
-What exactly would you like to read there? Just the compatible strings?
+Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Acked-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v2  change commit header to ARM: dts: socfpga.
+---
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> Also, preferred subject prefix is "dt-bindings: arm: ".
+diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+index c57e6ce..9329025 100644
+--- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+@@ -121,6 +121,11 @@
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 		};
++
++		a10sr_rst: reset-controller {
++			compatible = "altr,a10sr-reset";
++			#reset-cells = <1>;
++		};
+ 	};
+ };
+ 
+-- 
+1.9.1
 
-Thanks. To me dt-bindings was the include dir only. :)
-
-Regards,
-Andreas
-
--- =
-
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
-HRB 21284 (AG N=FCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
