@@ -1,100 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND 1/1] media: platform: Renesas IMR driver
-Date: Wed, 22 Feb 2017 08:25:15 -0600
-Message-ID: <20170222142515.i54xtgyvxysd2qsr@rob-hp-laptop>
-References: <20170211200207.273799464@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: Add vendor prefix for Hwacom Systems Inc.
+Date: Wed, 22 Feb 2017 08:25:58 -0600
+Message-ID: <20170222142558.wbedfw6l4maatkdy@rob-hp-laptop>
+References: <20170212193247.22705-1-carlo@caione.org>
+ <20170212193247.22705-2-carlo@caione.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170211200207.273799464@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
+In-Reply-To: <20170212193247.22705-2-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 11, 2017 at 11:02:01PM +0300, Sergei Shtylyov wrote:
-> From: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
+On Sun, Feb 12, 2017 at 08:32:46PM +0100, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > 
-> The image renderer light extended 4 (IMR-LX4) or the distortion correction
-> engine is a drawing processor with a simple  instruction system capable of
-> referencing data on an external memory as 2D texture data and performing
-> texture mapping and drawing with respect to any shape that is split into
-> triangular objects.
+> Hwacom Systems Inc. is a broadband system integrator and supplier of
+> mobile, fixed and IP networks related services as well as
+> multimedia application. Website: http://www.hwacom.com/
 > 
-> This V4L2 memory-to-memory device driver only supports image renderer found
-> in the R-Car gen3 SoCs; the R-Car gen2 support  can be added later...
-> 
-> [Sergei: merged 2 original patches, added the patch description, removed
-> unrelated parts,  added the binding document, ported the driver to the
-> modern kernel, renamed the UAPI header file and the guard  macros to match
-> the driver name, extended the copyrights, fixed up Kconfig prompt/depends/
-> help, made use of the BIT()/GENMASK() macros, sorted #include's, removed
-> leading  dots and fixed grammar in the comments, fixed up indentation to
-> use tabs where possible, renamed IMR_DLSR to IMR_DLPR to match the manual,
-> separated the register offset/bit #define's, removed *inline* from .c file,
-> fixed lines over 80 columns, removed useless parens, operators, casts,
-> braces, variables, #include's, (commented out) statements, and even
-> function, inserted empty line after desclaration, removed extra empty
-> lines, reordered some local variable desclarations, removed calls to
-> 4l2_err() on kmalloc() failure, fixed the error returned by imr_default(),
-> avoided code duplication in the IRQ handler, used '__packed' for the UAPI
-> structures, enclosed the macro parameters in parens, exchanged the values
-> of IMR_MAP_AUTO[SD]G macros.]
-> 
-> Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > ---
-> This patch is against the 'media_tree.git' repo's 'master' branch.
-> 
->  Documentation/devicetree/bindings/media/rcar_imr.txt |   23 
->  drivers/media/platform/Kconfig                       |   13 
->  drivers/media/platform/Makefile                      |    1 
->  drivers/media/platform/rcar_imr.c                    | 1923 +++++++++++++++++++
->  include/uapi/linux/rcar_imr.h                        |   94 
->  5 files changed, 2054 insertions(+)
-> 
-> Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-> ===================================================================
-> --- /dev/null
-> +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
-> @@ -0,0 +1,23 @@
-> +Renesas R-Car Image Renderer (Distortion Correction Engine)
-> +-----------------------------------------------------------
-> +
-> +The image renderer  or the distortion correction  engine is a drawing processor
-> +with a simple  instruction system capable of referencing data in external memory
-> +as  2D texture data and performing texture mapping and drawing with respect to
-> +any shape that is split into triangular objects.
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Please fix extra spaces in here.
-
-> +
-> +Required properties:
-> +- compatible: must be "renesas,imr-lx4" for the image renderer light extended 4
-> +  (IMR-LX4)  found in the R-Car gen3 SoCs;
-
-Needs an SoC specific compatible string too.
-
-The description is above, so you just need to list the compatible 
-strings.
-
-> +- reg: offset and length of the register block;
-> +- interrupts: interrupt specifier;
-
-How many interrupts?
-
-> +- clocks: clock phandle and specifier pair.
-
-How many clocks?
-
-> +
-> +Example:
-> +
-> +	imr-lx4@fe860000 {
-> +		compatible = "renesas,imr-lx4";
-> +		reg = <0 0xfe860000 0 0x2000>;
-> +		interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cpg CPG_MOD 823>;
-> +	};
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
