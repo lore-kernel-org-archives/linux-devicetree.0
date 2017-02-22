@@ -1,50 +1,52 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH/RFC 3/6] drivers: firmware: psci: Implement shallow
- suspend mode
-Date: Wed, 22 Feb 2017 14:35:37 +0000
-Message-ID: <a2e09969-3a67-6947-4dd8-2a153d1f48e7@arm.com>
-References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
- <1487622809-25127-4-git-send-email-geert+renesas@glider.be>
- <20170221110712.GB5021@amd> <de2a15d4-9ac2-9ba9-a47a-eacbf478f601@arm.com>
- <CAMuHMdVmu4AYZ6MZHd79N2-2gELR6s3oZ46UnEszCfLvHymY1w@mail.gmail.com>
- <3caf0f3f-76e5-cb1e-7c0f-87ed5e1c2b86@arm.com>
- <CAMuHMdU0fTtEXN9k477e3S-UUMNhd=U4_r0VOcyA1TGEgA5rmA@mail.gmail.com>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: hisilicon: add bindings for
+ hi3798cv200 SoC and Poplar board
+Date: Wed, 22 Feb 2017 08:36:21 -0600
+Message-ID: <842d2c57-3ea4-7e43-57a7-ddf69f44eceb@linaro.org>
+References: <1487752716-14824-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1487752716-14824-2-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU0fTtEXN9k477e3S-UUMNhd=U4_r0VOcyA1TGEgA5rmA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487752716-14824-2-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.gregotski-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 22/02/17 13:47, Geert Uytterhoeven wrote:
-> Hi Sudeep,
+On 02/22/2017 02:38 AM, Jiancheng Xue wrote:
+> Add bindings for HiSilicon hi3798cv200 SoC and Poplar Board.
 > 
-> On Tue, Feb 21, 2017 at 6:22 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-[...]
+I reviewed this before; the only change is it's separated
+from the original patch.
 
->>
->> IIUC, it's not implemented today. I can't talk about future ;), but your
+Reviewed-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Good, so there's no need for the DT property, and drivers/firmware/psci.c
-> should aways call do_cpu_idle() instead of PSCI SYSTEM_SUSPEND if any
-> other wake-up sources are configured?
+> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> index f1c1e21..1fd3dd7 100644
+> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> @@ -4,6 +4,10 @@ Hi3660 SoC
+>  Required root node properties:
+>  	- compatible = "hisilicon,hi3660";
+>  
+> +Hi3798cv200 Poplar Board
+> +Required root node properties:
+> +	- compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
+> +
+>  Hi4511 Board
+>  Required root node properties:
+>  	- compatible = "hisilicon,hi3620-hi4511";
 > 
 
-No.
-
-> That follows the principle of least surprise: it doesn't leave the user with
-> a system that won't wake up the way he configured it to wake up.
-> 
-
-But he can still wake up with the "switch" so there's no surprise. He
-just need to better understand his system before playing with it ;)
-
--- 
-Regards,
-Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
