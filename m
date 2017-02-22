@@ -1,51 +1,51 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 3/4] ARM: dts: da850-evm: add the UI expander node
-Date: Wed, 22 Feb 2017 15:01:48 +0100
-Message-ID: <1487772109-10014-4-git-send-email-bgolaszewski@baylibre.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 2/4] ARM: dts: da850: add vpif video display pins
+Date: Wed, 22 Feb 2017 15:01:47 +0100
+Message-ID: <1487772109-10014-3-git-send-email-bgolaszewski@baylibre.com>
 References: <1487772109-10014-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487772109-10014-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487772109-10014-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-We need the expander to be probed to allow the VPIF controller to
-receive interrupts from the video decoder.
+Add a new pinctrl sub-node for vpif display pins. Move VP_CLKIN3 and
+VP_CLKIN2 to the display node where they actually belong (vide section
+36.2.2 of the OMAP-L138 technical reference manual).
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/boot/dts/da850-evm.dts | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/da850.dtsi | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index dece981..3968a18 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -9,6 +9,7 @@
-  */
- /dts-v1/;
- #include "da850.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	compatible = "ti,da850-evm", "ti,da850";
-@@ -78,7 +79,10 @@
- 				DRVDD-supply = <&vbat>;
- 				DVDD-supply = <&vbat>;
- 			};
--
-+			tca6416: gpio@20 {
-+				compatible = "ti,tca6416";
-+				reg = <0x20>;
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 92d633d..5150331 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -216,8 +216,21 @@
+ 					0x3c 0x11111111 0xffffffff
+ 					/* VP_DIN[8..9] */
+ 					0x40 0x00000011 0x000000ff
+-					/* VP_CLKIN3, VP_CLKIN2 */
+-					0x4c 0x00010100 0x000f0f00
++				>;
 +			};
++			vpif_display_pins: vpif_display_pins {
++				pinctrl-single,bits = <
++					/* VP_DOUT[2..7] */
++					0x40 0x11111100 0xffffff00
++					/* VP_DOUT[10..15,0..1] */
++					0x44 0x11111111 0xffffffff
++					/*  VP_DOUT[8..9] */
++					0x48 0x00000011 0x000000ff
++					/*
++					 * VP_CLKOUT3, VP_CLKIN3,
++					 * VP_CLKOUT2, VP_CLKIN2
++					 */
++					0x4c 0x00111100 0x00ffff00
+ 				>;
+ 			};
  		};
- 		wdt: wdt@21000 {
- 			status = "okay";
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
