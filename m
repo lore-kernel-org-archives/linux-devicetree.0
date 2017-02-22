@@ -1,7 +1,7 @@
 From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v3 2/2] fpga manager: Add Xilinx slave serial SPI driver
-Date: Wed, 22 Feb 2017 11:39:11 +0100
-Message-ID: <1487759951-20711-3-git-send-email-agust@denx.de>
+Subject: [PATCH v3 1/2] dt: bindings: fpga: add xilinx slave-serial binding description
+Date: Wed, 22 Feb 2017 11:39:10 +0100
+Message-ID: <1487759951-20711-2-git-send-email-agust@denx.de>
 References: <1487759951-20711-1-git-send-email-agust@denx.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1487759951-20711-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
@@ -10,252 +10,76 @@ To: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76
 Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver loads FPGA firmware over SPI, using the "slave serial"
-configuration interface on Xilinx FPGAs.
+Add dt binding documentation details for Xilinx FPGA configuration
+over slave serial interface.
 
 Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
 ---
-This patch requires patch https://lkml.org/lkml/2017/2/15/667
-for building
-
 Changes in v3:
 
- - use named constant for udelay()/usleep_range() arguments
- - drop not needed .owner init
- - correct module licence (GPL v2)
- - fix build warning with newer gcc (in min() macro)
+ - extend example to show the usage in SPI master node, connected
+   to the fpga-region node
 
 Changes in v2:
 
- - rebased on v4.10
+ - correct gpios properties in example to match above description
 
- drivers/fpga/Kconfig      |   7 ++
- drivers/fpga/Makefile     |   1 +
- drivers/fpga/xilinx-spi.c | 185 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 193 insertions(+)
- create mode 100644 drivers/fpga/xilinx-spi.c
+ - use fpga-mgr@0 instead of fpga-spi@0 in example
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index ce861a2..6b42786 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -33,6 +33,13 @@ config FPGA_MGR_SOCFPGA_A10
- 	help
- 	  FPGA manager driver support for Altera Arria10 SoCFPGA.
- 
-+config FPGA_MGR_XILINX_SPI
-+	tristate "Xilinx Configuration over Slave Serial (SPI)"
-+	depends on SPI
-+	help
-+	  FPGA manager driver support for Xilinx FPGA configuration
-+	  over slave serial interface.
-+
- config FPGA_MGR_ZYNQ_FPGA
- 	tristate "Xilinx Zynq FPGA"
- 	depends on ARCH_ZYNQ || COMPILE_TEST
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 8df07bc..7582c5a 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_FPGA)			+= fpga-mgr.o
- # FPGA Manager Drivers
- obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
-+obj-$(CONFIG_FPGA_MGR_XILINX_SPI)	+= xilinx-spi.o
- obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
- 
- # FPGA Bridge Drivers
-diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+ .../bindings/fpga/xilinx-slave-serial.txt          | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+
+diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
 new file mode 100644
-index 0000000..af95727
+index 0000000..9766f74
 --- /dev/null
-+++ b/drivers/fpga/xilinx-spi.c
-@@ -0,0 +1,185 @@
-+/*
-+ * Xilinx Spartan6 Slave Serial SPI Driver
-+ *
-+ * Copyright (C) 2017 DENX Software Engineering
-+ *
-+ * Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * Manage Xilinx FPGA firmware that is loaded over SPI using
-+ * the slave serial configuration interface.
-+ */
++++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
+@@ -0,0 +1,44 @@
++Xilinx Slave Serial SPI FPGA Manager
 +
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/of.h>
-+#include <linux/spi/spi.h>
-+#include <linux/sizes.h>
++Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
++what is referred to as "slave serial" interface.
++The slave serial link is not technically SPI, and might require extra
++circuits in order to play nicely with other SPI slaves on the same bus.
 +
-+#define FPGA_MIN_CFG_WAIT_US	10
++See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
 +
-+struct xilinx_spi_conf {
-+	struct spi_device *spi;
-+	struct gpio_desc *prog_b;
-+	struct gpio_desc *done;
-+};
++Required properties:
++- compatible: should contain "xlnx,fpga-slave-serial"
++- reg: spi chip select of the FPGA
++- prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
++- done-gpios: config status pin (referred to as DONE in the manual)
 +
-+static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
-+{
-+	struct xilinx_spi_conf *conf = mgr->priv;
++Example for full FPGA configuration:
 +
-+	if (!gpiod_get_value(conf->done))
-+		return FPGA_MGR_STATE_RESET;
++	fpga-region0 {
++		compatible = "fpga-region";
++		fpga-mgr = <&fpga_mgr_spi>;
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++	};
 +
-+	return FPGA_MGR_STATE_UNKNOWN;
-+}
++	spi1: spi@10680 {
++		compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
++		pinctrl-0 = <&spi0_pins>;
++		pinctrl-names = "default";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cell-index = <1>;
++		interrupts = <92>;
++		clocks = <&coreclk 0>;
++		status = "okay";
 +
-+static int xilinx_spi_write_init(struct fpga_manager *mgr,
-+				 struct fpga_image_info *info,
-+				 const char *buf, size_t count)
-+{
-+	struct xilinx_spi_conf *conf = mgr->priv;
-+	const size_t prog_latency_1000us = 1000;
-+	const size_t prog_pulse_1us = 1;
-+
-+	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
-+		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
-+		return -EINVAL;
-+	}
-+
-+	gpiod_set_value(conf->prog_b, 1);
-+
-+	udelay(prog_pulse_1us); /* min is 500 ns */
-+
-+	gpiod_set_value(conf->prog_b, 0);
-+
-+	if (gpiod_get_value(conf->done)) {
-+		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
-+		return -EIO;
-+	}
-+
-+	/* program latency */
-+	usleep_range(prog_latency_1000us, prog_latency_1000us + 500);
-+	return 0;
-+}
-+
-+static int xilinx_spi_write(struct fpga_manager *mgr, const char *buf,
-+			    size_t count)
-+{
-+	struct xilinx_spi_conf *conf = mgr->priv;
-+	const char *fw_data = buf;
-+	const char *fw_data_end = fw_data + count;
-+
-+	while (fw_data < fw_data_end) {
-+		size_t remaining, stride;
-+		int ret;
-+
-+		remaining = fw_data_end - fw_data;
-+		stride = min_t(size_t, remaining, SZ_4K);
-+
-+		ret = spi_write(conf->spi, fw_data, stride);
-+		if (ret) {
-+			dev_err(&mgr->dev, "SPI error in firmware write: %d\n",
-+				ret);
-+			return ret;
-+		}
-+		fw_data += stride;
-+	}
-+
-+	return 0;
-+}
-+
-+static int xilinx_spi_write_complete(struct fpga_manager *mgr,
-+				     struct fpga_image_info *info)
-+{
-+	struct xilinx_spi_conf *conf = mgr->priv;
-+	int wait;
-+
-+	if (gpiod_get_value(conf->done))
-+		return 0;
-+
-+	wait = info->config_complete_timeout_us / FPGA_MIN_CFG_WAIT_US;
-+	if (info->config_complete_timeout_us % FPGA_MIN_CFG_WAIT_US)
-+		wait += 1;
-+
-+	while (wait--) {
-+		usleep_range(FPGA_MIN_CFG_WAIT_US, FPGA_MIN_CFG_WAIT_US + 5);
-+
-+		if (gpiod_get_value(conf->done))
-+			return 0;
-+	}
-+
-+	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
-+	return -ETIMEDOUT;
-+}
-+
-+static const struct fpga_manager_ops xilinx_spi_ops = {
-+	.state = xilinx_spi_state,
-+	.write_init = xilinx_spi_write_init,
-+	.write = xilinx_spi_write,
-+	.write_complete = xilinx_spi_write_complete,
-+};
-+
-+static int xilinx_spi_probe(struct spi_device *spi)
-+{
-+	struct xilinx_spi_conf *conf;
-+
-+	conf = devm_kzalloc(&spi->dev, sizeof(*conf), GFP_KERNEL);
-+	if (!conf)
-+		return -ENOMEM;
-+
-+	conf->spi = spi;
-+
-+	/* PROGRAM_B is active low */
-+	conf->prog_b = devm_gpiod_get(&spi->dev, "prog_b", GPIOD_OUT_LOW);
-+	if (IS_ERR(conf->prog_b)) {
-+		dev_err(&spi->dev, "Failed to get PROGRAM_B gpio: %ld\n",
-+			PTR_ERR(conf->prog_b));
-+		return PTR_ERR(conf->prog_b);
-+	}
-+
-+	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
-+	if (IS_ERR(conf->done)) {
-+		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
-+			PTR_ERR(conf->done));
-+		return PTR_ERR(conf->done);
-+	}
-+
-+	return fpga_mgr_register(&spi->dev, "Xilinx Slave Serial FPGA Manager",
-+				 &xilinx_spi_ops, conf);
-+}
-+
-+static int xilinx_spi_remove(struct spi_device *spi)
-+{
-+	fpga_mgr_unregister(&spi->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id xlnx_spi_of_match[] = {
-+	{ .compatible = "xlnx,fpga-slave-serial", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, xlnx_spi_of_match);
-+
-+static struct spi_driver xilinx_slave_spi_driver = {
-+	.driver = {
-+		.name = "xlnx-slave-spi",
-+		.of_match_table = of_match_ptr(xlnx_spi_of_match),
-+	},
-+	.probe = xilinx_spi_probe,
-+	.remove = xilinx_spi_remove,
-+};
-+
-+module_spi_driver(xilinx_slave_spi_driver)
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>");
-+MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SPI");
++		fpga_mgr_spi: fpga-mgr@0 {
++			compatible = "xlnx,fpga-slave-serial";
++			spi-max-frequency = <60000000>;
++			spi-cpha;
++			reg = <0>;
++			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
++			prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
++		};
++	};
 -- 
 2.7.4
 
