@@ -1,53 +1,48 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
-Date: Wed, 22 Feb 2017 08:20:58 +0100
-Message-ID: <20170222072058.GA9650@kroah.com>
-References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
- <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
- <20170220182214.izi46a7lbzck7q4r@ninjato>
- <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
- <20170221201403.GA1481@katana>
+From: =?UTF-8?Q?Janusz_U=c5=bcycki?= <j.uzycki@elpromaelectronics.com>
+Subject: Re: bug in DT docs vs mcp251x.c driver
+Date: Wed, 22 Feb 2017 08:58:43 +0100
+Message-ID: <d56accc5-67a8-e474-f1df-f23d4d02d50b@elpromaelectronics.com>
+References: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
+ <CAOMZO5BCcQYNr6qV0qhmRGTBm030kNWyErO66_HOD0A5huYM3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170221201403.GA1481@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5BCcQYNr6qV0qhmRGTBm030kNWyErO66_HOD0A5huYM3A@mail.gmail.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Alexander Shiyan <shc_work@mail.ru>, Oliver Hartkopp <socketcan@hartkopp.net>, linux-can@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "l.dalek elpromaelectronics.com" <l.dalek@elpromaelectronics.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 09:14:03PM +0100, Wolfram Sang wrote:
-> 
-> > >On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
-> > >>Since commit e2474541032d ("bcm2835: Fix hang for writing messages
-> > >>larger than 16 bytes") the interrupt handler is prone to a possible
-> > >>NULL pointer dereference. This could happen if an interrupt fires
-> > >>before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
-> > >>on the RPi 3. Even this is an unexpected behavior the driver must
-> > >>handle that with an error instead of a crash.
-> > >>
-> > >>CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-> > >>CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> > >>Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > >>Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
-> > >>Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> > >Applied to for-next, thanks (will be in 4.11)!
-> > >
-> > 
-> > since this patch is too late for 4.10, should i resent with CC to stable in
-> > order to get it into the next 4.10 release?
-> 
-> It has the Fixes: tag, that will do.
+Hi Fabio.
 
-But it moves it much lower on my "this needs to get into stable now!"
-priority list.  I'll try to remember this one when it goes by...
+You are right. Thanks.
+According to the source code printf adds the "-supply" indeed.
+I've not verified the code as I got a report for 3.14 that the driver
+does not work with vdd-supply in DT, works with vdd property
+and the supply was verified electrically.
+Now I have to investigate the problem better.
 
-thanks,
+best regards
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Janusz
+
+
+W dniu 2017-02-21 o 19:47, Fabio Estevam pisze:
+> Hi Janusz,
+>
+> On Tue, Feb 21, 2017 at 3:08 PM, Janusz UÅ¼ycki
+> <j.uzycki@elpromaelectronics.com> wrote:
+>> Hi,
+>>
+>> We've noticed the inconsistency in DT which still exist in kernel v4.10:
+>>
+>> devm_regulator_get(&spi->dev, "vdd") in drivers/net/can/mcp251x.c
+>>
+>> vs vdd-supply: Regulator that powers the CAN controller. in
+>> bindings/net/can/microchip,mcp251x.txt
+> This is correct.
+>
+> When the regulator is retrieved as devm_regulator_get(dev, "xyz") then
+> it searches for a xyz-supply in the dts.
+
