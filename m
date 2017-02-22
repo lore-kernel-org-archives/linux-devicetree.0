@@ -1,66 +1,90 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [RFC PATCH 0/4] mmc: core: Provide CMD5 awake and partial_init
- support
-Date: Wed, 22 Feb 2017 08:55:16 +0800
-Message-ID: <c126edac-af50-3f39-53d7-9290da5b1da0@rock-chips.com>
-References: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v10 0/3] Add support for the S6E3HA2 panel on TM2 board
+Date: Wed, 22 Feb 2017 10:09:48 +0900
+Message-ID: <50768133-aabc-6050-c9b2-8898bb8046a6@samsung.com>
+References: <CGME20170220071000epcas1p38e002e5064bdf4c3b1b4886207dcaaf4@epcas1p3.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Ritesh Harjani <riteshh@codeaurora.org>, adrian.hunter@intel.com
-Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CGME20170220071000epcas1p38e002e5064bdf4c3b1b4886207dcaaf4@epcas1p3.samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, jh80.chung@samsung.com, Andi Shyti <andi.shyti@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ritesh,
-
-On 2017/2/20 16:03, Ritesh Harjani wrote:
-> As per JEDEC spec - CMD5 can be used to awake from sleep mode for emmc.
-> This patch series provide CMD5(awake) + mmc_partial_init support to resume
-> mmc card device. This is mainly to reduce the resume time.
->
-
-For modem eMMC devices which support vccq to be 1v8, you patch seem to
-work fine but that didn't work for some eMMCs that only support 3v3
-vccq, for instance, some older v4.41 eMMC devices.
-
-Also, the spec didn't clearly have a statement about the fact that the
-partial init should work if keeping vqmmc.
-
-So finally you should have to add a fallback method once the partial
-init doesn't work well. In the point, this policy is not just host
-specified, but also eMMC device specified. So I guess this is why you
-expose a new DT property here instead?!
-
-
-> This was tested on db410c (emmc with HS200 mode) and MS8996 (emmc with HS400ES)
-> based internal board. This patch reduced the resume time by ~50% on msm8996
-> and ~11% on db410c.
->
-> As of now this patch series provides a caps (MMC_CAP2_SLEEP_AWAKE) to enable this feature.
-> Since there is no dependency on host platform for this, we can enable this feature by
-> default as well. Thoughts?
->
->
-> Ritesh Harjani (4):
->   Documentation: mmc: add mmc-sleep-awake
->   mmc: core: add mmc-sleep-awake caps
->   mmc: mmc: add support for CMD5 awake
->   mmc: core: Implement mmc_partial_init during resume
->
->  Documentation/devicetree/bindings/mmc/mmc.txt |   2 +
->  drivers/mmc/core/core.c                       |  13 +++
->  drivers/mmc/core/core.h                       |   1 +
->  drivers/mmc/core/host.c                       |   2 +
->  drivers/mmc/core/mmc.c                        | 160 ++++++++++++++++++++++++--
->  include/linux/mmc/card.h                      |   3 +
->  include/linux/mmc/host.h                      |   2 +
->  7 files changed, 176 insertions(+), 7 deletions(-)
->
-
-
--- 
-Best Regards
-Shawn Lin
+RGVhciBUaGllcnJ5LAoKSSB1bmRlcnN0YW5kIHRoYXQgeW91ciBvcGluaW9uIGlzOgpJdCBpcyBi
+ZXR0ZXIgdG8gaGFuZGxlIHRoZSBlcnJvciBldmVyeSB0aW1lIGl0IGlzIGlucHV0IHRvIHRoZQpy
+ZWdpc3RlciwgcmF0aGVyIHRoYW4gZXJyb3IgaGFuZGxpbmcgYXQgb25jZSBpbiB0aGUgc3RydWN0
+IHVzaW5nCmVycm9yLiBUaGlzIG5vdCBvbmx5IG1ha2VzIHRoZSBjb2RlIGVhc2llciB0byBtYWlu
+dGFpbiwgYnV0IGFsc28KcmVkdWNlcyB1bm5lY2Vzc2FyeSBjb21wdXRhdGlvbi4KClNvIEkgbW9k
+aWZpZWQgdGhlIHBhbmVsIGRyaXZlciB0byBjb2RlLWJ5LWNvZGUgZXJyb3IgaGFuZGxpbmcuCklm
+IHRoaXMgaXMgbm90IHlvdXIgb3BpbmlvbiwgY291bGQgeW91IHRlbGwgbWUgd2hhdCB5b3VyIG9w
+aW5pb24/CgpCZXN0IFJlZ2FyZHMsCkhvZWdldW4KCgpDaGFuZ2VzIGZvciBWMTA6Ci0gRml4ZWQg
+Y29kZS1ieS1jb2RlIGVycm9yIGhhbmRsaW5nLgoKQ2hhbmdlcyBmb3IgVjk6Ci0gRml4ZWQgdGhl
+IHRlLWdwaW8gdG8gb3B0aW9uYWwgaW4gYmluZGluZ3MKCkNoYW5nZXMgZm9yIFY4OgotIEFwcGxp
+ZWQgYmVsb3cgdHdvIHBhdGNoZXM6IChkcm0vZXh5bm9zKQogICA6IGRybS9leHlub3M6IG1pYzog
+QWRkIG1vZGVfc2V0IGNhbGxiYWNrIGZ1bmN0aW9uCiAgIDogZHJtL2V4eW5vczogbWljOiBGaXgg
+cGFyc2VfZHQgZnVuY3Rpb24KLSBUaGUgZHQtYmluZGluZyBwYXRjaCBhbmQgZHJpdmVyIHBhdGNo
+IHdlcmUgZGl2aWRlZC4KLSBSZWJhc2UgdGhlc2UgcGF0Y2hlcyBvbiBzYW1zdW5nIFNvQyB0cmVl
+WzFdIGFuZCB0bTIgdG91Y2tleSBwYXRjaFsyXS4KCkNoYW5nZSBmb3IgVjc6Ci0gRml4ZWQgdGhl
+IG1vZGVfc2V0IGNhbGxiYWNrIGZ1bmN0aW9uIG9mIG1pYyBkZXZpY2UgZHJpdmVyLgogICBiZWNh
+dXNlIHRoZSBtaWMgcmVnaXN0ZXIgaXMgaW5pdGlhbGl6ZWQgd2hlbiBlbnRlcmluZyBzdXNwZW5k
+CiAgIG1vZGUsIHNvIHNob3VsZCBzZXQgdGhlIHJlZyB2YWx1ZSB3aGVuZXZlciBwcmVfZW5hYmxl
+IGlzCiAgIGNhbGxlZC4KCkNoYW5nZXMgZm9yIFY2OgotIEZpeGVkIHRoZSBwYXJzZV9kdCBmdW5j
+dGlvbiBvZiBkc2kgZGV2aWNlIGRyaXZlci4KLSBSZW1vdmVkIE9GIGdyYXBoIG9mIHBhbmVsIGlu
+IERUIGFuZCBEVCBiaW5kaW5nIGRvY3VtZW50LgotIEZpeGVkIHRoZSBzNmUzaGEyIHBhbmVsIGRl
+dmljZSBkcml2ZXIuCiAgIC0gRml4ZWQgZnJvbSBudW1iZXIgc2l6ZSB0byBBUlJBWV9TSVpFKCku
+CiAgIC0gRml4ZWQgZXJyb3IgaGFuZGxpbmcgaW4gbWlwaV9kc2lfZGNzXyogZnVuY3Rpb25zLgog
+ICAtIEZpeGVkIHRoZSBjbG9jayBvZiBkaXNwbGF5X21vZGUuCiAgIC0gUmVtb3ZlZCB1bm5lY2Vz
+c2FyeSBjYXN0aW5nIGFuZCBlcnJvciBsb2cuCgpDaGFuZ2UgZm9yIFY1OgotIFRoZSBWNSBoYXMg
+b25seSBvbmUgZml4IGluIFY0IGJlbG93LgotIFJlbW92ZWQgdGhlIGVuYWJsZSBjaGVjayBvZiB0
+aGUgbWljIGRyaXZlciBpbiBtb2RlX3NldAogICBjYWxsYmFjaywgYmVjYXVzZSBtb2RlX3NldCBz
+aG91bGQgYmUgcGVyZm9ybWVkIGV2ZXJ5IHRpbWUuCgpDaGFuZ2VzIGZvciBWNDoKLSBSZW1vdmVk
+IGRpc3BsYXktdGltaW5ncyBpbiBkZXZpY2V0cmVlLCB0aGUgZGlzcGxheS10aW1pbmdzIGhhcwog
+ICBiZWVuIGZpeGVkIHRvIGJlIHByb3ZpZGVkIGJ5IHRoZSBkZXZpY2UgZHJpdmVyLgotIEFkZGVk
+IHRoZSBtb2RlX3NldCBjYWxsYmFjayBmdW5jdGlvbiBpbnRvIGV4eW5vc19kcm1fbWljLAogICBi
+ZWNhdXNlIHRoZSBleHlub3NfZHJtX21pYyBkcml2ZXIgY2FuIG5vdCBwYXJzZSBhIHZpZGVvbW9k
+ZQogICBzdHJ1Y3QgYnkgcmVtb3ZpbmcgdGhlIGRpc3BsYXktdGltaW5ncyBmcm9tIHRoZSBkZXZp
+Y2V0cmVlLgoKQ2hhbmdlcyBmb3IgVjM6Ci0gSW4gdGhlIERUIGJpbmRpbmcgZG9jdW1lbnQsIG1h
+ZGUgaXQgY2xlYXJseSB0aGF0IHRoZSBwYW5lbCBpcyBhCiAgIGNoaWxkIG5vZGUgb2YgZHNpLgot
+IEZpeCByZXNldC1ncGlvIGFjdGl2ZSBmcm9tIGhpZ2ggdG8gbG93LgotIElzIHRoZSBPRiBncmFw
+aCBzYXlpbmcgcmVsYXRlZCB0byBwYXRjaDI/CiAgIEFsdGhvZ2ggdGhlIHBhbmVsIGlzIGEgY2hp
+bGQgb2YgZHNpLCBJIHRoaW5rIE9GIGdyYXBoIG5lY2Vzc2FyeS4KICAgYmVjYXVzZSBpZiBhIHJl
+bW90ZS1lbmRwb2ludCBpcyBub3Qgc3BlY2lmaWVkLCB0aGUgZHNpIGFsc28KICAgcGFuZWwgaXMg
+bm90IHByb2JlZC4KLSBUaGUgZGlzcGxheS10aW1pbmdzIGhhcyBiZWVuIGZpeGVkIHRvIGJlIHBy
+b3ZpZGVkIGJ5IHRoZSBkZXZpY2UKICAgZHJpdmVyLiBob3dldmVyLCBJIHRoaW5rIGRpc3BsYXkt
+dGltaW5ncyBpcyBuZWNlc3NhcnkgaW4gZHRzLgogICBiZWNhdXNlIGlmIGR0cyBkb2VzIG5vdCBo
+YXZlIGRpc3BsYXktdGltaW5ncywgZHNpIHdpbGwgbm90IGxvYWQuCgpDaGFuZ2VzIGZvciBWMjoK
+LSBGaXhlZCB0aGUgc2Ftc3VuZyxzNmUzaGEyLnR4dCBEVCBkb2N1bWVudC4KICAgLSBBZGRlZCBh
+Y3RpdmUgaGlnaCBvciBsb3cgYWZ0ZXIgdGhlIGRlc2NyaXB0aW9uIG9mIHRoZSBHUElPcy4KICAg
+LSBSZW1vdmVkIHRoZSByZWcgYW5kIGFkZGVkIGEgZGVzY3JpcHRpb24gb2YgdGhlIHZpcnR1YWwK
+ICAgICBjaGFubmVsIG51bWJlciBvZiBhIERTSSBwZXJpcGhlcmFsLgoKRGVwZW5kcyBvbjoKWzFd
+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L2tyemsvbGludXgu
+Z2l0LyAKKGZvci1uZXh0IGJyYW5jaCkKWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvOTUwNDEzMS8KICAgICAtICgiYXJtNjQ6IGR0czogZXh5bm9zOiBBZGQgdG0yIHRvdWNo
+a2V5IG5vZGUiKQoKSG9lZ2V1biBLd29uICgyKToKICAgZHQtYmluZGluZ3M6IEFkZCBzdXBwb3J0
+IGZvciBzYW1zdW5nIHM2ZTNoYTIgcGFuZWwgYmluZGluZwogICBkcm0vcGFuZWw6IEFkZCBzdXBw
+b3J0IGZvciBTNkUzSEEyIHBhbmVsIGRyaXZlciBvbiBUTTIgYm9hcmQKCkh5dW5nd29uIEh3YW5n
+ICgxKToKICAgYXJtNjQ6IGR0czogZXh5bm9zOiBBZGQgc3VwcG9ydCBmb3IgUzZFM0hBMiBwYW5l
+bCBkZXZpY2Ugb24gVE0yIGJvYXJkCgogIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1
+bmcsczZlM2hhMi50eHQgICAgIHwgIDI4ICsKICBhcmNoL2FybTY0L2Jvb3QvZHRzL2V4eW5vcy9l
+eHlub3M1NDMzLXRtMi5kdHMgICAgICB8ICAxMiArCiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKwogIGRyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKICBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtc2Ftc3VuZy1zNmUzaGEyLmMgICAgICB8IDczOSAKKysrKysrKysrKysrKysr
+KysrKysrCiAgNSBmaWxlcyBjaGFuZ2VkLCA3ODYgaW5zZXJ0aW9ucygrKQogIGNyZWF0ZSBtb2Rl
+IDEwMDY0NCAKRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+c2Ftc3VuZyxzNmUzaGEyLnR4dAogIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+cGFuZWwvcGFuZWwtc2Ftc3VuZy1zNmUzaGEyLmMKCi0tIAoxLjkuMQoKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
