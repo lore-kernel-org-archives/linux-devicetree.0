@@ -1,54 +1,96 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: [PATCH 6/7] clk: tegra: correct tegra210_pll_fixed_mdiv_cfg rate calculation
-Date: Wed, 22 Feb 2017 17:14:01 +0200
-Message-ID: <1487776444-4701-7-git-send-email-pdeschrijver@nvidia.com>
-References: <1487776444-4701-1-git-send-email-pdeschrijver@nvidia.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] mfd: wm831x: Add device tree binding document
+Date: Wed, 22 Feb 2017 09:15:02 -0600
+Message-ID: <20170222151502.njwsimmttah3tv4f@rob-hp-laptop>
+References: <1486984514-29749-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1486984514-29749-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1487776444-4701-1-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486984514-29749-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Return the actually achieved rate in cfg->output_rate rather than just the
-requested rate. This is important to make clk_round_rate return the correct
-result.
+On Mon, Feb 13, 2017 at 11:15:14AM +0000, Charles Keepax wrote:
+> This is just a very simple initial binding, supporting only registering
+> the chip and the GPIOs. More features will be added as support for
+> device tree in the driver is expanded.
 
-Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
----
- drivers/clk/tegra/clk-tegra210.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+Please make the binding as complete as you can. You don't have to have 
+driver side support in place. Doesn't have to be everything, but at 
+least everything you know you will need.
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index fe698d2..58d7f9c 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -1222,6 +1222,7 @@ static int tegra210_pll_fixed_mdiv_cfg(struct clk_hw *hw,
- 	cfg->n = p_rate / cf;
- 
- 	cfg->sdm_data = 0;
-+	cfg->output_rate = input_rate;
- 	if (params->sdm_ctrl_reg) {
- 		unsigned long rem = p_rate - cf * cfg->n;
- 		/* If ssc is enabled SDM enabled as well, even for integer n */
-@@ -1232,10 +1233,15 @@ static int tegra210_pll_fixed_mdiv_cfg(struct clk_hw *hw,
- 			s -= PLL_SDM_COEFF / 2;
- 			cfg->sdm_data = sdin_din_to_data(s);
- 		}
-+		cfg->output_rate *= cfg->n * PLL_SDM_COEFF + PLL_SDM_COEFF/2 +
-+					sdin_data_to_din(cfg->sdm_data);
-+		cfg->output_rate /= p * cfg->m * PLL_SDM_COEFF;
-+	} else {
-+		cfg->output_rate *= cfg->n;
-+		cfg->output_rate /= p * cfg->m;
- 	}
- 
- 	cfg->input_rate = input_rate;
--	cfg->output_rate = rate;
- 
- 	return 0;
- }
--- 
-1.9.1
+> 
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+> 
+> Changes since v1:
+>  - Added MAINTAINERS update
+> 
+>  Documentation/devicetree/bindings/mfd/wm831x.txt | 31 ++++++++++++++++++++++++
+>  MAINTAINERS                                      |  1 +
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/wm831x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
+> new file mode 100644
+> index 0000000..9771022
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
+> @@ -0,0 +1,31 @@
+> +Cirrus Logic/Wolfson Microelectronics wm831x PMICs
+> +
+> +System PMICs with a wide range of additional features.
+> +
+> +Required properties:
+> +
+> +  - compatible : One of the following chip-specific strings:
+> +        "wlf,wm8310"
+> +        "wlf,wm8311"
+> +        "wlf,wm8312"
+> +        "wlf,wm8320"
+> +        "wlf,wm8321"
+> +        "wlf,wm8325"
+> +        "wlf,wm8326"
+> +
+> +  - reg : I2C slave address when connected using I2C, chip select number when
+> +    using SPI.
+> +
+> +  - gpio-controller : Indicates this device is a GPIO controller.
+> +  - #gpio-cells : Must be 2. The first cell is the pin number and the
+> +    second cell is used to specify optional parameters (currently unused).
+> +
+> +Example:
+> +
+> +wm8310: wm8310@36 {
 
+pmic@
+
+> +	compatible = "wlf,wm8310";
+> +	reg = <0x36>;
+> +
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2d8ca28..48fdc82 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13363,6 +13363,7 @@ F:	Documentation/hwmon/wm83??
+>  F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+>  F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+>  F:	Documentation/devicetree/bindings/mfd/arizona.txt
+> +F:	Documentation/devicetree/bindings/mfd/wm831x.txt
+>  F:	arch/arm/mach-s3c64xx/mach-crag6410*
+>  F:	drivers/clk/clk-wm83*.c
+>  F:	drivers/extcon/extcon-arizona.c
+> -- 
+> 2.1.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
