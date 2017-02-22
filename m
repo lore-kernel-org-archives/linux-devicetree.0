@@ -1,94 +1,121 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/9] doc: DT: venus: binding document for Qualcomm
- video driver
-Date: Tue, 21 Feb 2017 18:09:52 -0600
-Message-ID: <20170222000952.w6bg4bhvbklgkcnx@rob-hp-laptop>
-References: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
- <1486473024-21705-3-git-send-email-stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v1] regulator: Add driver for voltage controlled
+ regulators
+Date: Tue, 21 Feb 2017 18:22:14 -0600
+Message-ID: <20170222002214.sejshtotyiobn6n2@rob-hp-laptop>
+References: <20170210204348.107871-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486473024-21705-3-git-send-email-stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170210204348.107871-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2017 at 03:10:17PM +0200, Stanimir Varbanov wrote:
-> Add binding document for Venus video encoder/decoder driver
+On Fri, Feb 10, 2017 at 12:43:48PM -0800, Matthias Kaehlcke wrote:
+> The output voltage of a voltage controlled regulator can be controlled
+> through the voltage of another regulator. The current version of this
+> driver assumes that the output voltage is a linear function of the control
+> voltage.
 > 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > ---
-> Changes since previous v5:
->  * dropped rproc phandle (remoteproc is not used anymore)
->  * added subnodes paragraph with descrition of three subnodes:
->     - video-decoder and video-encoder - describes decoder (core0) and
->     encoder (core1) power-domains and clocks (applicable for msm8996
->     Venus core).
->     - video-firmware - needed to get reserved memory region where the
->     firmware is stored.
+> Note: The current version of the driver has a known limitation: If an
+> input supply is configured besides the control supply the two regulators
+> must have no common ancestor, otherwise the spinlock of the ancestor
+> would be acquired twice by the core code. One possible solution would be
+> to configure the control regulator through a string instead of a phandle,
+> i.e. not specifying it as supply.
 > 
->  .../devicetree/bindings/media/qcom,venus.txt       | 112 +++++++++++++++++++++
->  1 file changed, 112 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+>  .../devicetree/bindings/regulator/vctrl.txt        |  56 +++
+
+Please split bindings to separate patch.
+
+>  drivers/regulator/Kconfig                          |   7 +
+>  drivers/regulator/Makefile                         |   1 +
+>  drivers/regulator/vctrl-regulator.c                | 525 +++++++++++++++++++++
+>  4 files changed, 589 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/vctrl.txt
+>  create mode 100644 drivers/regulator/vctrl-regulator.c
 > 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+> diff --git a/Documentation/devicetree/bindings/regulator/vctrl.txt b/Documentation/devicetree/bindings/regulator/vctrl.txt
 > new file mode 100644
-> index 000000000000..4427af3ca5a5
+> index 000000000000..ba3c9b2f61b1
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-> @@ -0,0 +1,112 @@
-
-[...]
-
-> +* Subnodes
-> +The Venus node must contain three subnodes representing video-decoder,
-> +video-encoder and video-firmware.
-
-[...]
-
-> +The video-firmware subnode should contain:
+> +++ b/Documentation/devicetree/bindings/regulator/vctrl.txt
+> @@ -0,0 +1,56 @@
+> +Bindings for Voltage controlled regulators
+> +==========================================
 > +
-> +- memory-region:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: reference to the reserved-memory for the memory region
+> +Required properties:
+> +--------------------
+> +- compatible		: must be "vctrl-regulator".
+> +- ctrl-supply:		: a phandle for the regulator supplying the control
+> +			  voltage.
+> +- output-voltage-range	: an array of two integer values specifying the range
+> +			  (min/max) of the output voltage. The min/max voltage
+> +			  constraints of the regulator (if specified) must not
+> +			  exceed this range.
+> +- ctrl-voltage-range	: an array of two integer values specifying the range
+> +			  (min/max) of the control voltage. The values of
+> +			  ctrl-voltage-range and output-voltage-range are used
+> +			  for the conversion between output and control voltage.
+> +			  The min/max values of ctrl-voltage-range must specify
+> +			  the control voltage needed to generate the min/max
+> +			  output voltage.
 > +
-> +* An Example
-> +	video-codec@1d00000 {
-> +		compatible = "qcom,msm8916-venus";
-> +		reg = <0x01d00000 0xff000>;
-> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-> +			 <&gcc GCC_VENUS0_AHB_CLK>,
-> +			 <&gcc GCC_VENUS0_AXI_CLK>;
-> +		clock-names = "core", "iface", "bus";
-> +		power-domains = <&gcc VENUS_GDSC>;
-> +		iommus = <&apps_iommu 5>;
-> +
-> +		video-decoder {
-> +			compatible = "venus-decoder";
-> +			clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
-> +			clock-names = "core";
-> +			power-domains = <&mmcc VENUS_CORE0_GDSC>;
-> +		};
-> +
-> +		video-encoder {
-> +			compatible = "venus-encoder";
-> +			clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
-> +			clock-names = "core";
-> +			power-domains = <&mmcc VENUS_CORE1_GDSC>;
-> +		};
-> +
-> +		video-firmware {
-> +			memory-region = <&venus_mem>;
+> +Optional properties:
+> +--------------------
+> +- ovp-threshold-percent	: overvoltage protection (OVP) threshold of the
+> +			  regulator in percent. Some regulators have an OVP
+> +			  circuitry which shuts down the regulator when the
+> +			  actual output voltage deviates beyond a certain
+> +			  margin from the expected value for a given control
+> +			  voltage. On larger voltage decreases this can occur
+> +			  undesiredly since the output voltage does not adjust
+> +			  inmediately to changes in the control voltage. To
+> +			  avoid this situation the vctrl driver breaks down
+> +			  larger voltage decreases into multiple steps, where
+> +			  each step is within the OVP threshold.
+> +- min-slew-down-rate	: Describes how slowly the regulator voltage will decay
+> +			  down in the worst case (lightest expected load).
+> +			  Specified in uV / us (like main regulator ramp rate).
+> +			  This value is required when ovp-threshold-percent is
+> +			  specified.
 
-Why does this need to be a sub node?
+Don't we have a standard prop for this or that's just for ramp? Perhaps 
+this should be common?
 
-Rob
+> +
+> +Example:
+> +
+> +	vctrl_reg {
+
+Don't use '_' in node names.
+
+> +		compatible = "vctrl-regulator";
+> +		regulator-name = "vctrl_reg";
+> +
+> +		ctrl-supply = <&ctrl_supply>;
+> +
+
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1500000>;
+> +
+> +		output-voltage-range = <800000 1500000>;
+
+Why do you need both?
+
+> +		ctrl-voltage-range = <200000 500000>;
+> +
+> +		slew-rate = <225>;
+
+Not documented.
+
+> +		ovp-threshold-percent = <16>;
+> +	};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
