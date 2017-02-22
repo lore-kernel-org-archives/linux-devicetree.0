@@ -1,78 +1,112 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 4/6] drivers: firmware: psci: Fix non-PMIC wake-up if
- SYSTEM_SUSPEND cuts power
-Date: Wed, 22 Feb 2017 15:05:44 +0100
-Message-ID: <CAMuHMdW8JAYrgvWxi8c_ZLtsUWBYFGZ=V7pu2p+cO=NdwLas2w@mail.gmail.com>
-References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
- <1487622809-25127-5-git-send-email-geert+renesas@glider.be> <20170221174844.GE8605@leverpostej>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/9] doc: DT: venus: binding document for Qualcomm
+ video driver
+Date: Wed, 22 Feb 2017 08:17:19 -0600
+Message-ID: <CAL_JsqJ0+YEcw1-DgWpHgdDe4zfppNnpLt6XY=CGnMYwu8ALhw@mail.gmail.com>
+References: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1486473024-21705-3-git-send-email-stanimir.varbanov@linaro.org>
+ <20170222000952.w6bg4bhvbklgkcnx@rob-hp-laptop> <88584dd3-165f-2393-433e-95c288a8f473@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170221174844.GE8605@leverpostej>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <88584dd3-165f-2393-433e-95c288a8f473-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On Tue, Feb 21, 2017 at 6:48 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Mon, Feb 20, 2017 at 09:33:27PM +0100, Geert Uytterhoeven wrote:
->> @@ -440,12 +442,14 @@ static int psci_system_suspend_valid(suspend_state_t state)
->>  static int psci_system_suspend_enter(suspend_state_t state)
->>  {
->>       switch (state) {
->> +     case PM_SUSPEND_MEM:
->> +             if (!psci_system_suspend_is_power_down ||
->> +                 !wakeup_source_available())
->> +                     return cpu_suspend(0, psci_system_suspend);
->> +             /* fall through */
+On Wed, Feb 22, 2017 at 3:25 AM, Stanimir Varbanov
+<stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi Rob,
 >
-> I don't believe that this is the correct place to handle this.
+> On 02/22/2017 02:09 AM, Rob Herring wrote:
+>> On Tue, Feb 07, 2017 at 03:10:17PM +0200, Stanimir Varbanov wrote:
+>>> Add binding document for Venus video encoder/decoder driver
+>>>
+>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>> Changes since previous v5:
+>>>  * dropped rproc phandle (remoteproc is not used anymore)
+>>>  * added subnodes paragraph with descrition of three subnodes:
+>>>     - video-decoder and video-encoder - describes decoder (core0) and
+>>>     encoder (core1) power-domains and clocks (applicable for msm8996
+>>>     Venus core).
+>>>     - video-firmware - needed to get reserved memory region where the
+>>>     firmware is stored.
+>>>
+>>>  .../devicetree/bindings/media/qcom,venus.txt       | 112 +++++++++++++++++++++
+>>>  1 file changed, 112 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+>>> new file mode 100644
+>>> index 000000000000..4427af3ca5a5
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+>>> @@ -0,0 +1,112 @@
+>>
+>> [...]
+>>
+>>> +* Subnodes
+>>> +The Venus node must contain three subnodes representing video-decoder,
+>>> +video-encoder and video-firmware.
+>>
+>> [...]
+>>
+>>> +The video-firmware subnode should contain:
+>>> +
+>>> +- memory-region:
+>>> +    Usage: required
+>>> +    Value type: <phandle>
+>>> +    Definition: reference to the reserved-memory for the memory region
+>>> +
+>>> +* An Example
+>>> +    video-codec@1d00000 {
+>>> +            compatible = "qcom,msm8916-venus";
+>>> +            reg = <0x01d00000 0xff000>;
+>>> +            interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+>>> +            clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
+>>> +                     <&gcc GCC_VENUS0_AHB_CLK>,
+>>> +                     <&gcc GCC_VENUS0_AXI_CLK>;
+>>> +            clock-names = "core", "iface", "bus";
+>>> +            power-domains = <&gcc VENUS_GDSC>;
+>>> +            iommus = <&apps_iommu 5>;
+>>> +
+>>> +            video-decoder {
+>>> +                    compatible = "venus-decoder";
+>>> +                    clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
+>>> +                    clock-names = "core";
+>>> +                    power-domains = <&mmcc VENUS_CORE0_GDSC>;
+>>> +            };
+>>> +
+>>> +            video-encoder {
+>>> +                    compatible = "venus-encoder";
+>>> +                    clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
+>>> +                    clock-names = "core";
+>>> +                    power-domains = <&mmcc VENUS_CORE1_GDSC>;
+>>> +            };
+>>> +
+>>> +            video-firmware {
+>>> +                    memory-region = <&venus_mem>;
+>>
+>> Why does this need to be a sub node?
 >
-> The wakeup_source_available() check *might* be ok, though even with that
-> I'd rather we rejected the request rather than trying to fall back to a
-> PSCI_CPU_SUSPEND. Otherwise we have a potential silent power regression.
+> Because firmware reserved memory region must have separate struct
+> device, otherwise allocating video buffers (and map them through iommu)
+> for video-codec will fail because dma_alloc_coherent trying to allocate
+> from per-device coherent area.
 
-If we reject the request here, I think the PM core has to be modified to
-try again using a shallower state. Note that it would be better to reject
-the state in the .valid() callback instead of in .enter().
+Why can't the struct device be the video-codec device? Looking at the
+code, I don't see why you need the 2nd struct device.
 
-You also have to consider this is dynamic not static.
-I.e. the availability of other wake-up sources may change at runtime (cfr.
-the "wakeup" files in sysfs). Currently pm_sleep_states[] (which controls
-which states are available) is initialized from suspend_set_ops(), and not
-changed later.
+In any case, this is letting the driver design the binding which is
+wrong. From a binding perspective, there's no reason to have this
+node.
 
-Perhaps pm_sleep_states[] should be updated every time the wakeup_sources
-list is changed?
-
-> I can imagine that there are cases where the wakeup source is completely
-> external and invisible to Linux (e.g. a power button that has no
-> programming interface, and isn't desscribed at all). In that case, even
-> the wakeup_source_available() check might be too much. :/
-
-You mean the wakeup source that actually wakes up the system from PSCI
-SYSTEM_SUSPEND? On Renesas boards, that's a switch wired to the PMIC,
-and currently not described in DT.  Describing it in DT could indeed interfere
-with wakeup_source_available() :-(
-
-> What we could/should do is expose to userspace which suspend cases a
-> device can wake up the system from and/or whether a wakeup source is
-> suitable configured for a state currently. That way userspace can
-> determine whether it is gauranteed to be woken.
-
-Right.  And that information should come from DT?
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Rob
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
