@@ -1,225 +1,52 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/2] ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
-Date: Wed, 22 Feb 2017 17:31:31 +0100
-Message-ID: <20170222163131.14136-3-carlo@caione.org>
-References: <20170222163131.14136-1-carlo@caione.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170222163131.14136-1-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/3] power: reset: Add Renesas reset driver
+Date: Wed, 22 Feb 2017 07:28:15 -0800
+Message-ID: <20170222152815.GA23780@roeck-us.net>
+References: <20170216172320.10897-1-chris.brandt@renesas.com>
+ <20170216172320.10897-2-chris.brandt@renesas.com>
+ <20170216182644.GA17814@roeck-us.net>
+ <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <20170216222014.GA29672@roeck-us.net>
+ <PS1PR06MB11622077DE4673C1879C05278A5D0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <55cf087f-aa70-3660-1186-af9b9b20376d@roeck-us.net>
+ <SG2PR06MB11650D5EE485C0F44A77E0EA8A500@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB11650D5EE485C0F44A77E0EA8A500@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Wim Van Sebroeck <wim@iguana.be>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+On Wed, Feb 22, 2017 at 01:35:12PM +0000, Chris Brandt wrote:
+> Hello Geert and Guenter,
+> 
+> On Thursday, February 16, 2017, Guenter Roeck wrote:
+> > FWIW, the watchdog subsystem should support that easily, even with 125 ms
+> > hardware timeout. We added that capability for that very purpose. That
+> > would only fail if the system is stuck with interrupts disabled for more
+> > than 125 ms, which seems unlikely. I think the gpio watchdog on some
+> > systems has a similar low hardware timeout.
+> 
+> 
+> While I'm going to try that for the RZ/A1, I have a question for you guys
+> (or anyone else that has an opinion about end applications)
+> 
+> 
+> If I were going to make a request to the chip designers to make the timeout longer
+> for the next RZ/A chip, what would be a good max timeout for common Linux applications?
+> 
+> Looking through the drivers in the watchdog directly, I see default timeouts of 20,
+> 30, 60, and 120 seconds.
+> 
+30 and 60 are pretty common for default timeouts, though I personally think
+they are a bit long. If you want direct HW support, a maximum of 120 seconds
+should be sufficient though not really necessary anymore since the core
+supports virtual timeouts. A maximum of at least 30 seconds would be needed
+if the watchdog is supposed to run at boot time (ie if it is enabled by
+ROMMON/BIOS and kept running by the kernel).
 
-This patch adds support for the HwaCom AmazeTV set-top-box. The
-hardware configuration is really similar to the other GXL boards but
-for this hardware we need to limit the max-frequency of the eMMC to
-have it working.
-
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
- arch/arm64/boot/dts/amlogic/Makefile               |   1 +
- .../boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts  | 164 +++++++++++++++++++++
- 3 files changed, 166 insertions(+)
- create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index 9b2b41a..c369a55 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -47,3 +47,4 @@ Board compatible values:
-   - "amlogic,q201" (Meson gxm s912)
-   - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
-   - "nexbox,a1" (Meson gxm s912)
-+  - "hwacom,amazetv" (Meson gxl s905x)
-diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-index 0d7bfbf..2932755 100644
---- a/arch/arm64/boot/dts/amlogic/Makefile
-+++ b/arch/arm64/boot/dts/amlogic/Makefile
-@@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxl-nexbox-a95x.dtb
-+dtb-$(CONFIG_ARCH_MESON) += meson-gxl-hwacom-amazetv.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q200.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q201.dtb
- dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
-new file mode 100644
-index 0000000..9a2c60d
---- /dev/null
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
-@@ -0,0 +1,164 @@
-+/*
-+ * Copyright (c) 2017 Carlo Caione
-+ * Copyright (c) 2016 BayLibre, Inc.
-+ * Author: Neil Armstrong <narmstrong-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: GPL-2.0+ OR MIT
-+ */
-+
-+/dts-v1/;
-+
-+#include "meson-gxl-s905x.dtsi"
-+
-+/ {
-+	compatible = "hwacom,amazetv", "amlogic,s905x", "amlogic,meson-gxl";
-+	model = "Hwacom AmazeTV (S905X)";
-+
-+	aliases {
-+		serial0 = &uart_AO;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	vddio_card: gpio-regulator {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "VDDIO_CARD";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <1>;
-+
-+		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
-+		states = <1800000 0
-+			  3300000 1>;
-+	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+
-+	vddao_3v3: regulator-vddao_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDAO_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	wifi32k: wifi32k {
-+		compatible = "pwm-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-+		clocks = <&wifi32k>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	cvbs-connector {
-+		compatible = "composite-video-connector";
-+
-+		port {
-+			cvbs_connector_in: endpoint {
-+				remote-endpoint = <&cvbs_vdac_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&ethmac {
-+	status = "okay";
-+	phy-mode = "rmii";
-+	phy-handle = <&internal_phy>;
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+
-+	vmmc-supply = <&vddao_3v3>;
-+	vqmmc-supply = <&vddio_card>;
-+};
-+
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <8>;
-+	cap-sd-highspeed;
-+	cap-mmc-highspeed;
-+	max-frequency = <100000000>;
-+	non-removable;
-+	disable-wp;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
-+};
-+
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
-+};
-+
-+&cvbs_vdac_port {
-+	cvbs_vdac_out: endpoint {
-+		remote-endpoint = <&cvbs_connector_in>;
-+	};
-+};
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hope this helps,
+Guenter
