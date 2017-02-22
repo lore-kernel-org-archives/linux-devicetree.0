@@ -1,85 +1,82 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
-Date: Wed, 22 Feb 2017 11:41:40 -0600
-Message-ID: <CAL_JsqJo7QCUrMc-DdbSpy=yxrkjBShcE+mo_ZuatUnwjWKd7Q@mail.gmail.com>
-References: <20170212193247.22705-1-carlo@caione.org>
- <20170212193247.22705-3-carlo@caione.org>
- <20170222144406.zycqtc77dygavh3q@rob-hp-laptop>
- <4f0d36ce-8b44-06f1-2dc1-6b681b80a685@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4f0d36ce-8b44-06f1-2dc1-6b681b80a685@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@endlessm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux@endlessm.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio playback
+Date: Wed, 22 Feb 2017 18:19:34 +0000
+Message-ID: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgODo0OSBBTSwgQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJl
-ckBzdXNlLmRlPiB3cm90ZToKPiBBbSAyMi4wMi4yMDE3IHVtIDE1OjQ0IHNjaHJpZWIgUm9iIEhl
-cnJpbmc6Cj4+IE9uIFN1biwgRmViIDEyLCAyMDE3IGF0IDA4OjMyOjQ3UE0gKzAxMDAsIENhcmxv
-IENhaW9uZSB3cm90ZToKPj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9n
-aWMvbWVzb24tZ3hsLWh3YWNvbS1hbWF6ZXR2LmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1s
-b2dpYy9tZXNvbi1neGwtaHdhY29tLWFtYXpldHYuZHRzCj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0
-NAo+Pj4gaW5kZXggMDAwMDAwMC4uNDQ5OTc4OQo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIv
-YXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1od2Fjb20tYW1hemV0di5kdHMK
-Pj4+IEBAIC0wLDAgKzEsMjAxIEBACj4+PiArLyoKPj4+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTcg
-Q2FybG8gQ2Fpb25lCj4+PiArICogQ29weXJpZ2h0IChjKSAyMDE2IEFuZHJlYXMgRsOkcmJlcgo+
-Cj4gWW91IGNhbiBkcm9wIG1lIGhlcmUsIENhcmxvLgo+Cj4+PiArICogQ29weXJpZ2h0IChjKSAy
-MDE2IEJheUxpYnJlLCBJbmMuCj4+PiArICogQXV0aG9yOiBOZWlsIEFybXN0cm9uZyA8bmFybXN0
-cm9uZ0BrZXJuZWwub3JnPgo+Pj4gKyAqCj4+PiArICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5z
-ZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMKPj4+ICsgKiBvZiB0aGUg
-R1BMIG9yIHRoZSBYMTEgbGljZW5zZSwgYXQgeW91ciBvcHRpb24uIE5vdGUgdGhhdCB0aGlzIGR1
-YWwKPj4+ICsgKiBsaWNlbnNpbmcgb25seSBhcHBsaWVzIHRvIHRoaXMgZmlsZSwgYW5kIG5vdCB0
-aGlzIHByb2plY3QgYXMgYQo+Pj4gKyAqIHdob2xlLgo+Pj4gKyAqCj4+PiArICogIGEpIFRoaXMg
-bGlicmFyeSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IK
-Pj4+ICsgKiAgICAgbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwg
-UHVibGljIExpY2Vuc2UgYXMKPj4+ICsgKiAgICAgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3
-YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlCj4+PiArICogICAgIExpY2Vu
-c2UsIG9yIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uCj4+PiArICoKPj4+ICsg
-KiAgICAgVGhpcyBsaWJyYXJ5IGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2ls
-bCBiZSB1c2VmdWwsCj4+PiArICogICAgIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91
-dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCj4+PiArICogICAgIE1FUkNIQU5UQUJJTElU
-WSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPj4+ICsgKiAg
-ICAgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4+ICsgKgo+
-Pj4gKyAqIE9yLCBhbHRlcm5hdGl2ZWx5LAo+Pj4gKyAqCj4+PiArICogIGIpIFBlcm1pc3Npb24g
-aXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdlLCB0byBhbnkgcGVyc29uCj4+PiArICog
-ICAgIG9idGFpbmluZyBhIGNvcHkgb2YgdGhpcyBzb2Z0d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1
-bWVudGF0aW9uCj4+PiArICogICAgIGZpbGVzICh0aGUgIlNvZnR3YXJlIiksIHRvIGRlYWwgaW4g
-dGhlIFNvZnR3YXJlIHdpdGhvdXQKPj4+ICsgKiAgICAgcmVzdHJpY3Rpb24sIGluY2x1ZGluZyB3
-aXRob3V0IGxpbWl0YXRpb24gdGhlIHJpZ2h0cyB0byB1c2UsCj4+PiArICogICAgIGNvcHksIG1v
-ZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1YmxpY2Vuc2UsIGFuZC9vcgo+Pj4g
-KyAqICAgICBzZWxsIGNvcGllcyBvZiB0aGUgU29mdHdhcmUsIGFuZCB0byBwZXJtaXQgcGVyc29u
-cyB0byB3aG9tIHRoZQo+Pj4gKyAqICAgICBTb2Z0d2FyZSBpcyBmdXJuaXNoZWQgdG8gZG8gc28s
-IHN1YmplY3QgdG8gdGhlIGZvbGxvd2luZwo+Pj4gKyAqICAgICBjb25kaXRpb25zOgo+Pj4gKyAq
-Cj4+PiArICogICAgIFRoZSBhYm92ZSBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Np
-b24gbm90aWNlIHNoYWxsIGJlCj4+PiArICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Ig
-c3Vic3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgo+Pj4gKyAqCj4+PiArICogICAg
-IFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMiLCBXSVRIT1VUIFdBUlJBTlRZIE9GIEFO
-WSBLSU5ELAo+Pj4gKyAqICAgICBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9U
-IExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMKPj4+ICsgKiAgICAgT0YgTUVSQ0hBTlRBQklMSVRZ
-LCBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRSBBTkQKPj4+ICsgKiAgICAgTk9OSU5G
-UklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZUklHSFQKPj4+
-ICsgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFNQUdFUyBPUiBPVEhF
-UiBMSUFCSUxJVFksCj4+PiArICogICAgIFdIRVRIRVIgSU4gQU4gQUNUSU9OIE9GIENPTlRSQUNU
-LCBUT1JUIE9SIE9USEVSV0lTRSwgQVJJU0lORwo+Pj4gKyAqICAgICBGUk9NLCBPVVQgT0YgT1Ig
-SU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SCj4+PiArICogICAg
-IE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KPj4+ICsgKi8KPj4KPj4gSSdtIGdvaW5n
-IHRvIHN0YXJ0IGFza2luZyBwZW9wbGUgdG8gdXNlIFNQRFggdGFncyBhbmQgeW91IGFyZSB0aGUg
-Zmlyc3QuIDopCj4KPiBGaW5lIHdpdGggbWUsIEknbGwgdXBkYXRlIG15IGluLWZsaWdodCBzZXJp
-ZXMuIEJ1dDoKPgo+Pgo+PiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMMi4wKyBPUiBNSVQK
-Pgo+IEknbSBmYWlybHkgc3VyZSB0aGF0IGl0J3MgR1BMLTIuMCsgd2l0aCBhIGRhc2guCgpPaCB5
-ZXMuIEp1c3QgbWFraW5nIHN1cmUgcGVvcGxlIGFyZSBwYXlpbmcgYXR0ZW50aW9uLiA7KQoKSSB0
-aGluayBpdCBuZWVkcyBwYXJlbnRoZXNpcyBhcm91bmQgaXQsIHRvby4KClJvYgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This patch adds the necessary DT bindings to get HDMI audio
+output in ARC AXS10x SDP. The bindings for I2S controller were
+added as well as the bindings for simple audio card.
+
+Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ arch/arc/boot/dts/axs10x_mb.dtsi | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index d6c1bbc..9d882b1 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -149,12 +149,13 @@
+ 			interrupts = <14>;
+ 		};
+ 
+-		i2c@0x1e000 {
+-			compatible = "snps,designware-i2c";
++		i2s: i2s@1e000 {
++			compatible = "snps,designware-i2s";
+ 			reg = <0x1e000 0x100>;
+-			clock-frequency = <400000>;
+-			clocks = <&i2cclk>;
++			clocks = <&i2sclk 0>;
++			clock-names = "i2sclk";
+ 			interrupts = <15>;
++			#sound-dai-cells = <0>;
+ 		};
+ 
+ 		i2c@0x1f000 {
+@@ -174,6 +175,7 @@
+ 				adi,input-colorspace = "rgb";
+ 				adi,input-clock = "1x";
+ 				adi,clock-delay = <0x03>;
++				#sound-dai-cells = <0>;
+ 
+ 				ports {
+ 					#address-cells = <1>;
+@@ -295,5 +297,17 @@
+ 				};
+ 			};
+ 		};
++
++		sound_playback {
++			compatible = "simple-audio-card";
++			simple-audio-card,name = "AXS10x HDMI Audio";
++			simple-audio-card,format = "i2s";
++			simple-audio-card,cpu {
++				sound-dai = <&i2s>;
++			};
++			simple-audio-card,codec {
++				sound-dai = <&adv7511>;
++			};
++		};
+ 	};
+ };
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
