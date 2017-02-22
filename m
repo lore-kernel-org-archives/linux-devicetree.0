@@ -1,149 +1,160 @@
-From: Dan Sneddon <dan.sneddon@gmail.com>
-Subject: Re: SPI fix needed in kernel (DragonBoard 410c)
-Date: Wed, 22 Feb 2017 14:08:10 -0700
-Message-ID: <CACceFXeoV5DjekfDSbEhGOKrztwqSa9jLQ-pknCVaXQMkPOyqg@mail.gmail.com>
-References: <6857de0f674548d09ecad023211b3d1f@NASANEXM01D.na.qualcomm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6857de0f674548d09ecad023211b3d1f@NASANEXM01D.na.qualcomm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "King, Lawrence" <lking@qti.qualcomm.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "Sedlak Grinbaum,
- Anna Hanna" <c_asedla@qti.qualcomm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "stanimir.varbanov@linaro.org" <stanimir.varbanov@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "todor.tomov@linaro.org" <todor.tomov@linaro.org>, "nicolas.dechesne@linaro.org" <nicolas.dechesne@linaro.org>, "ill.deacon@arm.com" <ill.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "Elster,
- Constantine" <celster@qti.qualcomm.com>
+From: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/1] ARM: dts: BCM953012HR: Initial Checkin
+Date: Wed, 22 Feb 2017 16:14:52 -0500
+Message-ID: <1487798092-8631-1-git-send-email-steven.lin1@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PHNuaXA+Cgo+IEkgaGF2ZSBiZWVuIHVzaW5nIFNQSSBvbiB0aGUgRHJhZ29uYm9hcmQgNDEwYyBh
-bmQgZm91bmQgc29tZSBpc3N1ZXMuIFNwZWNpZmljYWxseSBIYXJkd2FyZSBDaGlwIFNlbGVjdCBp
-cyBub3Qgd29ya2luZyBvbiB0aGUgRGViaWFuIGtlcm5lbCBmcm9tIExpbmFybyAoQnVpbGQgIzIw
-MikuIEl0IHR1cm5zIG91dCB0aGF0IHRoZSBTUElfSU9fQ19NWF9DU19NT0RFIGJpdCBpbiB0aGUg
-U1BJX0lPX0NPTlRST0wgcmVnaXN0ZXIgbmVlZHMgdG8gYmUgc2V0LiBNeSAncGF0Y2gnIGlzIHZl
-cnkgc2ltcGxpc3RpYywgYW5kIEkgY2VydGFpbmx5IGhhdmVuJ3QgdGVzdGVkIGl0IGFnYWluc3Qg
-YWxsIGNhc2VzIG9mIERNQS9ub24tRE1BIGFuZCB2YXJpb3VzIHRyYW5zZmVyIGxlbmd0aHMsIGJ1
-dCBpdCBkb2VzIGZpeCBteSBvbmUgY2FzZS4KClNpbmNlIHRoZSBzcGktcXVwIGRyaXZlciB1c2Vk
-IHRoZSBnZW5lcmljIHNwaSB0cmFuc2Zlcl9vbmVfbWVzc2FnZSBJIHdvdWxkIGtlZXAKdGhlIENT
-IHBpbiBhcyBhIEdQSU8gZnVuY3Rpb24gcmF0aGVyIHRoYW4gdGhlIGJsc3Bfc3BpNSBmdW5jdGlv
-biBhbmQgbGV0IHRoZQpmcmFtZXdvcmsgYXNzZXJ0L2RlYXNzZXJ0IGl0LgoKPiBGaXJzdCBJIGNo
-YW5nZWQgb25seSB0aGUgZHRzaSBmaWxlcyB0byBlbmFibGUgYSBzcGlkZXYgZHJpdmVyIHdpdGgg
-aGFyZHdhcmUgY2hpcCBzZWxlY3QgKGFuZCBzZXQgdGhlIGRyaXZlIHN0cmVuZ3RoIGNvcnJlY3Rs
-eSk6Cj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL2FwcTgwMTYtc2Jj
-LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vYXBxODAxNi1zYmMuZHRzaQo+IGluZGV4
-IGY2ZDJiY2I2ZGJkMS4uODc0MTUwYTQxMmEyIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtNjQvYm9v
-dC9kdHMvcWNvbS9hcHE4MDE2LXNiYy5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9x
-Y29tL2FwcTgwMTYtc2JjLmR0c2kKPiBAQCAtMjA4LDggKzIwOCwxNCBAQAo+ICAgICAgICAgICAg
-ICAgICAvKiBPbiBMb3cgc3BlZWQgZXhwYW5zaW9uICovCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgbGFiZWwgPSAiTFMtU1BJMCI7Cj4gKy8qICAgICAgICAgICAgICAgICAgICAgICAgY3MtZ3Bp
-b3MgPSA8Jm1zbWdwaW8gMTggMD4gKi8KPiAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMg
-PSAib2theSI7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgc3BpZGV2QDAgewo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJzcGlkZXYiOwo+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwPjsKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwwPjsKPiArICAgICAgICAgICAg
-ICAgICAgICAgICB9Owo+ICAgICAgICAgICAgICAgICB9Owo+Cj4gICAgICAgICAgICAgICAgIGxl
-ZHMgewo+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODkxNi1waW5z
-LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vbXNtODkxNi1waW5zLmR0c2kKPiBpbmRl
-eCA4OTlmMmIyOGE5YzkuLjFjMjJiNDQxNGVkZiAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jv
-b3QvZHRzL3Fjb20vbXNtODkxNi1waW5zLmR0c2kKPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRz
-L3Fjb20vbXNtODkxNi1waW5zLmR0c2kKPiBAQCAtMjA4LDcgKzIwOCw3IEBACj4gICAgICAgICAg
-ICAgICAgICAgICAgICAgcGlucyA9ICJncGlvMTYiLCAiZ3BpbzE3IiwgImdwaW8xOSI7Cj4gICAg
-ICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIHBpbm11eF9jcyB7Cj4gLSAgICAgICAg
-ICAgICAgICAgICAgICAgZnVuY3Rpb24gPSAiZ3BpbyI7Cj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgZnVuY3Rpb24gPSAiYmxzcF9zcGk1IjsKPiAgICAgICAgICAgICAgICAgICAgICAgICBwaW5z
-ID0gImdwaW8xOCI7Cj4gICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIHBpbmNv
-bmYgewo+IEBAIC0yMTgsNyArMjE4LDcgQEAKPiAgICAgICAgICAgICAgICAgfTsKPiAgICAgICAg
-ICAgICAgICAgcGluY29uZl9jcyB7Cj4gICAgICAgICAgICAgICAgICAgICAgICAgcGlucyA9ICJn
-cGlvMTgiOwo+IC0gICAgICAgICAgICAgICAgICAgICAgIGRyaXZlLXN0cmVuZ3RoID0gPDI+Owo+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGRyaXZlLXN0cmVuZ3RoID0gPDEyPjsKPiAgICAgICAg
-ICAgICAgICAgICAgICAgICBiaWFzLWRpc2FibGU7Cj4gICAgICAgICAgICAgICAgICAgICAgICAg
-b3V0cHV0LWhpZ2g7Cj4gICAgICAgICAgICAgICAgIH07Cj4KPiBIZXJlIGlzIHdoYXQgbXkgMy1i
-eXRlIHRyYW5zYWN0aW9ucyBlbmQgdXAgbG9va2luZyBsaWtlIChZZWxsb3cgLSBDbG9jaywgR3Jl
-ZW4g4oCTIERhdGEgT3V0LCBNYWdlbnRhLSBDaGlwIFNlbGVjdCkgOgo+Cj4KPiBBcyB5b3UgY2Fu
-IHNlZSB0aGUgY2hpcCBzZWxlY3QgaXMgZ29pbmcgaGlnaCBiZXR3ZWVuIGVhY2ggYnl0ZSBvZiBk
-YXRhLiBUaGlzIHZpb2xhdGVzIHRoZSBTUEkgcHJvdG9jb2wgYW5kIEkgYW0gdW5hYmxlIHRvIHRy
-YW5zZmVyIGRhdGEgZnJvbSB0aGUgZGV2aWNlLgo+Cj4gTmV4dCBJIGNoYW5nZWQgdGhlIFNQSSBk
-cml2ZXI6Cj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zcGkvc3BpLXF1cC5jIGIvZHJpdmVycy9z
-cGkvc3BpLXF1cC5jCj4gaW5kZXggNjhmOTVhY2Y3OTcxLi5hZWQ3MWVmN2UzZmQgMTAwNjQ0Cj4g
-LS0tIGEvZHJpdmVycy9zcGkvc3BpLXF1cC5jCj4gKysrIGIvZHJpdmVycy9zcGkvc3BpLXF1cC5j
-Cj4gQEAgLTU4MCw2ICs1ODAsNyBAQCBzdGF0aWMgaW50IHNwaV9xdXBfaW9fY29uZmlnKHN0cnVj
-dCBzcGlfZGV2aWNlICpzcGksIHN0cnVjdCBzcGlfdHJhbnNmZXIgKnhmZXIpCj4gICAgICAgICBl
-bHNlCj4gICAgICAgICAgICAgICAgIGNvbnRyb2wgJj0gflNQSV9JT19DX0NMS19JRExFX0hJR0g7
-Cj4KPiArICAgICAgIGNvbmZpZyB8PSBTUElfSU9fQ19NWF9DU19NT0RFOwo+ICAgICAgICAgd3Jp
-dGVsX3JlbGF4ZWQoY29udHJvbCwgY29udHJvbGxlci0+YmFzZSArIFNQSV9JT19DT05UUk9MKTsK
-Pgo+ICAgICAgICAgY29uZmlnID0gcmVhZGxfcmVsYXhlZChjb250cm9sbGVyLT5iYXNlICsgU1BJ
-X0NPTkZJRyk7Cj4gQEAgLTkyOCw3ICs5MjksNyBAQCBzdGF0aWMgaW50IHNwaV9xdXBfcHJvYmUo
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgICAgICAgICAgICAgICAgICAgICAgICBi
-YXNlICsgUVVQX0VSUk9SX0ZMQUdTX0VOKTsKPgo+ICAgICAgICAgd3JpdGVsX3JlbGF4ZWQoMCwg
-YmFzZSArIFNQSV9DT05GSUcpOwo+IC0gICAgICAgd3JpdGVsX3JlbGF4ZWQoU1BJX0lPX0NfTk9f
-VFJJX1NUQVRFLCBiYXNlICsgU1BJX0lPX0NPTlRST0wpOwo+ICsgICAgICAgd3JpdGVsX3JlbGF4
-ZWQoU1BJX0lPX0NfTk9fVFJJX1NUQVRFfFNQSV9JT19DX01YX0NTX01PREUsIGJhc2UgKyBTUElf
-SU9fQ09OVFJPTCk7Cj4KPiAgICAgICAgIHJldCA9IGRldm1fcmVxdWVzdF9pcnEoZGV2LCBpcnEs
-IHNwaV9xdXBfcXVwX2lycSwKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgSVJRRl9U
-UklHR0VSX0hJR0gsIHBkZXYtPm5hbWUsIGNvbnRyb2xsZXIpOwo+Cj4gVGhpcyBzZXRzIHRoZSBT
-UElfSU9fQ19NWF9NT0RFIGJpdCBpbiB0aGUgU1BJX0lPX0NPTlRST0wgcmVnaXN0ZXIuIE9uY2Ug
-dGhpcyBpcyBkb25lIHRoZSBTUEkgdHJhbnNhY3Rpb25zIGxvb2sgbGlrZSB0aGlzOgo+Cj4KPgo+
-IEFzIHlvdSBjYW4gc2VlIHRoZSBDaGlwIFNlbGVjdCBzdGF5cyBsb3cgZm9yIHRoZSBlbnRpcmUg
-dHJhbnNhY3Rpb24gYW5kIHRoZSBkZXZpY2Ugc3VjY2Vzc2Z1bGx5IHRyYW5zZmVycyBkYXRhLgo+
-Cj4gSSBoYXZlIE5PVCB0ZXN0ZWQgdGhpcyBjaGFuZ2UgdmVyeSBjYXJlZnVsbHkgYW5kIEkgaGF2
-ZSBub3QgY292ZXJlZCBhbGwgb2YgdGhlIHBvc3NpYmxlIGNhc2VzIChkaWZmZXJlbnQgcHJvY2Vz
-c29ycywgRE1BIHZzIG5vbi1ETUEsIGV0YykuIFRoaXMg4oCYcGF0Y2jigJkgaXMgb25seSBrbm93
-biB0byB3b3JrIHdpdGggTVNNODkxNi9BUFE4MDE2LCBhbmQgb25seSB3aXRoIDMtYnl0ZSB0cmFu
-c2ZlcnMgYXQgMTAwa0h6Lgo+Cj4gTGF3cmVuY2UgS2luZwo+IFNlbmlvciBTdGFmZiBFbmcuL21n
-cgo+IFF1YWxjb21tIENhbmFkYSBJbmMuCj4gU3VpdGUgMTAwLCAxMDUgQ29tbWVyY2UgVmFsbGV5
-IERyaXZlIFdlc3QKPiBNYXJraGFtIE9udGFyaW8gQ2FuYWRhIEwzVCA3VzMKPiArMSg5MDUpNDgy
-LTU0MDMg4oCTIG9mZmljZQo+ICsxKDQxNik2MjctNzMwMiAtIGNlbGwKPgo+Cj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0KPiBGcm9tOiBBbmR5IEdyb3NzIFttYWlsdG86YW5keS5ncm9zc0Bs
-aW5hcm8ub3JnXQo+IFNlbnQ6IFR1ZXNkYXksIEZlYnJ1YXJ5IDE0LCAyMDE3IDQ6MjEgUE0KPiBU
-bzogS2luZywgTGF3cmVuY2UgPGxraW5nQHF0aS5xdWFsY29tbS5jb20+Cj4gQ2M6IEZyYWRraW4s
-IEFsZXggPGFsZXhmQHF0aS5xdWFsY29tbS5jb20+OyBuaWNvbGFzLmRlY2hlc25lQGxpbmFyby5v
-cmc7IEJqb3JuIEFuZGVyc3NvbiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+OyBTcmluaXZh
-cyBLYW5kYWdhdGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmc+OyBFbHN0ZXIsIENv
-bnN0YW50aW5lIDxjZWxzdGVyQHF0aS5xdWFsY29tbS5jb20+OyBTZWRsYWsgR3JpbmJhdW0sIEFu
-bmEgSGFubmEgPGNfYXNlZGxhQHF0aS5xdWFsY29tbS5jb20+Cj4gU3ViamVjdDogUmU6IFNQSSBm
-aXggbmVlZGVkIGluIGtlcm5lbAo+Cj4gT24gMTQgRmVicnVhcnkgMjAxNyBhdCAxNDozNywgS2lu
-ZywgTGF3cmVuY2UgPGxraW5nQHF0aS5xdWFsY29tbS5jb20+IHdyb3RlOgo+PiBEZWFyIEFsbDoK
-Pj4KPj4KPj4KPj4gSSBhbSBiYWNrIG9uIHRoZSBjYXNlIG9mIHRoZSBTUEkgZHJpdmVyIGZvciB0
-aGUgQVBRODAxNi4gVGhpcyB0aW1lIEkKPj4gYW0gdXNpbmcgdGhlICdsYXRlc3QnIGJ1aWxkICMy
-MDIgb2YgRGViaWFuLgo+Pgo+Pgo+Pgo+PiBJbiBvcmRlciB0byBnZXQgdGhlIGhhcmR3YXJlIENo
-aXAgU2VsZWN0IHRvIG9wZXJhdGUgY29ycmVjdGx5IEkgdHJpZWQKPj4gdGhlIHNhbWUgJ3RyaWNr
-JyBJIGhhZCBiZWVuIGRvaW5nIGJlZm9yZSwgSSBhZGRlZCB0aGUgbGluZSBvZiBjb2RlCj4+IHRo
-YXQgc2V0cyB0aGUgU1BJX0lPX0NfTVhfQ1NfTU9ERSBiaXQgaW4gdGhlIFNQSV9JT19DT05UUk9M
-IHJlZ2lzdGVyCj4+IGluIHRoZSBmdW5jdGlvbiBzcGlfcXVwX2lvX2NvbmZpZygpLiBCdXQgdG8g
-bXkgYW5ub3lhbmNlIGl0IGRpZG4ndCBmaXggdGhlIHByb2JsZW0uCj4KPiBMb29raW5nIGF0IHRo
-ZSBzcGlfcXNkLmMgaW4gMy4xOCwgdGhlcmUgaXMgYSBwcmV0dHkgY29tcGxleCBkYW5jZSBpbnZv
-bHZlZCB3aXRoIGRlY2lkaW5nIHdoZXRoZXIgb3Igbm90IHRvIHNldCB0aGUgTVhfQ1MuICBQcm9i
-YWJseSBiZWNhdXNlIG9mIHRoZSB3ZWlyZCB0cmFuc2ZlciBjb2FsZXNjaW5nIHRoZXkgZG8uCj4K
-PiBJbiBhZGRpdGlvbiwgdGhleSBhcmUgZG9pbmcgYSBGT1JDRV9DUyB3aGVuIHRoZSBzcGkgY29y
-ZSBjYWxscyBzZXRfY3MuCj4KPj4KPj4KPj4gSW4gb3JkZXIgdG8gZ2V0IGhhcmR3YXJlIENTIGNv
-bnRyb2wgdG8gd29yayBJIGFsc28gaGFkIHRvIGNoYW5nZSB0aGUKPj4gU1BJX0lPX0NPTlRST0wg
-aW4gdGhlIGZ1bmN0aW9uIHNwaV9xdXBfcHJvYmUoKSAgZnJvbQo+Pgo+PiB3cml0ZWxfcmVsYXhl
-ZChTUElfSU9fQ19OT19UUklfU1RBVEUsIGJhc2UgKyBTUElfSU9fQ09OVFJPTCk7Cj4+Cj4+IHRv
-Cj4+Cj4+IHdyaXRlbF9yZWxheGVkKFNQSV9JT19DX05PX1RSSV9TVEFURXxTUElfSU9fQ19NWF9D
-U19NT0RFLCBiYXNlICsKPj4gU1BJX0lPX0NPTlRST0wpOwo+Pgo+Pgo+Pgo+PiBJIHdvdWxkIGhh
-dmUgdGhvdWdodCB0aGF0IHRoZSBzcGlfcXVwX2lvX2NvbmZpZygpIHJhbiBhZnRlciB0aGUKPj4g
-c3BpX3F1cF9wcm9iZSgpLCBidXQgdGhpcyBpcyBhcHBhcmVudGx5IG5vdCB0aGUgY2FzZS4KPgo+
-IFRoZSBzcGlfcXVwX2lvX2NvbmZpZygpIGlzIHJ1biBldmVyeSB0aW1lIHRoZXJlIGlzIGEgc3Bp
-IHRyYW5zYWN0aW9uLgo+IEl0IGlzIGNhbGxlZCBmcm9tIHNwaV9xdXBfdHJhbnNmZXJfb25lKCku
-Cj4KPj4KPj4KPj4gV2h5IGlzIHRoZSBTUElfSU9fQ19NWF9DU19NT0RFIGJpdCBzdGlsbCBub3Qg
-c2V0IGluIHRoZSBjb2RlPyBXaXRob3V0Cj4+IHRoaXMgYml0IHNldCBoYXJkd2FyZSBDUyB3aWxs
-IG5ldmVyIHdvcmsgcHJvcGVybHkuIE5vdyB0aGF0IHlvdSBoYXZlCj4+IHNlcGFyYXRlZCBvdXQg
-dGhlIG9sZCBjb250cm9sbGVyIGZyb20gdGhlIG5ldyBjb250cm9sbGVyIHdpdGggdGhlCj4+IHF1
-cF92MSBmbGFnIGl0IHNob3VsZCBiZSBlYXN54oCmCj4KPiBJIHByZXN1bWUgbm8gb25lIHNlbnQg
-YSBwYXRjaCB0byB0aGUgbWFpbGluZyBsaXN0IGZvciB0aGlzLiAgSWYgeW91IGRvLCBwbGVhc2Ug
-Q0MgbGludXgtbXNtLiAgQnV0IGR1ZSB0byB0aGUgZGV0YWlscyBhYm92ZSwgaXQgbWlnaHQgYmUg
-YSBnb29kIGlkZWEgdG8gYXNrIHNvbWVvbmUgaW4gQm91bGRlciBhYm91dCBhbGwgdGhlIGRpZmZl
-cmVudCBzdGF0ZXMgd2hlcmUgeW91IG5lZWQgc29tZSBmbGFncyBzZXQgYW5kIG90aGVycyBub3Qg
-c2V0IGlmIHlvdSB3YW50IHRvIHVzZSBhdXRvIGNoaXAgc2VsZWN0LiAgU2FnYXIgRGhhcmlhIG1p
-Z2h0IGJlIGEgZ29vZCBzdGFydGluZyBwb2ludC4KPgo+Cj4gUmVnYXJkcywKPgo+IEFuZHkKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+Initial version of DTS to support Broadcom BCM953012HR Northstar
+HR platform, similar to, but not the same as existing 953012K.
+
+Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile        |   1 +
+ arch/arm/boot/dts/bcm953012hr.dts | 115 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 116 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm953012hr.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 01d178a..c64ca3d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -94,6 +94,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm94708.dtb \
+ 	bcm94709.dtb \
+ 	bcm953012er.dtb \
++	bcm953012hr.dtb \
+ 	bcm953012k.dtb
+ dtb-$(CONFIG_ARCH_BCM_53573) += \
+ 	bcm47189-tenda-ac9.dtb
+diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
+new file mode 100644
+index 0000000..c332277
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm953012hr.dts
+@@ -0,0 +1,115 @@
++/*
++ *  BSD LICENSE
++ *
++ *  Copyright(c) 2017 Broadcom
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom nor the names of its contributors
++ *      may be used to endorse or promote products derived from this
++ *      software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/dts-v1/;
++
++#include "bcm4708.dtsi"
++
++/ {
++	model = "NorthStar HR (BCM953012HR)";
++	compatible = "brcm,bcm953012hr", "brcm,brcm53012", "brcm,bcm4708";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x80000000 0x10000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&nand {
++	nandcs@0 {
++		compatible = "brcm,nandcs";
++		reg = <0>;
++		nand-on-flash-bbt;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++
++		partition@0 {
++			label = "nboot";
++			reg = <0x00000000 0x00200000>;
++			read-only;
++		};
++		partition@200000 {
++			label = "nenv";
++			reg = <0x00200000 0x00400000>;
++		};
++		partition@600000 {
++			label = "nsystem";
++			reg = <0x00600000 0x00a00000>;
++		};
++		partition@1000000 {
++			label = "nrootfs";
++			reg = <0x01000000 0x07000000>;
++		};
++	};
++};
++
++&spi_nor {
++	status = "okay";
++	spi-max-frequency = <62500000>;
++	m25p,default-addr-width = <3>;
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	partition@0 {
++		label = "boot";
++		reg = <0x00000000 0x000d0000>;
++	};
++	partition@d000 {
++		label = "env";
++		reg = <0x000d0000 0x00030000>;
++	};
++	partition@100000 {
++		label = "system";
++		reg = <0x00100000 0x00600000>;
++	};
++	partition@700000 {
++		label = "rootfs";
++		reg = <0x00700000 0x00900000>;
++	};
++};
++
+-- 
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
