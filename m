@@ -1,90 +1,47 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH/RFC 0/6] PSCI: Fix non-PMIC wake-up if SYSTEM_SUSPEND cuts power
-Date: Wed, 22 Feb 2017 02:14:54 +0100
-Message-ID: <1975396.x0czmkNPOW@aspire.rjw.lan>
-References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be> <94167d3a-e005-3af0-d290-a1086684d570@arm.com> <3c8b3f2d-8604-f999-4208-a82f171b64f2@arm.com>
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 0/2] add multiple clock handling for dwc2 driver
+Date: Wed, 22 Feb 2017 09:29:43 +0800
+Message-ID: <706482a7-7d07-a902-9b47-1a791f9a8185@rock-chips.com>
+References: <1486695987-7280-1-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <3c8b3f2d-8604-f999-4208-a82f171b64f2@arm.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486695987-7280-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, February 21, 2017 06:45:13 PM Sudeep Holla wrote:
-> 
-> On 21/02/17 18:27, Sudeep Holla wrote:
-> > 
-> > 
-> > On 21/02/17 17:51, Sudeep Holla wrote:
-> >>
-> >>
-> >> On 21/02/17 17:34, Geert Uytterhoeven wrote:
-> > 
-> > [...]
-> > 
-> >>>
-> >>> The SoC can wake-up. It's just not guaranteed that it can wake-up using
-> >>> the wakeup-source configured from Linux. Which wakeup-sources are available
-> >>> depends on the actual PSCI implementation.  It's not specified by the PSCI
-> >>> specification.
-> >>>
-> >>>> Just botching whatever shallow state you can enter on a particular SoC
-> >>>> into standard "mem" state sounds *horrible* to me.
-> >>>
-> >>> That's more or less what /sys/power/mem_sleep does, though.
-> >>>
-> >>
-> >> OK, I will go through that in detail.
-> >>
-> > 
-> > OK, I went through the patch and the main intention is was added.
-> > So I will begin by summarizing my understanding:
-> > 
-> > A new suspend interface(/sys/power/mem_sleep) is added to allow the
-> > "mem" string in /sys/power/state to represent multiple things that can
-> > be selected.
-> > 
-> > Before:
-> > A. echo freeze > /sys/power/state ---> Enters s2idle
-> > B. echo mem > /sys/power/state ---> Enters s2r(a.k.a now deep mem sleep)
-> > 
-> > After:
-> > 1. echo freeze > /sys/power/state ---> Enters s2idle still same
-> > 2. echo s2idle > /sys/power/mem_sleep
-> >    echo mem > /sys/power/state ---> Also enter s2idle
-> > 3. echo deep > /sys/power/mem_sleep
-> >    echo mem > /sys/power/state ---> Also enter s2r(same as [B] above)
-> > 
-> > Please note I have carefully dropped standby/shallow as we will not
-> > support that state on ARM64 platforms(refer previous discussions for the
-> > same)
-> > 
-> > Now IIUC, you need 2 above. So, since this new interface allow mem to
-> > mean "s2idle", we need to fix the core to register default suspend_ops
-> > to achieve what you need. 
-> 
-> I take this back, you have everything you need in place, nothing needs
-> to be done. I just checked again. If I don't register PSCI suspend_ops,
-> I still get mem in /sys/power/state with s2idle in /sys/power/mem_sleep
-> which is exactly what we need. Again we don't support standby/shallow
-> state on ARM64/PSCI.
+Hi John and Greg,
 
-Except for one thing which may or may not be a concern here.
+Friendly ping... :-)
 
-Suspend to idle should only go into states in which all of the available wakeup
-devices work.  If there are devices that cannot wake you up from a given state,
-this isn't "idle" any more, is it?
+On 2017/2/10 11:06, Frank Wang wrote:
+> Resend this series to involve device tree maintainer and add 'Reviewed-by' tag for driver.
+>
+> The Current default dwc2 just handle one clock named otg, however, it may have
+> two or more clock need to manage for some new SoCs(such as RK3328), so this
+> adds change clk to clk's array of dwc2_hsotg to handle more clocks operation.
+>
+> Changes in v2:
+>   - amend dwc2 clocks property in DT.
+>   - change DWC2_MAX_CLKS to 5 and amend commit message.
+>
+> Frank Wang (2):
+>    Documentation: dt: dwc2: amend clocks property
+>    usb: dwc2: add multiple clocks handling
+>
+>   Documentation/devicetree/bindings/usb/dwc2.txt | 13 +++++++--
+>   drivers/usb/dwc2/core.h                        |  5 +++-
+>   drivers/usb/dwc2/platform.c                    | 39 +++++++++++++++++---------
+>   3 files changed, 40 insertions(+), 17 deletions(-)
+>
 
-As for the device wakeup disable/enable interface, it is for controlling
-whether or not a given device should be allowed to generate wakeup signals at
-all.
+BR.
+Frank
 
-The information on what states a given device can wake up the system from is
-platform-specific and generally would need to be taken into consideration at
-the platform level.
-
-Thanks,
-Rafael
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
