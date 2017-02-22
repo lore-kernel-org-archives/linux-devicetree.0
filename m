@@ -1,95 +1,52 @@
-From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 4/4] hwrng: meson: add clock handling to driver
-Date: Wed, 22 Feb 2017 08:02:31 +0100
-Message-ID: <a561e156-f735-7a26-120b-e6c1ba13affd@gmail.com>
-References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
+Date: Wed, 22 Feb 2017 08:20:58 +0100
+Message-ID: <20170222072058.GA9650@kroah.com>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
+ <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
+ <20170220182214.izi46a7lbzck7q4r@ninjato>
+ <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
+ <20170221201403.GA1481@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170221201403.GA1481@katana>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add handling of RNG0 clock to the driver.
+On Tue, Feb 21, 2017 at 09:14:03PM +0100, Wolfram Sang wrote:
+> 
+> > >On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
+> > >>Since commit e2474541032d ("bcm2835: Fix hang for writing messages
+> > >>larger than 16 bytes") the interrupt handler is prone to a possible
+> > >>NULL pointer dereference. This could happen if an interrupt fires
+> > >>before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
+> > >>on the RPi 3. Even this is an unexpected behavior the driver must
+> > >>handle that with an error instead of a crash.
+> > >>
+> > >>CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+> > >>CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> > >>Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > >>Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
+> > >>Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> > >Applied to for-next, thanks (will be in 4.11)!
+> > >
+> > 
+> > since this patch is too late for 4.10, should i resent with CC to stable in
+> > order to get it into the next 4.10 release?
+> 
+> It has the Fixes: tag, that will do.
 
-Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-v2:
-- consider that clock is optional
-- use managed call to clk_disable_unprepare to ensure that
-  cleaning up is done in the right order if driver is removed
-v3:
-- no changes
----
- drivers/char/hw_random/meson-rng.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+But it moves it much lower on my "this needs to get into stable now!"
+priority list.  I'll try to remember this one when it goes by...
 
-diff --git a/drivers/char/hw_random/meson-rng.c b/drivers/char/hw_random/meson-rng.c
-index 119d6984..2e23be80 100644
---- a/drivers/char/hw_random/meson-rng.c
-+++ b/drivers/char/hw_random/meson-rng.c
-@@ -62,6 +62,7 @@
- #include <linux/slab.h>
- #include <linux/types.h>
- #include <linux/of.h>
-+#include <linux/clk.h>
- 
- #define RNG_DATA 0x00
- 
-@@ -69,6 +70,7 @@ struct meson_rng_data {
- 	void __iomem *base;
- 	struct platform_device *pdev;
- 	struct hwrng rng;
-+	struct clk *core_clk;
- };
- 
- static int meson_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
-@@ -81,11 +83,17 @@ static int meson_rng_read(struct hwrng *rng, void *buf, size_t max, bool wait)
- 	return sizeof(u32);
- }
- 
-+static void meson_rng_clk_disable(void *data)
-+{
-+	clk_disable_unprepare(data);
-+}
-+
- static int meson_rng_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct meson_rng_data *data;
- 	struct resource *res;
-+	int ret;
- 
- 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
-@@ -98,6 +106,20 @@ static int meson_rng_probe(struct platform_device *pdev)
- 	if (IS_ERR(data->base))
- 		return PTR_ERR(data->base);
- 
-+	data->core_clk = devm_clk_get(dev, "core");
-+	if (IS_ERR(data->core_clk))
-+		data->core_clk = NULL;
-+
-+	if (data->core_clk) {
-+		ret = clk_prepare_enable(data->core_clk);
-+		if (ret)
-+			return ret;
-+		ret = devm_add_action_or_reset(dev, meson_rng_clk_disable,
-+					       data->core_clk);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	data->rng.name = pdev->name;
- 	data->rng.read = meson_rng_read;
- 
--- 
-2.11.1
+thanks,
 
-
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
