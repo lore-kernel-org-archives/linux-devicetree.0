@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCHv2 1/5] dt-bindings: mfd: Add Altera Arria10 SR Reset Controller bindings
-Date: Wed, 22 Feb 2017 11:10:15 -0600
-Message-ID: <1487783419-10912-2-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCHv2 4/5] mfd: altr_a10sr: Add Arria10 DevKit Reset Controller
+Date: Wed, 22 Feb 2017 11:10:18 -0600
+Message-ID: <1487783419-10912-5-git-send-email-thor.thayer@linux.intel.com>
 References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,49 +12,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-This patch adds documentation for the Altera A10-SR Reset
-Controller DT bindings.
+Add Peripheral PHY Reset Controller to the Arria10
+Development Kit System Resource Chip's MFD.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
-v2  No change
+v2  Changes to commit header & body for clarification.
 ---
- Documentation/devicetree/bindings/mfd/altera-a10sr.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/mfd/altera-a10sr.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-index ea151f2..c8a7365 100644
---- a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-+++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-@@ -18,6 +18,7 @@ The A10SR consists of these sub-devices:
- Device                   Description
- ------                   ----------
- a10sr_gpio               GPIO Controller
-+a10sr_rst                Reset Controller
+diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
+index 06e1f7f..96e7d2c 100644
+--- a/drivers/mfd/altera-a10sr.c
++++ b/drivers/mfd/altera-a10sr.c
+@@ -33,6 +33,10 @@
+ 		.name = "altr_a10sr_gpio",
+ 		.of_compatible = "altr,a10sr-gpio",
+ 	},
++	{
++		.name = "altr_a10sr_reset",
++		.of_compatible = "altr,a10sr-reset",
++	},
+ };
  
- Arria10 GPIO
- Required Properties:
-@@ -27,6 +28,11 @@ Required Properties:
-                       the second cell is used to specify flags.
-                       See ../gpio/gpio.txt for more information.
- 
-+Arria10 Peripheral PHY Reset
-+Required Properties:
-+- compatible        : Should be "altr,a10sr-reset"
-+- #reset-cells      : Should be one.
-+
- Example:
- 
-         resource-manager@0 {
-@@ -43,4 +49,9 @@ Example:
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 		};
-+
-+		a10sr_rst: reset-controller {
-+			compatible = "altr,a10sr-reset";
-+			#reset-cells = <1>;
-+		};
- 	};
+ static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
 -- 
 1.9.1
