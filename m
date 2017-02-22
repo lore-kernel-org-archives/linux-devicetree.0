@@ -1,87 +1,42 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: [PATCH v3 1/2] dt: bindings: fpga: add xilinx slave-serial binding description
-Date: Wed, 22 Feb 2017 11:39:10 +0100
-Message-ID: <1487759951-20711-2-git-send-email-agust@denx.de>
-References: <1487759951-20711-1-git-send-email-agust@denx.de>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 7/8] arm64: dts: mt8173: move clock from phy node
+ into port nodes
+Date: Wed, 22 Feb 2017 18:48:09 +0800
+Message-ID: <1487760489.7255.5.camel@mhfsdcap03>
+References: <1487753705-6745-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1487753705-6745-7-git-send-email-chunfeng.yun@mediatek.com>
+         <d2abde73-91b0-36c3-8b32-d50a9800bd52@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487759951-20711-1-git-send-email-agust-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <d2abde73-91b0-36c3-8b32-d50a9800bd52-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add dt binding documentation details for Xilinx FPGA configuration
-over slave serial interface.
+Hi,
+On Wed, 2017-02-22 at 12:36 +0300, Sergei Shtylyov wrote:
+> On 2/22/2017 11:55 AM, Chunfeng Yun wrote:
+> 
+> > there is a reference clock for each port, HighSpeed port is 48M,
+> > and SuperSpeed port is 26M which usually comes from 26M oscillator
+> > directly, but some SoCs is not. it is flexible to move it into port
+> 
+>     ... but on some SoCs does not?
+I mean the reference clock of SuperSpeed port comes from PLL and need be
+controlled by driver on some SoCs. When it comes from oscillator
+directly, it is optional and is ok whether the driver controll it or not
+> 
+> > node.
+> >
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> [...]
+> 
+> MBR, Sergei
+> 
 
-Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
----
-Changes in v3:
-
- - extend example to show the usage in SPI master node, connected
-   to the fpga-region node
-
-Changes in v2:
-
- - correct gpios properties in example to match above description
-
- - use fpga-mgr@0 instead of fpga-spi@0 in example
-
- .../bindings/fpga/xilinx-slave-serial.txt          | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-
-diff --git a/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-new file mode 100644
-index 0000000..9766f74
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/xilinx-slave-serial.txt
-@@ -0,0 +1,44 @@
-+Xilinx Slave Serial SPI FPGA Manager
-+
-+Xilinx Spartan-6 FPGAs support a method of loading the bitstream over
-+what is referred to as "slave serial" interface.
-+The slave serial link is not technically SPI, and might require extra
-+circuits in order to play nicely with other SPI slaves on the same bus.
-+
-+See https://www.xilinx.com/support/documentation/user_guides/ug380.pdf
-+
-+Required properties:
-+- compatible: should contain "xlnx,fpga-slave-serial"
-+- reg: spi chip select of the FPGA
-+- prog_b-gpios: config pin (referred to as PROGRAM_B in the manual)
-+- done-gpios: config status pin (referred to as DONE in the manual)
-+
-+Example for full FPGA configuration:
-+
-+	fpga-region0 {
-+		compatible = "fpga-region";
-+		fpga-mgr = <&fpga_mgr_spi>;
-+		#address-cells = <0x1>;
-+		#size-cells = <0x1>;
-+	};
-+
-+	spi1: spi@10680 {
-+		compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
-+		pinctrl-0 = <&spi0_pins>;
-+		pinctrl-names = "default";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cell-index = <1>;
-+		interrupts = <92>;
-+		clocks = <&coreclk 0>;
-+		status = "okay";
-+
-+		fpga_mgr_spi: fpga-mgr@0 {
-+			compatible = "xlnx,fpga-slave-serial";
-+			spi-max-frequency = <60000000>;
-+			spi-cpha;
-+			reg = <0>;
-+			done-gpios = <&gpio0 9 GPIO_ACTIVE_HIGH>;
-+			prog_b-gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-+		};
-+	};
--- 
-2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
