@@ -1,62 +1,49 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
-Date: Wed, 22 Feb 2017 10:57:05 -0500
-Message-ID: <CAOw6vbJoS2P5m31+bgWw3Sghz=EVGj0fpLgCFnbVEhzRujNCLw@mail.gmail.com>
-References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
- <20170221153918.GA25168@art_vandelay> <20170222134314.016a4940.john@metanate.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2 1/3] power: reset: Add Renesas reset driver
+Date: Wed, 22 Feb 2017 16:04:06 +0000
+Message-ID: <SG2PR06MB1165F6C78BC5F4ACA32057718A500@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170216172320.10897-1-chris.brandt@renesas.com>
+ <20170216172320.10897-2-chris.brandt@renesas.com>
+ <20170216182644.GA17814@roeck-us.net>
+ <PS1PR06MB1162A4C12D144C321379E3028A5A0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <20170216222014.GA29672@roeck-us.net>
+ <PS1PR06MB11622077DE4673C1879C05278A5D0@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <55cf087f-aa70-3660-1186-af9b9b20376d@roeck-us.net>
+ <SG2PR06MB11650D5EE485C0F44A77E0EA8A500@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170222152815.GA23780@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170222134314.016a4940.john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Cc: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Yao <yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170222152815.GA23780-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 8:43 AM, John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org> wrote:
-> On Tue, 21 Feb 2017 10:39:18 -0500, Sean Paul wrote:
->
->> On Mon, Feb 20, 2017 at 04:02:16PM +0800, Chris Zhong wrote:
->> > Hi all
->> >
->> > [Resend this v7 version series, since there are 5 mails have gone missing, last
->> > week]
->> >
->> > This version does not change the existing v6 patches, just to add the
->> > "bandwidth fix" patch back, since we really need it.
->> >
->> > This patch serial is for RK3399 MIPI DSI. The MIPI DSI controller of
->> > RK3399 is almost the same as RK3288, except a little bit of difference
->> > in phy clock controlling and port id selection register. These patches
->> > add RK3399 support and the power domain support.
->> >
->> > And these patches base on John Keeping's v3 patches[0], it fixes many bugs,
->> > they have been tested on rk3288 evb board.
->>
->> Do we have an ETA on when John is planning on respinning his patchset based on
->> review feedback?
->
-> I have all of the changes queued but I was hoping to find some time to
-> test the latest version before sending it out; unfortunately everything
-> else is more important at the moment.  If you're happy with the caveat
-> that the latest changes are build tested only I can probably send it
-> out this afternoon.
+Hello Guenter,
 
-I suppose my answer depends on when the tested version will be
-available, or perhaps Chris can test the new set for you? I don't have
-any rockchip devices with mipi, so i'm not much help.
-
-Sean
-
->
->
-> John
+On Wednesday, February 22, 2017, Guenter Roeck wrote:
+> > Looking through the drivers in the watchdog directly, I see default
+> > timeouts of 20, 30, 60, and 120 seconds.
+> >
+> 30 and 60 are pretty common for default timeouts, though I personally
+> think they are a bit long. If you want direct HW support, a maximum of 12=
+0
+> seconds should be sufficient though not really necessary anymore since th=
+e
+> core supports virtual timeouts. A maximum of at least 30 seconds would be
+> needed if the watchdog is supposed to run at boot time (ie if it is
+> enabled by ROMMON/BIOS and kept running by the kernel).
 
 
+Thank you!
+Good point about the boot time.
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Chris
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
