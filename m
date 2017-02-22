@@ -1,170 +1,57 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 8/8] dt-bindings: phy-mt65xx-usb: add support for new
- version phy
-Date: Wed, 22 Feb 2017 16:55:05 +0800
-Message-ID: <1487753705-6745-8-git-send-email-chunfeng.yun@mediatek.com>
-References: <1487753705-6745-1-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1487753705-6745-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v8 1/3] dt: bindings: add documentation for zx2967 family i2c controller
+Date: Wed, 22 Feb 2017 17:18:50 +0800
+Message-ID: <1487755132-7730-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add a new compatible string for "mt2712", and move reference clock
-into each port node;
+This patch adds dt-binding documentation for zx2967 family
+i2c controller.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   93 +++++++++++++++++---
- 1 file changed, 80 insertions(+), 13 deletions(-)
+ .../devicetree/bindings/i2c/i2c-zx2967.txt         | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-index 33a2b1e..0acc5a9 100644
---- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-@@ -6,12 +6,11 @@ This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
- Required properties (controller (parent) node):
-  - compatible	: should be one of
- 		  "mediatek,mt2701-u3phy"
-+		  "mediatek,mt2712-u3phy"
- 		  "mediatek,mt8173-u3phy"
-- - reg		: offset and length of register for phy, exclude port's
--		  register.
-- - clocks	: a list of phandle + clock-specifier pairs, one for each
--		  entry in clock-names
-- - clock-names	: must contain
-+ - clocks	: (deprecated, use port's clocks instead) a list of phandle +
-+		  clock-specifier pairs, one for each entry in clock-names
-+ - clock-names	: (deprecated, use port's one instead) must contain
- 		  "u3phya_ref": for reference clock of usb3.0 analog phy.
- 
- Required nodes	: a sub-node is required for each port the controller
-@@ -19,8 +18,19 @@ Required nodes	: a sub-node is required for each port the controller
- 		  'reg' property is used inside these nodes to describe
- 		  the controller's topology.
- 
-+Optional properties (controller (parent) node):
-+ - reg		: offset and length of register shared by multiple ports,
-+		  exclude port's private register. It is needed on mt2701
-+		  and mt8173, but not on mt2712.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt b/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
+new file mode 100644
+index 0000000..a528374
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
+@@ -0,0 +1,24 @@
++ZTE zx2967 I2C controller
 +
- Required properties (port (child) node):
- - reg		: address and length of the register set for the port.
-+- clocks	: a list of phandle + clock-specifier pairs, one for each
-+		  entry in clock-names
-+- clock-names	: must contain
-+		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
-+			reference clock for SuperSpeed analog phy, sometimes is
-+			24M, 25M or 27M, depended on platform.
- - #phy-cells	: should be 1 (See second example)
- 		  cell after port phandle is phy type from:
- 			- PHY_TYPE_USB2
-@@ -31,21 +41,31 @@ Example:
- u3phy: usb-phy@11290000 {
- 	compatible = "mediatek,mt8173-u3phy";
- 	reg = <0 0x11290000 0 0x800>;
--	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
--	clock-names = "u3phya_ref";
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 	ranges;
- 	status = "okay";
- 
--	phy_port0: port@11290800 {
--		reg = <0 0x11290800 0 0x800>;
-+	u2port0: usb-phy@11290800 {
-+		reg = <0 0x11290800 0 0x100>;
-+		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-+		clock-names = "ref";
- 		#phy-cells = <1>;
- 		status = "okay";
- 	};
- 
--	phy_port1: port@11291000 {
--		reg = <0 0x11291000 0 0x800>;
-+	u3port0: usb-phy@11290900 {
-+		reg = <0 0x11290800 0 0x700>;
-+		clocks = <&clk26m>;
-+		clock-names = "ref";
-+		#phy-cells = <1>;
-+		status = "okay";
++Required properties:
++ - compatible: must be "zte,zx296718-i2c"
++ - reg: physical address and length of the device registers
++ - interrupts: a single interrupt specifier
++ - clocks: clock for the device
++ - #address-cells: should be <1>
++ - #size-cells: should be <0>
++ - clock-frequency: the desired I2C bus clock frequency.
++
++Examples:
++
++	i2c@112000 {
++		compatible = "zte,zx296718-i2c";
++		reg = <0x00112000 0x1000>;
++		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&osc24m>;
++		#address-cells = <1>
++		#size-cells = <0>;
++		clock-frequency = <1600000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c_global_pin>;
 +	};
-+
-+	u2port1: usb-phy@11291000 {
-+		reg = <0 0x11291000 0 0x100>;
-+		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-+		clock-names = "ref";
- 		#phy-cells = <1>;
- 		status = "okay";
- 	};
-@@ -64,7 +84,54 @@ Example:
- 
- usb30: usb@11270000 {
- 	...
--	phys = <&phy_port0 PHY_TYPE_USB3>;
--	phy-names = "usb3-0";
-+	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
-+	phy-names = "usb2-0", "usb3-0";
- 	...
- };
-+
-+
-+Layout differences of banks between mt8173/mt2701 and mt2712
-+-------------------------------------------------------------
-+mt8173 and mt2701:
-+port        offset    bank
-+shared      0x0000    SPLLC
-+            0x0100    FMREG
-+u2 port0    0x0800    U2PHY_COM
-+u3 port0    0x0900    U3PHYD
-+            0x0a00    U3PHYD_BANK2
-+            0x0b00    U3PHYA
-+            0x0c00    U3PHYA_DA
-+u2 port1    0x1000    U2PHY_COM
-+u3 port1    0x1100    U3PHYD
-+            0x1200    U3PHYD_BANK2
-+            0x1300    U3PHYA
-+            0x1400    U3PHYA_DA
-+u2 port2    0x1800    U2PHY_COM
-+            ...
-+
-+mt2712:
-+port        offset    bank
-+u2 port0    0x0000    MISC
-+            0x0100    FMREG
-+            0x0300    U2PHY_COM
-+u3 port0    0x0700    SPLLC
-+            0x0800    CHIP
-+            0x0900    U3PHYD
-+            0x0a00    U3PHYD_BANK2
-+            0x0b00    U3PHYA
-+            0x0c00    U3PHYA_DA
-+u2 port1    0x1000    MISC
-+            0x1100    FMREG
-+            0x1300    U2PHY_COM
-+u3 port1    0x1700    SPLLC
-+            0x1800    CHIP
-+            0x1900    U3PHYD
-+            0x1a00    U3PHYD_BANK2
-+            0x1b00    U3PHYA
-+            0x1c00    U3PHYA_DA
-+u2 port2    0x2000    MISC
-+            ...
-+
-+    SPLLC shared by u3 ports and FMREG shared by u2 ports on
-+mt8173/mt2701 are put back into each port; a new bank MISC for
-+u2 ports and CHIP for u3 ports are added on mt2712.
 -- 
-1.7.9.5
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
