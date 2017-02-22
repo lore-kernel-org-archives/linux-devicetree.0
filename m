@@ -1,95 +1,111 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] spi/bcm63xx-hsspi: allow for probing through devicetree
-Date: Wed, 22 Feb 2017 14:19:40 +0100
-Message-ID: <20170222131940.31085-3-jonas.gorski@gmail.com>
-References: <20170222131940.31085-1-jonas.gorski@gmail.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170222131940.31085-1-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/8] ARM64: Initial Marvell IAP140 enablement
+Date: Wed, 22 Feb 2017 07:34:25 -0600
+Message-ID: <CAL_JsqJmv--wP+gEt27ZbTT+8GeqKhYc=x3MTPBiz2Jr2wys8A@mail.gmail.com>
+References: <20170222022929.10540-1-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170222022929.10540-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add required binding support to probe through device tree.
+On Tue, Feb 21, 2017 at 8:29 PM, Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org> wrote:
+> Hello,
+>
+> This series adds initial support for the Marvell IAP140 SoC (aka PXA1908)
+> and the Andromeda Box Edge development board.
+>
+> v2 reuses ARCH_MMP.
+>
+> Both earlycon and serial are working, but an explicit console=ttyS0,115200n8
+> is needed; with just "earlycon" and stdout-path the earlycon stops early and
+> switches to a tty0, long before disabling the bootconsole...
+>
+> All four CPUs come up, and an initrd can be reached.
+>
+> However, there are errors about CPUs 1-3 having a zero SYS_CNTFRQ_EL0:
+>
+> [    0.095812] smp: Bringing up secondary CPUs ...
+> ======pxa1908_pmu_core_pwr_on: mpidr = 0x1
+> ======pxa1908_pmu_core_pwr_on: mpidr = 0x2
+> ======pxa1908_pmu_core_pwr_on: mpidr = 0x3
+> [    0.133419] Detected VIPT I-cache on CPU1
+> [    0.133430] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU1: 0x00000000000000
+> [    0.133447] Unsupported CPU feature variation.
+> ...
+> [    0.133748] CPU1: Booted secondary processor [410fd032]
+> [    0.165465] Detected VIPT I-cache on CPU2
+> [    0.165474] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU2: 0x00000000000000
+> [    0.165505] CPU2: Booted secondary processor [410fd032]
+> [    0.197539] Detected VIPT I-cache on CPU3
+> [    0.197546] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU3: 0x00000000000000
+> [    0.197573] CPU3: Booted secondary processor [410fd032]
+> [    0.197625] smp: Brought up 1 node, 4 CPUs
+> [    0.522514] SMP: Total of 4 processors activated.
+> [    0.527212] CPU features: detected feature: 32-bit EL0 Support
+> [    0.533105] CPU: All CPU(s) started at EL2
+>
+> KVM appears to initialize okay, but was not yet tested with guests.
+>
+> [    0.865255] kvm [1]: 8-bit VMID
+> [    0.868401] kvm [1]: IDMAP page: d23000
+> [    0.872233] kvm [1]: HYP VA range: 800000000000:ffffffffffff
+> [    0.878262] kvm [1]: Hyp mode initialized successfully
+> [    0.883429] kvm [1]: vgic-v2@d1dfc000
+> [    0.887179] kvm [1]: vgic interrupt IRQ1
+> [    0.891120] kvm [1]: virtual timer IRQ4
+>
+> One limitation is currently the lack of an IAP140 clk driver. Patch 4/4 works
+> around that for UART0 with a fixed-clock.
 
-Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/spi/spi-bcm63xx-hsspi.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+The PXA1928 clock driver should be close to what you need. They are
+supposed to be very similar.
 
-diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
-index 79096d17ebde..77c249a22c9b 100644
---- a/drivers/spi/spi-bcm63xx-hsspi.c
-+++ b/drivers/spi/spi-bcm63xx-hsspi.c
-@@ -19,6 +19,7 @@
- #include <linux/interrupt.h>
- #include <linux/spi/spi.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- 
- #define HSSPI_GLOBAL_CTRL_REG			0x0
- #define GLOBAL_CTRL_CS_POLARITY_SHIFT		0
-@@ -91,6 +92,7 @@
- 
- #define HSSPI_MAX_SYNC_CLOCK			30000000
- 
-+#define HSSPI_SPI_MAX_CS			8
- #define HSSPI_BUS_NUM				1 /* 0 is legacy SPI */
- 
- struct bcm63xx_hsspi {
-@@ -332,7 +334,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct clk *clk;
- 	int irq, ret;
--	u32 reg, rate;
-+	u32 reg, rate, num_cs = HSSPI_SPI_MAX_CS;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
-@@ -382,8 +384,20 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 	mutex_init(&bs->bus_mutex);
- 	init_completion(&bs->done);
- 
--	master->bus_num = HSSPI_BUS_NUM;
--	master->num_chipselect = 8;
-+	if (dev->of_node) {
-+		master->dev.of_node = dev->of_node;
-+
-+		of_property_read_u32(dev->of_node, "num-cs", &num_cs);
-+		if (num_cs > 8) {
-+			dev_warn(dev, "unsupported number of cs (%i), reducing to 8\n",
-+				 num_cs);
-+			num_cs = HSSPI_SPI_MAX_CS;
-+		}
-+	} else {
-+		master->bus_num = HSSPI_BUS_NUM;
-+	}
-+
-+	master->num_chipselect = num_cs;
- 	master->setup = bcm63xx_hsspi_setup;
- 	master->transfer_one_message = bcm63xx_hsspi_transfer_one;
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH |
-@@ -469,10 +483,16 @@ static int bcm63xx_hsspi_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(bcm63xx_hsspi_pm_ops, bcm63xx_hsspi_suspend,
- 			 bcm63xx_hsspi_resume);
- 
-+static const struct of_device_id bcm63xx_hsspi_of_match[] = {
-+	{ .compatible = "brcm,bcm6328-hsspi", },
-+	{ },
-+};
-+
- static struct platform_driver bcm63xx_hsspi_driver = {
- 	.driver = {
- 		.name	= "bcm63xx-hsspi",
- 		.pm	= &bcm63xx_hsspi_pm_ops,
-+		.of_match_table = bcm63xx_hsspi_of_match,
- 	},
- 	.probe		= bcm63xx_hsspi_probe,
- 	.remove		= bcm63xx_hsspi_remove,
--- 
-2.11.0
+> A 3.14 based tree is available on GitHub acorn-marvell/brillo_pxa_kernel.
+>
+> Booting required changes to the vendor U-Boot,
+> cf. https://en.opensuse.org/HCL:AndromedaBoxEdge
+>
+> https://github.com/afaerber/linux/commits/edge-next
+>
+> Have a lot of fun!
+>
+> Cheers,
+> Andreas
+>
+> v1 -> v2:
+> * Add non-DT documentation
+> * Use ARCH_MMP instead of ARCH_PXA
+> * Split off Kconfig cleanups per subsystem
+> * Drop "mrvl,pxa-uart" and instead implement mmp earlycon
+> * Add some more DT nodes
+>
+> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: info-PWLG29+z7hGxBmiGZ5/UTQ@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>
+> Andreas Färber (8):
+>   Documentation: arm: Marvell: Document IAP140
+>   tty: serial: Suppress deprecated SERIAL_PXA on arm64
+>   tty: serial: 8250_pxa: Implement mmp earlycon
 
+You should not use the pxa serial driver. AFAICT, it was separate to
+add DMA support, but now the base 8250 driver supports DMA. The base
+8250 driver works with the PXA1928 and should also work with the
+PXA1908.
+
+>   sound: soc: pxa: Suppress SND_MMP_SOC for arm64
+>   ARM64: Prepare Marvell IAP140 aka PXA1908
+>   Documentation: devicetree: arm: marvell: Document IAP140
+>   ARM64: dts: marvell: Add IAP140 and Andromeda Box Edge
+>   ARM64: dts: marvell: iap140-andromeda-box-edge: Add uart0 clock
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
