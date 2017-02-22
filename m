@@ -1,68 +1,38 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 1/8] phy: phy-mt65xx-usb3: improve RX detection stable time
-Date: Wed, 22 Feb 2017 16:54:58 +0800
-Message-ID: <1487753705-6745-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Subject: [PATCH v2 1/2] dt-bindings: arm: hisilicon: add bindings for hi3798cv200 SoC and Poplar board
+Date: Wed, 22 Feb 2017 16:38:35 +0800
+Message-ID: <1487752716-14824-2-git-send-email-xuejiancheng@hisilicon.com>
+References: <1487752716-14824-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487752716-14824-1-git-send-email-xuejiancheng@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, xuwei5@hisilicon.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, elder@linaro.org, mark.gregotski@linaro.org, peter.griffin@linaro.org, hermit.wangheming@hisilicon.com, yanhaifeng@hisilicon.com, xuejiancheng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-The default value of RX detection stable time is 10us, and this
-margin is too big for some critical cases which cause U3 link fail
-and link to U2(probability is about 1%). So change it to 5us.
+Add bindings for HiSilicon hi3798cv200 SoC and Poplar Board.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
 ---
- drivers/phy/phy-mt65xx-usb3.c |   18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-index d972067..fe2392a 100644
---- a/drivers/phy/phy-mt65xx-usb3.c
-+++ b/drivers/phy/phy-mt65xx-usb3.c
-@@ -112,6 +112,14 @@
- #define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
- #define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+index f1c1e21..1fd3dd7 100644
+--- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
++++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+@@ -4,6 +4,10 @@ Hi3660 SoC
+ Required root node properties:
+ 	- compatible = "hisilicon,hi3660";
  
-+#define U3P_U3_PHYD_RXDET1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x128)
-+#define P3D_RG_RXDET_STB2_SET		GENMASK(17, 9)
-+#define P3D_RG_RXDET_STB2_SET_VAL(x)	((0x1ff & (x)) << 9)
++Hi3798cv200 Poplar Board
++Required root node properties:
++	- compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
 +
-+#define U3P_U3_PHYD_RXDET2		(SSUSB_SIFSLV_U3PHYD_BASE + 0x12c)
-+#define P3D_RG_RXDET_STB2_SET_P3	GENMASK(8, 0)
-+#define P3D_RG_RXDET_STB2_SET_P3_VAL(x)	(0x1ff & (x))
-+
- #define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
- #define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
- #define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
-@@ -295,6 +303,16 @@ static void phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
- 	writel(tmp, port_base + U3P_PHYD_CDR1);
- 
-+	tmp = readl(port_base + U3P_U3_PHYD_RXDET1);
-+	tmp &= ~P3D_RG_RXDET_STB2_SET;
-+	tmp |= P3D_RG_RXDET_STB2_SET_VAL(0x10);
-+	writel(tmp, port_base + U3P_U3_PHYD_RXDET1);
-+
-+	tmp = readl(port_base + U3P_U3_PHYD_RXDET2);
-+	tmp &= ~P3D_RG_RXDET_STB2_SET_P3;
-+	tmp |= P3D_RG_RXDET_STB2_SET_P3_VAL(0x10);
-+	writel(tmp, port_base + U3P_U3_PHYD_RXDET2);
-+
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
- }
- 
+ Hi4511 Board
+ Required root node properties:
+ 	- compatible = "hisilicon,hi3620-hi4511";
 -- 
-1.7.9.5
+1.9.1
