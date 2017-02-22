@@ -1,48 +1,54 @@
-From: John Keeping <john@metanate.com>
-Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
-Date: Wed, 22 Feb 2017 13:43:14 +0000
-Message-ID: <20170222134314.016a4940.john@metanate.com>
-References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
- <20170221153918.GA25168@art_vandelay>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170221153918.GA25168@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/3] media: dt-bindings: vpif: fix whitespace errors
+Date: Wed, 22 Feb 2017 14:43:45 +0100
+Message-ID: <1487771027-7763-2-git-send-email-bgolaszewski@baylibre.com>
+References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487771027-7763-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMSBGZWIgMjAxNyAxMDozOToxOCAtMDUwMCwgU2VhbiBQYXVsIHdyb3RlOgoKPiBP
-biBNb24sIEZlYiAyMCwgMjAxNyBhdCAwNDowMjoxNlBNICswODAwLCBDaHJpcyBaaG9uZyB3cm90
-ZToKPiA+IEhpIGFsbAo+ID4gCj4gPiBbUmVzZW5kIHRoaXMgdjcgdmVyc2lvbiBzZXJpZXMsIHNp
-bmNlIHRoZXJlIGFyZSA1IG1haWxzIGhhdmUgZ29uZSBtaXNzaW5nLCBsYXN0Cj4gPiB3ZWVrXQo+
-ID4gCj4gPiBUaGlzIHZlcnNpb24gZG9lcyBub3QgY2hhbmdlIHRoZSBleGlzdGluZyB2NiBwYXRj
-aGVzLCBqdXN0IHRvIGFkZCB0aGUKPiA+ICJiYW5kd2lkdGggZml4IiBwYXRjaCBiYWNrLCBzaW5j
-ZSB3ZSByZWFsbHkgbmVlZCBpdC4KPiA+IAo+ID4gVGhpcyBwYXRjaCBzZXJpYWwgaXMgZm9yIFJL
-MzM5OSBNSVBJIERTSS4gVGhlIE1JUEkgRFNJIGNvbnRyb2xsZXIgb2YKPiA+IFJLMzM5OSBpcyBh
-bG1vc3QgdGhlIHNhbWUgYXMgUkszMjg4LCBleGNlcHQgYSBsaXR0bGUgYml0IG9mIGRpZmZlcmVu
-Y2UKPiA+IGluIHBoeSBjbG9jayBjb250cm9sbGluZyBhbmQgcG9ydCBpZCBzZWxlY3Rpb24gcmVn
-aXN0ZXIuIFRoZXNlIHBhdGNoZXMKPiA+IGFkZCBSSzMzOTkgc3VwcG9ydCBhbmQgdGhlIHBvd2Vy
-IGRvbWFpbiBzdXBwb3J0Lgo+ID4gCj4gPiBBbmQgdGhlc2UgcGF0Y2hlcyBiYXNlIG9uIEpvaG4g
-S2VlcGluZydzIHYzIHBhdGNoZXNbMF0sIGl0IGZpeGVzIG1hbnkgYnVncywKPiA+IHRoZXkgaGF2
-ZSBiZWVuIHRlc3RlZCBvbiByazMyODggZXZiIGJvYXJkLiAgCj4gCj4gRG8gd2UgaGF2ZSBhbiBF
-VEEgb24gd2hlbiBKb2huIGlzIHBsYW5uaW5nIG9uIHJlc3Bpbm5pbmcgaGlzIHBhdGNoc2V0IGJh
-c2VkIG9uCj4gcmV2aWV3IGZlZWRiYWNrPwoKSSBoYXZlIGFsbCBvZiB0aGUgY2hhbmdlcyBxdWV1
-ZWQgYnV0IEkgd2FzIGhvcGluZyB0byBmaW5kIHNvbWUgdGltZSB0bwp0ZXN0IHRoZSBsYXRlc3Qg
-dmVyc2lvbiBiZWZvcmUgc2VuZGluZyBpdCBvdXQ7IHVuZm9ydHVuYXRlbHkgZXZlcnl0aGluZwpl
-bHNlIGlzIG1vcmUgaW1wb3J0YW50IGF0IHRoZSBtb21lbnQuICBJZiB5b3UncmUgaGFwcHkgd2l0
-aCB0aGUgY2F2ZWF0CnRoYXQgdGhlIGxhdGVzdCBjaGFuZ2VzIGFyZSBidWlsZCB0ZXN0ZWQgb25s
-eSBJIGNhbiBwcm9iYWJseSBzZW5kIGl0Cm91dCB0aGlzIGFmdGVybm9vbi4KCgpKb2huCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The examples have been copied from the DT with whitespace errors. Fix
+them.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/media/ti,da850-vpif.txt | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+index 6d25d7f..9c7510b 100644
+--- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
++++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+@@ -30,15 +30,15 @@ I2C-connected TVP5147 decoder:
+ 
+ 		port {
+ 			vpif_ch0: endpoint@0 {
+-				  reg = <0>;
+-				  bus-width = <8>;
+-				  remote-endpoint = <&composite>;
++				reg = <0>;
++				bus-width = <8>;
++				remote-endpoint = <&composite>;
+ 			};
+ 
+ 			vpif_ch1: endpoint@1 {
+-				  reg = <1>;
+-				  bus-width = <8>;
+-				  data-shift = <8>;
++				reg = <1>;
++				bus-width = <8>;
++				data-shift = <8>;
+ 			};
+ 		};
+ 	};
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
