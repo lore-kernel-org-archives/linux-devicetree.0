@@ -1,208 +1,85 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree updates for 4.11
-Date: Wed, 22 Feb 2017 11:29:39 -0600
-Message-ID: <CAL_JsqLAkMQrJfgKQGz21wYo25Ur8mZKW6AD+o03BKjTDz_EHg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
+Date: Wed, 22 Feb 2017 11:41:40 -0600
+Message-ID: <CAL_JsqJo7QCUrMc-DdbSpy=yxrkjBShcE+mo_ZuatUnwjWKd7Q@mail.gmail.com>
+References: <20170212193247.22705-1-carlo@caione.org>
+ <20170212193247.22705-3-carlo@caione.org>
+ <20170222144406.zycqtc77dygavh3q@rob-hp-laptop>
+ <4f0d36ce-8b44-06f1-2dc1-6b681b80a685@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <4f0d36ce-8b44-06f1-2dc1-6b681b80a685@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@endlessm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux@endlessm.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
-
-Please pull. Pretty standard stuff with dtc upstream sync being the
-biggest piece. Details below.
-
-Rob
-
-
-The following changes since commit 0c744ea4f77d72b3dcebb7a8f2684633ec79be88=
-:
-
-  Linux 4.10-rc2 (2017-01-01 14:31:53 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-for-4.11
-
-for you to fetch changes up to 4e29ccdb240ec833f172a34fcf405e077b51066b:
-
-  DT: add Faraday Tec. as vendor (2017-02-15 17:01:50 -0600)
-
-----------------------------------------------------------------
-DeviceTree updates for 4.11:
-
-- Sync dtc to upstream commit 0931cea3ba20. This picks up overlay
-  support in dtc.
-
-- Set dma_ops for reserved memory users.
-
-- Make references to IOMMU consistent in DT bindings.
-
-- Cleanup references to pm_power_off in bindings.
-
-- Move some display bindings that snuck into the old bindings/video/
-  path.
-
-- Fix some wrong documentation paths caused from binding restructuring.
-
-- Vendor prefixes for Faraday and Fujitsu.
-
-- Fix an of_node ref counting leak in of_find_node_opts_by_path
-
-- Introduce new graph helper of_graph_get_remote_node() which will be
-  used by DRM drivers in 4.12.
-
-----------------------------------------------------------------
-Alexander Sverdlin (1):
-      of/unittest: Swap arguments of of_unittest_apply_overlay()
-
-Fabio Estevam (1):
-      serial: fsl-imx-uart.txt: Remove generic property
-
-Frank Rowand (2):
-      of: make of_device_make_bus_id() static
-      of: Add missing space at end of pr_fmt().
-
-Geliang Tang (1):
-      of: drop duplicate headers
-
-Guenter Roeck (3):
-      dt-bindings: mfd: as3722: Drop reference to pm_power_off
-      dt-bindings: power: reset: gpio-poweroff: Drop reference to pm_power_=
-off
-      dt-bindings: power: reset: qnap-poweroff: Drop reference to pm_power_=
-off
-
-Guilherme G. Piccoli (1):
-      of/irq: improve error report on irq discovery process failure
-
-Hans Ulli Kroll (1):
-      DT: add Faraday Tec. as vendor
-
-Marek Vasut (1):
-      devicetree: Add Fujitsu Ltd. vendor prefix
-
-Masanari Iida (1):
-      bus:qcom : Fix typo in qcom,ebi2.txt
-
-Qi Hou (1):
-      of: fix of_node leak caused in of_find_node_opts_by_path
-
-Rob Herring (3):
-      scripts/dtc: Update to upstream version 0931cea3ba20
-      dt-bindings: display: move ANX7814 and SiI8620 bridge bindings
-      of: introduce of_graph_get_remote_node
-
-Scott Wood (1):
-      dt-bindings: qman: Remove pool channel node
-
-Smitha T Murthy (1):
-      of: reserved_mem: set dma_ops for devices using reserved mem
-
-Stuart Yoder (1):
-      Docs: dt: Be explicit and consistent in reference to IOMMU specifiers
-
-Thomas Petazzoni (1):
-      dt-bindings: net: remove reference to fixed link support
-
-Uwe Kleine-K=C3=B6nig (1):
-      devicetree: bindings: clk: mvebu: fix description for sata1 on Armada=
- XP
-
-XuYing (1):
-      of: remove redundant memset in overlay
-
-Yegor Yefremov (5):
-      Documentation: omap-usb-host: fix OMAP OHCI/EHCI file names
-      Documentation: ehci-omap: remove the unnecessary newline
-      Documentation: panel-dpi: fix path to display-timing.txt
-      Documentation: display: fix wrong documentation paths
-      Documentation: usb: fix wrong documentation paths
-
- .../devicetree/bindings/bus/qcom,ebi2.txt          |   6 +-
- .../bindings/clock/mvebu-gated-clock.txt           |   2 +-
- .../devicetree/bindings/display/arm,pl11x.txt      |   2 +-
- .../bindings/display/bridge/analogix_dp.txt        |   2 +-
- .../bindings/{video =3D> display}/bridge/anx7814.txt |   0
- .../{video =3D> display}/bridge/sil-sii8620.txt      |   0
- .../bindings/display/cirrus,clps711x-fb.txt        |   2 +-
- .../bindings/display/exynos/exynos7-decon.txt      |   2 +-
- .../bindings/display/exynos/samsung-fimd.txt       |   2 +-
- .../devicetree/bindings/display/imx/fsl,imx-fb.txt |   2 +-
- .../devicetree/bindings/display/imx/ldb.txt        |   2 +-
- .../bindings/display/mediatek/mediatek,disp.txt    |   2 +-
- .../devicetree/bindings/display/msm/dsi.txt        |   2 +-
- .../devicetree/bindings/display/msm/edp.txt        |   2 +-
- .../devicetree/bindings/display/msm/hdmi.txt       |   2 +-
- .../bindings/display/panel/panel-dpi.txt           |   2 +-
- .../bindings/display/panel/samsung,ld9040.txt      |   2 +-
- .../bindings/display/panel/samsung,s6e8aa0.txt     |   2 +-
- .../display/rockchip/analogix_dp-rockchip.txt      |   2 +-
- .../devicetree/bindings/display/tilcdc/panel.txt   |   2 +-
- .../devicetree/bindings/iommu/arm,smmu.txt         |  10 +-
- Documentation/devicetree/bindings/mfd/as3722.txt   |   3 +-
- .../devicetree/bindings/mfd/omap-usb-host.txt      |   4 +-
- .../devicetree/bindings/net/marvell-pp2.txt        |   4 +-
- .../devicetree/bindings/pci/pci-iommu.txt          |   6 +-
- .../bindings/power/reset/gpio-poweroff.txt         |  10 +-
- .../bindings/power/reset/qnap-poweroff.txt         |   3 +-
- .../devicetree/bindings/serial/fsl-imx-uart.txt    |   4 +-
- .../devicetree/bindings/soc/fsl/qman-portals.txt   |  20 -
- Documentation/devicetree/bindings/usb/dwc3-st.txt  |   4 +-
- .../devicetree/bindings/usb/ehci-omap.txt          |   1 -
- Documentation/devicetree/bindings/usb/ehci-st.txt  |   2 +-
- .../devicetree/bindings/usb/mt8173-mtu3.txt        |   2 +-
- .../devicetree/bindings/usb/mt8173-xhci.txt        |   4 +-
- .../devicetree/bindings/usb/qcom,dwc3.txt          |   2 +-
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- drivers/of/base.c                                  |  40 ++
- drivers/of/fdt.c                                   |   2 +-
- drivers/of/irq.c                                   |  19 +-
- drivers/of/of_pci_irq.c                            |  10 +-
- drivers/of/of_reserved_mem.c                       |   4 +
- drivers/of/overlay.c                               |   2 -
- drivers/of/platform.c                              |   2 +-
- drivers/of/resolver.c                              |   1 -
- drivers/of/unittest.c                              |   5 +-
- include/linux/of_device.h                          |   1 -
- include/linux/of_graph.h                           |   8 +
- scripts/dtc/checks.c                               | 349 +++++-----
- scripts/dtc/dtc-lexer.l                            |  21 +-
- scripts/dtc/dtc-lexer.lex.c_shipped                | 650 +++++++++--------=
--
- scripts/dtc/dtc-parser.tab.c_shipped               | 752 +++++++++++------=
-----
- scripts/dtc/dtc-parser.tab.h_shipped               |  54 +-
- scripts/dtc/dtc-parser.y                           |  34 +-
- scripts/dtc/dtc.c                                  |  69 +-
- scripts/dtc/dtc.h                                  |  39 +-
- scripts/dtc/flattree.c                             |  41 +-
- scripts/dtc/fstree.c                               |   5 +-
- scripts/dtc/libfdt/Makefile.libfdt                 |   2 +-
- scripts/dtc/libfdt/fdt_ro.c                        |  30 +-
- scripts/dtc/libfdt/fdt_rw.c                        |   6 +-
- scripts/dtc/libfdt/fdt_strerror.c                  |   6 +
- scripts/dtc/libfdt/fdt_wip.c                       |  29 +-
- scripts/dtc/libfdt/libfdt.h                        | 210 +++++-
- scripts/dtc/libfdt/libfdt_env.h                    |   1 +
- scripts/dtc/livetree.c                             | 299 +++++++-
- scripts/dtc/srcpos.c                               |  35 +-
- scripts/dtc/srcpos.h                               |   1 -
- scripts/dtc/treesource.c                           |  14 +-
- scripts/dtc/util.c                                 |  30 +
- scripts/dtc/util.h                                 |   1 +
- scripts/dtc/version_gen.h                          |   2 +-
- 71 files changed, 1788 insertions(+), 1107 deletions(-)
- rename Documentation/devicetree/bindings/{video =3D>
-display}/bridge/anx7814.txt (100%)
- rename Documentation/devicetree/bindings/{video =3D>
-display}/bridge/sil-sii8620.txt (100%)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgODo0OSBBTSwgQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJl
+ckBzdXNlLmRlPiB3cm90ZToKPiBBbSAyMi4wMi4yMDE3IHVtIDE1OjQ0IHNjaHJpZWIgUm9iIEhl
+cnJpbmc6Cj4+IE9uIFN1biwgRmViIDEyLCAyMDE3IGF0IDA4OjMyOjQ3UE0gKzAxMDAsIENhcmxv
+IENhaW9uZSB3cm90ZToKPj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9n
+aWMvbWVzb24tZ3hsLWh3YWNvbS1hbWF6ZXR2LmR0cyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvYW1s
+b2dpYy9tZXNvbi1neGwtaHdhY29tLWFtYXpldHYuZHRzCj4+PiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NAo+Pj4gaW5kZXggMDAwMDAwMC4uNDQ5OTc4OQo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIv
+YXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4bC1od2Fjb20tYW1hemV0di5kdHMK
+Pj4+IEBAIC0wLDAgKzEsMjAxIEBACj4+PiArLyoKPj4+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTcg
+Q2FybG8gQ2Fpb25lCj4+PiArICogQ29weXJpZ2h0IChjKSAyMDE2IEFuZHJlYXMgRsOkcmJlcgo+
+Cj4gWW91IGNhbiBkcm9wIG1lIGhlcmUsIENhcmxvLgo+Cj4+PiArICogQ29weXJpZ2h0IChjKSAy
+MDE2IEJheUxpYnJlLCBJbmMuCj4+PiArICogQXV0aG9yOiBOZWlsIEFybXN0cm9uZyA8bmFybXN0
+cm9uZ0BrZXJuZWwub3JnPgo+Pj4gKyAqCj4+PiArICogVGhpcyBmaWxlIGlzIGR1YWwtbGljZW5z
+ZWQ6IHlvdSBjYW4gdXNlIGl0IGVpdGhlciB1bmRlciB0aGUgdGVybXMKPj4+ICsgKiBvZiB0aGUg
+R1BMIG9yIHRoZSBYMTEgbGljZW5zZSwgYXQgeW91ciBvcHRpb24uIE5vdGUgdGhhdCB0aGlzIGR1
+YWwKPj4+ICsgKiBsaWNlbnNpbmcgb25seSBhcHBsaWVzIHRvIHRoaXMgZmlsZSwgYW5kIG5vdCB0
+aGlzIHByb2plY3QgYXMgYQo+Pj4gKyAqIHdob2xlLgo+Pj4gKyAqCj4+PiArICogIGEpIFRoaXMg
+bGlicmFyeSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IK
+Pj4+ICsgKiAgICAgbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwg
+UHVibGljIExpY2Vuc2UgYXMKPj4+ICsgKiAgICAgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3
+YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlCj4+PiArICogICAgIExpY2Vu
+c2UsIG9yIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uCj4+PiArICoKPj4+ICsg
+KiAgICAgVGhpcyBsaWJyYXJ5IGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2ls
+bCBiZSB1c2VmdWwsCj4+PiArICogICAgIGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91
+dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5IG9mCj4+PiArICogICAgIE1FUkNIQU5UQUJJTElU
+WSBvciBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUKPj4+ICsgKiAg
+ICAgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KPj4+ICsgKgo+
+Pj4gKyAqIE9yLCBhbHRlcm5hdGl2ZWx5LAo+Pj4gKyAqCj4+PiArICogIGIpIFBlcm1pc3Npb24g
+aXMgaGVyZWJ5IGdyYW50ZWQsIGZyZWUgb2YgY2hhcmdlLCB0byBhbnkgcGVyc29uCj4+PiArICog
+ICAgIG9idGFpbmluZyBhIGNvcHkgb2YgdGhpcyBzb2Z0d2FyZSBhbmQgYXNzb2NpYXRlZCBkb2N1
+bWVudGF0aW9uCj4+PiArICogICAgIGZpbGVzICh0aGUgIlNvZnR3YXJlIiksIHRvIGRlYWwgaW4g
+dGhlIFNvZnR3YXJlIHdpdGhvdXQKPj4+ICsgKiAgICAgcmVzdHJpY3Rpb24sIGluY2x1ZGluZyB3
+aXRob3V0IGxpbWl0YXRpb24gdGhlIHJpZ2h0cyB0byB1c2UsCj4+PiArICogICAgIGNvcHksIG1v
+ZGlmeSwgbWVyZ2UsIHB1Ymxpc2gsIGRpc3RyaWJ1dGUsIHN1YmxpY2Vuc2UsIGFuZC9vcgo+Pj4g
+KyAqICAgICBzZWxsIGNvcGllcyBvZiB0aGUgU29mdHdhcmUsIGFuZCB0byBwZXJtaXQgcGVyc29u
+cyB0byB3aG9tIHRoZQo+Pj4gKyAqICAgICBTb2Z0d2FyZSBpcyBmdXJuaXNoZWQgdG8gZG8gc28s
+IHN1YmplY3QgdG8gdGhlIGZvbGxvd2luZwo+Pj4gKyAqICAgICBjb25kaXRpb25zOgo+Pj4gKyAq
+Cj4+PiArICogICAgIFRoZSBhYm92ZSBjb3B5cmlnaHQgbm90aWNlIGFuZCB0aGlzIHBlcm1pc3Np
+b24gbm90aWNlIHNoYWxsIGJlCj4+PiArICogICAgIGluY2x1ZGVkIGluIGFsbCBjb3BpZXMgb3Ig
+c3Vic3RhbnRpYWwgcG9ydGlvbnMgb2YgdGhlIFNvZnR3YXJlLgo+Pj4gKyAqCj4+PiArICogICAg
+IFRIRSBTT0ZUV0FSRSBJUyBQUk9WSURFRCAiQVMgSVMiLCBXSVRIT1VUIFdBUlJBTlRZIE9GIEFO
+WSBLSU5ELAo+Pj4gKyAqICAgICBFWFBSRVNTIE9SIElNUExJRUQsIElOQ0xVRElORyBCVVQgTk9U
+IExJTUlURUQgVE8gVEhFIFdBUlJBTlRJRVMKPj4+ICsgKiAgICAgT0YgTUVSQ0hBTlRBQklMSVRZ
+LCBGSVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRSBBTkQKPj4+ICsgKiAgICAgTk9OSU5G
+UklOR0VNRU5ULiBJTiBOTyBFVkVOVCBTSEFMTCBUSEUgQVVUSE9SUyBPUiBDT1BZUklHSFQKPj4+
+ICsgKiAgICAgSE9MREVSUyBCRSBMSUFCTEUgRk9SIEFOWSBDTEFJTSwgREFNQUdFUyBPUiBPVEhF
+UiBMSUFCSUxJVFksCj4+PiArICogICAgIFdIRVRIRVIgSU4gQU4gQUNUSU9OIE9GIENPTlRSQUNU
+LCBUT1JUIE9SIE9USEVSV0lTRSwgQVJJU0lORwo+Pj4gKyAqICAgICBGUk9NLCBPVVQgT0YgT1Ig
+SU4gQ09OTkVDVElPTiBXSVRIIFRIRSBTT0ZUV0FSRSBPUiBUSEUgVVNFIE9SCj4+PiArICogICAg
+IE9USEVSIERFQUxJTkdTIElOIFRIRSBTT0ZUV0FSRS4KPj4+ICsgKi8KPj4KPj4gSSdtIGdvaW5n
+IHRvIHN0YXJ0IGFza2luZyBwZW9wbGUgdG8gdXNlIFNQRFggdGFncyBhbmQgeW91IGFyZSB0aGUg
+Zmlyc3QuIDopCj4KPiBGaW5lIHdpdGggbWUsIEknbGwgdXBkYXRlIG15IGluLWZsaWdodCBzZXJp
+ZXMuIEJ1dDoKPgo+Pgo+PiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMMi4wKyBPUiBNSVQK
+Pgo+IEknbSBmYWlybHkgc3VyZSB0aGF0IGl0J3MgR1BMLTIuMCsgd2l0aCBhIGRhc2guCgpPaCB5
+ZXMuIEp1c3QgbWFraW5nIHN1cmUgcGVvcGxlIGFyZSBwYXlpbmcgYXR0ZW50aW9uLiA7KQoKSSB0
+aGluayBpdCBuZWVkcyBwYXJlbnRoZXNpcyBhcm91bmQgaXQsIHRvby4KClJvYgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
