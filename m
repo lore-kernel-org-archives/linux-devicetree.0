@@ -1,71 +1,274 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
-Date: Wed, 22 Feb 2017 17:10:12 -0500
-Message-ID: <CAOw6vbJO_TQnSAu6w7XHiMSYA+gB1tyHOvB7BMc7Q2+OMY=9=w@mail.gmail.com>
-References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
- <20170221153918.GA25168@art_vandelay>
- <20170222134314.016a4940.john@metanate.com>
- <CAOw6vbJoS2P5m31+bgWw3Sghz=EVGj0fpLgCFnbVEhzRujNCLw@mail.gmail.com>
- <20170222185543.71e20187.john@metanate.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: Re: [PATCH 2/8] clk: sunxi-ng: add support for DE2 CCU
+Date: Wed, 22 Feb 2017 23:11:49 +0100
+Message-ID: <2861790.WmLcjTgm5a@jernej-laptop>
+References: <20170222231754.Hm6O1qAk@smtp3j.mail.yandex.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170222185543.71e20187.john@metanate.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: John Keeping <john@metanate.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Yao <yzq@rock-chips.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa <tfiga@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Chris Zhong <zyw@rock-chips.com>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBKUZXDCQKGQE2I7AECY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170222231754.Hm6O1qAk-fU7thrOZ3Cs0PDqKvflMoHmW9unr2Ajn@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-ymACFijhrKM@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgMTo1NSBQTSwgSm9obiBLZWVwaW5nIDxqb2huQG1ldGFu
-YXRlLmNvbT4gd3JvdGU6Cj4gT24gV2VkLCAyMiBGZWIgMjAxNyAxMDo1NzowNSAtMDUwMCwgU2Vh
-biBQYXVsIHdyb3RlOgo+Cj4+IE9uIFdlZCwgRmViIDIyLCAyMDE3IGF0IDg6NDMgQU0sIEpvaG4g
-S2VlcGluZyA8am9obkBtZXRhbmF0ZS5jb20+IHdyb3RlOgo+PiA+IE9uIFR1ZSwgMjEgRmViIDIw
-MTcgMTA6Mzk6MTggLTA1MDAsIFNlYW4gUGF1bCB3cm90ZToKPj4gPgo+PiA+PiBPbiBNb24sIEZl
-YiAyMCwgMjAxNyBhdCAwNDowMjoxNlBNICswODAwLCBDaHJpcyBaaG9uZyB3cm90ZToKPj4gPj4g
-PiBIaSBhbGwKPj4gPj4gPgo+PiA+PiA+IFtSZXNlbmQgdGhpcyB2NyB2ZXJzaW9uIHNlcmllcywg
-c2luY2UgdGhlcmUgYXJlIDUgbWFpbHMgaGF2ZSBnb25lIG1pc3NpbmcsIGxhc3QKPj4gPj4gPiB3
-ZWVrXQo+PiA+PiA+Cj4+ID4+ID4gVGhpcyB2ZXJzaW9uIGRvZXMgbm90IGNoYW5nZSB0aGUgZXhp
-c3RpbmcgdjYgcGF0Y2hlcywganVzdCB0byBhZGQgdGhlCj4+ID4+ID4gImJhbmR3aWR0aCBmaXgi
-IHBhdGNoIGJhY2ssIHNpbmNlIHdlIHJlYWxseSBuZWVkIGl0Lgo+PiA+PiA+Cj4+ID4+ID4gVGhp
-cyBwYXRjaCBzZXJpYWwgaXMgZm9yIFJLMzM5OSBNSVBJIERTSS4gVGhlIE1JUEkgRFNJIGNvbnRy
-b2xsZXIgb2YKPj4gPj4gPiBSSzMzOTkgaXMgYWxtb3N0IHRoZSBzYW1lIGFzIFJLMzI4OCwgZXhj
-ZXB0IGEgbGl0dGxlIGJpdCBvZiBkaWZmZXJlbmNlCj4+ID4+ID4gaW4gcGh5IGNsb2NrIGNvbnRy
-b2xsaW5nIGFuZCBwb3J0IGlkIHNlbGVjdGlvbiByZWdpc3Rlci4gVGhlc2UgcGF0Y2hlcwo+PiA+
-PiA+IGFkZCBSSzMzOTkgc3VwcG9ydCBhbmQgdGhlIHBvd2VyIGRvbWFpbiBzdXBwb3J0Lgo+PiA+
-PiA+Cj4+ID4+ID4gQW5kIHRoZXNlIHBhdGNoZXMgYmFzZSBvbiBKb2huIEtlZXBpbmcncyB2MyBw
-YXRjaGVzWzBdLCBpdCBmaXhlcyBtYW55IGJ1Z3MsCj4+ID4+ID4gdGhleSBoYXZlIGJlZW4gdGVz
-dGVkIG9uIHJrMzI4OCBldmIgYm9hcmQuCj4+ID4+Cj4+ID4+IERvIHdlIGhhdmUgYW4gRVRBIG9u
-IHdoZW4gSm9obiBpcyBwbGFubmluZyBvbiByZXNwaW5uaW5nIGhpcyBwYXRjaHNldCBiYXNlZCBv
-bgo+PiA+PiByZXZpZXcgZmVlZGJhY2s/Cj4+ID4KPj4gPiBJIGhhdmUgYWxsIG9mIHRoZSBjaGFu
-Z2VzIHF1ZXVlZCBidXQgSSB3YXMgaG9waW5nIHRvIGZpbmQgc29tZSB0aW1lIHRvCj4+ID4gdGVz
-dCB0aGUgbGF0ZXN0IHZlcnNpb24gYmVmb3JlIHNlbmRpbmcgaXQgb3V0OyB1bmZvcnR1bmF0ZWx5
-IGV2ZXJ5dGhpbmcKPj4gPiBlbHNlIGlzIG1vcmUgaW1wb3J0YW50IGF0IHRoZSBtb21lbnQuICBJ
-ZiB5b3UncmUgaGFwcHkgd2l0aCB0aGUgY2F2ZWF0Cj4+ID4gdGhhdCB0aGUgbGF0ZXN0IGNoYW5n
-ZXMgYXJlIGJ1aWxkIHRlc3RlZCBvbmx5IEkgY2FuIHByb2JhYmx5IHNlbmQgaXQKPj4gPiBvdXQg
-dGhpcyBhZnRlcm5vb24uCj4+Cj4+IEkgc3VwcG9zZSBteSBhbnN3ZXIgZGVwZW5kcyBvbiB3aGVu
-IHRoZSB0ZXN0ZWQgdmVyc2lvbiB3aWxsIGJlCj4+IGF2YWlsYWJsZSwgb3IgcGVyaGFwcyBDaHJp
-cyBjYW4gdGVzdCB0aGUgbmV3IHNldCBmb3IgeW91PyBJIGRvbid0IGhhdmUKPj4gYW55IHJvY2tj
-aGlwIGRldmljZXMgd2l0aCBtaXBpLCBzbyBpJ20gbm90IG11Y2ggaGVscC4KPgo+IE5vbmUgb2Yg
-dGhlIGNoYW5nZXMgc2NhcmUgbWUgdGhhdCBtdWNoLCBzbyBJIGRvbid0IGV4cGVjdCB0ZXN0aW5n
-IHRvCj4gdGhyb3cgdXAgYW55IHByb2JsZW1zIGJ1dCBJIGRvbid0IGxpa2UgdGhyb3dpbmcgb3V0
-IHBhdGNoZXMgd2l0aG91dCBhdAo+IGxlYXN0IGEgYmFzaWMgdGVzdCBydW4uCj4KCkFncmVlZC4g
-SSBkb24ndCB0aGluayB3ZSdyZSBpbiBzdWNoIGRlc3BlcmF0ZSBuZWVkIHRoYXQgd2Ugc2hvdWxk
-CmZvcmVnbyB0ZXN0aW5nLiBJZiBDaHJpcyBjYW4gcHJvdmlkZSBUZXN0ZWQtYnksIHlvdSBzaG91
-bGQgc2VuZCB0aGVtCm91dCwgb3RoZXJ3aXNlIEknbSBoYXBweSB0byB3YWl0LgoKVGhhbmtzIGZv
-ciB0aGUgdXBkYXRlLAoKU2VhbgoKCj4gSSBtaWdodCBoYXZlIHRpbWUgdG8gdGVzdCBvbiBGcmlk
-YXksIGJ1dCBJIGV4cGVjdCBDaHJpcyBoYXMgbW9yZSB0aW1lIHRvCj4gZGV2b3RlIHRvIHRoaXMg
-dGhhbiBJIGRvLCBzbyBtYXliZSBpdCdzIGJldHRlciBpZiBJIHNlbmQgdGhlIHBhdGNoZXMgb3V0
-Cj4gdG9tb3Jyb3cuCj4KPgo+IEpvaG4KCgoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5l
-ZXIsIEdvb2dsZSAvIENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Hi,
+
+Dne sreda, 22. februar 2017 ob 21:17:29 CET je Icenowy Zheng napisal(a):
+> 2017=E5=B9=B42=E6=9C=8823=E6=97=A5 03:09=E4=BA=8E Maxime Ripard <maxime.r=
+ipard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+>=20
+> > Hi,
+> >=20
+> > On Wed, Feb 22, 2017 at 11:18:48PM +0800, Icenowy Zheng wrote:
+> > > +config SUNXI_DE2_CCU
+> > > + bool "Support for the Allwinner SoCs DE2 CCU"
+> > > + select SUNXI_CCU_DIV
+> > > + select SUNXI_CCU_GATE
+> > > + default n
+> >=20
+> > This is already the default.
+>=20
+> P.S. I in fact want it default DRM_SUN4I_DE2.
+>=20
+> > > +
+> > >
+> > >  endif
+> > >
+> > > diff --git a/drivers/clk/sunxi-ng/Makefile
+> > > b/drivers/clk/sunxi-ng/Makefile
+> > > index 6feaac0c5600..1d36c40384a6 100644
+> > > --- a/drivers/clk/sunxi-ng/Makefile
+> > > +++ b/drivers/clk/sunxi-ng/Makefile
+> > > @@ -28,3 +28,4 @@ obj-$(CONFIG_SUN8I_V3S_CCU) +=3D ccu-sun8i-v3s.o
+> > >
+> > >  obj-$(CONFIG_SUN9I_A80_CCU) +=3D ccu-sun9i-a80.o
+> > >  obj-$(CONFIG_SUN9I_A80_CCU) +=3D ccu-sun9i-a80-de.o
+> > >  obj-$(CONFIG_SUN9I_A80_CCU) +=3D ccu-sun9i-a80-usb.o
+> > >
+> > > +obj-$(CONFIG_SUNXI_DE2_CCU) +=3D ccu-sunxi-de2.o
+> >=20
+> > sun8i-de2 please
+>=20
+> It also exists in sun50is.
+
+Usual approach is to name it after the family where the IP block first=20
+appeared.
+
+Regards,
+Jernej
+
+>=20
+> > > diff --git a/drivers/clk/sunxi-ng/ccu-sunxi-de2.c
+> > > b/drivers/clk/sunxi-ng/ccu-sunxi-de2.c new file mode 100644
+> > > index 000000000000..4259c145d5da
+> > > --- /dev/null
+> > > +++ b/drivers/clk/sunxi-ng/ccu-sunxi-de2.c
+> > > @@ -0,0 +1,204 @@
+> > > +/*
+> > > + * Copyright (c) 2016 Chen-Yu Tsai. All rights reserved.
+> >=20
+> > Wrong author?
+>=20
+> Oh I copied ccu-sun9i-a80-de.c...
+>=20
+> > > + *
+> > > + * This software is licensed under the terms of the GNU General Publ=
+ic
+> > > + * License version 2, as published by the Free Software Foundation, =
+and
+> > > + * may be copied, distributed, and modified under those terms.
+> > > + *
+> > > + * This program is distributed in the hope that it will be useful,
+> > > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > > + * GNU General Public License for more details.
+> > > + */
+> > > +
+> > > +#include <linux/clk.h>
+> > > +#include <linux/clk-provider.h>
+> > > +#include <linux/of_address.h>
+> > > +#include <linux/of_platform.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/reset.h>
+> > > +
+> > > +#include "ccu_common.h"
+> > > +#include "ccu_div.h"
+> > > +#include "ccu_gate.h"
+> > > +#include "ccu_reset.h"
+> > > +
+> > > +#include "ccu-sunxi-de2.h"
+> > > +
+> > > +static SUNXI_CCU_GATE(bus_mixer0_clk, "bus-mixer0", "bus-de",
+> > > +       0x04, BIT(0), 0);
+> > > +static SUNXI_CCU_GATE(bus_mixer1_clk, "bus-mixer1", "bus-de",
+> > > +       0x04, BIT(1), 0);
+> > > +static SUNXI_CCU_GATE(bus_wb_clk, "bus-wb", "bus-de",
+> > > +       0x04, BIT(2), 0);
+> > > +
+> > > +static SUNXI_CCU_GATE(mixer0_clk, "mixer0", "mixer0-div",
+> > > +       0x00, BIT(0), CLK_SET_RATE_PARENT);
+> > > +static SUNXI_CCU_GATE(mixer1_clk, "mixer1", "mixer1-div",
+> > > +       0x00, BIT(1), CLK_SET_RATE_PARENT);
+> > > +static SUNXI_CCU_GATE(wb_clk, "wb", "wb-div",
+> > > +       0x00, BIT(2), CLK_SET_RATE_PARENT);
+> > > +
+> > > +static SUNXI_CCU_M(mixer0_div_clk, "mixer0-div", "de", 0x0c, 0, 4,
+> > > +    CLK_SET_RATE_PARENT);
+> > > +static SUNXI_CCU_M(mixer1_div_clk, "mixer1-div", "de", 0x0c, 4, 4,
+> > > +    CLK_SET_RATE_PARENT);
+> > > +static SUNXI_CCU_M(wb_div_clk, "wb-div", "de", 0x0c, 8, 4,
+> > > +    CLK_SET_RATE_PARENT);
+> > > +
+> > > +static struct ccu_common *sunxi_de2_clks[] =3D {
+> > > + &mixer0_clk.common,
+> > > + &mixer1_clk.common,
+> > > + &wb_clk.common,
+> > > +
+> > > + &bus_mixer0_clk.common,
+> > > + &bus_mixer1_clk.common,
+> > > + &bus_wb_clk.common,
+> > > +
+> > > + &mixer0_div_clk.common,
+> > > + &mixer1_div_clk.common,
+> > > + &wb_div_clk.common,
+> > > +};
+> > > +
+> > > +static struct clk_hw_onecell_data sunxi_de2_hw_clks =3D {
+> > > + .hws =3D {
+> > > + [CLK_MIXER0] =3D &mixer0_clk.common.hw,
+> > > + [CLK_MIXER1] =3D &mixer1_clk.common.hw,
+> > > + [CLK_WB] =3D &wb_clk.common.hw,
+> > > +
+> > > + [CLK_BUS_MIXER0] =3D &bus_mixer0_clk.common.hw,
+> > > + [CLK_BUS_MIXER1] =3D &bus_mixer1_clk.common.hw,
+> > > + [CLK_BUS_WB] =3D &bus_wb_clk.common.hw,
+> > > +
+> > > + [CLK_MIXER0_DIV] =3D &mixer1_div_clk.common.hw,
+> > > + [CLK_MIXER1_DIV] =3D &mixer0_div_clk.common.hw,
+> > > + [CLK_WB_DIV] =3D &wb_div_clk.common.hw,
+> > > + },
+> > > + .num =3D CLK_NUMBER,
+> > > +};
+> > > +
+> > > +static struct ccu_reset_map sun8i_a83t_de2_resets[] =3D {
+> > > + [RST_MIXER0] =3D { 0x08, BIT(0) },
+> > > + /*
+> > > + * For A83T, H3 and R40, mixer1 reset line is shared with wb, so
+> > > + * only RST_WB is exported here.
+> > > + */
+> > > + [RST_WB] =3D { 0x08, BIT(2) },
+> > > +};
+> > > +
+> > > +static struct ccu_reset_map sun50i_a64_de2_resets[] =3D {
+> > > + [RST_MIXER0] =3D { 0x08, BIT(0) },
+> > > + [RST_MIXER1] =3D { 0x08, BIT(1) },
+> > > + [RST_WB] =3D { 0x08, BIT(2) },
+> > > +};
+> > > +
+> > > +static const struct sunxi_ccu_desc sun8i_a83t_de2_clk_desc =3D {
+> > > + .ccu_clks =3D sunxi_de2_clks,
+> > > + .num_ccu_clks =3D ARRAY_SIZE(sunxi_de2_clks),
+> > > +
+> > > + .hw_clks =3D &sunxi_de2_hw_clks,
+> > > +
+> > > + .resets =3D sun8i_a83t_de2_resets,
+> > > + .num_resets =3D ARRAY_SIZE(sun8i_a83t_de2_resets),
+> > > +};
+> > > +
+> > > +static const struct sunxi_ccu_desc sun50i_a64_de2_clk_desc =3D {
+> > > + .ccu_clks =3D sunxi_de2_clks,
+> > > + .num_ccu_clks =3D ARRAY_SIZE(sunxi_de2_clks),
+> > > +
+> > > + .hw_clks =3D &sunxi_de2_hw_clks,
+> > > +
+> > > + .resets =3D sun50i_a64_de2_resets,
+> > > + .num_resets =3D ARRAY_SIZE(sun50i_a64_de2_resets),
+> > > +};
+> > > +
+> > > +static int sunxi_de2_clk_probe(struct platform_device *pdev)
+> > > +{
+> > > + struct resource *res;
+> > > + struct clk *bus_clk;
+> > > + struct reset_control *rstc;
+> > > + void __iomem *reg;
+> > > + const struct sunxi_ccu_desc *ccu_desc;
+> > > + int ret;
+> > > +
+> > > + ccu_desc =3D of_device_get_match_data(&pdev->dev);
+> > > + if (!ccu_desc)
+> > > + return -EINVAL;
+> > > +
+> > > + res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > + reg =3D devm_ioremap_resource(&pdev->dev, res);
+> > > + if (IS_ERR(reg))
+> > > + return PTR_ERR(reg);
+> > > +
+> > > + bus_clk =3D devm_clk_get(&pdev->dev, "bus");
+> > > + if (IS_ERR(bus_clk)) {
+> > > + ret =3D PTR_ERR(bus_clk);
+> > > + if (ret !=3D -EPROBE_DEFER)
+> > > + dev_err(&pdev->dev, "Couldn't get bus clk: %d\n", ret);
+> > > + return ret;
+> > > + }
+> > > +
+> > > + rstc =3D devm_reset_control_get_exclusive(&pdev->dev, NULL);
+> > > + if (IS_ERR(rstc)) {
+> > > + ret =3D PTR_ERR(bus_clk);
+> > > + if (ret !=3D -EPROBE_DEFER)
+> > > + dev_err(&pdev->dev,
+> > > + "Couldn't get reset control: %d\n", ret);
+> > > + return ret;
+> > > + }
+> > > +
+> > > + /* The bus clock needs to be enabled for us to access the registers=
+ */
+> > > + ret =3D clk_prepare_enable(bus_clk);
+> > > + if (ret) {
+> > > + dev_err(&pdev->dev, "Couldn't enable bus clk: %d\n", ret);
+> > > + return ret;
+> > > + }
+> >=20
+> > That looks inefficient if none of the clocks are enabled. Maybe you
+> > can use CLK_OPS_PARENT_ENABLE?
+>=20
+> Don't know about it... it's a simplified version of this func of A80 de c=
+cu.
+> > Thanks,
+> > Maxime
+> >=20
+> > --
+> > Maxime Ripard, Free Electrons
+> > Embedded Linux and Kernel engineering
+> > http://free-electrons.com
+> >=20
+> > --
+> > You received this message because you are subscribed to the Google Grou=
+ps
+> > "linux-sunxi" group. To unsubscribe from this group and stop receiving
+> > emails from it, send an email to
+> > linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org For more options, visit
+> > https://groups.google.com/d/optout.
+>=20
+> --
+> You received this message because you are subscribed to the Google Groups
+> "linux-sunxi" group. To unsubscribe from this group and stop receiving
+> emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org=
+.
+> For more options, visit https://groups.google.com/d/optout.
+
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
