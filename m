@@ -1,36 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] ARM: rockchip: reanme RK1108 to RV1108
-Date: Wed, 22 Feb 2017 09:10:16 -0600
-Message-ID: <20170222151016.bsiyv2j5sg2qvkhm@rob-hp-laptop>
-References: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com>
- <1486984234-32693-1-git-send-email-andy.yan@rock-chips.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/7] clk: tegra: fix pll_a1 iddq register, add pll_a1
+Date: Wed, 22 Feb 2017 17:13:56 +0200
+Message-ID: <1487776444-4701-2-git-send-email-pdeschrijver@nvidia.com>
+References: <1487776444-4701-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486984234-32693-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2yhQFI55V6+gNQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487776444-4701-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 07:10:34PM +0800, Andy Yan wrote:
-> Rockchip finally named the SOC as RV1108, so change it
-> for compatible.
-> 
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
->  Documentation/devicetree/bindings/arm/rockchip.txt   | 4 ++--
->  arch/arm/boot/dts/Makefile                           | 2 +-
->  arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} | 7 ++++---
->  3 files changed, 7 insertions(+), 6 deletions(-)
->  rename arch/arm/boot/dts/{rk1108-evb.dts => rv1108-evb.dts} (89%)
+pll_a1 was using CLK_RST_CONTROLLER_PLLA1_MISC_0 for IDDQ control rather
+than the correct register CLK_RST_CONTROLLER_PLLA1_MISC_1. Also add pll_a1
+to the set of clocks defined for Tegra210.
 
-Would be nice to have the information in the discussion summarized here.
+Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/clk/tegra/clk-tegra210.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 2896d2e..2ef8d49 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -1772,7 +1772,7 @@ static u32 pll_expo_p_to_pdiv(u32 p, u32 *pdiv)
+ 	.misc_reg = PLLA1_MISC0,
+ 	.lock_mask = PLLCX_BASE_LOCK,
+ 	.lock_delay = 300,
+-	.iddq_reg = PLLA1_MISC0,
++	.iddq_reg = PLLA1_MISC1,
+ 	.iddq_bit_idx = PLLCX_IDDQ_BIT,
+ 	.reset_reg = PLLA1_MISC0,
+ 	.reset_bit_idx = PLLCX_RESET_BIT,
+@@ -2209,6 +2209,7 @@ static u32 pll_expo_p_to_pdiv(u32 p, u32 *pdiv)
+ 	[tegra_clk_pll_c4_out2] = { .dt_id = TEGRA210_CLK_PLL_C4_OUT2, .present = true },
+ 	[tegra_clk_pll_c4_out3] = { .dt_id = TEGRA210_CLK_PLL_C4_OUT3, .present = true },
+ 	[tegra_clk_apb2ape] = { .dt_id = TEGRA210_CLK_APB2APE, .present = true },
++	[tegra_clk_pll_a1] = { .dt_id = TEGRA210_CLK_PLL_A1, .present = true },
+ };
+ 
+ static struct tegra_devclk devclks[] __initdata = {
+-- 
+1.9.1
