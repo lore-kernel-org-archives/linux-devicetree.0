@@ -1,24 +1,60 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IGJ1ZyBpbiBEVCBkb2NzIHZzIG1jcDI1MXguYyBkcml2ZXI=?=
-Date: Wed, 22 Feb 2017 08:53:19 +0300
-Message-ID: <1487742799.631389473@f418.i.mail.ru>
-References: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
+Date: Wed, 22 Feb 2017 07:55:24 +0100
+Message-ID: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1d36bb5b-b46a-8e9a-672b-907cac5c5ab4@elpromaelectronics.com>
-Sender: linux-can-owner@vger.kernel.org
-To: =?UTF-8?B?SmFudXN6IFXFvHlja2k=?= <j.uzycki@elpromaelectronics.com>
-Cc: =?UTF-8?B?T2xpdmVyIEhhcnRrb3Bw?= <socketcan@hartkopp.net>, linux-can@vger.kernel.org, =?UTF-8?B?TWFyYyBLbGVpbmUtQnVkZGU=?= <mkl@pengutronix.de>, =?UTF-8?B?V29sZmdhbmcgR3JhbmRlZ2dlcg==?= <wg@grandegger.com>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?bC5kYWxlayBlbHByb21hZWxlY3Ryb25pY3MuY29t?= <l.dalek@elpromaelectronics.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Herbert Xu <herbert@gondor.apana.org.au>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PtCS0YLQvtGA0L3QuNC6LCAyMSDRhNC10LLRgNCw0LvRjyAyMDE3LCAyMTowOCArMDM6MDAg0L7R
-giBKYW51c3ogVcW8eWNraSA8ai51enlja2lAZWxwcm9tYWVsZWN0cm9uaWNzLmNvbT46Cgo+V2Un
-dmUgbm90aWNlZCB0aGUgaW5jb25zaXN0ZW5jeSBpbiBEVCB3aGljaCBzdGlsbCBleGlzdCBpbiBr
-ZXJuZWwgdjQuMTA6Cj4KPmRldm1fcmVndWxhdG9yX2dldCgmc3BpLT5kZXYsICJ2ZGQiKSBpbiBk
-cml2ZXJzL25ldC9jYW4vbWNwMjUxeC5jCj4KPnZzIHZkZC1zdXBwbHk6IFJlZ3VsYXRvciB0aGF0
-IHBvd2VycyB0aGUgQ0FOIGNvbnRyb2xsZXIuIGluCj5iaW5kaW5ncy9uZXQvY2FuL21pY3JvY2hp
-cCxtY3AyNTF4LnR4dAoKSSBkbyBub3Qgc2VlIHRoZSBidWcgaGVyZSwgY291bGQgeW91IGNsYXJp
-Znk/CgotLS0K
+Expose clock CLKID_RNG0 which is needed for the HW random number generator.
+
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+---
+v2:
+- added clk and DT maintainers
+- split exposing the clock and using it in DT into two patches
+- comment out clock definition in drivers/clk/meson/gxbb.h
+- silently move CLKID_SPI to the right place
+v3:
+- no changes
+---
+ drivers/clk/meson/gxbb.h              | 2 +-
+ include/dt-bindings/clock/gxbb-clkc.h | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+index 8ee2022c..cbd62e46 100644
+--- a/drivers/clk/meson/gxbb.h
++++ b/drivers/clk/meson/gxbb.h
+@@ -193,7 +193,7 @@
+ /* CLKID_I2C */
+ /* #define CLKID_SAR_ADC */
+ #define CLKID_SMART_CARD	  24
+-#define CLKID_RNG0		  25
++/* CLKID_RNG0 */
+ #define CLKID_UART0		  26
+ #define CLKID_SDHC		  27
+ #define CLKID_STREAM		  28
+diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
+index 692846c7..63f4c2c4 100644
+--- a/include/dt-bindings/clock/gxbb-clkc.h
++++ b/include/dt-bindings/clock/gxbb-clkc.h
+@@ -12,9 +12,10 @@
+ #define CLKID_FCLK_DIV4		6
+ #define CLKID_CLK81		12
+ #define CLKID_MPLL2		15
+-#define CLKID_SPI		34
+ #define CLKID_I2C		22
+ #define CLKID_SAR_ADC		23
++#define CLKID_RNG0		25
++#define CLKID_SPI		34
+ #define CLKID_ETH		36
+ #define CLKID_USB0		50
+ #define CLKID_USB1		51
+-- 
+2.11.1
