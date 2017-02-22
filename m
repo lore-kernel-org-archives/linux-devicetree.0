@@ -1,87 +1,38 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
-Date: Wed, 22 Feb 2017 09:44:11 +0800
-Message-ID: <58ACECEB.2080406@rock-chips.com>
-References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
- <20170221153918.GA25168@art_vandelay>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/7] dt-bindings: rockchip-dw-mshc: rename RK1108 to RV1108
+Date: Wed, 22 Feb 2017 02:51:21 +0100
+Message-ID: <1743495.FQhDfDfeEj@phil>
+References: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com> <1486983759-32337-1-git-send-email-andy.yan@rock-chips.com> <20170221233605.wpcqja6hebdrkect@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170221153918.GA25168@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170221233605.wpcqja6hebdrkect@rob-hp-laptop>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Yan <andy.yan@rock-chips.com>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VhbgoKT24gMDIvMjEvMjAxNyAxMTozOSBQTSwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIE1v
-biwgRmViIDIwLCAyMDE3IGF0IDA0OjAyOjE2UE0gKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+
-PiBIaSBhbGwKPj4KPj4gW1Jlc2VuZCB0aGlzIHY3IHZlcnNpb24gc2VyaWVzLCBzaW5jZSB0aGVy
-ZSBhcmUgNSBtYWlscyBoYXZlIGdvbmUgbWlzc2luZywgbGFzdAo+PiB3ZWVrXQo+Pgo+PiBUaGlz
-IHZlcnNpb24gZG9lcyBub3QgY2hhbmdlIHRoZSBleGlzdGluZyB2NiBwYXRjaGVzLCBqdXN0IHRv
-IGFkZCB0aGUKPj4gImJhbmR3aWR0aCBmaXgiIHBhdGNoIGJhY2ssIHNpbmNlIHdlIHJlYWxseSBu
-ZWVkIGl0Lgo+Pgo+PiBUaGlzIHBhdGNoIHNlcmlhbCBpcyBmb3IgUkszMzk5IE1JUEkgRFNJLiBU
-aGUgTUlQSSBEU0kgY29udHJvbGxlciBvZgo+PiBSSzMzOTkgaXMgYWxtb3N0IHRoZSBzYW1lIGFz
-IFJLMzI4OCwgZXhjZXB0IGEgbGl0dGxlIGJpdCBvZiBkaWZmZXJlbmNlCj4+IGluIHBoeSBjbG9j
-ayBjb250cm9sbGluZyBhbmQgcG9ydCBpZCBzZWxlY3Rpb24gcmVnaXN0ZXIuIFRoZXNlIHBhdGNo
-ZXMKPj4gYWRkIFJLMzM5OSBzdXBwb3J0IGFuZCB0aGUgcG93ZXIgZG9tYWluIHN1cHBvcnQuCj4+
-Cj4+IEFuZCB0aGVzZSBwYXRjaGVzIGJhc2Ugb24gSm9obiBLZWVwaW5nJ3MgdjMgcGF0Y2hlc1sw
-XSwgaXQgZml4ZXMgbWFueSBidWdzLAo+PiB0aGV5IGhhdmUgYmVlbiB0ZXN0ZWQgb24gcmszMjg4
-IGV2YiBib2FyZC4KPiBEbyB3ZSBoYXZlIGFuIEVUQSBvbiB3aGVuIEpvaG4gaXMgcGxhbm5pbmcg
-b24gcmVzcGlubmluZyBoaXMgcGF0Y2hzZXQgYmFzZWQgb24KPiByZXZpZXcgZmVlZGJhY2s/Cj4K
-SSBndWVzcyBKb2huIHdpbGwgc2VuZCB0aGUgdjQgcGF0Y2ggc29vbiwgc2luY2UgdGhlcmUgYXJl
-IG5vdCBtYW55IHBvaW50IApuZWVkIHRvIGNoYW5nZS4KQW5kIGFzIEkga25vdywgTWFyayBZYW8g
-aXMgZ29pbmcgdG8gbWVyZ2UgSm9obidzIHY0IHNlcmllcyB0byBoaXMgCmJyYW5jaCwgYW5kIHRo
-aXMgdjcgc2VyaWVzCndpbGwgYmUgbWVyZ2VkIGFmdGVyIHRoYXQuCgoKPj4gWzBdOgo+PiBbMDEv
-MjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA4OQo+PiBbMDIvMjRd
-IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA2MQo+PiBbMDMvMjRdIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA2NQo+PiBbMDQvMjRdIGh0dHBz
-Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA3Nwo+PiBbMDUvMjRdIGh0dHBzOi8v
-cGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMwo+PiBbMDYvMjRdIGh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzNwo+PiBbMDcvMjRdIGh0dHBzOi8vcGF0Y2h3
-b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAyOQo+PiBbMDgvMjRdIGh0dHBzOi8vcGF0Y2h3b3Jr
-Lmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMQo+PiBbMDkvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtl
-cm5lbC5vcmcvcGF0Y2gvOTU0NDA4Mwo+PiBbMTAvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
-bC5vcmcvcGF0Y2gvOTU0NDA2Mwo+PiBbMTEvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvOTU0NDA4NQo+PiBbMTIvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
-cGF0Y2gvOTU0NDA5Mwo+PiBbMTMvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
-Y2gvOTU0NDA4MQo+PiBbMTQvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
-OTU0NDA1Nwo+PiBbMTUvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0
-NDA3OQo+PiBbMTYvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAz
-NQo+PiBbMTcvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDEwNQo+
-PiBbMTgvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA1OQo+PiBb
-MjEvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAwOQo+PiBbMjIv
-MjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA0OQo+PiBbMjMvMjRd
-IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA1NQo+PiBbMjQvMjRdIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDEwOQo+Pgo+Pgo+PiBDaGFuZ2Vz
-IGluIHY2Ogo+PiAtIG5vIG5lZWQgY2hlY2sgcGh5X2NmZ19jbGsgYmVmb3JlIGVuYWJsZS9kaXNh
-YmxlCj4+Cj4+IENoYW5nZXMgaW4gdjU6Cj4+IC0gY2hlY2sgdGhlIGVycm9yIG9mIHBoeV9jZmdf
-Y2xrIGluIGR3X21pcGlfZHNpX2JpbmQKPj4KPj4gQ2hhbmdlcyBpbiB2NDoKPj4gLSByZW1vdmUg
-dGhlIHVucmVsYXRlZCBjaGFuZ2UKPj4KPj4gQ2hhbmdlcyBpbiB2MzoKPj4gLSBiYXNlIG9uIEpv
-aG4gS2VlcGluZydzIHBhdGNoIHNlcmllcwo+Pgo+PiBDaHJpcyBaaG9uZyAoNyk6Cj4+ICAgIGR0
-LWJpbmRpbmdzOiBhZGQgcmszMzk5IHN1cHBvcnQgZm9yIGR3LW1pcGktcm9ja2NoaXAKPj4gICAg
-ZHJtL3JvY2tjaGlwL2RzaTogZHctbWlwaTogc3VwcG9ydCBSSzMzOTkgbWlwaSBkc2kKPj4gICAg
-ZHJtL3JvY2tjaGlwL2RzaTogZHctbWlwaTogY29ycmVjdCB0aGUgY29kaW5nIHN0eWxlCj4+ICAg
-IGRybS9yb2NrY2hpcC9kc2k6IHJlbW92ZSBtb2RlX3ZhbGlkIGZ1bmN0aW9uCj4+ICAgIGR0LWJp
-bmRpbmdzOiBhZGQgcG93ZXIgZG9tYWluIG5vZGUgZm9yIGR3LW1pcGktcm9ja2NoaXAKPj4gICAg
-ZHJtL3JvY2tjaGlwL2RzaTogZml4IGluc3VmZmljaWVudCBiYW5kd2lkdGggb2Ygc29tZSBwYW5l
-bAo+PiAgICBkcm0vcm9ja2NoaXAvZHNpOiBhZGQgZHctbWlwaSBwb3dlciBkb21haW4gc3VwcG9y
-dAo+Pgo+PiAgIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAg
-ICAgIHwgICA3ICstCj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMg
-ICAgICAgICAgICAgfCAxNjAgKysrKysrKysrKysrLS0tLS0tLS0tCj4+ICAgMiBmaWxlcyBjaGFu
-Z2VkLCAxMDAgaW5zZXJ0aW9ucygrKSwgNjcgZGVsZXRpb25zKC0pCj4+Cj4+IC0tIAo+PiAyLjYu
-Mwo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+
-PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKPj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwKCi0tIApDaHJpcyBaaG9uZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Hi Rob,
+
+Am Dienstag, 21. Februar 2017, 17:36:05 CET schrieb Rob Herring:
+> On Mon, Feb 13, 2017 at 07:02:39PM +0800, Andy Yan wrote:
+> > Rockchip finally named the SOC as RV1108, so change it.
+> > 
+> > Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> > 
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+
+does this Ack span to all dt-centric patches in this series?
+
+As stated in some other mail, should be safe, as the soc isn't on the market 
+yet.
+
+
+Thanks
+Heiko
