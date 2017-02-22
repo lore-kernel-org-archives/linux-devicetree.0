@@ -1,111 +1,93 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2 0/8] ARM64: Initial Marvell IAP140 enablement
-Date: Wed, 22 Feb 2017 03:29:20 +0100
-Message-ID: <20170222022929.10540-1-afaerber@suse.de>
+From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Wed, 22 Feb 2017 11:12:30 +0800
+Message-ID: <1487733150.15869.11.camel@mtksdaap41>
+References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
+         <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
+         <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
+         <1485419833.990.1.camel@mtksdaap41>
+         <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
+         <1486359476.11424.33.camel@mtksdaap41>
+         <CABb+yY0jCGqnrMLkkTNoEmLX4jDstWh7-UYhDyKjV-gFOnxpsg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, info@andromedabox.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY0jCGqnrMLkkTNoEmLX4jDstWh7-UYhDyKjV-gFOnxpsg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jo
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, 2017-02-16 at 21:02 +0530, Jassi Brar wrote:
+> On Mon, Feb 6, 2017 at 11:07 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Hi Jassi,
+> >
+> > On Wed, 2017-02-01 at 10:52 +0530, Jassi Brar wrote:
+> >> On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> > Hi Jassi,
+> >> >
+> >> > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
+> >> >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> >>
+> >> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> >> >> > new file mode 100644
+> >> >> > index 0000000..747bcd3
+> >> >> > --- /dev/null
+> >> >> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> >> >>
+> >> >> ...
+> >> >>
+> >> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
+> >> >> > +{
+> >> >> > +       struct cmdq *cmdq;
+> >> >> > +       struct cmdq_task *task;
+> >> >> > +       unsigned long curr_pa, end_pa;
+> >> >> > +
+> >> >> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
+> >> >> > +
+> >> >> > +       /* Client should not flush new tasks if suspended. */
+> >> >> > +       WARN_ON(cmdq->suspended);
+> >> >> > +
+> >> >> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
+> >> >> > +       task->cmdq = cmdq;
+> >> >> > +       INIT_LIST_HEAD(&task->list_entry);
+> >> >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
+> >> >> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
+> >> >> >
+> >> >> You seem to parse the requests and responses, that should ideally be
+> >> >> done in client driver.
+> >> >> Also, we are here in atomic context, can you move it in client driver
+> >> >> (before the spin_lock)?
+> >> >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
+> >> >
+> >> > will do
+> >
+> > I agree with moving dma_map_single out from spin_lock.
+> >
+> > However, mailbox clients cannot map virtual memory to mailbox
+> > controller's device for DMA.
+> >
+> If DMA is a resource used by MBox to transfer data, then yes the
+> mapping needs to be done in the Mbox controller driver. To map memory
+> outside of spinlock, you could schedule a tasklet in send_data() ?
 
-This series adds initial support for the Marvell IAP140 SoC (aka PXA1908)
-and the Andromeda Box Edge development board.
+Hi Jassi,
 
-v2 reuses ARCH_MMP.
+For CMDQ, the order of CMDQ tasks should be guaranteed.
+However, it seems tasklet cannot ensure this requirement.
 
-Both earlycon and serial are working, but an explicit console=ttyS0,115200n8
-is needed; with just "earlycon" and stdout-path the earlycon stops early and
-switches to a tty0, long before disabling the bootconsole...
+Quote from Linux Device Drivers 3rd edition ch7.
+"void tasklet_schedule(struct tasklet_struct *t);
+  Schedule the tasklet for execution. If a tasklet is scheduled again
+before it has a chance to run, it runs only once...."
 
-All four CPUs come up, and an initrd can be reached.
+May I use workqueue instead of tasklet?
 
-However, there are errors about CPUs 1-3 having a zero SYS_CNTFRQ_EL0:
+Thanks,
+HS
 
-[    0.095812] smp: Bringing up secondary CPUs ...
-======pxa1908_pmu_core_pwr_on: mpidr = 0x1
-======pxa1908_pmu_core_pwr_on: mpidr = 0x2
-======pxa1908_pmu_core_pwr_on: mpidr = 0x3
-[    0.133419] Detected VIPT I-cache on CPU1
-[    0.133430] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU1: 0x00000000000000
-[    0.133447] Unsupported CPU feature variation.
-...
-[    0.133748] CPU1: Booted secondary processor [410fd032]
-[    0.165465] Detected VIPT I-cache on CPU2
-[    0.165474] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU2: 0x00000000000000
-[    0.165505] CPU2: Booted secondary processor [410fd032]
-[    0.197539] Detected VIPT I-cache on CPU3
-[    0.197546] CPU features: SANITY CHECK: Unexpected variation in SYS_CNTFRQ_EL0. Boot CPU: 0x000000018cba80, CPU3: 0x00000000000000
-[    0.197573] CPU3: Booted secondary processor [410fd032]
-[    0.197625] smp: Brought up 1 node, 4 CPUs
-[    0.522514] SMP: Total of 4 processors activated.
-[    0.527212] CPU features: detected feature: 32-bit EL0 Support
-[    0.533105] CPU: All CPU(s) started at EL2
-
-KVM appears to initialize okay, but was not yet tested with guests.
-
-[    0.865255] kvm [1]: 8-bit VMID
-[    0.868401] kvm [1]: IDMAP page: d23000
-[    0.872233] kvm [1]: HYP VA range: 800000000000:ffffffffffff
-[    0.878262] kvm [1]: Hyp mode initialized successfully
-[    0.883429] kvm [1]: vgic-v2@d1dfc000
-[    0.887179] kvm [1]: vgic interrupt IRQ1
-[    0.891120] kvm [1]: virtual timer IRQ4
-
-One limitation is currently the lack of an IAP140 clk driver. Patch 4/4 works
-around that for UART0 with a fixed-clock.
-
-A 3.14 based tree is available on GitHub acorn-marvell/brillo_pxa_kernel.
-
-Booting required changes to the vendor U-Boot,
-cf. https://en.opensuse.org/HCL:AndromedaBoxEdge
-
-https://github.com/afaerber/linux/commits/edge-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-v1 -> v2:
-* Add non-DT documentation
-* Use ARCH_MMP instead of ARCH_PXA
-* Split off Kconfig cleanups per subsystem
-* Drop "mrvl,pxa-uart" and instead implement mmp earlycon
-* Add some more DT nodes
-
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>
-Cc: info@andromedabox.org
-Cc: devicetree@vger.kernel.org
-
-Andreas Färber (8):
-  Documentation: arm: Marvell: Document IAP140
-  tty: serial: Suppress deprecated SERIAL_PXA on arm64
-  tty: serial: 8250_pxa: Implement mmp earlycon
-  sound: soc: pxa: Suppress SND_MMP_SOC for arm64
-  ARM64: Prepare Marvell IAP140 aka PXA1908
-  Documentation: devicetree: arm: marvell: Document IAP140
-  ARM64: dts: marvell: Add IAP140 and Andromeda Box Edge
-  ARM64: dts: marvell: iap140-andromeda-box-edge: Add uart0 clock
-
- Documentation/arm/Marvell/README                   |  12 +-
- .../devicetree/bindings/arm/marvell/iap140.txt     |  11 +
- arch/arm64/Kconfig.platforms                       |   7 +
- arch/arm64/boot/dts/marvell/Makefile               |   3 +
- .../boot/dts/marvell/iap140-andromeda-box-edge.dts |  87 ++++++++
- arch/arm64/boot/dts/marvell/iap140.dtsi            | 241 +++++++++++++++++++++
- drivers/tty/serial/8250/8250_pxa.c                 |   1 +
- drivers/tty/serial/Kconfig                         |   2 +-
- sound/soc/pxa/Kconfig                              |   4 +-
- 9 files changed, 364 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/iap140.txt
- create mode 100644 arch/arm64/boot/dts/marvell/iap140-andromeda-box-edge.dts
- create mode 100644 arch/arm64/boot/dts/marvell/iap140.dtsi
-
--- 
-2.10.2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
