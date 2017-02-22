@@ -1,102 +1,109 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v6 2/9] doc: DT: venus: binding document for Qualcomm
- video driver
-Date: Wed, 22 Feb 2017 11:25:19 +0200
-Message-ID: <88584dd3-165f-2393-433e-95c288a8f473@linaro.org>
-References: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
- <1486473024-21705-3-git-send-email-stanimir.varbanov@linaro.org>
- <20170222000952.w6bg4bhvbklgkcnx@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170222000952.w6bg4bhvbklgkcnx@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH 1/1] devicetree: of_node_put() does not require holding devtree_lock
+Date: Wed, 22 Feb 2017 11:29:18 +0200
+Message-ID: <1487755758-6066-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+While holding a reference to a device_node it is allowed to put that node
+without holding devtree_lock spinlock. Move of_node_put() after releasing
+the spinlock.
 
-On 02/22/2017 02:09 AM, Rob Herring wrote:
-> On Tue, Feb 07, 2017 at 03:10:17PM +0200, Stanimir Varbanov wrote:
->> Add binding document for Venus video encoder/decoder driver
->>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->> ---
->> Changes since previous v5:
->>  * dropped rproc phandle (remoteproc is not used anymore)
->>  * added subnodes paragraph with descrition of three subnodes:
->>     - video-decoder and video-encoder - describes decoder (core0) and
->>     encoder (core1) power-domains and clocks (applicable for msm8996
->>     Venus core).
->>     - video-firmware - needed to get reserved memory region where the
->>     firmware is stored.
->>
->>  .../devicetree/bindings/media/qcom,venus.txt       | 112 +++++++++++++++++++++
->>  1 file changed, 112 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
->> new file mode 100644
->> index 000000000000..4427af3ca5a5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
->> @@ -0,0 +1,112 @@
-> 
-> [...]
-> 
->> +* Subnodes
->> +The Venus node must contain three subnodes representing video-decoder,
->> +video-encoder and video-firmware.
-> 
-> [...]
-> 
->> +The video-firmware subnode should contain:
->> +
->> +- memory-region:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: reference to the reserved-memory for the memory region
->> +
->> +* An Example
->> +	video-codec@1d00000 {
->> +		compatible = "qcom,msm8916-venus";
->> +		reg = <0x01d00000 0xff000>;
->> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
->> +			 <&gcc GCC_VENUS0_AHB_CLK>,
->> +			 <&gcc GCC_VENUS0_AXI_CLK>;
->> +		clock-names = "core", "iface", "bus";
->> +		power-domains = <&gcc VENUS_GDSC>;
->> +		iommus = <&apps_iommu 5>;
->> +
->> +		video-decoder {
->> +			compatible = "venus-decoder";
->> +			clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
->> +			clock-names = "core";
->> +			power-domains = <&mmcc VENUS_CORE0_GDSC>;
->> +		};
->> +
->> +		video-encoder {
->> +			compatible = "venus-encoder";
->> +			clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
->> +			clock-names = "core";
->> +			power-domains = <&mmcc VENUS_CORE1_GDSC>;
->> +		};
->> +
->> +		video-firmware {
->> +			memory-region = <&venus_mem>;
-> 
-> Why does this need to be a sub node?
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ drivers/of/base.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Because firmware reserved memory region must have separate struct
-device, otherwise allocating video buffers (and map them through iommu)
-for video-codec will fail because dma_alloc_coherent trying to allocate
-from per-device coherent area.
-
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4bea3c..a8d7fed 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -286,8 +286,8 @@ struct device_node *of_find_all_nodes(struct device_node *prev)
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np = __of_find_all_nodes(prev);
+ 	of_node_get(np);
+-	of_node_put(prev);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(prev);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_all_nodes);
+@@ -660,8 +660,8 @@ struct device_node *of_get_next_parent(struct device_node *node)
+ 
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	parent = of_node_get(node->parent);
+-	of_node_put(node);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(node);
+ 	return parent;
+ }
+ EXPORT_SYMBOL(of_get_next_parent);
+@@ -732,8 +732,8 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ 		if (of_node_get(next))
+ 			break;
+ 	}
+-	of_node_put(prev);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(prev);
+ 	return next;
+ }
+ EXPORT_SYMBOL(of_get_next_available_child);
+@@ -875,8 +875,8 @@ struct device_node *of_find_node_by_name(struct device_node *from,
+ 		if (np->name && (of_node_cmp(np->name, name) == 0)
+ 		    && of_node_get(np))
+ 			break;
+-	of_node_put(from);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(from);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_by_name);
+@@ -904,8 +904,8 @@ struct device_node *of_find_node_by_type(struct device_node *from,
+ 		if (np->type && (of_node_cmp(np->type, type) == 0)
+ 		    && of_node_get(np))
+ 			break;
+-	of_node_put(from);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(from);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_by_type);
+@@ -935,8 +935,8 @@ struct device_node *of_find_compatible_node(struct device_node *from,
+ 		if (__of_device_is_compatible(np, compatible, type, NULL) &&
+ 		    of_node_get(np))
+ 			break;
+-	of_node_put(from);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(from);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_compatible_node);
+@@ -970,8 +970,8 @@ struct device_node *of_find_node_with_property(struct device_node *from,
+ 		}
+ 	}
+ out:
+-	of_node_put(from);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(from);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_with_property);
+@@ -1051,8 +1051,8 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
+ 			break;
+ 		}
+ 	}
+-	of_node_put(from);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	of_node_put(from);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_matching_node_and_match);
 -- 
-regards,
-Stan
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
