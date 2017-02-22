@@ -1,798 +1,148 @@
-From: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] arm64: dts: Add basic DT to support Spreadtrum's
- SP9860G
-Date: Wed, 22 Feb 2017 11:46:33 +0800
-Message-ID: <20170222034632.GA18116@spreadtrum.com>
-References: <1487660104-15693-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487660104-15693-2-git-send-email-chunyan.zhang@spreadtrum.com>
- <20170221162744.GA29581@linaro.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+Date: Wed, 22 Feb 2017 09:29:57 +0530
+Message-ID: <CAFp+6iHvgPVSbZ-uGRAHK3Wh+k7Apy+U7YcSVrgegx-AJ1=ZTA@mail.gmail.com>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
+ <587C880E.90803@ti.com> <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
+ <20170118180347.GO10531@minitux> <CAFp+6iG3KxX=G64EyJFgGn9ZffzjCtEeR4HUPdOK-uhE8A=PwA@mail.gmail.com>
+ <58871C39.50403@ti.com> <20170126181527.GB10531@minitux> <692975a4-e735-975f-7152-fdd81324c42b@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170221162744.GA29581-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org, zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <692975a4-e735-975f-7152-fdd81324c42b@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: robh+dt <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mathieu,
+Hi Kishon,
 
-On 二,  2月 21, 2017 at 09:27:44上午 -0700, Mathieu Poirier wrote:
-> On Tue, Feb 21, 2017 at 02:55:02PM +0800, Chunyan Zhang wrote:
-> > From: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> 
-> Hello Chunyan,
-> 
-> > 
-> > SC9860G is a 8 cores of A53 SoC with 4G LTE support SoC from Spreadtrum.
-> > 
-> > According to regular hierarchy of sprd dts, whale2.dtsi contains SoC
-> > peripherals IP nodes, sc9860.dtsi contains stuff related to ARM core stuff
-> > and sp9860g dts is for the board level.
-> > 
-> > Signed-off-by: Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> > Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> > ---
-> >  arch/arm64/boot/dts/sprd/Makefile         |   3 +-
-> >  arch/arm64/boot/dts/sprd/sc9860.dtsi      | 531 ++++++++++++++++++++++++++++++
-> >  arch/arm64/boot/dts/sprd/sp9860g-1h10.dts |  56 ++++
-> >  arch/arm64/boot/dts/sprd/whale2.dtsi      |  70 ++++
-> >  4 files changed, 659 insertions(+), 1 deletion(-)
-> >  create mode 100644 arch/arm64/boot/dts/sprd/sc9860.dtsi
-> >  create mode 100644 arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-> >  create mode 100644 arch/arm64/boot/dts/sprd/whale2.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/sprd/Makefile b/arch/arm64/boot/dts/sprd/Makefile
-> > index b658c5e..f0535e6 100644
-> > --- a/arch/arm64/boot/dts/sprd/Makefile
-> > +++ b/arch/arm64/boot/dts/sprd/Makefile
-> > @@ -1,4 +1,5 @@
-> > -dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb
-> > +dtb-$(CONFIG_ARCH_SPRD) += sc9836-openphone.dtb \
-> > +			sp9860g-1h10.dtb
-> >  
-> >  always		:= $(dtb-y)
-> >  subdir-y	:= $(dts-dirs)
-> > diff --git a/arch/arm64/boot/dts/sprd/sc9860.dtsi b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-> > new file mode 100644
-> > index 0000000..73deb4e
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/sprd/sc9860.dtsi
-> > @@ -0,0 +1,531 @@
-> > +/*
-> > + * Spreadtrum SP9860 SoC DTS file
-> > + *
-> > + * Copyright (C) 2016, Spreadtrum Communications Inc.
-> > + *
-> > + * This file is licensed under a dual GPLv2 or X11 license.
-> > + */
-> > +
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +#include "whale2.dtsi"
-> > +
-> > +/ {
-> > +	cpus {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu-map {
-> > +			cluster0 {
-> > +				core0 {
-> > +					cpu = <&CPU0>;
-> > +				};
-> > +				core1 {
-> > +					cpu = <&CPU1>;
-> > +				};
-> > +				core2 {
-> > +					cpu = <&CPU2>;
-> > +				};
-> > +				core3 {
-> > +					cpu = <&CPU3>;
-> > +				};
-> > +			};
-> > +
-> > +			cluster1 {
-> > +				core0 {
-> > +					cpu = <&CPU4>;
-> > +				};
-> > +				core1 {
-> > +					cpu = <&CPU5>;
-> > +				};
-> > +				core2 {
-> > +					cpu = <&CPU6>;
-> > +				};
-> > +				core3 {
-> > +					cpu = <&CPU7>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		CPU0: cpu@530000 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530000>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +
-> > +		CPU1: cpu@530001 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530001>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +
-> > +		CPU2: cpu@530002 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530002>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +
-> > +		CPU3: cpu@530003 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530003>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +
-> > +		CPU4: cpu@530100 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530100>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +
-> > +		CPU5: cpu@530101 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530101>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +
-> > +		CPU6: cpu@530102 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530102>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +
-> > +		CPU7: cpu@530103 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x530103>;
-> > +			enable-method = "psci";
-> > +			cpu-idle-states = <&CORE_PD &CLUSTER_PD>;
-> > +		};
-> > +	};
-> > +
-> > +	idle-states{
-> > +		entry-method = "arm,psci";
-> > +
-> > +		CORE_PD: core_pd {
-> > +			compatible = "arm,idle-state";
-> > +			entry-latency-us = <1000>;
-> > +			exit-latency-us = <700>;
-> > +			min-residency-us = <2500>;
-> > +			local-timer-stop;
-> > +			arm,psci-suspend-param = <0x00010002>;
-> > +		};
-> > +
-> > +		CLUSTER_PD: cluster_pd {
-> > +			compatible = "arm,idle-state";
-> > +			entry-latency-us = <1000>;
-> > +			exit-latency-us = <1000>;
-> > +			min-residency-us = <3000>;
-> > +			local-timer-stop;
-> > +			arm,psci-suspend-param = <0x01010003>;
-> > +		};
-> > +	};
-> > +
-> > +	gic: interrupt-controller@12001000 {
-> > +		compatible = "arm,gic-400";
-> > +		reg = <0 0x12001000 0 0x1000>,
-> > +		      <0 0x12002000 0 0x2000>,
-> > +		      <0 0x12004000 0 0x2000>,
-> > +		      <0 0x12006000 0 0x2000>;
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-controller;
-> > +		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8)
-> > +					| IRQ_TYPE_LEVEL_HIGH)>;
-> > +	};
-> > +
-> > +	psci {
-> > +		compatible = "arm,psci-0.2";
-> > +		method = "smc";
-> > +	};
-> > +
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>,
-> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8)
-> > +					 | IRQ_TYPE_LEVEL_LOW)>;
-> > +	};
-> > +
-> > +	pmu {
-> > +		compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";
-> > +		interrupts = <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-affinity = <&CPU0>,
-> > +				     <&CPU1>,
-> > +				     <&CPU2>,
-> > +				     <&CPU3>,
-> > +				     <&CPU4>,
-> > +				     <&CPU5>,
-> > +				     <&CPU6>,
-> > +				     <&CPU7>;
-> > +	};
-> > +
-> > +	soc {
-> > +		soc_funnel: funnel@10001000 {
-> 
-> There is no need for a label ("soc_funnel) before the device name if that
-> device is not referenced elsewhere in the DTS.  The same comment applies to most
-> of the component listed below.
-> 
 
-OK, I will remove these labels from this DT.
-And there's another issue I'd like to discuss with you, do you think which way is better:
-1) use class name which can represent this kind of components as device node name in DT, e.g.
-	funnel@... {
+On Fri, Jan 27, 2017 at 11:54 AM, Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+>
+>
+> On 01/26/2017 11:45 PM, Bjorn Andersson wrote:
+>>
+>> On Tue 24 Jan 01:19 PST 2017, Kishon Vijay Abraham I wrote:
+>>>
+>>> On Monday 23 January 2017 03:43 PM, Vivek Gautam wrote:
+>>>>
+>>>> On Wed, Jan 18, 2017 at 11:33 PM, Bjorn Andersson
+>>
+>> [..]
+>>>>
+>>>> Yes, that's correct. The QMP and QUSB2 phy init sequences are a bunch
+>>>> of static values for a particular IP version. These values hardly give a
+>>>> meaningful data to put few phy bindings that could be referenced
+>>>> to configure the phy further.
+>>>
+>>> Not really. You can have clearly defined phy binding to give meaningful
+>>> data.
+>>> Every driver doing the same configuration bloats the driver and these
+>>> configuration values are just magic values which hardly can be reviewed
+>>> by anyone.
+>>>>>
+>>>>> Further more moving this blob to devicetree will not allow us to treat
+>>>>> the various QMP configurations as one HW block, as there are other
+>>>>> differences as well.
+>>>>>
+>>>>> Like many other drivers it's possible to create a generic version that
+>>>>> has every bit of logic driven by configuration from devicetree, but
+>>>>> like
+>>>>> most of those cases this is not the way we split things.
+>>>>>
+>>>>> And this has the side effect of keeping the dts files human readable,
+>>>>> human understandable and human maintainable.
+>>>
+>>> right. That's why I recommend having clearly defined bindings.
+>>>         phy,tx-<param1> = <val, offset, mask>
+>>>         phy,tx-<param2> = <val, offset, mask>
+>>>         phy,tx-<param3> = <val, offset, mask>
+>>
+>> There's no doubt that this table needs to be encoded somewhere, so the
+>> question is should we hard code this in a C file or in a DTSI file.
+>>
+>> Skimming through [1] I see examples of things that differs based on how
+>> the specific component is integrated in a SoC or on a particular board -
+>> properties that are relevant to a "system integrator".
+>>
+>> As far as I can tell this blob will, if ever, only be changed by a
+>> driver developer and as such it's not carry information about how this
+>> component relates to the rest of the system and should as such not be
+>> part of the device tree.
+>>
+>>
+>> If there are properties of the hardware that is affected by how the
+>> component is integrated in the system I really would like for those to
+>> be exposed as human-readable properties that I can understand and alter
+>> without deep knowledge about the register map of the hardware block.
+>
+>
+> I am reaching out to our internal teams to get more information
+> on different possible phy configurations, based on which the registers
+> values are decided.
+> This is something that i tried to understand in the past as well, but
+> couldn't
+> grab much information that time.
+> Will come back with relevant information on this.
+>
 
-	}
-	replicator@... {
+We have started looking into understanding the PHYs on msm and
+eventually create a set of generic phy bindings that can serve multiple
+platforms.
+But this task, I presume, will take its course and will involve multi-party
+discussions.
 
-	}
-	etb@... {
+For these QUSB2 and QMP phy drivers, a good amount of work has
+already gone in getting these drivers in upstream state.
+The common QMP phy driver supports a bunch of controllers on msm
+platforms - USB, PCIe and UFS and there are platforms such as DB820c
+and others that want to pull in these changes from upstream.
+The future phy controllers also depend on these drivers and we don't want
+to hold other developers to contribute to these drivers.
+So, we wish to not delay these drivers further because of the phy bindings.
+I see that there are phys that still program the registers-value pairs for
+phy initialization.
 
-	}
-	etf@...
-	etm@...
-	stm@...
+We will keep working on the bindings while these patches
+make way to upstream.
 
-2) use more descriptive device name for those which are more than one on
-a SoC, e.g.
-	soc-funnel@... {
+Can you consider pulling in these drivers?
+I can send the next version of these drivers with other comments addressed.
+Please let me know your comments.
 
-	}
-	cluster0-funnel@... {
 
-	}
-	cluster1-funnel@... {
+Regards
+Vivek
 
-	}
+>
+> Regards
+> Vivek
+>
+>>> [1] -> https://www.linuxplumbersconf.org/2016/ocw/proposals/4047
+>>
+>> Regards,
+>> Bjorn
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm"
+>> in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-I noticed Juno use the 2), would you suggest that way?
 
-Thanks,
-Chunyan
 
-> > +			compatible = "arm,coresight-funnel", "arm,primecell";
-> > +			reg = <0 0x10001000 0 0x1000>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +			ports {
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +
-> > +				port@0 {
-> > +					reg = <0>;
-> > +					soc_funnel_out_port: endpoint {
-> > +						remote-endpoint = <&etb_in>;
-> > +					};
-> > +				};
-> > +
-> > +				port@1 {
-> > +					reg = <0>;
-> > +					soc_funnel_in_port: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint =
-> > +						<&main_funnel_out_port>;
-> > +					};
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etb@10003000 {
-> > +			compatible = "arm,coresight-tmc", "arm,primecell";
-> > +			reg = <0 0x10003000 0 0x1000>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +			port {
-> > +				etb_in: endpoint {
-> > +					slave-mode;
-> > +					remote-endpoint =
-> > +						<&soc_funnel_out_port>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		cluster0_funnel: funnel@11001000 {
-> > +			compatible = "arm,coresight-funnel", "arm,primecell";
-> > +			reg = <0 0x11001000 0 0x1000>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +			ports {
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +
-> > +				port@0 {
-> > +					reg = <0>;
-> > +					cluster0_funnel_out_port: endpoint {
-> > +						remote-endpoint =
-> > +							<&cluster0_etf_in>;
-> > +					};
-> > +				};
-> > +
-> > +				port@1 {
-> > +					reg = <0>;
-> > +					cluster0_funnel_in_port0: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm0_out>;
-> > +					};
-> > +				};
-> > +
-> > +				port@2 {
-> > +					reg = <1>;
-> > +					cluster0_funnel_in_port1: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm1_out>;
-> > +					};
-> > +				};
-> > +
-> > +				port@3 {
-> > +					reg = <2>;
-> > +					cluster0_funnel_in_port2: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm2_out>;
-> > +					};
-> > +				};
-> > +
-> > +				port@4 {
-> > +					reg = <4>;
-> > +					cluster0_funnel_in_port3: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm3_out>;
-> > +					};
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		cluster1_funnel: funnel@11002000 {
-> > +			compatible = "arm,coresight-funnel", "arm,primecell";
-> > +			reg = <0 0x11002000 0 0x1000>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +			ports {
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +
-> > +				port@0 {
-> > +					reg = <0>;
-> > +					cluster1_funnel_out_port: endpoint {
-> > +						remote-endpoint =
-> > +							<&cluster1_etf_in>;
-> > +					};
-> > +				};
-> > +
-> > +				port@1 {
-> > +					reg = <0>;
-> > +					cluster1_funnel_in_port0: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm4_out>;
-> > +					};
-> > +				};
-> > +
-> > +				port@2 {
-> > +					reg = <1>;
-> > +					cluster1_funnel_in_port1: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm5_out>;
-> > +					};
-> > +				};
-> > +
-> > +				port@3 {
-> > +					reg = <2>;
-> > +					cluster1_funnel_in_port2: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm6_out>;
-> > +					};
-> > +				};
-> > +
-> > +				port@4 {
-> > +					reg = <3>;
-> > +					cluster1_funnel_in_port3: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint = <&etm7_out>;
-> > +					};
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		cluster0_etf: etf@11003000 {
-> > +			compatible = "arm,coresight-tmc", "arm,primecell";
-> > +			reg = <0 0x11003000 0 0x1000>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port@0 {
-> > +				cluster0_etf_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&main_funnel_in_port0>;
-> > +				};
-> > +			};
-> > +
-> > +			port@1 {
-> > +				cluster0_etf_in: endpoint {
-> > +					slave-mode;
-> > +					remote-endpoint =
-> > +						<&cluster0_funnel_out_port>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		cluster1_etf: etf@11004000 {
-> > +			compatible = "arm,coresight-tmc", "arm,primecell";
-> > +			reg = <0 0x11004000 0 0x1000>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port@0 {
-> > +				cluster1_etf_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&main_funnel_in_port1>;
-> > +				};
-> > +			};
-> > +
-> > +			port@1 {
-> > +				cluster1_etf_in: endpoint {
-> > +					slave-mode;
-> > +					remote-endpoint =
-> > +						<&cluster1_funnel_out_port>;
-> > +				};
-> > +			};
-> > +		};
-> 
-> When more than one port is present it is customary to add another level of
-> imbrication like it is done for funnels above:
->                          "ports {"
->                                 port@0 {
->                                 ...
->                                 port@1 {
->                                 ...
->                         }
-> 
-> The same comment applies to both etf. 
-> 
-
-OK.
-
-> > +
-> > +		main_funnel: funnel@11005000 {
-> > +			compatible = "arm,coresight-funnel", "arm,primecell";
-> > +			reg = <0 0x11005000 0 0x1000>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			ports {
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +
-> > +				port@0 {
-> > +					reg = <0>;
-> > +					main_funnel_out_port: endpoint {
-> > +						remote-endpoint =
-> > +							<&soc_funnel_in_port>;
-> > +					};
-> > +				};
-> > +
-> > +				port@1 {
-> > +					reg = <0>;
-> > +					main_funnel_in_port0: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint =
-> > +							<&cluster0_etf_out>;
-> > +					};
-> > +				};
-> > +
-> > +				port@2 {
-> > +					reg = <1>;
-> > +					main_funnel_in_port1: endpoint {
-> > +						slave-mode;
-> > +						remote-endpoint =
-> > +							<&cluster1_etf_out>;
-> > +					};
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11440000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11440000 0 0x1000>;
-> > +			cpu = <&CPU0>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm0_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster0_funnel_in_port0>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11540000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11540000 0 0x1000>;
-> > +			cpu = <&CPU1>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm1_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster0_funnel_in_port1>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11640000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11640000 0 0x1000>;
-> > +			cpu = <&CPU2>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm2_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster0_funnel_in_port2>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11740000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11740000 0 0x1000>;
-> > +			cpu = <&CPU3>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm3_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster0_funnel_in_port3>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11840000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11840000 0 0x1000>;
-> > +			cpu = <&CPU4>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm4_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster1_funnel_in_port0>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11940000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11940000 0 0x1000>;
-> > +			cpu = <&CPU5>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm5_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster1_funnel_in_port1>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11a40000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11a40000 0 0x1000>;
-> > +			cpu = <&CPU6>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm6_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster1_funnel_in_port2>;
-> > +				};
-> > +			};
-> > +		};
-> > +
-> > +		etm@11b40000 {
-> > +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> > +			reg = <0 0x11b40000 0 0x1000>;
-> > +			cpu = <&CPU7>;
-> > +			clocks = <&ext_26m>;
-> > +			clock-names = "apb_pclk";
-> > +
-> > +			port {
-> > +				etm7_out: endpoint {
-> > +					remote-endpoint =
-> > +						<&cluster1_funnel_in_port3>;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > +};
-> > diff --git a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-> > new file mode 100644
-> > index 0000000..5faa452
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-> > @@ -0,0 +1,56 @@
-> > +/*
-> > + * Spreadtrum SP9860g board DTS file
-> > + *
-> > + * Copyright (C) 2017, Spreadtrum Communications Inc.
-> > + *
-> > + * This file is licensed under a dual GPLv2 or X11 license.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "sc9860.dtsi"
-> > +
-> > +/ {
-> > +	model = "Spreadtrum SP9860G 3GFHD Board";
-> > +
-> > +	compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
-> > +
-> > +	aliases {
-> > +		serial0 = &uart0; /* for Bluetooth */
-> > +		serial1 = &uart1; /* UART console */
-> > +		serial2 = &uart2; /* Reserved */
-> > +		serial3 = &uart3; /* for GPS */
-> > +	};
-> > +
-> > +	memory{
-> > +		device_type = "memory";
-> > +		reg = <0x0 0x80000000 0 0x60000000>,
-> > +		      <0x1 0x80000000 0 0x60000000>;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial1:115200n8";
-> > +	};
-> > +
-> > +	reserved-memory {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> > +	};
-> > +};
-> > +
-> > +&uart0 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&uart1 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&uart2 {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&uart3 {
-> > +	status = "okay";
-> > +};
-> > diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-> > new file mode 100644
-> > index 0000000..64f06d9
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-> > @@ -0,0 +1,70 @@
-> > +/*
-> > + * Spreadtrum Whale2 SoC platform peripherals DTS file
-> > + *
-> > + * Copyright (C) 2016, Spreadtrum Communications Inc.
-> > + *
-> > + * This file is licensed under a dual GPLv2 or X11 license.
-> > + */
-> > +
-> > +/ {
-> > +	interrupt-parent = <&gic>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	soc: soc {
-> > +		compatible = "simple-bus";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> > +
-> > +		ap-apb {
-> > +			compatible = "simple-bus";
-> > +			#address-cells = <1>;
-> > +			#size-cells = <1>;
-> > +			ranges = <0 0x0 0x70000000 0x10000000>;
-> > +
-> > +			uart0: serial@70000000 {
-> > +				compatible = "sprd,sc9838-uart",
-> > +					     "sprd,sc9836-uart";
-> > +				reg = <0x000000 0x100>;
-> > +				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&ext_26m>;
-> > +				status = "disabled";
-> > +			};
-> > +
-> > +			uart1: serial@70100000 {
-> > +				compatible = "sprd,sc9838-uart",
-> > +					     "sprd,sc9836-uart";
-> > +				reg = <0x100000 0x100>;
-> > +				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&ext_26m>;
-> > +				status = "disabled";
-> > +			};
-> > +
-> > +			uart2: serial@70200000 {
-> > +				compatible = "sprd,sc9838-uart",
-> > +					     "sprd,sc9836-uart";
-> > +				reg = <0x200000 0x100>;
-> > +				interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&ext_26m>;
-> > +				status = "disabled";
-> > +			};
-> > +
-> > +			uart3: serial@70300000 {
-> > +				compatible = "sprd,sc9838-uart",
-> > +					     "sprd,sc9836-uart";
-> > +				reg = <0x300000 0x100>;
-> > +				interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
-> > +				clocks = <&ext_26m>;
-> > +				status = "disabled";
-> > +			};
-> > +		};
-> > +
-> > +		ext_26m: ext-26m {
-> > +			compatible = "fixed-clock";
-> > +			#clock-cells = <0>;
-> > +			clock-frequency = <26000000>;
-> > +			clock-output-names = "ext_26m";
-> > +		};
-> > +	};
-> > +};
-> > -- 
-> > 2.7.4
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
