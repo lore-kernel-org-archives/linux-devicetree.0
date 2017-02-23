@@ -1,64 +1,40 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: [PATCH 5/5] clk: tegra: add aclk
-Date: Thu, 23 Feb 2017 14:39:39 +0200
-Message-ID: <1487853585-17934-6-git-send-email-pdeschrijver@nvidia.com>
-References: <1487853585-17934-1-git-send-email-pdeschrijver@nvidia.com>
+From: Imre Kaloz <kaloz@openwrt.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
+Date: Thu, 23 Feb 2017 13:44:47 +0100
+Message-ID: <5c57772b-71fd-d9e2-efe6-1175cf048e0b@openwrt.org>
+References: <20170223104025.5755-1-zajec5@gmail.com>
+ <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
+ <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487853585-17934-1-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This clock clocks the ADSP cortex-A9.
-
-Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
----
- drivers/clk/tegra/clk-tegra210.c         | 10 ++++++++++
- include/dt-bindings/clock/tegra210-car.h |  2 ++
- 2 files changed, 12 insertions(+)
-
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index cfe7078..9a2512a 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -2308,6 +2308,11 @@ static u32 pll_expo_p_to_pdiv(u32 p, u32 *pdiv)
- 
- static struct clk **clks;
- 
-+static const char * const aclk_parents[] = {
-+	"pll_a1", "pll_c", "pll_p", "pll_a_out0", "pll_c2", "pll_c3",
-+	"clk_m"
-+};
-+
- static __init void tegra210_periph_clk_init(void __iomem *clk_base,
- 					    void __iomem *pmc_base)
- {
-@@ -2369,6 +2374,11 @@ static __init void tegra210_periph_clk_init(void __iomem *clk_base,
- 	clk_register_clkdev(clk, "cml1", NULL);
- 	clks[TEGRA210_CLK_CML1] = clk;
- 
-+	clk = tegra_clk_register_super_clk("aclk", aclk_parents,
-+				ARRAY_SIZE(aclk_parents), 0, clk_base + 0x6e0,
-+				0, NULL);
-+	clks[TEGRA210_CLK_ACLK] = clk;
-+
- 	tegra_periph_clk_init(clk_base, pmc_base, tegra210_clks, &pll_p_params);
- }
- 
-diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
-index 5aa1027..8744b19 100644
---- a/include/dt-bindings/clock/tegra210-car.h
-+++ b/include/dt-bindings/clock/tegra210-car.h
-@@ -396,6 +396,8 @@
- #define TEGRA210_CLK_PLL_C_UD 364
- #define TEGRA210_CLK_SCLK_MUX 365
- 
-+#define TEGRA210_CLK_ACLK 370
-+
- #define TEGRA210_CLK_DMIC1_SYNC_CLK 388
- #define TEGRA210_CLK_DMIC1_SYNC_CLK_MUX 389
- #define TEGRA210_CLK_DMIC2_SYNC_CLK 390
--- 
-1.9.1
+RGVhciBSYWZhbCwKCk9uIDIwMTctMDItMjMgMTM6MjksIFJhZmHFgiBNacWCZWNraSB3cm90ZToK
+PiBPbiAyMyBGZWJydWFyeSAyMDE3IGF0IDEzOjI3LCBJbXJlIEthbG96IDxrYWxvekBvcGVud3J0
+Lm9yZz4gd3JvdGU6Cj4+IEFzIGRpc2N1c3NlZCBmb3Igb3RoZXIgcGxhdGZvcm1zIGFzIHdlbGws
+IHBsZWFzZSB1c2UgdGhlIGJvYXJkJ3MgbmFtZSBhcyB0aGUKPj4gc2FtZSBib2FyZCBjYW4gZW5k
+IHVwIGJlaW5nIHNvbGQgdW5kZXIgbXVsdGlwbGUgbW9kZWwgbnVtYmVycy4KPj4KPj4gU28gcGxl
+YXNlIHJlbmFtZSB0aGUgZmlsZSB0byBiY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwo+IEh1
+aD8gV2hlcmUgZGlkIHlvdSBnZXQgcGFuYW1lcmEgbmFtZSBmcm9tPyEKWW91ciBtYW5uZXJzIHNo
+aW5lIG9uIHRoZXNlIGRhcmsgZGF5cyBvZiB3aW50ZXIuIEZvciBhYm91dCBhIGRlY2FkZSBub3cs
+IApodHRwOi8vMTkyLjE2OC4xLjEvc3lzaW5mby5jZ2kgd2lsbCBzaG93IHlvdSBxdWl0ZSBhIGJp
+dCBvZiBpbmZvcm1hdGlvbiAKaWYgeW91IGFyZSB0b28gbGF6eSB0byBsb29rIGludG8gdGhlIEdQ
+TCB0YXJiYWxsIG9yIGF0IHRoZSBvcmlnaW5hbCAKYm9vdGxvZ3MuCgoKQmVzdCwKCkltcmUKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
