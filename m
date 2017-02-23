@@ -1,159 +1,65 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 2/2] [2/2] mmc: sdhci-cadence: Update PHY delay configuration
-Date: Thu, 23 Feb 2017 20:47:10 +0900
-Message-ID: <CAK7LNARh=cNON0ufHKzcxs2C9Brw+_hSiFj-SUh3GCpRpGqjkw@mail.gmail.com>
-References: <1487250413-5769-1-git-send-email-piotrs@cadence.com>
- <1487250413-5769-2-git-send-email-piotrs@cadence.com> <CAPDyKFqsuzT9NXARMJtey_kZ0y2GsdOxZGsjbodWA1EXw_ZSzw@mail.gmail.com>
- <MWHPR07MB308848FCAB0C9A6A7976B09BDD5D0@MWHPR07MB3088.namprd07.prod.outlook.com>
+From: Imre Kaloz <kaloz@openwrt.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
+Date: Thu, 23 Feb 2017 13:27:24 +0100
+Message-ID: <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
+References: <20170223104025.5755-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <MWHPR07MB308848FCAB0C9A6A7976B09BDD5D0@MWHPR07MB3088.namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Piotr Sroka <piotrs@cadence.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170223104025.5755-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi.
-
-2017-02-17 23:12 GMT+09:00 Piotr Sroka <piotrs@cadence.com>:
->> -----Original Message-----
->> From: Ulf Hansson [mailto:ulf.hansson@linaro.org]
->> Sent: 16 February, 2017 4:10 PM
->> Subject: Re: [PATCH 2/2] [2/2] mmc: sdhci-cadence: Update PHY delay
->> configuration
->>
->> On 16 February 2017 at 14:06, Piotr Sroka <piotrs@cadence.com> wrote:
->> > DTS properties are used instead of fixed data because PHY settings can
->> > be different for different platforms.
->> > Configuration of new three PHY delays were added
->> >
->> > Signed-off-by: Piotr Sroka <piotrs@cadence.com>
->> > ---
->> >  .../devicetree/bindings/mmc/sdhci-cadence.txt      | 54 ++++++++++++++
->>
->> Please split this patch.
->>
->> DT docs should be a separate patch and make sure it precedes the changes
->> where the new bindings are being parsed in the driver code.
->>
->
-> Ok I will do it in next version of patch.
->
->> >  drivers/mmc/host/sdhci-cadence.c                   | 83 +++++++++++++++++++-
->> --
->> >  2 files changed, 129 insertions(+), 8 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
->> > b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
->> > index c0f37cb..221d3fe 100644
->> > --- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
->> > +++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
->> > @@ -19,6 +19,59 @@ if supported.  See mmc.txt for details.
->> >  - mmc-hs400-1_8v
->> >  - mmc-hs400-1_2v
->> >
->> > +- phy-input-delay-sd-hs:
->> > +  Value of the delay in the input path for High Speed work mode.
->> > +  Valid range = [0:0x1F].
-
-Instead of bunch of new bindings,
-a data associated with an SoC specific compatible will do in most cases.
-
-
-static const struct of_device_id sdhci_cdns_match[] = {
-        {
-                .compatible = "socionext,uniphier-sd4hc",
-                .data = sdhci_cdns_uniphier_phy_data,
-        },
-        { .compatible = "cdns,sd4hc" },
-        { /* sentinel */ }
-};
-
-
-Strictly speaking, the DLL delays will depend on board design as well as SoC.
-So, DT bindings would be more flexible, though.
-
-
-
-
-
->> Please specify what unit this in. And then also a suffix, like "-ns"
->> to the name of the binding.
->
-> The delay starts from 5ns (for delay parameter equal to 0), and it is increased by 2.5ns.
-> 0 - means 5ns, 1 means 7.5 ns etc.
-
-
-In short, all the DT values here are
-kind of mysterious register values for the PHY.
-
-
-
->
->> > +               if (ret)
->> > +                       return ret;
->> > +       }
->> > +       if (!of_property_read_u32(np, "phy-dll-delay-sdclk-hsmmc", &tmp)) {
->> > +               ret = sdhci_cdns_write_phy_reg(priv,
->> > +                                              SDHCI_CDNS_PHY_DLY_HSMMC, tmp);
->> > +               if (ret)
->> > +                       return ret;
->> > +       }
->> > +       if (!of_property_read_u32(np, "phy-dll-delay-strobe", &tmp)) {
->> > +               ret = sdhci_cdns_write_phy_reg(priv,
->> > +                                              SDHCI_CDNS_PHY_DLY_STROBE, tmp);
->> > +               if (ret)
->> > +                       return ret;
->> > +       }
->> > +       return 0;
-
-
-The repeat of the same pattern,
-"look up a DT property, then if it exists, set it to a register."
-
-
-Maybe, is it better to describe it with data array + loop, like this?
-
-
-struct sdhci_cdns_phy_cfg {
-        const char *property;
-        u8 addr;
-};
-
-static const struct sdhci_cdns_phy_cfg sdhci_cdns_phy_cfgs[] =  {
-        { "phy-input-delay-sd-hs", SDHCI_CDNS_PHY_DLY_SD_HS, },
-        { "phy-input-delay-sd-default", SDHCI_CDNS_PHY_DLY_SD_DEFAULT, },
-        { "phy-input-delay-sd-sdr12", SDHCI_CDNS_PHY_DLY_UHS_SDR12, },
-        { "phy-input-delay-sd-sdr25", SDHCI_CDNS_PHY_DLY_UHS_SDR25, },
-        { "phy-input-delay-sd-sdr50", SDHCI_CDNS_PHY_DLY_UHS_SDR50, },
-        ...
-};
-
-static int sdhci_cdns_phy_init(struct device_node *np,
-                               struct sdhci_cdns_priv *priv)
-{
-        u32 val;
-        int i;
-
-        for (i = 0; i < ARRAY_SIZE(sdhci_cdns_phy_cfgs), i++) {
-                ret = of_property_read_u32(np, sdhci_cdns_phy_cfgs[i].property,
-                                           &val);
-                if (ret)
-                        continue;
-
-                ret = sdhci_cdns_write_phy_reg(priv,
-                                               sdhci_cdns_phy_cfgs[i].addr,
-                                               val);
-                if (ret)
-                        return ret;
-        }
-}
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+SGkgUmFmYWwsCgpBcyBkaXNjdXNzZWQgZm9yIG90aGVyIHBsYXRmb3JtcyBhcyB3ZWxsLCBwbGVh
+c2UgdXNlIHRoZSBib2FyZCdzIG5hbWUgYXMgCnRoZSBzYW1lIGJvYXJkIGNhbiBlbmQgdXAgYmVp
+bmcgc29sZCB1bmRlciBtdWx0aXBsZSBtb2RlbCBudW1iZXJzLgoKU28gcGxlYXNlIHJlbmFtZSB0
+aGUgZmlsZSB0byBiY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwoKCkJlc3QsCgpJbXJlCgoK
+T24gMjAxNy0wMi0yMyAxMTo0MCwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IEZyb206IFJhZmHF
+giBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPgo+IEl0J3MgdHJpLWJhbmQgd2lyZWxlc3Mg
+aG9tZSByb3V0ZXIgYmFzZWQgb24gQkNNNDcwOTQgQUtBIEJDTTQ3MDlDMC4gSXQKPiB1c2VzIDMg
+eCBCQ000MzY2IGNoaXBzZXRzIGZvciB3aXJlbGVzcy4KPgo+IFNpZ25lZC1vZmYtYnk6IFJhZmHF
+giBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
+TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgIDEgKwo+ICBhcmNoL2FybS9ib290L2R0cy9i
+Y200NzA5NC1saW5rc3lzLWVhOTUwMC5kdHMgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBhcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1saW5rc3lzLWVhOTUwMC5kdHMKPgo+IGRp
+ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRz
+L01ha2VmaWxlCj4gaW5kZXggNTJhMDUyODljNTM4Li45MzFkYjBiNDEyNDYgMTAwNjQ0Cj4gLS0t
+IGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9N
+YWtlZmlsZQo+IEBAIC05Myw2ICs5Myw3IEBAIGR0Yi0kKENPTkZJR19BUkNIX0JDTV81MzAxWCkg
+Kz0gXAo+ICAJYmNtNDcwOS1uZXRnZWFyLXI4MDAwLmR0YiBcCj4gIAliY200NzA5LXRwbGluay1h
+cmNoZXItYzktdjEuZHRiIFwKPiAgCWJjbTQ3MDk0LWRsaW5rLWRpci04ODVsLmR0YiBcCj4gKwli
+Y200NzA5NC1saW5rc3lzLWVhOTUwMC5kdGIgXAo+ICAJYmNtNDcwOTQtbHV4dWwteHdyLTMxMDAu
+ZHRiIFwKPiAgCWJjbTQ3MDk0LW5ldGdlYXItcjg1MDAuZHRiIFwKPiAgCWJjbTk0NzA4LmR0YiBc
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWxpbmtzeXMtZWE5NTAw
+LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWxpbmtzeXMtZWE5NTAwLmR0cwo+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4zMTYzOWU1YjhjNzIKPiAt
+LS0gL2Rldi9udWxsCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQtbGlua3N5cy1l
+YTk1MDAuZHRzCj4gQEAgLTAsMCArMSwzNiBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIw
+MTcgUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+ICsgKgo+ICsgKiBMaWNlbnNl
+ZCB1bmRlciB0aGUgSVNDIGxpY2Vuc2UuCj4gKyAqLwo+ICsKPiArL2R0cy12MS87Cj4gKwo+ICsj
+aW5jbHVkZSAiYmNtNDcwOTQuZHRzaSIKPiArI2luY2x1ZGUgImJjbTUzMDF4LW5hbmQtY3MwLWJj
+aDguZHRzaSIKPiArCj4gKy8gewo+ICsJY29tcGF0aWJsZSA9ICJsaW5rc3lzLGVhOTUwMCIsICJi
+cmNtLGJjbTQ3MDk0IiwgImJyY20sYmNtNDcwOCI7Cj4gKwltb2RlbCA9ICJMaW5rc3lzIEVBOTUw
+MCI7Cj4gKwo+ICsJY2hvc2VuIHsKPiArCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIw
+MCI7Cj4gKwl9Owo+ICsKPiArCW1lbW9yeSB7Cj4gKwkJcmVnID0gPDB4MDAwMDAwMDAgMHgwODAw
+MDAwMAo+ICsJCSAgICAgICAweDg4MDAwMDAwIDB4MDgwMDAwMDA+Owo+ICsJfTsKPiArCj4gKwln
+cGlvLWtleXMgewo+ICsJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzIjsKPiArCQkjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJd3BzIHsKPiArCQkJ
+bGFiZWwgPSAiV1BTIjsKPiArCQkJbGludXgsY29kZSA9IDxLRVlfV1BTX0JVVFRPTj47Cj4gKwkJ
+CWdwaW9zID0gPCZjaGlwY29tbW9uIDMgR1BJT19BQ1RJVkVfTE9XPjsKPiArCQl9Owo+ICsJfTsK
+PiArfTsKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
