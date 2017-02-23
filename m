@@ -1,78 +1,38 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] gpio: Add gpio driver support for ThunderX and OCTEON-TX
-Date: Thu, 23 Feb 2017 14:46:41 +0100
-Message-ID: <CACRpkdbxZ8g1ef7aSHBukbkBY9GN=rvtHP7aCqJFakHLXkD71g@mail.gmail.com>
-References: <1487206866-4011-1-git-send-email-david.daney@cavium.com> <1487206866-4011-6-git-send-email-david.daney@cavium.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: BCM953012HR: Initial Checkin
+Date: Thu, 23 Feb 2017 14:58:18 +0100
+Message-ID: <CACna6rwYhM9_5_V+sdczMWoMjcLg7wh_MEJZthCBsj6hH0dQrw@mail.gmail.com>
+References: <1487798092-8631-1-git-send-email-steven.lin1@broadcom.com>
+ <68373798-376d-43d9-85cb-c6af7c6fa302@gmail.com> <CA+Jmh7Ha0CTmTQnexz7oga2m54paKxbqZ+yF5orbEH72Ffi3Ag@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487206866-4011-6-git-send-email-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CA+Jmh7Ha0CTmTQnexz7oga2m54paKxbqZ+yF5orbEH72Ffi3Ag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 2:01 AM, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
-
-> Cavium ThunderX and OCTEON-TX are arm64 based SoCs.  Add driver for
-> the on-chip GPIO pins.
+On 23 February 2017 at 14:38, Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> * Resending in plaintext - forgot to disable html in my mail client -
+> apologies if you receive 2 copies *
 >
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Rafal & Rob,
+>
+> I will spin a v2 with the cleanups Rob suggested and the uart/nand
+> changes Rafal suggested.  Thanks!
+>
+> Rafal, to answer your question about having similar partitions on both
+> flash devices, that is something that I believe we do on our reference
+> platforms to demonstrate to customers using either flash for storing
+> their kernel image, rootfs, etc.  See for example bcm958625k.dts where
+> we also have similar partition names for nand and spi flash.
 
-Hm due to an API change in the upstream kernel you will still have
-to respin this driver, but I'm sure you will fix it in 5 minutes.
+OK, thanks!
 
-> +#define  GPIO_BIT_CFG_FIL_CNT_SHIFT    4
-> +#define  GPIO_BIT_CFG_FIL_SEL_SHIFT    8
-(...)
-> +#define GLITCH_FILTER_400NS ((4ull << GPIO_BIT_CFG_FIL_SEL_SHIFT) | \
-> +                            (9ull << GPIO_BIT_CFG_FIL_CNT_SHIFT))
-
-This is what we call debounce in the API I think.
-
-You can consider implementing it below in the .set_config()
-function:
-
-> +/*
-> + * Weird, setting open-drain mode causes signal inversion.  Note this
-> + * so we can compensate in the dir_out function.
-> + */
-> +static int thunderx_gpio_set_single_ended(struct gpio_chip *chip,
-> +                                         unsigned int line,
-> +                                         enum single_ended_mode mode)
-
-
-This function is renamed .set_config() in v4.11.
-
-This can also be used for setting debounce for the line, and
-you proabably at some point want to add support for using the
-more elaborate settings in the glitch filter for that.
-
-> +       chip->label = KBUILD_MODNAME;
-> +       chip->parent = dev;
-> +       chip->owner = THIS_MODULE;
-> +       chip->base = -1; /* System allocated */
-> +       chip->can_sleep = false;
-> +       chip->ngpio = ngpio;
-> +       chip->direction_input = thunderx_gpio_dir_in;
-> +       chip->get = thunderx_gpio_get;
-> +       chip->direction_output = thunderx_gpio_dir_out;
-> +       chip->set = thunderx_gpio_set;
-> +       chip->set_multiple = thunderx_gpio_set_multiple;
-> +       chip->set_single_ended = thunderx_gpio_set_single_ended;
-
-So .set_config() is what we call this now. See converted drivers like
-gpio-wcove.c etc for examples.
-
-Hm no .get_direction() callback? I suggest to add that. It is useful
-for the userspace ABI and more.
-
-You could also add a ->names array with names for all the
-lines if you like. This is also nice for userspace and for PCI-based
-drivers that is the only way to insert line names for the chip.
-
-Yours,
-Linus Walleij
+--=20
+Rafa=C5=82
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
