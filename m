@@ -1,56 +1,121 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Thu, 23 Feb 2017 11:40:25 +0100
-Message-ID: <20170223104025.5755-1-zajec5@gmail.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v2 5/7] clk: tegra: don't warn for PLL defaults unnecessarily
+Date: Thu, 23 Feb 2017 12:44:42 +0200
+Message-ID: <1487846686-6388-6-git-send-email-pdeschrijver@nvidia.com>
+References: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKSXQncyB0cmktYmFuZCB3
-aXJlbGVzcyBob21lIHJvdXRlciBiYXNlZCBvbiBCQ000NzA5NCBBS0EgQkNNNDcwOUMwLiBJdAp1
-c2VzIDMgeCBCQ000MzY2IGNoaXBzZXRzIGZvciB3aXJlbGVzcy4KClNpZ25lZC1vZmYtYnk6IFJh
-ZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9N
-YWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgMSArCiBhcmNoL2FybS9ib290L2R0cy9iY200
-NzA5NC1saW5rc3lzLWVhOTUwMC5kdHMgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysrKysK
-IDIgZmlsZXMgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFy
-Y2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWxpbmtzeXMtZWE5NTAwLmR0cwoKZGlmZiAtLWdpdCBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUK
-aW5kZXggNTJhMDUyODljNTM4Li45MzFkYjBiNDEyNDYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL01ha2VmaWxlCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlCkBAIC05Myw2
-ICs5Myw3IEBAIGR0Yi0kKENPTkZJR19BUkNIX0JDTV81MzAxWCkgKz0gXAogCWJjbTQ3MDktbmV0
-Z2Vhci1yODAwMC5kdGIgXAogCWJjbTQ3MDktdHBsaW5rLWFyY2hlci1jOS12MS5kdGIgXAogCWJj
-bTQ3MDk0LWRsaW5rLWRpci04ODVsLmR0YiBcCisJYmNtNDcwOTQtbGlua3N5cy1lYTk1MDAuZHRi
-IFwKIAliY200NzA5NC1sdXh1bC14d3ItMzEwMC5kdGIgXAogCWJjbTQ3MDk0LW5ldGdlYXItcjg1
-MDAuZHRiIFwKIAliY205NDcwOC5kdGIgXApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-YmNtNDcwOTQtbGlua3N5cy1lYTk1MDAuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQt
-bGlua3N5cy1lYTk1MDAuZHRzCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
-MC4uMzE2MzllNWI4YzcyCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
-NDcwOTQtbGlua3N5cy1lYTk1MDAuZHRzCkBAIC0wLDAgKzEsMzYgQEAKKy8qCisgKiBDb3B5cmln
-aHQgKEMpIDIwMTcgUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgorICoKKyAqIExp
-Y2Vuc2VkIHVuZGVyIHRoZSBJU0MgbGljZW5zZS4KKyAqLworCisvZHRzLXYxLzsKKworI2luY2x1
-ZGUgImJjbTQ3MDk0LmR0c2kiCisjaW5jbHVkZSAiYmNtNTMwMXgtbmFuZC1jczAtYmNoOC5kdHNp
-IgorCisvIHsKKwljb21wYXRpYmxlID0gImxpbmtzeXMsZWE5NTAwIiwgImJyY20sYmNtNDcwOTQi
-LCAiYnJjbSxiY200NzA4IjsKKwltb2RlbCA9ICJMaW5rc3lzIEVBOTUwMCI7CisKKwljaG9zZW4g
-eworCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCI7CisJfTsKKworCW1lbW9yeSB7
-CisJCXJlZyA9IDwweDAwMDAwMDAwIDB4MDgwMDAwMDAKKwkJICAgICAgIDB4ODgwMDAwMDAgMHgw
-ODAwMDAwMD47CisJfTsKKworCWdwaW8ta2V5cyB7CisJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlz
-IjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXdw
-cyB7CisJCQlsYWJlbCA9ICJXUFMiOworCQkJbGludXgsY29kZSA9IDxLRVlfV1BTX0JVVFRPTj47
-CisJCQlncGlvcyA9IDwmY2hpcGNvbW1vbiAzIEdQSU9fQUNUSVZFX0xPVz47CisJCX07CisJfTsK
-K307Ci0tIAoyLjExLjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+If the PLL is on, only warn if the defaults are not yet set. Otherwise be
+silent.
+
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+---
+ drivers/clk/tegra/clk-tegra210.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index b7ef8a7..fe698d2 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -502,7 +502,7 @@ static void tegra210_pllcx_set_defaults(const char *name,
+ 	pllcx->params->defaults_set = true;
+ 
+ 	if (readl_relaxed(clk_base + pllcx->params->base_reg) &
+-			PLL_ENABLE) {
++			PLL_ENABLE && !pllcx->params->defaults_set) {
+ 		/* PLL is ON: only check if defaults already set */
+ 		pllcx_check_defaults(pllcx->params);
+ 		pr_warn("%s already enabled. Postponing set full defaults\n",
+@@ -608,7 +608,6 @@ static void tegra210_plld_set_defaults(struct tegra_clk_pll *plld)
+ 
+ 	if (readl_relaxed(clk_base + plld->params->base_reg) &
+ 			PLL_ENABLE) {
+-		pr_warn("PLL_D already enabled. Postponing set full defaults\n");
+ 
+ 		/*
+ 		 * PLL is ON: check if defaults already set, then set those
+@@ -625,6 +624,9 @@ static void tegra210_plld_set_defaults(struct tegra_clk_pll *plld)
+ 		_pll_misc_chk_default(clk_base, plld->params, 0, val,
+ 				~mask & PLLD_MISC0_WRITE_MASK);
+ 
++		if (!plld->params->defaults_set)
++			pr_warn("PLL_D already enabled. Postponing set full defaults\n");
++
+ 		/* Enable lock detect */
+ 		mask = PLLD_MISC0_LOCK_ENABLE | PLLD_MISC0_LOCK_OVERRIDE;
+ 		val = readl_relaxed(clk_base + plld->params->ext_misc_reg[0]);
+@@ -896,7 +898,6 @@ static void tegra210_pllx_set_defaults(struct tegra_clk_pll *pllx)
+ 	val |= step_b << PLLX_MISC2_DYNRAMP_STEPB_SHIFT;
+ 
+ 	if (readl_relaxed(clk_base + pllx->params->base_reg) & PLL_ENABLE) {
+-		pr_warn("PLL_X already enabled. Postponing set full defaults\n");
+ 
+ 		/*
+ 		 * PLL is ON: check if defaults already set, then set those
+@@ -904,6 +905,8 @@ static void tegra210_pllx_set_defaults(struct tegra_clk_pll *pllx)
+ 		 */
+ 		pllx_check_defaults(pllx);
+ 
++		if (!pllx->params->defaults_set)
++			pr_warn("PLL_X already enabled. Postponing set full defaults\n");
+ 		/* Configure dyn ramp, disable lock override */
+ 		writel_relaxed(val, clk_base + pllx->params->ext_misc_reg[2]);
+ 
+@@ -948,7 +951,6 @@ static void tegra210_pllmb_set_defaults(struct tegra_clk_pll *pllmb)
+ 	pllmb->params->defaults_set = true;
+ 
+ 	if (val & PLL_ENABLE) {
+-		pr_warn("PLL_MB already enabled. Postponing set full defaults\n");
+ 
+ 		/*
+ 		 * PLL is ON: check if defaults already set, then set those
+@@ -959,6 +961,8 @@ static void tegra210_pllmb_set_defaults(struct tegra_clk_pll *pllmb)
+ 		_pll_misc_chk_default(clk_base, pllmb->params, 0, val,
+ 				~mask & PLLMB_MISC1_WRITE_MASK);
+ 
++		if (!pllmb->params->defaults_set)
++			pr_warn("PLL_MB already enabled. Postponing set full defaults\n");
+ 		/* Enable lock detect */
+ 		val = readl_relaxed(clk_base + pllmb->params->ext_misc_reg[0]);
+ 		val &= ~mask;
+@@ -1008,13 +1012,14 @@ static void tegra210_pllp_set_defaults(struct tegra_clk_pll *pllp)
+ 	pllp->params->defaults_set = true;
+ 
+ 	if (val & PLL_ENABLE) {
+-		pr_warn("PLL_P already enabled. Postponing set full defaults\n");
+ 
+ 		/*
+ 		 * PLL is ON: check if defaults already set, then set those
+ 		 * that can be updated in flight.
+ 		 */
+ 		pllp_check_defaults(pllp, true);
++		if (!pllp->params->defaults_set)
++			pr_warn("PLL_P already enabled. Postponing set full defaults\n");
+ 
+ 		/* Enable lock detect */
+ 		val = readl_relaxed(clk_base + pllp->params->ext_misc_reg[0]);
+@@ -1069,13 +1074,14 @@ static void tegra210_pllu_set_defaults(struct tegra_clk_pll *pllu)
+ 	pllu->params->defaults_set = true;
+ 
+ 	if (val & PLL_ENABLE) {
+-		pr_warn("PLL_U already enabled. Postponing set full defaults\n");
+ 
+ 		/*
+ 		 * PLL is ON: check if defaults already set, then set those
+ 		 * that can be updated in flight.
+ 		 */
+ 		pllu_check_defaults(pllu, false);
++		if (!pllu->params->defaults_set)
++			pr_warn("PLL_U already enabled. Postponing set full defaults\n");
+ 
+ 		/* Enable lock detect */
+ 		val = readl_relaxed(clk_base + pllu->params->ext_misc_reg[0]);
+-- 
+1.9.1
+
