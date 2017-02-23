@@ -1,14 +1,18 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 01/18] drivers/fsi: Add empty fsi bus definitions
-Date: Thu, 23 Feb 2017 11:53:17 +0100
-Message-ID: <CAMuHMdUhiXCnjT60Lsqq4eGGnVv9eavtkVL1Mdk_6naBHBDVrQ@mail.gmail.com>
-References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
- <20170201165358.45415-2-cbostic@linux.vnet.ibm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V2 1/3] arm64: dts: Add basic DT to support Spreadtrum's
+ SP9860G
+Date: Thu, 23 Feb 2017 10:56:11 +0000
+Message-ID: <76146c97-d4ff-7058-0ca7-6b2baa3bf5fe@arm.com>
+References: <1487660104-15693-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1487660104-15693-2-git-send-email-chunyan.zhang@spreadtrum.com>
+ <20170221162744.GA29581@linaro.org> <20170222034632.GA18116@spreadtrum.com>
+ <CANLsYkyba+QscLK5m=Fb4ErK_WEtyteR0ozS47W48izhrbSBfg@mail.gmail.com>
+ <CAAfSe-t8pVM=bO+S4YatE0rYKgeeZntDbV4ufD5sC3jQYCwVMg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170201165358.45415-2-cbostic@linux.vnet.ibm.com>
+In-Reply-To: <CAAfSe-t8pVM=bO+S4YatE0rYKgeeZntDbV4ufD5sC3jQYCwVMg@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,47 +22,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christopher Bostic <cbostic@linux.vnet.ibm.com>, Jeremy Kerr <jk@ozlabs.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Geert Uytterhoeven <geert+renesas@glider.be>, andrew@aj.id.au, Greg KH <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Chris Bostic <cbostic@us.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, joel@jms.id.au, Alistair Popple <alistair@popple.id.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Orson Zhai <orson.zhai@spreadtrum.com>, Arnd Bergmann <arnd@arndb.de>, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris, Jeremy,
+Hi Chunyan,
 
-On Wed, Feb 1, 2017 at 5:53 PM, Christopher Bostic
-<cbostic@linux.vnet.ibm.com> wrote:
-> From: Jeremy Kerr <jk@ozlabs.org>
->
-> This change adds the initial (empty) fsi bus definition, and introduces
-> drivers/fsi/.
->
-> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-> Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
+On 23/02/17 06:20, Chunyan Zhang wrote:
+[...]
 
-> --- /dev/null
-> +++ b/drivers/fsi/Kconfig
-> @@ -0,0 +1,12 @@
-> +#
-> +# FSI subsystem
-> +#
-> +
-> +menu "FSI support"
-> +
-> +config FSI
-> +       tristate "FSI support"
+>>> I noticed Juno use the 2), would you suggest that way?
+>>
+>> It is better to describe the HW component themselves rather than where
+>> they are in the topology - the address of the component will make sure
+>> the names are unique.  So just the component type (etm, funnel,
+>> replicator, ....) and the address they are located at.
+>>
+> 
+> OK. And to avoid making other person confused in the future, is it
+> better to revise juno-base.dtsi according to this convention?
+> 
 
-I guess this should depend on some POWER symbol || COMPILE_TEST?
+Yes, it was noticed by Olof and should be now fixed for v4.11(already
+queued). You can check linux-next if you want to have a look before it
+gets merged.
 
-> +       ---help---
-> +         FSI - the FRU Support Interface - is a simple bus for low-level
-> +         access to POWER-based hardware.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Regards,
+Sudeep
