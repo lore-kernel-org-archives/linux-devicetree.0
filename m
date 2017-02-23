@@ -1,61 +1,56 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: Add regulators for Sinovoip BPI-M2
-Date: Thu, 23 Feb 2017 10:37:35 -0800
-Message-ID: <20170223183735.23fzypxnvumsnpkr@lukather>
-References: <20170223065539.47985-1-manu@bidouilliste.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] checkpatch.pl: Add SPDX license tag check for dts files
+ and headers
+Date: Thu, 23 Feb 2017 12:45:05 -0600
+Message-ID: <CAL_JsqL4ZztUvSevr4Co55n6w10TZaydGDyp4HJxHszFNvkVxw@mail.gmail.com>
+References: <20170223155644.24213-1-robh@kernel.org> <1487872274.14159.36.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yjx3b5ltd2vqpfge"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170223065539.47985-1-manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+In-Reply-To: <1487872274.14159.36.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 23, 2017 at 11:51 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Thu, 2017-02-23 at 09:56 -0600, Rob Herring wrote:
+>> Add a check for using SPDX-License-Identifier tags to define the license of
+>> .dts{i} and DT header files rather than using free form license text. This
+>> check looks for GPL, BSD, or X11(really incorrectly labeled MIT license)
+>> license text which are the commonly used DT licenses.
+>
+> Hi Rob.
+>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+>> Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  scripts/checkpatch.pl | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+>> index 982c52ca6473..ce802b3146e3 100755
+>> --- a/scripts/checkpatch.pl
+>> +++ b/scripts/checkpatch.pl
+>> @@ -2139,6 +2139,7 @@ sub process {
+>>       my $commit_log_has_diff = 0;
+>>       my $reported_maintainer_file = 0;
+>>       my $non_utf8_charset = 0;
+>> +     my $licensefile = '';
+>
+> Maybe this should be $spdx_license_file
+> but what's the actual reason to check if
+> multiple license bits are in a single file?
 
---yjx3b5ltd2vqpfge
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, just to get a single warning per file since the license matching
+can get multiple hits.
 
-On Thu, Feb 23, 2017 at 07:55:39AM +0100, Emmanuel Vadot wrote:
-> Add the needed node for DFVS on Sinovoip BPI-M2.
-> This add the axp221 under the p2wi node, the regulators and
-> the cpu-supply property for cpu0.
->=20
-> Signed-off-by: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Really what I'd like to do is warn if an SPDX tag is not present in
+any added file. Having a check for something missing doesn't really
+work well with checkpatch at least in a scalable way that I saw.
 
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---yjx3b5ltd2vqpfge
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYryvrAAoJEBx+YmzsjxAgvgMP/1PCOTjUS8sdGSyWI+XQ2UxX
-pFCsixU35l5pJCdmxytYIy9LH86O9cx8jSmPdquAxn6opLGAAS9BZtsa+77i1oFV
-CT5ddMx90o2R/IPmLi5XPj0GE3rzl5cnR59J5+p+OdoWOUzgN5mNno/sCxp+81nh
-aKapqJJSMXwaWzFZ6eg3FA5Ci/YAXu7QG93cbVvJ3BCV+9Vh+fqrhNCQ811xH21s
-ZFES93DaFXl3Y94i9qB3o973mlV8QP7F9qcvLSji7eq6770PuGtE6d6SLTdeCEwQ
-b7WlhewT5+9YXTo39SBbVRA9+2UA57w7AJSw+vToDKAjxQkYuFhFvkls0MqPYKzK
-jYFlEK+VRe0I3WxN/e/G846Upn+JdLxDJBxhYQDDG0wQgguOFoDUotCxvEVNgTnW
-1wdrUAbX+NKB89r7bKmwMNtbIatzHFdHK6ptRSWCxKP59ZkRJvhCCRuQKMpkUW1v
-GUDcEn51mrD2xA4yO3yhUKBCu+S4B9qure/+q0BpDNB8RCdQBJAjx69y3hbBIlpt
-fZfaxYgbZioahLXew4u2UVehr65M5GOSzc7hkBEV5GcpKM4/iwUAxr4Y8Gs0BbVZ
-dEmm5HP9nUrvRPc0upmmDZKarxXHUrB4ILzidj/sh0TGM4TApp3fI5S7fzhl6bfk
-kea0xOn+uZXLvikbQ+hm
-=Oplb
------END PGP SIGNATURE-----
-
---yjx3b5ltd2vqpfge--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
