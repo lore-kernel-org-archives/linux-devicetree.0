@@ -1,70 +1,62 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] checkpatch.pl: Add SPDX license tag check for dts files
- and headers
-Date: Thu, 23 Feb 2017 09:51:14 -0800
-Message-ID: <1487872274.14159.36.camel@perches.com>
-References: <20170223155644.24213-1-robh@kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: Add regulators for Sinovoip BPI-M2
+Date: Thu, 23 Feb 2017 10:37:35 -0800
+Message-ID: <20170223183735.23fzypxnvumsnpkr@lukather>
+References: <20170223065539.47985-1-manu@bidouilliste.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170223155644.24213-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andy Whitcroft <apw@canonical.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yjx3b5ltd2vqpfge"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170223065539.47985-1-manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-02-23 at 09:56 -0600, Rob Herring wrote:
-> Add a check for using SPDX-License-Identifier tags to define the license of
-> .dts{i} and DT header files rather than using free form license text. This
-> check looks for GPL, BSD, or X11(really incorrectly labeled MIT license)
-> license text which are the commonly used DT licenses.
 
-Hi Rob.
+--yjx3b5ltd2vqpfge
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Andy Whitcroft <apw@canonical.com>
-> Cc: Joe Perches <joe@perches.com>
-> ---
->  scripts/checkpatch.pl | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 982c52ca6473..ce802b3146e3 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -2139,6 +2139,7 @@ sub process {
->  	my $commit_log_has_diff = 0;
->  	my $reported_maintainer_file = 0;
->  	my $non_utf8_charset = 0;
-> +	my $licensefile = '';
+On Thu, Feb 23, 2017 at 07:55:39AM +0100, Emmanuel Vadot wrote:
+> Add the needed node for DFVS on Sinovoip BPI-M2.
+> This add the axp221 under the p2wi node, the regulators and
+> the cpu-supply property for cpu0.
+>=20
+> Signed-off-by: Emmanuel Vadot <manu-xXdDKFdH5B3kFDPD4ZthVA@public.gmane.org>
 
-Maybe this should be $spdx_license_file
-but what's the actual reason to check if
-multiple license bits are in a single file?
+Applied, thanks!
+Maxime
 
-> +# check for using SPDX tag instead of free form license text in dts and binding header files
-> +		if ($licensefile ne $realfile &&
-> +		    ($realfile =~ /\.dtsi?$/ || $realfile =~ /dt-bindings\/.*\.h$/) &&
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-It's nicer to use a non / leading char like @
-so you don't have to escape the /.
+--yjx3b5ltd2vqpfge
+Content-Type: application/pgp-signature; name="signature.asc"
 
-maybe
-	$realfile =~ m@/dt-bindings/.*\.h$@
+-----BEGIN PGP SIGNATURE-----
 
-> +		    $rawline !~ /\bSPDX-License-Identifier/ &&
-> +		    ($rawline =~ /^\+.*\bGeneral\s+Public\s+License/i ||
-> +		    $rawline =~ /^\+.*\bTHE\s+SOFTWARE\s+IS\s+PROVIDED\s+\"AS\s+IS\"/i ||
-> +		    $rawline =~ /^\+.*\b(GPL|BSD|X11)/)) {
+iQIcBAEBCAAGBQJYryvrAAoJEBx+YmzsjxAgvgMP/1PCOTjUS8sdGSyWI+XQ2UxX
+pFCsixU35l5pJCdmxytYIy9LH86O9cx8jSmPdquAxn6opLGAAS9BZtsa+77i1oFV
+CT5ddMx90o2R/IPmLi5XPj0GE3rzl5cnR59J5+p+OdoWOUzgN5mNno/sCxp+81nh
+aKapqJJSMXwaWzFZ6eg3FA5Ci/YAXu7QG93cbVvJ3BCV+9Vh+fqrhNCQ811xH21s
+ZFES93DaFXl3Y94i9qB3o973mlV8QP7F9qcvLSji7eq6770PuGtE6d6SLTdeCEwQ
+b7WlhewT5+9YXTo39SBbVRA9+2UA57w7AJSw+vToDKAjxQkYuFhFvkls0MqPYKzK
+jYFlEK+VRe0I3WxN/e/G846Upn+JdLxDJBxhYQDDG0wQgguOFoDUotCxvEVNgTnW
+1wdrUAbX+NKB89r7bKmwMNtbIatzHFdHK6ptRSWCxKP59ZkRJvhCCRuQKMpkUW1v
+GUDcEn51mrD2xA4yO3yhUKBCu+S4B9qure/+q0BpDNB8RCdQBJAjx69y3hbBIlpt
+fZfaxYgbZioahLXew4u2UVehr65M5GOSzc7hkBEV5GcpKM4/iwUAxr4Y8Gs0BbVZ
+dEmm5HP9nUrvRPc0upmmDZKarxXHUrB4ILzidj/sh0TGM4TApp3fI5S7fzhl6bfk
+kea0xOn+uZXLvikbQ+hm
+=Oplb
+-----END PGP SIGNATURE-----
 
-nicer to indent these last 2 lines one more space
-to keep alignment to open parenthesis.
-
-> +			$licensefile = $realfile;
-> +			WARN("SPDX_LICENSE_TAG",
-> +			     "Use SPDX-License-Identifier tags instead of full license text\n" . $herecurr);
-> +		}
-> +
->  # check we are in a valid source file if not then ignore this hunk
->  		next if ($realfile !~ /\.(h|c|s|S|sh|dtsi|dts)$/);
+--yjx3b5ltd2vqpfge--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
