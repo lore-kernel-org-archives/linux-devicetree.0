@@ -1,108 +1,52 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 00/16] ACPI graph support
-Date: Thu, 23 Feb 2017 18:19:20 +0200
-Message-ID: <1487866776-24578-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] iio: accel: adxl345: Use I2C regmap instead of
+ direct I2C access
+Date: Thu, 23 Feb 2017 18:27:52 +0200
+Message-ID: <CAHp75Vca29-H050MgCvdo986+QA5odJmAF3_AwQURMYZOb=wUA@mail.gmail.com>
+References: <cover.1487757223.git.eraretuya@gmail.com> <b477e7142cb39b5bb86670191f41dcc031e80569.1487757223.git.eraretuya@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b477e7142cb39b5bb86670191f41dcc031e80569.1487757223.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello everyone, 
+On Wed, Feb 22, 2017 at 12:22 PM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Convert the driver to use regmap instead of I2C-specific functions.
+> Also, introduce the header file "adxl345.h" and export the probe and
+> remove functions. This is done in preparation for splitting this driver
+> into core and I2C-specific code as well as introduction of SPI driver.
+>
+> Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I posted a previous RFC labelled set of ACPI graph support a while ago: 
+Is it possible to use device just after this very patch?
+For me it seems there is bisectability issue.
 
-<URL:http://www.spinics.net/lists/linux-acpi/msg69547.html> 
-
-Since then, the matter of how the properties should be used as in ACPI
-_DSD was discussed in Ksummit and LPC, and a document detailing the rules 
-was written [1].
-
-I've additionally posted v1 and v2 which can be found here:
-
-<URL:http://www.spinics.net/lists/linux-acpi/msg71661.html>
-<URL:http://www.spinics.net/lists/linux-acpi/msg71809.html>
-
-This set contains patches written by Mika Westerberg and by myself. The 
-patchset brings support for graphs to ACPI. The functionality achieved by 
-these patches is very similar to what the Device tree provides: the port
-and the endpoint concept are being employed. The patches make use of the
-_DSD property and data extensions to achieve this. The fwnode interface is
-extended by graph functionality; this way graph information originating 
-from both OF and ACPI may be accessed using the same interface, without 
-being aware of the underlying firmware interface. 
-
-The last patch of the set contains ASL documentation including an example.
-
-The entire set may also be found here (on mediatree.git master, but it
-also applies cleanly on linux-next):
-
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph> 
-
-The resulting fwnode graph interface has been tested using V4L2 async with
-fwnode matching and smiapp and omap3isp drivers, with appropriate changes 
-to make use of the fwnode interface in drivers.
-
-I'm additionally moving the firmware implementation specific code from
-drivers/base/property.c to firmware specific locations. I'll post that
-patchset soon. It'll be available here:
-
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph-cleaned>
-
-The V4L2 patches can be found here. The fwnode graph interface is used by 
-the newly added V4L2 fwnode framework which replaces the V4L2 OF
-framework, with equivalent functionality. 
-
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi>
-
-changes since v2.2:
-
-- Drop device_fwnode_handle() function in favour of moving the existing
-  dev_fwnode() function from drivers/base/property.c to linux/property.h
-  (now patch 12).
-
-- Unmerge two unrelated patches accidentally merged between RFC v1 and
-  PATCH v1 of the series. The patch adding device_fwnode_handle() was
-  accidentally merged with "device property: Obtain device's fwnode
-  independently of FW type".
-
-- Remove redundant forward declaration of struct device in
-  linux/property.h.
-
-changes since v2:
-
-- Include linux/property.h for property fwnode API in additional drivers
-  (current patch 11).
-
-changes since v1: 
-
-- Fix a few checkpatch.pl warnings in Mika's patches (too long lines),
-
-- remove the "endpoint" property specifying the endpoint id. The endpoint 
-id is a software concept and the index in the endpoint array can be used
-instead if needed. The changes are in patches "device property: Add 
-support for fwnode endpoints" and "ACPI / DSD: Document references, 
-ports and endpoints" and
-
-- add patch "irqchip/gic: Add missing forward declaration for 
-struct device" (patch 9) to fix compilation warning on arm64 caused 
-by "of: No need to include linux/property.h, linux/fwnode.h is
-sufficient" (now patch 10)
-
-changes since RFC v1: 
-
-- Rebased the set --- there were a few conflicts. 
-
-- Fixed a bug in ACPI graph parsing. (Thanks to Mika!)
-
-- Remove one layer (the "ports" node) of the _DSD hierarchical data 
-structure. Change the documentation accordingly. Instead, rely on the 
-presence of "port" and "endpoint" properties to identify port and 
-endpoint nodes. 
-
-- Add a reference the DSD property rule document [1].
+> -static const struct i2c_device_id adxl345_i2c_id[] = {
+> -       { "adxl345", 0 },
+> -       { }
+> -};
+> -
+> -MODULE_DEVICE_TABLE(i2c, adxl345_i2c_id);
+> -
+> -static struct i2c_driver adxl345_driver = {
+> -       .driver = {
+> -               .name   = "adxl345",
+> -       },
+> -       .probe          = adxl345_probe,
+> -       .remove         = adxl345_remove,
+> -       .id_table       = adxl345_i2c_id,
+> -};
+> -
+> -module_i2c_driver(adxl345_driver);
+> +EXPORT_SYMBOL_GPL(adxl345_common_remove);
 
 -- 
-Kind regards,
-Sakari
-
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
