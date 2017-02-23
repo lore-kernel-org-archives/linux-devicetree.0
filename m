@@ -1,38 +1,73 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH 1/1] devicetree: Document of_property_read_string_array() better
-Date: Thu, 23 Feb 2017 23:40:19 +0200
-Message-ID: <1487886019-25869-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC/PATCH] of: Mark property::value as const
+Date: Thu, 23 Feb 2017 13:47:07 -0800
+Message-ID: <58AF585B.7060303@gmail.com>
+References: <20170214025040.23955-1-stephen.boyd@linaro.org>
+ <58AF3E06.4030701@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <58AF3E06.4030701@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-of_property_read_string_array() is documented to return the number of
-strings present in a string array property if its target string buffer is
-NULL. What is not documented, however, is that is returned if the buffer
-is non-NULL. It returns the number of strings read. Document this.
+On 02/23/17 11:54, Frank Rowand wrote:
+> On 02/13/17 18:50, Stephen Boyd wrote:
+>> The 'blob' we pass into populate_properties() is marked as const,
+>> but we cast that const away when we assign the result of
+>> fdt_getprop_by_offset() to pp->value. Let's mark value as const
+>> instead, so that code can't mistakenly write to the value of the
+>> property that we've so far advertised as const.
+>>
+>> Unfortunately, this exposes a problem with the fdt resolver code,
+>> where we overwrite the value member of properties of phandles to
+>> update them with their final value. Add a comment for now to
+>> indicate where we're potentially writing over const data.
+> 
+> The resolver should not be over writing anything in the FDT.  I'll
+> look at what is going on there.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- include/linux/of.h | 1 +
- 1 file changed, 1 insertion(+)
+OK, now that I have looked at the resolver, I see that you meant that
+the resolver code is modifying the _overlay_ FDT, not the FDT that
+was used at initial boot.  So not what I thought you meant.
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d72f010..0579156 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -953,6 +953,7 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
-  * terminated string values (pointer to data, not a copy) in that property.
-  *
-  * If @out_strs is NULL, the number of strings in the property is returned.
-+ * Otherwise, returns the number of strings read.
-  */
- static inline int of_property_read_string_array(const struct device_node *np,
- 						const char *propname, const char **out_strs,
--- 
-2.7.4
+I'll reply separately to the original patch email with a more complete
+response.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Frank
+
+> 
+> The FDT we expose to user space should be the FDT we booted with,
+> not something later modified.
+> 
+> -Frank
+> 
+>>
+>> You can see the problem here by loading an overlay dtb into
+>> the kernel via the request firmware helper method (not direct
+>> loading) and then passing that tree to the resolver on an arm64
+>> device. In this case, the firmware data is vmapped with KERNEL_PAGE_RO
+>> and the code crashes when attempting to write to the blob to update
+>> the phandle properties.
+>>
+>> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+>> ---
+>>
+>> I was thinking perhaps it would work to store another __be32 variant
+>> of the phandle in each device node, but then we still have a problem
+>> with properties that have phandles inside them at some offset that we
+>> need to update. I guess the only real solution is to deep copy the
+>> property in that case and then save around some info to free the
+>> duplicated property later on?
+>>
+>>  drivers/of/base.c     |  2 +-
+>>  drivers/of/fdt.c      | 12 ++++++------
+>>  drivers/of/resolver.c |  3 +++
+>>  include/linux/of.h    |  2 +-
+>>  4 files changed, 11 insertions(+), 8 deletions(-)
+> 
+> < snip >
+> 
