@@ -1,50 +1,61 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/8] drm/sun4i: add support for sun8i DE2
- mixers and display engines
-Date: Thu, 23 Feb 2017 17:44:54 +0000
-Message-ID: <CACvgo5117BB+o429cH=X0t3xz_5=XZ65YCEdE=ro+895a9e=RA@mail.gmail.com>
-References: <20170222151854.3280-1-icenowy@aosc.xyz> <20170222151854.3280-5-icenowy@aosc.xyz>
-Reply-To: emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 00/35] treewide trivial patches converting pr_warning to
+ pr_warn
+Date: Thu, 23 Feb 2017 09:53:41 -0800
+Message-ID: <1487872421.14159.38.camel@perches.com>
+References: <cover.1487314666.git.joe@perches.com>
+ <CAL_JsqLTaq-QLTqfyDO8EVJYpgeUx1e4J0Fo2NvfFWqVoiVedQ@mail.gmail.com>
+ <1487870304.14159.29.camel@perches.com>
+ <CACvgo50LUm5VSn_F=Dh8kL5zCPpCQDoCyUEL=Z+=1+6hJpfTaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2JJ4UO64LBBF57XTCQKGQEVRPAUMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170222151854.3280-5-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACvgo50LUm5VSn_F=Dh8kL5zCPpCQDoCyUEL=Z+=1+6hJpfTaw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-ia64@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, ML nouveau <nouveau@lists.freedesktop.org>, Linux-ALSA <alsa-devel@alsa-project.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, sparclinux@vger.kernel.org, drbd-dev@lists.linbit.com, Rob Herring <robh@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, linux-scsi@vger.kernel.org, Richard Weinberger <richard@nod.at>, tboot-devel@lists.sourceforge.net, amd-gfx mailing list <amd-gfx@lists.freedesktop.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, sfi-devel@simplefirmware.org
 List-Id: devicetree@vger.kernel.org
 
-On 22 February 2017 at 15:18, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> Allwinner have a new "Display Engine 2.0" in there new SoCs, which comes
-> in a new "Display Engine" (mixers instead of old backends and
-> frontends).
->
-> Add support for the mixer on Allwinner V3s SoC; it's the simplest one.
->
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/Kconfig       |   8 +
->  drivers/gpu/drm/sun4i/Makefile      |   1 +
->  drivers/gpu/drm/sun4i/sun4i_crtc.c  |   6 +-
->  drivers/gpu/drm/sun4i/sun4i_drv.c   |  38 +++-
->  drivers/gpu/drm/sun4i/sun4i_drv.h   |   1 +
->  drivers/gpu/drm/sun4i/sun4i_layer.c |  92 ++++++--
->  drivers/gpu/drm/sun4i/sun4i_layer.h |   1 +
->  drivers/gpu/drm/sun4i/sun8i_mixer.c | 417 ++++++++++++++++++++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_mixer.h | 133 ++++++++++++
->  9 files changed, 674 insertions(+), 23 deletions(-)
-Silly question:
+On Thu, 2017-02-23 at 17:41 +0000, Emil Velikov wrote:
+> On 23 February 2017 at 17:18, Joe Perches <joe@perches.com> wrote:
+> > On Thu, 2017-02-23 at 09:28 -0600, Rob Herring wrote:
+> > > On Fri, Feb 17, 2017 at 1:11 AM, Joe Perches <joe@perches.com> wrote:
+> > > > There are ~4300 uses of pr_warn and ~250 uses of the older
+> > > > pr_warning in the kernel source tree.
+> > > > 
+> > > > Make the use of pr_warn consistent across all kernel files.
+> > > > 
+> > > > This excludes all files in tools/ as there is a separate
+> > > > define pr_warning for that directory tree and pr_warn is
+> > > > not used in tools/.
+> > > > 
+> > > > Done with 'sed s/\bpr_warning\b/pr_warn/' and some emacsing.
+> > 
+> > []
+> > > Where's the removal of pr_warning so we don't have more sneak in?
+> > 
+> > After all of these actually get applied,
+> > and maybe a cycle or two later, one would
+> > get sent.
+> > 
+> 
+> By which point you'll get a few reincarnation of it. So you'll have to
+> do the same exercise again :-(
 
-Does this series cover the same functionality/hardware as the separate
-sun8i driver proposed a few months back ?
-The diff stat looks quite different (~1.6k vs ~0.6k), although that
-could be due to reusing the existing sun4i code.
+Maybe to one or two files.  Not a big deal.
 
-Thanks
-Emil
+> I guess the question is - are you expecting to get the series merged
+> all together/via one tree ?
+
+No.  The only person that could do that effectively is Linus.
+
+> If not, your plan is perfectly reasonable.
