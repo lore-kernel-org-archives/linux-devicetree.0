@@ -1,65 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: SPI fix needed in kernel (DragonBoard 410c)
-Date: Thu, 23 Feb 2017 09:41:25 -0800
-Message-ID: <20170223174125.be5ewn5o5tk2hwhk@sirena.org.uk>
-References: <6857de0f674548d09ecad023211b3d1f@NASANEXM01D.na.qualcomm.com>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/8] drm/sun4i: add support for sun8i DE2
+ mixers and display engines
+Date: Thu, 23 Feb 2017 17:44:54 +0000
+Message-ID: <CACvgo5117BB+o429cH=X0t3xz_5=XZ65YCEdE=ro+895a9e=RA@mail.gmail.com>
+References: <20170222151854.3280-1-icenowy@aosc.xyz> <20170222151854.3280-5-icenowy@aosc.xyz>
+Reply-To: emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="e5ryvcvsnijoenec"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6857de0f674548d09ecad023211b3d1f@NASANEXM01D.na.qualcomm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "King, Lawrence" <lking@qti.qualcomm.com>
-Cc: Andy Gross <andy.gross@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "ill.deacon@arm.com" <ill.deacon@arm.com>, "todor.tomov@linaro.org" <todor.tomov@linaro.org>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "stanimir.varbanov@linaro.org" <stanimir.varbanov@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi@vger.
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD2JJ4UO64LBBF57XTCQKGQEVRPAUMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170222151854.3280-5-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 22 February 2017 at 15:18, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> Allwinner have a new "Display Engine 2.0" in there new SoCs, which comes
+> in a new "Display Engine" (mixers instead of old backends and
+> frontends).
+>
+> Add support for the mixer on Allwinner V3s SoC; it's the simplest one.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/Kconfig       |   8 +
+>  drivers/gpu/drm/sun4i/Makefile      |   1 +
+>  drivers/gpu/drm/sun4i/sun4i_crtc.c  |   6 +-
+>  drivers/gpu/drm/sun4i/sun4i_drv.c   |  38 +++-
+>  drivers/gpu/drm/sun4i/sun4i_drv.h   |   1 +
+>  drivers/gpu/drm/sun4i/sun4i_layer.c |  92 ++++++--
+>  drivers/gpu/drm/sun4i/sun4i_layer.h |   1 +
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c | 417 ++++++++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h | 133 ++++++++++++
+>  9 files changed, 674 insertions(+), 23 deletions(-)
+Silly question:
 
---e5ryvcvsnijoenec
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Does this series cover the same functionality/hardware as the separate
+sun8i driver proposed a few months back ?
+The diff stat looks quite different (~1.6k vs ~0.6k), although that
+could be due to reusing the existing sun4i code.
 
-On Wed, Feb 22, 2017 at 07:56:21PM +0000, King, Lawrence wrote:
-> Argghh.. I am such a Newbie ;-) I originally sent this as =E2=80=9CHTML=
-=E2=80=9D which of course was rejected by many of the recipients....
->=20
-> Resending as plain-text, with the formerly in-line oscilloscope screen sh=
-ots attached as JPEG files.
->=20
-> Scope_4.jpg shows the problem with Chip Select, Scope_5.jpg shows the chi=
-p select with the fix.
-
-I'm sorry but I can't really tell what this mail is about, it looks like
-the end of a large, top posted thread with formatting issues so it's
-pretty hard to read.  Can you please concisely describe the issue you'd
-like to discuss?
-
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
-
-Please fix your mail client to word wrap within paragraphs at something
-substantially less than 80 columns.  Doing this makes your messages much
-easier to read and reply to.
-
-Please also check the list of people you're CCing, you've sent this to
-a *very* large set of people.
-
---e5ryvcvsnijoenec
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlivHsQACgkQJNaLcl1U
-h9BQ2AgAgNWWYM+89Esqqrm9eK9F4KKLpeLQfjtzDQXUU9ORw1slv3YNf9y7OXf6
-BbMvvUoIoWRedZwVs3FTkd4edkGvbWXYla1FZUAaYqUu2xMZYLSN/yhI/5wES3kw
-sVhoRsKadFzKUU+6oYH3PM5kFlCD+cBHG5DMXY4I1195OM2ctqE870J6W6VPxKnq
-02hyoQU8Kg+azcePW+s7UYjkavsp9wtPXOojr/NpMHgmOkP2MUIJFgqLhEx9wOpr
-r8100c70htVLlQU4Hs9d65b4HGiSwN2lh7y/r3VgzQiCEYhSWiEy1WFUQD05MRBx
-iJCp4Ym0Utr9s/UXY/IfZKY7vHDXyQ==
-=atO4
------END PGP SIGNATURE-----
-
---e5ryvcvsnijoenec--
+Thanks
+Emil
