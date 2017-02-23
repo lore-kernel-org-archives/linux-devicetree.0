@@ -1,61 +1,36 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
-Date: Thu, 23 Feb 2017 17:47:59 +0100
-Message-ID: <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de>
-References: <cover.1487757223.git.eraretuya@gmail.com>
- <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com>
- <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Eva Rachel Retuya <eraretuya@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 01/20] device property: fwnode_property_read_string_array() may return -EILSEQ
+Date: Thu, 23 Feb 2017 19:00:57 +0200
+Message-ID: <1487869276-25244-2-git-send-email-sakari.ailus@linux.intel.com>
+References: <1487869276-25244-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1487869276-25244-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
-> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
->> Add SPI driver that initializes SPI regmap for the adxl345 core driver.
->> The driver supports the same functionality as I2C namely the x, y, z and
->> scale readings.
-> 
->> --- a/drivers/iio/accel/Kconfig
->> +++ b/drivers/iio/accel/Kconfig
->> @@ -8,20 +8,26 @@ menu "Accelerometers"
->>  config ADXL345
->>         tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer Driver"
->>         depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
->> +       depends on (I2C || SPI)
->>         select REGMAP
->>         select ADXL345_I2C if I2C
->> +       select ADXL345_SPI if SPI
->>         help
->>           Say Y here if you want to build support for the Analog Devices
->>           ADXL345 3-axis digital accelerometer.
->>
->>           To compile this driver as a module, choose M here: the core
->>           module will be called adxl345_core and you will also get
->> -         adxl345_i2c for I2C.
->> +         adxl345_i2c for I2C and/or adxl345_spi for SPI.
->>
->>  config ADXL345_I2C
->>         tristate
->>         select REGMAP_I2C
->>
->> +config ADXL345_SPI
->> +       tristate
->> +       select REGMAP_SPI
-> 
-> Hmm...
-> I saw another pattern
-> 
-> Library / core part is non-visible to user, while
-> SPI and I2C parts are selectable by user.
-> 
-> Why do you use inverted pattern? What did I miss?
+fwnode_property_read_string_array() may return -EILSEQ through
+of_property_read_string_array(). Document this.
 
-The first version of the patch used the other pattern SPI/I2C visible.
-Jonathan suggested this other pattern. I prefer the explicit SPI/I2C visible
-pattern, but in the end it doesn't really matter as long as both work.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/base/property.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 88e9f80..04c2174 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -584,7 +584,7 @@ static int __fwnode_property_read_string(struct fwnode_handle *fwnode,
+  *         %0 if the property was found (success),
+  *	   %-EINVAL if given arguments are not valid,
+  *	   %-ENODATA if the property does not have a value,
+- *	   %-EPROTO if the property is not an array of strings,
++ *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
+  *	   %-EOVERFLOW if the size of the property is not as expected,
+  *	   %-ENXIO if no suitable firmware interface is present.
+  */
+-- 
+2.7.4
+
