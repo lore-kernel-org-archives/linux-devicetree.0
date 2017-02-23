@@ -1,59 +1,132 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V3] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Thu, 23 Feb 2017 14:06:36 +0100
-Message-ID: <20170223130636.4704-1-zajec5@gmail.com>
-References: <20170223125612.2394-1-zajec5@gmail.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v6 2/9] doc: DT: venus: binding document for Qualcomm
+ video driver
+Date: Thu, 23 Feb 2017 15:08:00 +0200
+Message-ID: <ced61ede-1d51-18c1-ea00-731dc5887c58@linaro.org>
+References: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1486473024-21705-3-git-send-email-stanimir.varbanov@linaro.org>
+ <20170222000952.w6bg4bhvbklgkcnx@rob-hp-laptop>
+ <88584dd3-165f-2393-433e-95c288a8f473@linaro.org>
+ <CAL_JsqJ0+YEcw1-DgWpHgdDe4zfppNnpLt6XY=CGnMYwu8ALhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170223125612.2394-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJ0+YEcw1-DgWpHgdDe4zfppNnpLt6XY=CGnMYwu8ALhw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKSXQncyB0cmktYmFuZCB3
-aXJlbGVzcyBob21lIHJvdXRlciBiYXNlZCBvbiBCQ000NzA5NCBBS0EgQkNNNDcwOUMwLiBJdAp1
-c2VzIDMgeCBCQ000MzY2IGNoaXBzZXRzIGZvciB3aXJlbGVzcy4KUGFuYW1lcmEgc2VlbXMgdG8g
-YmUgYm9hcmQgbmFtZSB1c2VkIGJ5IExpbmtzeXMuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnF
-gmVja2kgPHJhZmFsQG1pbGVja2kucGw+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUg
-ICAgICAgICAgICAgICAgICAgICAgfCAgMSArCiBhcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1s
-aW5rc3lzLXBhbmFtZXJhLmR0cyB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysrKysKIDIgZmls
-ZXMgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJt
-L2Jvb3QvZHRzL2JjbTQ3MDk0LWxpbmtzeXMtcGFuYW1lcmEuZHRzCgpkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgYi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQppbmRl
-eCA1MmEwNTI4OWM1MzguLjJmZWFiYmUxNmQ1MyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKQEAgLTkzLDYgKzkz
-LDcgQEAgZHRiLSQoQ09ORklHX0FSQ0hfQkNNXzUzMDFYKSArPSBcCiAJYmNtNDcwOS1uZXRnZWFy
-LXI4MDAwLmR0YiBcCiAJYmNtNDcwOS10cGxpbmstYXJjaGVyLWM5LXYxLmR0YiBcCiAJYmNtNDcw
-OTQtZGxpbmstZGlyLTg4NWwuZHRiIFwKKwliY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0YiBc
-CiAJYmNtNDcwOTQtbHV4dWwteHdyLTMxMDAuZHRiIFwKIAliY200NzA5NC1uZXRnZWFyLXI4NTAw
-LmR0YiBcCiAJYmNtOTQ3MDguZHRiIFwKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Jj
-bTQ3MDk0LWxpbmtzeXMtcGFuYW1lcmEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQt
-bGlua3N5cy1wYW5hbWVyYS5kdHMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAw
-MDAwLi5iNjc1MGY3MGRmZmIKLS0tIC9kZXYvbnVsbAorKysgYi9hcmNoL2FybS9ib290L2R0cy9i
-Y200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwpAQCAtMCwwICsxLDM2IEBACisvKgorICogQ29w
-eXJpZ2h0IChDKSAyMDE3IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KKyAqCisg
-KiBMaWNlbnNlZCB1bmRlciB0aGUgSVNDIGxpY2Vuc2UuCisgKi8KKworL2R0cy12MS87CisKKyNp
-bmNsdWRlICJiY200NzA5NC5kdHNpIgorI2luY2x1ZGUgImJjbTUzMDF4LW5hbmQtY3MwLWJjaDgu
-ZHRzaSIKKworLyB7CisJY29tcGF0aWJsZSA9ICJsaW5rc3lzLHBhbmFtZXJhIiwgImJyY20sYmNt
-NDcwOTQiLCAiYnJjbSxiY200NzA4IjsKKwltb2RlbCA9ICJMaW5rc3lzIEVBOTUwMCI7CisKKwlj
-aG9zZW4geworCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCI7CisJfTsKKworCW1l
-bW9yeSB7CisJCXJlZyA9IDwweDAwMDAwMDAwIDB4MDgwMDAwMDAKKwkJICAgICAgIDB4ODgwMDAw
-MDAgMHgwODAwMDAwMD47CisJfTsKKworCWdwaW8ta2V5cyB7CisJCWNvbXBhdGlibGUgPSAiZ3Bp
-by1rZXlzIjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+Owor
-CisJCXdwcyB7CisJCQlsYWJlbCA9ICJXUFMiOworCQkJbGludXgsY29kZSA9IDxLRVlfV1BTX0JV
-VFRPTj47CisJCQlncGlvcyA9IDwmY2hpcGNvbW1vbiAzIEdQSU9fQUNUSVZFX0xPVz47CisJCX07
-CisJfTsKK307Ci0tIAoyLjExLjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+
+
+On 02/22/2017 04:17 PM, Rob Herring wrote:
+> On Wed, Feb 22, 2017 at 3:25 AM, Stanimir Varbanov
+> <stanimir.varbanov@linaro.org> wrote:
+>> Hi Rob,
+>>
+>> On 02/22/2017 02:09 AM, Rob Herring wrote:
+>>> On Tue, Feb 07, 2017 at 03:10:17PM +0200, Stanimir Varbanov wrote:
+>>>> Add binding document for Venus video encoder/decoder driver
+>>>>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>>>> ---
+>>>> Changes since previous v5:
+>>>>  * dropped rproc phandle (remoteproc is not used anymore)
+>>>>  * added subnodes paragraph with descrition of three subnodes:
+>>>>     - video-decoder and video-encoder - describes decoder (core0) and
+>>>>     encoder (core1) power-domains and clocks (applicable for msm8996
+>>>>     Venus core).
+>>>>     - video-firmware - needed to get reserved memory region where the
+>>>>     firmware is stored.
+>>>>
+>>>>  .../devicetree/bindings/media/qcom,venus.txt       | 112 +++++++++++++++++++++
+>>>>  1 file changed, 112 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+>>>> new file mode 100644
+>>>> index 000000000000..4427af3ca5a5
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+>>>> @@ -0,0 +1,112 @@
+>>>
+>>> [...]
+>>>
+>>>> +* Subnodes
+>>>> +The Venus node must contain three subnodes representing video-decoder,
+>>>> +video-encoder and video-firmware.
+>>>
+>>> [...]
+>>>
+>>>> +The video-firmware subnode should contain:
+>>>> +
+>>>> +- memory-region:
+>>>> +    Usage: required
+>>>> +    Value type: <phandle>
+>>>> +    Definition: reference to the reserved-memory for the memory region
+>>>> +
+>>>> +* An Example
+>>>> +    video-codec@1d00000 {
+>>>> +            compatible = "qcom,msm8916-venus";
+>>>> +            reg = <0x01d00000 0xff000>;
+>>>> +            interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +            clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
+>>>> +                     <&gcc GCC_VENUS0_AHB_CLK>,
+>>>> +                     <&gcc GCC_VENUS0_AXI_CLK>;
+>>>> +            clock-names = "core", "iface", "bus";
+>>>> +            power-domains = <&gcc VENUS_GDSC>;
+>>>> +            iommus = <&apps_iommu 5>;
+>>>> +
+>>>> +            video-decoder {
+>>>> +                    compatible = "venus-decoder";
+>>>> +                    clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
+>>>> +                    clock-names = "core";
+>>>> +                    power-domains = <&mmcc VENUS_CORE0_GDSC>;
+>>>> +            };
+>>>> +
+>>>> +            video-encoder {
+>>>> +                    compatible = "venus-encoder";
+>>>> +                    clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
+>>>> +                    clock-names = "core";
+>>>> +                    power-domains = <&mmcc VENUS_CORE1_GDSC>;
+>>>> +            };
+>>>> +
+>>>> +            video-firmware {
+>>>> +                    memory-region = <&venus_mem>;
+>>>
+>>> Why does this need to be a sub node?
+>>
+>> Because firmware reserved memory region must have separate struct
+>> device, otherwise allocating video buffers (and map them through iommu)
+>> for video-codec will fail because dma_alloc_coherent trying to allocate
+>> from per-device coherent area.
+> 
+> Why can't the struct device be the video-codec device? Looking at the
+> code, I don't see why you need the 2nd struct device.
+
+The issue when using one device (video-codec device) is coming from
+dma_alloc_from_coherent() which is called by dma_alloc_attrs(). The
+firmware memory-region is parsed and initialize coherent memory such a
+region with flag DMA_MEMORY_EXCLUSIVE which means that following
+invocations of dma_alloc_coherent (for example to allocate video buffers
+and map them through IOMMU) will no fallback to generic memory allocator
+i.e. dma_ops. Because Venus is behind IOMMU the dma_ops are pointing to
+iommu_dma_ops for ARM64.
+
+> 
+> In any case, this is letting the driver design the binding which is
+> wrong. From a binding perspective, there's no reason to have this
+> node.
+
+OK, thanks for the comments. I have few changes in the firmware memory
+allocation part of the driver which makes possible to remove
+video-firmware subnode and move memory-region to video-codec DT node.
+
+Is that fine for you?
+
+-- 
+regards,
+Stan
