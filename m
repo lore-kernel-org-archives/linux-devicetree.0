@@ -1,53 +1,75 @@
+Return-Path: <SRS0=NU9W=2E=linaro.org=baoyou.xie@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdZsFfnh8vA_-RQqXyrJOh-emZQytj2bxHXRDkTs9ga+eg@mail.gmail.com>
-References: <20170211125220.10273-1-linus.walleij@linaro.org>
-	<20170222002640.y2uhumje5csioure@rob-hp-laptop>
-	<CACRpkdZsFfnh8vA_-RQqXyrJOh-emZQytj2bxHXRDkTs9ga+eg@mail.gmail.com>
-Date: Mon, 27 Feb 2017 07:32:47 -0600
-Message-ID: <CAL_JsqK=hEXhJvATtDwT88BmLsLDo7AB7hxWLaEyx5udnhySMQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] PCI: add DT bindings for Faraday Technology PCI Host Bridge
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Gavin Guo <gavinguo@andestech.com>, Macpaul Lin <macpaul@andestech.com>, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, openwrt-devel@openwrt.org, linux-pci <linux-pci@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Feng-Hsin Chiang <john453@faraday-tech.com>
+In-Reply-To: <20170222160050.GA1479@katana>
+References: <1487755132-7730-1-git-send-email-baoyou.xie@linaro.org>
+ <1487755132-7730-3-git-send-email-baoyou.xie@linaro.org> <20170222160050.GA1479@katana>
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Date: Thu, 23 Feb 2017 21:03:19 +0800
+Message-ID: <CA+DQWky=zhHLk4eGtMtFgxHXp_prWpHdgw-RBTD_pJaVRJzZmQ@mail.gmail.com>
+Subject: Re: [PATCH v8 3/3] i2c: zx2967: add i2c controller driver for ZTE's
+ zx2967 family
+Content-Type: multipart/alternative; boundary=001a114028d2c6a42a0549323c0c
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jun Nie <jun.nie@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, Feb 26, 2017 at 2:17 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Feb 22, 2017 at 1:26 AM, Rob Herring <robh@kernel.org> wrote:
->> On Sat, Feb 11, 2017 at 01:52:17PM +0100, Linus Walleij wrote:
+--001a114028d2c6a42a0549323c0c
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi, Wolfram:
+
+Changes for v8:
+1=E3=80=81don't reset the hardware and disable the irq while timeouts in
+zx2967_i2c_xfer_read_bytes.
+2=E3=80=81remove two functions named zx2967_i2c_xfer_read and zx2967_i2c_xf=
+er_write,
+and merge the codes to zx2967_i2c_xfer_msg.
+
+On 23 February 2017 at 00:00, Wolfram Sang <wsa@the-dreams.de> wrote:
+
+> On Wed, Feb 22, 2017 at 05:18:52PM +0800, Baoyou Xie wrote:
+> > This patch adds i2c controller driver for ZTE's zx2967 family.
+> >
+> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> > Reviewed-by: Shawn Guo <shawnguo@kernel.org>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Reviewed-by: Jun Nie <jun.nie@linaro.org>
 >
->>> +- compatible: should be one of
->>> +  "faraday,pci"
->>> +  "faraday,dual-pci"
->>
->> Probably should still have a Cortina specific compatible.
+> Please provide a changelog what you changed since the last version.
 >
-> OK I rewrote it using the specific-to-generic compatible pattern.
 >
->>> +pci@50000000 {
->>> +     compatible = "faraday,pci";
->>> +     reg = <0x50000000 0x100>;
->>> +     interrupts = <8 IRQ_TYPE_LEVEL_HIGH>, /* PCI A */
->>> +                     <26 IRQ_TYPE_LEVEL_HIGH>, /* PCI B */
->>> +                     <27 IRQ_TYPE_LEVEL_HIGH>, /* PCI C */
->>> +                     <28 IRQ_TYPE_LEVEL_HIGH>; /* PCI D */
->>> +     #address-cells = <3>;
->>> +     #size-cells = <2>;
->>> +     #interrupt-cells = <1>;
->>
->> This doesn't belong here (I think).
->
-> This needs to be here because the interrupts for
-> PCI are 1 cell. The PCI host acts as interrupt parent for all
-> the cards you plug in, and they always have one cell, you
-> can see this in the example for open-pic in Device Tree
-> Specification release 0.1, page 19 for example.
->
-> It gets a bit confusing maybe in cases like this (as with
-> open-pic) where there is a cascades interrupt controller
-> that in this case also has 1 cell of interrupt specifier.
->
-> Or did you mean something else?
->
-> Yours,
-> Linus Walleij
+
+--001a114028d2c6a42a0549323c0c
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><span class=3D"gmail-m_7398540747629391754gmail-im">Hi, Wo=
+lfram:<br><br>Changes for v8:<br>1=E3=80=81don&#39;t reset the hardware and=
+ disable the irq while timeouts in zx2967_i2c_xfer_read_bytes.</span><div c=
+lass=3D"gmail_extra">2=E3=80=81remove two functions named <span class=3D"gm=
+ail-im">zx2967_i2c_xfer_read and </span><span class=3D"gmail-im">zx2967_i2c=
+_xfer_write, and merge the codes to zx2967_i2c_xfer_msg.<br><br></span><div=
+ class=3D"gmail_quote">On 23 February 2017 at 00:00, Wolfram Sang <span dir=
+=3D"ltr">&lt;<a href=3D"mailto:wsa@the-dreams.de" target=3D"_blank">wsa@the=
+-dreams.de</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex"><span class=3D"gmail-m_7398540747629391754gmail-">On Wed, Feb 22=
+, 2017 at 05:18:52PM +0800, Baoyou Xie wrote:<br>
+&gt; This patch adds i2c controller driver for ZTE&#39;s zx2967 family.<br>
+&gt;<br>
+&gt; Signed-off-by: Baoyou Xie &lt;<a href=3D"mailto:baoyou.xie@linaro.org"=
+ target=3D"_blank">baoyou.xie@linaro.org</a>&gt;<br>
+&gt; Reviewed-by: Shawn Guo &lt;<a href=3D"mailto:shawnguo@kernel.org" targ=
+et=3D"_blank">shawnguo@kernel.org</a>&gt;<br>
+&gt; Reviewed-by: Andy Shevchenko &lt;<a href=3D"mailto:andy.shevchenko@gma=
+il.com" target=3D"_blank">andy.shevchenko@gmail.com</a>&gt;<br>
+&gt; Reviewed-by: Jun Nie &lt;<a href=3D"mailto:jun.nie@linaro.org" target=
+=3D"_blank">jun.nie@linaro.org</a>&gt;<br>
+<br>
+</span>Please provide a changelog what you changed since the last version.<=
+br>
+<br>
+</blockquote></div><br></div></div>
+
+--001a114028d2c6a42a0549323c0c--
