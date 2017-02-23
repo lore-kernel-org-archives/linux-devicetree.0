@@ -1,40 +1,105 @@
-From: Imre Kaloz <kaloz@openwrt.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Thu, 23 Feb 2017 13:44:47 +0100
-Message-ID: <5c57772b-71fd-d9e2-efe6-1175cf048e0b@openwrt.org>
-References: <20170223104025.5755-1-zajec5@gmail.com>
- <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
- <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
+From: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Thu, 23 Feb 2017 20:48:24 +0800
+Message-ID: <1487854104.17813.1.camel@mtksdaap41>
+References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
+         <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
+         <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
+         <1485419833.990.1.camel@mtksdaap41>
+         <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
+         <1486359476.11424.33.camel@mtksdaap41>
+         <CABb+yY0jCGqnrMLkkTNoEmLX4jDstWh7-UYhDyKjV-gFOnxpsg@mail.gmail.com>
+         <1487733150.15869.11.camel@mtksdaap41>
+         <CABb+yY2dzcR4fYvrSQK5jemwUSkYVJ8aWEmiE6wstw-Yyqy7bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY2dzcR4fYvrSQK5jemwUSkYVJ8aWEmiE6wstw-Yyqy7bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jo
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBSYWZhbCwKCk9uIDIwMTctMDItMjMgMTM6MjksIFJhZmHFgiBNacWCZWNraSB3cm90ZToK
-PiBPbiAyMyBGZWJydWFyeSAyMDE3IGF0IDEzOjI3LCBJbXJlIEthbG96IDxrYWxvekBvcGVud3J0
-Lm9yZz4gd3JvdGU6Cj4+IEFzIGRpc2N1c3NlZCBmb3Igb3RoZXIgcGxhdGZvcm1zIGFzIHdlbGws
-IHBsZWFzZSB1c2UgdGhlIGJvYXJkJ3MgbmFtZSBhcyB0aGUKPj4gc2FtZSBib2FyZCBjYW4gZW5k
-IHVwIGJlaW5nIHNvbGQgdW5kZXIgbXVsdGlwbGUgbW9kZWwgbnVtYmVycy4KPj4KPj4gU28gcGxl
-YXNlIHJlbmFtZSB0aGUgZmlsZSB0byBiY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwo+IEh1
-aD8gV2hlcmUgZGlkIHlvdSBnZXQgcGFuYW1lcmEgbmFtZSBmcm9tPyEKWW91ciBtYW5uZXJzIHNo
-aW5lIG9uIHRoZXNlIGRhcmsgZGF5cyBvZiB3aW50ZXIuIEZvciBhYm91dCBhIGRlY2FkZSBub3cs
-IApodHRwOi8vMTkyLjE2OC4xLjEvc3lzaW5mby5jZ2kgd2lsbCBzaG93IHlvdSBxdWl0ZSBhIGJp
-dCBvZiBpbmZvcm1hdGlvbiAKaWYgeW91IGFyZSB0b28gbGF6eSB0byBsb29rIGludG8gdGhlIEdQ
-TCB0YXJiYWxsIG9yIGF0IHRoZSBvcmlnaW5hbCAKYm9vdGxvZ3MuCgoKQmVzdCwKCkltcmUKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+On Thu, 2017-02-23 at 09:40 +0530, Jassi Brar wrote:
+> On Wed, Feb 22, 2017 at 8:42 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > On Thu, 2017-02-16 at 21:02 +0530, Jassi Brar wrote:
+> >> On Mon, Feb 6, 2017 at 11:07 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> > Hi Jassi,
+> >> >
+> >> > On Wed, 2017-02-01 at 10:52 +0530, Jassi Brar wrote:
+> >> >> On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> >> > Hi Jassi,
+> >> >> >
+> >> >> > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
+> >> >> >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> >> >>
+> >> >> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> >> >> >> > new file mode 100644
+> >> >> >> > index 0000000..747bcd3
+> >> >> >> > --- /dev/null
+> >> >> >> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> >> >> >>
+> >> >> >> ...
+> >> >> >>
+> >> >> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
+> >> >> >> > +{
+> >> >> >> > +       struct cmdq *cmdq;
+> >> >> >> > +       struct cmdq_task *task;
+> >> >> >> > +       unsigned long curr_pa, end_pa;
+> >> >> >> > +
+> >> >> >> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
+> >> >> >> > +
+> >> >> >> > +       /* Client should not flush new tasks if suspended. */
+> >> >> >> > +       WARN_ON(cmdq->suspended);
+> >> >> >> > +
+> >> >> >> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
+> >> >> >> > +       task->cmdq = cmdq;
+> >> >> >> > +       INIT_LIST_HEAD(&task->list_entry);
+> >> >> >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
+> >> >> >> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
+> >> >> >> >
+> >> >> >> You seem to parse the requests and responses, that should ideally be
+> >> >> >> done in client driver.
+> >> >> >> Also, we are here in atomic context, can you move it in client driver
+> >> >> >> (before the spin_lock)?
+> >> >> >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
+> >> >> >
+> >> >> > will do
+> >> >
+> >> > I agree with moving dma_map_single out from spin_lock.
+> >> >
+> >> > However, mailbox clients cannot map virtual memory to mailbox
+> >> > controller's device for DMA.
+> >> >
+> >> If DMA is a resource used by MBox to transfer data, then yes the
+> >> mapping needs to be done in the Mbox controller driver. To map memory
+> >> outside of spinlock, you could schedule a tasklet in send_data() ?
+> >
+> > Hi Jassi,
+> >
+> > For CMDQ, the order of CMDQ tasks should be guaranteed.
+> > However, it seems tasklet cannot ensure this requirement.
+> >
+> > Quote from Linux Device Drivers 3rd edition ch7.
+> > "void tasklet_schedule(struct tasklet_struct *t);
+> >   Schedule the tasklet for execution. If a tasklet is scheduled again
+> > before it has a chance to run, it runs only once...."
+> >
+> Not sure what bothers you.
+> If you only add requests to a list, protected by some spinlock, during
+> send_datam you could always iterate over (submit) requests in the
+> order you queued them.
+
+Hi Jassi,
+
+OK. I will do it.
+
+Thanks,
+HS
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
