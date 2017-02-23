@@ -1,90 +1,456 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Thu, 23 Feb 2017 09:40:43 +0530
-Message-ID: <CABb+yY2dzcR4fYvrSQK5jemwUSkYVJ8aWEmiE6wstw-Yyqy7bw@mail.gmail.com>
-References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
- <1483499169-16329-3-git-send-email-hs.liao@mediatek.com> <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
- <1485419833.990.1.camel@mtksdaap41> <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
- <1486359476.11424.33.camel@mtksdaap41> <CABb+yY0jCGqnrMLkkTNoEmLX4jDstWh7-UYhDyKjV-gFOnxpsg@mail.gmail.com>
- <1487733150.15869.11.camel@mtksdaap41>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH V2 1/3] arm64: dts: Add basic DT to support Spreadtrum's
+ SP9860G
+Date: Thu, 23 Feb 2017 14:20:26 +0800
+Message-ID: <CAAfSe-t8pVM=bO+S4YatE0rYKgeeZntDbV4ufD5sC3jQYCwVMg@mail.gmail.com>
+References: <1487660104-15693-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1487660104-15693-2-git-send-email-chunyan.zhang@spreadtrum.com>
+ <20170221162744.GA29581@linaro.org> <20170222034632.GA18116@spreadtrum.com>
+ <CANLsYkyba+QscLK5m=Fb4ErK_WEtyteR0ozS47W48izhrbSBfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487733150.15869.11.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CANLsYkyba+QscLK5m=Fb4ErK_WEtyteR0ozS47W48izhrbSBfg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Orson Zhai <orson.zhai@spreadtrum.com>, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 8:42 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Thu, 2017-02-16 at 21:02 +0530, Jassi Brar wrote:
->> On Mon, Feb 6, 2017 at 11:07 AM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> > Hi Jassi,
->> >
->> > On Wed, 2017-02-01 at 10:52 +0530, Jassi Brar wrote:
->> >> On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> >> > Hi Jassi,
->> >> >
->> >> > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
->> >> >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> >> >>
->> >> >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
->> >> >> > new file mode 100644
->> >> >> > index 0000000..747bcd3
->> >> >> > --- /dev/null
->> >> >> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
->> >> >>
->> >> >> ...
->> >> >>
->> >> >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
->> >> >> > +{
->> >> >> > +       struct cmdq *cmdq;
->> >> >> > +       struct cmdq_task *task;
->> >> >> > +       unsigned long curr_pa, end_pa;
->> >> >> > +
->> >> >> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
->> >> >> > +
->> >> >> > +       /* Client should not flush new tasks if suspended. */
->> >> >> > +       WARN_ON(cmdq->suspended);
->> >> >> > +
->> >> >> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
->> >> >> > +       task->cmdq = cmdq;
->> >> >> > +       INIT_LIST_HEAD(&task->list_entry);
->> >> >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
->> >> >> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
->> >> >> >
->> >> >> You seem to parse the requests and responses, that should ideally be
->> >> >> done in client driver.
->> >> >> Also, we are here in atomic context, can you move it in client driver
->> >> >> (before the spin_lock)?
->> >> >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
->> >> >
->> >> > will do
->> >
->> > I agree with moving dma_map_single out from spin_lock.
->> >
->> > However, mailbox clients cannot map virtual memory to mailbox
->> > controller's device for DMA.
->> >
->> If DMA is a resource used by MBox to transfer data, then yes the
->> mapping needs to be done in the Mbox controller driver. To map memory
->> outside of spinlock, you could schedule a tasklet in send_data() ?
+[...]
+
+>>> > +
+>>> > +   soc {
+>>> > +           soc_funnel: funnel@10001000 {
+>>>
+>>> There is no need for a label ("soc_funnel) before the device name if that
+>>> device is not referenced elsewhere in the DTS.  The same comment applies to most
+>>> of the component listed below.
+>>>
+>>
+>> OK, I will remove these labels from this DT.
+>> And there's another issue I'd like to discuss with you, do you think which way is better:
+>> 1) use class name which can represent this kind of components as device node name in DT, e.g.
+>>         funnel@... {
+>>
+>>         }
+>>         replicator@... {
+>>
+>>         }
+>>         etb@... {
+>>
+>>         }
+>>         etf@...
+>>         etm@...
+>>         stm@...
+>>
+>> 2) use more descriptive device name for those which are more than one on
+>> a SoC, e.g.
+>>         soc-funnel@... {
+>>
+>>         }
+>>         cluster0-funnel@... {
+>>
+>>         }
+>>         cluster1-funnel@... {
+>>
+>>         }
+>>
+>> I noticed Juno use the 2), would you suggest that way?
 >
-> Hi Jassi,
+> It is better to describe the HW component themselves rather than where
+> they are in the topology - the address of the component will make sure
+> the names are unique.  So just the component type (etm, funnel,
+> replicator, ....) and the address they are located at.
 >
-> For CMDQ, the order of CMDQ tasks should be guaranteed.
-> However, it seems tasklet cannot ensure this requirement.
->
-> Quote from Linux Device Drivers 3rd edition ch7.
-> "void tasklet_schedule(struct tasklet_struct *t);
->   Schedule the tasklet for execution. If a tasklet is scheduled again
-> before it has a chance to run, it runs only once...."
->
-Not sure what bothers you.
-If you only add requests to a list, protected by some spinlock, during
-send_datam you could always iterate over (submit) requests in the
-order you queued them.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+OK. And to avoid making other person confused in the future, is it
+better to revise juno-base.dtsi according to this convention?
+
+Thanks,
+Chunyan
+
+>>
+>> Thanks,
+>> Chunyan
+>>
+>>> > +                   compatible = "arm,coresight-funnel", "arm,primecell";
+>>> > +                   reg = <0 0x10001000 0 0x1000>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +                   ports {
+>>> > +                           #address-cells = <1>;
+>>> > +                           #size-cells = <0>;
+>>> > +
+>>> > +                           port@0 {
+>>> > +                                   reg = <0>;
+>>> > +                                   soc_funnel_out_port: endpoint {
+>>> > +                                           remote-endpoint = <&etb_in>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@1 {
+>>> > +                                   reg = <0>;
+>>> > +                                   soc_funnel_in_port: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint =
+>>> > +                                           <&main_funnel_out_port>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etb@10003000 {
+>>> > +                   compatible = "arm,coresight-tmc", "arm,primecell";
+>>> > +                   reg = <0 0x10003000 0 0x1000>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +                   port {
+>>> > +                           etb_in: endpoint {
+>>> > +                                   slave-mode;
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&soc_funnel_out_port>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           cluster0_funnel: funnel@11001000 {
+>>> > +                   compatible = "arm,coresight-funnel", "arm,primecell";
+>>> > +                   reg = <0 0x11001000 0 0x1000>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +                   ports {
+>>> > +                           #address-cells = <1>;
+>>> > +                           #size-cells = <0>;
+>>> > +
+>>> > +                           port@0 {
+>>> > +                                   reg = <0>;
+>>> > +                                   cluster0_funnel_out_port: endpoint {
+>>> > +                                           remote-endpoint =
+>>> > +                                                   <&cluster0_etf_in>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@1 {
+>>> > +                                   reg = <0>;
+>>> > +                                   cluster0_funnel_in_port0: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm0_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@2 {
+>>> > +                                   reg = <1>;
+>>> > +                                   cluster0_funnel_in_port1: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm1_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@3 {
+>>> > +                                   reg = <2>;
+>>> > +                                   cluster0_funnel_in_port2: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm2_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@4 {
+>>> > +                                   reg = <4>;
+>>> > +                                   cluster0_funnel_in_port3: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm3_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           cluster1_funnel: funnel@11002000 {
+>>> > +                   compatible = "arm,coresight-funnel", "arm,primecell";
+>>> > +                   reg = <0 0x11002000 0 0x1000>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +                   ports {
+>>> > +                           #address-cells = <1>;
+>>> > +                           #size-cells = <0>;
+>>> > +
+>>> > +                           port@0 {
+>>> > +                                   reg = <0>;
+>>> > +                                   cluster1_funnel_out_port: endpoint {
+>>> > +                                           remote-endpoint =
+>>> > +                                                   <&cluster1_etf_in>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@1 {
+>>> > +                                   reg = <0>;
+>>> > +                                   cluster1_funnel_in_port0: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm4_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@2 {
+>>> > +                                   reg = <1>;
+>>> > +                                   cluster1_funnel_in_port1: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm5_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@3 {
+>>> > +                                   reg = <2>;
+>>> > +                                   cluster1_funnel_in_port2: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm6_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@4 {
+>>> > +                                   reg = <3>;
+>>> > +                                   cluster1_funnel_in_port3: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint = <&etm7_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           cluster0_etf: etf@11003000 {
+>>> > +                   compatible = "arm,coresight-tmc", "arm,primecell";
+>>> > +                   reg = <0 0x11003000 0 0x1000>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port@0 {
+>>> > +                           cluster0_etf_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&main_funnel_in_port0>;
+>>> > +                           };
+>>> > +                   };
+>>> > +
+>>> > +                   port@1 {
+>>> > +                           cluster0_etf_in: endpoint {
+>>> > +                                   slave-mode;
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster0_funnel_out_port>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           cluster1_etf: etf@11004000 {
+>>> > +                   compatible = "arm,coresight-tmc", "arm,primecell";
+>>> > +                   reg = <0 0x11004000 0 0x1000>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port@0 {
+>>> > +                           cluster1_etf_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&main_funnel_in_port1>;
+>>> > +                           };
+>>> > +                   };
+>>> > +
+>>> > +                   port@1 {
+>>> > +                           cluster1_etf_in: endpoint {
+>>> > +                                   slave-mode;
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster1_funnel_out_port>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>>
+>>> When more than one port is present it is customary to add another level of
+>>> imbrication like it is done for funnels above:
+>>>                          "ports {"
+>>>                                 port@0 {
+>>>                                 ...
+>>>                                 port@1 {
+>>>                                 ...
+>>>                         }
+>>>
+>>> The same comment applies to both etf.
+>>>
+>>
+>> OK.
+>>
+>>> > +
+>>> > +           main_funnel: funnel@11005000 {
+>>> > +                   compatible = "arm,coresight-funnel", "arm,primecell";
+>>> > +                   reg = <0 0x11005000 0 0x1000>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   ports {
+>>> > +                           #address-cells = <1>;
+>>> > +                           #size-cells = <0>;
+>>> > +
+>>> > +                           port@0 {
+>>> > +                                   reg = <0>;
+>>> > +                                   main_funnel_out_port: endpoint {
+>>> > +                                           remote-endpoint =
+>>> > +                                                   <&soc_funnel_in_port>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@1 {
+>>> > +                                   reg = <0>;
+>>> > +                                   main_funnel_in_port0: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint =
+>>> > +                                                   <&cluster0_etf_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +
+>>> > +                           port@2 {
+>>> > +                                   reg = <1>;
+>>> > +                                   main_funnel_in_port1: endpoint {
+>>> > +                                           slave-mode;
+>>> > +                                           remote-endpoint =
+>>> > +                                                   <&cluster1_etf_out>;
+>>> > +                                   };
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11440000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11440000 0 0x1000>;
+>>> > +                   cpu = <&CPU0>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm0_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster0_funnel_in_port0>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11540000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11540000 0 0x1000>;
+>>> > +                   cpu = <&CPU1>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm1_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster0_funnel_in_port1>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11640000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11640000 0 0x1000>;
+>>> > +                   cpu = <&CPU2>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm2_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster0_funnel_in_port2>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11740000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11740000 0 0x1000>;
+>>> > +                   cpu = <&CPU3>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm3_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster0_funnel_in_port3>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11840000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11840000 0 0x1000>;
+>>> > +                   cpu = <&CPU4>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm4_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster1_funnel_in_port0>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11940000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11940000 0 0x1000>;
+>>> > +                   cpu = <&CPU5>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm5_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster1_funnel_in_port1>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11a40000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11a40000 0 0x1000>;
+>>> > +                   cpu = <&CPU6>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm6_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster1_funnel_in_port2>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +
+>>> > +           etm@11b40000 {
+>>> > +                   compatible = "arm,coresight-etm4x", "arm,primecell";
+>>> > +                   reg = <0 0x11b40000 0 0x1000>;
+>>> > +                   cpu = <&CPU7>;
+>>> > +                   clocks = <&ext_26m>;
+>>> > +                   clock-names = "apb_pclk";
+>>> > +
+>>> > +                   port {
+>>> > +                           etm7_out: endpoint {
+>>> > +                                   remote-endpoint =
+>>> > +                                           <&cluster1_funnel_in_port3>;
+>>> > +                           };
+>>> > +                   };
+>>> > +           };
+>>> > +   };
+>>> > +};
+
+[...]
+
+>>> >
+>>> > _______________________________________________
+>>> > linux-arm-kernel mailing list
+>>> > linux-arm-kernel@lists.infradead.org
+>>> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
