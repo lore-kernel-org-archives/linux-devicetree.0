@@ -1,52 +1,51 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2 1/3] arm64: dts: Add basic DT to support Spreadtrum's
- SP9860G
-Date: Thu, 23 Feb 2017 10:56:11 +0000
-Message-ID: <76146c97-d4ff-7058-0ca7-6b2baa3bf5fe@arm.com>
-References: <1487660104-15693-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487660104-15693-2-git-send-email-chunyan.zhang@spreadtrum.com>
- <20170221162744.GA29581@linaro.org> <20170222034632.GA18116@spreadtrum.com>
- <CANLsYkyba+QscLK5m=Fb4ErK_WEtyteR0ozS47W48izhrbSBfg@mail.gmail.com>
- <CAAfSe-t8pVM=bO+S4YatE0rYKgeeZntDbV4ufD5sC3jQYCwVMg@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] [1/2] mmc: sdhci-cadence: Fix writing PHY delay
+Date: Thu, 23 Feb 2017 20:28:51 +0900
+Message-ID: <CAK7LNARW4zQ2OutrAfzkigt8OgMbAMbaLvTB2ZNfwbApHT=TEA@mail.gmail.com>
+References: <1487250413-5769-1-git-send-email-piotrs@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAAfSe-t8pVM=bO+S4YatE0rYKgeeZntDbV4ufD5sC3jQYCwVMg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Orson Zhai <orson.zhai@spreadtrum.com>, Arnd Bergmann <arnd@arndb.de>, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg KH <gregkh@linuxfoundation.org>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1487250413-5769-1-git-send-email-piotrs@cadence.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Piotr Sroka <piotrs@cadence.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunyan,
+Hi.
 
-On 23/02/17 06:20, Chunyan Zhang wrote:
-[...]
+2017-02-16 22:06 GMT+09:00 Piotr Sroka <piotrs@cadence.com>:
+> Add polling for ACK to be sure that data are written to PHY register.
+>
+> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+> ---
+>  drivers/mmc/host/sdhci-cadence.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-cadence.c b/drivers/mmc/host/sdhci-cadence.c
+> index 4b0ecb9..c946e45 100644
+> --- a/drivers/mmc/host/sdhci-cadence.c
+> +++ b/drivers/mmc/host/sdhci-cadence.c
+> @@ -65,11 +65,12 @@ struct sdhci_cdns_priv {
+>         void __iomem *hrs_addr;
+>  };
+>
+> -static void sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
+> +static int sdhci_cdns_write_phy_reg(struct sdhci_cdns_priv *priv,
+>                                      u8 addr, u8 data)
 
->>> I noticed Juno use the 2), would you suggest that way?
->>
->> It is better to describe the HW component themselves rather than where
->> they are in the topology - the address of the component will make sure
->> the names are unique.  So just the component type (etm, funnel,
->> replicator, ....) and the address they are located at.
->>
-> 
-> OK. And to avoid making other person confused in the future, is it
-> better to revise juno-base.dtsi according to this convention?
-> 
 
-Yes, it was noticed by Olof and should be now fixed for v4.11(already
-queued). You can check linux-next if you want to have a look before it
-gets merged.
+If you have a chance to submit v2,
+I want the indent of the above line adjusted.
+
+
+Otherwise,
+
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+
 
 -- 
-Regards,
-Sudeep
+Best Regards
+Masahiro Yamada
