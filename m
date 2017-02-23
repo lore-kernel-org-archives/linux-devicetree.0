@@ -1,96 +1,70 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 2/2] drivers: pwm: pwm-atmel: add support to allow run
- time changing of pwm parameters
-Date: Thu, 23 Feb 2017 11:32:26 +0100
-Message-ID: <20170223113226.7b24ffb6@bbrezillon>
-References: <1487839120-13650-1-git-send-email-claudiu.beznea@microchip.com>
-        <1487839120-13650-3-git-send-email-claudiu.beznea@microchip.com>
-        <20170223092148.5qmxy62xkufwbsrw@piout.net>
-        <f963def2-6d82-3bf7-22fa-8915f408ca54@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 3/3] extcon: int3496: Add GPIO ACPI mapping table
+Date: Thu, 23 Feb 2017 12:31:56 +0200
+Message-ID: <20170223103156.109643-3-andriy.shevchenko@linux.intel.com>
+References: <20170223103156.109643-1-andriy.shevchenko@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f963def2-6d82-3bf7-22fa-8915f408ca54@microchip.com>
+In-Reply-To: <20170223103156.109643-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: m18063 <Claudiu.Beznea@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, David Cohen <david.a.cohen@intel.com>, Felipe Balbi <balbi@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Claudiu,
+In order to make GPIO ACPI library stricter prepare users of
+gpiod_get_index() to correctly behave when there no mapping is
+provided by firmware.
 
-On Thu, 23 Feb 2017 12:25:58 +0200
-m18063 <Claudiu.Beznea@microchip.com> wrote:
+Here we add explicit mapping between _CRS GpioIo() resources and
+their names used in the driver.
 
-> Hi,
-> 
-> 
-> On 23.02.2017 11:21, Alexandre Belloni wrote:
-> > On 23/02/2017 at 10:38:40 +0200, Claudiu Beznea wrote:  
-> >> sama5d2 supports changing of pwm parameters like period and
-> >> duty factor without first to disable pwm. Since pwm code
-> >> is supported by more than one SoC add allow_runtime_cfg
-> >> parameter to atmel_pwm_chip data structure. This will be
-> >> filled statically for every SoC, saved in pwm specific
-> >> structure at probing time and checked while configuring
-> >> the device. Based on this, pwm clock will not be
-> >> enabled/disabled while configuring if it still enabled.
-> >>
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> >> ---
-> >>  drivers/pwm/pwm-atmel.c | 24 ++++++++++++++++++------
-> >>  1 file changed, 18 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> >> index 4406639..9e1dece 100644
-> >> --- a/drivers/pwm/pwm-atmel.c
-> >> +++ b/drivers/pwm/pwm-atmel.c
-> >> @@ -68,6 +68,8 @@ struct atmel_pwm_chip {
-> >>  
-> >>  	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
-> >>  		       unsigned long dty, unsigned long prd);
-> >> +
-> >> +	bool allow_runtime_cfg;
-> >>  };
-> >>  
-> >>  static inline struct atmel_pwm_chip *to_atmel_pwm_chip(struct pwm_chip *chip)
-> >> @@ -114,7 +116,8 @@ static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> >>  	u32 val;
-> >>  	int ret;
-> >>  
-> >> -	if (pwm_is_enabled(pwm) && (period_ns != pwm_get_period(pwm))) {
-> >> +	if (!atmel_pwm->allow_runtime_cfg &&
-> >> +	    pwm_is_enabled(pwm) && (period_ns != pwm_get_period(pwm))) {
-> >>  		dev_err(chip->dev, "cannot change PWM period while enabled\n");
-> >>  		return -EBUSY;
-> >>  	}
-> >> @@ -139,10 +142,12 @@ static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> >>  	do_div(div, period_ns);
-> >>  	dty = prd - div;
-> >>  
-> >> -	ret = clk_enable(atmel_pwm->clk);
-> >> -	if (ret) {
-> >> -		dev_err(chip->dev, "failed to enable PWM clock\n");
-> >> -		return ret;
-> >> +	if (!pwm_is_enabled(pwm)) {
-> >> +		ret = clk_enable(atmel_pwm->clk);
-> >> +		if (ret) {
-> >> +			dev_err(chip->dev, "failed to enable PWM clock\n");
-> >> +			return ret;
-> >> +		}
-> >>  	}
-> >>    
-> > It is probably worth switching to atomic PWM instead of changing this
-> > function. This would simplify the whole driver.  
-> I was thinking to switch to atomic PWM in a future patch.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/extcon/extcon-intel-int3496.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Actually, I think it's better to do it before adding support for the
-new IP (even before patch 1), but maybe I'm the only one to think
-so :-).
-
-Note that switching to the atomic API is not a big (actually, it should
-even simplify the code).
-
-Regards,
-
-Boris
+diff --git a/drivers/extcon/extcon-intel-int3496.c b/drivers/extcon/extcon-intel-int3496.c
+index 81713bf7487e..1abe9071d9d0 100644
+--- a/drivers/extcon/extcon-intel-int3496.c
++++ b/drivers/extcon/extcon-intel-int3496.c
+@@ -45,6 +45,17 @@ static const unsigned int int3496_cable[] = {
+ 	EXTCON_NONE,
+ };
+ 
++static const struct acpi_gpio_params id_gpios = { INT3496_GPIO_USB_ID, 0, false };
++static const struct acpi_gpio_params vbus_gpios = { INT3496_GPIO_VBUS_EN, 0, false };
++static const struct acpi_gpio_params mux_gpios = { INT3496_GPIO_USB_MUX, 0, false };
++
++static const struct acpi_gpio_mapping acpi_int3496_default_gpios[] = {
++	{ "id-gpios", &id_gpios, 1 },
++	{ "vbus-gpios", &vbus_gpios, 1 },
++	{ "mux-gpios", &mux_gpios, 1 },
++	{ },
++};
++
+ static void int3496_do_usb_id(struct work_struct *work)
+ {
+ 	struct int3496_data *data =
+@@ -83,6 +94,13 @@ static int int3496_probe(struct platform_device *pdev)
+ 	struct int3496_data *data;
+ 	int ret;
+ 
++	ret = acpi_dev_add_driver_gpios(ACPI_COMPANION(dev),
++					acpi_int3496_default_gpios);
++	if (ret) {
++		dev_err(dev, "can't add GPIO ACPI mapping\n");
++		return ret;
++	}
++
+ 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+@@ -154,6 +172,7 @@ static int int3496_remove(struct platform_device *pdev)
+ 	devm_free_irq(&pdev->dev, data->usb_id_irq, data);
+ 	cancel_delayed_work_sync(&data->work);
+ 
++	acpi_dev_remove_driver_gpios(ACPI_COMPANION(&pdev->dev));
+ 	return 0;
+ }
+ 
+-- 
+2.11.0
