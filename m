@@ -1,65 +1,25 @@
-From: Imre Kaloz <kaloz@openwrt.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Thu, 23 Feb 2017 13:27:24 +0100
-Message-ID: <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
-References: <20170223104025.5755-1-zajec5@gmail.com>
+Date: Thu, 23 Feb 2017 13:29:27 +0100
+Message-ID: <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
+References: <20170223104025.5755-1-zajec5@gmail.com> <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170223104025.5755-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <bd36df47-cefe-5736-e02c-621a21ae1b7a-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUmFmYWwsCgpBcyBkaXNjdXNzZWQgZm9yIG90aGVyIHBsYXRmb3JtcyBhcyB3ZWxsLCBwbGVh
-c2UgdXNlIHRoZSBib2FyZCdzIG5hbWUgYXMgCnRoZSBzYW1lIGJvYXJkIGNhbiBlbmQgdXAgYmVp
-bmcgc29sZCB1bmRlciBtdWx0aXBsZSBtb2RlbCBudW1iZXJzLgoKU28gcGxlYXNlIHJlbmFtZSB0
-aGUgZmlsZSB0byBiY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwoKCkJlc3QsCgpJbXJlCgoK
-T24gMjAxNy0wMi0yMyAxMTo0MCwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IEZyb206IFJhZmHF
-giBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPgo+IEl0J3MgdHJpLWJhbmQgd2lyZWxlc3Mg
-aG9tZSByb3V0ZXIgYmFzZWQgb24gQkNNNDcwOTQgQUtBIEJDTTQ3MDlDMC4gSXQKPiB1c2VzIDMg
-eCBCQ000MzY2IGNoaXBzZXRzIGZvciB3aXJlbGVzcy4KPgo+IFNpZ25lZC1vZmYtYnk6IFJhZmHF
-giBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMv
-TWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgIDEgKwo+ICBhcmNoL2FybS9ib290L2R0cy9i
-Y200NzA5NC1saW5rc3lzLWVhOTUwMC5kdHMgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysr
-KysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzNyBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBhcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1saW5rc3lzLWVhOTUwMC5kdHMKPgo+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L01ha2VmaWxlCj4gaW5kZXggNTJhMDUyODljNTM4Li45MzFkYjBiNDEyNDYgMTAwNjQ0Cj4gLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9N
-YWtlZmlsZQo+IEBAIC05Myw2ICs5Myw3IEBAIGR0Yi0kKENPTkZJR19BUkNIX0JDTV81MzAxWCkg
-Kz0gXAo+ICAJYmNtNDcwOS1uZXRnZWFyLXI4MDAwLmR0YiBcCj4gIAliY200NzA5LXRwbGluay1h
-cmNoZXItYzktdjEuZHRiIFwKPiAgCWJjbTQ3MDk0LWRsaW5rLWRpci04ODVsLmR0YiBcCj4gKwli
-Y200NzA5NC1saW5rc3lzLWVhOTUwMC5kdGIgXAo+ICAJYmNtNDcwOTQtbHV4dWwteHdyLTMxMDAu
-ZHRiIFwKPiAgCWJjbTQ3MDk0LW5ldGdlYXItcjg1MDAuZHRiIFwKPiAgCWJjbTk0NzA4LmR0YiBc
-Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWxpbmtzeXMtZWE5NTAw
-LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LWxpbmtzeXMtZWE5NTAwLmR0cwo+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi4zMTYzOWU1YjhjNzIKPiAt
-LS0gL2Rldi9udWxsCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQtbGlua3N5cy1l
-YTk1MDAuZHRzCj4gQEAgLTAsMCArMSwzNiBAQAo+ICsvKgo+ICsgKiBDb3B5cmlnaHQgKEMpIDIw
-MTcgUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+ICsgKgo+ICsgKiBMaWNlbnNl
-ZCB1bmRlciB0aGUgSVNDIGxpY2Vuc2UuCj4gKyAqLwo+ICsKPiArL2R0cy12MS87Cj4gKwo+ICsj
-aW5jbHVkZSAiYmNtNDcwOTQuZHRzaSIKPiArI2luY2x1ZGUgImJjbTUzMDF4LW5hbmQtY3MwLWJj
-aDguZHRzaSIKPiArCj4gKy8gewo+ICsJY29tcGF0aWJsZSA9ICJsaW5rc3lzLGVhOTUwMCIsICJi
-cmNtLGJjbTQ3MDk0IiwgImJyY20sYmNtNDcwOCI7Cj4gKwltb2RlbCA9ICJMaW5rc3lzIEVBOTUw
-MCI7Cj4gKwo+ICsJY2hvc2VuIHsKPiArCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIw
-MCI7Cj4gKwl9Owo+ICsKPiArCW1lbW9yeSB7Cj4gKwkJcmVnID0gPDB4MDAwMDAwMDAgMHgwODAw
-MDAwMAo+ICsJCSAgICAgICAweDg4MDAwMDAwIDB4MDgwMDAwMDA+Owo+ICsJfTsKPiArCj4gKwln
-cGlvLWtleXMgewo+ICsJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzIjsKPiArCQkjYWRkcmVzcy1j
-ZWxscyA9IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJd3BzIHsKPiArCQkJ
-bGFiZWwgPSAiV1BTIjsKPiArCQkJbGludXgsY29kZSA9IDxLRVlfV1BTX0JVVFRPTj47Cj4gKwkJ
-CWdwaW9zID0gPCZjaGlwY29tbW9uIDMgR1BJT19BQ1RJVkVfTE9XPjsKPiArCQl9Owo+ICsJfTsK
-PiArfTsKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On 23 February 2017 at 13:27, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> As discussed for other platforms as well, please use the board's name as the
+> same board can end up being sold under multiple model numbers.
+>
+> So please rename the file to bcm47094-linksys-panamera.dts
+
+Huh? Where did you get panamera name from?!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
