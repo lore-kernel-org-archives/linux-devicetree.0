@@ -1,139 +1,78 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] drivers: pwm: pwm-atmel: add support to allow run
- time changing of pwm parameters
-Date: Thu, 23 Feb 2017 10:21:48 +0100
-Message-ID: <20170223092148.5qmxy62xkufwbsrw@piout.net>
-References: <1487839120-13650-1-git-send-email-claudiu.beznea@microchip.com>
- <1487839120-13650-3-git-send-email-claudiu.beznea@microchip.com>
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] fpga manager: Add Xilinx slave serial SPI driver
+Date: Thu, 23 Feb 2017 10:28:52 +0100
+Message-ID: <20170223102852.47d5bf5d@crub>
+References: <1487759951-20711-1-git-send-email-agust@denx.de>
+ <1487759951-20711-3-git-send-email-agust@denx.de>
+ <e9620f07-48bd-1f83-a686-6874becbba86@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1487839120-13650-3-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+In-Reply-To: <e9620f07-48bd-1f83-a686-6874becbba86-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/02/2017 at 10:38:40 +0200, Claudiu Beznea wrote:
-> sama5d2 supports changing of pwm parameters like period and
-> duty factor without first to disable pwm. Since pwm code
-> is supported by more than one SoC add allow_runtime_cfg
-> parameter to atmel_pwm_chip data structure. This will be
-> filled statically for every SoC, saved in pwm specific
-> structure at probing time and checked while configuring
-> the device. Based on this, pwm clock will not be
-> enabled/disabled while configuring if it still enabled.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> ---
->  drivers/pwm/pwm-atmel.c | 24 ++++++++++++++++++------
->  1 file changed, 18 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> index 4406639..9e1dece 100644
-> --- a/drivers/pwm/pwm-atmel.c
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -68,6 +68,8 @@ struct atmel_pwm_chip {
->  
->  	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
->  		       unsigned long dty, unsigned long prd);
-> +
-> +	bool allow_runtime_cfg;
->  };
->  
->  static inline struct atmel_pwm_chip *to_atmel_pwm_chip(struct pwm_chip *chip)
-> @@ -114,7 +116,8 @@ static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  	u32 val;
->  	int ret;
->  
-> -	if (pwm_is_enabled(pwm) && (period_ns != pwm_get_period(pwm))) {
-> +	if (!atmel_pwm->allow_runtime_cfg &&
-> +	    pwm_is_enabled(pwm) && (period_ns != pwm_get_period(pwm))) {
->  		dev_err(chip->dev, "cannot change PWM period while enabled\n");
->  		return -EBUSY;
->  	}
-> @@ -139,10 +142,12 @@ static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  	do_div(div, period_ns);
->  	dty = prd - div;
->  
-> -	ret = clk_enable(atmel_pwm->clk);
-> -	if (ret) {
-> -		dev_err(chip->dev, "failed to enable PWM clock\n");
-> -		return ret;
-> +	if (!pwm_is_enabled(pwm)) {
-> +		ret = clk_enable(atmel_pwm->clk);
-> +		if (ret) {
-> +			dev_err(chip->dev, "failed to enable PWM clock\n");
-> +			return ret;
-> +		}
->  	}
->  
+On Wed, 22 Feb 2017 16:04:47 +0100
+Michal Simek michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org wrote:
+...
+>> +	/* program latency */
+>> +	usleep_range(prog_latency_1000us, prog_latency_1000us + 500);  
+>
+>Based on my colleague for spartan6 this should be 5ms and other xilinx
+>fpgas can take up to 7.5ms.
+>
+>In general, it is better to poll for INIT_B pin==High (but that takes
+>another GPIO) and wait until at least 10 ms before timeout.
 
-It is probably worth switching to atomic PWM instead of changing this
-function. This would simplify the whole driver.
+checked in the ug380.pdf, it depends on the speed grade, for some
+spartan6 it can be max. 4ms, for others 5ms. It is a max. value,
+INIT_B can go high earlier, but in my hw setup INIT_B is not
+connected. Someone with a hw setup with INIT_B connected can
+add optional support for INIT_P polling.
 
->  	/* It is necessary to preserve CPOL, inside CMR */
-> @@ -155,7 +160,9 @@ static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  	atmel_pwm->updated_pwms &= ~(1 << pwm->hwpwm);
->  	mutex_unlock(&atmel_pwm->isr_lock);
->  
-> -	clk_disable(atmel_pwm->clk);
-> +	if (!pwm_is_enabled(pwm))
-> +		clk_disable(atmel_pwm->clk);
-> +
->  	return ret;
->  }
->  
-> @@ -294,18 +301,22 @@ static const struct pwm_ops atmel_pwm_ops = {
->  struct atmel_pwm_data {
->  	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
->  		       unsigned long dty, unsigned long prd);
-> +	bool allow_runtime_cfg;
->  };
->  
->  static const struct atmel_pwm_data atmel_pwm_data_v1 = {
->  	.config = atmel_pwm_config_v1,
-> +	.allow_runtime_cfg = false,
+...
+>> +static int xilinx_spi_write_complete(struct fpga_manager *mgr,
+>> +				     struct fpga_image_info *info)
+>> +{
+>> +	struct xilinx_spi_conf *conf = mgr->priv;
+>> +	int wait;
+>> +
+>> +	if (gpiod_get_value(conf->done))
+>> +		return 0;
+>> +
+>> +	wait = info->config_complete_timeout_us / FPGA_MIN_CFG_WAIT_US;
+>> +	if (info->config_complete_timeout_us % FPGA_MIN_CFG_WAIT_US)
+>> +		wait += 1;
+>> +
+>> +	while (wait--) {
+>> +		usleep_range(FPGA_MIN_CFG_WAIT_US, FPGA_MIN_CFG_WAIT_US + 5);
+>> +
+>> +		if (gpiod_get_value(conf->done))
+>> +			return 0;
+>> +	}
+>> +  
+>
+>Based on my colleague:
+>IMHO, for step 4 it is better to do these steps to cover more possible
+>configuration DONE scenarios:
+>
+>While ((DONE==0) and (NOT TIMEOUT)) {
+>    Continue to apply CCLK cycles;
+>    Check DONE;
+>    timeout++;
+>}
+>
+>Apply at least 8 more CCLK cycles.
+>
+>The timeout should be equivalent to at least 10 ms of time.
 
-This is useless as it is false even if not explicitly set.
+You mead Step 8 I think, not step 4. Will see what I can change.
 
->  };
->  
->  static const struct atmel_pwm_data atmel_pwm_data_v2 = {
->  	.config = atmel_pwm_config_v2,
-> +	.allow_runtime_cfg = false,
-
-ditto.
-
->  };
->  
->  static const struct atmel_pwm_data atmel_pwm_data_v3 = {
->  	.config = atmel_pwm_config_v3,
-> +	.allow_runtime_cfg = true,
->  };
->  
->  static const struct platform_device_id atmel_pwm_devtypes[] = {
-> @@ -399,6 +410,7 @@ static int atmel_pwm_probe(struct platform_device *pdev)
->  	atmel_pwm->chip.npwm = 4;
->  	atmel_pwm->chip.can_sleep = true;
->  	atmel_pwm->config = data->config;
-> +	atmel_pwm->allow_runtime_cfg = data->allow_runtime_cfg;
-
-It is probably worth having a pointer to the atmel_pwm_data instead of
-having to copy all the members.
-
->  	atmel_pwm->updated_pwms = 0;
->  	mutex_init(&atmel_pwm->isr_lock);
->  
-> -- 
-> 2.7.4
-> 
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thansk,
+Anatolij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
