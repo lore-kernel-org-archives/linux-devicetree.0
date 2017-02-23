@@ -1,107 +1,197 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 3/8] mm: cma: Export a few symbols
-Date: Thu, 23 Feb 2017 14:58:09 -0800
-Message-ID: <20170223225809.rnpbjnli4wa5kims@lukather>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
- <2dee6c0baaf08e2c7d48ceb7e97e511c914d0f87.1486655917.git-series.maxime.ripard@free-electrons.com>
- <20170209192046.GB31906@dhcp22.suse.cz>
- <20170213134416.akgmtv3lv5m65fwx@lukather>
- <20170220123550.GH2431@dhcp22.suse.cz>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC/PATCH] of: Mark property::value as const
+Date: Thu, 23 Feb 2017 15:08:56 -0800
+Message-ID: <58AF6B88.6020709@gmail.com>
+References: <20170214025040.23955-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1150029903=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170220123550.GH2431@dhcp22.suse.cz>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Michal Hocko <mhocko@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Joonsoo Kim <js1304@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170214025040.23955-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/13/17 18:50, Stephen Boyd wrote:
+> The 'blob' we pass into populate_properties() is marked as const,
+> but we cast that const away when we assign the result of
+> fdt_getprop_by_offset() to pp->value. Let's mark value as const
+> instead, so that code can't mistakenly write to the value of the
+> property that we've so far advertised as const.
 
---===============1150029903==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="s63xugflc7zhlrdx"
-Content-Disposition: inline
+Instead of struct property field value being a pointer into the
+FDT, I would rather copy the data to newly allocated memory and
+have value be a pointer to that memory.  This is required if we
+want to make /sys/firmware/fdt optional, which would allow us to
+free the memory containing the initial boot FDT.
+
+I also do not want overlay live subtrees to have any pointers
+into the FDT that was used to populate the overlay, so copying
+the data solves that problem also.
 
 
---s63xugflc7zhlrdx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Unfortunately, this exposes a problem with the fdt resolver code,
+> where we overwrite the value member of properties of phandles to
+> update them with their final value. Add a comment for now to
+> indicate where we're potentially writing over const data.
 
-On Mon, Feb 20, 2017 at 01:35:50PM +0100, Michal Hocko wrote:
-> On Mon 13-02-17 14:44:16, Maxime Ripard wrote:
-> > Hi Michal,
-> >=20
-> > On Thu, Feb 09, 2017 at 08:20:47PM +0100, Michal Hocko wrote:
-> > > [CC CMA people]
-> > >=20
-> > > On Thu 09-02-17 17:39:17, Maxime Ripard wrote:
-> > > > Modules might want to check their CMA pool size and address for deb=
-ugging
-> > > > and / or have additional checks.
-> > > >=20
-> > > > The obvious way to do this would be through dev_get_cma_area and
-> > > > cma_get_base and cma_get_size, that are currently not exported, whi=
-ch
-> > > > results in a build failure.
-> > > >=20
-> > > > Export them to prevent such a failure.
-> > >=20
-> > > Who actually uses those exports. None of the follow up patches does
-> > > AFAICS.
-> >=20
-> > This is for the ARM Mali GPU driver that is out of tree, unfortunately.
->=20
-> We do not export symbols which do not have any in-tree users.
+Yes, the resolver code needs to adjust phandle values.
 
-Ok, sorry for the noise.
+I think I can get rid of the resolver modifying the various phandle
+values, and instead just modify the phandle value in struct
+device_node.  At the same time, I think I can also remove all
+instances of the phandle properties ('linux,phandle', 'ibm,phandle',
+'phandle') in the live tree.  These properties should not be
+accessed directly by any code outside of the device tree framework
+since the phandle is located in the struct device_node.  A quick
+grep does not show any such accesses of the phandle properties,
+but I want to look more closely.
 
-Thanks!
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> 
+> You can see the problem here by loading an overlay dtb into
+> the kernel via the request firmware helper method (not direct
+> loading) and then passing that tree to the resolver on an arm64
+> device. In this case, the firmware data is vmapped with KERNEL_PAGE_RO
+> and the code crashes when attempting to write to the blob to update
+> the phandle properties.
+> 
+> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> 
+> I was thinking perhaps it would work to store another __be32 variant
+> of the phandle in each device node, but then we still have a problem
 
---s63xugflc7zhlrdx
-Content-Type: application/pgp-signature; name="signature.asc"
+That would complicate the overlay code.  Once adjustments are done to
+the phandle property value, the overlay code does not need to special
+case phandle - phandle is just another property.  I am hoping I can
+instead modify the resolver code as I described above.
 
------BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYr2j9AAoJEBx+YmzsjxAg1psP/AxBecNFS/F6Lg4/68RQPm6E
-aPq5uFQGu/20PngWJhVRT1XVvQGFTbzht/EZMrfOweSSvmRyguekdWD6zkxitxJO
-gjAdoKU8WKzkDBEMsTh3dMQu/Gqfq6jaGeDwvJKcnlt7OpX7RJza75TJE1K2hkTH
-IhNEa19Cs+8xbtDARDDnCsiVuZ42Gku16p8s/h7+jjgOdJoKmdXBQAoplCiWdftO
-kqmGa2n4dAUC2S02ao8dpiiVjnnT4tBzMyoOY/HynaJ+IMLwhscFKa3f54SQX82h
-3bKK8n+c2avDIm3pCot4UsJS+TcKmlVa0zd3NavrU5Vl+0qXr90MUPe4ULghb8qt
-z2bSpib5V6PZJxScMNQRw6bcRHjeajL1PeeYJB9VTFATmHh3/oUrn6gJZ00ap2Hc
-WnFZPb49z10eo0oHyU2wuktqxTPWn5brTLCMbTsGrmEZITPh9IaMaEOmJa+FFA6d
-5zDqZr7YW4LZ9f72EsARbk8F3ZE6fzRzEPlje2Ea5hvOosi32/GjP7sX49wY/0zJ
-qQeePSPGyueawsyRGTidK12iB/RM2dO9kDhbDr23pHdKDAZQ1cyKoeWI3SAzD+wN
-VBnFmMn3aM/m6a5h+A8YUF2kOXDGQXIeUS54MTAGhWvVoBcqwpG82QgC5qer2y+G
-dzqy1P6jVdM3MyR3IL+f
-=88L1
------END PGP SIGNATURE-----
+> with properties that have phandles inside them at some offset that we
+> need to update. I guess the only real solution is to deep copy the
+> property in that case and then save around some info to free the
+> duplicated property later on?
+> 
+>  drivers/of/base.c     |  2 +-
+>  drivers/of/fdt.c      | 12 ++++++------
+>  drivers/of/resolver.c |  3 +++
+>  include/linux/of.h    |  2 +-
+>  4 files changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index fb6bb855714e..8e5f29b814c9 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1156,7 +1156,7 @@ EXPORT_SYMBOL_GPL(of_property_count_elems_of_size);
+>   * property data is too small or too large.
+>   *
+>   */
+> -static void *of_find_property_value_of_size(const struct device_node *np,
+> +static const void *of_find_property_value_of_size(const struct device_node *np,
+>  			const char *propname, u32 min, u32 max, size_t *len)
+>  {
+>  	struct property *prop = of_find_property(np, propname, NULL);
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index c9b5cac03b36..0635ef5dabf3 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -222,7 +222,7 @@ static void populate_properties(const void *blob,
+>  
+>  		pp->name   = (char *)pname;
+>  		pp->length = sz;
+> -		pp->value  = (__be32 *)val;
+> +		pp->value  = val;
+>  		*pprev     = pp;
+>  		pprev      = &pp->next;
+>  	}
+> @@ -232,6 +232,7 @@ static void populate_properties(const void *blob,
+>  	 */
+>  	if (!has_name) {
+>  		const char *p = nodename, *ps = p, *pa = NULL;
+> +		char *b;
+>  		int len;
+>  
+>  		while (*p) {
+> @@ -250,13 +251,12 @@ static void populate_properties(const void *blob,
+>  		if (!dryrun) {
+>  			pp->name   = "name";
+>  			pp->length = len;
+> -			pp->value  = pp + 1;
+> +			pp->value  = b = (char *)(pp + 1);
 
---s63xugflc7zhlrdx--
+I would prefer not to hide an assignment in the middle of a statement.
 
---===============1150029903==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+>  			*pprev     = pp;
+>  			pprev      = &pp->next;
+> -			memcpy(pp->value, ps, len - 1);
+> -			((char *)pp->value)[len - 1] = 0;
+> -			pr_debug("fixed up name for %s -> %s\n",
+> -				 nodename, (char *)pp->value);
+> +			memcpy(b, ps, len - 1);
+> +			b[len - 1] = 0;
+> +			pr_debug("fixed up name for %s -> %s\n", nodename, b);
 
---===============1150029903==--
+Nit: I would prefer 'value' to 'b'.  'value' would make the pr_debug longer
+that 80 characters, which could be resolved by removing 'for ':
+
+                        pr_debug("fixed up name %s -> %s\n", nodename, value);
+
+>  		}
+>  	}
+>  
+> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> index 8bf12e904fd2..6d88f8100318 100644
+> --- a/drivers/of/resolver.c
+> +++ b/drivers/of/resolver.c
+> @@ -93,6 +93,7 @@ static void adjust_overlay_phandles(struct device_node *overlay,
+>  		if (phandle == OF_PHANDLE_ILLEGAL)
+>  			continue;
+>  
+> +		/* This is bad because we cast away const */
+>  		*(uint32_t *)prop->value = cpu_to_be32(overlay->phandle);
+>  	}
+>  
+> @@ -154,6 +155,7 @@ static int update_usages_of_a_phandle_reference(struct device_node *overlay,
+>  			goto err_fail;
+>  		}
+>  
+> +		/* This is bad because we cast away const */
+>  		*(__be32 *)(prop->value + offset) = cpu_to_be32(phandle);
+>  	}
+>  
+> @@ -222,6 +224,7 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
+>  
+>  			phandle = be32_to_cpu(*(__be32 *)(prop->value + off));
+>  			phandle += phandle_delta;
+> +			/* This is bad because we cast away const */
+>  			*(__be32 *)(prop->value + off) = cpu_to_be32(phandle);
+>  		}
+>  	}
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index f22d4a83ca07..b0253886ef46 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -35,7 +35,7 @@ typedef u32 ihandle;
+>  struct property {
+>  	char	*name;
+>  	int	length;
+> -	void	*value;
+> +	const void *value;
+
+What is the result when all of the files that touch value are compiled?
+Any warnings or errors?
+
+
+>  	struct property *next;
+>  	unsigned long _flags;
+>  	unsigned int unique_id;
+> 
+
+-Frank
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
