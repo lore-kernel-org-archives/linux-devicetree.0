@@ -1,83 +1,176 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] fpga manager: Add Xilinx slave serial SPI driver
-Date: Thu, 23 Feb 2017 10:33:13 +0100
-Message-ID: <8ef97075-a9a3-07cc-83df-f89860c8f15a@xilinx.com>
-References: <1487759951-20711-1-git-send-email-agust@denx.de>
- <1487759951-20711-3-git-send-email-agust@denx.de>
- <e9620f07-48bd-1f83-a686-6874becbba86@xilinx.com>
- <20170223102852.47d5bf5d@crub>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: BCM953012HR: Initial Checkin
+Date: Thu, 23 Feb 2017 10:37:07 +0100
+Message-ID: <68373798-376d-43d9-85cb-c6af7c6fa302@gmail.com>
+References: <1487798092-8631-1-git-send-email-steven.lin1@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170223102852.47d5bf5d@crub>
+In-Reply-To: <1487798092-8631-1-git-send-email-steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.2.2017 10:28, Anatolij Gustschin wrote:
-> On Wed, 22 Feb 2017 16:04:47 +0100
-> Michal Simek michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org wrote:
-> ...
->>> +	/* program latency */
->>> +	usleep_range(prog_latency_1000us, prog_latency_1000us + 500);  
->>
->> Based on my colleague for spartan6 this should be 5ms and other xilinx
->> fpgas can take up to 7.5ms.
->>
->> In general, it is better to poll for INIT_B pin==High (but that takes
->> another GPIO) and wait until at least 10 ms before timeout.
-> 
-> checked in the ug380.pdf, it depends on the speed grade, for some
-> spartan6 it can be max. 4ms, for others 5ms. It is a max. value,
-> INIT_B can go high earlier, but in my hw setup INIT_B is not
-> connected. Someone with a hw setup with INIT_B connected can
-> add optional support for INIT_P polling.
-> 
-> ...
->>> +static int xilinx_spi_write_complete(struct fpga_manager *mgr,
->>> +				     struct fpga_image_info *info)
->>> +{
->>> +	struct xilinx_spi_conf *conf = mgr->priv;
->>> +	int wait;
->>> +
->>> +	if (gpiod_get_value(conf->done))
->>> +		return 0;
->>> +
->>> +	wait = info->config_complete_timeout_us / FPGA_MIN_CFG_WAIT_US;
->>> +	if (info->config_complete_timeout_us % FPGA_MIN_CFG_WAIT_US)
->>> +		wait += 1;
->>> +
->>> +	while (wait--) {
->>> +		usleep_range(FPGA_MIN_CFG_WAIT_US, FPGA_MIN_CFG_WAIT_US + 5);
->>> +
->>> +		if (gpiod_get_value(conf->done))
->>> +			return 0;
->>> +	}
->>> +  
->>
->> Based on my colleague:
->> IMHO, for step 4 it is better to do these steps to cover more possible
->> configuration DONE scenarios:
->>
->> While ((DONE==0) and (NOT TIMEOUT)) {
->>    Continue to apply CCLK cycles;
->>    Check DONE;
->>    timeout++;
->> }
->>
->> Apply at least 8 more CCLK cycles.
->>
->> The timeout should be equivalent to at least 10 ms of time.
-> 
-> You mead Step 8 I think, not step 4. Will see what I can change.
+On 02/22/2017 10:14 PM, Steve Lin wrote:
+> Initial version of DTS to support Broadcom BCM953012HR Northstar
+> HR platform, similar to, but not the same as existing 953012K.
+>
+> Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile        |   1 +
+>  arch/arm/boot/dts/bcm953012hr.dts | 115 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 116 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/bcm953012hr.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 01d178a..c64ca3d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -94,6 +94,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+>  	bcm94708.dtb \
+>  	bcm94709.dtb \
+>  	bcm953012er.dtb \
+> +	bcm953012hr.dtb \
+>  	bcm953012k.dtb
+>  dtb-$(CONFIG_ARCH_BCM_53573) += \
+>  	bcm47189-tenda-ac9.dtb
+> diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
+> new file mode 100644
+> index 0000000..c332277
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm953012hr.dts
+> @@ -0,0 +1,115 @@
+> +/*
+> + *  BSD LICENSE
+> + *
+> + *  Copyright(c) 2017 Broadcom
+> + *
+> + *  Redistribution and use in source and binary forms, with or without
+> + *  modification, are permitted provided that the following conditions
+> + *  are met:
+> + *
+> + *    * Redistributions of source code must retain the above copyright
+> + *      notice, this list of conditions and the following disclaimer.
+> + *    * Redistributions in binary form must reproduce the above copyright
+> + *      notice, this list of conditions and the following disclaimer in
+> + *      the documentation and/or other materials provided with the
+> + *      distribution.
+> + *    * Neither the name of Broadcom nor the names of its contributors
+> + *      may be used to endorse or promote products derived from this
+> + *      software without specific prior written permission.
+> + *
+> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "bcm4708.dtsi"
+> +
+> +/ {
+> +	model = "NorthStar HR (BCM953012HR)";
+> +	compatible = "brcm,bcm953012hr", "brcm,brcm53012", "brcm,bcm4708";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x80000000 0x10000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
 
-This was just c&p from his reply with different steps numbers. :-)
+You don't need this.
+7b790d3b2943 ("ARM: dts: BCM5301X: Enable UART by default for BCM4708(1), BCM4709(4) & BCM53012")
 
-Thanks,
-Michal
 
+> +&nand {
+> +	nandcs@0 {
+> +		compatible = "brcm,nandcs";
+> +		reg = <0>;
+> +		nand-on-flash-bbt;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		nand-ecc-strength = <4>;
+> +		nand-ecc-step-size = <512>;
+
+Can you just include bcm5301x-nand-cs0-bch4.dtsi?
+
+
+> +
+> +		partition@0 {
+> +			label = "nboot";
+> +			reg = <0x00000000 0x00200000>;
+> +			read-only;
+> +		};
+> +		partition@200000 {
+> +			label = "nenv";
+> +			reg = <0x00200000 0x00400000>;
+> +		};
+> +		partition@600000 {
+> +			label = "nsystem";
+> +			reg = <0x00600000 0x00a00000>;
+> +		};
+> +		partition@1000000 {
+> +			label = "nrootfs";
+> +			reg = <0x01000000 0x07000000>;
+> +		};
+
+These could go to &nandcs with above dtsi include.
+
+
+> +	};
+> +};
+> +
+> +&spi_nor {
+> +	status = "okay";
+> +	spi-max-frequency = <62500000>;
+> +	m25p,default-addr-width = <3>;
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	partition@0 {
+> +		label = "boot";
+> +		reg = <0x00000000 0x000d0000>;
+> +	};
+> +	partition@d000 {
+> +		label = "env";
+> +		reg = <0x000d0000 0x00030000>;
+> +	};
+> +	partition@100000 {
+> +		label = "system";
+> +		reg = <0x00100000 0x00600000>;
+> +	};
+> +	partition@700000 {
+> +		label = "rootfs";
+> +		reg = <0x00700000 0x00900000>;
+> +	};
+> +};
+
+This is a bit uncommon for me to have the same partitions on both flash device.
+Can you provide some extra description of this setup, please?
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
