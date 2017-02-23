@@ -1,151 +1,68 @@
-From: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: BCM953012HR: Initial Checkin
-Date: Thu, 23 Feb 2017 14:23:03 -0500
-Message-ID: <1487877783-25610-1-git-send-email-steven.lin1@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [RFC/PATCH] of: Mark property::value as const
+Date: Thu, 23 Feb 2017 11:54:46 -0800
+Message-ID: <58AF3E06.4030701@gmail.com>
+References: <20170214025040.23955-1-stephen.boyd@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170214025040.23955-1-stephen.boyd@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <stephen.boyd@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Initial version of DTS to support Broadcom BCM953012HR Northstar
-HR platform, similar to, but not the same as existing 953012K.
+On 02/13/17 18:50, Stephen Boyd wrote:
+> The 'blob' we pass into populate_properties() is marked as const,
+> but we cast that const away when we assign the result of
+> fdt_getprop_by_offset() to pp->value. Let's mark value as const
+> instead, so that code can't mistakenly write to the value of the
+> property that we've so far advertised as const.
+> 
+> Unfortunately, this exposes a problem with the fdt resolver code,
+> where we overwrite the value member of properties of phandles to
+> update them with their final value. Add a comment for now to
+> indicate where we're potentially writing over const data.
 
-Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
-V2 uses suggested changes from Rafal Milecki and Rob Herring.  Note
-that for now I just added the SPDX-License-Identifier line to the
-current full license text; maybe in the future we can revise to
-remove the license text, leaving only the SPDX ID (legal questions).
----
- arch/arm/boot/dts/Makefile        |   1 +
- arch/arm/boot/dts/bcm953012hr.dts | 100 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 101 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm953012hr.dts
+The resolver should not be over writing anything in the FDT.  I'll
+look at what is going on there.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 01d178a..c64ca3d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -94,6 +94,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm94708.dtb \
- 	bcm94709.dtb \
- 	bcm953012er.dtb \
-+	bcm953012hr.dtb \
- 	bcm953012k.dtb
- dtb-$(CONFIG_ARCH_BCM_53573) += \
- 	bcm47189-tenda-ac9.dtb
-diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
-new file mode 100644
-index 0000000..b6bf6ad
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm953012hr.dts
-@@ -0,0 +1,100 @@
-+/*
-+ *  SPDX-License-Identifier: BSD-3-Clause
-+ *
-+ *  Copyright(c) 2017 Broadcom
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom nor the names of its contributors
-+ *      may be used to endorse or promote products derived from this
-+ *      software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm4708.dtsi"
-+#include "bcm5301x-nand-cs0-bch4.dtsi"
-+
-+/ {
-+	model = "NorthStar HR (BCM953012HR)";
-+	compatible = "brcm,bcm953012hr", "brcm,brcm53012", "brcm,bcm4708";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x10000000>;
-+	};
-+};
-+
-+&nandcs {
-+	partition@0 {
-+		label = "nboot";
-+		reg = <0x00000000 0x00200000>;
-+		read-only;
-+	};
-+	partition@200000 {
-+		label = "nenv";
-+		reg = <0x00200000 0x00400000>;
-+	};
-+	partition@600000 {
-+		label = "nsystem";
-+		reg = <0x00600000 0x00a00000>;
-+	};
-+	partition@1000000 {
-+		label = "nrootfs";
-+		reg = <0x01000000 0x07000000>;
-+	};
-+};
-+
-+&spi_nor {
-+	status = "okay";
-+	spi-max-frequency = <62500000>;
-+	m25p,default-addr-width = <3>;
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	partition@0 {
-+		label = "boot";
-+		reg = <0x00000000 0x000d0000>;
-+	};
-+	partition@d000 {
-+		label = "env";
-+		reg = <0x000d0000 0x00030000>;
-+	};
-+	partition@100000 {
-+		label = "system";
-+		reg = <0x00100000 0x00600000>;
-+	};
-+	partition@700000 {
-+		label = "rootfs";
-+		reg = <0x00700000 0x00900000>;
-+	};
-+};
-+
--- 
-2.1.0
+The FDT we expose to user space should be the FDT we booted with,
+not something later modified.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Frank
+
+> 
+> You can see the problem here by loading an overlay dtb into
+> the kernel via the request firmware helper method (not direct
+> loading) and then passing that tree to the resolver on an arm64
+> device. In this case, the firmware data is vmapped with KERNEL_PAGE_RO
+> and the code crashes when attempting to write to the blob to update
+> the phandle properties.
+> 
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> ---
+> 
+> I was thinking perhaps it would work to store another __be32 variant
+> of the phandle in each device node, but then we still have a problem
+> with properties that have phandles inside them at some offset that we
+> need to update. I guess the only real solution is to deep copy the
+> property in that case and then save around some info to free the
+> duplicated property later on?
+> 
+>  drivers/of/base.c     |  2 +-
+>  drivers/of/fdt.c      | 12 ++++++------
+>  drivers/of/resolver.c |  3 +++
+>  include/linux/of.h    |  2 +-
+>  4 files changed, 11 insertions(+), 8 deletions(-)
+
+< snip >
