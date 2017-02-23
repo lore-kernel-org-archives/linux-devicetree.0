@@ -1,18 +1,16 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
-Date: Thu, 23 Feb 2017 08:25:06 +0800
-Message-ID: <58AE2BE2.7040006@rock-chips.com>
-References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
- <20170221153918.GA25168@art_vandelay>
- <20170222134314.016a4940.john@metanate.com>
- <CAOw6vbJoS2P5m31+bgWw3Sghz=EVGj0fpLgCFnbVEhzRujNCLw@mail.gmail.com>
- <20170222185543.71e20187.john@metanate.com>
- <CAOw6vbJO_TQnSAu6w7XHiMSYA+gB1tyHOvB7BMc7Q2+OMY=9=w@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
+Date: Wed, 22 Feb 2017 16:44:04 -0800
+Message-ID: <20170223004404.jyxlvvsoojw7qnud@lukather>
+References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
+ <20170216184524.cxcy2ux37yrwutla@lukather>
+ <2cecfc48-576f-3888-08aa-1fe2edc3c752@math.uni-bielefeld.de>
+ <20170217154341.vn7uqvdaijtrj64s@lukather>
+ <20170220164926.GB15493@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0124701516=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAOw6vbJO_TQnSAu6w7XHiMSYA+gB1tyHOvB7BMc7Q2+OMY=9=w@mail.gmail.com>
+In-Reply-To: <20170220164926.GB15493@ulmo.ba.sec>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -22,56 +20,161 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>, John Keeping <john@metanate.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Yao <yzq@rock-chips.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa <tfiga@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-mm@kvack.org, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, wens@csie.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDAyLzIzLzIwMTcgMDY6MTAgQU0sIFNlYW4gUGF1bCB3cm90ZToKPiBPbiBXZWQsIEZlYiAy
-MiwgMjAxNyBhdCAxOjU1IFBNLCBKb2huIEtlZXBpbmcgPGpvaG5AbWV0YW5hdGUuY29tPiB3cm90
-ZToKPj4gT24gV2VkLCAyMiBGZWIgMjAxNyAxMDo1NzowNSAtMDUwMCwgU2VhbiBQYXVsIHdyb3Rl
-Ogo+Pgo+Pj4gT24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgODo0MyBBTSwgSm9obiBLZWVwaW5nIDxq
-b2huQG1ldGFuYXRlLmNvbT4gd3JvdGU6Cj4+Pj4gT24gVHVlLCAyMSBGZWIgMjAxNyAxMDozOTox
-OCAtMDUwMCwgU2VhbiBQYXVsIHdyb3RlOgo+Pj4+Cj4+Pj4+IE9uIE1vbiwgRmViIDIwLCAyMDE3
-IGF0IDA0OjAyOjE2UE0gKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+Pj4+Pj4gSGkgYWxsCj4+
-Pj4+Pgo+Pj4+Pj4gW1Jlc2VuZCB0aGlzIHY3IHZlcnNpb24gc2VyaWVzLCBzaW5jZSB0aGVyZSBh
-cmUgNSBtYWlscyBoYXZlIGdvbmUgbWlzc2luZywgbGFzdAo+Pj4+Pj4gd2Vla10KPj4+Pj4+Cj4+
-Pj4+PiBUaGlzIHZlcnNpb24gZG9lcyBub3QgY2hhbmdlIHRoZSBleGlzdGluZyB2NiBwYXRjaGVz
-LCBqdXN0IHRvIGFkZCB0aGUKPj4+Pj4+ICJiYW5kd2lkdGggZml4IiBwYXRjaCBiYWNrLCBzaW5j
-ZSB3ZSByZWFsbHkgbmVlZCBpdC4KPj4+Pj4+Cj4+Pj4+PiBUaGlzIHBhdGNoIHNlcmlhbCBpcyBm
-b3IgUkszMzk5IE1JUEkgRFNJLiBUaGUgTUlQSSBEU0kgY29udHJvbGxlciBvZgo+Pj4+Pj4gUksz
-Mzk5IGlzIGFsbW9zdCB0aGUgc2FtZSBhcyBSSzMyODgsIGV4Y2VwdCBhIGxpdHRsZSBiaXQgb2Yg
-ZGlmZmVyZW5jZQo+Pj4+Pj4gaW4gcGh5IGNsb2NrIGNvbnRyb2xsaW5nIGFuZCBwb3J0IGlkIHNl
-bGVjdGlvbiByZWdpc3Rlci4gVGhlc2UgcGF0Y2hlcwo+Pj4+Pj4gYWRkIFJLMzM5OSBzdXBwb3J0
-IGFuZCB0aGUgcG93ZXIgZG9tYWluIHN1cHBvcnQuCj4+Pj4+Pgo+Pj4+Pj4gQW5kIHRoZXNlIHBh
-dGNoZXMgYmFzZSBvbiBKb2huIEtlZXBpbmcncyB2MyBwYXRjaGVzWzBdLCBpdCBmaXhlcyBtYW55
-IGJ1Z3MsCj4+Pj4+PiB0aGV5IGhhdmUgYmVlbiB0ZXN0ZWQgb24gcmszMjg4IGV2YiBib2FyZC4K
-Pj4+Pj4gRG8gd2UgaGF2ZSBhbiBFVEEgb24gd2hlbiBKb2huIGlzIHBsYW5uaW5nIG9uIHJlc3Bp
-bm5pbmcgaGlzIHBhdGNoc2V0IGJhc2VkIG9uCj4+Pj4+IHJldmlldyBmZWVkYmFjaz8KPj4+PiBJ
-IGhhdmUgYWxsIG9mIHRoZSBjaGFuZ2VzIHF1ZXVlZCBidXQgSSB3YXMgaG9waW5nIHRvIGZpbmQg
-c29tZSB0aW1lIHRvCj4+Pj4gdGVzdCB0aGUgbGF0ZXN0IHZlcnNpb24gYmVmb3JlIHNlbmRpbmcg
-aXQgb3V0OyB1bmZvcnR1bmF0ZWx5IGV2ZXJ5dGhpbmcKPj4+PiBlbHNlIGlzIG1vcmUgaW1wb3J0
-YW50IGF0IHRoZSBtb21lbnQuICBJZiB5b3UncmUgaGFwcHkgd2l0aCB0aGUgY2F2ZWF0Cj4+Pj4g
-dGhhdCB0aGUgbGF0ZXN0IGNoYW5nZXMgYXJlIGJ1aWxkIHRlc3RlZCBvbmx5IEkgY2FuIHByb2Jh
-Ymx5IHNlbmQgaXQKPj4+PiBvdXQgdGhpcyBhZnRlcm5vb24uCj4+PiBJIHN1cHBvc2UgbXkgYW5z
-d2VyIGRlcGVuZHMgb24gd2hlbiB0aGUgdGVzdGVkIHZlcnNpb24gd2lsbCBiZQo+Pj4gYXZhaWxh
-YmxlLCBvciBwZXJoYXBzIENocmlzIGNhbiB0ZXN0IHRoZSBuZXcgc2V0IGZvciB5b3U/IEkgZG9u
-J3QgaGF2ZQo+Pj4gYW55IHJvY2tjaGlwIGRldmljZXMgd2l0aCBtaXBpLCBzbyBpJ20gbm90IG11
-Y2ggaGVscC4KPj4gTm9uZSBvZiB0aGUgY2hhbmdlcyBzY2FyZSBtZSB0aGF0IG11Y2gsIHNvIEkg
-ZG9uJ3QgZXhwZWN0IHRlc3RpbmcgdG8KPj4gdGhyb3cgdXAgYW55IHByb2JsZW1zIGJ1dCBJIGRv
-bid0IGxpa2UgdGhyb3dpbmcgb3V0IHBhdGNoZXMgd2l0aG91dCBhdAo+PiBsZWFzdCBhIGJhc2lj
-IHRlc3QgcnVuLgo+Pgo+IEFncmVlZC4gSSBkb24ndCB0aGluayB3ZSdyZSBpbiBzdWNoIGRlc3Bl
-cmF0ZSBuZWVkIHRoYXQgd2Ugc2hvdWxkCj4gZm9yZWdvIHRlc3RpbmcuIElmIENocmlzIGNhbiBw
-cm92aWRlIFRlc3RlZC1ieSwgeW91IHNob3VsZCBzZW5kIHRoZW0KPiBvdXQsIG90aGVyd2lzZSBJ
-J20gaGFwcHkgdG8gd2FpdC4KPgo+IFRoYW5rcyBmb3IgdGhlIHVwZGF0ZSwKPgo+IFNlYW4KClN1
-cmUsIEkgYW0gdmVyeSBnbGFkIHRvIHRlc3QgdGhlbS4KQWN0dWFsbHksIEkgaGF2ZSBwaWNrZWQg
-dGhlIHYzIHBhdGNoZXMgdG8gY3JvcyBrZXJuZWwgKGNoYW5nZWQgYSBsaXR0bGUgCmJpdCkuClNv
-IGZhciwgbXkgMiBtaXBpIGRzaSBwYW5lbHMgd29ya3Mgd2VsbC4gVGhlIGNyb3MgcGF0Y2hlczoK
-aHR0cHM6Ly9jaHJvbWl1bS1yZXZpZXcuZ29vZ2xlc291cmNlLmNvbS8jL2MvNDMwNTk2LwouLi4K
-aHR0cHM6Ly9jaHJvbWl1bS1yZXZpZXcuZ29vZ2xlc291cmNlLmNvbS8jL2MvNDQyMzQ3LwoKPgo+
-PiBJIG1pZ2h0IGhhdmUgdGltZSB0byB0ZXN0IG9uIEZyaWRheSwgYnV0IEkgZXhwZWN0IENocmlz
-IGhhcyBtb3JlIHRpbWUgdG8KPj4gZGV2b3RlIHRvIHRoaXMgdGhhbiBJIGRvLCBzbyBtYXliZSBp
-dCdzIGJldHRlciBpZiBJIHNlbmQgdGhlIHBhdGNoZXMgb3V0Cj4+IHRvbW9ycm93Lgo+Pgo+Pgo+
-PiBKb2huCj4KPgoKLS0gCkNocmlzIFpob25nCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0124701516==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hiiboxguzdlnzlgo"
+Content-Disposition: inline
+
+
+--hiiboxguzdlnzlgo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Thierry,
+
+On Mon, Feb 20, 2017 at 05:49:26PM +0100, Thierry Reding wrote:
+> On Fri, Feb 17, 2017 at 04:43:41PM +0100, Maxime Ripard wrote:
+> > On Fri, Feb 17, 2017 at 01:45:44PM +0100, Tobias Jakobi wrote:
+> > > Hello Maxime,
+> > >=20
+> > > Maxime Ripard wrote:
+> > > > Hi,
+> > > >=20
+> > > > On Thu, Feb 16, 2017 at 01:43:06PM +0100, Tobias Jakobi wrote:
+> > > >> I was wondering about the following. Wasn't there some strict
+> > > >> requirement about code going upstream, which also included that th=
+ere
+> > > >> was a full open-source driver stack for it?
+> > > >>
+> > > >> I don't see how this is the case for Mali, neither in the kernel, =
+nor in
+> > > >> userspace. I'm aware that the Mali kernel driver is open-source. B=
+ut it
+> > > >> is not upstream, maintained out of tree, and won't land upstream i=
+n its
+> > > >> current form (no resemblence to a DRM driver at all). And let's no=
+t talk
+> > > >> about the userspace part.
+> > > >>
+> > > >> So, why should this be here?
+> > > >=20
+> > > > The device tree is a representation of the hardware itself. The sta=
+te
+> > > > of the driver support doesn't change the hardware you're running on,
+> > > > just like your BIOS/UEFI on x86 won't change the device it reports =
+to
+> > > > Linux based on whether it has a driver for it.
+> > >
+> > > Like Emil already said, the new bindings and the DT entries are solely
+> > > introduced to support a proprietary out-of-tree module.
+> >=20
+> > No. This new binding and the DT entries are solely introduced to
+> > describe a device found in a number of SoCs, just like any other DT
+> > binding we have.
+> >=20
+> > > The current workflow when introducing new DT entries is the following:
+> > > - upstream a driver that uses the entries
+> > > - THEN add the new entries
+> >=20
+> > And that's never been the preferred workflow, for *any* patches.
+>=20
+> Actually it has. How else are you going to test that your driver really
+> works? You've got to have both pieces before you can verify that they're
+> both adequate. So the typical workflow is to:
+>=20
+> 	1) define the bindings
+> 	2) write a driver that implements the bindings
+> 	3) add entries to device tree files
+>=20
+> Usually it doesn't matter in which order you do the above because they
+> are all part of the same patch series. But that's not what you're doing
+> here. The more general problem here is that you're providing device tree
+> content (and therefore ABI) that's based on a binding which has no
+> upstream users. So you don't actually have a way of validating that what
+> you merge is going to be an adequate description.
+>=20
+> You're probably going to respond: "but DT describes hardware, so it must
+> be known already, there won't be a need for changes". Unfortunately that
+> is only partially true. We've had a number of occasions where it later
+> turned out that a binding was in fact not an adequate description, and
+> then we've had to jump through hoops in order to preserve backwards
+> compatibility. That's already annoying enough if you've got in-tree
+> users, but it's going to be even more painful if you start out with an
+> out-of-tree user.
+>=20
+> All of that said, you've got an Acked-by from Rob and that's about as
+> good as it's going to get. So I'm not going to NAK this. But I will
+> caution against this, because I don't think you're doing yourself any
+> favours with this.
+>=20
+> So perhaps the question that we should ask is this: what do you gain by
+> merging this series? The fact remains that you don't have an upstream
+> driver that implements this binding, so ultimately you're going to be
+> carrying patches in some development tree anyway. Why not simply stash
+> these patches into the same tree? That should be about the same amount
+> of work for you and your users, but it has the advantage of not locking
+> you into something that you may regret.
+
+This is really a usability issue. I don't want the average Jane / Joe
+to have to patch and recompile the DT in order to get the GPU running
+on her / his distro of choice. The only thing that should be needed
+would be to install an (or a couple of) extra package in order to get
+everything running. Just like it's done for any other GPU out there,
+or wifi, disregarding whether it's supported upstream or not.
+
+Another nice thing is also that the mali bindings have been a huge
+mess so far. If we have a common bindings, everything will just work
+the same for all the platforms, and we can use the same driver there,
+allowing us at least to consolidate the source code.
+
+I'm not too afraid about getting something wrong. We already have code
+working for two different vendors, and all the other GPUs already
+described in DT (nvidia's, the Adreno) all have the same kind of
+binding that we have.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--hiiboxguzdlnzlgo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYrjBQAAoJEBx+YmzsjxAgIaEP/3paB8DgNmiCfEMIBgkFENK8
+Xuor5wY0q/jLibY5mdz1JOMSG5iUFmUR4A8lrXWM5xa8m3aza/5shsMLfr+1fRjn
+909+LL5C1uvmADVJV7buEqfYUISuk5ADDn+eySFxdJjd7+rxb1jQZ8DloaY0ozPY
+gJ2yMbYIH9LenEdl/gIq6lvIRCGLpcZmA9BdV1zjgql1mNzh/Yqa/2amImjFCccW
+gqjFSkn94gDRvW5+1fOycoI839V+wRlOddghLDcbYlejOrMWT6dIkdW1xJmoBV7n
+MIx97K3MhnbuVokWpZ3Wj43JQRYHBMmRTcdx7yGvir8iBkr+JhXZF7F9+0xKIe/4
+ru6If0HOamxtSI4xBJ2t2uxmT2F4RVtIJwCPQO3I6oA5yadNuLc1gb3dB5i7WQCJ
+3kyi7OVGFiW74i48ouFksbhI22/hRjSJUY12HzsegSthxfpQvVOH07s34yJlIQvk
+PlSiSqpOiWVKV9MVSLJBLoxS/7fVIhdCSDTrCxYY+MJDwYhLn94dfz9OJ/dzIE/N
+c4s5Oqieb9+p7gW8Ftki+a2JMk52slRq9qVOSEtJYS1XaUbPrkVafUhnmvHywv6W
+owBko2anQchupAd9mfBoOuj9U4HLqccyKNx9YLSVpQ/Fr4/IOqb3CxB8LC9AxhGa
+U7GIwTJr81Ptnj3lAIi7
+=QQ2H
+-----END PGP SIGNATURE-----
+
+--hiiboxguzdlnzlgo--
+
+--===============0124701516==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0124701516==--
