@@ -1,51 +1,39 @@
-From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH 1/2] regulator: core: Add new notification for enabling of regulator
-Date: Thu, 23 Feb 2017 17:06:52 +0000
-Message-ID: <1487869613-11927-1-git-send-email-harald@ccbib.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH 00/35] treewide trivial patches converting
+ pr_warning to pr_warn
+Date: Thu, 23 Feb 2017 09:18:24 -0800
+Message-ID: <1487870304.14159.29.camel@perches.com>
+References: <cover.1487314666.git.joe@perches.com>
+ <CAL_JsqLTaq-QLTqfyDO8EVJYpgeUx1e4J0Fo2NvfFWqVoiVedQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
+In-Reply-To: <CAL_JsqLTaq-QLTqfyDO8EVJYpgeUx1e4J0Fo2NvfFWqVoiVedQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <https://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-ia64@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, nouveau@lists.freedesktop.org, Linux-ALSA <alsa-devel@alsa-project.org>, dri-devel <dri-devel@lists.freedesktop.org>, virtualization@lists.linux-foundation.org, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, sparclinux@vger.kernel.org, drbd-dev@lists.linbit.com, linux-scsi@vger.kernel.org, Richard Weinberger <richard@nod.at>, sfi-devel@simplefirmware.org, amd-gfx@lists.freedesktop.org, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, tboot-devel@lists.sourceforge.net, oprofile-list@lists.sf.net, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, xen-devel@lists.xenproject.org, linux-media@vger.k
 List-Id: devicetree@vger.kernel.org
 
-This is useful for devices, which need some time to start up, to help
-the drivers track how long the supply has been up already. Ie whether
-it can safely talk to the HW or needs to wait.
-
-Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
----
-If this change gets accepted soon, it can go in via the regulator tree
-and everything will be in place for patch 2/2 to go in via iio when I'm
-done with longterm tests.
-
- drivers/regulator/core.c           | 2 ++
- include/linux/regulator/consumer.h | 1 +
- 2 files changed, 3 insertions(+)
-
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 04baac9..6b9bb1b 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -2162,6 +2162,8 @@ static int _regulator_enable(struct regulator_dev *rdev)
- 			if (ret < 0)
- 				return ret;
- 
-+			_notifier_call_chain(rdev, REGULATOR_EVENT_ENABLE,
-+					     NULL);
- 		} else if (ret < 0) {
- 			rdev_err(rdev, "is_enabled() failed: %d\n", ret);
- 			return ret;
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index ea0fffa..df176d7 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -119,6 +119,7 @@ struct regmap;
- #define REGULATOR_EVENT_ABORT_VOLTAGE_CHANGE	0x200
- #define REGULATOR_EVENT_PRE_DISABLE		0x400
- #define REGULATOR_EVENT_ABORT_DISABLE		0x800
-+#define REGULATOR_EVENT_ENABLE			0x1000
- 
- /*
-  * Regulator errors that can be queried using regulator_get_error_flags
--- 
-2.1.4
+T24gVGh1LCAyMDE3LTAyLTIzIGF0IDA5OjI4IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
+biBGcmksIEZlYiAxNywgMjAxNyBhdCAxOjExIEFNLCBKb2UgUGVyY2hlcyA8am9lQHBlcmNoZXMu
+Y29tPiB3cm90ZToKPiA+IFRoZXJlIGFyZSB+NDMwMCB1c2VzIG9mIHByX3dhcm4gYW5kIH4yNTAg
+dXNlcyBvZiB0aGUgb2xkZXIKPiA+IHByX3dhcm5pbmcgaW4gdGhlIGtlcm5lbCBzb3VyY2UgdHJl
+ZS4KPiA+IAo+ID4gTWFrZSB0aGUgdXNlIG9mIHByX3dhcm4gY29uc2lzdGVudCBhY3Jvc3MgYWxs
+IGtlcm5lbCBmaWxlcy4KPiA+IAo+ID4gVGhpcyBleGNsdWRlcyBhbGwgZmlsZXMgaW4gdG9vbHMv
+IGFzIHRoZXJlIGlzIGEgc2VwYXJhdGUKPiA+IGRlZmluZSBwcl93YXJuaW5nIGZvciB0aGF0IGRp
+cmVjdG9yeSB0cmVlIGFuZCBwcl93YXJuIGlzCj4gPiBub3QgdXNlZCBpbiB0b29scy8uCj4gPiAK
+PiA+IERvbmUgd2l0aCAnc2VkIHMvXGJwcl93YXJuaW5nXGIvcHJfd2Fybi8nIGFuZCBzb21lIGVt
+YWNzaW5nLgpbXQo+IFdoZXJlJ3MgdGhlIHJlbW92YWwgb2YgcHJfd2FybmluZyBzbyB3ZSBkb24n
+dCBoYXZlIG1vcmUgc25lYWsgaW4/CgpBZnRlciBhbGwgb2YgdGhlc2UgYWN0dWFsbHkgZ2V0IGFw
+cGxpZWQsCmFuZCBtYXliZSBhIGN5Y2xlIG9yIHR3byBsYXRlciwgb25lIHdvdWxkCmdldCBzZW50
+LgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClhlbi1k
+ZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbi5vcmcKaHR0cHM6Ly9saXN0cy54
+ZW4ub3JnL3hlbi1kZXZlbAo=
