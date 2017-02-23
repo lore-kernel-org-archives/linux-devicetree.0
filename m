@@ -1,72 +1,36 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC/PATCH] of: Mark property::value as const
-Date: Thu, 23 Feb 2017 12:58:43 -0800
-Message-ID: <58AF4D03.7020908@gmail.com>
-References: <20170214025040.23955-1-stephen.boyd@linaro.org>
- <58AF3E06.4030701@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH 1/1] devicetree: Document of_property_read_string_array() better
+Date: Thu, 23 Feb 2017 23:40:19 +0200
+Message-ID: <1487886019-25869-1-git-send-email-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58AF3E06.4030701-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/17 11:54, Frank Rowand wrote:
-> On 02/13/17 18:50, Stephen Boyd wrote:
->> The 'blob' we pass into populate_properties() is marked as const,
->> but we cast that const away when we assign the result of
->> fdt_getprop_by_offset() to pp->value. Let's mark value as const
->> instead, so that code can't mistakenly write to the value of the
->> property that we've so far advertised as const.
->>
->> Unfortunately, this exposes a problem with the fdt resolver code,
->> where we overwrite the value member of properties of phandles to
->> update them with their final value. Add a comment for now to
->> indicate where we're potentially writing over const data.
-> 
-> The resolver should not be over writing anything in the FDT.  I'll
-> look at what is going on there.
-> 
-> The FDT we expose to user space should be the FDT we booted with,
-> not something later modified.
+of_property_read_string_array() is documented to return the number of
+strings present in a string array property if its target string buffer is
+NULL. What is not documented, however, is that is returned if the buffer
+is non-NULL. It returns the number of strings read. Document this.
 
-It seems that /sys/firmware/fdt is not documented.  I'll look into
-fixing that.
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ include/linux/of.h | 1 +
+ 1 file changed, 1 insertion(+)
 
--Frank
-
-> 
-> -Frank
-> 
->>
->> You can see the problem here by loading an overlay dtb into
->> the kernel via the request firmware helper method (not direct
->> loading) and then passing that tree to the resolver on an arm64
->> device. In this case, the firmware data is vmapped with KERNEL_PAGE_RO
->> and the code crashes when attempting to write to the blob to update
->> the phandle properties.
->>
->> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>
->> I was thinking perhaps it would work to store another __be32 variant
->> of the phandle in each device node, but then we still have a problem
->> with properties that have phandles inside them at some offset that we
->> need to update. I guess the only real solution is to deep copy the
->> property in that case and then save around some info to free the
->> duplicated property later on?
->>
->>  drivers/of/base.c     |  2 +-
->>  drivers/of/fdt.c      | 12 ++++++------
->>  drivers/of/resolver.c |  3 +++
->>  include/linux/of.h    |  2 +-
->>  4 files changed, 11 insertions(+), 8 deletions(-)
-> 
-> < snip >
-> 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d72f010..0579156 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -953,6 +953,7 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
+  * terminated string values (pointer to data, not a copy) in that property.
+  *
+  * If @out_strs is NULL, the number of strings in the property is returned.
++ * Otherwise, returns the number of strings read.
+  */
+ static inline int of_property_read_string_array(const struct device_node *np,
+ 						const char *propname, const char **out_strs,
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
