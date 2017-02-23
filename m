@@ -1,51 +1,70 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH v2 0/3] Add Northstar Plus support to PDC mailbox driver
-Date: Thu, 23 Feb 2017 09:54:50 -0800
-Message-ID: <CAC3K-4oxR8+6=BcU5-c72JZmrSV2ezUueGK30Xt263Dg_4gmYA@mail.gmail.com>
-References: <1487861392-23039-1-git-send-email-steven.lin1@broadcom.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH] checkpatch.pl: Add SPDX license tag check for dts files
+ and headers
+Date: Thu, 23 Feb 2017 09:51:14 -0800
+Message-ID: <1487872274.14159.36.camel@perches.com>
+References: <20170223155644.24213-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1487861392-23039-1-git-send-email-steven.lin1@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steve Lin <steven.lin1@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <scott.branden@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, Jassi Brar <jassisinghbrar@gmail.com>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ray Jui <ray.jui@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170223155644.24213-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andy Whitcroft <apw@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 23, 2017 at 6:49 AM, Steve Lin <steven.lin1@broadcom.com> wrote:
-> Adds support for Broadcom Northstar+ to mailbox (PDC) driver.
->
-> Patch 1/3: Driver code and Kconfig changes
-> Patch 2/3: Device tree changes
-> Patch 3/3: DT bindings documentation changes
->
-> v2 addresses Jon Mason's suggestion about making the bindings doc change
-> a separate patch.
+On Thu, 2017-02-23 at 09:56 -0600, Rob Herring wrote:
+> Add a check for using SPDX-License-Identifier tags to define the license of
+> .dts{i} and DT header files rather than using free form license text. This
+> check looks for GPL, BSD, or X11(really incorrectly labeled MIT license)
+> license text which are the commonly used DT licenses.
 
-FWIW, looks good to me.  Feel free to add my
-Acked-by: Jon Mason <jon.mason@broadcom.com>
-to the relevant pieces
+Hi Rob.
 
-> Steve Lin (3):
->   mailbox: bcm-pdc: Add Northstar Plus support to PDC driver
->   ARM: dts: NSP: Add mailbox (PDC) to NSP
->   dt-bindings: mailbox: Update doc with NSP PDC/mailbox support
->
->  .../bindings/mailbox/brcm,iproc-pdc-mbox.txt       |  6 ++-
->  arch/arm/boot/dts/bcm-nsp.dtsi                     |  9 ++++
->  drivers/mailbox/Kconfig                            |  9 ++--
->  drivers/mailbox/bcm-pdc-mailbox.c                  | 61 ++++++++++++++++------
->  4 files changed, 63 insertions(+), 22 deletions(-)
->
-> --
-> 2.1.0
->
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Andy Whitcroft <apw@canonical.com>
+> Cc: Joe Perches <joe@perches.com>
+> ---
+>  scripts/checkpatch.pl | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 982c52ca6473..ce802b3146e3 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2139,6 +2139,7 @@ sub process {
+>  	my $commit_log_has_diff = 0;
+>  	my $reported_maintainer_file = 0;
+>  	my $non_utf8_charset = 0;
+> +	my $licensefile = '';
+
+Maybe this should be $spdx_license_file
+but what's the actual reason to check if
+multiple license bits are in a single file?
+
+> +# check for using SPDX tag instead of free form license text in dts and binding header files
+> +		if ($licensefile ne $realfile &&
+> +		    ($realfile =~ /\.dtsi?$/ || $realfile =~ /dt-bindings\/.*\.h$/) &&
+
+It's nicer to use a non / leading char like @
+so you don't have to escape the /.
+
+maybe
+	$realfile =~ m@/dt-bindings/.*\.h$@
+
+> +		    $rawline !~ /\bSPDX-License-Identifier/ &&
+> +		    ($rawline =~ /^\+.*\bGeneral\s+Public\s+License/i ||
+> +		    $rawline =~ /^\+.*\bTHE\s+SOFTWARE\s+IS\s+PROVIDED\s+\"AS\s+IS\"/i ||
+> +		    $rawline =~ /^\+.*\b(GPL|BSD|X11)/)) {
+
+nicer to indent these last 2 lines one more space
+to keep alignment to open parenthesis.
+
+> +			$licensefile = $realfile;
+> +			WARN("SPDX_LICENSE_TAG",
+> +			     "Use SPDX-License-Identifier tags instead of full license text\n" . $herecurr);
+> +		}
+> +
+>  # check we are in a valid source file if not then ignore this hunk
+>  		next if ($realfile !~ /\.(h|c|s|S|sh|dtsi|dts)$/);
