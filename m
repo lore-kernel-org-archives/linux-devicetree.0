@@ -1,52 +1,30 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] dt-bindings: net: generalize moxart-mac to support all
- faraday based ftmac IP
-Date: Thu, 23 Feb 2017 10:53:47 +0800
-Message-ID: <20170223025338.GA5982@app09>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] mfd: axp20x: Add support for dts property "xpowers,master-mode"
+Date: Thu, 23 Feb 2017 11:57:54 +0800
+Message-ID: <CAGb2v66=fipED2pDkHJWZG4RPVML+h8h7=n=M2y-5oW9xgu+uQ@mail.gmail.com>
+References: <cover.1487791328.git.rask@formelder.dk> <ef82cd5bbea5a5eedcafd3f57e7b7409dd9b4b5e.1487791329.git.rask@formelder.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <ef82cd5bbea5a5eedcafd3f57e7b7409dd9b4b5e.1487791329.git.rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Andestech and moxa use the same faraday mac IP, so we use faraday,ftmac.txt to
-describe it.
+On Thu, Feb 23, 2017 at 3:42 AM, Rask Ingemann Lambertsen
+<rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org> wrote:
+> commit b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
+> was intended to fix the case where a board uses an AXP806 in slave mode,
+> but the boot loader leaves it in master mode for lack of AXP806 support.
+> But now the driver breaks on boards where the PMIC is operating in master
+> mode. This patch lets the driver use the new device tree property
+> "xpowers,master-mode" to set the correct operating mode for the board.
+>
+> Fixes: 8824ee857348 ("mfd: axp20x: Add support for AXP806 PMIC")
+> Signed-off-by: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
 
-Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes in v2:
- - Wrap the commit messages and remove the hunk that are already applied.
----
- .../net/{moxa,moxart-mac.txt => faraday,ftmac.txt} |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/net/{moxa,moxart-mac.txt => faraday,ftmac.txt} (68%)
-
-diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-similarity index 68%
-rename from Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-rename to Documentation/devicetree/bindings/net/faraday,ftmac.txt
-index 583418b..be4f55e 100644
---- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-+++ b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-@@ -1,8 +1,11 @@
--MOXA ART Ethernet Controller
-+Faraday Ethernet Controller
- 
- Required properties:
- 
--- compatible : Must be "moxa,moxart-mac"
-+- compatible : Must contain "faraday,ftmac", as well as one of
-+		the SoC specific identifiers:
-+		"andestech,atmac100"
-+		"moxa,moxart-mac"
- - reg : Should contain register location and length
- - interrupts : Should contain the mac interrupt number
- 
--- 
-1.7.9.5
-
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
