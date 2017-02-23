@@ -1,32 +1,176 @@
-From: Piotr Sroka <piotrs-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 1/2] [1/2] mmc: sdhci-cadence: Fix writing PHY delay
-Date: Thu, 23 Feb 2017 11:46:11 +0000
-Message-ID: <DM5PR07MB308274A027F287ABF4408F0ADD530@DM5PR07MB3082.namprd07.prod.outlook.com>
-References: <1487250413-5769-1-git-send-email-piotrs@cadence.com>
- <CAK7LNARW4zQ2OutrAfzkigt8OgMbAMbaLvTB2ZNfwbApHT=TEA@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/1] ARM: dts: BCM953012HR: Initial Checkin
+Date: Thu, 23 Feb 2017 07:22:19 -0600
+Message-ID: <CAL_JsqJGLEKvdCpb+U5sN2GU4hgfYdqMH3rfntNnKsBOdHfKLw@mail.gmail.com>
+References: <1487798092-8631-1-git-send-email-steven.lin1@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNARW4zQ2OutrAfzkigt8OgMbAMbaLvTB2ZNfwbApHT=TEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487798092-8631-1-git-send-email-steven.lin1@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Steve Lin <steven.lin1@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Russell King <linux@armlinux.org.uk>, Jon Mason <jon.mason@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTWFzYWhpcm8gWWFtYWRh
-IFttYWlsdG86eWFtYWRhLm1hc2FoaXJvQHNvY2lvbmV4dC5jb21dDQo+IFNlbnQ6IDIzIEZlYnJ1
-YXJ5LCAyMDE3IDEyOjI5IFBNDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8yXSBbMS8yXSBtbWM6
-IHNkaGNpLWNhZGVuY2U6IEZpeCB3cml0aW5nIFBIWSBkZWxheQ0KPiANCj4gSGkuDQo+IA0KPiA+
-IC1zdGF0aWMgdm9pZCBzZGhjaV9jZG5zX3dyaXRlX3BoeV9yZWcoc3RydWN0IHNkaGNpX2NkbnNf
-cHJpdiAqcHJpdiwNCj4gPiArc3RhdGljIGludCBzZGhjaV9jZG5zX3dyaXRlX3BoeV9yZWcoc3Ry
-dWN0IHNkaGNpX2NkbnNfcHJpdiAqcHJpdiwNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgdTggYWRkciwgdTggZGF0YSkNCj4gDQo+IA0KPiBJZiB5b3UgaGF2ZSBhIGNo
-YW5jZSB0byBzdWJtaXQgdjIsDQo+IEkgd2FudCB0aGUgaW5kZW50IG9mIHRoZSBhYm92ZSBsaW5l
-IGFkanVzdGVkLg0KPiANCk9rIHRoYW5rcy4gSSB3aWxsIGZpeCB0aGUgaW5kZW50IGluIHYyLg0K
-DQpSZWdhcmRzDQpQaW90ciBTcm9rYQ0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Feb 22, 2017 at 3:14 PM, Steve Lin <steven.lin1@broadcom.com> wrote:
+> Initial version of DTS to support Broadcom BCM953012HR Northstar
+> HR platform, similar to, but not the same as existing 953012K.
+>
+> Signed-off-by: Steve Lin <steven.lin1@broadcom.com>
+> ---
+>  arch/arm/boot/dts/Makefile        |   1 +
+>  arch/arm/boot/dts/bcm953012hr.dts | 115 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 116 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/bcm953012hr.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 01d178a..c64ca3d 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -94,6 +94,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+>         bcm94708.dtb \
+>         bcm94709.dtb \
+>         bcm953012er.dtb \
+> +       bcm953012hr.dtb \
+>         bcm953012k.dtb
+>  dtb-$(CONFIG_ARCH_BCM_53573) += \
+>         bcm47189-tenda-ac9.dtb
+> diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
+> new file mode 100644
+> index 0000000..c332277
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm953012hr.dts
+> @@ -0,0 +1,115 @@
+> +/*
+> + *  BSD LICENSE
+
+Please use SDPX-License-Identifier tag instead.
+
+> + *
+> + *  Copyright(c) 2017 Broadcom
+> + *
+> + *  Redistribution and use in source and binary forms, with or without
+> + *  modification, are permitted provided that the following conditions
+> + *  are met:
+> + *
+> + *    * Redistributions of source code must retain the above copyright
+> + *      notice, this list of conditions and the following disclaimer.
+> + *    * Redistributions in binary form must reproduce the above copyright
+> + *      notice, this list of conditions and the following disclaimer in
+> + *      the documentation and/or other materials provided with the
+> + *      distribution.
+> + *    * Neither the name of Broadcom nor the names of its contributors
+> + *      may be used to endorse or promote products derived from this
+> + *      software without specific prior written permission.
+> + *
+> + *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+> + *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+> + *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+> + *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+> + *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+> + *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+> + *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+> + *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+> + *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "bcm4708.dtsi"
+> +
+> +/ {
+> +       model = "NorthStar HR (BCM953012HR)";
+> +       compatible = "brcm,bcm953012hr", "brcm,brcm53012", "brcm,bcm4708";
+> +
+> +       aliases {
+> +               serial0 = &uart0;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       memory {
+
+memory@80000000
+
+> +               reg = <0x80000000 0x10000000>;
+> +       };
+> +};
+> +
+> +&uart0 {
+> +       status = "okay";
+> +};
+> +
+> +&nand {
+> +       nandcs@0 {
+> +               compatible = "brcm,nandcs";
+> +               reg = <0>;
+> +               nand-on-flash-bbt;
+> +
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               nand-ecc-strength = <4>;
+> +               nand-ecc-step-size = <512>;
+> +
+> +               partition@0 {
+> +                       label = "nboot";
+> +                       reg = <0x00000000 0x00200000>;
+> +                       read-only;
+> +               };
+> +               partition@200000 {
+> +                       label = "nenv";
+> +                       reg = <0x00200000 0x00400000>;
+> +               };
+> +               partition@600000 {
+> +                       label = "nsystem";
+> +                       reg = <0x00600000 0x00a00000>;
+> +               };
+> +               partition@1000000 {
+> +                       label = "nrootfs";
+> +                       reg = <0x01000000 0x07000000>;
+> +               };
+> +       };
+> +};
+> +
+> +&spi_nor {
+> +       status = "okay";
+> +       spi-max-frequency = <62500000>;
+> +       m25p,default-addr-width = <3>;
+> +
+> +       #address-cells = <1>;
+> +       #size-cells = <1>;
+> +
+> +       partition@0 {
+> +               label = "boot";
+> +               reg = <0x00000000 0x000d0000>;
+> +       };
+> +       partition@d000 {
+> +               label = "env";
+> +               reg = <0x000d0000 0x00030000>;
+> +       };
+> +       partition@100000 {
+> +               label = "system";
+> +               reg = <0x00100000 0x00600000>;
+> +       };
+> +       partition@700000 {
+> +               label = "rootfs";
+> +               reg = <0x00700000 0x00900000>;
+> +       };
+> +};
+> +
+> --
+> 2.1.0
+>
