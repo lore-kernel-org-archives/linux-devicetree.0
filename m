@@ -1,57 +1,65 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH 00/35] treewide trivial patches converting pr_warning to
-	pr_warn
-Date: Thu, 23 Feb 2017 17:41:20 +0000
-Message-ID: <CACvgo50LUm5VSn_F=Dh8kL5zCPpCQDoCyUEL=Z+=1+6hJpfTaw@mail.gmail.com>
-References: <cover.1487314666.git.joe@perches.com>
-	<CAL_JsqLTaq-QLTqfyDO8EVJYpgeUx1e4J0Fo2NvfFWqVoiVedQ@mail.gmail.com>
-	<1487870304.14159.29.camel@perches.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: SPI fix needed in kernel (DragonBoard 410c)
+Date: Thu, 23 Feb 2017 09:41:25 -0800
+Message-ID: <20170223174125.be5ewn5o5tk2hwhk@sirena.org.uk>
+References: <6857de0f674548d09ecad023211b3d1f@NASANEXM01D.na.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
-In-Reply-To: <1487870304.14159.29.camel@perches.com>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Joe Perches <joe@perches.com>
-Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, linux-ia64@vger.kernel.org, SH-Linux <linux-sh@vger.kernel.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, ML nouveau <nouveau@lists.freedesktop.org>, Linux-ALSA <alsa-devel@alsa-project.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, sparclinux@vger.kernel.org, drbd-dev@lists.linbit.com, Rob Herring <robh@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, linux-scsi@vger.kernel.org, Richard Weinberger <richard@nod.at>, tboot-devel@lists.sourceforge.net, amd-gfx mailing list <amd-gfx@lists.freedesktop.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, sfi-devel@simplefirmware.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="e5ryvcvsnijoenec"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6857de0f674548d09ecad023211b3d1f@NASANEXM01D.na.qualcomm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "King, Lawrence" <lking@qti.qualcomm.com>
+Cc: Andy Gross <andy.gross@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "ill.deacon@arm.com" <ill.deacon@arm.com>, "todor.tomov@linaro.org" <todor.tomov@linaro.org>, "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "stanimir.varbanov@linaro.org" <stanimir.varbanov@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-spi@vger.
 List-Id: devicetree@vger.kernel.org
 
-On 23 February 2017 at 17:18, Joe Perches <joe@perches.com> wrote:
-> On Thu, 2017-02-23 at 09:28 -0600, Rob Herring wrote:
->> On Fri, Feb 17, 2017 at 1:11 AM, Joe Perches <joe@perches.com> wrote:
->> > There are ~4300 uses of pr_warn and ~250 uses of the older
->> > pr_warning in the kernel source tree.
->> >
->> > Make the use of pr_warn consistent across all kernel files.
->> >
->> > This excludes all files in tools/ as there is a separate
->> > define pr_warning for that directory tree and pr_warn is
->> > not used in tools/.
->> >
->> > Done with 'sed s/\bpr_warning\b/pr_warn/' and some emacsing.
-> []
->> Where's the removal of pr_warning so we don't have more sneak in?
->
-> After all of these actually get applied,
-> and maybe a cycle or two later, one would
-> get sent.
->
-By which point you'll get a few reincarnation of it. So you'll have to
-do the same exercise again :-(
 
-I guess the question is - are you expecting to get the series merged
-all together/via one tree ? If not, your plan is perfectly reasonable.
-Fwiw in the DRM subsystem, similar cleanups does purge the respective
-macros/other with the final commit. But there one can pull the lot in
-one go.
+--e5ryvcvsnijoenec
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Emil
+On Wed, Feb 22, 2017 at 07:56:21PM +0000, King, Lawrence wrote:
+> Argghh.. I am such a Newbie ;-) I originally sent this as =E2=80=9CHTML=
+=E2=80=9D which of course was rejected by many of the recipients....
+>=20
+> Resending as plain-text, with the formerly in-line oscilloscope screen sh=
+ots attached as JPEG files.
+>=20
+> Scope_4.jpg shows the problem with Chip Select, Scope_5.jpg shows the chi=
+p select with the fix.
+
+I'm sorry but I can't really tell what this mail is about, it looks like
+the end of a large, top posted thread with formatting issues so it's
+pretty hard to read.  Can you please concisely describe the issue you'd
+like to discuss?
+
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
+
+Please fix your mail client to word wrap within paragraphs at something
+substantially less than 80 columns.  Doing this makes your messages much
+easier to read and reply to.
+
+Please also check the list of people you're CCing, you've sent this to
+a *very* large set of people.
+
+--e5ryvcvsnijoenec
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlivHsQACgkQJNaLcl1U
+h9BQ2AgAgNWWYM+89Esqqrm9eK9F4KKLpeLQfjtzDQXUU9ORw1slv3YNf9y7OXf6
+BbMvvUoIoWRedZwVs3FTkd4edkGvbWXYla1FZUAaYqUu2xMZYLSN/yhI/5wES3kw
+sVhoRsKadFzKUU+6oYH3PM5kFlCD+cBHG5DMXY4I1195OM2ctqE870J6W6VPxKnq
+02hyoQU8Kg+azcePW+s7UYjkavsp9wtPXOojr/NpMHgmOkP2MUIJFgqLhEx9wOpr
+r8100c70htVLlQU4Hs9d65b4HGiSwN2lh7y/r3VgzQiCEYhSWiEy1WFUQD05MRBx
+iJCp4Ym0Utr9s/UXY/IfZKY7vHDXyQ==
+=atO4
+-----END PGP SIGNATURE-----
+
+--e5ryvcvsnijoenec--
