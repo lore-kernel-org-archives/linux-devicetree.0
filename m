@@ -1,73 +1,47 @@
-From: Frank Rowand <frowand.list@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [RFC/PATCH] of: Mark property::value as const
-Date: Thu, 23 Feb 2017 13:47:07 -0800
-Message-ID: <58AF585B.7060303@gmail.com>
+Date: Thu, 23 Feb 2017 16:09:40 -0600
+Message-ID: <CAL_Jsq+OQgmqvHQ_AWXOqnK0Yh8T3EVyxyiTFk1+0AwNHCf+Ag@mail.gmail.com>
 References: <20170214025040.23955-1-stephen.boyd@linaro.org>
- <58AF3E06.4030701@gmail.com>
+ <58AF3E06.4030701@gmail.com> <58AF4D03.7020908@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58AF3E06.4030701@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58AF4D03.7020908-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/17 11:54, Frank Rowand wrote:
-> On 02/13/17 18:50, Stephen Boyd wrote:
->> The 'blob' we pass into populate_properties() is marked as const,
->> but we cast that const away when we assign the result of
->> fdt_getprop_by_offset() to pp->value. Let's mark value as const
->> instead, so that code can't mistakenly write to the value of the
->> property that we've so far advertised as const.
+On Thu, Feb 23, 2017 at 2:58 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 02/23/17 11:54, Frank Rowand wrote:
+>> On 02/13/17 18:50, Stephen Boyd wrote:
+>>> The 'blob' we pass into populate_properties() is marked as const,
+>>> but we cast that const away when we assign the result of
+>>> fdt_getprop_by_offset() to pp->value. Let's mark value as const
+>>> instead, so that code can't mistakenly write to the value of the
+>>> property that we've so far advertised as const.
+>>>
+>>> Unfortunately, this exposes a problem with the fdt resolver code,
+>>> where we overwrite the value member of properties of phandles to
+>>> update them with their final value. Add a comment for now to
+>>> indicate where we're potentially writing over const data.
 >>
->> Unfortunately, this exposes a problem with the fdt resolver code,
->> where we overwrite the value member of properties of phandles to
->> update them with their final value. Add a comment for now to
->> indicate where we're potentially writing over const data.
-> 
-> The resolver should not be over writing anything in the FDT.  I'll
-> look at what is going on there.
+>> The resolver should not be over writing anything in the FDT.  I'll
+>> look at what is going on there.
+>>
+>> The FDT we expose to user space should be the FDT we booted with,
+>> not something later modified.
+>
+> It seems that /sys/firmware/fdt is not documented.  I'll look into
+> fixing that.
 
-OK, now that I have looked at the resolver, I see that you meant that
-the resolver code is modifying the _overlay_ FDT, not the FDT that
-was used at initial boot.  So not what I thought you meant.
+That's because the "official" interface is /proc/device-tree/ which is
+now a symlink. IIRC, it is documented to use /proc/device-tree, not
+the sysfs path.
 
-I'll reply separately to the original patch email with a more complete
-response.
-
--Frank
-
-> 
-> The FDT we expose to user space should be the FDT we booted with,
-> not something later modified.
-> 
-> -Frank
-> 
->>
->> You can see the problem here by loading an overlay dtb into
->> the kernel via the request firmware helper method (not direct
->> loading) and then passing that tree to the resolver on an arm64
->> device. In this case, the firmware data is vmapped with KERNEL_PAGE_RO
->> and the code crashes when attempting to write to the blob to update
->> the phandle properties.
->>
->> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
->> ---
->>
->> I was thinking perhaps it would work to store another __be32 variant
->> of the phandle in each device node, but then we still have a problem
->> with properties that have phandles inside them at some offset that we
->> need to update. I guess the only real solution is to deep copy the
->> property in that case and then save around some info to free the
->> duplicated property later on?
->>
->>  drivers/of/base.c     |  2 +-
->>  drivers/of/fdt.c      | 12 ++++++------
->>  drivers/of/resolver.c |  3 +++
->>  include/linux/of.h    |  2 +-
->>  4 files changed, 11 insertions(+), 8 deletions(-)
-> 
-> < snip >
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
