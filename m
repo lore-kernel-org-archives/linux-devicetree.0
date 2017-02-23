@@ -1,136 +1,55 @@
-From: Steve Lin <steven.lin1@broadcom.com>
-Subject: Re: [PATCH 1/1] ARM: dts: BCM953012HR: Initial Checkin
-Date: Thu, 23 Feb 2017 08:38:55 -0500
-Message-ID: <CA+Jmh7Ha0CTmTQnexz7oga2m54paKxbqZ+yF5orbEH72Ffi3Ag@mail.gmail.com>
-References: <1487798092-8631-1-git-send-email-steven.lin1@broadcom.com>
- <68373798-376d-43d9-85cb-c6af7c6fa302@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC/PATCH] of: Mark property::value as const
+Date: Thu, 23 Feb 2017 07:39:53 -0600
+Message-ID: <CAL_JsqJDaa+ozCTyS6M_1BP-sk3g5T2wQK+5DLTPWBKyp=AMeA@mail.gmail.com>
+References: <20170214025040.23955-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <68373798-376d-43d9-85cb-c6af7c6fa302@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hauke@hauke-m.de, linux@armlinux.org.uk, Jon Mason <jon.mason@broadcom.com>, robh+dt@kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170214025040.23955-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-KiBSZXNlbmRpbmcgaW4gcGxhaW50ZXh0IC0gZm9yZ290IHRvIGRpc2FibGUgaHRtbCBpbiBteSBt
-YWlsIGNsaWVudCAtCmFwb2xvZ2llcyBpZiB5b3UgcmVjZWl2ZSAyIGNvcGllcyAqCgpSYWZhbCAm
-IFJvYiwKCkkgd2lsbCBzcGluIGEgdjIgd2l0aCB0aGUgY2xlYW51cHMgUm9iIHN1Z2dlc3RlZCBh
-bmQgdGhlIHVhcnQvbmFuZApjaGFuZ2VzIFJhZmFsIHN1Z2dlc3RlZC4gIFRoYW5rcyEKClJhZmFs
-LCB0byBhbnN3ZXIgeW91ciBxdWVzdGlvbiBhYm91dCBoYXZpbmcgc2ltaWxhciBwYXJ0aXRpb25z
-IG9uIGJvdGgKZmxhc2ggZGV2aWNlcywgdGhhdCBpcyBzb21ldGhpbmcgdGhhdCBJIGJlbGlldmUg
-d2UgZG8gb24gb3VyIHJlZmVyZW5jZQpwbGF0Zm9ybXMgdG8gZGVtb25zdHJhdGUgdG8gY3VzdG9t
-ZXJzIHVzaW5nIGVpdGhlciBmbGFzaCBmb3Igc3RvcmluZwp0aGVpciBrZXJuZWwgaW1hZ2UsIHJv
-b3RmcywgZXRjLiAgU2VlIGZvciBleGFtcGxlIGJjbTk1ODYyNWsuZHRzIHdoZXJlCndlIGFsc28g
-aGF2ZSBzaW1pbGFyIHBhcnRpdGlvbiBuYW1lcyBmb3IgbmFuZCBhbmQgc3BpIGZsYXNoLgoKVGhh
-bmtzLApTdGV2ZQoKT24gVGh1LCBGZWIgMjMsIDIwMTcgYXQgNDozNyBBTSwgUmFmYcWCIE1pxYJl
-Y2tpIDx6YWplYzVAZ21haWwuY29tPiB3cm90ZToKPiBPbiAwMi8yMi8yMDE3IDEwOjE0IFBNLCBT
-dGV2ZSBMaW4gd3JvdGU6Cj4+Cj4+IEluaXRpYWwgdmVyc2lvbiBvZiBEVFMgdG8gc3VwcG9ydCBC
-cm9hZGNvbSBCQ005NTMwMTJIUiBOb3J0aHN0YXIKPj4gSFIgcGxhdGZvcm0sIHNpbWlsYXIgdG8s
-IGJ1dCBub3QgdGhlIHNhbWUgYXMgZXhpc3RpbmcgOTUzMDEySy4KPj4KPj4gU2lnbmVkLW9mZi1i
-eTogU3RldmUgTGluIDxzdGV2ZW4ubGluMUBicm9hZGNvbS5jb20+Cj4+IC0tLQo+PiAgYXJjaC9h
-cm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgIHwgICAxICsKPj4gIGFyY2gvYXJtL2Jvb3QvZHRz
-L2JjbTk1MzAxMmhyLmR0cyB8IDExNQo+PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKwo+PiAgMiBmaWxlcyBjaGFuZ2VkLCAxMTYgaW5zZXJ0aW9ucygrKQo+PiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTk1MzAxMmhyLmR0cwo+Pgo+PiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgYi9hcmNoL2FybS9ib290L2R0cy9N
-YWtlZmlsZQo+PiBpbmRleCAwMWQxNzhhLi5jNjRjYTNkIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9NYWtlZmlsZQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQo+
-PiBAQCAtOTQsNiArOTQsNyBAQCBkdGItJChDT05GSUdfQVJDSF9CQ01fNTMwMVgpICs9IFwKPj4g
-ICAgICAgICBiY205NDcwOC5kdGIgXAo+PiAgICAgICAgIGJjbTk0NzA5LmR0YiBcCj4+ICAgICAg
-ICAgYmNtOTUzMDEyZXIuZHRiIFwKPj4gKyAgICAgICBiY205NTMwMTJoci5kdGIgXAo+PiAgICAg
-ICAgIGJjbTk1MzAxMmsuZHRiCj4+ICBkdGItJChDT05GSUdfQVJDSF9CQ01fNTM1NzMpICs9IFwK
-Pj4gICAgICAgICBiY200NzE4OS10ZW5kYS1hYzkuZHRiCj4+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9iY205NTMwMTJoci5kdHMKPj4gYi9hcmNoL2FybS9ib290L2R0cy9iY205NTMw
-MTJoci5kdHMKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uYzMzMjI3
-Nwo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTk1MzAxMmhy
-LmR0cwo+PiBAQCAtMCwwICsxLDExNSBAQAo+PiArLyoKPj4gKyAqICBCU0QgTElDRU5TRQo+PiAr
-ICoKPj4gKyAqICBDb3B5cmlnaHQoYykgMjAxNyBCcm9hZGNvbQo+PiArICoKPj4gKyAqICBSZWRp
-c3RyaWJ1dGlvbiBhbmQgdXNlIGluIHNvdXJjZSBhbmQgYmluYXJ5IGZvcm1zLCB3aXRoIG9yIHdp
-dGhvdXQKPj4gKyAqICBtb2RpZmljYXRpb24sIGFyZSBwZXJtaXR0ZWQgcHJvdmlkZWQgdGhhdCB0
-aGUgZm9sbG93aW5nIGNvbmRpdGlvbnMKPj4gKyAqICBhcmUgbWV0Ogo+PiArICoKPj4gKyAqICAg
-ICogUmVkaXN0cmlidXRpb25zIG9mIHNvdXJjZSBjb2RlIG11c3QgcmV0YWluIHRoZSBhYm92ZSBj
-b3B5cmlnaHQKPj4gKyAqICAgICAgbm90aWNlLCB0aGlzIGxpc3Qgb2YgY29uZGl0aW9ucyBhbmQg
-dGhlIGZvbGxvd2luZyBkaXNjbGFpbWVyLgo+PiArICogICAgKiBSZWRpc3RyaWJ1dGlvbnMgaW4g
-YmluYXJ5IGZvcm0gbXVzdCByZXByb2R1Y2UgdGhlIGFib3ZlIGNvcHlyaWdodAo+PiArICogICAg
-ICBub3RpY2UsIHRoaXMgbGlzdCBvZiBjb25kaXRpb25zIGFuZCB0aGUgZm9sbG93aW5nIGRpc2Ns
-YWltZXIgaW4KPj4gKyAqICAgICAgdGhlIGRvY3VtZW50YXRpb24gYW5kL29yIG90aGVyIG1hdGVy
-aWFscyBwcm92aWRlZCB3aXRoIHRoZQo+PiArICogICAgICBkaXN0cmlidXRpb24uCj4+ICsgKiAg
-ICAqIE5laXRoZXIgdGhlIG5hbWUgb2YgQnJvYWRjb20gbm9yIHRoZSBuYW1lcyBvZiBpdHMgY29u
-dHJpYnV0b3JzCj4+ICsgKiAgICAgIG1heSBiZSB1c2VkIHRvIGVuZG9yc2Ugb3IgcHJvbW90ZSBw
-cm9kdWN0cyBkZXJpdmVkIGZyb20gdGhpcwo+PiArICogICAgICBzb2Z0d2FyZSB3aXRob3V0IHNw
-ZWNpZmljIHByaW9yIHdyaXR0ZW4gcGVybWlzc2lvbi4KPj4gKyAqCj4+ICsgKiAgVEhJUyBTT0ZU
-V0FSRSBJUyBQUk9WSURFRCBCWSBUSEUgQ09QWVJJR0hUIEhPTERFUlMgQU5EIENPTlRSSUJVVE9S
-Uwo+PiArICogICJBUyBJUyIgQU5EIEFOWSBFWFBSRVNTIE9SIElNUExJRUQgV0FSUkFOVElFUywg
-SU5DTFVESU5HLCBCVVQgTk9UCj4+ICsgKiAgTElNSVRFRCBUTywgVEhFIElNUExJRUQgV0FSUkFO
-VElFUyBPRiBNRVJDSEFOVEFCSUxJVFkgQU5EIEZJVE5FU1MgRk9SCj4+ICsgKiAgQSBQQVJUSUNV
-TEFSIFBVUlBPU0UgQVJFIERJU0NMQUlNRUQuIElOIE5PIEVWRU5UIFNIQUxMIFRIRSBDT1BZUklH
-SFQKPj4gKyAqICBPV05FUiBPUiBDT05UUklCVVRPUlMgQkUgTElBQkxFIEZPUiBBTlkgRElSRUNU
-LCBJTkRJUkVDVCwgSU5DSURFTlRBTCwKPj4gKyAqICBTUEVDSUFMLCBFWEVNUExBUlksIE9SIENP
-TlNFUVVFTlRJQUwgREFNQUdFUyAoSU5DTFVESU5HLCBCVVQgTk9UCj4+ICsgKiAgTElNSVRFRCBU
-TywgUFJPQ1VSRU1FTlQgT0YgU1VCU1RJVFVURSBHT09EUyBPUiBTRVJWSUNFUzsgTE9TUyBPRiBV
-U0UsCj4+ICsgKiAgREFUQSwgT1IgUFJPRklUUzsgT1IgQlVTSU5FU1MgSU5URVJSVVBUSU9OKSBI
-T1dFVkVSIENBVVNFRCBBTkQgT04gQU5ZCj4+ICsgKiAgVEhFT1JZIE9GIExJQUJJTElUWSwgV0hF
-VEhFUiBJTiBDT05UUkFDVCwgU1RSSUNUIExJQUJJTElUWSwgT1IgVE9SVAo+PiArICogIChJTkNM
-VURJTkcgTkVHTElHRU5DRSBPUiBPVEhFUldJU0UpIEFSSVNJTkcgSU4gQU5ZIFdBWSBPVVQgT0Yg
-VEhFIFVTRQo+PiArICogIE9GIFRISVMgU09GVFdBUkUsIEVWRU4gSUYgQURWSVNFRCBPRiBUSEUg
-UE9TU0lCSUxJVFkgT0YgU1VDSCBEQU1BR0UuCj4+ICsgKi8KPj4gKwo+PiArL2R0cy12MS87Cj4+
-ICsKPj4gKyNpbmNsdWRlICJiY200NzA4LmR0c2kiCj4+ICsKPj4gKy8gewo+PiArICAgICAgIG1v
-ZGVsID0gIk5vcnRoU3RhciBIUiAoQkNNOTUzMDEySFIpIjsKPj4gKyAgICAgICBjb21wYXRpYmxl
-ID0gImJyY20sYmNtOTUzMDEyaHIiLCAiYnJjbSxicmNtNTMwMTIiLCAiYnJjbSxiY200NzA4IjsK
-Pj4gKwo+PiArICAgICAgIGFsaWFzZXMgewo+PiArICAgICAgICAgICAgICAgc2VyaWFsMCA9ICZ1
-YXJ0MDsKPj4gKyAgICAgICB9Owo+PiArCj4+ICsgICAgICAgY2hvc2VuIHsKPj4gKyAgICAgICAg
-ICAgICAgIHN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOwo+PiArICAgICAgIH07Cj4+
-ICsKPj4gKyAgICAgICBtZW1vcnkgewo+PiArICAgICAgICAgICAgICAgcmVnID0gPDB4ODAwMDAw
-MDAgMHgxMDAwMDAwMD47Cj4+ICsgICAgICAgfTsKPj4gK307Cj4+ICsKPj4gKyZ1YXJ0MCB7Cj4+
-ICsgICAgICAgc3RhdHVzID0gIm9rYXkiOwo+PiArfTsKPgo+Cj4gWW91IGRvbid0IG5lZWQgdGhp
-cy4KPiA3Yjc5MGQzYjI5NDMgKCJBUk06IGR0czogQkNNNTMwMVg6IEVuYWJsZSBVQVJUIGJ5IGRl
-ZmF1bHQgZm9yIEJDTTQ3MDgoMSksCj4gQkNNNDcwOSg0KSAmIEJDTTUzMDEyIikKPgo+Cj4+ICsm
-bmFuZCB7Cj4+ICsgICAgICAgbmFuZGNzQDAgewo+PiArICAgICAgICAgICAgICAgY29tcGF0aWJs
-ZSA9ICJicmNtLG5hbmRjcyI7Cj4+ICsgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4+ICsgICAg
-ICAgICAgICAgICBuYW5kLW9uLWZsYXNoLWJidDsKPj4gKwo+PiArICAgICAgICAgICAgICAgI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9IDwxPjsK
-Pj4gKwo+PiArICAgICAgICAgICAgICAgbmFuZC1lY2Mtc3RyZW5ndGggPSA8ND47Cj4+ICsgICAg
-ICAgICAgICAgICBuYW5kLWVjYy1zdGVwLXNpemUgPSA8NTEyPjsKPgo+Cj4gQ2FuIHlvdSBqdXN0
-IGluY2x1ZGUgYmNtNTMwMXgtbmFuZC1jczAtYmNoNC5kdHNpPwo+Cj4KPj4gKwo+PiArICAgICAg
-ICAgICAgICAgcGFydGl0aW9uQDAgewo+PiArICAgICAgICAgICAgICAgICAgICAgICBsYWJlbCA9
-ICJuYm9vdCI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwweDAwMDAwMDAwIDB4
-MDAyMDAwMDA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICByZWFkLW9ubHk7Cj4+ICsgICAg
-ICAgICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgcGFydGl0aW9uQDIwMDAwMCB7Cj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgIGxhYmVsID0gIm5lbnYiOwo+PiArICAgICAgICAgICAgICAg
-ICAgICAgICByZWcgPSA8MHgwMDIwMDAwMCAweDAwNDAwMDAwPjsKPj4gKyAgICAgICAgICAgICAg
-IH07Cj4+ICsgICAgICAgICAgICAgICBwYXJ0aXRpb25ANjAwMDAwIHsKPj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgbGFiZWwgPSAibnN5c3RlbSI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHJlZyA9IDwweDAwNjAwMDAwIDB4MDBhMDAwMDA+Owo+PiArICAgICAgICAgICAgICAgfTsKPj4g
-KyAgICAgICAgICAgICAgIHBhcnRpdGlvbkAxMDAwMDAwIHsKPj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgbGFiZWwgPSAibnJvb3RmcyI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9
-IDwweDAxMDAwMDAwIDB4MDcwMDAwMDA+Owo+PiArICAgICAgICAgICAgICAgfTsKPgo+Cj4gVGhl
-c2UgY291bGQgZ28gdG8gJm5hbmRjcyB3aXRoIGFib3ZlIGR0c2kgaW5jbHVkZS4KPgo+Cj4+ICsg
-ICAgICAgfTsKPj4gK307Cj4+ICsKPj4gKyZzcGlfbm9yIHsKPj4gKyAgICAgICBzdGF0dXMgPSAi
-b2theSI7Cj4+ICsgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8NjI1MDAwMDA+Owo+PiArICAg
-ICAgIG0yNXAsZGVmYXVsdC1hZGRyLXdpZHRoID0gPDM+Owo+PiArCj4+ICsgICAgICAgI2FkZHJl
-c3MtY2VsbHMgPSA8MT47Cj4+ICsgICAgICAgI3NpemUtY2VsbHMgPSA8MT47Cj4+ICsKPj4gKyAg
-ICAgICBwYXJ0aXRpb25AMCB7Cj4+ICsgICAgICAgICAgICAgICBsYWJlbCA9ICJib290IjsKPj4g
-KyAgICAgICAgICAgICAgIHJlZyA9IDwweDAwMDAwMDAwIDB4MDAwZDAwMDA+Owo+PiArICAgICAg
-IH07Cj4+ICsgICAgICAgcGFydGl0aW9uQGQwMDAgewo+PiArICAgICAgICAgICAgICAgbGFiZWwg
-PSAiZW52IjsKPj4gKyAgICAgICAgICAgICAgIHJlZyA9IDwweDAwMGQwMDAwIDB4MDAwMzAwMDA+
-Owo+PiArICAgICAgIH07Cj4+ICsgICAgICAgcGFydGl0aW9uQDEwMDAwMCB7Cj4+ICsgICAgICAg
-ICAgICAgICBsYWJlbCA9ICJzeXN0ZW0iOwo+PiArICAgICAgICAgICAgICAgcmVnID0gPDB4MDAx
-MDAwMDAgMHgwMDYwMDAwMD47Cj4+ICsgICAgICAgfTsKPj4gKyAgICAgICBwYXJ0aXRpb25ANzAw
-MDAwIHsKPj4gKyAgICAgICAgICAgICAgIGxhYmVsID0gInJvb3RmcyI7Cj4+ICsgICAgICAgICAg
-ICAgICByZWcgPSA8MHgwMDcwMDAwMCAweDAwOTAwMDAwPjsKPj4gKyAgICAgICB9Owo+PiArfTsK
-Pgo+Cj4gVGhpcyBpcyBhIGJpdCB1bmNvbW1vbiBmb3IgbWUgdG8gaGF2ZSB0aGUgc2FtZSBwYXJ0
-aXRpb25zIG9uIGJvdGggZmxhc2gKPiBkZXZpY2UuCj4gQ2FuIHlvdSBwcm92aWRlIHNvbWUgZXh0
-cmEgZGVzY3JpcHRpb24gb2YgdGhpcyBzZXR1cCwgcGxlYXNlPwo+CgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, Feb 13, 2017 at 8:50 PM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> The 'blob' we pass into populate_properties() is marked as const,
+> but we cast that const away when we assign the result of
+> fdt_getprop_by_offset() to pp->value. Let's mark value as const
+> instead, so that code can't mistakenly write to the value of the
+> property that we've so far advertised as const.
+>
+> Unfortunately, this exposes a problem with the fdt resolver code,
+> where we overwrite the value member of properties of phandles to
+> update them with their final value. Add a comment for now to
+> indicate where we're potentially writing over const data.
+>
+> You can see the problem here by loading an overlay dtb into
+> the kernel via the request firmware helper method (not direct
+> loading) and then passing that tree to the resolver on an arm64
+> device. In this case, the firmware data is vmapped with KERNEL_PAGE_RO
+> and the code crashes when attempting to write to the blob to update
+> the phandle properties.
+
+This problem exists with or without this patch, right?
+
+> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>
+> I was thinking perhaps it would work to store another __be32 variant
+> of the phandle in each device node, but then we still have a problem
+> with properties that have phandles inside them at some offset that we
+> need to update. I guess the only real solution is to deep copy the
+> property in that case and then save around some info to free the
+> duplicated property later on?
+
+Couldn't we just copy the overlay and free the firmware blob in this
+case? That seems easier than trying to selectively copy things. We
+keep the base FDT to pass to userspace and we could need that for
+overlays, but not ones we load from userspace.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
