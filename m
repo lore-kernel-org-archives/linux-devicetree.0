@@ -1,48 +1,67 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH V2 2/2] ARM: dts: bcm283x: Add CPU thermal zone with 1
- trip point
-Date: Wed, 22 Feb 2017 17:54:58 -0800
-Message-ID: <20170223015456.GA7769@localhost.localdomain>
-References: <1486928328-25870-1-git-send-email-stefan.wahren@i2se.com>
- <1486928328-25870-2-git-send-email-stefan.wahren@i2se.com>
- <20170219011753.GB21016@localhost.localdomain>
- <1762674971.70633.1487507509664@email.1und1.de>
- <20170219212659.GA22580@localhost.localdomain>
- <9493160.170101.1487700876375@email.1und1.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9493160.170101.1487700876375@email.1und1.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: kernel@martin.sperl.org, Frank Rowand <frowand.list@gmail.com>, Eric Anholt <eric@anholt.net>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v1 0/2] coresight: enable debug module
+Date: Thu, 23 Feb 2017 09:57:45 +0800
+Message-ID: <1487815067-27511-1-git-send-email-leo.yan@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hey,
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
 
-On Tue, Feb 21, 2017 at 07:14:36PM +0100, Stefan Wahren wrote:
-> > 
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
 
-<cut>
+ARM external debug module:
+CPU[0]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+CPU[1]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
 
-> 
-> I prepared a new patch series to fix that issue in my github repo [1]. At first we need to implement a new function of_property_read_s32_array() [2]. After that we could use this function in of-thermal in order to use signed integer for both coefficients [3].
-> 
-> @Eduardo: Is it okay for you?
-> 
+[...]
 
-Yes, as I mentioned before, I am OK to patch of-thermal. And the
-representation of offset and slope are already signed.
+This patch series has been verified on 96boards Hikey.
 
-> @Martin: Do you want to send the next version of the patch series or should i?
-> 
-> [1] - https://github.com/lategoodbye/rpi-zero/commits/thermal
-> [2] - https://github.com/lategoodbye/rpi-zero/commit/3dc43581ada74d1345f79b4c36562fdf5f7941e5
-> [3] - https://github.com/lategoodbye/rpi-zero/commit/c02ed37c0ebdca98aee570862af10e90b3c9a0d0
-> 
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers;
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding;
+* According to Mark and Mathieu suggestion, refined debug driver;
 
-Number 3 is fine with me. Please send them in a single series for proper
-review in linux-pm.
+Leo Yan (2):
+  coresight: bindings for debug module
+  coresight: add support for debug module
 
-BR,
+ .../devicetree/bindings/arm/coresight-debug.txt    |  39 ++
+ drivers/hwtracing/coresight/Kconfig                |  10 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-debug.c      | 396 +++++++++++++++++++++
+ 4 files changed, 446 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
