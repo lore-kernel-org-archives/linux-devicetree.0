@@ -1,73 +1,77 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 23/36] media: imx: Add MIPI CSI-2 Receiver subdev driver
-Date: Wed, 22 Feb 2017 16:09:23 -0800
-Message-ID: <80ecf2ef-8e52-0c60-87b5-8325571857ee@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-24-git-send-email-steve_longerbeam@mentor.com>
- <1487328479.3107.21.camel@pengutronix.de>
- <20170217110616.GD21222@n2100.armlinux.org.uk>
- <20b7d3b7-85be-b701-19ca-1e8024260fc2@gmail.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
+Date: Thu, 23 Feb 2017 08:25:06 +0800
+Message-ID: <58AE2BE2.7040006@rock-chips.com>
+References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
+ <20170221153918.GA25168@art_vandelay>
+ <20170222134314.016a4940.john@metanate.com>
+ <CAOw6vbJoS2P5m31+bgWw3Sghz=EVGj0fpLgCFnbVEhzRujNCLw@mail.gmail.com>
+ <20170222185543.71e20187.john@metanate.com>
+ <CAOw6vbJO_TQnSAu6w7XHiMSYA+gB1tyHOvB7BMc7Q2+OMY=9=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20b7d3b7-85be-b701-19ca-1e8024260fc2@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAOw6vbJO_TQnSAu6w7XHiMSYA+gB1tyHOvB7BMc7Q2+OMY=9=w@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>, John Keeping <john@metanate.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Yao <yzq@rock-chips.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, Tomasz Figa <tfiga@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/22/2017 04:06 PM, Steve Longerbeam wrote:
->
->
-> On 02/17/2017 03:06 AM, Russell King - ARM Linux wrote:
->> On Fri, Feb 17, 2017 at 11:47:59AM +0100, Philipp Zabel wrote:
->>> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
->>>> +static void csi2_dphy_init(struct csi2_dev *csi2)
->>>> +{
->>>> +    /*
->>>> +     * FIXME: 0x14 is derived from a fixed D-PHY reference
->>>> +     * clock from the HSI_TX PLL, and a fixed target lane max
->>>> +     * bandwidth of 300 Mbps. This value should be derived
->>>
->>> If the table in https://community.nxp.com/docs/DOC-94312 is correct,
->>> this should be 850 Mbps. Where does this 300 Mbps value come from?
->>
->> I thought you had some code to compute the correct value, although
->> I guess we've lost the ability to know how fast the sensor is going
->> to drive the link.
->>
->> Note that the IMX219 currently drives the data lanes at 912Mbps almost
->> exclusively, as I've yet to finish working out how to derive the PLL
->> parameters.  (I have something that works, but it currently takes on
->> the order of 100k iterations to derive the parameters.  gcd() doesn't
->> help you in this instance.)
->
-> Hi Russell,
->
-> As I mentioned, I've added code to imx6-mipi-csi2 to determine the
-> sources link frequency via V4L2_CID_LINK_FREQ. If you were to implement
-> this control and return 912 Mbps-per-lane,
-
-argh, I mean return 912 / 2.
-
-Steve
-
-  the D-PHY will be programmed
-> correctly for the IMX219 (at least, that is the theory anyway).
->
-> Alternatively, I could up the default in imx6-mipi-csi2 to 950
-> Mbps. I will have to test that to make sure it still works with
-> OV5640 and tc358743.
->
-> Steve
+Ck9uIDAyLzIzLzIwMTcgMDY6MTAgQU0sIFNlYW4gUGF1bCB3cm90ZToKPiBPbiBXZWQsIEZlYiAy
+MiwgMjAxNyBhdCAxOjU1IFBNLCBKb2huIEtlZXBpbmcgPGpvaG5AbWV0YW5hdGUuY29tPiB3cm90
+ZToKPj4gT24gV2VkLCAyMiBGZWIgMjAxNyAxMDo1NzowNSAtMDUwMCwgU2VhbiBQYXVsIHdyb3Rl
+Ogo+Pgo+Pj4gT24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgODo0MyBBTSwgSm9obiBLZWVwaW5nIDxq
+b2huQG1ldGFuYXRlLmNvbT4gd3JvdGU6Cj4+Pj4gT24gVHVlLCAyMSBGZWIgMjAxNyAxMDozOTox
+OCAtMDUwMCwgU2VhbiBQYXVsIHdyb3RlOgo+Pj4+Cj4+Pj4+IE9uIE1vbiwgRmViIDIwLCAyMDE3
+IGF0IDA0OjAyOjE2UE0gKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+Pj4+Pj4gSGkgYWxsCj4+
+Pj4+Pgo+Pj4+Pj4gW1Jlc2VuZCB0aGlzIHY3IHZlcnNpb24gc2VyaWVzLCBzaW5jZSB0aGVyZSBh
+cmUgNSBtYWlscyBoYXZlIGdvbmUgbWlzc2luZywgbGFzdAo+Pj4+Pj4gd2Vla10KPj4+Pj4+Cj4+
+Pj4+PiBUaGlzIHZlcnNpb24gZG9lcyBub3QgY2hhbmdlIHRoZSBleGlzdGluZyB2NiBwYXRjaGVz
+LCBqdXN0IHRvIGFkZCB0aGUKPj4+Pj4+ICJiYW5kd2lkdGggZml4IiBwYXRjaCBiYWNrLCBzaW5j
+ZSB3ZSByZWFsbHkgbmVlZCBpdC4KPj4+Pj4+Cj4+Pj4+PiBUaGlzIHBhdGNoIHNlcmlhbCBpcyBm
+b3IgUkszMzk5IE1JUEkgRFNJLiBUaGUgTUlQSSBEU0kgY29udHJvbGxlciBvZgo+Pj4+Pj4gUksz
+Mzk5IGlzIGFsbW9zdCB0aGUgc2FtZSBhcyBSSzMyODgsIGV4Y2VwdCBhIGxpdHRsZSBiaXQgb2Yg
+ZGlmZmVyZW5jZQo+Pj4+Pj4gaW4gcGh5IGNsb2NrIGNvbnRyb2xsaW5nIGFuZCBwb3J0IGlkIHNl
+bGVjdGlvbiByZWdpc3Rlci4gVGhlc2UgcGF0Y2hlcwo+Pj4+Pj4gYWRkIFJLMzM5OSBzdXBwb3J0
+IGFuZCB0aGUgcG93ZXIgZG9tYWluIHN1cHBvcnQuCj4+Pj4+Pgo+Pj4+Pj4gQW5kIHRoZXNlIHBh
+dGNoZXMgYmFzZSBvbiBKb2huIEtlZXBpbmcncyB2MyBwYXRjaGVzWzBdLCBpdCBmaXhlcyBtYW55
+IGJ1Z3MsCj4+Pj4+PiB0aGV5IGhhdmUgYmVlbiB0ZXN0ZWQgb24gcmszMjg4IGV2YiBib2FyZC4K
+Pj4+Pj4gRG8gd2UgaGF2ZSBhbiBFVEEgb24gd2hlbiBKb2huIGlzIHBsYW5uaW5nIG9uIHJlc3Bp
+bm5pbmcgaGlzIHBhdGNoc2V0IGJhc2VkIG9uCj4+Pj4+IHJldmlldyBmZWVkYmFjaz8KPj4+PiBJ
+IGhhdmUgYWxsIG9mIHRoZSBjaGFuZ2VzIHF1ZXVlZCBidXQgSSB3YXMgaG9waW5nIHRvIGZpbmQg
+c29tZSB0aW1lIHRvCj4+Pj4gdGVzdCB0aGUgbGF0ZXN0IHZlcnNpb24gYmVmb3JlIHNlbmRpbmcg
+aXQgb3V0OyB1bmZvcnR1bmF0ZWx5IGV2ZXJ5dGhpbmcKPj4+PiBlbHNlIGlzIG1vcmUgaW1wb3J0
+YW50IGF0IHRoZSBtb21lbnQuICBJZiB5b3UncmUgaGFwcHkgd2l0aCB0aGUgY2F2ZWF0Cj4+Pj4g
+dGhhdCB0aGUgbGF0ZXN0IGNoYW5nZXMgYXJlIGJ1aWxkIHRlc3RlZCBvbmx5IEkgY2FuIHByb2Jh
+Ymx5IHNlbmQgaXQKPj4+PiBvdXQgdGhpcyBhZnRlcm5vb24uCj4+PiBJIHN1cHBvc2UgbXkgYW5z
+d2VyIGRlcGVuZHMgb24gd2hlbiB0aGUgdGVzdGVkIHZlcnNpb24gd2lsbCBiZQo+Pj4gYXZhaWxh
+YmxlLCBvciBwZXJoYXBzIENocmlzIGNhbiB0ZXN0IHRoZSBuZXcgc2V0IGZvciB5b3U/IEkgZG9u
+J3QgaGF2ZQo+Pj4gYW55IHJvY2tjaGlwIGRldmljZXMgd2l0aCBtaXBpLCBzbyBpJ20gbm90IG11
+Y2ggaGVscC4KPj4gTm9uZSBvZiB0aGUgY2hhbmdlcyBzY2FyZSBtZSB0aGF0IG11Y2gsIHNvIEkg
+ZG9uJ3QgZXhwZWN0IHRlc3RpbmcgdG8KPj4gdGhyb3cgdXAgYW55IHByb2JsZW1zIGJ1dCBJIGRv
+bid0IGxpa2UgdGhyb3dpbmcgb3V0IHBhdGNoZXMgd2l0aG91dCBhdAo+PiBsZWFzdCBhIGJhc2lj
+IHRlc3QgcnVuLgo+Pgo+IEFncmVlZC4gSSBkb24ndCB0aGluayB3ZSdyZSBpbiBzdWNoIGRlc3Bl
+cmF0ZSBuZWVkIHRoYXQgd2Ugc2hvdWxkCj4gZm9yZWdvIHRlc3RpbmcuIElmIENocmlzIGNhbiBw
+cm92aWRlIFRlc3RlZC1ieSwgeW91IHNob3VsZCBzZW5kIHRoZW0KPiBvdXQsIG90aGVyd2lzZSBJ
+J20gaGFwcHkgdG8gd2FpdC4KPgo+IFRoYW5rcyBmb3IgdGhlIHVwZGF0ZSwKPgo+IFNlYW4KClN1
+cmUsIEkgYW0gdmVyeSBnbGFkIHRvIHRlc3QgdGhlbS4KQWN0dWFsbHksIEkgaGF2ZSBwaWNrZWQg
+dGhlIHYzIHBhdGNoZXMgdG8gY3JvcyBrZXJuZWwgKGNoYW5nZWQgYSBsaXR0bGUgCmJpdCkuClNv
+IGZhciwgbXkgMiBtaXBpIGRzaSBwYW5lbHMgd29ya3Mgd2VsbC4gVGhlIGNyb3MgcGF0Y2hlczoK
+aHR0cHM6Ly9jaHJvbWl1bS1yZXZpZXcuZ29vZ2xlc291cmNlLmNvbS8jL2MvNDMwNTk2LwouLi4K
+aHR0cHM6Ly9jaHJvbWl1bS1yZXZpZXcuZ29vZ2xlc291cmNlLmNvbS8jL2MvNDQyMzQ3LwoKPgo+
+PiBJIG1pZ2h0IGhhdmUgdGltZSB0byB0ZXN0IG9uIEZyaWRheSwgYnV0IEkgZXhwZWN0IENocmlz
+IGhhcyBtb3JlIHRpbWUgdG8KPj4gZGV2b3RlIHRvIHRoaXMgdGhhbiBJIGRvLCBzbyBtYXliZSBp
+dCdzIGJldHRlciBpZiBJIHNlbmQgdGhlIHBhdGNoZXMgb3V0Cj4+IHRvbW9ycm93Lgo+Pgo+Pgo+
+PiBKb2huCj4KPgoKLS0gCkNocmlzIFpob25nCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
