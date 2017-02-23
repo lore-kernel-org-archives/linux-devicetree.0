@@ -1,52 +1,78 @@
 MIME-Version: 1.0
-In-Reply-To: <20170202070507.GY7139@valkosipuli.retiisi.org.uk>
-References: <20170130140628.18088-1-hverkuil@xs4all.nl>
-	<20170130140628.18088-9-hverkuil@xs4all.nl>
-	<20170201165059.2qw3gnuyornvfl46@rob-hp-laptop>
-	<20170202070507.GY7139@valkosipuli.retiisi.org.uk>
-Date: Mon, 6 Feb 2017 15:39:52 -0600
-Message-ID: <CAL_JsqK9g4A+vSbPTuz7hvr3zJ=Cud8pNvkRU=-jLV-t7GYpqg@mail.gmail.com>
-Subject: Re: [PATCHv2 08/16] atmel-isi: document device tree bindings
-From: Rob Herring <robh@kernel.org>
+In-Reply-To: <d801f4ad948b5029ae3d482f2a55d05bcf35f91f.1487314667.git.joe@perches.com>
+References: <cover.1487314666.git.joe@perches.com>
+	<d801f4ad948b5029ae3d482f2a55d05bcf35f91f.1487314667.git.joe@perches.com>
+Date: Thu, 23 Feb 2017 10:00:25 -0600
+Message-ID: <CAL_JsqLQKE1Fpt48KvEBsysYw81ctBoQyeA2rqWsbS9Q5AwZag@mail.gmail.com>
+Subject: Re: [PATCH 25/35] drivers/of: Convert remaining uses of pr_warning to pr_warn
+From: Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
+To: Joe Perches <joe@perches.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Feb 2, 2017 at 1:05 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> Hi Rob,
+On Fri, Feb 17, 2017 at 1:11 AM, Joe Perches <joe@perches.com> wrote:
+> To enable eventual removal of pr_warning
 >
-> On Wed, Feb 01, 2017 at 10:50:59AM -0600, Rob Herring wrote:
->> > +                   remote-endpoint = <&ov2640_0>;
->> > +                   bus-width = <8>;
->> > +                   vsync-active = <1>;
->> > +                   hsync-active = <1>;
->>
->> Which side of the connect is supposed to define these?
+> This makes pr_warn use consistent for drivers/of
 >
-> Today we have endpoint properties at each endpoint independently of the
-> remote endpoint. I guess you could obtain the endpoint properties from the
-> remote endpoint as well. There are exceptions though.
-
-The constraints should be at whatever end is imposing them. 
-
-> The configuration might not always be exactly the same. The parallel
-> interface is a little bit special: you could conceivably have a transmitter
-> with 8 wires but a receiver that could only use 10 or more. The wiring could
-> be such that the two most significant bits of the transmitter would be wired
-> to the two least significant bits on the receiver side. In this case the
-> bus-width property would have different values at each endpoint.
-
-Hopefully that implied wiring is documented somewhere.
-
-> If we were to do something like that, it should be done everywhere and such
-> exceptions be handled somehow.
+> Prior to this patch, there were 5 uses of pr_warning and
+> 19 uses of pr_warn in drivers/of
 >
-> The CSI-2 lane mapping configuration (where supported by the hardware) is
-> also specific to an endpoint.
+> Signed-off-by: Joe Perches <joe@perches.com>
+> ---
+>  drivers/of/fdt.c | 20 ++++++++++----------
+>  1 file changed, 10 insertions(+), 10 deletions(-)
 >
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index e5ce4b59e162..b9b1dc75e05d 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -514,8 +514,8 @@ static void *__unflatten_device_tree(const void *blob,
+>         /* Second pass, do actual unflattening */
+>         unflatten_dt_nodes(blob, mem, dad, mynodes);
+>         if (be32_to_cpup(mem + size) != 0xdeadbeef)
+> -               pr_warning("End of tree marker overwritten: %08x\n",
+> -                          be32_to_cpup(mem + size));
+> +               pr_warn("End of tree marker overwritten: %08x\n",
+> +                       be32_to_cpup(mem + size));
+>
+>         if (detached && mynodes) {
+>                 of_node_set_flag(*mynodes, OF_DETACHED);
+> @@ -1133,25 +1133,25 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+>         size &= PAGE_MASK;
+>
+>         if (base > MAX_MEMBLOCK_ADDR) {
+> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+> -                               base, base + size);
+> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
+> +                       base, base + size);
+>                 return;
+>         }
+>
+>         if (base + size - 1 > MAX_MEMBLOCK_ADDR) {
+> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
+> -                               ((u64)MAX_MEMBLOCK_ADDR) + 1, base + size);
+> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
+> +                       ((u64)MAX_MEMBLOCK_ADDR) + 1, base + size);
+>                 size = MAX_MEMBLOCK_ADDR - base + 1;
+>         }
+>
+>         if (base + size < phys_offset) {
+> -               pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+> -                          base, base + size);
+> +               pr_warn("Ignoring memory block 0x%llx - 0x%llx\n",
+> +                       base, base + size);
+>                 return;
+>         }
+>         if (base < phys_offset) {
+> -               pr_warning("Ignoring memory range 0x%llx - 0x%llx\n",
+> -                          base, phys_offset);
+> +               pr_warn("Ignoring memory range 0x%llx - 0x%llx\n",
+> +                       base, phys_offset);
+>                 size -= phys_offset - base;
+>                 base = phys_offset;
+>         }
 > --
-> Kind regards,
+> 2.10.0.rc2.1.g053435c
 >
-> Sakari Ailus
-> e-mail: sakari.ailus@iki.fi     XMPP: sailus@retiisi.org.uk
