@@ -1,72 +1,149 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] checkpatch.pl: Add SPDX license tag check for dts files
- and headers
-Date: Thu, 23 Feb 2017 11:10:52 -0800
-Message-ID: <1487877052.14159.45.camel@perches.com>
-References: <20170223155644.24213-1-robh@kernel.org>
-         <1487872274.14159.36.camel@perches.com>
-         <CAL_JsqL4ZztUvSevr4Co55n6w10TZaydGDyp4HJxHszFNvkVxw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: BCM953012HR: Initial Checkin
+Date: Thu, 23 Feb 2017 14:23:03 -0500
+Message-ID: <1487877783-25610-1-git-send-email-steven.lin1@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL4ZztUvSevr4Co55n6w10TZaydGDyp4HJxHszFNvkVxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+To: hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-02-23 at 12:45 -0600, Rob Herring wrote:
-> On Thu, Feb 23, 2017 at 11:51 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Thu, 2017-02-23 at 09:56 -0600, Rob Herring wrote:
-> > > Add a check for using SPDX-License-Identifier tags to define the license of
-> > > .dts{i} and DT header files rather than using free form license text. This
-> > > check looks for GPL, BSD, or X11(really incorrectly labeled MIT license)
-> > > license text which are the commonly used DT licenses.
-> > 
-> > Hi Rob.
-> > 
-> > > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-> > > Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > >  scripts/checkpatch.pl | 13 +++++++++++++
-> > >  1 file changed, 13 insertions(+)
-> > > 
-> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> > > index 982c52ca6473..ce802b3146e3 100755
-> > > --- a/scripts/checkpatch.pl
-> > > +++ b/scripts/checkpatch.pl
-> > > @@ -2139,6 +2139,7 @@ sub process {
-> > >       my $commit_log_has_diff = 0;
-> > >       my $reported_maintainer_file = 0;
-> > >       my $non_utf8_charset = 0;
-> > > +     my $licensefile = '';
-> > 
-> > Maybe this should be $spdx_license_file
-> > but what's the actual reason to check if
-> > multiple license bits are in a single file?
-> 
-> Yes, just to get a single warning per file since the license matching
-> can get multiple hits.
-> 
-> Really what I'd like to do is warn if an SPDX tag is not present in
-> any added file. Having a check for something missing doesn't really
-> work well with checkpatch at least in a scalable way that I saw.
+Initial version of DTS to support Broadcom BCM953012HR Northstar
+HR platform, similar to, but not the same as existing 953012K.
 
-That isn't really possible with checkpatch as
-I'm sure you know that it looks at patch
-contexts and it isn't really meant to scan
-entire files.
+Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+V2 uses suggested changes from Rafal Milecki and Rob Herring.  Note
+that for now I just added the SPDX-License-Identifier line to the
+current full license text; maybe in the future we can revise to
+remove the license text, leaving only the SPDX ID (legal questions).
+---
+ arch/arm/boot/dts/Makefile        |   1 +
+ arch/arm/boot/dts/bcm953012hr.dts | 100 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm953012hr.dts
 
-You might be better off with a separate script
-like the checkincludes.pl one.
-
-You might possibly integrate that script into
-checkpatch by looking at the "new file mode"
-block, remember those and see if in the patch
-each appropriate file has one of the spdx tags.
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 01d178a..c64ca3d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -94,6 +94,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm94708.dtb \
+ 	bcm94709.dtb \
+ 	bcm953012er.dtb \
++	bcm953012hr.dtb \
+ 	bcm953012k.dtb
+ dtb-$(CONFIG_ARCH_BCM_53573) += \
+ 	bcm47189-tenda-ac9.dtb
+diff --git a/arch/arm/boot/dts/bcm953012hr.dts b/arch/arm/boot/dts/bcm953012hr.dts
+new file mode 100644
+index 0000000..b6bf6ad
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm953012hr.dts
+@@ -0,0 +1,100 @@
++/*
++ *  SPDX-License-Identifier: BSD-3-Clause
++ *
++ *  Copyright(c) 2017 Broadcom
++ *
++ *  Redistribution and use in source and binary forms, with or without
++ *  modification, are permitted provided that the following conditions
++ *  are met:
++ *
++ *    * Redistributions of source code must retain the above copyright
++ *      notice, this list of conditions and the following disclaimer.
++ *    * Redistributions in binary form must reproduce the above copyright
++ *      notice, this list of conditions and the following disclaimer in
++ *      the documentation and/or other materials provided with the
++ *      distribution.
++ *    * Neither the name of Broadcom nor the names of its contributors
++ *      may be used to endorse or promote products derived from this
++ *      software without specific prior written permission.
++ *
++ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
++ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
++ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
++ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
++ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
++ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
++ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
++ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
++ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++/dts-v1/;
++
++#include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch4.dtsi"
++
++/ {
++	model = "NorthStar HR (BCM953012HR)";
++	compatible = "brcm,bcm953012hr", "brcm,brcm53012", "brcm,bcm4708";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x10000000>;
++	};
++};
++
++&nandcs {
++	partition@0 {
++		label = "nboot";
++		reg = <0x00000000 0x00200000>;
++		read-only;
++	};
++	partition@200000 {
++		label = "nenv";
++		reg = <0x00200000 0x00400000>;
++	};
++	partition@600000 {
++		label = "nsystem";
++		reg = <0x00600000 0x00a00000>;
++	};
++	partition@1000000 {
++		label = "nrootfs";
++		reg = <0x01000000 0x07000000>;
++	};
++};
++
++&spi_nor {
++	status = "okay";
++	spi-max-frequency = <62500000>;
++	m25p,default-addr-width = <3>;
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	partition@0 {
++		label = "boot";
++		reg = <0x00000000 0x000d0000>;
++	};
++	partition@d000 {
++		label = "env";
++		reg = <0x000d0000 0x00030000>;
++	};
++	partition@100000 {
++		label = "system";
++		reg = <0x00100000 0x00600000>;
++	};
++	partition@700000 {
++		label = "rootfs";
++		reg = <0x00700000 0x00900000>;
++	};
++};
++
+-- 
+2.1.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
