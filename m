@@ -1,78 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/35] treewide trivial patches converting pr_warning to
- pr_warn
-Date: Thu, 23 Feb 2017 09:28:23 -0600
-Message-ID: <CAL_JsqLTaq-QLTqfyDO8EVJYpgeUx1e4J0Fo2NvfFWqVoiVedQ@mail.gmail.com>
-References: <cover.1487314666.git.joe@perches.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 0/6] PSCI: Fix non-PMIC wake-up if SYSTEM_SUSPEND cuts power
+Date: Thu, 23 Feb 2017 16:34:50 +0100
+Message-ID: <CAMuHMdX3_Vjw2NNTE1XnQkuKS=7YDA4eccEFO1pAZkjw_4q9cg@mail.gmail.com>
+References: <1487622809-25127-1-git-send-email-geert+renesas@glider.be>
+ <94167d3a-e005-3af0-d290-a1086684d570@arm.com> <3c8b3f2d-8604-f999-4208-a82f171b64f2@arm.com>
+ <1975396.x0czmkNPOW@aspire.rjw.lan> <35840771-e16f-d6fe-3a89-1b3f51f4a8f3@arm.com>
+ <CAMuHMdXpKrJn9NrkAarvMtytk9gHEFcRoZLCsWBFgriUCeWo=Q@mail.gmail.com>
+ <f649d707-8b0a-5ca9-b021-93ae8cf66b33@arm.com> <CAMuHMdVTEbqEocYwu=KW_uXpykYkVwUgSJBnLvQp_Epn8Pjp1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <cover.1487314666.git.joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/amd-gfx>
-List-Post: <mailto:amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/amd-gfx>,
- <mailto:amd-gfx-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "amd-gfx" <amd-gfx-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-ia64-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, nouveau-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, drbd-dev-cunTk1MwBs8qoQakbn7OcQ@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, sfi-devel-yLnuTTp1/kvcsJTPyzm5gB2eb7JE58TQ@public.gmane.org, amd-gfx-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, tboot-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, oprofile-list-TtF/mJH4Jtrk1uMJSBkQmQ@public.gmane.org, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org, linux-media@vger.k
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVTEbqEocYwu=KW_uXpykYkVwUgSJBnLvQp_Epn8Pjp1g@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lina Iyer <lina.iyer@linaro.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMTcsIDIwMTcgYXQgMToxMSBBTSwgSm9lIFBlcmNoZXMgPGpvZUBwZXJjaGVz
-LmNvbT4gd3JvdGU6Cj4gVGhlcmUgYXJlIH40MzAwIHVzZXMgb2YgcHJfd2FybiBhbmQgfjI1MCB1
-c2VzIG9mIHRoZSBvbGRlcgo+IHByX3dhcm5pbmcgaW4gdGhlIGtlcm5lbCBzb3VyY2UgdHJlZS4K
-Pgo+IE1ha2UgdGhlIHVzZSBvZiBwcl93YXJuIGNvbnNpc3RlbnQgYWNyb3NzIGFsbCBrZXJuZWwg
-ZmlsZXMuCj4KPiBUaGlzIGV4Y2x1ZGVzIGFsbCBmaWxlcyBpbiB0b29scy8gYXMgdGhlcmUgaXMg
-YSBzZXBhcmF0ZQo+IGRlZmluZSBwcl93YXJuaW5nIGZvciB0aGF0IGRpcmVjdG9yeSB0cmVlIGFu
-ZCBwcl93YXJuIGlzCj4gbm90IHVzZWQgaW4gdG9vbHMvLgo+Cj4gRG9uZSB3aXRoICdzZWQgcy9c
-YnByX3dhcm5pbmdcYi9wcl93YXJuLycgYW5kIHNvbWUgZW1hY3NpbmcuCj4KPiBNaXNjZWxsYW5l
-YToKPgo+IG8gQ29hbGVzY2UgZm9ybWF0cyBhbmQgcmVhbGlnbiBhcmd1bWVudHMKPgo+IFNvbWUg
-ZmlsZXMgbm90IGNvbXBpbGVkIC0gbm8gY3Jvc3MtY29tcGlsZXJzCj4KPiBKb2UgUGVyY2hlcyAo
-MzUpOgo+ICAgYWxwaGE6IENvbnZlcnQgcmVtYWluaW5nIHVzZXMgb2YgcHJfd2FybmluZyB0byBw
-cl93YXJuCj4gICBBUk06IGVwOTN4eDogQ29udmVydCByZW1haW5pbmcgdXNlcyBvZiBwcl93YXJu
-aW5nIHRvIHByX3dhcm4KPiAgIGFybTY0OiBDb252ZXJ0IHJlbWFpbmluZyB1c2VzIG9mIHByX3dh
-cm5pbmcgdG8gcHJfd2Fybgo+ICAgYXJjaC9ibGFja2ZpbjogQ29udmVydCByZW1haW5pbmcgdXNl
-cyBvZiBwcl93YXJuaW5nIHRvIHByX3dhcm4KPiAgIGlhNjQ6IENvbnZlcnQgcmVtYWluaW5nIHVz
-ZSBvZiBwcl93YXJuaW5nIHRvIHByX3dhcm4KPiAgIHBvd2VycGM6IENvbnZlcnQgcmVtYWluaW5n
-IHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBzaDogQ29udmVydCByZW1haW5pbmcg
-dXNlcyBvZiBwcl93YXJuaW5nIHRvIHByX3dhcm4KPiAgIHNwYXJjOiBDb252ZXJ0IHJlbWFpbmlu
-ZyB1c2Ugb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICB4ODY6IENvbnZlcnQgcmVtYWluaW5n
-IHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBkcml2ZXJzL2FjcGk6IENvbnZlcnQg
-cmVtYWluaW5nIHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBibG9jay9kcmJkOiBD
-b252ZXJ0IHJlbWFpbmluZyB1c2VzIG9mIHByX3dhcm5pbmcgdG8gcHJfd2Fybgo+ICAgZ2Ryb206
-IENvbnZlcnQgcmVtYWluaW5nIHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBkcml2
-ZXJzL2NoYXI6IENvbnZlcnQgcmVtYWluaW5nIHVzZSBvZiBwcl93YXJuaW5nIHRvIHByX3dhcm4K
-PiAgIGNsb2Nrc291cmNlOiBDb252ZXJ0IHJlbWFpbmluZyB1c2Ugb2YgcHJfd2FybmluZyB0byBw
-cl93YXJuCj4gICBkcml2ZXJzL2NyeXB0bzogQ29udmVydCByZW1haW5pbmcgdXNlcyBvZiBwcl93
-YXJuaW5nIHRvIHByX3dhcm4KPiAgIGZtYzogQ29udmVydCByZW1haW5pbmcgdXNlIG9mIHByX3dh
-cm5pbmcgdG8gcHJfd2Fybgo+ICAgZHJpdmVycy9ncHU6IENvbnZlcnQgcmVtYWluaW5nIHVzZXMg
-b2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBkcml2ZXJzL2lkZTogQ29udmVydCByZW1haW5p
-bmcgdXNlcyBvZiBwcl93YXJuaW5nIHRvIHByX3dhcm4KPiAgIGRyaXZlcnMvaW5wdXQ6IENvbnZl
-cnQgcmVtYWluaW5nIHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBkcml2ZXJzL2lz
-ZG46IENvbnZlcnQgcmVtYWluaW5nIHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBk
-cml2ZXJzL21hY2ludG9zaDogQ29udmVydCByZW1haW5pbmcgdXNlcyBvZiBwcl93YXJuaW5nIHRv
-IHByX3dhcm4KPiAgIGRyaXZlcnMvbWVkaWE6IENvbnZlcnQgcmVtYWluaW5nIHVzZSBvZiBwcl93
-YXJuaW5nIHRvIHByX3dhcm4KPiAgIGRyaXZlcnMvbWZkOiBDb252ZXJ0IHJlbWFpbmluZyB1c2Vz
-IG9mIHByX3dhcm5pbmcgdG8gcHJfd2Fybgo+ICAgZHJpdmVycy9tdGQ6IENvbnZlcnQgcmVtYWlu
-aW5nIHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBkcml2ZXJzL29mOiBDb252ZXJ0
-IHJlbWFpbmluZyB1c2VzIG9mIHByX3dhcm5pbmcgdG8gcHJfd2Fybgo+ICAgZHJpdmVycy9vcHJv
-ZmlsZTogQ29udmVydCByZW1haW5pbmcgdXNlcyBvZiBwcl93YXJuaW5nIHRvIHByX3dhcm4KPiAg
-IGRyaXZlcnMvcGxhdGZvcm06IENvbnZlcnQgcmVtYWluaW5nIHVzZXMgb2YgcHJfd2FybmluZyB0
-byBwcl93YXJuCj4gICBkcml2ZXJzL3JhcGlkaW86IENvbnZlcnQgcmVtYWluaW5nIHVzZSBvZiBw
-cl93YXJuaW5nIHRvIHByX3dhcm4KPiAgIGRyaXZlcnMvc2NzaTogQ29udmVydCByZW1haW5pbmcg
-dXNlIG9mIHByX3dhcm5pbmcgdG8gcHJfd2Fybgo+ICAgZHJpdmVycy9zaDogQ29udmVydCByZW1h
-aW5pbmcgdXNlIG9mIHByX3dhcm5pbmcgdG8gcHJfd2Fybgo+ICAgZHJpdmVycy90dHk6IENvbnZl
-cnQgcmVtYWluaW5nIHVzZXMgb2YgcHJfd2FybmluZyB0byBwcl93YXJuCj4gICBkcml2ZXJzL3Zp
-ZGVvOiBDb252ZXJ0IHJlbWFpbmluZyB1c2VzIG9mIHByX3dhcm5pbmcgdG8gcHJfd2Fybgo+ICAg
-a2VybmVsL3RyYWNlOiBDb252ZXJ0IHJlbWFpbmluZyB1c2VzIG9mIHByX3dhcm5pbmcgdG8gcHJf
-d2Fybgo+ICAgbGliOiBDb252ZXJ0IHJlbWFpbmluZyB1c2VzIG9mIHByX3dhcm5pbmcgdG8gcHJf
-d2Fybgo+ICAgc291bmQvc29jOiBDb252ZXJ0IHJlbWFpbmluZyB1c2VzIG9mIHByX3dhcm5pbmcg
-dG8gcHJfd2FybgoKV2hlcmUncyB0aGUgcmVtb3ZhbCBvZiBwcl93YXJuaW5nIHNvIHdlIGRvbid0
-IGhhdmUgbW9yZSBzbmVhayBpbj8KClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwphbWQtZ2Z4IG1haWxpbmcgbGlzdAphbWQtZ2Z4QGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2FtZC1nZngK
+Hi Sudeep,
+
+On Thu, Feb 23, 2017 at 4:26 PM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Wed, Feb 22, 2017 at 3:32 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>> On 22/02/17 13:38, Geert Uytterhoeven wrote:
+>>> On Wed, Feb 22, 2017 at 12:03 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>>   4. Patch 3/6 adds a new "shallow" state, as it allows to save more
+>>> power (the difference may be due to suboptimal cpuidle platform support on R-Car Gen3, though),
+>>
+>> Why can't you do that in s2idle mode. Please give me the difference
+>> between your shallow state and s2idle state, not just power numbers
+>> but the actual state of CPUs and the devices in the system.
+>
+> From the Linux side, there's not much difference, except that the secondary
+> CPU cores are disabled.  As that is handled by PSCI, the difference may be
+> in the PSCI implementation.  I will have to check that...
+>
+> On these SoCs, the individual CPU cores and the SCU/L2 are in separate
+> (nested) power areas.  Perhaps these power areas are turned off when
+> disabling the CPU cores, but not when suspending them.
+
+BTW, I don't care much about the extra state.
+
+>>> E.g. on non-PSCI platforms with an Ethernet driver that supports
+>>> Wake-on-LAN, I can do:
+>>>
+>>>         ethtool -s eth0 wol g
+>>>         echo mem > /sys/power/state
+>>>
+>>> and be sure that the system can be woken up by sending a WoL MagicPacket.
+>>
+>> Still possible with s2idle if CPU_SUSPEND is correctly implemented by
+>> the platform.
+>
+> Sure. But not automatic, as it needs fiddling with mem_sleep.
+
+I do care about this, as it affects user experience.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
