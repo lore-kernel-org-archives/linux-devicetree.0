@@ -1,47 +1,44 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC/PATCH] of: Mark property::value as const
-Date: Thu, 23 Feb 2017 16:09:40 -0600
-Message-ID: <CAL_Jsq+OQgmqvHQ_AWXOqnK0Yh8T3EVyxyiTFk1+0AwNHCf+Ag@mail.gmail.com>
-References: <20170214025040.23955-1-stephen.boyd@linaro.org>
- <58AF3E06.4030701@gmail.com> <58AF4D03.7020908@gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 00/20] Move firmware specific code to firmware specific locations
+Date: Thu, 23 Feb 2017 23:37:12 +0100
+Message-ID: <2915459.fDeP2CYj8T@aspire.rjw.lan>
+References: <1487869276-25244-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58AF4D03.7020908-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1487869276-25244-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 23, 2017 at 2:58 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 02/23/17 11:54, Frank Rowand wrote:
->> On 02/13/17 18:50, Stephen Boyd wrote:
->>> The 'blob' we pass into populate_properties() is marked as const,
->>> but we cast that const away when we assign the result of
->>> fdt_getprop_by_offset() to pp->value. Let's mark value as const
->>> instead, so that code can't mistakenly write to the value of the
->>> property that we've so far advertised as const.
->>>
->>> Unfortunately, this exposes a problem with the fdt resolver code,
->>> where we overwrite the value member of properties of phandles to
->>> update them with their final value. Add a comment for now to
->>> indicate where we're potentially writing over const data.
->>
->> The resolver should not be over writing anything in the FDT.  I'll
->> look at what is going on there.
->>
->> The FDT we expose to user space should be the FDT we booted with,
->> not something later modified.
->
-> It seems that /sys/firmware/fdt is not documented.  I'll look into
-> fixing that.
+On Thursday, February 23, 2017 07:00:56 PM Sakari Ailus wrote:
+> Hi,
+> 
+> This set moves firmware specific implementations of the device / fwnode
+> property API to locations that are specific to firmware implementation,
+> still leaving property set (which isn't really firmware) implementation in
+> drivers/base/property.c.
+> 
+> The set begins with a few bugfixes (patches 1--3), followed by adding
+> fwnode_operations struct and then gradually moving firmware dependent code
+> to drivers/acpi/property.c and drivers/of/base.c.
+> 
+> The set depends on the ACPI graph support here:
+> 
+> <URL:http://marc.info/?l=linux-acpi&m=148786716920942&w=2>
+> 
+> Comments are welcome.
 
-That's because the "official" interface is /proc/device-tree/ which is
-now a symlink. IIRC, it is documented to use /proc/device-tree, not
-the sysfs path.
+Patches [1-3/20] from this series seem to be fixes that don't depend on the
+rest of it and don't depend on the other series you posted.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If that is the case, it would be good to get them in during this cycle instead
+of sitting on them for several weeks.
+
+So is that the case?
+
+Thanks,
+Rafael
+
