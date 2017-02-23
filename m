@@ -1,15 +1,13 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V2] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Thu, 23 Feb 2017 14:05:29 +0100
-Message-ID: <CACna6rxYScuKzm5156FviBut=SJHL+j=zc3D4B3+bH1Z1HK5vw@mail.gmail.com>
-References: <20170223104025.5755-1-zajec5@gmail.com>
- <20170223125612.2394-1-zajec5@gmail.com>
- <b87821b6-57a5-e8cc-eeac-1b0e42ee50f1@openwrt.org>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V3] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
+Date: Thu, 23 Feb 2017 14:06:36 +0100
+Message-ID: <20170223130636.4704-1-zajec5@gmail.com>
+References: <20170223125612.2394-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b87821b6-57a5-e8cc-eeac-1b0e42ee50f1@openwrt.org>
+In-Reply-To: <20170223125612.2394-1-zajec5@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,22 +17,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Imre Kaloz <kaloz@openwrt.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjMgRmVicnVhcnkgMjAxNyBhdCAxNDowMywgSW1yZSBLYWxveiA8a2Fsb3pAb3BlbndydC5v
-cmc+IHdyb3RlOgo+IE9uIDIwMTctMDItMjMgMTM6NTYsIFJhZmHFgiBNacWCZWNraSB3cm90ZToK
-Pj4KPj4gRnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+Pgo+PiBJdCdz
-IHRyaS1iYW5kIHdpcmVsZXNzIGhvbWUgcm91dGVyIGJhc2VkIG9uIEJDTTQ3MDk0IEFLQSBCQ000
-NzA5QzAuIEl0Cj4+IHVzZXMgMyB4IEJDTTQzNjYgY2hpcHNldHMgZm9yIHdpcmVsZXNzLgo+PiBQ
-YW5hbWVyYSBzZWVtcyB0byBiZSBib2FyZCBuYW1lIHVzZWQgYnkgTGlua3N5cy4KPj4KPj4gU2ln
-bmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+PiAtLS0KPj4g
-VjI6IFVzZSBwYW5hbWVyYSBib2FyZCBuYW1lCj4KPgo+IE15IGJhZCwgZm9yZ290IHRvIG1lbnRp
-b24gdGhhdCB5b3Ugc2hvdWxkIGFsc28gdXNlICJsaW5rc3lzLHBhbmFtZXJhIiBhcyBhCj4gY29t
-cGF0aWJpbGl0eSBuYW1lIGFzIHdlbGwuICJtb2RlbCIgc2hvdWxkIHN0YXkgYXMtaXMgb2YgY291
-cnNlLgoKT29wcywgSSBtaXNzZWQgdGhhdC4gWW91J3JlIGNvcnJlY3Qgb2J2aW91c2x5LgoKLS0g
-ClJhZmHFggoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKSXQncyB0cmktYmFuZCB3
+aXJlbGVzcyBob21lIHJvdXRlciBiYXNlZCBvbiBCQ000NzA5NCBBS0EgQkNNNDcwOUMwLiBJdAp1
+c2VzIDMgeCBCQ000MzY2IGNoaXBzZXRzIGZvciB3aXJlbGVzcy4KUGFuYW1lcmEgc2VlbXMgdG8g
+YmUgYm9hcmQgbmFtZSB1c2VkIGJ5IExpbmtzeXMuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnF
+gmVja2kgPHJhZmFsQG1pbGVja2kucGw+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUg
+ICAgICAgICAgICAgICAgICAgICAgfCAgMSArCiBhcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1s
+aW5rc3lzLXBhbmFtZXJhLmR0cyB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysrKysKIDIgZmls
+ZXMgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJt
+L2Jvb3QvZHRzL2JjbTQ3MDk0LWxpbmtzeXMtcGFuYW1lcmEuZHRzCgpkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgYi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQppbmRl
+eCA1MmEwNTI4OWM1MzguLjJmZWFiYmUxNmQ1MyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKQEAgLTkzLDYgKzkz
+LDcgQEAgZHRiLSQoQ09ORklHX0FSQ0hfQkNNXzUzMDFYKSArPSBcCiAJYmNtNDcwOS1uZXRnZWFy
+LXI4MDAwLmR0YiBcCiAJYmNtNDcwOS10cGxpbmstYXJjaGVyLWM5LXYxLmR0YiBcCiAJYmNtNDcw
+OTQtZGxpbmstZGlyLTg4NWwuZHRiIFwKKwliY200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0YiBc
+CiAJYmNtNDcwOTQtbHV4dWwteHdyLTMxMDAuZHRiIFwKIAliY200NzA5NC1uZXRnZWFyLXI4NTAw
+LmR0YiBcCiAJYmNtOTQ3MDguZHRiIFwKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Jj
+bTQ3MDk0LWxpbmtzeXMtcGFuYW1lcmEuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQt
+bGlua3N5cy1wYW5hbWVyYS5kdHMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAw
+MDAwLi5iNjc1MGY3MGRmZmIKLS0tIC9kZXYvbnVsbAorKysgYi9hcmNoL2FybS9ib290L2R0cy9i
+Y200NzA5NC1saW5rc3lzLXBhbmFtZXJhLmR0cwpAQCAtMCwwICsxLDM2IEBACisvKgorICogQ29w
+eXJpZ2h0IChDKSAyMDE3IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KKyAqCisg
+KiBMaWNlbnNlZCB1bmRlciB0aGUgSVNDIGxpY2Vuc2UuCisgKi8KKworL2R0cy12MS87CisKKyNp
+bmNsdWRlICJiY200NzA5NC5kdHNpIgorI2luY2x1ZGUgImJjbTUzMDF4LW5hbmQtY3MwLWJjaDgu
+ZHRzaSIKKworLyB7CisJY29tcGF0aWJsZSA9ICJsaW5rc3lzLHBhbmFtZXJhIiwgImJyY20sYmNt
+NDcwOTQiLCAiYnJjbSxiY200NzA4IjsKKwltb2RlbCA9ICJMaW5rc3lzIEVBOTUwMCI7CisKKwlj
+aG9zZW4geworCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCI7CisJfTsKKworCW1l
+bW9yeSB7CisJCXJlZyA9IDwweDAwMDAwMDAwIDB4MDgwMDAwMDAKKwkJICAgICAgIDB4ODgwMDAw
+MDAgMHgwODAwMDAwMD47CisJfTsKKworCWdwaW8ta2V5cyB7CisJCWNvbXBhdGlibGUgPSAiZ3Bp
+by1rZXlzIjsKKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+Owor
+CisJCXdwcyB7CisJCQlsYWJlbCA9ICJXUFMiOworCQkJbGludXgsY29kZSA9IDxLRVlfV1BTX0JV
+VFRPTj47CisJCQlncGlvcyA9IDwmY2hpcGNvbW1vbiAzIEdQSU9fQUNUSVZFX0xPVz47CisJCX07
+CisJfTsKK307Ci0tIAoyLjExLjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
