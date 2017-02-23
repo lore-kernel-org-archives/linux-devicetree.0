@@ -1,101 +1,179 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH 12/20] device property: Use fwnode_operations for obtaining parent node
-Date: Thu, 23 Feb 2017 19:01:08 +0200
-Message-ID: <1487869276-25244-13-git-send-email-sakari.ailus@linux.intel.com>
-References: <1487869276-25244-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487869276-25244-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH 2/2] [RFC] iio: dht11: Add optional support for supply control via regulator framework
+Date: Thu, 23 Feb 2017 17:06:53 +0000
+Message-ID: <1487869613-11927-2-git-send-email-harald@ccbib.org>
+References: <1487869613-11927-1-git-send-email-harald@ccbib.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487869613-11927-1-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change the implementation of fwnode_property_get_parent() function to use
-struct fwnode_operations.
+If a supply is provided via DT, release the supply whenever we don't read
+the sensor. Also use notifications to track the actual status of the
+supply to ensure that we meet the timing requirements stated in the
+datasheet.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+This change is motivated by the hope that these sensors will work more
+reliably if power-cycled regularly.
+
+Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
 ---
- drivers/acpi/property.c |  7 +++++++
- drivers/base/property.c | 14 +-------------
- drivers/of/base.c       | 12 ++++++++++++
- 3 files changed, 20 insertions(+), 13 deletions(-)
+This is an RFC this time, because I want to run extensive long term tests
+with DHT11 and DHT22 before officially proposing this for inclusion. I
+have learned my lessons with this quirky bits of HW... :(
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 4e76b31..a20b81f 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -1150,8 +1150,15 @@ static int acpi_fwnode_property_read_string_array(
- 				   val, nval);
- }
+However since this will take a lot of time (mostly physical, but also
+man hours), I'd like to get review comments now instead of risking a
+second iteration of long term tests.
+
+ .../devicetree/bindings/iio/humidity/dht11.txt     | 10 ++++
+ drivers/iio/humidity/dht11.c                       | 57 ++++++++++++++++++++--
+ 2 files changed, 64 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/humidity/dht11.txt b/Documentation/devicetree/bindings/iio/humidity/dht11.txt
+index ecc24c19..ab9ea18 100644
+--- a/Documentation/devicetree/bindings/iio/humidity/dht11.txt
++++ b/Documentation/devicetree/bindings/iio/humidity/dht11.txt
+@@ -6,9 +6,19 @@ Required properties:
+     line, see "gpios property" in
+     Documentation/devicetree/bindings/gpio/gpio.txt.
  
-+static struct fwnode_handle *acpi_fwnode_get_parent(
-+	struct fwnode_handle *fwnode)
++Optional properties:
++  - vdd-supply: phandle to the regulator node, for details see
++    Documentation/devicetree/bindings/regulator/regulator.txt
++    On Linux the driver disables the regulator after 4 seconds of
++    inactivity, to save power and to ensure that the hardware is
++    reset regularly, because it was found to randomly stop responding
++    otherwise. However for this to work all other consumers of the
++    regulator must cooperate (disable the regulator when possible too).
++
+ Example:
+ 
+ humidity_sensor {
+ 	compatible = "dht11";
+ 	gpios = <&gpio0 6 0>;
++	vdd-supply = <&sensor_supply>;
+ }
+diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
+index 2a22ad9..5bce712 100644
+--- a/drivers/iio/humidity/dht11.c
++++ b/drivers/iio/humidity/dht11.c
+@@ -34,12 +34,16 @@
+ #include <linux/gpio.h>
+ #include <linux/of_gpio.h>
+ #include <linux/timekeeping.h>
++#include <linux/regulator/consumer.h>
++#include <linux/notifier.h>
+ 
+ #include <linux/iio/iio.h>
+ 
+ #define DRIVER_NAME	"dht11"
+ 
+ #define DHT11_DATA_VALID_TIME	2000000000  /* 2s in ns */
++#define DHT11_POWER_ON_TIME 2000000000 /* must be less the MAX_INT */
++#define DHT11_POWEROFF_DELAY 4000 /* ms */
+ 
+ #define DHT11_EDGES_PREAMBLE 2
+ #define DHT11_BITS_PER_READ 40
+@@ -84,6 +88,10 @@ struct dht11 {
+ 	int				gpio;
+ 	int				irq;
+ 
++	struct regulator		*supply;
++	struct notifier_block		nb;
++	s64				timestamp_enabled;
++
+ 	struct completion		completion;
+ 	/* The iio sysfs interface doesn't prevent concurrent reads: */
+ 	struct mutex			lock;
+@@ -97,6 +105,21 @@ struct dht11 {
+ 	struct {s64 ts; int value; }	edges[DHT11_EDGES_PER_READ];
+ };
+ 
++static int dht11_regulator_update(struct notifier_block *nb,
++				  unsigned long event,
++				  void *ignored)
 +{
-+	return acpi_node_get_parent(fwnode);
++	struct dht11 *dht11 = container_of(nb, struct dht11, nb);
++
++	if (event & REGULATOR_EVENT_DISABLE)
++		dht11->timestamp_enabled = -1;
++	else if (event & REGULATOR_EVENT_ENABLE)
++		if (dht11->timestamp_enabled == -1)
++			dht11->timestamp_enabled = ktime_get_boot_ns();
++
++	return NOTIFY_OK;
 +}
 +
- const struct fwnode_operations acpi_fwnode_ops = {
- 	.property_present = acpi_fwnode_property_present,
- 	.property_read_int_array = acpi_fwnode_property_read_int_array,
- 	.property_read_string_array = acpi_fwnode_property_read_string_array,
-+	.get_parent = acpi_fwnode_get_parent,
- };
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 136ba66..e730f4f 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -863,19 +863,7 @@ EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
-  */
- struct fwnode_handle *fwnode_get_parent(struct fwnode_handle *fwnode)
+ #ifdef CONFIG_DYNAMIC_DEBUG
+ /*
+  * dht11_edges_print: show the data as actually received by the
+@@ -203,9 +226,22 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
  {
--	struct fwnode_handle *parent = NULL;
--
--	if (is_of_node(fwnode)) {
--		struct device_node *node;
--
--		node = of_get_parent(to_of_node(fwnode));
--		if (node)
--			parent = &node->fwnode;
--	} else if (is_acpi_node(fwnode)) {
--		parent = acpi_node_get_parent(fwnode);
--	}
--
--	return parent;
-+	return fwnode_call_ptr_op(fwnode, get_parent);
- }
- EXPORT_SYMBOL_GPL(fwnode_get_parent);
+ 	struct dht11 *dht11 = iio_priv(iio_dev);
+ 	int ret, timeres, offset;
++	s64 time;
  
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 7bd9eec..5825eda 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2531,10 +2531,22 @@ static int of_fwnode_property_read_string_array(
- 	return -EOVERFLOW;
- }
+ 	mutex_lock(&dht11->lock);
+-	if (dht11->timestamp + DHT11_DATA_VALID_TIME < ktime_get_boot_ns()) {
++	time = ktime_get_boot_ns();
++	if (dht11->timestamp + DHT11_DATA_VALID_TIME < time) {
++		if (dht11->supply) {
++			ret = regulator_enable(dht11->supply);
++			if (ret) {
++				dev_err(dht11->dev, "Can't enable supply\n");
++				goto err_reg;
++			}
++			time -= dht11->timestamp_enabled + DHT11_POWER_ON_TIME;
++			if (time < 0)
++				msleep(((int)(-time)) / 1000000);
++		}
++
+ 		timeres = ktime_get_resolution_ns();
+ 		dev_dbg(dht11->dev, "current timeresolution: %dns\n", timeres);
+ 		if (timeres > DHT11_MIN_TIMERES) {
+@@ -266,8 +302,13 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+ 				break;
+ 		}
  
-+static struct fwnode_handle *of_fwnode_get_parent(struct fwnode_handle *fwnode)
-+{
-+	struct device_node *node;
++err:
++		if (dht11->supply)
++			regulator_disable_deferred(dht11->supply,
++						   DHT11_POWEROFF_DELAY);
 +
-+	node = of_get_parent(to_of_node(fwnode));
-+	if (node)
-+		return of_fwnode_handle(node);
+ 		if (ret)
+-			goto err;
++			goto err_reg;
+ 	}
+ 
+ 	ret = IIO_VAL_INT;
+@@ -277,7 +318,8 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+ 		*val = dht11->humidity;
+ 	else
+ 		ret = -EINVAL;
+-err:
 +
-+	return NULL;
-+}
++err_reg:
+ 	dht11->num_edges = -1;
+ 	mutex_unlock(&dht11->lock);
+ 	return ret;
+@@ -332,6 +374,15 @@ static int dht11_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
+ 
++	dht11->timestamp_enabled = -1;
++	dht11->supply = devm_regulator_get(dev, "vdd");
++	if (IS_ERR(dht11->supply)) {
++		dht11->supply = NULL;
++	} else {
++		dht11->nb.notifier_call = &dht11_regulator_update;
++		devm_regulator_register_notifier(dht11->supply, &dht11->nb);
++	}
 +
- const struct fwnode_operations of_fwnode_ops = {
- 	.get = of_fwnode_get,
- 	.put = of_fwnode_put,
- 	.property_present = of_fwnode_property_present,
- 	.property_read_int_array = of_fwnode_property_read_int_array,
- 	.property_read_string_array = of_fwnode_property_read_string_array,
-+	.get_parent = of_fwnode_get_parent,
- };
+ 	dht11->timestamp = ktime_get_boot_ns() - DHT11_DATA_VALID_TIME - 1;
+ 	dht11->num_edges = -1;
+ 
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
