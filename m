@@ -1,60 +1,65 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/8] drm/sun4i: add support for sun8i DE2 mixers and
- display engines
-Date: Fri, 24 Feb 2017 07:30:36 -0600
-Message-ID: <CAL_JsqKY1sXT9g9wHhQEt9-x32PaY0yQi8++bTajcEVk1x8E_w@mail.gmail.com>
-References: <20170222152310.3719-5-icenowy@aosc.xyz>
- <20170222200947.3ikrhvv76ymfu5tv@lukather>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 2/2] arm64: dts: r8a7796: Upgrade to PSCI v1.0 to support
+ Suspend-to-RAM
+Date: Fri, 24 Feb 2017 14:49:14 +0100
+Message-ID: <1487944154-31435-3-git-send-email-geert+renesas@glider.be>
+References: <1487944154-31435-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170222200947.3ikrhvv76ymfu5tv@lukather>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Jean-Francois Moine <moinejf@free.fr>, Jernej Skrabec <jernej.skrabec@siol.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487944154-31435-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Khiem Nguyen <khiem.nguyen.xt@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMjIsIDIwMTcgYXQgMjowOSBQTSwgTWF4aW1lIFJpcGFyZAo8bWF4aW1lLnJp
-cGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+IHdyb3RlOgo+IEhpLAo+Cj4gT24gV2VkLCBGZWIgMjIs
-IDIwMTcgYXQgMTE6MjM6MDZQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gQWxsd2lu
-bmVyIGhhdmUgYSBuZXcgIkRpc3BsYXkgRW5naW5lIDIuMCIgaW4gdGhlcmUgbmV3IFNvQ3MsIHdo
-aWNoIGNvbWVzCj4+IGluIGEgbmV3ICJEaXNwbGF5IEVuZ2luZSIgKG1peGVycyBpbnN0ZWFkIG9m
-IG9sZCBiYWNrZW5kcyBhbmQKPj4gZnJvbnRlbmRzKS4KPj4KPj4gQWRkIHN1cHBvcnQgZm9yIHRo
-ZSBtaXhlciBvbiBBbGx3aW5uZXIgVjNzIFNvQzsgaXQncyB0aGUgc2ltcGxlc3Qgb25lLgo+Pgo+
-PiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MueHl6Pgo+PiAtLS0K
-ClsuLi5dCgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjhpX21peGVy
-LmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuOGlfbWl4ZXIuYwo+PiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjk0MjdiNTcyNDBkMwo+PiAtLS0gL2Rldi9u
-dWxsCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW44aV9taXhlci5jCj4+IEBAIC0w
-LDAgKzEsNDE3IEBACj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAyMDE3IEljZW5vd3kgWmhl
-bmcgPGljZW5vd3lAYW9zYy54eXo+Cj4+ICsgKgo+PiArICogQmFzZWQgb24gc3VuNGlfYmFja2Vu
-ZC5jLCB3aGljaCBpczoKPj4gKyAqICAgQ29weXJpZ2h0IChDKSAyMDE1IEZyZWUgRWxlY3Ryb25z
-Cj4+ICsgKiAgIENvcHlyaWdodCAoQykgMjAxNSBOZXh0VGhpbmcgQ28KPj4gKyAqCj4+ICsgKiBU
-aGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1dGUgaXQgYW5k
-L29yCj4+ICsgKiBtb2RpZnkgaXQgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQ
-dWJsaWMgTGljZW5zZSBhcwo+PiArICogcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNvZnR3YXJlIEZv
-dW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YKPj4gKyAqIHRoZSBMaWNlbnNlLCBvciAoYXQg
-eW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJzaW9uLgo+PiArICovCj4+ICsKPj4gKyNpbmNsdWRl
-IDxkcm0vZHJtUC5oPgo+PiArI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hlbHBlci5oPgo+PiAr
-I2luY2x1ZGUgPGRybS9kcm1fY3J0Yy5oPgo+PiArI2luY2x1ZGUgPGRybS9kcm1fY3J0Y19oZWxw
-ZXIuaD4KPj4gKyNpbmNsdWRlIDxkcm0vZHJtX2ZiX2NtYV9oZWxwZXIuaD4KPj4gKyNpbmNsdWRl
-IDxkcm0vZHJtX2dlbV9jbWFfaGVscGVyLmg+Cj4+ICsjaW5jbHVkZSA8ZHJtL2RybV9wbGFuZV9o
-ZWxwZXIuaD4KPj4gKwo+PiArI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+PiArI2luY2x1
-ZGUgPGxpbnV4L3Jlc2V0Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+Cj4+ICsK
-Pj4gKyNpbmNsdWRlICJzdW44aV9taXhlci5oIgo+PiArI2luY2x1ZGUgInN1bjRpX2Rydi5oIgo+
-PiArCj4+ICsjZGVmaW5lIFNVTjhJX0RSQU1fT0ZGU0VUIDB4NDAwMDAwMDAKPgo+IFBIWVNfT0ZG
-U0VUPwoKUEhZU19PRkZTRVQgaXMgbm90IHBvcnRhYmxlLiBfX3BhKFBBR0VfT0ZGU0VUKSBpbnN0
-ZWFkLgoKSWYgeW91ciBETUEgYWRkcmVzc2VzIGFyZSBkaWZmZXJlbnQgZnJvbSBDUFUgYWRkcmVz
-c2VzIChpLmUuIGhhdmUgc29tZQpvZmZzZXQpLCB0aGVuIHVzZSAiZG1hLXJhbmdlcyIgaW4gRFQu
-CgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+
+>From PSCI v1.0, Suspend-to-RAM is supported via SYSTEM_SUSPEND PSCI
+function call. Hence, upgrade PSCI version for R-Car M3-W to support
+Suspend-to-RAM.
+
+The Suspend-to-RAM is highly dependent on ARM Trusted Firwmare support
+since necessary callback functions will be registered after a query
+to ARM Trusted Firmware about SYSTEM_SUSPEND support.
+
+Since PSCI v1.0 is backward compatible with PSCI v0.2, CPU Hotplug and
+CPUIdle should be able to work normally with this change.
+
+Signed-off-by: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+[geert: Keep "arm,psci-0.2"]
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Khiem: I've updated your email address.
+
+v2:
+  - Keep "arm,psci-0.2".
+---
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index e664456490ec0cc7..4985274b3c5f4a06 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -29,7 +29,7 @@
+ 	};
+ 
+ 	psci {
+-		compatible = "arm,psci-0.2";
++		compatible = "arm,psci-1.0", "arm,psci-0.2";
+ 		method = "smc";
+ 	};
+ 
+-- 
+2.7.4
