@@ -1,68 +1,80 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
-Date: Fri, 24 Feb 2017 19:46:39 +0000
-Message-ID: <EA621197-929A-43D7-8E77-21991975F75E@jic23.retrosnub.co.uk>
-References: <cover.1487757223.git.eraretuya@gmail.com> <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com> <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com> <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de> <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA@mail.gmail.com> <20170224091231.GC5012@Socrates-UM> <13912e47-1e3e-e68e-1e91-4a174f33fda5@metafoo.de> <CAHp75VfnnCe40V9k9zqyt4rkUYHgTDjfJ-y2qNV7SCxpLqhOtg@mail.gmail.com> <20170224143033.GD5012@Socrates-UM>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v4 15/36] platform: add video-multiplexer subdevice driver
+Date: Fri, 24 Feb 2017 21:09:02 +0100
+Message-ID: <20170224200902.GA19893@amd>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
+ <20170219220237.GD32327@amd>
+ <1487668265.2331.23.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170224143033.GD5012@Socrates-UM>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eva Rachel Retuya <eraretuya@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487668265.2331.23.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orglinu
 List-Id: devicetree@vger.kernel.org
 
 
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 24 February 2017 14:30:35 GMT+00:00, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
->On Fri, Feb 24, 2017 at 01:48:39PM +0200, Andy Shevchenko wrote:
->> On Fri, Feb 24, 2017 at 11:22 AM, Lars-Peter Clausen
-><lars@metafoo.de> wrote:
->> > On 02/24/2017 10:12 AM, Eva Rachel Retuya wrote:
->> >> On Thu, Feb 23, 2017 at 06:58:12PM +0200, Andy Shevchenko wrote:
->> >>> On Thu, Feb 23, 2017 at 6:47 PM, Lars-Peter Clausen
-><lars@metafoo.de> wrote:
->> >>>> On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
->> >>>>> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya
-><eraretuya@gmail.com> wrote:
->> 
->> >> I'll revert to the explicit SPI/I2C pattern in order to give more
->> >> freedom in configuring as per the scenarios previously stated.
->> >
->> > Please check with Jonathan before you do, in the end he'll have to
->apply the
->> > patch.
->> 
->> +1. I will be fine with either just need to make sure maintainer
->> understands pros and cons.
->> 
->
->OK.
->
->Jonathan, please let me know whether to continue with your preferred
->configuration or go with the "explicit" pattern that was discussed
->here.
->
-Have lost track. Will catch up with thread tomorrow and get back to you.
+Hi!
 
-J
->Thanks,
->Eva
->
->> -- 
->> With Best Regards,
->> Andy Shevchenko
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-iio"
->in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo@vger.kernel.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Plus you might want to describe which port correspond to which gpio
+> > state/bitfield values...
+> >=20
+> > > +struct vidsw {
+> >=20
+> > I knew it: it is secretely a switch! :-).
+>=20
+> This driver started as a two-input gpio controlled bus switch.
+> I changed the name when adding support for bitfield controlled
+> multiplexers with more than two inputs.
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+We had discussion with Sakari / Rob whether gpio controlled thing is a
+switch or a multiplexer :-).
+
+> > > +	if (!pad) {
+> > > +		/* Mirror the input side on the output side */
+> > > +		cfg->type =3D vidsw->endpoint[vidsw->active].bus_type;
+> > > +		if (cfg->type =3D=3D V4L2_MBUS_PARALLEL ||
+> > > +		    cfg->type =3D=3D V4L2_MBUS_BT656)
+> > > +			cfg->flags =3D vidsw->endpoint[vidsw->active].bus.parallel.flags;
+> > > +	}
+> >=20
+> > Will this need support for other V4L2_MBUS_ values?
+>=20
+> To support CSI-2 multiplexers, yes.
+
+Can you stick switch () { .... default: dev_err() } there, to help
+future hackers?
+
+Thank,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAliwkt4ACgkQMOfwapXb+vKKsACfZ9eYjIrasoIKOwHZgrqYjyBK
+BmcAoIrG0v1R2XhXi2Ae1RakbdbSLZIn
+=Mqf9
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
