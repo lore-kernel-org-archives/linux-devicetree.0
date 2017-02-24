@@ -1,79 +1,87 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v1 2/3] extcon: int3496: Rename GPIO pins in accordance
- with binding
-Date: Fri, 24 Feb 2017 10:17:12 +0900
-Message-ID: <58AF8998.5000601@samsung.com>
-References: <20170223103156.109643-1-andriy.shevchenko@linux.intel.com>
- <CGME20170223103203epcas1p1512e927e6f4c85e793d65c2e426ed1d6@epcas1p1.samsung.com>
- <20170223103156.109643-2-andriy.shevchenko@linux.intel.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 33/36] media: imx: redo pixel format enumeration and
+ negotiation
+Date: Thu, 23 Feb 2017 17:30:57 -0800
+Message-ID: <9d4fe000-f694-7d3d-34f2-a89cd637b3f0@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-34-git-send-email-steve_longerbeam@mentor.com>
+ <1487244744.2377.38.camel@pengutronix.de>
+ <9a4a4da7-418e-860e-05ec-da44b3c945cc@gmail.com>
+ <1487841019.2916.7.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170223103156.109643-2-andriy.shevchenko@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, David Cohen <david.a.cohen@intel.com>, Felipe Balbi <balbi@kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1487841019.2916.7.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2017년 02월 23일 19:31, Andy Shevchenko wrote:
-> First of all, add an optional binding for external muxer which might be
-> used.
-> 
-> Second, update GPIO pin names in extcon-intel-int3496.c driver to follow
-> the existing binding.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt | 3 +++
->  drivers/extcon/extcon-intel-int3496.c                        | 4 ++--
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> index dfc14f71e81f..9d97472ae51d 100644
-> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
-> @@ -10,6 +10,9 @@ Either one of id-gpio or vbus-gpio must be present. Both can be present as well.
->  - id-gpio: gpio for USB ID pin. See gpio binding.
->  - vbus-gpio: gpio for USB VBUS pin.
->  
-> +Optional properties:
-> +- mux-gpios: gpio for USB external muxer
-
-The Documentation/extcon/intel-int3496.txt includes
-already the information for id/vbus/mux pin.
-
-The extcon-usb-gpio.txt is not related with the extcon-int3496 driver.
-
-> +
->  Example: Examples of extcon-usb-gpio node in dra7-evm.dts as listed below:
->  	extcon_usb1 {
->  		compatible = "linux,extcon-usb-gpio";
-> diff --git a/drivers/extcon/extcon-intel-int3496.c b/drivers/extcon/extcon-intel-int3496.c
-> index 38eb6cab938f..81713bf7487e 100644
-> --- a/drivers/extcon/extcon-intel-int3496.c
-> +++ b/drivers/extcon/extcon-intel-int3496.c
-> @@ -105,13 +105,13 @@ static int int3496_probe(struct platform_device *pdev)
->  		return data->usb_id_irq;
->  	}
->  
-> -	data->gpio_vbus_en = devm_gpiod_get_index(dev, "vbus en",
-> +	data->gpio_vbus_en = devm_gpiod_get_index(dev, "vbus",
->  						 INT3496_GPIO_VBUS_EN,
->  						 GPIOD_ASIS);
->  	if (IS_ERR(data->gpio_vbus_en))
->  		dev_info(dev, "can't request VBUS EN GPIO\n");
->  
-> -	data->gpio_usb_mux = devm_gpiod_get_index(dev, "usb mux",
-> +	data->gpio_usb_mux = devm_gpiod_get_index(dev, "mux",
->  						 INT3496_GPIO_USB_MUX,
->  						 GPIOD_ASIS);
->  	if (IS_ERR(data->gpio_usb_mux))
-> 
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+On 02/23/2017 01:10 AM, Philipp Zabel wrote:
+> Hi Steve,
+>
+> On Wed, 2017-02-22 at 15:52 -0800, Steve Longerbeam wrote:
+>> Hi Philipp,
+>>
+>>
+>> On 02/16/2017 03:32 AM, Philipp Zabel wrote:
+>>> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
+>>>> The previous API and negotiation of mbus codes and pixel formats
+>>>> was broken, and has been completely redone.
+>>>>
+>>>> The negotiation of media bus codes should be as follows:
+>>>>
+>>>> CSI:
+>>>>
+>>>> sink pad     direct src pad      IDMAC src pad
+>>>> --------     ----------------    -------------
+>>>> RGB (any)        IPU RGB           RGB (any)
+>>>> YUV (any)        IPU YUV           YUV (any)
+>>>> Bayer              N/A             must be same bayer code as sink
+>>>
+>>> The IDMAC src pad should also use the internal 32-bit RGB / YUV format,
+>>> except if bayer/raw mode is selected, in which case the attached capture
+>>> video device should only allow a single mode corresponding to the output
+>>> pad media bus format.
+>>
+>> The IDMAC source pad is going to memory, so it has left the IPU.
+>> Are you sure it should be an internal IPU format? I realize it
+>> is linked to a capture device node, and the IPU format could then
+>> be translated to a v4l2 fourcc by the capture device, but IMHO this
+>> pad is external to the IPU.
+>
+> The CSI IDMAC source pad should describe the format at the connection
+> between the CSI and the IDMAC, just as the icprpvf and icprpenc source
+> pads.
+> The format outside of the IPU is the memory format written by the IDMAC,
+> but that is a memory pixel format and not a media bus format at all.
+>
+
+True, it is a memory format. I don't really mind if the CSI and PRP
+ENC/VF source pads are characterized as IPU internal formats, since
+they are only used to indicate the colorspace to the capture device.
+
+And yes it did simplify the enumeration and try_fmt code a bit. So
+I went ahead and made the change.
+
+Steve
+
+
+> That would also make it more straightforward to enumerate the memory
+> pixel formats in the capture device: If the source pad media bus format
+> is 32-bit YUV, enumerate all YUV formats, if it is 32-bit RGB or RGB565,
+> enumerate all rgb formats, otherwise (bayer/raw mode) only allow the
+> specific memory format matching the bus format.
+>
+>
