@@ -1,94 +1,79 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/8] watchdog: s3c2410: Remove confusing CONFIG prefix from
- local defines
-Date: Fri, 24 Feb 2017 17:11:15 +0200
-Message-ID: <20170224151122.12142-2-krzk@kernel.org>
-References: <20170224151122.12142-1-krzk@kernel.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/2] of: add devm_ functions for populate and depopulate
+Date: Fri, 24 Feb 2017 09:20:17 -0600
+Message-ID: <CAL_JsqLwDPYeO9fHvviCheKLrJv4qqcdbP4wseLLd_SVrsbw=A@mail.gmail.com>
+References: <1487341886-13829-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
+ <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
+ <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170224151122.12142-1-krzk@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The CONFIG prefix from defines in the s3c2410_wdt.c might suggest that
-these constants come from Kconfig.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/watchdog/s3c2410_wdt.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-index 59e95762a6de..3e216f54cb6f 100644
---- a/drivers/watchdog/s3c2410_wdt.c
-+++ b/drivers/watchdog/s3c2410_wdt.c
-@@ -64,8 +64,8 @@
- #define S3C2410_WTCON_PRESCALE_MASK	(0xff << 8)
- #define S3C2410_WTCON_PRESCALE_MAX	0xff
- 
--#define CONFIG_S3C2410_WATCHDOG_ATBOOT		(0)
--#define CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME	(15)
-+#define S3C2410_WATCHDOG_ATBOOT		(0)
-+#define S3C2410_WATCHDOG_DEFAULT_TIME	(15)
- 
- #define EXYNOS5_RST_STAT_REG_OFFSET		0x0404
- #define EXYNOS5_WDT_DISABLE_REG_OFFSET		0x0408
-@@ -79,7 +79,7 @@
- 
- static bool nowayout	= WATCHDOG_NOWAYOUT;
- static int tmr_margin;
--static int tmr_atboot	= CONFIG_S3C2410_WATCHDOG_ATBOOT;
-+static int tmr_atboot	= S3C2410_WATCHDOG_ATBOOT;
- static int soft_noboot;
- static int debug;
- 
-@@ -90,10 +90,10 @@ module_param(soft_noboot, int, 0);
- module_param(debug,	  int, 0);
- 
- MODULE_PARM_DESC(tmr_margin, "Watchdog tmr_margin in seconds. (default="
--		__MODULE_STRING(CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME) ")");
-+		__MODULE_STRING(S3C2410_WATCHDOG_DEFAULT_TIME) ")");
- MODULE_PARM_DESC(tmr_atboot,
- 		"Watchdog is started at boot time if set to 1, default="
--			__MODULE_STRING(CONFIG_S3C2410_WATCHDOG_ATBOOT));
-+			__MODULE_STRING(S3C2410_WATCHDOG_ATBOOT));
- MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
- MODULE_PARM_DESC(soft_noboot, "Watchdog action, set to 1 to ignore reboots, "
-@@ -406,7 +406,7 @@ static struct watchdog_ops s3c2410wdt_ops = {
- static struct watchdog_device s3c2410_wdd = {
- 	.info = &s3c2410_wdt_ident,
- 	.ops = &s3c2410wdt_ops,
--	.timeout = CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME,
-+	.timeout = S3C2410_WATCHDOG_DEFAULT_TIME,
- };
- 
- /* interrupt handler code */
-@@ -600,12 +600,12 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
- 					wdt->wdt_device.timeout);
- 	if (ret) {
- 		started = s3c2410wdt_set_heartbeat(&wdt->wdt_device,
--					CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME);
-+					S3C2410_WATCHDOG_DEFAULT_TIME);
- 
- 		if (started == 0)
- 			dev_info(dev,
- 			   "tmr_margin value out of range, default %d used\n",
--			       CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME);
-+			       S3C2410_WATCHDOG_DEFAULT_TIME);
- 		else
- 			dev_info(dev, "default timer value is out of range, "
- 							"cannot start\n");
--- 
-2.9.3
+T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgOToxMyBBTSwgQmVuamFtaW4gR2FpZ25hcmQKPGJlbmph
+bWluLmdhaWduYXJkQGxpbmFyby5vcmc+IHdyb3RlOgo+IDIwMTctMDItMjQgMTU6MTcgR01UKzAx
+OjAwIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ogo+PiBPbiBGcmksIEZlYiAxNywg
+MjAxNyBhdCA4OjMxIEFNLCBCZW5qYW1pbiBHYWlnbmFyZAo+PiA8YmVuamFtaW4uZ2FpZ25hcmRA
+bGluYXJvLm9yZz4gd3JvdGU6Cj4+PiBMb3N0IG9mIGNhbGxzIHRvIG9mX3BsYXRmb3JtX3BvcHVs
+YXRlKCkgYXJlIG5vdCB1bmJhbGFuY2VkIGJ5IGEgY2FsbAo+Pgo+PiBzL0xvc3QvTG90cy8KPj4K
+Pj4+IHRvIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKS4gVGhpcyBjcmVhdGUgaXNzdWVzIHdoaWxl
+IGRyaXZlcnMgYXJlCj4+PiBiaW5kL3VuYmluZC4KPj4+Cj4+PiBJbiB3YXkgdG8gc29sdmUgdGhv
+c2UgaXNzdWVzIGlzIHRvIGFkZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkKPj4+IHdoaWNo
+IHdpbGwgY2FsbCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgd2hlbiB0aGUgZGV2aWNlIGlzIHVu
+Ym91bmQKPj4+IGZyb20gdGhlIGJ1cy4KPj4KPj4gT25lIGNvbXBsaWNhdGlvbiBpcyBvZl9wbGF0
+Zm9ybV9wb3B1bGF0ZSBpcyBkZXNpZ25lZCB0byBiZSBjYWxsZWQKPj4gbXVsdGlwbGUgdGltZXMu
+IFdlIGNhbGwgaXQgd2l0aCB0aGUgZGVmYXVsdCBtYXRjaCB0YWJsZSBhbmQgdGhlbgo+PiBwbGF0
+Zm9ybXMgY2FuIGNhbGwgaXQgYWdhaW4gd2l0aCBhIGN1c3RvbSBtYXRjaCB0YWJsZSBmb3IgZXhh
+bXBsZS4KPgo+IEkgZG8gbm90IHBsYW4gdG8gdXNlIGl0IGV2ZXJ5IHdoZXJlIGJ1dCBvbmx5IGlu
+IHNvbWUgZHJpdmVycyBwcm9iZSgpCj4gdG8gYXZvaWQgYWRkaW5nIGdvdG8gdG8gY2FsbCBvZl9w
+bGF0Zm9ybV9kZXBvcHVsYXRlKCkgZm9yIGVhY2ggZXJyb3IKPiBjYXNlcyB3aGljaCBtYXkgb2Nj
+dXIgYWZ0ZXIgY2FsbGluZyBwb3B1bGF0ZS4KPgo+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogQmVuamFt
+aW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQGxpbmFyby5vcmc+Cj4+PiAtLS0KPj4+ICBk
+cml2ZXJzL29mL3BsYXRmb3JtLmMgICAgICAgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysKPj4+ICBpbmNsdWRlL2xpbnV4L29mX3BsYXRmb3JtLmggfCAy
+MCArKysrKysrKysrKysKPj4+ICAyIGZpbGVzIGNoYW5nZWQsIDk3IGluc2VydGlvbnMoKykKPj4+
+Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9wbGF0Zm9ybS5jIGIvZHJpdmVycy9vZi9wbGF0
+Zm9ybS5jCj4+PiBpbmRleCBiODA2NGJjLi4zZGJlYmY3IDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVy
+cy9vZi9wbGF0Zm9ybS5jCj4+PiArKysgYi9kcml2ZXJzL29mL3BsYXRmb3JtLmMKPj4+IEBAIC01
+NzEsNiArNTcxLDgzIEBAIHZvaWQgb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZShzdHJ1Y3QgZGV2aWNl
+ICpwYXJlbnQpCj4+PiAgfQo+Pj4gIEVYUE9SVF9TWU1CT0xfR1BMKG9mX3BsYXRmb3JtX2RlcG9w
+dWxhdGUpOwo+Pj4KPj4+ICtzdGF0aWMgdm9pZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlX3Jl
+bGVhc2Uoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpyZXMpCj4+PiArewo+Pj4gKyAgICAgICBv
+Zl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCooc3RydWN0IGRldmljZSAqKilyZXMpOwo+Pj4gK30KPj4+
+ICsKPj4+ICsvKioKPj4+ICsgKiBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkgLSBQb3B1bGF0
+ZSBwbGF0Zm9ybV9kZXZpY2VzIGZyb20gZGV2aWNlIHRyZWUgZGF0YQo+Pj4gKyAqIEBkZXY6IGRl
+dmljZSB0aGF0IHJlcXVlc3RlZCB0byBwb3B1bGF0ZSBmcm9tIGRldmljZSB0cmVlIGRhdGEKPj4+
+ICsgKiBAcm9vdDogcGFyZW50IG9mIHRoZSBmaXJzdCBsZXZlbCB0byBwcm9iZSBvciBOVUxMIGZv
+ciB0aGUgcm9vdCBvZiB0aGUgdHJlZQo+Pj4gKyAqIEBtYXRjaGVzOiBtYXRjaCB0YWJsZSwgTlVM
+TCB0byB1c2UgdGhlIGRlZmF1bHQKPj4KPj4gTlVMTCBpcyBubyBtYXRjaCB0YWJsZSwgbm90IHRo
+ZSBkZWZhdWx0IHdoaWNoIG1lYW5zIG9ubHkgcG9wdWxhdGUKPj4gaW1tZWRpYXRlIGNoaWxkcmVu
+Lgo+Cj4gSSBoYXZlIGNvcHkgb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKSBkZXNjcmlwdGlvbi4uLgo+
+IEkgcmVwbGFjZSBpdCBieTogQG1hdGNoZXM6IG1hdGNoIHRhYmxlIChjb3VsZCBiZSBOVUxMKQo+
+Cj4+Cj4+PiArICogQGxvb2t1cDogYXV4ZGF0YSB0YWJsZSBmb3IgbWF0Y2hpbmcgaWQgYW5kIHBs
+YXRmb3JtX2RhdGEgd2l0aCBkZXZpY2Ugbm9kZXMKPj4+ICsgKiBAcGFyZW50OiBwYXJlbnQgdG8g
+aG9vayBkZXZpY2VzIGZyb20sIE5VTEwgZm9yIHRvcGxldmVsCj4+Cj4+IEkgdGhpbmsgdGhpcyBu
+ZWVkcyB0byBiZSBhIGJpdCBkaWZmZXJlbnQgYXJncyBhcyB0aGUgdXNlIGlzIGxpbWl0ZWQuCj4+
+IHJvb3QgYW5kIHBhcmVudCBtdXN0IG5vdCBiZSBOVUxMLiBkZXYgc2hvdWxkIGJlIHRoZSBzYW1l
+IGFzIHBhcmVudC4KPj4gbG9va3VwIHdhcyBmb3IgbGVnYWN5LCBzbyBkcm9wIHRoYXQuCj4KPiBT
+byBmdW5jdGlvbiBwcm90b3R5cGUgd2lsbCBiZWNvbWU6Cj4gaW50IGRldm1fb2ZfcGxhdGZvcm1f
+cG9wdWxhdGUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUKPiAqcm9vdCwg
+Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2hlcykKCkkganVzdCBub3RpY2VkIHNvbWV0
+aGluZyBlbHNlIHRvby4gZGV2LT5vZl9ub2RlIHNob3VsZCBlcXVhbCByb290IEkKdGhpbmssIHNv
+IHdlIGNhbiBnZXQgcmlkIG9mIHJvb3QgcGFyYW0uCgpSb2IKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
