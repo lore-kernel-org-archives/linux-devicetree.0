@@ -1,153 +1,77 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/8] watchdog: s3c2410: Fix infinite interrupt in soft mode
-Date: Fri, 24 Feb 2017 17:11:16 +0200
-Message-ID: <20170224151122.12142-3-krzk@kernel.org>
-References: <20170224151122.12142-1-krzk@kernel.org>
+From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Subject: Re: [PATCH v1 1/2] of: add devm_ functions for populate and depopulate
+Date: Fri, 24 Feb 2017 16:13:20 +0100
+Message-ID: <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
+References: <1487341886-13829-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
+ <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170224151122.12142-1-krzk@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
 List-Id: devicetree@vger.kernel.org
 
-In soft (no-reboot) mode, the driver self-pings watchdog upon expiration
-of an interrupt.  However the interrupt itself was not cleared thus on
-first hit, the system enters infinite interrupt handling loop.
-
-On Odroid U3 (Exynos4412), when booted with s3c2410_wdt.soft_noboot=1
-argument the console is flooded:
-	# killall -9 watchdog
-	[   60.523760] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
-	[   60.536744] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
-
-Fix this by writing something to the WTCLRINT register to clear the
-interrupt.  The register WTCLRINT however appeared in S3C6410 so a new
-watchdog quirk and flavor are needed.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
----
-
-I was thinking about CC-ing stable, especially when I thought about
-adding unconditional WTCLRINT clear.  However it appears that S3C2410
-does not have the WTCLRINT register, this a new chip flavor has to be
-added.  This makes the fix spread over driver and DTS changes.
-
-Worth adding:
-	Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-?
----
- .../devicetree/bindings/watchdog/samsung-wdt.txt    |  9 +++++----
- drivers/watchdog/s3c2410_wdt.c                      | 21 ++++++++++++++++++---
- 2 files changed, 23 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-index 8f3d96af81d7..1f6e101e299a 100644
---- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-@@ -6,10 +6,11 @@ occurred.
- 
- Required properties:
- - compatible : should be one among the following
--	(a) "samsung,s3c2410-wdt" for Exynos4 and previous SoCs
--	(b) "samsung,exynos5250-wdt" for Exynos5250
--	(c) "samsung,exynos5420-wdt" for Exynos5420
--	(c) "samsung,exynos7-wdt" for Exynos7
-+	- "samsung,s3c2410-wdt" for S3C2410
-+	- "samsung,s3c6410-wdt" for S3C6410, S5PV210 and Exynos4
-+	- "samsung,exynos5250-wdt" for Exynos5250
-+	- "samsung,exynos5420-wdt" for Exynos5420
-+	- "samsung,exynos7-wdt" for Exynos7
- 
- - reg : base physical address of the controller and length of memory mapped
- 	region.
-diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-index 3e216f54cb6f..7db7847a005c 100644
---- a/drivers/watchdog/s3c2410_wdt.c
-+++ b/drivers/watchdog/s3c2410_wdt.c
-@@ -46,6 +46,7 @@
- #define S3C2410_WTCON		0x00
- #define S3C2410_WTDAT		0x04
- #define S3C2410_WTCNT		0x08
-+#define S3C2410_WTCLRINT	0x0c
- 
- #define S3C2410_WTCNT_MAXCNT	0xffff
- 
-@@ -72,6 +73,7 @@
- #define EXYNOS5_WDT_MASK_RESET_REG_OFFSET	0x040c
- #define QUIRK_HAS_PMU_CONFIG			(1 << 0)
- #define QUIRK_HAS_RST_STAT			(1 << 1)
-+#define QUIRK_HAS_WTCLRINT_REG			(1 << 2)
- 
- /* These quirks require that we have a PMU register map */
- #define QUIRKS_HAVE_PMUREG			(QUIRK_HAS_PMU_CONFIG | \
-@@ -143,13 +145,18 @@ static const struct s3c2410_wdt_variant drv_data_s3c2410 = {
- };
- 
- #ifdef CONFIG_OF
-+static const struct s3c2410_wdt_variant drv_data_s3c6410 = {
-+	.quirks = QUIRK_HAS_WTCLRINT_REG,
-+};
-+
- static const struct s3c2410_wdt_variant drv_data_exynos5250  = {
- 	.disable_reg = EXYNOS5_WDT_DISABLE_REG_OFFSET,
- 	.mask_reset_reg = EXYNOS5_WDT_MASK_RESET_REG_OFFSET,
- 	.mask_bit = 20,
- 	.rst_stat_reg = EXYNOS5_RST_STAT_REG_OFFSET,
- 	.rst_stat_bit = 20,
--	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT,
-+	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT \
-+		  | QUIRK_HAS_WTCLRINT_REG,
- };
- 
- static const struct s3c2410_wdt_variant drv_data_exynos5420 = {
-@@ -158,7 +165,8 @@ static const struct s3c2410_wdt_variant drv_data_exynos5420 = {
- 	.mask_bit = 0,
- 	.rst_stat_reg = EXYNOS5_RST_STAT_REG_OFFSET,
- 	.rst_stat_bit = 9,
--	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT,
-+	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT \
-+		  | QUIRK_HAS_WTCLRINT_REG,
- };
- 
- static const struct s3c2410_wdt_variant drv_data_exynos7 = {
-@@ -167,12 +175,15 @@ static const struct s3c2410_wdt_variant drv_data_exynos7 = {
- 	.mask_bit = 23,
- 	.rst_stat_reg = EXYNOS5_RST_STAT_REG_OFFSET,
- 	.rst_stat_bit = 23,	/* A57 WDTRESET */
--	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT,
-+	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT \
-+		  | QUIRK_HAS_WTCLRINT_REG,
- };
- 
- static const struct of_device_id s3c2410_wdt_match[] = {
- 	{ .compatible = "samsung,s3c2410-wdt",
- 	  .data = &drv_data_s3c2410 },
-+	{ .compatible = "samsung,s3c6410-wdt",
-+	  .data = &drv_data_s3c6410 },
- 	{ .compatible = "samsung,exynos5250-wdt",
- 	  .data = &drv_data_exynos5250 },
- 	{ .compatible = "samsung,exynos5420-wdt",
-@@ -418,6 +429,10 @@ static irqreturn_t s3c2410wdt_irq(int irqno, void *param)
- 	dev_info(wdt->dev, "watchdog timer expired (irq)\n");
- 
- 	s3c2410wdt_keepalive(&wdt->wdt_device);
-+
-+	if (wdt->drv_data->quirks & QUIRK_HAS_WTCLRINT_REG)
-+		writel(0x1, wdt->reg_base + S3C2410_WTCLRINT);
-+
- 	return IRQ_HANDLED;
- }
- 
--- 
-2.9.3
+MjAxNy0wMi0yNCAxNToxNyBHTVQrMDE6MDAgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9y
+Zz46Cj4gT24gRnJpLCBGZWIgMTcsIDIwMTcgYXQgODozMSBBTSwgQmVuamFtaW4gR2FpZ25hcmQK
+PiA8YmVuamFtaW4uZ2FpZ25hcmRAbGluYXJvLm9yZz4gd3JvdGU6Cj4+IExvc3Qgb2YgY2FsbHMg
+dG8gb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKSBhcmUgbm90IHVuYmFsYW5jZWQgYnkgYSBjYWxsCj4K
+PiBzL0xvc3QvTG90cy8KPgo+PiB0byBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkuIFRoaXMgY3Jl
+YXRlIGlzc3VlcyB3aGlsZSBkcml2ZXJzIGFyZQo+PiBiaW5kL3VuYmluZC4KPj4KPj4gSW4gd2F5
+IHRvIHNvbHZlIHRob3NlIGlzc3VlcyBpcyB0byBhZGQgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0
+ZSgpCj4+IHdoaWNoIHdpbGwgY2FsbCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgd2hlbiB0aGUg
+ZGV2aWNlIGlzIHVuYm91bmQKPj4gZnJvbSB0aGUgYnVzLgo+Cj4gT25lIGNvbXBsaWNhdGlvbiBp
+cyBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSBpcyBkZXNpZ25lZCB0byBiZSBjYWxsZWQKPiBtdWx0aXBs
+ZSB0aW1lcy4gV2UgY2FsbCBpdCB3aXRoIHRoZSBkZWZhdWx0IG1hdGNoIHRhYmxlIGFuZCB0aGVu
+Cj4gcGxhdGZvcm1zIGNhbiBjYWxsIGl0IGFnYWluIHdpdGggYSBjdXN0b20gbWF0Y2ggdGFibGUg
+Zm9yIGV4YW1wbGUuCgpJIGRvIG5vdCBwbGFuIHRvIHVzZSBpdCBldmVyeSB3aGVyZSBidXQgb25s
+eSBpbiBzb21lIGRyaXZlcnMgcHJvYmUoKQp0byBhdm9pZCBhZGRpbmcgZ290byB0byBjYWxsIG9m
+X3BsYXRmb3JtX2RlcG9wdWxhdGUoKSBmb3IgZWFjaCBlcnJvcgpjYXNlcyB3aGljaCBtYXkgb2Nj
+dXIgYWZ0ZXIgY2FsbGluZyBwb3B1bGF0ZS4KCj4KPj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4g
+R2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQGxpbmFyby5vcmc+Cj4+IC0tLQo+PiAgZHJpdmVy
+cy9vZi9wbGF0Zm9ybS5jICAgICAgIHwgNzcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrCj4+ICBpbmNsdWRlL2xpbnV4L29mX3BsYXRmb3JtLmggfCAyMCArKysr
+KysrKysrKysKPj4gIDIgZmlsZXMgY2hhbmdlZCwgOTcgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9vZi9wbGF0Zm9ybS5jIGIvZHJpdmVycy9vZi9wbGF0Zm9ybS5jCj4+
+IGluZGV4IGI4MDY0YmMuLjNkYmViZjcgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvb2YvcGxhdGZv
+cm0uYwo+PiArKysgYi9kcml2ZXJzL29mL3BsYXRmb3JtLmMKPj4gQEAgLTU3MSw2ICs1NzEsODMg
+QEAgdm9pZCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKHN0cnVjdCBkZXZpY2UgKnBhcmVudCkKPj4g
+IH0KPj4gIEVYUE9SVF9TWU1CT0xfR1BMKG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUpOwo+Pgo+PiAr
+c3RhdGljIHZvaWQgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZV9yZWxlYXNlKHN0cnVjdCBkZXZp
+Y2UgKmRldiwgdm9pZCAqcmVzKQo+PiArewo+PiArICAgICAgIG9mX3BsYXRmb3JtX2RlcG9wdWxh
+dGUoKihzdHJ1Y3QgZGV2aWNlICoqKXJlcyk7Cj4+ICt9Cj4+ICsKPj4gKy8qKgo+PiArICogZGV2
+bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIC0gUG9wdWxhdGUgcGxhdGZvcm1fZGV2aWNlcyBmcm9t
+IGRldmljZSB0cmVlIGRhdGEKPj4gKyAqIEBkZXY6IGRldmljZSB0aGF0IHJlcXVlc3RlZCB0byBw
+b3B1bGF0ZSBmcm9tIGRldmljZSB0cmVlIGRhdGEKPj4gKyAqIEByb290OiBwYXJlbnQgb2YgdGhl
+IGZpcnN0IGxldmVsIHRvIHByb2JlIG9yIE5VTEwgZm9yIHRoZSByb290IG9mIHRoZSB0cmVlCj4+
+ICsgKiBAbWF0Y2hlczogbWF0Y2ggdGFibGUsIE5VTEwgdG8gdXNlIHRoZSBkZWZhdWx0Cj4KPiBO
+VUxMIGlzIG5vIG1hdGNoIHRhYmxlLCBub3QgdGhlIGRlZmF1bHQgd2hpY2ggbWVhbnMgb25seSBw
+b3B1bGF0ZQo+IGltbWVkaWF0ZSBjaGlsZHJlbi4KCkkgaGF2ZSBjb3B5IG9mX3BsYXRmb3JtX3Bv
+cHVsYXRlKCkgZGVzY3JpcHRpb24uLi4KSSByZXBsYWNlIGl0IGJ5OiBAbWF0Y2hlczogbWF0Y2gg
+dGFibGUgKGNvdWxkIGJlIE5VTEwpCgo+Cj4+ICsgKiBAbG9va3VwOiBhdXhkYXRhIHRhYmxlIGZv
+ciBtYXRjaGluZyBpZCBhbmQgcGxhdGZvcm1fZGF0YSB3aXRoIGRldmljZSBub2Rlcwo+PiArICog
+QHBhcmVudDogcGFyZW50IHRvIGhvb2sgZGV2aWNlcyBmcm9tLCBOVUxMIGZvciB0b3BsZXZlbAo+
+Cj4gSSB0aGluayB0aGlzIG5lZWRzIHRvIGJlIGEgYml0IGRpZmZlcmVudCBhcmdzIGFzIHRoZSB1
+c2UgaXMgbGltaXRlZC4KPiByb290IGFuZCBwYXJlbnQgbXVzdCBub3QgYmUgTlVMTC4gZGV2IHNo
+b3VsZCBiZSB0aGUgc2FtZSBhcyBwYXJlbnQuCj4gbG9va3VwIHdhcyBmb3IgbGVnYWN5LCBzbyBk
+cm9wIHRoYXQuCgpTbyBmdW5jdGlvbiBwcm90b3R5cGUgd2lsbCBiZWNvbWU6CmludCBkZXZtX29m
+X3BsYXRmb3JtX3BvcHVsYXRlKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2Rl
+Cipyb290LCBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaGVzKQoKPgo+PiArICoKPj4g
+KyAqIFNpbWlsYXIgdG8gb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKSwgYnV0IHdpbGwgYXV0b21hdGlj
+YWxseSBjYWxsCj4+ICsgKiBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgd2hlbiB0aGUgZGV2aWNl
+IGlzIHVuYm91bmQgZnJvbSB0aGUgYnVzLgo+PiArICoKPj4gKyAqIFJldHVybnMgMCBvbiBzdWNj
+ZXNzLCA8IDAgb24gZmFpbHVyZS4KPj4gKyAqLwpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
