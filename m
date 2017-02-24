@@ -1,55 +1,187 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Fri, 24 Feb 2017 07:10:53 +0100
-Message-ID: <CACna6rzn3YDBqwReEikqjfhpMk-uQj0cuNaay2HyK0kLc_xuJg@mail.gmail.com>
-References: <20170223104025.5755-1-zajec5@gmail.com> <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
- <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
- <5c57772b-71fd-d9e2-efe6-1175cf048e0b@openwrt.org> <CACna6ryFQHGN6xYiLcp9-v7f+55-4hoq+6kXCjiT6LJOS70sQQ@mail.gmail.com>
+From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Subject: [PATCH v1 net] net: phy: Fix LED mode in DT single property.
+Date: Fri, 24 Feb 2017 12:02:19 +0530
+Message-ID: <1487917939-28060-1-git-send-email-Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6ryFQHGN6xYiLcp9-v7f+55-4hoq+6kXCjiT6LJOS70sQQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24 February 2017 at 07:02, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
-ote:
-> On 23 February 2017 at 13:44, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->> On 2017-02-23 13:29, Rafa=C5=82 Mi=C5=82ecki wrote:
->>>
->>> On 23 February 2017 at 13:27, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
->>>>
->>>> As discussed for other platforms as well, please use the board's name =
-as
->>>> the
->>>> same board can end up being sold under multiple model numbers.
->>>>
->>>> So please rename the file to bcm47094-linksys-panamera.dts
->>>
->>> Huh? Where did you get panamera name from?!
->>
->> Your manners shine on these dark days of winter. For about a decade now,
->> http://192.168.1.1/sysinfo.cgi will show you quite a bit of information =
-if
->> you are too lazy to look into the GPL tarball or at the original bootlog=
-s.
->
-> Today I decided to do my homework & check GPL sources of EA9500 fw.
->
-> (...)
->
-> Will you be so generous to tell us how did you get EA9500 board name
-> by just looking at GPL sources?
+From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 
-I also tried find with -name "*panamera*". One way of guessing board
-name seems to be checking names of patches in ./src/linux/patches/.
-Any other, more reliable method?
+Fix the LED mode DT parameters combine to a single property
+and change the vendor prefix i.e. mscc.
 
---=20
-Rafa=C5=82
+Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+---
+Change set:
+v0: Fix the LED mode DT parameters combine to a single property
+v1: Fix the build test ERROR
+
+ .../devicetree/bindings/net/mscc-phy-vsc8531.txt   | 20 +++-----
+ drivers/net/phy/mscc.c                             | 57 ++++++++++++----------
+ 2 files changed, 40 insertions(+), 37 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+index 0eedabe..2253de5 100644
+--- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
++++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+@@ -6,12 +6,12 @@ Required properties:
+ 		  Documentation/devicetree/bindings/net/phy.txt
+ 
+ Optional properties:
+-- vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
++- mscc,vddmac		: The vddmac in mV. Allowed values is listed
+ 			  in the first row of Table 1 (below).
+ 			  This property is only used in combination
+ 			  with the 'edge-slowdown' property.
+ 			  Default value is 3300.
+-- vsc8531,edge-slowdown	: % the edge should be slowed down relative to
++- mscc,edge-slowdown	: % the edge should be slowed down relative to
+ 			  the fastest possible edge time.
+ 			  Edge rate sets the drive strength of the MAC
+ 			  interface output signals.  Changing the
+@@ -27,14 +27,11 @@ Optional properties:
+ 			  'vddmac'.
+ 			  Default value is 0%.
+ 			  Ref: Table:1 - Edge rate change (below).
+-- vsc8531,led-0-mode	: LED mode. Specify how the LED[0] should behave.
++- mscc,led-mode		: LED mode. Specify how the LED[0] and LED[1] should behave.
+ 			  Allowed values are define in
+ 			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
+-			  Default value is VSC8531_LINK_1000_ACTIVITY (1).
+-- vsc8531,led-1-mode	: LED mode. Specify how the LED[1] should behave.
+-			  Allowed values are define in
+-			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
+-			  Default value is VSC8531_LINK_100_ACTIVITY (2).
++			  Default LED[0] value is VSC8531_LINK_1000_ACTIVITY (1).
++			  Default LED[1] value is VSC8531_LINK_100_ACTIVITY (2).
+ 
+ Table: 1 - Edge rate change
+ ----------------------------------------------------------------|
+@@ -66,8 +63,7 @@ Example:
+ 
+         vsc8531_0: ethernet-phy@0 {
+                 compatible = "ethernet-phy-id0007.0570";
+-                vsc8531,vddmac		= <3300>;
+-                vsc8531,edge-slowdown	= <7>;
+-                vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
+-                vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
++                mscc,vddmac		= /bits/ 16 <3300>;
++                mscc,edge-slowdown	= /bits/ 8  <7>;
++                mscc,led-mode	= <LINK_1000_ACTIVITY LINK_100_ACTIVITY>;
+         };
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 650c266..dc35a90 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -385,11 +385,11 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	if (!of_node)
+ 		return -ENODEV;
+ 
+-	rc = of_property_read_u16(of_node, "vsc8531,vddmac", &vdd);
++	rc = of_property_read_u16(of_node, "mscc,vddmac", &vdd);
+ 	if (rc != 0)
+ 		vdd = MSCC_VDDMAC_3300;
+ 
+-	rc = of_property_read_u8(of_node, "vsc8531,edge-slowdown", &sd);
++	rc = of_property_read_u8(of_node, "mscc,edge-slowdown", &sd);
+ 	if (rc != 0)
+ 		sd = 0;
+ 
+@@ -402,26 +402,43 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	return -EINVAL;
+ }
+ 
+-static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+-				   char *led,
+-				   u8 default_mode)
++static int vsc85xx_dt_led_mode_get(struct phy_device *phydev, char *led)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
+ 	struct device_node *of_node = dev->of_node;
+-	u8 led_mode;
+-	int err;
++	struct vsc8531_private *vsc8531 = phydev->priv;
++	u8 led_0_mode = VSC8531_LINK_1000_ACTIVITY;
++	u8 led_1_mode = VSC8531_LINK_100_ACTIVITY;
++	const __be32 *paddr_end;
++	const __be32 *paddr;
++	int len;
+ 
+ 	if (!of_node)
+ 		return -ENODEV;
+ 
+-	led_mode = default_mode;
+-	err = of_property_read_u8(of_node, led, &led_mode);
+-	if (!err && (led_mode > 15 || led_mode == 7 || led_mode == 11)) {
+-		phydev_err(phydev, "DT %s invalid\n", led);
++	paddr = of_get_property(of_node, "mscc,led-mode", &len);
++	if (!paddr)
+ 		return -EINVAL;
++
++	paddr_end = paddr + (len /= sizeof(*paddr));
++	while (paddr + 1 < paddr_end) {
++		led_0_mode = be32_to_cpup(paddr++);
++		led_1_mode = be32_to_cpup(paddr++);
+ 	}
+ 
+-	return led_mode;
++	if (!len && (led_0_mode > 15 || led_0_mode == 7 || led_0_mode == 11)) {
++		phydev_err(phydev, "DT %s-0 invalid\n", led);
++		return -EINVAL;
++	}
++	vsc8531->led_0_mode = led_0_mode;
++
++	if (!len && (led_1_mode > 15 || led_1_mode == 7 || led_1_mode == 11)) {
++		phydev_err(phydev, "DT %s-1 invalid\n", led);
++		return -EINVAL;
++	}
++	vsc8531->led_1_mode = led_1_mode;
++
++	return 0;
+ }
+ 
+ #else
+@@ -430,11 +447,9 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
+-static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+-				   char *led,
+-				   u8 default_mode)
++static int vsc85xx_dt_led_mode_get(struct phy_device *phydev, char *led)
+ {
+-	return default_mode;
++	return 0;
+ }
+ #endif /* CONFIG_OF_MDIO */
+ 
+@@ -641,17 +656,9 @@ static int vsc85xx_probe(struct phy_device *phydev)
+ 	vsc8531->rate_magic = rate_magic;
+ 
+ 	/* LED[0] and LED[1] mode */
+-	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-0-mode",
+-					   VSC8531_LINK_1000_ACTIVITY);
+-	if (led_mode < 0)
+-		return led_mode;
+-	vsc8531->led_0_mode = led_mode;
+-
+-	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-1-mode",
+-					   VSC8531_LINK_100_ACTIVITY);
++	led_mode = vsc85xx_dt_led_mode_get(phydev, "mscc,led-mode");
+ 	if (led_mode < 0)
+ 		return led_mode;
+-	vsc8531->led_1_mode = led_mode;
+ 
+ 	return 0;
+ }
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
