@@ -1,37 +1,57 @@
 From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
-Date: Fri, 24 Feb 2017 13:48:39 +0200
-Message-ID: <CAHp75VfnnCe40V9k9zqyt4rkUYHgTDjfJ-y2qNV7SCxpLqhOtg@mail.gmail.com>
-References: <cover.1487757223.git.eraretuya@gmail.com> <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com>
- <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com>
- <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de> <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA@mail.gmail.com>
- <20170224091231.GC5012@Socrates-UM> <13912e47-1e3e-e68e-1e91-4a174f33fda5@metafoo.de>
+Subject: Re: [PATCH v1 2/3] extcon: int3496: Rename GPIO pins in accordance
+ with binding
+Date: Fri, 24 Feb 2017 14:08:08 +0200
+Message-ID: <CAHp75Vf-qJDX8fk1nRbzgUTGRaWK41fwO2y87Da-M+ob=3UjKQ@mail.gmail.com>
+References: <20170223103156.109643-1-andriy.shevchenko@linux.intel.com>
+ <CGME20170223103203epcas1p1512e927e6f4c85e793d65c2e426ed1d6@epcas1p1.samsung.com>
+ <20170223103156.109643-2-andriy.shevchenko@linux.intel.com> <58AF8998.5000601@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <13912e47-1e3e-e68e-1e91-4a174f33fda5-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+In-Reply-To: <58AF8998.5000601-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Cohen <david.a.cohen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 24, 2017 at 11:22 AM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
-> On 02/24/2017 10:12 AM, Eva Rachel Retuya wrote:
->> On Thu, Feb 23, 2017 at 06:58:12PM +0200, Andy Shevchenko wrote:
->>> On Thu, Feb 23, 2017 at 6:47 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->>>> On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
->>>>> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Fri, Feb 24, 2017 at 3:17 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote=
+:
+> On 2017=EB=85=84 02=EC=9B=94 23=EC=9D=BC 19:31, Andy Shevchenko wrote:
+>> First of all, add an optional binding for external muxer which might be
+>> used.
 
->> I'll revert to the explicit SPI/I2C pattern in order to give more
->> freedom in configuring as per the scenarios previously stated.
+>> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
+>> @@ -10,6 +10,9 @@ Either one of id-gpio or vbus-gpio must be present. Bo=
+th can be present as well.
+>>  - id-gpio: gpio for USB ID pin. See gpio binding.
+>>  - vbus-gpio: gpio for USB VBUS pin.
+>>
+>> +Optional properties:
+>> +- mux-gpios: gpio for USB external muxer
 >
-> Please check with Jonathan before you do, in the end he'll have to apply the
-> patch.
+> The Documentation/extcon/intel-int3496.txt includes
+> already the information for id/vbus/mux pin.
 
-+1. I will be fine with either just need to make sure maintainer
-understands pros and cons.
+Thanks for pointing this out...
 
--- 
+> The extcon-usb-gpio.txt is not related with the extcon-int3496 driver.
+
+...but the bindings is related to ACPI somehow. I dunno why in
+extcon-usb-gpio.c we have
+        if (!np && !ACPI_HANDLE(dev))
+
+...and thus it means either firmware chooses we better to have
+standardized bindings in both cases.
+
+OTOH mux-gpios indeed doesn't make sense for extcon-usb-gpio.c and
+would be removed from the bindings.
+
+I'll update patches accordingly.
+
+--=20
 With Best Regards,
 Andy Shevchenko
 --
