@@ -1,95 +1,41 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 1/8] watchdog: s3c2410: Remove confusing CONFIG prefix
- from local defines
-Date: Fri, 24 Feb 2017 07:32:47 -0800
-Message-ID: <a176ce28-e5ca-77b3-2f4c-58b7d27d98e4@roeck-us.net>
-References: <20170224151122.12142-1-krzk@kernel.org>
- <20170224151122.12142-2-krzk@kernel.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
+Date: Fri, 24 Feb 2017 16:33:16 +0100
+Message-ID: <64ed3cde-7627-eb60-c507-b68447012502@metafoo.de>
+References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdU9UL9ZyiPJqtTTNS=KOScu6M3c7jQgD1vZ+gTiTCAYMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170224151122.12142-2-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdU9UL9ZyiPJqtTTNS=KOScu6M3c7jQgD1vZ+gTiTCAYMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2017 07:11 AM, Krzysztof Kozlowski wrote:
-> The CONFIG prefix from defines in the s3c2410_wdt.c might suggest that
-> these constants come from Kconfig.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On 02/24/2017 04:22 PM, Geert Uytterhoeven wrote:
+> On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+>> @@ -0,0 +1,27 @@
+>> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+>> +
+>> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+>> +12-bits ADC communicating over I2c bus.
+>> +The device node for this driver shall be a child of a I2c controller.
+>> +
+>> +Required properties
+>> +  - compatible: Should be "maxim,max961x"
+>> +  - reg: The 7-bits long I2c address of the device
+>> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
+>> +                   resistor.
+> 
+> shunt-resistor-micro-ohms?
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+I'll take this one further:
 
-> ---
->  drivers/watchdog/s3c2410_wdt.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-> index 59e95762a6de..3e216f54cb6f 100644
-> --- a/drivers/watchdog/s3c2410_wdt.c
-> +++ b/drivers/watchdog/s3c2410_wdt.c
-> @@ -64,8 +64,8 @@
->  #define S3C2410_WTCON_PRESCALE_MASK	(0xff << 8)
->  #define S3C2410_WTCON_PRESCALE_MAX	0xff
->
-> -#define CONFIG_S3C2410_WATCHDOG_ATBOOT		(0)
-> -#define CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME	(15)
-> +#define S3C2410_WATCHDOG_ATBOOT		(0)
-> +#define S3C2410_WATCHDOG_DEFAULT_TIME	(15)
->
->  #define EXYNOS5_RST_STAT_REG_OFFSET		0x0404
->  #define EXYNOS5_WDT_DISABLE_REG_OFFSET		0x0408
-> @@ -79,7 +79,7 @@
->
->  static bool nowayout	= WATCHDOG_NOWAYOUT;
->  static int tmr_margin;
-> -static int tmr_atboot	= CONFIG_S3C2410_WATCHDOG_ATBOOT;
-> +static int tmr_atboot	= S3C2410_WATCHDOG_ATBOOT;
->  static int soft_noboot;
->  static int debug;
->
-> @@ -90,10 +90,10 @@ module_param(soft_noboot, int, 0);
->  module_param(debug,	  int, 0);
->
->  MODULE_PARM_DESC(tmr_margin, "Watchdog tmr_margin in seconds. (default="
-> -		__MODULE_STRING(CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME) ")");
-> +		__MODULE_STRING(S3C2410_WATCHDOG_DEFAULT_TIME) ")");
->  MODULE_PARM_DESC(tmr_atboot,
->  		"Watchdog is started at boot time if set to 1, default="
-> -			__MODULE_STRING(CONFIG_S3C2410_WATCHDOG_ATBOOT));
-> +			__MODULE_STRING(S3C2410_WATCHDOG_ATBOOT));
->  MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
->  			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
->  MODULE_PARM_DESC(soft_noboot, "Watchdog action, set to 1 to ignore reboots, "
-> @@ -406,7 +406,7 @@ static struct watchdog_ops s3c2410wdt_ops = {
->  static struct watchdog_device s3c2410_wdd = {
->  	.info = &s3c2410_wdt_ident,
->  	.ops = &s3c2410wdt_ops,
-> -	.timeout = CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME,
-> +	.timeout = S3C2410_WATCHDOG_DEFAULT_TIME,
->  };
->
->  /* interrupt handler code */
-> @@ -600,12 +600,12 @@ static int s3c2410wdt_probe(struct platform_device *pdev)
->  					wdt->wdt_device.timeout);
->  	if (ret) {
->  		started = s3c2410wdt_set_heartbeat(&wdt->wdt_device,
-> -					CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME);
-> +					S3C2410_WATCHDOG_DEFAULT_TIME);
->
->  		if (started == 0)
->  			dev_info(dev,
->  			   "tmr_margin value out of range, default %d used\n",
-> -			       CONFIG_S3C2410_WATCHDOG_DEFAULT_TIME);
-> +			       S3C2410_WATCHDOG_DEFAULT_TIME);
->  		else
->  			dev_info(dev, "default timer value is out of range, "
->  							"cannot start\n");
->
+maxim,shunt-resistor-micro-ohms?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Although there is precedence for just 'shunt-resistor' in the ina2xx bindings.
