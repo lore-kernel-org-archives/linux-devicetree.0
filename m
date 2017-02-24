@@ -1,330 +1,383 @@
-Return-Path: <SRS0=0emD=ZR=linaro.org=baoyou.xie@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1486116655-24111-1-git-send-email-baoyou.xie@linaro.org>
-References: <1486116655-24111-1-git-send-email-baoyou.xie@linaro.org>
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Date: Sat, 4 Feb 2017 08:26:12 +0800
-Message-ID: <CA+DQWkx9JKat1BO=52ASXNKaf835Offt70cv8woEOe2KD98f9g@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] dt: bindings: add documentation for zx2967 family
- thermal sensor
-Content-Type: multipart/alternative; boundary=94eb2c0b0b9c16710d0547a97214
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, Jun Nie <jun.nie@linaro.org>, rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-pm@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Baoyou Xie <baoyou.xie@linaro.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+In-Reply-To: <87poim7md3.wl%kuninori.morimoto.gx@renesas.com>
+References: <87zihq7mja.wl%kuninori.morimoto.gx@renesas.com>
+	<87poim7md3.wl%kuninori.morimoto.gx@renesas.com>
+Date: Fri, 24 Feb 2017 08:45:15 -0600
+Message-ID: <CAL_JsqK8SL4XmAnHfMk3miNrLrWSw90ZPayNi-z3fkUxSz1Y+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] ASoC: add simple-graph-card support
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Simon <horms@verge.net.au>, Linux-DT <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---94eb2c0b0b9c16710d0547a97214
-Content-Type: text/plain; charset=UTF-8
-
-On 3 February 2017 at 18:10, Baoyou Xie <baoyou.xie@linaro.org> wrote:
-
-> This patch adds dt-binding documentation for zx2967 family thermal sensor.
+On Sun, Feb 12, 2017 at 10:23 PM, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote:
 >
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Shawn Guo <shawnguo@kernel.org>
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+>
+> OF-graph base DT binding are used on V4L2, and ALSA SoC is using
+> different style of DT today. Now ALSA SoC supports simple-card driver
+> for generic/simple sound card.
+> In the future, V4L2 / ALSA will support HDMI, and then, DT bindings
+> between V4L2 / ALSA should be merged.
+> This patch adds OF-graph base DT binding with simple-card style
+>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > ---
->  .../devicetree/bindings/thermal/zx2967-thermal.txt | 116
-> +++++++++++++++++++++
->  1 file changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/zx2967-
-> thermal.txt
+> v1 -> v2
 >
-> diff --git a/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
-> b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+>  - no change
+>
+>  sound/soc/generic/Kconfig             |   7 +
+>  sound/soc/generic/Makefile            |   2 +
+>  sound/soc/generic/simple-graph-card.c | 303 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 312 insertions(+)
+>  create mode 100644 sound/soc/generic/simple-graph-card.c
+>
+> diff --git a/sound/soc/generic/Kconfig b/sound/soc/generic/Kconfig
+> index d023959..efefabd 100644
+> --- a/sound/soc/generic/Kconfig
+> +++ b/sound/soc/generic/Kconfig
+> @@ -14,3 +14,10 @@ config SND_SIMPLE_SCU_CARD
+>         help
+>           This option enables generic simple SCU sound card support.
+>           It supports DPCM of multi CPU single Codec system.
+> +
+> +config SND_SIMPLE_GRAPH_CARD
+> +       tristate "ASoC Simple Graph sound card support"
+> +       depends on OF
+> +       select SND_SIMPLE_CARD_UTILS
+> +       help
+> +         This option enables generic simple Graph sound card support
+> diff --git a/sound/soc/generic/Makefile b/sound/soc/generic/Makefile
+> index ee750f3..94eb6f1 100644
+> --- a/sound/soc/generic/Makefile
+> +++ b/sound/soc/generic/Makefile
+> @@ -1,7 +1,9 @@
+>  snd-soc-simple-card-utils-objs := simple-card-utils.o
+>  snd-soc-simple-card-objs       := simple-card.o
+>  snd-soc-simple-scu-card-objs   := simple-scu-card.o
+> +snd-soc-simple-graph-card-objs := simple-graph-card.o
+>
+>  obj-$(CONFIG_SND_SIMPLE_CARD_UTILS)    += snd-soc-simple-card-utils.o
+>  obj-$(CONFIG_SND_SIMPLE_CARD)          += snd-soc-simple-card.o
+>  obj-$(CONFIG_SND_SIMPLE_SCU_CARD)      += snd-soc-simple-scu-card.o
+> +obj-$(CONFIG_SND_SIMPLE_GRAPH_CARD)    += snd-soc-simple-graph-card.o
+> diff --git a/sound/soc/generic/simple-graph-card.c b/sound/soc/generic/simple-graph-card.c
 > new file mode 100644
-> index 0000000..169a699
+> index 0000000..700717b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
-> @@ -0,0 +1,116 @@
-> +* ZTE zx2967 family Thermal
+> +++ b/sound/soc/generic/simple-graph-card.c
+> @@ -0,0 +1,303 @@
+> +/*
+> + * ASoC simple graph sound card support
+> + *
+> + * Copyright (C) 2016 Renesas Solutions Corp.
+> + * Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> + *
+> + * based on ${LINUX}/sound/soc/generic/simple-card.c
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/device.h>
+> +#include <linux/gpio.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/string.h>
+> +#include <sound/jack.h>
+> +#include <sound/simple_card_utils.h>
 > +
-> +Required Properties:
-> +- compatible: should be one of the following.
-> +    * zte,zx296718-thermal
-> +- reg: physical base address of the controller and length of memory mapped
-> +    region.
-> +- clocks : Pairs of phandle and specifier referencing the controller's
-> clocks.
-> +- clock-names: "gate" for the topcrm clock.
-> +              "pclk" for the apb clock.
-> +- #thermal-sensor-cells: must be 0.
+> +struct simple_card_data {
+> +       struct snd_soc_card snd_card;
+> +       struct simple_dai_props {
+> +               struct asoc_simple_dai cpu_dai;
+> +               struct asoc_simple_dai codec_dai;
+> +       } *dai_props;
+> +       struct snd_soc_dai_link *dai_link;
+> +};
 > +
-> +Please note: coefficients defined in thermal-zones section need to be
-> +multiplied by 1000.
+> +#define simple_priv_to_dev(priv) ((priv)->snd_card.dev)
+> +#define simple_priv_to_link(priv, i) ((priv)->snd_card.dai_link + (i))
+> +#define simple_priv_to_props(priv, i) ((priv)->dai_props + (i))
 > +
-> +Example for tempsensor:
+> +#define PREFIX "simple-audio-card,"
 > +
-> +       tempsensor: tempsensor@148a000 {
-> +               compatible = "zte,zx296718-thermal";
-> +               reg = <0x0148a000 0x20>;
-> +               clocks = <&topcrm TEMPSENSOR_GATE>, <&audiocrm
-> AUDIO_TS_PCLK>;
-> +               clock-names = "gate", "pclk";
-> +               #thermal-sensor-cells = <0>;
-> +       };
+> +static int asoc_simple_card_startup(struct snd_pcm_substream *substream)
+> +{
+> +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> +       struct simple_card_data *priv = snd_soc_card_get_drvdata(rtd->card);
+> +       struct simple_dai_props *dai_props =
+> +               simple_priv_to_props(priv, rtd->num);
+> +       int ret;
 > +
-> +Example for cooling device:
+> +       ret = clk_prepare_enable(dai_props->cpu_dai.clk);
+> +       if (ret)
+> +               return ret;
 > +
-> +       cooling_dev: cooling_dev {
-> +               cluster0_cooling_dev: cluster0-cooling-dev {
-> +                       #cooling-cells = <2>;
-> +                       cpumask = <0xf>;
-> +                       capacitance = <1500>;
-> +               };
+> +       ret = clk_prepare_enable(dai_props->codec_dai.clk);
+> +       if (ret)
+> +               clk_disable_unprepare(dai_props->cpu_dai.clk);
 > +
-> +       cluster1_cooling_dev: cluster1-cooling-dev {
-> +                       #cooling-cells = <2>;
-> +                       cpumask = <0x30>;
-> +                       capacitance = <2000>;
-> +               };
-> +       };
+> +       return ret;
+> +}
 > +
-> +Example for thermal zones:
+> +static void asoc_simple_card_shutdown(struct snd_pcm_substream *substream)
+> +{
+> +       struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> +       struct simple_card_data *priv = snd_soc_card_get_drvdata(rtd->card);
+> +       struct simple_dai_props *dai_props =
+> +               simple_priv_to_props(priv, rtd->num);
 > +
-> +       thermal-zones {
-> +               zx296718_thermal: zx296718_thermal {
-> +                       polling-delay-passive = <500>;
-> +                       polling-delay = <1000>;
-> +                       sustainable-power = <6500>;
+> +       clk_disable_unprepare(dai_props->cpu_dai.clk);
 > +
-> +                       thermal-sensors = <&tempsensor 0>;
-> +                       /*
-> +                        * both slope and offset need to be multiplied by
-> 1000.
-> +                        */
->
+> +       clk_disable_unprepare(dai_props->codec_dai.clk);
+> +}
+> +
+> +static struct snd_soc_ops asoc_simple_card_ops = {
+> +       .startup = asoc_simple_card_startup,
+> +       .shutdown = asoc_simple_card_shutdown,
+> +};
+> +
+> +static int asoc_simple_card_dai_init(struct snd_soc_pcm_runtime *rtd)
+> +{
+> +       struct simple_card_data *priv = snd_soc_card_get_drvdata(rtd->card);
+> +       struct snd_soc_dai *codec = rtd->codec_dai;
+> +       struct snd_soc_dai *cpu = rtd->cpu_dai;
+> +       struct simple_dai_props *dai_props =
+> +               simple_priv_to_props(priv, rtd->num);
+> +       int ret;
+> +
+> +       ret = asoc_simple_card_init_dai(codec, &dai_props->codec_dai);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = asoc_simple_card_init_dai(cpu, &dai_props->cpu_dai);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       return 0;
+> +}
+> +
+> +static int asoc_simple_card_dai_link_of(struct device_node *cpu_port,
 
-Sorry, this comment is invalid. only the slope field is be multiplied by
-1000. I will modify it in next patch.
+I think the sound card node should point to dai's rather than ports.
 
-Please go on to review.
+> +                                       struct simple_card_data *priv,
+> +                                       int idx)
+> +{
+> +       struct device *dev = simple_priv_to_dev(priv);
+> +       struct snd_soc_dai_link *dai_link = simple_priv_to_link(priv, idx);
+> +       struct simple_dai_props *dai_props = simple_priv_to_props(priv, idx);
+> +       struct asoc_simple_dai *cpu_dai = &dai_props->cpu_dai;
+> +       struct asoc_simple_dai *codec_dai = &dai_props->codec_dai;
+> +       struct device_node *cpu_ep    = of_get_next_child(cpu_port, NULL);
+> +       struct device_node *codec_ep = of_graph_get_remote_endpoint(cpu_ep);
+> +       struct device_node *rcpu_ep = of_graph_get_remote_endpoint(codec_ep);
+> +       int ret;
+> +
+> +       if (rcpu_ep != cpu_ep) {
 
+You don't need this check. The kernel's job is not DT validation.
 
-> +                       coefficients = <1951 (-922)>;
+> +               dev_err(dev, "remote-endpoint missmatch (%s/%s/%s)\n",
+> +                       cpu_ep->name, codec_ep->name, rcpu_ep->name);
+> +               return -EINVAL;
+> +       }
 > +
-> +                       trips {
-> +                               trip0: switch_on_temperature {
-> +                                       temperature = <90000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
+> +       ret = asoc_simple_card_parse_daifmt(dev, cpu_ep, codec_ep,
+> +                                           PREFIX, &dai_link->dai_fmt);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                               trip1: desired_temperature {
-> +                                       temperature = <100000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
+> +       /*
+> +        * we need to consider "mclk-fs" around here
+> +        * see simple-card
+> +        */
 > +
-> +                               crit: critical_temperature {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
+> +       ret = asoc_simple_card_parse_graph_cpu(cpu_ep, dai_link);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                       cooling-maps {
-> +                               map0 {
-> +                                       trip = <&trip0>;
-> +                                       cooling-device = <&gpu 2 5>;
-> +                               };
+> +       ret = asoc_simple_card_parse_graph_codec(codec_ep, dai_link);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                               map1 {
-> +                                       trip = <&trip0>;
-> +                                       cooling-device =
-> <&cluster0_cooling_dev 1 2>;
-> +                               };
+> +       ret = snd_soc_of_parse_tdm_slot(cpu_ep,
+> +                                       &cpu_dai->tx_slot_mask,
+> +                                       &cpu_dai->rx_slot_mask,
+> +                                       &cpu_dai->slots,
+> +                                       &cpu_dai->slot_width);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                               map2 {
-> +                                       trip = <&trip1>;
-> +                                       cooling-device =
-> <&cluster0_cooling_dev 1 2>;
-> +                               };
+> +       ret = snd_soc_of_parse_tdm_slot(codec_ep,
+> +                                       &codec_dai->tx_slot_mask,
+> +                                       &codec_dai->rx_slot_mask,
+> +                                       &codec_dai->slots,
+> +                                       &codec_dai->slot_width);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                               map3 {
-> +                                       trip = <&crit>;
-> +                                       cooling-device =
-> <&cluster0_cooling_dev 1 2>;
-> +                               };
+> +       ret = asoc_simple_card_parse_clk_cpu(dev, cpu_ep, dai_link, cpu_dai);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                               map4 {
-> +                                       trip = <&trip0>;
-> +                                       cooling-device =
-> <&cluster1_cooling_dev 1 2>;
-> +                                       contribution = <9000>;
-> +                               };
+> +       ret = asoc_simple_card_parse_clk_codec(dev, codec_ep, dai_link, codec_dai);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                               map5 {
-> +                                       trip = <&trip1>;
-> +                                       cooling-device =
-> <&cluster1_cooling_dev 1 2>;
-> +                                       contribution = <4096>;
-> +                               };
+> +       ret = asoc_simple_card_canonicalize_dailink(dai_link);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
 > +
-> +                               map6 {
-> +                                       trip = <&crit>;
-> +                                       cooling-device =
-> <&cluster1_cooling_dev 1 2>;
-> +                                       contribution = <4096>;
-> +                               };
-> +                       };
-> +               };
-> +       };
+> +       ret = asoc_simple_card_set_dailink_name(dev, dai_link,
+> +                                               "%s-%s",
+> +                                               dai_link->cpu_dai_name,
+> +                                               dai_link->codec_dai_name);
+> +       if (ret < 0)
+> +               goto dai_link_of_err;
+> +
+> +       dai_link->ops = &asoc_simple_card_ops;
+> +       dai_link->init = asoc_simple_card_dai_init;
+> +
+> +       dev_dbg(dev, "\tname : %s\n", dai_link->stream_name);
+> +       dev_dbg(dev, "\tformat : %04x\n", dai_link->dai_fmt);
+> +       dev_dbg(dev, "\tcpu : %s / %d\n",
+> +               dai_link->cpu_dai_name,
+> +               dai_props->cpu_dai.sysclk);
+> +       dev_dbg(dev, "\tcodec : %s / %d\n",
+> +               dai_link->codec_dai_name,
+> +               dai_props->codec_dai.sysclk);
+> +
+> +       asoc_simple_card_canonicalize_cpu(dai_link,
+> +                                         priv->snd_card.num_links == 1);
+> +
+> +dai_link_of_err:
+> +       of_node_put(codec_ep);
+> +
+> +       return ret;
+> +}
+> +
+> +static int asoc_simple_card_parse_of(struct device *dev,
+> +                                    struct simple_card_data *priv)
+> +{
+> +       struct device_node *node = dev->of_node;
+> +       struct snd_soc_card *card = &priv->snd_card;
+> +       struct device_node *np;
+> +       int idx = 0;
+> +       int ret;
+> +
+> +       /*
+> +        * we need to consider "widgets", "routing", "mclk-fs" around here
+> +        * see simple-card
+> +        */
+> +
+> +       while ((np = of_parse_phandle(node, "dais", idx))) {
+> +               ret = asoc_simple_card_dai_link_of(np, priv, idx++);
+> +               if (ret < 0)
+> +                       return ret;
+> +       }
+> +
+> +       return asoc_simple_card_parse_card_name(card, PREFIX);
+> +}
+> +
+> +static int asoc_simple_get_dais_count(struct device *dev)
+> +{
+> +       struct device_node *node = dev->of_node;
+> +       int count = 0;
+> +
+> +       if (of_get_property(node, "dais", NULL)) {
+> +               while (of_parse_phandle(node, "dais", count))
+> +                       count++;
+> +       } else {
+> +               count = 1;
+> +       }
+> +
+> +       return count;
+> +}
+> +
+> +static int asoc_simple_card_probe(struct platform_device *pdev)
+> +{
+> +       struct simple_card_data *priv;
+> +       struct snd_soc_dai_link *dai_link;
+> +       struct simple_dai_props *dai_props;
+> +       struct device *dev = &pdev->dev;
+> +       int num, ret;
+> +
+> +       /* Allocate the private data and the DAI link array */
+> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       num = asoc_simple_get_dais_count(dev);
+> +
+> +       dai_props = devm_kzalloc(dev, sizeof(*dai_props) * num, GFP_KERNEL);
+> +       dai_link  = devm_kzalloc(dev, sizeof(*dai_link)  * num, GFP_KERNEL);
+> +       if (!dai_props || !dai_link)
+> +               return -ENOMEM;
+> +
+> +       priv->dai_props                 = dai_props;
+> +       priv->dai_link                  = dai_link;
+> +
+> +       /* Init snd_soc_card */
+> +       priv->snd_card.owner            = THIS_MODULE;
+> +       priv->snd_card.dev              = dev;
+> +       priv->snd_card.dai_link         = dai_link;
+> +       priv->snd_card.num_links        = num;
+> +
+> +       ret = asoc_simple_card_parse_of(dev, priv);
+> +       if (ret < 0) {
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(dev, "parse error %d\n", ret);
+> +               goto err;
+> +       }
+> +
+> +       snd_soc_card_set_drvdata(&priv->snd_card, priv);
+> +
+> +       ret = devm_snd_soc_register_card(dev, &priv->snd_card);
+> +       if (ret >= 0)
+> +               return ret;
+> +err:
+> +       asoc_simple_card_clean_reference(&priv->snd_card);
+> +
+> +       return ret;
+> +}
+> +
+> +static int asoc_simple_card_remove(struct platform_device *pdev)
+> +{
+> +       struct snd_soc_card *card = platform_get_drvdata(pdev);
+> +       struct simple_card_data *priv = snd_soc_card_get_drvdata(card);
+> +
+> +       return asoc_simple_card_clean_reference(&priv->snd_card);
+> +}
+> +
+> +static const struct of_device_id asoc_simple_of_match[] = {
+> +       { .compatible = "asoc-simple-graph-card", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, asoc_simple_of_match);
+> +
+> +static struct platform_driver asoc_simple_card = {
+> +       .driver = {
+> +               .name = "asoc-simple-graph-card",
+> +               .of_match_table = asoc_simple_of_match,
+> +       },
+> +       .probe = asoc_simple_card_probe,
+> +       .remove = asoc_simple_card_remove,
+> +};
+> +module_platform_driver(asoc_simple_card);
+> +
+> +MODULE_ALIAS("platform:asoc-simple-graph-card");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("ASoC Simple Graph Sound Card");
+> +MODULE_AUTHOR("Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>");
 > --
-> 2.7.4
+> 1.9.1
 >
->
-
---94eb2c0b0b9c16710d0547a97214
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: base64
-
-PGRpdiBkaXI9Imx0ciI+PGJyPjxkaXYgY2xhc3M9ImdtYWlsX2V4dHJhIj48YnI+PGRpdiBjbGFz
-cz0iZ21haWxfcXVvdGUiPk9uIDMgRmVicnVhcnkgMjAxNyBhdCAxODoxMCwgQmFveW91IFhpZSA8
-c3BhbiBkaXI9Imx0ciI+Jmx0OzxhIGhyZWY9Im1haWx0bzpiYW95b3UueGllQGxpbmFyby5vcmci
-IHRhcmdldD0iX2JsYW5rIj5iYW95b3UueGllQGxpbmFyby5vcmc8L2E+Jmd0Ozwvc3Bhbj4gd3Jv
-dGU6PGJyPjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90ZSIgc3R5bGU9Im1hcmdpbjowcHgg
-MHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQgcmdiKDIwNCwyMDQsMjA0KTtwYWRk
-aW5nLWxlZnQ6MWV4Ij5UaGlzIHBhdGNoIGFkZHMgZHQtYmluZGluZyBkb2N1bWVudGF0aW9uIGZv
-ciB6eDI5NjcgZmFtaWx5IHRoZXJtYWwgc2Vuc29yLjxicj4NCjxicj4NClNpZ25lZC1vZmYtYnk6
-IEJhb3lvdSBYaWUgJmx0OzxhIGhyZWY9Im1haWx0bzpiYW95b3UueGllQGxpbmFyby5vcmciPmJh
-b3lvdS54aWVAbGluYXJvLm9yZzwvYT4mZ3Q7PGJyPg0KQWNrZWQtYnk6IFJvYiBIZXJyaW5nICZs
-dDs8YSBocmVmPSJtYWlsdG86cm9iaEBrZXJuZWwub3JnIj5yb2JoQGtlcm5lbC5vcmc8L2E+Jmd0
-Ozxicj4NClJldmlld2VkLWJ5OiBTaGF3biBHdW8gJmx0OzxhIGhyZWY9Im1haWx0bzpzaGF3bmd1
-b0BrZXJuZWwub3JnIj5zaGF3bmd1b0BrZXJuZWwub3JnPC9hPiZndDs8YnI+DQotLS08YnI+DQrC
-oC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzLzx3YnI+dGhlcm1hbC96eDI5NjctdGhlcm1hbC50eHQg
-fCAxMTYgKysrKysrKysrKysrKysrKysrKysrPGJyPg0KwqAxIGZpbGUgY2hhbmdlZCwgMTE2IGlu
-c2VydGlvbnMoKyk8YnI+DQrCoGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvPHdicj5iaW5kaW5ncy90aGVybWFsL3p4Mjk2Ny08d2JyPnRoZXJtYWwudHh0PGJyPg0K
-PGJyPg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS88d2JyPmJpbmRpbmdz
-L3RoZXJtYWwvengyOTY3LTx3YnI+dGhlcm1hbC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvPHdicj5iaW5kaW5ncy90aGVybWFsL3p4Mjk2Ny08d2JyPnRoZXJtYWwudHh0PGJyPg0KbmV3
-IGZpbGUgbW9kZSAxMDA2NDQ8YnI+DQppbmRleCAwMDAwMDAwLi4xNjlhNjk5PGJyPg0KLS0tIC9k
-ZXYvbnVsbDxicj4NCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS88d2JyPmJpbmRpbmdz
-L3RoZXJtYWwvengyOTY3LTx3YnI+dGhlcm1hbC50eHQ8YnI+DQpAQCAtMCwwICsxLDExNiBAQDxi
-cj4NCisqIFpURSB6eDI5NjcgZmFtaWx5IFRoZXJtYWw8YnI+DQorPGJyPg0KK1JlcXVpcmVkIFBy
-b3BlcnRpZXM6PGJyPg0KKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93
-aW5nLjxicj4NCivCoCDCoCAqIHp0ZSx6eDI5NjcxOC10aGVybWFsPGJyPg0KKy0gcmVnOiBwaHlz
-aWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIgYW5kIGxlbmd0aCBvZiBtZW1vcnkg
-bWFwcGVkPGJyPg0KK8KgIMKgIHJlZ2lvbi48YnI+DQorLSBjbG9ja3MgOiBQYWlycyBvZiBwaGFu
-ZGxlIGFuZCBzcGVjaWZpZXIgcmVmZXJlbmNpbmcgdGhlIGNvbnRyb2xsZXImIzM5O3MgY2xvY2tz
-Ljxicj4NCistIGNsb2NrLW5hbWVzOiAmcXVvdDtnYXRlJnF1b3Q7IGZvciB0aGUgdG9wY3JtIGNs
-b2NrLjxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCAmcXVvdDtwY2xrJnF1b3Q7IGZvciB0aGUg
-YXBiIGNsb2NrLjxicj4NCistICN0aGVybWFsLXNlbnNvci1jZWxsczogbXVzdCBiZSAwLjxicj4N
-Cis8YnI+DQorUGxlYXNlIG5vdGU6IGNvZWZmaWNpZW50cyBkZWZpbmVkIGluIHRoZXJtYWwtem9u
-ZXMgc2VjdGlvbiBuZWVkIHRvIGJlPGJyPg0KK211bHRpcGxpZWQgYnkgMTAwMC48YnI+DQorPGJy
-Pg0KK0V4YW1wbGUgZm9yIHRlbXBzZW5zb3I6PGJyPg0KKzxicj4NCivCoCDCoCDCoCDCoHRlbXBz
-ZW5zb3I6IHRlbXBzZW5zb3JAMTQ4YTAwMCB7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-Y29tcGF0aWJsZSA9ICZxdW90O3p0ZSx6eDI5NjcxOC10aGVybWFsJnF1b3Q7Ozxicj4NCivCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoHJlZyA9ICZsdDsweDAxNDhhMDAwIDB4MjAmZ3Q7Ozxicj4NCivC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNsb2NrcyA9ICZsdDsmYW1wO3RvcGNybSBURU1QU0VOU09S
-X0dBVEUmZ3Q7LCAmbHQ7JmFtcDthdWRpb2NybSBBVURJT19UU19QQ0xLJmd0Ozs8YnI+DQorwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqBjbG9jay1uYW1lcyA9ICZxdW90O2dhdGUmcXVvdDssICZxdW90
-O3BjbGsmcXVvdDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgI3RoZXJtYWwtc2Vuc29y
-LWNlbGxzID0gJmx0OzAmZ3Q7Ozxicj4NCivCoCDCoCDCoCDCoH07PGJyPg0KKzxicj4NCitFeGFt
-cGxlIGZvciBjb29saW5nIGRldmljZTo8YnI+DQorPGJyPg0KK8KgIMKgIMKgIMKgY29vbGluZ19k
-ZXY6IGNvb2xpbmdfZGV2IHs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjbHVzdGVyMF9j
-b29saW5nX2RldjogY2x1c3RlcjAtY29vbGluZy1kZXYgezxicj4NCivCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCNjb29saW5nLWNlbGxzID0gJmx0OzImZ3Q7Ozxicj4NCivCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNwdW1hc2sgPSAmbHQ7MHhmJmd0Ozs8YnI+
-DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjYXBhY2l0YW5jZSA9ICZsdDsx
-NTAwJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB9Ozxicj4NCis8YnI+DQorwqAg
-wqAgwqAgwqBjbHVzdGVyMV9jb29saW5nX2RldjogY2x1c3RlcjEtY29vbGluZy1kZXYgezxicj4N
-CivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCNjb29saW5nLWNlbGxzID0gJmx0
-OzImZ3Q7Ozxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNwdW1hc2sg
-PSAmbHQ7MHgzMCZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-Y2FwYWNpdGFuY2UgPSAmbHQ7MjAwMCZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-fTs8YnI+DQorwqAgwqAgwqAgwqB9Ozxicj4NCis8YnI+DQorRXhhbXBsZSBmb3IgdGhlcm1hbCB6
-b25lczo8YnI+DQorPGJyPg0KK8KgIMKgIMKgIMKgdGhlcm1hbC16b25lcyB7PGJyPg0KK8KgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgengyOTY3MThfdGhlcm1hbDogengyOTY3MThfdGhlcm1hbCB7PGJy
-Pg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgcG9sbGluZy1kZWxheS1wYXNz
-aXZlID0gJmx0OzUwMCZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgcG9sbGluZy1kZWxheSA9ICZsdDsxMDAwJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqBzdXN0YWluYWJsZS1wb3dlciA9ICZsdDs2NTAwJmd0Ozs8YnI+DQor
-PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdGhlcm1hbC1zZW5zb3Jz
-ID0gJmx0OyZhbXA7dGVtcHNlbnNvciAwJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAvKjxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCAqIGJvdGggc2xvcGUgYW5kIG9mZnNldCBuZWVkIHRvIGJlIG11bHRpcGxpZWQgYnkgMTAwMC48
-YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgKi88YnI+PC9ibG9ja3F1
-b3RlPjxkaXY+PGJyPjwvZGl2PjxkaXY+U29ycnksIHRoaXMgY29tbWVudCBpcyBpbnZhbGlkLiBv
-bmx5IHRoZSBzbG9wZSBmaWVsZCBpcyBiZSBtdWx0aXBsaWVkIGJ5IDEwMDAuIEkgd2lsbCBtb2Rp
-ZnkgaXQgaW4gbmV4dCBwYXRjaC48YnI+PGJyPjwvZGl2PjxkaXY+UGxlYXNlIGdvIG9uIHRvIHJl
-dmlldy48YnI+PC9kaXY+PGRpdj7CoDwvZGl2PjxibG9ja3F1b3RlIGNsYXNzPSJnbWFpbF9xdW90
-ZSIgc3R5bGU9Im1hcmdpbjowcHggMHB4IDBweCAwLjhleDtib3JkZXItbGVmdDoxcHggc29saWQg
-cmdiKDIwNCwyMDQsMjA0KTtwYWRkaW5nLWxlZnQ6MWV4Ij4NCivCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoGNvZWZmaWNpZW50cyA9ICZsdDsxOTUxICgtOTIyKSZndDs7PGJyPg0K
-Kzxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHRyaXBzIHs8YnI+DQor
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB0cmlwMDogc3dp
-dGNoX29uX3RlbXBlcmF0dXJlIHs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB0ZW1wZXJhdHVyZSA9ICZsdDs5MDAwMCZndDs7
-PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgaHlzdGVyZXNpcyA9ICZsdDsyMDAwJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB0eXBlID0gJnF1b3Q7
-cGFzc2l2ZSZxdW90Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqB9Ozxicj4NCis8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqB0cmlwMTogZGVzaXJlZF90ZW1wZXJhdHVyZSB7PGJyPg0KK8KgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdGVt
-cGVyYXR1cmUgPSAmbHQ7MTAwMDAwJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBoeXN0ZXJlc2lzID0gJmx0OzIwMDAm
-Z3Q7Ozxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoHR5cGUgPSAmcXVvdDtwYXNzaXZlJnF1b3Q7Ozxicj4NCivCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoH07PGJyPg0KKzxicj4NCivCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNyaXQ6IGNyaXRpY2Fs
-X3RlbXBlcmF0dXJlIHs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB0ZW1wZXJhdHVyZSA9ICZsdDsxMTAwMDAmZ3Q7Ozxicj4N
-CivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoGh5c3RlcmVzaXMgPSAmbHQ7MjAwMCZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdHlwZSA9ICZxdW90O2NyaXRp
-Y2FsJnF1b3Q7Ozxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoH07PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+
-DQorPGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY29vbGluZy1tYXBz
-IHs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBt
-YXAwIHs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqB0cmlwID0gJmx0OyZhbXA7dHJpcDAmZ3Q7Ozxicj4NCivCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoGNvb2xpbmct
-ZGV2aWNlID0gJmx0OyZhbXA7Z3B1IDIgNSZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+DQorPGJyPg0KK8KgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgbWFwMSB7PGJyPg0KK8KgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdHJpcCA9ICZs
-dDsmYW1wO3RyaXAwJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb29saW5nLWRldmljZSA9ICZsdDsmYW1wO2NsdXN0
-ZXIwX2Nvb2xpbmdfZGV2IDEgMiZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+DQorPGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgbWFwMiB7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdHJpcCA9ICZsdDsmYW1w
-O3RyaXAxJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqBjb29saW5nLWRldmljZSA9ICZsdDsmYW1wO2NsdXN0ZXIwX2Nv
-b2xpbmdfZGV2IDEgMiZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgfTs8YnI+DQorPGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgbWFwMyB7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgdHJpcCA9ICZsdDsmYW1wO2NyaXQm
-Z3Q7Ozxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoGNvb2xpbmctZGV2aWNlID0gJmx0OyZhbXA7Y2x1c3RlcjBfY29vbGluZ19k
-ZXYgMSAyJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqB9Ozxicj4NCis8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqBtYXA0IHs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqB0cmlwID0gJmx0OyZhbXA7dHJpcDAmZ3Q7Ozxi
-cj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoGNvb2xpbmctZGV2aWNlID0gJmx0OyZhbXA7Y2x1c3RlcjFfY29vbGluZ19kZXYgMSAy
-Jmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqBjb250cmlidXRpb24gPSAmbHQ7OTAwMCZndDs7PGJyPg0KK8KgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+DQorPGJyPg0KK8Kg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgbWFwNSB7PGJyPg0K
-K8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgdHJpcCA9ICZsdDsmYW1wO3RyaXAxJmd0Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqBjb29saW5nLWRldmljZSA9ICZs
-dDsmYW1wO2NsdXN0ZXIxX2Nvb2xpbmdfZGV2IDEgMiZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgY29udHJpYnV0aW9u
-ID0gJmx0OzQwOTYmZ3Q7Ozxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoH07PGJyPg0KKzxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoG1hcDYgezxicj4NCivCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoHRyaXAgPSAmbHQ7JmFtcDtjcml0Jmd0
-Ozs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqAgwqAgwqBjb29saW5nLWRldmljZSA9ICZsdDsmYW1wO2NsdXN0ZXIxX2Nvb2xpbmdfZGV2
-IDEgMiZndDs7PGJyPg0KK8KgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgY29udHJpYnV0aW9uID0gJmx0OzQwOTYmZ3Q7Ozxicj4NCivCoCDC
-oCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoCDCoH07PGJyPg0KK8KgIMKg
-IMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgIMKgfTs8YnI+DQorwqAgwqAgwqAgwqAgwqAgwqAg
-wqAgwqB9Ozxicj4NCivCoCDCoCDCoCDCoH07PGJyPg0KPHNwYW4gY2xhc3M9ImdtYWlsLUhPRW5a
-YiI+PGZvbnQgY29sb3I9IiM4ODg4ODgiPi0tPGJyPg0KMi43LjQ8YnI+DQo8YnI+DQo8L2ZvbnQ+
-PC9zcGFuPjwvYmxvY2txdW90ZT48L2Rpdj48YnI+PC9kaXY+PC9kaXY+DQo=
---94eb2c0b0b9c16710d0547a97214--
