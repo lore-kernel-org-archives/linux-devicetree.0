@@ -1,89 +1,113 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v1 3/3] extcon: int3496: Add GPIO ACPI mapping table
-Date: Fri, 24 Feb 2017 10:30:43 +0900
-Message-ID: <58AF8CC3.7080703@samsung.com>
-References: <20170223103156.109643-1-andriy.shevchenko@linux.intel.com>
- <CGME20170223103233epcas2p1c4c914cb79395704d8fce85e2b23f43d@epcas2p1.samsung.com>
- <20170223103156.109643-3-andriy.shevchenko@linux.intel.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH linux v8 0/6] drivers: hwmon: Add On-Chip Controller
+ driver
+Date: Thu, 23 Feb 2017 18:42:41 -0800
+Message-ID: <20170224024241.GA25676@roeck-us.net>
+References: <1487104463-4253-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <OF68CFA9BA.DAF80746-ON002580D0.007C5BAD-862580D0.007CD16A@notes.na.collabserv.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170223103156.109643-3-andriy.shevchenko@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, David Cohen <david.a.cohen@intel.com>, Felipe Balbi <balbi@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <OF68CFA9BA.DAF80746-ON002580D0.007C5BAD-862580D0.007CD16A@notes.na.collabserv.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Edward James <eajames@us.ibm.com>
+Cc: andrew@aj.id.au, benh@kernel.crashing.org, corbet@lwn.net, devicetree@vger.kernel.org, jdelvare@suse.com, joel@jms.id.a, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 2017년 02월 23일 19:31, Andy Shevchenko wrote:
-> In order to make GPIO ACPI library stricter prepare users of
-> gpiod_get_index() to correctly behave when there no mapping is
-> provided by firmware.
+On Thu, Feb 23, 2017 at 04:43:20PM -0600, Edward James wrote:
+> Hi Guenter,
 > 
-> Here we add explicit mapping between _CRS GpioIo() resources and
-> their names used in the driver.
+> Any thoughts on this patch set? Others welcome to chime in too.
 > 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/extcon/extcon-intel-int3496.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+Sorry, I have been busy. Weekend or next week, hopefully.
+
+Guenter
+
+> Thanks,
+> Eddie
 > 
-> diff --git a/drivers/extcon/extcon-intel-int3496.c b/drivers/extcon/extcon-intel-int3496.c
-> index 81713bf7487e..1abe9071d9d0 100644
-> --- a/drivers/extcon/extcon-intel-int3496.c
-> +++ b/drivers/extcon/extcon-intel-int3496.c
-> @@ -45,6 +45,17 @@ static const unsigned int int3496_cable[] = {
->  	EXTCON_NONE,
->  };
->  
-> +static const struct acpi_gpio_params id_gpios = { INT3496_GPIO_USB_ID, 0, false };
-> +static const struct acpi_gpio_params vbus_gpios = { INT3496_GPIO_VBUS_EN, 0, false };
-> +static const struct acpi_gpio_params mux_gpios = { INT3496_GPIO_USB_MUX, 0, false };
-> +
-> +static const struct acpi_gpio_mapping acpi_int3496_default_gpios[] = {
-> +	{ "id-gpios", &id_gpios, 1 },
-> +	{ "vbus-gpios", &vbus_gpios, 1 },
-> +	{ "mux-gpios", &mux_gpios, 1 },
-> +	{ },
-> +};
-> +
->  static void int3496_do_usb_id(struct work_struct *work)
->  {
->  	struct int3496_data *data =
-> @@ -83,6 +94,13 @@ static int int3496_probe(struct platform_device *pdev)
->  	struct int3496_data *data;
->  	int ret;
->  
-> +	ret = acpi_dev_add_driver_gpios(ACPI_COMPANION(dev),
-> +					acpi_int3496_default_gpios);
-> +	if (ret) {
-> +		dev_err(dev, "can't add GPIO ACPI mapping\n");
-> +		return ret;
-> +	}
-> +
->  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
->  	if (!data)
->  		return -ENOMEM;
-> @@ -154,6 +172,7 @@ static int int3496_remove(struct platform_device *pdev)
->  	devm_free_irq(&pdev->dev, data->usb_id_irq, data);
->  	cancel_delayed_work_sync(&data->work);
->  
-> +	acpi_dev_remove_driver_gpios(ACPI_COMPANION(&pdev->dev));
-
-Need to add the one blank line.
-
->  	return 0;
->  }
->  
-
-Looks good to me.
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-
-This patch depends on the patch2. So, after resending the v2,
-I'll merge them if there is no problem.
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+> Eddie James <eajames@linux.vnet.ibm.com> wrote on 02/14/2017 02:34:17 PM:
+> 
+> > From: Eddie James <eajames@linux.vnet.ibm.com>
+> > To: linux@roeck-us.net
+> > Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-
+> > hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com,
+> > corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-
+> > dreams.de, andrew@aj.id.au, benh@kernel.crashing.org,
+> > joel@jms.id.au, Edward James/Austin/IBM@IBMUS
+> > Date: 02/14/2017 02:34 PM
+> > Subject: [PATCH linux v8 0/6] drivers: hwmon: Add On-Chip Controller
+> driver
+> >
+> > From: "Edward A. James" <eajames@us.ibm.com>
+> >
+> > This patchset adds a hwmon driver to support the OCC (On-Chip Controller)
+> > on the IBM POWER8 and POWER9 processors, from a BMC (Baseboard Management
+> > Controller). The OCC is an embedded processor that provides real time
+> > power and thermal monitoring.
+> >
+> > The driver provides an interface on a BMC to poll OCC sensor data, set
+> > user power caps, and perform some basic OCC error handling. It interfaces
+> > with userspace through hwmon.
+> >
+> > The driver is currently functional only for the OCC on POWER8 chips.
+> > Communicating with the POWER9 OCC requries FSI support.
+> >
+> > Since v7:
+> >  * change Makefile and Kconfig to build a single module for the driver
+> >  * include p9 file in build
+> >  * change Kconfig from "PPC" to "IBM"
+> >  * remove EXPORT_SYMBOL
+> >  * bundle occ_config and occ_ops structures into occ_init_data structure
+> >  * few style tweaks suggested by Joel
+> >
+> > Edward A. James (6):
+> >   hwmon: Add core On-Chip Controller support for POWER CPUs
+> >   hwmon: occ: Add sysfs interface
+> >   hwmon: occ: Add I2C transport implementation for SCOM operations
+> >   hwmon: occ: Add callbacks for parsing P8 OCC datastructures
+> >   hwmon: occ: Add hwmon implementation for the P8 OCC
+> >   hwmon: occ: Add callbacks for parsing P9 OCC datastructures
+> >
+> >  Documentation/devicetree/bindings/hwmon/occ.txt |  13 +
+> >  Documentation/hwmon/occ                         | 116 +++++++
+> >  MAINTAINERS                                     |   7 +
+> >  drivers/hwmon/Kconfig                           |   2 +
+> >  drivers/hwmon/Makefile                          |   1 +
+> >  drivers/hwmon/occ/Kconfig                       |  39 +++
+> >  drivers/hwmon/occ/Makefile                      |   5 +
+> >  drivers/hwmon/occ/occ.c                         | 440 +++++++++++++
+> > +++++++++++
+> >  drivers/hwmon/occ/occ.h                         |  77 +++++
+> >  drivers/hwmon/occ/occ_p8.c                      | 256 ++++++++++++++
+> >  drivers/hwmon/occ/occ_p8.h                      |  25 ++
+> >  drivers/hwmon/occ/occ_p8_i2c.c                  |  99 ++++++
+> >  drivers/hwmon/occ/occ_p9.c                      | 320 +++++++++++++++++
+> >  drivers/hwmon/occ/occ_p9.h                      |  25 ++
+> >  drivers/hwmon/occ/occ_scom_i2c.c                |  69 ++++
+> >  drivers/hwmon/occ/occ_scom_i2c.h                |  21 ++
+> >  drivers/hwmon/occ/occ_sysfs.c                   | 245 +++++++++++++
+> >  drivers/hwmon/occ/occ_sysfs.h                   |  25 ++
+> >  drivers/hwmon/occ/scom.h                        |  42 +++
+> >  19 files changed, 1827 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+> >  create mode 100644 Documentation/hwmon/occ
+> >  create mode 100644 drivers/hwmon/occ/Kconfig
+> >  create mode 100644 drivers/hwmon/occ/Makefile
+> >  create mode 100644 drivers/hwmon/occ/occ.c
+> >  create mode 100644 drivers/hwmon/occ/occ.h
+> >  create mode 100644 drivers/hwmon/occ/occ_p8.c
+> >  create mode 100644 drivers/hwmon/occ/occ_p8.h
+> >  create mode 100644 drivers/hwmon/occ/occ_p8_i2c.c
+> >  create mode 100644 drivers/hwmon/occ/occ_p9.c
+> >  create mode 100644 drivers/hwmon/occ/occ_p9.h
+> >  create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
+> >  create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+> >  create mode 100644 drivers/hwmon/occ/occ_sysfs.c
+> >  create mode 100644 drivers/hwmon/occ/occ_sysfs.h
+> >  create mode 100644 drivers/hwmon/occ/scom.h
+> >
+> > --
+> > 1.8.3.1
+> >
