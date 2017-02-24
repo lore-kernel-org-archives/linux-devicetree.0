@@ -1,152 +1,68 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: media / serial_ir: BUG: unable to handle kernel NULL pointer
- dereference at 0000039c
-Date: Fri, 24 Feb 2017 11:19:34 -0800
-Message-ID: <CA+55aFxsh2uF8gi5sN_guY3Z+tiLv7LpJYKBw+y8vqLzp+TsnQ@mail.gmail.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
+Date: Fri, 24 Feb 2017 19:46:39 +0000
+Message-ID: <EA621197-929A-43D7-8E77-21991975F75E@jic23.retrosnub.co.uk>
+References: <cover.1487757223.git.eraretuya@gmail.com> <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com> <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com> <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de> <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA@mail.gmail.com> <20170224091231.GC5012@Socrates-UM> <13912e47-1e3e-e68e-1e91-4a174f33fda5@metafoo.de> <CAHp75VfnnCe40V9k9zqyt4rkUYHgTDjfJ-y2qNV7SCxpLqhOtg@mail.gmail.com> <20170224143033.GD5012@Socrates-UM>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: kernel test robot <fengguang.wu@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, Sean Young <sean@mess.org>, Ruslan Ruslichenko <rruslich@cisco.com>
-Cc: LKP <lkp@01.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, kernel@stlinux.com, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, wfg@linux.intel.com
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170224143033.GD5012@Socrates-UM>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eva Rachel Retuya <eraretuya@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, resending with a less broken subject line that doesn't talk
-about anti-virus scanning failures.  I almost ignored the original
-email due to the crazy subject line.
 
-So if you get this twice, don't worry. It's all the same thing, just
-quoted and subject line cleaned up.
 
-                 Linus
+On 24 February 2017 14:30:35 GMT+00:00, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
+>On Fri, Feb 24, 2017 at 01:48:39PM +0200, Andy Shevchenko wrote:
+>> On Fri, Feb 24, 2017 at 11:22 AM, Lars-Peter Clausen
+><lars@metafoo.de> wrote:
+>> > On 02/24/2017 10:12 AM, Eva Rachel Retuya wrote:
+>> >> On Thu, Feb 23, 2017 at 06:58:12PM +0200, Andy Shevchenko wrote:
+>> >>> On Thu, Feb 23, 2017 at 6:47 PM, Lars-Peter Clausen
+><lars@metafoo.de> wrote:
+>> >>>> On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
+>> >>>>> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya
+><eraretuya@gmail.com> wrote:
+>> 
+>> >> I'll revert to the explicit SPI/I2C pattern in order to give more
+>> >> freedom in configuring as per the scenarios previously stated.
+>> >
+>> > Please check with Jonathan before you do, in the end he'll have to
+>apply the
+>> > patch.
+>> 
+>> +1. I will be fine with either just need to make sure maintainer
+>> understands pros and cons.
+>> 
+>
+>OK.
+>
+>Jonathan, please let me know whether to continue with your preferred
+>configuration or go with the "explicit" pattern that was discussed
+>here.
+>
+Have lost track. Will catch up with thread tomorrow and get back to you.
 
-On Fri, Feb 24, 2017 at 11:15 AM, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> Added more relevant people. I've debugged the immediate problem below,
-> but I think there's another problem that actually triggered this.
+J
+>Thanks,
+>Eva
 >
-> On Fri, Feb 24, 2017 at 10:28 AM, kernel test robot
-> <fengguang.wu@intel.com> wrote:
->>
->> 0day kernel testing robot got the below dmesg and the first bad commit is
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>
->> commit ff58d005cd10fcd372787cceac547e11cf706ff6
->> Merge: 5ab3566 9eeb0ed
->>
->>     Merge tag 'media/v4.11-1' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media
-> [...]
->> [    4.664940] rc rc0: lirc_dev: driver ir-lirc-codec (rc-loopback) registered at minor = 0
->> [    4.666322] BUG: unable to handle kernel NULL pointer dereference at 0000039c
->> [    4.666675] IP: serial_ir_irq_handler+0x189/0x410
->
-> This merge being fingered ends up being a subtle interaction with other changes.
->
-> Those "other changes" are (again) the interrupt retrigger code that
-> was reverted for 4.10, and then we tried to merge them again this
-> merge window.
->
-> Because the immediate cause is:
->
->> [    4.666675] EIP: serial_ir_irq_handler+0x189/0x410
->> [    4.666675] Call Trace:
->> [    4.666675]  <IRQ>
->> [    4.666675]  __handle_irq_event_percpu+0x57/0x100
->> [    4.666675]  handle_irq_event_percpu+0x1d/0x50
->> [    4.666675]  handle_irq_event+0x32/0x60
->> [    4.666675]  handle_edge_irq+0xa5/0x120
->> [    4.666675]  handle_irq+0x9d/0xd0
->> [    4.666675]  </IRQ>
->> [    4.666675]  do_IRQ+0x5f/0x130
->> [    4.666675]  common_interrupt+0x33/0x38
->> [    4.666675] EIP: hardware_init_port+0x3f/0x190
->> [    4.666675] EFLAGS: 00200246 CPU: 0
->> [    4.666675] EAX: c718990f EBX: 00000000 ECX: 00000000 EDX: 000003f9
->> [    4.666675] ESI: 000003f9 EDI: 000003f8 EBP: c0065d98 ESP: c0065d84
->> [    4.666675]  DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068
->> [    4.666675]  serial_ir_probe+0xbb/0x300
->> [    4.666675]  platform_drv_probe+0x48/0xb0
-> ...
->
-> ie an interrupt came in immediately after the request_irq(), before
-> all the data was properly set up, which then causes the interrupt
-> handler to take a fault because it tries to access some field that
-> hasn't even been set up yet.
->
-> The code line is helpful, the faulting instruction is
->
->       mov    0x39c(%rax),%eax   <--- fault
->       call ..
->       mov    someglobalvar,%edx
->
-> which together with the supplied config file makes me able to match it
-> up with the assembly generation around it:
->
->         inb %dx, %al    # tmp254, value
->         andb    $1, %al #, tmp255
->         testb   %al, %al        # tmp255
->         je      .L233   #,
->   .L215:
->         movl    serial_ir+8, %eax       # serial_ir.rcdev, serial_ir.rcdev
->         xorl    %edx, %edx      # _66->timeout
->         movl    924(%eax), %eax # _66->timeout, _66->timeout
->         call    nsecs_to_jiffies        #
->         movl    jiffies, %edx   # jiffies, jiffies.33_70
->         addl    %eax, %edx      # _69, tmp259
->         movl    $serial_ir+16, %eax     #,
->         call    mod_timer       #
->         movl    serial_ir+8, %eax       # serial_ir.rcdev,
->         call    ir_raw_event_handle     #
->         movl    $1, %eax        #, <retval>
->
-> so it's that "serial_ir.rcdev->timeout" access that faults. So this is
-> the faulting source code:
->
-> drivers/media/rc/serial_ir.c: 402
->
->         mod_timer(&serial_ir.timeout_timer,
->                   jiffies + nsecs_to_jiffies(serial_ir.rcdev->timeout));
->
->         ir_raw_event_handle(serial_ir.rcdev);
->
->         return IRQ_HANDLED;
->
-> and serial_ir.rcdev is NULL when ti tries to look up the timeout.
->
-> That mod_timer() is new as of commit 2940c7e49775 ("[media] serial_ir:
-> generate timeout") and *that* is the actual new bug.
->
-> Looking at the code, that serial_ir.rcdev thing is initialized fairly
-> late in serial_ir_init_module(), while the interrupt is allocated
-> early in serial_ir_probe(), which is done _early_ in
-> serial_ir_init_module():
->
-> serial_ir_init_module -> serial_ir_init -> platform_driver_register ->
-> serial_ir_probe -> devm_request_irq
->
-> Mauro, Sean, please fix.
->
-> Anyway, this is clearly a bug in the serial_ir code, but it is *also*
-> once again clearly now being *triggered* due to the irq handling
-> changes.
->
-> I'm pretty sure that the thing that triggered this is once more commit
-> a9b4f08770b4 ("x86/ioapic: Restore IO-APIC irq_chip retrigger
-> callback") which seems to retrigger stale irqs that simply should not
-> be retriggered.
->
-> They aren't actually active any more, if they ever were.
->
-> So that commit seems to act like a random CONFIG_DEBUG_SHIRQ. It's
-> good for testing, but not good for actual users.
->
-> I the local APIC retrigger just unconditionally resends that irq. But
-> it's the core interrupt code that decides to retrigger it incorrectly
-> for some reason.
->
-> Why is IRQS_PENDING set for that thing? Something must have almost
-> certainly set it, despite the irq not actually having ever been
-> pending. Thomas?
->
->                   Linus
+>> -- 
+>> With Best Regards,
+>> Andy Shevchenko
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio"
+>in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>the body of a message to majordomo@vger.kernel.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
