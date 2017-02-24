@@ -1,48 +1,89 @@
-From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
-Date: Fri, 24 Feb 2017 16:48:19 +0100
-Message-ID: <a67f7cf1-b676-5306-9e3d-4768a6e53357@jmondi.org>
-References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdU9UL9ZyiPJqtTTNS=KOScu6M3c7jQgD1vZ+gTiTCAYMA@mail.gmail.com>
- <64ed3cde-7627-eb60-c507-b68447012502@metafoo.de>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
+ resolution
+Date: Fri, 24 Feb 2017 17:04:45 +0100
+Message-ID: <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
+References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
+ <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
+ <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <64ed3cde-7627-eb60-c507-b68447012502-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Lars-Peter,
-
-On 24/02/2017 16:33, Lars-Peter Clausen wrote:
-> On 02/24/2017 04:22 PM, Geert Uytterhoeven wrote:
->> On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
->>> @@ -0,0 +1,27 @@
->>> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
->>> +
->>> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
->>> +12-bits ADC communicating over I2c bus.
->>> +The device node for this driver shall be a child of a I2c controller.
->>> +
->>> +Required properties
->>> +  - compatible: Should be "maxim,max961x"
->>> +  - reg: The 7-bits long I2c address of the device
->>> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
->>> +                   resistor.
+On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
+> On 15/02/17 16:55, Fabrice Gasnier wrote:
+>> Add documentation for 'st,adc-res' dt optional property.
 >>
->> shunt-resistor-micro-ohms?
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> I'm happy with this, but would like to leave time for a device tree review.
 >
-> I'll take this one further:
->
-> maxim,shunt-resistor-micro-ohms?
->
-> Although there is precedence for just 'shunt-resistor' in the ina2xx bindings.
->
+> Ultimately we may well want to make this a generic property and call it something
+> like adc-resolution but perhaps we need to wait until we have a few more devices
+> supporting setting it via device tree to figure out what the best interface is.
+> It would exactly be a problem to support this as a deprecated binding at that
+> point.
 
-And that's where I took "inspiration" from :)
+Hi Jonathan,
+
+I agree with you on this... It may be better to have generic property
+for this, especially if you see that it will come in the near future.
+May I suggest this prop to be less restrictive, e.g. like 
+resolution-bits as is may also be worth for other device types, e.g. DAC 
+as an example ?
+
+>
+> Give me a poke if we hear nothing from Rob or Mark for say another week.
+
+No news yet, but it can wait a little longer.
+
+Please advise,
+Regards,
+Fabrice
+
+>
+> Thanks,
+>
+> Jonathan
+>
+>> ---
+>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> index 5dfc88e..45f7ff2 100644
+>> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> @@ -57,6 +57,9 @@ Optional properties:
+>>  - dmas: Phandle to dma channel for this ADC instance.
+>>    See ../../dma/dma.txt for details.
+>>  - dma-names: Must be "rx" when dmas property is being used.
+>> +- st,adc-res: Resolution (bits) to use for conversions. Must match device
+>> +  available resolutions (e.g. can be 6, 8, 10 or 12 on stm32f4). Default
+>> +  is maximum resolution if unset.
+>>
+>>  Example:
+>>  	adc: adc@40012000 {
+>> @@ -84,6 +87,7 @@ Example:
+>>  			st,adc-channels = <8>;
+>>  			dmas = <&dma2 0 0 0x400 0x0>;
+>>  			dma-names = "rx";
+>> +			st,adc-res = <8>;
+>>  		};
+>>  		...
+>>  		other adc child nodes follow...
+>>
+>
