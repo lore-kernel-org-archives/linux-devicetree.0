@@ -1,66 +1,59 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/2] of: add devm_ functions for populate and depopulate
-Date: Fri, 24 Feb 2017 08:17:36 -0600
-Message-ID: <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
-References: <1487341886-13829-1-git-send-email-benjamin.gaignard@linaro.org>
- <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
+From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
+Date: Fri, 24 Feb 2017 22:30:35 +0800
+Message-ID: <20170224143033.GD5012@Socrates-UM>
+References: <cover.1487757223.git.eraretuya@gmail.com>
+ <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com>
+ <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com>
+ <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de>
+ <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA@mail.gmail.com>
+ <20170224091231.GC5012@Socrates-UM>
+ <13912e47-1e3e-e68e-1e91-4a174f33fda5@metafoo.de>
+ <CAHp75VfnnCe40V9k9zqyt4rkUYHgTDjfJ-y2qNV7SCxpLqhOtg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VfnnCe40V9k9zqyt4rkUYHgTDjfJ-y2qNV7SCxpLqhOtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMTcsIDIwMTcgYXQgODozMSBBTSwgQmVuamFtaW4gR2FpZ25hcmQKPGJlbmph
-bWluLmdhaWduYXJkQGxpbmFyby5vcmc+IHdyb3RlOgo+IExvc3Qgb2YgY2FsbHMgdG8gb2ZfcGxh
-dGZvcm1fcG9wdWxhdGUoKSBhcmUgbm90IHVuYmFsYW5jZWQgYnkgYSBjYWxsCgpzL0xvc3QvTG90
-cy8KCj4gdG8gb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgpLiBUaGlzIGNyZWF0ZSBpc3N1ZXMgd2hp
-bGUgZHJpdmVycyBhcmUKPiBiaW5kL3VuYmluZC4KPgo+IEluIHdheSB0byBzb2x2ZSB0aG9zZSBp
-c3N1ZXMgaXMgdG8gYWRkIGRldm1fb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKQo+IHdoaWNoIHdpbGwg
-Y2FsbCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgd2hlbiB0aGUgZGV2aWNlIGlzIHVuYm91bmQK
-PiBmcm9tIHRoZSBidXMuCgpPbmUgY29tcGxpY2F0aW9uIGlzIG9mX3BsYXRmb3JtX3BvcHVsYXRl
-IGlzIGRlc2lnbmVkIHRvIGJlIGNhbGxlZAptdWx0aXBsZSB0aW1lcy4gV2UgY2FsbCBpdCB3aXRo
-IHRoZSBkZWZhdWx0IG1hdGNoIHRhYmxlIGFuZCB0aGVuCnBsYXRmb3JtcyBjYW4gY2FsbCBpdCBh
-Z2FpbiB3aXRoIGEgY3VzdG9tIG1hdGNoIHRhYmxlIGZvciBleGFtcGxlLgoKPiBTaWduZWQtb2Zm
-LWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAbGluYXJvLm9yZz4KPiAt
-LS0KPiAgZHJpdmVycy9vZi9wbGF0Zm9ybS5jICAgICAgIHwgNzcgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIGluY2x1ZGUvbGludXgvb2ZfcGxhdGZvcm0u
-aCB8IDIwICsrKysrKysrKysrKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDk3IGluc2VydGlvbnMoKykK
-Pgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL3BsYXRmb3JtLmMgYi9kcml2ZXJzL29mL3BsYXRm
-b3JtLmMKPiBpbmRleCBiODA2NGJjLi4zZGJlYmY3IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvb2Yv
-cGxhdGZvcm0uYwo+ICsrKyBiL2RyaXZlcnMvb2YvcGxhdGZvcm0uYwo+IEBAIC01NzEsNiArNTcx
-LDgzIEBAIHZvaWQgb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZShzdHJ1Y3QgZGV2aWNlICpwYXJlbnQp
-Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTF9HUEwob2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSk7Cj4KPiAr
-c3RhdGljIHZvaWQgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZV9yZWxlYXNlKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgdm9pZCAqcmVzKQo+ICt7Cj4gKyAgICAgICBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRl
-KCooc3RydWN0IGRldmljZSAqKilyZXMpOwo+ICt9Cj4gKwo+ICsvKioKPiArICogZGV2bV9vZl9w
-bGF0Zm9ybV9wb3B1bGF0ZSgpIC0gUG9wdWxhdGUgcGxhdGZvcm1fZGV2aWNlcyBmcm9tIGRldmlj
-ZSB0cmVlIGRhdGEKPiArICogQGRldjogZGV2aWNlIHRoYXQgcmVxdWVzdGVkIHRvIHBvcHVsYXRl
-IGZyb20gZGV2aWNlIHRyZWUgZGF0YQo+ICsgKiBAcm9vdDogcGFyZW50IG9mIHRoZSBmaXJzdCBs
-ZXZlbCB0byBwcm9iZSBvciBOVUxMIGZvciB0aGUgcm9vdCBvZiB0aGUgdHJlZQo+ICsgKiBAbWF0
-Y2hlczogbWF0Y2ggdGFibGUsIE5VTEwgdG8gdXNlIHRoZSBkZWZhdWx0CgpOVUxMIGlzIG5vIG1h
-dGNoIHRhYmxlLCBub3QgdGhlIGRlZmF1bHQgd2hpY2ggbWVhbnMgb25seSBwb3B1bGF0ZQppbW1l
-ZGlhdGUgY2hpbGRyZW4uCgo+ICsgKiBAbG9va3VwOiBhdXhkYXRhIHRhYmxlIGZvciBtYXRjaGlu
-ZyBpZCBhbmQgcGxhdGZvcm1fZGF0YSB3aXRoIGRldmljZSBub2Rlcwo+ICsgKiBAcGFyZW50OiBw
-YXJlbnQgdG8gaG9vayBkZXZpY2VzIGZyb20sIE5VTEwgZm9yIHRvcGxldmVsCgpJIHRoaW5rIHRo
-aXMgbmVlZHMgdG8gYmUgYSBiaXQgZGlmZmVyZW50IGFyZ3MgYXMgdGhlIHVzZSBpcyBsaW1pdGVk
-Lgpyb290IGFuZCBwYXJlbnQgbXVzdCBub3QgYmUgTlVMTC4gZGV2IHNob3VsZCBiZSB0aGUgc2Ft
-ZSBhcyBwYXJlbnQuCmxvb2t1cCB3YXMgZm9yIGxlZ2FjeSwgc28gZHJvcCB0aGF0LgoKPiArICoK
-PiArICogU2ltaWxhciB0byBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpLCBidXQgd2lsbCBhdXRvbWF0
-aWNhbGx5IGNhbGwKPiArICogb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgpIHdoZW4gdGhlIGRldmlj
-ZSBpcyB1bmJvdW5kIGZyb20gdGhlIGJ1cy4KPiArICoKPiArICogUmV0dXJucyAwIG9uIHN1Y2Nl
-c3MsIDwgMCBvbiBmYWlsdXJlLgo+ICsgKi8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On Fri, Feb 24, 2017 at 01:48:39PM +0200, Andy Shevchenko wrote:
+> On Fri, Feb 24, 2017 at 11:22 AM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+> > On 02/24/2017 10:12 AM, Eva Rachel Retuya wrote:
+> >> On Thu, Feb 23, 2017 at 06:58:12PM +0200, Andy Shevchenko wrote:
+> >>> On Thu, Feb 23, 2017 at 6:47 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+> >>>> On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
+> >>>>> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> >> I'll revert to the explicit SPI/I2C pattern in order to give more
+> >> freedom in configuring as per the scenarios previously stated.
+> >
+> > Please check with Jonathan before you do, in the end he'll have to apply the
+> > patch.
+> 
+> +1. I will be fine with either just need to make sure maintainer
+> understands pros and cons.
+> 
+
+OK.
+
+Jonathan, please let me know whether to continue with your preferred
+configuration or go with the "explicit" pattern that was discussed here.
+
+Thanks,
+Eva
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
