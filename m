@@ -1,87 +1,65 @@
-From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
 Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
-Date: Fri, 24 Feb 2017 16:50:44 +0100
-Message-ID: <a489f2fc-4d15-42cc-fdcc-b41f60b4638a@jmondi.org>
+Date: Fri, 24 Feb 2017 16:54:06 +0100
+Message-ID: <CAMuHMdU+omAOc6Z-0pG1EZx9wLP=+LnyWTHMzBSn_OPpqF-GNQ@mail.gmail.com>
 References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
  <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
- <CAMuHMdWjtRZpjGi8BPkDGKGPr5uBr5jsjLi80COUDruZLuTXfQ@mail.gmail.com>
+ <CAMuHMdWjtRZpjGi8BPkDGKGPr5uBr5jsjLi80COUDruZLuTXfQ@mail.gmail.com> <a489f2fc-4d15-42cc-fdcc-b41f60b4638a@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWjtRZpjGi8BPkDGKGPr5uBr5jsjLi80COUDruZLuTXfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <a489f2fc-4d15-42cc-fdcc-b41f60b4638a@jmondi.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Jacopo,
 
-On 24/02/2017 16:29, Geert Uytterhoeven wrote:
-> Hi Jacopo,
->
-> [fixed Peter Meerwald's address]
->
-> On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
->> Add device tree bindings documentation for Maxim max961x current sense
->> amplifier.
+On Fri, Feb 24, 2017 at 4:50 PM, jacopo mondi <jacopo@jmondi.org> wrote:
+> On 24/02/2017 16:29, Geert Uytterhoeven wrote:
+>> On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas@jmondi.org>
+>> wrote:
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+>>> @@ -0,0 +1,27 @@
+>>> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC
+>>> interface
+>>> +
+>>> +Maxim max9611/max9612 is an high-side current sense amplifier with
+>>> integrated
+>>> +12-bits ADC communicating over I2c bus.
+>>> +The device node for this driver shall be a child of a I2c controller.
+>>> +
+>>> +Required properties
+>>> +  - compatible: Should be "maxim,max961x"
 >>
->> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iio/adc/max961x.txt        | 27 ++++++++++++++++++++++
->>  1 file changed, 27 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max961x.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/max961x.txt b/Documentation/devicetree/bindings/iio/adc/max961x.txt
->> new file mode 100644
->> index 0000000..abbc6c4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
->> @@ -0,0 +1,27 @@
->> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
->> +
->> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
->> +12-bits ADC communicating over I2c bus.
->> +The device node for this driver shall be a child of a I2c controller.
->> +
->> +Required properties
->> +  - compatible: Should be "maxim,max961x"
+>> I'ts not a good idea to use wildcards in compatible values.
+>> Ask yourself: is this valid for any (future) value of "x"?
 >
-> I'ts not a good idea to use wildcards in compatible values.
-> Ask yourself: is this valid for any (future) value of "x"?
+> I suspect you already know the answer here :)
 >
+>> Hence please use "maxim,max9611" or "maxim,max9612".
+>> The only difference between these two is a noninverting vs. inverting
+>> input-to-output configuration. Does the driver need to care?
+>
+> No, not right now, as the inverting/non-inverting output is on the
+> op-amp/comparator side, which is currently not supported by this driver.
+>
+> Instead of using one or the other, should we use both, as long as it does
+> not makes any difference from driver perspective?
 
-I suspect you already know the answer here :)
+DT describes the hardware, not current software limitations.
+So yes, we want both (in the bindings/drivers, not in the same *.dts file ;-).
 
-> Hence please use "maxim,max9611" or "maxim,max9612".
-> The only difference between these two is a noninverting vs. inverting
-> input-to-output configuration. Does the driver need to care?
+Gr{oetje,eeting}s,
 
-No, not right now, as the inverting/non-inverting output is on the 
-op-amp/comparator side, which is currently not supported by this driver.
+                        Geert
 
-Instead of using one or the other, should we use both, as long as it 
-does not makes any difference from driver perspective?
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks
-   j
-
-
->
->> +  - reg: The 7-bits long I2c address of the device
->> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
->> +                   resistor.
->
-> shunt-resistor-micro-ohms?
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
->
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
