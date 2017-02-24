@@ -1,66 +1,44 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 2/3] drm/vc4: Add HDMI audio support
-Date: Fri, 24 Feb 2017 14:09:36 +0100
-Message-ID: <20170224140936.4b4b8bd5@bbrezillon>
-References: <20170207210703.7082-1-eric@anholt.net>
- <20170207210703.7082-2-eric@anholt.net>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v2 0/5] Add missing Tegra210 clocks
+Date: Fri, 24 Feb 2017 15:19:25 +0200
+Message-ID: <1487942376-19631-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170207210703.7082-2-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRXJpYywKCk9uIFR1ZSwgIDcgRmViIDIwMTcgMTM6MDc6MDIgLTA4MDAKRXJpYyBBbmhvbHQg
-PGVyaWNAYW5ob2x0Lm5ldD4gd3JvdGU6Cgo+ICtzdGF0aWMgaW50IHZjNF9oZG1pX2F1ZGlvX2lu
-aXQoc3RydWN0IHZjNF9oZG1pICpoZG1pKQo+ICt7Cj4gKwlzdHJ1Y3Qgc25kX3NvY19kYWlfbGlu
-ayAqZGFpX2xpbmsgPSAmaGRtaS0+YXVkaW8ubGluazsKPiArCXN0cnVjdCBzbmRfc29jX2NhcmQg
-KmNhcmQgPSAmaGRtaS0+YXVkaW8uY2FyZDsKPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZoZG1p
-LT5wZGV2LT5kZXY7Cj4gKwljb25zdCBfX2JlMzIgKmFkZHI7Cj4gKwlpbnQgcmV0Owo+ICsKPiAr
-CWlmICghb2ZfZmluZF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJkbWFzIiwgTlVMTCkpIHsKPiAr
-CQlkZXZfd2FybihkZXYsCj4gKwkJCSAiJ2RtYXMnIERUIHByb3BlcnR5IGlzIG1pc3NpbmcsIG5v
-IEhETUkgYXVkaW9cbiIpOwo+ICsJCXJldHVybiAwOwo+ICsJfQo+ICsKPiArCS8qCj4gKwkgKiBH
-ZXQgdGhlIHBoeXNpY2FsIGFkZHJlc3Mgb2YgVkM0X0hEX01BSV9EQVRBLiBXZSBuZWVkIHRvIHJl
-dHJpZXZlCj4gKwkgKiB0aGUgYnVzIGFkZHJlc3Mgc3BlY2lmaWVkIGluIHRoZSBEVCwgYmVjYXVz
-ZSB0aGUgcGh5c2ljYWwgYWRkcmVzcwo+ICsJICogKHRoZSBvbmUgcmV0dXJuZWQgYnkgcGxhdGZv
-cm1fZ2V0X3Jlc291cmNlKCkpIGlzIG5vdCBhcHByb3ByaWF0ZQo+ICsJICogZm9yIERNQSB0cmFu
-c2ZlcnMuCj4gKwkgKiBUaGlzIFZDL01NVSBzaG91bGQgcHJvYmFibHkgYmUgZXhwb3NlZCB0byBh
-dm9pZCB0aGlzIGtpbmQgb2YgaGFja3MuCj4gKwkgKi8KPiArCWFkZHIgPSBvZl9nZXRfYWRkcmVz
-cyhkZXYtPm9mX25vZGUsIDEsIE5VTEwsIE5VTEwpOwo+ICsJaGRtaS0+YXVkaW8uZG1hX2RhdGEu
-YWRkciA9IGJlMzJfdG9fY3B1cChhZGRyKSArIFZDNF9IRF9NQUlfREFUQTsKPiArCWhkbWktPmF1
-ZGlvLmRtYV9kYXRhLmFkZHJfd2lkdGggPSBETUFfU0xBVkVfQlVTV0lEVEhfNF9CWVRFUzsKPiAr
-CWhkbWktPmF1ZGlvLmRtYV9kYXRhLm1heGJ1cnN0ID0gMjsKPiArCj4gKwlyZXQgPSBkZXZtX3Nu
-ZF9kbWFlbmdpbmVfcGNtX3JlZ2lzdGVyKGRldiwgJnBjbV9jb25mLCAwKTsKPiArCWlmIChyZXQp
-IHsKPiArCQlkZXZfZXJyKGRldiwgIkNvdWxkIG5vdCByZWdpc3RlciBQQ00gY29tcG9uZW50OiAl
-ZFxuIiwgcmV0KTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+ICsKPiArCXJldCA9IGRldm1fc25k
-X3NvY19yZWdpc3Rlcl9jb21wb25lbnQoZGV2LCAmdmM0X2hkbWlfYXVkaW9fY3B1X2RhaV9jb21w
-LAo+ICsJCQkJCSAgICAgICZ2YzRfaGRtaV9hdWRpb19jcHVfZGFpX2RydiwgMSk7Cj4gKwlpZiAo
-cmV0KSB7Cj4gKwkJZGV2X2VycihkZXYsICJDb3VsZCBub3QgcmVnaXN0ZXIgQ1BVIERBSTogJWRc
-biIsIHJldCk7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwkvKiByZWdpc3RlciBjb2Rl
-YyBhbmQgY29kZWMgZGFpICovCj4gKwlyZXQgPSBzbmRfc29jX3JlZ2lzdGVyX2NvZGVjKGRldiwg
-JnZjNF9oZG1pX2F1ZGlvX2NvZGVjX2RydiwKPiArCQkJCSAgICAgJnZjNF9oZG1pX2F1ZGlvX2Nv
-ZGVjX2RhaV9kcnYsIDEpOwo+ICsJaWYgKHJldCkgewo+ICsJCWRldl9lcnIoZGV2LCAiQ291bGQg
-bm90IHJlZ2lzdGVyIGNvZGVjOiAlZFxuIiwgcmV0KTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+
-ICsKPiArCWRhaV9saW5rLT5uYW1lID0gIk1BSSI7Cj4gKwlkYWlfbGluay0+c3RyZWFtX25hbWUg
-PSAiTUFJIFBDTSI7Cj4gKwlkYWlfbGluay0+Y29kZWNfZGFpX25hbWUgPSB2YzRfaGRtaV9hdWRp
-b19jb2RlY19kYWlfZHJ2Lm5hbWU7Cj4gKwlkYWlfbGluay0+Y3B1X2RhaV9uYW1lID0gZGV2X25h
-bWUoZGV2KTsKPiArCWRhaV9saW5rLT5jb2RlY19uYW1lID0gZGV2X25hbWUoZGV2KTsKPiArCWRh
-aV9saW5rLT5wbGF0Zm9ybV9uYW1lID0gZGV2X25hbWUoZGV2KTsKPiArCj4gKwljYXJkLT5kYWlf
-bGluayA9IGRhaV9saW5rOwo+ICsJY2FyZC0+bnVtX2xpbmtzID0gMTsKPiArCWNhcmQtPm5hbWUg
-PSAidmM0LWhkbWktYXVkaW8iOwoKSSBrbm93IEknbSB0aGUgb25lIHdobyBjaG9zZSB0aGlzIG5h
-bWUsIGJ1dCBtYXliZSB3ZSBzaG91bGQganVzdCBjaGFuZ2UKaXQgZm9yICJ2YzQtaGRtaSIsIHNp
-bmNlIGF1ZGlvIGlzIGtpbmQgb2YgaW1wbGllZCBoZXJlIDstKS4KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This series adds a number of clocks which were missing from the Tegra210
+clock definition. It applies on top of the 'Tegra210 clock bug fixes' series
+posted earlier.
+
+Change log:
+
+v2: fixed a few useless lines moving around
+
+Peter De Schrijver (5):
+  clk: tegra: add cec clock
+  clk: tegra: define Tegra210 DMIC sync clocks
+  clk: tegra: define Tegra210 DMIC clocks
+  clk: tegra: add super clk mux/div
+  clk: tegra: add aclk
+
+ drivers/clk/tegra/clk-id.h                      | 10 +++
+ drivers/clk/tegra/clk-super.c                   | 87 +++++++++++++++++++++++--
+ drivers/clk/tegra/clk-tegra-audio.c             | 85 +++++++++++++++++-------
+ drivers/clk/tegra/clk-tegra-periph.c            | 22 +++++++
+ drivers/clk/tegra/clk-tegra114.c                |  1 +
+ drivers/clk/tegra/clk-tegra124.c                |  1 +
+ drivers/clk/tegra/clk-tegra210.c                | 20 ++++++
+ drivers/clk/tegra/clk-tegra30.c                 |  1 +
+ drivers/clk/tegra/clk.h                         |  7 +-
+ include/dt-bindings/clock/tegra114-car.h        |  2 +-
+ include/dt-bindings/clock/tegra124-car-common.h |  2 +-
+ include/dt-bindings/clock/tegra210-car.h        | 13 +++-
+ include/dt-bindings/clock/tegra30-car.h         |  2 +-
+ 13 files changed, 219 insertions(+), 34 deletions(-)
+
+-- 
+1.9.1
+
