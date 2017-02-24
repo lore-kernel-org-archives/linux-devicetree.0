@@ -1,92 +1,89 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH 4/8] drm/sun4i: add support for sun8i DE2
- mixers and display engines
-Date: Fri, 24 Feb 2017 16:30:17 +0100
-Message-ID: <1634001.dRmL8h9ofd@jernej-laptop>
-References: <20170222152310.3719-5-icenowy@aosc.xyz> <20170222200947.3ikrhvv76ymfu5tv@lukather> <CAL_JsqKY1sXT9g9wHhQEt9-x32PaY0yQi8++bTajcEVk1x8E_w@mail.gmail.com>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v1 1/2] of: add devm_ functions for populate and depopulate
+Date: Fri, 24 Feb 2017 09:30:13 -0600
+Message-ID: <CAL_Jsq+AwZM8i-UrLvqoBoW-Q=ssJkWVcfuXjAs6kLgGgQ9bZQ@mail.gmail.com>
+References: <1487341886-13829-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
+ <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
+ <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
+ <CAL_JsqLwDPYeO9fHvviCheKLrJv4qqcdbP4wseLLd_SVrsbw=A@mail.gmail.com>
+ <CA+M3ks7ViNCEnmfEP-6kTCj4nUfMQRe7ktA-9cATb-AAGiS=sQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBD5DYHCQKGQE2VXWABQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAL_JsqKY1sXT9g9wHhQEt9-x32PaY0yQi8++bTajcEVk1x8E_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CA+M3ks7ViNCEnmfEP-6kTCj4nUfMQRe7ktA-9cATb-AAGiS=sQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Dne petek, 24. februar 2017 ob 14:30:36 CET je Rob Herring napisal(a):
-> On Wed, Feb 22, 2017 at 2:09 PM, Maxime Ripard
-> 
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > Hi,
-> > 
-> > On Wed, Feb 22, 2017 at 11:23:06PM +0800, Icenowy Zheng wrote:
-> >> Allwinner have a new "Display Engine 2.0" in there new SoCs, which comes
-> >> in a new "Display Engine" (mixers instead of old backends and
-> >> frontends).
-> >> 
-> >> Add support for the mixer on Allwinner V3s SoC; it's the simplest one.
-> >> 
-> >> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> ---
-> 
-> [...]
-> 
-> >> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> >> b/drivers/gpu/drm/sun4i/sun8i_mixer.c new file mode 100644
-> >> index 000000000000..9427b57240d3
-> >> --- /dev/null
-> >> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
-> >> @@ -0,0 +1,417 @@
-> >> +/*
-> >> + * Copyright (C) 2017 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> + *
-> >> + * Based on sun4i_backend.c, which is:
-> >> + *   Copyright (C) 2015 Free Electrons
-> >> + *   Copyright (C) 2015 NextThing Co
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or
-> >> + * modify it under the terms of the GNU General Public License as
-> >> + * published by the Free Software Foundation; either version 2 of
-> >> + * the License, or (at your option) any later version.
-> >> + */
-> >> +
-> >> +#include <drm/drmP.h>
-> >> +#include <drm/drm_atomic_helper.h>
-> >> +#include <drm/drm_crtc.h>
-> >> +#include <drm/drm_crtc_helper.h>
-> >> +#include <drm/drm_fb_cma_helper.h>
-> >> +#include <drm/drm_gem_cma_helper.h>
-> >> +#include <drm/drm_plane_helper.h>
-> >> +
-> >> +#include <linux/component.h>
-> >> +#include <linux/reset.h>
-> >> +#include <linux/of_device.h>
-> >> +
-> >> +#include "sun8i_mixer.h"
-> >> +#include "sun4i_drv.h"
-> >> +
-> >> +#define SUN8I_DRAM_OFFSET 0x40000000
-> > 
-> > PHYS_OFFSET?
-> 
-> PHYS_OFFSET is not portable. __pa(PAGE_OFFSET) instead.
-> 
-> If your DMA addresses are different from CPU addresses (i.e. have some
-> offset), then use "dma-ranges" in DT.
-> 
-> Rob
-
-That adjustment is not needed and should be removed. Such adjusment breaks DE 
-on boards with 2 GiB of RAM.
-
-Regards,
-Jernej
+T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgOToyNiBBTSwgQmVuamFtaW4gR2FpZ25hcmQKPGJlbmph
+bWluLmdhaWduYXJkQGxpbmFyby5vcmc+IHdyb3RlOgo+IDIwMTctMDItMjQgMTY6MjAgR01UKzAx
+OjAwIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ogo+PiBPbiBGcmksIEZlYiAyNCwg
+MjAxNyBhdCA5OjEzIEFNLCBCZW5qYW1pbiBHYWlnbmFyZAo+PiA8YmVuamFtaW4uZ2FpZ25hcmRA
+bGluYXJvLm9yZz4gd3JvdGU6Cj4+PiAyMDE3LTAyLTI0IDE1OjE3IEdNVCswMTowMCBSb2IgSGVy
+cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjoKPj4+PiBPbiBGcmksIEZlYiAxNywgMjAxNyBhdCA4
+OjMxIEFNLCBCZW5qYW1pbiBHYWlnbmFyZAo+Pj4+IDxiZW5qYW1pbi5nYWlnbmFyZEBsaW5hcm8u
+b3JnPiB3cm90ZToKPj4+Pj4gTG9zdCBvZiBjYWxscyB0byBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSgp
+IGFyZSBub3QgdW5iYWxhbmNlZCBieSBhIGNhbGwKPj4+Pgo+Pj4+IHMvTG9zdC9Mb3RzLwo+Pj4+
+Cj4+Pj4+IHRvIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKS4gVGhpcyBjcmVhdGUgaXNzdWVzIHdo
+aWxlIGRyaXZlcnMgYXJlCj4+Pj4+IGJpbmQvdW5iaW5kLgo+Pj4+Pgo+Pj4+PiBJbiB3YXkgdG8g
+c29sdmUgdGhvc2UgaXNzdWVzIGlzIHRvIGFkZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkK
+Pj4+Pj4gd2hpY2ggd2lsbCBjYWxsIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKSB3aGVuIHRoZSBk
+ZXZpY2UgaXMgdW5ib3VuZAo+Pj4+PiBmcm9tIHRoZSBidXMuCj4+Pj4KPj4+PiBPbmUgY29tcGxp
+Y2F0aW9uIGlzIG9mX3BsYXRmb3JtX3BvcHVsYXRlIGlzIGRlc2lnbmVkIHRvIGJlIGNhbGxlZAo+
+Pj4+IG11bHRpcGxlIHRpbWVzLiBXZSBjYWxsIGl0IHdpdGggdGhlIGRlZmF1bHQgbWF0Y2ggdGFi
+bGUgYW5kIHRoZW4KPj4+PiBwbGF0Zm9ybXMgY2FuIGNhbGwgaXQgYWdhaW4gd2l0aCBhIGN1c3Rv
+bSBtYXRjaCB0YWJsZSBmb3IgZXhhbXBsZS4KPj4+Cj4+PiBJIGRvIG5vdCBwbGFuIHRvIHVzZSBp
+dCBldmVyeSB3aGVyZSBidXQgb25seSBpbiBzb21lIGRyaXZlcnMgcHJvYmUoKQo+Pj4gdG8gYXZv
+aWQgYWRkaW5nIGdvdG8gdG8gY2FsbCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgZm9yIGVhY2gg
+ZXJyb3IKPj4+IGNhc2VzIHdoaWNoIG1heSBvY2N1ciBhZnRlciBjYWxsaW5nIHBvcHVsYXRlLgo+
+Pj4KPj4+Pgo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4u
+Z2FpZ25hcmRAbGluYXJvLm9yZz4KPj4+Pj4gLS0tCj4+Pj4+ICBkcml2ZXJzL29mL3BsYXRmb3Jt
+LmMgICAgICAgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysKPj4+Pj4gIGluY2x1ZGUvbGludXgvb2ZfcGxhdGZvcm0uaCB8IDIwICsrKysrKysrKysrKwo+
+Pj4+PiAgMiBmaWxlcyBjaGFuZ2VkLCA5NyBpbnNlcnRpb25zKCspCj4+Pj4+Cj4+Pj4+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL29mL3BsYXRmb3JtLmMgYi9kcml2ZXJzL29mL3BsYXRmb3JtLmMKPj4+
+Pj4gaW5kZXggYjgwNjRiYy4uM2RiZWJmNyAxMDA2NDQKPj4+Pj4gLS0tIGEvZHJpdmVycy9vZi9w
+bGF0Zm9ybS5jCj4+Pj4+ICsrKyBiL2RyaXZlcnMvb2YvcGxhdGZvcm0uYwo+Pj4+PiBAQCAtNTcx
+LDYgKzU3MSw4MyBAQCB2b2lkIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoc3RydWN0IGRldmljZSAq
+cGFyZW50KQo+Pj4+PiAgfQo+Pj4+PiAgRVhQT1JUX1NZTUJPTF9HUEwob2ZfcGxhdGZvcm1fZGVw
+b3B1bGF0ZSk7Cj4+Pj4+Cj4+Pj4+ICtzdGF0aWMgdm9pZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVs
+YXRlX3JlbGVhc2Uoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpyZXMpCj4+Pj4+ICt7Cj4+Pj4+
+ICsgICAgICAgb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgqKHN0cnVjdCBkZXZpY2UgKiopcmVzKTsK
+Pj4+Pj4gK30KPj4+Pj4gKwo+Pj4+PiArLyoqCj4+Pj4+ICsgKiBkZXZtX29mX3BsYXRmb3JtX3Bv
+cHVsYXRlKCkgLSBQb3B1bGF0ZSBwbGF0Zm9ybV9kZXZpY2VzIGZyb20gZGV2aWNlIHRyZWUgZGF0
+YQo+Pj4+PiArICogQGRldjogZGV2aWNlIHRoYXQgcmVxdWVzdGVkIHRvIHBvcHVsYXRlIGZyb20g
+ZGV2aWNlIHRyZWUgZGF0YQo+Pj4+PiArICogQHJvb3Q6IHBhcmVudCBvZiB0aGUgZmlyc3QgbGV2
+ZWwgdG8gcHJvYmUgb3IgTlVMTCBmb3IgdGhlIHJvb3Qgb2YgdGhlIHRyZWUKPj4+Pj4gKyAqIEBt
+YXRjaGVzOiBtYXRjaCB0YWJsZSwgTlVMTCB0byB1c2UgdGhlIGRlZmF1bHQKPj4+Pgo+Pj4+IE5V
+TEwgaXMgbm8gbWF0Y2ggdGFibGUsIG5vdCB0aGUgZGVmYXVsdCB3aGljaCBtZWFucyBvbmx5IHBv
+cHVsYXRlCj4+Pj4gaW1tZWRpYXRlIGNoaWxkcmVuLgo+Pj4KPj4+IEkgaGF2ZSBjb3B5IG9mX3Bs
+YXRmb3JtX3BvcHVsYXRlKCkgZGVzY3JpcHRpb24uLi4KPj4+IEkgcmVwbGFjZSBpdCBieTogQG1h
+dGNoZXM6IG1hdGNoIHRhYmxlIChjb3VsZCBiZSBOVUxMKQo+Pj4KPj4+Pgo+Pj4+PiArICogQGxv
+b2t1cDogYXV4ZGF0YSB0YWJsZSBmb3IgbWF0Y2hpbmcgaWQgYW5kIHBsYXRmb3JtX2RhdGEgd2l0
+aCBkZXZpY2Ugbm9kZXMKPj4+Pj4gKyAqIEBwYXJlbnQ6IHBhcmVudCB0byBob29rIGRldmljZXMg
+ZnJvbSwgTlVMTCBmb3IgdG9wbGV2ZWwKPj4+Pgo+Pj4+IEkgdGhpbmsgdGhpcyBuZWVkcyB0byBi
+ZSBhIGJpdCBkaWZmZXJlbnQgYXJncyBhcyB0aGUgdXNlIGlzIGxpbWl0ZWQuCj4+Pj4gcm9vdCBh
+bmQgcGFyZW50IG11c3Qgbm90IGJlIE5VTEwuIGRldiBzaG91bGQgYmUgdGhlIHNhbWUgYXMgcGFy
+ZW50Lgo+Pj4+IGxvb2t1cCB3YXMgZm9yIGxlZ2FjeSwgc28gZHJvcCB0aGF0Lgo+Pj4KPj4+IFNv
+IGZ1bmN0aW9uIHByb3RvdHlwZSB3aWxsIGJlY29tZToKPj4+IGludCBkZXZtX29mX3BsYXRmb3Jt
+X3BvcHVsYXRlKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlCj4+PiAqcm9v
+dCwgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2hlcykKPj4KPj4gSSBqdXN0IG5vdGlj
+ZWQgc29tZXRoaW5nIGVsc2UgdG9vLiBkZXYtPm9mX25vZGUgc2hvdWxkIGVxdWFsIHJvb3QgSQo+
+PiB0aGluaywgc28gd2UgY2FuIGdldCByaWQgb2Ygcm9vdCBwYXJhbS4KPgo+IG1hdGNoIHBhcmFt
+ZXRlciBpcyB2ZXJ5IG9mdGVuIHNldCB0byBOVUxMIHNpbmNlIHRoaXMgZnVuY3Rpb24gd2lsbAo+
+IGhhdmUgYSBsaW1pdGVkCj4gc2NvcGUgd2h5IG5vdCBhbHNvIHJlbW92ZSBpdCBhbmQgb25seSBr
+ZWVwIGRldiA/CgpUaGF0J3MgZmluZSB3aXRoIG1lLgoKUm9iCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
