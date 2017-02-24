@@ -1,112 +1,105 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 1/2] arm64: dts: r8a7795: Add Cortex-A53 CPU cores
-Date: Fri, 24 Feb 2017 14:59:27 +0100
-Message-ID: <1487944768-31983-2-git-send-email-geert+renesas@glider.be>
-References: <1487944768-31983-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487944768-31983-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takeshi Kihara <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
+Date: Fri, 24 Feb 2017 08:06:41 -0600
+Message-ID: <CAL_JsqLqNzpV1pjz3bX1gowHwJzsKKA=17aD5Ce18sy1B_V-0g@mail.gmail.com>
+References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
+ <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
+ <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
+ <2b409ff7-54fe-4110-6495-1cc54585e5e2@st.com>
+ <CAL_JsqLBZ0DGP62yGb2GjNZMto9hWce_HWNCX5iWhbrnE3ae_Q@mail.gmail.com>
+ <0036d551-91bc-9f3f-22a9-9dac2cf3527c@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <0036d551-91bc-9f3f-22a9-9dac2cf3527c@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick FERTRE <yannick.fertre@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Cortex-A53 CPU cores to r8a7795 SoC for a total of 8
-cores (4 x Cortex-A57 + 4 x Cortex-A53).
-
-Based on work by Takeshi Kihara and Dirk Behme.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-v4:
-  - Drop bogus links from the pmu_a57 node to the CA53 nodes,
-
-v3:
-  - Link CPU nodes 100-103 to their L2 cache nodes,
-
-v2:
-  - Rebased.
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 46 ++++++++++++++++++++++++++++----
- 1 file changed, 41 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index 8c43e9d7a6d2f799..d8e70d75781acaa0 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -73,6 +73,42 @@
- 			enable-method = "psci";
- 		};
- 
-+		a53_0: cpu@100 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x100>;
-+			device_type = "cpu";
-+			power-domains = <&sysc R8A7795_PD_CA53_CPU0>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		a53_1: cpu@101 {
-+			compatible = "arm,cortex-a53","arm,armv8";
-+			reg = <0x101>;
-+			device_type = "cpu";
-+			power-domains = <&sysc R8A7795_PD_CA53_CPU1>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		a53_2: cpu@102 {
-+			compatible = "arm,cortex-a53","arm,armv8";
-+			reg = <0x102>;
-+			device_type = "cpu";
-+			power-domains = <&sysc R8A7795_PD_CA53_CPU2>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
-+		a53_3: cpu@103 {
-+			compatible = "arm,cortex-a53","arm,armv8";
-+			reg = <0x103>;
-+			device_type = "cpu";
-+			power-domains = <&sysc R8A7795_PD_CA53_CPU3>;
-+			next-level-cache = <&L2_CA53>;
-+			enable-method = "psci";
-+		};
-+
- 		L2_CA57: cache-controller@0 {
- 			compatible = "cache";
- 			reg = <0>;
-@@ -166,7 +202,7 @@
- 			      <0x0 0xf1040000 0 0x20000>,
- 			      <0x0 0xf1060000 0 0x20000>;
- 			interrupts = <GIC_PPI 9
--					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
- 			clocks = <&cpg CPG_MOD 408>;
- 			clock-names = "clk";
- 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-@@ -317,13 +353,13 @@
- 		timer {
- 			compatible = "arm,armv8-timer";
- 			interrupts = <GIC_PPI 13
--					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 14
--					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 11
--					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 				     <GIC_PPI 10
--					(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+					(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
- 		};
- 
- 		cpg: clock-controller@e6150000 {
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgMjoxOCBBTSwgWWFubmljayBGRVJUUkUgPHlhbm5pY2su
+ZmVydHJlQHN0LmNvbT4gd3JvdGU6Cj4KPgo+IE9uIDAyLzIxLzIwMTcgMDM6MDcgUE0sIFJvYiBI
+ZXJyaW5nIHdyb3RlOgo+PiBPbiBNb24sIEZlYiAyMCwgMjAxNyBhdCA1OjAxIEFNLCBZYW5uaWNr
+IEZFUlRSRSA8eWFubmljay5mZXJ0cmVAc3QuY29tPiB3cm90ZToKPj4+Cj4+Pgo+Pj4gT24gMDIv
+MTYvMjAxNyAwMzozNCBBTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Pj4gT24gRnJpLCBGZWIgMTAs
+IDIwMTcgYXQgMDM6NTQ6NDRQTSArMDEwMCwgWWFubmljayBGZXJ0cmUgd3JvdGU6Cj4+Pj4+IFNp
+Z25lZC1vZmYtYnk6IFlhbm5pY2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+Cj4+Pj4+
+IC0tLQo+Pj4+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3Mmgz
+dG1xdy10MDFoLnR4dCAgICAgICAgIHwgNyArKysrKysrCj4+Pj4+ICAxIGZpbGUgY2hhbmdlZCwg
+NyBpbnNlcnRpb25zKCspCj4+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10
+MDFoLnR4dAo+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxh
+bS00ODAyNzJoM3RtcXctdDAxaC50eHQKPj4+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+Pj4g
+aW5kZXggMDAwMDAwMC4uZjU5ZTNjNAo+Pj4+PiAtLS0gL2Rldi9udWxsCj4+Pj4+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00
+ODAyNzJoM3RtcXctdDAxaC50eHQKPj4+Pj4gQEAgLTAsMCArMSw3IEBACj4+Pj4+ICtBbXBpcmUg
+QU0tNDgwMjcySDNUTVFXLVQwMUggNC4zIiBXUVZHQSBURlQgTENEIHBhbmVsCj4+Pj4+ICsKPj4+
+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
+YW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIgo+Pj4+Cj4+Pj4gTm8gR1BJTyBjb250cm9scyBv
+ciBwb3dlciBzdXBwbHkgZm9yIHRoaXMgcGFuZWw/Cj4+Pj4KPj4+PiBSb2IKPj4+Pgo+Pj4KPj4+
+IEhpIFJvYiwKPj4+IHRoYW5rIGZvciB5b3VyIHJlcGx5Lgo+Pj4gVGhlcmUgaXMgbm8gZ3BpbyBv
+ciBwb3dlciBzdXBwbHkgY29udHJvbCBmb3IgdGhpcyBwYW5lbCB3aXRoIHRoZSBldmFsCj4+PiBi
+b2FyZCBzdG00Mjl4OWkuCj4+Cj4+IFlvdSBuZWVkIHRvIGRlc2NyaWJlIHdoYXQgdGhlIHBhbmVs
+IGhhcywgbm90IHdoYXQgeW91IGhhdmUgY29udHJvbCBvZgo+PiBvciBub3Qgb24gYSBwYXJ0aWN1
+bGFyIGJvYXJkLgo+Cj4gWWVzLCBJIGRvbid0IGhhdmUgdG8gZGVzY3JpYmUgY29udHJvbCBvbiBh
+IHBhcnRpY3VsYXIgYm9hcmQuIFRoaXMKPiBiaW5kaW5nIGNvbnRhaW5zIGZldyBsaW5lcy4gVGhp
+cyBjb21wYXRpYmxlIGlzIHVzZWQgYnkgcGFuZWwtc2ltcGxlIHRvCj4gZ2V0IG9ubHkgdGltaW5n
+cy4gT3RoZXIgc3RhZmYgbGlrZSBncGlvIG9yIHBvd2VyLXN1eXBwbHkgaXMgd2VsbCBtYW5hZ2Vk
+Cj4gYnkgcGFuZWwtc2ltcGxlIGl0c2VsZi4KPgo+IFRoaXMgYmluZGluZyBpcyBzaW1pbGFyIHRv
+IHRoZXNlIGJpbmRpbmdzICYgbm90IHJlcXVpcmVkIG1vcmUgZGV0YWlsczoKCkZpbmRpbmcgYmFk
+IGV4YW1wbGVzIGlzIG5vdCBhbiBhcmd1bWVudC4gQW5kIHllcywgbG90cyB3ZW50IGluIGJlZm9y
+ZQp3ZSBzdGFydGVkIGJlaW5nIG1vcmUgcGFydGljdWxhciBpbiByZXZpZXdzLCBidXQgbm93IEkg
+d2FudCB0byBzZWUKcG93ZXIgc3VwcGxpZXMgYW5kIGNvbnRyb2wgbGluZXMgYWNjdXJhdGVseSBk
+ZXNjcmliZWQuIE5leHQgd2VlaywKdGhlcmUgbWF5IGJlIGFkZGl0aW9uYWwgcmVxdWlyZW1lbnRz
+LgoKVGhpcyBpcyBubyBkaWZmZXJlbnQgdGhhbiBjbG9jayBvciBpbnRlcnJ1cHQgYmluZGluZ3Mu
+IFdlIGRvbid0IGp1c3QKc2F5ICJ1c2VzIGNsb2NrL2ludGVycnVwdCBiaW5kaW5nIiBpbiBiaW5k
+aW5nIGRvY3MuIFlvdSBoYXZlIHRvCmV4cGxpY2l0bHkgc3RhdGUgaG93IG1hbnkgY2xvY2tzL2lu
+dGVycnVwdHMgYW5kIHRoZWlyIG9yZGVyLgoKCj4gICAgLWFtcGlyZSxhbS00ODAyNzJoM3RtcXct
+dDAxaC50eHQsYW1waXJlLGFtODAwNDgwcjN0bXF3YTFoLnR4dCwKPiAgICAtYXVvLGIwODB1YW4w
+MS50eHQsYXVvLGIxMDFhdzAzLnR4dCxhdW8sYjEwMWVhbjAxLnR4dCwKPiAgICAtYXVvLGIxMDF4
+dG4wMS50eHQsYXVvLGIxMTZ4dzAzLnR4dCxhdW8sYjEzM2h0bjAxLnR4dCwKPiAgICAtYXVvLGIx
+MzN4dG4wMS50eHQsYXVvLGcxMzNoYW4wMS50eHQsYXVvLGcxODVoYW4wMS50eHQsCj4gICAgLWF1
+byx0MjE1aHZuMDEudHh0LGF2aWMsdG0wNzBkZGgwMy50eHQsCj4gICAgLWJvZSx0djA4MHd1bS1u
+bDAudHh0LGNodW5naHdhLGNsYWEwNzB3cDAzeGcudHh0LAo+ICAgIC1jaHVuZ2h3YSxjbGFhMTAx
+d2EwMWEudHh0LGNodW5naHdhLGNsYWExMDF3YjAzLnR4dCwKPiAgICAtZWR0LGV0MDU3MDkwZGh1
+LnR4dCxlZHQsZXQwNzAwODBkaDYudHh0LGVkdCxldG0wNzAwZzBkaDYudHh0LAo+ICAgIC1mb3hs
+aW5rLGZsNTAwd3ZyMDAtYTB0LnR4dCxnaWFudHBsdXMsZ3BnNDgyNzM5cXM1LnR4dCwKPiAgICAt
+aGFubnN0YXIsaHNkMDcwcHd3MS50eHQsaGFubnN0YXIsaHNkMTAwcHhuMS50eHQsCj4gICAgLWhp
+dCx0eDIzZDM4dm0wY2FhLnR4dCxpbm5vbHV4LGF0MDQzdG4yNC50eHQsCj4gICAgLWlubm9sdXgs
+YXQwNzB0bjkyLnR4dCxpbm5vbHV4LGcxMDFpY2UtbDAxLnR4dCwKPiAgICAtaW5ub2x1eCxnMTIx
+aTEtbDAxLnR4dCxpbm5vbHV4LGcxMjF4MS1sMDMudHh0LAo+ICAgIC1pbm5vbHV4LG4xMTZiZ2Uu
+dHh0LGlubm9sdXgsbjE1NmJnZS1sMjEudHh0LAo+ICAgIC1pbm5vbHV4LHpqMDcwbmEtMDFwLnR4
+dCxreW8sdGNnMTIxeGdscC50eHQsCj4gICAgLWxnLGxiMDcwd3Y4LnR4dCxsZyxsZDA3MHd4My1z
+bDAxLnR4dCxsZyxsaDUwMHd4MS1zZDAzLnR4dCwKPiAgICAtbGcsbHAwNzlxeDEtc3Awdi50eHQs
+IGxnLGxwMDk3cXgxLXNwYTEudHh0LGxnLGxwMTIwdXAxLnR4dCwKPiAgICAtbGcsbHAxMjlxZS50
+eHQsIG5lYyxubDQ4MjdoYzE5LTA1Yi50eHQsCj4gICAgLW52ZCw5MTI4LnR4dCxva2F5YSxyczgw
+MDQ4MHQtN3gwZ3AudHh0LAo+ICAgIC1vbGltZXgsbGNkLW9saW51eGluby00My10cy50eHQsb250
+YXQseXg3MDB3djAzLnR4dCwKPiAgICAtb3J0dXN0ZWNoLGNvbTQzaDRtODV1bGMudHh0LCBwYW5h
+c29uaWMsdnZ4MTBmMDA0YjAwLnR4dCwKPiAgICAtcWlhb2RpYW4scWQ0MzAwM2MwLTQwLnR4dCwK
+PiAgICAtc2Ftc3VuZyxsc24xMjJkbDAxLWMwMS50eHQsc2Ftc3VuZyxsdG4xMDFudDA1LnR4dCwK
+PiAgICAtc2Ftc3VuZyxsdG4xNDBhdDI5LTMwMS50eHQsc2hhcnAsbHExMDFrMWx5MDQudHh0LAo+
+ICAgIC1zaGFycCxscTEyM3AxangzMS50eHQsCj4gICAgLXNoZWxseSxzY2EwNzAxMC1iZm4tbG5u
+LnR4dCxzdGFycnksa3IxMjJlYTBzcmEudHh0LAo+ICAgIC10cGssZjA3YS0wMTAyLnR4dCx0cGss
+ZjEwYS0wMTAyLnR4dCx1cnQsdW1zaC04NTk2bWQudHh0Cj4KPiBCZXN0IHJlZ2FyZHMKPgo+Pgo+
+Pj4gVGhpcyBiaW5kaW5nIGlzIHNpbWlsYXIgdG8gYWxsIHBhbmVsIGJpbmRpbmdzIHdoaWNoIGFy
+ZSBsaW5rIHRvIHBhbmVsCj4+PiBzaW1wbGUuIERldGFpbHMgb24gZ3BpbyAmIHBvd2VyIHN1cHBs
+eSBhcmUgZGVzY3JpYmUgd2l0aCBzaW1wbGUtcGFuZWwKPj4+IGJpbmRpbmcuCj4+Cj4+IHNpbXBs
+ZS1wYW5lbC50eHQgcHJvdmlkZXMgd2hhdCBwb3NzaWJsZSBzdGFuZGFyZCBwcm9wZXJ0aWVzIHRo
+ZXJlIGFyZSwKPj4gbm90IHdoZXRoZXIgYSBwYW5lbCB1c2VzIHRoZW0uIFRoZSBwb3dlciBzdXBw
+bHkgbmVlZHMgdG8gYmUgZXhwbGljaXQKPj4gYmVjYXVzZSBJIGRvbid0IGtub3cgaWYgeW91IGZv
+cmdvdCBhbmQgdGhlcmUncyByZWFsbHkgMiBzdXBwbGllcyBvcgo+PiB5b3UgYXJlIHVzaW5nICJw
+b3dlci1zdXBwbHkiIGZvciBhIHNpbmdsZSBzdXBwbHkuCj4+Cj4+IFJvYgo+PgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
