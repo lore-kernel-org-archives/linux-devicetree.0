@@ -1,173 +1,77 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 1/4] pinctrl: samsung: Fix the width of PINCFG_TYPE_DRV
- bitfields for Exynos5433
-Date: Fri, 24 Feb 2017 09:22:35 +0900
-Message-ID: <58AF7CCB.5070303@samsung.com>
-References: <CGME20161230041426epcas1p1f827d3cee8b607d81e9921b412ddf301@epcas1p1.samsung.com>
- <20161230041421.24448-1-andi.shyti@samsung.com>
- <20161230041421.24448-2-andi.shyti@samsung.com>
- <CACRpkdbR3x14h38Gg7qpeWnswwD9qsS0zDUrrXCEJH-AdEB+cQ@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/8] drm/sun4i: add support for sun8i DE2
+ mixers and display engines
+Date: Thu, 23 Feb 2017 16:46:28 -0800
+Message-ID: <20170224004628.xkjrpmbomomgbd24@lukather>
+References: <20170222151854.3280-1-icenowy@aosc.xyz>
+ <20170222151854.3280-5-icenowy@aosc.xyz>
+ <CACvgo5117BB+o429cH=X0t3xz_5=XZ65YCEdE=ro+895a9e=RA@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <CACRpkdbR3x14h38Gg7qpeWnswwD9qsS0zDUrrXCEJH-AdEB+cQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Andi Shyti <andi.shyti@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Andi Shyti <andi@etezian.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, stable <stable@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gbdh35hmqoiikprm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2EEX3CQKGQEGKM66WA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CACvgo5117BB+o429cH=X0t3xz_5=XZ65YCEdE=ro+895a9e=RA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGludXMsCgpPbiAyMDE264WEIDEy7JuUIDMw7J28IDIyOjI4LCBMaW51cyBXYWxsZWlqIHdy
-b3RlOgo+IE9uIEZyaSwgRGVjIDMwLCAyMDE2IGF0IDU6MTQgQU0sIEFuZGkgU2h5dGkgPGFuZGku
-c2h5dGlAc2Ftc3VuZy5jb20+IHdyb3RlOgo+IAo+PiBGcm9tOiBDaGFud29vIENob2kgPGN3MDAu
-Y2hvaUBzYW1zdW5nLmNvbT4KPj4KPj4gVGhpcyBwYXRjaCBmaXhlcyB0aGUgd3Jvbmcgd2lkdGgg
-b2YgUElOQ0ZHX1RZUEVfRFJWIGJpdGZpZWxkcyBmb3IgRXh5bm9zNTQzMwo+PiBiZWNhdXNlIFBJ
-TkNGR19UWVBFX0RSViBvZiBFeHlub3M1NDMzIGhhcyA0Yml0IGZpZWxkcyBpbiB0aGUgKl9EUlYK
-Pj4gcmVnaXN0ZXJzLiBVc3VhbGx5LCBvdGhlciBFeHlub3MgaGF2ZSAyYml0IGZpZWxkIGZvciBQ
-SU5DRkdfVFlQRV9EUlYuCj4+Cj4+IEZpeGVzOiAzYzVlY2M5ZWQzNTMgKCJwaW5jdHJsOiBleHlu
-b3M6IEFkZCBzdXBwb3J0IGZvciBFeHlub3M1NDMzIikKPj4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5l
-bC5vcmcKPj4gQ2M6IFRvbWFzeiBGaWdhIDx0b21hc3ouZmlnYUBnbWFpbC5jb20+Cj4+IENjOiBL
-cnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+Cj4+IENjOiBTeWx3ZXN0ZXIgTmF3
-cm9ja2kgPHMubmF3cm9ja2lAc2Ftc3VuZy5jb20+Cj4+IENjOiBMaW51cyBXYWxsZWlqIDxsaW51
-cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4+IENjOiBLdWtqaW4gS2ltIDxrZ2VuZUBrZXJuZWwub3Jn
-Pgo+PiBDYzogSmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJAb3NnLnNhbXN1bmcuY29t
-Pgo+PiBTaWduZWQtb2ZmLWJ5OiBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4K
-PiAKPiBOb21pbmFsbHkgSSB0aGluayB5b3Ugc2hvdWxkIHNpZ24gdGhpcyBvZmYgdG9vIEFuZGks
-IGFzIHlvdSBhcmUgaW4gdGhlIGRlbGl2ZXJ5Cj4gcGF0aC4KPiAKPiBQYXRjaCBhcHBsaWVkIGZv
-ciBmaXhlcy4KClRoaXMgcGF0Y2ggd2FzIGFscmVhZHkgbWVyZ2VkIG9uIHlvdXIgZ2l0IGFuZCB0
-aGVuIG1lcmdlIGl0IG9uIHRvdmFsZHMncyBnaXRbMV0uCkJ1dCwgd2hlbiBJIGNoZWNrZWQgdGhl
-IGxhdGVzdCBkcml2ZXJzL3BpbmN0cmwvc2Ftc3VuZy9waW5jdHJsLWV4eW5vcy5jLAppdCBkb2Vz
-bid0IGNvbnRhaW4gdGhlIGFsbCBjb2RlcyBvZiBwYXRjaFsxXS4KTWF5YmUsIEkgdGhpbmsgdGhh
-dCB0aGVyZSB3YXMgc29tZSBtZXJnZSBjb25mbGljdFsyXS4gCgpbMV0gaHR0cHM6Ly9naXQua2Vy
-bmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L2NvbW1pdC9k
-cml2ZXJzL3BpbmN0cmwvc2Ftc3VuZy9waW5jdHJsLWV4eW5vcy5jP2lkPTEyNTlmZWRkZDBmODM2
-NDlkNWM0OGQ3MzBjMTQwYjRmN2YzZmEyODgKWzJdIGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dp
-dC9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvZHJpdmVycy9waW5j
-dHJsL3NhbXN1bmcvcGluY3RybC1leHlub3MuYz9pZD03ZjM2ZjVkMTFjZGEwNTBiMTE4Zjc2ZDc3
-NDE1MTQyN2ExOGQxNWVmCgpTbywgSG93IGNhbiB3ZSBmaXggaXQ/IElmIHlvdSB3YW50IHRvIHJl
-c2VuZCB0aGUgbmV3IHBhdGNoLCBJJ2xsIGRvLgpUbyBoZWxwIHlvdSB1bmRlcnN0YW5kLCBJIGp1
-c3QgYWRkZWQgdGhlIGRpZmYgb24gdGhlIGJlbG93LgoKQmVzdCBSZWdhcmRzLApDaGFud29vIENo
-b2kKCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL3NhbXN1bmcvcGluY3RybC1leHlub3Mu
-YyBiL2RyaXZlcnMvcGluY3RybC9zYW1zdW5nL3BpbmN0cmwtZXh5bm9zLmMKaW5kZXggZjliNDk5
-NjdmNTEyLi42M2U1MWI1NmEyMmEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGluY3RybC9zYW1zdW5n
-L3BpbmN0cmwtZXh5bm9zLmMKKysrIGIvZHJpdmVycy9waW5jdHJsL3NhbXN1bmcvcGluY3RybC1l
-eHlub3MuYwpAQCAtMTQ2OCw4MiArMTQ2OCw4MiBAQCBzdGF0aWMgdm9pZCBleHlub3NfcmV0ZW50
-aW9uX2Rpc2FibGUoc3RydWN0IHNhbXN1bmdfcGluY3RybF9kcnZfZGF0YSAqZHJ2ZGF0YSkKIAog
-LyogcGluIGJhbmtzIG9mIGV4eW5vczU0MzMgcGluLWNvbnRyb2xsZXIgLSBBTElWRSAqLwogc3Rh
-dGljIGNvbnN0IHN0cnVjdCBzYW1zdW5nX3Bpbl9iYW5rX2RhdGEgZXh5bm9zNTQzM19waW5fYmFu
-a3MwW10gX19pbml0Y29uc3QgPSB7Ci0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRXKDgsIDB4
-MDAwLCAiZ3BhMCIsIDB4MDApLAotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5UVyg4LCAweDAy
-MCwgImdwYTEiLCAweDA0KSwKLSAgICAgICBFWFlOT1NfUElOX0JBTktfRUlOVFcoOCwgMHgwNDAs
-ICJncGEyIiwgMHgwOCksCi0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRXKDgsIDB4MDYwLCAi
-Z3BhMyIsIDB4MGMpLAotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5UV19FWFQoOCwgMHgwMjAs
-ICJncGYxIiwgMHgxMDA0LCAxKSwKLSAgICAgICBFWFlOT1NfUElOX0JBTktfRUlOVFdfRVhUKDQs
-IDB4MDQwLCAiZ3BmMiIsIDB4MTAwOCwgMSksCi0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRX
-X0VYVCg0LCAweDA2MCwgImdwZjMiLCAweDEwMGMsIDEpLAotICAgICAgIEVYWU5PU19QSU5fQkFO
-S19FSU5UV19FWFQoOCwgMHgwODAsICJncGY0IiwgMHgxMDEwLCAxKSwKLSAgICAgICBFWFlOT1Nf
-UElOX0JBTktfRUlOVFdfRVhUKDgsIDB4MGEwLCAiZ3BmNSIsIDB4MTAxNCwgMSksCisgICAgICAg
-RVhZTk9TNTQzM19QSU5fQkFOS19FSU5UVyg4LCAweDAwMCwgImdwYTAiLCAweDAwKSwKKyAgICAg
-ICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRXKDgsIDB4MDIwLCAiZ3BhMSIsIDB4MDQpLAorICAg
-ICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVFcoOCwgMHgwNDAsICJncGEyIiwgMHgwOCksCisg
-ICAgICAgRVhZTk9TNTQzM19QSU5fQkFOS19FSU5UVyg4LCAweDA2MCwgImdwYTMiLCAweDBjKSwK
-KyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRXX0VYVCg4LCAweDAyMCwgImdwZjEiLCAw
-eDEwMDQsIDEpLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVFdfRVhUKDQsIDB4MDQw
-LCAiZ3BmMiIsIDB4MTAwOCwgMSksCisgICAgICAgRVhZTk9TNTQzM19QSU5fQkFOS19FSU5UV19F
-WFQoNCwgMHgwNjAsICJncGYzIiwgMHgxMDBjLCAxKSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9C
-QU5LX0VJTlRXX0VYVCg4LCAweDA4MCwgImdwZjQiLCAweDEwMTAsIDEpLAorICAgICAgIEVYWU5P
-UzU0MzNfUElOX0JBTktfRUlOVFdfRVhUKDgsIDB4MGEwLCAiZ3BmNSIsIDB4MTAxNCwgMSksCiB9
-OwogCiAvKiBwaW4gYmFua3Mgb2YgZXh5bm9zNTQzMyBwaW4tY29udHJvbGxlciAtIEFVRCAqLwog
-c3RhdGljIGNvbnN0IHN0cnVjdCBzYW1zdW5nX3Bpbl9iYW5rX2RhdGEgZXh5bm9zNTQzM19waW5f
-YmFua3MxW10gX19pbml0Y29uc3QgPSB7Ci0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRHKDcs
-IDB4MDAwLCAiZ3B6MCIsIDB4MDApLAotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5URyg0LCAw
-eDAyMCwgImdwejEiLCAweDA0KSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDcs
-IDB4MDAwLCAiZ3B6MCIsIDB4MDApLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVEco
-NCwgMHgwMjAsICJncHoxIiwgMHgwNCksCiB9OwogCiAvKiBwaW4gYmFua3Mgb2YgZXh5bm9zNTQz
-MyBwaW4tY29udHJvbGxlciAtIENQSUYgKi8KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc2Ftc3VuZ19w
-aW5fYmFua19kYXRhIGV4eW5vczU0MzNfcGluX2JhbmtzMltdIF9faW5pdGNvbnN0ID0gewotICAg
-ICAgIEVYWU5PU19QSU5fQkFOS19FSU5URygyLCAweDAwMCwgImdwdjYiLCAweDAwKSwKKyAgICAg
-ICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDIsIDB4MDAwLCAiZ3B2NiIsIDB4MDApLAogfTsK
-IAogLyogcGluIGJhbmtzIG9mIGV4eW5vczU0MzMgcGluLWNvbnRyb2xsZXIgLSBlU0UgKi8KIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgc2Ftc3VuZ19waW5fYmFua19kYXRhIGV4eW5vczU0MzNfcGluX2Jh
-bmtzM1tdIF9faW5pdGNvbnN0ID0gewotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5URygzLCAw
-eDAwMCwgImdwajIiLCAweDAwKSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDMs
-IDB4MDAwLCAiZ3BqMiIsIDB4MDApLAogfTsKIAogLyogcGluIGJhbmtzIG9mIGV4eW5vczU0MzMg
-cGluLWNvbnRyb2xsZXIgLSBGSU5HRVIgKi8KIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc2Ftc3VuZ19w
-aW5fYmFua19kYXRhIGV4eW5vczU0MzNfcGluX2JhbmtzNFtdIF9faW5pdGNvbnN0ID0gewotICAg
-ICAgIEVYWU5PU19QSU5fQkFOS19FSU5URyg0LCAweDAwMCwgImdwZDUiLCAweDAwKSwKKyAgICAg
-ICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDQsIDB4MDAwLCAiZ3BkNSIsIDB4MDApLAogfTsK
-IAogLyogcGluIGJhbmtzIG9mIGV4eW5vczU0MzMgcGluLWNvbnRyb2xsZXIgLSBGU1lTICovCiBz
-dGF0aWMgY29uc3Qgc3RydWN0IHNhbXN1bmdfcGluX2JhbmtfZGF0YSBleHlub3M1NDMzX3Bpbl9i
-YW5rczVbXSBfX2luaXRjb25zdCA9IHsKLSAgICAgICBFWFlOT1NfUElOX0JBTktfRUlOVEcoNiwg
-MHgwMDAsICJncGgxIiwgMHgwMCksCi0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRHKDcsIDB4
-MDIwLCAiZ3ByNCIsIDB4MDQpLAotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5URyg1LCAweDA0
-MCwgImdwcjAiLCAweDA4KSwKLSAgICAgICBFWFlOT1NfUElOX0JBTktfRUlOVEcoOCwgMHgwNjAs
-ICJncHIxIiwgMHgwYyksCi0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRHKDIsIDB4MDgwLCAi
-Z3ByMiIsIDB4MTApLAotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5URyg4LCAweDBhMCwgImdw
-cjMiLCAweDE0KSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDYsIDB4MDAwLCAi
-Z3BoMSIsIDB4MDApLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVEcoNywgMHgwMjAs
-ICJncHI0IiwgMHgwNCksCisgICAgICAgRVhZTk9TNTQzM19QSU5fQkFOS19FSU5URyg1LCAweDA0
-MCwgImdwcjAiLCAweDA4KSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDgsIDB4
-MDYwLCAiZ3ByMSIsIDB4MGMpLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVEcoMiwg
-MHgwODAsICJncHIyIiwgMHgxMCksCisgICAgICAgRVhZTk9TNTQzM19QSU5fQkFOS19FSU5URyg4
-LCAweDBhMCwgImdwcjMiLCAweDE0KSwKIH07CiAKIC8qIHBpbiBiYW5rcyBvZiBleHlub3M1NDMz
-IHBpbi1jb250cm9sbGVyIC0gSU1FTSAqLwogc3RhdGljIGNvbnN0IHN0cnVjdCBzYW1zdW5nX3Bp
-bl9iYW5rX2RhdGEgZXh5bm9zNTQzM19waW5fYmFua3M2W10gX19pbml0Y29uc3QgPSB7Ci0gICAg
-ICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRHKDgsIDB4MDAwLCAiZ3BmMCIsIDB4MDApLAorICAgICAg
-IEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVEcoOCwgMHgwMDAsICJncGYwIiwgMHgwMCksCiB9Owog
-CiAvKiBwaW4gYmFua3Mgb2YgZXh5bm9zNTQzMyBwaW4tY29udHJvbGxlciAtIE5GQyAqLwogc3Rh
-dGljIGNvbnN0IHN0cnVjdCBzYW1zdW5nX3Bpbl9iYW5rX2RhdGEgZXh5bm9zNTQzM19waW5fYmFu
-a3M3W10gX19pbml0Y29uc3QgPSB7Ci0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRHKDMsIDB4
-MDAwLCAiZ3BqMCIsIDB4MDApLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVEcoMywg
-MHgwMDAsICJncGowIiwgMHgwMCksCiB9OwogCiAvKiBwaW4gYmFua3Mgb2YgZXh5bm9zNTQzMyBw
-aW4tY29udHJvbGxlciAtIFBFUklDICovCiBzdGF0aWMgY29uc3Qgc3RydWN0IHNhbXN1bmdfcGlu
-X2JhbmtfZGF0YSBleHlub3M1NDMzX3Bpbl9iYW5rczhbXSBfX2luaXRjb25zdCA9IHsKLSAgICAg
-ICBFWFlOT1NfUElOX0JBTktfRUlOVEcoNiwgMHgwMDAsICJncHY3IiwgMHgwMCksCi0gICAgICAg
-RVhZTk9TX1BJTl9CQU5LX0VJTlRHKDUsIDB4MDIwLCAiZ3BiMCIsIDB4MDQpLAotICAgICAgIEVY
-WU5PU19QSU5fQkFOS19FSU5URyg4LCAweDA0MCwgImdwYzAiLCAweDA4KSwKLSAgICAgICBFWFlO
-T1NfUElOX0JBTktfRUlOVEcoMiwgMHgwNjAsICJncGMxIiwgMHgwYyksCi0gICAgICAgRVhZTk9T
-X1BJTl9CQU5LX0VJTlRHKDYsIDB4MDgwLCAiZ3BjMiIsIDB4MTApLAotICAgICAgIEVYWU5PU19Q
-SU5fQkFOS19FSU5URyg4LCAweDBhMCwgImdwYzMiLCAweDE0KSwKLSAgICAgICBFWFlOT1NfUElO
-X0JBTktfRUlOVEcoMiwgMHgwYzAsICJncGcwIiwgMHgxOCksCi0gICAgICAgRVhZTk9TX1BJTl9C
-QU5LX0VJTlRHKDQsIDB4MGUwLCAiZ3BkMCIsIDB4MWMpLAotICAgICAgIEVYWU5PU19QSU5fQkFO
-S19FSU5URyg2LCAweDEwMCwgImdwZDEiLCAweDIwKSwKLSAgICAgICBFWFlOT1NfUElOX0JBTktf
-RUlOVEcoOCwgMHgxMjAsICJncGQyIiwgMHgyNCksCi0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJ
-TlRHKDUsIDB4MTQwLCAiZ3BkNCIsIDB4MjgpLAotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5U
-RygyLCAweDE2MCwgImdwZDgiLCAweDJjKSwKLSAgICAgICBFWFlOT1NfUElOX0JBTktfRUlOVEco
-NywgMHgxODAsICJncGQ2IiwgMHgzMCksCi0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRHKDMs
-IDB4MWEwLCAiZ3BkNyIsIDB4MzQpLAotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5URyg1LCAw
-eDFjMCwgImdwZzEiLCAweDM4KSwKLSAgICAgICBFWFlOT1NfUElOX0JBTktfRUlOVEcoMiwgMHgx
-ZTAsICJncGcyIiwgMHgzYyksCi0gICAgICAgRVhZTk9TX1BJTl9CQU5LX0VJTlRHKDgsIDB4MjAw
-LCAiZ3BnMyIsIDB4NDApLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVEcoNiwgMHgw
-MDAsICJncHY3IiwgMHgwMCksCisgICAgICAgRVhZTk9TNTQzM19QSU5fQkFOS19FSU5URyg1LCAw
-eDAyMCwgImdwYjAiLCAweDA0KSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDgs
-IDB4MDQwLCAiZ3BjMCIsIDB4MDgpLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktfRUlOVEco
-MiwgMHgwNjAsICJncGMxIiwgMHgwYyksCisgICAgICAgRVhZTk9TNTQzM19QSU5fQkFOS19FSU5U
-Ryg2LCAweDA4MCwgImdwYzIiLCAweDEwKSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJ
-TlRHKDgsIDB4MGEwLCAiZ3BjMyIsIDB4MTQpLAorICAgICAgIEVYWU5PUzU0MzNfUElOX0JBTktf
-RUlOVEcoMiwgMHgwYzAsICJncGcwIiwgMHgxOCksCisgICAgICAgRVhZTk9TNTQzM19QSU5fQkFO
-S19FSU5URyg0LCAweDBlMCwgImdwZDAiLCAweDFjKSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9C
-QU5LX0VJTlRHKDYsIDB4MTAwLCAiZ3BkMSIsIDB4MjApLAorICAgICAgIEVYWU5PUzU0MzNfUElO
-X0JBTktfRUlOVEcoOCwgMHgxMjAsICJncGQyIiwgMHgyNCksCisgICAgICAgRVhZTk9TNTQzM19Q
-SU5fQkFOS19FSU5URyg1LCAweDE0MCwgImdwZDQiLCAweDI4KSwKKyAgICAgICBFWFlOT1M1NDMz
-X1BJTl9CQU5LX0VJTlRHKDIsIDB4MTYwLCAiZ3BkOCIsIDB4MmMpLAorICAgICAgIEVYWU5PUzU0
-MzNfUElOX0JBTktfRUlOVEcoNywgMHgxODAsICJncGQ2IiwgMHgzMCksCisgICAgICAgRVhZTk9T
-NTQzM19QSU5fQkFOS19FSU5URygzLCAweDFhMCwgImdwZDciLCAweDM0KSwKKyAgICAgICBFWFlO
-T1M1NDMzX1BJTl9CQU5LX0VJTlRHKDUsIDB4MWMwLCAiZ3BnMSIsIDB4MzgpLAorICAgICAgIEVY
-WU5PUzU0MzNfUElOX0JBTktfRUlOVEcoMiwgMHgxZTAsICJncGcyIiwgMHgzYyksCisgICAgICAg
-RVhZTk9TNTQzM19QSU5fQkFOS19FSU5URyg4LCAweDIwMCwgImdwZzMiLCAweDQwKSwKIH07CiAK
-IC8qIHBpbiBiYW5rcyBvZiBleHlub3M1NDMzIHBpbi1jb250cm9sbGVyIC0gVE9VQ0ggKi8KIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgc2Ftc3VuZ19waW5fYmFua19kYXRhIGV4eW5vczU0MzNfcGluX2Jh
-bmtzOVtdIF9faW5pdGNvbnN0ID0gewotICAgICAgIEVYWU5PU19QSU5fQkFOS19FSU5URygzLCAw
-eDAwMCwgImdwajEiLCAweDAwKSwKKyAgICAgICBFWFlOT1M1NDMzX1BJTl9CQU5LX0VJTlRHKDMs
-IDB4MDAwLCAiZ3BqMSIsIDB4MDApLAogfTsKIAogLyoKCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+--gbdh35hmqoiikprm
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi Emil,
+
+On Thu, Feb 23, 2017 at 05:44:54PM +0000, Emil Velikov wrote:
+> On 22 February 2017 at 15:18, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> > Allwinner have a new "Display Engine 2.0" in there new SoCs, which comes
+> > in a new "Display Engine" (mixers instead of old backends and
+> > frontends).
+> >
+> > Add support for the mixer on Allwinner V3s SoC; it's the simplest one.
+> >
+> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/sun4i/Kconfig       |   8 +
+> >  drivers/gpu/drm/sun4i/Makefile      |   1 +
+> >  drivers/gpu/drm/sun4i/sun4i_crtc.c  |   6 +-
+> >  drivers/gpu/drm/sun4i/sun4i_drv.c   |  38 +++-
+> >  drivers/gpu/drm/sun4i/sun4i_drv.h   |   1 +
+> >  drivers/gpu/drm/sun4i/sun4i_layer.c |  92 ++++++--
+> >  drivers/gpu/drm/sun4i/sun4i_layer.h |   1 +
+> >  drivers/gpu/drm/sun4i/sun8i_mixer.c | 417 ++++++++++++++++++++++++++++++++++++
+> >  drivers/gpu/drm/sun4i/sun8i_mixer.h | 133 ++++++++++++
+> >  9 files changed, 674 insertions(+), 23 deletions(-)
+> Silly question:
+> 
+> Does this series cover the same functionality/hardware as the separate
+> sun8i driver proposed a few months back ?
+> The diff stat looks quite different (~1.6k vs ~0.6k), although that
+> could be due to reusing the existing sun4i code.
+
+Since those aren't feature equivalent, this is a bit complicated to
+answer, but most of the changes introduced by the old driver was
+duplication of code that was already existing (Allwinner TCON, TV
+Encoder, Designware HDMI, etc).
+
+This patchset superseeds it by using what is already supported without
+the duplication. It also has a bit less features (for example the HDMI
+support is missing for now), but it's a much better code base to base
+our future work on.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--gbdh35hmqoiikprm--
