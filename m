@@ -1,46 +1,73 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
-Date: Fri, 24 Feb 2017 16:22:16 +0100
-Message-ID: <CAMuHMdU9UL9ZyiPJqtTTNS=KOScu6M3c7jQgD1vZ+gTiTCAYMA@mail.gmail.com>
-References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org> <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/8] ARM: dts: exynos: Fix watchdog reset on Exynos4412
+Date: Fri, 24 Feb 2017 17:25:38 +0200
+Message-ID: <20170224152538.3zwgoa3oreuqkx6m@kozik-lap>
+References: <20170224151122.12142-1-krzk@kernel.org>
+ <20170224151122.12142-4-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487948756-25172-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170224151122.12142-4-krzk@kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
-> @@ -0,0 +1,27 @@
-> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
-> +
-> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
-> +12-bits ADC communicating over I2c bus.
-> +The device node for this driver shall be a child of a I2c controller.
-> +
-> +Required properties
-> +  - compatible: Should be "maxim,max961x"
-> +  - reg: The 7-bits long I2c address of the device
-> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
-> +                   resistor.
+On Fri, Feb 24, 2017 at 05:11:17PM +0200, Krzysztof Kozlowski wrote:
+> The Exynos4412 has the same watchdog as newer SoCs (e.g. Exynos5250).
+> Just like the others, for working it requires additional steps in Power
+> Management Unit: unmasking the reset request and enabling the system
+> reset.  Without these additional steps in PMU, the watchdog will not be
+> able to reset the system on expiration event.
+> 
+> Change the compatible of Exynos4412 watchdog device node to
+> samsung,exynos5250-wdt which includes the additional PMU steps.
+> 
+> This will also fix infinite watchdog interrupt in soft mode (lack of
+> interrupt clear) because it is also included in samsung,exynos5250-wdt.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi    |  9 ---------
+>  arch/arm/boot/dts/exynos4210.dtsi |  9 +++++++++
+>  arch/arm/boot/dts/exynos4412.dtsi | 10 ++++++++++
+>  3 files changed, 19 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index 18def1c774d5..71e2cdae6068 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -283,15 +283,6 @@
+>  		};
+>  	};
+>  
+> -	watchdog: watchdog@10060000 {
+> -		compatible = "samsung,s3c2410-wdt";
+> -		reg = <0x10060000 0x100>;
+> -		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+> -		clocks = <&clock CLK_WDT>;
+> -		clock-names = "watchdog";
+> -		status = "disabled";
+> -	};
+> -
+>  	rtc: rtc@10070000 {
+>  		compatible = "samsung,s3c6410-rtc";
+>  		reg = <0x10070000 0x100>;
+> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+> index f9408188f97f..e126357aba9a 100644
+> --- a/arch/arm/boot/dts/exynos4210.dtsi
+> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> @@ -119,6 +119,15 @@
+>  		};
+>  	};
+>  
+> +	watchdog: watchdog@10060000 {
+> +		compatible = "samsung,s3c6410-wdt";
 
-shunt-resistor-micro-ohms?
+My mistake - here it should still remain at samsung,s3c2410-wdt because
+I am just copying existing nodes to Exynso4210. The compatible should be
+changed in patch 6/8.
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
