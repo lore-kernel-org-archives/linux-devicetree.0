@@ -1,117 +1,82 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state" binding to OPP nodes
-Date: Fri, 24 Feb 2017 14:36:34 +0530
-Message-ID: <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
-References: <cover.1487926924.git.viresh.kumar@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1487926924.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-In-Reply-To: <cover.1487926924.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-References: <cover.1487926924.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Fri, 24 Feb 2017 10:21:03 +0100
+Message-ID: <20170224102103.26b38341@bbrezillon>
+References: <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
+ <20170221162133.jch6yzpotj4s7zob@piout.net>
+ <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
+ <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
+ <20170221171438.e5hvruoixafpcdps@piout.net>
+ <CACiLriSdRM4ZfoDsxFhf6ZVwAtacJOJ28M8CvOg6kC_XN0T-Mw@mail.gmail.com>
+ <20170224081430.GB19663@samfundet.no>
+ <20170224092742.3ce205e2@bbrezillon>
+ <20170224085209.GA27812@samfundet.no>
+ <20170224095509.777da771@bbrezillon>
+ <20170224090435.GA11313@samfundet.no>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170224090435.GA11313@samfundet.no>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, "open
+ list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?SMOldmFyZA==?= Skinnemoen <hskinne>
 List-Id: devicetree@vger.kernel.org
 
-If the consumers don't need the capability of switching to different
-domain performance states at runtime, then they can simply define their
-required domain performance state in their nodes directly.
-
-But if the device needs the capability of switching to different domain
-performance states, as they may need to support different clock rates,
-then the per OPP node can be used to contain that information.
-
-This patch introduces the domain-performance-state (already defined by
-Power Domain bindings) to the per OPP node.
-
-Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Tested-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/opp/opp.txt | 64 +++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 9f5ca4457b5f..7f6bb52521b6 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -154,6 +154,15 @@ properties.
- 
- - status: Marks the node enabled/disabled.
- 
-+- domain-performance-state: A positive integer value representing the minimum
-+  performance level (of the parent domain) required by the consumer as defined
-+  by ../power/power_domain.txt binding document. The OPP nodes can contain the
-+  "domain-performance-state" property, only if the device node contains a
-+  "power-domains" property. The OPP nodes aren't allowed to contain the
-+  "domain-performance-state" property partially, i.e. Either all OPP nodes in
-+  the OPP table have the "domain-performance-state" property or none of them
-+  have it.
-+
- Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
- 
- / {
-@@ -528,3 +537,58 @@ Example 5: opp-supported-hw
- 		};
- 	};
- };
-+
-+Example 7: domain-Performance-state:
-+(example: For 1GHz require domain state 1 and for 1.1 & 1.2 GHz require state 2)
-+
-+/ {
-+	cpu0_opp_table: opp_table0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp@1000000000 {
-+			opp-hz = /bits/ 64 <1000000000>;
-+			domain-performance-state = <1>;
-+		};
-+		opp@1100000000 {
-+			opp-hz = /bits/ 64 <1100000000>;
-+			domain-performance-state = <2>;
-+		};
-+		opp@1200000000 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			domain-performance-state = <2>;
-+		};
-+	};
-+
-+	foo_domain: power-controller@12340000 {
-+		compatible = "foo,power-controller";
-+		reg = <0x12340000 0x1000>;
-+		#power-domain-cells = <0>;
-+
-+		performance-states {
-+			compatible = "domain-performance-state";
-+			pstate@1 {
-+				reg = <1>;
-+				domain-microvolt = <970000 975000 985000>;
-+			};
-+			pstate@2 {
-+				reg = <2>;
-+				domain-microvolt = <1000000 1075000 1085000>;
-+			};
-+		};
-+	}
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+			clocks = <&clk_controller 0>;
-+			clock-names = "cpu";
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			power-domains = <&foo_domain>;
-+		};
-+	};
-+};
--- 
-2.7.1.410.g6faf27b
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyNCBGZWIgMjAxNyAxMDowNDozNSArMDEwMApIYW5zLUNocmlzdGlhbiBOb3JlbiBF
+Z3R2ZWR0IDxlZ3R2ZWR0QHNhbWZ1bmRldC5ubz4gd3JvdGU6Cgo+IEFyb3VuZCBGcmkgMjQgRmVi
+IDIwMTcgMDk6NTU6MDkgKzAxMDAgb3IgdGhlcmVhYm91dCwgQm9yaXMgQnJlemlsbG9uIHdyb3Rl
+Ogo+ID4gT24gRnJpLCAyNCBGZWIgMjAxNyAwOTo1MjowOSArMDEwMAo+ID4gSGFucy1DaHJpc3Rp
+YW4gTm9yZW4gRWd0dmVkdCA8ZWd0dmVkdEBzYW1mdW5kZXQubm8+IHdyb3RlOiAgCj4gPj4gQXJv
+dW5kIEZyaSAyNCBGZWIgMjAxNyAwOToyNzo0MiArMDEwMCBvciB0aGVyZWFib3V0LCBCb3JpcyBC
+cmV6aWxsb24gd3JvdGU6ICAKPiA+PiA+IE9uIEZyaSwgMjQgRmViIDIwMTcgMDk6MTQ6MzAgKzAx
+MDAgSGFucy1DaHJpc3RpYW4gTm9yZW4gRWd0dmVkdCA8ZWd0dmVkdEBzYW1mdW5kZXQubm8+IHdy
+b3RlOiAgICAKPiA+PiA+PiBBcm91bmQgVGh1IDIzIEZlYiAyMDE3IDIxOjE4OjEzIC0wODAwIG9y
+IHRoZXJlYWJvdXQsIEjDpXZhcmQgU2tpbm5lbW9lbiB3cm90ZTogICAgCj4gPj4gPj4gPiBPbiBU
+dWUsIEZlYiAyMSwgMjAxNyBhdCA5OjE0IEFNLCBBbGV4YW5kcmUgQmVsbG9uaQo+ID4+ID4+ID4g
+PGFsZXhhbmRyZS5iZWxsb25pQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6ICAgICAgCj4gPj4g
+Pj4gPj4gT24gMjEvMDIvMjAxNyBhdCAxODo0MzozNSArMDIwMCwgQW5keSBTaGV2Y2hlbmtvIHdy
+b3RlOiAgICAgIAo+ID4+IAo+ID4+IDxzbmlwcD4KPiA+PiAgIAo+ID4+ID4+ID4+IElmIG5vYm9k
+eSBjb21wbGFpbnMgYWJvdXQgdGhlIDQuMTAgYnJlYWthZ2UsIFlvdSdsbCBoYXZlIHBsZW50eSBv
+ZiB0aW1lCj4gPj4gPj4gPj4gdG8gcmVtb3ZlIGl0IGZvciA0LjEyICAgICAgCj4gPj4gPj4gPiAK
+PiA+PiA+PiA+IEknbSBmaW5lIHdpdGggdGhhdCwgYnV0IEkgaGF2ZW4ndCBwdXQgbXVjaCBlZmZv
+cnQgaW50byBrZWVwaW5nIGl0Cj4gPj4gPj4gPiBhbGl2ZSBsYXRlbHkuIElmIEhhbnMtQ2hyaXN0
+aWFuIGFncmVlcywgSSdtIHdpbGxpbmcgdG8gcG9zdCBhIHBhdGNoIHRvCj4gPj4gPj4gPiByZW1v
+dmUgaXQsIG9yIGFjayBzb21lb25lIGVsc2UncyBwYXRjaC4gICAgICAKPiA+PiA+PiAKPiA+PiA+
+PiBUaGVuIGxldHMgcGxhbiB0aGlzIGZvciA0LjEyLCBlaXRoZXIgeW91IEjDpXZhcmQgd2hpcCB1
+cCBhIHBhdGNoIG9yIEkgY2FuCj4gPj4gPj4gZXZlbnR1YWxseSBkbyBpdC4KPiA+PiA+PiAKPiA+
+PiA+PiBJIGNhbiBwdXNoIGl0IHRocm91Z2ggdGhlIGxpbnV4LWF2cjMyIGdpdCB0cmVlIG9uIGtl
+cm5lbC5vcmcuCj4gPj4gPj4gICAgIAo+ID4+ID4gCj4gPj4gPiBDYW4geW91IGRvIHRoYXQganVz
+dCBhZnRlciA0LjExLXJjMSBpcyByZWxlYXNlZCBhbmQgcHJvdmlkZSBhIHRvcGljCj4gPj4gPiBi
+cmFuY2ggSSBjYW4gcHVsbCBpbiBteSBuYW5kL25leHQgYnJhbmNoLCBzbyB0aGF0IEkgY2FuIHJl
+d29yayB0aGlzCj4gPj4gPiBwYXRjaCBhbmQgZHJvcCBhbGwgdGhlIHBkYXRhLWNvbXBhdCBjb2Rl
+IChhcyBzdWdnZXN0ZWQgYnkgQW5keSkuICAgIAo+ID4+IAo+ID4+IE9LLCBJIHdpbGwgdHJ5IHRv
+IHByZXBhcmUgaXQgZHVyaW5nIHRoZSB3ZWVrZW5kLgo+ID4+IAo+ID4+IEFueSByZWFzb24gdG8g
+d2FpdCBmb3IgNC4xMS1yYzE/IEFGQUlLIExpbnVzIHByZWZlcnMgdGhlIGxhcmdlciBjaGFuZ2Vz
+Cj4gPj4gYmVmb3JlIGhlIHN0YXJ0cyB0YWdnaW5nIHJjJ3MuCj4gPj4gICAKPiA+IAo+ID4gT2gs
+IHNvIHlvdSB3YW50IHRvIHF1ZXVlIGl0IGZvciA0LjExLCB0aGF0J3MgZXZlbiBiZXR0ZXIuICAK
+PiAKPiBQZXJoYXBzIEkgbWlzdW5kZXJzdG9vZCB5b3UsIGJ5IGFmdGVyIDQuMTEtcmMxIHlvdSBt
+ZWFuIHF1ZXVlIGl0IGZvciA0LjEyPwoKWWVwLCB0aGF0J3Mgd2hhdCBJIHVuZGVyc3Rvb2QgZnJv
+bSB5b3VyIHByZXZpb3VzIGFuc3dlciB3aGVyZSB5b3Ugc2FpZAonVGhlbiBsZXRzIHBsYW4gdGhp
+cyBmb3IgNC4xMiwgZWl0aGVyIHlvdSBIw6V2YXJkIHdoaXAgdXAgYSBwYXRjaCBvciBJCmNhbiBl
+dmVudHVhbGx5IGRvIGl0LicuIElmIHlvdSBxdWV1ZSBpdCBmb3IgNC4xMiwgeW91J2xsIHByb2Jh
+Ymx5IHdhbnQKdG8gYmFzZSB5b3VyIHBhdGNoIG9uIDQuMTEtcmMxIHRvIG1ha2Ugc3VyZSBpdCBk
+b2VzIG5vdCBjb25mbGljdCB3aXRoCmNoYW5nZXMgcHVsbGVkIGJ5IExpbnVzIGR1cmluZyB0aGUg
+bWVyZ2Ugd2luZG93LgoKT1RPSCwgaWYgeW91IHdhbnQgdG8gcmVtb3ZlIGF2cjMyIHN1cHBvcnQg
+aW4gNC4xMSAod2hpY2ggd291bGQgbWFrZQp0aGluZ3MgZWFzaWVyIGZvciBtZSA7LSkpLCB5b3Ug
+c3RpbGwgaGF2ZSBvbmUgd2VlayBiZWZvcmUgdGhlIGVuZCBvZgp0aGUgbWVyZ2Ugd2luZG93LgoK
+PiAKPiBJIHdpbGwgc2VlIHdoYXQgSSBnZXQgYXJvdW5kIHRvIGRvIGluIHRoZSB3ZWVrZW5kLCBp
+dCBzaG91bGQgYmUgcHJldHR5Cj4gc3RyYWlnaHRmb3J3YXJkLCBqdXN0IHdhbnQgdG8gbWFrZSBz
+dXJlIHdlIHJlbW92ZSBhbGwgdGhlIGJpdHMuCj4gCgpPa2F5LgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
