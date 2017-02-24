@@ -1,215 +1,135 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] input: cpcap-pwrbutton: new driver
-Date: Fri, 24 Feb 2017 09:59:09 +0100
-Message-ID: <20170224085909.30559-1-sre@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
+ for imx6sll
+Date: Fri, 24 Feb 2017 17:02:12 +0800
+Message-ID: <CAA+hA=SnrGo62=XAQCTjmsS0tQTB097JhVXFSQU8RDak3hA1Rg@mail.gmail.com>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
+ <1482832070-22668-6-git-send-email-ping.bai@nxp.com>
+ <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
+ <CAA+hA=TL=Ys6j7YGOofAqrEGBcR15szvx3mMf-Dm03rnEa_VRA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAA+hA=TL=Ys6j7YGOofAqrEGBcR15szvx3mMf-Dm03rnEa_VRA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Bai Ping <ping.bai@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Jacky Bai <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Philipp Zabel <p.zabel@pengutronix.de>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Motorola CPCAP is a PMIC found in multiple smartphones.
-This driver adds support for the power/on button and has
-been tested with Droid 4.
-
-Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/input/cpcap-pwrbutton.txt  |  20 ++++
- drivers/input/misc/Kconfig                         |  10 ++
- drivers/input/misc/Makefile                        |   1 +
- drivers/input/misc/cpcap-pwrbutton.c               | 119 +++++++++++++++++++++
- 4 files changed, 150 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
- create mode 100644 drivers/input/misc/cpcap-pwrbutton.c
-
-diff --git a/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
-new file mode 100644
-index 000000000000..0dd0076daf71
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
-@@ -0,0 +1,20 @@
-+Motorola CPCAP on key
-+
-+This module is part of the CPCAP. For more details about the whole
-+chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
-+
-+This module provides a simple power button event via an Interrupt.
-+
-+Required properties:
-+- compatible: should be one of the following
-+   - "motorola,cpcap-pwrbutton"
-+- interrupts: irq specifier for CPCAP's ON IRQ
-+
-+Example:
-+
-+&cpcap {
-+	cpcap_pwrbutton: pwrbutton {
-+		compatible = "motorola,cpcap-pwrbutton";
-+		interrupts = <23 IRQ_TYPE_NONE>;
-+	};
-+};
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 5b6c52210d20..9f7b72249eac 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -316,6 +316,16 @@ config INPUT_COBALT_BTNS
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cobalt_btns.
- 
-+config INPUT_CPCAP_PWRBUTTON
-+	tristate "CPCAP OnKey"
-+	depends on MFD_CPCAP
-+	help
-+	  Say Y here if you want to enable power key reporting via the
-+	  Motorola CPCAP chip.
-+
-+	  To compile this driver as a module, choose M here. The module will
-+	  be called cpcap-pwrbutton.
-+
- config INPUT_WISTRON_BTNS
- 	tristate "x86 Wistron laptop button interface"
- 	depends on X86_32
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index b10523f2878e..b923a9828c88 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_INPUT_CM109)		+= cm109.o
- obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
- obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
- obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
-+obj-$(CONFIG_INPUT_CPCAP_PWRBUTTON)	+= cpcap-pwrbutton.o
- obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
- obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
- obj-$(CONFIG_INPUT_DA9063_ONKEY)	+= da9063_onkey.o
-diff --git a/drivers/input/misc/cpcap-pwrbutton.c b/drivers/input/misc/cpcap-pwrbutton.c
-new file mode 100644
-index 000000000000..ed6674689e79
---- /dev/null
-+++ b/drivers/input/misc/cpcap-pwrbutton.c
-@@ -0,0 +1,119 @@
-+/**
-+ * CPCAP Power Button Input Driver
-+ *
-+ * Copyright (C) 2017 Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-+ *
-+ * This file is subject to the terms and conditions of the GNU General
-+ * Public License. See the file "COPYING" in the main directory of this
-+ * archive for more details.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/errno.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/regmap.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/mfd/motorola-cpcap.h>
-+
-+#define CPCAP_IRQ_ON 23
-+#define CPCAP_IRQ_ON_BITMASK (1 << (CPCAP_IRQ_ON % 16))
-+
-+struct cpcap_power_button {
-+	struct regmap *regmap;
-+	struct input_dev *idev;
-+	struct device *dev;
-+};
-+
-+static irqreturn_t powerbutton_irq(int irq, void *_button)
-+{
-+	struct cpcap_power_button *button = _button;
-+	bool key_pressed;
-+	int err, val;
-+
-+	err = regmap_read(button->regmap, CPCAP_REG_INTS2, &val);
-+	if (err) {
-+		dev_err(button->dev, "read failed: %d", err);
-+		return IRQ_HANDLED;
-+	}
-+	key_pressed = !!(val & CPCAP_IRQ_ON_BITMASK);
-+
-+	pm_wakeup_event(button->dev, 0);
-+	input_report_key(button->idev, KEY_POWER, key_pressed);
-+	input_sync(button->idev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cpcap_power_button_probe(struct platform_device *pdev)
-+{
-+	struct cpcap_power_button *button;
-+	int irq = platform_get_irq(pdev, 0);
-+	int err;
-+
-+	button = devm_kmalloc(&pdev->dev, sizeof(*button), GFP_KERNEL);
-+	if (!button)
-+		return -ENOMEM;
-+
-+	button->idev = devm_input_allocate_device(&pdev->dev);
-+	if (!button->idev)
-+		return -ENOMEM;
-+
-+	button->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!button->regmap)
-+		return -ENODEV;
-+
-+	button->dev = &pdev->dev;
-+
-+	button->idev->name = "cpcap-pwrbutton";
-+	button->idev->phys = "cpcap-pwrbutton/input0";
-+	button->idev->dev.parent = button->dev;
-+	input_set_capability(button->idev, EV_KEY, KEY_POWER);
-+
-+	err = devm_request_threaded_irq(&button->idev->dev, irq, NULL,
-+		powerbutton_irq, IRQF_ONESHOT, "cpcap_pwrbutton", button);
-+	if (err < 0) {
-+		dev_err(&pdev->dev, "IRQ request failed: %d\n", err);
-+		return err;
-+	}
-+
-+	err = input_register_device(button->idev);
-+	if (err) {
-+		dev_err(&pdev->dev, "Input register failed: %d\n", err);
-+		return err;
-+	}
-+
-+	device_init_wakeup(&pdev->dev, true);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id cpcap_pwrbutton_dt_match_table[] = {
-+	{ .compatible = "motorola,cpcap-pwrbutton" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cpcap_pwrbutton_dt_match_table);
-+#endif
-+
-+static struct platform_driver cpcap_power_button_driver = {
-+	.probe		= cpcap_power_button_probe,
-+	.driver		= {
-+		.name	= "cpcap-pwrbutton",
-+		.of_match_table = of_match_ptr(cpcap_pwrbutton_dt_match_table),
-+	},
-+};
-+module_platform_driver(cpcap_power_button_driver);
-+
-+MODULE_ALIAS("platform:cpcap-pwrbutton");
-+MODULE_DESCRIPTION("CPCAP Power Button");
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTGludXMKCkdlbnRseSBQaW5nLi4uCgpBbnkgZmVlZGJhY2sgYWJvdXQgdGhlIHByb3Bvc2Fs
+PwoKUmVnYXJkcwpEb25nIEFpc2hlbmcKCk9uIFRodSwgRmViIDE2LCAyMDE3IGF0IDM6NTEgUE0s
+IERvbmcgQWlzaGVuZyA8ZG9uZ2FzODZAZ21haWwuY29tPiB3cm90ZToKPiBIaSBMaW51cywKPgo+
+IE9uIFR1ZSwgRGVjIDI3LCAyMDE2IGF0IDg6NTkgUE0sIExpbnVzIFdhbGxlaWogPGxpbnVzLndh
+bGxlaWpAbGluYXJvLm9yZz4gd3JvdGU6Cj4+IE9uIFR1ZSwgRGVjIDI3LCAyMDE2IGF0IDEwOjQ3
+IEFNLCBCYWkgUGluZyA8cGluZy5iYWlAbnhwLmNvbT4gd3JvdGU6Cj4+Cj4+PiBBZGQgcGluY3Ry
+bCBiaW5kaW5nIGRvYyB1cGRhdGUgZm9yIGlteDZzbGwuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTog
+QmFpIFBpbmcgPHBpbmcuYmFpQG54cC5jb20+Cj4+Cj4+IEkgaGF2ZSB0byBwdXNoIGJhY2sgb24g
+dGhpcyBhIGJpdC4KPj4KPj4+ICtQbGVhc2UgcmVmZXIgdG8gZnNsLGlteC1waW5jdHJsLnR4dCBp
+biB0aGlzIGRpcmVjdG9yeSBmb3IgY29tbW9uIGJpbmRpbmcgcGFydAo+Pj4gK2FuZCB1c2FnZS4K
+Pj4KPj4gSSB1bmRlcnN0YW5kIHRoYXQgaXQgaXMgYnVpbGRpbmcgb24gdG9wIG9mIHRoZSBvbGQg
+aS5NWCBiaW5kaW5ncyBhbmQgdGhhdAo+PiBpdCBoYXMgc29tZSBraW5kIG9mICJ0cmFkaXRpb24i
+IGNvbWluZyB3aXRoIGl0Lgo+Pgo+PiBBdCB0aGUgc2FtZSB0aW1lLCB0aGUgaS5NWCBiaW5kaW5n
+cyBjYW1lIGFib3V0IGJlZm9yZSB3ZSBoYWQgdGhlCj4+IGdlbmVyaWMgcGluIGNvbnRyb2wgYmlu
+ZGluZ3MgZGVmaW5lZC4KPj4KPj4+ICtDT05GSUcgYml0cyBkZWZpbml0aW9uOgo+Pj4gK1BBRF9D
+VExfTFZFICAgICAgICAgICAgICAgICAgICAoMSA8PCAyMikKPj4+ICtQQURfQ1RMX0hZUyAgICAg
+ICAgICAgICAgICAgICAgICgxIDw8IDE2KQo+Pj4gK1BBRF9DVExfUFVTXzEwMEtfRE9XTiAgICAg
+ICAgICAgKDAgPDwgMTQpCj4+PiArUEFEX0NUTF9QVVNfNDdLX1VQICAgICAgICAgICAgICAoMSA8
+PCAxNCkKPj4+ICtQQURfQ1RMX1BVU18xMDBLX1VQICAgICAgICAgICAgICgyIDw8IDE0KQo+Pj4g
+K1BBRF9DVExfUFVTXzIyS19VUCAgICAgICAgICAgICAgKDMgPDwgMTQpCj4+PiArUEFEX0NUTF9Q
+VUUgICAgICAgICAgICAgICAgICAgICAoMSA8PCAxMykKPj4+ICtQQURfQ1RMX1BLRSAgICAgICAg
+ICAgICAgICAgICAgICgxIDw8IDEyKQo+Pj4gK1BBRF9DVExfT0RFICAgICAgICAgICAgICAgICAg
+ICAgKDEgPDwgMTEpCj4+PiArUEFEX0NUTF9TUEVFRF9MT1cgICAgICAgICAgICAgICAoMCA8PCA2
+KQo+Pj4gK1BBRF9DVExfU1BFRURfTUVEICAgICAgICAgICAgICAgKDEgPDwgNikKPj4+ICtQQURf
+Q1RMX1NQRUVEX0hJR0ggICAgICAgICAgICAgICgzIDw8IDYpCj4+PiArUEFEX0NUTF9EU0VfRElT
+QUJMRSAgICAgICAgICAgICAoMCA8PCAzKQo+Pj4gK1BBRF9DVExfRFNFXzI2MG9obSAgICAgICAg
+ICAgICAgKDEgPDwgMykKPj4+ICtQQURfQ1RMX0RTRV8xMzBvaG0gICAgICAgICAgICAgICgyIDw8
+IDMpCj4+PiArUEFEX0NUTF9EU0VfODdvaG0gICAgICAgICAgICAgICAoMyA8PCAzKQo+Pj4gK1BB
+RF9DVExfRFNFXzY1b2htICAgICAgICAgICAgICAgKDQgPDwgMykKPj4+ICtQQURfQ1RMX0RTRV81
+Mm9obSAgICAgICAgICAgICAgICg1IDw8IDMpCj4+PiArUEFEX0NUTF9EU0VfNDNvaG0gICAgICAg
+ICAgICAgICAoNiA8PCAzKQo+Pj4gK1BBRF9DVExfRFNFXzM3b2htICAgICAgICAgICAgICAgKDcg
+PDwgMykKPj4+ICtQQURfQ1RMX1NSRV9GQVNUICAgICAgICAgICAgICAgICgxIDw8IDApCj4+PiAr
+UEFEX0NUTF9TUkVfU0xPVyAgICAgICAgICAgICAgICAoMCA8PCAwKQo+Pgo+PiBBIHdob2xlIHNs
+ZXcgb2YgdGhlc2UgaWYgbm90IGFsbCBjb3JyZXNwb25kIHRvIHRoZSBnZW5lcmljIGJpbmRpbmdz
+Lgo+Pgo+PiBJIHdvdWxkIGNvbnNpZGVyIGF1Z21lbnRpbmcgdGhlIGNvZGUgaW4gdGhlIGRyaXZl
+ciB0byBoYW5kbGUgdGhlIGdlbmVyaWMKPj4gYmluZGluZ3MgKmluIGFkZGl0aW9uKiB0byB0aGUg
+b2xkIGxlZ2FjeSBiaW5kaW5ncywgYW5kIHVzZSB0aG9zZSBvdmVyIHRoZXNlCj4+IHJhbmRvbSBj
+dXN0b20gYml0cy4KPj4KPj4gUmVhZCBkcml2ZXJzIHVzaW5nIENPTkZJR19HRU5FUklDX1BJTkNP
+TkYgYXMgYW4gaW5zcGlyYXRpb24uCj4+Cj4+IEZvciBleGFtcGxlIHNlZSBjb21taXQKPj4gY2Vm
+YmYxYTFiMjk1MzFhOTcwYmMyOTA4YTUwYTc1ZDY0NzRmY2MzOAo+PiAicGluY3RybDogc3VueGk6
+IFN1cHBvcnQgZ2VuZXJpYyBiaW5kaW5nIgo+PiBmcm9tIE1heGltZSBSaXBhcmQsIHdoZXJlIGhl
+IGRvZXMgYSBzaW1pbGFyIHRoaW5nIGZvciBzdW54aS4KPj4KPgo+IEZpcnN0IHRoYW5rcyBmb3Ig
+eW91ciBnb29kIHN1Z2dlc3Rpb24hCj4KPiBBbGwgd2UgcmVhbGl6ZWQgdGhhdCB0aGUgcmF3IGRh
+dGEgb2YgSU1YIHBhZCBjb25maWcgaW4gZHRzIGlzIG5vdCBnb29kLgo+IGUuZy4KPiBwaW5jdHJs
+X2Vjc3BpMzogZWNzcGkzZ3JwIHsKPiAgICAgICAgIGZzbCxwaW5zID0gPAo+ICAgICAgICAgICAg
+ICAgICBNWDdEX1BBRF9TQUkyX1RYX1NZTkNfX0VDU1BJM19NSVNPICAgICAgMHgxNzA1OQo+ICAg
+ICAgICAgLi4uLi4uLi4uCj4KPiBJIGRpZCBhIGRlZXAgZmVhc2liaWxpdHkgYW5hbHlzaXMgdGhl
+c2UgZGF5cyBvbiB0aGUgbWlncmF0aW5nIHRvIGdlbmVyaWMKPiBwaW5jdHJsIGJpbmRpbmcgeW91
+IHJlZmVycmVkLiBJdCBpcyByZWdyZXR0YWJseSB0aGF0IGl0IG1heSBub3QgYmUgc28gc3VpdGFi
+bGUKPiBmb3IgSU1YIHRvIGZ1bGx5IG1pZ3JhdGUgcmlnaHQgbm93Lgo+Cj4gR2VuZXJpYyBiaW5k
+aW5nIG9ubHkgc3VwcG9ydHMgcGFyc2luZyBzdHJpbmdzIGZvciBwaW5zIGFuZCBmdW5jdGlvbgo+
+IGZyb20gZHRzIHJpZ2h0IG5vdywgdGhhdCBtZWFucyB3ZSBuZWVkIGJhY2sgdG8gdGhlIG9sZCB3
+YXkgb2YgaGFyZGNvZGluZwo+IGFsbCByZWdpc3RlciBiaXRzIGluIGRyaXZlciB3aGljaCB3ZSBh
+Y3R1YWxseSBjaG9zZSB0byBtb3ZlIG91dCBzaW5jZQo+IHRoZSBjb21taXQgImUxNjQxNTMgcGlu
+Y3RybDogaW14OiBtb3ZlIGhhcmQtY29kaW5nIGRhdGEgaW50byBkZXZpY2UgdHJlZSIuCj4KPiBB
+bmQgSU1YIGRvZXNuJ3QgaGF2ZSBQQUQgR1JPVVAgaW4gSFcsIGVhY2ggcGFkIHRoZW9yZXRpY2Fs
+bHkgY2FuIGJlIG11eGVkCj4gYXMgOCBzaW5nbGUgZnVuY3Rpb25zLgo+IGUuZy4KPiBGb3IgSU9N
+VVhDX1NXX01VWF9DVExfUEFEX0NTSV9EQVRBMDcKPiBNVVhfTU9ERSBNVVggTW9kZSBTZWxlY3Qg
+RmllbGQuCj4gU2VsZWN0IDEgb2YgOCBpb211eCBtb2RlcyB0byBiZSB1c2VkIGZvciBwYWQ6IENT
+SV9EQVRBMDcuCj4gMDAwIEFMVDAg4oCUIFNlbGVjdCBzaWduYWwgQ1NJMV9EQVRBMDkuCj4gMDAx
+IEFMVDEg4oCUIFNlbGVjdCBzaWduYWwgRVNBSV9UWDNfUlgyLgo+IDAxMCBBTFQyIOKAlCBTZWxl
+Y3Qgc2lnbmFsIEkyQzRfU0RBLgo+IDAxMSBBTFQzIOKAlCBTZWxlY3Qgc2lnbmFsIEtQUF9ST1c3
+Lgo+IDEwMCBBTFQ0IOKAlCBTZWxlY3Qgc2lnbmFsIFVBUlQ2X0NUU19CLgo+IDEwMSBBTFQ1IOKA
+lCBTZWxlY3Qgc2lnbmFsIEdQSU8xX0lPMjEuCj4gMTEwIEFMVDYg4oCUIFNlbGVjdCBzaWduYWwg
+RUlNX0RBVEExNi4KPiAxMTEgQUxUNyDigJQgU2VsZWN0IHNpZ25hbCBEQ0lDMV9PVVQuCj4gQnkg
+Y29udmVydGluZyB0byBnZW5lcmljIGJpbmRpbmcsIHdlIG5lZWQgY29uc3RydWN0IGEgaHVnZSBm
+dW5jdGlvbi9ncm91cCBtYXAKPiBpbiBkcml2ZXIgZm9yIGh1bmRyZWRzIG9mIHBhZHMgZm9yIGVh
+Y2ggU29DLiBUaGF0IGlzIGEgYml0IGZlYXIgdG8gdXMuCj4KPiBDdXJyZW50IElNWCBtZXRob2Qg
+b25seSBnZW5lcmF0ZXMgdGhlIHVzZWQgZnVuY3Rpb24vZ3JvdXBzIGR5bmFtaWNhbGx5Cj4gYnkg
+cGFyc2luZyBib2FyZCBkdHMgd2hpY2ggaXMgbXVjaCBhIGxpZ2h0ZXIgd2F5Lgo+Cj4gQnV0IG9m
+IGNvdXJzZSwgd2Ugd2FudCB0byBmaXggdGhlIHJhdyBjb25maWcgdmFsdWUgaXNzdWUgYXMgd2Vs
+bCB3aGljaCBpcwo+IHVuLW1haW50YWluYWJsZSBhbmQgdW4tcmVhZGFibGUgYXMgeW91IHBvaW50
+ZWQgb3V0Lgo+Cj4gSSB0aGluayB0aGVyZSBtaWdodCBiZSB0d28gb3B0aW9ucyBmb3IgdXMgdG8g
+Z286Cj4gT25lIG9wdGlvbiBpcyB1c2luZyBtYWNybyBkZWZpbml0aW9ucyBpbnN0ZWFkIG9mIHJh
+dyBkYXRhIGFzIHBpbmN0cmwtc2luZ2xlCj4gdXNlcnMgYXMgT01BUC4KPiBlLmcuCj4gYXJ0Ml9w
+aW5zOiBwaW5tdXhfdWFydDJfcGlucyB7Cj4gICAgICAgICBwaW5jdHJsLXNpbmdsZSxwaW5zID0g
+PAo+ICAgICAgICAgICAgICAgICBPTUFQNF9JT1BBRCgweDExOCwgUElOX0lOUFVUX1BVTExVUCB8
+IE1VWF9NT0RFMCkKPiAgLyogdWFydDJfY3RzLnVhcnQyX2N0cyAqLwo+ICAgICAgICAgLi4uLi4u
+Li4KPgo+IEZvciB0aGlzIHdheSwgbm8gZHJpdmVyIGNoYW5nZXMgcmVxdWlyZWQsIGp1c3QgcmVw
+bGFjZSB0aGUgcmF3IGRhdGEgYnkgbWFjcm8KPiBpbiBkZXZpY2UgdHJlZS4gQnV0IGkgd29uZGVy
+IHRoaXMgbWF5IG5vdCBiZSB5b3VyIG9yaWdpbmFsIGludGVudGlvbiBhbHRob3VnaAo+IGl0J3Mg
+dGhlIGVhc2llc3Qgd2F5IGZvciB1cy4KPiBBbnl3YXksIGlmIHlvdSBhZ3JlZSwgd2UgcHJvYmFi
+bHkgd291bGQgcHJlZmVyIHRoaXMgd2F5Lgo+Cj4gQW5vdGhlciBvcHRpb24gaXMgcGFydGlhbGx5
+IGNvbnZlcnQgdG8gZ2VuZXJpYyBiaW5kaW5nIGZvciBvbmx5IHBhZAo+IGNvbmZpZ3VyYXRpb24K
+PiBwYXJ0LiBlLmcuCj4gcGluY3RybF91c2RoYzE6IHVzZGhjMWdycCB7Cj4gICAgICAgICBmc2ws
+cGlucyA9IDwKPiAgICAgICAgICAgICAgICAgTVg3RF9QQURfU0QxX0NNRF9fU0QxX0NNRAo+ICAg
+ICAgICAgICAgICAgICBNWDdEX1BBRF9TRDFfQ0xLX19TRDFfQ0xLCj4gICAgICAgICAgICAgICAg
+IE1YN0RfUEFEX1NEMV9EQVRBMF9fU0QxX0RBVEEwCj4gICAgICAgICAgICAgICAgIC4uLgo+ICAg
+ICAgICAgPjsKPiAgICAgICAgIGJpYXMtcHVsbC11cCA9IDw0N0tPSE0+Owo+ICAgICAgICAgZHJp
+dmUtc3RyZW5ndGggPSA8MTMwT0hNPjsKPiAgICAgICAgIHNsZXctcmF0ZSA9IDxGQVNUPjsKPiAg
+ICAgICAgIHNwZWVkID0gPDUwTUhaPjsKPiAgICAgICAgIC4uLi4KPiB9Owo+IChTb21lIG9mIHRo
+ZSBwcm9wZXJ0eSBzdGlsbCBub3Qgc3VwcG9ydGVkIG9yIG5vdCB0aGUgc2FtZSBhcyBnZW5lcmlj
+Cj4gYmluZGluZyByaWdodCBub3cpCj4KPiBUaGlzIHdheSByZXF1aXJlcyBubyBiaWcgZHJpdmVy
+cyBjaGFuZ2VzIGFuZCBvbmx5IGV4dGVuZCB0aGUgZHJpdmVyCj4gdG8gc3VwcG9ydCB0aGUgZ2Vu
+ZXJpYyBwaW5jdHJsIGR0IGNvbmZpZ3VyYXRpb24gcHJvcGVydGllcy4KPgo+IEFuZCBpdCBhbHNv
+IGZpeCB0aGUgcmF3IGRhdGEgaXNzdWVzIGFuZCBsb29rcyBsaWtlIG1vcmUgYXBwbGljYWJsZSB0
+aGFuIHRoZSBmdWxsCj4gbWlncmF0aW9uLgo+Cj4gU28gd291bGQgeW91IGJlIHdpbGxpbmcgdG8g
+YWNjZXB0IGl0Pwo+Cj4gQW5vdGhlciBwb3RlbnRpYWwgYmVuZWZpdHMgZm9yIHRoaXMgd2F5IGlz
+IHRoYXQgd2UgbWF5IGNhbiB1c2UgUENPTkZEVU1QCj4gdG8gZHVtcCBhIG1vcmUgcmVhZGFibGUg
+ZGF0YSBmcm9tIHBpbmN0cmwgZGVidWcgc3lzdGVtLgo+Cj4+IFlvdXJzLAo+PiBMaW51cyBXYWxs
+ZWlqCj4+IC0tCj4+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5l
+ICJ1bnN1YnNjcmliZSBsaW51eC1jbGsiIGluCj4+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBt
+YWpvcmRvbW9Admdlci5rZXJuZWwub3JnCj4+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6
+Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+Cj4gUmVnYXJkcwo+IERvbmcg
+QWlzaGVuZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
