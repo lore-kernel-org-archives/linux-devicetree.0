@@ -1,51 +1,49 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v2 17/17] ARM: dts: s500-guitar-bb-rev-b: Add fake uart3 clock
-Date: Fri, 24 Feb 2017 04:40:55 +0100
-Message-ID: <20170224034055.18807-18-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [RFC v2 03/17] dt-bindings: timer: Document Owl timer
+Date: Fri, 24 Feb 2017 04:40:41 +0100
+Message-ID: <20170224034055.18807-4-afaerber@suse.de>
 References: <20170224034055.18807-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170224034055.18807-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170224034055.18807-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arm@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, support@lemaker.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a fixed-clock for baudrate 115200.
+The Actions Semi S500 SoC contains a timer block with two timers.
 
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
  v2: new
  
- arch/arm/boot/dts/s500-guitar-bb-rev-b.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../devicetree/bindings/timer/actions,owl-timer.txt      | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/actions,owl-timer.txt
 
-diff --git a/arch/arm/boot/dts/s500-guitar-bb-rev-b.dts b/arch/arm/boot/dts/s500-guitar-bb-rev-b.dts
-index 834b71d..f6fd10a 100644
---- a/arch/arm/boot/dts/s500-guitar-bb-rev-b.dts
-+++ b/arch/arm/boot/dts/s500-guitar-bb-rev-b.dts
-@@ -19,8 +19,15 @@
- 	chosen {
- 		stdout-path = "serial3:115200n8";
- 	};
+diff --git a/Documentation/devicetree/bindings/timer/actions,owl-timer.txt b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+new file mode 100644
+index 0000000..141bc7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+@@ -0,0 +1,16 @@
++Actions Semi Owl Timer
 +
-+	uart3_clk: uart3-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <921600>;
-+		#clock-cells = <0>;
-+	};
- };
- 
- &uart3 {
- 	status = "okay";
-+	clocks = <&uart3_clk>;
- };
++Required properties:
++- compatible :  "actions,owl-timer"
++- reg        :  Offset and length of the register set for the device.
++- interrupts :  Should contain two timer interrupts.
++
++
++Example:
++
++		timer@b0168000 {
++			compatible = "actions,owl-timer";
++			reg = <0xb0168000 0x100>;
++			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++		};
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
