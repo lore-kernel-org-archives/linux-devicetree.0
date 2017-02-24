@@ -1,89 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/2] of: add devm_ functions for populate and depopulate
-Date: Fri, 24 Feb 2017 09:30:13 -0600
-Message-ID: <CAL_Jsq+AwZM8i-UrLvqoBoW-Q=ssJkWVcfuXjAs6kLgGgQ9bZQ@mail.gmail.com>
-References: <1487341886-13829-1-git-send-email-benjamin.gaignard@linaro.org>
- <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
- <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
- <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
- <CAL_JsqLwDPYeO9fHvviCheKLrJv4qqcdbP4wseLLd_SVrsbw=A@mail.gmail.com>
- <CA+M3ks7ViNCEnmfEP-6kTCj4nUfMQRe7ktA-9cATb-AAGiS=sQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
+Date: Fri, 24 Feb 2017 16:29:11 +0100
+Message-ID: <CAMuHMdWjtRZpjGi8BPkDGKGPr5uBr5jsjLi80COUDruZLuTXfQ@mail.gmail.com>
+References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org> <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CA+M3ks7ViNCEnmfEP-6kTCj4nUfMQRe7ktA-9cATb-AAGiS=sQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487948756-25172-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgOToyNiBBTSwgQmVuamFtaW4gR2FpZ25hcmQKPGJlbmph
-bWluLmdhaWduYXJkQGxpbmFyby5vcmc+IHdyb3RlOgo+IDIwMTctMDItMjQgMTY6MjAgR01UKzAx
-OjAwIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ogo+PiBPbiBGcmksIEZlYiAyNCwg
-MjAxNyBhdCA5OjEzIEFNLCBCZW5qYW1pbiBHYWlnbmFyZAo+PiA8YmVuamFtaW4uZ2FpZ25hcmRA
-bGluYXJvLm9yZz4gd3JvdGU6Cj4+PiAyMDE3LTAyLTI0IDE1OjE3IEdNVCswMTowMCBSb2IgSGVy
-cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjoKPj4+PiBPbiBGcmksIEZlYiAxNywgMjAxNyBhdCA4
-OjMxIEFNLCBCZW5qYW1pbiBHYWlnbmFyZAo+Pj4+IDxiZW5qYW1pbi5nYWlnbmFyZEBsaW5hcm8u
-b3JnPiB3cm90ZToKPj4+Pj4gTG9zdCBvZiBjYWxscyB0byBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSgp
-IGFyZSBub3QgdW5iYWxhbmNlZCBieSBhIGNhbGwKPj4+Pgo+Pj4+IHMvTG9zdC9Mb3RzLwo+Pj4+
-Cj4+Pj4+IHRvIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKS4gVGhpcyBjcmVhdGUgaXNzdWVzIHdo
-aWxlIGRyaXZlcnMgYXJlCj4+Pj4+IGJpbmQvdW5iaW5kLgo+Pj4+Pgo+Pj4+PiBJbiB3YXkgdG8g
-c29sdmUgdGhvc2UgaXNzdWVzIGlzIHRvIGFkZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkK
-Pj4+Pj4gd2hpY2ggd2lsbCBjYWxsIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKSB3aGVuIHRoZSBk
-ZXZpY2UgaXMgdW5ib3VuZAo+Pj4+PiBmcm9tIHRoZSBidXMuCj4+Pj4KPj4+PiBPbmUgY29tcGxp
-Y2F0aW9uIGlzIG9mX3BsYXRmb3JtX3BvcHVsYXRlIGlzIGRlc2lnbmVkIHRvIGJlIGNhbGxlZAo+
-Pj4+IG11bHRpcGxlIHRpbWVzLiBXZSBjYWxsIGl0IHdpdGggdGhlIGRlZmF1bHQgbWF0Y2ggdGFi
-bGUgYW5kIHRoZW4KPj4+PiBwbGF0Zm9ybXMgY2FuIGNhbGwgaXQgYWdhaW4gd2l0aCBhIGN1c3Rv
-bSBtYXRjaCB0YWJsZSBmb3IgZXhhbXBsZS4KPj4+Cj4+PiBJIGRvIG5vdCBwbGFuIHRvIHVzZSBp
-dCBldmVyeSB3aGVyZSBidXQgb25seSBpbiBzb21lIGRyaXZlcnMgcHJvYmUoKQo+Pj4gdG8gYXZv
-aWQgYWRkaW5nIGdvdG8gdG8gY2FsbCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgZm9yIGVhY2gg
-ZXJyb3IKPj4+IGNhc2VzIHdoaWNoIG1heSBvY2N1ciBhZnRlciBjYWxsaW5nIHBvcHVsYXRlLgo+
-Pj4KPj4+Pgo+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4u
-Z2FpZ25hcmRAbGluYXJvLm9yZz4KPj4+Pj4gLS0tCj4+Pj4+ICBkcml2ZXJzL29mL3BsYXRmb3Jt
-LmMgICAgICAgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysKPj4+Pj4gIGluY2x1ZGUvbGludXgvb2ZfcGxhdGZvcm0uaCB8IDIwICsrKysrKysrKysrKwo+
-Pj4+PiAgMiBmaWxlcyBjaGFuZ2VkLCA5NyBpbnNlcnRpb25zKCspCj4+Pj4+Cj4+Pj4+IGRpZmYg
-LS1naXQgYS9kcml2ZXJzL29mL3BsYXRmb3JtLmMgYi9kcml2ZXJzL29mL3BsYXRmb3JtLmMKPj4+
-Pj4gaW5kZXggYjgwNjRiYy4uM2RiZWJmNyAxMDA2NDQKPj4+Pj4gLS0tIGEvZHJpdmVycy9vZi9w
-bGF0Zm9ybS5jCj4+Pj4+ICsrKyBiL2RyaXZlcnMvb2YvcGxhdGZvcm0uYwo+Pj4+PiBAQCAtNTcx
-LDYgKzU3MSw4MyBAQCB2b2lkIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoc3RydWN0IGRldmljZSAq
-cGFyZW50KQo+Pj4+PiAgfQo+Pj4+PiAgRVhQT1JUX1NZTUJPTF9HUEwob2ZfcGxhdGZvcm1fZGVw
-b3B1bGF0ZSk7Cj4+Pj4+Cj4+Pj4+ICtzdGF0aWMgdm9pZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVs
-YXRlX3JlbGVhc2Uoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpyZXMpCj4+Pj4+ICt7Cj4+Pj4+
-ICsgICAgICAgb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgqKHN0cnVjdCBkZXZpY2UgKiopcmVzKTsK
-Pj4+Pj4gK30KPj4+Pj4gKwo+Pj4+PiArLyoqCj4+Pj4+ICsgKiBkZXZtX29mX3BsYXRmb3JtX3Bv
-cHVsYXRlKCkgLSBQb3B1bGF0ZSBwbGF0Zm9ybV9kZXZpY2VzIGZyb20gZGV2aWNlIHRyZWUgZGF0
-YQo+Pj4+PiArICogQGRldjogZGV2aWNlIHRoYXQgcmVxdWVzdGVkIHRvIHBvcHVsYXRlIGZyb20g
-ZGV2aWNlIHRyZWUgZGF0YQo+Pj4+PiArICogQHJvb3Q6IHBhcmVudCBvZiB0aGUgZmlyc3QgbGV2
-ZWwgdG8gcHJvYmUgb3IgTlVMTCBmb3IgdGhlIHJvb3Qgb2YgdGhlIHRyZWUKPj4+Pj4gKyAqIEBt
-YXRjaGVzOiBtYXRjaCB0YWJsZSwgTlVMTCB0byB1c2UgdGhlIGRlZmF1bHQKPj4+Pgo+Pj4+IE5V
-TEwgaXMgbm8gbWF0Y2ggdGFibGUsIG5vdCB0aGUgZGVmYXVsdCB3aGljaCBtZWFucyBvbmx5IHBv
-cHVsYXRlCj4+Pj4gaW1tZWRpYXRlIGNoaWxkcmVuLgo+Pj4KPj4+IEkgaGF2ZSBjb3B5IG9mX3Bs
-YXRmb3JtX3BvcHVsYXRlKCkgZGVzY3JpcHRpb24uLi4KPj4+IEkgcmVwbGFjZSBpdCBieTogQG1h
-dGNoZXM6IG1hdGNoIHRhYmxlIChjb3VsZCBiZSBOVUxMKQo+Pj4KPj4+Pgo+Pj4+PiArICogQGxv
-b2t1cDogYXV4ZGF0YSB0YWJsZSBmb3IgbWF0Y2hpbmcgaWQgYW5kIHBsYXRmb3JtX2RhdGEgd2l0
-aCBkZXZpY2Ugbm9kZXMKPj4+Pj4gKyAqIEBwYXJlbnQ6IHBhcmVudCB0byBob29rIGRldmljZXMg
-ZnJvbSwgTlVMTCBmb3IgdG9wbGV2ZWwKPj4+Pgo+Pj4+IEkgdGhpbmsgdGhpcyBuZWVkcyB0byBi
-ZSBhIGJpdCBkaWZmZXJlbnQgYXJncyBhcyB0aGUgdXNlIGlzIGxpbWl0ZWQuCj4+Pj4gcm9vdCBh
-bmQgcGFyZW50IG11c3Qgbm90IGJlIE5VTEwuIGRldiBzaG91bGQgYmUgdGhlIHNhbWUgYXMgcGFy
-ZW50Lgo+Pj4+IGxvb2t1cCB3YXMgZm9yIGxlZ2FjeSwgc28gZHJvcCB0aGF0Lgo+Pj4KPj4+IFNv
-IGZ1bmN0aW9uIHByb3RvdHlwZSB3aWxsIGJlY29tZToKPj4+IGludCBkZXZtX29mX3BsYXRmb3Jt
-X3BvcHVsYXRlKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlCj4+PiAqcm9v
-dCwgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2hlcykKPj4KPj4gSSBqdXN0IG5vdGlj
-ZWQgc29tZXRoaW5nIGVsc2UgdG9vLiBkZXYtPm9mX25vZGUgc2hvdWxkIGVxdWFsIHJvb3QgSQo+
-PiB0aGluaywgc28gd2UgY2FuIGdldCByaWQgb2Ygcm9vdCBwYXJhbS4KPgo+IG1hdGNoIHBhcmFt
-ZXRlciBpcyB2ZXJ5IG9mdGVuIHNldCB0byBOVUxMIHNpbmNlIHRoaXMgZnVuY3Rpb24gd2lsbAo+
-IGhhdmUgYSBsaW1pdGVkCj4gc2NvcGUgd2h5IG5vdCBhbHNvIHJlbW92ZSBpdCBhbmQgb25seSBr
-ZWVwIGRldiA/CgpUaGF0J3MgZmluZSB3aXRoIG1lLgoKUm9iCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Jacopo,
+
+[fixed Peter Meerwald's address]
+
+On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> Add device tree bindings documentation for Maxim max961x current sense
+> amplifier.
+>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/adc/max961x.txt        | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max961x.txt
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/max961x.txt b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+> new file mode 100644
+> index 0000000..abbc6c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+> @@ -0,0 +1,27 @@
+> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+> +
+> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+> +12-bits ADC communicating over I2c bus.
+> +The device node for this driver shall be a child of a I2c controller.
+> +
+> +Required properties
+> +  - compatible: Should be "maxim,max961x"
+
+I'ts not a good idea to use wildcards in compatible values.
+Ask yourself: is this valid for any (future) value of "x"?
+
+Hence please use "maxim,max9611" or "maxim,max9612".
+The only difference between these two is a noninverting vs. inverting
+input-to-output configuration. Does the driver need to care?
+
+> +  - reg: The 7-bits long I2c address of the device
+> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
+> +                   resistor.
+
+shunt-resistor-micro-ohms?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
