@@ -1,158 +1,87 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/8] watchdog: s3c2410: Fix infinite interrupt in soft
- mode
-Date: Fri, 24 Feb 2017 07:37:53 -0800
-Message-ID: <1348b7de-b485-832b-1743-8f810a174dd5@roeck-us.net>
-References: <20170224151122.12142-1-krzk@kernel.org>
- <20170224151122.12142-3-krzk@kernel.org>
+From: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
+Date: Fri, 24 Feb 2017 16:50:44 +0100
+Message-ID: <a489f2fc-4d15-42cc-fdcc-b41f60b4638a@jmondi.org>
+References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdWjtRZpjGi8BPkDGKGPr5uBr5jsjLi80COUDruZLuTXfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170224151122.12142-3-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWjtRZpjGi8BPkDGKGPr5uBr5jsjLi80COUDruZLuTXfQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2017 07:11 AM, Krzysztof Kozlowski wrote:
-> In soft (no-reboot) mode, the driver self-pings watchdog upon expiration
-> of an interrupt.  However the interrupt itself was not cleared thus on
-> first hit, the system enters infinite interrupt handling loop.
->
-> On Odroid U3 (Exynos4412), when booted with s3c2410_wdt.soft_noboot=1
-> argument the console is flooded:
-> 	# killall -9 watchdog
-> 	[   60.523760] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
-> 	[   60.536744] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
->
-> Fix this by writing something to the WTCLRINT register to clear the
-> interrupt.  The register WTCLRINT however appeared in S3C6410 so a new
-> watchdog quirk and flavor are needed.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hi Geert,
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-
+On 24/02/2017 16:29, Geert Uytterhoeven wrote:
+> Hi Jacopo,
 >
-> ---
+> [fixed Peter Meerwald's address]
 >
-> I was thinking about CC-ing stable, especially when I thought about
-> adding unconditional WTCLRINT clear.  However it appears that S3C2410
-> does not have the WTCLRINT register, this a new chip flavor has to be
-> added.  This makes the fix spread over driver and DTS changes.
+> On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+>> Add device tree bindings documentation for Maxim max961x current sense
+>> amplifier.
+>>
+>> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/iio/adc/max961x.txt        | 27 ++++++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max961x.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/max961x.txt b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+>> new file mode 100644
+>> index 0000000..abbc6c4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+>> @@ -0,0 +1,27 @@
+>> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+>> +
+>> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+>> +12-bits ADC communicating over I2c bus.
+>> +The device node for this driver shall be a child of a I2c controller.
+>> +
+>> +Required properties
+>> +  - compatible: Should be "maxim,max961x"
 >
-> Worth adding:
-> 	Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> ?
-
-How would that be different to Cc: stable ?
-
-> ---
->  .../devicetree/bindings/watchdog/samsung-wdt.txt    |  9 +++++----
->  drivers/watchdog/s3c2410_wdt.c                      | 21 ++++++++++++++++++---
->  2 files changed, 23 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> index 8f3d96af81d7..1f6e101e299a 100644
-> --- a/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/samsung-wdt.txt
-> @@ -6,10 +6,11 @@ occurred.
->
->  Required properties:
->  - compatible : should be one among the following
-> -	(a) "samsung,s3c2410-wdt" for Exynos4 and previous SoCs
-> -	(b) "samsung,exynos5250-wdt" for Exynos5250
-> -	(c) "samsung,exynos5420-wdt" for Exynos5420
-> -	(c) "samsung,exynos7-wdt" for Exynos7
-> +	- "samsung,s3c2410-wdt" for S3C2410
-> +	- "samsung,s3c6410-wdt" for S3C6410, S5PV210 and Exynos4
-> +	- "samsung,exynos5250-wdt" for Exynos5250
-> +	- "samsung,exynos5420-wdt" for Exynos5420
-> +	- "samsung,exynos7-wdt" for Exynos7
->
->  - reg : base physical address of the controller and length of memory mapped
->  	region.
-> diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_wdt.c
-> index 3e216f54cb6f..7db7847a005c 100644
-> --- a/drivers/watchdog/s3c2410_wdt.c
-> +++ b/drivers/watchdog/s3c2410_wdt.c
-> @@ -46,6 +46,7 @@
->  #define S3C2410_WTCON		0x00
->  #define S3C2410_WTDAT		0x04
->  #define S3C2410_WTCNT		0x08
-> +#define S3C2410_WTCLRINT	0x0c
->
->  #define S3C2410_WTCNT_MAXCNT	0xffff
->
-> @@ -72,6 +73,7 @@
->  #define EXYNOS5_WDT_MASK_RESET_REG_OFFSET	0x040c
->  #define QUIRK_HAS_PMU_CONFIG			(1 << 0)
->  #define QUIRK_HAS_RST_STAT			(1 << 1)
-> +#define QUIRK_HAS_WTCLRINT_REG			(1 << 2)
->
->  /* These quirks require that we have a PMU register map */
->  #define QUIRKS_HAVE_PMUREG			(QUIRK_HAS_PMU_CONFIG | \
-> @@ -143,13 +145,18 @@ static const struct s3c2410_wdt_variant drv_data_s3c2410 = {
->  };
->
->  #ifdef CONFIG_OF
-> +static const struct s3c2410_wdt_variant drv_data_s3c6410 = {
-> +	.quirks = QUIRK_HAS_WTCLRINT_REG,
-> +};
-> +
->  static const struct s3c2410_wdt_variant drv_data_exynos5250  = {
->  	.disable_reg = EXYNOS5_WDT_DISABLE_REG_OFFSET,
->  	.mask_reset_reg = EXYNOS5_WDT_MASK_RESET_REG_OFFSET,
->  	.mask_bit = 20,
->  	.rst_stat_reg = EXYNOS5_RST_STAT_REG_OFFSET,
->  	.rst_stat_bit = 20,
-> -	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT,
-> +	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT \
-> +		  | QUIRK_HAS_WTCLRINT_REG,
->  };
->
->  static const struct s3c2410_wdt_variant drv_data_exynos5420 = {
-> @@ -158,7 +165,8 @@ static const struct s3c2410_wdt_variant drv_data_exynos5420 = {
->  	.mask_bit = 0,
->  	.rst_stat_reg = EXYNOS5_RST_STAT_REG_OFFSET,
->  	.rst_stat_bit = 9,
-> -	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT,
-> +	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT \
-> +		  | QUIRK_HAS_WTCLRINT_REG,
->  };
->
->  static const struct s3c2410_wdt_variant drv_data_exynos7 = {
-> @@ -167,12 +175,15 @@ static const struct s3c2410_wdt_variant drv_data_exynos7 = {
->  	.mask_bit = 23,
->  	.rst_stat_reg = EXYNOS5_RST_STAT_REG_OFFSET,
->  	.rst_stat_bit = 23,	/* A57 WDTRESET */
-> -	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT,
-> +	.quirks = QUIRK_HAS_PMU_CONFIG | QUIRK_HAS_RST_STAT \
-> +		  | QUIRK_HAS_WTCLRINT_REG,
->  };
->
->  static const struct of_device_id s3c2410_wdt_match[] = {
->  	{ .compatible = "samsung,s3c2410-wdt",
->  	  .data = &drv_data_s3c2410 },
-> +	{ .compatible = "samsung,s3c6410-wdt",
-> +	  .data = &drv_data_s3c6410 },
->  	{ .compatible = "samsung,exynos5250-wdt",
->  	  .data = &drv_data_exynos5250 },
->  	{ .compatible = "samsung,exynos5420-wdt",
-> @@ -418,6 +429,10 @@ static irqreturn_t s3c2410wdt_irq(int irqno, void *param)
->  	dev_info(wdt->dev, "watchdog timer expired (irq)\n");
->
->  	s3c2410wdt_keepalive(&wdt->wdt_device);
-> +
-> +	if (wdt->drv_data->quirks & QUIRK_HAS_WTCLRINT_REG)
-> +		writel(0x1, wdt->reg_base + S3C2410_WTCLRINT);
-> +
->  	return IRQ_HANDLED;
->  }
->
+> I'ts not a good idea to use wildcards in compatible values.
+> Ask yourself: is this valid for any (future) value of "x"?
 >
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I suspect you already know the answer here :)
+
+> Hence please use "maxim,max9611" or "maxim,max9612".
+> The only difference between these two is a noninverting vs. inverting
+> input-to-output configuration. Does the driver need to care?
+
+No, not right now, as the inverting/non-inverting output is on the 
+op-amp/comparator side, which is currently not supported by this driver.
+
+Instead of using one or the other, should we use both, as long as it 
+does not makes any difference from driver perspective?
+
+Thanks
+   j
+
+
+>
+>> +  - reg: The 7-bits long I2c address of the device
+>> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
+>> +                   resistor.
+>
+> shunt-resistor-micro-ohms?
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+>
