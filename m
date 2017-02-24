@@ -1,197 +1,215 @@
-From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-Subject: [PATCH v2 net] net: phy: Fix LED mode in DT single property.
-Date: Fri, 24 Feb 2017 14:27:26 +0530
-Message-ID: <1487926646-3605-1-git-send-email-Raju.Lakkaraju@microsemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: f.fainelli@gmail.com, Allan.Nielsen@microsemi.com, andrew@lunn.ch, robh@kernel.org, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] input: cpcap-pwrbutton: new driver
+Date: Fri, 24 Feb 2017 09:59:09 +0100
+Message-ID: <20170224085909.30559-1-sre@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Motorola CPCAP is a PMIC found in multiple smartphones.
+This driver adds support for the power/on button and has
+been tested with Droid 4.
 
-Fix the LED mode DT parameters combine to a single property
-and change the vendor prefix i.e. mscc.
-
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-Change set:
-v0: Fix the LED mode DT parameters combine to a single property
-v1: Fix the build test ERROR
-v2: Add default LED mode "vsc85xx_dt_led_mode_get" function.
+ .../devicetree/bindings/input/cpcap-pwrbutton.txt  |  20 ++++
+ drivers/input/misc/Kconfig                         |  10 ++
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/cpcap-pwrbutton.c               | 119 +++++++++++++++++++++
+ 4 files changed, 150 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+ create mode 100644 drivers/input/misc/cpcap-pwrbutton.c
 
- .../devicetree/bindings/net/mscc-phy-vsc8531.txt   | 20 +++----
- drivers/net/phy/mscc.c                             | 65 ++++++++++++----------
- 2 files changed, 45 insertions(+), 40 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index 0eedabe..2253de5 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -6,12 +6,12 @@ Required properties:
- 		  Documentation/devicetree/bindings/net/phy.txt
- 
- Optional properties:
--- vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
-+- mscc,vddmac		: The vddmac in mV. Allowed values is listed
- 			  in the first row of Table 1 (below).
- 			  This property is only used in combination
- 			  with the 'edge-slowdown' property.
- 			  Default value is 3300.
--- vsc8531,edge-slowdown	: % the edge should be slowed down relative to
-+- mscc,edge-slowdown	: % the edge should be slowed down relative to
- 			  the fastest possible edge time.
- 			  Edge rate sets the drive strength of the MAC
- 			  interface output signals.  Changing the
-@@ -27,14 +27,11 @@ Optional properties:
- 			  'vddmac'.
- 			  Default value is 0%.
- 			  Ref: Table:1 - Edge rate change (below).
--- vsc8531,led-0-mode	: LED mode. Specify how the LED[0] should behave.
-+- mscc,led-mode		: LED mode. Specify how the LED[0] and LED[1] should behave.
- 			  Allowed values are define in
- 			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
--			  Default value is VSC8531_LINK_1000_ACTIVITY (1).
--- vsc8531,led-1-mode	: LED mode. Specify how the LED[1] should behave.
--			  Allowed values are define in
--			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
--			  Default value is VSC8531_LINK_100_ACTIVITY (2).
-+			  Default LED[0] value is VSC8531_LINK_1000_ACTIVITY (1).
-+			  Default LED[1] value is VSC8531_LINK_100_ACTIVITY (2).
- 
- Table: 1 - Edge rate change
- ----------------------------------------------------------------|
-@@ -66,8 +63,7 @@ Example:
- 
-         vsc8531_0: ethernet-phy@0 {
-                 compatible = "ethernet-phy-id0007.0570";
--                vsc8531,vddmac		= <3300>;
--                vsc8531,edge-slowdown	= <7>;
--                vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
--                vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
-+                mscc,vddmac		= /bits/ 16 <3300>;
-+                mscc,edge-slowdown	= /bits/ 8  <7>;
-+                mscc,led-mode	= <LINK_1000_ACTIVITY LINK_100_ACTIVITY>;
-         };
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index 650c266..30bc9ec 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -385,11 +385,11 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- 	if (!of_node)
- 		return -ENODEV;
- 
--	rc = of_property_read_u16(of_node, "vsc8531,vddmac", &vdd);
-+	rc = of_property_read_u16(of_node, "mscc,vddmac", &vdd);
- 	if (rc != 0)
- 		vdd = MSCC_VDDMAC_3300;
- 
--	rc = of_property_read_u8(of_node, "vsc8531,edge-slowdown", &sd);
-+	rc = of_property_read_u8(of_node, "mscc,edge-slowdown", &sd);
- 	if (rc != 0)
- 		sd = 0;
- 
-@@ -402,26 +402,43 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- 	return -EINVAL;
- }
- 
--static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
--				   char *led,
--				   u8 default_mode)
-+static int vsc85xx_dt_led_mode_get(struct phy_device *phydev, char *led)
- {
- 	struct device *dev = &phydev->mdio.dev;
- 	struct device_node *of_node = dev->of_node;
--	u8 led_mode;
--	int err;
-+	struct vsc8531_private *vsc8531 = phydev->priv;
-+	u8 led_0_mode = VSC8531_LINK_1000_ACTIVITY;
-+	u8 led_1_mode = VSC8531_LINK_100_ACTIVITY;
-+	const __be32 *paddr_end;
-+	const __be32 *paddr;
-+	int len;
- 
- 	if (!of_node)
- 		return -ENODEV;
- 
--	led_mode = default_mode;
--	err = of_property_read_u8(of_node, led, &led_mode);
--	if (!err && (led_mode > 15 || led_mode == 7 || led_mode == 11)) {
--		phydev_err(phydev, "DT %s invalid\n", led);
-+	paddr = of_get_property(of_node, "mscc,led-mode", &len);
-+	if (!paddr)
-+		return -EINVAL;
+diff --git a/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+new file mode 100644
+index 000000000000..0dd0076daf71
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+@@ -0,0 +1,20 @@
++Motorola CPCAP on key
 +
-+	paddr_end = paddr + (len /= sizeof(*paddr));
-+	while (paddr + 1 < paddr_end) {
-+		led_0_mode = be32_to_cpup(paddr++);
-+		led_1_mode = be32_to_cpup(paddr++);
++This module is part of the CPCAP. For more details about the whole
++chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
++
++This module provides a simple power button event via an Interrupt.
++
++Required properties:
++- compatible: should be one of the following
++   - "motorola,cpcap-pwrbutton"
++- interrupts: irq specifier for CPCAP's ON IRQ
++
++Example:
++
++&cpcap {
++	cpcap_pwrbutton: pwrbutton {
++		compatible = "motorola,cpcap-pwrbutton";
++		interrupts = <23 IRQ_TYPE_NONE>;
++	};
++};
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 5b6c52210d20..9f7b72249eac 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -316,6 +316,16 @@ config INPUT_COBALT_BTNS
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cobalt_btns.
+ 
++config INPUT_CPCAP_PWRBUTTON
++	tristate "CPCAP OnKey"
++	depends on MFD_CPCAP
++	help
++	  Say Y here if you want to enable power key reporting via the
++	  Motorola CPCAP chip.
++
++	  To compile this driver as a module, choose M here. The module will
++	  be called cpcap-pwrbutton.
++
+ config INPUT_WISTRON_BTNS
+ 	tristate "x86 Wistron laptop button interface"
+ 	depends on X86_32
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index b10523f2878e..b923a9828c88 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -24,6 +24,7 @@ obj-$(CONFIG_INPUT_CM109)		+= cm109.o
+ obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
+ obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
+ obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
++obj-$(CONFIG_INPUT_CPCAP_PWRBUTTON)	+= cpcap-pwrbutton.o
+ obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
+ obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
+ obj-$(CONFIG_INPUT_DA9063_ONKEY)	+= da9063_onkey.o
+diff --git a/drivers/input/misc/cpcap-pwrbutton.c b/drivers/input/misc/cpcap-pwrbutton.c
+new file mode 100644
+index 000000000000..ed6674689e79
+--- /dev/null
++++ b/drivers/input/misc/cpcap-pwrbutton.c
+@@ -0,0 +1,119 @@
++/**
++ * CPCAP Power Button Input Driver
++ *
++ * Copyright (C) 2017 Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
++ *
++ * This file is subject to the terms and conditions of the GNU General
++ * Public License. See the file "COPYING" in the main directory of this
++ * archive for more details.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/errno.h>
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/regmap.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/mfd/motorola-cpcap.h>
++
++#define CPCAP_IRQ_ON 23
++#define CPCAP_IRQ_ON_BITMASK (1 << (CPCAP_IRQ_ON % 16))
++
++struct cpcap_power_button {
++	struct regmap *regmap;
++	struct input_dev *idev;
++	struct device *dev;
++};
++
++static irqreturn_t powerbutton_irq(int irq, void *_button)
++{
++	struct cpcap_power_button *button = _button;
++	bool key_pressed;
++	int err, val;
++
++	err = regmap_read(button->regmap, CPCAP_REG_INTS2, &val);
++	if (err) {
++		dev_err(button->dev, "read failed: %d", err);
++		return IRQ_HANDLED;
 +	}
++	key_pressed = !!(val & CPCAP_IRQ_ON_BITMASK);
 +
-+	if (!len && (led_0_mode > 15 || led_0_mode == 7 || led_0_mode == 11)) {
-+		phydev_err(phydev, "DT %s-0 invalid\n", led);
- 		return -EINVAL;
- 	}
-+	vsc8531->led_0_mode = led_0_mode;
- 
--	return led_mode;
-+	if (!len && (led_1_mode > 15 || led_1_mode == 7 || led_1_mode == 11)) {
-+		phydev_err(phydev, "DT %s-1 invalid\n", led);
-+		return -EINVAL;
-+	}
-+	vsc8531->led_1_mode = led_1_mode;
++	pm_wakeup_event(button->dev, 0);
++	input_report_key(button->idev, KEY_POWER, key_pressed);
++	input_sync(button->idev);
 +
-+	return 0;
- }
- 
- #else
-@@ -430,11 +447,11 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- 	return 0;
- }
- 
--static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
--				   char *led,
--				   u8 default_mode)
-+static int vsc85xx_dt_led_mode_get(struct phy_device *phydev, char *led)
- {
--	return default_mode;
-+	vsc8531->led_0_mode = VSC8531_LINK_1000_ACTIVITY;
-+	vsc8531->led_1_mode = VSC8531_LINK_100_ACTIVITY;
-+	return 0;
- }
- #endif /* CONFIG_OF_MDIO */
- 
-@@ -626,7 +643,7 @@ static int vsc85xx_probe(struct phy_device *phydev)
- {
- 	struct vsc8531_private *vsc8531;
- 	int rate_magic;
--	int led_mode;
++	return IRQ_HANDLED;
++}
++
++static int cpcap_power_button_probe(struct platform_device *pdev)
++{
++	struct cpcap_power_button *button;
++	int irq = platform_get_irq(pdev, 0);
 +	int err;
- 
- 	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
- 	if (rate_magic < 0)
-@@ -641,17 +658,9 @@ static int vsc85xx_probe(struct phy_device *phydev)
- 	vsc8531->rate_magic = rate_magic;
- 
- 	/* LED[0] and LED[1] mode */
--	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-0-mode",
--					   VSC8531_LINK_1000_ACTIVITY);
--	if (led_mode < 0)
--		return led_mode;
--	vsc8531->led_0_mode = led_mode;
--
--	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-1-mode",
--					   VSC8531_LINK_100_ACTIVITY);
--	if (led_mode < 0)
--		return led_mode;
--	vsc8531->led_1_mode = led_mode;
-+	err = vsc85xx_dt_led_mode_get(phydev, "mscc,led-mode");
-+	if (err < 0)
++
++	button = devm_kmalloc(&pdev->dev, sizeof(*button), GFP_KERNEL);
++	if (!button)
++		return -ENOMEM;
++
++	button->idev = devm_input_allocate_device(&pdev->dev);
++	if (!button->idev)
++		return -ENOMEM;
++
++	button->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!button->regmap)
++		return -ENODEV;
++
++	button->dev = &pdev->dev;
++
++	button->idev->name = "cpcap-pwrbutton";
++	button->idev->phys = "cpcap-pwrbutton/input0";
++	button->idev->dev.parent = button->dev;
++	input_set_capability(button->idev, EV_KEY, KEY_POWER);
++
++	err = devm_request_threaded_irq(&button->idev->dev, irq, NULL,
++		powerbutton_irq, IRQF_ONESHOT, "cpcap_pwrbutton", button);
++	if (err < 0) {
++		dev_err(&pdev->dev, "IRQ request failed: %d\n", err);
 +		return err;
- 
- 	return 0;
- }
++	}
++
++	err = input_register_device(button->idev);
++	if (err) {
++		dev_err(&pdev->dev, "Input register failed: %d\n", err);
++		return err;
++	}
++
++	device_init_wakeup(&pdev->dev, true);
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id cpcap_pwrbutton_dt_match_table[] = {
++	{ .compatible = "motorola,cpcap-pwrbutton" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, cpcap_pwrbutton_dt_match_table);
++#endif
++
++static struct platform_driver cpcap_power_button_driver = {
++	.probe		= cpcap_power_button_probe,
++	.driver		= {
++		.name	= "cpcap-pwrbutton",
++		.of_match_table = of_match_ptr(cpcap_pwrbutton_dt_match_table),
++	},
++};
++module_platform_driver(cpcap_power_button_driver);
++
++MODULE_ALIAS("platform:cpcap-pwrbutton");
++MODULE_DESCRIPTION("CPCAP Power Button");
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
 -- 
-2.7.4
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
