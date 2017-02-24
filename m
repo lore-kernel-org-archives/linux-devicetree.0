@@ -1,77 +1,104 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v1 1/2] of: add devm_ functions for populate and depopulate
-Date: Fri, 24 Feb 2017 16:13:20 +0100
-Message-ID: <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
-References: <1487341886-13829-1-git-send-email-benjamin.gaignard@linaro.org>
- <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
- <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 3/8] ARM: dts: exynos: Fix watchdog reset on Exynos4412
+Date: Fri, 24 Feb 2017 17:11:17 +0200
+Message-ID: <20170224151122.12142-4-krzk@kernel.org>
+References: <20170224151122.12142-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170224151122.12142-1-krzk@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxNy0wMi0yNCAxNToxNyBHTVQrMDE6MDAgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9y
-Zz46Cj4gT24gRnJpLCBGZWIgMTcsIDIwMTcgYXQgODozMSBBTSwgQmVuamFtaW4gR2FpZ25hcmQK
-PiA8YmVuamFtaW4uZ2FpZ25hcmRAbGluYXJvLm9yZz4gd3JvdGU6Cj4+IExvc3Qgb2YgY2FsbHMg
-dG8gb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKSBhcmUgbm90IHVuYmFsYW5jZWQgYnkgYSBjYWxsCj4K
-PiBzL0xvc3QvTG90cy8KPgo+PiB0byBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkuIFRoaXMgY3Jl
-YXRlIGlzc3VlcyB3aGlsZSBkcml2ZXJzIGFyZQo+PiBiaW5kL3VuYmluZC4KPj4KPj4gSW4gd2F5
-IHRvIHNvbHZlIHRob3NlIGlzc3VlcyBpcyB0byBhZGQgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0
-ZSgpCj4+IHdoaWNoIHdpbGwgY2FsbCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgd2hlbiB0aGUg
-ZGV2aWNlIGlzIHVuYm91bmQKPj4gZnJvbSB0aGUgYnVzLgo+Cj4gT25lIGNvbXBsaWNhdGlvbiBp
-cyBvZl9wbGF0Zm9ybV9wb3B1bGF0ZSBpcyBkZXNpZ25lZCB0byBiZSBjYWxsZWQKPiBtdWx0aXBs
-ZSB0aW1lcy4gV2UgY2FsbCBpdCB3aXRoIHRoZSBkZWZhdWx0IG1hdGNoIHRhYmxlIGFuZCB0aGVu
-Cj4gcGxhdGZvcm1zIGNhbiBjYWxsIGl0IGFnYWluIHdpdGggYSBjdXN0b20gbWF0Y2ggdGFibGUg
-Zm9yIGV4YW1wbGUuCgpJIGRvIG5vdCBwbGFuIHRvIHVzZSBpdCBldmVyeSB3aGVyZSBidXQgb25s
-eSBpbiBzb21lIGRyaXZlcnMgcHJvYmUoKQp0byBhdm9pZCBhZGRpbmcgZ290byB0byBjYWxsIG9m
-X3BsYXRmb3JtX2RlcG9wdWxhdGUoKSBmb3IgZWFjaCBlcnJvcgpjYXNlcyB3aGljaCBtYXkgb2Nj
-dXIgYWZ0ZXIgY2FsbGluZyBwb3B1bGF0ZS4KCj4KPj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4g
-R2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQGxpbmFyby5vcmc+Cj4+IC0tLQo+PiAgZHJpdmVy
-cy9vZi9wbGF0Zm9ybS5jICAgICAgIHwgNzcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrCj4+ICBpbmNsdWRlL2xpbnV4L29mX3BsYXRmb3JtLmggfCAyMCArKysr
-KysrKysrKysKPj4gIDIgZmlsZXMgY2hhbmdlZCwgOTcgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9vZi9wbGF0Zm9ybS5jIGIvZHJpdmVycy9vZi9wbGF0Zm9ybS5jCj4+
-IGluZGV4IGI4MDY0YmMuLjNkYmViZjcgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvb2YvcGxhdGZv
-cm0uYwo+PiArKysgYi9kcml2ZXJzL29mL3BsYXRmb3JtLmMKPj4gQEAgLTU3MSw2ICs1NzEsODMg
-QEAgdm9pZCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKHN0cnVjdCBkZXZpY2UgKnBhcmVudCkKPj4g
-IH0KPj4gIEVYUE9SVF9TWU1CT0xfR1BMKG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUpOwo+Pgo+PiAr
-c3RhdGljIHZvaWQgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZV9yZWxlYXNlKHN0cnVjdCBkZXZp
-Y2UgKmRldiwgdm9pZCAqcmVzKQo+PiArewo+PiArICAgICAgIG9mX3BsYXRmb3JtX2RlcG9wdWxh
-dGUoKihzdHJ1Y3QgZGV2aWNlICoqKXJlcyk7Cj4+ICt9Cj4+ICsKPj4gKy8qKgo+PiArICogZGV2
-bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpIC0gUG9wdWxhdGUgcGxhdGZvcm1fZGV2aWNlcyBmcm9t
-IGRldmljZSB0cmVlIGRhdGEKPj4gKyAqIEBkZXY6IGRldmljZSB0aGF0IHJlcXVlc3RlZCB0byBw
-b3B1bGF0ZSBmcm9tIGRldmljZSB0cmVlIGRhdGEKPj4gKyAqIEByb290OiBwYXJlbnQgb2YgdGhl
-IGZpcnN0IGxldmVsIHRvIHByb2JlIG9yIE5VTEwgZm9yIHRoZSByb290IG9mIHRoZSB0cmVlCj4+
-ICsgKiBAbWF0Y2hlczogbWF0Y2ggdGFibGUsIE5VTEwgdG8gdXNlIHRoZSBkZWZhdWx0Cj4KPiBO
-VUxMIGlzIG5vIG1hdGNoIHRhYmxlLCBub3QgdGhlIGRlZmF1bHQgd2hpY2ggbWVhbnMgb25seSBw
-b3B1bGF0ZQo+IGltbWVkaWF0ZSBjaGlsZHJlbi4KCkkgaGF2ZSBjb3B5IG9mX3BsYXRmb3JtX3Bv
-cHVsYXRlKCkgZGVzY3JpcHRpb24uLi4KSSByZXBsYWNlIGl0IGJ5OiBAbWF0Y2hlczogbWF0Y2gg
-dGFibGUgKGNvdWxkIGJlIE5VTEwpCgo+Cj4+ICsgKiBAbG9va3VwOiBhdXhkYXRhIHRhYmxlIGZv
-ciBtYXRjaGluZyBpZCBhbmQgcGxhdGZvcm1fZGF0YSB3aXRoIGRldmljZSBub2Rlcwo+PiArICog
-QHBhcmVudDogcGFyZW50IHRvIGhvb2sgZGV2aWNlcyBmcm9tLCBOVUxMIGZvciB0b3BsZXZlbAo+
-Cj4gSSB0aGluayB0aGlzIG5lZWRzIHRvIGJlIGEgYml0IGRpZmZlcmVudCBhcmdzIGFzIHRoZSB1
-c2UgaXMgbGltaXRlZC4KPiByb290IGFuZCBwYXJlbnQgbXVzdCBub3QgYmUgTlVMTC4gZGV2IHNo
-b3VsZCBiZSB0aGUgc2FtZSBhcyBwYXJlbnQuCj4gbG9va3VwIHdhcyBmb3IgbGVnYWN5LCBzbyBk
-cm9wIHRoYXQuCgpTbyBmdW5jdGlvbiBwcm90b3R5cGUgd2lsbCBiZWNvbWU6CmludCBkZXZtX29m
-X3BsYXRmb3JtX3BvcHVsYXRlKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2Rl
-Cipyb290LCBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaGVzKQoKPgo+PiArICoKPj4g
-KyAqIFNpbWlsYXIgdG8gb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKSwgYnV0IHdpbGwgYXV0b21hdGlj
-YWxseSBjYWxsCj4+ICsgKiBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgd2hlbiB0aGUgZGV2aWNl
-IGlzIHVuYm91bmQgZnJvbSB0aGUgYnVzLgo+PiArICoKPj4gKyAqIFJldHVybnMgMCBvbiBzdWNj
-ZXNzLCA8IDAgb24gZmFpbHVyZS4KPj4gKyAqLwpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+The Exynos4412 has the same watchdog as newer SoCs (e.g. Exynos5250).
+Just like the others, for working it requires additional steps in Power
+Management Unit: unmasking the reset request and enabling the system
+reset.  Without these additional steps in PMU, the watchdog will not be
+able to reset the system on expiration event.
+
+Change the compatible of Exynos4412 watchdog device node to
+samsung,exynos5250-wdt which includes the additional PMU steps.
+
+This will also fix infinite watchdog interrupt in soft mode (lack of
+interrupt clear) because it is also included in samsung,exynos5250-wdt.
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm/boot/dts/exynos4.dtsi    |  9 ---------
+ arch/arm/boot/dts/exynos4210.dtsi |  9 +++++++++
+ arch/arm/boot/dts/exynos4412.dtsi | 10 ++++++++++
+ 3 files changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 18def1c774d5..71e2cdae6068 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -283,15 +283,6 @@
+ 		};
+ 	};
+ 
+-	watchdog: watchdog@10060000 {
+-		compatible = "samsung,s3c2410-wdt";
+-		reg = <0x10060000 0x100>;
+-		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&clock CLK_WDT>;
+-		clock-names = "watchdog";
+-		status = "disabled";
+-	};
+-
+ 	rtc: rtc@10070000 {
+ 		compatible = "samsung,s3c6410-rtc";
+ 		reg = <0x10070000 0x100>;
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index f9408188f97f..e126357aba9a 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -119,6 +119,15 @@
+ 		};
+ 	};
+ 
++	watchdog: watchdog@10060000 {
++		compatible = "samsung,s3c6410-wdt";
++		reg = <0x10060000 0x100>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clock CLK_WDT>;
++		clock-names = "watchdog";
++		status = "disabled";
++	};
++
+ 	clock: clock-controller@10030000 {
+ 		compatible = "samsung,exynos4210-clock";
+ 		reg = <0x10030000 0x20000>;
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index 235bbb69ad7c..6f47988a1ab5 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -215,6 +215,16 @@
+ 		};
+ 	};
+ 
++	watchdog: watchdog@10060000 {
++		compatible = "samsung,exynos5250-wdt";
++		reg = <0x10060000 0x100>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&clock CLK_WDT>;
++		clock-names = "watchdog";
++		samsung,syscon-phandle = <&pmu_system_controller>;
++		status = "disabled";
++	};
++
+ 	adc: adc@126C0000 {
+ 		compatible = "samsung,exynos-adc-v1";
+ 		reg = <0x126C0000 0x100>;
+-- 
+2.9.3
