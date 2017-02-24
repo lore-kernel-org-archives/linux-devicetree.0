@@ -1,41 +1,64 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] of: add devm_ functions for populate and depopulate
-Date: Fri, 24 Feb 2017 10:31:25 -0600
-Message-ID: <CAL_Jsq+z9FcPowoMYXQ4aPfSYfL3D4ENoZxiTTO2pKJjnsRXOw@mail.gmail.com>
-References: <1487952874-23635-1-git-send-email-benjamin.gaignard@linaro.org>
- <1487952874-23635-2-git-send-email-benjamin.gaignard@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/8] watchdog: s3c2410: Fix infinite interrupt in soft mode
+Date: Fri, 24 Feb 2017 19:30:57 +0200
+Message-ID: <20170224173057.ezbefenrxjro72ck@kozik-lap>
+References: <20170224151122.12142-1-krzk@kernel.org>
+ <20170224151122.12142-3-krzk@kernel.org>
+ <1348b7de-b485-832b-1743-8f810a174dd5@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1487952874-23635-2-git-send-email-benjamin.gaignard@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1348b7de-b485-832b-1743-8f810a174dd5@roeck-us.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgMTA6MTQgQU0sIEJlbmphbWluIEdhaWduYXJkCjxiZW5q
-YW1pbi5nYWlnbmFyZEBsaW5hcm8ub3JnPiB3cm90ZToKPiBMb3RzIG9mIGNhbGxzIHRvIG9mX3Bs
-YXRmb3JtX3BvcHVsYXRlKCkgYXJlIG5vdCB1bmJhbGFuY2VkIGJ5IGEgY2FsbAo+IHRvIG9mX3Bs
-YXRmb3JtX2RlcG9wdWxhdGUoKS4gVGhpcyBjcmVhdGUgaXNzdWVzIHdoaWxlIGRyaXZlcnMgYXJl
-Cj4gYmluZC91bmJpbmQuCj4KPiBJbiB3YXkgdG8gc29sdmUgdGhvc2UgaXNzdWVzIGlzIHRvIGFk
-ZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkKPiB3aGljaCB3aWxsIGNhbGwgb2ZfcGxhdGZv
-cm1fZGVwb3B1bGF0ZSgpIHdoZW4gdGhlIGRldmljZSBpcyB1bmJvdW5kCj4gZnJvbSB0aGUgYnVz
-Lgo+Cj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJk
-QGxpbmFyby5vcmc+Cj4gLS0tCj4gdmVyc2lvbiAyOgo+IC0gc2ltcGxpZnkgZnVuY3Rpb24gcHJv
-dG90eXBlIHRvIG9ubHkga2VlcCBkZXZpY2UgYXMgcGFyYW1ldGVyCj4KPiAgZHJpdmVycy9vZi9w
-bGF0Zm9ybS5jICAgICAgIHwgNzEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrCj4gIGluY2x1ZGUvbGludXgvb2ZfcGxhdGZvcm0uaCB8IDExICsrKysrKysKPiAg
-MiBmaWxlcyBjaGFuZ2VkLCA4MiBpbnNlcnRpb25zKCspCgpGb3IgdGhpcyBhbmQgcGF0Y2ggMjoK
-CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Feb 24, 2017 at 07:37:53AM -0800, Guenter Roeck wrote:
+> On 02/24/2017 07:11 AM, Krzysztof Kozlowski wrote:
+> > In soft (no-reboot) mode, the driver self-pings watchdog upon expiration
+> > of an interrupt.  However the interrupt itself was not cleared thus on
+> > first hit, the system enters infinite interrupt handling loop.
+> > 
+> > On Odroid U3 (Exynos4412), when booted with s3c2410_wdt.soft_noboot=1
+> > argument the console is flooded:
+> > 	# killall -9 watchdog
+> > 	[   60.523760] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
+> > 	[   60.536744] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
+> > 
+> > Fix this by writing something to the WTCLRINT register to clear the
+> > interrupt.  The register WTCLRINT however appeared in S3C6410 so a new
+> > watchdog quirk and flavor are needed.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> > 
+> > ---
+> > 
+> > I was thinking about CC-ing stable, especially when I thought about
+> > adding unconditional WTCLRINT clear.  However it appears that S3C2410
+> > does not have the WTCLRINT register, this a new chip flavor has to be
+> > added.  This makes the fix spread over driver and DTS changes.
+> > 
+> > Worth adding:
+> > 	Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> > ?
+> 
+> How would that be different to Cc: stable ?
+
+I guess not much... except for the metrics that some bug was fixed.
+
+Best regards,
+Krzysztof
