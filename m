@@ -1,7 +1,7 @@
 From: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
-Date: Fri, 24 Feb 2017 16:05:53 +0100
-Message-ID: <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
+Subject: [PATCH 2/4] iio: Documentation: Add max961x sysfs documentation
+Date: Fri, 24 Feb 2017 16:05:54 +0100
+Message-ID: <1487948756-25172-3-git-send-email-jacopo+renesas@jmondi.org>
 References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1487948756-25172-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
@@ -10,48 +10,27 @@ To: geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mv
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Maxim max961x current sense
-amplifier.
+Add documentation for max961x driver.
+The only attribute to document is the current sense shunt resistor
+value.
 
 Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/iio/adc/max961x.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/max961x.txt
+ Documentation/ABI/testing/sysfs-bus-iio-adc-max961x | 5 +++++
+ 1 file changed, 5 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max961x.txt b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x b/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
 new file mode 100644
-index 0000000..abbc6c4
+index 0000000..dbd5e75
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
-@@ -0,0 +1,27 @@
-+* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
-+
-+Maxim max9611/max9612 is an high-side current sense amplifier with integrated
-+12-bits ADC communicating over I2c bus.
-+The device node for this driver shall be a child of a I2c controller.
-+
-+Required properties
-+  - compatible: Should be "maxim,max961x"
-+  - reg: The 7-bits long I2c address of the device
-+  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
-+		    resistor.
-+
-+Example:
-+
-+&i2c4 {
-+	csa: max9611@7c {
-+		compatible = "maxim,max961x";
-+		reg = <0x7c>;
-+
-+		shunt-resistor = <5000>;
-+	};
-+};
-+
-+This device node describes a current sense amplifier sitting on I2c4 bus
-+with address 0x7c (read address is 0xf9, write address is 0xf8).
-+A sense resistor with 0,005 Ohm is installed between RS+ and RS-
-+current-sensing inputs.
++++ b/Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
+@@ -0,0 +1,5 @@
++What:		/sys/bus/iio/devices/iio:deviceX/in_shunt_resistor
++Date:		February 2017
++KernelVersion:	4.10
++Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++Description: 	The value of the shunt resistor in micro Ohms.
 -- 
 2.7.4
 
