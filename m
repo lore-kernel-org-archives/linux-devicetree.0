@@ -1,79 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/2] of: add devm_ functions for populate and depopulate
-Date: Fri, 24 Feb 2017 09:20:17 -0600
-Message-ID: <CAL_JsqLwDPYeO9fHvviCheKLrJv4qqcdbP4wseLLd_SVrsbw=A@mail.gmail.com>
-References: <1487341886-13829-1-git-send-email-benjamin.gaignard@linaro.org>
- <1487341886-13829-2-git-send-email-benjamin.gaignard@linaro.org>
- <CAL_JsqL1X0t=QH1Yp0JBmoFXfEVzhRmKm1Rtz4F1b-vY6TgG0Q@mail.gmail.com>
- <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
+Date: Fri, 24 Feb 2017 16:22:16 +0100
+Message-ID: <CAMuHMdU9UL9ZyiPJqtTTNS=KOScu6M3c7jQgD1vZ+gTiTCAYMA@mail.gmail.com>
+References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org> <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CA+M3ks6aZD_ewOWHrdgj6PgQEgAv0FrHpZkQHP8ZjdLE7J_ayQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487948756-25172-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgOToxMyBBTSwgQmVuamFtaW4gR2FpZ25hcmQKPGJlbmph
-bWluLmdhaWduYXJkQGxpbmFyby5vcmc+IHdyb3RlOgo+IDIwMTctMDItMjQgMTU6MTcgR01UKzAx
-OjAwIFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ogo+PiBPbiBGcmksIEZlYiAxNywg
-MjAxNyBhdCA4OjMxIEFNLCBCZW5qYW1pbiBHYWlnbmFyZAo+PiA8YmVuamFtaW4uZ2FpZ25hcmRA
-bGluYXJvLm9yZz4gd3JvdGU6Cj4+PiBMb3N0IG9mIGNhbGxzIHRvIG9mX3BsYXRmb3JtX3BvcHVs
-YXRlKCkgYXJlIG5vdCB1bmJhbGFuY2VkIGJ5IGEgY2FsbAo+Pgo+PiBzL0xvc3QvTG90cy8KPj4K
-Pj4+IHRvIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKS4gVGhpcyBjcmVhdGUgaXNzdWVzIHdoaWxl
-IGRyaXZlcnMgYXJlCj4+PiBiaW5kL3VuYmluZC4KPj4+Cj4+PiBJbiB3YXkgdG8gc29sdmUgdGhv
-c2UgaXNzdWVzIGlzIHRvIGFkZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkKPj4+IHdoaWNo
-IHdpbGwgY2FsbCBvZl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCkgd2hlbiB0aGUgZGV2aWNlIGlzIHVu
-Ym91bmQKPj4+IGZyb20gdGhlIGJ1cy4KPj4KPj4gT25lIGNvbXBsaWNhdGlvbiBpcyBvZl9wbGF0
-Zm9ybV9wb3B1bGF0ZSBpcyBkZXNpZ25lZCB0byBiZSBjYWxsZWQKPj4gbXVsdGlwbGUgdGltZXMu
-IFdlIGNhbGwgaXQgd2l0aCB0aGUgZGVmYXVsdCBtYXRjaCB0YWJsZSBhbmQgdGhlbgo+PiBwbGF0
-Zm9ybXMgY2FuIGNhbGwgaXQgYWdhaW4gd2l0aCBhIGN1c3RvbSBtYXRjaCB0YWJsZSBmb3IgZXhh
-bXBsZS4KPgo+IEkgZG8gbm90IHBsYW4gdG8gdXNlIGl0IGV2ZXJ5IHdoZXJlIGJ1dCBvbmx5IGlu
-IHNvbWUgZHJpdmVycyBwcm9iZSgpCj4gdG8gYXZvaWQgYWRkaW5nIGdvdG8gdG8gY2FsbCBvZl9w
-bGF0Zm9ybV9kZXBvcHVsYXRlKCkgZm9yIGVhY2ggZXJyb3IKPiBjYXNlcyB3aGljaCBtYXkgb2Nj
-dXIgYWZ0ZXIgY2FsbGluZyBwb3B1bGF0ZS4KPgo+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogQmVuamFt
-aW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQGxpbmFyby5vcmc+Cj4+PiAtLS0KPj4+ICBk
-cml2ZXJzL29mL3BsYXRmb3JtLmMgICAgICAgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysKPj4+ICBpbmNsdWRlL2xpbnV4L29mX3BsYXRmb3JtLmggfCAy
-MCArKysrKysrKysrKysKPj4+ICAyIGZpbGVzIGNoYW5nZWQsIDk3IGluc2VydGlvbnMoKykKPj4+
-Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9wbGF0Zm9ybS5jIGIvZHJpdmVycy9vZi9wbGF0
-Zm9ybS5jCj4+PiBpbmRleCBiODA2NGJjLi4zZGJlYmY3IDEwMDY0NAo+Pj4gLS0tIGEvZHJpdmVy
-cy9vZi9wbGF0Zm9ybS5jCj4+PiArKysgYi9kcml2ZXJzL29mL3BsYXRmb3JtLmMKPj4+IEBAIC01
-NzEsNiArNTcxLDgzIEBAIHZvaWQgb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZShzdHJ1Y3QgZGV2aWNl
-ICpwYXJlbnQpCj4+PiAgfQo+Pj4gIEVYUE9SVF9TWU1CT0xfR1BMKG9mX3BsYXRmb3JtX2RlcG9w
-dWxhdGUpOwo+Pj4KPj4+ICtzdGF0aWMgdm9pZCBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlX3Jl
-bGVhc2Uoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpyZXMpCj4+PiArewo+Pj4gKyAgICAgICBv
-Zl9wbGF0Zm9ybV9kZXBvcHVsYXRlKCooc3RydWN0IGRldmljZSAqKilyZXMpOwo+Pj4gK30KPj4+
-ICsKPj4+ICsvKioKPj4+ICsgKiBkZXZtX29mX3BsYXRmb3JtX3BvcHVsYXRlKCkgLSBQb3B1bGF0
-ZSBwbGF0Zm9ybV9kZXZpY2VzIGZyb20gZGV2aWNlIHRyZWUgZGF0YQo+Pj4gKyAqIEBkZXY6IGRl
-dmljZSB0aGF0IHJlcXVlc3RlZCB0byBwb3B1bGF0ZSBmcm9tIGRldmljZSB0cmVlIGRhdGEKPj4+
-ICsgKiBAcm9vdDogcGFyZW50IG9mIHRoZSBmaXJzdCBsZXZlbCB0byBwcm9iZSBvciBOVUxMIGZv
-ciB0aGUgcm9vdCBvZiB0aGUgdHJlZQo+Pj4gKyAqIEBtYXRjaGVzOiBtYXRjaCB0YWJsZSwgTlVM
-TCB0byB1c2UgdGhlIGRlZmF1bHQKPj4KPj4gTlVMTCBpcyBubyBtYXRjaCB0YWJsZSwgbm90IHRo
-ZSBkZWZhdWx0IHdoaWNoIG1lYW5zIG9ubHkgcG9wdWxhdGUKPj4gaW1tZWRpYXRlIGNoaWxkcmVu
-Lgo+Cj4gSSBoYXZlIGNvcHkgb2ZfcGxhdGZvcm1fcG9wdWxhdGUoKSBkZXNjcmlwdGlvbi4uLgo+
-IEkgcmVwbGFjZSBpdCBieTogQG1hdGNoZXM6IG1hdGNoIHRhYmxlIChjb3VsZCBiZSBOVUxMKQo+
-Cj4+Cj4+PiArICogQGxvb2t1cDogYXV4ZGF0YSB0YWJsZSBmb3IgbWF0Y2hpbmcgaWQgYW5kIHBs
-YXRmb3JtX2RhdGEgd2l0aCBkZXZpY2Ugbm9kZXMKPj4+ICsgKiBAcGFyZW50OiBwYXJlbnQgdG8g
-aG9vayBkZXZpY2VzIGZyb20sIE5VTEwgZm9yIHRvcGxldmVsCj4+Cj4+IEkgdGhpbmsgdGhpcyBu
-ZWVkcyB0byBiZSBhIGJpdCBkaWZmZXJlbnQgYXJncyBhcyB0aGUgdXNlIGlzIGxpbWl0ZWQuCj4+
-IHJvb3QgYW5kIHBhcmVudCBtdXN0IG5vdCBiZSBOVUxMLiBkZXYgc2hvdWxkIGJlIHRoZSBzYW1l
-IGFzIHBhcmVudC4KPj4gbG9va3VwIHdhcyBmb3IgbGVnYWN5LCBzbyBkcm9wIHRoYXQuCj4KPiBT
-byBmdW5jdGlvbiBwcm90b3R5cGUgd2lsbCBiZWNvbWU6Cj4gaW50IGRldm1fb2ZfcGxhdGZvcm1f
-cG9wdWxhdGUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUKPiAqcm9vdCwg
-Y29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2hlcykKCkkganVzdCBub3RpY2VkIHNvbWV0
-aGluZyBlbHNlIHRvby4gZGV2LT5vZl9ub2RlIHNob3VsZCBlcXVhbCByb290IEkKdGhpbmssIHNv
-IHdlIGNhbiBnZXQgcmlkIG9mIHJvb3QgcGFyYW0uCgpSb2IKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+> @@ -0,0 +1,27 @@
+> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+> +
+> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+> +12-bits ADC communicating over I2c bus.
+> +The device node for this driver shall be a child of a I2c controller.
+> +
+> +Required properties
+> +  - compatible: Should be "maxim,max961x"
+> +  - reg: The 7-bits long I2c address of the device
+> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
+> +                   resistor.
+
+shunt-resistor-micro-ohms?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
