@@ -1,50 +1,50 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 0/2] arm64: dts: r8a7795: Add Cortex-A53 CPU cores and PMU
-Date: Fri, 24 Feb 2017 14:59:26 +0100
-Message-ID: <1487944768-31983-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v4 2/2] arm64: dts: r8a7795: Add Cortex-A53 PMU node
+Date: Fri, 24 Feb 2017 14:59:28 +0100
+Message-ID: <1487944768-31983-3-git-send-email-geert+renesas@glider.be>
+References: <1487944768-31983-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1487944768-31983-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Dirk Behme <dirk.behme@gmail.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+Enable the performance monitor unit for the Cortex-A53 cores on the
+R8A7795 SoC.
 
-This patch series adds the Cortex-A53 CPU cores and PMU on the Renesas
-R-Car H3 SoC to its DTS file.
+Extracted from a patch by Takeshi Kihara in the BSP.
 
-Note that these patches describes the hardware; actual enabling of the
-CPU depends on the PSCI firmware.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v4:
+  - New.
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-With the current firmware version (v2.16.0), only the CA57 CPU cores are
-enabled, hence these patches do not introduce undeterministic scheduling
-behavior due to migration between big and LITTLE cores.
-
-Changes compared to v3:
-  - Drop bogus links from the pmu_a57 node to the CA53 nodes,
-  - Add Cortex-A53 PMU node.
-
-Tested on r8a7795/salvator-x, with CPU hot(un)plug and system suspend.
-
-Thanks for applying!
-
-Geert Uytterhoeven (2):
-  arm64: dts: r8a7795: Add Cortex-A53 CPU cores
-  arm64: dts: r8a7795: Add Cortex-A53 PMU node
-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 58 +++++++++++++++++++++++++++++---
- 1 file changed, 53 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index d8e70d75781acaa0..e0d70e5ad167a10d 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -350,6 +350,18 @@
+ 					     <&a57_3>;
+ 		};
+ 
++		pmu_a53 {
++			compatible = "arm,cortex-a53-pmu";
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-affinity = <&a53_0>,
++					     <&a53_1>,
++					     <&a53_2>,
++					     <&a53_3>;
++		};
++
+ 		timer {
+ 			compatible = "arm,armv8-timer";
+ 			interrupts = <GIC_PPI 13
 -- 
 2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
