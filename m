@@ -1,60 +1,66 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 2/3] extcon: int3496: Rename GPIO pins in accordance
- with binding
-Date: Fri, 24 Feb 2017 14:08:08 +0200
-Message-ID: <CAHp75Vf-qJDX8fk1nRbzgUTGRaWK41fwO2y87Da-M+ob=3UjKQ@mail.gmail.com>
-References: <20170223103156.109643-1-andriy.shevchenko@linux.intel.com>
- <CGME20170223103203epcas1p1512e927e6f4c85e793d65c2e426ed1d6@epcas1p1.samsung.com>
- <20170223103156.109643-2-andriy.shevchenko@linux.intel.com> <58AF8998.5000601@samsung.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 2/3] drm/vc4: Add HDMI audio support
+Date: Fri, 24 Feb 2017 14:09:36 +0100
+Message-ID: <20170224140936.4b4b8bd5@bbrezillon>
+References: <20170207210703.7082-1-eric@anholt.net>
+ <20170207210703.7082-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58AF8998.5000601-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Cohen <david.a.cohen-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170207210703.7082-2-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 24, 2017 at 3:17 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote=
-:
-> On 2017=EB=85=84 02=EC=9B=94 23=EC=9D=BC 19:31, Andy Shevchenko wrote:
->> First of all, add an optional binding for external muxer which might be
->> used.
-
->> --- a/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> +++ b/Documentation/devicetree/bindings/extcon/extcon-usb-gpio.txt
->> @@ -10,6 +10,9 @@ Either one of id-gpio or vbus-gpio must be present. Bo=
-th can be present as well.
->>  - id-gpio: gpio for USB ID pin. See gpio binding.
->>  - vbus-gpio: gpio for USB VBUS pin.
->>
->> +Optional properties:
->> +- mux-gpios: gpio for USB external muxer
->
-> The Documentation/extcon/intel-int3496.txt includes
-> already the information for id/vbus/mux pin.
-
-Thanks for pointing this out...
-
-> The extcon-usb-gpio.txt is not related with the extcon-int3496 driver.
-
-...but the bindings is related to ACPI somehow. I dunno why in
-extcon-usb-gpio.c we have
-        if (!np && !ACPI_HANDLE(dev))
-
-...and thus it means either firmware chooses we better to have
-standardized bindings in both cases.
-
-OTOH mux-gpios indeed doesn't make sense for extcon-usb-gpio.c and
-would be removed from the bindings.
-
-I'll update patches accordingly.
-
---=20
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgRXJpYywKCk9uIFR1ZSwgIDcgRmViIDIwMTcgMTM6MDc6MDIgLTA4MDAKRXJpYyBBbmhvbHQg
+PGVyaWNAYW5ob2x0Lm5ldD4gd3JvdGU6Cgo+ICtzdGF0aWMgaW50IHZjNF9oZG1pX2F1ZGlvX2lu
+aXQoc3RydWN0IHZjNF9oZG1pICpoZG1pKQo+ICt7Cj4gKwlzdHJ1Y3Qgc25kX3NvY19kYWlfbGlu
+ayAqZGFpX2xpbmsgPSAmaGRtaS0+YXVkaW8ubGluazsKPiArCXN0cnVjdCBzbmRfc29jX2NhcmQg
+KmNhcmQgPSAmaGRtaS0+YXVkaW8uY2FyZDsKPiArCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZoZG1p
+LT5wZGV2LT5kZXY7Cj4gKwljb25zdCBfX2JlMzIgKmFkZHI7Cj4gKwlpbnQgcmV0Owo+ICsKPiAr
+CWlmICghb2ZfZmluZF9wcm9wZXJ0eShkZXYtPm9mX25vZGUsICJkbWFzIiwgTlVMTCkpIHsKPiAr
+CQlkZXZfd2FybihkZXYsCj4gKwkJCSAiJ2RtYXMnIERUIHByb3BlcnR5IGlzIG1pc3NpbmcsIG5v
+IEhETUkgYXVkaW9cbiIpOwo+ICsJCXJldHVybiAwOwo+ICsJfQo+ICsKPiArCS8qCj4gKwkgKiBH
+ZXQgdGhlIHBoeXNpY2FsIGFkZHJlc3Mgb2YgVkM0X0hEX01BSV9EQVRBLiBXZSBuZWVkIHRvIHJl
+dHJpZXZlCj4gKwkgKiB0aGUgYnVzIGFkZHJlc3Mgc3BlY2lmaWVkIGluIHRoZSBEVCwgYmVjYXVz
+ZSB0aGUgcGh5c2ljYWwgYWRkcmVzcwo+ICsJICogKHRoZSBvbmUgcmV0dXJuZWQgYnkgcGxhdGZv
+cm1fZ2V0X3Jlc291cmNlKCkpIGlzIG5vdCBhcHByb3ByaWF0ZQo+ICsJICogZm9yIERNQSB0cmFu
+c2ZlcnMuCj4gKwkgKiBUaGlzIFZDL01NVSBzaG91bGQgcHJvYmFibHkgYmUgZXhwb3NlZCB0byBh
+dm9pZCB0aGlzIGtpbmQgb2YgaGFja3MuCj4gKwkgKi8KPiArCWFkZHIgPSBvZl9nZXRfYWRkcmVz
+cyhkZXYtPm9mX25vZGUsIDEsIE5VTEwsIE5VTEwpOwo+ICsJaGRtaS0+YXVkaW8uZG1hX2RhdGEu
+YWRkciA9IGJlMzJfdG9fY3B1cChhZGRyKSArIFZDNF9IRF9NQUlfREFUQTsKPiArCWhkbWktPmF1
+ZGlvLmRtYV9kYXRhLmFkZHJfd2lkdGggPSBETUFfU0xBVkVfQlVTV0lEVEhfNF9CWVRFUzsKPiAr
+CWhkbWktPmF1ZGlvLmRtYV9kYXRhLm1heGJ1cnN0ID0gMjsKPiArCj4gKwlyZXQgPSBkZXZtX3Nu
+ZF9kbWFlbmdpbmVfcGNtX3JlZ2lzdGVyKGRldiwgJnBjbV9jb25mLCAwKTsKPiArCWlmIChyZXQp
+IHsKPiArCQlkZXZfZXJyKGRldiwgIkNvdWxkIG5vdCByZWdpc3RlciBQQ00gY29tcG9uZW50OiAl
+ZFxuIiwgcmV0KTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+ICsKPiArCXJldCA9IGRldm1fc25k
+X3NvY19yZWdpc3Rlcl9jb21wb25lbnQoZGV2LCAmdmM0X2hkbWlfYXVkaW9fY3B1X2RhaV9jb21w
+LAo+ICsJCQkJCSAgICAgICZ2YzRfaGRtaV9hdWRpb19jcHVfZGFpX2RydiwgMSk7Cj4gKwlpZiAo
+cmV0KSB7Cj4gKwkJZGV2X2VycihkZXYsICJDb3VsZCBub3QgcmVnaXN0ZXIgQ1BVIERBSTogJWRc
+biIsIHJldCk7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gKwkvKiByZWdpc3RlciBjb2Rl
+YyBhbmQgY29kZWMgZGFpICovCj4gKwlyZXQgPSBzbmRfc29jX3JlZ2lzdGVyX2NvZGVjKGRldiwg
+JnZjNF9oZG1pX2F1ZGlvX2NvZGVjX2RydiwKPiArCQkJCSAgICAgJnZjNF9oZG1pX2F1ZGlvX2Nv
+ZGVjX2RhaV9kcnYsIDEpOwo+ICsJaWYgKHJldCkgewo+ICsJCWRldl9lcnIoZGV2LCAiQ291bGQg
+bm90IHJlZ2lzdGVyIGNvZGVjOiAlZFxuIiwgcmV0KTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+
+ICsKPiArCWRhaV9saW5rLT5uYW1lID0gIk1BSSI7Cj4gKwlkYWlfbGluay0+c3RyZWFtX25hbWUg
+PSAiTUFJIFBDTSI7Cj4gKwlkYWlfbGluay0+Y29kZWNfZGFpX25hbWUgPSB2YzRfaGRtaV9hdWRp
+b19jb2RlY19kYWlfZHJ2Lm5hbWU7Cj4gKwlkYWlfbGluay0+Y3B1X2RhaV9uYW1lID0gZGV2X25h
+bWUoZGV2KTsKPiArCWRhaV9saW5rLT5jb2RlY19uYW1lID0gZGV2X25hbWUoZGV2KTsKPiArCWRh
+aV9saW5rLT5wbGF0Zm9ybV9uYW1lID0gZGV2X25hbWUoZGV2KTsKPiArCj4gKwljYXJkLT5kYWlf
+bGluayA9IGRhaV9saW5rOwo+ICsJY2FyZC0+bnVtX2xpbmtzID0gMTsKPiArCWNhcmQtPm5hbWUg
+PSAidmM0LWhkbWktYXVkaW8iOwoKSSBrbm93IEknbSB0aGUgb25lIHdobyBjaG9zZSB0aGlzIG5h
+bWUsIGJ1dCBtYXliZSB3ZSBzaG91bGQganVzdCBjaGFuZ2UKaXQgZm9yICJ2YzQtaGRtaSIsIHNp
+bmNlIGF1ZGlvIGlzIGtpbmQgb2YgaW1wbGllZCBoZXJlIDstKS4KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
