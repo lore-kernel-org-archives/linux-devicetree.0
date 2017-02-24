@@ -1,79 +1,200 @@
-From: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Fri, 24 Feb 2017 17:59:36 +0800
-Message-ID: <1487930376.22858.14.camel@mhfsdcap03>
-References: <1484988923-1543-1-git-send-email-yong.mao@mediatek.com>
-         <1484988923-1543-2-git-send-email-yong.mao@mediatek.com>
-         <CAPDyKFqo7fMTp3YPJwgoa4u3iAie2U884VUfTnMQ_js8neMqTQ@mail.gmail.com>
+From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Subject: [PATCH v2 net] net: phy: Fix LED mode in DT single property.
+Date: Fri, 24 Feb 2017 16:17:12 +0530
+Message-ID: <1487933232-5383-1-git-send-email-Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFqo7fMTp3YPJwgoa4u3iAie2U884VUfTnMQ_js8neMqTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob,
+From: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
 
-Could you please help to make comments for this patch?
-Thanks.
+Fix the LED mode DT parameters combine to a single property
+and change the vendor prefix i.e. mscc.
 
-On Tue, 2017-01-24 at 09:02 +0100, Ulf Hansson wrote:
-> +Rob, devicetree
-> 
-> On 21 January 2017 at 09:55, Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > From: yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >
-> > Add description for mediatek,hs200-cmd-int-delay
-> > Add description for mediatek,hs400-cmd-int-delay
-> > Add description for mediatek,hs400-cmd-resp-sel-rising
-> >
-> > Signed-off-by: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> You need an ack from a DT maintainer for this. I have added Rob and
-> the devicetree list on cc.
-> 
-> Kind regards
-> Uffe
-> 
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt |   12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > index 0120c7f..4182ea3 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > @@ -21,6 +21,15 @@ Optional properties:
-> >  - assigned-clocks: PLL of the source clock
-> >  - assigned-clock-parents: parent of source clock, used for HS400 mode to get 400Mhz source clock
-> >  - hs400-ds-delay: HS400 DS delay setting
-> > +- mediatek,hs200-cmd-int-delay: HS200 command internal delay setting.
-> > +                               This field has total 32 stages.
-> > +                               The value is an integer from 0 to 31.
-> > +- mediatek,hs400-cmd-int-delay: HS400 command internal delay setting
-> > +                               This field has total 32 stages.
-> > +                               The value is an integer from 0 to 31.
-> > +- mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
-> > +                                      If present,HS400 command responses are sampled on rising edges.
-> > +                                      If not present,HS400 command responses are sampled on falling edges.
-> >
-> >  Examples:
-> >  mmc0: mmc@11230000 {
-> > @@ -38,4 +47,7 @@ mmc0: mmc@11230000 {
-> >         assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
-> >         assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL_D2>;
-> >         hs400-ds-delay = <0x14015>;
-> > +       mediatek,hs200-cmd-int-delay = <26>;
-> > +       mediatek,hs400-cmd-int-delay = <14>;
-> > +       mediatek,hs400-cmd-resp-sel-rising;
-> >  };
-> > --
-> > 1.7.9.5
-> >
+Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+---
+Change set:
+v0: Fix the LED mode DT parameters combine to a single property
+v1: Fix the build test ERROR
+v2: Add default LED mode "vsc85xx_dt_led_mode_get" function.
 
+ .../devicetree/bindings/net/mscc-phy-vsc8531.txt   | 20 +++----
+ drivers/net/phy/mscc.c                             | 65 ++++++++++++----------
+ 2 files changed, 45 insertions(+), 40 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+index 0eedabe..2253de5 100644
+--- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
++++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
+@@ -6,12 +6,12 @@ Required properties:
+ 		  Documentation/devicetree/bindings/net/phy.txt
+ 
+ Optional properties:
+-- vsc8531,vddmac	: The vddmac in mV. Allowed values is listed
++- mscc,vddmac		: The vddmac in mV. Allowed values is listed
+ 			  in the first row of Table 1 (below).
+ 			  This property is only used in combination
+ 			  with the 'edge-slowdown' property.
+ 			  Default value is 3300.
+-- vsc8531,edge-slowdown	: % the edge should be slowed down relative to
++- mscc,edge-slowdown	: % the edge should be slowed down relative to
+ 			  the fastest possible edge time.
+ 			  Edge rate sets the drive strength of the MAC
+ 			  interface output signals.  Changing the
+@@ -27,14 +27,11 @@ Optional properties:
+ 			  'vddmac'.
+ 			  Default value is 0%.
+ 			  Ref: Table:1 - Edge rate change (below).
+-- vsc8531,led-0-mode	: LED mode. Specify how the LED[0] should behave.
++- mscc,led-mode		: LED mode. Specify how the LED[0] and LED[1] should behave.
+ 			  Allowed values are define in
+ 			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
+-			  Default value is VSC8531_LINK_1000_ACTIVITY (1).
+-- vsc8531,led-1-mode	: LED mode. Specify how the LED[1] should behave.
+-			  Allowed values are define in
+-			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
+-			  Default value is VSC8531_LINK_100_ACTIVITY (2).
++			  Default LED[0] value is VSC8531_LINK_1000_ACTIVITY (1).
++			  Default LED[1] value is VSC8531_LINK_100_ACTIVITY (2).
+ 
+ Table: 1 - Edge rate change
+ ----------------------------------------------------------------|
+@@ -66,8 +63,7 @@ Example:
+ 
+         vsc8531_0: ethernet-phy@0 {
+                 compatible = "ethernet-phy-id0007.0570";
+-                vsc8531,vddmac		= <3300>;
+-                vsc8531,edge-slowdown	= <7>;
+-                vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
+-                vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
++                mscc,vddmac		= /bits/ 16 <3300>;
++                mscc,edge-slowdown	= /bits/ 8  <7>;
++                mscc,led-mode	= <LINK_1000_ACTIVITY LINK_100_ACTIVITY>;
+         };
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 650c266..5cd705b 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -385,11 +385,11 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	if (!of_node)
+ 		return -ENODEV;
+ 
+-	rc = of_property_read_u16(of_node, "vsc8531,vddmac", &vdd);
++	rc = of_property_read_u16(of_node, "mscc,vddmac", &vdd);
+ 	if (rc != 0)
+ 		vdd = MSCC_VDDMAC_3300;
+ 
+-	rc = of_property_read_u8(of_node, "vsc8531,edge-slowdown", &sd);
++	rc = of_property_read_u8(of_node, "mscc,edge-slowdown", &sd);
+ 	if (rc != 0)
+ 		sd = 0;
+ 
+@@ -402,26 +402,43 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	return -EINVAL;
+ }
+ 
+-static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+-				   char *led,
+-				   u8 default_mode)
++static int vsc85xx_dt_led_mode_get(struct phy_device *phydev, char *led)
+ {
+ 	struct device *dev = &phydev->mdio.dev;
+ 	struct device_node *of_node = dev->of_node;
+-	u8 led_mode;
+-	int err;
++	struct vsc8531_private *vsc8531 = phydev->priv;
++	u8 led_0_mode = VSC8531_LINK_1000_ACTIVITY;
++	u8 led_1_mode = VSC8531_LINK_100_ACTIVITY;
++	const __be32 *paddr_end;
++	const __be32 *paddr;
++	int len;
+ 
+ 	if (!of_node)
+ 		return -ENODEV;
+ 
+-	led_mode = default_mode;
+-	err = of_property_read_u8(of_node, led, &led_mode);
+-	if (!err && (led_mode > 15 || led_mode == 7 || led_mode == 11)) {
+-		phydev_err(phydev, "DT %s invalid\n", led);
++	paddr = of_get_property(of_node, "mscc,led-mode", &len);
++	if (!paddr)
++		return -EINVAL;
++
++	paddr_end = paddr + (len /= sizeof(*paddr));
++	while (paddr + 1 < paddr_end) {
++		led_0_mode = be32_to_cpup(paddr++);
++		led_1_mode = be32_to_cpup(paddr++);
++	}
++
++	if (!len && (led_0_mode > 15 || led_0_mode == 7 || led_0_mode == 11)) {
++		phydev_err(phydev, "DT %s-0 invalid\n", led);
+ 		return -EINVAL;
+ 	}
++	vsc8531->led_0_mode = led_0_mode;
+ 
+-	return led_mode;
++	if (!len && (led_1_mode > 15 || led_1_mode == 7 || led_1_mode == 11)) {
++		phydev_err(phydev, "DT %s-1 invalid\n", led);
++		return -EINVAL;
++	}
++	vsc8531->led_1_mode = led_1_mode;
++
++	return 0;
+ }
+ 
+ #else
+@@ -430,11 +447,9 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
+-static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
+-				   char *led,
+-				   u8 default_mode)
++static int vsc85xx_dt_led_mode_get(struct phy_device *phydev, char *led)
+ {
+-	return default_mode;
++	return 0;
+ }
+ #endif /* CONFIG_OF_MDIO */
+ 
+@@ -626,7 +641,7 @@ static int vsc85xx_probe(struct phy_device *phydev)
+ {
+ 	struct vsc8531_private *vsc8531;
+ 	int rate_magic;
+-	int led_mode;
++	int err;
+ 
+ 	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
+ 	if (rate_magic < 0)
+@@ -641,17 +656,11 @@ static int vsc85xx_probe(struct phy_device *phydev)
+ 	vsc8531->rate_magic = rate_magic;
+ 
+ 	/* LED[0] and LED[1] mode */
+-	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-0-mode",
+-					   VSC8531_LINK_1000_ACTIVITY);
+-	if (led_mode < 0)
+-		return led_mode;
+-	vsc8531->led_0_mode = led_mode;
+-
+-	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-1-mode",
+-					   VSC8531_LINK_100_ACTIVITY);
+-	if (led_mode < 0)
+-		return led_mode;
+-	vsc8531->led_1_mode = led_mode;
++	vsc8531->led_0_mode = VSC8531_LINK_1000_ACTIVITY;
++	vsc8531->led_1_mode = VSC8531_LINK_100_ACTIVITY;
++	err = vsc85xx_dt_led_mode_get(phydev, "mscc,led-mode");
++	if (err < 0)
++		return err;
+ 
+ 	return 0;
+ }
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
