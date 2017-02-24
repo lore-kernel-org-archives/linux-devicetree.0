@@ -1,74 +1,96 @@
-From: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Fri, 24 Feb 2017 09:14:30 +0100
-Message-ID: <20170224081430.GB19663@samfundet.no>
-References: <CAHp75VfZfj-8ih3vg63w_dAq8xXE2Whu1bANXRcXS1_EGNq43A@mail.gmail.com>
- <20170221112641.6276c001@bbrezillon>
- <CAHp75Vcb9gtzF7LvH74JwL4dTUyQvKmg=dnTXKfjhVHuyK3WXg@mail.gmail.com>
- <20170221112720.ynehsryprhrhzjla@piout.net>
- <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
- <20170221162133.jch6yzpotj4s7zob@piout.net>
- <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
- <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
- <20170221171438.e5hvruoixafpcdps@piout.net>
- <CACiLriSdRM4ZfoDsxFhf6ZVwAtacJOJ28M8CvOg6kC_XN0T-Mw@mail.gmail.com>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
+Date: Fri, 24 Feb 2017 08:18:16 +0000
+Message-ID: <0036d551-91bc-9f3f-22a9-9dac2cf3527c@st.com>
+References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
+ <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
+ <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
+ <2b409ff7-54fe-4110-6495-1cc54585e5e2@st.com>
+ <CAL_JsqLBZ0DGP62yGb2GjNZMto9hWce_HWNCX5iWhbrnE3ae_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CACiLriSdRM4ZfoDsxFhf6ZVwAtacJOJ28M8CvOg6kC_XN0T-Mw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?iso-8859-1?Q?H=E5vard?= Skinnemoen <hskinnemoen@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infrade>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqLBZ0DGP62yGb2GjNZMto9hWce_HWNCX5iWhbrnE3ae_Q@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <377995D28B6A7C4D89DD00F72915C808@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Around Thu 23 Feb 2017 21:18:13 -0800 or thereabout, H=E5vard Skinnemoen wr=
-ote:
-> On Tue, Feb 21, 2017 at 9:14 AM, Alexandre Belloni
-> <alexandre.belloni@free-electrons.com> wrote:
->> On 21/02/2017 at 18:43:35 +0200, Andy Shevchenko wrote:
-
-<snipp>
-
->> A few weeks ago, I was telling Boris to let it not build for a while and
->> then remove it. You already went out of your way to make it work. Again,
->> feel free to send a patch removing avr32. I can only see a lot of
->> benefits for the Atmel ARM SoCs and the many cleanups that will follow.
-> =
-
-> Agree, I can't help but feel that the AVR32 support is doing more harm
-> than good at this point.
-
-I also agree on this, I can relate to Nicolas (and Atmel friends) having to
-always think about the less-maintained AVR32 parts when improving drivers.
-
->> If nobody complains about the 4.10 breakage, You'll have plenty of time
->> to remove it for 4.12
-> =
-
-> I'm fine with that, but I haven't put much effort into keeping it
-> alive lately. If Hans-Christian agrees, I'm willing to post a patch to
-> remove it, or ack someone else's patch.
-
-Then lets plan this for 4.12, either you H=E5vard whip up a patch or I can
-eventually do it.
-
-I can push it through the linux-avr32 git tree on kernel.org.
-
--- =
-
-mvh
-Hans-Christian Noren Egtvedt
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+DQoNCk9uIDAyLzIxLzIwMTcgMDM6MDcgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBNb24s
+IEZlYiAyMCwgMjAxNyBhdCA1OjAxIEFNLCBZYW5uaWNrIEZFUlRSRSA8eWFubmljay5mZXJ0cmVA
+c3QuY29tPiB3cm90ZToNCj4+DQo+Pg0KPj4gT24gMDIvMTYvMjAxNyAwMzozNCBBTSwgUm9iIEhl
+cnJpbmcgd3JvdGU6DQo+Pj4gT24gRnJpLCBGZWIgMTAsIDIwMTcgYXQgMDM6NTQ6NDRQTSArMDEw
+MCwgWWFubmljayBGZXJ0cmUgd3JvdGU6DQo+Pj4+IFNpZ25lZC1vZmYtYnk6IFlhbm5pY2sgRmVy
+dHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+DQo+Pj4+IC0tLQ0KPj4+PiAgLi4uL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCAgICAgICAgIHwg
+NyArKysrKysrDQo+Pj4+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspDQo+Pj4+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dA0KPj4+Pg0KPj4+PiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+YW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQN
+Cj4+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4+Pj4gaW5kZXggMDAwMDAwMC4uZjU5ZTNjNA0K
+Pj4+PiAtLS0gL2Rldi9udWxsDQo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQNCj4+
+Pj4gQEAgLTAsMCArMSw3IEBADQo+Pj4+ICtBbXBpcmUgQU0tNDgwMjcySDNUTVFXLVQwMUggNC4z
+IiBXUVZHQSBURlQgTENEIHBhbmVsDQo+Pj4+ICsNCj4+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+Pj4+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10
+MDFoIg0KPj4+DQo+Pj4gTm8gR1BJTyBjb250cm9scyBvciBwb3dlciBzdXBwbHkgZm9yIHRoaXMg
+cGFuZWw/DQo+Pj4NCj4+PiBSb2INCj4+Pg0KPj4NCj4+IEhpIFJvYiwNCj4+IHRoYW5rIGZvciB5
+b3VyIHJlcGx5Lg0KPj4gVGhlcmUgaXMgbm8gZ3BpbyBvciBwb3dlciBzdXBwbHkgY29udHJvbCBm
+b3IgdGhpcyBwYW5lbCB3aXRoIHRoZSBldmFsDQo+PiBib2FyZCBzdG00Mjl4OWkuDQo+DQo+IFlv
+dSBuZWVkIHRvIGRlc2NyaWJlIHdoYXQgdGhlIHBhbmVsIGhhcywgbm90IHdoYXQgeW91IGhhdmUg
+Y29udHJvbCBvZg0KPiBvciBub3Qgb24gYSBwYXJ0aWN1bGFyIGJvYXJkLg0KDQpZZXMsIEkgZG9u
+J3QgaGF2ZSB0byBkZXNjcmliZSBjb250cm9sIG9uIGEgcGFydGljdWxhciBib2FyZC4gVGhpcyAN
+CmJpbmRpbmcgY29udGFpbnMgZmV3IGxpbmVzLiBUaGlzIGNvbXBhdGlibGUgaXMgdXNlZCBieSBw
+YW5lbC1zaW1wbGUgdG8gDQpnZXQgb25seSB0aW1pbmdzLiBPdGhlciBzdGFmZiBsaWtlIGdwaW8g
+b3IgcG93ZXItc3V5cHBseSBpcyB3ZWxsIG1hbmFnZWQgDQpieSBwYW5lbC1zaW1wbGUgaXRzZWxm
+Lg0KDQpUaGlzIGJpbmRpbmcgaXMgc2ltaWxhciB0byB0aGVzZSBiaW5kaW5ncyAmIG5vdCByZXF1
+aXJlZCBtb3JlIGRldGFpbHM6DQogICAtYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCxh
+bXBpcmUsYW04MDA0ODByM3RtcXdhMWgudHh0LA0KICAgLWF1byxiMDgwdWFuMDEudHh0LGF1byxi
+MTAxYXcwMy50eHQsYXVvLGIxMDFlYW4wMS50eHQsDQogICAtYXVvLGIxMDF4dG4wMS50eHQsYXVv
+LGIxMTZ4dzAzLnR4dCxhdW8sYjEzM2h0bjAxLnR4dCwNCiAgIC1hdW8sYjEzM3h0bjAxLnR4dCxh
+dW8sZzEzM2hhbjAxLnR4dCxhdW8sZzE4NWhhbjAxLnR4dCwNCiAgIC1hdW8sdDIxNWh2bjAxLnR4
+dCxhdmljLHRtMDcwZGRoMDMudHh0LA0KICAgLWJvZSx0djA4MHd1bS1ubDAudHh0LGNodW5naHdh
+LGNsYWEwNzB3cDAzeGcudHh0LA0KICAgLWNodW5naHdhLGNsYWExMDF3YTAxYS50eHQsY2h1bmdo
+d2EsY2xhYTEwMXdiMDMudHh0LA0KICAgLWVkdCxldDA1NzA5MGRodS50eHQsZWR0LGV0MDcwMDgw
+ZGg2LnR4dCxlZHQsZXRtMDcwMGcwZGg2LnR4dCwNCiAgIC1mb3hsaW5rLGZsNTAwd3ZyMDAtYTB0
+LnR4dCxnaWFudHBsdXMsZ3BnNDgyNzM5cXM1LnR4dCwNCiAgIC1oYW5uc3Rhcixoc2QwNzBwd3cx
+LnR4dCxoYW5uc3Rhcixoc2QxMDBweG4xLnR4dCwNCiAgIC1oaXQsdHgyM2QzOHZtMGNhYS50eHQs
+aW5ub2x1eCxhdDA0M3RuMjQudHh0LA0KICAgLWlubm9sdXgsYXQwNzB0bjkyLnR4dCxpbm5vbHV4
+LGcxMDFpY2UtbDAxLnR4dCwNCiAgIC1pbm5vbHV4LGcxMjFpMS1sMDEudHh0LGlubm9sdXgsZzEy
+MXgxLWwwMy50eHQsDQogICAtaW5ub2x1eCxuMTE2YmdlLnR4dCxpbm5vbHV4LG4xNTZiZ2UtbDIx
+LnR4dCwNCiAgIC1pbm5vbHV4LHpqMDcwbmEtMDFwLnR4dCxreW8sdGNnMTIxeGdscC50eHQsDQog
+ICAtbGcsbGIwNzB3djgudHh0LGxnLGxkMDcwd3gzLXNsMDEudHh0LGxnLGxoNTAwd3gxLXNkMDMu
+dHh0LA0KICAgLWxnLGxwMDc5cXgxLXNwMHYudHh0LCBsZyxscDA5N3F4MS1zcGExLnR4dCxsZyxs
+cDEyMHVwMS50eHQsDQogICAtbGcsbHAxMjlxZS50eHQsIG5lYyxubDQ4MjdoYzE5LTA1Yi50eHQs
+DQogICAtbnZkLDkxMjgudHh0LG9rYXlhLHJzODAwNDgwdC03eDBncC50eHQsDQogICAtb2xpbWV4
+LGxjZC1vbGludXhpbm8tNDMtdHMudHh0LG9udGF0LHl4NzAwd3YwMy50eHQsDQogICAtb3J0dXN0
+ZWNoLGNvbTQzaDRtODV1bGMudHh0LCBwYW5hc29uaWMsdnZ4MTBmMDA0YjAwLnR4dCwNCiAgIC1x
+aWFvZGlhbixxZDQzMDAzYzAtNDAudHh0LA0KICAgLXNhbXN1bmcsbHNuMTIyZGwwMS1jMDEudHh0
+LHNhbXN1bmcsbHRuMTAxbnQwNS50eHQsDQogICAtc2Ftc3VuZyxsdG4xNDBhdDI5LTMwMS50eHQs
+c2hhcnAsbHExMDFrMWx5MDQudHh0LA0KICAgLXNoYXJwLGxxMTIzcDFqeDMxLnR4dCwNCiAgIC1z
+aGVsbHksc2NhMDcwMTAtYmZuLWxubi50eHQsc3RhcnJ5LGtyMTIyZWEwc3JhLnR4dCwNCiAgIC10
+cGssZjA3YS0wMTAyLnR4dCx0cGssZjEwYS0wMTAyLnR4dCx1cnQsdW1zaC04NTk2bWQudHh0DQoN
+CkJlc3QgcmVnYXJkcw0KDQo+DQo+PiBUaGlzIGJpbmRpbmcgaXMgc2ltaWxhciB0byBhbGwgcGFu
+ZWwgYmluZGluZ3Mgd2hpY2ggYXJlIGxpbmsgdG8gcGFuZWwNCj4+IHNpbXBsZS4gRGV0YWlscyBv
+biBncGlvICYgcG93ZXIgc3VwcGx5IGFyZSBkZXNjcmliZSB3aXRoIHNpbXBsZS1wYW5lbA0KPj4g
+YmluZGluZy4NCj4NCj4gc2ltcGxlLXBhbmVsLnR4dCBwcm92aWRlcyB3aGF0IHBvc3NpYmxlIHN0
+YW5kYXJkIHByb3BlcnRpZXMgdGhlcmUgYXJlLA0KPiBub3Qgd2hldGhlciBhIHBhbmVsIHVzZXMg
+dGhlbS4gVGhlIHBvd2VyIHN1cHBseSBuZWVkcyB0byBiZSBleHBsaWNpdA0KPiBiZWNhdXNlIEkg
+ZG9uJ3Qga25vdyBpZiB5b3UgZm9yZ290IGFuZCB0aGVyZSdzIHJlYWxseSAyIHN1cHBsaWVzIG9y
+DQo+IHlvdSBhcmUgdXNpbmcgInBvd2VyLXN1cHBseSIgZm9yIGEgc2luZ2xlIHN1cHBseS4NCj4N
+Cj4gUm9iDQo+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
