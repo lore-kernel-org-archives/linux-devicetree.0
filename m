@@ -1,87 +1,89 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 33/36] media: imx: redo pixel format enumeration and
- negotiation
-Date: Thu, 23 Feb 2017 17:30:57 -0800
-Message-ID: <9d4fe000-f694-7d3d-34f2-a89cd637b3f0@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-34-git-send-email-steve_longerbeam@mentor.com>
- <1487244744.2377.38.camel@pengutronix.de>
- <9a4a4da7-418e-860e-05ec-da44b3c945cc@gmail.com>
- <1487841019.2916.7.camel@pengutronix.de>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v1 3/3] extcon: int3496: Add GPIO ACPI mapping table
+Date: Fri, 24 Feb 2017 10:30:43 +0900
+Message-ID: <58AF8CC3.7080703@samsung.com>
+References: <20170223103156.109643-1-andriy.shevchenko@linux.intel.com>
+ <CGME20170223103233epcas2p1c4c914cb79395704d8fce85e2b23f43d@epcas2p1.samsung.com>
+ <20170223103156.109643-3-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1487841019.2916.7.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20170223103156.109643-3-andriy.shevchenko@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, David Cohen <david.a.cohen@intel.com>, Felipe Balbi <balbi@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On 2017년 02월 23일 19:31, Andy Shevchenko wrote:
+> In order to make GPIO ACPI library stricter prepare users of
+> gpiod_get_index() to correctly behave when there no mapping is
+> provided by firmware.
+> 
+> Here we add explicit mapping between _CRS GpioIo() resources and
+> their names used in the driver.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/extcon/extcon-intel-int3496.c | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/drivers/extcon/extcon-intel-int3496.c b/drivers/extcon/extcon-intel-int3496.c
+> index 81713bf7487e..1abe9071d9d0 100644
+> --- a/drivers/extcon/extcon-intel-int3496.c
+> +++ b/drivers/extcon/extcon-intel-int3496.c
+> @@ -45,6 +45,17 @@ static const unsigned int int3496_cable[] = {
+>  	EXTCON_NONE,
+>  };
+>  
+> +static const struct acpi_gpio_params id_gpios = { INT3496_GPIO_USB_ID, 0, false };
+> +static const struct acpi_gpio_params vbus_gpios = { INT3496_GPIO_VBUS_EN, 0, false };
+> +static const struct acpi_gpio_params mux_gpios = { INT3496_GPIO_USB_MUX, 0, false };
+> +
+> +static const struct acpi_gpio_mapping acpi_int3496_default_gpios[] = {
+> +	{ "id-gpios", &id_gpios, 1 },
+> +	{ "vbus-gpios", &vbus_gpios, 1 },
+> +	{ "mux-gpios", &mux_gpios, 1 },
+> +	{ },
+> +};
+> +
+>  static void int3496_do_usb_id(struct work_struct *work)
+>  {
+>  	struct int3496_data *data =
+> @@ -83,6 +94,13 @@ static int int3496_probe(struct platform_device *pdev)
+>  	struct int3496_data *data;
+>  	int ret;
+>  
+> +	ret = acpi_dev_add_driver_gpios(ACPI_COMPANION(dev),
+> +					acpi_int3496_default_gpios);
+> +	if (ret) {
+> +		dev_err(dev, "can't add GPIO ACPI mapping\n");
+> +		return ret;
+> +	}
+> +
+>  	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+>  	if (!data)
+>  		return -ENOMEM;
+> @@ -154,6 +172,7 @@ static int int3496_remove(struct platform_device *pdev)
+>  	devm_free_irq(&pdev->dev, data->usb_id_irq, data);
+>  	cancel_delayed_work_sync(&data->work);
+>  
+> +	acpi_dev_remove_driver_gpios(ACPI_COMPANION(&pdev->dev));
 
-On 02/23/2017 01:10 AM, Philipp Zabel wrote:
-> Hi Steve,
->
-> On Wed, 2017-02-22 at 15:52 -0800, Steve Longerbeam wrote:
->> Hi Philipp,
->>
->>
->> On 02/16/2017 03:32 AM, Philipp Zabel wrote:
->>> On Wed, 2017-02-15 at 18:19 -0800, Steve Longerbeam wrote:
->>>> The previous API and negotiation of mbus codes and pixel formats
->>>> was broken, and has been completely redone.
->>>>
->>>> The negotiation of media bus codes should be as follows:
->>>>
->>>> CSI:
->>>>
->>>> sink pad     direct src pad      IDMAC src pad
->>>> --------     ----------------    -------------
->>>> RGB (any)        IPU RGB           RGB (any)
->>>> YUV (any)        IPU YUV           YUV (any)
->>>> Bayer              N/A             must be same bayer code as sink
->>>
->>> The IDMAC src pad should also use the internal 32-bit RGB / YUV format,
->>> except if bayer/raw mode is selected, in which case the attached capture
->>> video device should only allow a single mode corresponding to the output
->>> pad media bus format.
->>
->> The IDMAC source pad is going to memory, so it has left the IPU.
->> Are you sure it should be an internal IPU format? I realize it
->> is linked to a capture device node, and the IPU format could then
->> be translated to a v4l2 fourcc by the capture device, but IMHO this
->> pad is external to the IPU.
->
-> The CSI IDMAC source pad should describe the format at the connection
-> between the CSI and the IDMAC, just as the icprpvf and icprpenc source
-> pads.
-> The format outside of the IPU is the memory format written by the IDMAC,
-> but that is a memory pixel format and not a media bus format at all.
->
+Need to add the one blank line.
 
-True, it is a memory format. I don't really mind if the CSI and PRP
-ENC/VF source pads are characterized as IPU internal formats, since
-they are only used to indicate the colorspace to the capture device.
+>  	return 0;
+>  }
+>  
 
-And yes it did simplify the enumeration and try_fmt code a bit. So
-I went ahead and made the change.
+Looks good to me.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Steve
+This patch depends on the patch2. So, after resending the v2,
+I'll merge them if there is no problem.
 
-
-> That would also make it more straightforward to enumerate the memory
-> pixel formats in the capture device: If the source pad media bus format
-> is 32-bit YUV, enumerate all YUV formats, if it is 32-bit RGB or RGB565,
-> enumerate all rgb formats, otherwise (bayer/raw mode) only allow the
-> specific memory format matching the bus format.
->
->
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
