@@ -1,72 +1,38 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
-Date: Fri, 24 Feb 2017 17:12:33 +0800
-Message-ID: <20170224091231.GC5012@Socrates-UM>
-References: <cover.1487757223.git.eraretuya@gmail.com>
- <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com>
- <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com>
- <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de>
- <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 00/16] ACPI graph support
+Date: Fri, 24 Feb 2017 11:13:09 +0200
+Message-ID: <20170224091309.GW16975@valkosipuli.retiisi.org.uk>
+References: <1487866776-24578-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-acpi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487866776-24578-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 23, 2017 at 06:58:12PM +0200, Andy Shevchenko wrote:
-> On Thu, Feb 23, 2017 at 6:47 PM, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
-> > On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
-> >> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>> Add SPI driver that initializes SPI regmap for the adxl345 core driver.
-> >>> The driver supports the same functionality as I2C namely the x, y, z and
-> >>> scale readings.
+On Thu, Feb 23, 2017 at 06:19:20PM +0200, Sakari Ailus wrote:
+> changes since v2.2:
 > 
-> >>>  config ADXL345_I2C
-> >>>         tristate
-> >>>         select REGMAP_I2C
-> >>>
-> >>> +config ADXL345_SPI
-> >>> +       tristate
-> >>> +       select REGMAP_SPI
-> >>
-> >> Hmm...
-> >> I saw another pattern
-> >>
-> >> Library / core part is non-visible to user, while
-> >> SPI and I2C parts are selectable by user.
-> >>
-> >> Why do you use inverted pattern? What did I miss?
-> >
-> > The first version of the patch used the other pattern SPI/I2C visible.
-> > Jonathan suggested this other pattern. I prefer the explicit SPI/I2C visible
-> > pattern, but in the end it doesn't really matter as long as both work.
+> - Drop device_fwnode_handle() function in favour of moving the existing
+>   dev_fwnode() function from drivers/base/property.c to linux/property.h
+>   (now patch 12).
 > 
-> Yes, but this pattern makes extra footprint of the kernel and
-> basically dead code when I would like, for example, to have SPI bus
-> enabled, I2C module available, but SPI module not compiled.
+> - Unmerge two unrelated patches accidentally merged between RFC v1 and
+>   PATCH v1 of the series. The patch adding device_fwnode_handle() was
+>   accidentally merged with "device property: Obtain device's fwnode
+>   independently of FW type".
 > 
-> Other one is when I want to have one compiled in, one as a module by
-> whatever reason.
-> 
-> At the end I have no strong opinion, though rationale for the opposite is above.
-> 
+> - Remove redundant forward declaration of struct device in
+>   linux/property.h.
 
-Hello Lars and Andy,
+I forgot to mention that the patch "device property: Get endpoint index from
+the ACPI tables" has been merged with "device property: Obtain device's
+fwnode independently of FW type". This is how it was expected to be already
+in v2. There are no changes in code though.
 
-I'll revert to the explicit SPI/I2C pattern in order to give more
-freedom in configuring as per the scenarios previously stated.
-
-Thanks,
-Eva
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
