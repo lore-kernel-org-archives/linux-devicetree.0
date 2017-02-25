@@ -1,7 +1,7 @@
 From: Florian Vaussard <florian.vaussard@gmail.com>
-Subject: [PATCH 4/6] ARM: dts: socfpga: Remove unneeded reg from stmpe_touchscreen
-Date: Sat, 25 Feb 2017 06:54:27 +0100
-Message-ID: <1488002069-22404-5-git-send-email-florian.vaussard@heig-vd.ch>
+Subject: [PATCH 2/6] ARM: dts: socfpga: Add unit name to memory nodes
+Date: Sat, 25 Feb 2017 06:54:25 +0100
+Message-ID: <1488002069-22404-3-git-send-email-florian.vaussard@heig-vd.ch>
 References: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
@@ -10,32 +10,157 @@ To: Dinh Nguyen <dinguyen@kernel.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
-The stmpe_touchscreen node in Cyclone5 MCV EVK has a reg property, but
-this is not used by the driver. Moreover the binding documentation do
-not define this property. Having a reg property without a unit name will
-trigger the following warning when compiled with W=1:
+Memory nodes in Arria5, Cyclone5 and Arria10 do not have a unit name.
+This will trigger several warnings like this one (when compiled with
+W=1):
 
-Node /soc/i2c@ffc04000/stmpe811@41/stmpe_touchscreen has a reg or ranges
-property, but no unit name
+Node /memory has a reg or ranges property, but no unit name
 
-Remove the superfluous reg property.
+Add the corresponding unit name to each node.
 
 Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
 ---
- arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi       | 2 +-
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts         | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts  | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi        | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_sodia.dts       | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 2 +-
+ arch/arm/boot/dts/socfpga_vt.dts                   | 2 +-
+ 10 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
-index e5a98e5..21e3972 100644
---- a/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
-+++ b/arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts
-@@ -71,7 +71,6 @@
+diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+index c57e6ce..4d0a729 100644
+--- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
+@@ -30,7 +30,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- 		stmpe_touchscreen {
- 			compatible = "st,stmpe-ts";
--			reg = <0>;
- 			ts,sample-time = <4>;
- 			ts,mod-12b = <1>;
- 			ts,ref-sel = <0>;
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1GB */
+diff --git a/arch/arm/boot/dts/socfpga_arria5_socdk.dts b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+index 8672edf..aac4fee 100644
+--- a/arch/arm/boot/dts/socfpga_arria5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_arria5_socdk.dts
+@@ -26,7 +26,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1GB */
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+index 5ecd2ef..7b49395 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -25,7 +25,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1GB */
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi b/arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi
+index 6ad3b1eb..3c03da6 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi
++++ b/arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi
+@@ -21,7 +21,7 @@
+ 	model = "Aries/DENX MCV";
+ 	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1 GiB */
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+index 7ea32c8..155829f 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+@@ -26,7 +26,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1GB */
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+index a0c90b3b..a4a555c 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_sockit.dts
+@@ -26,7 +26,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1GB */
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+index c3d52f2..8e3b017 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+@@ -25,7 +25,7 @@
+ 		bootargs = "console=ttyS0,115200";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1GB */
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
+index d69ad29..8860dd2 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_sodia.dts
+@@ -28,7 +28,7 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>;
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+index 363ee62..8931980 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+@@ -57,7 +57,7 @@
+ 		bootargs = "console=ttyS0,115200";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1GB */
+diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+index f9345e0..dfe2193 100644
+--- a/arch/arm/boot/dts/socfpga_vt.dts
++++ b/arch/arm/boot/dts/socfpga_vt.dts
+@@ -26,7 +26,7 @@
+ 		bootargs = "console=ttyS0,57600";
+ 	};
+ 
+-	memory {
++	memory@0 {
+ 		name = "memory";
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000>; /* 1 GB */
 -- 
 2.7.4
