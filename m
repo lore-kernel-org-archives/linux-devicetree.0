@@ -1,139 +1,185 @@
-From: Mauro Carvalho Chehab <mchehab@infradead.org>
-Subject: [PATCH v3] [media] serial_ir: ensure we're ready to receive
- interrupts
-Date: Sat, 25 Feb 2017 11:44:19 -0300
-Message-ID: <20170225112213.6e890b38@vento.lan>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
+Date: Sat, 25 Feb 2017 16:50:56 +0200
+Message-ID: <20170225145053.puqkcrntnhmcvla4@ihha.localdomain>
+References: <cover.1487334912.git.roliveir@synopsys.com>
+ <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
+ <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
+ <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
+ <cc6c914e-c3e7-7703-0405-104e701610cf@mentor.com>
+ <20170221214813.GN16975@valkosipuli.retiisi.org.uk>
+ <1b7e2802-dda1-0372-8738-17655dd8ca69@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: base64
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux Media Mailing List <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, kernel test robot <fengguang.wu@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>, Ruslan Ruslichenko <rruslich@cisco.com>, LKP <lkp@01.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, kernel@stlinux.com, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, wfg@linux.intel.com, Sean Young <sean@mess.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1b7e2802-dda1-0372-8738-17655dd8ca69-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam@g>
 List-Id: devicetree@vger.kernel.org
 
-LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMjU2DQoNCkZyb206
-IFNlYW4gWW91bmcgPHNlYW5AbWVzcy5vcmc+DQoNCldoZW4gdGhlIGludGVycnVwdCByZXF1ZXN0
-ZWQgd2l0aCBkZXZtX3JlcXVlc3RfaXJxKCksIHNlcmlhbF9pci5yY2Rldg0KaXMgc3RpbGwgbnVs
-bCBzbyB3aWxsIGNhdXNlIG51bGwgZGVmZXJlbmNlIGlmIHRoZSBpcnEgaGFuZGxlciBpcyBjYWxs
-ZWQNCmVhcmx5IG9uLg0KDQpBbHNvIGVuc3VyZSB0aGF0IHRpbWVvdXRfdGltZXIgaXMgc2V0dXAu
-DQoNCkxpbms6IGh0dHA6Ly9sa21sLmtlcm5lbC5vcmcvci9DQSs1NWFGeHNoMnVGOGdpNXNOX2d1
-WTNaK3RpTHY3THBKWUtCdyt5OHZxTHpwK1RzblFAbWFpbC5nbWFpbC5jb20NCg0KW21jaGVoYWJA
-cy1vcGVuc291cmNlLmNvbTogbW92ZWQgc2VyaWFsX2lyX3Byb2JlKCkgYmFjayB0byBpdHMgb3Jp
-Z2luYWwgcGxhY2VdDQoNCkNjOiA8c3RhYmxlQHZnZXIua2VybmVsLm9yZz4gIyA0LjEwDQpTaWdu
-ZWQtb2ZmLWJ5OiBTZWFuIFlvdW5nIDxzZWFuQG1lc3Mub3JnPg0KU2lnbmVkLW9mZi1ieTogTWF1
-cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFiQHMtb3BlbnNvdXJjZS5jb20+DQotIC0gLS0tDQog
-ZHJpdmVycy9tZWRpYS9yYy9zZXJpYWxfaXIuYyB8IDEyMyArKysrKysrKysrKysrKysrKysrKysr
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDYyIGluc2VydGlvbnMoKyks
-IDYxIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9yYy9zZXJpYWxf
-aXIuYyBiL2RyaXZlcnMvbWVkaWEvcmMvc2VyaWFsX2lyLmMNCmluZGV4IDkyM2ZiMjI5OTU1My4u
-NDFiNTRlNDAxNzZjIDEwMDY0NA0KLSAtIC0tLSBhL2RyaXZlcnMvbWVkaWEvcmMvc2VyaWFsX2ly
-LmMNCisrKyBiL2RyaXZlcnMvbWVkaWEvcmMvc2VyaWFsX2lyLmMNCkBAIC00ODcsMTAgKzQ4Nyw2
-OSBAQCBzdGF0aWMgdm9pZCBzZXJpYWxfaXJfdGltZW91dCh1bnNpZ25lZCBsb25nIGFyZykNCiAJ
-aXJfcmF3X2V2ZW50X2hhbmRsZShzZXJpYWxfaXIucmNkZXYpOw0KIH0NCiANCisvKiBOZWVkZWQg
-Ynkgc2VyaWFsX2lyX3Byb2JlKCkgKi8NCitzdGF0aWMgaW50IHNlcmlhbF9pcl90eChzdHJ1Y3Qg
-cmNfZGV2ICpkZXYsIHVuc2lnbmVkIGludCAqdHhidWYsDQorCQkJdW5zaWduZWQgaW50IGNvdW50
-KTsNCitzdGF0aWMgaW50IHNlcmlhbF9pcl90eF9kdXR5X2N5Y2xlKHN0cnVjdCByY19kZXYgKmRl
-diwgdTMyIGN5Y2xlKTsNCitzdGF0aWMgaW50IHNlcmlhbF9pcl90eF9jYXJyaWVyKHN0cnVjdCBy
-Y19kZXYgKmRldiwgdTMyIGNhcnJpZXIpOw0KK3N0YXRpYyBpbnQgc2VyaWFsX2lyX29wZW4oc3Ry
-dWN0IHJjX2RldiAqcmNkZXYpOw0KK3N0YXRpYyB2b2lkIHNlcmlhbF9pcl9jbG9zZShzdHJ1Y3Qg
-cmNfZGV2ICpyY2Rldik7DQorDQogc3RhdGljIGludCBzZXJpYWxfaXJfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqZGV2KQ0KIHsNCisJc3RydWN0IHJjX2RldiAqcmNkZXY7DQogCWludCBp
-LCBubG93LCBuaGlnaCwgcmVzdWx0Ow0KIA0KKwlyY2RldiA9IGRldm1fcmNfYWxsb2NhdGVfZGV2
-aWNlKCZkZXYtPmRldiwgUkNfRFJJVkVSX0lSX1JBVyk7DQorCWlmICghcmNkZXYpDQorCQlyZXR1
-cm4gLUVOT01FTTsNCisNCisJaWYgKGhhcmR3YXJlW3R5cGVdLnNlbmRfcHVsc2UgJiYgaGFyZHdh
-cmVbdHlwZV0uc2VuZF9zcGFjZSkNCisJCXJjZGV2LT50eF9pciA9IHNlcmlhbF9pcl90eDsNCisJ
-aWYgKGhhcmR3YXJlW3R5cGVdLnNldF9zZW5kX2NhcnJpZXIpDQorCQlyY2Rldi0+c190eF9jYXJy
-aWVyID0gc2VyaWFsX2lyX3R4X2NhcnJpZXI7DQorCWlmIChoYXJkd2FyZVt0eXBlXS5zZXRfZHV0
-eV9jeWNsZSkNCisJCXJjZGV2LT5zX3R4X2R1dHlfY3ljbGUgPSBzZXJpYWxfaXJfdHhfZHV0eV9j
-eWNsZTsNCisNCisJc3dpdGNoICh0eXBlKSB7DQorCWNhc2UgSVJfSE9NRUJSRVc6DQorCQlyY2Rl
-di0+aW5wdXRfbmFtZSA9ICJTZXJpYWwgSVIgdHlwZSBob21lLWJyZXciOw0KKwkJYnJlYWs7DQor
-CWNhc2UgSVJfSVJERU86DQorCQlyY2Rldi0+aW5wdXRfbmFtZSA9ICJTZXJpYWwgSVIgdHlwZSBJ
-UmRlbyI7DQorCQlicmVhazsNCisJY2FzZSBJUl9JUkRFT19SRU1PVEU6DQorCQlyY2Rldi0+aW5w
-dXRfbmFtZSA9ICJTZXJpYWwgSVIgdHlwZSBJUmRlbyByZW1vdGUiOw0KKwkJYnJlYWs7DQorCWNh
-c2UgSVJfQU5JTUFYOg0KKwkJcmNkZXYtPmlucHV0X25hbWUgPSAiU2VyaWFsIElSIHR5cGUgQW5p
-bWFYIjsNCisJCWJyZWFrOw0KKwljYXNlIElSX0lHT1I6DQorCQlyY2Rldi0+aW5wdXRfbmFtZSA9
-ICJTZXJpYWwgSVIgdHlwZSBJZ29yUGx1ZyI7DQorCQlicmVhazsNCisJfQ0KKw0KKwlyY2Rldi0+
-aW5wdXRfcGh5cyA9IEtCVUlMRF9NT0ROQU1FICIvaW5wdXQwIjsNCisJcmNkZXYtPmlucHV0X2lk
-LmJ1c3R5cGUgPSBCVVNfSE9TVDsNCisJcmNkZXYtPmlucHV0X2lkLnZlbmRvciA9IDB4MDAwMTsN
-CisJcmNkZXYtPmlucHV0X2lkLnByb2R1Y3QgPSAweDAwMDE7DQorCXJjZGV2LT5pbnB1dF9pZC52
-ZXJzaW9uID0gMHgwMTAwOw0KKwlyY2Rldi0+b3BlbiA9IHNlcmlhbF9pcl9vcGVuOw0KKwlyY2Rl
-di0+Y2xvc2UgPSBzZXJpYWxfaXJfY2xvc2U7DQorCXJjZGV2LT5kZXYucGFyZW50ID0gJnNlcmlh
-bF9pci5wZGV2LT5kZXY7DQorCXJjZGV2LT5hbGxvd2VkX3Byb3RvY29scyA9IFJDX0JJVF9BTExf
-SVJfREVDT0RFUjsNCisJcmNkZXYtPmRyaXZlcl9uYW1lID0gS0JVSUxEX01PRE5BTUU7DQorCXJj
-ZGV2LT5tYXBfbmFtZSA9IFJDX01BUF9SQzZfTUNFOw0KKwlyY2Rldi0+bWluX3RpbWVvdXQgPSAx
-Ow0KKwlyY2Rldi0+dGltZW91dCA9IElSX0RFRkFVTFRfVElNRU9VVDsNCisJcmNkZXYtPm1heF90
-aW1lb3V0ID0gMTAgKiBJUl9ERUZBVUxUX1RJTUVPVVQ7DQorCXJjZGV2LT5yeF9yZXNvbHV0aW9u
-ID0gMjUwMDAwOw0KKw0KKwlzZXJpYWxfaXIucmNkZXYgPSByY2RldjsNCisNCisJc2V0dXBfdGlt
-ZXIoJnNlcmlhbF9pci50aW1lb3V0X3RpbWVyLCBzZXJpYWxfaXJfdGltZW91dCwNCisJCSAgICAo
-dW5zaWduZWQgbG9uZykmc2VyaWFsX2lyKTsNCisNCiAJcmVzdWx0ID0gZGV2bV9yZXF1ZXN0X2ly
-cSgmZGV2LT5kZXYsIGlycSwgc2VyaWFsX2lyX2lycV9oYW5kbGVyLA0KIAkJCQkgIHNoYXJlX2ly
-cSA/IElSUUZfU0hBUkVEIDogMCwNCiAJCQkJICBLQlVJTERfTU9ETkFNRSwgJmhhcmR3YXJlKTsN
-CkBAIC01MTYsOSArNTc1LDYgQEAgc3RhdGljIGludCBzZXJpYWxfaXJfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqZGV2KQ0KIAkJcmV0dXJuIC1FQlVTWTsNCiAJfQ0KIA0KLSAtIC0Jc2V0
-dXBfdGltZXIoJnNlcmlhbF9pci50aW1lb3V0X3RpbWVyLCBzZXJpYWxfaXJfdGltZW91dCwNCi0g
-LSAtCQkgICAgKHVuc2lnbmVkIGxvbmcpJnNlcmlhbF9pcik7DQotIC0gLQ0KIAlyZXN1bHQgPSBo
-YXJkd2FyZV9pbml0X3BvcnQoKTsNCiAJaWYgKHJlc3VsdCA8IDApDQogCQlyZXR1cm4gcmVzdWx0
-Ow0KQEAgLTU1Miw3ICs2MDgsOCBAQCBzdGF0aWMgaW50IHNlcmlhbF9pcl9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpkZXYpDQogCQkJIHNlbnNlID8gImxvdyIgOiAiaGlnaCIpOw0KIA0K
-IAlkZXZfZGJnKCZkZXYtPmRldiwgIkludGVycnVwdCAlZCwgcG9ydCAlMDR4IG9idGFpbmVkXG4i
-LCBpcnEsIGlvKTsNCi0gLSAtCXJldHVybiAwOw0KKw0KKwlyZXR1cm4gZGV2bV9yY19yZWdpc3Rl
-cl9kZXZpY2UoJmRldi0+ZGV2LCByY2Rldik7DQogfQ0KIA0KIHN0YXRpYyBpbnQgc2VyaWFsX2ly
-X29wZW4oc3RydWN0IHJjX2RldiAqcmNkZXYpDQpAQCAtNzIzLDcgKzc4MCw2IEBAIHN0YXRpYyB2
-b2lkIHNlcmlhbF9pcl9leGl0KHZvaWQpDQogDQogc3RhdGljIGludCBfX2luaXQgc2VyaWFsX2ly
-X2luaXRfbW9kdWxlKHZvaWQpDQogew0KLSAtIC0Jc3RydWN0IHJjX2RldiAqcmNkZXY7DQogCWlu
-dCByZXN1bHQ7DQogDQogCXN3aXRjaCAodHlwZSkgew0KQEAgLTc1NCw2MyArODEwLDkgQEAgc3Rh
-dGljIGludCBfX2luaXQgc2VyaWFsX2lyX2luaXRfbW9kdWxlKHZvaWQpDQogCQlzZW5zZSA9ICEh
-c2Vuc2U7DQogDQogCXJlc3VsdCA9IHNlcmlhbF9pcl9pbml0KCk7DQotIC0gLQlpZiAocmVzdWx0
-KQ0KLSAtIC0JCXJldHVybiByZXN1bHQ7DQotIC0gLQ0KLSAtIC0JcmNkZXYgPSBkZXZtX3JjX2Fs
-bG9jYXRlX2RldmljZSgmc2VyaWFsX2lyLnBkZXYtPmRldiwgUkNfRFJJVkVSX0lSX1JBVyk7DQot
-IC0gLQlpZiAoIXJjZGV2KSB7DQotIC0gLQkJcmVzdWx0ID0gLUVOT01FTTsNCi0gLSAtCQlnb3Rv
-IHNlcmlhbF9jbGVhbnVwOw0KLSAtIC0JfQ0KLSAtIC0NCi0gLSAtCWlmIChoYXJkd2FyZVt0eXBl
-XS5zZW5kX3B1bHNlICYmIGhhcmR3YXJlW3R5cGVdLnNlbmRfc3BhY2UpDQotIC0gLQkJcmNkZXYt
-PnR4X2lyID0gc2VyaWFsX2lyX3R4Ow0KLSAtIC0JaWYgKGhhcmR3YXJlW3R5cGVdLnNldF9zZW5k
-X2NhcnJpZXIpDQotIC0gLQkJcmNkZXYtPnNfdHhfY2FycmllciA9IHNlcmlhbF9pcl90eF9jYXJy
-aWVyOw0KLSAtIC0JaWYgKGhhcmR3YXJlW3R5cGVdLnNldF9kdXR5X2N5Y2xlKQ0KLSAtIC0JCXJj
-ZGV2LT5zX3R4X2R1dHlfY3ljbGUgPSBzZXJpYWxfaXJfdHhfZHV0eV9jeWNsZTsNCi0gLSAtDQot
-IC0gLQlzd2l0Y2ggKHR5cGUpIHsNCi0gLSAtCWNhc2UgSVJfSE9NRUJSRVc6DQotIC0gLQkJcmNk
-ZXYtPmlucHV0X25hbWUgPSAiU2VyaWFsIElSIHR5cGUgaG9tZS1icmV3IjsNCi0gLSAtCQlicmVh
-azsNCi0gLSAtCWNhc2UgSVJfSVJERU86DQotIC0gLQkJcmNkZXYtPmlucHV0X25hbWUgPSAiU2Vy
-aWFsIElSIHR5cGUgSVJkZW8iOw0KLSAtIC0JCWJyZWFrOw0KLSAtIC0JY2FzZSBJUl9JUkRFT19S
-RU1PVEU6DQotIC0gLQkJcmNkZXYtPmlucHV0X25hbWUgPSAiU2VyaWFsIElSIHR5cGUgSVJkZW8g
-cmVtb3RlIjsNCi0gLSAtCQlicmVhazsNCi0gLSAtCWNhc2UgSVJfQU5JTUFYOg0KLSAtIC0JCXJj
-ZGV2LT5pbnB1dF9uYW1lID0gIlNlcmlhbCBJUiB0eXBlIEFuaW1hWCI7DQotIC0gLQkJYnJlYWs7
-DQotIC0gLQljYXNlIElSX0lHT1I6DQotIC0gLQkJcmNkZXYtPmlucHV0X25hbWUgPSAiU2VyaWFs
-IElSIHR5cGUgSWdvclBsdWciOw0KLSAtIC0JCWJyZWFrOw0KLSAtIC0JfQ0KLSAtIC0NCi0gLSAt
-CXJjZGV2LT5pbnB1dF9waHlzID0gS0JVSUxEX01PRE5BTUUgIi9pbnB1dDAiOw0KLSAtIC0JcmNk
-ZXYtPmlucHV0X2lkLmJ1c3R5cGUgPSBCVVNfSE9TVDsNCi0gLSAtCXJjZGV2LT5pbnB1dF9pZC52
-ZW5kb3IgPSAweDAwMDE7DQotIC0gLQlyY2Rldi0+aW5wdXRfaWQucHJvZHVjdCA9IDB4MDAwMTsN
-Ci0gLSAtCXJjZGV2LT5pbnB1dF9pZC52ZXJzaW9uID0gMHgwMTAwOw0KLSAtIC0JcmNkZXYtPm9w
-ZW4gPSBzZXJpYWxfaXJfb3BlbjsNCi0gLSAtCXJjZGV2LT5jbG9zZSA9IHNlcmlhbF9pcl9jbG9z
-ZTsNCi0gLSAtCXJjZGV2LT5kZXYucGFyZW50ID0gJnNlcmlhbF9pci5wZGV2LT5kZXY7DQotIC0g
-LQlyY2Rldi0+YWxsb3dlZF9wcm90b2NvbHMgPSBSQ19CSVRfQUxMX0lSX0RFQ09ERVI7DQotIC0g
-LQlyY2Rldi0+ZHJpdmVyX25hbWUgPSBLQlVJTERfTU9ETkFNRTsNCi0gLSAtCXJjZGV2LT5tYXBf
-bmFtZSA9IFJDX01BUF9SQzZfTUNFOw0KLSAtIC0JcmNkZXYtPm1pbl90aW1lb3V0ID0gMTsNCi0g
-LSAtCXJjZGV2LT50aW1lb3V0ID0gSVJfREVGQVVMVF9USU1FT1VUOw0KLSAtIC0JcmNkZXYtPm1h
-eF90aW1lb3V0ID0gMTAgKiBJUl9ERUZBVUxUX1RJTUVPVVQ7DQotIC0gLQlyY2Rldi0+cnhfcmVz
-b2x1dGlvbiA9IDI1MDAwMDsNCi0gLSAtDQotIC0gLQlzZXJpYWxfaXIucmNkZXYgPSByY2RldjsN
-Ci0gLSAtDQotIC0gLQlyZXN1bHQgPSByY19yZWdpc3Rlcl9kZXZpY2UocmNkZXYpOw0KLSAtIC0N
-CiAJaWYgKCFyZXN1bHQpDQogCQlyZXR1cm4gMDsNCi0gLSAtc2VyaWFsX2NsZWFudXA6DQorDQog
-CXNlcmlhbF9pcl9leGl0KCk7DQogCXJldHVybiByZXN1bHQ7DQogfQ0KQEAgLTgxOCw3ICs4MjAs
-NiBAQCBzdGF0aWMgaW50IF9faW5pdCBzZXJpYWxfaXJfaW5pdF9tb2R1bGUodm9pZCkNCiBzdGF0
-aWMgdm9pZCBfX2V4aXQgc2VyaWFsX2lyX2V4aXRfbW9kdWxlKHZvaWQpDQogew0KIAlkZWxfdGlt
-ZXJfc3luYygmc2VyaWFsX2lyLnRpbWVvdXRfdGltZXIpOw0KLSAtIC0JcmNfdW5yZWdpc3Rlcl9k
-ZXZpY2Uoc2VyaWFsX2lyLnJjZGV2KTsNCiAJc2VyaWFsX2lyX2V4aXQoKTsNCiB9DQogDQotIC0g
-LS0gDQoyLjkuMw0KLS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0NClZlcnNpb246IEdudVBH
-IHYyDQoNCmlRSWNCQUVCQ0FBR0JRSllzWmhFQUFvSkVBaGZQcjJPNU9FVjJsOFAvaTBqeWlrVHNP
-QzROYUNzSW1CaFZzTTUNCnNkZ2p5K3dpYitoQ3dkbjlIRE9SeEZxN1AwWnlLU0Vya1JuSElaU2lx
-dTFxNFM5UStYYTVoOTN0YUVkWmkzOEgNCjJBaW41ckI0MHk3ZVhnc3NzVTlBUEhpbjg5SG1kVDlY
-V0tTN3BBRUUxNm1LaGlpdXUwY2dGZCtMbmdEeXBqTlENCnM1WWx6ZldGc042dWJqUy90MndKcHh4
-eWVwc0tvQ3R2OHNtVE9meVFaSWh3S1VjV1dDOWtKVEE3N3ViTzllZ3INClpCRnpzdncwWGJFalc4
-Y3VpNEVFdWR1b3pEOUsxT3JTc0NpYitOSzJOTVUwbHVZeTlZdHNVdGpONU96dTFlNnQNCko1UU9k
-c0psMGFxTFBmRWs4VFczKys1NU1hSzlMVWdFNmFhQ2RudGJlazVjWm1nc2szYWQ3OWtEUDhnU2R4
-QVYNClZVWERFUFpRcEpYZWRBNlMvYkFtWFViRVc3bVZISDlBTFlTYThBR1hDQXJLS3R6KzVpWE5Q
-MCs4M0pvRkdFSGINCnRUQ0dJbk5mc0JIZDgvTnFkVy91L3VnR1ZqNHh0MEtjKzRvT1BZZWNqTzJ0
-aUNTK2xwS1dJRHc5Yk9jYVI0LzANCncremJDbUlFbUJaNzRsTTB5cytUbUNtREd3WEMyUVlFcVkw
-VSs5Wlpjc3krN2JNY3hKSDZzbHJqZmFhNmZKYTANCmoyT1UycUIwVm5VVEpxMGEwTzhJTDdzNWpR
-bjFsS05wbUc5VEtZTm50Q3pCdUhiYXNMMnJzcitKcnI2dnBNS1UNCnZZYnBSYXBvQW5JWGFVVzcw
-OGJkdEEyeDcvSmZpTGo5TTdLdllKZmVGQXQ5SEdIZVhxMUhKc2FHaml4MW1aaDMNCm5MLzY4RnFj
-MlNjdXJienEvQzdaDQo9QXB5ZQ0KLS0tLS1FTkQgUEdQIFNJR05BVFVSRS0tLS0tDQo=
+Hi Vladimir,
+
+On Wed, Feb 22, 2017 at 12:37:51AM +0200, Vladimir Zapolskiy wrote:
+> Hi Sakari,
+> 
+> On 02/21/2017 11:48 PM, Sakari Ailus wrote:
+> > Hi, Vladimir!
+> > 
+> > How do you do? :-)
+> 
+> deferring execution of boring tasks by doing code review :)
+
+X-)
+
+> 
+> > On Tue, Feb 21, 2017 at 10:48:09PM +0200, Vladimir Zapolskiy wrote:
+> >> Hi Ramiro,
+> >>
+> >> On 02/21/2017 10:13 PM, Ramiro Oliveira wrote:
+> >>> Hi Vladimir,
+> >>>
+> >>> Thank you for your feedback
+> >>>
+> >>> On 2/21/2017 3:58 PM, Vladimir Zapolskiy wrote:
+> >>>> Hi Ramiro,
+> >>>>
+> >>>> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
+> >>>>> Create device tree bindings documentation.
+> >>>>>
+> >>>>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> >>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>>>> ---
+> >>>>>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
+> >>>>>  1 file changed, 35 insertions(+)
+> >>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> >>>>>
+> >>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> >>>>> new file mode 100644
+> >>>>> index 000000000000..31956426d3b9
+> >>>>> --- /dev/null
+> >>>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> >>>>> @@ -0,0 +1,35 @@
+> >>>>> +Omnivision OV5647 raw image sensor
+> >>>>> +---------------------------------
+> >>>>> +
+> >>>>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
+> >>>>> +and CCI (I2C compatible) control bus.
+> >>>>> +
+> >>>>> +Required properties:
+> >>>>> +
+> >>>>> +- compatible		: "ovti,ov5647".
+> >>>>> +- reg			: I2C slave address of the sensor.
+> >>>>> +- clocks		: Reference to the xclk clock.
+> >>>>
+> >>>> Is "xclk" clock a pixel clock or something else?
+> >>>>
+> >>>
+> >>> It's an external oscillator.
+> >>
+> >> hmm, I suppose a clock of any type could serve as a clock for the sensor.
+> >> It can be an external oscillator on a particular board, or it can be
+> >> something else on another board.
+> > 
+> > Any clock source could be used I presume.
+> > 
+> 
+> That's exactly my point, and it is a reason to rename "xclk" to something
+> more generic.
+
+That's a sensor specific name, the one in the hardware datasheet should be
+used if there's one, shouldn't it?
+
+An alternative is not to use a name, as there's just a single clock.
+
+> 
+> >>
+> >> Can you please describe what for does ov5647 sensor need this clock, what
+> >> is its function?
+> > 
+> > Camera modules (sensors) quite commonly require an external clock as they do
+> > not have an oscillator on their own. A lot of devices under
+> > Documentation/devicetree/bindings/media/i2c/ have similar properties.
+> > 
+> 
+> So, what should be a better replacement of "xclk" in the description above?
+> 
+> E.g.
+> 
+> - clocks		: Phandle to a device supply clock.
+> 
+> >>
+> >>>
+> >>>>> +- clock-names		: Should be "xclk".
+> 
+> We got an agreement that "clock-names" property is removed, nevertheless
+> if it is added back, is should not be "xclk".
+> 
+> >>>>
+> >>>> You can remove this property, because there is only one source clock.
+> >>>>
+> >>>
+> >>> Ok.
+> >>>
+> >>>>> +- clock-frequency	: Frequency of the xclk clock.
+> >>>>
+> >>>> And after the last updates in the driver this property can be removed as well.
+> >>>>
+> >>>
+> >>> But I'm still using clk_get_rate in the driver, if I remove the frequency here
+> >>> the probing will fail.
+> >>>
+> >>
+> >> I doubt it, there should be no connection between a custom "clock-frequency"
+> >> device tree property in a clock consumer device node and clk_get_rate() function
+> >> from the CCF, which takes a clock provider as its argument.
+> > 
+> > The purpose is to make sure the clock frequency is really usable for the
+> > device, in this particular case the driver can work with one particular
+> > frequency.
+> > 
+> > That said, the driver does not appear to use the property at the moment. It
+> > should.
+> > 
+> > It'd be good to verify that the rate matches: clk_set_rate() is not
+> > guaranteed to produce the requested clock rate, and the driver could
+> > conceivably be updated with support for more frequencies. There are
+> > typically a few frequencies that a SoC such a sensor is connected can
+> > support, and 25 MHz is not one of the common frequencies. With this
+> > property, the frequency would be always there explicitly.
+> > 
+> 
+> I can provide my arguments given at v8 review time again, since I don't
+> see a contradiction with my older comments.
+> 
+> Briefly "clock-frequency" as a device tree property on a consumer side
+> can be considered as redundant, because there is a mechanism to specify
+> a wanted clock frequency on a clock provider side right in a board DTB.
+
+You can, but there's no guarantee that the frequency what you get is going
+to be what you asked for.
+
+Although, the driver could try to work on the actual obtained frequency.
+This is unlikely to work though, but it won't be very easy to figure out
+why the device isn't working. Having the frequency in DT accessible for the
+driver to check makes failing early with a clear error message possible.
+
+> 
+> So, the clock frequency set up is delegated to CCF, and when any other
+> than 25 MHz frequencies are got supported, that's only the matter of
+> driver updates, DTBs won't be touched.
+
+Indeed. The new supported frequencies in this case will be additional
+single values; there won't be ranges or such. The register lists the
+driver contains are more or less dependent on that frequency.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
