@@ -1,185 +1,221 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Sat, 25 Feb 2017 16:50:56 +0200
-Message-ID: <20170225145053.puqkcrntnhmcvla4@ihha.localdomain>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
- <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
- <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
- <cc6c914e-c3e7-7703-0405-104e701610cf@mentor.com>
- <20170221214813.GN16975@valkosipuli.retiisi.org.uk>
- <1b7e2802-dda1-0372-8738-17655dd8ca69@mentor.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: [PATCH v3.1] [media] serial_ir: ensure we're ready to receive
+ interrupts
+Date: Sat, 25 Feb 2017 11:55:46 -0300
+Message-ID: <4bf42b3935a6da2ec45730764c624ddc7c3f7c4f.1488032183.git.mchehab@s-opensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1b7e2802-dda1-0372-8738-17655dd8ca69-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam@g>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ruslan Ruslichenko <rruslich-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, kernel test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, LKP <lkp-JC7UmRfGjtg@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
 
-On Wed, Feb 22, 2017 at 12:37:51AM +0200, Vladimir Zapolskiy wrote:
-> Hi Sakari,
-> 
-> On 02/21/2017 11:48 PM, Sakari Ailus wrote:
-> > Hi, Vladimir!
-> > 
-> > How do you do? :-)
-> 
-> deferring execution of boring tasks by doing code review :)
+When the interrupt requested with devm_request_irq(), serial_ir.rcdev
+is still null so will cause null deference if the irq handler is called
+early on.
 
-X-)
+Also ensure that timeout_timer is setup.
 
-> 
-> > On Tue, Feb 21, 2017 at 10:48:09PM +0200, Vladimir Zapolskiy wrote:
-> >> Hi Ramiro,
-> >>
-> >> On 02/21/2017 10:13 PM, Ramiro Oliveira wrote:
-> >>> Hi Vladimir,
-> >>>
-> >>> Thank you for your feedback
-> >>>
-> >>> On 2/21/2017 3:58 PM, Vladimir Zapolskiy wrote:
-> >>>> Hi Ramiro,
-> >>>>
-> >>>> On 02/17/2017 03:14 PM, Ramiro Oliveira wrote:
-> >>>>> Create device tree bindings documentation.
-> >>>>>
-> >>>>> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> >>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>>>> ---
-> >>>>>  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
-> >>>>>  1 file changed, 35 insertions(+)
-> >>>>>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>>>>
-> >>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>>>> new file mode 100644
-> >>>>> index 000000000000..31956426d3b9
-> >>>>> --- /dev/null
-> >>>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> >>>>> @@ -0,0 +1,35 @@
-> >>>>> +Omnivision OV5647 raw image sensor
-> >>>>> +---------------------------------
-> >>>>> +
-> >>>>> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> >>>>> +and CCI (I2C compatible) control bus.
-> >>>>> +
-> >>>>> +Required properties:
-> >>>>> +
-> >>>>> +- compatible		: "ovti,ov5647".
-> >>>>> +- reg			: I2C slave address of the sensor.
-> >>>>> +- clocks		: Reference to the xclk clock.
-> >>>>
-> >>>> Is "xclk" clock a pixel clock or something else?
-> >>>>
-> >>>
-> >>> It's an external oscillator.
-> >>
-> >> hmm, I suppose a clock of any type could serve as a clock for the sensor.
-> >> It can be an external oscillator on a particular board, or it can be
-> >> something else on another board.
-> > 
-> > Any clock source could be used I presume.
-> > 
-> 
-> That's exactly my point, and it is a reason to rename "xclk" to something
-> more generic.
+Link: http://lkml.kernel.org/r/CA+55aFxsh2uF8gi5sN_guY3Z+tiLv7LpJYKBw+y8vqLzp+TsnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org
 
-That's a sensor specific name, the one in the hardware datasheet should be
-used if there's one, shouldn't it?
+[mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org: moved serial_ir_probe() back to its original place]
 
-An alternative is not to use a name, as there's just a single clock.
+Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # for 4.10
+Signed-off-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+---
 
-> 
-> >>
-> >> Can you please describe what for does ov5647 sensor need this clock, what
-> >> is its function?
-> > 
-> > Camera modules (sensors) quite commonly require an external clock as they do
-> > not have an oscillator on their own. A lot of devices under
-> > Documentation/devicetree/bindings/media/i2c/ have similar properties.
-> > 
-> 
-> So, what should be a better replacement of "xclk" in the description above?
-> 
-> E.g.
-> 
-> - clocks		: Phandle to a device supply clock.
-> 
-> >>
-> >>>
-> >>>>> +- clock-names		: Should be "xclk".
-> 
-> We got an agreement that "clock-names" property is removed, nevertheless
-> if it is added back, is should not be "xclk".
-> 
-> >>>>
-> >>>> You can remove this property, because there is only one source clock.
-> >>>>
-> >>>
-> >>> Ok.
-> >>>
-> >>>>> +- clock-frequency	: Frequency of the xclk clock.
-> >>>>
-> >>>> And after the last updates in the driver this property can be removed as well.
-> >>>>
-> >>>
-> >>> But I'm still using clk_get_rate in the driver, if I remove the frequency here
-> >>> the probing will fail.
-> >>>
-> >>
-> >> I doubt it, there should be no connection between a custom "clock-frequency"
-> >> device tree property in a clock consumer device node and clk_get_rate() function
-> >> from the CCF, which takes a clock provider as its argument.
-> > 
-> > The purpose is to make sure the clock frequency is really usable for the
-> > device, in this particular case the driver can work with one particular
-> > frequency.
-> > 
-> > That said, the driver does not appear to use the property at the moment. It
-> > should.
-> > 
-> > It'd be good to verify that the rate matches: clk_set_rate() is not
-> > guaranteed to produce the requested clock rate, and the driver could
-> > conceivably be updated with support for more frequencies. There are
-> > typically a few frequencies that a SoC such a sensor is connected can
-> > support, and 25 MHz is not one of the common frequencies. With this
-> > property, the frequency would be always there explicitly.
-> > 
-> 
-> I can provide my arguments given at v8 review time again, since I don't
-> see a contradiction with my older comments.
-> 
-> Briefly "clock-frequency" as a device tree property on a consumer side
-> can be considered as redundant, because there is a mechanism to specify
-> a wanted clock frequency on a clock provider side right in a board DTB.
+Resent, using git
 
-You can, but there's no guarantee that the frequency what you get is going
-to be what you asked for.
+ drivers/media/rc/serial_ir.c | 123 ++++++++++++++++++++++---------------------
+ 1 file changed, 62 insertions(+), 61 deletions(-)
 
-Although, the driver could try to work on the actual obtained frequency.
-This is unlikely to work though, but it won't be very easy to figure out
-why the device isn't working. Having the frequency in DT accessible for the
-driver to check makes failing early with a clear error message possible.
-
-> 
-> So, the clock frequency set up is delegated to CCF, and when any other
-> than 25 MHz frequencies are got supported, that's only the matter of
-> driver updates, DTBs won't be touched.
-
-Indeed. The new supported frequencies in this case will be additional
-single values; there won't be ranges or such. The register lists the
-driver contains are more or less dependent on that frequency.
-
+diff --git a/drivers/media/rc/serial_ir.c b/drivers/media/rc/serial_ir.c
+index 923fb2299553..41b54e40176c 100644
+--- a/drivers/media/rc/serial_ir.c
++++ b/drivers/media/rc/serial_ir.c
+@@ -487,10 +487,69 @@ static void serial_ir_timeout(unsigned long arg)
+ 	ir_raw_event_handle(serial_ir.rcdev);
+ }
+ 
++/* Needed by serial_ir_probe() */
++static int serial_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
++			unsigned int count);
++static int serial_ir_tx_duty_cycle(struct rc_dev *dev, u32 cycle);
++static int serial_ir_tx_carrier(struct rc_dev *dev, u32 carrier);
++static int serial_ir_open(struct rc_dev *rcdev);
++static void serial_ir_close(struct rc_dev *rcdev);
++
+ static int serial_ir_probe(struct platform_device *dev)
+ {
++	struct rc_dev *rcdev;
+ 	int i, nlow, nhigh, result;
+ 
++	rcdev = devm_rc_allocate_device(&dev->dev, RC_DRIVER_IR_RAW);
++	if (!rcdev)
++		return -ENOMEM;
++
++	if (hardware[type].send_pulse && hardware[type].send_space)
++		rcdev->tx_ir = serial_ir_tx;
++	if (hardware[type].set_send_carrier)
++		rcdev->s_tx_carrier = serial_ir_tx_carrier;
++	if (hardware[type].set_duty_cycle)
++		rcdev->s_tx_duty_cycle = serial_ir_tx_duty_cycle;
++
++	switch (type) {
++	case IR_HOMEBREW:
++		rcdev->input_name = "Serial IR type home-brew";
++		break;
++	case IR_IRDEO:
++		rcdev->input_name = "Serial IR type IRdeo";
++		break;
++	case IR_IRDEO_REMOTE:
++		rcdev->input_name = "Serial IR type IRdeo remote";
++		break;
++	case IR_ANIMAX:
++		rcdev->input_name = "Serial IR type AnimaX";
++		break;
++	case IR_IGOR:
++		rcdev->input_name = "Serial IR type IgorPlug";
++		break;
++	}
++
++	rcdev->input_phys = KBUILD_MODNAME "/input0";
++	rcdev->input_id.bustype = BUS_HOST;
++	rcdev->input_id.vendor = 0x0001;
++	rcdev->input_id.product = 0x0001;
++	rcdev->input_id.version = 0x0100;
++	rcdev->open = serial_ir_open;
++	rcdev->close = serial_ir_close;
++	rcdev->dev.parent = &serial_ir.pdev->dev;
++	rcdev->allowed_protocols = RC_BIT_ALL_IR_DECODER;
++	rcdev->driver_name = KBUILD_MODNAME;
++	rcdev->map_name = RC_MAP_RC6_MCE;
++	rcdev->min_timeout = 1;
++	rcdev->timeout = IR_DEFAULT_TIMEOUT;
++	rcdev->max_timeout = 10 * IR_DEFAULT_TIMEOUT;
++	rcdev->rx_resolution = 250000;
++
++	serial_ir.rcdev = rcdev;
++
++	setup_timer(&serial_ir.timeout_timer, serial_ir_timeout,
++		    (unsigned long)&serial_ir);
++
+ 	result = devm_request_irq(&dev->dev, irq, serial_ir_irq_handler,
+ 				  share_irq ? IRQF_SHARED : 0,
+ 				  KBUILD_MODNAME, &hardware);
+@@ -516,9 +575,6 @@ static int serial_ir_probe(struct platform_device *dev)
+ 		return -EBUSY;
+ 	}
+ 
+-	setup_timer(&serial_ir.timeout_timer, serial_ir_timeout,
+-		    (unsigned long)&serial_ir);
+-
+ 	result = hardware_init_port();
+ 	if (result < 0)
+ 		return result;
+@@ -552,7 +608,8 @@ static int serial_ir_probe(struct platform_device *dev)
+ 			 sense ? "low" : "high");
+ 
+ 	dev_dbg(&dev->dev, "Interrupt %d, port %04x obtained\n", irq, io);
+-	return 0;
++
++	return devm_rc_register_device(&dev->dev, rcdev);
+ }
+ 
+ static int serial_ir_open(struct rc_dev *rcdev)
+@@ -723,7 +780,6 @@ static void serial_ir_exit(void)
+ 
+ static int __init serial_ir_init_module(void)
+ {
+-	struct rc_dev *rcdev;
+ 	int result;
+ 
+ 	switch (type) {
+@@ -754,63 +810,9 @@ static int __init serial_ir_init_module(void)
+ 		sense = !!sense;
+ 
+ 	result = serial_ir_init();
+-	if (result)
+-		return result;
+-
+-	rcdev = devm_rc_allocate_device(&serial_ir.pdev->dev, RC_DRIVER_IR_RAW);
+-	if (!rcdev) {
+-		result = -ENOMEM;
+-		goto serial_cleanup;
+-	}
+-
+-	if (hardware[type].send_pulse && hardware[type].send_space)
+-		rcdev->tx_ir = serial_ir_tx;
+-	if (hardware[type].set_send_carrier)
+-		rcdev->s_tx_carrier = serial_ir_tx_carrier;
+-	if (hardware[type].set_duty_cycle)
+-		rcdev->s_tx_duty_cycle = serial_ir_tx_duty_cycle;
+-
+-	switch (type) {
+-	case IR_HOMEBREW:
+-		rcdev->input_name = "Serial IR type home-brew";
+-		break;
+-	case IR_IRDEO:
+-		rcdev->input_name = "Serial IR type IRdeo";
+-		break;
+-	case IR_IRDEO_REMOTE:
+-		rcdev->input_name = "Serial IR type IRdeo remote";
+-		break;
+-	case IR_ANIMAX:
+-		rcdev->input_name = "Serial IR type AnimaX";
+-		break;
+-	case IR_IGOR:
+-		rcdev->input_name = "Serial IR type IgorPlug";
+-		break;
+-	}
+-
+-	rcdev->input_phys = KBUILD_MODNAME "/input0";
+-	rcdev->input_id.bustype = BUS_HOST;
+-	rcdev->input_id.vendor = 0x0001;
+-	rcdev->input_id.product = 0x0001;
+-	rcdev->input_id.version = 0x0100;
+-	rcdev->open = serial_ir_open;
+-	rcdev->close = serial_ir_close;
+-	rcdev->dev.parent = &serial_ir.pdev->dev;
+-	rcdev->allowed_protocols = RC_BIT_ALL_IR_DECODER;
+-	rcdev->driver_name = KBUILD_MODNAME;
+-	rcdev->map_name = RC_MAP_RC6_MCE;
+-	rcdev->min_timeout = 1;
+-	rcdev->timeout = IR_DEFAULT_TIMEOUT;
+-	rcdev->max_timeout = 10 * IR_DEFAULT_TIMEOUT;
+-	rcdev->rx_resolution = 250000;
+-
+-	serial_ir.rcdev = rcdev;
+-
+-	result = rc_register_device(rcdev);
+-
+ 	if (!result)
+ 		return 0;
+-serial_cleanup:
++
+ 	serial_ir_exit();
+ 	return result;
+ }
+@@ -818,7 +820,6 @@ static int __init serial_ir_init_module(void)
+ static void __exit serial_ir_exit_module(void)
+ {
+ 	del_timer_sync(&serial_ir.timeout_timer);
+-	rc_unregister_device(serial_ir.rcdev);
+ 	serial_ir_exit();
+ }
+ 
 -- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
