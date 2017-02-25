@@ -1,108 +1,191 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] iio: adc: Maxim max961x driver
-Date: Sat, 25 Feb 2017 16:09:05 +0000
-Message-ID: <f6b94b05-c0f8-239e-733d-dc93a7683184@kernel.org>
-References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH 2/2] [RFC] iio: dht11: Add optional support for supply
+ control via regulator framework
+Date: Sat, 25 Feb 2017 16:16:30 +0000
+Message-ID: <84dd6f7e-3bd3-edcd-0bda-81a80de35f3c@kernel.org>
+References: <1487869613-11927-1-git-send-email-harald@ccbib.org>
+ <1487869613-11927-2-git-send-email-harald@ccbib.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487948756-25172-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1487869613-11927-2-git-send-email-harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/02/17 15:05, Jacopo Mondi wrote:
-> Hello!
+On 23/02/17 17:06, Harald Geyer wrote:
+> If a supply is provided via DT, release the supply whenever we don't read
+> the sensor. Also use notifications to track the actual status of the
+> supply to ensure that we meet the timing requirements stated in the
+> datasheet.
 > 
-> This series adds driver and documentation for Maxim max9611/max9612
-> high-side current sense amplifier with 12-bit ADC and I2c interface.
-> It also registers two devices installed on VDD_0.8V and DVFS_0.8V lines
-> in Renesas r87796 Salvator-X board.
+> This change is motivated by the hope that these sensors will work more
+> reliably if power-cycled regularly.
 > 
-> The device provides several functionalities, and only some of them are
-> currently supported by this driver.
-> Particularly, the on-board op-amp and analog comparator are not currently
-> supported.
-More fun to come ;)
-> 
-> A simplified integration schematic drawing is here reported:
-> 
->  ----o----/\/\/-----o-------|LOAD|---
->      |    shunt     |
->  ____|______________|___
->  |  RS+            RS-  |
->  |   |-----gain-----|   |
->  |          |           |
->  |          |           |
->  |max961x   |->| ADC |===== I2c
->  |______________________|
-> 
-> 
-> The device provides though its 12-bits ADC the following informations:
-information is it's own plural (silly English quirk of the day!)
+> Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+I'd certainly rather this was driven by the powersaving argument but I guess
+it's an added bonus if we happen to improve on the hardware hangs.
 
-> - Common input voltage on RS+
-> - Voltage drop between RS+ and RS- ends
-> - Die temperature
-> 
-> All of the above ones are exposed though IIO with _raw and _scale values
-> (plus _input for milli degree Celsius die temperature).
-> 
-> From the above values the driver calculates the current flowing between
-> RS+ and RS- ends, using the shunt resistor value provided by device tree, and
-> the power load. Again this values are exposed through _raw and _scale
-> attributes, which I'm not completely sure it's acceptables as they are
-> calculated values and not natively provided by the current sense amplifier.
-> I would like to hear IIO people opinions on this, if they should be better
-> exposed though some other attributes which are not _raw and _scale, or if
-> their calculation should be completely left to userspace tools.
-So one element of the implementation is a problem.
-Because of the dynamic gain adjustment you are doing in the driver (which I
-rather like BTW) there will be instabilities in the computed values that
-userspace comes up with when we are near a transition for in the current
-sense amplifier gain.  We can't do that as crazy outputs will result
-(read offset and scale for possible different values of that gain then
-read the actual ADC value for a possible 3rd choice resulting in complete
-garbage).
-
-So there are two ways to avoid this:
-1. Move all that magic into the original reads and apply the gain and offset
-before they get to userspace.
-2. Provide enough information for userspace to be able to compute everything
-iff it is using buffered mode with a 'scan' covering all the channels in one
-go.  Even then we'd have to explicitly allow reading of the PGA gain as a
-channel, or make userspace responsible for doing your autogain stuff.
-
-1 is probably easier but will make implementing 2 as a follow up will be tricky
-and would be needed if you want to read this stuff faster than sysfs will
-allow. 
-
-It's a shame, but my gut feeling is you want to drop the autogain stuff
-as then it all becomes straight forward.
-
-What do others think?
+Minor comment inline. Looks good to me.
 
 Jonathan
+> ---
+> This is an RFC this time, because I want to run extensive long term tests
+> with DHT11 and DHT22 before officially proposing this for inclusion. I
+> have learned my lessons with this quirky bits of HW... :(
 > 
-> Thanks
->    j
+> However since this will take a lot of time (mostly physical, but also
+> man hours), I'd like to get review comments now instead of risking a
+> second iteration of long term tests.
 > 
-> Jacopo Mondi (4):
->   Documentation: dt-bindings: iio: Add max961x
->   iio: Documentation: Add max961x sysfs documentation
->   iio: adc: Add max9611/9612 ADC driver
->   arm64: dts: salvator-x: Add current sense amplifiers
+>  .../devicetree/bindings/iio/humidity/dht11.txt     | 10 ++++
+>  drivers/iio/humidity/dht11.c                       | 57 ++++++++++++++++++++--
+>  2 files changed, 64 insertions(+), 3 deletions(-)
 > 
->  .../ABI/testing/sysfs-bus-iio-adc-max961x          |   5 +
->  .../devicetree/bindings/iio/adc/max961x.txt        |  27 +
->  arch/arm64/boot/dts/renesas/r8a7796-salvator-x.dts |  17 +
->  drivers/iio/adc/Kconfig                            |  10 +
->  drivers/iio/adc/Makefile                           |   1 +
->  drivers/iio/adc/max961x.c                          | 648 +++++++++++++++++++++
->  6 files changed, 708 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-adc-max961x
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/max961x.txt
->  create mode 100644 drivers/iio/adc/max961x.c
+> diff --git a/Documentation/devicetree/bindings/iio/humidity/dht11.txt b/Documentation/devicetree/bindings/iio/humidity/dht11.txt
+> index ecc24c19..ab9ea18 100644
+> --- a/Documentation/devicetree/bindings/iio/humidity/dht11.txt
+> +++ b/Documentation/devicetree/bindings/iio/humidity/dht11.txt
+> @@ -6,9 +6,19 @@ Required properties:
+>      line, see "gpios property" in
+>      Documentation/devicetree/bindings/gpio/gpio.txt.
+>  
+> +Optional properties:
+> +  - vdd-supply: phandle to the regulator node, for details see
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
+> +    On Linux the driver disables the regulator after 4 seconds of
+> +    inactivity, to save power and to ensure that the hardware is
+> +    reset regularly, because it was found to randomly stop responding
+> +    otherwise. However for this to work all other consumers of the
+> +    regulator must cooperate (disable the regulator when possible too).
+> +
+>  Example:
+>  
+>  humidity_sensor {
+>  	compatible = "dht11";
+>  	gpios = <&gpio0 6 0>;
+> +	vdd-supply = <&sensor_supply>;
+>  }
+> diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
+> index 2a22ad9..5bce712 100644
+> --- a/drivers/iio/humidity/dht11.c
+> +++ b/drivers/iio/humidity/dht11.c
+> @@ -34,12 +34,16 @@
+>  #include <linux/gpio.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/timekeeping.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/notifier.h>
+>  
+>  #include <linux/iio/iio.h>
+>  
+>  #define DRIVER_NAME	"dht11"
+>  
+>  #define DHT11_DATA_VALID_TIME	2000000000  /* 2s in ns */
+> +#define DHT11_POWER_ON_TIME 2000000000 /* must be less the MAX_INT */
+> +#define DHT11_POWEROFF_DELAY 4000 /* ms */
+>  
+>  #define DHT11_EDGES_PREAMBLE 2
+>  #define DHT11_BITS_PER_READ 40
+> @@ -84,6 +88,10 @@ struct dht11 {
+>  	int				gpio;
+>  	int				irq;
+>  
+> +	struct regulator		*supply;
+> +	struct notifier_block		nb;
+> +	s64				timestamp_enabled;
+> +
+>  	struct completion		completion;
+>  	/* The iio sysfs interface doesn't prevent concurrent reads: */
+>  	struct mutex			lock;
+> @@ -97,6 +105,21 @@ struct dht11 {
+>  	struct {s64 ts; int value; }	edges[DHT11_EDGES_PER_READ];
+>  };
+>  
+> +static int dht11_regulator_update(struct notifier_block *nb,
+> +				  unsigned long event,
+> +				  void *ignored)
+> +{
+> +	struct dht11 *dht11 = container_of(nb, struct dht11, nb);
+> +
+> +	if (event & REGULATOR_EVENT_DISABLE)
+> +		dht11->timestamp_enabled = -1;
+> +	else if (event & REGULATOR_EVENT_ENABLE)
+> +		if (dht11->timestamp_enabled == -1)
+This nesting is a bit ugly, why not combine the else if and the if?
+> +			dht11->timestamp_enabled = ktime_get_boot_ns();
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+>  #ifdef CONFIG_DYNAMIC_DEBUG
+>  /*
+>   * dht11_edges_print: show the data as actually received by the
+> @@ -203,9 +226,22 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+>  {
+>  	struct dht11 *dht11 = iio_priv(iio_dev);
+>  	int ret, timeres, offset;
+> +	s64 time;
+>  
+>  	mutex_lock(&dht11->lock);
+> -	if (dht11->timestamp + DHT11_DATA_VALID_TIME < ktime_get_boot_ns()) {
+> +	time = ktime_get_boot_ns();
+> +	if (dht11->timestamp + DHT11_DATA_VALID_TIME < time) {
+> +		if (dht11->supply) {
+> +			ret = regulator_enable(dht11->supply);
+> +			if (ret) {
+> +				dev_err(dht11->dev, "Can't enable supply\n");
+> +				goto err_reg;
+> +			}
+> +			time -= dht11->timestamp_enabled + DHT11_POWER_ON_TIME;
+> +			if (time < 0)
+> +				msleep(((int)(-time)) / 1000000);
+> +		}
+> +
+>  		timeres = ktime_get_resolution_ns();
+>  		dev_dbg(dht11->dev, "current timeresolution: %dns\n", timeres);
+>  		if (timeres > DHT11_MIN_TIMERES) {
+> @@ -266,8 +302,13 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+>  				break;
+>  		}
+>  
+> +err:
+> +		if (dht11->supply)
+> +			regulator_disable_deferred(dht11->supply,
+> +						   DHT11_POWEROFF_DELAY);
+> +
+>  		if (ret)
+> -			goto err;
+> +			goto err_reg;
+>  	}
+>  
+>  	ret = IIO_VAL_INT;
+> @@ -277,7 +318,8 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+>  		*val = dht11->humidity;
+>  	else
+>  		ret = -EINVAL;
+> -err:
+> +
+> +err_reg:
+>  	dht11->num_edges = -1;
+>  	mutex_unlock(&dht11->lock);
+>  	return ret;
+> @@ -332,6 +374,15 @@ static int dht11_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> +	dht11->timestamp_enabled = -1;
+> +	dht11->supply = devm_regulator_get(dev, "vdd");
+> +	if (IS_ERR(dht11->supply)) {
+> +		dht11->supply = NULL;
+> +	} else {
+> +		dht11->nb.notifier_call = &dht11_regulator_update;
+> +		devm_regulator_register_notifier(dht11->supply, &dht11->nb);
+> +	}
+> +
+>  	dht11->timestamp = ktime_get_boot_ns() - DHT11_DATA_VALID_TIME - 1;
+>  	dht11->num_edges = -1;
+>  
 > 
