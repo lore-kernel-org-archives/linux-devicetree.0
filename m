@@ -1,55 +1,54 @@
 From: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 6/6] ARM: dts: socfpga: Do not include skeleton.dtsi
-Date: Sat, 25 Feb 2017 06:54:29 +0100
-Message-ID: <1488002069-22404-7-git-send-email-florian.vaussard@heig-vd.ch>
-References: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
+Subject: [PATCH 0/6] ARM: dts: socfpga: Fix dtc warnings
+Date: Sat, 25 Feb 2017 06:54:23 +0100
+Message-ID: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488002069-22404-1-git-send-email-florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The skeleton.dtsi file is now deprecated as noted in commit 9c0da3cc61f1
-("ARM: dts: explicitly mark skeleton.dtsi as deprecated"). The SoCFPGA
-device trees already contain the nodes that are defined in skeleton.dtsi
-(#address-cells, #size-cells, chosen, aliases, memory).
+We get a bunch of warnings when compiling the SoCFPGA device trees with W=1.
+This warnings happens because some nodes have a unit name but no 'reg' property,
+or are missing a unit name while having a 'reg' property. This series enables to
+compile all SoCFPGA dts without warnings.
 
-Including skeleton.dtsi is useless and will produce the following
-warning when compiled with W=1:
+Patches 1 to 5 fix these warnings by adding the unit name or removing the
+'reg' property when approriate.
 
-Node /memory has a reg or ranges property, but no unit name
+Patch 6 removes the inclusion of the deprecated skeleton.dtsi file, as SoCFPGA
+device trees already define the mandatory properties and nodes. This is needed
+to remove the latest warning.
 
-Signed-off-by: Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
----
- arch/arm/boot/dts/socfpga.dtsi         | 1 -
- arch/arm/boot/dts/socfpga_arria10.dtsi | 1 -
- 2 files changed, 2 deletions(-)
+This series was boot tested on a Cyclone5 SoC DK, thus covering some of the
+changes dones by patches 1 -> 3 + 6.
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 25a68af..774c239 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -15,7 +15,6 @@
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
--#include "skeleton.dtsi"
- #include <dt-bindings/reset/altr,rst-mgr.h>
- 
- / {
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 4e1f653..bead79e 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -14,7 +14,6 @@
-  * this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
--#include "skeleton.dtsi"
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/altr,rst-mgr-a10.h>
- 
+Regards,
+Florian
+
+Florian Vaussard (6):
+  ARM: dts: socfpga: Add unit name to clock nodes
+  ARM: dts: socfpga: Add unit name to memory nodes
+  ARM: dts: socfpga: Remove unneeded unit names
+  ARM: dts: socfpga: Remove unneeded reg from stmpe_touchscreen
+  ARM: dts: socfpga: Remove unit name for LEDs in EBV SOCrates
+  ARM: dts: socfpga: Do not include skeleton.dtsi
+
+ arch/arm/boot/dts/socfpga.dtsi                     | 43 +++++++++---------
+ arch/arm/boot/dts/socfpga_arria10.dtsi             | 51 +++++++++++-----------
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi       |  2 +-
+ arch/arm/boot/dts/socfpga_arria5_socdk.dts         |  2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts  |  2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi        |  2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts      |  1 -
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       |  2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      |  2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    |  8 ++--
+ arch/arm/boot/dts/socfpga_cyclone5_sodia.dts       |  2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts |  2 +-
+ arch/arm/boot/dts/socfpga_vt.dts                   |  2 +-
+ 13 files changed, 59 insertions(+), 62 deletions(-)
+
 -- 
 2.7.4
 
