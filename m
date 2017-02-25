@@ -1,70 +1,82 @@
-From: Imre Kaloz <kaloz@openwrt.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Sat, 25 Feb 2017 23:43:07 +0100
-Message-ID: <9a2d6751-d7c3-458f-d717-2abe492e226d@openwrt.org>
-References: <20170223104025.5755-1-zajec5@gmail.com>
- <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
+Date: Sun, 26 Feb 2017 00:06:08 +0100
+Message-ID: <CACna6rwdC+6DrKK4Zpp7t+W9w1H-Rzj+N3ANaZRAL_GP6JFO2Q@mail.gmail.com>
+References: <20170223104025.5755-1-zajec5@gmail.com> <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
  <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
- <5c57772b-71fd-d9e2-efe6-1175cf048e0b@openwrt.org>
- <CACna6ryFQHGN6xYiLcp9-v7f+55-4hoq+6kXCjiT6LJOS70sQQ@mail.gmail.com>
- <CACna6rzn3YDBqwReEikqjfhpMk-uQj0cuNaay2HyK0kLc_xuJg@mail.gmail.com>
+ <5c57772b-71fd-d9e2-efe6-1175cf048e0b@openwrt.org> <CACna6ryFQHGN6xYiLcp9-v7f+55-4hoq+6kXCjiT6LJOS70sQQ@mail.gmail.com>
+ <CACna6rzn3YDBqwReEikqjfhpMk-uQj0cuNaay2HyK0kLc_xuJg@mail.gmail.com> <9a2d6751-d7c3-458f-d717-2abe492e226d@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACna6rzn3YDBqwReEikqjfhpMk-uQj0cuNaay2HyK0kLc_xuJg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9a2d6751-d7c3-458f-d717-2abe492e226d-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBSYWZhbCwKCk9uIDIwMTctMDItMjQgMDc6MTAsIFJhZmHFgiBNacWCZWNraSB3cm90ZToK
-Pj4+IFlvdXIgbWFubmVycyBzaGluZSBvbiB0aGVzZSBkYXJrIGRheXMgb2Ygd2ludGVyLiBGb3Ig
-YWJvdXQgYSBkZWNhZGUgbm93LAo+Pj4gaHR0cDovLzE5Mi4xNjguMS4xL3N5c2luZm8uY2dpIHdp
-bGwgc2hvdyB5b3UgcXVpdGUgYSBiaXQgb2YgaW5mb3JtYXRpb24gaWYKPj4+IHlvdSBhcmUgdG9v
-IGxhenkgdG8gbG9vayBpbnRvIHRoZSBHUEwgdGFyYmFsbCBvciBhdCB0aGUgb3JpZ2luYWwgYm9v
-dGxvZ3MuCj4+IFRvZGF5IEkgZGVjaWRlZCB0byBkbyBteSBob21ld29yayAmIGNoZWNrIEdQTCBz
-b3VyY2VzIG9mIEVBOTUwMCBmdy4KPj4KPj4gKC4uLikKPj4KPj4gV2lsbCB5b3UgYmUgc28gZ2Vu
-ZXJvdXMgdG8gdGVsbCB1cyBob3cgZGlkIHlvdSBnZXQgRUE5NTAwIGJvYXJkIG5hbWUKPj4gYnkg
-anVzdCBsb29raW5nIGF0IEdQTCBzb3VyY2VzPwo+IEkgYWxzbyB0cmllZCBmaW5kIHdpdGggLW5h
-bWUgIipwYW5hbWVyYSoiLiBPbmUgd2F5IG9mIGd1ZXNzaW5nIGJvYXJkCj4gbmFtZSBzZWVtcyB0
-byBiZSBjaGVja2luZyBuYW1lcyBvZiBwYXRjaGVzIGluIC4vc3JjL2xpbnV4L3BhdGNoZXMvLgo+
-IEFueSBvdGhlciwgbW9yZSByZWxpYWJsZSBtZXRob2Q/Cj4KCkZpcnN0IG9mIGFsbCwgaXQncyBy
-ZWFsbHkgd2VpcmQgeW91IG5ldmVyIGV2ZXIgbG9va2VkIGF0IHRoZSBmYWN0b3J5IApib290bG9n
-cywgYnV0IGxldCBtZSBoZWxwIGluIGhvcGUgdG8gZW5oYW5jZSB5b3VyIGNvbW11bmljYXRpb24g
-c3R5bGU6CgpmaWxlbmFtZXM6CgpzcmMvbGludXgvcGF0Y2hlcy9saW51eC0yLjYuMzYuNC1wYW5h
-bWVyYV8wMDBfQlNQLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFt
-ZXJhXzAwMV9icmNtX2J1aWxkLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40
-LXBhbmFtZXJhXzAwMl9icmNtX2J1aWxkX2ZsYWdzX3RlbXBfZml4LnBhdGNoCnNyYy9saW51eC9w
-YXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAwM19jdGZfYnlwYXNzLnBhdGNoCnNyYy9s
-aW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAwNl9jaXNjb19jb21tZW50LnBh
-dGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAwN191c2JfcmVt
-b3ZlX29vcHMucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFf
-MDA4XzZyZF9zaXRfZnJhZ21lbnQucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2
-LjQtcGFuYW1lcmFfMDA5X2Npc2NvX3J0c3BfY29ubnRyYWNrLnBhdGNoCnNyYy9saW51eC9wYXRj
-aGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAxMF9jaXNjb19ydHNwX2Nvbm50cmFjazIucGF0
-Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFfMDE0X2Z0cF9wYXN2
-X2NvbW1hbmQucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFf
-MDQ2X3NpcF9hbGcucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1l
-cmFfMDQ3X2FkZF91c2JfbGVkLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40
-LXBhbmFtZXJhXzA1MF9QUFRQX0wyVFBfY3RmLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4
-LTIuNi4zNi40LXBhbmFtZXJhXzA1Ml9jZmVfcGFzc19sZWRfdG9fYmxpbmsucGF0Y2gKc3JjL2xp
-bnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFfMjAxX2JyY21fcGF0Y2hfMjAxNjAy
-MjYucGF0Y2gKCmZpbGUgY29udGVudHM6CgpzcmMvbW9kX2JkdXRpbC9wbGF0Zm9ybS9icmNtLy5i
-b2FyZF9pZC5vLmNtZApzcmMvbW9kX2JkdXRpbC9wbGF0Zm9ybS9icmNtLy5idXR0b25zLm8uY21k
-CnNyYy9tb2RfYmR1dGlsL3BsYXRmb3JtL2JyY20vLmxlZHNfcGFuYW1lcmEuby5jbWQKc3JjL21v
-ZF9iZHV0aWwvcGxhdGZvcm0vYnJjbS8udXNiaHViLm8uY21kCgoKSWYgeW91IGhhdmUgZnVydGhl
-ciBxdWVzdGlvbnMsIGZlZWwgZnJlZSB0byBtYWlsIG1lIGRpcmVjdGx5IGFuZCBrZWVwIApvZmYt
-dG9waWMgZGlzY3Vzc2lvbiBhd2F5IGZyb20gdGhlIGxpc3RzLgoKClRoYW5rIHlvdSBhbmQgaGF2
-ZSBhIG5pY2Ugd2Vla2VuZCwKCkltcmUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 25 February 2017 at 23:43, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
+> On 2017-02-24 07:10, Rafa=C5=82 Mi=C5=82ecki wrote:
+>>>>
+>>>> Your manners shine on these dark days of winter. For about a decade no=
+w,
+>>>> http://192.168.1.1/sysinfo.cgi will show you quite a bit of informatio=
+n
+>>>> if
+>>>> you are too lazy to look into the GPL tarball or at the original
+>>>> bootlogs.
+>>>
+>>> Today I decided to do my homework & check GPL sources of EA9500 fw.
+>>>
+>>> (...)
+>>>
+>>> Will you be so generous to tell us how did you get EA9500 board name
+>>> by just looking at GPL sources?
+>>
+>> I also tried find with -name "*panamera*". One way of guessing board
+>> name seems to be checking names of patches in ./src/linux/patches/.
+>> Any other, more reliable method?
+>>
+>
+> First of all, it's really weird you never ever looked at the factory
+> bootlogs, but let me help in hope to enhance your communication style:
+>
+> filenames:
+>
+> src/linux/patches/linux-2.6.36.4-panamera_000_BSP.patch
+> src/linux/patches/linux-2.6.36.4-panamera_001_brcm_build.patch
+> src/linux/patches/linux-2.6.36.4-panamera_002_brcm_build_flags_temp_fix.p=
+atch
+> src/linux/patches/linux-2.6.36.4-panamera_003_ctf_bypass.patch
+> src/linux/patches/linux-2.6.36.4-panamera_006_cisco_comment.patch
+> src/linux/patches/linux-2.6.36.4-panamera_007_usb_remove_oops.patch
+> src/linux/patches/linux-2.6.36.4-panamera_008_6rd_sit_fragment.patch
+> src/linux/patches/linux-2.6.36.4-panamera_009_cisco_rtsp_conntrack.patch
+> src/linux/patches/linux-2.6.36.4-panamera_010_cisco_rtsp_conntrack2.patch
+> src/linux/patches/linux-2.6.36.4-panamera_014_ftp_pasv_command.patch
+> src/linux/patches/linux-2.6.36.4-panamera_046_sip_alg.patch
+> src/linux/patches/linux-2.6.36.4-panamera_047_add_usb_led.patch
+> src/linux/patches/linux-2.6.36.4-panamera_050_PPTP_L2TP_ctf.patch
+> src/linux/patches/linux-2.6.36.4-panamera_052_cfe_pass_led_to_blink.patch
+> src/linux/patches/linux-2.6.36.4-panamera_201_brcm_patch_20160226.patch
+>
+> file contents:
+>
+> src/mod_bdutil/platform/brcm/.board_id.o.cmd
+> src/mod_bdutil/platform/brcm/.buttons.o.cmd
+> src/mod_bdutil/platform/brcm/.leds_panamera.o.cmd
+> src/mod_bdutil/platform/brcm/.usbhub.o.cmd
+>
+>
+> If you have further questions, feel free to mail me directly and keep
+> off-topic discussion away from the lists.
+
+Thanks
+
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
