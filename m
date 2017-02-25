@@ -1,52 +1,73 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v9 1/2] Add OV5647 device tree documentation
-Date: Sat, 25 Feb 2017 16:55:11 +0200
-Message-ID: <20170225145504.b66vvsi6hiilmaj2@ihha.localdomain>
-References: <cover.1487334912.git.roliveir@synopsys.com>
- <5a93352142495528dd56d5e281a8ed8ad6404a05.1487334912.git.roliveir@synopsys.com>
- <dd33c7bc-e6f7-c234-c3c6-6cc4c7353c68@mentor.com>
- <a2887a9a-0317-eb89-b971-9b238a214459@synopsys.com>
- <cc6c914e-c3e7-7703-0405-104e701610cf@mentor.com>
- <20170221214813.GN16975@valkosipuli.retiisi.org.uk>
- <1b7e2802-dda1-0372-8738-17655dd8ca69@mentor.com>
- <20170225145053.puqkcrntnhmcvla4@ihha.localdomain>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/4] Documentation: dt-bindings: iio: Add max961x
+Date: Sat, 25 Feb 2017 16:34:27 +0100
+Message-ID: <CAMuHMdUzT5gSoXEyDeaKSdKBaT4jEVCKOSChxdR0bbniaz_qvA@mail.gmail.com>
+References: <1487948756-25172-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1487948756-25172-2-git-send-email-jacopo+renesas@jmondi.org>
+ <CAMuHMdU9UL9ZyiPJqtTTNS=KOScu6M3c7jQgD1vZ+gTiTCAYMA@mail.gmail.com>
+ <64ed3cde-7627-eb60-c507-b68447012502@metafoo.de> <a67f7cf1-b676-5306-9e3d-4768a6e53357@jmondi.org>
+ <a0217564-0730-16f2-491f-86ea3561dc2e@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170225145053.puqkcrntnhmcvla4-5TBSa+ebGXJ82hYKe6nXyg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Steve Longerbeam <slongerbeam@g>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a0217564-0730-16f2-491f-86ea3561dc2e-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: jacopo mondi <jacopo-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, meerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 25, 2017 at 04:50:53PM +0200, Sakari Ailus wrote:
-> Although, the driver could try to work on the actual obtained frequency.
-> This is unlikely to work though, but it won't be very easy to figure out
-> why the device isn't working. Having the frequency in DT accessible for the
-> driver to check makes failing early with a clear error message possible.
+Hi Jonathan,
 
-The below point actually makes the above matter a non-issue: this driver
-will contain a list of supported frequencies. A SMIA driver that I
-typically work with, for instance, does not. So I think your suggestion of
-having the CCF handle setting the frequency is a good one.
+On Sat, Feb 25, 2017 at 4:19 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 24/02/17 15:48, jacopo mondi wrote:
+>> On 24/02/2017 16:33, Lars-Peter Clausen wrote:
+>>> On 02/24/2017 04:22 PM, Geert Uytterhoeven wrote:
+>>>> On Fri, Feb 24, 2017 at 4:05 PM, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org> wrote:
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/max961x.txt
+>>>>> @@ -0,0 +1,27 @@
+>>>>> +* Maxim max9611/max9612 current sense amplifier with 12-bits ADC interface
+>>>>> +
+>>>>> +Maxim max9611/max9612 is an high-side current sense amplifier with integrated
+>>>>> +12-bits ADC communicating over I2c bus.
+>>>>> +The device node for this driver shall be a child of a I2c controller.
+>>>>> +
+>>>>> +Required properties
+>>>>> +  - compatible: Should be "maxim,max961x"
+>>>>> +  - reg: The 7-bits long I2c address of the device
+>>>>> +  - shunt-resistor: Resistor value, in uOhm, of the current sense shunt
+>>>>> +                   resistor.
+>>>>
+>>>> shunt-resistor-micro-ohms?
+>>>
+>>> I'll take this one further:
+>>>
+>>> maxim,shunt-resistor-micro-ohms?
+>>>
+>>> Although there is precedence for just 'shunt-resistor' in the ina2xx bindings.
+>>>
+>>
+>> And that's where I took "inspiration" from :)
+> Which raises another open question.  Why IIO rather than hwmon like the ina2xx?
 
-> 
-> > 
-> > So, the clock frequency set up is delegated to CCF, and when any other
-> > than 25 MHz frequencies are got supported, that's only the matter of
-> > driver updates, DTBs won't be touched.
-> 
-> Indeed. The new supported frequencies in this case will be additional
-> single values; there won't be ranges or such. The register lists the
-> driver contains are more or less dependent on that frequency.
+Actually we have both drivers/hwmon/ina2xx.c and drivers/iio/adc/ina2xx-adc.c.
 
--- 
-Kind regards,
+> Whether we are better going for the existing binding without units, or
+> 'fixing' that is a question for the device tree maintainers.  I guess that
+> one snuck through.
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+ltc4151 uses shunt-resistor-micro-ohms.
+sgtl5000 uses micbias-resistor-k-ohms.
+
+So there's precedence for everything ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
