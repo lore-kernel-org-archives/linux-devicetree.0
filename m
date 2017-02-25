@@ -1,57 +1,239 @@
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [WARNING: A/V UNSCANNABLE][Merge tag 'media/v4.11-1' of git]
- ff58d005cd: BUG: unable to handle kernel NULL pointer dereference at 0000039c
-Date: Sat, 25 Feb 2017 10:02:44 -0800
-Message-ID: <CA+55aFy+ER8cYV02eZsKAOLnZBWY96zNWqUFWSWT1+3sZD4XnQ@mail.gmail.com>
-References: <58b07b30.9XFLj9Hhl7F6HMc2%fengguang.wu@intel.com>
- <CA+55aFytXj+TZ_TanbxcY0KgRTrV7Vvr=fWON8tioUGmYHYiNA@mail.gmail.com> <20170225090741.GA20463@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] input: cpcap-pwrbutton: new driver
+Date: Sat, 25 Feb 2017 10:58:52 -0800
+Message-ID: <20170225185852.GB31929@dtor-ws>
+References: <20170224085909.30559-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170225090741.GA20463@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20170224085909.30559-1-sre@kernel.org>
 Sender: linux-input-owner@vger.kernel.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: kernel test robot <fengguang.wu@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Mauro Carvalho Chehab <mchehab@infradead.org>, Sean Young <sean@mess.org>, Ruslan Ruslichenko <rruslich@cisco.com>, LKP <lkp@01.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, kernel@stlinux.com, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, wfg@linux.intel.com
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 25, 2017 at 1:07 AM, Ingo Molnar <mingo@kernel.org> wrote:
->
-> So, should we revert the hw-retrigger change:
->
->   a9b4f08770b4 x86/ioapic: Restore IO-APIC irq_chip retrigger callback
->
-> ... until we managed to fix CONFIG_DEBUG_SHIRQ=y? If you'd like to revert it
-> upstream straight away:
->
-> Acked-by: Ingo Molnar <mingo@kernel.org>
+Hi Sebastian,
 
-So I'm in no huge hurry to revert that commit as long as we're still
-in the merge window or early -rc's.
+On Fri, Feb 24, 2017 at 09:59:09AM +0100, Sebastian Reichel wrote:
+> Motorola CPCAP is a PMIC found in multiple smartphones.
+> This driver adds support for the power/on button and has
+> been tested with Droid 4.
+> 
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> ---
+>  .../devicetree/bindings/input/cpcap-pwrbutton.txt  |  20 ++++
+>  drivers/input/misc/Kconfig                         |  10 ++
+>  drivers/input/misc/Makefile                        |   1 +
+>  drivers/input/misc/cpcap-pwrbutton.c               | 119 +++++++++++++++++++++
+>  4 files changed, 150 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+>  create mode 100644 drivers/input/misc/cpcap-pwrbutton.c
+> 
+> diff --git a/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+> new file mode 100644
+> index 000000000000..0dd0076daf71
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/cpcap-pwrbutton.txt
+> @@ -0,0 +1,20 @@
+> +Motorola CPCAP on key
+> +
+> +This module is part of the CPCAP. For more details about the whole
+> +chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
+> +
+> +This module provides a simple power button event via an Interrupt.
+> +
+> +Required properties:
+> +- compatible: should be one of the following
+> +   - "motorola,cpcap-pwrbutton"
+> +- interrupts: irq specifier for CPCAP's ON IRQ
+> +
+> +Example:
+> +
+> +&cpcap {
+> +	cpcap_pwrbutton: pwrbutton {
+> +		compatible = "motorola,cpcap-pwrbutton";
+> +		interrupts = <23 IRQ_TYPE_NONE>;
+> +	};
+> +};
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 5b6c52210d20..9f7b72249eac 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -316,6 +316,16 @@ config INPUT_COBALT_BTNS
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called cobalt_btns.
+>  
+> +config INPUT_CPCAP_PWRBUTTON
+> +	tristate "CPCAP OnKey"
+> +	depends on MFD_CPCAP
+> +	help
+> +	  Say Y here if you want to enable power key reporting via the
+> +	  Motorola CPCAP chip.
+> +
+> +	  To compile this driver as a module, choose M here. The module will
+> +	  be called cpcap-pwrbutton.
+> +
+>  config INPUT_WISTRON_BTNS
+>  	tristate "x86 Wistron laptop button interface"
+>  	depends on X86_32
+> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> index b10523f2878e..b923a9828c88 100644
+> --- a/drivers/input/misc/Makefile
+> +++ b/drivers/input/misc/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_INPUT_CM109)		+= cm109.o
+>  obj-$(CONFIG_INPUT_CMA3000)		+= cma3000_d0x.o
+>  obj-$(CONFIG_INPUT_CMA3000_I2C)		+= cma3000_d0x_i2c.o
+>  obj-$(CONFIG_INPUT_COBALT_BTNS)		+= cobalt_btns.o
+> +obj-$(CONFIG_INPUT_CPCAP_PWRBUTTON)	+= cpcap-pwrbutton.o
+>  obj-$(CONFIG_INPUT_DA9052_ONKEY)	+= da9052_onkey.o
+>  obj-$(CONFIG_INPUT_DA9055_ONKEY)	+= da9055_onkey.o
+>  obj-$(CONFIG_INPUT_DA9063_ONKEY)	+= da9063_onkey.o
+> diff --git a/drivers/input/misc/cpcap-pwrbutton.c b/drivers/input/misc/cpcap-pwrbutton.c
+> new file mode 100644
+> index 000000000000..ed6674689e79
+> --- /dev/null
+> +++ b/drivers/input/misc/cpcap-pwrbutton.c
+> @@ -0,0 +1,119 @@
+> +/**
+> + * CPCAP Power Button Input Driver
+> + *
+> + * Copyright (C) 2017 Sebastian Reichel <sre@kernel.org>
+> + *
+> + * This file is subject to the terms and conditions of the GNU General
+> + * Public License. See the file "COPYING" in the main directory of this
+> + * archive for more details.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/errno.h>
+> +#include <linux/input.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mfd/motorola-cpcap.h>
+> +
+> +#define CPCAP_IRQ_ON 23
+> +#define CPCAP_IRQ_ON_BITMASK (1 << (CPCAP_IRQ_ON % 16))
 
->From a debug standpoint, the spurious early interrupts are fine, and
-hopefully will help us find more broken drivers.
+Is this truly static or it could depend= on IRQ returned by
+platform_get_irq()?
 
-It's just that I'd like to revert it before the actual 4.11 release,
-unless we can find a better solution.
+> +
+> +struct cpcap_power_button {
+> +	struct regmap *regmap;
+> +	struct input_dev *idev;
+> +	struct device *dev;
+> +};
+> +
+> +static irqreturn_t powerbutton_irq(int irq, void *_button)
+> +{
+> +	struct cpcap_power_button *button = _button;
+> +	bool key_pressed;
+> +	int err, val;
+> +
+> +	err = regmap_read(button->regmap, CPCAP_REG_INTS2, &val);
+> +	if (err) {
+> +		dev_err(button->dev, "read failed: %d", err);
+> +		return IRQ_HANDLED;
+> +	}
+> +	key_pressed = !!(val & CPCAP_IRQ_ON_BITMASK);
 
-Because it really seems like the interrupt re-trigger is entirely
-bogus. It's not an _actual_ "re-trigger the interrupt that may have
-gotten lost", it's some code that ends up triggering it for no good
-reason.
+No need to do this, input_report_key() already "normalizes" the value,
+so simply do
 
-So I'd actually hope that we could figure out why IRQS_PENDING got
-set, and perhaps fix the underlying cause?
+	input_report_key(button->idev, KEY_POWER, val & CPCAP_IRQ_ON_BITMASK);
 
-There are several things that set IRQS_PENDING, ranging from "try to
-test mis-routed interrupts while irqd was working", to "prepare for
-suspend losing the irq for us", to "irq auto-probing uses it on
-unassigned probable irqs".
+> +
+> +	pm_wakeup_event(button->dev, 0);
+> +	input_report_key(button->idev, KEY_POWER, key_pressed);
+> +	input_sync(button->idev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int cpcap_power_button_probe(struct platform_device *pdev)
+> +{
+> +	struct cpcap_power_button *button;
+> +	int irq = platform_get_irq(pdev, 0);
+> +	int err;
+> +
+> +	button = devm_kmalloc(&pdev->dev, sizeof(*button), GFP_KERNEL);
+> +	if (!button)
+> +		return -ENOMEM;
+> +
+> +	button->idev = devm_input_allocate_device(&pdev->dev);
+> +	if (!button->idev)
+> +		return -ENOMEM;
+> +
+> +	button->regmap = dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!button->regmap)
+> +		return -ENODEV;
+> +
+> +	button->dev = &pdev->dev;
+> +
+> +	button->idev->name = "cpcap-pwrbutton";
+> +	button->idev->phys = "cpcap-pwrbutton/input0";
+> +	button->idev->dev.parent = button->dev;
+> +	input_set_capability(button->idev, EV_KEY, KEY_POWER);
+> +
+> +	err = devm_request_threaded_irq(&button->idev->dev, irq, NULL,
 
-The *actual* reason to re-send, namely getting a nested irq that we
-had to drop because we got a second one while still handling the first
-(or because it was disabled), is just one case.
+This is wrong device to attach devm to: we never bind input device to a
+driver, so interrupt will never be released. You want to use &pdev->dev
+as with the rest of devm resources.
 
-Personally, I'd suspect some left-over state from auto-probing earlier
-in the boot, but I don't know. Could we fix that underlying issue?
+> +		powerbutton_irq, IRQF_ONESHOT, "cpcap_pwrbutton", button);
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "IRQ request failed: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	err = input_register_device(button->idev);
+> +	if (err) {
+> +		dev_err(&pdev->dev, "Input register failed: %d\n", err);
+> +		return err;
+> +	}
+> +
+> +	device_init_wakeup(&pdev->dev, true);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id cpcap_pwrbutton_dt_match_table[] = {
+> +	{ .compatible = "motorola,cpcap-pwrbutton" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, cpcap_pwrbutton_dt_match_table);
+> +#endif
+> +
+> +static struct platform_driver cpcap_power_button_driver = {
+> +	.probe		= cpcap_power_button_probe,
+> +	.driver		= {
+> +		.name	= "cpcap-pwrbutton",
+> +		.of_match_table = of_match_ptr(cpcap_pwrbutton_dt_match_table),
+> +	},
+> +};
+> +module_platform_driver(cpcap_power_button_driver);
+> +
+> +MODULE_ALIAS("platform:cpcap-pwrbutton");
+> +MODULE_DESCRIPTION("CPCAP Power Button");
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Sebastian Reichel <sre@kernel.org>");
+> -- 
+> 2.11.0
+> 
 
-                 Linus
+Thanks.
+
+-- 
+Dmitry
