@@ -1,91 +1,57 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH] arm64: dts: allwinner: add support for Pinebook
-Date: Sun, 26 Feb 2017 01:03:17 +0800
-Message-ID: <CAGb2v650PAJU9HCbEFLYt3EeMW7T2ZxOJ0pfMSvQR_18Om2p+Q@mail.gmail.com>
-References: <20170225070032.35834-1-icenowy@aosc.xyz> <20170225163802.guxwxzp734hlqoob@localhost>
- <1242601488041706@web21h.yandex.ru>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [WARNING: A/V UNSCANNABLE][Merge tag 'media/v4.11-1' of git]
+ ff58d005cd: BUG: unable to handle kernel NULL pointer dereference at 0000039c
+Date: Sat, 25 Feb 2017 10:02:44 -0800
+Message-ID: <CA+55aFy+ER8cYV02eZsKAOLnZBWY96zNWqUFWSWT1+3sZD4XnQ@mail.gmail.com>
+References: <58b07b30.9XFLj9Hhl7F6HMc2%fengguang.wu@intel.com>
+ <CA+55aFytXj+TZ_TanbxcY0KgRTrV7Vvr=fWON8tioUGmYHYiNA@mail.gmail.com> <20170225090741.GA20463@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3XRY3CQKGQERNLBVOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1242601488041706-non2vsEn42Jxpj1cXAZ9Bg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170225090741.GA20463@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Ingo Molnar <mingo@kernel.org>
+Cc: kernel test robot <fengguang.wu@intel.com>, Thomas Gleixner <tglx@linutronix.de>, Mauro Carvalho Chehab <mchehab@infradead.org>, Sean Young <sean@mess.org>, Ruslan Ruslichenko <rruslich@cisco.com>, LKP <lkp@01.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, kernel@stlinux.com, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, wfg@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 26, 2017 at 12:55 AM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+On Sat, Feb 25, 2017 at 1:07 AM, Ingo Molnar <mingo@kernel.org> wrote:
 >
+> So, should we revert the hw-retrigger change:
 >
-> 26.02.2017, 00:38, "Rask Ingemann Lambertsen" <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>:
->> On Sat, Feb 25, 2017 at 03:00:32PM +0800, Icenowy Zheng wrote:
->> [...]
->>>  diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
->>>  new file mode 100644
->>>  index 000000000000..2dceba3132b0
->>>  --- /dev/null
->>>  +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
->>
->> [...]
->>>  + gpio_keys {
->>>  + compatible = "gpio-keys";
->>>  +
->>>  + lid_switch {
->>
->> Node names should not contain underscores. You can use hyphens instead. See
->> https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1122967.html
->> https://www.mail-archive.com/linux-kernel%40vger.kernel.org/msg1145633.html
+>   a9b4f08770b4 x86/ioapic: Restore IO-APIC irq_chip retrigger callback
 >
-> Sorry... but here I modelled after omap3-n900.dts, maybe it should also be changed?
-
-I believe this is a recent change to the device tree compiler. (Or maybe not.)
-Either way underscores in node names will give out warnings if they are turned
-on. While they aren't at the moment, it does not mean it's OK to add even
-more.
-
-Old DTs may have them. It may be up to the respective maintainers to fix them.
-Or there might be some code that depends on the names being how they currently
-are, which means they can't be changed easily.
-
+> ... until we managed to fix CONFIG_DEBUG_SHIRQ=y? If you'd like to revert it
+> upstream straight away:
 >
->>
->>>  +&mmc0 {
->>>  + pinctrl-names = "default";
->>>  + pinctrl-0 = <&mmc0_pins>;
->>>  + vmmc-supply = <&reg_vcc3v3>;
->>>  + cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
->>>  + cd-inverted;
->>
->> You ought to be able to replace those last two lines with just
->> cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
->
-> Before this all Allwinner boards uses GPIO_ACTIVE_HIGH and
-> cd-inverted.
+> Acked-by: Ingo Molnar <mingo@kernel.org>
 
-This might be some leftover stuff from before gpios supported flags.
-IIRC the mmc core supports both, so dropping cd-inverted and using
-GPIO_ACTIVE_LOW should be fine.
+So I'm in no huge hurry to revert that commit as long as we're still
+in the merge window or early -rc's.
 
-Documentation/devicetree/bindings/mmc/mmc.txt explains this.
+>From a debug standpoint, the spurious early interrupts are fine, and
+hopefully will help us find more broken drivers.
 
-ChenYu
+It's just that I'd like to revert it before the actual 4.11 release,
+unless we can find a better solution.
 
->>
->>>  + disable-wp;
->>>  + bus-width = <4>;
->>>  + status = "okay";
->>>  +};
->>
->> --
->> Rask Ingemann Lambertsen
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+Because it really seems like the interrupt re-trigger is entirely
+bogus. It's not an _actual_ "re-trigger the interrupt that may have
+gotten lost", it's some code that ends up triggering it for no good
+reason.
+
+So I'd actually hope that we could figure out why IRQS_PENDING got
+set, and perhaps fix the underlying cause?
+
+There are several things that set IRQS_PENDING, ranging from "try to
+test mis-routed interrupts while irqd was working", to "prepare for
+suspend losing the irq for us", to "irq auto-probing uses it on
+unassigned probable irqs".
+
+The *actual* reason to re-send, namely getting a nested irq that we
+had to drop because we got a second one while still handling the first
+(or because it was disabled), is just one case.
+
+Personally, I'd suspect some left-over state from auto-probing earlier
+in the boot, but I don't know. Could we fix that underlying issue?
+
+                 Linus
