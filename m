@@ -1,92 +1,101 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
-Date: Sat, 25 Feb 2017 15:09:36 +0000
-Message-ID: <668ecb12-2a95-4e9c-8eab-509739d52d8c@kernel.org>
-References: <cover.1487757223.git.eraretuya@gmail.com>
- <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com>
- <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com>
- <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de>
- <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA@mail.gmail.com>
- <20170224091231.GC5012@Socrates-UM>
- <13912e47-1e3e-e68e-1e91-4a174f33fda5@metafoo.de>
- <CAHp75VfnnCe40V9k9zqyt4rkUYHgTDjfJ-y2qNV7SCxpLqhOtg@mail.gmail.com>
- <20170224143033.GD5012@Socrates-UM>
- <EA621197-929A-43D7-8E77-21991975F75E@jic23.retrosnub.co.uk>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
+ resolution
+Date: Sat, 25 Feb 2017 15:11:59 +0000
+Message-ID: <d64bd76d-a2c6-6148-c126-fa73e96019a1@kernel.org>
+References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
+ <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
+ <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
+ <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <EA621197-929A-43D7-8E77-21991975F75E-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On 24/02/17 19:46, Jonathan Cameron wrote:
-> 
-> 
-> On 24 February 2017 14:30:35 GMT+00:00, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Feb 24, 2017 at 01:48:39PM +0200, Andy Shevchenko wrote:
->>> On Fri, Feb 24, 2017 at 11:22 AM, Lars-Peter Clausen
->> <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->>>> On 02/24/2017 10:12 AM, Eva Rachel Retuya wrote:
->>>>> On Thu, Feb 23, 2017 at 06:58:12PM +0200, Andy Shevchenko wrote:
->>>>>> On Thu, Feb 23, 2017 at 6:47 PM, Lars-Peter Clausen
->> <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
->>>>>>> On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
->>>>>>>> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya
->> <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 24/02/17 16:04, Fabrice Gasnier wrote:
+> On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
+>> On 15/02/17 16:55, Fabrice Gasnier wrote:
+>>> Add documentation for 'st,adc-res' dt optional property.
 >>>
->>>>> I'll revert to the explicit SPI/I2C pattern in order to give more
->>>>> freedom in configuring as per the scenarios previously stated.
->>>>
->>>> Please check with Jonathan before you do, in the end he'll have to
->> apply the
->>>> patch.
->>>
->>> +1. I will be fine with either just need to make sure maintainer
->>> understands pros and cons.
->>>
+>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> I'm happy with this, but would like to leave time for a device tree review.
 >>
->> OK.
->>
->> Jonathan, please let me know whether to continue with your preferred
->> configuration or go with the "explicit" pattern that was discussed
->> here.
->>
-> Have lost track. Will catch up with thread tomorrow and get back to you.
+>> Ultimately we may well want to make this a generic property and call it something
+>> like adc-resolution but perhaps we need to wait until we have a few more devices
+>> supporting setting it via device tree to figure out what the best interface is.
+>> It would exactly be a problem to support this as a deprecated binding at that
+>> point.
 > 
-Ah, now I have caught up, I'll go with the same no strong opinions.
-Looks like it is 2 to one in favour of the explicit i2c / spi bits so
-lets go with the original form.
-
-Sorry for wasting your time on this Eva!
-
-Divide is always between simplifying configurability of the kernel
-vs minimising the extra code built that isn't needed.  Never entirely
-obvious where that boundary falls and it really doesn't make that
-much difference on either side.
-
-Anyhow, at least you know the options and arguments either way now
-so not completely wasted time.
+> Hi Jonathan,
+> 
+> I agree with you on this... It may be better to have generic property
+> for this, especially if you see that it will come in the near future.
+> May I suggest this prop to be less restrictive, e.g. like
+> resolution-bits as is may also be worth for other device types, e.g.
+> DAC as an example ?>
+Sure, why not - no loss of meaning here.  We may never use it for anything
+else but that doesn't matter.
+>>
+>> Give me a poke if we hear nothing from Rob or Mark for say another week.
+> 
+> No news yet, but it can wait a little longer.
+Rob / Mark, can you take a look at this if you have time?
 
 Thanks,
 
 Jonathan
-> J
->> Thanks,
->> Eva
->>
->>> -- 
->>> With Best Regards,
->>> Andy Shevchenko
->>> --
->>> To unsubscribe from this list: send the line "unsubscribe linux-iio"
->> in
->>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
+> Please advise,
+> Regards,
+> Fabrice
+> 
+>>
+>> Thanks,
+>>
+>> Jonathan
+>>
+>>> ---
+>>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>> index 5dfc88e..45f7ff2 100644
+>>> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>> @@ -57,6 +57,9 @@ Optional properties:
+>>>  - dmas: Phandle to dma channel for this ADC instance.
+>>>    See ../../dma/dma.txt for details.
+>>>  - dma-names: Must be "rx" when dmas property is being used.
+>>> +- st,adc-res: Resolution (bits) to use for conversions. Must match device
+>>> +  available resolutions (e.g. can be 6, 8, 10 or 12 on stm32f4). Default
+>>> +  is maximum resolution if unset.
+>>>
+>>>  Example:
+>>>      adc: adc@40012000 {
+>>> @@ -84,6 +87,7 @@ Example:
+>>>              st,adc-channels = <8>;
+>>>              dmas = <&dma2 0 0 0x400 0x0>;
+>>>              dma-names = "rx";
+>>> +            st,adc-res = <8>;
+>>>          };
+>>>          ...
+>>>          other adc child nodes follow...
+>>>
+>>
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
