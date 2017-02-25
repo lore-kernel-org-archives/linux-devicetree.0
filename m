@@ -1,221 +1,92 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: [PATCH v3.1] [media] serial_ir: ensure we're ready to receive
- interrupts
-Date: Sat, 25 Feb 2017 11:55:46 -0300
-Message-ID: <4bf42b3935a6da2ec45730764c624ddc7c3f7c4f.1488032183.git.mchehab@s-opensource.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] iio: accel: adxl345: Add SPI support
+Date: Sat, 25 Feb 2017 15:09:36 +0000
+Message-ID: <668ecb12-2a95-4e9c-8eab-509739d52d8c@kernel.org>
+References: <cover.1487757223.git.eraretuya@gmail.com>
+ <515297e48abd139993cab56dbf980711400d6534.1487757223.git.eraretuya@gmail.com>
+ <CAHp75VdmB1YqY4YyntbvHUaK_9yjY8wFeX6i9hmMDaScajKNOw@mail.gmail.com>
+ <cb64adc9-f468-11f8-4a8a-fd3f5779fee0@metafoo.de>
+ <CAHp75VfbfRB_7Y2CRrJRYHqnJNMYD1hKScGr0HLSpFSGgJtymA@mail.gmail.com>
+ <20170224091231.GC5012@Socrates-UM>
+ <13912e47-1e3e-e68e-1e91-4a174f33fda5@metafoo.de>
+ <CAHp75VfnnCe40V9k9zqyt4rkUYHgTDjfJ-y2qNV7SCxpLqhOtg@mail.gmail.com>
+ <20170224143033.GD5012@Socrates-UM>
+ <EA621197-929A-43D7-8E77-21991975F75E@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ruslan Ruslichenko <rruslich-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Sean Young <sean-hENCXIMQXOg@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, kernel test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, LKP <lkp-JC7UmRfGjtg@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <EA621197-929A-43D7-8E77-21991975F75E-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+On 24/02/17 19:46, Jonathan Cameron wrote:
+> 
+> 
+> On 24 February 2017 14:30:35 GMT+00:00, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Fri, Feb 24, 2017 at 01:48:39PM +0200, Andy Shevchenko wrote:
+>>> On Fri, Feb 24, 2017 at 11:22 AM, Lars-Peter Clausen
+>> <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>>>> On 02/24/2017 10:12 AM, Eva Rachel Retuya wrote:
+>>>>> On Thu, Feb 23, 2017 at 06:58:12PM +0200, Andy Shevchenko wrote:
+>>>>>> On Thu, Feb 23, 2017 at 6:47 PM, Lars-Peter Clausen
+>> <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+>>>>>>> On 02/23/2017 05:43 PM, Andy Shevchenko wrote:
+>>>>>>>> On Wed, Feb 22, 2017 at 12:23 PM, Eva Rachel Retuya
+>> <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>>>> I'll revert to the explicit SPI/I2C pattern in order to give more
+>>>>> freedom in configuring as per the scenarios previously stated.
+>>>>
+>>>> Please check with Jonathan before you do, in the end he'll have to
+>> apply the
+>>>> patch.
+>>>
+>>> +1. I will be fine with either just need to make sure maintainer
+>>> understands pros and cons.
+>>>
+>>
+>> OK.
+>>
+>> Jonathan, please let me know whether to continue with your preferred
+>> configuration or go with the "explicit" pattern that was discussed
+>> here.
+>>
+> Have lost track. Will catch up with thread tomorrow and get back to you.
+> 
+Ah, now I have caught up, I'll go with the same no strong opinions.
+Looks like it is 2 to one in favour of the explicit i2c / spi bits so
+lets go with the original form.
 
-When the interrupt requested with devm_request_irq(), serial_ir.rcdev
-is still null so will cause null deference if the irq handler is called
-early on.
+Sorry for wasting your time on this Eva!
 
-Also ensure that timeout_timer is setup.
+Divide is always between simplifying configurability of the kernel
+vs minimising the extra code built that isn't needed.  Never entirely
+obvious where that boundary falls and it really doesn't make that
+much difference on either side.
 
-Link: http://lkml.kernel.org/r/CA+55aFxsh2uF8gi5sN_guY3Z+tiLv7LpJYKBw+y8vqLzp+TsnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org
+Anyhow, at least you know the options and arguments either way now
+so not completely wasted time.
 
-[mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org: moved serial_ir_probe() back to its original place]
+Thanks,
 
-Cc: <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> # for 4.10
-Signed-off-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
----
-
-Resent, using git
-
- drivers/media/rc/serial_ir.c | 123 ++++++++++++++++++++++---------------------
- 1 file changed, 62 insertions(+), 61 deletions(-)
-
-diff --git a/drivers/media/rc/serial_ir.c b/drivers/media/rc/serial_ir.c
-index 923fb2299553..41b54e40176c 100644
---- a/drivers/media/rc/serial_ir.c
-+++ b/drivers/media/rc/serial_ir.c
-@@ -487,10 +487,69 @@ static void serial_ir_timeout(unsigned long arg)
- 	ir_raw_event_handle(serial_ir.rcdev);
- }
- 
-+/* Needed by serial_ir_probe() */
-+static int serial_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
-+			unsigned int count);
-+static int serial_ir_tx_duty_cycle(struct rc_dev *dev, u32 cycle);
-+static int serial_ir_tx_carrier(struct rc_dev *dev, u32 carrier);
-+static int serial_ir_open(struct rc_dev *rcdev);
-+static void serial_ir_close(struct rc_dev *rcdev);
-+
- static int serial_ir_probe(struct platform_device *dev)
- {
-+	struct rc_dev *rcdev;
- 	int i, nlow, nhigh, result;
- 
-+	rcdev = devm_rc_allocate_device(&dev->dev, RC_DRIVER_IR_RAW);
-+	if (!rcdev)
-+		return -ENOMEM;
-+
-+	if (hardware[type].send_pulse && hardware[type].send_space)
-+		rcdev->tx_ir = serial_ir_tx;
-+	if (hardware[type].set_send_carrier)
-+		rcdev->s_tx_carrier = serial_ir_tx_carrier;
-+	if (hardware[type].set_duty_cycle)
-+		rcdev->s_tx_duty_cycle = serial_ir_tx_duty_cycle;
-+
-+	switch (type) {
-+	case IR_HOMEBREW:
-+		rcdev->input_name = "Serial IR type home-brew";
-+		break;
-+	case IR_IRDEO:
-+		rcdev->input_name = "Serial IR type IRdeo";
-+		break;
-+	case IR_IRDEO_REMOTE:
-+		rcdev->input_name = "Serial IR type IRdeo remote";
-+		break;
-+	case IR_ANIMAX:
-+		rcdev->input_name = "Serial IR type AnimaX";
-+		break;
-+	case IR_IGOR:
-+		rcdev->input_name = "Serial IR type IgorPlug";
-+		break;
-+	}
-+
-+	rcdev->input_phys = KBUILD_MODNAME "/input0";
-+	rcdev->input_id.bustype = BUS_HOST;
-+	rcdev->input_id.vendor = 0x0001;
-+	rcdev->input_id.product = 0x0001;
-+	rcdev->input_id.version = 0x0100;
-+	rcdev->open = serial_ir_open;
-+	rcdev->close = serial_ir_close;
-+	rcdev->dev.parent = &serial_ir.pdev->dev;
-+	rcdev->allowed_protocols = RC_BIT_ALL_IR_DECODER;
-+	rcdev->driver_name = KBUILD_MODNAME;
-+	rcdev->map_name = RC_MAP_RC6_MCE;
-+	rcdev->min_timeout = 1;
-+	rcdev->timeout = IR_DEFAULT_TIMEOUT;
-+	rcdev->max_timeout = 10 * IR_DEFAULT_TIMEOUT;
-+	rcdev->rx_resolution = 250000;
-+
-+	serial_ir.rcdev = rcdev;
-+
-+	setup_timer(&serial_ir.timeout_timer, serial_ir_timeout,
-+		    (unsigned long)&serial_ir);
-+
- 	result = devm_request_irq(&dev->dev, irq, serial_ir_irq_handler,
- 				  share_irq ? IRQF_SHARED : 0,
- 				  KBUILD_MODNAME, &hardware);
-@@ -516,9 +575,6 @@ static int serial_ir_probe(struct platform_device *dev)
- 		return -EBUSY;
- 	}
- 
--	setup_timer(&serial_ir.timeout_timer, serial_ir_timeout,
--		    (unsigned long)&serial_ir);
--
- 	result = hardware_init_port();
- 	if (result < 0)
- 		return result;
-@@ -552,7 +608,8 @@ static int serial_ir_probe(struct platform_device *dev)
- 			 sense ? "low" : "high");
- 
- 	dev_dbg(&dev->dev, "Interrupt %d, port %04x obtained\n", irq, io);
--	return 0;
-+
-+	return devm_rc_register_device(&dev->dev, rcdev);
- }
- 
- static int serial_ir_open(struct rc_dev *rcdev)
-@@ -723,7 +780,6 @@ static void serial_ir_exit(void)
- 
- static int __init serial_ir_init_module(void)
- {
--	struct rc_dev *rcdev;
- 	int result;
- 
- 	switch (type) {
-@@ -754,63 +810,9 @@ static int __init serial_ir_init_module(void)
- 		sense = !!sense;
- 
- 	result = serial_ir_init();
--	if (result)
--		return result;
--
--	rcdev = devm_rc_allocate_device(&serial_ir.pdev->dev, RC_DRIVER_IR_RAW);
--	if (!rcdev) {
--		result = -ENOMEM;
--		goto serial_cleanup;
--	}
--
--	if (hardware[type].send_pulse && hardware[type].send_space)
--		rcdev->tx_ir = serial_ir_tx;
--	if (hardware[type].set_send_carrier)
--		rcdev->s_tx_carrier = serial_ir_tx_carrier;
--	if (hardware[type].set_duty_cycle)
--		rcdev->s_tx_duty_cycle = serial_ir_tx_duty_cycle;
--
--	switch (type) {
--	case IR_HOMEBREW:
--		rcdev->input_name = "Serial IR type home-brew";
--		break;
--	case IR_IRDEO:
--		rcdev->input_name = "Serial IR type IRdeo";
--		break;
--	case IR_IRDEO_REMOTE:
--		rcdev->input_name = "Serial IR type IRdeo remote";
--		break;
--	case IR_ANIMAX:
--		rcdev->input_name = "Serial IR type AnimaX";
--		break;
--	case IR_IGOR:
--		rcdev->input_name = "Serial IR type IgorPlug";
--		break;
--	}
--
--	rcdev->input_phys = KBUILD_MODNAME "/input0";
--	rcdev->input_id.bustype = BUS_HOST;
--	rcdev->input_id.vendor = 0x0001;
--	rcdev->input_id.product = 0x0001;
--	rcdev->input_id.version = 0x0100;
--	rcdev->open = serial_ir_open;
--	rcdev->close = serial_ir_close;
--	rcdev->dev.parent = &serial_ir.pdev->dev;
--	rcdev->allowed_protocols = RC_BIT_ALL_IR_DECODER;
--	rcdev->driver_name = KBUILD_MODNAME;
--	rcdev->map_name = RC_MAP_RC6_MCE;
--	rcdev->min_timeout = 1;
--	rcdev->timeout = IR_DEFAULT_TIMEOUT;
--	rcdev->max_timeout = 10 * IR_DEFAULT_TIMEOUT;
--	rcdev->rx_resolution = 250000;
--
--	serial_ir.rcdev = rcdev;
--
--	result = rc_register_device(rcdev);
--
- 	if (!result)
- 		return 0;
--serial_cleanup:
-+
- 	serial_ir_exit();
- 	return result;
- }
-@@ -818,7 +820,6 @@ static int __init serial_ir_init_module(void)
- static void __exit serial_ir_exit_module(void)
- {
- 	del_timer_sync(&serial_ir.timeout_timer);
--	rc_unregister_device(serial_ir.rcdev);
- 	serial_ir_exit();
- }
- 
--- 
-2.9.3
+Jonathan
+> J
+>> Thanks,
+>> Eva
+>>
+>>> -- 
+>>> With Best Regards,
+>>> Andy Shevchenko
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe linux-iio"
+>> in
+>>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
