@@ -1,391 +1,202 @@
-From: Florian Vaussard <florian.vaussard@gmail.com>
-Subject: [PATCH 1/6] ARM: dts: socfpga: Add unit name to clock nodes
-Date: Sat, 25 Feb 2017 06:54:24 +0100
-Message-ID: <1488002069-22404-2-git-send-email-florian.vaussard@heig-vd.ch>
-References: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH] arm64: dts: allwinner: add support for Pinebook
+Date: Sat, 25 Feb 2017 15:00:32 +0800
+Message-ID: <20170225070032.35834-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBM6XYTCQKGQER5TFMDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Most clock nodes in Arria5, Cyclone5 and Arria10 have a reg property but
-does not have a unit name. This will trigger several warnings like this
-one (when compiled with W=1):
+Pinebook is a A64-based laptop produced by Pine64, with the following
+peripherals:
 
-Node /soc/clkmgr@ffd04000/clocks/periph_pll has a reg or ranges
-property, but no unit name
+USB:
+- Two external USB ports (one is directly connected to A64's OTG
+controller, the other is under a internal hub connected to the host-only
+controller.)
+- USB HID keyboard and touchpad connected to the internal hub.
+- USB UVC camera connected to the internal hub.
 
-Add the corresponding unit name to each node.
+Power-related:
+- A DC IN jack connected to AXP803's DCIN pin.
+- A Li-Polymer battery connected to AXP803's battery pins.
 
-Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+Storage:
+- An eMMC by Foresee on the main board (in the product revision of the
+main board it's designed to be switchable).
+- An external MicroSD card slot.
+
+Display:
+- An eDP LCD panel (1366x768) connected via an ANX6345/ANX9807 RGB-eDP
+bridge.
+- A mini HDMI jack.
+
+Misc:
+- A Hall sensor designed to detect the status of lid, connected to GPIO PH10.
+- A headphone jack connected to the SoC's internal codec.
+- A BMA223 gravity sensor connected to the SoC's I2C1 bus. (Not
+supported yet)
+- A debug UART port muxed with one of the USB ports, only available on
+product revision of the main board.
+
+This commit adds basical support for it, with out-of-tree patches for
+display support the laptop can be basically usable.
+
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga.dtsi         | 38 ++++++++++++++--------------
- arch/arm/boot/dts/socfpga_arria10.dtsi | 46 +++++++++++++++++-----------------
- 2 files changed, 42 insertions(+), 42 deletions(-)
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-a64-pinebook.dts     | 123 +++++++++++++++++++++
+ 2 files changed, 124 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 2c43c4d..4dda6d8 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -145,7 +145,7 @@
- 						compatible = "fixed-clock";
- 					};
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index bc6f342be59f..893520c39955 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinebook.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
  
--					main_pll: main_pll {
-+					main_pll: main_pll@40 {
- 						#address-cells = <1>;
- 						#size-cells = <0>;
- 						#clock-cells = <0>;
-@@ -153,7 +153,7 @@
- 						clocks = <&osc1>;
- 						reg = <0x40>;
- 
--						mpuclk: mpuclk {
-+						mpuclk: mpuclk@48 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&main_pll>;
-@@ -161,7 +161,7 @@
- 							reg = <0x48>;
- 						};
- 
--						mainclk: mainclk {
-+						mainclk: mainclk@4c {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&main_pll>;
-@@ -169,7 +169,7 @@
- 							reg = <0x4C>;
- 						};
- 
--						dbg_base_clk: dbg_base_clk {
-+						dbg_base_clk: dbg_base_clk@50 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&main_pll>, <&osc1>;
-@@ -177,21 +177,21 @@
- 							reg = <0x50>;
- 						};
- 
--						main_qspi_clk: main_qspi_clk {
-+						main_qspi_clk: main_qspi_clk@54 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x54>;
- 						};
- 
--						main_nand_sdmmc_clk: main_nand_sdmmc_clk {
-+						main_nand_sdmmc_clk: main_nand_sdmmc_clk@58 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x58>;
- 						};
- 
--						cfg_h2f_usr0_clk: cfg_h2f_usr0_clk {
-+						cfg_h2f_usr0_clk: cfg_h2f_usr0_clk@5c {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&main_pll>;
-@@ -199,7 +199,7 @@
- 						};
- 					};
- 
--					periph_pll: periph_pll {
-+					periph_pll: periph_pll@80 {
- 						#address-cells = <1>;
- 						#size-cells = <0>;
- 						#clock-cells = <0>;
-@@ -207,42 +207,42 @@
- 						clocks = <&osc1>, <&osc2>, <&f2s_periph_ref_clk>;
- 						reg = <0x80>;
- 
--						emac0_clk: emac0_clk {
-+						emac0_clk: emac0_clk@88 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0x88>;
- 						};
- 
--						emac1_clk: emac1_clk {
-+						emac1_clk: emac1_clk@8c {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0x8C>;
- 						};
- 
--						per_qspi_clk: per_qsi_clk {
-+						per_qspi_clk: per_qsi_clk@90 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0x90>;
- 						};
- 
--						per_nand_mmc_clk: per_nand_mmc_clk {
-+						per_nand_mmc_clk: per_nand_mmc_clk@94 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0x94>;
- 						};
- 
--						per_base_clk: per_base_clk {
-+						per_base_clk: per_base_clk@98 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0x98>;
- 						};
- 
--						h2f_usr1_clk: h2f_usr1_clk {
-+						h2f_usr1_clk: h2f_usr1_clk@9c {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&periph_pll>;
-@@ -250,7 +250,7 @@
- 						};
- 					};
- 
--					sdram_pll: sdram_pll {
-+					sdram_pll: sdram_pll@c0 {
- 						#address-cells = <1>;
- 						#size-cells = <0>;
- 						#clock-cells = <0>;
-@@ -258,28 +258,28 @@
- 						clocks = <&osc1>, <&osc2>, <&f2s_sdram_ref_clk>;
- 						reg = <0xC0>;
- 
--						ddr_dqs_clk: ddr_dqs_clk {
-+						ddr_dqs_clk: ddr_dqs_clk@c8 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&sdram_pll>;
- 							reg = <0xC8>;
- 						};
- 
--						ddr_2x_dqs_clk: ddr_2x_dqs_clk {
-+						ddr_2x_dqs_clk: ddr_2x_dqs_clk@cc {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&sdram_pll>;
- 							reg = <0xCC>;
- 						};
- 
--						ddr_dq_clk: ddr_dq_clk {
-+						ddr_dq_clk: ddr_dq_clk@d0 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&sdram_pll>;
- 							reg = <0xD0>;
- 						};
- 
--						h2f_usr2_clk: h2f_usr2_clk {
-+						h2f_usr2_clk: h2f_usr2_clk@d4 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-perip-clk";
- 							clocks = <&sdram_pll>;
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index 6b0b746..0332d51 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -119,7 +119,7 @@
- 						compatible = "fixed-clock";
- 					};
- 
--					main_pll: main_pll {
-+					main_pll: main_pll@40 {
- 						#address-cells = <1>;
- 						#size-cells = <0>;
- 						#clock-cells = <0>;
-@@ -142,35 +142,35 @@
- 							div-reg = <0x144 0 11>;
- 						};
- 
--						main_emaca_clk: main_emaca_clk {
-+						main_emaca_clk: main_emaca_clk@68 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x68>;
- 						};
- 
--						main_emacb_clk: main_emacb_clk {
-+						main_emacb_clk: main_emacb_clk@6c {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x6C>;
- 						};
- 
--						main_emac_ptp_clk: main_emac_ptp_clk {
-+						main_emac_ptp_clk: main_emac_ptp_clk@70 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x70>;
- 						};
- 
--						main_gpio_db_clk: main_gpio_db_clk {
-+						main_gpio_db_clk: main_gpio_db_clk@74 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x74>;
- 						};
- 
--						main_sdmmc_clk: main_sdmmc_clk {
-+						main_sdmmc_clk: main_sdmmc_clk@78 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk"
- ;
-@@ -178,28 +178,28 @@
- 							reg = <0x78>;
- 						};
- 
--						main_s2f_usr0_clk: main_s2f_usr0_clk {
-+						main_s2f_usr0_clk: main_s2f_usr0_clk@7c {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x7C>;
- 						};
- 
--						main_s2f_usr1_clk: main_s2f_usr1_clk {
-+						main_s2f_usr1_clk: main_s2f_usr1_clk@80 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x80>;
- 						};
- 
--						main_hmc_pll_ref_clk: main_hmc_pll_ref_clk {
-+						main_hmc_pll_ref_clk: main_hmc_pll_ref_clk@84 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
- 							reg = <0x84>;
- 						};
- 
--						main_periph_ref_clk: main_periph_ref_clk {
-+						main_periph_ref_clk: main_periph_ref_clk@9c {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&main_pll>;
-@@ -207,7 +207,7 @@
- 						};
- 					};
- 
--					periph_pll: periph_pll {
-+					periph_pll: periph_pll@c0 {
- 						#address-cells = <1>;
- 						#size-cells = <0>;
- 						#clock-cells = <0>;
-@@ -230,56 +230,56 @@
- 							div-reg = <0x144 16 11>;
- 						};
- 
--						peri_emaca_clk: peri_emaca_clk {
-+						peri_emaca_clk: peri_emaca_clk@e8 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0xE8>;
- 						};
- 
--						peri_emacb_clk: peri_emacb_clk {
-+						peri_emacb_clk: peri_emacb_clk@ec {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0xEC>;
- 						};
- 
--						peri_emac_ptp_clk: peri_emac_ptp_clk {
-+						peri_emac_ptp_clk: peri_emac_ptp_clk@f0 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0xF0>;
- 						};
- 
--						peri_gpio_db_clk: peri_gpio_db_clk {
-+						peri_gpio_db_clk: peri_gpio_db_clk@f4 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0xF4>;
- 						};
- 
--						peri_sdmmc_clk: peri_sdmmc_clk {
-+						peri_sdmmc_clk: peri_sdmmc_clk@f8 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0xF8>;
- 						};
- 
--						peri_s2f_usr0_clk: peri_s2f_usr0_clk {
-+						peri_s2f_usr0_clk: peri_s2f_usr0_clk@fc {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0xFC>;
- 						};
- 
--						peri_s2f_usr1_clk: peri_s2f_usr1_clk {
-+						peri_s2f_usr1_clk: peri_s2f_usr1_clk@100 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
- 							reg = <0x100>;
- 						};
- 
--						peri_hmc_pll_ref_clk: peri_hmc_pll_ref_clk {
-+						peri_hmc_pll_ref_clk: peri_hmc_pll_ref_clk@104 {
- 							#clock-cells = <0>;
- 							compatible = "altr,socfpga-a10-perip-clk";
- 							clocks = <&periph_pll>;
-@@ -287,7 +287,7 @@
- 						};
- 					};
- 
--					mpu_free_clk: mpu_free_clk {
-+					mpu_free_clk: mpu_free_clk@60 {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-a10-perip-clk";
- 						clocks = <&main_mpu_base_clk>, <&peri_mpu_base_clk>,
-@@ -296,7 +296,7 @@
- 						reg = <0x60>;
- 					};
- 
--					noc_free_clk: noc_free_clk {
-+					noc_free_clk: noc_free_clk@64 {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-a10-perip-clk";
- 						clocks = <&main_noc_base_clk>, <&peri_noc_base_clk>,
-@@ -305,7 +305,7 @@
- 						reg = <0x64>;
- 					};
- 
--					s2f_user1_free_clk: s2f_user1_free_clk {
-+					s2f_user1_free_clk: s2f_user1_free_clk@104 {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-a10-perip-clk";
- 						clocks = <&main_s2f_usr1_clk>, <&peri_s2f_usr1_clk>,
-@@ -314,7 +314,7 @@
- 						reg = <0x104>;
- 					};
- 
--					sdmmc_free_clk: sdmmc_free_clk {
-+					sdmmc_free_clk: sdmmc_free_clk@f8 {
- 						#clock-cells = <0>;
- 						compatible = "altr,socfpga-a10-perip-clk";
- 						clocks = <&main_sdmmc_clk>, <&peri_sdmmc_clk>,
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+new file mode 100644
+index 000000000000..2dceba3132b0
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
+@@ -0,0 +1,123 @@
++/*
++ * Copyright (c) 2016 ARM Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "sun50i-a64.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "Pinebook";
++	compatible = "pine64,pinebook", "allwinner,sun50i-a64";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++
++		lid_switch {
++			label = "Lid Switch";
++			gpios = <&pio 7 10 GPIO_ACTIVE_LOW>; /* PH10 */
++			linux,input-type = <EV_SW>;
++			linux,code = <SW_LID>;
++			linux,can-disable;
++		};
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	disable-wp;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&mmc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc2_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <8>;
++	non-removable;
++	cap-mmc-hw-reset;
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usbphy {
++	status = "okay";
++};
 -- 
-2.7.4
+2.11.1
