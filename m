@@ -1,58 +1,59 @@
-From: Florian Vaussard <florian.vaussard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/6] ARM: dts: socfpga: Fix dtc warnings
-Date: Sat, 25 Feb 2017 06:54:23 +0100
-Message-ID: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>
+From: Florian Vaussard <florian.vaussard@gmail.com>
+Subject: [PATCH 5/6] ARM: dts: socfpga: Remove unit name for LEDs in EBV SOCrates
+Date: Sat, 25 Feb 2017 06:54:28 +0100
+Message-ID: <1488002069-22404-6-git-send-email-florian.vaussard@heig-vd.ch>
+References: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>
 List-Id: devicetree@vger.kernel.org
 
-We get a bunch of warnings when compiling the SoCFPGA device trees with W=1.
-This warnings happens because some nodes have a unit name but no 'reg' property,
-or are missing a unit name while having a 'reg' property. This series enables to
-compile all SoCFPGA dts without warnings.
+GPIO LEDs in the Cyclone5 EBV SOCrates board have a unit name but no reg
+property. Indeed, GPIO LEDs do not need such a property. They do not
+need a unit name neither. This will trigger the following warnings when
+compiled with W=1:
 
-Patches 1 to 5 fix these warnings by adding the unit name or removing the
-'reg' property when approriate.
+Node /gpio-leds/led@0 has a unit name, but no reg property
+Node /gpio-leds/led@1 has a unit name, but no reg property
+Node /gpio-leds/led@2 has a unit name, but no reg property
 
-Patch 6 removes the inclusion of the deprecated skeleton.dtsi file, as SoCFPGA
-device trees already define the mandatory properties and nodes. This is needed
-to remove the latest warning.
+The solution is to remove the unit name. In order to have unique node
+names, a rename is necessary. This should be harmless as all the LEDs
+have a 'label' property, hence their name do not derive from the node
+name and will stay the same after this patch.
 
-This series was boot tested on a Cyclone5 SoC DK, thus covering some of the
-changes dones by patches 1 -> 3 + 6.
+Signed-off-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+---
+ arch/arm/boot/dts/socfpga_cyclone5_socrates.dts | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Regards,
-Florian
-
-Florian Vaussard (6):
-  ARM: dts: socfpga: Add unit name to clock nodes
-  ARM: dts: socfpga: Add unit name to memory nodes
-  ARM: dts: socfpga: Remove unneeded unit names
-  ARM: dts: socfpga: Remove unneeded reg from stmpe_touchscreen
-  ARM: dts: socfpga: Remove unit name for LEDs in EBV SOCrates
-  ARM: dts: socfpga: Do not include skeleton.dtsi
-
- arch/arm/boot/dts/socfpga.dtsi                     | 43 +++++++++---------
- arch/arm/boot/dts/socfpga_arria10.dtsi             | 51 +++++++++++-----------
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi       |  2 +-
- arch/arm/boot/dts/socfpga_arria5_socdk.dts         |  2 +-
- arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts  |  2 +-
- arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi        |  2 +-
- arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts      |  1 -
- arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       |  2 +-
- arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      |  2 +-
- arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    |  8 ++--
- arch/arm/boot/dts/socfpga_cyclone5_sodia.dts       |  2 +-
- arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts |  2 +-
- arch/arm/boot/dts/socfpga_vt.dts                   |  2 +-
- 13 files changed, 59 insertions(+), 62 deletions(-)
-
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+index 8e3b017..53bf99e 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
+@@ -60,18 +60,18 @@
+ &leds {
+ 	compatible = "gpio-leds";
+ 
+-	led@0 {
++	led0 {
+ 		label = "led:green:heartbeat";
+ 		gpios = <&porta 28 1>;
+ 		linux,default-trigger = "heartbeat";
+ 	};
+ 
+-	led@1 {
++	led1 {
+ 		label = "led:green:D7";
+ 		gpios = <&portb 19 1>;
+ 	};
+ 
+-	led@2 {
++	led2 {
+ 		label = "led:green:D8";
+ 		gpios = <&portb 25 1>;
+ 	};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
