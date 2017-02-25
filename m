@@ -1,47 +1,70 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] input: cpcap-pwrbutton: new driver
-Date: Sat, 25 Feb 2017 11:21:00 -0800
-Message-ID: <20170225192100.GK21809@atomide.com>
-References: <20170224085909.30559-1-sre@kernel.org>
- <20170225185852.GB31929@dtor-ws>
+From: Imre Kaloz <kaloz@openwrt.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
+Date: Sat, 25 Feb 2017 23:43:07 +0100
+Message-ID: <9a2d6751-d7c3-458f-d717-2abe492e226d@openwrt.org>
+References: <20170223104025.5755-1-zajec5@gmail.com>
+ <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
+ <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
+ <5c57772b-71fd-d9e2-efe6-1175cf048e0b@openwrt.org>
+ <CACna6ryFQHGN6xYiLcp9-v7f+55-4hoq+6kXCjiT6LJOS70sQQ@mail.gmail.com>
+ <CACna6rzn3YDBqwReEikqjfhpMk-uQj0cuNaay2HyK0kLc_xuJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170225185852.GB31929@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACna6rzn3YDBqwReEikqjfhpMk-uQj0cuNaay2HyK0kLc_xuJg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Dmitry Torokhov <dmitry.torokhov@gmail.com> [170225 11:00]:
-> On Fri, Feb 24, 2017 at 09:59:09AM +0100, Sebastian Reichel wrote:
-> > +#include <linux/mfd/motorola-cpcap.h>
-> > +
-> > +#define CPCAP_IRQ_ON 23
-> > +#define CPCAP_IRQ_ON_BITMASK (1 << (CPCAP_IRQ_ON % 16))
-> 
-> Is this truly static or it could depend= on IRQ returned by
-> platform_get_irq()?
-
-I suggest we add it to include/linux/mfd/motorola-cpcap.h:
-
-static inline int cpcap_get_irq_status(struct device *dev,
-				       struct regmap *regmap,
-				       int irq,
-				       u16 *status);
-
-Or do you guys have better ideas?
-
-I'll be needing that for the USB PHY driver too for multiple
-bits so we want to return the whole bank register in status.
-
-We may want to change to do that later to avoid dependencies
-or set up an immutable branch with just that change.
-
-Other than that things work for me based on a quick test.
-
-Regards,
-
-Tony
-
+RGVhciBSYWZhbCwKCk9uIDIwMTctMDItMjQgMDc6MTAsIFJhZmHFgiBNacWCZWNraSB3cm90ZToK
+Pj4+IFlvdXIgbWFubmVycyBzaGluZSBvbiB0aGVzZSBkYXJrIGRheXMgb2Ygd2ludGVyLiBGb3Ig
+YWJvdXQgYSBkZWNhZGUgbm93LAo+Pj4gaHR0cDovLzE5Mi4xNjguMS4xL3N5c2luZm8uY2dpIHdp
+bGwgc2hvdyB5b3UgcXVpdGUgYSBiaXQgb2YgaW5mb3JtYXRpb24gaWYKPj4+IHlvdSBhcmUgdG9v
+IGxhenkgdG8gbG9vayBpbnRvIHRoZSBHUEwgdGFyYmFsbCBvciBhdCB0aGUgb3JpZ2luYWwgYm9v
+dGxvZ3MuCj4+IFRvZGF5IEkgZGVjaWRlZCB0byBkbyBteSBob21ld29yayAmIGNoZWNrIEdQTCBz
+b3VyY2VzIG9mIEVBOTUwMCBmdy4KPj4KPj4gKC4uLikKPj4KPj4gV2lsbCB5b3UgYmUgc28gZ2Vu
+ZXJvdXMgdG8gdGVsbCB1cyBob3cgZGlkIHlvdSBnZXQgRUE5NTAwIGJvYXJkIG5hbWUKPj4gYnkg
+anVzdCBsb29raW5nIGF0IEdQTCBzb3VyY2VzPwo+IEkgYWxzbyB0cmllZCBmaW5kIHdpdGggLW5h
+bWUgIipwYW5hbWVyYSoiLiBPbmUgd2F5IG9mIGd1ZXNzaW5nIGJvYXJkCj4gbmFtZSBzZWVtcyB0
+byBiZSBjaGVja2luZyBuYW1lcyBvZiBwYXRjaGVzIGluIC4vc3JjL2xpbnV4L3BhdGNoZXMvLgo+
+IEFueSBvdGhlciwgbW9yZSByZWxpYWJsZSBtZXRob2Q/Cj4KCkZpcnN0IG9mIGFsbCwgaXQncyBy
+ZWFsbHkgd2VpcmQgeW91IG5ldmVyIGV2ZXIgbG9va2VkIGF0IHRoZSBmYWN0b3J5IApib290bG9n
+cywgYnV0IGxldCBtZSBoZWxwIGluIGhvcGUgdG8gZW5oYW5jZSB5b3VyIGNvbW11bmljYXRpb24g
+c3R5bGU6CgpmaWxlbmFtZXM6CgpzcmMvbGludXgvcGF0Y2hlcy9saW51eC0yLjYuMzYuNC1wYW5h
+bWVyYV8wMDBfQlNQLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFt
+ZXJhXzAwMV9icmNtX2J1aWxkLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40
+LXBhbmFtZXJhXzAwMl9icmNtX2J1aWxkX2ZsYWdzX3RlbXBfZml4LnBhdGNoCnNyYy9saW51eC9w
+YXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAwM19jdGZfYnlwYXNzLnBhdGNoCnNyYy9s
+aW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAwNl9jaXNjb19jb21tZW50LnBh
+dGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAwN191c2JfcmVt
+b3ZlX29vcHMucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFf
+MDA4XzZyZF9zaXRfZnJhZ21lbnQucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2
+LjQtcGFuYW1lcmFfMDA5X2Npc2NvX3J0c3BfY29ubnRyYWNrLnBhdGNoCnNyYy9saW51eC9wYXRj
+aGVzL2xpbnV4LTIuNi4zNi40LXBhbmFtZXJhXzAxMF9jaXNjb19ydHNwX2Nvbm50cmFjazIucGF0
+Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFfMDE0X2Z0cF9wYXN2
+X2NvbW1hbmQucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFf
+MDQ2X3NpcF9hbGcucGF0Y2gKc3JjL2xpbnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1l
+cmFfMDQ3X2FkZF91c2JfbGVkLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4LTIuNi4zNi40
+LXBhbmFtZXJhXzA1MF9QUFRQX0wyVFBfY3RmLnBhdGNoCnNyYy9saW51eC9wYXRjaGVzL2xpbnV4
+LTIuNi4zNi40LXBhbmFtZXJhXzA1Ml9jZmVfcGFzc19sZWRfdG9fYmxpbmsucGF0Y2gKc3JjL2xp
+bnV4L3BhdGNoZXMvbGludXgtMi42LjM2LjQtcGFuYW1lcmFfMjAxX2JyY21fcGF0Y2hfMjAxNjAy
+MjYucGF0Y2gKCmZpbGUgY29udGVudHM6CgpzcmMvbW9kX2JkdXRpbC9wbGF0Zm9ybS9icmNtLy5i
+b2FyZF9pZC5vLmNtZApzcmMvbW9kX2JkdXRpbC9wbGF0Zm9ybS9icmNtLy5idXR0b25zLm8uY21k
+CnNyYy9tb2RfYmR1dGlsL3BsYXRmb3JtL2JyY20vLmxlZHNfcGFuYW1lcmEuby5jbWQKc3JjL21v
+ZF9iZHV0aWwvcGxhdGZvcm0vYnJjbS8udXNiaHViLm8uY21kCgoKSWYgeW91IGhhdmUgZnVydGhl
+ciBxdWVzdGlvbnMsIGZlZWwgZnJlZSB0byBtYWlsIG1lIGRpcmVjdGx5IGFuZCBrZWVwIApvZmYt
+dG9waWMgZGlzY3Vzc2lvbiBhd2F5IGZyb20gdGhlIGxpc3RzLgoKClRoYW5rIHlvdSBhbmQgaGF2
+ZSBhIG5pY2Ugd2Vla2VuZCwKCkltcmUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
