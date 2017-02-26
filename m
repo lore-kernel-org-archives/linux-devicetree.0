@@ -1,73 +1,57 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 3/9] ASoC: sun8i-codec-analog: add support
-	for V3s SoC
-Date: Sun, 26 Feb 2017 15:08:44 +0800
-Message-ID: <7002681488092924@web8j.yandex.ru>
-References: <20170225123029.55939-1-icenowy@aosc.xyz>
- <20170225123029.55939-3-icenowy@aosc.xyz>
- <CAGb2v67YfVo7RhkAPUZusfJiCW-_m6-d-=uq-DdgjEWNKYWVsQ@mail.gmail.com>
+From: Rask Ingemann Lambertsen <rask@formelder.dk>
+Subject: Re: [PATCH v5 6/7] arm64: dts: allwinner: add Allwinner H5 .dtsi
+Date: Sun, 26 Feb 2017 09:55:54 +0100
+Message-ID: <20170226085553.b6o6mv7ibe5op4dg@localhost>
+References: <20170226011956.53581-1-icenowy@aosc.xyz>
+ <20170226011956.53581-7-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAGb2v67YfVo7RhkAPUZusfJiCW-_m6-d-=uq-DdgjEWNKYWVsQ@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170226011956.53581-7-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-sunxi@googlegroups.com, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Andre Przywara <andre.przywara@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CgoyNi4wMi4yMDE3LCAxNDoxNiwgIkNoZW4tWXUgVHNhaSIgPHdlbnNAY3NpZS5vcmc+Ogo+IE9u
-IFNhdCwgRmViIDI1LCAyMDE3IGF0IDg6MzAgUE0sIEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9z
-Yy54eXo+IHdyb3RlOgo+PiDCoFRoZSBWM3MgU29DIGZlYXR1cmVzIGFuIGFuYWxvZyBjb2RlYyB3
-aXRoIGhlYWRwaG9uZSBzdXBwb3J0IGJ1dCB3aXRob3V0Cj4+IMKgbWljMiBhbmQgbGluZWluLgo+
-Cj4gSXQgZG9lc24ndCBoYXZlIE1CSUFTIGVpdGhlci4gUGxlYXNlIHNwbGl0IGl0IG91dCBhcyB3
-ZWxsLgoKVGhhbmtzIGZvciB5b3VyIHRpcHMgOy0pCgo+Cj4gQ2hlbll1Cj4KPj4gwqBBZGQgc3Vw
-cG9ydCBmb3IgaXQuCj4+Cj4+IMKgU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93
-eUBhb3NjLnh5ej4KPj4gwqAtLS0KPj4gwqDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb3VuZC9zdW44aS1jb2RlYy1hbmFsb2cudHh0IHwgMSArCj4+IMKgwqBzb3VuZC9zb2Mv
-c3VueGkvc3VuOGktY29kZWMtYW5hbG9nLmMgfCA5ICsrKysrKysrKwo+PiDCoMKgMiBmaWxlcyBj
-aGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCj4+Cj4+IMKgZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdW44aS1jb2RlYy1hbmFsb2cudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL3N1bjhpLWNvZGVjLWFuYWxvZy50
-eHQKPj4gwqBpbmRleCA3NzliNzM1NzgxYmEuLjFiNmU3YzRlNTBhYiAxMDA2NDQKPj4gwqAtLS0g
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvc3VuOGktY29kZWMtYW5h
-bG9nLnR4dAo+PiDCoCsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3Vu
-ZC9zdW44aS1jb2RlYy1hbmFsb2cudHh0Cj4+IMKgQEAgLTQsNiArNCw3IEBAIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4+IMKgwqAtIGNvbXBhdGlibGU6IG11c3QgYmUgb25lIG9mIHRoZSBmb2xsb3dp
-bmcgY29tcGF0aWJsZXM6Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAtICJh
-bGx3aW5uZXIsc3VuOGktYTIzLWNvZGVjLWFuYWxvZyIKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoC0gImFsbHdpbm5lcixzdW44aS1oMy1jb2RlYy1hbmFsb2ciCj4+IMKgKyAt
-ICJhbGx3aW5uZXIsc3VuOGktdjNzLWNvZGVjLWFuYWxvZyIKPj4KPj4gwqDCoFJlcXVpcmVkIHBy
-b3BlcnRpZXMgaWYgbm90IGEgc3ViLW5vZGUgb2YgdGhlIFBSQ00gbm9kZToKPj4gwqDCoC0gcmVn
-OiBtdXN0IGNvbnRhaW4gdGhlIHJlZ2lzdGVycyBsb2NhdGlvbiBhbmQgbGVuZ3RoCj4+IMKgZGlm
-ZiAtLWdpdCBhL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy1hbmFsb2cuYyBiL3NvdW5kL3Nv
-Yy9zdW54aS9zdW44aS1jb2RlYy1hbmFsb2cuYwo+PiDCoGluZGV4IDZjMTdjOTljMmM4ZC4uNjM3
-NTkzMjE3N2EzIDEwMDY0NAo+PiDCoC0tLSBhL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy1h
-bmFsb2cuYwo+PiDCoCsrKyBiL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy1hbmFsb2cuYwo+
-PiDCoEBAIC02OTUsNiArNjk1LDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VuOGlfY29kZWNf
-YW5hbG9nX3F1aXJrcyBzdW44aV9oM19xdWlya3MgPSB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoC5o
-YXNfbWljMiA9IHRydWUsCj4+IMKgwqB9Owo+Pgo+PiDCoCtzdGF0aWMgY29uc3Qgc3RydWN0IHN1
-bjhpX2NvZGVjX2FuYWxvZ19xdWlya3Mgc3VuOGlfdjNzX3F1aXJrcyA9IHsKPj4gwqArIC5oYXNf
-aGVhZHBob25lID0gdHJ1ZSwKPj4gwqArIC5oYXNfaG1pYyA9IHRydWUsCj4+IMKgK307Cj4+IMKg
-Kwo+PiDCoMKgc3RhdGljIGludCBzdW44aV9jb2RlY19hbmFsb2dfY21wbnRfcHJvYmUoc3RydWN0
-IHNuZF9zb2NfY29tcG9uZW50ICpjbXBudCkKPj4gwqDCoHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKg
-c3RydWN0IGRldmljZSAqZGV2ID0gY21wbnQtPmRldjsKPj4gwqBAQCAtNzYyLDYgKzc2NywxMCBA
-QCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzdW44aV9jb2RlY19hbmFsb2dfb2Zf
-bWF0Y2hbXSA9IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5jb21wYXRp
-YmxlID0gImFsbHdpbm5lcixzdW44aS1oMy1jb2RlYy1hbmFsb2ciLAo+PiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgLmRhdGEgPSAmc3VuOGlfaDNfcXVpcmtzLAo+PiDCoMKgwqDC
-oMKgwqDCoMKgwqB9LAo+PiDCoCsgewo+PiDCoCsgLmNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1
-bjhpLXYzcy1jb2RlYy1hbmFsb2ciLAo+PiDCoCsgLmRhdGEgPSAmc3VuOGlfdjNzX3F1aXJrcywK
-Pj4gwqArIH0sCj4+IMKgwqDCoMKgwqDCoMKgwqDCoHt9Cj4+IMKgwqB9Owo+PiDCoMKgTU9EVUxF
-X0RFVklDRV9UQUJMRShvZiwgc3VuOGlfY29kZWNfYW5hbG9nX29mX21hdGNoKTsKPj4gwqAtLQo+
-PiDCoDIuMTEuMQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0
-cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
+On Sun, Feb 26, 2017 at 09:19:55AM +0800, Icenowy Zheng wrote:
+> From: Andre Przywara <andre.przywara@arm.com>
+> 
+> The Allwinner H5 SoC is pin-compatible to the H3 SoC, but uses
+> Cortex-A53 cores instead.
+> Based on the now shared base .dtsi describing the common peripherals
+> describe the H5 specific nodes on top of that.
+> That symlinks in the sunxi-h3-h5.dtsi from the arch/arm tree.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> [Icenowy: add H5 pinctrl compatible, and changes for my h3-h5 dtsi
+>  refactor, commit message change to met new arm64 naming scheme,
+
+s/change to met/change to meet/ or s/change to met/changed to meet/ ?
+
+> diff --git a/arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi b/arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi
+> new file mode 120000
+> index 000000000000..036f01dc2b9b
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi
+> @@ -0,0 +1 @@
+> +../../../../arm/boot/dts/sunxi-h3-h5.dtsi
+> \ No newline at end of file
+
+But it's missing more than just a newline, isn't it? Shouldn't it read
+
+#include <../../../../arm/boot/dts/sunxi-h3-h5.dtsi>
+
+?
+
+-- 
+Rask Ingemann Lambertsen
