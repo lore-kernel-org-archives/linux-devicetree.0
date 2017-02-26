@@ -1,13 +1,11 @@
 From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 3/3] arm64: dts: uniphier: fix no unit name warnings
-Date: Sun, 26 Feb 2017 14:04:09 +0900
-Message-ID: <1488085449-28922-4-git-send-email-yamada.masahiro@socionext.com>
-References: <1488085449-28922-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Recommended notation for OPP to avoid DTC warnings
+Date: Sun, 26 Feb 2017 14:18:03 +0900
+Message-ID: <CAK7LNAQyc9=3d07-1upywYDk-AaRUGK4mJwAVduCuEJgnY1uFA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488085449-28922-1-git-send-email-yamada.masahiro@socionext.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,73 +15,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: masahiroy@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix warnings reported when built with W=1:
-  Node /memory has a reg or ranges property, but no unit name
+Hi.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
 
- arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts | 2 +-
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi    | 2 +-
- arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts | 2 +-
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi    | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Decumentation/devicetree/bindings/opp/opp.txt
+takes examples like this:
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts
-index 7168cf8..1b96e24 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11-ref.dts
-@@ -52,7 +52,7 @@
- 	model = "UniPhier LD11 Reference Board";
- 	compatible = "socionext,uniphier-ld11-ref", "socionext,uniphier-ld11";
- 
--	memory {
-+	memory@80000000 {
- 		device_type = "memory";
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index da881f5..2ed35e3 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -140,7 +140,7 @@
- 			     <1 10 4>;
- 	};
- 
--	soc {
-+	soc@0 {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-index 609162a..8cb0f11 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-ref.dts
-@@ -52,7 +52,7 @@
- 	model = "UniPhier LD20 Reference Board";
- 	compatible = "socionext,uniphier-ld20-ref", "socionext,uniphier-ld20";
- 
--	memory {
-+	memory@80000000 {
- 		device_type = "memory";
- 		reg = <0 0x80000000 0 0xc0000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index a6b3a70..96c053f 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -209,7 +209,7 @@
- 			     <1 10 4>;
- 	};
- 
--	soc {
-+	soc@0 {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
+        opp@1000000000 {
+                opp-hz = /bits/ 64 <1000000000>;
+                opp-microvolt = <970000 975000 985000>;
+                opp-microamp = <70000>;
+                clock-latency-ns = <300000>;
+                opp-suspend;
+        };
+        opp@1100000000 {
+                opp-hz = /bits/ 64 <1100000000>;
+                opp-microvolt = <980000 1000000 1010000>;
+                opp-microamp = <80000>;
+                clock-latency-ns = <310000>;
+        };
+        opp@1200000000 {
+                opp-hz = /bits/ 64 <1200000000>;
+                opp-microvolt = <1025000>;
+                clock-latency-ns = <290000>;
+                turbo-mode;
+        };
+
+
+If we follow this notation and the device-tree is built with W=1,
+DTC warns like follows:
+
+
+Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+unit name, but no reg property
+
+
+Is there a recommended notation to avoid it?
+
+Maybe, simply omit the "@" ?
+
+
+
 -- 
-2.7.4
+Best Regards
+Masahiro Yamada
