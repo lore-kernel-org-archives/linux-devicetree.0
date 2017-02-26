@@ -1,158 +1,403 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 4/4] iio: accel: adxl345: Add SPI support
-Date: Sun, 26 Feb 2017 21:45:07 +0800
-Message-ID: <32e9aa0cce01f8b4a5cbe963d863b238a8077375.1488115521.git.eraretuya@gmail.com>
-References: <cover.1488115521.git.eraretuya@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1488115521.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1488115521.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1488115521.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v1 2/2] coresight: add support for debug module
+Date: Sun, 26 Feb 2017 22:07:32 +0800
+Message-ID: <20170226140732.GA32233@leoy-linaro>
+References: <1487815067-27511-1-git-send-email-leo.yan@linaro.org>
+ <1487815067-27511-3-git-send-email-leo.yan@linaro.org>
+ <20170224190711.GA12355@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170224190711.GA12355@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add SPI driver that initializes SPI regmap for the adxl345 core driver.
-The driver supports the same functionality as I2C namely the x, y, z and
-scale readings.
+On Fri, Feb 24, 2017 at 12:07:11PM -0700, Mathieu Poirier wrote:
+> On Thu, Feb 23, 2017 at 09:57:47AM +0800, Leo Yan wrote:
 
-Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes from v3:
-* Revert to explicit and separate I2C and SPI configuration
-* Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
+[...]
 
- drivers/iio/accel/Kconfig       | 14 +++++++
- drivers/iio/accel/Makefile      |  1 +
- drivers/iio/accel/adxl345_spi.c | 83 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 98 insertions(+)
- create mode 100644 drivers/iio/accel/adxl345_spi.c
+> > +/* bits definition for EDDEVID1 */
+> > +#define EDDEVID1_PCSR_OFFSET_MASK	GENMASK(3, 0)
+> > +#define EDDEVID1_PCSR_OFFSET_INS_SET	(0x0)
+> > +#define EDDEVID1_PCSR_NO_OFFSET		(0x1)
+> 
+> Hi Leo,
+> 
+> The above #define isn't used in the code - please remove.
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 9f5a889..8994175 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -22,6 +22,20 @@ config ADXL345_I2C
- 	  will be called adxl345_i2c and you will also get adxl345_core
- 	  for the core module.
- 
-+config ADXL345_SPI
-+	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer SPI Driver"
-+	depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
-+	depends on SPI
-+	select ADXL345
-+	select REGMAP_SPI
-+	help
-+	  Say Y here if you want to build support for the Analog Devices
-+	  ADXL345 3-axis digital accelerometer.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called adxl345_spi and you will also get adxl345_core
-+	  for the core module.
-+
- config BMA180
- 	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
- 	depends on I2C
-diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
-index 3f4a6d6..31fba19 100644
---- a/drivers/iio/accel/Makefile
-+++ b/drivers/iio/accel/Makefile
-@@ -5,6 +5,7 @@
- # When adding new entries keep the list in alphabetical order
- obj-$(CONFIG_ADXL345) += adxl345_core.o
- obj-$(CONFIG_ADXL345_I2C) += adxl345_i2c.o
-+obj-$(CONFIG_ADXL345_SPI) += adxl345_spi.o
- obj-$(CONFIG_BMA180) += bma180.o
- obj-$(CONFIG_BMA220) += bma220_spi.o
- obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
-diff --git a/drivers/iio/accel/adxl345_spi.c b/drivers/iio/accel/adxl345_spi.c
-new file mode 100644
-index 0000000..b7c2e7f
---- /dev/null
-+++ b/drivers/iio/accel/adxl345_spi.c
-@@ -0,0 +1,83 @@
-+/*
-+ * ADXL345 3-Axis Digital Accelerometer
-+ *
-+ * Copyright (c) 2017 Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License. See the file COPYING in the main
-+ * directory of this archive for more details.
-+ *
-+ * SPI driver for ADXL345
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/spi/spi.h>
-+
-+#include "adxl345.h"
-+
-+#define ADXL345_MAX_SPI_FREQ_HZ		5000000
-+
-+static const struct regmap_config adxl345_spi_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	 /* Setting bits 7 and 6 enables multiple-byte read */
-+	.read_flag_mask = BIT(7) | BIT(6),
-+};
-+
-+static int adxl345_spi_probe(struct spi_device *spi)
-+{
-+	struct regmap *regmap;
-+	const struct spi_device_id *id = spi_get_device_id(spi);
-+
-+	/* Bail out if max_speed_hz exceeds 5 MHz */
-+	if (spi->max_speed_hz > ADXL345_MAX_SPI_FREQ_HZ) {
-+		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds 5 MHz\n",
-+			spi->max_speed_hz);
-+		return -EINVAL;
-+	}
-+
-+	regmap = devm_regmap_init_spi(spi, &adxl345_spi_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&spi->dev, "Error initializing spi regmap: %d\n",
-+			(int)PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
-+	}
-+
-+	return adxl345_common_probe(&spi->dev, regmap, id->name);
-+}
-+
-+static int adxl345_spi_remove(struct spi_device *spi)
-+{
-+	return adxl345_common_remove(&spi->dev);
-+}
-+
-+static const struct spi_device_id adxl345_spi_id[] = {
-+	{ "adxl345", 0 },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(spi, adxl345_spi_id);
-+
-+static const struct of_device_id adxl345_of_match[] = {
-+	{ .compatible = "adi,adxl345" },
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, adxl345_of_match);
-+
-+static struct spi_driver adxl345_spi_driver = {
-+	.driver = {
-+		.name	= "adxl345_spi",
-+		.of_match_table = adxl345_of_match,
-+	},
-+	.probe		= adxl345_spi_probe,
-+	.remove		= adxl345_spi_remove,
-+	.id_table	= adxl345_spi_id,
-+};
-+
-+module_spi_driver(adxl345_spi_driver);
-+
-+MODULE_AUTHOR("Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer SPI driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+Thanks a lot for quite detailed reivew and suggestion for below
+refactors. I will follow up them and send out new version for
+reviewing.
+
+Thanks,
+Leo Yan
+
+> > +
+> > +/* bits definition for EDDEVID */
+> > +#define EDDEVID_PCSAMPLE_MODE		GENMASK(3, 0)
+> > +#define EDDEVID_IMPL_NONE		(0x0)
+> > +#define EDDEVID_IMPL_EDPCSR_EDCIDSR	(0x2)
+> > +#define EDDEVID_IMPL_FULL		(0x3)
+> > +
+> > +struct debug_drvdata {
+> > +	void __iomem	*base;
+> > +	struct device	*dev;
+> > +	int		cpu;
+> > +	struct clk	*dbg_clk;
+> > +
+> > +	bool		edpcsr_present;
+> > +	bool		edvidsr_present;
+> > +	bool		pc_has_offset;
+> > +
+> > +	u32		eddevid;
+> > +	u32		eddevid1;
+> > +
+> > +	u32		edpcsr;
+> > +	u32		edpcsr_hi;
+> > +	u32		edprsr;
+> > +	u32		edvidsr;
+> > +	u32		edcidsr;
+> > +};
+> > +
+> > +static int debug_count;
+> 
+> No need to make this global - please move this to debug_probe() 
+> 
+> > +static DEFINE_PER_CPU(struct debug_drvdata *, debug_drvdata);
+> > +
+> > +static void debug_os_unlock(struct debug_drvdata *drvdata)
+> > +{
+> > +	/* Unlocks the debug registers */
+> > +	writel_relaxed(0x0, drvdata->base + EDOSLAR);
+> > +	wmb();
+> > +}
+> > +
+> > +/*
+> > + * According to ARM DDI 0487A.k, before access external debug
+> > + * registers should firstly check the access permission; if any
+> > + * below condition has been met then cannot access debug
+> > + * registers to avoid lockup issue:
+> > + *
+> > + * - CPU power domain is powered off;
+> > + * - The OS Double Lock is locked;
+> > + *
+> > + * By checking EDPRSR can get to know if meet these conditions.
+> > + */
+> > +static bool debug_access_permit(struct debug_drvdata *drvdata)
+> 
+> s/debug_access_permit/debug_access_permitted
+> 
+> > +{
+> > +	/* CPU is powered off */
+> > +	if (!(drvdata->edprsr & EDPRSR_PU))
+> > +		return false;
+> > +
+> > +	/* The OS Double Lock is locked */
+> > +	if (drvdata->edprsr & EDPRSR_DLK)
+> > +		return false;
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static void debug_read_regs(struct debug_drvdata *drvdata)
+> > +{
+> > +	drvdata->edprsr = readl_relaxed(drvdata->base + EDPRSR);
+> > +
+> > +	if (!debug_access_permit(drvdata))
+> > +		return;
+> > +
+> > +	if (!drvdata->edpcsr_present)
+> > +		return;
+> > +
+> > +	CS_UNLOCK(drvdata->base);
+> > +
+> > +	debug_os_unlock(drvdata);
+> > +
+> > +	drvdata->edpcsr = readl_relaxed(drvdata->base + EDPCSR);
+> > +
+> > +	/*
+> > +	 * As described in ARM DDI 0487A.k, if the processing
+> > +	 * element (PE) is in debug state, or sample-based
+> > +	 * profiling is prohibited, EDPCSR reads as 0xFFFFFFFF;
+> > +	 * EDCIDSR, EDVIDSR and EDPCSR_HI registers also become
+> > +	 * UNKNOWN state. So directly bail out for this case.
+> > +	 */
+> > +	if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
+> > +		CS_LOCK(drvdata->base);
+> > +		return;
+> > +	}
+> > +
+> > +	/*
+> > +	 * A read of the EDPCSR normally has the side-effect of
+> > +	 * indirectly writing to EDCIDSR, EDVIDSR and EDPCSR_HI;
+> > +	 * at this point it's safe to read value from them.
+> > +	 */
+> > +	drvdata->edcidsr = readl_relaxed(drvdata->base + EDCIDSR);
+> > +#ifdef CONFIG_64BIT
+> > +	drvdata->edpcsr_hi = readl_relaxed(drvdata->base + EDPCSR_HI);
+> > +#endif
+> > +
+> > +	if (drvdata->edvidsr_present)
+> > +		drvdata->edvidsr = readl_relaxed(drvdata->base + EDVIDSR);
+> > +
+> > +	CS_LOCK(drvdata->base);
+> > +}
+> > +
+> > +#ifndef CONFIG_64BIT
+> > +static bool debug_pc_has_offset(struct debug_drvdata *drvdata)
+> > +{
+> > +	u32 pcsr_offset;
+> > +
+> > +	pcsr_offset = drvdata->eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
+> > +
+> > +	return (pcsr_offset == EDDEVID1_PCSR_OFFSET_INS_SET);
+> > +}
+> > +
+> > +static unsigned long debug_adjust_pc(struct debug_drvdata *drvdata,
+> > +				     unsigned long pc)
+> > +{
+> > +	unsigned long arm_inst_offset = 0, thumb_inst_offset = 0;
+> > +
+> > +	if (debug_pc_has_offset(drvdata)) {
+> > +		arm_inst_offset = 8;
+> > +		thumb_inst_offset = 4;
+> > +	}
+> > +
+> > +	/* Handle thumb instruction */
+> > +	if (pc & EDPCSR_THUMB) {
+> > +		pc = (pc & EDPCSR_THUMB_INST_MASK) - thumb_inst_offset;
+> > +		return pc;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Handle arm instruction offset, if the arm instruction
+> > +	 * is not 4 byte alignment then it's possible the case
+> > +	 * for implementation defined; keep original value for this
+> > +	 * case and print info for notice.
+> > +	 */
+> > +	if (pc & BIT(1))
+> > +		pr_emerg("Instruction offset is implementation defined\n");
+> > +	else
+> > +		pc = (pc & EDPCSR_ARM_INST_MASK) - arm_inst_offset;
+> > +
+> > +	return pc;
+> > +}
+> > +#endif
+> > +
+> > +static void debug_dump_regs(struct debug_drvdata *drvdata)
+> > +{
+> > +	unsigned long pc;
+> > +
+> > +	pr_emerg("\tEDPRSR:  %08x (Power:%s DLK:%s)\n", drvdata->edprsr,
+> > +		 drvdata->edprsr & EDPRSR_PU ? "On" : "Off",
+> > +		 drvdata->edprsr & EDPRSR_DLK ? "Lock" : "Unlock");
+> > +
+> > +	if (!debug_access_permit(drvdata) || !drvdata->edpcsr_present) {
+> > +		pr_emerg("No permission to access debug registers!\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
+> > +		pr_emerg("CPU is in Debug state or profiling is prohibited!\n");
+> > +		return;
+> > +	}
+> > +
+> > +#ifdef CONFIG_64BIT
+> > +	pc = (unsigned long)drvdata->edpcsr_hi << 32 |
+> > +	     (unsigned long)drvdata->edpcsr;
+> > +#else
+> > +	pc = debug_adjust_pc(drvdata, (unsigned long)drvdata->edpcsr);
+> > +#endif
+> > +
+> > +	pr_emerg("\tEDPCSR:  [<%p>] %pS\n", (void *)pc, (void *)pc);
+> > +	pr_emerg("\tEDCIDSR: %08x\n", drvdata->edcidsr);
+> > +
+> > +	if (!drvdata->edvidsr_present)
+> > +		return;
+> > +
+> > +	pr_emerg("\tEDVIDSR: %08x (State:%s Mode:%s Width:%s VMID:%x)\n",
+> > +		 drvdata->edvidsr,
+> > +		 drvdata->edvidsr & EDVIDSR_NS ? "Non-secure" : "Secure",
+> > +		 drvdata->edvidsr & EDVIDSR_E3 ? "EL3" :
+> > +			(drvdata->edvidsr & EDVIDSR_E2 ? "EL2" : "EL1/0"),
+> > +		 drvdata->edvidsr & EDVIDSR_HV ? "64bits" : "32bits",
+> > +		 drvdata->edvidsr & (u32)EDVIDSR_VMID);
+> > +}
+> > +
+> > +/*
+> > + * Dump out information on panic.
+> > + */
+> > +static int debug_notifier_call(struct notifier_block *self,
+> > +			       unsigned long v, void *p)
+> > +{
+> > +	int cpu;
+> > +
+> > +	pr_emerg("ARM external debug module:\n");
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> > +
+> > +		if (!per_cpu(debug_drvdata, cpu))
+> > +			continue;
+> > +
+> > +		pr_emerg("CPU[%d]:\n", per_cpu(debug_drvdata, cpu)->cpu);
+> > +
+> > +		debug_read_regs(per_cpu(debug_drvdata, cpu));
+> > +		debug_dump_regs(per_cpu(debug_drvdata, cpu));
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct notifier_block debug_notifier = {
+> > +	.notifier_call = debug_notifier_call,
+> > +};
+> > +
+> > +static void debug_init_arch_data(void *info)
+> > +{
+> > +	struct debug_drvdata *drvdata = info;
+> > +	u32 mode;
+> > +
+> > +	CS_UNLOCK(drvdata->base);
+> > +
+> > +	debug_os_unlock(drvdata);
+> > +
+> > +	/* Read device info */
+> > +	drvdata->eddevid  = readl_relaxed(drvdata->base + EDDEVID);
+> > +	drvdata->eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
+> > +
+> > +	/* Parse implementation feature */
+> > +	mode = drvdata->eddevid & EDDEVID_PCSAMPLE_MODE;
+> > +	if (mode == EDDEVID_IMPL_FULL) {
+> > +		drvdata->edpcsr_present  = true;
+> > +		drvdata->edvidsr_present = true;
+> > +	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
+> > +		drvdata->edpcsr_present  = true;
+> > +		drvdata->edvidsr_present = false;
+> > +	} else {
+> > +		drvdata->edpcsr_present  = false;
+> > +		drvdata->edvidsr_present = false;
+> > +	}
+> > +
+> > +	CS_LOCK(drvdata->base);
+> > +}
+> > +
+> > +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> > +{
+> > +	int ret;
+> > +	void __iomem *base;
+> > +	struct device *dev = &adev->dev;
+> > +	struct coresight_platform_data *pdata = NULL;
+> > +	struct debug_drvdata *drvdata;
+> > +	struct resource *res = &adev->res;
+> > +	struct device_node *np = adev->dev.of_node;
+> > +
+> > +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> > +	if (!drvdata)
+> > +		return -ENOMEM;
+> > +
+> > +	if (np) {
+> > +		pdata = of_get_coresight_platform_data(dev, np);
+> > +		if (IS_ERR(pdata))
+> > +			return PTR_ERR(pdata);
+> > +		adev->dev.platform_data = pdata;
+> > +	}
+> 
+> I wonder if dragging a coresight_platform_data is worth it.  From what I see the
+> only thing it is used for is to retrieve the CPU.  As such I think it is better
+> get the portion of code in of_get_coresight_platform_data() that deals with the
+> CPU and create a new function (of_coresight_get_cpu()).  That way you can reuse
+> it here and in of_get_coresight_platform_data(). 
+> 
+> > +
+> > +	drvdata->dev = &adev->dev;
+> > +	drvdata->dbg_clk = devm_clk_get(&adev->dev, "dbg_clk");
+> > +	if (IS_ERR(drvdata->dbg_clk)) {
+> > +		dev_err(dev, "debug clock initialization failed.\n");
+> > +		return PTR_ERR(drvdata->dbg_clk);
+> > +	}
+> > +
+> > +	ret = clk_prepare_enable(drvdata->dbg_clk);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	dev_set_drvdata(dev, drvdata);
+> > +
+> > +	/* Validity for the resource is already checked by the AMBA core */
+> > +	base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	drvdata->base = base;
+> > +	drvdata->cpu = pdata ? pdata->cpu : 0;
+> > +
+> > +	get_online_cpus();
+> > +	per_cpu(debug_drvdata, drvdata->cpu) = drvdata;
+> > +
+> > +	if (smp_call_function_single(drvdata->cpu,
+> > +				debug_init_arch_data, drvdata, 1))
+> > +		dev_err(dev, "Debug arch init failed\n");
+> > +
+> > +	if (!debug_count++)
+> > +		atomic_notifier_chain_register(&panic_notifier_list,
+> > +					       &debug_notifier);
+> > +	put_online_cpus();
+> 
+> There is no need to hold the CPUs in place through the chain registration.  This
+> should go before the if().
+> 
+> > +
+> > +	dev_info(dev, "%s initialized\n", (char *)id->data);
+>         
+>         fprintf(buffer, (char *)id->data, drvdata->cpu);
+>         dev_info(dev, "%s initialized\n", buffer);
+> 
+> > +	return 0;
+> > +}
+> > +
+> > +static struct amba_id debug_ids[] = {
+> > +	{       /* Debug for Cortex-A53 */
+> > +		.id	= 0x000bbd03,
+> > +		.mask	= 0x000fffff,
+> > +		.data	= "debug",
+>        
+>                 .data   = "Coresight debug-CPU%d",
+> 
+> > +	},
+> > +	{       /* Debug for Cortex-A57 */
+> > +		.id	= 0x000bbd07,
+> > +		.mask	= 0x000fffff,
+> > +		.data	= "debug",
+> > +	},
+> > +	{       /* Debug for Cortex-A72 */
+> > +		.id	= 0x000bbd08,
+> > +		.mask	= 0x000fffff,
+> > +		.data	= "debug",
+> > +	},
+> > +	{ 0, 0},
+> > +};
+> > +
+> > +static struct amba_driver debug_driver = {
+> > +	.drv = {
+> > +		.name   = "coresight-debug",
+> > +		.suppress_bind_attrs = true,
+> > +	},
+> > +	.probe		= debug_probe,
+> > +	.id_table	= debug_ids,
+> > +};
+> > +builtin_amba_driver(debug_driver);
+> > -- 
+> > 2.7.4
+> > 
