@@ -1,17 +1,17 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v5 6/7] arm64: dts: allwinner: add Allwinner
- H5 .dtsi
-Date: Sun, 26 Feb 2017 22:54:54 +0800
-Message-ID: <3514551488120894@web6m.yandex.ru>
+Subject: Re: [PATCH v5 2/7] clk: sunxi-ng: rename sun8i-h3
+ driver to sunxi-h3-h5
+Date: Sun, 26 Feb 2017 22:57:58 +0800
+Message-ID: <10821061488121078@web18g.yandex.ru>
 References: <20170226011956.53581-1-icenowy@aosc.xyz>
-	 <20170226011956.53581-7-icenowy@aosc.xyz> <20170226085553.b6o6mv7ibe5op4dg@localhost>
+	 <20170226011956.53581-3-icenowy@aosc.xyz> <20170226095204.cwh7f2mbgjumr5fu@localhost>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBQGYZPCQKGQE2SNWPVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB56ZZPCQKGQE4TH7FUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170226085553.b6o6mv7ibe5op4dg@localhost>
+In-Reply-To: <20170226095204.cwh7f2mbgjumr5fu@localhost>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,46 +24,30 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-26.02.2017, 16:56, "Rask Ingemann Lambertsen" <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>:
-> On Sun, Feb 26, 2017 at 09:19:55AM +0800, Icenowy Zheng wrote:
->> =C2=A0From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+26.02.2017, 17:52, "Rask Ingemann Lambertsen" <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>:
+> On Sun, Feb 26, 2017 at 09:19:51AM +0800, Icenowy Zheng wrote:
+>> =C2=A0As the CCU in the Allwinner H5 SoC is very similar to the one in H=
+3,
+>> =C2=A0rename the H3 driver to sunxi-h3-h5 so that it can be extended wit=
+h H5
+>> =C2=A0support.
 >>
->> =C2=A0The Allwinner H5 SoC is pin-compatible to the H3 SoC, but uses
->> =C2=A0Cortex-A53 cores instead.
->> =C2=A0Based on the now shared base .dtsi describing the common periphera=
-ls
->> =C2=A0describe the H5 specific nodes on top of that.
->> =C2=A0That symlinks in the sunxi-h3-h5.dtsi from the arch/arm tree.
+>> =C2=A0Trasitional header symlinks are created, to ensure current device =
+tree
+>
+> s/Trasitional/Transitional/ I guess.
+>
+>> =C2=A0files which included sun8i-h3-ccu.h can compile.
 >>
->> =C2=A0Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->> =C2=A0[Icenowy: add H5 pinctrl compatible, and changes for my h3-h5 dtsi
->> =C2=A0=C2=A0refactor, commit message change to met new arm64 naming sche=
-me,
+>> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>> =C2=A0---
+>> =C2=A0Changes in v5:
+>> =C2=A0- Add the reason to create trasitional headers in commit message.
 >
-> s/change to met/change to meet/ or s/change to met/changed to meet/ ?
->
->> =C2=A0diff --git a/arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi b/arch=
-/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi
->> =C2=A0new file mode 120000
->> =C2=A0index 000000000000..036f01dc2b9b
->> =C2=A0--- /dev/null
->> =C2=A0+++ b/arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi
->> =C2=A0@@ -0,0 +1 @@
->> =C2=A0+../../../../arm/boot/dts/sunxi-h3-h5.dtsi
->> =C2=A0\ No newline at end of file
->
-> But it's missing more than just a newline, isn't it? Shouldn't it read
->
-> #include <../../../../arm/boot/dts/sunxi-h3-h5.dtsi>
+> Likewise.
 
-Oh you may do not know what a symlink seems like in git format-patch.
+Thanks ;-)
 
-This is a symlink.
-
-It's mode is not 100644, but 120000
-
->
-> ?
 >
 > --
 > Rask Ingemann Lambertsen
