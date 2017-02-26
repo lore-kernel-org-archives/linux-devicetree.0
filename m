@@ -1,48 +1,131 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v4 3/3] ARM: dts: sun8i: enable SID on Allwinner
- H3 SoC
-Date: Mon, 27 Feb 2017 00:10:03 +0800
-Message-ID: <20170226161003.12433-3-icenowy@aosc.xyz>
-References: <20170226161003.12433-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBOX4ZPCQKGQEAMEXK6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170226161003.12433-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+From: matthew.gerlach@linux.intel.com
+Subject: [PATCH v2 4/4] fpga pr ip: Platform driver for Altera Partial Reconfiguration IP.
+Date: Sun, 26 Feb 2017 08:35:48 -0800
+Message-ID: <1488126948-9466-5-git-send-email-matthew.gerlach@linux.intel.com>
+References: <1488126948-9466-1-git-send-email-matthew.gerlach@linux.intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1488126948-9466-1-git-send-email-matthew.gerlach@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: atull@opensource.altera.com, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-As we have already made sunxi_sid driver support the SID controller on
-H3, enable it.
+From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+This adds a platform bus driver for a fpga-mgr driver
+that uses the Altera Partial Reconfiguration IP component.
+
+v2: s/altr,pr-ip-core/altr,pr-ip/
+====================
+
+Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/fpga/Kconfig                  |  7 ++++
+ drivers/fpga/Makefile                 |  1 +
+ drivers/fpga/altera-pr-ip-core-plat.c | 65 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 73 insertions(+)
+ create mode 100644 drivers/fpga/altera-pr-ip-core-plat.c
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 08fd0860bb6b..0a7a38a75ee4 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -206,6 +206,11 @@
- 			#size-cells = <0>;
- 		};
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index a46c173..40f75d0 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -68,6 +68,13 @@ config ALTERA_PR_IP_CORE
+         help
+           Core driver support for Altera Partial Reconfiguration IP component
  
-+		sid: eeprom@01c14000 {
-+			compatible = "allwinner,sun8i-h3-sid";
-+			reg = <0x01c14000 0x400>;
-+		};
++config ALTERA_PR_IP_CORE_PLAT
++	tristate "Platform support of Altera Partial Reconfiguration IP Core"
++	depends on ALTERA_PR_IP_CORE && OF
++	help
++	  Platform driver support for Altera Partial Reconfiguration IP
++	  component
 +
- 		usbphy: phy@01c19400 {
- 			compatible = "allwinner,sun8i-h3-usb-phy";
- 			reg = <0x01c19400 0x2c>,
+ endif # FPGA
+ 
+ endmenu
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index 82693d2..5b8ae2b 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
+ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
+ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+ obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
++obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
+ 
+ # FPGA Bridge Drivers
+ obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
+diff --git a/drivers/fpga/altera-pr-ip-core-plat.c b/drivers/fpga/altera-pr-ip-core-plat.c
+new file mode 100644
+index 0000000..ab14380
+--- /dev/null
++++ b/drivers/fpga/altera-pr-ip-core-plat.c
+@@ -0,0 +1,65 @@
++/*
++ * Driver for Altera Partial Reconfiguration IP Core
++ *
++ * Copyright (C) 2016-2017 Intel Corporation
++ *
++ * Based on socfpga-a10.c Copyright (C) 2015-2016 Altera Corporation
++ *  by Alan Tull <atull@opensource.altera.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along with
++ * this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++#include "altera-pr-ip-core.h"
++#include <linux/module.h>
++#include <linux/of_device.h>
++
++static int alt_pr_platform_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	void __iomem *reg_base;
++	struct resource *res;
++
++	/* First mmio base is for register access */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++
++	reg_base = devm_ioremap_resource(dev, res);
++
++	if (IS_ERR(reg_base))
++		return PTR_ERR(reg_base);
++
++	return alt_pr_probe(dev, reg_base);
++}
++
++static int alt_pr_platform_remove(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	return alt_pr_remove(dev);
++}
++
++static const struct of_device_id alt_pr_of_match[] = {
++	{ .compatible = "altr,pr-ip", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, alt_pr_of_match);
++
++static struct platform_driver alt_pr_platform_driver = {
++	.probe = alt_pr_platform_probe,
++	.remove = alt_pr_platform_remove,
++	.driver = {
++		.name	= "alt_pr_ip",
++		.of_match_table = alt_pr_of_match,
++	},
++};
++
++module_platform_driver(alt_pr_platform_driver);
 -- 
-2.11.1
+2.7.4
