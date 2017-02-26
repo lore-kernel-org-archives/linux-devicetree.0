@@ -1,13 +1,11 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 2/2] arm64: dts: add arm/arm64 include symlinks
-Date: Sun, 26 Feb 2017 07:00:58 +0100
-Message-ID: <20170226060058.5841-2-heiko@sntech.de>
-References: <20170226060058.5841-1-heiko@sntech.de>
+Subject: [PATCH 1/2] ARM: dts: add arm/arm64 include symlinks
+Date: Sun, 26 Feb 2017 07:00:57 +0100
+Message-ID: <20170226060058.5841-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170226060058.5841-1-heiko@sntech.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -33,31 +31,27 @@ Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Suggested by Olof in response to the patch adding direct symlinks
 for cros-ec includes.
 
-Tested with adapted rk3399-Gru dtsi files and while we only need this arm64
-version right now, it might make sense to already have both the arm32 and
-arm64 versions ready.
-
- arch/arm64/boot/dts/include/arm   | 1 +
- arch/arm64/boot/dts/include/arm64 | 1 +
+ arch/arm/boot/dts/include/arm   | 1 +
+ arch/arm/boot/dts/include/arm64 | 1 +
  2 files changed, 2 insertions(+)
- create mode 120000 arch/arm64/boot/dts/include/arm
- create mode 120000 arch/arm64/boot/dts/include/arm64
+ create mode 120000 arch/arm/boot/dts/include/arm
+ create mode 120000 arch/arm/boot/dts/include/arm64
 
-diff --git a/arch/arm64/boot/dts/include/arm b/arch/arm64/boot/dts/include/arm
-new file mode 120000
-index 000000000000..cf63d80e2b93
---- /dev/null
-+++ b/arch/arm64/boot/dts/include/arm
-@@ -0,0 +1 @@
-+../../../../arm/boot/dts
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/include/arm64 b/arch/arm64/boot/dts/include/arm64
+diff --git a/arch/arm/boot/dts/include/arm b/arch/arm/boot/dts/include/arm
 new file mode 120000
 index 000000000000..a96aa0ea9d8c
 --- /dev/null
-+++ b/arch/arm64/boot/dts/include/arm64
++++ b/arch/arm/boot/dts/include/arm
 @@ -0,0 +1 @@
 +..
+\ No newline at end of file
+diff --git a/arch/arm/boot/dts/include/arm64 b/arch/arm/boot/dts/include/arm64
+new file mode 120000
+index 000000000000..074a835fca3e
+--- /dev/null
++++ b/arch/arm/boot/dts/include/arm64
+@@ -0,0 +1 @@
++../../../../arm64/boot/dts
 \ No newline at end of file
 -- 
 2.11.0
