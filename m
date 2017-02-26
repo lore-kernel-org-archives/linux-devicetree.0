@@ -1,57 +1,36 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 1/2] ARM: dts: add arm/arm64 include symlinks
-Date: Sun, 26 Feb 2017 07:00:57 +0100
-Message-ID: <20170226060058.5841-1-heiko@sntech.de>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 2/9] ASoC: sun8i-codec-analog: split out
+	linein and mic2
+Date: Sun, 26 Feb 2017 14:06:06 +0800
+Message-ID: <CAGb2v66Yhw1kxAzWE0RjUYe+reUswdw=3jx4MRErbjbGaMjtGQ@mail.gmail.com>
+References: <20170225123029.55939-1-icenowy@aosc.xyz>
+ <20170225123029.55939-2-icenowy@aosc.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, arnd@arndb.de, briannorris@chromium.org, dianders@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, olof@lixom.net
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170225123029.55939-2-icenowy@aosc.xyz>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow including of dtsi files in an architecture-independent manner.
-Some dtsi files may be shared between architectures and one suggestion
-was to have symlinks and let these includes get accessed via a
-    #include <arm64/foo.dtsi>
-So add the necessary symlinks for arm32.
+On Sat, Feb 25, 2017 at 8:30 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+> Allwinner V3s SoC features an analog codec without linein and mic2.
+>
+> Split out them, in order to prepare for the analog codec on V3s.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 
-Suggested-by: Olof Johansson <olof@lixom.net>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-Suggested by Olof in response to the patch adding direct symlinks
-for cros-ec includes.
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
- arch/arm/boot/dts/include/arm   | 1 +
- arch/arm/boot/dts/include/arm64 | 1 +
- 2 files changed, 2 insertions(+)
- create mode 120000 arch/arm/boot/dts/include/arm
- create mode 120000 arch/arm/boot/dts/include/arm64
-
-diff --git a/arch/arm/boot/dts/include/arm b/arch/arm/boot/dts/include/arm
-new file mode 120000
-index 000000000000..a96aa0ea9d8c
---- /dev/null
-+++ b/arch/arm/boot/dts/include/arm
-@@ -0,0 +1 @@
-+..
-\ No newline at end of file
-diff --git a/arch/arm/boot/dts/include/arm64 b/arch/arm/boot/dts/include/arm64
-new file mode 120000
-index 000000000000..074a835fca3e
---- /dev/null
-+++ b/arch/arm/boot/dts/include/arm64
-@@ -0,0 +1 @@
-+../../../../arm64/boot/dts
-\ No newline at end of file
--- 
-2.11.0
+Though it would be better if you did 1 split as 1 patch, with 2 patches
+in total.
