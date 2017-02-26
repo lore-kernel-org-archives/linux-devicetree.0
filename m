@@ -1,322 +1,125 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: [PATCH v2 2/4] fpga pr ip: Core driver support for Altera Partial Reconfiguration IP.
-Date: Sun, 26 Feb 2017 08:35:46 -0800
-Message-ID: <1488126948-9466-3-git-send-email-matthew.gerlach@linux.intel.com>
-References: <1488126948-9466-1-git-send-email-matthew.gerlach@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488126948-9466-1-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v4 1/4] Documentation: devicetree: Add document bindings
+ for leds-mt6323
+Date: Sun, 26 Feb 2017 18:35:11 +0100
+Message-ID: <709ff2c2-38f3-a3dd-f686-de3db873997d@gmail.com>
+References: <1487962041-6548-1-git-send-email-sean.wang@mediatek.com>
+ <1487962041-6548-2-git-send-email-sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487962041-6548-2-git-send-email-sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sean.wang@mediatek.com, rpurdie@rpsys.net, lee.jones@linaro.org, matthias.bgg@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, keyhaede@gmail.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Hi Sean,
 
-Adding the core functions necessary for a fpga-mgr driver
-for the Altera Partial IP component.  It is intended for
-these functions to be used by the various bus implementations
-like the platform bus or the PCIe bus.
+Thanks for the update. I have one comment below.
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/fpga/Kconfig             |   5 +
- drivers/fpga/Makefile            |   1 +
- drivers/fpga/altera-pr-ip-core.c | 217 +++++++++++++++++++++++++++++++++++++++
- drivers/fpga/altera-pr-ip-core.h |  29 ++++++
- 4 files changed, 252 insertions(+)
- create mode 100644 drivers/fpga/altera-pr-ip-core.c
- create mode 100644 drivers/fpga/altera-pr-ip-core.h
+On 02/24/2017 07:47 PM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> This patch adds documentation for devicetree bindings
+> for LED support on MT6323 PMIC
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  .../devicetree/bindings/leds/leds-mt6323.txt       | 64 ++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-mt6323.txt b/Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> new file mode 100644
+> index 0000000..950b8c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> @@ -0,0 +1,64 @@
+> +Device Tree Bindings for LED support on MT6323 PMIC
+> +
+> +MT6323 LED controller is subfunction provided by
+> +MT6323 PMIC, so the LED controllers are defined as
+> +the subnode of the function node provided by MT6323
+> +PMIC controller that is being defined as one kind of
+> +Muti-Function Device (MFD) using shared bus called
+> +PMIC wrapper for each subfunction to access remote
+> +MT6323 PMIC hardware.
+> +
+> +For MT6323 MFD bindings see:
+> +Documentation/devicetree/bindings/mfd/mt6397.txt
+> +For MediaTek PMIC wrapper bindings see:
+> +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +
+> +There's sub-node for the LED controller that describes
+> +the initial behavior for each LED physically and currently
+> +only four LED sub-nodes can be supported.
+> +
+> +Required properties:
+> +- compatible : Must be "mediatek,mt6323-led"
+> +- reg : LED channel number (0..3)
+> +
+> +Optional properties:
+> +- label : (optional)
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger : (optional)
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +- default-state: (optional) The initial state of the LED
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +&pwrap {
+> +	pmic: mt6323 {
+> +		compatible = "mediatek,mt6323";
+> +		interrupt-parent = <&pio>;
+> +		interrupts = <150 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +
+> +		mt6323led: mt6323led{
+> +			compatible = "mediatek,mt6323-led";
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index ce861a2..a46c173 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -63,6 +63,11 @@ config ALTERA_FREEZE_BRIDGE
- 	  isolate one region of the FPGA from the busses while that
- 	  region is being reprogrammed.
- 
-+config ALTERA_PR_IP_CORE
-+        tristate "Altera Partial Reconfiguration IP Core"
-+        help
-+          Core driver support for Altera Partial Reconfiguration IP component
-+
- endif # FPGA
- 
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 8df07bc..82693d2 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_FPGA)			+= fpga-mgr.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
- obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
-+obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
- 
- # FPGA Bridge Drivers
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
-diff --git a/drivers/fpga/altera-pr-ip-core.c b/drivers/fpga/altera-pr-ip-core.c
-new file mode 100644
-index 0000000..6ef60f3
---- /dev/null
-+++ b/drivers/fpga/altera-pr-ip-core.c
-@@ -0,0 +1,217 @@
-+/*
-+ * Driver for Altera Partial Reconfiguration IP Core
-+ *
-+ * Copyright (C) 2016-2017 Intel Corporation
-+ *
-+ * Based on socfpga-a10.c Copyright (C) 2015-2016 Altera Corporation
-+ *  by Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include "altera-pr-ip-core.h"
-+#include <linux/delay.h>
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/module.h>
-+
-+#define ALT_PR_DATA_OFST		0x00
-+#define ALT_PR_CSR_OFST			0x04
-+
-+#define ALT_PR_CSR_PR_START		BIT(0)
-+#define ALT_PR_CSR_STATUS_SFT		2
-+#define ALT_PR_CSR_STATUS_MSK		(7 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_NRESET	(0 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_PR_ERR	(1 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_CRC_ERR	(2 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_BAD_BITS	(3 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_PR_IN_PROG	(4 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_PR_SUCCESS	(5 << ALT_PR_CSR_STATUS_SFT)
-+
-+struct alt_pr_priv {
-+	void __iomem *reg_base;
-+};
-+
-+static enum fpga_mgr_states alt_pr_fpga_state(struct fpga_manager *mgr)
-+{
-+	struct alt_pr_priv *priv = mgr->priv;
-+	const char *err = "unknown";
-+	enum fpga_mgr_states ret = FPGA_MGR_STATE_UNKNOWN;
-+	u32 val;
-+
-+	val = readl(priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	val &= ALT_PR_CSR_STATUS_MSK;
-+
-+	switch (val) {
-+	case ALT_PR_CSR_STATUS_NRESET:
-+		return FPGA_MGR_STATE_RESET;
-+
-+	case ALT_PR_CSR_STATUS_PR_ERR:
-+		err = "pr error";
-+		ret = FPGA_MGR_STATE_WRITE_ERR;
-+		break;
-+
-+	case ALT_PR_CSR_STATUS_CRC_ERR:
-+		err = "crc error";
-+		ret = FPGA_MGR_STATE_WRITE_ERR;
-+		break;
-+
-+	case ALT_PR_CSR_STATUS_BAD_BITS:
-+		err = "bad bits";
-+		ret = FPGA_MGR_STATE_WRITE_ERR;
-+		break;
-+
-+	case ALT_PR_CSR_STATUS_PR_IN_PROG:
-+		return FPGA_MGR_STATE_WRITE;
-+
-+	case ALT_PR_CSR_STATUS_PR_SUCCESS:
-+		return FPGA_MGR_STATE_OPERATING;
-+
-+	default:
-+		break;
-+	}
-+
-+	dev_err(&mgr->dev, "encountered error code %d (%s) in %s()\n",
-+		val, err, __func__);
-+	return ret;
-+}
-+
-+static int alt_pr_fpga_write_init(struct fpga_manager *mgr,
-+				  struct fpga_image_info *info,
-+				  const char *buf, size_t count)
-+{
-+	struct alt_pr_priv *priv = mgr->priv;
-+	u32 val;
-+
-+	if (!(info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
-+		pr_err("%s Partial Reconfiguration flag not set\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	val = readl(priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	if (val & ALT_PR_CSR_PR_START) {
-+		pr_err("%s Partial Reconfiguration already started\n",
-+		       __func__);
-+		return -EINVAL;
-+	}
-+
-+	writel(val | ALT_PR_CSR_PR_START, priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	return 0;
-+}
-+
-+static int alt_pr_fpga_write(struct fpga_manager *mgr, const char *buf,
-+			     size_t count)
-+{
-+	struct alt_pr_priv *priv = mgr->priv;
-+	u32 *buffer_32 = (u32 *)buf;
-+	size_t i = 0;
-+
-+	if (count <= 0)
-+		return -EINVAL;
-+
-+	/* Write out the complete 32-bit chunks */
-+	while (count >= sizeof(u32)) {
-+		writel(buffer_32[i++], priv->reg_base);
-+		count -= sizeof(u32);
-+	}
-+
-+	/* Write out remaining non 32-bit chunks */
-+	switch (count) {
-+	case 3:
-+		writel(buffer_32[i++] & 0x00ffffff, priv->reg_base);
-+		break;
-+	case 2:
-+		writel(buffer_32[i++] & 0x0000ffff, priv->reg_base);
-+		break;
-+	case 1:
-+		writel(buffer_32[i++] & 0x000000ff, priv->reg_base);
-+		break;
-+	case 0:
-+		break;
-+	default:
-+		/* This will never happen */
-+		return -EFAULT;
-+	}
-+
-+	if (alt_pr_fpga_state(mgr) == FPGA_MGR_STATE_WRITE_ERR)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int alt_pr_fpga_write_complete(struct fpga_manager *mgr,
-+				      struct fpga_image_info *info)
-+{
-+	u32 i;
-+
-+	for (i = 0; i < info->config_complete_timeout_us; i++) {
-+		switch (alt_pr_fpga_state(mgr)) {
-+		case FPGA_MGR_STATE_WRITE_ERR:
-+			return -EIO;
-+
-+		case FPGA_MGR_STATE_OPERATING:
-+			dev_info(&mgr->dev,
-+				 "successful partial reconfiguration\n");
-+			return 0;
-+
-+		default:
-+			break;
-+		}
-+		udelay(1);
-+	}
-+	dev_err(&mgr->dev, "timed out waiting for write to complete\n");
-+	return -ETIMEDOUT;
-+}
-+
-+static const struct fpga_manager_ops alt_pr_ops = {
-+	.state = alt_pr_fpga_state,
-+	.write_init = alt_pr_fpga_write_init,
-+	.write = alt_pr_fpga_write,
-+	.write_complete = alt_pr_fpga_write_complete,
-+};
-+
-+int alt_pr_probe(struct device *dev, void __iomem *reg_base)
-+{
-+	struct alt_pr_priv *priv;
-+	u32 val;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->reg_base = reg_base;
-+
-+	val = readl(priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	dev_dbg(dev, "%s status=%d start=%d\n", __func__,
-+		(val & ALT_PR_CSR_STATUS_MSK) >> ALT_PR_CSR_STATUS_SFT,
-+		(int)(val & ALT_PR_CSR_PR_START));
-+
-+	return fpga_mgr_register(dev, dev_name(dev), &alt_pr_ops, priv);
-+}
-+EXPORT_SYMBOL_GPL(alt_pr_probe);
-+
-+int alt_pr_remove(struct device *dev)
-+{
-+	dev_dbg(dev, "%s\n", __func__);
-+
-+	fpga_mgr_unregister(dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(alt_pr_remove);
-+
-+MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
-+MODULE_DESCRIPTION("Altera Partial Reconfiguration IP Core");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/fpga/altera-pr-ip-core.h b/drivers/fpga/altera-pr-ip-core.h
-new file mode 100644
-index 0000000..cb73929
---- /dev/null
-+++ b/drivers/fpga/altera-pr-ip-core.h
-@@ -0,0 +1,29 @@
-+/*
-+ * Driver for Altera Partial Reconfiguration IP Core
-+ *
-+ * Copyright (C) 2016 Intel Corporation
-+ *
-+ * Based on socfpga-a10.c Copyright (C) 2015-2016 Altera Corporation
-+ *  by Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef _ALT_PR_IP_CORE_H
-+#define _ALT_PR_IP_CORE_H
-+#include <linux/io.h>
-+
-+int alt_pr_probe(struct device *dev, void __iomem *reg_base);
-+int alt_pr_remove(struct device *dev);
-+
-+#endif /* _ALT_PR_IP_CORE_H */
+You require here also:
+
+#address-cells = <1>;
+#size-cells = <0>;
+
+Without these entries you should notice a warning from dtc compiler.
+
+
+> +
+> +			led0: isink0 {
+> +				reg = <0>;
+> +				label = "LED0"
+> +				linux,default-trigger = "timer";
+> +				default-state = "on";
+> +			};
+> +			led1: isink1 {
+> +				reg = <1>;
+> +				label = "LED1";
+> +				default-state = "on";
+> +			};
+> +			led2: isink2 {
+> +				reg = <2>;
+> +				label = "LED2";
+> +				linux,default-trigger = "timer";
+> +				default-state = "off";
+> +			};
+> +		};
+> +	};
+> +};
+> 
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jacek Anaszewski
