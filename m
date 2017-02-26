@@ -1,82 +1,62 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9500
-Date: Sun, 26 Feb 2017 00:06:08 +0100
-Message-ID: <CACna6rwdC+6DrKK4Zpp7t+W9w1H-Rzj+N3ANaZRAL_GP6JFO2Q@mail.gmail.com>
-References: <20170223104025.5755-1-zajec5@gmail.com> <bd36df47-cefe-5736-e02c-621a21ae1b7a@openwrt.org>
- <CACna6rzN-OQv4UJoRso_Kyf1rCEtuU5Lu9LDjvTTt011UgrA=Q@mail.gmail.com>
- <5c57772b-71fd-d9e2-efe6-1175cf048e0b@openwrt.org> <CACna6ryFQHGN6xYiLcp9-v7f+55-4hoq+6kXCjiT6LJOS70sQQ@mail.gmail.com>
- <CACna6rzn3YDBqwReEikqjfhpMk-uQj0cuNaay2HyK0kLc_xuJg@mail.gmail.com> <9a2d6751-d7c3-458f-d717-2abe492e226d@openwrt.org>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v5 0/7] Allwinner H5 and Orange Pi PC2 support
+Date: Sun, 26 Feb 2017 09:19:49 +0800
+Message-ID: <20170226011956.53581-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9a2d6751-d7c3-458f-d717-2abe492e226d-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBXO2ZDCQKGQEJORXO5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 25 February 2017 at 23:43, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> wrote:
-> On 2017-02-24 07:10, Rafa=C5=82 Mi=C5=82ecki wrote:
->>>>
->>>> Your manners shine on these dark days of winter. For about a decade no=
-w,
->>>> http://192.168.1.1/sysinfo.cgi will show you quite a bit of informatio=
-n
->>>> if
->>>> you are too lazy to look into the GPL tarball or at the original
->>>> bootlogs.
->>>
->>> Today I decided to do my homework & check GPL sources of EA9500 fw.
->>>
->>> (...)
->>>
->>> Will you be so generous to tell us how did you get EA9500 board name
->>> by just looking at GPL sources?
->>
->> I also tried find with -name "*panamera*". One way of guessing board
->> name seems to be checking names of patches in ./src/linux/patches/.
->> Any other, more reliable method?
->>
->
-> First of all, it's really weird you never ever looked at the factory
-> bootlogs, but let me help in hope to enhance your communication style:
->
-> filenames:
->
-> src/linux/patches/linux-2.6.36.4-panamera_000_BSP.patch
-> src/linux/patches/linux-2.6.36.4-panamera_001_brcm_build.patch
-> src/linux/patches/linux-2.6.36.4-panamera_002_brcm_build_flags_temp_fix.p=
-atch
-> src/linux/patches/linux-2.6.36.4-panamera_003_ctf_bypass.patch
-> src/linux/patches/linux-2.6.36.4-panamera_006_cisco_comment.patch
-> src/linux/patches/linux-2.6.36.4-panamera_007_usb_remove_oops.patch
-> src/linux/patches/linux-2.6.36.4-panamera_008_6rd_sit_fragment.patch
-> src/linux/patches/linux-2.6.36.4-panamera_009_cisco_rtsp_conntrack.patch
-> src/linux/patches/linux-2.6.36.4-panamera_010_cisco_rtsp_conntrack2.patch
-> src/linux/patches/linux-2.6.36.4-panamera_014_ftp_pasv_command.patch
-> src/linux/patches/linux-2.6.36.4-panamera_046_sip_alg.patch
-> src/linux/patches/linux-2.6.36.4-panamera_047_add_usb_led.patch
-> src/linux/patches/linux-2.6.36.4-panamera_050_PPTP_L2TP_ctf.patch
-> src/linux/patches/linux-2.6.36.4-panamera_052_cfe_pass_led_to_blink.patch
-> src/linux/patches/linux-2.6.36.4-panamera_201_brcm_patch_20160226.patch
->
-> file contents:
->
-> src/mod_bdutil/platform/brcm/.board_id.o.cmd
-> src/mod_bdutil/platform/brcm/.buttons.o.cmd
-> src/mod_bdutil/platform/brcm/.leds_panamera.o.cmd
-> src/mod_bdutil/platform/brcm/.usbhub.o.cmd
->
->
-> If you have further questions, feel free to mail me directly and keep
-> off-topic discussion away from the lists.
+Allwinner H5 is a 64-bit SoC with a design like the 32-bit
+H3.
 
-Thanks
+This patchset adds support for it, along with the first available
+board -- Orange Pi PC2.
 
---=20
-Rafa=C5=82
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andre Przywara (3):
+  arm: dts: sun8i: split Allwinner H3 .dtsi
+  arm64: dts: allwinner: add Allwinner H5 .dtsi
+  arm64: dts: sunxi: add support for the Orange Pi PC 2 board
+
+Icenowy Zheng (4):
+  arm64: allwinner: Kconfig: add essential pinctrl driver for H5
+  clk: sunxi-ng: rename sun8i-h3 driver to sunxi-h3-h5
+  clk: sunxi-ng: add support for Allwinner H5 SoC
+  ARM: dts: sun8i: convert H3 dtsi to use new sunxi-h3-h5 binding header
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |   1 +
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 589 ++-------------------
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 575 ++++++++++++++++++++
+ arch/arm64/Kconfig.platforms                       |   5 +-
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 164 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       | 139 +++++
+ arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi     |   1 +
+ drivers/clk/sunxi-ng/Kconfig                       |   6 +-
+ drivers/clk/sunxi-ng/Makefile                      |   2 +-
+ .../sunxi-ng/{ccu-sun8i-h3.c => ccu-sunxi-h3-h5.c} | 339 +++++++++++-
+ .../sunxi-ng/{ccu-sun8i-h3.h => ccu-sunxi-h3-h5.h} |  13 +-
+ .../clock/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h}    |  11 +-
+ .../reset/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h}    |  11 +-
+ 14 files changed, 1277 insertions(+), 580 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sunxi-h3-h5.dtsi
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+ create mode 120000 arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi
+ rename drivers/clk/sunxi-ng/{ccu-sun8i-h3.c => ccu-sunxi-h3-h5.c} (71%)
+ rename drivers/clk/sunxi-ng/{ccu-sun8i-h3.h => ccu-sunxi-h3-h5.h} (83%)
+ rename include/dt-bindings/clock/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h} (95%)
+ rename include/dt-bindings/reset/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h} (94%)
+
+-- 
+2.11.1
