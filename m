@@ -1,48 +1,51 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] of: add devm_ functions for populate and depopulate
-Date: Mon, 27 Feb 2017 07:30:24 -0600
-Message-ID: <CAL_JsqJQcFO_=D=g1KrfSTQdVCXUfE0k25+PQnSxvLZ1pHU=3g@mail.gmail.com>
-References: <1487952874-23635-1-git-send-email-benjamin.gaignard@linaro.org>
- <1487952874-23635-2-git-send-email-benjamin.gaignard@linaro.org>
- <CAL_Jsq+z9FcPowoMYXQ4aPfSYfL3D4ENoZxiTTO2pKJjnsRXOw@mail.gmail.com>
- <20170226201157.xzg5b5tyrdlxkeyd@phenom.ffwll.local>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 1/3] clk: meson-gxbb: expose clock CLKID_RNG0
+Date: Mon, 27 Feb 2017 05:28:49 -0800
+Message-ID: <80bc00c9-dc3b-5aeb-89a0-8b427dca9b34@baylibre.com>
+References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170226201157.xzg5b5tyrdlxkeyd@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Vincent Abriou <vincent.abriou@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Herbert Xu <herbert@gondor.apana.org.au>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBGZWIgMjYsIDIwMTcgYXQgMjoxMSBQTSwgRGFuaWVsIFZldHRlciA8ZGFuaWVsQGZm
-d2xsLmNoPiB3cm90ZToKPiBPbiBGcmksIEZlYiAyNCwgMjAxNyBhdCAxMDozMToyNUFNIC0wNjAw
-LCBSb2IgSGVycmluZyB3cm90ZToKPj4gT24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgMTA6MTQgQU0s
-IEJlbmphbWluIEdhaWduYXJkCj4+IDxiZW5qYW1pbi5nYWlnbmFyZEBsaW5hcm8ub3JnPiB3cm90
-ZToKPj4gPiBMb3RzIG9mIGNhbGxzIHRvIG9mX3BsYXRmb3JtX3BvcHVsYXRlKCkgYXJlIG5vdCB1
-bmJhbGFuY2VkIGJ5IGEgY2FsbAo+PiA+IHRvIG9mX3BsYXRmb3JtX2RlcG9wdWxhdGUoKS4gVGhp
-cyBjcmVhdGUgaXNzdWVzIHdoaWxlIGRyaXZlcnMgYXJlCj4+ID4gYmluZC91bmJpbmQuCj4+ID4K
-Pj4gPiBJbiB3YXkgdG8gc29sdmUgdGhvc2UgaXNzdWVzIGlzIHRvIGFkZCBkZXZtX29mX3BsYXRm
-b3JtX3BvcHVsYXRlKCkKPj4gPiB3aGljaCB3aWxsIGNhbGwgb2ZfcGxhdGZvcm1fZGVwb3B1bGF0
-ZSgpIHdoZW4gdGhlIGRldmljZSBpcyB1bmJvdW5kCj4+ID4gZnJvbSB0aGUgYnVzLgo+PiA+Cj4+
-ID4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQGxp
-bmFyby5vcmc+Cj4+ID4gLS0tCj4+ID4gdmVyc2lvbiAyOgo+PiA+IC0gc2ltcGxpZnkgZnVuY3Rp
-b24gcHJvdG90eXBlIHRvIG9ubHkga2VlcCBkZXZpY2UgYXMgcGFyYW1ldGVyCj4+ID4KPj4gPiAg
-ZHJpdmVycy9vZi9wbGF0Zm9ybS5jICAgICAgIHwgNzEgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrCj4+ID4gIGluY2x1ZGUvbGludXgvb2ZfcGxhdGZvcm0uaCB8
-IDExICsrKysrKysKPj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA4MiBpbnNlcnRpb25zKCspCj4+Cj4+
-IEZvciB0aGlzIGFuZCBwYXRjaCAyOgo+Pgo+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4KPgo+IElzIHRoaXMgYW4gYWNrIGZvciBtZXJnaW5nIGJvdGggdGhyb3VnaCBk
-cm0tbWlzYywgb3Igc2hvdWxkIHdlIGRvIGEKPiB0b3BpYy1icmFuY2ggZGFuY2UgaGVyZT8KCllv
-dSBjYW4gYXBwbHkgaXQgZGlyZWN0bHkuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+On 02/21/2017 10:55 PM, Heiner Kallweit wrote:
+> Expose clock CLKID_RNG0 which is needed for the HW random number generator.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+> v2:
+> - added clk and DT maintainers
+> - split exposing the clock and using it in DT into two patches
+> - comment out clock definition in drivers/clk/meson/gxbb.h
+> - silently move CLKID_SPI to the right place
+> v3:
+> - no changes
+> ---
+>  drivers/clk/meson/gxbb.h              | 2 +-
+>  include/dt-bindings/clock/gxbb-clkc.h | 3 ++-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+
+
+Hi Heiner,
+
+This looks all good to me, but you should always send a cover letter for each revisions
+of the patchset.
+
+Using "git send-email" along the "--cover-letter" of "get format-patch" feature would
+also help send them in a row with a up-to-date cover letter.
+
+For the third patch, it may be good to also add the same to the GXL dtsi, no ?
+
+Anyway :
+
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
+Thanks,
+Neil
+
