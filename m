@@ -1,36 +1,60 @@
-From: Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH 2/2] dt-bindings: display: imx: entry for LAUSCR
-Date: Mon, 27 Feb 2017 11:56:42 +0100
-Message-ID: <1488193030-13064-2-git-send-email-martin@kaiser.cx>
-References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: Recommended notation for OPP to avoid DTC warnings
+Date: Mon, 27 Feb 2017 19:58:28 +0900
+Message-ID: <CAK7LNARnxdi4B2G2FnvfQNM8iVK+rsdH7N7Uwd+Qc2d9hSsuUA@mail.gmail.com>
+References: <CAK7LNAQyc9=3d07-1upywYDk-AaRUGK4mJwAVduCuEJgnY1uFA@mail.gmail.com>
+ <20170227104445.GE6795@leverpostej> <20170227105533.GA19417@vireshk-i7>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
+In-Reply-To: <20170227105533.GA19417@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org
-Cc: Martin Kaiser <martin@kaiser.cx>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow setting the LCDC AUS Mode Control Register from the device tree.
-This setting is optional, the register is available only on imx21 and
-compatible chipsets.
+2017-02-27 19:55 GMT+09:00 Viresh Kumar <viresh.kumar@linaro.org>:
+> On 27-02-17, 10:44, Mark Rutland wrote:
+>> On Sun, Feb 26, 2017 at 02:18:03PM +0900, Masahiro Yamada wrote:
+>> > Hi.
+>> >
+>> >
+>> > Decumentation/devicetree/bindings/opp/opp.txt
+>> > takes examples like this:
+>> >
+>> >         opp@1000000000 {
+>> >                 opp-hz = /bits/ 64 <1000000000>;
+>> >                 opp-microvolt = <970000 975000 985000>;
+>> >                 opp-microamp = <70000>;
+>> >                 clock-latency-ns = <300000>;
+>> >                 opp-suspend;
+>> >         };
+>>
+>> > If we follow this notation and the device-tree is built with W=1,
+>> > DTC warns like follows:
+>> >
+>> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+>> > unit name, but no reg property
+>> >
+>> > Is there a recommended notation to avoid it?
+>> >
+>> > Maybe, simply omit the "@" ?
+>>
+>> I think just s/@/-/ should be fine, e.g. call the above opp-1000000000.
+>
+> That's fine with me. I can send a patch to fix all existing users if we all
+> agree for it.
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
- Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-index 7a5c0e2..bd5077f 100644
---- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-@@ -13,6 +13,8 @@ Required nodes:
- 	Additional, the display node has to define properties:
- 	- bits-per-pixel: Bits per pixel
- 	- fsl,pcr: LCDC PCR value
-+	A display node may optionally define
-+	- fsl,lauscr: LCDC AUS Mode Control Register value (only for imx21)
- 
- Optional properties:
- - lcd-supply: Regulator for LCD supply voltage.
+OK with me.
+
+Also, please remember to update the examples
+in Documentation/devicetree/bindings/opp/opp.txt
+
+
+
+
+
 -- 
-2.1.4
+Best Regards
+Masahiro Yamada
