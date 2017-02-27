@@ -1,110 +1,121 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] staging: fsl-mc: fix warning in DT ranges parser
-Date: Mon, 27 Feb 2017 21:42:16 +0100
-Message-ID: <20170227204235.3547639-1-arnd@arndb.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v1.2] dt: emac: document device-tree based phy discovery
+ and setup
+Date: Mon, 27 Feb 2017 12:44:09 -0800
+Message-ID: <cecba35f-0a94-67e8-543a-a1d340d62947@gmail.com>
+References: <eaf5b812-deae-c5f7-3930-dadf0b0132bf@gmail.com>
+ <0f6d91964359390ea08ff9d29f7d7c5ad49961c3.1488227767.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stuart Yoder <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, German Rivera <german.rivera@nxp.com>, Frank Rowand <frowand.list@gmail.com>, Itai Katz <itai.katz@nxp.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <0f6d91964359390ea08ff9d29f7d7c5ad49961c3.1488227767.git.chunkeey@googlemail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>, Ivan Mikhaylov <ivan@de.ibm.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The fsl-mc-bus driver in staging contains a copy of the standard
-'ranges' property parsing algorithm with a hack to treat a missing
-property the same way as an empty one. This code produces false-positive
-warnings for me in an allmodconfig build:
+On 02/27/2017 12:41 PM, Christian Lamparter wrote:
+> This patch adds documentation for a new "phy-handle" property,
+> "fixed-link" and "mdio" sub-node. These allows the enumeration
+> of PHYs which are supported by the phy library under drivers/net/phy.
+> 
+> The EMAC ethernet controller in IBM and AMCC 4xx chips is
+> currently stuck with a few privately defined phy
+> implementations. It has no support for PHYs which
+> are supported by the generic phylib.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> ---
+> Fixed: phy node - so it conforms to phy.txt.
+> ---
+> ---
+>  .../devicetree/bindings/powerpc/4xx/emac.txt       | 61 +++++++++++++++++++++-
+>  1 file changed, 59 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
+> index 712baf6c3e24..2fa861378294 100644
+> --- a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
+> @@ -71,6 +71,9 @@
+>  			  For Axon it can be absent, though my current driver
+>  			  doesn't handle phy-address yet so for now, keep
+>  			  0x00ffffff in it.
+> +    - phy-handle	: Used to describe configurations where a external PHY
+> +			  is used. Please refer to:
+> +			  Documentation/devicetree/bindings/net/ethernet.txt
+>      - rx-fifo-size-gige : 1 cell, Rx fifo size in bytes for 1000 Mb/sec
+>  			  operations (if absent the value is the same as
+>  			  rx-fifo-size).  For Axon, either absent or 2048.
+> @@ -81,8 +84,22 @@
+>  			  offload, phandle of the TAH device node.
+>      - tah-channel       : 1 cell, optional. If appropriate, channel used on the
+>  			  TAH engine.
+> +    - fixed-link	: Fixed-link subnode describing a link to a non-MDIO
+> +			  managed entity. See
+> +			  Documentation/devicetree/bindings/net/fixed-link.txt
+> +			  for details.
+> +    - mdio subnode	: When the EMAC has a phy connected to its local
+> +			  mdio, which us supported by the kernel's network
+> +			  PHY library in drivers/net/phy, there must be device
+> +			  tree subnode with the following required properties:
+> +				- #address-cells: Must be <1>.
+> +				- #size-cells: Must be <0>.
+>  
+> -    Example:
+> +			  For PHY definitions: Please refer to
+> +			  Documentation/devicetree/bindings/net/phy.txt and
+> +			  Documentation/devicetree/bindings/net/ethernet.txt
+> +
+> +    Examples:
+>  
+>  	EMAC0: ethernet@40000800 {
+>  		device_type = "network";
+> @@ -104,6 +121,47 @@
+>  		zmii-channel = <0>;
+>  	};
+>  
+> +	EMAC1: ethernet@ef600c00 {
+> +		device_type = "network";
+> +		compatible = "ibm,emac-apm821xx", "ibm,emac4sync";
+> +		interrupt-parent = <&EMAC1>;
+> +		interrupts = <0 1>;
+> +		#interrupt-cells = <1>;
+> +		#address-cells = <0>;
+> +		#size-cells = <0>;
+> +		interrupt-map = <0 &UIC2 0x10 IRQ_TYPE_LEVEL_HIGH /* Status */
+> +				 1 &UIC2 0x14 IRQ_TYPE_LEVEL_HIGH /* Wake */>;
+> +		reg = <0xef600c00 0x000000c4>;
+> +		local-mac-address = [000000000000]; /* Filled in by U-Boot */
+> +		mal-device = <&MAL0>;
+> +		mal-tx-channel = <0>;
+> +		mal-rx-channel = <0>;
+> +		cell-index = <0>;
+> +		max-frame-size = <9000>;
+> +		rx-fifo-size = <16384>;
+> +		tx-fifo-size = <2048>;
+> +		fifo-entry-size = <10>;
+> +		phy-mode = "rgmii";
+> +		phy-handle = <&phy0>;
+> +		phy-map = <0x00000000>;
+> +		rgmii-device = <&RGMII0>;
+> +		rgmii-channel = <0>;
+> +		tah-device = <&TAH0>;
+> +		tah-channel = <0>;
+> +		has-inverted-stacr-oc;
+> +		has-new-stacr-staopc;
+> +
+> +	        mdio {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			phy0: ethernet-phy@0 {
+> +				compatible = "ethernet-phy-ieee802.3-c22";
+> +				reg = <0>;
 
-drivers/staging/fsl-mc/bus/fsl-mc-bus.c: In function 'fsl_mc_bus_probe':
-drivers/staging/fsl-mc/bus/fsl-mc-bus.c:645:6: error: 'mc_size_cells' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-drivers/staging/fsl-mc/bus/fsl-mc-bus.c:682:8: error: 'mc_addr_cells' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-drivers/staging/fsl-mc/bus/fsl-mc-bus.c:644:6: note: 'mc_addr_cells' was declared here
-drivers/staging/fsl-mc/bus/fsl-mc-bus.c:684:8: error: 'paddr_cells' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-drivers/staging/fsl-mc/bus/fsl-mc-bus.c:643:6: note: 'paddr_cells' was declared here
+Missing closing curly brace here :) with that fixed:
 
-To avoid the warnings, I'm simplifying the argument handling to pass
-the number of valid ranges in the property as the function return code
-rather than passing it by reference. With this change, gcc can see that
-we don't evaluate the cell numbers for an missing ranges property.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/staging/fsl-mc/bus/fsl-mc-bus.c | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/staging/fsl-mc/bus/fsl-mc-bus.c b/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
-index 47acb0a29842..3be5f25ff113 100644
---- a/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
-+++ b/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
-@@ -588,8 +588,7 @@ static int parse_mc_ranges(struct device *dev,
- 			   int *paddr_cells,
- 			   int *mc_addr_cells,
- 			   int *mc_size_cells,
--			   const __be32 **ranges_start,
--			   u8 *num_ranges)
-+			   const __be32 **ranges_start)
- {
- 	const __be32 *prop;
- 	int range_tuple_cell_count;
-@@ -602,8 +601,6 @@ static int parse_mc_ranges(struct device *dev,
- 		dev_warn(dev,
- 			 "missing or empty ranges property for device tree node '%s'\n",
- 			 mc_node->name);
--
--		*num_ranges = 0;
- 		return 0;
- 	}
- 
-@@ -630,8 +627,7 @@ static int parse_mc_ranges(struct device *dev,
- 		return -EINVAL;
- 	}
- 
--	*num_ranges = ranges_len / tuple_len;
--	return 0;
-+	return ranges_len / tuple_len;
- }
- 
- static int get_mc_addr_translation_ranges(struct device *dev,
-@@ -639,7 +635,7 @@ static int get_mc_addr_translation_ranges(struct device *dev,
- 						**ranges,
- 					  u8 *num_ranges)
- {
--	int error;
-+	int ret;
- 	int paddr_cells;
- 	int mc_addr_cells;
- 	int mc_size_cells;
-@@ -647,16 +643,16 @@ static int get_mc_addr_translation_ranges(struct device *dev,
- 	const __be32 *ranges_start;
- 	const __be32 *cell;
- 
--	error = parse_mc_ranges(dev,
-+	ret = parse_mc_ranges(dev,
- 				&paddr_cells,
- 				&mc_addr_cells,
- 				&mc_size_cells,
--				&ranges_start,
--				num_ranges);
--	if (error < 0)
--		return error;
-+				&ranges_start);
-+	if (ret < 0)
-+		return ret;
- 
--	if (!(*num_ranges)) {
-+	*num_ranges = ret;
-+	if (!ret) {
- 		/*
- 		 * Missing or empty ranges property ("ranges;") for the
- 		 * 'fsl,qoriq-mc' node. In this case, identity mapping
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.9.0
+Florian
