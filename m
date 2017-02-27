@@ -1,81 +1,55 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] pwm: sunxi: Add A64 support
-Date: Mon, 27 Feb 2017 08:44:58 +0100
-Message-ID: <20170227074458.ivj5el2u4glhyrpw@lukather>
-References: <20170225074216.64868-1-icenowy@aosc.xyz>
- <20170225074216.64868-2-icenowy@aosc.xyz>
- <CAGb2v67OaUps1yffyZ8pBvMwbAU+6WC2pPkt25e5i+SYU1nrDw@mail.gmail.com>
- <870861488014589@web9m.yandex.ru>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/9] ARM: dts: sun8i: add device tree for
+ Lichee Pi Zero with Dock
+Date: Mon, 27 Feb 2017 08:49:11 +0100
+Message-ID: <20170227074910.hdsge4qhbqqufe36@lukather>
+References: <20170225123029.55939-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jlehaupqitc2vs5u"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB65RZ7CQKGQEI4PV65Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <870861488014589-IyhJ2jtAr7tuio3avFS2gg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0020968750742451794=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170225123029.55939-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---jlehaupqitc2vs5u
-Content-Type: text/plain; charset=UTF-8
+--===============0020968750742451794==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="o7rhhkyaybixokpx"
+Content-Disposition: inline
+
+
+--o7rhhkyaybixokpx
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 25, 2017 at 05:23:09PM +0800, Icenowy Zheng wrote:
+On Sat, Feb 25, 2017 at 08:30:21PM +0800, Icenowy Zheng wrote:
+> Lichee Pi Zero features a dock, which adds some functions, and should be
+> soldered with the core board of Lichee Pi Zero.
 >=20
+> Add support for the dock as a new dts, as soldering is needed to make
+> the dock usable and there's functions enabled on the dock that is
+> unavailable at the 2.54mm pins of the core board.
 >=20
-> 25.02.2017, 16:53, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
-> > On Sat, Feb 25, 2017 at 3:42 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote=
-:
-> >> =C2=A0A64 PWM controller has same register layout as sun4i driver, so =
-it works
-> >> =C2=A0by adding A64 specific data.
-> >>
-> >> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> =C2=A0---
-> >> =C2=A0=C2=A0drivers/pwm/pwm-sun4i.c | 9 +++++++++
-> >> =C2=A0=C2=A01 file changed, 9 insertions(+)
-> >>
-> >> =C2=A0diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> >> =C2=A0index 1284ffa05921..ca3431e03fb8 100644
-> >> =C2=A0--- a/drivers/pwm/pwm-sun4i.c
-> >> =C2=A0+++ b/drivers/pwm/pwm-sun4i.c
-> >> =C2=A0@@ -290,6 +290,12 @@ static const struct sun4i_pwm_data sun4i_pw=
-m_data_h3 =3D {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.npwm =3D 1,
-> >> =C2=A0=C2=A0};
-> >>
-> >> =C2=A0+static const struct sun4i_pwm_data sun4i_pwm_data_a64 =3D {
-> >> =C2=A0+ .has_prescaler_bypass =3D true,
-> >> =C2=A0+ .has_rdy =3D true,
-> >> =C2=A0+ .npwm =3D 1,
-> >> =C2=A0+};
-> >> =C2=A0+
-> >
-> > This seems to be tha same as the H3. Any differences between the
-> > H3 and A64? Otherwise please just use that compatible.
->=20
-> H3 is also same as A13...
->=20
-> See http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/4=
-86595.html
+> Currently no new feature on core board is available in the mainline
+> kernel, so the dock dt file only includes the core board device tree.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 
-What I meant was that you should have a compatible in your DT like this:
+How does that relate to the rest of the serie, which seems to be about
+the audio on V3s?
 
-compatible =3D "allwinner,sun50i-a64-pwm", "allwinner,sun5i-a13-pwm".
-
-There's no need to add a new one in the driver (for now).
-
-And you still haven't fixed the size.
+This should be clarified in a cover letter, but you know that already.
 
 Maxime
 
@@ -84,31 +58,33 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---jlehaupqitc2vs5u
+--o7rhhkyaybixokpx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYs9j2AAoJEBx+YmzsjxAg/68P/jjnRUtaJyV2ytm1YLt2G+M/
-HCpm8RT5fagzG5i5FraHNh94MghSS+uR4V8oTYgU0t5mej6hFC948IGvZcrjpNTR
-iKFw2wHA4M+plsT7vWO8kTU25H5iXOJTcE/bjhWK/1UGYEJU/meMdghT4lQkBkdh
-KxuRF7IqG9Oloh1ZO61TUqqfuA0t5WRmxpWckQVf1+sMAw4Eygh9vsFzb6JK+2ie
-kOp6x7hv3w9C6umQI1xtD2v1hYtQ8EwTvTvQniNWcpPq8+rNTMG3HCY9j+QUtWJZ
-7s9VQg4ZtlfHrtokeLwaC6iPzVmQYsZr5fXXdVfQ8RTWpb0peY+bfqIrZxvjoAn0
-CsIcFoSZMkfiS1LFE79SEejNkfM63P3lZMZyz9yWlh0auyY95wCxjNSJn/ynztwG
-vi5TSbVhIdXhcFs3OXPx35iZS9k5G4rSU2xvrBn+V6sgArpMMg+s5dSRh55GuZhk
-RHdOwt4oqpzO+Y6OojTfQExEs1XacMhaLnsQHTnvEQfqnB9N2ub6gHchYYlcO5rv
-gf1TKMWa1UQ3Flgz1mKxs4klkw3MWxoIo65LLpUpfHOWWkET5wdBe4F1Uhe6T+tP
-izsGyq1w62J0iSkiMTEesjw9WuONAIOhnKeAFrVekPUWJ0Ed9yJ10TZ35rSD6G3k
-/M0xcjTPVuQC0pFKDm4/
-=Hc1t
+iQIcBAEBCAAGBQJYs9n2AAoJEBx+YmzsjxAgOF0QAIIfE4B+6EZWoFBkrCEvMJ6W
+JZX2eoH0K23ZB9XvvsgR4DeQ8fYPZV3Oj23AuUvOvz7jSNoQFDR57UY3A/YVRmDG
+bl9ddr9EvLrqFNFN8QuVeuYAhXJybAa+Z0dPHRyXN0Axz8tb78IfhKlNbw0ROVSc
+y3mcPlYv3ssw9EVCjVngX77R4GHI1NFtBiMsIsb+/F5QFjvSIIQ57zm7v2P6wdPf
+5NJqvXr5Vz5KiFOX2ixD9bpWI+w5twROEbIYDmRlQM71qKwCRly92GrMB34W525r
+mnA3m+Mmmr1L9WJEYh2LJj8Y7sPlhGi4WoKrSPbnP0Z1bvZ9x6qt29izfzeTXtq7
+1US8m8BFS5lwzIKjBR4Cececrc/0w7798NqELC/P6FRTwS0gV3qTaiEuXX7u0BUT
+tMg06OEjQ/oGXXg8x2nnfZJAB+EepqMUSEPzLHE8elfRBkBMN8UDmrzd43mWifo1
+YFtUpStzUmh0keIFLbGt2lZ81j2nIDD0ED5Vz2k5wq/FDaAGZEchzsbm2z/WLQAg
+qVW8Kh6N9ozpMbZkMx4b7Lc1jDBbNBC/B2Vw/asnJkfiLCgnh2hEWzgGXm0DIlkI
+4HCD05JnyiqAcCGbMW6oTEw30JOg7+nXkprIuVax+BhW4O4zzOhO9KPsAIW+4gLz
+XQnykiagMrNoJ0TRD64F
+=1z7j
 -----END PGP SIGNATURE-----
 
---jlehaupqitc2vs5u--
+--o7rhhkyaybixokpx--
+
+--===============0020968750742451794==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0020968750742451794==--
