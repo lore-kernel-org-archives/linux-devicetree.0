@@ -1,65 +1,84 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 5/6] DT bindings documentation for Broadcom IPROC USB
- Device controller.
-Date: Mon, 27 Feb 2017 14:52:41 -0600
-Message-ID: <20170227205241.xn7mtmyt645m7dht@rob-hp-laptop>
-References: <1487677384-6115-1-git-send-email-raviteja.garimella@broadcom.com>
- <1487677384-6115-6-git-send-email-raviteja.garimella@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] can: ti_hecc: Add TI HECC DT binding documentation
+Date: Mon, 27 Feb 2017 10:44:52 -0600
+Message-ID: <20170227164452.3y3ilfxcb2s5ltnt@rob-hp-laptop>
+References: <1487346753-19286-1-git-send-email-yegorslists@googlemail.com>
+ <1487346753-19286-3-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1487677384-6115-6-git-send-email-raviteja.garimella@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
+In-Reply-To: <1487346753-19286-3-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 05:13:03PM +0530, Raviteja Garimella wrote:
-> The device node is used for UDCs integrated into Broadcom's
-> iProc family of SoCs'. The UDC is based on Synopsys Designware
-> Cores AHB Subsystem USB Device Controller IP.
-
-For subject:
-dt-bindings: usb: Add Broadcom IPROC USB Device controller
-
+On Fri, Feb 17, 2017 at 04:52:32PM +0100, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
+> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > 
-> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
+> DT binding documentation for TI High End CAN Controller
+> 
+> Signed-off-by: Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/usb/iproc-udc.txt | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/iproc-udc.txt
+>  .../devicetree/bindings/net/can/ti_hecc.txt        | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/ti_hecc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/iproc-udc.txt b/Documentation/devicetree/bindings/usb/iproc-udc.txt
+> diff --git a/Documentation/devicetree/bindings/net/can/ti_hecc.txt b/Documentation/devicetree/bindings/net/can/ti_hecc.txt
 > new file mode 100644
-> index 0000000..c2ce803
+> index 0000000..a7c601e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/iproc-udc.txt
-> @@ -0,0 +1,21 @@
-> +Broadcom IPROC USB Device controller.
+> +++ b/Documentation/devicetree/bindings/net/can/ti_hecc.txt
+> @@ -0,0 +1,33 @@
+> +Texas Instruments High End CAN Controller (HECC)
+> +================================================
 > +
-> +The device node is used for UDCs integrated into Broadcom's
-> +iProc family (Northstar2, Cygnus) of SoCs'. The UDC is based
-> +on Synopsys Designware Cores AHB Subsystem Device Controller
-> +IP.
+> +This file provides information, what the device node
+> +for the hecc interface contains.
 > +
 > +Required properties:
-> + - compatible: Add the compatibility strings for supported platforms.
-> +   For Broadcom NS2 platform, add "brcm,ns2-udc".
-> +   For Broadcom Cygnus platform, add "brcm,cygnus-udc".
-> + - reg: Offset and length of UDC register set
-> + - interrupts: description of interrupt line
-> + - phys: phandle to phy node.
+> +- compatible: "ti,am3517-hecc"
+> +- reg: addresses and lengths of the register spaces for 'hecc', 'hecc-ram'
+> +       and 'mbx'
+> +- reg-names :"hecc", "hecc-ram", "mbx"
+> +- interrupts: interrupt mapping for the hecc interrupts sources
+> +- clocks: clock phandles (see clock bindings for details)
+> +
+> +Optional properties:
+> +- ti,use-hecc1int: if provided configures HECC to produce all interrupts
+> +		   on HECC1INT interrupt line. By default HECC0INT interrupt
+> +		   line will be used.
+> +- xceiver-supply: regulator that powers the CAN transceiver
 > +
 > +Example:
-> +	udc_dwc: usb@664e0000 {
-> +		compatible = "brcm,ns2-udc", "brcm,cygnus-udc";
+> +
+> +For am3517evm board:
+> +	hecc: can@0x5c050000 {
 
-This doesn't look right?
+Drop the '0x'.
 
-> +		reg = <0x664e0000 0x2000>;
-> +		interrupts = <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>;
-> +		phys = <&usbdrd_phy>;
+> +		compatible = "ti,am3517-hecc";
+> +		status = "disabled";
+
+No need to put status in examples.
+
+With that,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> +		reg = <0x5c050000 0x80>,
+> +		      <0x5c053000 0x180>,
+> +		      <0x5c052000 0x200>;
+> +		reg-names = "hecc", "hecc-ram", "mbx";
+> +		interrupts = <24>;
+> +		clocks = <&hecc_ck>;
+> +	};
 > -- 
-> 2.1.0
+> 2.1.4
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
