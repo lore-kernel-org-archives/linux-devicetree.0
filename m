@@ -1,59 +1,56 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [WARNING: A/V UNSCANNABLE][Merge tag 'media/v4.11-1' of git]
- ff58d005cd: BUG: unable to handle kernel NULL pointer dereference at
- 0000039c
-Date: Mon, 27 Feb 2017 17:18:28 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1702271712470.4732@nanos>
-References: <58b07b30.9XFLj9Hhl7F6HMc2%fengguang.wu@intel.com>
- <CA+55aFytXj+TZ_TanbxcY0KgRTrV7Vvr=fWON8tioUGmYHYiNA@mail.gmail.com>
- <20170225090741.GA20463@gmail.com>
- <CA+55aFy+ER8cYV02eZsKAOLnZBWY96zNWqUFWSWT1+3sZD4XnQ@mail.gmail.com>
- <alpine.DEB.2.20.1702271105090.4732@nanos>
- <alpine.DEB.2.20.1702271231410.4732@nanos> <20170227154124.GA20569@gmail.com>
- <20170227160750.GM21809@atomide.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2 1/2] of: add devm_ functions for populate and depopulate
+Date: Mon, 27 Feb 2017 17:20:53 +0100
+Message-ID: <20170227162053.j2gca6zmobpengbb@phenom.ffwll.local>
+References: <1487952874-23635-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1487952874-23635-2-git-send-email-benjamin.gaignard@linaro.org>
+ <CAL_Jsq+z9FcPowoMYXQ4aPfSYfL3D4ENoZxiTTO2pKJjnsRXOw@mail.gmail.com>
+ <20170226201157.xzg5b5tyrdlxkeyd@phenom.ffwll.local>
+ <CAL_JsqJQcFO_=D=g1KrfSTQdVCXUfE0k25+PQnSxvLZ1pHU=3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20170227160750.GM21809-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ruslan Ruslichenko <rruslich-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, kernel test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Sean Young <sean-hENCXIMQXOg@public.gmane.org>, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, LKP <lkp-JC7UmRfGjtg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJQcFO_=D=g1KrfSTQdVCXUfE0k25+PQnSxvLZ1pHU=3g@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Vincent Abriou <vincent.abriou@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 27 Feb 2017, Tony Lindgren wrote:
-> * Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170227 07:44]:
-> > Because it's not the requirement that hurts primarily, but the resulting 
-> > non-determinism and the sporadic crashes. Which can be solved by making the race 
-> > deterministic via the debug facility.
-> > 
-> > If the IRQ handler crashed the moment it was first written by the driver author 
-> > we'd never see these problems.
-> 
-> Just in case this is PM related.. Maybe the spurious interrupt is pending
-> from earlier? This could be caused by glitches on the lines with runtime PM,
-> or a pending interrupt during suspend/resume. In that case IRQ_DISABLE_UNLAZY
-> might provide more clues if the problem goes away.
-
-It's not PM related.  That's just silly hardware. At the moment when you
-enable some magic bit in the control register, which is required to probe
-the version, the fricking thing spits out a spurious interrupt despite the
-interrupt enable bit in the same control register being still disabled. Of
-course we cannot install an interrupt handler before having probed the
-version and setup other stuff, except we add magic 'if (!initialized)'
-crappola into the handler and lose the ability to install version dependent
-handlers afterwards.
-
-Wonderful crap that, isn't it?
-
-Thanks,
-
-	tglx
+T24gTW9uLCBGZWIgMjcsIDIwMTcgYXQgMDc6MzA6MjRBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gU3VuLCBGZWIgMjYsIDIwMTcgYXQgMjoxMSBQTSwgRGFuaWVsIFZldHRlciA8ZGFu
+aWVsQGZmd2xsLmNoPiB3cm90ZToKPiA+IE9uIEZyaSwgRmViIDI0LCAyMDE3IGF0IDEwOjMxOjI1
+QU0gLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+ID4+IE9uIEZyaSwgRmViIDI0LCAyMDE3IGF0
+IDEwOjE0IEFNLCBCZW5qYW1pbiBHYWlnbmFyZAo+ID4+IDxiZW5qYW1pbi5nYWlnbmFyZEBsaW5h
+cm8ub3JnPiB3cm90ZToKPiA+PiA+IExvdHMgb2YgY2FsbHMgdG8gb2ZfcGxhdGZvcm1fcG9wdWxh
+dGUoKSBhcmUgbm90IHVuYmFsYW5jZWQgYnkgYSBjYWxsCj4gPj4gPiB0byBvZl9wbGF0Zm9ybV9k
+ZXBvcHVsYXRlKCkuIFRoaXMgY3JlYXRlIGlzc3VlcyB3aGlsZSBkcml2ZXJzIGFyZQo+ID4+ID4g
+YmluZC91bmJpbmQuCj4gPj4gPgo+ID4+ID4gSW4gd2F5IHRvIHNvbHZlIHRob3NlIGlzc3VlcyBp
+cyB0byBhZGQgZGV2bV9vZl9wbGF0Zm9ybV9wb3B1bGF0ZSgpCj4gPj4gPiB3aGljaCB3aWxsIGNh
+bGwgb2ZfcGxhdGZvcm1fZGVwb3B1bGF0ZSgpIHdoZW4gdGhlIGRldmljZSBpcyB1bmJvdW5kCj4g
+Pj4gPiBmcm9tIHRoZSBidXMuCj4gPj4gPgo+ID4+ID4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4g
+R2FpZ25hcmQgPGJlbmphbWluLmdhaWduYXJkQGxpbmFyby5vcmc+Cj4gPj4gPiAtLS0KPiA+PiA+
+IHZlcnNpb24gMjoKPiA+PiA+IC0gc2ltcGxpZnkgZnVuY3Rpb24gcHJvdG90eXBlIHRvIG9ubHkg
+a2VlcCBkZXZpY2UgYXMgcGFyYW1ldGVyCj4gPj4gPgo+ID4+ID4gIGRyaXZlcnMvb2YvcGxhdGZv
+cm0uYyAgICAgICB8IDcxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKwo+ID4+ID4gIGluY2x1ZGUvbGludXgvb2ZfcGxhdGZvcm0uaCB8IDExICsrKysrKysKPiA+
+PiA+ICAyIGZpbGVzIGNoYW5nZWQsIDgyIGluc2VydGlvbnMoKykKPiA+Pgo+ID4+IEZvciB0aGlz
+IGFuZCBwYXRjaCAyOgo+ID4+Cj4gPj4gQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5l
+bC5vcmc+Cj4gPgo+ID4gSXMgdGhpcyBhbiBhY2sgZm9yIG1lcmdpbmcgYm90aCB0aHJvdWdoIGRy
+bS1taXNjLCBvciBzaG91bGQgd2UgZG8gYQo+ID4gdG9waWMtYnJhbmNoIGRhbmNlIGhlcmU/Cj4g
+Cj4gWW91IGNhbiBhcHBseSBpdCBkaXJlY3RseS4KCk9rLCB0aGlzIHNlZW1zIGxpa2UgYSBwcmV0
+dHkgY29vbCBpZGVhLCBzbyBhcHBsaWVkIGJvdGggdG8gZHJtLW1pc2MgZm9yCjQuMTIuCgpDaGVl
+cnMsIERhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29y
+cG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
