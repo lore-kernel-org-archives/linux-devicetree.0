@@ -1,48 +1,164 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v5 3/3] ARM: dts: sun8i: enable SID on Allwinner
- H3 SoC
-Date: Tue, 28 Feb 2017 03:27:15 +0800
-Message-ID: <20170227192715.50198-3-icenowy@aosc.xyz>
-References: <20170227192715.50198-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] soc/imx: Add GPCv2 power gating driver
+Date: Mon, 27 Feb 2017 13:37:41 -0600
+Message-ID: <20170227193741.psngihpnsfhwhkh3@rob-hp-laptop>
+References: <20170220152727.31892-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBT732HCQKGQEGNETBUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170227192715.50198-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170220152727.31892-1-andrew.smirnov@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, yurovsky@gmail.com, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-As we have already made sunxi_sid driver support the SID controller on
-H3, enable it.
+On Mon, Feb 20, 2017 at 07:27:27AM -0800, Andrey Smirnov wrote:
+> Add code allowing for control of various power domains managed by GPCv2
+> IP block found in i.MX7 series of SoCs. Power domains covered by this
+> patch are:
+> 
+>     - PCIE PHY
+>     - MIPI PHY
+>     - USB HSIC PHY
+>     - USB OTG1/2 PHY
+> 
+> Support for any other power domain controlled by GPC is not present, and
+> can be added at some later point.
+> 
+> Testing of this code was done against a PCIe driver.
+> 
+> Cc: yurovsky@gmail.com
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+> 
+> Changes since v2 (see [v2]):
+> 
+> 	- Fix a critical bug where incorrect state of a bit was
+>           expected in a busy wait loop (bit set instead of bit
+>           cleared) imx7_gpc_pu_pgc_sw_pxx_req()
+> 
+> 	- Add missing step (setting of PCR in GPC_PGC_nCTRL) in power
+>           down procedure
+> 
+> Changes since v1 (see [v1]):
+> 
+> 	- Various small DT bindings description fixes as per feedback
+>           from Rob Herring
+> 
+> 
+> [v1] https://lkml.org/lkml/2017/2/6/554
+> [v2] https://lkml.org/lkml/2017/2/13/489
+> 
+>  .../devicetree/bindings/power/fsl,imx-gpcv2.txt    |  71 ++++
+>  drivers/soc/imx/Makefile                           |   2 +-
+>  drivers/soc/imx/gpcv2.c                            | 397 +++++++++++++++++++++
+>  include/dt-bindings/power/imx7-power.h             |  18 +
+>  4 files changed, 487 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+>  create mode 100644 drivers/soc/imx/gpcv2.c
+>  create mode 100644 include/dt-bindings/power/imx7-power.h
+> 
+> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> new file mode 100644
+> index 0000000..393f68a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+> @@ -0,0 +1,71 @@
+> +Freescale i.MX General Power Controller v2
+> +==========================================
+> +
+> +The i.MX7S/D General Power Control (GPC) block contains Power Gating
+> +Control (PGC) for various power domains.
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "fsl,imx7d-gpc"
+> +
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +
+> +- interrupts: Should contain GPC interrupt request 1
+> +
+> +Power domains contained within GPC node are generic power domain
+> +providers, documented in
+> +Documentation/devicetree/bindings/power/power_domain.txt, which are
+> +described as subnodes of the power gating controller 'pgc' node,
+> +which, in turn, is expected to contain the following:
+> +
+> +Required properties:
+> +
+> +- reg: Power domain index. Valid values are defined in
+> +  include/dt-bindings/power/imx7-power.h
+> +
+> +- #power-domain-cells: Should be 0
+> +
+> +Optional properties:
+> +
+> +- power-supply: Power supply used to power the domain
+> +
+> +Example:
+> +
+> +	gpc: gpc@303a0000 {
+> +		compatible = "fsl,imx7d-gpc";
+> +		reg = <0x303a0000 0x1000>;
+> +		interrupt-controller;
+> +		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+> +		#interrupt-cells = <3>;
+> +		interrupt-parent = <&intc>;
+> +
+> +		pgc {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			pgc_pcie_phy: pgc-pcie-phy-domain {
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+power-domain@...
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 27780b97c863..ed2eede5f1f0 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -206,6 +206,11 @@
- 			#size-cells = <0>;
- 		};
- 
-+		sid: eeprom@01c14000 {
-+			compatible = "allwinner,sun8i-h3-sid";
-+			reg = <0x01c14000 0x400>;
-+		};
-+
- 		usbphy: phy@01c19400 {
- 			compatible = "allwinner,sun8i-h3-usb-phy";
- 			reg = <0x01c19400 0x2c>,
--- 
-2.11.1
+> +				#power-domain-cells = <0>;
+> +
+> +				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
+> +				power-supply = <&reg_1p0d>;
+> +			};
+> +		};
+> +	};
+> +
+> +
+> +Specifying power domain for IP modules
+> +======================================
+> +
+> +IP cores belonging to a power domain should contain a 'power-domains'
+> +property that is a phandle for PGC node representing the domain.
+> +
+> +Example of a device that is part of the PCIE_PHY power domain:
+> +
+> +	pcie: pcie@0x33800000 {
+
+Drop the '0x'
+
+With that, for the binding:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +	      reg = <0x33800000 0x4000>,
+> +	            <0x4ff00000 0x80000>;
+> +		/* ... */
+> +		power-domains = <&pgc_pcie_phy>;
+> +		/* ... */
+> +	};
