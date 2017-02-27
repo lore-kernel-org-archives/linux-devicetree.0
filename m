@@ -1,42 +1,38 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH v2 0/7] Tegra210 clock bug fixes
-Date: Mon, 27 Feb 2017 20:28:44 +0200
-Message-ID: <726ffa63-31e0-2fba-4edf-52261c43b8da@kapsi.fi>
-References: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 02/11] dt-bindings: hisi: Add Hisilicon HiP05/06/07
+ Djtag dts bindings
+Date: Mon, 27 Feb 2017 12:54:46 -0600
+Message-ID: <20170227185446.pjcld4wsqsrsbhdg@rob-hp-laptop>
+References: <1487530213-42387-1-git-send-email-anurup.m@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1487846686-6388-1-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1487530213-42387-1-git-send-email-anurup.m@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anurup M <anurupvasu@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, wangkefeng.wang@huawei.com, gabriele.paoloni@huawei.com, huangdaode@hisilicon.com, tanxiaojun@huawei.com, john.garry@huawei.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, zhangshaokun@hisilicon.com, sanil.kumar@hisilicon.com, anurup.m@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, linux-arm-kernel@lists.infradead.org, shiju.jose@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Series,
+On Sun, Feb 19, 2017 at 01:50:13PM -0500, Anurup M wrote:
+> From: Tan Xiaojun <tanxiaojun@huawei.com>
+> 
+> Add Hisilicon HiP05/06/07 Djtag dts bindings for CPU and IO Die
+> 
+> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
+> Signed-off-by: Anurup M <anurup.m@huawei.com>
+> ---
+>  .../devicetree/bindings/arm/hisilicon/djtag.txt    | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
 
-Reviewed-by: Mikko Perttunen <mperttunen@nvidia.com>
-Tested-by: Mikko Perttunen <mperttunen@nvidia.com>
-
-On 02/23/2017 12:44 PM, Peter De Schrijver wrote:
-> A number of bug fixes for the Tegra210 clock implementation.
->
-> Changelog:
->
-> v2: add better description for 'remove non-existing pll_m_out1 clock'
->
-> Peter De Schrijver (7):
->   clk: tegra: fix pll_a1 iddq register, add pll_a1
->   clk: tegra: fix isp clock modelling
->   clk: tegra: correct afi parent
->   clk: tegra: remove non-existing pll_m_out1 clock
->   clk: tegra: don't warn for PLL defaults unnecessarily
->   clk: tegra: correct tegra210_pll_fixed_mdiv_cfg rate calculation
->   clk: tegra: fix type for m field
->
->  drivers/clk/tegra/clk-id.h               |  1 +
->  drivers/clk/tegra/clk-tegra-periph.c     | 13 +++++++++---
->  drivers/clk/tegra/clk-tegra210.c         | 35 ++++++++++++++++++++------------
->  drivers/clk/tegra/clk.h                  |  2 +-
->  include/dt-bindings/clock/tegra210-car.h |  4 ++--
->  5 files changed, 36 insertions(+), 19 deletions(-)
->
+Acked-by: Rob Herring <robh@kernel.org>
