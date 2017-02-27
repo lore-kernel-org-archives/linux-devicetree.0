@@ -1,90 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: dma: uart: add uart dma bindings
-Date: Mon, 27 Feb 2017 09:22:26 -0600
-Message-ID: <20170227152226.g4zokauxii2nuyxn@rob-hp-laptop>
-References: <1487243251-964-1-git-send-email-long.cheng@mediatek.com>
- <1487243251-964-2-git-send-email-long.cheng@mediatek.com>
+From: m18063 <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 1/2] drivers: pwm: pwm-atmel: add support for pwm on
+ sama5d2
+Date: Mon, 27 Feb 2017 17:23:59 +0200
+Message-ID: <99294e68-5503-6ea0-6b6d-c0c29c3bfd81@microchip.com>
+References: <1487839120-13650-1-git-send-email-claudiu.beznea@microchip.com>
+ <1487839120-13650-2-git-send-email-claudiu.beznea@microchip.com>
+ <20170223091607.j5yfz7jvfzeinrap@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1487243251-964-2-git-send-email-long.cheng@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Long Cheng <long.cheng@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Vinod Koul <vinod.koul@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20170223091607.j5yfz7jvfzeinrap@piout.net>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 07:07:28PM +0800, Long Cheng wrote:
-> add uart dma bindings
+Hi,
+Please ignore this patch also. I will resend it after
+switching to atomic PWM.
 
-This and the subject need to be more specific in that this is for 
-Mediatek.
+Thank you,
+Claudiu Beznea
 
-> 
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
-> ---
->  .../devicetree/bindings/dma/mtk_uart_dma.txt       |   32 ++++++++++++++++++++
 
-mediatek,uart-dma.txt for filename.
-
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk_uart_dma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mtk_uart_dma.txt b/Documentation/devicetree/bindings/dma/mtk_uart_dma.txt
-> new file mode 100644
-> index 0000000..b8aa7f4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk_uart_dma.txt
-> @@ -0,0 +1,32 @@
-> +* Mediatek UART APDMA Controller
-
-Is the block really for UARTs only or just happens to be connected to 
-UARTs. For the latter, you should drop UART here and in the compatible.
-
-> +
-> +Required properties:
-> +- compatible should contain:
-> +  * "mediatek,mt2701-uart-dma" for MT2701 compatible APDMA
-> +  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
-> +
-> +- reg: The base address of the APDMA register bank.
-> +
-> +- interrupts: A single interrupt specifier.
-> +
-> +- clocks : Must contain an entry for each entry in clock-names.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: The APDMA clock for register accesses
-
-Needs to list "apdma" here. Is apdma really the right name here? It 
-should be the name of the input to this block.
-
-> +
-> +Examples:
-> +
-> +	apdma: dma-controller@11000380 {
-> +		compatible = "mediatek,mt2701-uart-dma";
-> +		reg = <0 0x11000380 0 0x400>;
-> +		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 65 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 66 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 67 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 69 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pericfg CLK_PERI_AP_DMA>;
-> +		clock-names = "apdma";
-> +		#dma-cells = <1>;
-> +	};
-> -- 
-> 1.7.9.5
-> 
+On 23.02.2017 11:16, Alexandre Belloni wrote:
+> On 23/02/2017 at 10:38:39 +0200, Claudiu Beznea wrote:
+>> Enable PWM on sama5d2 by adding atmel_pwm_config_v3().
+>> This, simply, sets the period and duty factor registers.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+>
+>> ---
+>>  Documentation/devicetree/bindings/pwm/atmel-pwm.txt |  1 +
+>>  drivers/pwm/pwm-atmel.c                             | 16 ++++++++++++++++
+>>  2 files changed, 17 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+>> index 02331b9..c8c831d 100644
+>> --- a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
+>> @@ -4,6 +4,7 @@ Required properties:
+>>    - compatible: should be one of:
+>>      - "atmel,at91sam9rl-pwm"
+>>      - "atmel,sama5d3-pwm"
+>> +    - "atmel,sama5d2-pwm"
+>>    - reg: physical base address and length of the controller's registers
+>>    - #pwm-cells: Should be 3. See pwm.txt in this directory for a
+>>      description of the cells format.
+>> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
+>> index 0e4bd4e..4406639 100644
+>> --- a/drivers/pwm/pwm-atmel.c
+>> +++ b/drivers/pwm/pwm-atmel.c
+>> @@ -207,6 +207,15 @@ static void atmel_pwm_config_v2(struct pwm_chip *chip, struct pwm_device *pwm,
+>>  	}
+>>  }
+>>  
+>> +static void atmel_pwm_config_v3(struct pwm_chip *chip, struct pwm_device *pwm,
+>> +				unsigned long dty, unsigned long prd)
+>> +{
+>> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
+>> +
+>> +	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTY, dty);
+>> +	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CPRD, prd);
+>> +}
+>> +
+>>  static int atmel_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
+>>  				  enum pwm_polarity polarity)
+>>  {
+>> @@ -295,6 +304,10 @@ static const struct atmel_pwm_data atmel_pwm_data_v2 = {
+>>  	.config = atmel_pwm_config_v2,
+>>  };
+>>  
+>> +static const struct atmel_pwm_data atmel_pwm_data_v3 = {
+>> +	.config = atmel_pwm_config_v3,
+>> +};
+>> +
+>>  static const struct platform_device_id atmel_pwm_devtypes[] = {
+>>  	{
+>>  		.name = "at91sam9rl-pwm",
+>> @@ -316,6 +329,9 @@ static const struct of_device_id atmel_pwm_dt_ids[] = {
+>>  		.compatible = "atmel,sama5d3-pwm",
+>>  		.data = &atmel_pwm_data_v2,
+>>  	}, {
+>> +		.compatible = "atmel,sama5d2-pwm",
+>> +		.data = &atmel_pwm_data_v3,
+>> +	}, {
+>>  		/* sentinel */
+>>  	},
+>>  };
+>> -- 
+>> 2.7.4
+>>
