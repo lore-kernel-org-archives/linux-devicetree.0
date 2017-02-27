@@ -1,100 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 2/3] Documentation: sprd: Add bindings for SP9860G
-Date: Mon, 27 Feb 2017 13:56:51 -0600
-Message-ID: <20170227195651.h63j73xlud5tp73l@rob-hp-laptop>
-References: <1487660104-15693-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487660104-15693-3-git-send-email-chunyan.zhang@spreadtrum.com>
+Subject: Re: [PATCH 1/3] usb: usb251xb: remove max_{power,current}_{sp,bp}
+ properties
+Date: Mon, 27 Feb 2017 13:58:40 -0600
+Message-ID: <20170227195840.3qygh6leatwazbfu@rob-hp-laptop>
+References: <1487667379-2075-1-git-send-email-richard.leitner@skidata.com>
+ <1487667379-2075-2-git-send-email-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1487660104-15693-3-git-send-email-chunyan.zhang@spreadtrum.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, arnd@arndb.de, gregkh@linuxfoundation.org, sudeep.holla@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, zhang.lyra@gmail.com, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1487667379-2075-2-git-send-email-richard.leitner@skidata.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Leitner <richard.leitner@skidata.com>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 02:55:03PM +0800, Chunyan Zhang wrote:
-> Added support for Spreadtrum SP9860G board and SC9860 SoC.
-> This patch also revised bindings of SC9836 to make the format
-> more clear.
+On Tue, Feb 21, 2017 at 09:56:17AM +0100, Richard Leitner wrote:
+> Remove the max_{power,current}_{sp,bp} properties of the usb251xb driver
+> from devicetree. This is done to simplify the dt bindings as requested
+> by Rob Herring in https://lkml.org/lkml/2017/2/15/1283. If those
+> properties are ever needed by somebody they can be enabled again easily.
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
 > ---
->  Documentation/devicetree/bindings/arm/sprd.txt         | 13 ++++++++-----
->  Documentation/devicetree/bindings/serial/sprd-uart.txt | 16 +++++++++++++++-
+>  Documentation/devicetree/bindings/usb/usb251xb.txt | 20 ------------------
+>  drivers/usb/misc/usb251xb.c                        | 24 ++++------------------
+>  2 files changed, 4 insertions(+), 40 deletions(-)
 
-Probably should be 2 commits.
-
-"dt-bindings: (arm|serial): " is the preferred subject prefix.
-
->  2 files changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/sprd.txt b/Documentation/devicetree/bindings/arm/sprd.txt
-> index 31a629d..3df034b 100644
-> --- a/Documentation/devicetree/bindings/arm/sprd.txt
-> +++ b/Documentation/devicetree/bindings/arm/sprd.txt
-> @@ -1,11 +1,14 @@
->  Spreadtrum SoC Platforms Device Tree Bindings
->  ----------------------------------------------------
->  
-> -Sharkl64 is a Spreadtrum's SoC Platform which is based
-> -on ARM 64-bit processor.
-> +SC9836 openphone Board
-> +Required root node properties:
-> +	- compatible = "sprd,sc9836-openphone", "sprd,sc9836";
->  
-> -SC9836 openphone board with SC9836 SoC based on the
-> -Sharkl64 Platform shall have the following properties.
-> +SC9860 SoC
-> +Required root node properties:
-> +	- compatible = "sprd,sc9860"
->  
-> +SP9860G 3GFHD Board
->  Required root node properties:
-> -        - compatible = "sprd,sc9836-openphone", "sprd,sc9836";
-> +	- compatible = "sprd,sp9860g-1h10", "sprd,sc9860";
-> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> index 2aff0f2..f530cbb 100644
-> --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
-> @@ -1,7 +1,21 @@
->  * Spreadtrum serial UART
->  
->  Required properties:
-> -- compatible: must be "sprd,sc9836-uart"
-> +- compatible must contain:
-> +  * "sprd,sc9836-uart" for SC9836 and all Spreadtrum SoCs
-> +  This also can be specific with:
-> +  * "sprd, sc9860-uart" for SC9860
-space        ^
-
-> +
->  - reg: offset and length of the register set for the device
->  - interrupts: exactly one interrupt specifier
->  - clocks: phandles to input clocks.
-> +
-> +Example:
-> +	uart0: serial@70000000 {
-> +		compatible = "sprd,sc9838-uart",
-> +			     "sprd,sc9836-uart";
-> +		reg = <0x000000 0x100>;
-> +		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&ext_26m>;
-> +		status = "disabled";
-
-No need for status in examples.
-
-> +	};
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh@kernel.org>
