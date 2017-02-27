@@ -1,149 +1,54 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 5/9] dmaengine: sun6i: support V3s SoC
-	variant
-Date: Mon, 27 Feb 2017 08:50:21 +0100
-Message-ID: <20170227075021.e7e43o54s23jzfto@lukather>
-References: <20170225123029.55939-1-icenowy@aosc.xyz>
- <20170225123029.55939-5-icenowy@aosc.xyz>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 5/7] arm: dts: sun8i: split Allwinner H3 .dtsi
+Date: Mon, 27 Feb 2017 08:20:40 +0000
+Message-ID: <579a2e9f-335f-04b7-fce2-ee4d2128141f@arm.com>
+References: <20170226011956.53581-1-icenowy@aosc.xyz>
+ <20170226011956.53581-6-icenowy@aosc.xyz>
+ <CAGb2v67qywz9EdTzguAOEtWYqqrOZ-jSMTgkRza3dysUsCN6rw@mail.gmail.com>
+Reply-To: marc.zyngier-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7162917847184997259=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170225123029.55939-5-icenowy@aosc.xyz>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCPZR5X4TYBBBX6CZ7CQKGQEDKGJPGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67qywz9EdTzguAOEtWYqqrOZ-jSMTgkRza3dysUsCN6rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 26/02/17 03:46, Chen-Yu Tsai wrote:
+> Hi,
 
---===============7162917847184997259==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wqbdmu3xkno5eyt3"
-Content-Disposition: inline
+[...]
 
+>> -               gic: interrupt-controller@01c81000 {
+>> -                       compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+>> -                       reg = <0x01c81000 0x1000>,
+>> -                             <0x01c82000 0x2000>,
+>> -                             <0x01c84000 0x2000>,
+>> -                             <0x01c86000 0x2000>;
+>> -                       interrupt-controller;
+>> -                       #interrupt-cells = <3>;
+>> -                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+> 
+> The gic bits seem to be the same for both SoCs, aside from the
+> different compatible
+> string. Marc had sent a series to change them all to arm,gic-400, which is the
+> proper name for it, but it wasn't merged. I'm assuming the compatibles
+> are equal?
+> If so then it can also be shared.
 
---wqbdmu3xkno5eyt3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The series was fixing the various GICv2 memory maps, and is now in
+mainline. If you have a good indication that all these SoCs are indeed
+featuring a gic-400, feel free to amend the DT.
 
-On Sat, Feb 25, 2017 at 08:30:25PM +0800, Icenowy Zheng wrote:
-> Allwinner V3s has a DMA engine similar to the ones from A31, but with
-> fewer channels and DRQs.
->=20
-> Add support for it.
->=20
-> As it also needs the special gate bit, make the gate bit generic.
+Thanks,
 
-That should be part of a separate patch.
-
->=20
-> According to BSP source code, SUN8IW6 (A83T) also needs the bit, so it
-> have also been specified gate_needed property.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> ---
->  Documentation/devicetree/bindings/dma/sun6i-dma.txt |  1 +
->  drivers/dma/sun6i-dma.c                             | 17 ++++++++++++++-=
---
->  2 files changed, 15 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/Docume=
-ntation/devicetree/bindings/dma/sun6i-dma.txt
-> index 6b267045f522..98fbe1a5c6dd 100644
-> --- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  		  "allwinner,sun8i-a23-dma"
->  		  "allwinner,sun8i-a83t-dma"
->  		  "allwinner,sun8i-h3-dma"
-> +		  "allwinner,sun8i-v3s-dma"
->  - reg:		Should contain the registers base address and length
->  - interrupts:	Should contain a reference to the interrupt used by this d=
-evice
->  - clocks:	Should contain a reference to the parent AHB clock
-> diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
-> index a2358780ab2c..1f38424c1b14 100644
-> --- a/drivers/dma/sun6i-dma.c
-> +++ b/drivers/dma/sun6i-dma.c
-> @@ -101,6 +101,7 @@ struct sun6i_dma_config {
->  	u32 nr_max_channels;
->  	u32 nr_max_requests;
->  	u32 nr_max_vchans;
-> +	bool gate_needed;
->  };
-> =20
->  /*
-> @@ -1009,12 +1010,14 @@ static struct sun6i_dma_config sun8i_a23_dma_cfg =
-=3D {
->  	.nr_max_channels =3D 8,
->  	.nr_max_requests =3D 24,
->  	.nr_max_vchans   =3D 37,
-> +	.gate_needed	 =3D true,
->  };
-> =20
->  static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
->  	.nr_max_channels =3D 8,
->  	.nr_max_requests =3D 28,
->  	.nr_max_vchans   =3D 39,
-> +	.gate_needed	 =3D true,
->  };
-> =20
->  /*
-> @@ -1028,11 +1031,19 @@ static struct sun6i_dma_config sun8i_h3_dma_cfg =
-=3D {
->  	.nr_max_vchans   =3D 34,
->  };
-> =20
-> +static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D {
-> +	.nr_max_channels =3D 8,
-> +	.nr_max_requests =3D 23,
-> +	.nr_max_vchans   =3D 24,
-
-This one is suspicious. There's just a single endpoint that can be
-used in both directions?
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---wqbdmu3xkno5eyt3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYs9o9AAoJEBx+YmzsjxAgjSAP/1tCb0DdLiZwMU2l6peo0ah1
-MIyBD1BpYzUTFlYd9BMbfdebyNx7LaFC2/khqqmrOYfatjjTvSOGz0oz44DgmyLe
-YKx7k7EpQiHyOtAYrVoROT4nnW6C/MWBJ6H5wyo27RNY4QanyrKagEV4R2Qii0mb
-Yl67gCFayWYuTUU1HoxB4HeR0axsB2MPfodlMWYKZAGRwLD5jjTA6kNaNPmoxGjO
-CG7L/M+6skKvSFNoik0z04e5IuLPF7E9nJZl0F7BD+Er0k1xMOf+BqODNpBV2nAf
-vAKDnl6k7o1DO1UX4PhWiGa64joXde6IR3dPv7ATOI0GrhRsQ5E/D1qkab/o2xd+
-7ebAUJ4yWiUEYj1Cof5c5qM8reUVwfYYzb2s30lkBGXULEfwAKGR3DUYVhIwA10P
-rFINFLkBnRZqZQ7DiCcnK+Fb0kOpVL/44iJvLD0e/1Icl0yNsX/nq86h0rmW06YR
-4INgnUiB8h3FY5cad6O3SmorKVlaGOCkceAq0N/xXipDu5UCBelPkdRa2GBz0uy7
-gEhHLxN/tcdhyUAZcWSFWSPCSYz12MWx0US29uRcrMdRYTCZBDTlwmf2CLEf9CPl
-4rtsY/PtcbWJOeKobhCCnWveustrRkY7gV4/k+D2jAyzmASDl2oBroWySIZ46kEi
-zncrCdc+6qHIltUr7Tqi
-=ieMh
------END PGP SIGNATURE-----
-
---wqbdmu3xkno5eyt3--
-
---===============7162917847184997259==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7162917847184997259==--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
