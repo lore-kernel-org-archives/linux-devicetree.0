@@ -1,52 +1,116 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] fpga dt: bindings for Altera Partial Reconfiguraion
- IP.
-Date: Mon, 27 Feb 2017 08:32:30 -0600
-Message-ID: <20170227143230.b3frg3rg2sdttt64@rob-hp-laptop>
-References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com>
+Subject: Re: [PATCH v4 01/36] [media] dt-bindings: Add bindings for i.MX
+ media driver
+Date: Mon, 27 Feb 2017 08:38:23 -0600
+Message-ID: <20170227143823.25oxk72jul3ldvpb@rob-hp-laptop>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-2-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthew.gerlach@linux.intel.com
-Cc: atull@opensource.altera.com, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+In-Reply-To: <1487211578-11360-2-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 01:10:37PM -0800, matthew.gerlach@linux.intel.com wrote:
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+On Wed, Feb 15, 2017 at 06:19:03PM -0800, Steve Longerbeam wrote:
+> Add bindings documentation for the i.MX media driver.
 > 
-> Device Tree bindings for Altera Partial Reconfiguraion IP?
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 > ---
->  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+>  Documentation/devicetree/bindings/media/imx.txt | 66 +++++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
 > new file mode 100644
-> index 0000000..ada821f
+> index 0000000..fd5af50
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
-> @@ -0,0 +1,12 @@
-> +Altera Partial Reconfiguration IP
+> +++ b/Documentation/devicetree/bindings/media/imx.txt
+> @@ -0,0 +1,66 @@
+> +Freescale i.MX Media Video Device
+> +=================================
+> +
+> +Video Media Controller node
+> +---------------------------
+> +
+> +This is the media controller node for video capture support. It is a
+> +virtual device that lists the camera serial interface nodes that the
+> +media device will control.
 > +
 > +Required properties:
-> +- compatible : should contain "altr,pr-ip"
-
-Kind of generic. There's only one version of h/w?
-
-> +- reg        : base address and size for memory mapped io.
+> +- compatible : "fsl,imx-capture-subsystem";
+> +- ports      : Should contain a list of phandles pointing to camera
+> +		sensor interface ports of IPU devices
 > +
-> +Example:
+> +example:
 > +
-> +	fpga_mgr: fpga-mgr@ff20c000 {
-> +		compatible = "altr,pr-ip";
-> +		reg = <0xff20c000 0x10>;
-> +	};
+> +capture-subsystem {
+> +	compatible = "fsl,capture-subsystem";
+> +	ports = <&ipu1_csi0>, <&ipu1_csi1>;
+> +};
+> +
+> +fim child node
+> +--------------
+> +
+> +This is an optional child node of the ipu_csi port nodes. If present and
+> +available, it enables the Frame Interval Monitor. Its properties can be
+> +used to modify the method in which the FIM measures frame intervals.
+> +Refer to Documentation/media/v4l-drivers/imx.rst for more info on the
+> +Frame Interval Monitor.
+
+This should have a compatible string.
+
+> +
+> +Optional properties:
+> +- fsl,input-capture-channel: an input capture channel and channel flags,
+> +			     specified as <chan flags>. The channel number
+> +			     must be 0 or 1. The flags can be
+> +			     IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, or
+> +			     IRQ_TYPE_EDGE_BOTH, and specify which input
+> +			     capture signal edge will trigger the input
+> +			     capture event. If an input capture channel is
+> +			     specified, the FIM will use this method to
+> +			     measure frame intervals instead of via the EOF
+> +			     interrupt. The input capture method is much
+> +			     preferred over EOF as it is not subject to
+> +			     interrupt latency errors. However it requires
+> +			     routing the VSYNC or FIELD output signals of
+> +			     the camera sensor to one of the i.MX input
+> +			     capture pads (SD1_DAT0, SD1_DAT1), which also
+> +			     gives up support for SD1.
+> +
+> +
+> +mipi_csi2 node
+> +--------------
+> +
+> +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
+> +CSI-2 sensors.
+> +
+> +Required properties:
+> +- compatible	: "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
+> +- reg           : physical base address and length of the register set;
+> +- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
+> +                  (the DPHY clock), video_27m, and eim_podf;
+> +- clock-names	: must contain "dphy", "cfg", "pix";
+
+Don't you need ports to describe the sensor and IPU connections?
+
+> +
+> +Optional properties:
+> +- interrupts	: must contain two level-triggered interrupts,
+> +                  in order: 100 and 101;
 > -- 
 > 2.7.4
 > 
