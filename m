@@ -1,91 +1,53 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [RFC v2 2/7] IIO: Add bindings for simple sigma
-	delta adc
-Date: Mon, 27 Feb 2017 12:15:47 +0100
-Message-ID: <6943aaf5-b580-0fd1-7a2e-b99f7a266388@st.com>
-References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
- <1487003909-11710-3-git-send-email-arnaud.pouliquen@st.com>
- <20170222151750.h5d7gycltwnk7b4t@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 2/7] clk: sunxi-ng: rename sun8i-h3
+ driver to sunxi-h3-h5
+Date: Mon, 27 Feb 2017 13:24:44 +0100
+Message-ID: <20170227122444.6523qu4wwm4ihlfx@lukather>
+References: <20170226011956.53581-1-icenowy@aosc.xyz>
+ <20170226011956.53581-3-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170222151750.h5d7gycltwnk7b4t@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="e5suamyvr326w62f"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDNV2DCQKGQE6PC35BQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170226011956.53581-3-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
 
-Please find my answers in-line
+--e5suamyvr326w62f
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Regards,
+Hi,
 
-Arnaud
+On Sun, Feb 26, 2017 at 09:19:51AM +0800, Icenowy Zheng wrote:
+> As the CCU in the Allwinner H5 SoC is very similar to the one in H3,
+> rename the H3 driver to sunxi-h3-h5 so that it can be extended with H5
+> support.
+> 
+> Trasitional header symlinks are created, to ensure current device tree
+> files which included sun8i-h3-ccu.h can compile.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-On 02/22/2017 04:17 PM, Rob Herring wrote:
-> On Mon, Feb 13, 2017 at 05:38:24PM +0100, Arnaud Pouliquen wrote:
->> Add documentation of device tree bindings to support
->> sigma delta modulator in IIO framework.
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->>  Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt b/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
->> new file mode 100644
->> index 0000000..2b3968a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
->> @@ -0,0 +1,13 @@
->> +Device-Tree bindings for simple sigma delta adc
-> 
-> What makes it "simple"?
-"simple" sigma delta modulator are external chip that just converts
-analog signal in sigma delta modulation. No configuration needs.
-"Simple" is use to differentiate SD ADC that offers interfaces to
-activate some internal processing ( gain, offset compensation...)
+Just like for the R40, I wonder whether this is needed at all. We have
+a lot of other drivers that we don't have to rename to support new
+SoCs. This is kind of weird to make an exception for this one only.
 
-> 
->> +
->> +Required properties:
->> +- compatible: should be "sd-modulator".
->> +- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
->> +
->> +Example node:
->> +
->> +	ads1202: simple_sd_adc@0 {
-> 
-> Is ads1202 the actual chip? Then it should be in the compatible list.
-I tried to define a generic device to support several SD modulator
-chips, inspired by ALSA "dmic-codec" device.
-I have none exhaustive list of chip that can be handled by the driver,
-but i found several devices that could match...
-That why i did not use chip name in compatible list.
-What should be the best way to do it?
+Maxime
 
-> 
-> unit address without a reg prop is an error. The node name should be 
-> "adc".
-> 
->> +		compatible = "sd-modulator";
->> +		#io-channel-cells = <1>;
->> +		status = "okay";
-> 
-> Drop status from examples.
-> 
->> +	};
->> -- 
->> 1.9.1
->>
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--e5suamyvr326w62f--
