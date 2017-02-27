@@ -1,36 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] media: dt-bindings: vpif: extend the example with
- an output port
-Date: Mon, 27 Feb 2017 16:46:15 -0600
-Message-ID: <20170227224615.akogq6rccv3rwzrz@rob-hp-laptop>
+Subject: Re: [PATCH v2 3/3] media: dt-bindings: vpif: new optional property
+Date: Mon, 27 Feb 2017 16:52:09 -0600
+Message-ID: <20170227225209.26oieqwbafqjga2a@rob-hp-laptop>
 References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
- <1487771027-7763-3-git-send-email-bgolaszewski@baylibre.com>
+ <1487771027-7763-4-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1487771027-7763-3-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+In-Reply-To: <1487771027-7763-4-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Patrick Titiano <ptitiano@baylibre.com>, linux-arm-kernel@lists.infradead.org
+Cc: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 02:43:46PM +0100, Bartosz Golaszewski wrote:
-> This makes the example more or less correspond with the da850-evm
-> hardware setup.
+On Wed, Feb 22, 2017 at 02:43:47PM +0100, Bartosz Golaszewski wrote:
+> Add an optional property - enable-gpios - which can be used to specify
+> the GPIOs that must be requested to select the vpif functionality.
 > 
 > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../devicetree/bindings/media/ti,da850-vpif.txt    | 40 +++++++++++++++++-----
->  1 file changed, 32 insertions(+), 8 deletions(-)
+>  Documentation/devicetree/bindings/media/ti,da850-vpif.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+> index df7182a..23c5405 100644
+> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+> @@ -13,6 +13,9 @@ Required properties:
+>  - reg: physical base address and length of the registers set for the device;
+>  - interrupts: should contain IRQ line for the VPIF
+>  
+> +Optional properties:
+> +- enable-gpios: phandle of the GPIOs used to select the vpif functionality
 
-Acked-by: Rob Herring <robh@kernel.org>
+What does this control exactly? The GPIOs belong in the node they are 
+connected to and having GPIOs routed to this block seems strange.
+
+There are inputs or outputs?
+
+> +
+>  Video Capture:
+>  
+>  VPIF has a 16-bit parallel bus input, supporting 2 8-bit channels or a
+> @@ -30,6 +33,10 @@ I2C-connected TVP5147 decoder:
+>  		reg = <0x217000 0x1000>;
+>  		interrupts = <92>;
+>  
+> +		enable-gpios = <&tca6416 7 GPIO_ACTIVE_HIGH
+> +				&tca6416 6 GPIO_ACTIVE_HIGH
+> +				&tca6416 5 GPIO_ACTIVE_LOW>;
+> +
+>  		port@0 {
+>  			vpif_input_ch0: endpoint@0 {
+>  				reg = <0>;
+> -- 
+> 2.9.3
+> 
