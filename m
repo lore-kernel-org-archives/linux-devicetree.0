@@ -1,118 +1,101 @@
 MIME-Version: 1.0
-In-Reply-To: <1487755758-6066-1-git-send-email-sakari.ailus@linux.intel.com>
-References: <1487755758-6066-1-git-send-email-sakari.ailus@linux.intel.com>
-Date: Thu, 23 Feb 2017 10:02:30 -0600
-Message-ID: <CAL_JsqKL+=6xEchZLMOxLPVggKPYh6wW9zN4TOLr+UPPbgzeBg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] devicetree: of_node_put() does not require holding devtree_lock
-From: Rob Herring <robh@kernel.org>
+In-Reply-To: <CACvgo51GKYEiXqV4SMFbucmE5SxLwh7Jd_zNMMWvxZwSRP5pWA@mail.gmail.com>
+References: <10fd28cb-269a-ec38-ecfb-b7c86be3e716@math.uni-bielefeld.de>
+	<CACvgo51p+aqegjkbF6jGggwr+KXq_71w0VFzJvFAF6_egT1-kA@mail.gmail.com>
+	<20170217154419.xr4n2ikp4li3c7co@lukather>
+	<CACvgo51vLca_Ji8VQBO5fqCrbhpm_=6mrqx1K-7GddVv5yMKWg@mail.gmail.com>
+	<20170224001921.wsis65um3jnhtpil@lukather>
+	<CACvgo51GKYEiXqV4SMFbucmE5SxLwh7Jd_zNMMWvxZwSRP5pWA@mail.gmail.com>
+Date: Mon, 27 Feb 2017 08:58:51 -0600
+Message-ID: <CAL_Jsq+fucvF8+2-ZrQFwN6OFou-MVQcbSC9jTaDW7RqiFQXiw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] ARM: sun8i: a33: Mali improvements
+From: Rob Herring <robh+dt@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, ML dri-devel <dri-devel@lists.freedesktop.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, Chen-Yu Tsai <wens@csie.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Feb 22, 2017 at 3:29 AM, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
-> While holding a reference to a device_node it is allowed to put that node
-> without holding devtree_lock spinlock. Move of_node_put() after releasing
-> the spinlock.
-
-True, but why do you really care? It is not a heavyweight operation.
-
-Rob
-
+On Sun, Feb 26, 2017 at 6:14 AM, Emil Velikov <emil.l.velikov@gmail.com> wrote:
+> Hi Maxime,
 >
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  drivers/of/base.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+> Thanks for the links.
 >
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d4bea3c..a8d7fed 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -286,8 +286,8 @@ struct device_node *of_find_all_nodes(struct device_node *prev)
->         raw_spin_lock_irqsave(&devtree_lock, flags);
->         np = __of_find_all_nodes(prev);
->         of_node_get(np);
-> -       of_node_put(prev);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(prev);
->         return np;
->  }
->  EXPORT_SYMBOL(of_find_all_nodes);
-> @@ -660,8 +660,8 @@ struct device_node *of_get_next_parent(struct device_node *node)
+> On 24 February 2017 at 00:19, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> Hi,
+>>
+>> On Fri, Feb 17, 2017 at 08:39:33PM +0000, Emil Velikov wrote:
+>>> As I feared things have taken a turn for the bitter end :-]
+>>>
+>>> It seems that this is a heated topic, so I'l kindly ask that we try
+>>> the following:
+>>>
+>>>  - For people such as myself/Tobias/others who feel that driver and DT
+>>> bindings should go hand in hand, prove them wrong.
+>>> But please, do so by pointing to the documentation (conclusion of a
+>>> previous discussion). This way you don't have to repeat yourself and
+>>> get [too] annoyed over silly suggestions.
+>>
+>> http://lxr.free-electrons.com/source/Documentation/devicetree/usage-model.txt#L13
+>>
+>> "The "Open Firmware Device Tree", or simply Device Tree (DT), is a
+>> data structure and language for describing hardware. More
+>> specifically, it is a description of hardware that is readable by an
+>> operating system so that the operating system doesn't need to hard
+>> code details of the machine"
+>>
+>> http://lxr.free-electrons.com/source/Documentation/devicetree/usage-model.txt#L79
+>>
+>> "What it does do is provide a language for decoupling the hardware
+>> configuration from the board and device driver support in the Linux
+>> kernel (or any other operating system for that matter)."
+>>
+> The above seems to imply that there is (merged) device driver support
+> in the Linux kernel (or other) that uses the bindings.
 >
->         raw_spin_lock_irqsave(&devtree_lock, flags);
->         parent = of_node_get(node->parent);
-> -       of_node_put(node);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(node);
->         return parent;
->  }
->  EXPORT_SYMBOL(of_get_next_parent);
-> @@ -732,8 +732,8 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
->                 if (of_node_get(next))
->                         break;
->         }
-> -       of_node_put(prev);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(prev);
->         return next;
->  }
->  EXPORT_SYMBOL(of_get_next_available_child);
-> @@ -875,8 +875,8 @@ struct device_node *of_find_node_by_name(struct device_node *from,
->                 if (np->name && (of_node_cmp(np->name, name) == 0)
->                     && of_node_get(np))
->                         break;
-> -       of_node_put(from);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(from);
->         return np;
->  }
->  EXPORT_SYMBOL(of_find_node_by_name);
-> @@ -904,8 +904,8 @@ struct device_node *of_find_node_by_type(struct device_node *from,
->                 if (np->type && (of_node_cmp(np->type, type) == 0)
->                     && of_node_get(np))
->                         break;
-> -       of_node_put(from);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(from);
->         return np;
->  }
->  EXPORT_SYMBOL(of_find_node_by_type);
-> @@ -935,8 +935,8 @@ struct device_node *of_find_compatible_node(struct device_node *from,
->                 if (__of_device_is_compatible(np, compatible, type, NULL) &&
->                     of_node_get(np))
->                         break;
-> -       of_node_put(from);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(from);
->         return np;
->  }
->  EXPORT_SYMBOL(of_find_compatible_node);
-> @@ -970,8 +970,8 @@ struct device_node *of_find_node_with_property(struct device_node *from,
->                 }
->         }
->  out:
-> -       of_node_put(from);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(from);
->         return np;
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
-> @@ -1051,8 +1051,8 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
->                         break;
->                 }
->         }
-> -       of_node_put(from);
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +       of_node_put(from);
->         return np;
->  }
->  EXPORT_SYMBOL(of_find_matching_node_and_match);
-> --
-> 2.7.4
+> It's not my call to make any of the policy, so I'll just kindly
+> suggest improving the existing documentation:
+>  - Reword/elaborate if out of tree [Linux or in general?] drivers are
+> suitable counterpart.
+>  - Patches could/should reference the "other OS" driver, or the "other
+> OS" name at least ?
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Rather than clumping the above in 2.1 a separate section would be better ?
+>
+>> And like I said, we already had bindings for out of tree bindings,
+>> like this one:
+>> https://patchwork.kernel.org/patch/9275707/
+>>
+>> Which triggered no discussion at the time (but the technical one,
+>> hence a v2, that should always be done).
+>>
+> Needless to say, there's many of us waiting to see a Mali driver land
+> - hence the noise. It's not meant to belittle/sway the work you and
+> others do.
+>
+>>> - The series has code changes which [seemingly] cater for out of tree
+>>> module(s).
+>>
+>> That patch was dropped, only DT changes remains now, and do not depend
+>> of that missing patch anyway.
+>>
+>>> Clearly state in the commit message who is the user, why it's save to
+>>> do so and get an Ack from more prominent [DRM] developers.
+>>
+>> DRM is really not important here. We could implement a driver using
+>> i2c as far as the DT is concerned.
+>>
+> What I meant to say is:
+>
+> Please, provide clear expectations from the start - "Linux driver is
+> OOT with no ETA on landing" or "driver for $FOO OS is at $LINK".
+> Afaict Hans did the former in the patch mentioned. Perhaps you already
+> did - in which case pardon for missing it.
+>
+>> FreeBSD for example uses a different, !DRM framework to support our
+>> display stack, and still uses the DT.
+>>
+> Interesting - do you have a link handy ? Does it use open-source usespace ?
+>
+> Thanks
+> Emil
