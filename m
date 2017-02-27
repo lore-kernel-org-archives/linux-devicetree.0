@@ -1,123 +1,140 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [PATCH v1.2] dt: emac: document device-tree based phy discovery and setup
-Date: Mon, 27 Feb 2017 21:41:40 +0100
-Message-ID: <0f6d91964359390ea08ff9d29f7d7c5ad49961c3.1488227767.git.chunkeey@googlemail.com>
-References: <eaf5b812-deae-c5f7-3930-dadf0b0132bf@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <eaf5b812-deae-c5f7-3930-dadf0b0132bf@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: "David S . Miller" <davem@davemloft.net>, Ivan Mikhaylov <ivan@de.ibm.com>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] Input: pwm-beeper: support customized freq for
+ SND_BELL
+Date: Mon, 27 Feb 2017 13:10:57 -0600
+Message-ID: <20170227191057.uvrefh6mypnwkmkx@rob-hp-laptop>
+References: <1487579863-7256-1-git-send-email-hs@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1487579863-7256-1-git-send-email-hs@denx.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-input@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for a new "phy-handle" property,
-"fixed-link" and "mdio" sub-node. These allows the enumeration
-of PHYs which are supported by the phy library under drivers/net/phy.
-
-The EMAC ethernet controller in IBM and AMCC 4xx chips is
-currently stuck with a few privately defined phy
-implementations. It has no support for PHYs which
-are supported by the generic phylib.
+On Mon, Feb 20, 2017 at 09:37:43AM +0100, Heiko Schocher wrote:
+> From: Guan Ben <ben.guan@cn.bosch.com>
+> 
+> extend the pwm-beeper driver to support customized frequency
+> for SND_BELL from device tree.
+> 
+> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+> [hs@denx.de: adapted to 4.10-rc7]
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> 
+> ---
+> 
+> Changes in v2:
+> - add comment from Rob Herring:
+>   rename property name "bell-frequency" to "beeper-hz"
+> - add comment from Dmitry Torokhov:
+>   use device_property_read_u32() instead of of_property_read_u32()
+> - rebased against c470abd4fde40ea6a0846a2beab642a578c0b8cd
+>   Linux 4.10
+> 
+>  .../devicetree/bindings/input/pwm-beeper.txt       |  3 ++
 
 Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
----
-Fixed: phy node - so it conforms to phy.txt.
----
----
- .../devicetree/bindings/powerpc/4xx/emac.txt       | 61 +++++++++++++++++++++-
- 1 file changed, 59 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-index 712baf6c3e24..2fa861378294 100644
---- a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-+++ b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-@@ -71,6 +71,9 @@
- 			  For Axon it can be absent, though my current driver
- 			  doesn't handle phy-address yet so for now, keep
- 			  0x00ffffff in it.
-+    - phy-handle	: Used to describe configurations where a external PHY
-+			  is used. Please refer to:
-+			  Documentation/devicetree/bindings/net/ethernet.txt
-     - rx-fifo-size-gige : 1 cell, Rx fifo size in bytes for 1000 Mb/sec
- 			  operations (if absent the value is the same as
- 			  rx-fifo-size).  For Axon, either absent or 2048.
-@@ -81,8 +84,22 @@
- 			  offload, phandle of the TAH device node.
-     - tah-channel       : 1 cell, optional. If appropriate, channel used on the
- 			  TAH engine.
-+    - fixed-link	: Fixed-link subnode describing a link to a non-MDIO
-+			  managed entity. See
-+			  Documentation/devicetree/bindings/net/fixed-link.txt
-+			  for details.
-+    - mdio subnode	: When the EMAC has a phy connected to its local
-+			  mdio, which us supported by the kernel's network
-+			  PHY library in drivers/net/phy, there must be device
-+			  tree subnode with the following required properties:
-+				- #address-cells: Must be <1>.
-+				- #size-cells: Must be <0>.
- 
--    Example:
-+			  For PHY definitions: Please refer to
-+			  Documentation/devicetree/bindings/net/phy.txt and
-+			  Documentation/devicetree/bindings/net/ethernet.txt
-+
-+    Examples:
- 
- 	EMAC0: ethernet@40000800 {
- 		device_type = "network";
-@@ -104,6 +121,47 @@
- 		zmii-channel = <0>;
- 	};
- 
-+	EMAC1: ethernet@ef600c00 {
-+		device_type = "network";
-+		compatible = "ibm,emac-apm821xx", "ibm,emac4sync";
-+		interrupt-parent = <&EMAC1>;
-+		interrupts = <0 1>;
-+		#interrupt-cells = <1>;
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+		interrupt-map = <0 &UIC2 0x10 IRQ_TYPE_LEVEL_HIGH /* Status */
-+				 1 &UIC2 0x14 IRQ_TYPE_LEVEL_HIGH /* Wake */>;
-+		reg = <0xef600c00 0x000000c4>;
-+		local-mac-address = [000000000000]; /* Filled in by U-Boot */
-+		mal-device = <&MAL0>;
-+		mal-tx-channel = <0>;
-+		mal-rx-channel = <0>;
-+		cell-index = <0>;
-+		max-frame-size = <9000>;
-+		rx-fifo-size = <16384>;
-+		tx-fifo-size = <2048>;
-+		fifo-entry-size = <10>;
-+		phy-mode = "rgmii";
-+		phy-handle = <&phy0>;
-+		phy-map = <0x00000000>;
-+		rgmii-device = <&RGMII0>;
-+		rgmii-channel = <0>;
-+		tah-device = <&TAH0>;
-+		tah-channel = <0>;
-+		has-inverted-stacr-oc;
-+		has-new-stacr-staopc;
-+
-+	        mdio {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			phy0: ethernet-phy@0 {
-+				compatible = "ethernet-phy-ieee802.3-c22";
-+				reg = <0>;
-+		};
-+	};
-+
-+
-       ii) McMAL node
- 
-     Required properties:
-@@ -145,4 +203,3 @@
-     - revision           : as provided by the RGMII new version register if
- 			   available.
- 			   For Axon: 0x0000012a
--
--- 
-2.11.0
+A few comments on the driver though.
+
+>  drivers/input/misc/pwm-beeper.c                    | 36 ++++++++++++++++------
+>  2 files changed, 30 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> index be332ae..4e4e128 100644
+> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> @@ -5,3 +5,6 @@ Registers a PWM device as beeper.
+>  Required properties:
+>  - compatible: should be "pwm-beeper"
+>  - pwms: phandle to the physical PWM device
+> +
+> +optional properties:
+> +- beeper-hz:  bell frequency in Hz
+> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+> index 5f9655d..5ea6fda 100644
+> --- a/drivers/input/misc/pwm-beeper.c
+> +++ b/drivers/input/misc/pwm-beeper.c
+> @@ -27,6 +27,7 @@ struct pwm_beeper {
+>  	struct pwm_device *pwm;
+>  	struct work_struct work;
+>  	unsigned long period;
+> +	unsigned int bell_frequency;
+>  };
+>  
+>  #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
+> @@ -58,20 +59,17 @@ static int pwm_beeper_event(struct input_dev *input,
+>  	if (type != EV_SND || value < 0)
+>  		return -EINVAL;
+>  
+> -	switch (code) {
+> -	case SND_BELL:
+> -		value = value ? 1000 : 0;
+> -		break;
+> -	case SND_TONE:
+> -		break;
+> -	default:
+> +	if (code != SND_BELL && code != SND_TONE)
+>  		return -EINVAL;
+> -	}
+>  
+>  	if (value == 0)
+>  		beeper->period = 0;
+> -	else
+> +	else {
+> +		if (code == SND_BELL)
+> +			value = beeper->bell_frequency;
+> +
+>  		beeper->period = HZ_TO_NANOSECONDS(value);
+> +	}
+>  
+>  	schedule_work(&beeper->work);
+>  
+> @@ -93,6 +91,25 @@ static void pwm_beeper_close(struct input_dev *input)
+>  	pwm_beeper_stop(beeper);
+>  }
+>  
+> +static void pwm_beeper_init_bell_frequency(struct device *dev,
+> +					   struct pwm_beeper *beeper)
+> +{
+> +	struct device_node *node;
+> +	unsigned int bell_frequency = 1000;
+> +	int err;
+> +
+> +	if (IS_ENABLED(CONFIG_OF)) {
+
+You don't really need this. There should be an empty version of the 
+function.
+
+> +		node = dev->of_node;
+
+You don't need this line.
+
+> +		err = device_property_read_u32(dev, "beeper-hz",
+> +					       &bell_frequency);
+> +		if (err < 0)
+> +			dev_dbg(dev, "Failed to read beeper-hz, using default: %u Hz\n",
+> +				bell_frequency);
+> +	}
+> +
+> +	beeper->bell_frequency = bell_frequency;
+> +}
+> +
+>  static int pwm_beeper_probe(struct platform_device *pdev)
+>  {
+>  	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
+> @@ -122,6 +139,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+>  	pwm_apply_args(beeper->pwm);
+>  
+>  	INIT_WORK(&beeper->work, pwm_beeper_work);
+> +	pwm_beeper_init_bell_frequency(&pdev->dev, beeper);
+>  
+>  	beeper->input = input_allocate_device();
+>  	if (!beeper->input) {
+> -- 
+> 2.7.4
+> 
