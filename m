@@ -1,64 +1,51 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 4/8] drm/sun4i: Grab reserved memory region
-Date: Mon, 27 Feb 2017 15:49:19 +0100
-Message-ID: <20170227144919.pijmvi3yptvxlbkx@lukather>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
- <cf185f6de351837a9a29c123ca801682c983b83d.1486655917.git-series.maxime.ripard@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/6] ARM: dts: armada-xp-98dx3236: combine dfx server
+ nodes
+Date: Mon, 27 Feb 2017 08:49:48 -0600
+Message-ID: <20170227144948.arndiwidghwd7pth@rob-hp-laptop>
+References: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
+ <20170216085041.28337-3-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="drwddbbdvfj3blu7"
-Return-path: <owner-linux-mm@kvack.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <cf185f6de351837a9a29c123ca801682c983b83d.1486655917.git-series.maxime.ripard@free-electrons.com>
-Sender: owner-linux-mm@kvack.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+In-Reply-To: <20170216085041.28337-3-chris.packham@alliedtelesis.co.nz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 16, 2017 at 09:50:36PM +1300, Chris Packham wrote:
+> Rather than having a separate node for the dfx server add a reg property
+> to the parent node. This give some compatibility with the Marvell
+> supplied SDK.
+> 
+> As no upstream driver currently exists for this block and support for
+> this SoC is still quite fresh in the kernel it should not be necessary
+> to retain a backwards compatible binding.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+> 
+> Notes:
+>     Changes in v2:
+>     - none
+>     Changes in v3:
+>     - update commit message to indicate backwards incompatible change and
+>       why it's OK
+>     - retain dfx-server compatible string
+> 
+>  Documentation/devicetree/bindings/net/marvell,prestera.txt | 13 +++++--------
+>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi                  | 10 +++-------
+>  2 files changed, 8 insertions(+), 15 deletions(-)
 
---drwddbbdvfj3blu7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 09, 2017 at 05:39:18PM +0100, Maxime Ripard wrote:
-> Allow to provide an optional memory region to allocate from for our DRM
-> driver.
->=20
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-
-Fixed the conflicts and applied.
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---drwddbbdvfj3blu7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYtDxrAAoJEBx+YmzsjxAgCKgP/j2zjI1Va7uaSMFU/DjawVpR
-m2Acc1QiVTi0LxG5Q6/iuq6EO//3FTxT7QzlQoE3iRstRRlWZ2u2qjtSCL/gW8cj
-sPwxAzJaYfrMwzTVBPxbUeNyihDTmR263WCZXZfw7QrL0n2rdZ/GJoxQOgzicxOC
-taOo0yOyTiEjqIPdNiWVrGZiErIaK/8CdW8k3msAqI5YZIrzJ0IWgVaIE/7Qn8vx
-wpY7LHYyhrH5ogJUpkqhOtEXaSFLjn4zdAy0HwACYmMtyoi8JJvHH3vK2YArvJrX
-UUDqGgc3IpzrXaf8iPhXnSkBFQfoqX7JL/buE7VeVh4HW78y8LZkc2jXCh7HLBAn
-xj/9muedm07odljkknHT31LZ5uBL4hclxLoXRryLRo6lyjvbFP0wD0DkxQ42rfjN
-A+qiDAy2QwhipXzZaMdl9OECsQWb/CG79lG9MuLcI382zakxHBFv6OhyELGapb8/
-0ncc/D1Fu+Y49BQ0T6Riw6vo52mN7aUfM0/P1NtyMNlUiuM/l4zuX9dK5PDnMDPK
-36PuN5mFjZ0VvG8zB47cRN7NJNvEhYk2AZ+XrJuWa7cuGBo0ImTYmt51sg2RqGVO
-7w6oW47JljCmLjzkM+8ZFE9Ru+FR9T2BB/iHZyTxPYKTMkKZ9ZeaUdaNVWQyQnCv
-2y0bPSf7gqQh72zE2UvH
-=SJQV
------END PGP SIGNATURE-----
-
---drwddbbdvfj3blu7--
-
---
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+Acked-by: Rob Herring <robh@kernel.org>
