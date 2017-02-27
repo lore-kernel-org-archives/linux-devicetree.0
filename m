@@ -1,54 +1,76 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 5/7] arm: dts: sun8i: split Allwinner H3 .dtsi
-Date: Mon, 27 Feb 2017 08:20:40 +0000
-Message-ID: <579a2e9f-335f-04b7-fce2-ee4d2128141f@arm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 1/7] arm64: allwinner: Kconfig: add
+ essential pinctrl driver for H5
+Date: Mon, 27 Feb 2017 09:25:14 +0100
+Message-ID: <20170227082514.54umfltn5xmdcpv3@lukather>
 References: <20170226011956.53581-1-icenowy@aosc.xyz>
- <20170226011956.53581-6-icenowy@aosc.xyz>
- <CAGb2v67qywz9EdTzguAOEtWYqqrOZ-jSMTgkRza3dysUsCN6rw@mail.gmail.com>
-Reply-To: marc.zyngier-5wv7dgnIgG8@public.gmane.org
+ <20170226011956.53581-2-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCPZR5X4TYBBBX6CZ7CQKGQEDKGJPGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tkxmchuhxcbqiygm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB26EZ7CQKGQEE5VQ4RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67qywz9EdTzguAOEtWYqqrOZ-jSMTgkRza3dysUsCN6rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170226011956.53581-2-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/02/17 03:46, Chen-Yu Tsai wrote:
-> Hi,
 
-[...]
+--tkxmchuhxcbqiygm
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
->> -               gic: interrupt-controller@01c81000 {
->> -                       compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->> -                       reg = <0x01c81000 0x1000>,
->> -                             <0x01c82000 0x2000>,
->> -                             <0x01c84000 0x2000>,
->> -                             <0x01c86000 0x2000>;
->> -                       interrupt-controller;
->> -                       #interrupt-cells = <3>;
->> -                       interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+On Sun, Feb 26, 2017 at 09:19:50AM +0800, Icenowy Zheng wrote:
+> H5 SoC has two pin controllers, one (in user manual called "CPUx") needs
+> a slightly advanced driver, and the other (called "CPUs") is just equal
+> to the on in H3, and the H3 driver can be just reused.
 > 
-> The gic bits seem to be the same for both SoCs, aside from the
-> different compatible
-> string. Marc had sent a series to change them all to arm,gic-400, which is the
-> proper name for it, but it wasn't merged. I'm assuming the compatibles
-> are equal?
-> If so then it can also be shared.
+> Select the two necessary pinctrl drivers when building kernel for
+> Allwinner SoCs.
+> 
+> Also add H5 in the option's description.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig.platforms | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 129cc5ae4091..81f0d6149c2e 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -5,8 +5,11 @@ config ARCH_SUNXI
+>  	select GENERIC_IRQ_CHIP
+>  	select PINCTRL
+>  	select PINCTRL_SUN50I_A64
+> +	select PINCTRL_SUN50I_H5
+> +	select PINCTRL_SUN8I_H3_R
 
-The series was fixing the various GICv2 memory maps, and is now in
-mainline. If you have a good indication that all these SoCs are indeed
-featuring a gic-400, feel free to amend the DT.
+Why not add those options as def_bool instead?
 
-Thanks,
+Being able to remove them certainly have values if you want to strip
+them down.
 
-	M.
+>  	help
+> -	  This enables support for Allwinner sunxi based SoCs like the A64.
+> +	  This enables support for Allwinner sunxi based SoCs like the A64
+> +	  and H5.
+
+There's no point in having an ever growing list of SoCs here. You can
+just remove the mention of the A64.
+
+Maxime
+
 -- 
-Jazz is not dead. It just smells funny...
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--tkxmchuhxcbqiygm--
