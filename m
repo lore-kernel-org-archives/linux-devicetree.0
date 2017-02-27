@@ -1,60 +1,42 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: spi: document bcm63xx HS SPI devicetree
- bindings
-Date: Mon, 27 Feb 2017 14:49:21 -0800
-Message-ID: <c21aadc6-cbcf-4948-0e40-b8aae0304430@gmail.com>
-References: <20170222131940.31085-1-jonas.gorski@gmail.com>
- <20170222131940.31085-2-jonas.gorski@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
+Date: Mon, 27 Feb 2017 16:58:42 -0600
+Message-ID: <20170227225842.pkix32wpcdien3cu@rob-hp-laptop>
+References: <20170222163131.14136-1-carlo@caione.org>
+ <20170222163131.14136-3-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170222131940.31085-2-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170222163131.14136-3-carlo@caione.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <carlo@caione.org>
+Cc: devicetree@vger.kernel.org, narmstrong@baylibre.com, khilman@baylibre.com, Carlo Caione <carlo@endlessm.com>, linux-amlogic@lists.infradead.org, linux@endlessm.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/22/2017 05:19 AM, Jonas Gorski wrote:
-> Add documentation for the bindings of the high speed SPI controller found
-> on newer bcm63xx SoCs.
+On Wed, Feb 22, 2017 at 05:31:31PM +0100, Carlo Caione wrote:
+> From: Carlo Caione <carlo@endlessm.com>
 > 
-> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> This patch adds support for the HwaCom AmazeTV set-top-box. The
+> hardware configuration is really similar to the other GXL boards but
+> for this hardware we need to limit the max-frequency of the eMMC to
+> have it working.
+> 
+> Signed-off-by: Carlo Caione <carlo@endlessm.com>
 > ---
->  .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
-> new file mode 100644
-> index 000000000000..3b0a2220b896
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
-> @@ -0,0 +1,35 @@
-> +Binding for Broadcom BCM6328 SPI controller
-> +
-> +Required properties:
-> +- compatible: must contain of "brcm,bcm6328-hsspi".
-> +- reg: Base address and size of the controllers memory area.
-> +- interrupts: Interrupt for the SPI block.
-> +- clocks: phandle of the SPI clock.
-> +- clock-names: must be "hsspi".
-> +- #address-cells: <1>, as required by generic SPI binding.
-> +- #size-cells: <0>, also as required by generic SPI binding.
-> +
-> +Optional properties:
-> +- num-cs: some controllers have less than 8 cs signals. Defaults to 8
-> +  if absent.
-> +- clocks: a second handle for the PLL clock.
-> +- clock-names: must be named "pll", if present.
+>  Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+>  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+>  .../boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts  | 164 +++++++++++++++++++++
+>  3 files changed, 166 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
 
-I have not found chips where the PLL may be optional, but there may be
-ways to have the same PLL and UBUS clocks feeding into the HSSPI block.
-
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
