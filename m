@@ -1,53 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] input: arizona-haptics - Add device property for HAP_ACT
-Date: Mon, 27 Feb 2017 10:39:11 -0600
-Message-ID: <20170227163911.wymyo23crb3mfwml@rob-hp-laptop>
-References: <1487266558-19040-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] hwmon: (sht15) Add device tree support
+Date: Mon, 27 Feb 2017 13:46:42 -0300
+Message-ID: <CAOMZO5D9UyKpxRB_bLrDFohyofTBu=sZArVynu--Fao6PewcKg@mail.gmail.com>
+References: <1487247824-10005-1-git-send-email-marco.franchi@nxp.com> <20170227155752.b6yshpowa4ioty6a@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1487266558-19040-1-git-send-email-rf@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Cc: dmitry.torokhov@gmail.com, patches@opensource.wolfsonmicro.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170227155752.b6yshpowa4ioty6a@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marco Antonio Franchi <marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, FoxPeter-5t/GDYzpMLSELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 05:35:58PM +0000, Richard Fitzgerald wrote:
-> This adds a device property for setting the configuration for the
-> HAP_ACT register field so that the connected actuator type can be
-> configured on systems that are not using pdata.
-> 
-> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> ---
->  Documentation/devicetree/bindings/input/arizona-haptics.txt | 10 ++++++++++
->  MAINTAINERS                                                 |  1 +
->  drivers/input/misc/arizona-haptics.c                        |  7 +++++++
->  3 files changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/arizona-haptics.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/arizona-haptics.txt b/Documentation/devicetree/bindings/input/arizona-haptics.txt
-> new file mode 100644
-> index 0000000..a3e767b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/arizona-haptics.txt
-> @@ -0,0 +1,10 @@
-> +Cirrus Logic Arizona class audio SoCs
-> +
-> +This document lists haptics bindings for these codecs.
-> +Also see the primary binding document:
-> +  ../mfd/arizona.txt
-> +
-> +Optional properties:
-> +  - wlf,hap-act : Single value defining the actuator type, as per the HAP_ACT
-> +    register field. See the codec datasheet for the available HAP_ACT values
-> +    and their meaning.
+Hi Rob,
 
-What node does this property apply to? Document this in mfd/arizona.txt.
+On Mon, Feb 27, 2017 at 12:57 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-I would like the possible values documented here or a better 
-education as to what this is because I have no idea if this property 
-makes sense and I can't read everybody's datasheet. Just because you 
-have it as platform data doesn't mean it belongs in DT.
+>> +Required properties:
+>> +
+>> + - "compatible": must be "sensirion,sht15".
+>> + - "data-gpios": GPIO connected to the data line.
+>> + - "clk-gpios": GPIO connected to the clock line.
+>
+> Looks like this device is I2C perhaps? Though I'm not sure the waveforms
+> before and after transactions are compliant.
 
-Rob
+No, the SHT15 datasheet is very clear that the device does not operate
+in I2C mode:
+"The sensor cannot be addressed by I2C protocol".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
