@@ -1,60 +1,91 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: Recommended notation for OPP to avoid DTC warnings
-Date: Mon, 27 Feb 2017 19:58:28 +0900
-Message-ID: <CAK7LNARnxdi4B2G2FnvfQNM8iVK+rsdH7N7Uwd+Qc2d9hSsuUA@mail.gmail.com>
-References: <CAK7LNAQyc9=3d07-1upywYDk-AaRUGK4mJwAVduCuEJgnY1uFA@mail.gmail.com>
- <20170227104445.GE6795@leverpostej> <20170227105533.GA19417@vireshk-i7>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [RFC v2 2/7] IIO: Add bindings for simple sigma
+	delta adc
+Date: Mon, 27 Feb 2017 12:15:47 +0100
+Message-ID: <6943aaf5-b580-0fd1-7a2e-b99f7a266388@st.com>
+References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
+ <1487003909-11710-3-git-send-email-arnaud.pouliquen@st.com>
+ <20170222151750.h5d7gycltwnk7b4t@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170227105533.GA19417@vireshk-i7>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170222151750.h5d7gycltwnk7b4t@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-02-27 19:55 GMT+09:00 Viresh Kumar <viresh.kumar@linaro.org>:
-> On 27-02-17, 10:44, Mark Rutland wrote:
->> On Sun, Feb 26, 2017 at 02:18:03PM +0900, Masahiro Yamada wrote:
->> > Hi.
->> >
->> >
->> > Decumentation/devicetree/bindings/opp/opp.txt
->> > takes examples like this:
->> >
->> >         opp@1000000000 {
->> >                 opp-hz = /bits/ 64 <1000000000>;
->> >                 opp-microvolt = <970000 975000 985000>;
->> >                 opp-microamp = <70000>;
->> >                 clock-latency-ns = <300000>;
->> >                 opp-suspend;
->> >         };
+Hello Rob,
+
+Please find my answers in-line
+
+Regards,
+
+Arnaud
+
+On 02/22/2017 04:17 PM, Rob Herring wrote:
+> On Mon, Feb 13, 2017 at 05:38:24PM +0100, Arnaud Pouliquen wrote:
+>> Add documentation of device tree bindings to support
+>> sigma delta modulator in IIO framework.
 >>
->> > If we follow this notation and the device-tree is built with W=1,
->> > DTC warns like follows:
->> >
->> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
->> > unit name, but no reg property
->> >
->> > Is there a recommended notation to avoid it?
->> >
->> > Maybe, simply omit the "@" ?
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>>  Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
 >>
->> I think just s/@/-/ should be fine, e.g. call the above opp-1000000000.
->
-> That's fine with me. I can send a patch to fix all existing users if we all
-> agree for it.
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt b/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
+>> new file mode 100644
+>> index 0000000..2b3968a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
+>> @@ -0,0 +1,13 @@
+>> +Device-Tree bindings for simple sigma delta adc
+> 
+> What makes it "simple"?
+"simple" sigma delta modulator are external chip that just converts
+analog signal in sigma delta modulation. No configuration needs.
+"Simple" is use to differentiate SD ADC that offers interfaces to
+activate some internal processing ( gain, offset compensation...)
 
+> 
+>> +
+>> +Required properties:
+>> +- compatible: should be "sd-modulator".
+>> +- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
+>> +
+>> +Example node:
+>> +
+>> +	ads1202: simple_sd_adc@0 {
+> 
+> Is ads1202 the actual chip? Then it should be in the compatible list.
+I tried to define a generic device to support several SD modulator
+chips, inspired by ALSA "dmic-codec" device.
+I have none exhaustive list of chip that can be handled by the driver,
+but i found several devices that could match...
+That why i did not use chip name in compatible list.
+What should be the best way to do it?
 
-OK with me.
-
-Also, please remember to update the examples
-in Documentation/devicetree/bindings/opp/opp.txt
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+> unit address without a reg prop is an error. The node name should be 
+> "adc".
+> 
+>> +		compatible = "sd-modulator";
+>> +		#io-channel-cells = <1>;
+>> +		status = "okay";
+> 
+> Drop status from examples.
+> 
+>> +	};
+>> -- 
+>> 1.9.1
+>>
