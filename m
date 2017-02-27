@@ -1,66 +1,52 @@
-From: matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH 3/4] fpga dt: bindings for Altera Partial Reconfiguraion
- IP.
-Date: Mon, 27 Feb 2017 08:27:49 -0800 (PST)
-Message-ID: <alpine.DEB.2.20.1702270822260.13342@mgerlach-VirtualBox>
-References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com> <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com> <20170227143230.b3frg3rg2sdttt64@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 14/22] dt-bindings: PCI: dra7xx: Add dt bindings to
+ enable legacy mode
+Date: Mon, 27 Feb 2017 10:40:54 -0600
+Message-ID: <20170227164054.xcubjpaf2qx3pxol@rob-hp-laptop>
+References: <1487325042-28227-1-git-send-email-kishon@ti.com>
+ <1487325042-28227-15-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170227143230.b3frg3rg2sdttt64@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: atull@opensource.altera.com, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1487325042-28227-15-git-send-email-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 17, 2017 at 03:20:34PM +0530, Kishon Vijay Abraham I wrote:
+> Update device tree binding documentation of TI's dra7xx PCI
+> controller to include property for enabling legacy mode.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> index 190828a..72ebe2b 100644
+> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> @@ -39,6 +39,10 @@ DEVICE MODE
+>   - interrupts : one interrupt entries must be specified for main interrupt.
+>   - num-ib-windows : number of inbound address translation windows
+>   - num-ob-windows : number of outbound address translation windows
+> + - syscon-legacy-mode: phandle to the syscon dt node. The 1st argument should
+> +		       contain the register offset within syscon and the 2nd
+> +		       argument should contain the bit field for setting the
+> +		       legacy mode
 
+Vendor prefix needed and what does "legacy mode" mean? Perhaps name this 
+around what the mode is/does, not that it is legacy.
 
-On Mon, 27 Feb 2017, Rob Herring wrote:
-
-Hi Rob,
-
-
-> On Wed, Feb 15, 2017 at 01:10:37PM -0800, matthew.gerlach@linux.intel.com wrote:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>
->> Device Tree bindings for Altera Partial Reconfiguraion IP?
->>
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
->> ---
->>  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
->>
->> diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
->> new file mode 100644
->> index 0000000..ada821f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
->> @@ -0,0 +1,12 @@
->> +Altera Partial Reconfiguration IP
->> +
->> +Required properties:
->> +- compatible : should contain "altr,pr-ip"
->
-> Kind of generic. There's only one version of h/w?
-
-
-Fair point on being generic.  It does match the published documentation, 
-but we could be more specific with "altr,a10-pr-ip" because it 
-really is only for an Arria10.
-
-Matthew Gerlach
-
->
->> +- reg        : base address and size for memory mapped io.
->> +
->> +Example:
->> +
->> +	fpga_mgr: fpga-mgr@ff20c000 {
->> +		compatible = "altr,pr-ip";
->> +		reg = <0xff20c000 0x10>;
->> +	};
->> --
->> 2.7.4
->>
->
+Rob
