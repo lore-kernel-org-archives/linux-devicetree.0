@@ -1,40 +1,131 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 6/6] ARM: dts: mvebu: Move mv98dx3236 clock bindings
-Date: Mon, 27 Feb 2017 09:15:25 -0600
-Message-ID: <20170227151525.cmtza63aw5ogszjr@rob-hp-laptop>
-References: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
- <20170216085041.28337-7-chris.packham@alliedtelesis.co.nz>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] devicetree: of_node_put() does not require holding
+ devtree_lock
+Date: Mon, 27 Feb 2017 06:54:46 -0800
+Message-ID: <58B43DB6.4040009@gmail.com>
+References: <1487755758-6066-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170216085041.28337-7-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1487755758-6066-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 09:50:40PM +1300, Chris Packham wrote:
-> Previously the coreclk binding for the 98dx3236 SoC was inherited from
-> the armada-370/xp. This block is present in as much as it is possible to
-> read from the register location without causing any harm. However the
-> actual sampled at reset values are reflected in the DFX block.
+On 02/22/17 01:29, Sakari Ailus wrote:
+> While holding a reference to a device_node it is allowed to put that node
+> without holding devtree_lock spinlock. Move of_node_put() after releasing
+> the spinlock.
 > 
-> Moving the binding to the DFX block enables support for different clock
-> strapping options in hardware.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> 
-> Notes:
->     Changes in v2:
->     - New. Split out from "clk: mvebu: Expand mv98dx3236-core-clock support"
->     Changes in v3:
->     - Clarify why the old location was wrong (but worked).
-> 
->  .../devicetree/bindings/clock/mvebu-core-clock.txt         |  7 +++++++
->  .../devicetree/bindings/clock/mvebu-gated-clock.txt        | 11 +++++++++++
->  arch/arm/boot/dts/armada-xp-98dx3236.dtsi                  | 14 +++++++-------
->  3 files changed, 25 insertions(+), 7 deletions(-)
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+I would rather leave this code the way it is.
+
+The change is a micro-optimization that is not going to have any real
+impact on performance.
+
+The change also makes the code less clear and readable.  (Not
+significantly, but very slightly).  THe code in the current form
+slightly emphasizes the balancing of gets and puts.  I know that
+this is nit picking, but so be it.
+
+Thus the change is on balance code churn.
+
+-Frank
+
+> ---
+>  drivers/of/base.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d4bea3c..a8d7fed 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -286,8 +286,8 @@ struct device_node *of_find_all_nodes(struct device_node *prev)
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np = __of_find_all_nodes(prev);
+>  	of_node_get(np);
+> -	of_node_put(prev);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(prev);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_all_nodes);
+> @@ -660,8 +660,8 @@ struct device_node *of_get_next_parent(struct device_node *node)
+>  
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	parent = of_node_get(node->parent);
+> -	of_node_put(node);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(node);
+>  	return parent;
+>  }
+>  EXPORT_SYMBOL(of_get_next_parent);
+> @@ -732,8 +732,8 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+>  		if (of_node_get(next))
+>  			break;
+>  	}
+> -	of_node_put(prev);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(prev);
+>  	return next;
+>  }
+>  EXPORT_SYMBOL(of_get_next_available_child);
+> @@ -875,8 +875,8 @@ struct device_node *of_find_node_by_name(struct device_node *from,
+>  		if (np->name && (of_node_cmp(np->name, name) == 0)
+>  		    && of_node_get(np))
+>  			break;
+> -	of_node_put(from);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(from);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_by_name);
+> @@ -904,8 +904,8 @@ struct device_node *of_find_node_by_type(struct device_node *from,
+>  		if (np->type && (of_node_cmp(np->type, type) == 0)
+>  		    && of_node_get(np))
+>  			break;
+> -	of_node_put(from);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(from);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_by_type);
+> @@ -935,8 +935,8 @@ struct device_node *of_find_compatible_node(struct device_node *from,
+>  		if (__of_device_is_compatible(np, compatible, type, NULL) &&
+>  		    of_node_get(np))
+>  			break;
+> -	of_node_put(from);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(from);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_compatible_node);
+> @@ -970,8 +970,8 @@ struct device_node *of_find_node_with_property(struct device_node *from,
+>  		}
+>  	}
+>  out:
+> -	of_node_put(from);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(from);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_with_property);
+> @@ -1051,8 +1051,8 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
+>  			break;
+>  		}
+>  	}
+> -	of_node_put(from);
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	of_node_put(from);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_matching_node_and_match);
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
