@@ -1,69 +1,25 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 4/6] i2c: designware: introducing I2C_SLAVE definitions
-Date: Mon, 27 Feb 2017 11:24:25 -0600
-Message-ID: <20170227172425.cwg3wlzdm75lr5gz@rob-hp-laptop>
-References: <cover.1487009294.git.lolivei@synopsys.com>
- <36d6f21ead74e6436215f9ca449a42114ebec0d1.1487009294.git.lolivei@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: add vendor prefix for Sensirion company
+Date: Mon, 27 Feb 2017 11:33:32 -0600
+Message-ID: <CAL_JsqKpb=jSqb84nZSfpY2J-b=H4u+6T2+O7Yi01UwLX+vsRQ@mail.gmail.com>
+References: <20170219145949.22750-1-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <36d6f21ead74e6436215f9ca449a42114ebec0d1.1487009294.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: wsa@the-dreams.de, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170219145949.22750-1-tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 12:22:13PM +0000, Luis Oliveira wrote:
-> - Definitions were added to core library
-> - A example was added to designware-core.txt Documentation that shows
->   how the slave can be setup using DTS
-> 
-> SLAVE related definitions were added to the core of the controller.
-> 
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Sun, Feb 19, 2017 at 8:59 AM, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch adds prefix for Sensirion company.
+>
+> Signed-off-by: Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> V5->V6
-> - Included an example of use in the device tree binding document
-> 
->  .../devicetree/bindings/i2c/i2c-designware.txt     | 16 +++++++++-
->  drivers/i2c/busses/i2c-designware-core.h           | 35 ++++++++++++++++++++--
->  2 files changed, 48 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> index fee26dc3e858..c6f1d9a63d18 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> @@ -20,7 +20,7 @@ Optional properties :
->   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
->     This value which is by default 300ns is used to compute the tHIGH period.
->  
-> -Example :
-> +Examples :
->  
->  	i2c@f0000 {
->  		#address-cells = <1>;
-> @@ -43,3 +43,17 @@ Example :
->  		i2c-sda-falling-time-ns = <300>;
->  		i2c-scl-falling-time-ns = <300>;
->  	};
-> +
-> +	i2c@01120000 {
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Drop leading 0. With that, for the binding:
+There's another patch already adding this that I'm applying, so drop this one.
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x2000 0x100>;
-> +		clock-frequency = <400000>;
-> +		clocks = <&i2cclk>;
-> +		interrupts = <0>;
-> +
-> +		eeprom@64 {
-> +			compatible = "linux,slave-24c02";
-> +			reg = <0x40000064>;
-> +		};
-> +	};
+Rob
