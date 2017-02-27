@@ -1,77 +1,108 @@
-From: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Subject: Re: [WARNING: A/V UNSCANNABLE][Merge tag 'media/v4.11-1' of git]
- ff58d005cd: BUG: unable to handle kernel NULL pointer dereference at 0000039c
-Date: Mon, 27 Feb 2017 11:23:21 -0800
-Message-ID: <CA+55aFxwtkOs95R-v7z8yjguvp91oDTxRKs-x3uN_=sM_33Gvg@mail.gmail.com>
-References: <58b07b30.9XFLj9Hhl7F6HMc2%fengguang.wu@intel.com>
- <CA+55aFytXj+TZ_TanbxcY0KgRTrV7Vvr=fWON8tioUGmYHYiNA@mail.gmail.com>
- <20170225090741.GA20463@gmail.com>
- <CA+55aFy+ER8cYV02eZsKAOLnZBWY96zNWqUFWSWT1+3sZD4XnQ@mail.gmail.com>
- <alpine.DEB.2.20.1702271105090.4732@nanos>
- <alpine.DEB.2.20.1702271231410.4732@nanos>
- <20170227154124.GA20569@gmail.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v5 1/3] nvmem: sunxi-sid: read NVMEM size from
+ device compatible
+Date: Tue, 28 Feb 2017 03:27:13 +0800
+Message-ID: <20170227192715.50198-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20170227154124.GA20569-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ruslan Ruslichenko <rruslich-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Sean Young <sean-hENCXIMQXOg@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, kernel test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, LKP <lkp-JC7UmRfGjtg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBL732HCQKGQEGMDFTHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 27, 2017 at 7:41 AM, Ingo Molnar <mingo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
-> BTW., instead of trying to avoid the scenario, wow about moving in the other
-> direction: making CONFIG_DEBUG_SHIRQ=y unconditional property in the IRQ core code
-> starting from v4.12 or so
+Sometimes the SID device have more memory address space than the real
+NVMEM size (for the registers used to read/write the SID).
 
-The problem is that it's generally almost undebuggable ahead of time
-by developers, and most users won't be able to do good reports either,
-because the symptom is geberally a boot-time crash, often with no
-logs.
+Fetch the NVMEM size from device compatible, rather than the memory
+address space's length, in order to prepare for adding some
+registers-based read support.
 
-So this option is *not* good for actual users. It's been tried before.
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+Changes in v4:
+- Added Maxime's ACK.
 
-It's a wonderful thing for developers to run with to make sure the
-drivers they are working on are resilient to this problem, but we have
-too many legacy drivers and lots of random users, and it's unrealistic
-to expect them to handle it.
+ drivers/nvmem/sunxi_sid.c | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
-In other words: what will happen is that distros start getting bootup
-problem reports six months or a year after we've done it, and *if*
-they figure out it's the irq enabling, they'll disable it, because
-they have no way to solve it either.
-
-And core developers will just maybe see the occasional "4.12 doesn't
-boot for me" reports, but by then developers will ahve moved on to
-4.16 or something.
-
-So I don't disagree that in a perfect world all drivers should just
-handle it. It's just that it's not realistic.
-
-The fact that we have now *twice* gotten an oops report or a "this
-machine doesn't boot" report etc within a week or so of merging the
-problematic patch does *not* indicate that it's easy to fix or rare.
-
-Quite the reverse.
-
-It indicates that it's just rare enough that core developers don't see
-it, but it's common enough to have triggered issues in random places.
-
-And it will just get *much* worse when you then get the random
-end-users that usually have older machines than the developers who
-actually test daily development -git trees.
-
-Then we'll just hit *other* random places, and without having testers
-that are competent and willing or able to bisect or debug.
-
-                  Linus
+diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+index 1567ccca8de3..69524b67007f 100644
+--- a/drivers/nvmem/sunxi_sid.c
++++ b/drivers/nvmem/sunxi_sid.c
+@@ -20,6 +20,7 @@
+ #include <linux/module.h>
+ #include <linux/nvmem-provider.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/random.h>
+@@ -32,6 +33,10 @@ static struct nvmem_config econfig = {
+ 	.owner = THIS_MODULE,
+ };
+ 
++struct sunxi_sid_cfg {
++	u32	size;
++};
++
+ struct sunxi_sid {
+ 	void __iomem		*base;
+ };
+@@ -72,18 +77,24 @@ static int sunxi_sid_probe(struct platform_device *pdev)
+ 	struct sunxi_sid *sid;
+ 	int ret, i, size;
+ 	char *randomness;
++	const struct sunxi_sid_cfg *cfg;
+ 
+ 	sid = devm_kzalloc(dev, sizeof(*sid), GFP_KERNEL);
+ 	if (!sid)
+ 		return -ENOMEM;
+ 
++	cfg = of_device_get_match_data(dev);
++	if (!cfg)
++		return -EINVAL;
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	sid->base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(sid->base))
+ 		return PTR_ERR(sid->base);
+ 
+-	size = resource_size(res) - 1;
+-	econfig.size = resource_size(res);
++	size = cfg->size;
++
++	econfig.size = size;
+ 	econfig.dev = dev;
+ 	econfig.reg_read = sunxi_sid_read;
+ 	econfig.priv = sid;
+@@ -119,9 +130,17 @@ static int sunxi_sid_remove(struct platform_device *pdev)
+ 	return nvmem_unregister(nvmem);
+ }
+ 
++static const struct sunxi_sid_cfg sun4i_a10_cfg = {
++	.size = 0x10,
++};
++
++static const struct sunxi_sid_cfg sun7i_a20_cfg = {
++	.size = 0x200,
++};
++
+ static const struct of_device_id sunxi_sid_of_match[] = {
+-	{ .compatible = "allwinner,sun4i-a10-sid" },
+-	{ .compatible = "allwinner,sun7i-a20-sid" },
++	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
++	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
+ 	{/* sentinel */},
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
+-- 
+2.11.1
