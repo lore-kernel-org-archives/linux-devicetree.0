@@ -1,50 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RESEND PATCH v5 1/4] PCI: imx6: Add code to support i.MX7D
-Date: Mon, 27 Feb 2017 13:42:53 -0600
-Message-ID: <20170227194253.i7vcouppxr62sgh5@rob-hp-laptop>
-References: <20170220160900.7014-1-andrew.smirnov@gmail.com>
- <20170220160900.7014-2-andrew.smirnov@gmail.com>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: Re: [PATCH v1.1] net: emac: add support for device-tree based PHY discovery and setup
+Date: Mon, 27 Feb 2017 20:42:15 +0100
+Message-ID: <2567253.1QjLrx0r05@debian64>
+References: <2109609d-c6a7-5c6f-d6aa-657107765778@gmail.com> <d32546b59c67456c77d003af1df51862d2f8c5de.1487617501.git.chunkeey@googlemail.com> <20170222.153735.1289514443979947868.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170220160900.7014-2-andrew.smirnov@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, yurovsky@gmail.com, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170222.153735.1289514443979947868.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, ivan@de.ibm.com, f.fainelli@gmail.com, andrew@lunn.ch, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 20, 2017 at 08:08:57AM -0800, Andrey Smirnov wrote:
-> Add various bits of code needed to support i.MX7D variant of the IP.
+On Wednesday, February 22, 2017 3:37:35 PM CET David Miller wrote:
+> From: Christian Lamparter <chunkeey@googlemail.com>
+> Date: Mon, 20 Feb 2017 20:10:58 +0100
 > 
-> Cc: yurovsky@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  13 ++-
+> > This patch adds glue-code that allows the EMAC driver to interface
+> > with the existing dt-supported PHYs in drivers/net/phy.
+> > 
+> > Because currently, the emac driver maintains a small library of
+> > supported phys for in a private phy.c file located in the drivers
+> > directory.
+> > 
+> > The support is limited to mostly single ethernet transceiver like the:
+> > CIS8201, BCM5248, ET1011C, Marvell 88E1111 and 88E1112, AR8035.
+> > 
+> > However, routers like the Netgear WNDR4700 and Cisco Meraki MX60(W)
+> > have a 5-port switch (AR8327N) attached to the EMAC. The switch chip
+> > is supported by the qca8k mdio driver, which uses the generic phy
+> > library. Another reason is that PHYLIB also supports the BCM54610,
+> > which was used for the Western Digital My Book Live.
+> > 
+> > This will now also make EMAC select PHYLIB.
+> > 
+> > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> 
+> Applied, thanks.
+> 
+Thanks David.
 
-I guess the conclusion of the discussion is this is fine, so:
+I noticed that the DT Documentation patch:
+"[v1,1/2] dt: emac: document device-tree based phy discovery and setup"
+is still pending with "Changes Requested":
+<https://patchwork.ozlabs.org/patch/729658/>
 
-Acked-by: Rob Herring <robh@kernel.org>
+I think this is because of Florian's comment on patch:
+"[v1,2/2] net: emac: add support for device-tree based PHY discovery and setup"
+If so, can you please queue this documentation update patch for -next?
+(I haven't received any comments or complains. If necessary, I can also
+resent it.)
 
->  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
->  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
->  3 files changed, 112 insertions(+), 26 deletions(-)
+Thanks,
+Christian
