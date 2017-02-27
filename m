@@ -1,132 +1,65 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1.1] dt: emac: document device-tree based phy discovery
- and setup
-Date: Mon, 27 Feb 2017 12:25:53 -0800
-Message-ID: <eaf5b812-deae-c5f7-3930-dadf0b0132bf@gmail.com>
-References: <20170227.145447.1005420963599745103.davem@davemloft.net>
- <8f94c394faf5665ae693f41832f2446dfc7c989e.1488226061.git.chunkeey@googlemail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH RFC 3/3] ARM64: bcm2837-rpi: Fix pwm and i2c pin control
+Date: Mon, 27 Feb 2017 12:56:02 -0800
+Message-ID: <87r32j8ial.fsf@eliezer.anholt.net>
+References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com> <1487280047-29608-4-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8f94c394faf5665ae693f41832f2446dfc7c989e.1488226061.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Ivan Mikhaylov <ivan-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1487280047-29608-4-git-send-email-stefan.wahren@i2se.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Peter Robinson <pbrobinson@gmail.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>, Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/2017 12:11 PM, Christian Lamparter wrote:
-> This patch adds documentation for a new "phy-handle" property,
-> "fixed-link" and "mdio" sub-node. These allows the enumeration
-> of PHYs which are supported by the phy library under drivers/net/phy.
-> 
-> The EMAC ethernet controller in IBM and AMCC 4xx chips is
-> currently stuck with a few privately defined phy
-> implementations. It has no support for PHYs which
-> are supported by the generic phylib.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
-> Resent - no changes.
-> ---
->  .../devicetree/bindings/powerpc/4xx/emac.txt       | 64 +++++++++++++++++++++-
->  1 file changed, 62 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-> index 712baf6c3e24..1893b4c4d93b 100644
-> --- a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-> @@ -71,6 +71,9 @@
->  			  For Axon it can be absent, though my current driver
->  			  doesn't handle phy-address yet so for now, keep
->  			  0x00ffffff in it.
-> +    - phy-handle	: Used to describe configurations where a external PHY
-> +			  is used. Please refer to:
-> +			  Documentation/devicetree/bindings/net/ethernet.txt
->      - rx-fifo-size-gige : 1 cell, Rx fifo size in bytes for 1000 Mb/sec
->  			  operations (if absent the value is the same as
->  			  rx-fifo-size).  For Axon, either absent or 2048.
-> @@ -81,8 +84,22 @@
->  			  offload, phandle of the TAH device node.
->      - tah-channel       : 1 cell, optional. If appropriate, channel used on the
->  			  TAH engine.
-> +    - fixed-link	: Fixed-link subnode describing a link to a non-MDIO
-> +			  managed entity. See
-> +			  Documentation/devicetree/bindings/net/fixed-link.txt
-> +			  for details.
-> +    - mdio subnode	: When the EMAC has a phy connected to its local
-> +			  mdio, which us supported by the kernel's network
-> +			  PHY library in drivers/net/phy, there must be device
-> +			  tree subnode with the following required properties:
-> +				- #address-cells: Must be <1>.
-> +				- #size-cells: Must be <0>.
->  
-> -    Example:
-> +			  For PHY definitions: Please refer to
-> +			  Documentation/devicetree/bindings/net/phy.txt and
-> +			  Documentation/devicetree/bindings/net/ethernet.txt
-> +
-> +    Examples:
->  
->  	EMAC0: ethernet@40000800 {
->  		device_type = "network";
-> @@ -104,6 +121,50 @@
->  		zmii-channel = <0>;
->  	};
->  
-> +	EMAC1: ethernet@ef600c00 {
-> +		device_type = "network";
-> +		compatible = "ibm,emac-apm821xx", "ibm,emac4sync";
-> +		interrupt-parent = <&EMAC1>;
-> +		interrupts = <0 1>;
-> +		#interrupt-cells = <1>;
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +		interrupt-map = <0 &UIC2 0x10 IRQ_TYPE_LEVEL_HIGH /* Status */
-> +				 1 &UIC2 0x14 IRQ_TYPE_LEVEL_HIGH /* Wake */>;
-> +		reg = <0xef600c00 0x000000c4>;
-> +		local-mac-address = [000000000000]; /* Filled in by U-Boot */
-> +		mal-device = <&MAL0>;
-> +		mal-tx-channel = <0>;
-> +		mal-rx-channel = <0>;
-> +		cell-index = <0>;
-> +		max-frame-size = <9000>;
-> +		rx-fifo-size = <16384>;
-> +		tx-fifo-size = <2048>;
-> +		fifo-entry-size = <10>;
-> +		phy-mode = "rgmii";
-> +		phy-handle = <&phy0>;
-> +		phy-map = <0x00000000>;
-> +		rgmii-device = <&RGMII0>;
-> +		rgmii-channel = <0>;
-> +		tah-device = <&TAH0>;
-> +		tah-channel = <0>;
-> +		has-inverted-stacr-oc;
-> +		has-new-stacr-staopc;
-> +
-> +	        mdio {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			phy0: ethernet-phy@0 {
-> +				device_type = "ethernet-phy";
+--=-=-=
+Content-Type: text/plain
 
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-Christian, sorry for noticing this that late, but his does not quite
-conform to the phy.txt binding document here.
+> According to the firmware DT blob [1] the RPi 3 uses different
+> pins for i2c0 and pwm.
+>
+> [1] - https://github.com/raspberrypi/firmware/blob/master/extra/dt-blob.dts
+>
+> Fixes: 9d56c22a7861 ("ARM: bcm2835: Add devicetree for the Raspberry Pi 3.")
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Please put something standard e.g:
+Interesting.  The dt-blob does, I think, basically reflect the state
+that the pins will be in when the firmware hands off to us.  Note that
+the firmware also, at boot, sets ID_SDA/SCL to function 0 (i2c0), probes
+for a HAT ROM and saves it, then restores those pins to whatever mux
+they had before (presumably the dt-blob pin_config values).
 
-			phy0: ethernet-phy@0 {
-				compatible = "ethernet-phy-ieee802.3-c22";
-				reg = <0>;
-			};
+Linux doesn't have any HAT probing code itself, so leaving pins 0/1 as
+GPIO input (most boards) or i2c0 (rev2) should be fine.  I think this
+patch should effectively be a no-op, unless you've enabled the pwm node.
 
-examples tend to be copy/pasted more often than they should...
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My only suggestion for change is: These pin configurations are
+board-specific, so could we just move them into the specific board
+files, instead?  Basically leave bcm2835-rpi.dtsi as the "generic
+configuration of bcm283x for the rpi firmware" rather than "things
+common to bcm2835/6 with rpi firmware but not bcm2837 with rpi
+firmware".
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAli0kmQACgkQtdYpNtH8
+nuiwwhAAujVC0ifl9wWBDLx7DaGAgRiUkhWTBgYXiC9YORxXskrFNGmx2qaYs1CM
+Bb5rCEjHGN/iz1yYWdW8Vysvb6DkWaF5nVJaTsv/S585sMBuZBPutv/Vwj5c9gjs
+BTbKSt+BktWePnJwmY5jmI/lhGZNICtJvry3m9428ZvvJegG8PD6biqDGGPjre0b
+OA+PbM5FGesajoQaFxqdFpLMN2uWx25w6zG1/nVtYrQjfbF9zA073JP4G4wSIHTf
+RVJC1xVHtLZ7TZFSNyH/W1TJI91ba114qbnDZfJ84GAWPKiM18DxEmONlLagBpSj
+p3ls9xY3tyjdBt7r78alDfPX7n14Aa0FGqzYOcL5wTJMz/PSTkEJ5VG4N+z3rxFx
+3obbPuUm4pmy7FBmlr/BusPsbu6Bi3TkYx8q/BCFXm1gvj6Zj2LFqGPbw8k65Pmd
+04EGbJnHBJ5lAQoLWwzLMEe7p9I8SXORqXQqKC2+GaiKSyXEd5LtleijdYop+tNe
+ect92Y/g3mfzCOrL4ZrdkdP6MvNpS+NR6iE9yUmSPwijiQvGigvQzE8XCR5+49ZB
+Nomjiy4F0fDwlKnCohpS1ySLWYXVPeyYWiCS1tZPiDWkoPOgEvEgm/RqzkVXsYO3
+LPAXvt3hHk9+Td3H/nU4wX6LAYB2ewLs1kqfMCK88Itv5AILzfI=
+=X3Fe
+-----END PGP SIGNATURE-----
+--=-=-=--
