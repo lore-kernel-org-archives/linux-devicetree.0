@@ -1,84 +1,58 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 5/9] dmaengine: sun6i: support V3s SoC
-	variant
-Date: Mon, 27 Feb 2017 18:48:01 +0800
-Message-ID: <1426971488192481@web6g.yandex.ru>
-References: <20170225123029.55939-1-icenowy@aosc.xyz>
- <20170225123029.55939-5-icenowy@aosc.xyz>
- <20170227075021.e7e43o54s23jzfto@lukather>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: Recommended notation for OPP to avoid DTC warnings
+Date: Mon, 27 Feb 2017 16:25:33 +0530
+Message-ID: <20170227105533.GA19417@vireshk-i7>
+References: <CAK7LNAQyc9=3d07-1upywYDk-AaRUGK4mJwAVduCuEJgnY1uFA@mail.gmail.com>
+ <20170227104445.GE6795@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170227075021.e7e43o54s23jzfto@lukather>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170227104445.GE6795@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-pm@vger.kernel.org, masahiroy@kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyNy4wMi4yMDE3LCAxNTo1MCwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gU2F0LCBGZWIgMjUsIDIwMTcgYXQgMDg6MzA6MjVQTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqBBbGx3aW5uZXIgVjNzIGhhcyBhIERNQSBlbmdp
-bmUgc2ltaWxhciB0byB0aGUgb25lcyBmcm9tIEEzMSwgYnV0IHdpdGgKPj4gwqBmZXdlciBjaGFu
-bmVscyBhbmQgRFJRcy4KPj4KPj4gwqBBZGQgc3VwcG9ydCBmb3IgaXQuCj4+Cj4+IMKgQXMgaXQg
-YWxzbyBuZWVkcyB0aGUgc3BlY2lhbCBnYXRlIGJpdCwgbWFrZSB0aGUgZ2F0ZSBiaXQgZ2VuZXJp
-Yy4KPgo+IFRoYXQgc2hvdWxkIGJlIHBhcnQgb2YgYSBzZXBhcmF0ZSBwYXRjaC4KCk9LLgoKPgo+
-PiDCoEFjY29yZGluZyB0byBCU1Agc291cmNlIGNvZGUsIFNVTjhJVzYgKEE4M1QpIGFsc28gbmVl
-ZHMgdGhlIGJpdCwgc28gaXQKPj4gwqBoYXZlIGFsc28gYmVlbiBzcGVjaWZpZWQgZ2F0ZV9uZWVk
-ZWQgcHJvcGVydHkuCj4+Cj4+IMKgU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93
-eUBhb3NjLnh5ej4KPj4gwqAtLS0KPj4gwqDCoERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kbWEvc3VuNmktZG1hLnR4dCB8IDEgKwo+PiDCoMKgZHJpdmVycy9kbWEvc3VuNmktZG1h
-LmMgfCAxNyArKysrKysrKysrKysrKy0tLQo+PiDCoMKgMiBmaWxlcyBjaGFuZ2VkLCAxNSBpbnNl
-cnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+Pgo+PiDCoGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3N1bjZpLWRtYS50eHQgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3N1bjZpLWRtYS50eHQKPj4gwqBpbmRleCA2YjI2NzA0
-NWY1MjIuLjk4ZmJlMWE1YzZkZCAxMDA2NDQKPj4gwqAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZG1hL3N1bjZpLWRtYS50eHQKPj4gwqArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3N1bjZpLWRtYS50eHQKPj4gwqBAQCAtOSw2ICs5LDcg
-QEAgUmVxdWlyZWQgcHJvcGVydGllczoKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCJhbGx3aW5uZXIsc3VuOGktYTIzLWRtYSIKPj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJhbGx3aW5uZXIsc3VuOGktYTgzdC1kbWEiCj4+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiYWxsd2lubmVyLHN1bjhpLWgzLWRt
-YSIKPj4gwqArICJhbGx3aW5uZXIsc3VuOGktdjNzLWRtYSIKPj4gwqDCoC0gcmVnOiBTaG91bGQg
-Y29udGFpbiB0aGUgcmVnaXN0ZXJzIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoCj4+IMKgwqAtIGlu
-dGVycnVwdHM6IFNob3VsZCBjb250YWluIGEgcmVmZXJlbmNlIHRvIHRoZSBpbnRlcnJ1cHQgdXNl
-ZCBieSB0aGlzIGRldmljZQo+PiDCoMKgLSBjbG9ja3M6IFNob3VsZCBjb250YWluIGEgcmVmZXJl
-bmNlIHRvIHRoZSBwYXJlbnQgQUhCIGNsb2NrCj4+IMKgZGlmZiAtLWdpdCBhL2RyaXZlcnMvZG1h
-L3N1bjZpLWRtYS5jIGIvZHJpdmVycy9kbWEvc3VuNmktZG1hLmMKPj4gwqBpbmRleCBhMjM1ODc4
-MGFiMmMuLjFmMzg0MjRjMWIxNCAxMDA2NDQKPj4gwqAtLS0gYS9kcml2ZXJzL2RtYS9zdW42aS1k
-bWEuYwo+PiDCoCsrKyBiL2RyaXZlcnMvZG1hL3N1bjZpLWRtYS5jCj4+IMKgQEAgLTEwMSw2ICsx
-MDEsNyBAQCBzdHJ1Y3Qgc3VuNmlfZG1hX2NvbmZpZyB7Cj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-dTMyIG5yX21heF9jaGFubmVsczsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqB1MzIgbnJfbWF4X3Jl
-cXVlc3RzOwo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoHUzMiBucl9tYXhfdmNoYW5zOwo+PiDCoCsg
-Ym9vbCBnYXRlX25lZWRlZDsKPj4gwqDCoH07Cj4+Cj4+IMKgwqAvKgo+PiDCoEBAIC0xMDA5LDEy
-ICsxMDEwLDE0IEBAIHN0YXRpYyBzdHJ1Y3Qgc3VuNmlfZG1hX2NvbmZpZyBzdW44aV9hMjNfZG1h
-X2NmZyA9IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAubnJfbWF4X2NoYW5uZWxzID0gOCwKPj4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqAubnJfbWF4X3JlcXVlc3RzID0gMjQsCj4+IMKgwqDCoMKgwqDC
-oMKgwqDCoMKgLm5yX21heF92Y2hhbnMgPSAzNywKPj4gwqArIC5nYXRlX25lZWRlZCA9IHRydWUs
-Cj4+IMKgwqB9Owo+Pgo+PiDCoMKgc3RhdGljIHN0cnVjdCBzdW42aV9kbWFfY29uZmlnIHN1bjhp
-X2E4M3RfZG1hX2NmZyA9IHsKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAubnJfbWF4X2NoYW5uZWxz
-ID0gOCwKPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAubnJfbWF4X3JlcXVlc3RzID0gMjgsCj4+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgLm5yX21heF92Y2hhbnMgPSAzOSwKPj4gwqArIC5nYXRlX25lZWRl
-ZCA9IHRydWUsCj4+IMKgwqB9Owo+Pgo+PiDCoMKgLyoKPj4gwqBAQCAtMTAyOCwxMSArMTAzMSwx
-OSBAQCBzdGF0aWMgc3RydWN0IHN1bjZpX2RtYV9jb25maWcgc3VuOGlfaDNfZG1hX2NmZyA9IHsK
-Pj4gwqDCoMKgwqDCoMKgwqDCoMKgwqAubnJfbWF4X3ZjaGFucyA9IDM0LAo+PiDCoMKgfTsKPj4K
-Pj4gwqArc3RhdGljIHN0cnVjdCBzdW42aV9kbWFfY29uZmlnIHN1bjhpX3Yzc19kbWFfY2ZnID0g
-ewo+PiDCoCsgLm5yX21heF9jaGFubmVscyA9IDgsCj4+IMKgKyAubnJfbWF4X3JlcXVlc3RzID0g
-MjMsCj4+IMKgKyAubnJfbWF4X3ZjaGFucyA9IDI0LAo+Cj4gVGhpcyBvbmUgaXMgc3VzcGljaW91
-cy4gVGhlcmUncyBqdXN0IGEgc2luZ2xlIGVuZHBvaW50IHRoYXQgY2FuIGJlCj4gdXNlZCBpbiBi
-b3RoIGRpcmVjdGlvbnM/Cgpucl9tYXhfdmNoYW5zIGlzIHRoZSBlbmRwb2ludCBudW1iZXIuIG5y
-X21heF9yZXF1ZXN0cyBpcyB0aGUKbWF4aW11bSBEUlEgbnVtYmVyLCBmb3IgVjNzLCBhY2NvcmRp
-bmcgdG8gdGhlIGRhdGFzaGVldCwgaXQncwoyMzogU1BJMF97UixUfVguCgo+Cj4gTWF4aW1lCj4K
-PiAtLQo+IE1heGltZSBSaXBhcmQsIEZyZWUgRWxlY3Ryb25zCj4gRW1iZWRkZWQgTGludXggYW5k
-IEtlcm5lbCBlbmdpbmVlcmluZwo+IGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5n
-IGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJv
-amVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+On 27-02-17, 10:44, Mark Rutland wrote:
+> On Sun, Feb 26, 2017 at 02:18:03PM +0900, Masahiro Yamada wrote:
+> > Hi.
+> > 
+> > 
+> > Decumentation/devicetree/bindings/opp/opp.txt
+> > takes examples like this:
+> > 
+> >         opp@1000000000 {
+> >                 opp-hz = /bits/ 64 <1000000000>;
+> >                 opp-microvolt = <970000 975000 985000>;
+> >                 opp-microamp = <70000>;
+> >                 clock-latency-ns = <300000>;
+> >                 opp-suspend;
+> >         };
+> 
+> > If we follow this notation and the device-tree is built with W=1,
+> > DTC warns like follows:
+> > 
+> > Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+> > unit name, but no reg property
+> > 
+> > Is there a recommended notation to avoid it?
+> > 
+> > Maybe, simply omit the "@" ?
+> 
+> I think just s/@/-/ should be fine, e.g. call the above opp-1000000000.
+
+That's fine with me. I can send a patch to fix all existing users if we all
+agree for it.
+
+-- 
+viresh
