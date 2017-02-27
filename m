@@ -1,55 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] stih-cec: add HPD notifier support
-Date: Mon, 27 Feb 2017 10:43:03 -0600
-Message-ID: <20170227164303.mqhelwmn4vr5nl7a@rob-hp-laptop>
-References: <1487328412-8305-1-git-send-email-benjamin.gaignard@linaro.org>
- <1487328412-8305-3-git-send-email-benjamin.gaignard@linaro.org>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH 0/6] ARM: dts: socfpga: Fix dtc warnings
+Date: Mon, 27 Feb 2017 10:45:22 -0600
+Message-ID: <f70f5daa-2d24-041c-6e3a-195b7e1bde0b@kernel.org>
+References: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1487328412-8305-3-git-send-email-benjamin.gaignard@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: hverkuil@xs4all.nl, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, javier@osg.samsung.com, hans.verkuil@cisco.com, dri-devel@lists.freedesktop.org, daniel.vetter@intel.com, m.szyprowski@samsung.com, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488002069-22404-1-git-send-email-florian.vaussard@heig-vd.ch>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Vaussard <florian.vaussard@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Florian Vaussard <florian.vaussard@heig-vd.ch>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 17, 2017 at 11:46:51AM +0100, Benjamin Gaignard wrote:
-> By using the HPD notifier framework there is no longer any reason
-> to manually set the physical address. This was the one blocking
-> issue that prevented this driver from going out of staging, so do
-> this move as well.
+
+
+On 02/24/2017 11:54 PM, Florian Vaussard wrote:
+> We get a bunch of warnings when compiling the SoCFPGA device trees with W=1.
+> This warnings happens because some nodes have a unit name but no 'reg' property,
+> or are missing a unit name while having a 'reg' property. This series enables to
+> compile all SoCFPGA dts without warnings.
 > 
-> Update the bindings documentation the new hdmi phandle.
-
-Should be a separate commit, but it's fine unless you do another spin.
-
+> Patches 1 to 5 fix these warnings by adding the unit name or removing the
+> 'reg' property when approriate.
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> CC: devicetree@vger.kernel.org
+> Patch 6 removes the inclusion of the deprecated skeleton.dtsi file, as SoCFPGA
+> device trees already define the mandatory properties and nodes. This is needed
+> to remove the latest warning.
 > 
-> version 3:
-> - change hdmi phandle from "st,hdmi-handle" to "hdmi-handle"
-> ---
->  .../devicetree/bindings/media/stih-cec.txt         |   2 +
+> This series was boot tested on a Cyclone5 SoC DK, thus covering some of the
+> changes dones by patches 1 -> 3 + 6.
+> 
+> Regards,
+> Florian
+> 
+> Florian Vaussard (6):
+>   ARM: dts: socfpga: Add unit name to clock nodes
+>   ARM: dts: socfpga: Add unit name to memory nodes
+>   ARM: dts: socfpga: Remove unneeded unit names
+>   ARM: dts: socfpga: Remove unneeded reg from stmpe_touchscreen
+>   ARM: dts: socfpga: Remove unit name for LEDs in EBV SOCrates
+>   ARM: dts: socfpga: Do not include skeleton.dtsi
+> 
+>  arch/arm/boot/dts/socfpga.dtsi                     | 43 +++++++++---------
+>  arch/arm/boot/dts/socfpga_arria10.dtsi             | 51 +++++++++++-----------
+>  arch/arm/boot/dts/socfpga_arria10_socdk.dtsi       |  2 +-
+>  arch/arm/boot/dts/socfpga_arria5_socdk.dts         |  2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts  |  2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_mcv.dtsi        |  2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_mcvevk.dts      |  1 -
+>  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       |  2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_sockit.dts      |  2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    |  8 ++--
+>  arch/arm/boot/dts/socfpga_cyclone5_sodia.dts       |  2 +-
+>  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts |  2 +-
+>  arch/arm/boot/dts/socfpga_vt.dts                   |  2 +-
+>  13 files changed, 59 insertions(+), 62 deletions(-)
+> 
 
-Acked-by: Rob Herring <robh@kernel.org>
+All applied!
 
->  drivers/media/platform/Kconfig                     |  10 +
->  drivers/media/platform/Makefile                    |   1 +
->  drivers/media/platform/sti/cec/Makefile            |   1 +
->  drivers/media/platform/sti/cec/stih-cec.c          | 404 +++++++++++++++++++++
->  drivers/staging/media/Kconfig                      |   2 -
->  drivers/staging/media/Makefile                     |   1 -
->  drivers/staging/media/st-cec/Kconfig               |   8 -
->  drivers/staging/media/st-cec/Makefile              |   1 -
->  drivers/staging/media/st-cec/TODO                  |   7 -
->  drivers/staging/media/st-cec/stih-cec.c            | 379 -------------------
->  11 files changed, 418 insertions(+), 398 deletions(-)
->  create mode 100644 drivers/media/platform/sti/cec/Makefile
->  create mode 100644 drivers/media/platform/sti/cec/stih-cec.c
->  delete mode 100644 drivers/staging/media/st-cec/Kconfig
->  delete mode 100644 drivers/staging/media/st-cec/Makefile
->  delete mode 100644 drivers/staging/media/st-cec/TODO
->  delete mode 100644 drivers/staging/media/st-cec/stih-cec.c
+Thanks,
+Dinh
