@@ -1,36 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] ARM64: dts: meson-gx: add clock to DT binding
- documentation for hwrng
-Date: Mon, 27 Feb 2017 16:34:49 -0600
-Message-ID: <20170227223449.f24ppbk3wx4gguc4@rob-hp-laptop>
-References: <4e2d12e5-f75b-3ac6-a3f7-18e8a8b7283b@gmail.com>
- <86db7397-8355-0d07-5180-c78d6cd06c84@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: hisilicon: add bindings for
+ hi3798cv200 SoC and Poplar board
+Date: Mon, 27 Feb 2017 16:35:19 -0600
+Message-ID: <20170227223519.dxxjqcufovwefip4@rob-hp-laptop>
+References: <1487752716-14824-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1487752716-14824-2-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <86db7397-8355-0d07-5180-c78d6cd06c84@gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Herbert Xu <herbert@gondor.apana.org.au>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-crypto@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1487752716-14824-2-git-send-email-xuejiancheng@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de, xuwei5@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, elder@linaro.org, mark.gregotski@linaro.org, peter.griffin@linaro.org, hermit.wangheming@hisilicon.com, yanhaifeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 07:59:08AM +0100, Heiner Kallweit wrote:
-> Add clock to DT binding documentation.
+On Wed, Feb 22, 2017 at 04:38:35PM +0800, Jiancheng Xue wrote:
+> Add bindings for HiSilicon hi3798cv200 SoC and Poplar Board.
 > 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
 > ---
-> v2:
-> - splitted first version of patch into two
-> - add DT binding documentation
-> - mention that clock is optional
-> - replace spaces with tabs in DT binding example
-> v3:
-> - splitted DT extension and binding documentation update into two patches
-> ---
->  Documentation/devicetree/bindings/rng/amlogic,meson-rng.txt | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-
-Now the subject should really be: "dt-bindings: rng: ..."
+>  Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
