@@ -1,58 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [WARNING: A/V UNSCANNABLE][Merge tag 'media/v4.11-1' of git]
- ff58d005cd: BUG: unable to handle kernel NULL pointer dereference at
- 0000039c
-Date: Mon, 27 Feb 2017 08:26:39 -0800
-Message-ID: <20170227162639.GN21809@atomide.com>
-References: <58b07b30.9XFLj9Hhl7F6HMc2%fengguang.wu@intel.com>
- <CA+55aFytXj+TZ_TanbxcY0KgRTrV7Vvr=fWON8tioUGmYHYiNA@mail.gmail.com>
- <20170225090741.GA20463@gmail.com>
- <CA+55aFy+ER8cYV02eZsKAOLnZBWY96zNWqUFWSWT1+3sZD4XnQ@mail.gmail.com>
- <alpine.DEB.2.20.1702271105090.4732@nanos>
- <alpine.DEB.2.20.1702271231410.4732@nanos>
- <20170227154124.GA20569@gmail.com>
- <20170227160750.GM21809@atomide.com>
- <alpine.DEB.2.20.1702271712470.4732@nanos>
+From: matthew.gerlach@linux.intel.com
+Subject: Re: [PATCH 3/4] fpga dt: bindings for Altera Partial Reconfiguraion
+ IP.
+Date: Mon, 27 Feb 2017 08:27:49 -0800 (PST)
+Message-ID: <alpine.DEB.2.20.1702270822260.13342@mgerlach-VirtualBox>
+References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com> <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com> <20170227143230.b3frg3rg2sdttt64@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.20.1702271712470.4732@nanos>
-Sender: linux-leds-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ruslan Ruslichenko <rruslich@cisco.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, kernel@stlinux.com, Sean Young <sean@mess.org>, wfg@linux.intel.com, Peter Zijlstra <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@infradead.org>, linux-mediatek@lists.infradead.org, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-amlogic@lists.infradead.org, kernel test robot <fengguang.wu@intel.com>, LKP <lkp@01.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>Linux
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170227143230.b3frg3rg2sdttt64@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: atull@opensource.altera.com, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-* Thomas Gleixner <tglx@linutronix.de> [170227 08:20]:
-> On Mon, 27 Feb 2017, Tony Lindgren wrote:
-> > * Ingo Molnar <mingo@kernel.org> [170227 07:44]:
-> > > Because it's not the requirement that hurts primarily, but the resulting 
-> > > non-determinism and the sporadic crashes. Which can be solved by making the race 
-> > > deterministic via the debug facility.
-> > > 
-> > > If the IRQ handler crashed the moment it was first written by the driver author 
-> > > we'd never see these problems.
-> > 
-> > Just in case this is PM related.. Maybe the spurious interrupt is pending
-> > from earlier? This could be caused by glitches on the lines with runtime PM,
-> > or a pending interrupt during suspend/resume. In that case IRQ_DISABLE_UNLAZY
-> > might provide more clues if the problem goes away.
-> 
-> It's not PM related.  That's just silly hardware. At the moment when you
-> enable some magic bit in the control register, which is required to probe
-> the version, the fricking thing spits out a spurious interrupt despite the
-> interrupt enable bit in the same control register being still disabled. Of
-> course we cannot install an interrupt handler before having probed the
-> version and setup other stuff, except we add magic 'if (!initialized)'
-> crappola into the handler and lose the ability to install version dependent
-> handlers afterwards.
 
-OK and presumably no -EPROBE_DEFER happening either.
 
-> Wonderful crap that, isn't it?
+On Mon, 27 Feb 2017, Rob Herring wrote:
 
-Sounds broken..
+Hi Rob,
 
-Regards,
 
-Tony
+> On Wed, Feb 15, 2017 at 01:10:37PM -0800, matthew.gerlach@linux.intel.com wrote:
+>> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>
+>> Device Tree bindings for Altera Partial Reconfiguraion IP?
+>>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>>  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+>> new file mode 100644
+>> index 0000000..ada821f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+>> @@ -0,0 +1,12 @@
+>> +Altera Partial Reconfiguration IP
+>> +
+>> +Required properties:
+>> +- compatible : should contain "altr,pr-ip"
+>
+> Kind of generic. There's only one version of h/w?
+
+
+Fair point on being generic.  It does match the published documentation, 
+but we could be more specific with "altr,a10-pr-ip" because it 
+really is only for an Arria10.
+
+Matthew Gerlach
+
+>
+>> +- reg        : base address and size for memory mapped io.
+>> +
+>> +Example:
+>> +
+>> +	fpga_mgr: fpga-mgr@ff20c000 {
+>> +		compatible = "altr,pr-ip";
+>> +		reg = <0xff20c000 0x10>;
+>> +	};
+>> --
+>> 2.7.4
+>>
+>
