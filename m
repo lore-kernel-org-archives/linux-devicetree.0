@@ -1,244 +1,197 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 02/11] phy: exynos-ufs: add UFS PHY driver for EXYNOS
- SoC
-Date: Mon, 27 Feb 2017 10:56:19 +0530
-Message-ID: <58B3B87B.7010302@ti.com>
-References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
- <1447046787-480-3-git-send-email-alim.akhtar@samsung.com>
- <564AC63F.1000508@ti.com> <564AE11F.50908@samsung.com>
- <CGME20170203092123epcas4p20b1d56d7a6fdec46903c41fc65718795@epcas4p2.samsung.com>
- <564DD11D.2060101@ti.com> <aae976f6-18cf-7241-4f76-f842317229d4@samsung.com>
- <CAGOxZ50gh_SErTiDbkjqNTCds-8ghgxXofSgzSwp6hicAcw23Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <CAGOxZ50gh_SErTiDbkjqNTCds-8ghgxXofSgzSwp6hicAcw23Q@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@gmail.com>, Alim Akhtar <alim.akhtar@samsung.com>
-Cc: linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, Vivek Gautam <gautam.vivek@samsung.com>, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, vivek.gautam@codeaurora.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] kbuild: avoid unrecognized option error for external DTC
+Date: Mon, 27 Feb 2017 14:40:52 +0900
+Message-ID: <1488174052-2530-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Alessio Igor Bogani <alessio.bogani@elettra.eu>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, linux-c6x-dev@linux-c6x.org, Michal Simek <monstr@monstr.eu>, Nicolas Pitre <nicolas.pitre@linaro.org>, Ben Hutchings <ben@decadent.org.uk>, Marcin Nowakowski <marcin.nowakowski@imgtec.com>, devicetree@vger.kernel.org, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Michal Marek <mmarek@suse.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>, openrisc@lists.librecores.org, Mark Salter <msalter@redhat.com>, Stafford Horne <shorne@gmail.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, Jonas
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Since commit 6b22b3d1614a ("kbuild: Allow using host dtc instead of
+kernel's copy"), it is possible to use an external dtc.  In this
+case, we do not know which options are supported on it.
 
-On Thursday 23 February 2017 12:20 AM, Alim Akhtar wrote:
-> On Fri, Feb 3, 2017 at 2:49 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
->> Hi Kishon,
->>
->>
->> On 11/19/2015 07:09 PM, Kishon Vijay Abraham I wrote:
->>>
->>> Hi,
->>>
->>> On Tuesday 17 November 2015 01:41 PM, Alim Akhtar wrote:
->>>>
->>>> Hi
->>>> Thanks again for looking into this.
->>>>
->>>> On 11/17/2015 11:46 AM, Kishon Vijay Abraham I wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> On Monday 09 November 2015 10:56 AM, Alim Akhtar wrote:
->>>>>>
->>>>>> From: Seungwon Jeon <essuuj@gmail.com>
->>>>>>
->>>>>> This patch introduces Exynos UFS PHY driver. This driver
->>>>>> supports to deal with phy calibration and power control
->>>>>> according to UFS host driver's behavior.
->>>>>>
->>>>>> Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
->>>>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->>>>>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
->>>>>> ---
->>>>>>   drivers/phy/Kconfig                |    7 ++
->>>>>>   drivers/phy/Makefile               |    1 +
->>>>>>   drivers/phy/phy-exynos-ufs.c       |  241
->>>>>> ++++++++++++++++++++++++++++++++++++
->>>>>>   drivers/phy/phy-exynos-ufs.h       |   85 +++++++++++++
->>>>>>   drivers/phy/phy-exynos7-ufs.h      |   89 +++++++++++++
->>>>>>   include/linux/phy/phy-exynos-ufs.h |   85 +++++++++++++
->>>>>>   6 files changed, 508 insertions(+)
->>>>>>   create mode 100644 drivers/phy/phy-exynos-ufs.c
->>>>>>   create mode 100644 drivers/phy/phy-exynos-ufs.h
->>>>>>   create mode 100644 drivers/phy/phy-exynos7-ufs.h
->>>>>>   create mode 100644 include/linux/phy/phy-exynos-ufs.h
->>>>>>
->>>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->>>>>> index 7eb5859dd035..7d38a92e0297 100644
->>>>>> --- a/drivers/phy/Kconfig
->>>>>> +++ b/drivers/phy/Kconfig
->>>>>> @@ -389,4 +389,11 @@ config PHY_CYGNUS_PCIE
->>>>>>         Enable this to support the Broadcom Cygnus PCIe PHY.
->>>>>>         If unsure, say N.
->>>>>>
->>>>>> +config PHY_EXYNOS_UFS
->>>>>> +    tristate "EXYNOS SoC series UFS PHY driver"
->>>>>> +    depends on OF && ARCH_EXYNOS || COMPILE_TEST
->>>>>> +    select GENERIC_PHY
->>>>>> +    help
->>>>>> +      Support for UFS PHY on Samsung EXYNOS chipsets.
->>>>>> +
->>>>>>   endmenu
->>>>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->>>>>> index 075db1a81aa5..9bec4d1a89e1 100644
->>>>>> --- a/drivers/phy/Makefile
->>>>>> +++ b/drivers/phy/Makefile
->>>>>> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)    +=
->>>>>> phy-armada375-usb2.o
->>>>>>   obj-$(CONFIG_BCM_KONA_USB2_PHY)        += phy-bcm-kona-usb2.o
->>>>>>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)    += phy-exynos-dp-video.o
->>>>>>   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)    += phy-exynos-mipi-video.o
->>>>>> +obj-$(CONFIG_PHY_EXYNOS_UFS)    += phy-exynos-ufs.o
->>>>>>   obj-$(CONFIG_PHY_LPC18XX_USB_OTG)    += phy-lpc18xx-usb-otg.o
->>>>>>   obj-$(CONFIG_PHY_PXA_28NM_USB2)        += phy-pxa-28nm-usb2.o
->>>>>>   obj-$(CONFIG_PHY_PXA_28NM_HSIC)        += phy-pxa-28nm-hsic.o
->>>>>> diff --git a/drivers/phy/phy-exynos-ufs.c
->>>>>> b/drivers/phy/phy-exynos-ufs.c
->>>>>> new file mode 100644
->>>>>> index 000000000000..cb1aeaa3d4eb
->>>>>> --- /dev/null
->>>>>> +++ b/drivers/phy/phy-exynos-ufs.c
->>>>>> @@ -0,0 +1,241 @@
->>>>>> +/*
->>>>>> + * UFS PHY driver for Samsung EXYNOS SoC
->>>>>> + *
->>>>>> + * Copyright (C) 2015 Samsung Electronics Co., Ltd.
->>>>>> + * Author: Seungwon Jeon <essuuj@gmail.com>
->>>>>> + *
->>>>>> + * This program is free software; you can redistribute it and/or
->>>>>> modify
->>>>>> + * it under the terms of the GNU General Public License as published
->>>>>> by
->>>>>> + * the Free Software Foundation; either version 2 of the License, or
->>>>>> + * (at your option) any later version.
->>>>>> + */
->>>>>> +#include <linux/clk.h>
->>>>>> +#include <linux/delay.h>
->>>>>> +#include <linux/err.h>
->>>>>> +#include <linux/io.h>
->>>>>> +#include <linux/iopoll.h>
->>>>>> +#include <linux/mfd/syscon.h>
->>>>>> +#include <linux/module.h>
->>>>>> +#include <linux/of.h>
->>>>>> +#include <linux/phy/phy.h>
->>>>>> +#include <linux/phy/phy-exynos-ufs.h>
->>>>>> +#include <linux/platform_device.h>
->>>>>> +#include <linux/regmap.h>
->>>>>> +
->>>>>> +#include "phy-exynos-ufs.h"
->>>>>> +
->>>>>> +#define for_each_phy_lane(phy, i) \
->>>>>> +    for (i = 0; i < (phy)->lane_cnt; i++)
->>>>>> +#define for_each_phy_cfg(cfg) \
->>>>>> +    for (; (cfg)->id; (cfg)++)
->>>>>> +
->>>>>> +#define PHY_DEF_LANE_CNT    1
->>>>>> +
->>>>>> +static void exynos_ufs_phy_config(struct exynos_ufs_phy *phy,
->>>>>> +            const struct exynos_ufs_phy_cfg *cfg, u8 lane)
->>>>>> +{
->>>>>> +    enum {LANE_0, LANE_1}; /* lane index */
->>>>>> +
->>>>>> +    switch (lane) {
->>>>>> +    case LANE_0:
->>>>>> +        writel(cfg->val, (phy)->reg_pma + cfg->off_0);
->>>>>> +        break;
->>>>>> +    case LANE_1:
->>>>>> +        if (cfg->id == PHY_TRSV_BLK)
->>>>>> +            writel(cfg->val, (phy)->reg_pma + cfg->off_1);
->>>>>> +        break;
->>>>>> +    }
->>>>>> +}
->>>>>> +
->>>>>> +static bool match_cfg_to_pwr_mode(u8 desc, u8 required_pwr)
->>>>>> +{
->>>>>> +    if (IS_PWR_MODE_ANY(desc))
->>>>>> +        return true;
->>>>>> +
->>>>>> +    if (IS_PWR_MODE_HS(required_pwr) && IS_PWR_MODE_HS_ANY(desc))
->>>>>> +        return true;
->>>>>> +
->>>>>> +    if (COMP_PWR_MODE(required_pwr, desc))
->>>>>> +        return true;
->>>>>> +
->>>>>> +    if (COMP_PWR_MODE_MD(required_pwr, desc) &&
->>>>>> +        COMP_PWR_MODE_GEAR(required_pwr, desc) &&
->>>>>> +        COMP_PWR_MODE_SER(required_pwr, desc))
->>>>>> +        return true;
->>>>>> +
->>>>>> +    return false;
->>>>>> +}
->>>>>> +
->>>>>> +int exynos_ufs_phy_calibrate(struct phy *phy,
->>>>>> +                    enum phy_cfg_tag tag, u8 pwr)
->>>>>
->>>>>
->>>>> This is similar to the first version of your patch without
->>>>> EXPORT_SYMBOL.
->>>>>
->>>>> I think you have to create a new generic PHY_OPS for calibrate PHY while
->>>>> making
->>>>> sure that it is as generic as possible (which means calibrate_phy
->>>>> shouldn't
->>>>> have tag and pwr arguments or a strong justification as to why those
->>>>> arguments
->>>>> are required in a generic API).
->>>>
->>>> I don't see the advantage to making this a generic phy_ops, this is
->>>> exynos
->>>> specific ufs-phy, please have a look at other implementations
->>>
->>>
->>> only the implementation is specific to exynos. I've seen lot of other
->>> vendors
->>> want to do something like calibrate phy.
->>>
->>> So if we add something like (*calibrate)(struct phy *phy), then it can be
->>> used
->>> by others as well. Russell King also want to minimize the code to program
->>> calibration settings. So it would be good to come up with a set of
->>> standard
->>> bindings like 'phy,tx-swing', 'phy,emphasis', 'phy,amplitude' etc.. to
->>> program
->>> these settings.
->>>>
->>>> drivers/phy/phy-qcom-ufs.c (which I belive mereged recently)
->>>
->>>
->>> Thats why I hate when someone else merge PHY drivers :-( That driver can
->>> as
->>> well be in drivers/misc as it doesn't use PHY framework as it is supposed
->>> to be
->>> used. It just exports a dozen of API's to be used by controller drivers.
->>> ick..
->>>
->>>> may be other vendors might come with there own implementation of phy.
->>>
->>>
->>> right, it's all about providing the correct callback functions.
->>>>
->>>> I am using what is currently provided by the generic phy framework.
->>>
->>>
->>> I think for your use case, what is currently provided in the PHY framework
->>> is
->>> not sufficient.
->>>
->> Its little over a year since last time we discuss about adding a generic
->> calibration API. I can see in the past people tried adding *calibration* API
->> [1] but not sure why [1] was not landed in mainline.
->> Anyway now we have many users of phy_calibration API, like UFS, USB and may
->> be PCIe, there is a real need to add this functionality. So, here is my
->> approach:
+Commit bc553986a2f7 ("dtc: turn off dtc unit address warnings by
+default") gives -Wno-unit_address_vs_reg, but this options is only
+recognized by v1.4.2 or later.
 
-Agree, there are quite a few users that require calibration of phy parameters.
-I think previously it was accommodated in phy_init, hence it was not merged.
->>  * Along with [1], we can add a void *priv for handling device specific phy
->> private data, and before calling phy_calibration() from phy consumer,
->> phy->priv is populated with private data.
+If an older version is specified, the build fails:
 
-Not sure how you plan to use priv here?
+$ dtc --version
+Version: DTC 1.4.0
+$ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- DTC=dtc dtbs
+  [ snip ]
+  DTC     arch/arm64/boot/dts/al/alpine-v2-evp.dtb
+FATAL ERROR: Unrecognized check name "unit_address_vs_reg"
+make[2]: *** [arch/arm64/boot/dts/al/alpine-v2-evp.dtb] Error 1
+make[1]: *** [arch/arm64/boot/dts/al] Error 2
+make: *** [dtbs] Error 2
 
-Thanks
-Kishon
+This commit adds a new helper dtc-option to check if the given
+option is supported, like cc-option, ld-option, etc.
+
+The check for the -Wno-unit_address_vs_reg has been moved from
+Makefile.lib to Makefile.extrawarn.  Since Makefile.lib is included
+recursively, it is not efficient to evaluate the $(call dtc-option)
+at every descend.  On the other hand, Makefile.extrawarn is included
+just once from the top Makefile.  Besides, it seems more suitable to
+collect extra warning things into the Makefile.extrawarn.
+
+The variable, DTC, has also been moved to the top Makefile so that
+the Makefile.extrawarn can reference it.
+
+Here is one problem for the dtc-option helper; the kernel's copy
+(scripts/dtc/dtc) is not compiled until Kbuild descends into the
+scripts/dtc/ directory.  This happens later after Makefile.extrawarn
+is evaluated.  So, dtc-options should its job only when DTC is
+overridden from the command line (i.e. pre-built dtc is used).
+If the kernel's copy is used, dtc-option falls back to a fixed option
+because we know which options are supported on the internal one.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ Makefile                          |  4 +++-
+ arch/c6x/boot/dts/Makefile        |  2 +-
+ arch/microblaze/boot/dts/Makefile |  2 +-
+ arch/openrisc/boot/dts/Makefile   |  2 +-
+ arch/powerpc/boot/Makefile        |  2 +-
+ scripts/Kbuild.include            | 14 ++++++++++++++
+ scripts/Makefile.extrawarn        |  4 ++++
+ scripts/Makefile.lib              |  6 ------
+ 8 files changed, 25 insertions(+), 11 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index b83109b..4c4647a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -356,6 +356,7 @@ STRIP		= $(CROSS_COMPILE)strip
+ OBJCOPY		= $(CROSS_COMPILE)objcopy
+ OBJDUMP		= $(CROSS_COMPILE)objdump
+ AWK		= awk
++DTC		= scripts/dtc/dtc
+ GENKSYMS	= scripts/genksyms/genksyms
+ INSTALLKERNEL  := installkernel
+ DEPMOD		= /sbin/depmod
+@@ -365,6 +366,7 @@ CHECK		= sparse
+ 
+ CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
+ 		  -Wbitwise -Wno-return-void $(CF)
++DTC_FLAGS      :=
+ NOSTDINC_FLAGS  =
+ CFLAGS_MODULE   =
+ AFLAGS_MODULE   =
+@@ -419,7 +421,7 @@ export VERSION PATCHLEVEL SUBLEVEL KERNELRELEASE KERNELVERSION
+ export ARCH SRCARCH CONFIG_SHELL HOSTCC HOSTCFLAGS CROSS_COMPILE AS LD CC
+ export CPP AR NM STRIP OBJCOPY OBJDUMP
+ export MAKE AWK GENKSYMS INSTALLKERNEL PERL PYTHON UTS_MACHINE
+-export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS
++export HOSTCXX HOSTCXXFLAGS LDFLAGS_MODULE CHECK CHECKFLAGS DTC DTC_FLAGS
+ 
+ export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS LDFLAGS
+ export KBUILD_CFLAGS CFLAGS_KERNEL CFLAGS_MODULE CFLAGS_GCOV CFLAGS_KCOV CFLAGS_KASAN CFLAGS_UBSAN
+diff --git a/arch/c6x/boot/dts/Makefile b/arch/c6x/boot/dts/Makefile
+index c7528b0..459955b 100644
+--- a/arch/c6x/boot/dts/Makefile
++++ b/arch/c6x/boot/dts/Makefile
+@@ -2,7 +2,7 @@
+ # Makefile for device trees
+ #
+ 
+-DTC_FLAGS ?= -p 1024
++DTC_FLAGS += -p 1024
+ 
+ ifneq ($(DTB),)
+ obj-y += linked_dtb.o
+diff --git a/arch/microblaze/boot/dts/Makefile b/arch/microblaze/boot/dts/Makefile
+index a3d2e42..5addb5b 100644
+--- a/arch/microblaze/boot/dts/Makefile
++++ b/arch/microblaze/boot/dts/Makefile
+@@ -15,4 +15,4 @@ quiet_cmd_cp = CP      $< $@$2
+ 	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
+ 
+ # Rule to build device tree blobs
+-DTC_FLAGS := -p 1024
++DTC_FLAGS += -p 1024
+diff --git a/arch/openrisc/boot/dts/Makefile b/arch/openrisc/boot/dts/Makefile
+index b092d30..f4048d1 100644
+--- a/arch/openrisc/boot/dts/Makefile
++++ b/arch/openrisc/boot/dts/Makefile
+@@ -7,4 +7,4 @@ obj-y += $(BUILTIN_DTB)
+ 
+ clean-files := *.dtb.S
+ 
+-#DTC_FLAGS ?= -p 1024
++#DTC_FLAGS += -p 1024
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index e82f333..5350b67 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -50,7 +50,7 @@ endif
+ 
+ BOOTCFLAGS	+= -I$(objtree)/$(obj) -I$(srctree)/$(obj)
+ 
+-DTC_FLAGS	?= -p 1024
++DTC_FLAGS	+= -p 1024
+ 
+ $(obj)/4xx.o: BOOTCFLAGS += -mcpu=405
+ $(obj)/ebony.o: BOOTCFLAGS += -mcpu=405
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index d6ca649..adabbb5 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -171,6 +171,20 @@ ld-version = $(shell $(LD) --version | $(srctree)/scripts/ld-version.sh)
+ # Usage:  $(call ld-ifversion, -ge, 22252, y)
+ ld-ifversion = $(shell [ $(ld-version) $(1) $(2) ] && echo $(3) || echo $(4))
+ 
++# dtc-option
++# Usage:  DTC_FLAGS += $(call dtc-option,-Wno-unit_address_vs_reg)
++#
++# When we use the external dtc, check if the desired options are supported.
++# When we use the kernel's copy (scripts/dtc/dtc), just use the fixed option.
++# Until Kbuild descends into the scripts/dtc/ directory, scripts/dtc/dtc may
++# not exist, i.e. $(call try-run,...) may not work.
++ifeq ("$(origin DTC)", "command line")
++dtc-option = $(call try-run,\
++	echo '/dts-v1/; / {};' | $(DTC) $(1),$(1),$(2))
++else
++dtc-option = $(1)
++endif
++
+ ######
+ 
+ ###
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 7c321a6..17d4030 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -69,4 +69,8 @@ KBUILD_CFLAGS += $(call cc-disable-warning, sign-compare)
+ KBUILD_CFLAGS += $(call cc-disable-warning, format-zero-length)
+ KBUILD_CFLAGS += $(call cc-disable-warning, uninitialized)
+ endif
++
++# Disable noisy checks by default
++DTC_FLAGS += $(call dtc-option,-Wno-unit_address_vs_reg)
++
+ endif
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 0a07f90..6228c9b 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -276,12 +276,6 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n -f -9 > $@) || \
+ 
+ # DTC
+ # ---------------------------------------------------------------------------
+-DTC ?= $(objtree)/scripts/dtc/dtc
+-
+-# Disable noisy checks by default
+-ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
+-DTC_FLAGS += -Wno-unit_address_vs_reg
+-endif
+ 
+ # Generate an assembly file to wrap the output of the device tree compiler
+ quiet_cmd_dt_S_dtb= DTB     $@
+-- 
+2.7.4
+
