@@ -1,52 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 14/22] dt-bindings: PCI: dra7xx: Add dt bindings to
- enable legacy mode
-Date: Mon, 27 Feb 2017 10:40:54 -0600
-Message-ID: <20170227164054.xcubjpaf2qx3pxol@rob-hp-laptop>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-15-git-send-email-kishon@ti.com>
+Subject: Re: [PATCH v2 2/3] watchdog: renesas-wdt: add support for rza
+Date: Mon, 27 Feb 2017 10:34:03 -0600
+Message-ID: <20170227163403.itptnpa24immhx7s@rob-hp-laptop>
+References: <20170216172320.10897-1-chris.brandt@renesas.com>
+ <20170216172320.10897-3-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1487325042-28227-15-git-send-email-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170216172320.10897-3-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 17, 2017 at 03:20:34PM +0530, Kishon Vijay Abraham I wrote:
-> Update device tree binding documentation of TI's dra7xx PCI
-> controller to include property for enabling legacy mode.
+On Thu, Feb 16, 2017 at 12:23:19PM -0500, Chris Brandt wrote:
+> Describe the WDT hardware in the RZ/A series.
 > 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 > ---
->  Documentation/devicetree/bindings/pci/ti-pci.txt |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> index 190828a..72ebe2b 100644
-> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> @@ -39,6 +39,10 @@ DEVICE MODE
->   - interrupts : one interrupt entries must be specified for main interrupt.
->   - num-ib-windows : number of inbound address translation windows
->   - num-ob-windows : number of outbound address translation windows
-> + - syscon-legacy-mode: phandle to the syscon dt node. The 1st argument should
-> +		       contain the register offset within syscon and the 2nd
-> +		       argument should contain the bit field for setting the
-> +		       legacy mode
+> v2:
+> * added to renesas-wdt.txt instead of creating a new file
+> * changed commit title
+> * added "renesas,rza-wdt" as a fallback
+> * added interrupts property
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Vendor prefix needed and what does "legacy mode" mean? Perhaps name this 
-around what the mode is/does, not that it is legacy.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
