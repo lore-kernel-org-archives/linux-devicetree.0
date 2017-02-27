@@ -1,39 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 4/4] dt-bindings: Add DT bindings document for
- Broadcom SBA RAID driver
-Date: Mon, 27 Feb 2017 08:47:38 -0600
-Message-ID: <20170227144738.szmppcir6bvav4bb@rob-hp-laptop>
-References: <1487227695-965-1-git-send-email-anup.patel@broadcom.com>
- <1487227695-965-5-git-send-email-anup.patel@broadcom.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 4/8] drm/sun4i: Grab reserved memory region
+Date: Mon, 27 Feb 2017 15:49:19 +0100
+Message-ID: <20170227144919.pijmvi3yptvxlbkx@lukather>
+References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
+ <cf185f6de351837a9a29c123ca801682c983b83d.1486655917.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="drwddbbdvfj3blu7"
+Return-path: <owner-linux-mm@kvack.org>
 Content-Disposition: inline
-In-Reply-To: <1487227695-965-5-git-send-email-anup.patel@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Scott Branden <sbranden@broadcom.com>, Vinod Koul <vinod.koul@intel.com>, Ray Jui <rjui@broadcom.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, linux-raid@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-crypto@vger.kernel.org, Rob Rice <rob.rice@broadcom.com>, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, "David S . Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <cf185f6de351837a9a29c123ca801682c983b83d.1486655917.git-series.maxime.ripard@free-electrons.com>
+Sender: owner-linux-mm@kvack.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 12:18:15PM +0530, Anup Patel wrote:
-> This patch adds the DT bindings document for newly added Broadcom
-> SBA RAID driver.
-> 
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  .../devicetree/bindings/dma/brcm,iproc-sba.txt     | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+--drwddbbdvfj3blu7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 09, 2017 at 05:39:18PM +0100, Maxime Ripard wrote:
+> Allow to provide an optional memory region to allocate from for our DRM
+> driver.
+>=20
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Fixed the conflicts and applied.
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--drwddbbdvfj3blu7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYtDxrAAoJEBx+YmzsjxAgCKgP/j2zjI1Va7uaSMFU/DjawVpR
+m2Acc1QiVTi0LxG5Q6/iuq6EO//3FTxT7QzlQoE3iRstRRlWZ2u2qjtSCL/gW8cj
+sPwxAzJaYfrMwzTVBPxbUeNyihDTmR263WCZXZfw7QrL0n2rdZ/GJoxQOgzicxOC
+taOo0yOyTiEjqIPdNiWVrGZiErIaK/8CdW8k3msAqI5YZIrzJ0IWgVaIE/7Qn8vx
+wpY7LHYyhrH5ogJUpkqhOtEXaSFLjn4zdAy0HwACYmMtyoi8JJvHH3vK2YArvJrX
+UUDqGgc3IpzrXaf8iPhXnSkBFQfoqX7JL/buE7VeVh4HW78y8LZkc2jXCh7HLBAn
+xj/9muedm07odljkknHT31LZ5uBL4hclxLoXRryLRo6lyjvbFP0wD0DkxQ42rfjN
+A+qiDAy2QwhipXzZaMdl9OECsQWb/CG79lG9MuLcI382zakxHBFv6OhyELGapb8/
+0ncc/D1Fu+Y49BQ0T6Riw6vo52mN7aUfM0/P1NtyMNlUiuM/l4zuX9dK5PDnMDPK
+36PuN5mFjZ0VvG8zB47cRN7NJNvEhYk2AZ+XrJuWa7cuGBo0ImTYmt51sg2RqGVO
+7w6oW47JljCmLjzkM+8ZFE9Ru+FR9T2BB/iHZyTxPYKTMkKZ9ZeaUdaNVWQyQnCv
+2y0bPSf7gqQh72zE2UvH
+=SJQV
+-----END PGP SIGNATURE-----
+
+--drwddbbdvfj3blu7--
+
+--
+To unsubscribe, send a message with 'unsubscribe linux-mm' in
+the body to majordomo@kvack.org.  For more info on Linux MM,
+see: http://www.linux-mm.org/ .
+Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
