@@ -1,102 +1,138 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 8/8] ARM: sun8i: a33: Add the Mali OPPs
-Date: Mon, 27 Feb 2017 15:40:57 +0100
-Message-ID: <20170227144057.in7uclundvd77s5q@lukather>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
- <2e4a4f3f2f584f65f3c2d5e78f589015c651198d.1486655917.git-series.maxime.ripard@free-electrons.com>
- <20170215234029.3vfh25gxtvz44dsw@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 15/36] platform: add video-multiplexer subdevice driver
+Date: Mon, 27 Feb 2017 08:41:53 -0600
+Message-ID: <20170227144153.g4jzzbrcb7oyddyj@rob-hp-laptop>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1289174578=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170215234029.3vfh25gxtvz44dsw@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.orgsu
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 15, 2017 at 06:19:17PM -0800, Steve Longerbeam wrote:
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> This driver can handle SoC internal and external video bus multiplexers,
+> controlled either by register bit fields or by a GPIO. The subdevice
+> passes through frame interval and mbus configuration of the active input
+> to the output side.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> --
+> 
+> - fixed a cut&paste error in vidsw_remove(): v4l2_async_register_subdev()
+>   should be unregister.
+> 
+> - added media_entity_cleanup() and v4l2_device_unregister_subdev()
+>   to vidsw_remove().
+> 
+> - added missing MODULE_DEVICE_TABLE().
+>   Suggested-by: Javier Martinez Canillas <javier@dowhile0.org>
+> 
+> - there was a line left over from a previous iteration that negated
+>   the new way of determining the pad count just before it which
+>   has been removed (num_pads = of_get_child_count(np)).
+> 
+> - Philipp Zabel has developed a set of patches that allow adding
+>   to the subdev async notifier waiting list using a chaining method
+>   from the async registered callbacks (v4l2_of_subdev_registered()
+>   and the prep patches for that). For now, I've removed the use of
+>   v4l2_of_subdev_registered() for the vidmux driver's registered
+>   callback. This doesn't affect the functionality of this driver,
+>   but allows for it to be merged now, before adding the chaining
+>   support.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  .../bindings/media/video-multiplexer.txt           |  59 +++
 
---===============1289174578==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vlqthyvsp4cqgzwc"
-Content-Disposition: inline
+Please make this a separate commit.
 
-
---vlqthyvsp4cqgzwc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 15, 2017 at 05:40:29PM -0600, Rob Herring wrote:
-> On Thu, Feb 09, 2017 at 05:39:22PM +0100, Maxime Ripard wrote:
-> > The Mali GPU in the A33 has various operating frequencies used in the
-> > Allwinner BSP.
-> >=20
-> > Add them to our DT.
-> >=20
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> >  arch/arm/boot/dts/sun8i-a33.dtsi | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+), 0 deletions(-)
-> >=20
-> > diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i=
--a33.dtsi
-> > index 043b1b017276..e1b0abfee42f 100644
-> > --- a/arch/arm/boot/dts/sun8i-a33.dtsi
-> > +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-> > @@ -101,6 +101,22 @@
-> >  		status =3D "disabled";
-> >  	};
-> > =20
-> > +	mali_opp_table: opp_table1 {
->=20
-> gpu-opp-table
-
-Applied with that change. Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---vlqthyvsp4cqgzwc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYtDp5AAoJEBx+YmzsjxAgUCYP/3QB1y2wH9sSn2RY8/KkUq40
-B9PW7zWPs4HK0kDloEBlIlAmvqcfZqnjXE5dAmPy0sWKfCT3VEbX7BaxkIdA5STU
-mvJVdpd544sE/Rj5Pd4z1a+dJjYRMSRYhIkDeyvnAjFo7nvvNv5yRQmN8H4XW2ce
-qF6GylTO+bufxqM1oqF3qGhpwfm4ezyLc+sMCv0DMzuVZPjXkIwmZNZytB/jHgyq
-ttaV6jUzbpwtxALLhcGZQUanFTlzXD3v/cCE1OW5P6Pdc9OC0CU3dGQYp+sFxweJ
-qDXtx/rEFpHPJ9XdVbs9d5KlsEphbep+RkKOQ0qIjgDvdd8/N6I/RZBUblPoCMaV
-pYEpEq/+Xe6l5zqusyPhGIFZ3bRH55b7owkSmOM0YQwH8DQdzq7E52n4mkR14ixJ
-zNV0TgWTwqM40lijsVD/qeIpOlLBFxgABuUnCsPjpUCY2e8Rin7ZCMyJUPN6KWos
-Ni48r053krU8HWgLzvoJySS/nFP03Tk/T+azUe4z8Ml5FpwVWMiPnAEYEs06AoNc
-D3j/V5qId0OYAeAfABKmnl2TkP4LoBYD9/L0B5McuVsOgXdLtl4xW6kEEpS4+yt2
-wmhf0e/NWcZPxik2nYtN5RsuasJ+feeUF9gUC4FGNHIaAUQSBN9HtLTiAFfHSAiI
-/BCtGbbFoukHMdFYfgVI
-=+uJf
------END PGP SIGNATURE-----
-
---vlqthyvsp4cqgzwc--
-
---===============1289174578==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1289174578==--
+>  drivers/media/platform/Kconfig                     |   8 +
+>  drivers/media/platform/Makefile                    |   2 +
+>  drivers/media/platform/video-multiplexer.c         | 474 +++++++++++++++++++++
+>  4 files changed, 543 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
+>  create mode 100644 drivers/media/platform/video-multiplexer.c
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.txt b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> new file mode 100644
+> index 0000000..9d133d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> @@ -0,0 +1,59 @@
+> +Video Multiplexer
+> +=================
+> +
+> +Video multiplexers allow to select between multiple input ports. Video received
+> +on the active input port is passed through to the output port. Muxes described
+> +by this binding may be controlled by a syscon register bitfield or by a GPIO.
+> +
+> +Required properties:
+> +- compatible : should be "video-multiplexer"
+> +- reg: should be register base of the register containing the control bitfield
+> +- bit-mask: bitmask of the control bitfield in the control register
+> +- bit-shift: bit offset of the control bitfield in the control register
+> +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO phandle
+> +  may be given to switch between two inputs
+> +- #address-cells: should be <1>
+> +- #size-cells: should be <0>
+> +- port@*: at least three port nodes containing endpoints connecting to the
+> +  source and sink devices according to of_graph bindings. The last port is
+> +  the output port, all others are inputs.
+> +
+> +Example:
+> +
+> +syscon {
+> +	compatible = "syscon", "simple-mfd";
+> +
+> +	mux {
+> +		compatible = "video-multiplexer";
+> +		/* Single bit (1 << 19) in syscon register 0x04: */
+> +		reg = <0x04>;
+> +		bit-mask = <1>;
+> +		bit-shift = <19>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			mux_in0: endpoint {
+> +				remote-endpoint = <&video_source0_out>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			mux_in1: endpoint {
+> +				remote-endpoint = <&video_source1_out>;
+> +			};
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			mux_out: endpoint {
+> +				remote-endpoint = <&capture_interface_in>;
+> +			};
+> +		};
+> +	};
+> +};
