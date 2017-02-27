@@ -1,59 +1,87 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/3] media: dt-bindings: vpif: new optional property
-Date: Mon, 27 Feb 2017 16:52:09 -0600
-Message-ID: <20170227225209.26oieqwbafqjga2a@rob-hp-laptop>
-References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
- <1487771027-7763-4-git-send-email-bgolaszewski@baylibre.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] spi/bcm63xx-hsspi: allow for probing through
+ devicetree
+Date: Mon, 27 Feb 2017 14:54:41 -0800
+Message-ID: <75499273-96ba-0270-9b06-5b1def1452ca@gmail.com>
+References: <20170222131940.31085-1-jonas.gorski@gmail.com>
+ <20170222131940.31085-3-jonas.gorski@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1487771027-7763-4-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170222131940.31085-3-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 02:43:47PM +0100, Bartosz Golaszewski wrote:
-> Add an optional property - enable-gpios - which can be used to specify
-> the GPIOs that must be requested to select the vpif functionality.
+On 02/22/2017 05:19 AM, Jonas Gorski wrote:
+> Add required binding support to probe through device tree.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/media/ti,da850-vpif.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  drivers/spi/spi-bcm63xx-hsspi.c | 26 +++++++++++++++++++++++---
+>  1 file changed, 23 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> index df7182a..23c5405 100644
-> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-> @@ -13,6 +13,9 @@ Required properties:
->  - reg: physical base address and length of the registers set for the device;
->  - interrupts: should contain IRQ line for the VPIF
+> diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
+> index 79096d17ebde..77c249a22c9b 100644
+> --- a/drivers/spi/spi-bcm63xx-hsspi.c
+> +++ b/drivers/spi/spi-bcm63xx-hsspi.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/spi/spi.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
 >  
-> +Optional properties:
-> +- enable-gpios: phandle of the GPIOs used to select the vpif functionality
+>  #define HSSPI_GLOBAL_CTRL_REG			0x0
+>  #define GLOBAL_CTRL_CS_POLARITY_SHIFT		0
+> @@ -91,6 +92,7 @@
+>  
+>  #define HSSPI_MAX_SYNC_CLOCK			30000000
+>  
+> +#define HSSPI_SPI_MAX_CS			8
+>  #define HSSPI_BUS_NUM				1 /* 0 is legacy SPI */
+>  
+>  struct bcm63xx_hsspi {
+> @@ -332,7 +334,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct clk *clk;
+>  	int irq, ret;
+> -	u32 reg, rate;
+> +	u32 reg, rate, num_cs = HSSPI_SPI_MAX_CS;
+>  
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0) {
+> @@ -382,8 +384,20 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+>  	mutex_init(&bs->bus_mutex);
+>  	init_completion(&bs->done);
+>  
+> -	master->bus_num = HSSPI_BUS_NUM;
+> -	master->num_chipselect = 8;
+> +	if (dev->of_node) {
+> +		master->dev.of_node = dev->of_node;
 
-What does this control exactly? The GPIOs belong in the node they are 
-connected to and having GPIOs routed to this block seems strange.
-
-There are inputs or outputs?
+You could move this out of the if () statement here.
 
 > +
->  Video Capture:
->  
->  VPIF has a 16-bit parallel bus input, supporting 2 8-bit channels or a
-> @@ -30,6 +33,10 @@ I2C-connected TVP5147 decoder:
->  		reg = <0x217000 0x1000>;
->  		interrupts = <92>;
->  
-> +		enable-gpios = <&tca6416 7 GPIO_ACTIVE_HIGH
-> +				&tca6416 6 GPIO_ACTIVE_HIGH
-> +				&tca6416 5 GPIO_ACTIVE_LOW>;
-> +
->  		port@0 {
->  			vpif_input_ch0: endpoint@0 {
->  				reg = <0>;
-> -- 
-> 2.9.3
-> 
+> +		of_property_read_u32(dev->of_node, "num-cs", &num_cs);
+> +		if (num_cs > 8) {
+> +			dev_warn(dev, "unsupported number of cs (%i), reducing to 8\n",
+> +				 num_cs);
+> +			num_cs = HSSPI_SPI_MAX_CS;
+> +		}
+> +	} else {
+> +		master->bus_num = HSSPI_BUS_NUM;
+
+And this one too, since the core will take care of assigning it based on
+aliases and such when master->dev.of_node is correctly set.
+
+With that changed:
+
+Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
