@@ -1,79 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/9] gpu: ipu-v3: add DT binding for the Prefetch Resolve
- Engine
-Date: Mon, 27 Feb 2017 11:00:16 -0600
-Message-ID: <20170227170016.c2yfocvp7ryc7ns6@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/9] gpu: ipu-v3: add DT binding for the Prefetch Resolve
+ Gasket
+Date: Mon, 27 Feb 2017 11:02:21 -0600
+Message-ID: <20170227170221.y5ut2lm7ietirlyy@rob-hp-laptop>
 References: <20170217182830.32618-1-l.stach@pengutronix.de>
- <20170217182830.32618-3-l.stach@pengutronix.de>
+ <20170217182830.32618-5-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170217182830.32618-3-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <20170217182830.32618-5-l.stach@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 17, 2017 at 07:28:23PM +0100, Lucas Stach wrote:
-> The Prefetch Resolve Engine is a prefetch and tile resolve engine
-> which prefetches display data from DRAM to an internal SRAM region.
-> It has a single clock for configuration register access and the
-> functional units. A single shared interrupt is used for status and
-> error signaling.
-> 
-> The only external dependency is the SRAM region to use for the
-> prefetch double buffer.
-> 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../bindings/display/imx/fsl-imx-drm.txt           | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> index 971c3eedb1c7..1bd777d7c37d 100644
-> --- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-> @@ -53,6 +53,32 @@ ipu: ipu@18000000 {
->  	};
->  };
->  
-> +Freescale i.MX PRE (Prefetch Resolve Engine)
-> +============================================
-> +
-> +Required properties:
-> +- compatible: should be "fsl,imx6qp-pre"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- clocks : phandle to the PRE axi clock input, as described
-> +  in Documentation/devicetree/bindings/clock/clock-bindings.txt and
-> +  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-> +- clock-names: should be "axi"
-> +- interrupts: should contain the PRE interrupt
-> +- fsl,ocram: phandle pointing to the mmio-sram device node, that should be
-> +  used for the PRE SRAM double buffer.
-> +
-> +example:
-> +
-> +pre@021c8000 {
-
-Drop the leading 0.
-
-> +	compatible = "fsl,imx6qp-pre";
-> +	reg = <0x021c8000 0x1000>;
-> +	interrupts = <GIC_SPI 90 IRQ_TYPE_EDGE_RISING>;
-> +	clocks = <&clks IMX6QDL_CLK_PRE0>;
-> +	clock-names = "axi";
-> +	fsl,ocram = <&ocram2>;
-> +};
-> +
->  Parallel display support
->  ========================
->  
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBGZWIgMTcsIDIwMTcgYXQgMDc6Mjg6MjVQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
+dGU6Cj4gVGhpcyBhZGRzIHRoZSB0aGUgZGV2aWNldHJlZSBiaW5kaW5nIGZvciB0aGUgUHJlZmV0
+Y2ggUmVzb2x2ZSBHYXNrZXQsCj4gYXMgZm91bmQgb24gaS5NWDYgUXVhZFBsdXMuCj4gVGhlIFBS
+RyBpcyBmYWlybHkgc2ltcGxlIGluIHRoYXQgaXQgb25seSBoYXMgYSBjb25maWd1cmF0aW9uIHJl
+Z2lzdGVyCj4gcmFuZ2UgYW5kIHR3byBjbG9ja3MsIG9uZSBmb3IgdGhlIEFIQiBzbGF2ZSBwb3J0
+IGFuZCBvbmUgZm9yIHRoZSBBWEkKPiBwb3J0cyBhbmQgdGhlIGZ1bmN0aW9uYWwgdW5pdHMuCj4g
+Cj4gVGhlIFBSRSBjb25uZWN0aW9ucyBuZWVkIHRvIGJlIGRlc2NyaWJlZCBpbiB0aGUgRFQsIGFz
+IHRoZSBQUkU8LT5QUkcKPiBhc3NpZ25tZW50IGlzIGEgbWl4IGJldHdlZW4gZml4ZWQgYW5kIG11
+eGFibGUgY29ubmVjdGlvbnMuCj4gCj4gU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3Rh
+Y2hAcGVuZ3V0cm9uaXguZGU+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2lteC9mc2wt
+aW14LWRybS50eHQgICAgICAgICAgIHwgMjUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZp
+bGUgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlteC1kcm0udHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4
+dAo+IGluZGV4IDFiZDc3N2Q3YzM3ZC4uNWU0YjhiMTNiOWY4IDEwMDY0NAo+IC0tLSBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9mc2wtaW14LWRybS50eHQK
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvZnNs
+LWlteC1kcm0udHh0Cj4gQEAgLTc5LDYgKzc5LDMxIEBAIHByZUAwMjFjODAwMCB7Cj4gIAlmc2ws
+b2NyYW0gPSA8Jm9jcmFtMj47Cj4gIH07Cj4gIAo+ICtGcmVlc2NhbGUgaS5NWCBQUkcgKFByZWZl
+dGNoIFJlc29sdmUgR2Fza2V0KQo+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBz
+aG91bGQgYmUgImZzbCxpbXg2cXAtcHJnIgo+ICstIHJlZzogc2hvdWxkIGJlIHJlZ2lzdGVyIGJh
+c2UgYW5kIGxlbmd0aCBhcyBkb2N1bWVudGVkIGluIHRoZQo+ICsgIGRhdGFzaGVldAo+ICstIGNs
+b2NrcyA6IHBoYW5kbGVzIHRvIHRoZSBQUkcgaXBnIGFuZCBheGkgY2xvY2sgaW5wdXRzLCBhcyBk
+ZXNjcmliZWQKPiArICBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
+Y2xvY2stYmluZGluZ3MudHh0IGFuZAo+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQuCj4gKy0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAi
+aXBnIiBhbmQgImF4aSIKPiArLSBmc2wscHJlczogcGhhbmRsZXMgdG8gdGhlIFBSRSB1bml0cyBh
+dHRhY2hlZCB0byB0aGlzIFBSRywgd2l0aCB0aGUgZml4ZWQKPiArICBQUkUgYXMgdGhlIGZpcnN0
+IGVudHJ5IGFuZCB0aGUgbXV4YWJsZSBQUkVzIGZvbGxvd2luZy4KPiArCj4gK2V4YW1wbGU6Cj4g
+Kwo+ICtwcmdAMDIxY2MwMDAgewoKRHJvcCB0aGUgbGVhZGluZyAwLiBXaXRoIHRoYXQsCgpBY2tl
+ZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCj4gKwljb21wYXRpYmxlID0gImZz
+bCxpbXg2cXAtcHJnIjsKPiArCXJlZyA9IDwweDAyMWNjMDAwIDB4MTAwMD47Cj4gKwljbG9ja3Mg
+PSA8JmNsa3MgSU1YNlFETF9DTEtfUFJHMF9BUEI+LAo+ICsJCSA8JmNsa3MgSU1YNlFETF9DTEtf
+UFJHMF9BWEk+Owo+ICsJY2xvY2stbmFtZXMgPSAiaXBnIiwgImF4aSI7Cj4gKwlmc2wscHJlcyA9
+IDwmcHJlMT4sIDwmcHJlMj4sIDwmcHJlMz47Cj4gK307Cj4gKwo+ICBQYXJhbGxlbCBkaXNwbGF5
+IHN1cHBvcnQKPiAgPT09PT09PT09PT09PT09PT09PT09PT09Cj4gIAo+IC0tIAo+IDIuMTEuMAo+
+IAo+IC0tCj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVu
+c3Vic2NyaWJlIGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9y
+ZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdl
+ci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
