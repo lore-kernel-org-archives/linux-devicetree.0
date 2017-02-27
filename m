@@ -1,95 +1,140 @@
-From: m18063 <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 1/2] drivers: pwm: pwm-atmel: add support for pwm on
- sama5d2
-Date: Mon, 27 Feb 2017 17:23:59 +0200
-Message-ID: <99294e68-5503-6ea0-6b6d-c0c29c3bfd81@microchip.com>
-References: <1487839120-13650-1-git-send-email-claudiu.beznea@microchip.com>
- <1487839120-13650-2-git-send-email-claudiu.beznea@microchip.com>
- <20170223091607.j5yfz7jvfzeinrap@piout.net>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v1 1/2] coresight: bindings for debug module
+Date: Mon, 27 Feb 2017 23:34:25 +0800
+Message-ID: <20170227153425.GA31630@leoy-linaro>
+References: <1487815067-27511-1-git-send-email-leo.yan@linaro.org>
+ <1487815067-27511-2-git-send-email-leo.yan@linaro.org>
+ <CAJ9a7VgBx+4Vgr_2VOY76wJMyjoyO48YD3Pp7Qx0C7hUY8xzKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20170223091607.j5yfz7jvfzeinrap@piout.net>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ9a7VgBx+4Vgr_2VOY76wJMyjoyO48YD3Pp7Qx0C7hUY8xzKg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Leach <mike.leach@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-Please ignore this patch also. I will resend it after
-switching to atomic PWM.
+Hi Mike,
 
-Thank you,
-Claudiu Beznea
+On Mon, Feb 27, 2017 at 12:37:45PM +0000, Mike Leach wrote:
+> Hi Leo
+> 
+> On 23 February 2017 at 01:57, Leo Yan <leo.yan@linaro.org> wrote:
+> > According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
+> > Chapter 'Part H: External debug', the CPU can integrate debug module
+> > and it can support self-hosted debug and external debug. Especially
+> > for supporting self-hosted debug, this means the program can access
+> > the debug module from mmio region; and usually the mmio region is
+> > integrated with coresight.
+> >
+> > So add document for binding debug component, includes binding to two
+> > clocks, one is apb clock for bus and another is debug clock for debug
+> > module self; and also need specify the CPU node which the debug module
+> > is dedicated to specific CPU.
+> >
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > ---
+> >  .../devicetree/bindings/arm/coresight-debug.txt    | 39 ++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/coresight-debug.txt b/Documentation/devicetree/bindings/arm/coresight-debug.txt
+> > new file mode 100644
+> > index 0000000..6e03e9b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/coresight-debug.txt
+> > @@ -0,0 +1,39 @@
+> > +* CoreSight Debug Component:
+> > +
+> > +CoreSight debug component are compliant with the ARMv8 architecture reference
+> > +manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The external debug
+> > +module is mainly used for two modes: self-hosted debug and external debug, and
+> > +it can be accessed from mmio region from Coresight and eventually the debug
+> > +module connects with CPU for debugging. And the debug module provides
+> > +sample-based profiling extension, which can be used to sample CPU program
+> > +counter, secure state and exception level, etc; usually every CPU has one
+> > +dedicated debug module to be connected.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : should be
+> > +            * "arm,coresight-debug", "arm,primecell"; supplemented with
+> > +              "arm,primecell" as driver is using the AMBA bus interface.
+> > +
+> > +- reg : physical base address and length of the register set.
+> > +
+> > +- clocks : the clocks associated to this component.
+> > +
+> > +- clock-names : the name of the clocks referenced by the code. Since we are
+> > +                using the AMBA framework, the name of the clock providing
+> > +               the interconnect should be "apb_pclk", and the debug module
+> > +               has an additional clock "dbg_clk", which is used to provide
+> > +               clock for debug module itself. Both clocks are mandatory.
+> > +
+> 
+> Perhaps I am misunderstanding the nature of the .dts files, but I'm
+> puzzled about the dbg_clk. I cannot see anything in the architecture
+> or normal A53 implementation that mentions this.
+> To access external debug from the core/external debug agent then we do
+> need the APB clock, but the interface between the debug logic and the
+> processor core is clocked by the internal CPU clocks.
 
+You are right and sorry I may introduce confusion at here.
 
-On 23.02.2017 11:16, Alexandre Belloni wrote:
-> On 23/02/2017 at 10:38:39 +0200, Claudiu Beznea wrote:
->> Enable PWM on sama5d2 by adding atmel_pwm_config_v3().
->> This, simply, sets the period and duty factor registers.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
->
->> ---
->>  Documentation/devicetree/bindings/pwm/atmel-pwm.txt |  1 +
->>  drivers/pwm/pwm-atmel.c                             | 16 ++++++++++++++++
->>  2 files changed, 17 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
->> index 02331b9..c8c831d 100644
->> --- a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
->> +++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
->> @@ -4,6 +4,7 @@ Required properties:
->>    - compatible: should be one of:
->>      - "atmel,at91sam9rl-pwm"
->>      - "atmel,sama5d3-pwm"
->> +    - "atmel,sama5d2-pwm"
->>    - reg: physical base address and length of the controller's registers
->>    - #pwm-cells: Should be 3. See pwm.txt in this directory for a
->>      description of the cells format.
->> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
->> index 0e4bd4e..4406639 100644
->> --- a/drivers/pwm/pwm-atmel.c
->> +++ b/drivers/pwm/pwm-atmel.c
->> @@ -207,6 +207,15 @@ static void atmel_pwm_config_v2(struct pwm_chip *chip, struct pwm_device *pwm,
->>  	}
->>  }
->>  
->> +static void atmel_pwm_config_v3(struct pwm_chip *chip, struct pwm_device *pwm,
->> +				unsigned long dty, unsigned long prd)
->> +{
->> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
->> +
->> +	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTY, dty);
->> +	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CPRD, prd);
->> +}
->> +
->>  static int atmel_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
->>  				  enum pwm_polarity polarity)
->>  {
->> @@ -295,6 +304,10 @@ static const struct atmel_pwm_data atmel_pwm_data_v2 = {
->>  	.config = atmel_pwm_config_v2,
->>  };
->>  
->> +static const struct atmel_pwm_data atmel_pwm_data_v3 = {
->> +	.config = atmel_pwm_config_v3,
->> +};
->> +
->>  static const struct platform_device_id atmel_pwm_devtypes[] = {
->>  	{
->>  		.name = "at91sam9rl-pwm",
->> @@ -316,6 +329,9 @@ static const struct of_device_id atmel_pwm_dt_ids[] = {
->>  		.compatible = "atmel,sama5d3-pwm",
->>  		.data = &atmel_pwm_data_v2,
->>  	}, {
->> +		.compatible = "atmel,sama5d2-pwm",
->> +		.data = &atmel_pwm_data_v3,
->> +	}, {
->>  		/* sentinel */
->>  	},
->>  };
->> -- 
->> 2.7.4
->>
+When I wrote this doc for binding, I assumed every debug logic has
+its own clock source. This is because there have one register
+ACPU_SC_PDBGUP_MBIST with eight bits, every bit is used to control
+every CPU's DBGPWRDUP signal. I wrongly understood this bit is used
+for debug logic clock gating.
+
+I read CA53 TRM, the DBGPWRDUP signal actually is used between power
+controller and CPU so can ensure CPU can be safely enter and exit low
+power states; and "The EDPRSR.PU bit reflects the value of this
+DBGPWRDUP signal". So I made mistake here and the bits in
+ACPU_SC_PDBGUP_MBIST is no matter with debug logic clocks.
+
+I will remove the "dbg_clk" from binding doc. Please correct me if my
+understanding is still wrong or blur.
+
+> > +- cpu : the cpu phandle the debug module is affined to. When omitted
+> > +       the source is considered to belong to CPU0.
+> > +
+> > +Example:
+> > +
+> > +       debug@f6590000 {
+> > +               compatible = "arm,coresight-debug","arm,primecell";
+> > +               reg = <0 0xf6590000 0 0x1000>;
+> > +               clocks = <&sys_ctrl HI6220_CS_ATB>, <&acpu_ctrl HI6220_ACPU_DBG_CLK0>;
+> > +               clock-names = "apb_pclk", "dbg_clk";
+> > +               cpu = <&cpu0>;
+> > +       };
+> > --
+> > 2.7.4
+> >
+> 
+> When I was looking at clocks for trace on the HiKey board I noted:
+> HI6220_CS_DAPB -- which I assumed was the debug APB clock.
+> HI6220_CS_ATB - which I assumed was the ATB (trace bus) clock.
+
+The clock HI6220_CS_DAPB is a mux; and after went through the spec for
+register definition, the clock driver misses the dapb gate clock in
+its system controller 'sysctrl'; And I checked this bit is luckily
+enabled by bootloaders (I have not checked it's enabled by ARM-TF or
+UEFI) so the driver can access debug module registers.
+
+diff --git a/drivers/clk/hisilicon/clk-hi6220.c b/drivers/clk/hisilicon/clk-hi6220.c
+index 553d083..a4ac75e 100644
+--- a/drivers/clk/hisilicon/clk-hi6220.c
++++ b/drivers/clk/hisilicon/clk-hi6220.c
+@@ -134,6 +134,7 @@ static struct hisi_gate_clock hi6220_separated_gate_clks_sys[] __initdata = {
+        { HI6220_UART4_PCLK,    "uart4_pclk",    "uart4_src",      CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x230, 8,  0, },
+        { HI6220_SPI_CLK,       "spi_clk",       "clk_150m",       CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x230, 9,  0, },
+        { HI6220_TSENSOR_CLK,   "tsensor_clk",   "clk_bus",        CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x230, 12, 0, },
++       { HI6220_DAPB_CLK,      "dapb_clk",      "cs_dapb",        CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x230, 18, 0, },
+        { HI6220_MMU_CLK,       "mmu_clk",       "ddrc_axi1",      CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x240, 11, 0, },
+        { HI6220_HIFI_SEL,      "hifi_sel",      "hifi_src",       CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 0,  0, },
+        { HI6220_MMC0_SYSPLL,   "mmc0_syspll",   "syspll",         CLK_SET_RATE_PARENT|CLK_IGNORE_UNUSED, 0x270, 1,  0, },
+
+Thanks,
+Leo Yan
