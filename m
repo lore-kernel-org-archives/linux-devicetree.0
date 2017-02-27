@@ -1,52 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
- resolution
-Date: Mon, 27 Feb 2017 08:29:48 -0600
-Message-ID: <20170227142948.eejne6j42lkzsiyq@rob-hp-laptop>
-References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
- <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
- <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
- <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
+Subject: Re: [PATCH 3/4] fpga dt: bindings for Altera Partial Reconfiguraion
+ IP.
+Date: Mon, 27 Feb 2017 08:32:30 -0600
+Message-ID: <20170227143230.b3frg3rg2sdttt64@rob-hp-laptop>
+References: <1487193038-3490-1-git-send-email-matthew.gerlach@linux.intel.com>
+ <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1487193038-3490-4-git-send-email-matthew.gerlach@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.gerlach@linux.intel.com
+Cc: atull@opensource.altera.com, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 24, 2017 at 05:04:45PM +0100, Fabrice Gasnier wrote:
-> On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
-> > On 15/02/17 16:55, Fabrice Gasnier wrote:
-> > > Add documentation for 'st,adc-res' dt optional property.
-> > > 
-> > > Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> > I'm happy with this, but would like to leave time for a device tree review.
-> > 
-> > Ultimately we may well want to make this a generic property and call it something
-> > like adc-resolution but perhaps we need to wait until we have a few more devices
-> > supporting setting it via device tree to figure out what the best interface is.
-> > It would exactly be a problem to support this as a deprecated binding at that
-> > point.
+On Wed, Feb 15, 2017 at 01:10:37PM -0800, matthew.gerlach@linux.intel.com wrote:
+> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
 > 
-> Hi Jonathan,
+> Device Tree bindings for Altera Partial Reconfiguraion IP?
 > 
-> I agree with you on this... It may be better to have generic property
-> for this, especially if you see that it will come in the near future.
-> May I suggest this prop to be less restrictive, e.g. like resolution-bits as
-> is may also be worth for other device types, e.g. DAC as an example ?
+> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> ---
+>  Documentation/devicetree/bindings/fpga/altera-pr-ip.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+> new file mode 100644
+> index 0000000..ada821f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/altera-pr-ip.txt
+> @@ -0,0 +1,12 @@
+> +Altera Partial Reconfiguration IP
+> +
+> +Required properties:
+> +- compatible : should contain "altr,pr-ip"
 
-Yes, please make this a commmon property.
+Kind of generic. There's only one version of h/w?
 
-Rob
+> +- reg        : base address and size for memory mapped io.
+> +
+> +Example:
+> +
+> +	fpga_mgr: fpga-mgr@ff20c000 {
+> +		compatible = "altr,pr-ip";
+> +		reg = <0xff20c000 0x10>;
+> +	};
+> -- 
+> 2.7.4
+> 
