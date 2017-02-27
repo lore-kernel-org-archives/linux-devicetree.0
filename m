@@ -1,57 +1,56 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 14/22] dt-bindings: PCI: dra7xx: Add dt bindings to
- enable legacy mode
-Date: Tue, 28 Feb 2017 08:58:41 +0530
-Message-ID: <58B4EE69.6030004@ti.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-15-git-send-email-kishon@ti.com>
- <20170227164054.xcubjpaf2qx3pxol@rob-hp-laptop>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v1] regulator: Add driver for voltage controlled
+ regulators
+Date: Mon, 27 Feb 2017 10:53:10 -0800
+Message-ID: <20170227185310.GA153648@google.com>
+References: <20170210204348.107871-1-mka@chromium.org>
+ <20170222002214.sejshtotyiobn6n2@rob-hp-laptop>
+ <20170225031919.GB56005@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170227164054.xcubjpaf2qx3pxol@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170225031919.GB56005-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+El Fri, Feb 24, 2017 at 07:19:19PM -0800 Matthias Kaehlcke ha dit:
 
-
-On Monday 27 February 2017 10:10 PM, Rob Herring wrote:
-> On Fri, Feb 17, 2017 at 03:20:34PM +0530, Kishon Vijay Abraham I wrote:
->> Update device tree binding documentation of TI's dra7xx PCI
->> controller to include property for enabling legacy mode.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  Documentation/devicetree/bindings/pci/ti-pci.txt |    4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> index 190828a..72ebe2b 100644
->> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
->> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
->> @@ -39,6 +39,10 @@ DEVICE MODE
->>   - interrupts : one interrupt entries must be specified for main interrupt.
->>   - num-ib-windows : number of inbound address translation windows
->>   - num-ob-windows : number of outbound address translation windows
->> + - syscon-legacy-mode: phandle to the syscon dt node. The 1st argument should
->> +		       contain the register offset within syscon and the 2nd
->> +		       argument should contain the bit field for setting the
->> +		       legacy mode
+> El Tue, Feb 21, 2017 at 06:22:14PM -0600 Rob Herring ha dit:
+> >
+> > > +Optional properties:
+> > > +--------------------
+> > > ...
+> > > +- min-slew-down-rate	: Describes how slowly the regulator voltage will decay
+> > > +			  down in the worst case (lightest expected load).
+> > > +			  Specified in uV / us (like main regulator ramp rate).
+> > > +			  This value is required when ovp-threshold-percent is
+> > > +			  specified.
+> > 
+> > Don't we have a standard prop for this or that's just for ramp?
 > 
-> Vendor prefix needed and what does "legacy mode" mean? Perhaps name this 
-> around what the mode is/does, not that it is legacy.
+> regulator-ramp-delay is related, but not exactly the same. The
+> ramp-delay is applied at the end of an up- or downward transition,
+> while this prop only specifies the downward rate and is applied in
+> between partial transitions towards the final voltage.
+> 
+> We possibly could use ramp-delay and add a set_voltage_time() op to
+> vctrl to prevent the core code from adding the "normal" ramp-delay at
+> the end of the transition. However it could be confusing that vctrl
+> handles the ramp-delay differently than other drivers, especially we
+> don't want a delay in the upward transition for vctrl. But maybe
+> nobody would care about the different behavior, as long as the
+> regulator does its job ...
 
-All right, thanks!
+Actually the behavior of a delay on the downward transition and no
+delay on the upward transition is hardware specific. Other users of
+this driver might need a standard ramp delay, therefore I think it's
+not a good idea to (re-)use this property in vctrl.
 
--Kishon
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
