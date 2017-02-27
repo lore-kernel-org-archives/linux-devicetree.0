@@ -1,58 +1,88 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [RFC v2 03/17] dt-bindings: timer: Document Owl timer
-Date: Mon, 27 Feb 2017 15:40:07 +0100
-Message-ID: <0c3f94c0-b920-25f9-7347-b43407d66dfa@suse.de>
-References: <20170224034055.18807-1-afaerber@suse.de>
- <20170224034055.18807-4-afaerber@suse.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 24/36] [media] add Omnivision OV5640 sensor driver
+Date: Mon, 27 Feb 2017 08:45:39 -0600
+Message-ID: <20170227144539.3la2veztkurhwa2p@rob-hp-laptop>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-25-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170224034055.18807-4-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1487211578-11360-25-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjQuMDIuMjAxNyB1bSAwNDo0MCBzY2hyaWViIEFuZHJlYXMgRsOkcmJlcjoKPiBUaGUgQWN0
-aW9ucyBTZW1pIFM1MDAgU29DIGNvbnRhaW5zIGEgdGltZXIgYmxvY2sgd2l0aCB0d28gdGltZXJz
-Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT4K
-PiAtLS0KPiAgdjI6IG5ldwo+ICAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvYWN0
-aW9ucyxvd2wtdGltZXIudHh0ICAgICAgfCAxNiArKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvYWN0aW9ucyxvd2wtdGltZXIudHh0Cj4gCj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9hY3Rp
-b25zLG93bC10aW1lci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGlt
-ZXIvYWN0aW9ucyxvd2wtdGltZXIudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAw
-MDAwMDAwLi4xNDFiYzdiCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy90aW1lci9hY3Rpb25zLG93bC10aW1lci50eHQKPiBAQCAtMCwwICsx
-LDE2IEBACj4gK0FjdGlvbnMgU2VtaSBPd2wgVGltZXIKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRp
-ZXM6Cj4gKy0gY29tcGF0aWJsZSA6ICAiYWN0aW9ucyxvd2wtdGltZXIiCj4gKy0gcmVnICAgICAg
-ICA6ICBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IGZvciB0aGUgZGV2aWNl
-Lgo+ICstIGludGVycnVwdHMgOiAgU2hvdWxkIGNvbnRhaW4gdHdvIHRpbWVyIGludGVycnVwdHMu
-Cj4gKwo+ICsKPiArRXhhbXBsZToKPiArCj4gKwkJdGltZXJAYjAxNjgwMDAgewo+ICsJCQljb21w
-YXRpYmxlID0gImFjdGlvbnMsb3dsLXRpbWVyIjsKPiArCQkJcmVnID0gPDB4YjAxNjgwMDAgMHgx
-MDA+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTAgSVJRX1RZUEVfTEVWRUxfSElHSD4s
-Cj4gKwkJCSAgICAgICAgICAgICA8R0lDX1NQSSAxMSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiAr
-CQl9OwoKSSBuZWVkIHRvIG1vZGlmeSB0aGVzZSBiaW5kaW5ncyBmb3IgdXBjb21pbmcgdjMgaW4g
-dGhlIGZvbGxvd2luZyB3YXlzOgoKKiAiYWN0aW9ucyxzNTAwLXRpbWVyIiwgImFjdGlvbnMsb3ds
-LXRpbWVyIiB0byBkZWFsIHdpdGggUzUwMCB2cy4gUzkwMApkaWZmZXJlbmNlcyB3aGlsZSBrZWVw
-aW5nIGEgc2luZ2xlIGRyaXZlciByZWdpc3RyYXRpb24gKG9yIHdvdWxkIHR3bwpyZWdpc3RyYXRp
-b25zIGJlIHByZWZlcnJlZCwgZHJvcHBpbmcgdGhlIHNlY29uZCBjb21wYXRpYmxlPyB0aGV5IGRv
-CnNoYXJlIGEgY29tbW9uIHN1YnNldCkKCiogVXNlIG5hbWVkIGludGVycnVwdHMgdG8gZGVhbCB3
-aXRoIDJ4IDJIeiArIDJ4IFRpbWVyIHZzLiA0eCBUaW1lciBmb3IKY29tcGxldGUgaGFyZHdhcmUg
-ZGVzY3JpcHRpb24KClJlZ2FyZHMsCkFuZHJlYXMKCi0tIApTVVNFIExpbnV4IEdtYkgsIE1heGZl
-bGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQpHRjogRmVsaXggSW1lbmTDtnJmZmVy
-LCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uCkhSQiAyMTI4NCAoQUcgTsO8cm5iZXJnKQoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
-LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
-cm5lbAo=
+On Wed, Feb 15, 2017 at 06:19:26PM -0800, Steve Longerbeam wrote:
+> This driver is based on ov5640_mipi.c from Freescale imx_3.10.17_1.0.0_beta
+> branch, modified heavily to bring forward to latest interfaces and code
+> cleanup.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  .../devicetree/bindings/media/i2c/ov5640.txt       |   43 +
+
+Please split to separate commit.
+
+>  drivers/media/i2c/Kconfig                          |    7 +
+>  drivers/media/i2c/Makefile                         |    1 +
+>  drivers/media/i2c/ov5640.c                         | 2109 ++++++++++++++++++++
+>  4 files changed, 2160 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>  create mode 100644 drivers/media/i2c/ov5640.c
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> new file mode 100644
+> index 0000000..4607bbe
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+> @@ -0,0 +1,43 @@
+> +* Omnivision OV5640 MIPI CSI-2 sensor
+> +
+> +Required Properties:
+> +- compatible: should be "ovti,ov5640"
+> +- clocks: reference to the xclk input clock.
+> +- clock-names: should be "xclk".
+> +- DOVDD-supply: Digital I/O voltage supply, 1.8 volts
+> +- AVDD-supply: Analog voltage supply, 2.8 volts
+> +- DVDD-supply: Digital core voltage supply, 1.5 volts
+> +
+> +Optional Properties:
+> +- reset-gpios: reference to the GPIO connected to the reset pin, if any.
+> +- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
+
+Use powerdown-gpios here as that is a somewhat standard name.
+
+Both need to state what is the active state.
+
+> +
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +
+> +Example:
+> +
+> +&i2c1 {
+> +	ov5640: camera@3c {
+> +		compatible = "ovti,ov5640";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ov5640>;
+> +		reg = <0x3c>;
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		clock-names = "xclk";
+> +		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
+> +		AVDD-supply = <&vgen3_reg>;  /* 2.8v */
+> +		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
+> +		pwdn-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
+> +		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> +
+> +		port {
+> +			ov5640_to_mipi_csi2: endpoint {
+> +				remote-endpoint = <&mipi_csi2_from_ov5640>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +	};
+> +};
