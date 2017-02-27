@@ -1,15 +1,16 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] devicetree: Add vendor prefix for Kontron AG
-Date: Mon, 27 Feb 2017 13:00:32 -0600
-Message-ID: <20170227190032.p32ophqwp5ffrrvu@rob-hp-laptop>
-References: <20170219202801.2082-1-plaes@plaes.org>
- <20170219202801.2082-3-plaes@plaes.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 1/2] devicetree: Add vendor prefix for Hwacom Systems Inc.
+Date: Mon, 27 Feb 2017 20:02:17 +0100
+Message-ID: <b2f85993-7ee3-80f2-066d-66582c06ad14@suse.de>
+References: <20170212193247.22705-1-carlo@caione.org>
+ <20170212193247.22705-2-carlo@caione.org>
+ <20170222142558.wbedfw6l4maatkdy@rob-hp-laptop> <m2mvd839t7.fsf@baylibre.com>
+ <CAL_Jsq+O4gpf7Hbfx_+ppe0uVpbzxJdk49jsytsYmyP4GZyUfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170219202801.2082-3-plaes@plaes.org>
+In-Reply-To: <CAL_Jsq+O4gpf7Hbfx_+ppe0uVpbzxJdk49jsytsYmyP4GZyUfQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,36 +20,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Priit Laes <plaes@plaes.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@endlessm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux@endlessm.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 19, 2017 at 10:27:59PM +0200, Priit Laes wrote:
-> Kontron AG is a German-based company designing and manufacturing
-> embedded modules, computers and systems.
-> 
-> Signed-off-by: Priit Laes <plaes@plaes.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 16d3b5e..4dca895 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -154,7 +154,8 @@ jedec	JEDEC Solid State Technology Association
->  karo	Ka-Ro electronics GmbH
->  keithkoep	Keith & Koep GmbH
->  keymile	Keymile GmbH
-> -kinetic Kinetic Technologies
-> +kinetic	Kinetic Technologies
-
-No doubt this needs re-formatting, but don't do that in this patch.
-
-> +kontron	Kontron AG
->  kosagi	Sutajio Ko-Usagi PTE Ltd.
->  kyo	Kyocera Corporation
->  lacie	LaCie
-> -- 
-> 2.9.3
-> 
+QW0gMjcuMDIuMjAxNyB1bSAxNDoyOSBzY2hyaWViIFJvYiBIZXJyaW5nOgo+IE9uIFN1biwgRmVi
+IDI2LCAyMDE3IGF0IDM6NDUgUE0sIEtldmluIEhpbG1hbiA8a2hpbG1hbkBiYXlsaWJyZS5jb20+
+IHdyb3RlOgo+PiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cml0ZXM6Cj4+Cj4+PiBP
+biBTdW4sIEZlYiAxMiwgMjAxNyBhdCAwODozMjo0NlBNICswMTAwLCBDYXJsbyBDYWlvbmUgd3Jv
+dGU6Cj4+Pj4gRnJvbTogQ2FybG8gQ2Fpb25lIDxjYXJsb0BlbmRsZXNzbS5jb20+Cj4+Pj4KPj4+
+PiBId2Fjb20gU3lzdGVtcyBJbmMuIGlzIGEgYnJvYWRiYW5kIHN5c3RlbSBpbnRlZ3JhdG9yIGFu
+ZCBzdXBwbGllciBvZgo+Pj4+IG1vYmlsZSwgZml4ZWQgYW5kIElQIG5ldHdvcmtzIHJlbGF0ZWQg
+c2VydmljZXMgYXMgd2VsbCBhcwo+Pj4+IG11bHRpbWVkaWEgYXBwbGljYXRpb24uIFdlYnNpdGU6
+IGh0dHA6Ly93d3cuaHdhY29tLmNvbS8KPj4+Pgo+Pj4+IFNpZ25lZC1vZmYtYnk6IENhcmxvIENh
+aW9uZSA8Y2FybG9AZW5kbGVzc20uY29tPgo+Pj4+IC0tLQo+Pj4+ICBEb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8IDEgKwo+Pj4+ICAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykKPj4+Cj4+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
+YmhAa2VybmVsLm9yZz4KPj4KPj4gUm9iLCBJIGFzc3VtZSBJIHNob3VsZCB0YWtlIHRoaXMgcGF0
+Y2ggYWxvbmcgd2l0aCB0aGUgcGF0Y2ggdGhhdCdzIHVzaW5nCj4+IHRoaXMgcHJlZml4PyAgT3Ig
+ZG9lcyB0aGlzIGdvIHRocm91Z2ggc29tZSBvdGhlciBEVCBwYXRoPwo+IAo+IFllcywgaXQgc2hv
+dWxkIGJlIGFwcGxpZWQgd2l0aCB0aGUgcmVzdCBvZiB0aGUgc2VyaWVzLgoKRWxzZXdoZXJlIFJv
+YiByZXF1ZXN0ZWQgdGhhdCAiZHQtYmluZGluZ3M6ICIgYmUgdXNlZCBpbiAkc3ViamVjdCBCVFcu
+CkRvZXMgdGhhdCBub3QgYXBwbHkgdG8gdmVuZG9yIHByZWZpeGVzLCBvciBzaG91bGQgS2V2aW4g
+Zml4IHRoYXQgd2hlbgphcHBseWluZz8KClJlZ2FyZHMsCkFuZHJlYXMKCi0tIApTVVNFIExpbnV4
+IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQpHRjogRmVsaXgg
+SW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uCkhSQiAyMTI4NCAoQUcg
+TsO8cm5iZXJnKQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+bGludXgtYXJtLWtlcm5lbAo=
