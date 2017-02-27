@@ -1,84 +1,123 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] can: ti_hecc: Add TI HECC DT binding documentation
-Date: Mon, 27 Feb 2017 10:44:52 -0600
-Message-ID: <20170227164452.3y3ilfxcb2s5ltnt@rob-hp-laptop>
-References: <1487346753-19286-1-git-send-email-yegorslists@googlemail.com>
- <1487346753-19286-3-git-send-email-yegorslists@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1487346753-19286-3-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, andrej.skvortzov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: [PATCH v2] dt: emac: document device-tree based phy discovery and setup
+Date: Mon, 27 Feb 2017 21:54:50 +0100
+Message-ID: <0149985a262cfc2feacd604a581cd5ae9134a525.1488228734.git.chunkeey@googlemail.com>
+References: <cecba35f-0a94-67e8-543a-a1d340d62947@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <cecba35f-0a94-67e8-543a-a1d340d62947@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: "David S . Miller" <davem@davemloft.net>, Ivan Mikhaylov <ivan@de.ibm.com>, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 17, 2017 at 04:52:32PM +0100, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
-> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> 
-> DT binding documentation for TI High End CAN Controller
-> 
-> Signed-off-by: Anton Glukhov <anton.a.glukhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/can/ti_hecc.txt        | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/can/ti_hecc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/ti_hecc.txt b/Documentation/devicetree/bindings/net/can/ti_hecc.txt
-> new file mode 100644
-> index 0000000..a7c601e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/ti_hecc.txt
-> @@ -0,0 +1,33 @@
-> +Texas Instruments High End CAN Controller (HECC)
-> +================================================
-> +
-> +This file provides information, what the device node
-> +for the hecc interface contains.
-> +
-> +Required properties:
-> +- compatible: "ti,am3517-hecc"
-> +- reg: addresses and lengths of the register spaces for 'hecc', 'hecc-ram'
-> +       and 'mbx'
-> +- reg-names :"hecc", "hecc-ram", "mbx"
-> +- interrupts: interrupt mapping for the hecc interrupts sources
-> +- clocks: clock phandles (see clock bindings for details)
-> +
-> +Optional properties:
-> +- ti,use-hecc1int: if provided configures HECC to produce all interrupts
-> +		   on HECC1INT interrupt line. By default HECC0INT interrupt
-> +		   line will be used.
-> +- xceiver-supply: regulator that powers the CAN transceiver
-> +
-> +Example:
-> +
-> +For am3517evm board:
-> +	hecc: can@0x5c050000 {
+This patch adds documentation for a new "phy-handle" property,
+"fixed-link" and "mdio" sub-node. These allows the enumeration
+of PHYs which are supported by the phy library under drivers/net/phy.
 
-Drop the '0x'.
+The EMAC ethernet controller in IBM and AMCC 4xx chips is
+currently stuck with a few privately defined phy
+implementations. It has no support for PHYs which
+are supported by the generic phylib.
 
-> +		compatible = "ti,am3517-hecc";
-> +		status = "disabled";
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+---
+---
+ .../devicetree/bindings/powerpc/4xx/emac.txt       | 62 +++++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 2 deletions(-)
 
-No need to put status in examples.
-
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +		reg = <0x5c050000 0x80>,
-> +		      <0x5c053000 0x180>,
-> +		      <0x5c052000 0x200>;
-> +		reg-names = "hecc", "hecc-ram", "mbx";
-> +		interrupts = <24>;
-> +		clocks = <&hecc_ck>;
-> +	};
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
+index 712baf6c3e24..44b842b6ca15 100644
+--- a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
++++ b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
+@@ -71,6 +71,9 @@
+ 			  For Axon it can be absent, though my current driver
+ 			  doesn't handle phy-address yet so for now, keep
+ 			  0x00ffffff in it.
++    - phy-handle	: Used to describe configurations where a external PHY
++			  is used. Please refer to:
++			  Documentation/devicetree/bindings/net/ethernet.txt
+     - rx-fifo-size-gige : 1 cell, Rx fifo size in bytes for 1000 Mb/sec
+ 			  operations (if absent the value is the same as
+ 			  rx-fifo-size).  For Axon, either absent or 2048.
+@@ -81,8 +84,22 @@
+ 			  offload, phandle of the TAH device node.
+     - tah-channel       : 1 cell, optional. If appropriate, channel used on the
+ 			  TAH engine.
++    - fixed-link	: Fixed-link subnode describing a link to a non-MDIO
++			  managed entity. See
++			  Documentation/devicetree/bindings/net/fixed-link.txt
++			  for details.
++    - mdio subnode	: When the EMAC has a phy connected to its local
++			  mdio, which us supported by the kernel's network
++			  PHY library in drivers/net/phy, there must be device
++			  tree subnode with the following required properties:
++				- #address-cells: Must be <1>.
++				- #size-cells: Must be <0>.
+ 
+-    Example:
++			  For PHY definitions: Please refer to
++			  Documentation/devicetree/bindings/net/phy.txt and
++			  Documentation/devicetree/bindings/net/ethernet.txt
++
++    Examples:
+ 
+ 	EMAC0: ethernet@40000800 {
+ 		device_type = "network";
+@@ -104,6 +121,48 @@
+ 		zmii-channel = <0>;
+ 	};
+ 
++	EMAC1: ethernet@ef600c00 {
++		device_type = "network";
++		compatible = "ibm,emac-apm821xx", "ibm,emac4sync";
++		interrupt-parent = <&EMAC1>;
++		interrupts = <0 1>;
++		#interrupt-cells = <1>;
++		#address-cells = <0>;
++		#size-cells = <0>;
++		interrupt-map = <0 &UIC2 0x10 IRQ_TYPE_LEVEL_HIGH /* Status */
++				 1 &UIC2 0x14 IRQ_TYPE_LEVEL_HIGH /* Wake */>;
++		reg = <0xef600c00 0x000000c4>;
++		local-mac-address = [000000000000]; /* Filled in by U-Boot */
++		mal-device = <&MAL0>;
++		mal-tx-channel = <0>;
++		mal-rx-channel = <0>;
++		cell-index = <0>;
++		max-frame-size = <9000>;
++		rx-fifo-size = <16384>;
++		tx-fifo-size = <2048>;
++		fifo-entry-size = <10>;
++		phy-mode = "rgmii";
++		phy-handle = <&phy0>;
++		phy-map = <0x00000000>;
++		rgmii-device = <&RGMII0>;
++		rgmii-channel = <0>;
++		tah-device = <&TAH0>;
++		tah-channel = <0>;
++		has-inverted-stacr-oc;
++		has-new-stacr-staopc;
++
++	        mdio {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			phy0: ethernet-phy@0 {
++				compatible = "ethernet-phy-ieee802.3-c22";
++				reg = <0>;
++			};
++		};
++	};
++
++
+       ii) McMAL node
+ 
+     Required properties:
+@@ -145,4 +204,3 @@
+     - revision           : as provided by the RGMII new version register if
+ 			   available.
+ 			   For Axon: 0x0000012a
+-
+-- 
+2.11.0
