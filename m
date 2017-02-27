@@ -1,93 +1,55 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4/4 v3] ARM: dts: add PCI to the Gemini
-	device trees
-Date: Mon, 27 Feb 2017 20:07:20 +0100
-Message-ID: <20170227190720.31409-4-linus.walleij@linaro.org>
-References: <20170227190720.31409-1-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 1/4] Documentation: mmc: add mmc-sleep-awake
+Date: Mon, 27 Feb 2017 13:04:38 -0600
+Message-ID: <20170227190438.m2nnb24qnnjijp5p@rob-hp-laptop>
+References: <1487577792-12510-1-git-send-email-riteshh@codeaurora.org>
+ <1487577792-12510-2-git-send-email-riteshh@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-In-Reply-To: <20170227190720.31409-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc: openwrt-devel@openwrt.org, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1487577792-12510-2-git-send-email-riteshh@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Ritesh Harjani <riteshh@codeaurora.org>
+Cc: ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, adrian.hunter@intel.com, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, alex.lemberg@sandisk.com, mateusz.nowak@intel.com, Yuliy.Izrailov@sandisk.com, asutoshd@codeaurora.org, david.griego@linaro.org, stummala@codeaurora.org, venkatg@codeaurora.org, pramod.gurav@linaro.org, jeremymc@redhat.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIENvcnRpbmEgR2VtaW5pIGhhcyBhbiBpbnRlcm5hbCBQQ0kgcm9vdCBidXMsIGFkZCB0aGlz
-IHRvCnRoZSBkZXZpY2UgdHJlZSwgYW5kIGFkZCBpbnRlcnJ1cHQgbWFwcGluZyAoc3dpenpsaW5n
-KSB0byB0aGUKcmVsZXZhbnQgc3lzdGVtcyBkZXZpY2UgdHJlZXMuCgpDYzogSmFub3MgTGF1YmUg
-PGphbm9zLmRldkBnbWFpbC5jb20+CkNjOiBQYXVsaXVzIFphbGVja2FzIDxwYXVsaXVzLnphbGVj
-a2FzQGdtYWlsLmNvbT4KQ2M6IEhhbnMgVWxsaSBLcm9sbCA8dWxsaS5rcm9sbEBnb29nbGVtYWls
-LmNvbT4KQ2M6IEZsb3JpYW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgpDYzogRmVu
-Zy1Ic2luIENoaWFuZyA8am9objQ1M0BmYXJhZGF5LXRlY2guY29tPgpDYzogR3JlZW50aW1lIEh1
-IDxncmVlbi5odUBnbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVz
-LndhbGxlaWpAbGluYXJvLm9yZz4KLS0tCkNoYW5nZUxvZyB2Mi0+djM6Ci0gQ2hhbmdlIGNvbXBh
-dGlibGUgc3RyaW5nIHRvICJjb3J0aW5hLGdlbWluaS1wY2kiLCAiZmFyYWRheSxmdHBjaTEwMCI7
-Ci0gQWRkICJkbWEtcmFuZ2VzIiBwcm9wZXJ0eSwgYWZ0ZXIgZGVjaXBoZXJpbmcgdGhhdCBzb21l
-IGhhcmRjb2RlZAogIGNvbnN0YW50cyBpbiB0aGUgZHJpdmVyIGlzIHJlYWxseSBhYm91dCB0aGlz
-LgpDaGFuZ2VMb2cgdjEtPnYyOgotIENoYW5nZSBidXMtcmFuZ2UgdG8gPDB4MDAgMHhmZj4KLSBE
-cm9wIHRoZSB0aHJlZSBleHRyYSBJUlFzIHRoYXQgYXJlIHVudXNlZAotIEltcGxlbWVudCB0aGUg
-cmlnaHQgaW50ZXJydXB0IG1hcHBpbmcvc3dpenpsaW5nCi0gUHVzaCB0aGUgaW50ZXJydXB0IG1h
-cHBpbmcgZG93biB0byBlYWNoIGFmZmVjdGVkIHN5c3RlbSwgb25seQogIFNRMjAxIGZvciBub3cu
-CgpQQ0kgbWFpbnRhaW5lcnM6IHRoaXMgaXMgRllJIG9ubHksIEkgd2lsbCBmdW5uZWwgdGhpcyB0
-byB0aGUgQVJNClNvQyB0cmVlIG9uY2Ugd2UgYXJlIGRvbmUgd2l0aCB0aGUgUENJIGRyaXZlci4K
-LS0tCiBhcmNoL2FybS9ib290L2R0cy9nZW1pbmktc3EyMDEuZHRzIHwgMjIgKysrKysrKysrKysr
-KysrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL2dlbWluaS5kdHNpICAgICAgfCA0MiArKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA2NCBpbnNl
-cnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZ2VtaW5pLXNxMjAxLmR0
-cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2dlbWluaS1zcTIwMS5kdHMKaW5kZXggZGFlMmE3MGQ4ZmJj
-Li40NjMwOWU3OWNjN2IgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2dlbWluaS1zcTIw
-MS5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZ2VtaW5pLXNxMjAxLmR0cwpAQCAtOTIsNSAr
-OTIsMjcgQEAKIAkJCQlyZWFkLW9ubHk7CiAJCQl9OwogCQl9OworCisJCXBjaUA1MDAwMDAwMCB7
-CisJCQlzdGF0dXMgPSAib2theSI7CisJCQlpbnRlcnJ1cHQtbWFwLW1hc2sgPSA8MHhmODAwIDAg
-MCA3PjsKKwkJCWludGVycnVwdC1tYXAgPQorCQkJCTwweDQ4MDAgMCAwIDEgJnBjaV9pbnRjIDA+
-LCAvKiBTbG90IDkgKi8KKwkJCQk8MHg0ODAwIDAgMCAyICZwY2lfaW50YyAxPiwKKwkJCQk8MHg0
-ODAwIDAgMCAzICZwY2lfaW50YyAyPiwKKwkJCQk8MHg0ODAwIDAgMCA0ICZwY2lfaW50YyAzPiwK
-KwkJCQk8MHg1MDAwIDAgMCAxICZwY2lfaW50YyAxPiwgLyogU2xvdCAxMCAqLworCQkJCTwweDUw
-MDAgMCAwIDIgJnBjaV9pbnRjIDI+LAorCQkJCTwweDUwMDAgMCAwIDMgJnBjaV9pbnRjIDM+LAor
-CQkJCTwweDUwMDAgMCAwIDQgJnBjaV9pbnRjIDA+LAorCQkJCTwweDU4MDAgMCAwIDEgJnBjaV9p
-bnRjIDI+LCAvKiBTbG90IDExICovCisJCQkJPDB4NTgwMCAwIDAgMiAmcGNpX2ludGMgMz4sCisJ
-CQkJPDB4NTgwMCAwIDAgMyAmcGNpX2ludGMgMD4sCisJCQkJPDB4NTgwMCAwIDAgNCAmcGNpX2lu
-dGMgMT4sCisJCQkJPDB4NjAwMCAwIDAgMSAmcGNpX2ludGMgMz4sIC8qIFNsb3QgMTIgKi8KKwkJ
-CQk8MHg2MDAwIDAgMCAyICZwY2lfaW50YyAwPiwKKwkJCQk8MHg2MDAwIDAgMCAzICZwY2lfaW50
-YyAxPiwKKwkJCQk8MHg2MDAwIDAgMCA0ICZwY2lfaW50YyAyPjsKKwkJfTsKIAl9OwogfTsKZGlm
-ZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2dlbWluaS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9k
-dHMvZ2VtaW5pLmR0c2kKaW5kZXggMzg3NmZlZWZjOWQ5Li45MThlNDY1NDY4MjMgMTAwNjQ0Ci0t
-LSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2dlbWluaS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2dlbWluaS5kdHNpCkBAIC0xMDQsNSArMTA0LDQ3IEBACiAJCQlpbnRlcnJ1cHQtY29udHJvbGxl
-cjsKIAkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8Mj47CiAJCX07CisKKwkJcGNpQDUwMDAwMDAwIHsK
-KwkJCWNvbXBhdGlibGUgPSAiY29ydGluYSxnZW1pbmktcGNpIiwgImZhcmFkYXksZnRwY2kxMDAi
-OworCQkJLyoKKwkJCSAqIFRoZSBmaXJzdCAyNTYgYnl0ZXMgaW4gdGhlIElPIHJhbmdlIGlzIGFj
-dHVhbGx5IHVzZWQKKwkJCSAqIHRvIGNvbmZpZ3VyZSB0aGUgaG9zdCBicmlkZ2UuCisJCQkgKi8K
-KwkJCXJlZyA9IDwweDUwMDAwMDAwIDB4MTAwPjsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDM+Owor
-CQkJI3NpemUtY2VsbHMgPSA8Mj47CisJCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+OworCQkJc3Rh
-dHVzID0gImRpc2FibGVkIjsKKworCQkJYnVzLXJhbmdlID0gPDB4MDAgMHhmZj47CisJCQkvKiBQ
-Q0kgcmFuZ2VzIG1hcHBpbmdzICovCisJCQlyYW5nZXMgPQorCQkJLyogMU1pQiBJL08gc3BhY2Ug
-MHg1MDAwMDAwMC0weDUwMGZmZmZmICovCisJCQk8MHgwMTAwMDAwMCAwIDAgICAgICAgICAgMHg1
-MDAwMDAwMCAwIDB4MDAxMDAwMDA+LAorCQkJLyogMTI4TWlCIG5vbi1wcmVmZXRjaGFibGUgbWVt
-b3J5IDB4NTgwMDAwMDAtMHg1ZmZmZmZmZiAqLworCQkJPDB4MDIwMDAwMDAgMCAweDU4MDAwMDAw
-IDB4NTgwMDAwMDAgMCAweDA4MDAwMDAwPjsKKworCQkJLyogRE1BIHJhbmdlcyAqLworCQkJZG1h
-LXJhbmdlcyA9CisJCQkvKiAxMjhNaUIgYXQgMHgwMDAwMDAwMC0weDA3ZmZmZmZmICovCisJCQk8
-MHgwMjAwMDAwMCAwIDB4MDAwMDAwMDAgMHgwMDAwMDAwMCAwIDB4MDgwMDAwMDA+LAorCQkJLyog
-NjRNaUIgYXQgMHgwMDAwMDAwMC0weDAzZmZmZmZmICovCisJCQk8MHgwMjAwMDAwMCAwIDB4MDAw
-MDAwMDAgMHgwMDAwMDAwMCAwIDB4MDQwMDAwMDA+LAorCQkJLyogNjRNaUIgYXQgMHgwMDAwMDAw
-MC0weDAzZmZmZmZmICovCisJCQk8MHgwMjAwMDAwMCAwIDB4MDAwMDAwMDAgMHgwMDAwMDAwMCAw
-IDB4MDQwMDAwMDA+OworCisJCQkvKgorCQkJICogVGhpcyBQQ0kgaG9zdCBicmlkZ2UgdmFyaWFu
-dCBoYXMgYSBjYXNjYWRlZCBpbnRlcnJ1cHQKKwkJCSAqIGNvbnRyb2xsZXIgZW1iZWRkZWQgaW4g
-dGhlIGhvc3QgYnJpZGdlLgorCQkJICovCisJCQlwY2lfaW50YzogaW50ZXJydXB0LWNvbnRyb2xs
-ZXIgeworCQkJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGNvbj47CisJCQkJaW50ZXJydXB0cyA9
-IDw4IElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQkJCWludGVycnVwdC1jb250cm9sbGVyOworCQkJ
-CSNhZGRyZXNzLWNlbGxzID0gPDA+OworCQkJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47CisJCQl9
-OworCQl9OwogCX07CiB9OwotLSAKMi45LjMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18Kb3BlbndydC1kZXZlbCBtYWlsaW5nIGxpc3QKb3BlbndydC1kZXZl
-bEBsaXN0cy5vcGVud3J0Lm9yZwpodHRwczovL2xpc3RzLm9wZW53cnQub3JnL2NnaS1iaW4vbWFp
-bG1hbi9saXN0aW5mby9vcGVud3J0LWRldmVsCg==
+On Mon, Feb 20, 2017 at 01:33:09PM +0530, Ritesh Harjani wrote:
+> mmc-sleep-awake enables CMD5 awake feature
+> & partial_init which can help reduce resume
+> latency on emmc.
+> 
+> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index c7f4a0e..b0df54c 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -53,6 +53,8 @@ Optional properties:
+>  - no-sdio: controller is limited to send sdio cmd during initialization
+>  - no-sd: controller is limited to send sd cmd during initialization
+>  - no-mmc: controller is limited to send mmc cmd during initialization
+> +- mmc-sleep-awake: eMMC to support awake by CMD5 partial init to reduce resume
+> +  latency.
+
+This is a feature of the controller or card? If a card, this should be 
+in a card node probably.
+
+Is there a better name that matches the h/w feature?
+
+Rob
+
+>  
+>  *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>  polarity properties, we have to fix the meaning of the "normal" and "inverted"
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, 
+> a Linux Foundation Collaborative Project.
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
