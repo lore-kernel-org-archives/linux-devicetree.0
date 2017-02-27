@@ -1,164 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] soc/imx: Add GPCv2 power gating driver
-Date: Mon, 27 Feb 2017 13:37:41 -0600
-Message-ID: <20170227193741.psngihpnsfhwhkh3@rob-hp-laptop>
-References: <20170220152727.31892-1-andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v3 3/7] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
+Date: Mon, 27 Feb 2017 13:39:16 -0600
+Message-ID: <20170227193916.5k7ti7e3xumzq7v3@rob-hp-laptop>
+References: <1487606921-26981-1-git-send-email-yannick.fertre@st.com>
+ <1487606921-26981-4-git-send-email-yannick.fertre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170220152727.31892-1-andrew.smirnov@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, yurovsky@gmail.com, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
+In-Reply-To: <1487606921-26981-4-git-send-email-yannick.fertre@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick Fertre <yannick.fertre@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Philippe Cornu <philippe.cornu@st.com>, kernel@stlinux.com, dri-devel@lists.freedesktop.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 20, 2017 at 07:27:27AM -0800, Andrey Smirnov wrote:
-> Add code allowing for control of various power domains managed by GPCv2
-> IP block found in i.MX7 series of SoCs. Power domains covered by this
-> patch are:
-> 
->     - PCIE PHY
->     - MIPI PHY
->     - USB HSIC PHY
->     - USB OTG1/2 PHY
-> 
-> Support for any other power domain controlled by GPC is not present, and
-> can be added at some later point.
-> 
-> Testing of this code was done against a PCIe driver.
-> 
-> Cc: yurovsky@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
-> 
-> Changes since v2 (see [v2]):
-> 
-> 	- Fix a critical bug where incorrect state of a bit was
->           expected in a busy wait loop (bit set instead of bit
->           cleared) imx7_gpc_pu_pgc_sw_pxx_req()
-> 
-> 	- Add missing step (setting of PCR in GPC_PGC_nCTRL) in power
->           down procedure
-> 
-> Changes since v1 (see [v1]):
-> 
-> 	- Various small DT bindings description fixes as per feedback
->           from Rob Herring
-> 
-> 
-> [v1] https://lkml.org/lkml/2017/2/6/554
-> [v2] https://lkml.org/lkml/2017/2/13/489
-> 
->  .../devicetree/bindings/power/fsl,imx-gpcv2.txt    |  71 ++++
->  drivers/soc/imx/Makefile                           |   2 +-
->  drivers/soc/imx/gpcv2.c                            | 397 +++++++++++++++++++++
->  include/dt-bindings/power/imx7-power.h             |  18 +
->  4 files changed, 487 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
->  create mode 100644 drivers/soc/imx/gpcv2.c
->  create mode 100644 include/dt-bindings/power/imx7-power.h
-> 
-> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-> new file mode 100644
-> index 0000000..393f68a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-> @@ -0,0 +1,71 @@
-> +Freescale i.MX General Power Controller v2
-> +==========================================
-> +
-> +The i.MX7S/D General Power Control (GPC) block contains Power Gating
-> +Control (PGC) for various power domains.
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "fsl,imx7d-gpc"
-> +
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +
-> +- interrupts: Should contain GPC interrupt request 1
-> +
-> +Power domains contained within GPC node are generic power domain
-> +providers, documented in
-> +Documentation/devicetree/bindings/power/power_domain.txt, which are
-> +described as subnodes of the power gating controller 'pgc' node,
-> +which, in turn, is expected to contain the following:
-> +
-> +Required properties:
-> +
-> +- reg: Power domain index. Valid values are defined in
-> +  include/dt-bindings/power/imx7-power.h
-> +
-> +- #power-domain-cells: Should be 0
-> +
-> +Optional properties:
-> +
-> +- power-supply: Power supply used to power the domain
-> +
-> +Example:
-> +
-> +	gpc: gpc@303a0000 {
-> +		compatible = "fsl,imx7d-gpc";
-> +		reg = <0x303a0000 0x1000>;
-> +		interrupt-controller;
-> +		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&intc>;
-> +
-> +		pgc {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			pgc_pcie_phy: pgc-pcie-phy-domain {
-
-power-domain@...
-
-> +				#power-domain-cells = <0>;
-> +
-> +				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
-> +				power-supply = <&reg_1p0d>;
-> +			};
-> +		};
-> +	};
-> +
-> +
-> +Specifying power domain for IP modules
-> +======================================
-> +
-> +IP cores belonging to a power domain should contain a 'power-domains'
-> +property that is a phandle for PGC node representing the domain.
-> +
-> +Example of a device that is part of the PCIE_PHY power domain:
-> +
-> +	pcie: pcie@0x33800000 {
-
-Drop the '0x'
-
-With that, for the binding:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-> +	      reg = <0x33800000 0x4000>,
-> +	            <0x4ff00000 0x80000>;
-> +		/* ... */
-> +		power-domains = <&pgc_pcie_phy>;
-> +		/* ... */
-> +	};
+T24gTW9uLCBGZWIgMjAsIDIwMTcgYXQgMDU6MDg6MzdQTSArMDEwMCwgWWFubmljayBGZXJ0cmUg
+d3JvdGU6Cj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0
+LmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3
+MmgzdG1xdy10MDFoLnR4dCAgICAgICAgIHwgNyArKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA3
+IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC50
+eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGlyZSxhbS00ODAyNzJoM3Rt
+cXctdDAxaC50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmY1OWUz
+YzQKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dAo+IEBAIC0w
+LDAgKzEsNyBAQAo+ICtBbXBpcmUgQU0tNDgwMjcySDNUTVFXLVQwMUggNC4zIiBXUVZHQSBURlQg
+TENEIHBhbmVsCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IHNo
+b3VsZCBiZSAiYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIgoKTm8gR1BJTyBjb250cm9scyBu
+b3IgcG93ZXIgc3VwcGxpZXM/IFlvdSBuZWVkIHRvIGJlIGV4cGxpY2l0IGlmIHVzaW5nIAoncG93
+ZXItc3VwcGx5JyBvciBub3Q/Cgo+ICsKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0
+aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBzaW1w
+bGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+IC0tIAo+IDEuOS4xCj4gCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
