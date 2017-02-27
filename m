@@ -1,53 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/9] gpu: ipu-v3: extend the IPUv3 DT binding for i.MX6
- QuadPlus
-Date: Mon, 27 Feb 2017 11:04:05 -0600
-Message-ID: <20170227170405.ofrh22vbyawtdsad@rob-hp-laptop>
-References: <20170217182830.32618-1-l.stach@pengutronix.de>
- <20170217182830.32618-7-l.stach@pengutronix.de>
+Subject: Re: [PATCH 1/2] dts: mfd: axp20x: Add xpowers,master-mode property
+ for AXP806 PMICs
+Date: Mon, 27 Feb 2017 11:05:42 -0600
+Message-ID: <20170227170541.s5ntce5njwpavnyw@rob-hp-laptop>
+References: <cover.1487428238.git.rask@formelder.dk>
+ <112c3e4aa625ce2c550ae7ae4446a61d058455b5.1487428238.git.rask@formelder.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170217182830.32618-7-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de
+In-Reply-To: <112c3e4aa625ce2c550ae7ae4446a61d058455b5.1487428238.git.rask@formelder.dk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rask Ingemann Lambertsen <rask@formelder.dk>
+Cc: Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMTcsIDIwMTcgYXQgMDc6Mjg6MjdQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
-dGU6Cj4gT24gaS5NWDYgUXVhZFBsdXMgdGhlIElQVSBuZWVkcyB0byBrbm93IHdoaWNoIFBSRyBo
-YXMgdG8gYmUKPiB1c2VkIGZvciB0aGlzIElQVSBpbnN0YW5jZS4gQWRkIGEgImZzbCxwcmciIHBy
-b3BlcnR5IGNvbnRhaW5pbmcKPiBhIHBoYW5kbGUgcG9pbnRpbmcgdG8gdGhlIGNvcnJlY3QgUFJH
-IGRldmljZS4KCklzIHRoZXJlIGFscmVhZHkgYSBuZXcgY29tcGF0aWJsZSBzdHJpbmc/IElmIG5v
-dCwgYWRkIG9uZS4gSWYgc28sIHRoZW4gCnRoZSBzdWJqZWN0IHNob3VsZCBiZSBtb3JlIHNwZWNp
-ZmljLgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25p
-eC5kZT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-aW14L2ZzbC1pbXgtZHJtLnR4dCB8IDIgKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9u
-cygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9pbXgvZnNsLWlteC1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4dAo+IGluZGV4IDVlNGI4YjEzYjlmOC4u
-YzhjN2E3YjM5NTFmIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2lteC9mc2wtaW14LWRybS50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlteC1kcm0udHh0Cj4gQEAgLTI4LDYg
-KzI4LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgICBpbiB0aGlzIG9yZGVyLgo+ICAtIHJl
-c2V0czogcGhhbmRsZSBwb2ludGluZyB0byB0aGUgc3lzdGVtIHJlc2V0IGNvbnRyb2xsZXIgYW5k
-Cj4gICAgICAgICAgICByZXNldCBsaW5lIGluZGV4LCBzZWUgcmVzZXQvZnNsLGlteC1zcmMudHh0
-IGZvciBkZXRhaWxzCj4gK0FkZGl0aW9uYWwgcmVxdWlyZWQgcHJvcGVydGllcyBmb3IgZnNsLGlt
-eDZxcC1pcHU6Cj4gKy0gZnNsLHByZzogcGhhbmRsZSB0byBwcmcgbm9kZSBhc3NvY2lhdGVkIHdp
-dGggdGhpcyBJUFUgaW5zdGFuY2UKPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBwb3J0QFsw
-LTNdOiBQb3J0IG5vZGVzIHdpdGggZW5kcG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbgo+
-ICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZh
-Y2VzLnR4dC4KPiAtLSAKPiAyLjExLjAKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On Sat, Feb 18, 2017 at 08:51:18PM +0100, Rask Ingemann Lambertsen wrote:
+> commit b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
+> was intended to fix the case where a board uses an AXP806 in slave mode,
+> but the boot loader leaves it in master mode for lack of AXP806 support.
+> But now the driver breaks on boards where the PMIC is operating in master
+> mode. To let the device tree describe which mode of operation is needed,
+> this patch introduces a new property "xpowers,master-mode".
+> 
+> Fixes: b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
+> Signed-off-by: Rask Ingemann Lambertsen <rask@formelder.dk>
+> ---
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+
+Acked-by: Rob Herring <robh@kernel.org>
