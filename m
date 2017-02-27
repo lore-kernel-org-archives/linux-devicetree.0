@@ -1,48 +1,66 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] ASoC: es7134: add dt-bindings for the
-	es7134 dac
-Date: Mon, 27 Feb 2017 16:47:24 +0100
-Message-ID: <20170227154724.13724-3-jbrunet@baylibre.com>
-References: <20170227154724.13724-1-jbrunet@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] hwmon: (sht15) Add device tree support
+Date: Mon, 27 Feb 2017 09:57:52 -0600
+Message-ID: <20170227155752.b6yshpowa4ioty6a@rob-hp-laptop>
+References: <1487247824-10005-1-git-send-email-marco.franchi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170227154724.13724-1-jbrunet@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487247824-10005-1-git-send-email-marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcofrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, FoxPeter-5t/GDYzpMLSELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- Documentation/devicetree/bindings/sound/everest,es7134.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/everest,es7134.txt
+On Thu, Feb 16, 2017 at 10:23:43AM -0200, Marco Franchi wrote:
+> Allow the driver to work with device tree support.
+> 
+> Based on initial patch submission from Peter Fox.
+> 
+> Tested on a imx7d-sdb board connected to a SHT15 board via Mikro Bus.
+> 
+> Signed-off-by: Marco Franchi <marco.franchi-3arQi8VN3Tc@public.gmane.org>
+> ---
+> Changes since v3:
+> -Remove the optional properties because they are not hardware description
+> -Change the sensor node name
+> 
+>  Documentation/devicetree/bindings/hwmon/sht15.txt | 19 +++++++
+>  drivers/hwmon/sht15.c                             | 64 +++++++++++++++++++++--
+>  2 files changed, 79 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/sht15.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/sht15.txt b/Documentation/devicetree/bindings/hwmon/sht15.txt
+> new file mode 100644
+> index 0000000..6a80277
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/sht15.txt
+> @@ -0,0 +1,19 @@
+> +Sensirion SHT15 Humidity and Temperature Sensor
+> +
+> +Required properties:
+> +
+> + - "compatible": must be "sensirion,sht15".
+> + - "data-gpios": GPIO connected to the data line.
+> + - "clk-gpios": GPIO connected to the clock line.
 
-diff --git a/Documentation/devicetree/bindings/sound/everest,es7134.txt b/Documentation/devicetree/bindings/sound/everest,es7134.txt
-new file mode 100644
-index 000000000000..5495a3cb8b7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/everest,es7134.txt
-@@ -0,0 +1,10 @@
-+ES7134 i2s DA converter
-+
-+Required properties:
-+- compatible : "everest,es7134" or "everest,es7144"
-+
-+Example:
-+
-+i2s_codec: external-codec {
-+	compatible = "everest,es7134";
-+};
--- 
-2.9.3
+Looks like this device is I2C perhaps? Though I'm not sure the waveforms 
+before and after transactions are compliant.
+
+> + - "vcc-supply": regulator that drives the VCC pin.
+> +
+> +Example:
+> +
+> +	sensor {
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_sensor>;
+> +		compatible = "sensirion,sht15";
+> +		clk-gpios = <&gpio4 12 0>;
+> +		data-gpios = <&gpio4 13 0>;
+> +		vcc-supply = <&reg_sht15>;
+> +	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
