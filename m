@@ -1,95 +1,271 @@
-From: Ben Hutchings <ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH] kbuild: avoid unrecognized option error for external DTC
-Date: Mon, 27 Feb 2017 14:06:56 +0000
-Message-ID: <1488204416.2819.9.camel@decadent.org.uk>
-References: <1488174052-2530-1-git-send-email-yamada.masahiro@socionext.com>
+From: Alim Akhtar <alim.akhtar@samsung.com>
+Subject: Re: [PATCH v5 02/11] phy: exynos-ufs: add UFS PHY driver for EXYNOS SoC
+Date: Mon, 27 Feb 2017 19:40:47 +0530
+Message-ID: <bcab9fcc-1308-7adb-ad2a-88eeea5565c7@samsung.com>
+References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
+ <1447046787-480-3-git-send-email-alim.akhtar@samsung.com>
+ <564AC63F.1000508@ti.com> <564AE11F.50908@samsung.com>
+ <CGME20170203092123epcas4p20b1d56d7a6fdec46903c41fc65718795@epcas4p2.samsung.com>
+ <564DD11D.2060101@ti.com> <aae976f6-18cf-7241-4f76-f842317229d4@samsung.com>
+ <CAGOxZ50gh_SErTiDbkjqNTCds-8ghgxXofSgzSwp6hicAcw23Q@mail.gmail.com>
+ <58B3B87B.7010302@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-34dSXzycV0LBKz+SA5yC"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488174052-2530-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alessio Igor Bogani <alessio.bogani-9b6o1nMz89Julxpn9UvDqw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marcin Nowakowski <marcin.nowakowski-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, Michal Marek <mmarek-IBi9RG/b67k@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, openrisc-cunTk1MwBs9a3B2Vnqf2dGD2FQJk+8+b@public.gmane.org, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stafford Horne <shorne-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-reply-to: <58B3B87B.7010302@ti.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Alim Akhtar <alim.akhtar@gmail.com>
+Cc: linux-scsi@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "James E.J. Bottomley" <JBottomley@odin.com>, vinayak holikatti <vinholikatti@gmail.com>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <essuuj@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, vivek.gautam@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Kishon,
 
---=-34dSXzycV0LBKz+SA5yC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 02/27/2017 10:56 AM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Thursday 23 February 2017 12:20 AM, Alim Akhtar wrote:
+>> On Fri, Feb 3, 2017 at 2:49 PM, Alim Akhtar <alim.akhtar@samsung.com> wrote:
+>>> Hi Kishon,
+>>>
+>>>
+>>> On 11/19/2015 07:09 PM, Kishon Vijay Abraham I wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On Tuesday 17 November 2015 01:41 PM, Alim Akhtar wrote:
+>>>>>
+>>>>> Hi
+>>>>> Thanks again for looking into this.
+>>>>>
+>>>>> On 11/17/2015 11:46 AM, Kishon Vijay Abraham I wrote:
+>>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> On Monday 09 November 2015 10:56 AM, Alim Akhtar wrote:
+>>>>>>>
+>>>>>>> From: Seungwon Jeon <essuuj@gmail.com>
+>>>>>>>
+>>>>>>> This patch introduces Exynos UFS PHY driver. This driver
+>>>>>>> supports to deal with phy calibration and power control
+>>>>>>> according to UFS host driver's behavior.
+>>>>>>>
+>>>>>>> Signed-off-by: Seungwon Jeon <essuuj@gmail.com>
+>>>>>>> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+>>>>>>> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>>>> ---
+>>>>>>>   drivers/phy/Kconfig                |    7 ++
+>>>>>>>   drivers/phy/Makefile               |    1 +
+>>>>>>>   drivers/phy/phy-exynos-ufs.c       |  241
+>>>>>>> ++++++++++++++++++++++++++++++++++++
+>>>>>>>   drivers/phy/phy-exynos-ufs.h       |   85 +++++++++++++
+>>>>>>>   drivers/phy/phy-exynos7-ufs.h      |   89 +++++++++++++
+>>>>>>>   include/linux/phy/phy-exynos-ufs.h |   85 +++++++++++++
+>>>>>>>   6 files changed, 508 insertions(+)
+>>>>>>>   create mode 100644 drivers/phy/phy-exynos-ufs.c
+>>>>>>>   create mode 100644 drivers/phy/phy-exynos-ufs.h
+>>>>>>>   create mode 100644 drivers/phy/phy-exynos7-ufs.h
+>>>>>>>   create mode 100644 include/linux/phy/phy-exynos-ufs.h
+>>>>>>>
+>>>>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>>>>>> index 7eb5859dd035..7d38a92e0297 100644
+>>>>>>> --- a/drivers/phy/Kconfig
+>>>>>>> +++ b/drivers/phy/Kconfig
+>>>>>>> @@ -389,4 +389,11 @@ config PHY_CYGNUS_PCIE
+>>>>>>>         Enable this to support the Broadcom Cygnus PCIe PHY.
+>>>>>>>         If unsure, say N.
+>>>>>>>
+>>>>>>> +config PHY_EXYNOS_UFS
+>>>>>>> +    tristate "EXYNOS SoC series UFS PHY driver"
+>>>>>>> +    depends on OF && ARCH_EXYNOS || COMPILE_TEST
+>>>>>>> +    select GENERIC_PHY
+>>>>>>> +    help
+>>>>>>> +      Support for UFS PHY on Samsung EXYNOS chipsets.
+>>>>>>> +
+>>>>>>>   endmenu
+>>>>>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>>>>>>> index 075db1a81aa5..9bec4d1a89e1 100644
+>>>>>>> --- a/drivers/phy/Makefile
+>>>>>>> +++ b/drivers/phy/Makefile
+>>>>>>> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)    +=
+>>>>>>> phy-armada375-usb2.o
+>>>>>>>   obj-$(CONFIG_BCM_KONA_USB2_PHY)        += phy-bcm-kona-usb2.o
+>>>>>>>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)    += phy-exynos-dp-video.o
+>>>>>>>   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)    += phy-exynos-mipi-video.o
+>>>>>>> +obj-$(CONFIG_PHY_EXYNOS_UFS)    += phy-exynos-ufs.o
+>>>>>>>   obj-$(CONFIG_PHY_LPC18XX_USB_OTG)    += phy-lpc18xx-usb-otg.o
+>>>>>>>   obj-$(CONFIG_PHY_PXA_28NM_USB2)        += phy-pxa-28nm-usb2.o
+>>>>>>>   obj-$(CONFIG_PHY_PXA_28NM_HSIC)        += phy-pxa-28nm-hsic.o
+>>>>>>> diff --git a/drivers/phy/phy-exynos-ufs.c
+>>>>>>> b/drivers/phy/phy-exynos-ufs.c
+>>>>>>> new file mode 100644
+>>>>>>> index 000000000000..cb1aeaa3d4eb
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/drivers/phy/phy-exynos-ufs.c
+>>>>>>> @@ -0,0 +1,241 @@
+>>>>>>> +/*
+>>>>>>> + * UFS PHY driver for Samsung EXYNOS SoC
+>>>>>>> + *
+>>>>>>> + * Copyright (C) 2015 Samsung Electronics Co., Ltd.
+>>>>>>> + * Author: Seungwon Jeon <essuuj@gmail.com>
+>>>>>>> + *
+>>>>>>> + * This program is free software; you can redistribute it and/or
+>>>>>>> modify
+>>>>>>> + * it under the terms of the GNU General Public License as published
+>>>>>>> by
+>>>>>>> + * the Free Software Foundation; either version 2 of the License, or
+>>>>>>> + * (at your option) any later version.
+>>>>>>> + */
+>>>>>>> +#include <linux/clk.h>
+>>>>>>> +#include <linux/delay.h>
+>>>>>>> +#include <linux/err.h>
+>>>>>>> +#include <linux/io.h>
+>>>>>>> +#include <linux/iopoll.h>
+>>>>>>> +#include <linux/mfd/syscon.h>
+>>>>>>> +#include <linux/module.h>
+>>>>>>> +#include <linux/of.h>
+>>>>>>> +#include <linux/phy/phy.h>
+>>>>>>> +#include <linux/phy/phy-exynos-ufs.h>
+>>>>>>> +#include <linux/platform_device.h>
+>>>>>>> +#include <linux/regmap.h>
+>>>>>>> +
+>>>>>>> +#include "phy-exynos-ufs.h"
+>>>>>>> +
+>>>>>>> +#define for_each_phy_lane(phy, i) \
+>>>>>>> +    for (i = 0; i < (phy)->lane_cnt; i++)
+>>>>>>> +#define for_each_phy_cfg(cfg) \
+>>>>>>> +    for (; (cfg)->id; (cfg)++)
+>>>>>>> +
+>>>>>>> +#define PHY_DEF_LANE_CNT    1
+>>>>>>> +
+>>>>>>> +static void exynos_ufs_phy_config(struct exynos_ufs_phy *phy,
+>>>>>>> +            const struct exynos_ufs_phy_cfg *cfg, u8 lane)
+>>>>>>> +{
+>>>>>>> +    enum {LANE_0, LANE_1}; /* lane index */
+>>>>>>> +
+>>>>>>> +    switch (lane) {
+>>>>>>> +    case LANE_0:
+>>>>>>> +        writel(cfg->val, (phy)->reg_pma + cfg->off_0);
+>>>>>>> +        break;
+>>>>>>> +    case LANE_1:
+>>>>>>> +        if (cfg->id == PHY_TRSV_BLK)
+>>>>>>> +            writel(cfg->val, (phy)->reg_pma + cfg->off_1);
+>>>>>>> +        break;
+>>>>>>> +    }
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +static bool match_cfg_to_pwr_mode(u8 desc, u8 required_pwr)
+>>>>>>> +{
+>>>>>>> +    if (IS_PWR_MODE_ANY(desc))
+>>>>>>> +        return true;
+>>>>>>> +
+>>>>>>> +    if (IS_PWR_MODE_HS(required_pwr) && IS_PWR_MODE_HS_ANY(desc))
+>>>>>>> +        return true;
+>>>>>>> +
+>>>>>>> +    if (COMP_PWR_MODE(required_pwr, desc))
+>>>>>>> +        return true;
+>>>>>>> +
+>>>>>>> +    if (COMP_PWR_MODE_MD(required_pwr, desc) &&
+>>>>>>> +        COMP_PWR_MODE_GEAR(required_pwr, desc) &&
+>>>>>>> +        COMP_PWR_MODE_SER(required_pwr, desc))
+>>>>>>> +        return true;
+>>>>>>> +
+>>>>>>> +    return false;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> +int exynos_ufs_phy_calibrate(struct phy *phy,
+>>>>>>> +                    enum phy_cfg_tag tag, u8 pwr)
+>>>>>>
+>>>>>>
+>>>>>> This is similar to the first version of your patch without
+>>>>>> EXPORT_SYMBOL.
+>>>>>>
+>>>>>> I think you have to create a new generic PHY_OPS for calibrate PHY while
+>>>>>> making
+>>>>>> sure that it is as generic as possible (which means calibrate_phy
+>>>>>> shouldn't
+>>>>>> have tag and pwr arguments or a strong justification as to why those
+>>>>>> arguments
+>>>>>> are required in a generic API).
+>>>>>
+>>>>> I don't see the advantage to making this a generic phy_ops, this is
+>>>>> exynos
+>>>>> specific ufs-phy, please have a look at other implementations
+>>>>
+>>>>
+>>>> only the implementation is specific to exynos. I've seen lot of other
+>>>> vendors
+>>>> want to do something like calibrate phy.
+>>>>
+>>>> So if we add something like (*calibrate)(struct phy *phy), then it can be
+>>>> used
+>>>> by others as well. Russell King also want to minimize the code to program
+>>>> calibration settings. So it would be good to come up with a set of
+>>>> standard
+>>>> bindings like 'phy,tx-swing', 'phy,emphasis', 'phy,amplitude' etc.. to
+>>>> program
+>>>> these settings.
+>>>>>
+>>>>> drivers/phy/phy-qcom-ufs.c (which I belive mereged recently)
+>>>>
+>>>>
+>>>> Thats why I hate when someone else merge PHY drivers :-( That driver can
+>>>> as
+>>>> well be in drivers/misc as it doesn't use PHY framework as it is supposed
+>>>> to be
+>>>> used. It just exports a dozen of API's to be used by controller drivers.
+>>>> ick..
+>>>>
+>>>>> may be other vendors might come with there own implementation of phy.
+>>>>
+>>>>
+>>>> right, it's all about providing the correct callback functions.
+>>>>>
+>>>>> I am using what is currently provided by the generic phy framework.
+>>>>
+>>>>
+>>>> I think for your use case, what is currently provided in the PHY framework
+>>>> is
+>>>> not sufficient.
+>>>>
+>>> Its little over a year since last time we discuss about adding a generic
+>>> calibration API. I can see in the past people tried adding *calibration* API
+>>> [1] but not sure why [1] was not landed in mainline.
+>>> Anyway now we have many users of phy_calibration API, like UFS, USB and may
+>>> be PCIe, there is a real need to add this functionality. So, here is my
+>>> approach:
+>
+> Agree, there are quite a few users that require calibration of phy parameters.
+> I think previously it was accommodated in phy_init, hence it was not merged.
+Ok, thanks for this information.
 
-On Mon, 2017-02-27 at 14:40 +0900, Masahiro Yamada wrote:
-> Since commit 6b22b3d1614a ("kbuild: Allow using host dtc instead of
-> kernel's copy"), it is possible to use an external dtc.=C2=A0=C2=A0In thi=
-s
-> case, we do not know which options are supported on it.
->=20
-> Commit bc553986a2f7 ("dtc: turn off dtc unit address warnings by
-> default") gives -Wno-unit_address_vs_reg, but this options is only
-> recognized by v1.4.2 or later.
->=20
-> If an older version is specified, the build fails:
+>>>  * Along with [1], we can add a void *priv for handling device specific phy
+>>> private data, and before calling phy_calibration() from phy consumer,
+>>> phy->priv is populated with private data.
+>
+> Not sure how you plan to use priv here?
+>
+ From ufs driver I am populating PHY _priv_ data and calling phy_calibrate()
 
-But the option to use an external dtc was intended to allow testing of
-newer versions.  If there's no reason to use this option to run an
-older version, why bother trying to support that?
+e.g
+----------------------- from ufs-exynos.c
+Instead of using below code earlier
+- exynos_ufs_phy_calibrate(generic_phy,CFG_PRE_INIT,PWR_MODE_ANY);
 
-[...]
-> --- a/scripts/Kbuild.include
-> +++ b/scripts/Kbuild.include
-> @@ -171,6 +171,20 @@ ld-version =3D $(shell $(LD) --version | $(srctree)/=
-scripts/ld-version.sh)
-> =C2=A0# Usage:=C2=A0=C2=A0$(call ld-ifversion, -ge, 22252, y)
-> =C2=A0ld-ifversion =3D $(shell [ $(ld-version) $(1) $(2) ] && echo $(3) |=
-| echo $(4))
-> =C2=A0
-> +# dtc-option
-> +# Usage:=C2=A0=C2=A0DTC_FLAGS +=3D $(call dtc-option,-Wno-unit_address_v=
-s_reg)
-> +#
-> +# When we use the external dtc, check if the desired options are support=
-ed.
-> +# When we use the kernel's copy (scripts/dtc/dtc), just use the fixed op=
-tion.
-> +# Until Kbuild descends into the scripts/dtc/ directory, scripts/dtc/dtc=
- may
-> +# not exist, i.e. $(call try-run,...) may not work.
-> +ifeq ("$(origin DTC)", "command line")
-[...]
+Now I am using below from ufs-exynos driver
 
-It could also be specified as an environment variable (assignment with
-"?=3D" doesn't override them, but "=3D" does).
++ generic_phy->priv =(void*)CFG_PRE_INIT;
++ phy_calibrate(generic_phy);
 
-Ben.
+and in drivers/phy/phy-exynos-ufs.c
+using phy->priv in calibration function.
 
---=20
-Ben Hutchings
-This sentence contradicts itself - no actually it doesn't.
+Let me know if you need more details here.
 
+I think this will work well for other drivers like PCIe or USB etc.
 
---=-34dSXzycV0LBKz+SA5yC
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAli0MoAACgkQ57/I7JWG
-EQnf9xAAsrFofDAMb/8Y7FdR1SB9TyigTo5kslryzW1w9ge3wdkEst3DCrXIuAJg
-rYlVL4Rlu+kvW8tQExD345wZKNbVZ1vkaviJfr7mqHP+EHRlyJR3qVlpZMsnSuZm
-ZwhaB+J3Nl6jMo7G9nj4+YGa8smPWANwj3svFuuZv+VHSXipsIzYDKjWsjE9F2xs
-cX3T2ESaUV7yGKGiMiGyQN7LOMyPawNuKYGxq3g9B8rfS/twEd3CD/uA+99rftsZ
-ycwwSIzlulBUKbie9bv/5tZ/Jkt9x8/iF3iun87AJYUSaiwv9S+iUbhQJDx2cpm4
-LAC4DXBsQllfEjKQCFaZZ8NnkRM5VYGinNvVy69gv/Q/iXQWaqVFqcrnFw+pW5u9
-EUzdz2H4ebhXJM0pi+pUowJKH6e8ySrLAbkY1CqcCJno5IvpUR2YhLJp3Gq/CElZ
-D8rlWNaY7NTPddckwLNh1AYZpVF31AIkFDFxSG9A5xTudyPmP1j8gA/MS1DLiH7b
-xe5i7qdYeR5noHgc5CqM7SPCqUHSv2rbaCDbdC8oAfSxVK2mGPMcurOcz6rhrf07
-Mot8XYtGglXs+VnQFxSX0I+brqw5TDEHPAaa89VuwoFbxaABpGWkRwOpED1mTCSM
-sWEe1LEReCMYKF/oQygec5jhf2QhWKMKgXZjo7CVDV+ljYzHm1o=
-=UfrQ
------END PGP SIGNATURE-----
-
---=-34dSXzycV0LBKz+SA5yC--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks
+> Kishon
+>
+>
+>
