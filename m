@@ -1,138 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 15/36] platform: add video-multiplexer subdevice driver
-Date: Mon, 27 Feb 2017 08:41:53 -0600
-Message-ID: <20170227144153.g4jzzbrcb7oyddyj@rob-hp-laptop>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [RFC v2 03/17] dt-bindings: timer: Document Owl timer
+Date: Mon, 27 Feb 2017 15:40:07 +0100
+Message-ID: <0c3f94c0-b920-25f9-7347-b43407d66dfa@suse.de>
+References: <20170224034055.18807-1-afaerber@suse.de>
+ <20170224034055.18807-4-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1487211578-11360-16-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.orgsu
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170224034055.18807-4-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 15, 2017 at 06:19:17PM -0800, Steve Longerbeam wrote:
-> From: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> This driver can handle SoC internal and external video bus multiplexers,
-> controlled either by register bit fields or by a GPIO. The subdevice
-> passes through frame interval and mbus configuration of the active input
-> to the output side.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> 
-> --
-> 
-> - fixed a cut&paste error in vidsw_remove(): v4l2_async_register_subdev()
->   should be unregister.
-> 
-> - added media_entity_cleanup() and v4l2_device_unregister_subdev()
->   to vidsw_remove().
-> 
-> - added missing MODULE_DEVICE_TABLE().
->   Suggested-by: Javier Martinez Canillas <javier@dowhile0.org>
-> 
-> - there was a line left over from a previous iteration that negated
->   the new way of determining the pad count just before it which
->   has been removed (num_pads = of_get_child_count(np)).
-> 
-> - Philipp Zabel has developed a set of patches that allow adding
->   to the subdev async notifier waiting list using a chaining method
->   from the async registered callbacks (v4l2_of_subdev_registered()
->   and the prep patches for that). For now, I've removed the use of
->   v4l2_of_subdev_registered() for the vidmux driver's registered
->   callback. This doesn't affect the functionality of this driver,
->   but allows for it to be merged now, before adding the chaining
->   support.
-> 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> ---
->  .../bindings/media/video-multiplexer.txt           |  59 +++
-
-Please make this a separate commit.
-
->  drivers/media/platform/Kconfig                     |   8 +
->  drivers/media/platform/Makefile                    |   2 +
->  drivers/media/platform/video-multiplexer.c         | 474 +++++++++++++++++++++
->  4 files changed, 543 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
->  create mode 100644 drivers/media/platform/video-multiplexer.c
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.txt b/Documentation/devicetree/bindings/media/video-multiplexer.txt
-> new file mode 100644
-> index 0000000..9d133d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
-> @@ -0,0 +1,59 @@
-> +Video Multiplexer
-> +=================
-> +
-> +Video multiplexers allow to select between multiple input ports. Video received
-> +on the active input port is passed through to the output port. Muxes described
-> +by this binding may be controlled by a syscon register bitfield or by a GPIO.
-> +
-> +Required properties:
-> +- compatible : should be "video-multiplexer"
-> +- reg: should be register base of the register containing the control bitfield
-> +- bit-mask: bitmask of the control bitfield in the control register
-> +- bit-shift: bit offset of the control bitfield in the control register
-> +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO phandle
-> +  may be given to switch between two inputs
-> +- #address-cells: should be <1>
-> +- #size-cells: should be <0>
-> +- port@*: at least three port nodes containing endpoints connecting to the
-> +  source and sink devices according to of_graph bindings. The last port is
-> +  the output port, all others are inputs.
-> +
-> +Example:
-> +
-> +syscon {
-> +	compatible = "syscon", "simple-mfd";
-> +
-> +	mux {
-> +		compatible = "video-multiplexer";
-> +		/* Single bit (1 << 19) in syscon register 0x04: */
-> +		reg = <0x04>;
-> +		bit-mask = <1>;
-> +		bit-shift = <19>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@0 {
-> +			reg = <0>;
-> +
-> +			mux_in0: endpoint {
-> +				remote-endpoint = <&video_source0_out>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +
-> +			mux_in1: endpoint {
-> +				remote-endpoint = <&video_source1_out>;
-> +			};
-> +		};
-> +
-> +		port@2 {
-> +			reg = <2>;
-> +
-> +			mux_out: endpoint {
-> +				remote-endpoint = <&capture_interface_in>;
-> +			};
-> +		};
-> +	};
-> +};
+QW0gMjQuMDIuMjAxNyB1bSAwNDo0MCBzY2hyaWViIEFuZHJlYXMgRsOkcmJlcjoKPiBUaGUgQWN0
+aW9ucyBTZW1pIFM1MDAgU29DIGNvbnRhaW5zIGEgdGltZXIgYmxvY2sgd2l0aCB0d28gdGltZXJz
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT4K
+PiAtLS0KPiAgdjI6IG5ldwo+ICAKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvYWN0
+aW9ucyxvd2wtdGltZXIudHh0ICAgICAgfCAxNiArKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvYWN0aW9ucyxvd2wtdGltZXIudHh0Cj4gCj4g
+ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9hY3Rp
+b25zLG93bC10aW1lci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGlt
+ZXIvYWN0aW9ucyxvd2wtdGltZXIudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAw
+MDAwMDAwLi4xNDFiYzdiCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy90aW1lci9hY3Rpb25zLG93bC10aW1lci50eHQKPiBAQCAtMCwwICsx
+LDE2IEBACj4gK0FjdGlvbnMgU2VtaSBPd2wgVGltZXIKPiArCj4gK1JlcXVpcmVkIHByb3BlcnRp
+ZXM6Cj4gKy0gY29tcGF0aWJsZSA6ICAiYWN0aW9ucyxvd2wtdGltZXIiCj4gKy0gcmVnICAgICAg
+ICA6ICBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IGZvciB0aGUgZGV2aWNl
+Lgo+ICstIGludGVycnVwdHMgOiAgU2hvdWxkIGNvbnRhaW4gdHdvIHRpbWVyIGludGVycnVwdHMu
+Cj4gKwo+ICsKPiArRXhhbXBsZToKPiArCj4gKwkJdGltZXJAYjAxNjgwMDAgewo+ICsJCQljb21w
+YXRpYmxlID0gImFjdGlvbnMsb3dsLXRpbWVyIjsKPiArCQkJcmVnID0gPDB4YjAxNjgwMDAgMHgx
+MDA+Owo+ICsJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTAgSVJRX1RZUEVfTEVWRUxfSElHSD4s
+Cj4gKwkJCSAgICAgICAgICAgICA8R0lDX1NQSSAxMSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiAr
+CQl9OwoKSSBuZWVkIHRvIG1vZGlmeSB0aGVzZSBiaW5kaW5ncyBmb3IgdXBjb21pbmcgdjMgaW4g
+dGhlIGZvbGxvd2luZyB3YXlzOgoKKiAiYWN0aW9ucyxzNTAwLXRpbWVyIiwgImFjdGlvbnMsb3ds
+LXRpbWVyIiB0byBkZWFsIHdpdGggUzUwMCB2cy4gUzkwMApkaWZmZXJlbmNlcyB3aGlsZSBrZWVw
+aW5nIGEgc2luZ2xlIGRyaXZlciByZWdpc3RyYXRpb24gKG9yIHdvdWxkIHR3bwpyZWdpc3RyYXRp
+b25zIGJlIHByZWZlcnJlZCwgZHJvcHBpbmcgdGhlIHNlY29uZCBjb21wYXRpYmxlPyB0aGV5IGRv
+CnNoYXJlIGEgY29tbW9uIHN1YnNldCkKCiogVXNlIG5hbWVkIGludGVycnVwdHMgdG8gZGVhbCB3
+aXRoIDJ4IDJIeiArIDJ4IFRpbWVyIHZzLiA0eCBUaW1lciBmb3IKY29tcGxldGUgaGFyZHdhcmUg
+ZGVzY3JpcHRpb24KClJlZ2FyZHMsCkFuZHJlYXMKCi0tIApTVVNFIExpbnV4IEdtYkgsIE1heGZl
+bGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQpHRjogRmVsaXggSW1lbmTDtnJmZmVy
+LCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uCkhSQiAyMTI4NCAoQUcgTsO8cm5iZXJnKQoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJt
+LWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtl
+cm5lbAo=
