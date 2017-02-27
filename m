@@ -1,76 +1,64 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 1/7] arm64: allwinner: Kconfig: add
- essential pinctrl driver for H5
-Date: Mon, 27 Feb 2017 09:25:14 +0100
-Message-ID: <20170227082514.54umfltn5xmdcpv3@lukather>
-References: <20170226011956.53581-1-icenowy@aosc.xyz>
- <20170226011956.53581-2-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [RFC v2 4/7] ASoC: dmaengine_pcm: add copy support
+Date: Mon, 27 Feb 2017 10:05:18 +0100
+Message-ID: <6bdd18a9-d040-3b62-a5a5-8ac6e632a1b0@st.com>
+References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
+ <1487003909-11710-5-git-send-email-arnaud.pouliquen@st.com>
+ <20170214171630.qgkyoymxyqjiiblh@sirena.org.uk>
+ <40633f7c-a2ac-1658-cc9d-b30eaff8a95a@st.com>
+ <20170215145341.sntwx7oqyqmw6azv@sirena.org.uk>
+ <338f8db7-2077-626f-986b-b4e3df40469c@st.com>
+ <20170216201427.z7ixcwbuyvb7ajgn@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tkxmchuhxcbqiygm"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB26EZ7CQKGQEE5VQ4RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170226011956.53581-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170216201427.z7ixcwbuyvb7ajgn@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Jonathan Cameron <jic23@kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello Mark,
 
---tkxmchuhxcbqiygm
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Sorry for the late answer, i was OoO...
 
-On Sun, Feb 26, 2017 at 09:19:50AM +0800, Icenowy Zheng wrote:
-> H5 SoC has two pin controllers, one (in user manual called "CPUx") needs
-> a slightly advanced driver, and the other (called "CPUs") is just equal
-> to the on in H3, and the H3 driver can be just reused.
+On 02/16/2017 09:14 PM, Mark Brown wrote:
+> On Wed, Feb 15, 2017 at 04:46:44PM +0100, Arnaud Pouliquen wrote:
+>> On 02/15/2017 03:53 PM, Mark Brown wrote:
+>>> On Wed, Feb 15, 2017 at 02:59:18PM +0100, Arnaud Pouliquen
+>>> wrote:
 > 
-> Select the two necessary pinctrl drivers when building kernel for
-> Allwinner SoCs.
+>>> No, copy() is an alternative to doing DMA rather than
+>>> something that works with DMA.  If you want to have some sort
+>>> of post processing operation it shoudn't be called copy().
+>>> It's probably worth considering just making a new format and
+>>> letting userspace convert things here.
 > 
-> Also add H5 in the option's description.
+>> You mean using a plug-in alsa to do it? this seems not possible
+>> with tiny-alsa... Without a plug-in, driver will not be
+>> compatible with standard audio application.
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  arch/arm64/Kconfig.platforms | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Right.  But if you're using tinyalsa you've got some open coded
+> system specific stuff anyway!
 > 
-> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-> index 129cc5ae4091..81f0d6149c2e 100644
-> --- a/arch/arm64/Kconfig.platforms
-> +++ b/arch/arm64/Kconfig.platforms
-> @@ -5,8 +5,11 @@ config ARCH_SUNXI
->  	select GENERIC_IRQ_CHIP
->  	select PINCTRL
->  	select PINCTRL_SUN50I_A64
-> +	select PINCTRL_SUN50I_H5
-> +	select PINCTRL_SUN8I_H3_R
+>> Do you think this would be reasonable if i implement something
+>> similar in my driver, without using the soc generic DMA engine?
+> 
+> Probably.  It might even be possible to fit it elegently into the 
+> generic dmaengine code, just don't say it's a copy() operation
+> since that's a specific thing in ALSA.
+> 
+Ok I will have a look in generic dmaengine and try to propose
+something in this way in the V2.
 
-Why not add those options as def_bool instead?
-
-Being able to remove them certainly have values if you want to strip
-them down.
-
->  	help
-> -	  This enables support for Allwinner sunxi based SoCs like the A64.
-> +	  This enables support for Allwinner sunxi based SoCs like the A64
-> +	  and H5.
-
-There's no point in having an ever growing list of SoCs here. You can
-just remove the mention of the A64.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---tkxmchuhxcbqiygm--
+Regards,
+Arnaud
