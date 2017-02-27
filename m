@@ -1,32 +1,36 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: spi: document bcm63xx HS SPI devicetree
- bindings
-Date: Mon, 27 Feb 2017 16:41:04 -0600
-Message-ID: <20170227224104.ezhf7juce6jrdkbq@rob-hp-laptop>
-References: <20170222131940.31085-1-jonas.gorski@gmail.com>
- <20170222131940.31085-2-jonas.gorski@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: NSP: Add mailbox (PDC) to NSP
+Date: Mon, 27 Feb 2017 17:47:20 -0600
+Message-ID: <20170227234720.jaxsnxbjcbzhf7hn@rob-hp-laptop>
+References: <1487796146-14690-1-git-send-email-steven.lin1@broadcom.com>
+ <1487796146-14690-3-git-send-email-steven.lin1@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170222131940.31085-2-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+In-Reply-To: <1487796146-14690-3-git-send-email-steven.lin1@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Steve Lin <steven.lin1@broadcom.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, scott.branden@broadcom.com, rob.rice@broadcom.com, jassisinghbrar@gmail.com, linux@armlinux.org.uk, jon.mason@broadcom.com, ray.jui@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 02:19:39PM +0100, Jonas Gorski wrote:
-> Add documentation for the bindings of the high speed SPI controller found
-> on newer bcm63xx SoCs.
+On Wed, Feb 22, 2017 at 03:42:26PM -0500, Steve Lin wrote:
+> Adds mailbox / PDC to NSP device tree.  Needs new compatibility string
+> to differentiate from NS2 version.
 > 
-> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Steve Lin <steven.lin1@broadcom.com>
 > ---
->  .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+>  .../devicetree/bindings/mailbox/brcm,iproc-pdc-mbox.txt          | 6 ++++--
+>  arch/arm/boot/dts/bcm-nsp.dtsi                                   | 9 +++++++++
+>  2 files changed, 13 insertions(+), 2 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
