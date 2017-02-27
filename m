@@ -1,131 +1,90 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] devicetree: of_node_put() does not require holding
- devtree_lock
-Date: Mon, 27 Feb 2017 06:54:46 -0800
-Message-ID: <58B43DB6.4040009@gmail.com>
-References: <1487755758-6066-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: dma: uart: add uart dma bindings
+Date: Mon, 27 Feb 2017 09:22:26 -0600
+Message-ID: <20170227152226.g4zokauxii2nuyxn@rob-hp-laptop>
+References: <1487243251-964-1-git-send-email-long.cheng@mediatek.com>
+ <1487243251-964-2-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487755758-6066-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1487243251-964-2-git-send-email-long.cheng@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Long Cheng <long.cheng@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, Vinod Koul <vinod.koul@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/22/17 01:29, Sakari Ailus wrote:
-> While holding a reference to a device_node it is allowed to put that node
-> without holding devtree_lock spinlock. Move of_node_put() after releasing
-> the spinlock.
+On Thu, Feb 16, 2017 at 07:07:28PM +0800, Long Cheng wrote:
+> add uart dma bindings
+
+This and the subject need to be more specific in that this is for 
+Mediatek.
+
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-
-I would rather leave this code the way it is.
-
-The change is a micro-optimization that is not going to have any real
-impact on performance.
-
-The change also makes the code less clear and readable.  (Not
-significantly, but very slightly).  THe code in the current form
-slightly emphasizes the balancing of gets and puts.  I know that
-this is nit picking, but so be it.
-
-Thus the change is on balance code churn.
-
--Frank
-
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
 > ---
->  drivers/of/base.c | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index d4bea3c..a8d7fed 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -286,8 +286,8 @@ struct device_node *of_find_all_nodes(struct device_node *prev)
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
->  	np = __of_find_all_nodes(prev);
->  	of_node_get(np);
-> -	of_node_put(prev);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(prev);
->  	return np;
->  }
->  EXPORT_SYMBOL(of_find_all_nodes);
-> @@ -660,8 +660,8 @@ struct device_node *of_get_next_parent(struct device_node *node)
->  
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
->  	parent = of_node_get(node->parent);
-> -	of_node_put(node);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(node);
->  	return parent;
->  }
->  EXPORT_SYMBOL(of_get_next_parent);
-> @@ -732,8 +732,8 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
->  		if (of_node_get(next))
->  			break;
->  	}
-> -	of_node_put(prev);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(prev);
->  	return next;
->  }
->  EXPORT_SYMBOL(of_get_next_available_child);
-> @@ -875,8 +875,8 @@ struct device_node *of_find_node_by_name(struct device_node *from,
->  		if (np->name && (of_node_cmp(np->name, name) == 0)
->  		    && of_node_get(np))
->  			break;
-> -	of_node_put(from);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(from);
->  	return np;
->  }
->  EXPORT_SYMBOL(of_find_node_by_name);
-> @@ -904,8 +904,8 @@ struct device_node *of_find_node_by_type(struct device_node *from,
->  		if (np->type && (of_node_cmp(np->type, type) == 0)
->  		    && of_node_get(np))
->  			break;
-> -	of_node_put(from);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(from);
->  	return np;
->  }
->  EXPORT_SYMBOL(of_find_node_by_type);
-> @@ -935,8 +935,8 @@ struct device_node *of_find_compatible_node(struct device_node *from,
->  		if (__of_device_is_compatible(np, compatible, type, NULL) &&
->  		    of_node_get(np))
->  			break;
-> -	of_node_put(from);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(from);
->  	return np;
->  }
->  EXPORT_SYMBOL(of_find_compatible_node);
-> @@ -970,8 +970,8 @@ struct device_node *of_find_node_with_property(struct device_node *from,
->  		}
->  	}
->  out:
-> -	of_node_put(from);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(from);
->  	return np;
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
-> @@ -1051,8 +1051,8 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
->  			break;
->  		}
->  	}
-> -	of_node_put(from);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	of_node_put(from);
->  	return np;
->  }
->  EXPORT_SYMBOL(of_find_matching_node_and_match);
-> 
+>  .../devicetree/bindings/dma/mtk_uart_dma.txt       |   32 ++++++++++++++++++++
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+mediatek,uart-dma.txt for filename.
+
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk_uart_dma.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/mtk_uart_dma.txt b/Documentation/devicetree/bindings/dma/mtk_uart_dma.txt
+> new file mode 100644
+> index 0000000..b8aa7f4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mtk_uart_dma.txt
+> @@ -0,0 +1,32 @@
+> +* Mediatek UART APDMA Controller
+
+Is the block really for UARTs only or just happens to be connected to 
+UARTs. For the latter, you should drop UART here and in the compatible.
+
+> +
+> +Required properties:
+> +- compatible should contain:
+> +  * "mediatek,mt2701-uart-dma" for MT2701 compatible APDMA
+> +  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
+> +
+> +- reg: The base address of the APDMA register bank.
+> +
+> +- interrupts: A single interrupt specifier.
+> +
+> +- clocks : Must contain an entry for each entry in clock-names.
+> +  See ../clocks/clock-bindings.txt for details.
+> +- clock-names: The APDMA clock for register accesses
+
+Needs to list "apdma" here. Is apdma really the right name here? It 
+should be the name of the input to this block.
+
+> +
+> +Examples:
+> +
+> +	apdma: dma-controller@11000380 {
+> +		compatible = "mediatek,mt2701-uart-dma";
+> +		reg = <0 0x11000380 0 0x400>;
+> +		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 65 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 66 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 67 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 69 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_AP_DMA>;
+> +		clock-names = "apdma";
+> +		#dma-cells = <1>;
+> +	};
+> -- 
+> 1.7.9.5
+> 
