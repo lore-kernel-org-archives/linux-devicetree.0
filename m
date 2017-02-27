@@ -1,27 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 8/8] dt-bindings: phy-mt65xx-usb: add support for new
- version phy
-Date: Mon, 27 Feb 2017 16:38:54 -0600
-Message-ID: <20170227223853.htphbxx2hyvll6fd@rob-hp-laptop>
-References: <1487753705-6745-1-git-send-email-chunfeng.yun@mediatek.com>
- <1487753705-6745-8-git-send-email-chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2 2/3] media: dt-bindings: vpif: extend the example with
+ an output port
+Date: Mon, 27 Feb 2017 16:46:15 -0600
+Message-ID: <20170227224615.akogq6rccv3rwzrz@rob-hp-laptop>
+References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
+ <1487771027-7763-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1487753705-6745-8-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <1487771027-7763-3-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Patrick Titiano <ptitiano@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 22, 2017 at 04:55:05PM +0800, Chunfeng Yun wrote:
-> add a new compatible string for "mt2712", and move reference clock
-> into each port node;
+On Wed, Feb 22, 2017 at 02:43:46PM +0100, Bartosz Golaszewski wrote:
+> This makes the example more or less correspond with the da850-evm
+> hardware setup.
 > 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   93 +++++++++++++++++---
->  1 file changed, 80 insertions(+), 13 deletions(-)
+>  .../devicetree/bindings/media/ti,da850-vpif.txt    | 40 +++++++++++++++++-----
+>  1 file changed, 32 insertions(+), 8 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
