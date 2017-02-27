@@ -1,31 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] watchdog: renesas-wdt: add support for rza
-Date: Mon, 27 Feb 2017 10:34:03 -0600
-Message-ID: <20170227163403.itptnpa24immhx7s@rob-hp-laptop>
-References: <20170216172320.10897-1-chris.brandt@renesas.com>
- <20170216172320.10897-3-chris.brandt@renesas.com>
+Subject: Re: [PATCH v3 2/3] stih-cec: add HPD notifier support
+Date: Mon, 27 Feb 2017 10:43:03 -0600
+Message-ID: <20170227164303.mqhelwmn4vr5nl7a@rob-hp-laptop>
+References: <1487328412-8305-1-git-send-email-benjamin.gaignard@linaro.org>
+ <1487328412-8305-3-git-send-email-benjamin.gaignard@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170216172320.10897-3-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-renesas-soc@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+In-Reply-To: <1487328412-8305-3-git-send-email-benjamin.gaignard@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: hverkuil@xs4all.nl, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@armlinux.org.uk, krzk@kernel.org, javier@osg.samsung.com, hans.verkuil@cisco.com, dri-devel@lists.freedesktop.org, daniel.vetter@intel.com, m.szyprowski@samsung.com, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 12:23:19PM -0500, Chris Brandt wrote:
-> Describe the WDT hardware in the RZ/A series.
+On Fri, Feb 17, 2017 at 11:46:51AM +0100, Benjamin Gaignard wrote:
+> By using the HPD notifier framework there is no longer any reason
+> to manually set the physical address. This was the one blocking
+> issue that prevented this driver from going out of staging, so do
+> this move as well.
 > 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Update the bindings documentation the new hdmi phandle.
+
+Should be a separate commit, but it's fine unless you do another spin.
+
+> 
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> CC: devicetree@vger.kernel.org
+> 
+> version 3:
+> - change hdmi phandle from "st,hdmi-handle" to "hdmi-handle"
 > ---
-> v2:
-> * added to renesas-wdt.txt instead of creating a new file
-> * changed commit title
-> * added "renesas,rza-wdt" as a fallback
-> * added interrupts property
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/media/stih-cec.txt         |   2 +
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/media/platform/Kconfig                     |  10 +
+>  drivers/media/platform/Makefile                    |   1 +
+>  drivers/media/platform/sti/cec/Makefile            |   1 +
+>  drivers/media/platform/sti/cec/stih-cec.c          | 404 +++++++++++++++++++++
+>  drivers/staging/media/Kconfig                      |   2 -
+>  drivers/staging/media/Makefile                     |   1 -
+>  drivers/staging/media/st-cec/Kconfig               |   8 -
+>  drivers/staging/media/st-cec/Makefile              |   1 -
+>  drivers/staging/media/st-cec/TODO                  |   7 -
+>  drivers/staging/media/st-cec/stih-cec.c            | 379 -------------------
+>  11 files changed, 418 insertions(+), 398 deletions(-)
+>  create mode 100644 drivers/media/platform/sti/cec/Makefile
+>  create mode 100644 drivers/media/platform/sti/cec/stih-cec.c
+>  delete mode 100644 drivers/staging/media/st-cec/Kconfig
+>  delete mode 100644 drivers/staging/media/st-cec/Makefile
+>  delete mode 100644 drivers/staging/media/st-cec/TODO
+>  delete mode 100644 drivers/staging/media/st-cec/stih-cec.c
