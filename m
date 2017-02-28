@@ -1,309 +1,563 @@
-From: Eva Rachel Retuya <eraretuya@gmail.com>
-Subject: [PATCH v5 3/4] iio: accel: adxl345: Split driver into core and I2C
-Date: Tue, 28 Feb 2017 10:37:18 +0800
-Message-ID: <f15e3023ba4cabd1a236943378caa6ab6c1b4d85.1488248485.git.eraretuya@gmail.com>
-References: <cover.1488248485.git.eraretuya@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1488248485.git.eraretuya@gmail.com>
-In-Reply-To: <cover.1488248485.git.eraretuya@gmail.com>
-References: <cover.1488248485.git.eraretuya@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, linux-iio@vger.kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, dmitry.torokhov@gmail.com, michael.hennerich@analog.com, daniel.baluta@gmail.com, amsfield22@gmail.com, florian.vaussard@heig-vd.ch, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Eva Rachel Retuya <eraretuya@gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 3/4] drm/bridge: Drivers for
+ megachips-stdpxxxx-ge-b850v3-fw (LVDS-DP++)
+Date: Tue, 28 Feb 2017 08:47:28 +0530
+Message-ID: <1999d8e0-d57c-eb93-cbd3-cf23174d1dc0@codeaurora.org>
+References: <cover.1485611969.git.peter.senna@collabora.com>
+ <38d16cfeec0f873445d6194c112fb45818d6566c.1485611969.git.peter.senna@collabora.com>
+ <9c703b4a-c422-ef00-a88c-2bb04086c74a@codeaurora.org>
+ <20170227134050.GM26544@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170227134050.GM26544@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Senna Tschudin <peter.senna@collabora.com>
+Cc: mark.rutland@arm.com, heiko@sntech.de, airlied@linux.ie, daniel.vetter@ffwll.ch, peter.senna@gmail.com, dri-devel@lists.freedesktop.org, tiwai@suse.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, ykk@rock-chips.com, jslaby@suse.cz, martyn.welch@collabora.co.uk, Rob Herring <robh@kernel.org>, mchehab@osg.samsung.com, linux@armlinux.org.uk, javier@dowhile0.org, treding@nvidia.com, linux@roeck-us.net, martin.donnelly@ge.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, eballetbo@gmail.com, Fabio Estevam <fabio.estevam@nxp.com>, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, galak@codeaurora.org, enric.balletbo@collabora.com, akpm@linux-foundation.org, shawnguo@kernel.org, davem@dave
 List-Id: devicetree@vger.kernel.org
 
-Move I2C-specific code into its own file and rely on regmap to access
-registers. The core code provides access to x, y, z and scale readings.
 
-Signed-off-by: Eva Rachel Retuya <eraretuya@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
-Changes from v4:
-* Add Andy's Reviewed-by tag
 
-Changes from v3:
-* Revert to explicit and separate I2C and SPI configuration
-* Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
+On 02/27/2017 07:10 PM, Peter Senna Tschudin wrote:
+> On Wed, Feb 01, 2017 at 04:17:21PM +0530, Archit Taneja wrote:
+> Hi Archit,
+>
+>> Hi,
+>>
+>> Some minor comments:
+>
+> Thank you for the review!
+>
+>>
+>> On 01/28/2017 07:51 PM, Peter Senna Tschudin wrote:
+>>> The video processing pipeline on the second output on the GE B850v3:
+>>>
+>>>   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+>>>
+>>> Each bridge has a dedicated flash containing firmware for supporting the
+>>> custom design. The result is that in this design neither the STDP4028
+>>> nor the STDP2690 behave as the stock bridges would. The compatible
+>>> strings include the suffix "-ge-b850v3-fw" to make it clear that the
+>>> driver is for the bridges with the firmware which is specific for the GE
+>>> B850v3.
+>>>
+>>> The driver is powerless to control the video processing pipeline, as the
+>>> two bridges behaves as a single one. The driver is only needed for
+>>> telling the host about EDID / HPD, and for giving the host powers to ack
+>>> interrupts.
+>>>
+>>> This driver adds one i2c_device for each bridge, but only one
+>>> drm_bridge. This design allows the creation of a functional connector
+>>> that is capable of reading EDID from the STDP2690 while handling
+>>> interrupts on the STDP4028.
+>>>
+>>> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>>> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
+>>> Cc: Martin Donnelly <martin.donnelly@ge.com>
+>>> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+>>> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+>>> Cc: David Airlie <airlied@linux.ie>
+>>> Cc: Thierry Reding <treding@nvidia.com>
+>>> Cc: Thierry Reding <thierry.reding@gmail.com>
+>>> Cc: Archit Taneja <architt@codeaurora.org>
+>>> Cc: Enric Balletbo <enric.balletbo@collabora.com>
+>>> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+>>> ---
+>>>  drivers/gpu/drm/bridge/Kconfig                     |  11 +
+>>>  drivers/gpu/drm/bridge/Makefile                    |   1 +
+>>>  .../drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c   | 408 +++++++++++++++++++++
+>>>  3 files changed, 420 insertions(+)
+>>>  create mode 100644 drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+>>>
+>>> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+>>> index eb8688e..4a937f1 100644
+>>> --- a/drivers/gpu/drm/bridge/Kconfig
+>>> +++ b/drivers/gpu/drm/bridge/Kconfig
+>>> @@ -48,6 +48,17 @@ config DRM_DW_HDMI_I2S_AUDIO
+>>>  	  Support the I2S Audio interface which is part of the Synopsis
+>>>  	  Designware HDMI block.
+>>>
+>>> +config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+>>> +	tristate "MegaChips stdp4028-ge-b850v3-fw and stdp2690-ge-b850v3-fw"
+>>> +	depends on OF
+>>> +	select DRM_KMS_HELPER
+>>> +	select DRM_PANEL
+>>> +	---help---
+>>> +          This is a driver for the display bridges of
+>>> +          GE B850v3 that convert dual channel LVDS
+>>> +          to DP++. This is used with the i.MX6 imx-ldb
+>>> +          driver. You are likely to say N here.
+>>> +
+>>>  config DRM_NXP_PTN3460
+>>>  	tristate "NXP PTN3460 DP/LVDS bridge"
+>>>  	depends on OF
+>>> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+>>> index 2e83a785..af0b7cc 100644
+>>> --- a/drivers/gpu/drm/bridge/Makefile
+>>> +++ b/drivers/gpu/drm/bridge/Makefile
+>>> @@ -5,6 +5,7 @@ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+>>>  obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
+>>>  obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
+>>>  obj-$(CONFIG_DRM_DW_HDMI_I2S_AUDIO) += dw-hdmi-i2s-audio.o
+>>> +obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+>>>  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+>>>  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+>>>  obj-$(CONFIG_DRM_SIL_SII8620) += sil-sii8620.o
+>>> diff --git a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+>>> new file mode 100644
+>>> index 0000000..13de03cf
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+>>> @@ -0,0 +1,408 @@
+>>> +/*
+>>> + * Driver for MegaChips STDP4028 with GE B850v3 firmware (LVDS-DP)
+>>> + * Driver for MegaChips STDP2690 with GE B850v3 firmware (DP-DP++)
+>>> +
+>>> + * Copyright (c) 2016, Collabora Ltd.
+>>> + * Copyright (c) 2016, General Electric Company
+>>
+>> 2017?
+>
+> Fixed.
+>
+>>
+>>> +
+>>> + * This program is free software; you can redistribute it and/or modify it
+>>> + * under the terms and conditions of the GNU General Public License,
+>>> + * version 2, as published by the Free Software Foundation.
+>>> +
+>>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>>> + * more details.
+>>> +
+>>> + * You should have received a copy of the GNU General Public License
+>>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>>> +
+>>> + * This driver creates a drm_bridge and a drm_connector for the LVDS to DP++
+>>> + * display bridge of the GE B850v3. There are two physical bridges on the video
+>>> + * signal pipeline: a STDP4028(LVDS to DP) and a STDP2690(DP to DP++). The
+>>> + * physical bridges are automatically configured by the input video signal, and
+>>> + * the driver has no access to the video processing pipeline. The driver is
+>>> + * only needed to read EDID from the STDP2690 and to handle HPD events from the
+>>> + * STDP4028. The driver communicates with both bridges over i2c. The video
+>>> + * signal pipeline is as follows:
+>>> + *
+>>> + *   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+>>> + *
+>>> + */
+>>> +
+>>> +#include <linux/gpio.h>
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <drm/drm_atomic.h>
+>>> +#include <drm/drm_atomic_helper.h>
+>>> +#include <drm/drm_crtc_helper.h>
+>>> +#include <drm/drm_edid.h>
+>>> +#include <drm/drmP.h>
+>>> +
+>>> +#define EDID_EXT_BLOCK_CNT 0x7E
+>>> +
+>>> +#define STDP4028_IRQ_OUT_CONF_REG 0x02
+>>> +#define STDP4028_DPTX_IRQ_EN_REG 0x3C
+>>> +#define STDP4028_DPTX_IRQ_STS_REG 0x3D
+>>> +#define STDP4028_DPTX_STS_REG 0x3E
+>>> +
+>>> +#define STDP4028_DPTX_DP_IRQ_EN 0x1000
+>>> +
+>>> +#define STDP4028_DPTX_HOTPLUG_IRQ_EN 0x0400
+>>> +#define STDP4028_DPTX_LINK_CH_IRQ_EN 0x2000
+>>> +#define STDP4028_DPTX_IRQ_CONFIG \
+>>> +		(STDP4028_DPTX_LINK_CH_IRQ_EN | STDP4028_DPTX_HOTPLUG_IRQ_EN)
+>>> +
+>>> +#define STDP4028_DPTX_HOTPLUG_STS 0x0200
+>>> +#define STDP4028_DPTX_LINK_STS 0x1000
+>>> +#define STDP4028_CON_STATE_CONNECTED \
+>>> +		(STDP4028_DPTX_HOTPLUG_STS | STDP4028_DPTX_LINK_STS)
+>>> +
+>>> +#define STDP4028_DPTX_HOTPLUG_CH_STS 0x0400
+>>> +#define STDP4028_DPTX_LINK_CH_STS 0x2000
+>>> +#define STDP4028_DPTX_IRQ_CLEAR \
+>>> +		(STDP4028_DPTX_LINK_CH_STS | STDP4028_DPTX_HOTPLUG_CH_STS)
+>>> +
+>>> +static DEFINE_MUTEX(ge_b850v3_lvds_dev_mutex);
+>>> +
+>>> +struct ge_b850v3_lvds {
+>>> +	struct drm_connector connector;
+>>> +	struct drm_bridge bridge;
+>>> +	struct i2c_client *stdp4028_i2c;
+>>> +	struct i2c_client *stdp2690_i2c;
+>>> +	struct edid *edid;
+>>> +};
+>>> +
+>>> +static struct ge_b850v3_lvds *ge_b850v3_lvds_ptr;
+>>> +
+>>> +u8 *stdp2690_get_edid(struct i2c_client *client)
+>>> +{
+>>> +	struct i2c_adapter *adapter = client->adapter;
+>>> +	unsigned char start = 0x00;
+>>> +	unsigned int total_size;
+>>> +	u8 *block = kmalloc(EDID_LENGTH, GFP_KERNEL);
+>>> +
+>>> +	struct i2c_msg msgs[] = {
+>>> +		{
+>>> +			.addr	= client->addr,
+>>> +			.flags	= 0,
+>>> +			.len	= 1,
+>>> +			.buf	= &start,
+>>> +		}, {
+>>> +			.addr	= client->addr,
+>>> +			.flags	= I2C_M_RD,
+>>> +			.len	= EDID_LENGTH,
+>>> +			.buf	= block,
+>>> +		}
+>>> +	};
+>>> +
+>>> +	if (!block)
+>>> +		return NULL;
+>>> +
+>>> +	if (i2c_transfer(adapter, msgs, 2) != 2) {
+>>> +		DRM_ERROR("Unable to read EDID.\n");
+>>> +		goto err;
+>>> +	}
+>>> +
+>>> +	if (!drm_edid_block_valid(block, 0, false, NULL)) {
+>>> +		DRM_ERROR("Invalid EDID data\n");
+>>> +		goto err;
+>>> +	}
+>>> +
+>>> +	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
+>>> +	if (total_size > EDID_LENGTH) {
+>>> +		kfree(block);
+>>> +		block = kmalloc(total_size, GFP_KERNEL);
+>>> +		if (!block)
+>>> +			return NULL;
+>>> +
+>>> +		/* Yes, read the entire buffer, and do not skip the first
+>>> +		 * EDID_LENGTH bytes.
+>>> +		 */
+>>> +		start = 0x00;
+>>> +		msgs[1].len = total_size;
+>>> +		msgs[1].buf = block;
+>>> +
+>>> +		if (i2c_transfer(adapter, msgs, 2) != 2) {
+>>> +			DRM_ERROR("Unable to read EDID extension blocks.\n");
+>>> +			goto err;
+>>> +		}
+>>> +		if (!drm_edid_block_valid(block, 1, false, NULL)) {
+>>> +			DRM_ERROR("Invalid EDID data\n");
+>>> +			goto err;
+>>> +		}
+>>> +	}
+>>> +
+>>> +	return block;
+>>> +
+>>> +err:
+>>> +	kfree(block);
+>>> +	return NULL;
+>>> +}
+>>> +
+>>> +static int ge_b850v3_lvds_get_modes(struct drm_connector *connector)
+>>> +{
+>>> +	int num_modes = 0;
+>>> +
+>>> +	kfree(ge_b850v3_lvds_ptr->edid);
+>>> +	ge_b850v3_lvds_ptr->edid = (struct edid *)
+>>> +		stdp2690_get_edid(ge_b850v3_lvds_ptr->stdp2690_i2c);
+>>> +
+>>> +	if (ge_b850v3_lvds_ptr->edid) {
+>>> +		drm_mode_connector_update_edid_property(connector,
+>>> +				ge_b850v3_lvds_ptr->edid);
+>>> +		num_modes = drm_add_edid_modes(connector,
+>>> +				ge_b850v3_lvds_ptr->edid);
+>>> +	}
+>>> +
+>>> +	return num_modes;
+>>> +}
+>>> +
+>>> +
+>>
+>> extra blank line here.
+>
+> Fixed
+>
+>>
+>>> +static enum drm_mode_status ge_b850v3_lvds_mode_valid(
+>>> +		struct drm_connector *connector, struct drm_display_mode *mode)
+>>> +{
+>>> +	return MODE_OK;
+>>> +}
+>>> +
+>>> +static const struct
+>>> +drm_connector_helper_funcs ge_b850v3_lvds_connector_helper_funcs = {
+>>> +	.get_modes = ge_b850v3_lvds_get_modes,
+>>> +	.mode_valid = ge_b850v3_lvds_mode_valid,
+>>> +};
+>>> +
+>>> +static enum drm_connector_status ge_b850v3_lvds_detect(
+>>> +		struct drm_connector *connector, bool force)
+>>> +{
+>>> +	s32 link_state;
+>>> +
+>>> +	link_state = i2c_smbus_read_word_data(ge_b850v3_lvds_ptr->stdp4028_i2c,
+>>> +			STDP4028_DPTX_STS_REG);
+>>> +
+>>> +	if (link_state == STDP4028_CON_STATE_CONNECTED)
+>>> +		return connector_status_connected;
+>>> +
+>>> +	if (link_state == 0)
+>>> +		return connector_status_disconnected;
+>>> +
+>>> +	return connector_status_unknown;
+>>> +}
+>>> +
+>>> +static const struct drm_connector_funcs ge_b850v3_lvds_connector_funcs = {
+>>> +	.dpms = drm_atomic_helper_connector_dpms,
+>>> +	.fill_modes = drm_helper_probe_single_connector_modes,
+>>> +	.detect = ge_b850v3_lvds_detect,
+>>> +	.destroy = drm_connector_cleanup,
+>>> +	.reset = drm_atomic_helper_connector_reset,
+>>> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+>>> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+>>> +};
+>>> +
+>>> +static irqreturn_t ge_b850v3_lvds_irq_handler(int irq, void *dev_id)
+>>> +{
+>>> +	i2c_smbus_write_word_data(ge_b850v3_lvds_ptr->stdp4028_i2c,
+>>> +			STDP4028_DPTX_IRQ_STS_REG, STDP4028_DPTX_IRQ_CLEAR);
+>>> +
+>>> +	if (ge_b850v3_lvds_ptr->connector.dev)
+>>> +		drm_kms_helper_hotplug_event(ge_b850v3_lvds_ptr->connector.dev);
+>>> +
+>>> +	return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static int ge_b850v3_lvds_attach(struct drm_bridge *bridge)
+>>> +{
+>>> +	int ret;
+>>> +
+>>> +	if (!ge_b850v3_lvds_ptr->stdp2690_i2c ||
+>>> +			!ge_b850v3_lvds_ptr->stdp4028_i2c) {
+>>> +		DRM_ERROR("i2c not properly initialized...");
+>>> +		return -ENODEV;
+>>> +	}
+>>> +
+>>> +	if (!bridge->encoder) {
+>>> +		DRM_ERROR("Parent encoder object not found");
+>>> +		return -ENODEV;
+>>> +	}
+>>> +
+>>> +	ge_b850v3_lvds_ptr->connector.polled = DRM_CONNECTOR_POLL_HPD;
+>>> +
+>>> +	drm_connector_helper_add(&ge_b850v3_lvds_ptr->connector,
+>>> +			&ge_b850v3_lvds_connector_helper_funcs);
+>>> +
+>>> +	ret = drm_connector_init(bridge->dev, &ge_b850v3_lvds_ptr->connector,
+>>> +			&ge_b850v3_lvds_connector_funcs,
+>>> +			DRM_MODE_CONNECTOR_DisplayPort);
+>>> +	if (ret) {
+>>> +		DRM_ERROR("Failed to initialize connector with drm\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	ret = drm_mode_connector_attach_encoder(&ge_b850v3_lvds_ptr->connector,
+>>> +			bridge->encoder);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +
+>>> +	/* Configures the bridge to re-enable interrupts after each ack. */
+>>> +	i2c_smbus_write_word_data(ge_b850v3_lvds_ptr->stdp4028_i2c,
+>>> +			STDP4028_IRQ_OUT_CONF_REG, STDP4028_DPTX_DP_IRQ_EN);
+>>> +
+>>> +	/* Enable interrupts */
+>>> +	i2c_smbus_write_word_data(ge_b850v3_lvds_ptr->stdp4028_i2c,
+>>> +			STDP4028_DPTX_IRQ_EN_REG, STDP4028_DPTX_IRQ_CONFIG);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void ge_b850v3_lvds_detach(struct drm_bridge *bridge)
+>>> +{
+>>> +	/* Disable interrupts */
+>>> +	i2c_smbus_write_word_data(ge_b850v3_lvds_ptr->stdp4028_i2c,
+>>> +			STDP4028_DPTX_IRQ_EN_REG, 0);
+>>> +}
+>>> +
+>>> +static const struct drm_bridge_funcs ge_b850v3_lvds_funcs = {
+>>> +	.attach = ge_b850v3_lvds_attach,
+>>> +	.detach = ge_b850v3_lvds_detach,
+>>> +};
+>>> +
+>>> +static int ge_b850v3_lvds_init(struct device *dev)
+>>> +{
+>>> +	mutex_lock(&ge_b850v3_lvds_dev_mutex);
+>>> +
+>>> +	if (ge_b850v3_lvds_ptr)
+>>> +		goto success;
+>>> +
+>>> +	ge_b850v3_lvds_ptr = devm_kzalloc(dev,
+>>> +			sizeof(*ge_b850v3_lvds_ptr), GFP_KERNEL);
+>>> +
+>>> +	if (!ge_b850v3_lvds_ptr) {
+>>> +		mutex_unlock(&ge_b850v3_lvds_dev_mutex);
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +
+>>> +	ge_b850v3_lvds_ptr->bridge.funcs = &ge_b850v3_lvds_funcs;
+>>> +	ge_b850v3_lvds_ptr->bridge.of_node = dev->of_node;
+>>> +
+>>> +	ge_b850v3_lvds_ptr->stdp2690_i2c = NULL;
+>>> +	ge_b850v3_lvds_ptr->stdp4028_i2c = NULL;
+>>> +
+>>> +	drm_bridge_add(&ge_b850v3_lvds_ptr->bridge);
+>>> +
+>>> +success:
+>>> +	mutex_unlock(&ge_b850v3_lvds_dev_mutex);
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void ge_b850v3_lvds_remove(void)
+>>> +{
+>>> +	mutex_lock(&ge_b850v3_lvds_dev_mutex);
+>>> +
+>>> +	if (!ge_b850v3_lvds_ptr->edid)
+>>> +		goto out;
+>>
+>> The check above seems to be used to avoid both the drivers
+>> removing the bridge in their remove() func. But it's possible
+>> that ge_b850v3_lvds_ptr->edid is always NULL, i.e, a LVDS panel
+>> was never connected in the platform, or the EDID read failed for
+>> some reason.
+>>
+>> Maybe you could just check on ge_b850v3_lvds_ptr itself being
+>> non-NULL, and set ge_b850v3_lvds_ptr to NULL when the bridge
+>> is removed.
+>
+> Fixed and added a coment to explain why the test is there.
+>
+>>
+>>> +
+>>> +	drm_bridge_remove(&ge_b850v3_lvds_ptr->bridge);
+>>> +
+>>> +	kfree(ge_b850v3_lvds_ptr->edid);
+>>> +out:
+>>> +	mutex_unlock(&ge_b850v3_lvds_dev_mutex);
+>>> +}
+>>> +
+>>> +static int stdp4028_ge_b850v3_fw_probe(struct i2c_client *stdp4028_i2c,
+>>> +				const struct i2c_device_id *id)
+>>> +{
+>>> +	struct device *dev = &stdp4028_i2c->dev;
+>>> +
+>>> +	ge_b850v3_lvds_init(dev);
+>>> +
+>>> +	ge_b850v3_lvds_ptr->stdp4028_i2c = stdp4028_i2c;
+>>> +	i2c_set_clientdata(stdp4028_i2c, ge_b850v3_lvds_ptr);
+>>> +
+>>> +	/* Clear pending interrupts since power up. */
+>>> +	i2c_smbus_write_word_data(stdp4028_i2c,
+>>> +			STDP4028_DPTX_IRQ_STS_REG, STDP4028_DPTX_IRQ_CLEAR);
+>>> +
+>>> +	if (!stdp4028_i2c->irq)
+>>> +		return 0;
+>>> +
+>>> +	return devm_request_threaded_irq(&stdp4028_i2c->dev,
+>>> +			stdp4028_i2c->irq, NULL,
+>>> +			ge_b850v3_lvds_irq_handler,
+>>> +			IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+>>> +			"ge-b850v3-lvds-dp", ge_b850v3_lvds_ptr);
+>>> +}
+>>> +
+>>> +static int stdp4028_ge_b850v3_fw_remove(struct i2c_client *stdp4028_i2c)
+>>> +{
+>>> +	ge_b850v3_lvds_remove();
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static const struct i2c_device_id stdp4028_ge_b850v3_fw_i2c_table[] = {
+>>> +	{"stdp4028_ge_fw", 0},
+>>> +	{},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(i2c, stdp4028_ge_b850v3_fw_i2c_table);
+>>> +
+>>> +static const struct of_device_id stdp4028_ge_b850v3_fw_match[] = {
+>>> +	{ .compatible = "megachips,stdp4028-ge-b850v3-fw" },
+>>> +	{},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, stdp4028_ge_b850v3_fw_match);
+>>> +
+>>> +static struct i2c_driver stdp4028_ge_b850v3_fw_driver = {
+>>> +	.id_table	= stdp4028_ge_b850v3_fw_i2c_table,
+>>> +	.probe		= stdp4028_ge_b850v3_fw_probe,
+>>> +	.remove		= stdp4028_ge_b850v3_fw_remove,
+>>> +	.driver		= {
+>>> +		.name		= "stdp4028-ge-b850v3-fw",
+>>> +		.of_match_table = stdp4028_ge_b850v3_fw_match,
+>>> +	},
+>>> +};
+>>> +module_i2c_driver(stdp4028_ge_b850v3_fw_driver);
+>>> +
+>>> +static int stdp2690_ge_b850v3_fw_probe(struct i2c_client *stdp2690_i2c,
+>>> +				const struct i2c_device_id *id)
+>>> +{
+>>> +	ge_b850v3_lvds_init(&stdp2690_i2c->dev);
+>>> +
+>>> +	ge_b850v3_lvds_ptr->stdp2690_i2c = stdp2690_i2c;
+>>> +	i2c_set_clientdata(stdp2690_i2c, ge_b850v3_lvds_ptr);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int stdp2690_ge_b850v3_fw_remove(struct i2c_client *stdp2690_i2c)
+>>> +{
+>>> +	ge_b850v3_lvds_remove();
+>>> +
+>>> +	return 0;
+>>> +}
+>>
+>> A blank needed here.
+>
+> Fixed.
+>
+>>
+>> I get a lot of checkpatch compalints on alignment with parenthesis when I run
+>> the command with '--strict'. These aren't necessary to fix, but since it's a
+>> new driver, it would be nice if these are fixed too.
+>
+> There was one warning about space after a cast that I fixed.
+>
+> CHECK: Alignment should match open parenthesis
+> #156: FILE: drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c:156:
+> +		drm_mode_connector_update_edid_property(connector,
+> +				ge_b850v3_lvds_ptr->edid);
+>
+> The problem with these is that if I align with opening parenthesis, then
+> the continuation line will be over 80 chars, so I guess I'll leave these
+> out as there is no way to be consistent with continuation lines if I
+> align with opening parenthesis. But I'll happily apply the changes to
+> the places where it fits if this is the way to go. Align with opening
+> parenthesis or consistency?
 
- drivers/iio/accel/Kconfig                       | 11 +++-
- drivers/iio/accel/Makefile                      |  3 +-
- drivers/iio/accel/adxl345.h                     | 18 ++++++
- drivers/iio/accel/{adxl345.c => adxl345_core.c} | 55 ++++-------------
- drivers/iio/accel/adxl345_i2c.c                 | 78 +++++++++++++++++++++++++
- 5 files changed, 117 insertions(+), 48 deletions(-)
- create mode 100644 drivers/iio/accel/adxl345.h
- rename drivers/iio/accel/{adxl345.c => adxl345_core.c} (78%)
- create mode 100644 drivers/iio/accel/adxl345_i2c.c
+You could align with open parenthesis wherever you can without exceeding
+80 chars. Where you can't, it's okay to ignore the alignment errors.
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 26b8614..9f5a889 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -6,16 +6,21 @@
- menu "Accelerometers"
- 
- config ADXL345
--	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer Driver"
-+	tristate
-+
-+config ADXL345_I2C
-+	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer I2C Driver"
- 	depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
- 	depends on I2C
-+	select ADXL345
- 	select REGMAP_I2C
- 	help
- 	  Say Y here if you want to build support for the Analog Devices
- 	  ADXL345 3-axis digital accelerometer.
- 
--	  To compile this driver as a module, choose M here: the
--	  module will be called adxl345.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called adxl345_i2c and you will also get adxl345_core
-+	  for the core module.
- 
- config BMA180
- 	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
-diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
-index 618488d..3f4a6d6 100644
---- a/drivers/iio/accel/Makefile
-+++ b/drivers/iio/accel/Makefile
-@@ -3,7 +3,8 @@
- #
- 
- # When adding new entries keep the list in alphabetical order
--obj-$(CONFIG_ADXL345) += adxl345.o
-+obj-$(CONFIG_ADXL345) += adxl345_core.o
-+obj-$(CONFIG_ADXL345_I2C) += adxl345_i2c.o
- obj-$(CONFIG_BMA180) += bma180.o
- obj-$(CONFIG_BMA220) += bma220_spi.o
- obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
-diff --git a/drivers/iio/accel/adxl345.h b/drivers/iio/accel/adxl345.h
-new file mode 100644
-index 0000000..fca3e25
---- /dev/null
-+++ b/drivers/iio/accel/adxl345.h
-@@ -0,0 +1,18 @@
-+/*
-+ * ADXL345 3-Axis Digital Accelerometer
-+ *
-+ * Copyright (c) 2017 Eva Rachel Retuya <eraretuya@gmail.com>
-+ *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License. See the file COPYING in the main
-+ * directory of this archive for more details.
-+ */
-+
-+#ifndef _ADXL345_H_
-+#define _ADXL345_H_
-+
-+int adxl345_common_probe(struct device *dev, struct regmap *regmap,
-+			 const char *name);
-+int adxl345_common_remove(struct device *dev);
-+
-+#endif /* _ADXL345_H_ */
-diff --git a/drivers/iio/accel/adxl345.c b/drivers/iio/accel/adxl345_core.c
-similarity index 78%
-rename from drivers/iio/accel/adxl345.c
-rename to drivers/iio/accel/adxl345_core.c
-index bec8bec..9dea6a5 100644
---- a/drivers/iio/accel/adxl345.c
-+++ b/drivers/iio/accel/adxl345_core.c
-@@ -7,17 +7,16 @@
-  * the GNU General Public License. See the file COPYING in the main
-  * directory of this archive for more details.
-  *
-- * IIO driver for ADXL345
-- * 7-bit I2C slave address: 0x1D (ALT ADDRESS pin tied to VDDIO) or
-- * 0x53 (ALT ADDRESS pin grounded)
-+ * IIO core driver for ADXL345
-  */
- 
--#include <linux/i2c.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
- 
- #include <linux/iio/iio.h>
- 
-+#include "adxl345.h"
-+
- #define ADXL345_REG_DEVID		0x00
- #define ADXL345_REG_POWER_CTL		0x2D
- #define ADXL345_REG_DATA_FORMAT		0x31
-@@ -50,11 +49,6 @@ struct adxl345_data {
- 	u8 data_range;
- };
- 
--static const struct regmap_config adxl345_regmap_config = {
--	.reg_bits = 8,
--	.val_bits = 8,
--};
--
- #define ADXL345_CHANNEL(reg, axis) {					\
- 	.type = IIO_ACCEL,						\
- 	.modified = 1,							\
-@@ -107,25 +101,14 @@ static const struct iio_info adxl345_info = {
- 	.read_raw	= adxl345_read_raw,
- };
- 
--static int adxl345_probe(struct i2c_client *client,
--			 const struct i2c_device_id *id)
-+int adxl345_common_probe(struct device *dev, struct regmap *regmap,
-+			 const char *name)
- {
- 	struct adxl345_data *data;
- 	struct iio_dev *indio_dev;
--	struct device *dev;
--	struct regmap *regmap;
- 	int ret;
- 	u32 regval;
- 
--	regmap = devm_regmap_init_i2c(client, &adxl345_regmap_config);
--	if (IS_ERR(regmap)) {
--		dev_err(&client->dev, "Error initializing regmap: %d\n",
--			(int)PTR_ERR(regmap));
--		return PTR_ERR(regmap);
--	}
--
--	dev = regmap_get_device(regmap);
--
- 	ret = regmap_read(regmap, ADXL345_REG_DEVID, &regval);
- 	if (ret < 0) {
- 		dev_err(dev, "Error reading device ID: %d\n", ret);
-@@ -156,7 +139,7 @@ static int adxl345_probe(struct i2c_client *client,
- 	}
- 
- 	indio_dev->dev.parent = dev;
--	indio_dev->name = id->name;
-+	indio_dev->name = name;
- 	indio_dev->info = &adxl345_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->channels = adxl345_channels;
-@@ -179,10 +162,11 @@ static int adxl345_probe(struct i2c_client *client,
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(adxl345_common_probe);
- 
--static int adxl345_remove(struct i2c_client *client)
-+int adxl345_common_remove(struct device *dev)
- {
--	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-+	struct iio_dev *indio_dev = dev_get_drvdata(dev);
- 	struct adxl345_data *data = iio_priv(indio_dev);
- 
- 	iio_device_unregister(indio_dev);
-@@ -190,25 +174,8 @@ static int adxl345_remove(struct i2c_client *client)
- 	return regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
- 			    ADXL345_POWER_CTL_STANDBY);
- }
--
--static const struct i2c_device_id adxl345_i2c_id[] = {
--	{ "adxl345", 0 },
--	{ }
--};
--
--MODULE_DEVICE_TABLE(i2c, adxl345_i2c_id);
--
--static struct i2c_driver adxl345_driver = {
--	.driver = {
--		.name	= "adxl345",
--	},
--	.probe		= adxl345_probe,
--	.remove		= adxl345_remove,
--	.id_table	= adxl345_i2c_id,
--};
--
--module_i2c_driver(adxl345_driver);
-+EXPORT_SYMBOL_GPL(adxl345_common_remove);
- 
- MODULE_AUTHOR("Eva Rachel Retuya <eraretuya@gmail.com>");
--MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer driver");
-+MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer core driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/iio/accel/adxl345_i2c.c b/drivers/iio/accel/adxl345_i2c.c
-new file mode 100644
-index 0000000..19053be
---- /dev/null
-+++ b/drivers/iio/accel/adxl345_i2c.c
-@@ -0,0 +1,78 @@
-+/*
-+ * ADXL345 3-Axis Digital Accelerometer
-+ *
-+ * Copyright (c) 2017 Eva Rachel Retuya <eraretuya@gmail.com>
-+ *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License. See the file COPYING in the main
-+ * directory of this archive for more details.
-+ *
-+ * I2C driver for ADXL345
-+ * 7-bit I2C slave address: 0x1D (ALT ADDRESS pin tied to VDDIO) or
-+ * 0x53 (ALT ADDRESS pin grounded)
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+
-+#include "adxl345.h"
-+
-+static const struct regmap_config adxl345_i2c_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+};
-+
-+static int adxl345_i2c_probe(struct i2c_client *client,
-+			     const struct i2c_device_id *id)
-+{
-+	struct regmap *regmap;
-+	const char *name = NULL;
-+
-+	regmap = devm_regmap_init_i2c(client, &adxl345_i2c_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		dev_err(&client->dev, "Error initializing i2c regmap: %d\n",
-+			(int)PTR_ERR(regmap));
-+		return PTR_ERR(regmap);
-+	}
-+
-+	if (id)
-+		name = id->name;
-+
-+	return adxl345_common_probe(&client->dev, regmap, name);
-+}
-+
-+static int adxl345_i2c_remove(struct i2c_client *client)
-+{
-+	return adxl345_common_remove(&client->dev);
-+}
-+
-+static const struct i2c_device_id adxl345_i2c_id[] = {
-+	{ "adxl345", 0 },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(i2c, adxl345_i2c_id);
-+
-+static const struct of_device_id adxl345_of_match[] = {
-+	{ .compatible = "adi,adxl345" },
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, adxl345_of_match);
-+
-+static struct i2c_driver adxl345_i2c_driver = {
-+	.driver = {
-+		.name	= "adxl345_i2c",
-+		.of_match_table = adxl345_of_match,
-+	},
-+	.probe		= adxl345_i2c_probe,
-+	.remove		= adxl345_i2c_remove,
-+	.id_table	= adxl345_i2c_id,
-+};
-+
-+module_i2c_driver(adxl345_i2c_driver);
-+
-+MODULE_AUTHOR("Eva Rachel Retuya <eraretuya@gmail.com>");
-+MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer I2C driver");
-+MODULE_LICENSE("GPL v2");
+Thanks,
+Archit
+
 -- 
-2.7.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
