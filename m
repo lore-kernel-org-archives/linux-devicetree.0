@@ -1,79 +1,121 @@
-Return-Path: <SRS0=SqoR=ZX=mara.localdomain=sailus@kernel.org>
-Date: Fri, 10 Feb 2017 20:37:38 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH RESEND v7 2/2] Add support for OV5647 sensor.
-Message-ID: <20170210183737.GE887@mara.localdomain>
-References: <cover.1486136893.git.roliveir@synopsys.com>
- <26e5a587f1ba9e2fbbc04284408305bc8cf8c5c0.1486136893.git.roliveir@synopsys.com>
- <20170203201729.GA18086@kekkonen.localdomain>
- <f23e76ff-326a-c4df-601d-6b12b644bff7@synopsys.com>
- <20170207173116.GC13854@valkosipuli.retiisi.org.uk>
- <e4ce5644-4f44-4c46-219a-cac2126dc8ba@synopsys.com>
- <20170209100254.GH13854@valkosipuli.retiisi.org.uk>
- <3d8368f8-0cae-934b-fc6a-0ead79db14aa@synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3d8368f8-0cae-934b-fc6a-0ead79db14aa@synopsys.com>
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>
-List-ID: <devicetree@vger.kernel.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/9] ARM: dts: sun8i: add device tree for
+ Lichee Pi Zero with Dock
+Date: Tue, 28 Feb 2017 17:02:27 -0600
+Message-ID: <CAL_JsqL_fbCpiH3jvF7UuTrWkNSJmk5UyrYBDZ9hwE29+Hrk0w@mail.gmail.com>
+References: <20170225123029.55939-1-icenowy@aosc.xyz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170225123029.55939-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+On Sat, Feb 25, 2017 at 6:30 AM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
+> Lichee Pi Zero features a dock, which adds some functions, and should be
+> soldered with the core board of Lichee Pi Zero.
+>
+> Add support for the dock as a new dts, as soldering is needed to make
+> the dock usable and there's functions enabled on the dock that is
+> unavailable at the 2.54mm pins of the core board.
+>
+> Currently no new feature on core board is available in the mainline
+> kernel, so the dock dt file only includes the core board device tree.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> ---
+>  arch/arm/boot/dts/Makefile                         |  3 +-
+>  arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts | 49 ++++++++++++++++++++++
+>  2 files changed, 51 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 011808490fed..1aa365306479 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -876,7 +876,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>         sun8i-h3-orangepi-plus.dtb \
+>         sun8i-h3-orangepi-plus2e.dtb \
+>         sun8i-r16-parrot.dtb \
+> -       sun8i-v3s-licheepi-zero.dtb
+> +       sun8i-v3s-licheepi-zero.dtb \
+> +       sun8i-v3s-licheepi-zero-dock.dtb
+>  dtb-$(CONFIG_MACH_SUN9I) += \
+>         sun9i-a80-optimus.dtb \
+>         sun9i-a80-cubieboard4.dtb
+> diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
+> new file mode 100644
+> index 000000000000..68c114d6b939
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
+> @@ -0,0 +1,49 @@
+> +/*
+> + * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
 
-On Thu, Feb 09, 2017 at 10:13:02AM +0000, Ramiro Oliveira wrote:
-> Hi Sakari
-> 
-> On 2/9/2017 10:02 AM, Sakari Ailus wrote:
-> > Hi Ramiro,
-> > 
-> > On Wed, Feb 08, 2017 at 09:56:12AM +0000, Ramiro Oliveira wrote:
-> >> Hi Sakari
-> >>
-> >> On 2/7/2017 5:31 PM, Sakari Ailus wrote:
-> >>> Hi Ramiro,
-> >>>
-> >>> On Mon, Feb 06, 2017 at 11:38:28AM +0000, Ramiro Oliveira wrote:
-> >>> ...
-> >>>>>> +	ret = ov5647_write_array(sd, ov5647_640x480,
-> >>>>>> +					ARRAY_SIZE(ov5647_640x480));
-> >>>>>> +	if (ret < 0) {
-> >>>>>> +		dev_err(&client->dev, "write sensor_default_regs error\n");
-> >>>>>> +		return ret;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	ov5647_set_virtual_channel(sd, 0);
-> >>>>>> +
-> >>>>>> +	ov5647_read(sd, 0x0100, &resetval);
-> >>>>>> +	if (!(resetval & 0x01)) {
-> >>>>>
-> >>>>> Can this ever happen? Streaming start is at the end of the register list.
-> >>>>>
-> >>>>
-> >>>> I'm not sure it can happen. It was just a safeguard, but I can remove it if you
-> >>>> think it's not necessary
-> >>>
-> >>> You're not reading back the other registers either, albeit I'd check that
-> >>> the I2C accesses actually succeed. Generally the return values are ignored.
-> >>>
-> >>
-> >> So you're recommending I perform a random I2C access after power on to check the
-> >> system, and discard the read value? Or just drop this piece of code entirely?
-> >>
-> > 
-> > I'm not. What I'm saying that you're mostly not checking whether I2C
-> > accesses succeed or not.
-> > 
-> 
-> 
-> I think I'm understanding what you're saying now. You want me to check more
-> often the return value from write/read functions?
-> 
-> That makes sense. I'll add more checks to the code
+Use SPDX tags here:
 
-Please do. That's generally a better approach with I2C than reading back
-register values.  :-)
+SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 
--- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+While it says X11, this is really MIT license text.
+
+> + */
+> +
+> +#include "sun8i-v3s-licheepi-zero.dts"
+> +
+> +/ {
+> +       model = "Lichee Pi Zero with Dock";
+> +       compatible = "licheepi,licheepi-zero-dock", "licheepi,licheepi-zero",
+> +                    "allwinner,sun8i-v3s";
+> +};
+> --
+> 2.11.1
+>
