@@ -1,78 +1,48 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH 3/4] dt-bindings: leds: document binding for LED timer trigger
-Date: Tue, 28 Feb 2017 13:04:51 +0100
-Message-ID: <20170228120452.10043-3-zajec5@gmail.com>
-References: <20170228120452.10043-1-zajec5@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 11/25] ARM: dts: Add Actions Semi S500 and LeMaker
+ Guitar
+Date: Tue, 28 Feb 2017 12:32:45 +0000
+Message-ID: <20170228123245.GF3691@leverpostej>
+References: <20170228063535.32069-1-afaerber@suse.de>
+ <20170228063535.32069-12-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170228120452.10043-1-zajec5@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170228063535.32069-12-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
-
-Timer trigger is one of the simplest, hardware independent triggers. It
-just blinks LED with a given intervals.
-
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- .../devicetree/bindings/leds/triggers-timer.txt        | 18 ++++++++++++++++++
- Documentation/devicetree/bindings/leds/triggers.txt    | 17 +++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/triggers-timer.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/triggers-timer.txt b/Documentation/devicetree/bindings/leds/triggers-timer.txt
-new file mode 100644
-index 000000000000..0e6c81d6f81b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/triggers-timer.txt
-@@ -0,0 +1,18 @@
-+Timer LED trigger properties.
-+
-+Timer trigger enables and disables LED with a given time intervals. It's example
-+usage may be a simple indication that system is alive & working (to some point
-+at least).
-+
-+Properties:
-+- trigger-type : Must be "timer".
-+- delay-on : Amount of time (in milliseconds) LED stays enabled.
-+- delay-off : Amount of time (in milliseconds) LED stays disabled.
-+
-+Examples:
-+
-+timer-trigger {
-+	trigger-type = "timer";
-+	delay-on = <300>;
-+	delay-off = <1000>;
-+};
-diff --git a/Documentation/devicetree/bindings/leds/triggers.txt b/Documentation/devicetree/bindings/leds/triggers.txt
-index a1fbf3a75d67..8d8daa027bee 100644
---- a/Documentation/devicetree/bindings/leds/triggers.txt
-+++ b/Documentation/devicetree/bindings/leds/triggers.txt
-@@ -11,3 +11,20 @@ Common properties:
- 		 documentation for more details.
- 
- More properties can be available depending on the chosen trigger type.
-+
-+Examples:
-+
-+timer_trigger: timer-trigger {
-+	trigger-type = "timer";
-+	...
-+};
-+
-+gpio-leds {
-+	compatible = "gpio-leds";
-+
-+	system-status {
-+		label = "Status";
-+		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
-+		triggers = <&timer_trigger>;
-+	};
-+};
--- 
-2.11.0
+SGksCgpPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAwNzozNToyMUFNICswMTAwLCBBbmRyZWFzIEbD
+pHJiZXIgd3JvdGU6Cj4gKy9kdHMtdjEvOwo+ICsKPiArI2luY2x1ZGUgInM1MDAtZ3VpdGFyLmR0
+c2kiCj4gKwo+ICsvIHsKPiArCWNvbXBhdGlibGUgPSAibGVtYWtlcixndWl0YXItYmItcmV2LWIi
+LCAibGVtYWtlcixndWl0YXIiLCAiYWN0aW9ucyxzNTAwIjsKPiArCW1vZGVsID0gIkxlTWFrZXIg
+R3VpdGFyIEJhc2UgQm9hcmQgcmV2LiBCIjsKPiArCj4gKwlhbGlhc2VzIHsKPiArCQlzZXJpYWwz
+ID0gJnVhcnQzOwo+ICsJfTsKPiArCj4gKwljaG9zZW4gewo+ICsJCXN0ZG91dC1wYXRoID0gInNl
+cmlhbDM6MTE1MjAwbjgiOwo+ICsJfTsKPiArfTsKPiArCj4gKyZ1YXJ0MyB7Cj4gKwlzdGF0dXMg
+PSAib2theSI7Cj4gK307Cgo+ICsjaW5jbHVkZSAiczUwMC5kdHNpIgo+ICsKPiArLyB7Cj4gKwlj
+b21wYXRpYmxlID0gImxlbWFrZXIsZ3VpdGFyIiwgImFjdGlvbnMsczUwMCI7Cj4gKwo+ICsJL2Rl
+bGV0ZS1ub2RlLyBtZW1vcnk7CgpFd3cuIElzIHRoaXMganVzdCBib2RnaW5nIGFyb3VuZCBza2Vs
+ZXRvbi5kdHNpPwoKPiArCj4gKwltZW1vcnlAMCB7Cj4gKwkJZGV2aWNlX3R5cGUgPSAibWVtb3J5
+IjsKPiArCQlyZWcgPSA8MHgwIDB4NDAwMDAwMDA+Owo+ICsJfTsKPiArfTsKCj4gKyNpbmNsdWRl
+ICJza2VsZXRvbi5kdHNpIgoKUGxlYXNlIGRvbid0IGluY2x1ZGUgc2tlbGV0b24uZHRzaS4gUGxl
+YXNlIGFkZCB0aGUgcmVsZXZhbnQgbm9kZXMgYW5kCnByb3BlcnRpZXMgZXhwbGNpaXRseSB0byB5
+b3VyIGR0c3tpLH0gZmlsZXMuCgo+ICsKPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVw
+dC1jb250cm9sbGVyL2FybS1naWMuaD4KPiArCj4gKy8gewoKUGxlYXNlIGRlZmluZSB5b3VyICNh
+ZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1jZWxscyBoZXJlLgoKSWYgeW91IHdhbnQsIGFkZCBhbiBl
+bXB0eSAvY2hvc2VuIG5vZGUgKG5vdCBzdHJpY3RseSBuZWNlc3Nhcnkgc2luY2UKeW91ciBkdHMg
+ZmlsZSBoYXMgYSBub24tZW1wdHkgb25lIGFueWhvdykuCgpUaGFua3MsCk1hcmsuCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
+IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
+L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
