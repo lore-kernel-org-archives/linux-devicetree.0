@@ -1,61 +1,61 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v9 00/10] mux controller abstraction and iio/i2c muxes
-Date: Tue, 28 Feb 2017 18:18:42 +0100
-Message-ID: <20170228171842.GA11127@kroah.com>
-References: <1486568517-6997-1-git-send-email-peda@axentia.se>
- <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH 1/5] pinctrl: sunxi: refactor pinctrl choice
+ selecting for ARM64
+Date: Wed,  1 Mar 2017 01:24:40 +0800
+Message-ID: <20170228172444.59655-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB6PE23CQKGQENXKW76Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 04:17:52PM +0100, Peter Rosin wrote:
-> Hi!
-> 
-> The status of this series [1] is that Rob Herring has acked/reviewed all
-> devicetree changes, so I suppose that's ok. Jonathan Cameron has acked
-> the additions to the iio subsystem and reviewed the new iio driver.
-> Wolfram Sang has acked the i2c-mux driver. That's acks or reviews from
-> the maintainers for all changes to the maintained areas.
-> 
-> What's not covered by the above is the mux subsystem itself. Jonathan
-> has also acked or reviewed those changes, but I get the feeling that
-> more tags are desired? So, please review the core of the mux subsystem
-> and the two drivers! It's small. Really. And much of it is boilerplate
-> devm functions. The relevant patches are:
-> 
->  3/10 "mux: minimal mux subsystem and gpio-based mux controller"
-> 10/10 "mux: adg792a: add mux controller driver for ADG792A/G"
-> 
-> I also wonder how I should proceed next. Jonathan kindly provided some
-> hints. I have created a project on gitlab [2] to track future mux
-> changes and where this series is also available (in the "mux" branch,
-> of course subject to rebases, at least for now). I intend to create a
-> for-next branch that I hope Stephen Rothwell will be happy to add to
-> linux-next at some point after v4.11-rc1. Whomever I will feed future
-> changes to will also pull from that tree. Etc. At least that's my
-> picture of how this is going to work.
-> 
-> The question then becomes to whom I will send pull requests? My guess is
-> that the plausible candidates are Greg K-H, Linus Torvalds and Andrew
-> Morton. Any taker? Are there other candidates? I don't have any particular
-> preference. If I don't hear anything I'll probably just send a pull
-> request to Linus for the next merge window (i.e. targeting 4.12-rc1).
-> 
-> Or am I perhaps getting ahead of myself? Is a new tree overkill? I
-> don't expect it to be exactly busy...
+ARM64 Allwinner SoCs used to have every pinctrl driver selected in
+ARCH_SUNXI. Change this to make their default value to (ARM64 &&
+ARCH_SUNXI).
 
-I pull in lots of semi-random driver subsystems into my char-misc driver
-tree, and I can do that here for you as well if you want me to, to
-forward things on to Linus at the proper times.
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+ drivers/pinctrl/sunxi/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-Just let me know.
-
-thanks,
-
-greg k-h
+diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+index 816015cf7053..92325736d953 100644
+--- a/drivers/pinctrl/sunxi/Kconfig
++++ b/drivers/pinctrl/sunxi/Kconfig
+@@ -48,8 +48,9 @@ config PINCTRL_SUN8I_H3
+ 	select PINCTRL_SUNXI
+ 
+ config PINCTRL_SUN8I_H3_R
+-	def_bool MACH_SUN8I
+-	select PINCTRL_SUNXI_COMMON
++	def_bool MACH_SUN8I || (ARM64 && ARCH_SUNXI)
++	depends on RESET_CONTROLLER
++	select PINCTRL_SUNXI
+ 
+ config PINCTRL_SUN8I_V3S
+ 	def_bool MACH_SUN8I
+@@ -65,11 +66,11 @@ config PINCTRL_SUN9I_A80_R
+ 	select PINCTRL_SUNXI
+ 
+ config PINCTRL_SUN50I_A64
+-	bool
++	def_bool ARM64 && ARCH_SUNXI
+ 	select PINCTRL_SUNXI
+ 
+ config PINCTRL_SUN50I_H5
+-	bool
++	def_bool ARM64 && ARCH_SUNXI
+ 	select PINCTRL_SUNXI
+ 
+ endif
+-- 
+2.11.1
