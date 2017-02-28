@@ -1,106 +1,50 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
- resolution
-Date: Tue, 28 Feb 2017 11:14:20 +0100
-Message-ID: <84b7cbab-1342-7f80-cab6-132324e002a4@st.com>
-References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
- <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
- <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
- <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
- <d64bd76d-a2c6-6148-c126-fa73e96019a1@kernel.org>
- <79e01c5c-d27c-89ea-4d8f-9e66a6c091e6@st.com>
- <f486bd08-b562-5101-01ba-c8e36ac0d83b@metafoo.de>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] kbuild: avoid unrecognized option error for external DTC
+Date: Tue, 28 Feb 2017 21:21:02 +1100
+Message-ID: <87tw7epqep.fsf@concordia.ellerman.id.au>
+References: <1488174052-2530-1-git-send-email-yamada.masahiro@socionext.com>
+ <1488204416.2819.9.camel@decadent.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f486bd08-b562-5101-01ba-c8e36ac0d83b@metafoo.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1488204416.2819.9.camel@decadent.org.uk>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Ben Hutchings <ben@decadent.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kbuild@vger.kernel.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, Paul Mackerras <paulus@samba.org>, Jonas Bonn <jonas@southpole.se>, linux-c6x-dev@linux-c6x.org, Alessio Igor Bogani <alessio.bogani@elettra.eu>, Emese Revfy <re.emese@gmail.com>, Mark Salter <msalter@redhat.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Scott Wood <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, Stafford Horne <shorne@gmail.com>, Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org, Michal Marek <mmarek@suse.com>, Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, Marcin Nowakowski <marcin.nowakowski@imgtec.com>, openrisc@lists.librecores.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2017 09:34 AM, Lars-Peter Clausen wrote:
-> On 02/28/2017 09:21 AM, Fabrice Gasnier wrote:
->> On 02/25/2017 04:11 PM, Jonathan Cameron wrote:
->>> On 24/02/17 16:04, Fabrice Gasnier wrote:
->>>> On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
->>>>> On 15/02/17 16:55, Fabrice Gasnier wrote:
->>>>>> Add documentation for 'st,adc-res' dt optional property.
->>>>>>
->>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->>>>> I'm happy with this, but would like to leave time for a device tree review.
->>>>>
->>>>> Ultimately we may well want to make this a generic property and call it
->>>>> something
->>>>> like adc-resolution but perhaps we need to wait until we have a few more
->>>>> devices
->>>>> supporting setting it via device tree to figure out what the best
->>>>> interface is.
->>>>> It would exactly be a problem to support this as a deprecated binding at
->>>>> that
->>>>> point.
->>>>
->>>> Hi Jonathan,
->>>>
->>>> I agree with you on this... It may be better to have generic property
->>>> for this, especially if you see that it will come in the near future.
->>>> May I suggest this prop to be less restrictive, e.g. like
->>>> resolution-bits as is may also be worth for other device types, e.g.
->>>> DAC as an example ?>
->>> Sure, why not - no loss of meaning here.  We may never use it for anything
->>> else but that doesn't matter.
->>
->> Hi Jonathan,
->>
->> Following Rob's comment, how you see such a common property can be
->> integrated. Currently I don't see much devices are doing this.
->> Do you have ideas or preferences on this ?
->>
->> - Do you think replacing 'st,adc-res' by 'resolution-bits' in current
->> patchset is enough for now ?
->
-> That name would be a bit confusing. Considering that the devicetree
-> describes th capabilities of the hardware this name would suggest that this
-> is the resolution supported by the device.
->
-> If we want to allow selecting runtime configuration parameters for IIO
-> devices from the devicetree we should probably follow the precedence set by
-> the clock framework and use properties with the 'assigned-' prefix.
+Ben Hutchings <ben@decadent.org.uk> writes:
 
-Hi Lars,
-
-This makes sense. Then, do you see 'assigned-resolution-bits' as a
-better candidate ?
-Also, do you think listing all devices caps in property like 
-'resolutions-bits', e.g. 'resolutions-bits = <6 8 10 12>', is
-suitable/necessary ?
-
+> [ Unknown signature status ]
+> On Mon, 2017-02-27 at 14:40 +0900, Masahiro Yamada wrote:
+>> Since commit 6b22b3d1614a ("kbuild: Allow using host dtc instead of
+>> kernel's copy"), it is possible to use an external dtc.=C2=A0=C2=A0In th=
+is
+>> case, we do not know which options are supported on it.
+>>=20
+>> Commit bc553986a2f7 ("dtc: turn off dtc unit address warnings by
+>> default") gives -Wno-unit_address_vs_reg, but this options is only
+>> recognized by v1.4.2 or later.
+>>=20
+>> If an older version is specified, the build fails:
 >
-> But to be honest I'm not convinced yet that the whole approach of allowing
-> runtime configuration parameters to be configured via the devicetree is the
-> right approach. Converters and sensors often have a lot of runtime
-> configurable parameters, typically we expose them to the application layer
-> to allow maximum flexibility. Why is the resolution special in this case and
-> should be pre-configured via the devicetree instead?
+> But the option to use an external dtc was intended to allow testing of
+> newer versions.  If there's no reason to use this option to run an
+> older version, why bother trying to support that?
 
-As I understand it, currently lots of devices have hard-coded
-(maximum?) resolution, then exposed to application layer as read only 
-data format. Then resolution depends on HW used (e.g. sensor, 
-converter). Depending on the application board, it may be worth to offer
-pre-configured intermediate/lower resolution depending on analog
-sources. Is it ok to offer devicetree pre-configuration ?
++1
 
-Best Regards,
-Fabrice
->
-> - Lars
->
+That's a lot of added complexity, when the answer could just be "use the
+kernel dtc".
+
+cheers
