@@ -1,45 +1,52 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH 1/1] devicetree: Document of_property_read_string_array() better
-Date: Tue, 28 Feb 2017 09:30:06 +0200
-Message-ID: <1488267006-29945-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: sun7i: Convert sun7i SoC to sunxi-ng
+Date: Tue, 28 Feb 2017 08:52:43 +0100
+Message-ID: <20170228075243.gschowjzagwuxgok@lukather>
+References: <20170227210914.18954-1-plaes@plaes.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vuvp4e2gkxtnurrf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTGY2TCQKGQEJVVFJQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170227210914.18954-1-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-of_property_read_string_array() is documented to return the number of
-strings present in a string array property if its target string buffer is
-NULL. What is not documented, however, is that is returned if the buffer
-is non-NULL. It returns the number of strings read. Document this, as well
-as the error codes.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- include/linux/of.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+--vuvp4e2gkxtnurrf
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d72f010..5856765 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -952,7 +952,11 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
-  * Search for a property in a device tree node and retrieve a list of
-  * terminated string values (pointer to data, not a copy) in that property.
-  *
-- * If @out_strs is NULL, the number of strings in the property is returned.
-+ * If @out_strs is NULL, the number of strings in the property is returned. If
-+ * $out_strs is non-NULL, returns the number of strings read. On error, the
-+ * function returns -EINVAL if the property does not exist, -ENODATA if
-+ * property does not have a value, and -EILSEQ if the string is not
-+ * null-terminated within the length of the property data.
-  */
- static inline int of_property_read_string_array(const struct device_node *np,
- 						const char *propname, const char **out_strs,
+Hi Priit,
+
+On Mon, Feb 27, 2017 at 11:09:10PM +0200, Priit Laes wrote:
+> Hi,
+> 
+> This is serie brings another SoC into the sunxi-ng world.
+> 
+> As mentioned in sun5i conversion, this is pretty much standard
+> stuff as all the required clocks were already implemented in
+> the sunxi-ng framework.
+
+Thanks a lot for that work. I think the A10 should be converted at the
+same time, and both would share the same driver.
+
+Fortunately, if I recall properly, both are not too far off.
+
+Thanks again,
+Maxime
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--vuvp4e2gkxtnurrf--
