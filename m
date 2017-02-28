@@ -1,68 +1,76 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: spi: document bcm63xx HS SPI devicetree bindings
-Date: Tue, 28 Feb 2017 14:11:04 +0100
-Message-ID: <CAOiHx==wHRDqiWFkupmcj0iw8u6w36j8Lb-V_gq8oqKLei6Aww@mail.gmail.com>
-References: <20170222131940.31085-1-jonas.gorski@gmail.com>
- <20170222131940.31085-2-jonas.gorski@gmail.com> <c21aadc6-cbcf-4948-0e40-b8aae0304430@gmail.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+Date: Tue, 28 Feb 2017 13:04:49 +0100
+Message-ID: <20170228120452.10043-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c21aadc6-cbcf-4948-0e40-b8aae0304430-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Rafał Miłecki <rafal@milecki.pl>
 
-On 27 February 2017 at 23:49, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 02/22/2017 05:19 AM, Jonas Gorski wrote:
->> Add documentation for the bindings of the high speed SPI controller found
->> on newer bcm63xx SoCs.
->>
->> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 35 ++++++++++++++++++++++
->>  1 file changed, 35 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
->> new file mode 100644
->> index 000000000000..3b0a2220b896
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
->> @@ -0,0 +1,35 @@
->> +Binding for Broadcom BCM6328 SPI controller
+There was a long discussion on describing LED trigger sources in DT.
+Few solutions were posted but neither was clear & flexible enough. It's
+really hard to design DT bindings for a LED node that will allow
+describing any kinds of triggers.
 
-I missed a "High Speed" here.
+Finally Jacek suggested a different design. It involved using separated
+DT node for each trigger.
 
->> +
->> +Required properties:
->> +- compatible: must contain of "brcm,bcm6328-hsspi".
->> +- reg: Base address and size of the controllers memory area.
->> +- interrupts: Interrupt for the SPI block.
->> +- clocks: phandle of the SPI clock.
->> +- clock-names: must be "hsspi".
->> +- #address-cells: <1>, as required by generic SPI binding.
->> +- #size-cells: <0>, also as required by generic SPI binding.
->> +
->> +Optional properties:
->> +- num-cs: some controllers have less than 8 cs signals. Defaults to 8
->> +  if absent.
->> +- clocks: a second handle for the PLL clock.
->> +- clock-names: must be named "pll", if present.
->
-> I have not found chips where the PLL may be optional, but there may be
-> ways to have the same PLL and UBUS clocks feeding into the HSSPI block.
+This documentation follows that idea. It really simplifies DT bindings
+and allows clear support for different trigger types. With this solution
+every type can have its own specific properties.
 
-Indeed, I guess I make it just non-optional. Having it as an optional
-clock was (not intentionally) more describing the driver, not the
-hardware. If there is ever only one clock, one could just pass it
-twice. I'll update and send a V2.
+Please note an example will be added later with the first supported
+trigger bindings. The point is to have nodes like:
+foo-trigger {
+	trigger-type = "foo";
+	...
+};
 
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ Documentation/devicetree/bindings/leds/common.txt   |  3 +++
+ Documentation/devicetree/bindings/leds/triggers.txt | 13 +++++++++++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/triggers.txt
 
-Jonas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+index 696be5792625..0bc91556a47a 100644
+--- a/Documentation/devicetree/bindings/leds/common.txt
++++ b/Documentation/devicetree/bindings/leds/common.txt
+@@ -49,6 +49,9 @@ Optional properties for child nodes:
+ - panic-indicator : This property specifies that the LED should be used,
+ 		    if at all possible, as a panic indicator.
+ 
++- triggers : List of nodes of triggers that should control this LED state. For
++	     more details see triggers.txt.
++
+ Required properties for flash LED child nodes:
+ - flash-max-microamp : Maximum flash LED supply current in microamperes.
+ - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
+diff --git a/Documentation/devicetree/bindings/leds/triggers.txt b/Documentation/devicetree/bindings/leds/triggers.txt
+new file mode 100644
+index 000000000000..a1fbf3a75d67
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/triggers.txt
+@@ -0,0 +1,13 @@
++Common trigger properties.
++
++Triggers describe the way LEDs should be controlled, e.g. under what conditions
++they should be turned on or off. Depending on a trigger type various events can
++be used to determine a LED state. Some triggers can be hardware independent
++(e.g. time based), some can react to a specific hardware events.
++
++Common properties:
++- trigger-type : Type of a trigger. Choosing a trigger determines what kind of
++		 events will be used to control LED. See specific trigger
++		 documentation for more details.
++
++More properties can be available depending on the chosen trigger type.
+-- 
+2.11.0
