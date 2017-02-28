@@ -1,57 +1,61 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v3 4/6] iio: iio-interrupt-trigger: device-tree support
-Date: Tue, 28 Feb 2017 17:51:17 +0100
-Message-ID: <1488300679-3259-5-git-send-email-fabrice.gasnier@st.com>
-References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v9 00/10] mux controller abstraction and iio/i2c muxes
+Date: Tue, 28 Feb 2017 18:18:42 +0100
+Message-ID: <20170228171842.GA11127@kroah.com>
+References: <1486568517-6997-1-git-send-email-peda@axentia.se>
+ <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, =?UTF-8?q?Gr=C3=A9gor=20Boirie?= <gregor.boirie@parrot.com>, fabrice.gasnier@st.com, linus.walleij@linaro.org, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogR3LDqWdvciBCb2lyaWUgPGdyZWdvci5ib2lyaWVAcGFycm90LmNvbT4KCkFkZCBjb21w
-YXRpYmxlIHN0cmluZyB0aGF0IHNob3VsZCBiZSB1c2VkIGluIERULgpBbHNvIGNhc2NhZGUgb2Zf
-bm9kZSB0byBuZXdseSBhbGxvY2F0ZWQgdHJpZ2dlciBkZXZpY2UuCgpTaWduZWQtb2ZmLWJ5OiBH
-cmVnb3IgQm9pcmllIDxncmVnb3IuYm9pcmllQHBhcnJvdC5jb20+ClNpZ25lZC1vZmYtYnk6IEZh
-YnJpY2UgR2FzbmllciA8ZmFicmljZS5nYXNuaWVyQHN0LmNvbT4KLS0tCk9yaWdpbmFsIFBBVENI
-IGZyb20gR3JlZ29yIEJvaXJpZToKaHR0cHM6Ly9tYXJjLmluZm8vP2w9bGludXgtaWlvJm09MTQ1
-NTkwOTUzNjA3OTA1Jnc9NAoKVXBkYXRlczoKLSBjb21wYXRpYmxlIHN0cmluZyBjaGFuZ2VkIHRv
-ICJpbnRlcnJ1cHQtdHJpZ2dlciIKLSBjYXNjYWRlIG9mX25vZGUgZG93biB0byBpaW8gdHJpZ2dl
-ciBkZXZpY2UKLS0tCiBkcml2ZXJzL2lpby90cmlnZ2VyL2lpby10cmlnLWludGVycnVwdC5jIHwg
-MTAgKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKykKCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2lpby90cmlnZ2VyL2lpby10cmlnLWludGVycnVwdC5jIGIvZHJpdmVycy9p
-aW8vdHJpZ2dlci9paW8tdHJpZy1pbnRlcnJ1cHQuYwppbmRleCBlMThmMTJiLi42ZWUxZjdlIDEw
-MDY0NAotLS0gYS9kcml2ZXJzL2lpby90cmlnZ2VyL2lpby10cmlnLWludGVycnVwdC5jCisrKyBi
-L2RyaXZlcnMvaWlvL3RyaWdnZXIvaWlvLXRyaWctaW50ZXJydXB0LmMKQEAgLTYyLDYgKzYyLDcg
-QEAgc3RhdGljIGludCBpaW9faW50ZXJydXB0X3RyaWdnZXJfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikKIAl9CiAJaWlvX3RyaWdnZXJfc2V0X2RydmRhdGEodHJpZywgdHJpZ19p
-bmZvKTsKIAl0cmlnX2luZm8tPmlycSA9IGlycTsKKwl0cmlnLT5kZXYub2Zfbm9kZSA9IHBkZXYt
-PmRldi5vZl9ub2RlOwogCXRyaWctPm9wcyA9ICZpaW9faW50ZXJydXB0X3RyaWdnZXJfb3BzOwog
-CXJldCA9IHJlcXVlc3RfaXJxKGlycSwgaWlvX2ludGVycnVwdF90cmlnZ2VyX3BvbGwsCiAJCQkg
-IGlycWZsYWdzLCB0cmlnLT5uYW1lLCB0cmlnKTsKQEAgLTEwNCwxMSArMTA1LDIwIEBAIHN0YXRp
-YyBpbnQgaWlvX2ludGVycnVwdF90cmlnZ2VyX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQogCXJldHVybiAwOwogfQogCisjaWZkZWYgQ09ORklHX09GCitzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCBpaW9faW50ZXJydXB0X3RyaWdnZXJfb2ZfbWF0Y2hbXSA9IHsK
-Kwl7IC5jb21wYXRpYmxlID0gImludGVycnVwdC10cmlnZ2VyIiB9LAorCXt9LAorfTsKK01PRFVM
-RV9ERVZJQ0VfVEFCTEUob2YsIGlpb19pbnRlcnJ1cHRfdHJpZ2dlcl9vZl9tYXRjaCk7CisjZW5k
-aWYKKwogc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgaWlvX2ludGVycnVwdF90cmlnZ2Vy
-X2RyaXZlciA9IHsKIAkucHJvYmUgPSBpaW9faW50ZXJydXB0X3RyaWdnZXJfcHJvYmUsCiAJLnJl
-bW92ZSA9IGlpb19pbnRlcnJ1cHRfdHJpZ2dlcl9yZW1vdmUsCiAJLmRyaXZlciA9IHsKIAkJLm5h
-bWUgPSAiaWlvX2ludGVycnVwdF90cmlnZ2VyIiwKKwkJLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0
-Y2hfcHRyKGlpb19pbnRlcnJ1cHRfdHJpZ2dlcl9vZl9tYXRjaCksCiAJfSwKIH07CiAKLS0gCjEu
-OS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+On Tue, Feb 28, 2017 at 04:17:52PM +0100, Peter Rosin wrote:
+> Hi!
+> 
+> The status of this series [1] is that Rob Herring has acked/reviewed all
+> devicetree changes, so I suppose that's ok. Jonathan Cameron has acked
+> the additions to the iio subsystem and reviewed the new iio driver.
+> Wolfram Sang has acked the i2c-mux driver. That's acks or reviews from
+> the maintainers for all changes to the maintained areas.
+> 
+> What's not covered by the above is the mux subsystem itself. Jonathan
+> has also acked or reviewed those changes, but I get the feeling that
+> more tags are desired? So, please review the core of the mux subsystem
+> and the two drivers! It's small. Really. And much of it is boilerplate
+> devm functions. The relevant patches are:
+> 
+>  3/10 "mux: minimal mux subsystem and gpio-based mux controller"
+> 10/10 "mux: adg792a: add mux controller driver for ADG792A/G"
+> 
+> I also wonder how I should proceed next. Jonathan kindly provided some
+> hints. I have created a project on gitlab [2] to track future mux
+> changes and where this series is also available (in the "mux" branch,
+> of course subject to rebases, at least for now). I intend to create a
+> for-next branch that I hope Stephen Rothwell will be happy to add to
+> linux-next at some point after v4.11-rc1. Whomever I will feed future
+> changes to will also pull from that tree. Etc. At least that's my
+> picture of how this is going to work.
+> 
+> The question then becomes to whom I will send pull requests? My guess is
+> that the plausible candidates are Greg K-H, Linus Torvalds and Andrew
+> Morton. Any taker? Are there other candidates? I don't have any particular
+> preference. If I don't hear anything I'll probably just send a pull
+> request to Linus for the next merge window (i.e. targeting 4.12-rc1).
+> 
+> Or am I perhaps getting ahead of myself? Is a new tree overkill? I
+> don't expect it to be exactly busy...
+
+I pull in lots of semi-random driver subsystems into my char-misc driver
+tree, and I can do that here for you as well if you want me to, to
+forward things on to Linus at the proper times.
+
+Just let me know.
+
+thanks,
+
+greg k-h
