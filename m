@@ -1,11 +1,14 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v3 0/6] Add EXTI GPIO trigger support to STM32 ADC
-Date: Tue, 28 Feb 2017 17:51:13 +0100
-Message-ID: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v3 1/6] dt-bindings: iio: introduce trigger providers,
+ consumers
+Date: Tue, 28 Feb 2017 17:51:14 +0100
+Message-ID: <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
+References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,34 +22,58 @@ To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kerne
 Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linus.walleij@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-U1RNMzIgQURDLCBjYW4gdXNlIEVYVEkgbGluZSAoZXh0ZXJuYWwgaW50ZXJydXB0KSBhcyB0cmln
-Z2VyIHNvdXJjZQpmb3IgY29udmVyc2lvbnMuClRoaXMgcGF0Y2hzZXQgaW50cm9kdWNlczoKLSBJ
-SU8gdHJpZ2dlciBwcm92aWRlcnMgLyBjb25zdW1lcnMgdGhhdCBjYW4gYmUgY29uZmlndXJlZCBm
-cm9tIERUCi0gRFQgc3VwcG9ydCBmb3IgSUlPIGludGVycnVwdCB0cmlnZ2VyCi0gU1RNMzIgQURD
-IEVYVEkgdHJpZ2dlciBzZWxlY3Rpb24sIGNvbmZpZ3VyZWQgYnkgRFQuCgotLS0KQ2hhbmdlcyBp
-biBWMzoKLSBSZXdvcmsgbW9zdCBvZiBpdCwgdG8gdXNlIGdlbmVyaWMgaWlvLWludGVycnVwdC10
-cmlnZ2VyCi0gRHJvcCBHUElPIHRyaWdnZXIsIHVzZSBnZW5lcmljIGludGVycnVwdCBiaW5kaW5n
-IGluc3RlYWQKLSBDb21tZW50cyBmcm9tIFYyIGFuZCBSRkM6IGlpbzogdHJpZ2dlcjogQWRkIE9G
-IHN1cHBvcnQgYW5kIEdQSU8gYmFzZWQgdHJpZ2dlcgogIGh0dHBzOi8vbGttbC5vcmcvbGttbC8y
-MDE3LzIvMTcvNDc4CgotLS0KQ2hhbmdlcyBpbiBWMjoKLSBGaXhlZCBLY29uZmlnIGRlcGVuZGVu
-Y2llcwoKRmFicmljZSBHYXNuaWVyICg1KToKICBkdC1iaW5kaW5nczogaWlvOiBpbnRyb2R1Y2Ug
-dHJpZ2dlciBwcm92aWRlcnMsIGNvbnN1bWVycwogIGlpbzogdHJpZ2dlcjogYWRkIE9GIHN1cHBv
-cnQKICBkdC1iaW5kaW5nczogaWlvOiBkb2N1bWVudCBpbnRlcnJ1cHQgdHJpZ2dlciBzdXBwb3J0
-CiAgZHQtYmluZGluZ3M6IGlpbzogc3RtMzItYWRjOiBhZGQgZXh0ZXJuYWwgaW50ZXJydXB0IHRy
-aWdnZXIKICBpaW86IGFkYzogc3RtMzI6IGFkZCBzdXBwb3J0IGZvciBFWFRJIHRyaWdnZXIKCkdy
-w6lnb3IgQm9pcmllICgxKToKICBpaW86IGlpby1pbnRlcnJ1cHQtdHJpZ2dlcjogZGV2aWNlLXRy
-ZWUgc3VwcG9ydAoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvc3Qsc3RtMzItYWRj
-LnR4dCAgIHwgIDIxICsrKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vaWlvLWJpbmRp
-bmdzLnR4dCAgICAgICB8ICAzOCArKysrKysrKwogLi4uL2JpbmRpbmdzL2lpby90cmlnZ2VyL2lp
-by10cmlnLWludGVycnVwdC50eHQgICAgfCAgMjIgKysrKysKIGRyaXZlcnMvaWlvL2FkYy9zdG0z
-Mi1hZGMuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI3ICsrKysrLQogZHJpdmVycy9paW8v
-aW5kdXN0cmlhbGlvLXRyaWdnZXIuYyAgICAgICAgICAgICAgICAgfCAxMDAgKysrKysrKysrKysr
-KysrKysrKysrCiBkcml2ZXJzL2lpby90cmlnZ2VyL2lpby10cmlnLWludGVycnVwdC5jICAgICAg
-ICAgICB8ICAxMCArKysKIGluY2x1ZGUvbGludXgvaWlvL3RyaWdnZXIuaCAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICA0ICsKIDcgZmlsZXMgY2hhbmdlZCwgMjE5IGluc2VydGlvbnMoKyksIDMg
-ZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2lpby90cmlnZ2VyL2lpby10cmlnLWludGVycnVwdC50eHQKCi0tIAoxLjkuMQoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+Document iio provider and consumer bindings.
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ .../devicetree/bindings/iio/iio-bindings.txt       | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+index 68d6f8c..01765e9 100644
+--- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
++++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+@@ -95,3 +95,41 @@ vdd channel is connected to output 0 of the &ref device.
+ 		io-channels = <&adc 10>, <&adc 11>;
+ 		io-channel-names = "adc1", "adc2";
+ 	};
++
++==IIO trigger providers==
++Sources of IIO triggers can be represented by any node in the device
++tree. Those nodes are designated as IIO trigger providers. IIO trigger
++consumer uses a phandle and an IIO trigger specifier to connect to an
++IIO trigger provider.
++An IIO trigger specifier is an array of one or more cells identifying
++the IIO trigger output on a device. The length of an IIO trigger
++specifier is defined by the value of a #io-trigger-cells property in
++the IIO trigger provider node.
++
++Required properties:
++#io-trigger-cells:
++		Number of cells in an IIO trigger specifier; Typically
++		0 for nodes with a simple IIO trigger output.
++
++Example:
++	trig0: interrupt-trigger0 {
++		#io-trigger-cells = <0>;
++		compatible = "interrupt-trigger";
++		interrupts = <11 0>;
++		interrupt-parent = <&gpioa>;
++	}
++
++==IIO trigger consumers==
++Required properties:
++- io-triggers:	List of phandle representing the IIO trigger specifier.
++
++Optional properties:
++- io-trigger-names :
++		List of IIO trigger name strings that matches elements
++		in 'io-triggers' list property.
++
++Example:
++	some_trigger_consumer {
++		io-triggers = <&trig0>;
++		io-trigger-names = "mytrig";
++	}
+-- 
+1.9.1
