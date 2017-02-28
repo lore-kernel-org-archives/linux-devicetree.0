@@ -1,153 +1,155 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4] reset: Add i.MX7 SRC reset driver
-Date: Tue, 28 Feb 2017 15:38:27 +0100
-Message-ID: <1488292707.2288.53.camel@pengutronix.de>
-References: <20170221161331.17012-1-andrew.smirnov@gmail.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v3 1/6] clk: tegra: add cec clock
+Date: Tue, 28 Feb 2017 16:37:17 +0200
+Message-ID: <1488292648-16876-2-git-send-email-pdeschrijver@nvidia.com>
+References: <1488292648-16876-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170221161331.17012-1-andrew.smirnov@gmail.com>
+In-Reply-To: <1488292648-16876-1-git-send-email-pdeschrijver@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rhyland Klein <rklein@nvidia.com>, linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-02-21 at 08:13 -0800, Andrey Smirnov wrote:
-> Add reset controller driver exposing various reset faculties,
-> implemented by System Reset Controller IP block.
-> 
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
-> 
-> Changes since v3 (see [v3]):
-> 
-> 	- Convert code IMX7_RESET_PCIEPHY to change G_RST and BTNRST
->           simultaneously to make all resets be representable as
->           signal->bit in signal->offset register
-> 
-> 	- Convert assert/deassert subroutines to be special cases of a
->           common reset subroutine
-> 
-> Changes since v2 (see [v2]):
-> 
-> 	- Fix typos
-> 
-> 	- Kconfig/Makefile chagnes account for alphabetical sorting of
->           those files
-> 
-> 	- Remove redundant includes
-> 
-> 	- Make use of regmap_attach_dev and avoid storing refernce to
->           struct *dev in private data
-> 
-> 	- Change code and headers to expose almost all of the reset
->           related bits in SRC IP block
-> 
-> Changes since v1 (see [v1]):
-> 
-> 	- Various small DT bindings description fixes as per feedback
->           from Rob Herring
-> 
-> 
-> [v1] https://lkml.org/lkml/2017/2/6/554
-> [v2] https://lkml.org/lkml/2017/2/13/488
-> [v3] https://lkml.org/lkml/2017/2/20/344
-> 
-> 
->  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  47 ++++++
->  drivers/reset/Kconfig                              |   8 ++
->  drivers/reset/Makefile                             |   2 +
->  drivers/reset/reset-imx7.c                         | 158 +++++++++++++++++++++
->  include/dt-bindings/reset/imx7-reset.h             |  62 ++++++++
->  5 files changed, 277 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
->  create mode 100644 drivers/reset/reset-imx7.c
->  create mode 100644 include/dt-bindings/reset/imx7-reset.h
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> new file mode 100644
-> index 0000000..5e1afc3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> @@ -0,0 +1,47 @@
-> +Freescale i.MX7 System Reset Controller
-> +======================================
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,imx7-src", "syscon"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- interrupts: Should contain SRC interrupt
-> +- #reset-cells: 1, see below
-> +
-> +example:
-> +
-> +src: reset-controller@30390000 {
-> +     compatible = "fsl,imx7d-src", "syscon";
-> +     reg = <0x30390000 0x2000>;
-> +     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> +     #reset-cells = <1>;
-> +};
-> +
-> +
-> +Specifying reset lines connected to IP modules
-> +==============================================
-> +
-> +The system reset controller can be used to reset various set of
-> +peripherals. Device nodes that need access to reset lines should
-> +specify them as a reset phandle in their corresponding node as
-> +specified in reset.txt.
-> +
-> +Example:
-> +
-> +	pcie: pcie@33800000 {
-> +
-> +		...
-> +
-> +		resets = <&src IMX7_RESET_PCIEPHY>,
-> +			 <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
-> +		reset-names = "pciephy", "apps";
-> +
-> +		...
-> +        };
-> +
-> +
-> +For list of all valid reset indicies see
-> +<dt-bindings/reset/imx7-reset.h>
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 172dc96..bea1800 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -27,6 +27,14 @@ config RESET_BERLIN
->  	help
->  	  This enables the reset controller driver for Marvell Berlin SoCs.
->  
-> +config RESET_IMX7
-> +	bool "i.MX7 Reset Driver"
-> +	depends on SOC_IMX7D || COMPILE_TEST
-> +	select MFD_SYSCON
-> +	default SOC_IMX7D
+This clock is used to clock the HDMI CEC interface.
 
-Can we make this
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+---
+ drivers/clk/tegra/clk-id.h                      | 1 +
+ drivers/clk/tegra/clk-tegra-periph.c            | 1 +
+ drivers/clk/tegra/clk-tegra114.c                | 1 +
+ drivers/clk/tegra/clk-tegra124.c                | 1 +
+ drivers/clk/tegra/clk-tegra210.c                | 1 +
+ drivers/clk/tegra/clk-tegra30.c                 | 1 +
+ include/dt-bindings/clock/tegra114-car.h        | 2 +-
+ include/dt-bindings/clock/tegra124-car-common.h | 2 +-
+ include/dt-bindings/clock/tegra210-car.h        | 2 +-
+ include/dt-bindings/clock/tegra30-car.h         | 2 +-
+ 10 files changed, 10 insertions(+), 4 deletions(-)
 
-config RESET_IMX7
-	bool "i.MX7 Reset Driver" if COMPILE_TEST
-	default SOC_IMX7D
-	select MFD_SYSCON
-
-instead?
-
-If you agree, I can fix it up while applying.
-
-regards
-Philipp
+diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
+index 1019eb8..fc978b2 100644
+--- a/drivers/clk/tegra/clk-id.h
++++ b/drivers/clk/tegra/clk-id.h
+@@ -308,6 +308,7 @@ enum clk_id {
+ 	tegra_clk_sclk_mux,
+ 	tegra_clk_sor_safe,
+ 	tegra_clk_ispa,
++	tegra_clk_cec,
+ 	tegra_clk_max,
+ };
+ 
+diff --git a/drivers/clk/tegra/clk-tegra-periph.c b/drivers/clk/tegra/clk-tegra-periph.c
+index c9e795b..a2aed27 100644
+--- a/drivers/clk/tegra/clk-tegra-periph.c
++++ b/drivers/clk/tegra/clk-tegra-periph.c
+@@ -837,6 +837,7 @@
+ 	GATE("pll_p_out_cpu", "pll_p", 223, 0, tegra_clk_pll_p_out_cpu, 0),
+ 	GATE("pll_p_out_adsp", "pll_p", 187, 0, tegra_clk_pll_p_out_adsp, 0),
+ 	GATE("apb2ape", "clk_m", 107, 0, tegra_clk_apb2ape, 0),
++	GATE("cec", "pclk", 136, 0, tegra_clk_cec, 0),
+ };
+ 
+ static struct tegra_periph_init_data div_clks[] = {
+diff --git a/drivers/clk/tegra/clk-tegra114.c b/drivers/clk/tegra/clk-tegra114.c
+index 933b5dd..fd1a99c 100644
+--- a/drivers/clk/tegra/clk-tegra114.c
++++ b/drivers/clk/tegra/clk-tegra114.c
+@@ -819,6 +819,7 @@
+ 	[tegra_clk_clk_out_3_mux] = { .dt_id = TEGRA114_CLK_CLK_OUT_3_MUX, .present = true },
+ 	[tegra_clk_dsia_mux] = { .dt_id = TEGRA114_CLK_DSIA_MUX, .present = true },
+ 	[tegra_clk_dsib_mux] = { .dt_id = TEGRA114_CLK_DSIB_MUX, .present = true },
++	[tegra_clk_cec] = { .dt_id = TEGRA114_CLK_CEC, .present = true },
+ };
+ 
+ static struct tegra_devclk devclks[] __initdata = {
+diff --git a/drivers/clk/tegra/clk-tegra124.c b/drivers/clk/tegra/clk-tegra124.c
+index a112d3d..e81ea5b 100644
+--- a/drivers/clk/tegra/clk-tegra124.c
++++ b/drivers/clk/tegra/clk-tegra124.c
+@@ -928,6 +928,7 @@
+ 	[tegra_clk_clk_out_1_mux] = { .dt_id = TEGRA124_CLK_CLK_OUT_1_MUX, .present = true },
+ 	[tegra_clk_clk_out_2_mux] = { .dt_id = TEGRA124_CLK_CLK_OUT_2_MUX, .present = true },
+ 	[tegra_clk_clk_out_3_mux] = { .dt_id = TEGRA124_CLK_CLK_OUT_3_MUX, .present = true },
++	[tegra_clk_cec] = { .dt_id = TEGRA124_CLK_CEC, .present = true },
+ };
+ 
+ static struct tegra_devclk devclks[] __initdata = {
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index 58d7f9c..bdb296a 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2222,6 +2222,7 @@ static u32 pll_expo_p_to_pdiv(u32 p, u32 *pdiv)
+ 	[tegra_clk_apb2ape] = { .dt_id = TEGRA210_CLK_APB2APE, .present = true },
+ 	[tegra_clk_pll_a1] = { .dt_id = TEGRA210_CLK_PLL_A1, .present = true },
+ 	[tegra_clk_ispa] = { .dt_id = TEGRA210_CLK_ISPA, .present = true },
++	[tegra_clk_cec] = { .dt_id = TEGRA210_CLK_CEC, .present = true },
+ };
+ 
+ static struct tegra_devclk devclks[] __initdata = {
+diff --git a/drivers/clk/tegra/clk-tegra30.c b/drivers/clk/tegra/clk-tegra30.c
+index 8e2db5e..a2d163f 100644
+--- a/drivers/clk/tegra/clk-tegra30.c
++++ b/drivers/clk/tegra/clk-tegra30.c
+@@ -817,6 +817,7 @@
+ 	[tegra_clk_pll_p_out4] = { .dt_id = TEGRA30_CLK_PLL_P_OUT4, .present = true },
+ 	[tegra_clk_pll_a] = { .dt_id = TEGRA30_CLK_PLL_A, .present = true },
+ 	[tegra_clk_pll_a_out0] = { .dt_id = TEGRA30_CLK_PLL_A_OUT0, .present = true },
++	[tegra_clk_cec] = { .dt_id = TEGRA30_CLK_CEC, .present = true },
+ };
+ 
+ static const char *pll_e_parents[] = { "pll_ref", "pll_p" };
+diff --git a/include/dt-bindings/clock/tegra114-car.h b/include/dt-bindings/clock/tegra114-car.h
+index 534c03f..ed5ca21 100644
+--- a/include/dt-bindings/clock/tegra114-car.h
++++ b/include/dt-bindings/clock/tegra114-car.h
+@@ -156,7 +156,7 @@
+ /* 133 */
+ /* 134 */
+ /* 135 */
+-/* 136 */
++#define TEGRA114_CLK_CEC 136
+ /* 137 */
+ /* 138 */
+ /* 139 */
+diff --git a/include/dt-bindings/clock/tegra124-car-common.h b/include/dt-bindings/clock/tegra124-car-common.h
+index a215609..9352c7e 100644
+--- a/include/dt-bindings/clock/tegra124-car-common.h
++++ b/include/dt-bindings/clock/tegra124-car-common.h
+@@ -156,7 +156,7 @@
+ /* 133 */
+ /* 134 */
+ /* 135 */
+-/* 136 */
++#define TEGRA124_CLK_CEC 136
+ /* 137 */
+ /* 138 */
+ /* 139 */
+diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
+index f5c6563..e7a2578 100644
+--- a/include/dt-bindings/clock/tegra210-car.h
++++ b/include/dt-bindings/clock/tegra210-car.h
+@@ -156,7 +156,7 @@
+ /* 133 */
+ /* 134 */
+ /* 135 */
+-/* 136 */
++#define TEGRA210_CLK_CEC 136
+ /* 137 */
+ /* 138 */
+ /* 139 */
+diff --git a/include/dt-bindings/clock/tegra30-car.h b/include/dt-bindings/clock/tegra30-car.h
+index 889e49b..7213354b 100644
+--- a/include/dt-bindings/clock/tegra30-car.h
++++ b/include/dt-bindings/clock/tegra30-car.h
+@@ -156,7 +156,7 @@
+ /* 133 */
+ /* 134 */
+ /* 135 */
+-/* 136 */
++#define TEGRA30_CLK_CEC 136
+ /* 137 */
+ /* 138 */
+ /* 139 */
+-- 
+1.9.1
