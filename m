@@ -1,13 +1,11 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v3 3/6] dt-bindings: iio: document interrupt trigger support
-Date: Tue, 28 Feb 2017 17:51:16 +0100
-Message-ID: <1488300679-3259-4-git-send-email-fabrice.gasnier@st.com>
-References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v3 0/6] Add EXTI GPIO trigger support to STM32 ADC
+Date: Tue, 28 Feb 2017 17:51:13 +0100
+Message-ID: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,43 +19,34 @@ To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kerne
 Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linus.walleij@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Document interrupt trigger that takes a generic interrupt, and
-can be used as trigger source for sampling devices such as sensors,
-ADCs...
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- .../bindings/iio/trigger/iio-trig-interrupt.txt    | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt b/Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt
-new file mode 100644
-index 0000000..9de9856
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt
-@@ -0,0 +1,22 @@
-+Interrupt based trigger
-+
-+Any internal or external interrupt may be used as trigger source for
-+devices like sensors, ADCs... As an example, external signal can be
-+routed to a GPIO, and turned into an interrupt driven trigger.
-+
-+Required properties:
-+- compatible: Should be "interrupt-trigger"
-+- interrupts: The interrupt used as trigger. Generic interrupt client node as
-+  described in ../../interrupt-controller/interrupts.txt
-+
-+Optional properties:
-+- #io-trigger-cells = <0>; See the IIO bindings, IIO trigger providers
-+  and consumers sections in ../iio-bindings.txt
-+
-+Example:
-+	trig0: interrupt-trigger0 {
-+		#io-trigger-cells = <0>;
-+		compatible = "interrupt-trigger";
-+		interrupts = <11 0>;
-+		interrupt-parent = <&gpioa>;
-+	}
--- 
-1.9.1
+U1RNMzIgQURDLCBjYW4gdXNlIEVYVEkgbGluZSAoZXh0ZXJuYWwgaW50ZXJydXB0KSBhcyB0cmln
+Z2VyIHNvdXJjZQpmb3IgY29udmVyc2lvbnMuClRoaXMgcGF0Y2hzZXQgaW50cm9kdWNlczoKLSBJ
+SU8gdHJpZ2dlciBwcm92aWRlcnMgLyBjb25zdW1lcnMgdGhhdCBjYW4gYmUgY29uZmlndXJlZCBm
+cm9tIERUCi0gRFQgc3VwcG9ydCBmb3IgSUlPIGludGVycnVwdCB0cmlnZ2VyCi0gU1RNMzIgQURD
+IEVYVEkgdHJpZ2dlciBzZWxlY3Rpb24sIGNvbmZpZ3VyZWQgYnkgRFQuCgotLS0KQ2hhbmdlcyBp
+biBWMzoKLSBSZXdvcmsgbW9zdCBvZiBpdCwgdG8gdXNlIGdlbmVyaWMgaWlvLWludGVycnVwdC10
+cmlnZ2VyCi0gRHJvcCBHUElPIHRyaWdnZXIsIHVzZSBnZW5lcmljIGludGVycnVwdCBiaW5kaW5n
+IGluc3RlYWQKLSBDb21tZW50cyBmcm9tIFYyIGFuZCBSRkM6IGlpbzogdHJpZ2dlcjogQWRkIE9G
+IHN1cHBvcnQgYW5kIEdQSU8gYmFzZWQgdHJpZ2dlcgogIGh0dHBzOi8vbGttbC5vcmcvbGttbC8y
+MDE3LzIvMTcvNDc4CgotLS0KQ2hhbmdlcyBpbiBWMjoKLSBGaXhlZCBLY29uZmlnIGRlcGVuZGVu
+Y2llcwoKRmFicmljZSBHYXNuaWVyICg1KToKICBkdC1iaW5kaW5nczogaWlvOiBpbnRyb2R1Y2Ug
+dHJpZ2dlciBwcm92aWRlcnMsIGNvbnN1bWVycwogIGlpbzogdHJpZ2dlcjogYWRkIE9GIHN1cHBv
+cnQKICBkdC1iaW5kaW5nczogaWlvOiBkb2N1bWVudCBpbnRlcnJ1cHQgdHJpZ2dlciBzdXBwb3J0
+CiAgZHQtYmluZGluZ3M6IGlpbzogc3RtMzItYWRjOiBhZGQgZXh0ZXJuYWwgaW50ZXJydXB0IHRy
+aWdnZXIKICBpaW86IGFkYzogc3RtMzI6IGFkZCBzdXBwb3J0IGZvciBFWFRJIHRyaWdnZXIKCkdy
+w6lnb3IgQm9pcmllICgxKToKICBpaW86IGlpby1pbnRlcnJ1cHQtdHJpZ2dlcjogZGV2aWNlLXRy
+ZWUgc3VwcG9ydAoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lpby9hZGMvc3Qsc3RtMzItYWRj
+LnR4dCAgIHwgIDIxICsrKysrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9paW8vaWlvLWJpbmRp
+bmdzLnR4dCAgICAgICB8ICAzOCArKysrKysrKwogLi4uL2JpbmRpbmdzL2lpby90cmlnZ2VyL2lp
+by10cmlnLWludGVycnVwdC50eHQgICAgfCAgMjIgKysrKysKIGRyaXZlcnMvaWlvL2FkYy9zdG0z
+Mi1hZGMuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI3ICsrKysrLQogZHJpdmVycy9paW8v
+aW5kdXN0cmlhbGlvLXRyaWdnZXIuYyAgICAgICAgICAgICAgICAgfCAxMDAgKysrKysrKysrKysr
+KysrKysrKysrCiBkcml2ZXJzL2lpby90cmlnZ2VyL2lpby10cmlnLWludGVycnVwdC5jICAgICAg
+ICAgICB8ICAxMCArKysKIGluY2x1ZGUvbGludXgvaWlvL3RyaWdnZXIuaCAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICA0ICsKIDcgZmlsZXMgY2hhbmdlZCwgMjE5IGluc2VydGlvbnMoKyksIDMg
+ZGVsZXRpb25zKC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2lpby90cmlnZ2VyL2lpby10cmlnLWludGVycnVwdC50eHQKCi0tIAoxLjkuMQoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
