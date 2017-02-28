@@ -1,76 +1,97 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
-Date: Tue, 28 Feb 2017 13:04:49 +0100
-Message-ID: <20170228120452.10043-1-zajec5@gmail.com>
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] spi/bcm63xx-hsspi: allow for probing through devicetree
+Date: Tue, 28 Feb 2017 14:17:46 +0100
+Message-ID: <CAOiHx==d3Jhnpa0ppjPHcUHpqg6EnADNgWg4o_ShdnU8z_VG6w@mail.gmail.com>
+References: <20170222131940.31085-1-jonas.gorski@gmail.com>
+ <20170222131940.31085-3-jonas.gorski@gmail.com> <75499273-96ba-0270-9b06-5b1def1452ca@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <75499273-96ba-0270-9b06-5b1def1452ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On 27 February 2017 at 23:54, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 02/22/2017 05:19 AM, Jonas Gorski wrote:
+>> Add required binding support to probe through device tree.
+>>
+>> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/spi/spi-bcm63xx-hsspi.c | 26 +++++++++++++++++++++++---
+>>  1 file changed, 23 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
+>> index 79096d17ebde..77c249a22c9b 100644
+>> --- a/drivers/spi/spi-bcm63xx-hsspi.c
+>> +++ b/drivers/spi/spi-bcm63xx-hsspi.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/interrupt.h>
+>>  #include <linux/spi/spi.h>
+>>  #include <linux/mutex.h>
+>> +#include <linux/of.h>
+>>
+>>  #define HSSPI_GLOBAL_CTRL_REG                        0x0
+>>  #define GLOBAL_CTRL_CS_POLARITY_SHIFT                0
+>> @@ -91,6 +92,7 @@
+>>
+>>  #define HSSPI_MAX_SYNC_CLOCK                 30000000
+>>
+>> +#define HSSPI_SPI_MAX_CS                     8
+>>  #define HSSPI_BUS_NUM                                1 /* 0 is legacy SPI */
+>>
+>>  struct bcm63xx_hsspi {
+>> @@ -332,7 +334,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+>>       struct device *dev = &pdev->dev;
+>>       struct clk *clk;
+>>       int irq, ret;
+>> -     u32 reg, rate;
+>> +     u32 reg, rate, num_cs = HSSPI_SPI_MAX_CS;
+>>
+>>       irq = platform_get_irq(pdev, 0);
+>>       if (irq < 0) {
+>> @@ -382,8 +384,20 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
+>>       mutex_init(&bs->bus_mutex);
+>>       init_completion(&bs->done);
+>>
+>> -     master->bus_num = HSSPI_BUS_NUM;
+>> -     master->num_chipselect = 8;
+>> +     if (dev->of_node) {
+>> +             master->dev.of_node = dev->of_node;
+>
+> You could move this out of the if () statement here.
 
-There was a long discussion on describing LED trigger sources in DT.
-Few solutions were posted but neither was clear & flexible enough. It's
-really hard to design DT bindings for a LED node that will allow
-describing any kinds of triggers.
+Indeed, of_property_read_u32 is safe to call with a NULL np, so I
+don't need to guard it extra.
 
-Finally Jacek suggested a different design. It involved using separated
-DT node for each trigger.
+>> +
+>> +             of_property_read_u32(dev->of_node, "num-cs", &num_cs);
+>> +             if (num_cs > 8) {
+>> +                     dev_warn(dev, "unsupported number of cs (%i), reducing to 8\n",
+>> +                              num_cs);
+>> +                     num_cs = HSSPI_SPI_MAX_CS;
+>> +             }
+>> +     } else {
+>> +             master->bus_num = HSSPI_BUS_NUM;
+>
+> And this one too, since the core will take care of assigning it based on
+> aliases and such when master->dev.of_node is correctly set.
 
-This documentation follows that idea. It really simplifies DT bindings
-and allows clear support for different trigger types. With this solution
-every type can have its own specific properties.
+It will only do if bus_num is < 0, so I will still need to guard it
+for !of_node, else the alias-based assignent won't work.
 
-Please note an example will be added later with the first supported
-trigger bindings. The point is to have nodes like:
-foo-trigger {
-	trigger-type = "foo";
-	...
-};
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- Documentation/devicetree/bindings/leds/common.txt   |  3 +++
- Documentation/devicetree/bindings/leds/triggers.txt | 13 +++++++++++++
- 2 files changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/triggers.txt
+>
+> With that changed:
+>
+> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 696be5792625..0bc91556a47a 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -49,6 +49,9 @@ Optional properties for child nodes:
- - panic-indicator : This property specifies that the LED should be used,
- 		    if at all possible, as a panic indicator.
- 
-+- triggers : List of nodes of triggers that should control this LED state. For
-+	     more details see triggers.txt.
-+
- Required properties for flash LED child nodes:
- - flash-max-microamp : Maximum flash LED supply current in microamperes.
- - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
-diff --git a/Documentation/devicetree/bindings/leds/triggers.txt b/Documentation/devicetree/bindings/leds/triggers.txt
-new file mode 100644
-index 000000000000..a1fbf3a75d67
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/triggers.txt
-@@ -0,0 +1,13 @@
-+Common trigger properties.
-+
-+Triggers describe the way LEDs should be controlled, e.g. under what conditions
-+they should be turned on or off. Depending on a trigger type various events can
-+be used to determine a LED state. Some triggers can be hardware independent
-+(e.g. time based), some can react to a specific hardware events.
-+
-+Common properties:
-+- trigger-type : Type of a trigger. Choosing a trigger determines what kind of
-+		 events will be used to control LED. See specific trigger
-+		 documentation for more details.
-+
-+More properties can be available depending on the chosen trigger type.
--- 
-2.11.0
+Thanks for the review!
+
+
+Jonas
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
