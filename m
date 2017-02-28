@@ -1,340 +1,123 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/4] clk: sunxi-ng: Add sun7i-a20 CCU driver
-Date: Tue, 28 Feb 2017 09:21:08 +0100
-Message-ID: <20170228082108.cthaanfuffbwbkaf@lukather>
-References: <20170227210914.18954-1-plaes@plaes.org>
- <20170227210914.18954-3-plaes@plaes.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
+ resolution
+Date: Tue, 28 Feb 2017 09:21:49 +0100
+Message-ID: <79e01c5c-d27c-89ea-4d8f-9e66a6c091e6@st.com>
+References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
+ <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
+ <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
+ <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
+ <d64bd76d-a2c6-6148-c126-fa73e96019a1@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fgcuu4d5fyo4hxrx"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB77F2TCQKGQEM2S2FIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170227210914.18954-3-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <d64bd76d-a2c6-6148-c126-fa73e96019a1@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
+On 02/25/2017 04:11 PM, Jonathan Cameron wrote:
+> On 24/02/17 16:04, Fabrice Gasnier wrote:
+>> On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
+>>> On 15/02/17 16:55, Fabrice Gasnier wrote:
+>>>> Add documentation for 'st,adc-res' dt optional property.
+>>>>
+>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>> I'm happy with this, but would like to leave time for a device tree review.
+>>>
+>>> Ultimately we may well want to make this a generic property and call it something
+>>> like adc-resolution but perhaps we need to wait until we have a few more devices
+>>> supporting setting it via device tree to figure out what the best interface is.
+>>> It would exactly be a problem to support this as a deprecated binding at that
+>>> point.
+>>
+>> Hi Jonathan,
+>>
+>> I agree with you on this... It may be better to have generic property
+>> for this, especially if you see that it will come in the near future.
+>> May I suggest this prop to be less restrictive, e.g. like
+>> resolution-bits as is may also be worth for other device types, e.g.
+>> DAC as an example ?>
+> Sure, why not - no loss of meaning here.  We may never use it for anything
+> else but that doesn't matter.
 
---fgcuu4d5fyo4hxrx
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Jonathan,
 
-Hi,
+Following Rob's comment, how you see such a common property can be
+integrated. Currently I don't see much devices are doing this.
+Do you have ideas or preferences on this ?
 
-On Mon, Feb 27, 2017 at 11:09:12PM +0200, Priit Laes wrote:
-> Introduce a clock controller driver for sun7i A20 SoC.
-> 
-> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-> ---
->  drivers/clk/sunxi-ng/Kconfig         |   11 +
->  drivers/clk/sunxi-ng/Makefile        |    1 +
->  drivers/clk/sunxi-ng/ccu-sun7i-a20.c | 1068 ++++++++++++++++++++++++++++++++++
->  drivers/clk/sunxi-ng/ccu-sun7i-a20.h |  121 ++++
->  4 files changed, 1201 insertions(+)
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun7i-a20.c
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun7i-a20.h
-> 
-> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-> index 695bbf9..4f436ab 100644
-> --- a/drivers/clk/sunxi-ng/Kconfig
-> +++ b/drivers/clk/sunxi-ng/Kconfig
-> @@ -85,6 +85,17 @@ config SUN6I_A31_CCU
->  	select SUNXI_CCU_PHASE
->  	default MACH_SUN6I
->  
-> +config SUN7I_A20_CCU
-> +	bool "Support for the Allwinner A20 CCU"
-> +	select SUNXI_CCU_DIV
-> +	select SUNXI_CCU_MULT
-> +	select SUNXI_CCU_NK
-> +	select SUNXI_CCU_NKM
-> +	select SUNXI_CCU_NM
-> +	select SUNXI_CCU_MP
-> +	select SUNXI_CCU_PHASE
-> +	default MACH_SUN7I
-> +
->  config SUN8I_A23_CCU
->  	bool "Support for the Allwinner A23 CCU"
->  	select SUNXI_CCU_DIV
-> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-> index 6feaac0..bedda5b 100644
-> --- a/drivers/clk/sunxi-ng/Makefile
-> +++ b/drivers/clk/sunxi-ng/Makefile
-> @@ -21,6 +21,7 @@ obj-$(CONFIG_SUNXI_CCU_MP)	+= ccu_mp.o
->  obj-$(CONFIG_SUN50I_A64_CCU)	+= ccu-sun50i-a64.o
->  obj-$(CONFIG_SUN5I_CCU)		+= ccu-sun5i.o
->  obj-$(CONFIG_SUN6I_A31_CCU)	+= ccu-sun6i-a31.o
-> +obj-$(CONFIG_SUN7I_A20_CCU)	+= ccu-sun7i-a20.o
->  obj-$(CONFIG_SUN8I_A23_CCU)	+= ccu-sun8i-a23.o
->  obj-$(CONFIG_SUN8I_A33_CCU)	+= ccu-sun8i-a33.o
->  obj-$(CONFIG_SUN8I_H3_CCU)	+= ccu-sun8i-h3.o
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun7i-a20.c b/drivers/clk/sunxi-ng/ccu-sun7i-a20.c
-> new file mode 100644
-> index 0000000..90d2f13
-> --- /dev/null
-> +++ b/drivers/clk/sunxi-ng/ccu-sun7i-a20.c
-> @@ -0,0 +1,1068 @@
-> +/*
-> + * Copyright (c) 2017 Priit Laes. All rights reserved.
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_address.h>
-> +
-> +#include "ccu_common.h"
-> +#include "ccu_reset.h"
-> +
-> +#include "ccu_div.h"
-> +#include "ccu_gate.h"
-> +#include "ccu_mp.h"
-> +#include "ccu_mult.h"
-> +#include "ccu_nk.h"
-> +#include "ccu_nkm.h"
-> +#include "ccu_nkmp.h"
-> +#include "ccu_nm.h"
-> +#include "ccu_phase.h"
-> +
-> +#include "ccu-sun7i-a20.h"
-> +
-> +/*
-> + * PLL1 - Core clock
-> + *
-> + * TODO: sigma-delta pattern bits 2 & 3
-> + * TODO: PLL1 tuning register
+- Do you think replacing 'st,adc-res' by 'resolution-bits' in current 
+patchset is enough for now ?
+- Or do I need to add dt parsing routine in IIO core, e.g. as simple
+as of_iio_get_resolution(), or something like this ? Or parsing routine
+that may fill in a common properties structure (but only resolution
+will be there from the start)...
 
-I don't think we need those TODO's at all, and these comments too. If
-the clock name is good enough (and it is), it's redundant.
+Please let me know.
 
-> + */
-> +static struct ccu_nkmp pll_core_clk = {
-> +	.enable		= BIT(31),
-> +	.n		= _SUNXI_CCU_MULT_OFFSET(8, 5, 0),
-> +	.k		= _SUNXI_CCU_MULT(4, 2),
-> +	.m		= _SUNXI_CCU_DIV(0, 2),
-> +	.p		= _SUNXI_CCU_DIV(16, 2),
-> +	.common		= {
-> +		.reg		= 0x000,
-> +		.hw.init	= CLK_HW_INIT("pll-core",
-> +					      "hosc",
-> +					      &ccu_nkmp_ops,
-> +					      0),
-> +	},
-> +};
-> +
-> +/* PLL2 - Audio clock */
-> +static struct ccu_nm pll_audio_base_clk = {
-> +	.enable		= BIT(31),
-> +	.n		= _SUNXI_CCU_MULT_OFFSET(8, 7, 0),
-> +	.m		= _SUNXI_CCU_DIV_OFFSET(0, 5, 0),
-> +	.common		= {
-> +		.reg		= 0x008,
-> +		.hw.init	= CLK_HW_INIT("pll-audio-base",
-> +					      "hosc",
-> +					      &ccu_nm_ops,
-> +					      0),
-> +	},
-> +
-> +};
+Thanks,
+Fabrice
 
-You're forgetting the post-divider here
-
-> +/* TODO: pll8 gpu 0x040 */
-
-Please add all the clocks.
-
-> +/* BIT(21 .. 31) - reserved */
-
-I'm not sure we need those comments either.
-
-> +/*
-> + * TODO: SATA clock also supports external clock as parent.
-> + * Currently we default to using PLL6 SATA gate.
-> + */
-
-Which external clock? It should be modelled anyway. If we have a
-dependency on some other clock, it should be in our DT binding, and
-listed in the mux there.
-
-Otherwise, the clock framework will not be able to deal with that mux
-being already set by the bootloader, and if we need to support that
-clock in the future, our binding will be ready for it.
-
-> +static CLK_FIXED_FACTOR(pll_periph_2x_clk, "pll-periph-2x",
-> +			"pll-periph", 1, 2, CLK_SET_RATE_PARENT);
-> +/* We hardcode the divider to 4 for now */
-> +static CLK_FIXED_FACTOR(pll_audio_clk, "pll-audio",
-> +			"pll-audio-base", 4, 1, CLK_SET_RATE_PARENT);
-> +static CLK_FIXED_FACTOR(pll_audio_2x_clk, "pll-audio-2x",
-> +			"pll-audio-base", 2, 1, CLK_SET_RATE_PARENT);
-> +static CLK_FIXED_FACTOR(pll_audio_4x_clk, "pll-audio-4x",
-> +			"pll-audio-base", 1, 1, CLK_SET_RATE_PARENT);
-> +static CLK_FIXED_FACTOR(pll_audio_8x_clk, "pll-audio-8x",
-> +			"pll-audio-base", 1, 2, CLK_SET_RATE_PARENT);
-> +static CLK_FIXED_FACTOR(pll_video0_2x_clk, "pll-video0-2x",
-> +			"pll-video0", 1, 2, CLK_SET_RATE_PARENT);
-> +static CLK_FIXED_FACTOR(pll_video1_2x_clk, "pll-video1-2x",
-> +			"pll-video1", 1, 2, CLK_SET_RATE_PARENT);
-
-It feels more natural to just have the clocks defined in the same
-order than their parents. So periph shouldn't be first
-
-> +static struct ccu_reset_map sun7i_a20_ccu_resets[] = {
-> +
-> +	[RST_USB_PHY0]		= { 0x0cc, BIT(0) },
-> +	[RST_USB_PHY1]		= { 0x0cc, BIT(1) },
-> +	[RST_USB_PHY2]		= { 0x0cc, BIT(2) },
-> +	[RST_DE_BE0]		= { 0x104, BIT(30) },
-> +	[RST_DE_BE1]		= { 0x108, BIT(30) },
-> +	[RST_DE_FE0]		= { 0x10c, BIT(30) },
-> +	[RST_DE_FE1]		= { 0x110, BIT(30) },
-> +	[RST_DE_MP]		= { 0x114, BIT(30) },
-> +	[RST_TCON0]		= { 0x118, BIT(30) },
-> +	[RST_TCON1]		= { 0x11c, BIT(30) },
-> +	[RST_CSI0]		= { 0x134, BIT(30) },
-> +	[RST_CSI1]		= { 0x138, BIT(30) },
-> +	[RST_VE]		= { 0x13c, BIT(0) },
-> +	[RST_ACE]		= { 0x148, BIT(16) },
-> +	[RST_LVDS]		= { 0x14c, BIT(0) },
-> +	[RST_GPU]		= { 0x154, BIT(30) },
-> +	[RST_HDMI_H]		= { 0x170, BIT(0) },
-> +	[RST_HDMI_SYS]		= { 0x170, BIT(1) },
-> +	[RST_HDMI_AUDIO_DMA]	= { 0x170, BIT(2) },
-> +};
-> +
-> +static const struct sunxi_ccu_desc sun7i_a20_ccu_desc = {
-> +	.ccu_clks	= sun7i_a20_ccu_clks,
-> +	.num_ccu_clks	= ARRAY_SIZE(sun7i_a20_ccu_clks),
-> +
-> +	.hw_clks	= &sun7i_a20_hw_clks,
-> +
-> +	.resets		= sun7i_a20_ccu_resets,
-> +	.num_resets	= ARRAY_SIZE(sun7i_a20_ccu_resets),
-> +};
-> +
-> +static void __init sun7i_a20_ccu_setup(struct device_node *node)
-> +{
-> +	void __iomem *reg;
-> +	u32 val;
-> +
-> +	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-> +	if (IS_ERR(reg)) {
-> +		pr_err("%s: Could not map the clock registers\n",
-> +		       of_node_full_name(node));
-> +		return;
-> +	}
-> +
-> +	#define SUN7I_PLL_AUDIO_REG	0x008
-
-This should be defined above
-
-> +
-> +	/* Force the PLL-Audio-1x divider to 4 */
-> +	val = readl(reg + SUN7I_PLL_AUDIO_REG);
-> +	val &= ~GENMASK(19, 16);
-> +	writel(val | (3 << 16), reg + SUN7I_PLL_AUDIO_REG);
-> +
-> +	/*
-> +	 * Use PLL6 as parent for AHB
-> +	 * CPU/AXI clock changes rate when cpufreq is enabled
-
-I'm not sure why that last sentence is needed too. A lot of clock
-listed there change rate when <some-feature> is enabled.
-
-> +/* Some AHB gates are exported */
-> +#define CLK_AHB_BIST		31
-> +#define CLK_AHB_MS		36
-> +#define CLK_AHB_SDRAM		38
-> +#define CLK_AHB_ACE		39
-> +#define CLK_AHB_TS		41
-> +#define CLK_AHB_VE		48
-> +#define CLK_AHB_TVD		49
-> +#define CLK_AHB_TVE1		51
-> +#define CLK_AHB_LCD1		53
-> +#define CLK_AHB_CSI0		54
-> +#define CLK_AHB_CSI1		55
-> +#define CLK_AHB_HDMI0		56
-> +#define CLK_AHB_DE_BE1		59
-> +#define CLK_AHB_DE_FE0		60
-> +#define CLK_AHB_DE_FE1		61
-> +#define CLK_AHB_MP		63
-> +#define CLK_AHB_GPU		64
-> +
-> +/* Some APB0 gates are exported */
-> +#define CLK_APB0_AC97		67
-> +#define CLK_APB0_KEYPAD		74
-> +
-> +/* Some APB1 gates are exported */
-> +#define CLK_APB1_CAN		79
-> +#define CLK_APB1_SCR		80
-> +
-> +/* Some IP module clocks are exported */
-> +#define CLK_MS			93
-> +#define CLK_TS			106
-> +#define CLK_PATA		111
-> +#define CLK_AC97		115
-> +#define CLK_KEYPAD		117
-> +#define CLK_SATA		118
-> +
-> +/* Some DRAM gates are exported */
-> +#define CLK_DRAM_VE		125
-> +#define CLK_DRAM_CSI0		126
-> +#define CLK_DRAM_CSI1		127
-> +#define CLK_DRAM_TS		128
-> +#define CLK_DRAM_TVD		129
-> +#define CLK_DRAM_TVE1		131
-> +#define CLK_DRAM_OUT		132
-> +#define CLK_DRAM_DE_FE1		133
-> +#define CLK_DRAM_DE_FE0		134
-> +#define CLK_DRAM_DE_BE1		136
-> +#define CLK_DRAM_MP		137
-> +#define CLK_DRAM_ACE		138
-> +
-> +#define CLK_DE_BE1		140
-> +#define CLK_DE_FE0		141
-> +#define CLK_DE_FE1		142
-> +#define CLK_DE_MP		143
-> +#define CLK_TCON1_CH0		145
-> +#define CLK_CSI_SPECIAL		146
-> +#define CLK_TVD			147
-> +#define CLK_TCON0_CH1_SCLK2	148
-> +#define CLK_TCON1_CH1_SCLK2	150
-> +#define CLK_TCON1_CH1		151
-> +#define CLK_CSI0		152
-> +#define CLK_CSI1		153
-> +#define CLK_VE			154
-> +#define CLK_AVS			156
-> +#define CLK_ACE			157
-> +#define CLK_HDMI		158
-> +#define CLK_GPU			159
-> +#define CLK_MBUS		160
-> +#define CLK_HDMI1_SLOW		161
-> +#define CLK_HDMI1_REPEAT	162
-> +#define CLK_OUT_A		163
-> +#define CLK_OUT_B		164
-
-Is there a reason not to expose these clocks?
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---fgcuu4d5fyo4hxrx--
+>>>
+>>> Give me a poke if we hear nothing from Rob or Mark for say another week.
+>>
+>> No news yet, but it can wait a little longer.
+> Rob / Mark, can you take a look at this if you have time?
+>
+> Thanks,
+>
+> Jonathan
+>>
+>> Please advise,
+>> Regards,
+>> Fabrice
+>>
+>>>
+>>> Thanks,
+>>>
+>>> Jonathan
+>>>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 4 ++++
+>>>>  1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>>> index 5dfc88e..45f7ff2 100644
+>>>> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>>>> @@ -57,6 +57,9 @@ Optional properties:
+>>>>  - dmas: Phandle to dma channel for this ADC instance.
+>>>>    See ../../dma/dma.txt for details.
+>>>>  - dma-names: Must be "rx" when dmas property is being used.
+>>>> +- st,adc-res: Resolution (bits) to use for conversions. Must match device
+>>>> +  available resolutions (e.g. can be 6, 8, 10 or 12 on stm32f4). Default
+>>>> +  is maximum resolution if unset.
+>>>>
+>>>>  Example:
+>>>>      adc: adc@40012000 {
+>>>> @@ -84,6 +87,7 @@ Example:
+>>>>              st,adc-channels = <8>;
+>>>>              dmas = <&dma2 0 0 0x400 0x0>;
+>>>>              dma-names = "rx";
+>>>> +            st,adc-res = <8>;
+>>>>          };
+>>>>          ...
+>>>>          other adc child nodes follow...
+>>>>
+>>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
