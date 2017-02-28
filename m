@@ -1,188 +1,282 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: add usb_otg and
- OHCI/EHCI for usbc0 on H3
-Date: Wed, 01 Mar 2017 00:23:03 +0800
-Message-ID: <12781488298983@web13o.yandex.ru>
-References: <20170228152702.42602-1-icenowy@aosc.xyz> <20170228152702.42602-2-icenowy@aosc.xyz>
-	 <CAGb2v67fsuhRnGp7X8PDkH_t_gb+gPb6VrY-pVu0B4HhD6d8qA@mail.gmail.com> <244591488297463@web16h.yandex.ru> <CAGb2v64cu8Jz6PZ7mZ7Atw9jS7xaaG+8MSv+NX_6nKNmyyXotQ@mail.gmail.com>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB2OH23CQKGQE6VNBKMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64cu8Jz6PZ7mZ7Atw9jS7xaaG+8MSv+NX_6nKNmyyXotQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH v4 2/2] fpga manager: Add Xilinx slave serial SPI driver
+Date: Tue, 28 Feb 2017 17:40:22 +0100
+Message-ID: <1488300022-30150-3-git-send-email-agust@denx.de>
+References: <1488300022-30150-1-git-send-email-agust@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1488300022-30150-1-git-send-email-agust@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+The driver loads FPGA firmware over SPI, using the "slave serial"
+configuration interface on Xilinx FPGAs.
 
+Signed-off-by: Anatolij Gustschin <agust@denx.de>
+---
+This patch requires patch https://lkml.org/lkml/2017/2/15/667
+for building
 
-01.03.2017, 00:10, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
-> On Tue, Feb 28, 2017 at 11:57 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
->> =C2=A028.02.2017, 23:46, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org>:
->>> =C2=A0On Tue, Feb 28, 2017 at 11:27 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org=
-> wrote:
->>>> =C2=A0=C2=A0Allwinner H3 have a dual-routed USB PHY0 -- routed to eith=
-er OHCI/EHCI
->>>> =C2=A0=C2=A0or MUSB controller.
->>>>
->>>> =C2=A0=C2=A0Add device nodes for these controllers.
->>>>
->>>> =C2=A0=C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>>> =C2=A0=C2=A0---
->>>> =C2=A0=C2=A0=C2=A0arch/arm/boot/dts/sun8i-h3.dtsi | 36 +++++++++++++++=
-+++++++++++++++++++++
->>>> =C2=A0=C2=A0=C2=A01 file changed, 36 insertions(+)
->>>>
->>>> =C2=A0=C2=A0diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/bo=
-ot/dts/sun8i-h3.dtsi
->>>> =C2=A0=C2=A0index 27780b97c863..bc9a53edf371 100644
->>>> =C2=A0=C2=A0--- a/arch/arm/boot/dts/sun8i-h3.dtsi
->>>> =C2=A0=C2=A0+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
->>>> =C2=A0=C2=A0@@ -206,6 +206,19 @@
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0#size-cells =3D <0>;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
->>>>
->>>> =C2=A0=C2=A0+ usb_otg: usb@01c19000 {
->>>> =C2=A0=C2=A0+ compatible =3D "allwinner,sun8i-h3-musb";
->>>> =C2=A0=C2=A0+ reg =3D <0x01c19000 0x0400>;
->>>> =C2=A0=C2=A0+ clocks =3D <&ccu CLK_BUS_OTG>;
->>>> =C2=A0=C2=A0+ resets =3D <&ccu RST_BUS_OTG>;
->>>> =C2=A0=C2=A0+ interrupts =3D <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
->>>> =C2=A0=C2=A0+ interrupt-names =3D "mc";
->>>> =C2=A0=C2=A0+ phys =3D <&usbphy 0>;
->>>> =C2=A0=C2=A0+ phy-names =3D "usb";
->>>> =C2=A0=C2=A0+ extcon =3D <&usbphy 0>;
->>>> =C2=A0=C2=A0+ status =3D "disabled";
->>>> =C2=A0=C2=A0+ };
->>>> =C2=A0=C2=A0+
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0usbphy: phy@01c19400 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0compatible =3D "allwinner,sun8i-h3-usb-phy";
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0reg =3D <0x01c19400 0x2c>,
->>>> =C2=A0=C2=A0@@ -238,6 +251,29 @@
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0#phy-cells =3D <1>;
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
->>>>
->>>> =C2=A0=C2=A0+ ehci0: usb@01c1a000 {
->>>> =C2=A0=C2=A0+ compatible =3D "allwinner,sun8i-h3-ehci", "generic-ehci"=
-;
->>>> =C2=A0=C2=A0+ reg =3D <0x01c1a000 0x100>;
->>>> =C2=A0=C2=A0+ interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
->>>> =C2=A0=C2=A0+ clocks =3D <&ccu CLK_BUS_EHCI0>, <&ccu CLK_BUS_OHCI0>;
->>>> =C2=A0=C2=A0+ resets =3D <&ccu RST_BUS_EHCI0>, <&ccu RST_BUS_OHCI0>;
->>>> =C2=A0=C2=A0+ phys =3D <&usbphy 0>;
->>>> =C2=A0=C2=A0+ phy-names =3D "usb";
->>>
->>> =C2=A0So this bit is slightly concerning. IIRC the xHCI drivers power o=
-n the phy when
->>> =C2=A0probed, which means VBUS is _always_ going to be powered on, even=
- when it's
->>> =C2=A0supposed to be in peripheral mode. You're probably going to need =
-to rework
->>> =C2=A0either the phy or the musb driver to cope with this.
->>>
->>> =C2=A0Or maybe just dropping the phy handle here and letting the musb d=
-river handle
->>> =C2=A0it would work, but that requires the musb driver be loaded.
->>
->> =C2=A0In fact the MUSB driver is always needed -- to set the dr_mode.
->
-> I guess it's the same with DWC2/3 that have host controller pairs.
->
->> =C2=A0And currently MUSB driver can take over the USB bus even if it's h=
-ost-only by forcing
->> =C2=A0its mode in sysfs.
->
-> IIUC that would also switch the phy muxing over to the HCI pairs.
+Changes in v4:
 
-The MUSB mode setting code in fact sets the mode of PHY.
+ - increase program latency up to 7.5ms for other Xilinx FPGAs
+ - continue to apply CCLK cycles until specified timeout elapses (to
+   cover more possible configuration DONE scenarios)
+ - apply 8 CCLK cycles afer DONE signal
+ - rebased to apply on top of Kconfig/Makefile changes by queued
+   fpga manager patches
 
-So then the PHY will return a id_det value based on its mode set
-(Always 0 for host, Always 1 for peripheral, real GPIO value for otg),
-then the id_det change code will be run and then re-route the PHY.
+Changes in v3:
 
->
-> ChenYu
->
->>> =C2=A0ChenYu
->>>
->>>> =C2=A0=C2=A0+ status =3D "disabled";
->>>> =C2=A0=C2=A0+ };
->>>> =C2=A0=C2=A0+
->>>> =C2=A0=C2=A0+ ohci0: usb@01c1a400 {
->>>> =C2=A0=C2=A0+ compatible =3D "allwinner,sun8i-h3-ohci", "generic-ohci"=
-;
->>>> =C2=A0=C2=A0+ reg =3D <0x01c1a400 0x100>;
->>>> =C2=A0=C2=A0+ interrupts =3D <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
->>>> =C2=A0=C2=A0+ clocks =3D <&ccu CLK_BUS_EHCI0>, <&ccu CLK_BUS_OHCI0>,
->>>> =C2=A0=C2=A0+ <&ccu CLK_USB_OHCI0>;
->>>> =C2=A0=C2=A0+ resets =3D <&ccu RST_BUS_EHCI0>, <&ccu RST_BUS_OHCI0>;
->>>> =C2=A0=C2=A0+ phys =3D <&usbphy 0>;
->>>> =C2=A0=C2=A0+ phy-names =3D "usb";
->>>> =C2=A0=C2=A0+ status =3D "disabled";
->>>> =C2=A0=C2=A0+ };
->>>> =C2=A0=C2=A0+
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ehci1: usb@01c1b000 {
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0compatible =3D "allwinner,sun8i-h3-ehci", "generic-ehci";
->>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0reg =3D <0x01c1b000 0x100>;
->>>> =C2=A0=C2=A0--
->>>> =C2=A0=C2=A02.11.1
->>>>
->>>> =C2=A0=C2=A0--
->>>> =C2=A0=C2=A0You received this message because you are subscribed to th=
-e Google Groups "linux-sunxi" group.
->>>> =C2=A0=C2=A0To unsubscribe from this group and stop receiving emails f=
-rom it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->>>> =C2=A0=C2=A0For more options, visit https://groups.google.com/d/optout=
-.
->>>
->>> =C2=A0--
->>> =C2=A0You received this message because you are subscribed to the Googl=
-e Groups "linux-sunxi" group.
->>> =C2=A0To unsubscribe from this group and stop receiving emails from it,=
- send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->>> =C2=A0For more options, visit https://groups.google.com/d/optout.
->>
->> =C2=A0--
->> =C2=A0You received this message because you are subscribed to the Google=
- Groups "linux-sunxi" group.
->> =C2=A0To unsubscribe from this group and stop receiving emails from it, =
-send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->> =C2=A0For more options, visit https://groups.google.com/d/optout.
->
-> --
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+ - use named constant for udelay()/usleep_range() arguments
+ - drop not needed .owner init
+ - correct module licence (GPL v2)
+ - fix build warning with newer gcc (in min() macro)
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Changes in v2:
+
+ - rebased on v4.10
+
+ drivers/fpga/Kconfig      |   7 ++
+ drivers/fpga/Makefile     |   1 +
+ drivers/fpga/xilinx-spi.c | 198 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 206 insertions(+)
+ create mode 100644 drivers/fpga/xilinx-spi.c
+
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index dee470f..c81cb7d 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -46,6 +46,13 @@ config FPGA_MGR_TS73XX
+ 	  FPGA manager driver support for the Altera Cyclone II FPGA
+ 	  present on the TS-73xx SBC boards.
+ 
++config FPGA_MGR_XILINX_SPI
++	tristate "Xilinx Configuration over Slave Serial (SPI)"
++	depends on SPI
++	help
++	  FPGA manager driver support for Xilinx FPGA configuration
++	  over slave serial interface.
++
+ config FPGA_MGR_ZYNQ_FPGA
+ 	tristate "Xilinx Zynq FPGA"
+ 	depends on ARCH_ZYNQ || COMPILE_TEST
+diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+index a5ee3ff..c6f5d74 100644
+--- a/drivers/fpga/Makefile
++++ b/drivers/fpga/Makefile
+@@ -10,6 +10,7 @@ obj-$(CONFIG_FPGA_MGR_ICE40_SPI)	+= ice40-spi.o
+ obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
+ obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
+ obj-$(CONFIG_FPGA_MGR_TS73XX)		+= ts73xx-fpga.o
++obj-$(CONFIG_FPGA_MGR_XILINX_SPI)	+= xilinx-spi.o
+ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
+ 
+ # FPGA Bridge Drivers
+diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
+new file mode 100644
+index 0000000..9b62a4c
+--- /dev/null
++++ b/drivers/fpga/xilinx-spi.c
+@@ -0,0 +1,198 @@
++/*
++ * Xilinx Spartan6 Slave Serial SPI Driver
++ *
++ * Copyright (C) 2017 DENX Software Engineering
++ *
++ * Anatolij Gustschin <agust@denx.de>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * Manage Xilinx FPGA firmware that is loaded over SPI using
++ * the slave serial configuration interface.
++ */
++
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/fpga/fpga-mgr.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
++#include <linux/of.h>
++#include <linux/spi/spi.h>
++#include <linux/sizes.h>
++
++struct xilinx_spi_conf {
++	struct spi_device *spi;
++	struct gpio_desc *prog_b;
++	struct gpio_desc *done;
++};
++
++static enum fpga_mgr_states xilinx_spi_state(struct fpga_manager *mgr)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++
++	if (!gpiod_get_value(conf->done))
++		return FPGA_MGR_STATE_RESET;
++
++	return FPGA_MGR_STATE_UNKNOWN;
++}
++
++static int xilinx_spi_write_init(struct fpga_manager *mgr,
++				 struct fpga_image_info *info,
++				 const char *buf, size_t count)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++	const size_t prog_latency_7500us = 7500;
++	const size_t prog_pulse_1us = 1;
++
++	if (info->flags & FPGA_MGR_PARTIAL_RECONFIG) {
++		dev_err(&mgr->dev, "Partial reconfiguration not supported.\n");
++		return -EINVAL;
++	}
++
++	gpiod_set_value(conf->prog_b, 1);
++
++	udelay(prog_pulse_1us); /* min is 500 ns */
++
++	gpiod_set_value(conf->prog_b, 0);
++
++	if (gpiod_get_value(conf->done)) {
++		dev_err(&mgr->dev, "Unexpected DONE pin state...\n");
++		return -EIO;
++	}
++
++	/* program latency */
++	usleep_range(prog_latency_7500us, prog_latency_7500us + 100);
++	return 0;
++}
++
++static int xilinx_spi_write(struct fpga_manager *mgr, const char *buf,
++			    size_t count)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++	const char *fw_data = buf;
++	const char *fw_data_end = fw_data + count;
++
++	while (fw_data < fw_data_end) {
++		size_t remaining, stride;
++		int ret;
++
++		remaining = fw_data_end - fw_data;
++		stride = min_t(size_t, remaining, SZ_4K);
++
++		ret = spi_write(conf->spi, fw_data, stride);
++		if (ret) {
++			dev_err(&mgr->dev, "SPI error in firmware write: %d\n",
++				ret);
++			return ret;
++		}
++		fw_data += stride;
++	}
++
++	return 0;
++}
++
++static int xilinx_spi_apply_cclk_cycles(struct xilinx_spi_conf *conf)
++{
++	struct spi_device *spi = conf->spi;
++	const u8 din_data[1] = { 0xff };
++	int ret;
++
++	ret = spi_write(conf->spi, din_data, sizeof(din_data));
++	if (ret)
++		dev_err(&spi->dev, "applying CCLK cycles failed: %d\n", ret);
++
++	return ret;
++}
++
++static int xilinx_spi_write_complete(struct fpga_manager *mgr,
++				     struct fpga_image_info *info)
++{
++	struct xilinx_spi_conf *conf = mgr->priv;
++	unsigned long timeout;
++	int ret;
++
++	if (gpiod_get_value(conf->done))
++		return xilinx_spi_apply_cclk_cycles(conf);
++
++	timeout = jiffies + usecs_to_jiffies(info->config_complete_timeout_us);
++
++	while (time_before(jiffies, timeout)) {
++
++		ret = xilinx_spi_apply_cclk_cycles(conf);
++		if (ret)
++			return ret;
++
++		if (gpiod_get_value(conf->done))
++			return xilinx_spi_apply_cclk_cycles(conf);
++	}
++
++	dev_err(&mgr->dev, "Timeout after config data transfer.\n");
++	return -ETIMEDOUT;
++}
++
++static const struct fpga_manager_ops xilinx_spi_ops = {
++	.state = xilinx_spi_state,
++	.write_init = xilinx_spi_write_init,
++	.write = xilinx_spi_write,
++	.write_complete = xilinx_spi_write_complete,
++};
++
++static int xilinx_spi_probe(struct spi_device *spi)
++{
++	struct xilinx_spi_conf *conf;
++
++	conf = devm_kzalloc(&spi->dev, sizeof(*conf), GFP_KERNEL);
++	if (!conf)
++		return -ENOMEM;
++
++	conf->spi = spi;
++
++	/* PROGRAM_B is active low */
++	conf->prog_b = devm_gpiod_get(&spi->dev, "prog_b", GPIOD_OUT_LOW);
++	if (IS_ERR(conf->prog_b)) {
++		dev_err(&spi->dev, "Failed to get PROGRAM_B gpio: %ld\n",
++			PTR_ERR(conf->prog_b));
++		return PTR_ERR(conf->prog_b);
++	}
++
++	conf->done = devm_gpiod_get(&spi->dev, "done", GPIOD_IN);
++	if (IS_ERR(conf->done)) {
++		dev_err(&spi->dev, "Failed to get DONE gpio: %ld\n",
++			PTR_ERR(conf->done));
++		return PTR_ERR(conf->done);
++	}
++
++	return fpga_mgr_register(&spi->dev, "Xilinx Slave Serial FPGA Manager",
++				 &xilinx_spi_ops, conf);
++}
++
++static int xilinx_spi_remove(struct spi_device *spi)
++{
++	fpga_mgr_unregister(&spi->dev);
++
++	return 0;
++}
++
++static const struct of_device_id xlnx_spi_of_match[] = {
++	{ .compatible = "xlnx,fpga-slave-serial", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, xlnx_spi_of_match);
++
++static struct spi_driver xilinx_slave_spi_driver = {
++	.driver = {
++		.name = "xlnx-slave-spi",
++		.of_match_table = of_match_ptr(xlnx_spi_of_match),
++	},
++	.probe = xilinx_spi_probe,
++	.remove = xilinx_spi_remove,
++};
++
++module_spi_driver(xilinx_slave_spi_driver)
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Anatolij Gustschin <agust@denx.de>");
++MODULE_DESCRIPTION("Load Xilinx FPGA firmware over SPI");
+-- 
+2.7.4
