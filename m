@@ -1,56 +1,46 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v1] regulator: Add driver for voltage controlled
- regulators
-Date: Mon, 27 Feb 2017 10:53:10 -0800
-Message-ID: <20170227185310.GA153648@google.com>
-References: <20170210204348.107871-1-mka@chromium.org>
- <20170222002214.sejshtotyiobn6n2@rob-hp-laptop>
- <20170225031919.GB56005@google.com>
+From: Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: 289b7bfd48 BUG: KASAN: slab-out-of-bounds in of_device_uevent at
+ addr ffff880012049289
+Date: Tue, 28 Feb 2017 12:29:43 +0800
+Message-ID: <20170228042943.zyt2oqqtwuheki5d@wfg-t540p.sh.intel.com>
+References: <20170228042403.tl3d7v7iedqxoe4n@wfg-t540p.sh.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170225031919.GB56005-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20170228042403.tl3d7v7iedqxoe4n@wfg-t540p.sh.intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, LKP <lkp@01.org>
 List-Id: devicetree@vger.kernel.org
 
-El Fri, Feb 24, 2017 at 07:19:19PM -0800 Matthias Kaehlcke ha dit:
+On Tue, Feb 28, 2017 at 12:24:03PM +0800, Fengguang Wu wrote:
+>Hi Linus Walleij,
+>
+>I'm not sure if this is a good bisect since the merged gpio branch
+>suffers from another early hang problem which could hide the KASAN
+>BUG. So also OF people are also included in the loop.
+>
+>The attached reproduce-* script may easily reproduce the bug.
+>
+>https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>
+>commit 289b7bfd483c8ca3dfde92d7e19a8b70e0b81248
+>Merge: 183c948 9b8e3ec
+>Author:     Linus Torvalds <torvalds@linux-foundation.org>
+>AuthorDate: Sat Apr 9 13:28:50 2016 -0700
+>Commit:     Linus Torvalds <torvalds@linux-foundation.org>
+>CommitDate: Sat Apr 9 13:28:50 2016 -0700
+>
+>     Merge tag 'gpio-v4.6-3' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
 
-> El Tue, Feb 21, 2017 at 06:22:14PM -0600 Rob Herring ha dit:
-> >
-> > > +Optional properties:
-> > > +--------------------
-> > > ...
-> > > +- min-slew-down-rate	: Describes how slowly the regulator voltage will decay
-> > > +			  down in the worst case (lightest expected load).
-> > > +			  Specified in uV / us (like main regulator ramp rate).
-> > > +			  This value is required when ovp-threshold-percent is
-> > > +			  specified.
-> > 
-> > Don't we have a standard prop for this or that's just for ramp?
-> 
-> regulator-ramp-delay is related, but not exactly the same. The
-> ramp-delay is applied at the end of an up- or downward transition,
-> while this prop only specifies the downward rate and is applied in
-> between partial transitions towards the final voltage.
-> 
-> We possibly could use ramp-delay and add a set_voltage_time() op to
-> vctrl to prevent the core code from adding the "normal" ramp-delay at
-> the end of the transition. However it could be confusing that vctrl
-> handles the ramp-delay differently than other drivers, especially we
-> don't want a delay in the upward transition for vctrl. But maybe
-> nobody would care about the different behavior, as long as the
-> regulator does its job ...
+The below bisect log shows this old bug is still alive in mainline.
+Not sure for linux-next because it now suffers from an early boot hang bug.
 
-Actually the behavior of a delay on the downward transition and no
-delay on the upward transition is hardware specific. Other users of
-this driver might need a standard ramp delay, therefore I think it's
-not a good idea to (re-)use this property in vctrl.
+># extra tests on tree/branch linus/master
+>git bisect  bad e5d56efc97f8240d0b5d66c03949382b6d7e5570  # 10:50      0-      3  Merge tag 'watchdog-for-linus-v4.11' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging
+># extra tests on tree/branch linux-next/master
+>git bisect good 3e7350242c6f3d41d28e03418bd781cc1b7bad5f  # 01:04     60+     72  Add linux-next specific files for 20170224
 
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Fengguang
