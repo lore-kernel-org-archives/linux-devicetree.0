@@ -1,53 +1,38 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v3 03/25] dt-bindings: timer: Document Owl timer
-Date: Tue, 28 Feb 2017 07:35:13 +0100
-Message-ID: <20170228063535.32069-4-afaerber@suse.de>
+Subject: [PATCH v3 19/25] dt-bindings: arm: cpus: Add S500 enable-method
+Date: Tue, 28 Feb 2017 07:35:29 +0100
+Message-ID: <20170228063535.32069-20-afaerber@suse.de>
 References: <20170228063535.32069-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170228063535.32069-1-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, support@lemaker.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFjdGlvbnMgU2VtaSBTNTAwIFNvQyBjb250YWlucyBhIHRpbWVyIGJsb2NrIHdpdGggdHdv
-IDIgSHogYW5kIHR3bwozMi1iaXQgdGltZXJzLiBUaGUgUzkwMCBTb0MgdGltZXIgYmxvY2sgaGFz
-IGZvdXIgMzItYml0IHRpbWVycy4KClNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZh
-ZXJiZXJAc3VzZS5kZT4KLS0tCiB2MiAtPiB2MzoKICogQWRvcHRlZCBpbnRlcnJ1cHQtbmFtZXMK
-ICogQ2hhbmdlZCBjb21wYXRpYmxlIGZvciBTNTAwCiAqIEFkZGVkIFM5MDAgY29tcGF0aWJsZSBh
-bmQgaW50ZXJydXB0IG5hbWVzCiAKIHYyOiBuZXcKIAogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
-dGltZXIvYWN0aW9ucyxvd2wtdGltZXIudHh0ICB8IDIwICsrKysrKysrKysrKysrKysrKysrCiAx
-IGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9hY3Rpb25zLG93bC10aW1lci50eHQK
-CmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvYWN0
-aW9ucyxvd2wtdGltZXIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Rp
-bWVyL2FjdGlvbnMsb3dsLXRpbWVyLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAw
-MDAwLi41YjQ4MzRkCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3RpbWVyL2FjdGlvbnMsb3dsLXRpbWVyLnR4dApAQCAtMCwwICsxLDIwIEBACitB
-Y3Rpb25zIFNlbWkgT3dsIFRpbWVyCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGli
-bGUgICAgICA6ICAiYWN0aW9ucyxzNTAwLXRpbWVyIiBmb3IgUzUwMAorICAgICAgICAgICAgICAg
-ICAgICAgImFjdGlvbnMsczkwMC10aW1lciIgZm9yIFM5MDAKKy0gcmVnICAgICAgICAgICAgIDog
-IE9mZnNldCBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBkZXZpY2UuCist
-IGludGVycnVwdHMgICAgICA6ICBTaG91bGQgY29udGFpbiB0aGUgaW50ZXJydXB0cy4KKy0gaW50
-ZXJydXB0LW5hbWVzIDogIFZhbGlkIG5hbWVzIGFyZTogIjJIejAiLCAiMkh6MSIsCisgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJUaW1lcjAiLCAiVGltZXIxIiwgIlRpbWVy
-MiIsICJUaW1lcjMiCisgICAgICAgICAgICAgICAgICAgICBTZWUgLi4vcmVzb3VyY2UtbmFtZXMu
-dHh0CisKK0V4YW1wbGU6CisKKwkJdGltZXJAYjAxNjgwMDAgeworCQkJY29tcGF0aWJsZSA9ICJh
-Y3Rpb25zLHM1MDAtdGltZXIiOworCQkJcmVnID0gPDB4YjAxNjgwMDAgMHgxMDA+OworCQkJaW50
-ZXJydXB0cyA9IDxHSUNfU1BJIDEwIElSUV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJICAgICAgICAg
-ICAgIDxHSUNfU1BJIDExIElSUV9UWVBFX0xFVkVMX0hJR0g+OworCQkJaW50ZXJydXB0LW5hbWVz
-ID0gIlRpbWVyMCIsICJUaW1lcjEiOworCQl9OwotLSAKMi4xMC4yCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
-IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+The Actions Semi S500 SoC requires a special secondary CPU boot procedure.
+
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ v3: new
+ 
+ Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 698ad1f0..e3e1e2f 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -192,6 +192,7 @@ nodes to be present and contain the properties described below.
+ 			     "spin-table"
+ 			# On ARM 32-bit systems this property is optional and
+ 			  can be one of:
++			    "actions,s500-smp"
+ 			    "allwinner,sun6i-a31"
+ 			    "allwinner,sun8i-a23"
+ 			    "arm,realview-smp"
+-- 
+2.10.2
