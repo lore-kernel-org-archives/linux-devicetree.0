@@ -1,60 +1,84 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] nvmem: sunxi-sid: add support for
- H3's SID controller
-Date: Tue, 28 Feb 2017 16:35:31 +0800
-Message-ID: <630891488270931@web10m.yandex.ru>
-References: <20170227192715.50198-1-icenowy@aosc.xyz>
-	 <20170227192715.50198-2-icenowy@aosc.xyz> <20170228064258.mqpu33udgokxazkz@lukather>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
+ resolution
+Date: Tue, 28 Feb 2017 09:34:41 +0100
+Message-ID: <f486bd08-b562-5101-01ba-c8e36ac0d83b@metafoo.de>
+References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
+ <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
+ <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
+ <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
+ <d64bd76d-a2c6-6148-c126-fa73e96019a1@kernel.org>
+ <79e01c5c-d27c-89ea-4d8f-9e66a6c091e6@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBVXM2TCQKGQEEXCCTYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170228064258.mqpu33udgokxazkz@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <79e01c5c-d27c-89ea-4d8f-9e66a6c091e6@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
+On 02/28/2017 09:21 AM, Fabrice Gasnier wrote:
+> On 02/25/2017 04:11 PM, Jonathan Cameron wrote:
+>> On 24/02/17 16:04, Fabrice Gasnier wrote:
+>>> On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
+>>>> On 15/02/17 16:55, Fabrice Gasnier wrote:
+>>>>> Add documentation for 'st,adc-res' dt optional property.
+>>>>>
+>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>> I'm happy with this, but would like to leave time for a device tree review.
+>>>>
+>>>> Ultimately we may well want to make this a generic property and call it
+>>>> something
+>>>> like adc-resolution but perhaps we need to wait until we have a few more
+>>>> devices
+>>>> supporting setting it via device tree to figure out what the best
+>>>> interface is.
+>>>> It would exactly be a problem to support this as a deprecated binding at
+>>>> that
+>>>> point.
+>>>
+>>> Hi Jonathan,
+>>>
+>>> I agree with you on this... It may be better to have generic property
+>>> for this, especially if you see that it will come in the near future.
+>>> May I suggest this prop to be less restrictive, e.g. like
+>>> resolution-bits as is may also be worth for other device types, e.g.
+>>> DAC as an example ?>
+>> Sure, why not - no loss of meaning here.  We may never use it for anything
+>> else but that doesn't matter.
+> 
+> Hi Jonathan,
+> 
+> Following Rob's comment, how you see such a common property can be
+> integrated. Currently I don't see much devices are doing this.
+> Do you have ideas or preferences on this ?
+> 
+> - Do you think replacing 'st,adc-res' by 'resolution-bits' in current
+> patchset is enough for now ?
 
+That name would be a bit confusing. Considering that the devicetree
+describes th capabilities of the hardware this name would suggest that this
+is the resolution supported by the device.
 
-28.02.2017, 14:43, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Tue, Feb 28, 2017 at 03:27:14AM +0800, Icenowy Zheng wrote:
->> =C2=A0The H3 SoC have a bigger SID controller, which has its direct read
->> =C2=A0address at 0x200 position in the SID block, not 0x0.
->>
->> =C2=A0Also, H3 SID controller has some silicon bug that makes the direct=
- read
->> =C2=A0value wrong at cold boot, add code to workaround the bug. (This bu=
-g has
->> =C2=A0already been fixed on A64 and later SoCs)
->>
->> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+If we want to allow selecting runtime configuration parameters for IIO
+devices from the devicetree we should probably follow the precedence set by
+the clock framework and use properties with the 'assigned-' prefix.
 
-Who will finally apply these patches?
+But to be honest I'm not convinced yet that the whole approach of allowing
+runtime configuration parameters to be configured via the devicetree is the
+right approach. Converters and sensors often have a lot of runtime
+configurable parameters, typically we expose them to the application layer
+to allow maximum flexibility. Why is the resolution special in this case and
+should be pre-configured via the devicetree instead?
 
-I have seen that you are one of the maintainers of NVMEM subsystem.
-
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+- Lars
