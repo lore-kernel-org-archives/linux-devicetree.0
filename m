@@ -1,97 +1,56 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] spi/bcm63xx-hsspi: allow for probing through devicetree
-Date: Tue, 28 Feb 2017 14:17:46 +0100
-Message-ID: <CAOiHx==d3Jhnpa0ppjPHcUHpqg6EnADNgWg4o_ShdnU8z_VG6w@mail.gmail.com>
-References: <20170222131940.31085-1-jonas.gorski@gmail.com>
- <20170222131940.31085-3-jonas.gorski@gmail.com> <75499273-96ba-0270-9b06-5b1def1452ca@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <75499273-96ba-0270-9b06-5b1def1452ca-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/7] clk: meson: update clock controller for audio support
+Date: Tue, 28 Feb 2017 14:29:55 +0100
+Message-ID: <20170228133002.17894-1-jbrunet@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 February 2017 at 23:54, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 02/22/2017 05:19 AM, Jonas Gorski wrote:
->> Add required binding support to probe through device tree.
->>
->> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/spi/spi-bcm63xx-hsspi.c | 26 +++++++++++++++++++++++---
->>  1 file changed, 23 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
->> index 79096d17ebde..77c249a22c9b 100644
->> --- a/drivers/spi/spi-bcm63xx-hsspi.c
->> +++ b/drivers/spi/spi-bcm63xx-hsspi.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/interrupt.h>
->>  #include <linux/spi/spi.h>
->>  #include <linux/mutex.h>
->> +#include <linux/of.h>
->>
->>  #define HSSPI_GLOBAL_CTRL_REG                        0x0
->>  #define GLOBAL_CTRL_CS_POLARITY_SHIFT                0
->> @@ -91,6 +92,7 @@
->>
->>  #define HSSPI_MAX_SYNC_CLOCK                 30000000
->>
->> +#define HSSPI_SPI_MAX_CS                     8
->>  #define HSSPI_BUS_NUM                                1 /* 0 is legacy SPI */
->>
->>  struct bcm63xx_hsspi {
->> @@ -332,7 +334,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
->>       struct device *dev = &pdev->dev;
->>       struct clk *clk;
->>       int irq, ret;
->> -     u32 reg, rate;
->> +     u32 reg, rate, num_cs = HSSPI_SPI_MAX_CS;
->>
->>       irq = platform_get_irq(pdev, 0);
->>       if (irq < 0) {
->> @@ -382,8 +384,20 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
->>       mutex_init(&bs->bus_mutex);
->>       init_completion(&bs->done);
->>
->> -     master->bus_num = HSSPI_BUS_NUM;
->> -     master->num_chipselect = 8;
->> +     if (dev->of_node) {
->> +             master->dev.of_node = dev->of_node;
->
-> You could move this out of the if () statement here.
+This patchset is a first round of update to the meson clock controllers
+to bring audio support. The patchset is based on clk-next with two
+additional patches from arm-soc next (to avoid conflict later on).
+commit d356a86b1b30 ("clk: meson-gxbb: Export HDMI clocks")
+commit 7d753a742127 ("clk: gxbb: add the SAR ADC clocks and expose them")
 
-Indeed, of_property_read_u32 is safe to call with a NULL np, so I
-don't need to guard it extra.
+The 2 first patches of the series put the generic muxes and divisors
+declaration in tables so the register address fixup works in the same way
+as the clock gates. We are going to add more of these clock types for
+audio or gpu support, so we can't continue to fix addresses individually
+like it is currently done.
 
->> +
->> +             of_property_read_u32(dev->of_node, "num-cs", &num_cs);
->> +             if (num_cs > 8) {
->> +                     dev_warn(dev, "unsupported number of cs (%i), reducing to 8\n",
->> +                              num_cs);
->> +                     num_cs = HSSPI_SPI_MAX_CS;
->> +             }
->> +     } else {
->> +             master->bus_num = HSSPI_BUS_NUM;
->
-> And this one too, since the core will take care of assigning it based on
-> aliases and such when master->dev.of_node is correctly set.
+Patches 3 to 6 improve the support of the mpll clocks, now allowing the
+rate to be set. Among other things, the mplls are the parent clocks of the
+i2s and spdif clocks.
 
-It will only do if bus_num is < 0, so I will still need to guard it
-for !of_node, else the alias-based assignent won't work.
+Patch 7 expose the clock gates required to power on the i2s output.
 
+These patches have been tested on the meson gxbb p200 board, as part of the
+ongoing work to bring audio support for meson SoC family.
 
->
-> With that changed:
->
-> Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Jerome Brunet (7):
+  clk: meson8b: put dividers and muxes in tables
+  clk: gxbb: put dividers and muxes in tables
+  clk: meson: mpll: add rw operation
+  clk: meson: gxbb: mpll: use rw operation
+  clk: meson8b: add the mplls clocks 0, 1 and 2
+  clk: meson: mpll: correct N2 maximum value
+  dt-bindings: clk: gxbb: expose i2s output clock gates
 
-Thanks for the review!
+ drivers/clk/meson/clk-mpll.c          | 152 ++++++++++++++++++++++++++++++++--
+ drivers/clk/meson/clkc.h              |   4 +-
+ drivers/clk/meson/gxbb.c              |  64 +++++++++++---
+ drivers/clk/meson/gxbb.h              |  10 +--
+ drivers/clk/meson/meson8b.c           | 126 +++++++++++++++++++++++++++-
+ drivers/clk/meson/meson8b.h           |  20 ++++-
+ include/dt-bindings/clock/gxbb-clkc.h |   5 ++
+ 7 files changed, 354 insertions(+), 27 deletions(-)
 
+-- 
+2.9.3
 
-Jonas
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
