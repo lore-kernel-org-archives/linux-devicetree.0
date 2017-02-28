@@ -1,107 +1,84 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 4/6] clk: tegra: define Tegra210 DMIC clocks
-Date: Tue, 28 Feb 2017 16:37:20 +0200
-Message-ID: <1488292648-16876-5-git-send-email-pdeschrijver@nvidia.com>
-References: <1488292648-16876-1-git-send-email-pdeschrijver@nvidia.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 0/3] coresight: enable debug module
+Date: Tue, 28 Feb 2017 23:06:57 +0800
+Message-ID: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488292648-16876-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Tegra210 has 3 inputs for Digital Microphones (DMICs). Provide the required
-clocks for them.
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
 
-Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/clk/tegra/clk-id.h           |  5 ++++-
- drivers/clk/tegra/clk-tegra-periph.c | 21 +++++++++++++++++++++
- drivers/clk/tegra/clk-tegra210.c     |  3 +++
- 3 files changed, 28 insertions(+), 1 deletion(-)
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
 
-diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
-index b40293c..d3a79a8 100644
---- a/drivers/clk/tegra/clk-id.h
-+++ b/drivers/clk/tegra/clk-id.h
-@@ -307,8 +307,11 @@ enum clk_id {
- 	tegra_clk_xusb_ssp_src,
- 	tegra_clk_sclk_mux,
- 	tegra_clk_sor_safe,
--	tegra_clk_ispa,
- 	tegra_clk_cec,
-+	tegra_clk_ispa,
-+	tegra_clk_dmic1,
-+	tegra_clk_dmic2,
-+	tegra_clk_dmic3,
- 	tegra_clk_dmic1_sync_clk,
- 	tegra_clk_dmic2_sync_clk,
- 	tegra_clk_dmic3_sync_clk,
-diff --git a/drivers/clk/tegra/clk-tegra-periph.c b/drivers/clk/tegra/clk-tegra-periph.c
-index a2aed27..9e6ac11 100644
---- a/drivers/clk/tegra/clk-tegra-periph.c
-+++ b/drivers/clk/tegra/clk-tegra-periph.c
-@@ -138,6 +138,9 @@
- #define CLK_SOURCE_TSECB 0x6d8
- #define CLK_SOURCE_MAUD 0x6d4
- #define CLK_SOURCE_USB2_HSIC_TRK 0x6cc
-+#define CLK_SOURCE_DMIC1 0x64c
-+#define CLK_SOURCE_DMIC2 0x650
-+#define CLK_SOURCE_DMIC3 0x6bc
- 
- #define MASK(x) (BIT(x) - 1)
- 
-@@ -625,6 +628,21 @@
- };
- #define mux_clkm_plldp_sor0lvds_idx NULL
- 
-+static const char * const mux_dmic1[] = {
-+	"pll_a_out0", "dmic1_sync_clk", "pll_p", "clk_m"
-+};
-+#define mux_dmic1_idx NULL
-+
-+static const char * const mux_dmic2[] = {
-+	"pll_a_out0", "dmic2_sync_clk", "pll_p", "clk_m"
-+};
-+#define mux_dmic2_idx NULL
-+
-+static const char * const mux_dmic3[] = {
-+	"pll_a_out0", "dmic3_sync_clk", "pll_p", "clk_m"
-+};
-+#define mux_dmic3_idx NULL
-+
- static struct tegra_periph_init_data periph_clks[] = {
- 	AUDIO("d_audio", CLK_SOURCE_D_AUDIO, 106, TEGRA_PERIPH_ON_APB, tegra_clk_d_audio),
- 	AUDIO("dam0", CLK_SOURCE_DAM0, 108, TEGRA_PERIPH_ON_APB, tegra_clk_dam0),
-@@ -794,6 +812,9 @@
- 	MUX("uartape", mux_pllp_pllc_clkm, CLK_SOURCE_UARTAPE, 212, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_uartape),
- 	MUX8("tsecb", mux_pllp_pllc2_c_c3_clkm, CLK_SOURCE_TSECB, 206, 0, tegra_clk_tsecb),
- 	MUX8("maud", mux_pllp_pllp_out3_clkm_clk32k_plla, CLK_SOURCE_MAUD, 202, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_maud),
-+	MUX8("dmic1", mux_dmic1, CLK_SOURCE_DMIC1, 161, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_dmic1),
-+	MUX8("dmic2", mux_dmic2, CLK_SOURCE_DMIC2, 162, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_dmic2),
-+	MUX8("dmic3", mux_dmic3, CLK_SOURCE_DMIC3, 197, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_dmic3),
- };
- 
- static struct tegra_periph_init_data gate_clks[] = {
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-index ca63901..cfe7078 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -2223,6 +2223,9 @@ static u32 pll_expo_p_to_pdiv(u32 p, u32 *pdiv)
- 	[tegra_clk_pll_a1] = { .dt_id = TEGRA210_CLK_PLL_A1, .present = true },
- 	[tegra_clk_ispa] = { .dt_id = TEGRA210_CLK_ISPA, .present = true },
- 	[tegra_clk_cec] = { .dt_id = TEGRA210_CLK_CEC, .present = true },
-+	[tegra_clk_dmic1] = { .dt_id = TEGRA210_CLK_DMIC1, .present = true },
-+	[tegra_clk_dmic2] = { .dt_id = TEGRA210_CLK_DMIC2, .present = true },
-+	[tegra_clk_dmic3] = { .dt_id = TEGRA210_CLK_DMIC3, .present = true },
- 	[tegra_clk_dmic1_sync_clk] = { .dt_id = TEGRA210_CLK_DMIC1_SYNC_CLK, .present = true },
- 	[tegra_clk_dmic2_sync_clk] = { .dt_id = TEGRA210_CLK_DMIC2_SYNC_CLK, .present = true },
- 	[tegra_clk_dmic3_sync_clk] = { .dt_id = TEGRA210_CLK_DMIC3_SYNC_CLK, .present = true },
+ARM external debug module:
+CPU[0]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+CPU[1]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+
+[...]
+
+This patch series has been verified on 96boards Hikey.
+
+Changes from v1:
+* According to Mike Leach suggestion, remove the binding for debug
+  module clocks which have been directly provided by CPU clocks.
+* According to Mathieu Poirier suggestion, add function
+  of_coresight_get_cpu() and some minor refactors for debug module
+  driver.
+
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers;
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding;
+* According to Mark and Mathieu suggestion, refined debug driver;
+
+
+Leo Yan (3):
+  coresight: bindings for debug module
+  coresight: refactor with function of_coresight_get_cpu
+  coresight: add support for debug module
+
+ .../devicetree/bindings/arm/coresight-debug.txt    |  40 +++
+ drivers/hwtracing/coresight/Kconfig                |  10 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-debug.c      | 378 +++++++++++++++++++++
+ drivers/hwtracing/coresight/of_coresight.c         |  35 +-
+ include/linux/coresight.h                          |   2 +
+ 6 files changed, 454 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
