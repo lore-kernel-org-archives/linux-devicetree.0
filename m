@@ -1,131 +1,63 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 1/7] PM / Domains: Introduce "performance-states"
- binding
-Date: Tue, 28 Feb 2017 11:06:23 +0530
-Message-ID: <20170228053623.GC19417@vireshk-i7>
-References: <cover.1487926924.git.viresh.kumar@linaro.org>
- <132e9200102bf2f1175567f0862596d098363d9e.1487926924.git.viresh.kumar@linaro.org>
- <20170228003108.2jcclpkawi3o74c2@rob-hp-laptop>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] media: dt-bindings: vpif: new optional property
+Date: Tue, 28 Feb 2017 11:06:38 +0530
+Message-ID: <6b392a4a-2de8-9981-ad40-ca7201bf813d@ti.com>
+References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
+ <1487771027-7763-4-git-send-email-bgolaszewski@baylibre.com>
+ <20170227225209.26oieqwbafqjga2a@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170228003108.2jcclpkawi3o74c2@rob-hp-laptop>
+In-Reply-To: <20170227225209.26oieqwbafqjga2a@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27-02-17, 18:31, Rob Herring wrote:
-> On Fri, Feb 24, 2017 at 02:36:33PM +0530, Viresh Kumar wrote:
-> > Some platforms have the capability to configure the performance state of
-> > their power domains. The process of configuring the performance state is
-> > pretty much platform dependent and we may need to work with a wide range
-> > of configurables. For some platforms, like Qcom, it can be a positive
-> > integer value alone, while in other cases it can be voltage levels, etc.
-> > 
-> > The power-domain framework until now was only designed for the idle
-> > state management of the device and this needs to change in order to
-> > reuse the power-domain framework for active state management of the
-> > devices.
-> > 
-> > This patch adds DT bindings to describe the performance states of a
-> > power domain. The power domain node needs to contain a
-> > "performance-states" node, which itself is an array of per-state nodes.
-> > Each per-state node represents individual performance state of a device.
-> > Individual nodes are identified by their (mandatory) "reg" field. These
-> > nodes can also contain an optional "domain-microvolt" property. More
-> > properties can be added later on once we have more platforms using it.
-> > 
-> > If the consumers don't need the capability of switching to different
-> > domain performance states at runtime, then they can simply define their
-> > required domain performance state in their node directly using the
-> > "domain-performance-state" property. Otherwise the consumers can define
-> > their requirements with help of other infrastructure, for example the
-> > OPP table (added in a later commit).
-> > 
-> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Tested-by: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/power/power_domain.txt     | 67 ++++++++++++++++++++++
-> >  1 file changed, 67 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> > index 723e1ad937da..9be09e576f68 100644
-> > --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> > +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> > @@ -38,6 +38,33 @@ phandle arguments (so called PM domain specifiers) of length specified by the
-> >    domain's idle states. In the absence of this property, the domain would be
-> >    considered as capable of being powered-on or powered-off.
-> >  
-> > +- performance-states : This describes the performance states of a PM domain.
-> > +  The performance-states node reflects the performance states of this PM domain
-> > +  and not the performance states of the devices or sub-domains in the PM domain.
-> > +  Sub domains can have their own performance states. Sub domains without their
-> > +  own performance states are governed by the performance states of the parent
-> > +  domain and the "domain-performance-state" properties of their consumers refer
-> > +  to the "reg" properties of the nodes in the parent domain.
-> > +
-> > +  Required properties of the performance-states node:
-> > +  - compatible: Allow performance states to express their compatibility. It
-> > +    should be: "domain-performance-state".
-> > +
-> > +  - nodes: The performance-states node should contain one or
-> > +    more nodes, each representing a supported performance state.
-> > +
-> > +    Required properties of the performance state nodes:
-> > +    - reg: A positive integer value representing the performance level
-> > +      associated with a performance state. The integer value '0' represents the
-> > +      lowest performance level and the highest value represents the highest
-> > +      performance level. The exact meaning and performance implications of
-> > +      individual values is left to be defined by the user platform.
-> > +
-> > +    Optional properties of performance state nodes:
-> > +    - domain-microvolt: voltage in micro Volts. A single regulator's voltage is
-> > +      specified with an array of size one or three.  Single entry is for target
-> > +      voltage and three entries are for <target min max> voltages.
-> > +
-> >  Example:
-> >  
-> >  	power: power-controller@12340000 {
-> > @@ -118,4 +145,44 @@ The node above defines a typical PM domain consumer device, which is located
-> >  inside a PM domain with index 0 of a power controller represented by a node
-> >  with the label "power".
-> >  
-> > +Optional properties:
-> > +- domain-performance-state: A positive integer value representing the minimum
-> > +  performance level (of the parent domain) required by the consumer for its
-> > +  working. The integer value '0' represents the lowest performance level and the
-> > +  highest value represents the highest performance level. The value of
-> > +  domain-performance-state field should match one of the "reg" fields in the
-> > +  "performance-states" table of the parent power domain.
-> > +
-> > +
-> > +Example:
-> > +
-> > +	parent: power-controller@12340000 {
-> > +		compatible = "foo,power-controller";
-> > +		reg = <0x12340000 0x1000>;
-> > +		#power-domain-cells = <0>;
-> > +
-> > +		performance-states {
-> > +			compatible = "domain-performance-state";
-> > +			pstate@1 {
-> > +				reg = <1>;
-> > +				domain-microvolt = <970000 975000 985000>;
+On Tuesday 28 February 2017 04:22 AM, Rob Herring wrote:
+> On Wed, Feb 22, 2017 at 02:43:47PM +0100, Bartosz Golaszewski wrote:
+>> Add an optional property - enable-gpios - which can be used to specify
+>> the GPIOs that must be requested to select the vpif functionality.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/media/ti,da850-vpif.txt | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>> index df7182a..23c5405 100644
+>> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>> @@ -13,6 +13,9 @@ Required properties:
+>>  - reg: physical base address and length of the registers set for the device;
+>>  - interrupts: should contain IRQ line for the VPIF
+>>  
+>> +Optional properties:
+>> +- enable-gpios: phandle of the GPIOs used to select the vpif functionality
 > 
-> This doesn't look like "<target> <min> <max>".
+> What does this control exactly? The GPIOs belong in the node they are 
+> connected to and having GPIOs routed to this block seems strange.
 
-Wow, even the examples in the OPP document have these screwed up :(
+The DA850 EVM board implements on-board muxing which lets the video
+input (via VPIF) to be routed to a TVP5147 (video decoder) for composite
+input or to a camera header. There are other mux options which use the
+same VPIF SoC pins (RMII ethernet or character LCD).
 
-> With that fixed,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+There is a three-to-eight demux on the board which drives enable signals
+to buffers letting you choose from these options.
 
-Thanks.
+>From your response, it looks like you want the enable-gpios property to
+be in the TVP5147 or camera node. That does make sense to me.
 
--- 
-viresh
+>
+> There are inputs or outputs?
+
+These GPIOs are driving a 3-to-8 demux so they are all outputs.
+
+Thanks,
+Sekhar
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
