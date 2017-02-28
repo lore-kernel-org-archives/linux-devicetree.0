@@ -1,140 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] Input: pwm-beeper: support customized freq for
- SND_BELL
-Date: Mon, 27 Feb 2017 13:10:57 -0600
-Message-ID: <20170227191057.uvrefh6mypnwkmkx@rob-hp-laptop>
-References: <1487579863-7256-1-git-send-email-hs@denx.de>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v2 2/2] usb: host: ehci-platform: fix usb 1.1 device is
+ not connected in system resume
+Date: Tue, 28 Feb 2017 09:04:28 +0800
+Message-ID: <20170228010428.GB1235@b29397-desktop>
+References: <1487674788-12599-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1487674788-12599-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1487579863-7256-1-git-send-email-hs@denx.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-input@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <1487674788-12599-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 20, 2017 at 09:37:43AM +0100, Heiko Schocher wrote:
-> From: Guan Ben <ben.guan@cn.bosch.com>
+On Tue, Feb 21, 2017 at 07:59:48PM +0900, Yoshihiro Shimoda wrote:
+> This patch fixes an issue that a usb 1.1 device is not connected in
+> system resume and then the following message appeared if debug messages
+> are enabled:
+> 	usb 2-1: Waited 2000ms for CONNECT
 > 
-> extend the pwm-beeper driver to support customized frequency
-> for SND_BELL from device tree.
+> To resolve this issue, the EHCI controller must be resumed after its
+> companion controllers. So, this patch adds such code on the driver.
 > 
-> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
-> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
-> [hs@denx.de: adapted to 4.10-rc7]
-> Signed-off-by: Heiko Schocher <hs@denx.de>
-> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
+>  drivers/usb/host/ehci-platform.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> Changes in v2:
-> - add comment from Rob Herring:
->   rename property name "bell-frequency" to "beeper-hz"
-> - add comment from Dmitry Torokhov:
->   use device_property_read_u32() instead of of_property_read_u32()
-> - rebased against c470abd4fde40ea6a0846a2beab642a578c0b8cd
->   Linux 4.10
-> 
->  .../devicetree/bindings/input/pwm-beeper.txt       |  3 ++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-A few comments on the driver though.
-
->  drivers/input/misc/pwm-beeper.c                    | 36 ++++++++++++++++------
->  2 files changed, 30 insertions(+), 9 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> index be332ae..4e4e128 100644
-> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> @@ -5,3 +5,6 @@ Registers a PWM device as beeper.
->  Required properties:
->  - compatible: should be "pwm-beeper"
->  - pwms: phandle to the physical PWM device
+> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+> index a268d9e..3214300 100644
+> --- a/drivers/usb/host/ehci-platform.c
+> +++ b/drivers/usb/host/ehci-platform.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/usb.h>
+>  #include <linux/usb/hcd.h>
+>  #include <linux/usb/ehci_pdriver.h>
+> +#include <linux/usb/of.h>
+>  
+>  #include "ehci.h"
+>  
+> @@ -297,6 +298,7 @@ static int ehci_platform_probe(struct platform_device *dev)
+>  		goto err_power;
+>  
+>  	device_wakeup_enable(hcd->self.controller);
+> +	device_enable_async_suspend(hcd->self.controller);
+>  	platform_set_drvdata(dev, hcd);
+>  
+>  	return err;
+> @@ -370,6 +372,7 @@ static int ehci_platform_resume(struct device *dev)
+>  	struct usb_ehci_pdata *pdata = dev_get_platdata(dev);
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+> +	struct device *companion_dev;
+>  
+>  	if (pdata->power_on) {
+>  		int err = pdata->power_on(pdev);
+> @@ -377,6 +380,10 @@ static int ehci_platform_resume(struct device *dev)
+>  			return err;
+>  	}
+>  
+> +	companion_dev = usb_of_get_companion_dev(hcd->self.controller);
+> +	if (companion_dev)
+> +		device_pm_wait_for_dev(hcd->self.controller, companion_dev);
 > +
-> +optional properties:
-> +- beeper-hz:  bell frequency in Hz
-> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
-> index 5f9655d..5ea6fda 100644
-> --- a/drivers/input/misc/pwm-beeper.c
-> +++ b/drivers/input/misc/pwm-beeper.c
-> @@ -27,6 +27,7 @@ struct pwm_beeper {
->  	struct pwm_device *pwm;
->  	struct work_struct work;
->  	unsigned long period;
-> +	unsigned int bell_frequency;
->  };
->  
->  #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
-> @@ -58,20 +59,17 @@ static int pwm_beeper_event(struct input_dev *input,
->  	if (type != EV_SND || value < 0)
->  		return -EINVAL;
->  
-> -	switch (code) {
-> -	case SND_BELL:
-> -		value = value ? 1000 : 0;
-> -		break;
-> -	case SND_TONE:
-> -		break;
-> -	default:
-> +	if (code != SND_BELL && code != SND_TONE)
->  		return -EINVAL;
-> -	}
->  
->  	if (value == 0)
->  		beeper->period = 0;
-> -	else
-> +	else {
-> +		if (code == SND_BELL)
-> +			value = beeper->bell_frequency;
-> +
->  		beeper->period = HZ_TO_NANOSECONDS(value);
-> +	}
->  
->  	schedule_work(&beeper->work);
->  
-> @@ -93,6 +91,25 @@ static void pwm_beeper_close(struct input_dev *input)
->  	pwm_beeper_stop(beeper);
->  }
->  
-> +static void pwm_beeper_init_bell_frequency(struct device *dev,
-> +					   struct pwm_beeper *beeper)
-> +{
-> +	struct device_node *node;
-> +	unsigned int bell_frequency = 1000;
-> +	int err;
-> +
-> +	if (IS_ENABLED(CONFIG_OF)) {
+>  	ehci_resume(hcd, priv->reset_on_resume);
+>  	return 0;
 
-You don't really need this. There should be an empty version of the 
-function.
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
 
-> +		node = dev->of_node;
+-- 
 
-You don't need this line.
-
-> +		err = device_property_read_u32(dev, "beeper-hz",
-> +					       &bell_frequency);
-> +		if (err < 0)
-> +			dev_dbg(dev, "Failed to read beeper-hz, using default: %u Hz\n",
-> +				bell_frequency);
-> +	}
-> +
-> +	beeper->bell_frequency = bell_frequency;
-> +}
-> +
->  static int pwm_beeper_probe(struct platform_device *pdev)
->  {
->  	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
-> @@ -122,6 +139,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
->  	pwm_apply_args(beeper->pwm);
->  
->  	INIT_WORK(&beeper->work, pwm_beeper_work);
-> +	pwm_beeper_init_bell_frequency(&pdev->dev, beeper);
->  
->  	beeper->input = input_allocate_device();
->  	if (!beeper->input) {
-> -- 
-> 2.7.4
-> 
+Best Regards,
+Peter Chen
