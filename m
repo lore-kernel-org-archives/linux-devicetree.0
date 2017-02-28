@@ -1,80 +1,118 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v5] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
- Driver
-Date: Tue, 28 Feb 2017 12:14:05 +0100
-Message-ID: <1488280445.2612.35.camel@pengutronix.de>
-References: <1486714767-25930-1-git-send-email-richard.leitner@skidata.com>
-         <20170216023004.25dwzy7ppxdoasfz@rob-hp-laptop>
-         <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
-         <CAL_JsqJ=ViO+QnTiZXSL7zyO7xu_+f7C4aSkfA7VmqiU92EeHg@mail.gmail.com>
-         <a44c2244-bdb3-ebc3-cfd2-271d3dabe011@skidata.com>
-         <1488188908.2612.18.camel@pengutronix.de>
-         <CAL_JsqLEtPc+WHg3kAJ_vauX1na6HAb73i1gm+X2T+gsrzgy6g@mail.gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: hisilicon: add bindings for
+ hi3798cv200 SoC and Poplar board
+Date: Tue, 28 Feb 2017 11:42:27 +0000
+Message-ID: <20170228114227.GA17088@griffinp-mac>
+References: <1487752716-14824-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1487752716-14824-2-git-send-email-xuejiancheng@hisilicon.com>
+ <ef8cca92-7f1f-40bd-4023-2e64dcf69a68@suse.de>
+ <798bfd0e-bd8d-a75d-e841-53d82b513f94@hisilicon.com>
+ <14a08c7d-8e25-bb5c-d700-46a07107e52f@linaro.org>
+ <e9385988-27bc-b930-cbed-807beafb64bc@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLEtPc+WHg3kAJ_vauX1na6HAb73i1gm+X2T+gsrzgy6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <e9385988-27bc-b930-cbed-807beafb64bc@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: devicetree@vger.kernel.org, mark.gregotski@linaro.org, arnd@arndb.de, catalin.marinas@arm.com, will.deacon@arm.com, yanhaifeng@hisilicon.com, xuwei5@hisilicon.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Alex Elder <elder@linaro.org>, Jiancheng Xue <xuejiancheng@hisilicon.com>, hermit.wangheming@hisilicon.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mo, 2017-02-27 at 16:27 -0600, Rob Herring wrote:
-> On Mon, Feb 27, 2017 at 3:48 AM, Jan Lübbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Di, 2017-02-21 at 15:57 +0100, Richard Leitner wrote:
-> >> >>> This is a lot of properties. Are you really finding a need for all of
-> >> >>> them? Is this to handle h/w designers too cheap to put down the EEPROM?
-> >> >>> Maybe better to just define an eeprom property in the format the h/w
-> >> >>> expects.
-> >> >>
-> >> >>
-> >> >> I need about 15 of these properties. I just exposed them all to dt because I
-> >> >> thought they could be useful for somebody.
-> >> >>
-> >> >> Yes, these are a subset of the settings which can be configured via an
-> >> >> external EEPROM (By strapping some pins of the hub you can select if it
-> >> >> loads its configuration from an EEPROM or receives it via SMBus).
-> >> >>
-> >> >> My first thought was also to define only a byte array in dt, but IMHO these
-> >> >> options are much more readable and convenient for everybody. I'd also be
-> >> >> fine with removing the properties I don't need from dt. But that may lead to
-> >> >> future patches where somebody needs some of the options not already exposed
-> >> >> to dt.
-> >> >
-> >> > Okay. It's really a judgement call. If this is most of the settings,
-> >> > then it's fine. If it was only a fraction of them, then maybe we'd
-> >> > want to do just a byte array. Sounds like it is the former.
+Hi Andreas,
+
+On Mon, 27 Feb 2017, Andreas F=E4rber wrote:
+
+> Hi,
+> =
+
+> Am 27.02.2017 um 03:48 schrieb Alex Elder:
+> > On 02/26/2017 07:24 PM, Jiancheng Xue wrote:
+> >> On 2017/2/26 9:32, Andreas F=E4rber wrote:
+> >>> Am 22.02.2017 um 09:38 schrieb Jiancheng Xue:
+> >>>> Add bindings for HiSilicon hi3798cv200 SoC and Poplar Board.
+> >>>>
+> >>>> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> >>>> ---
+> >>>>  Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 +=
++++
+> >>>>  1 file changed, 4 insertions(+)
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilic=
+on.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> >>>> index f1c1e21..1fd3dd7 100644
+> >>>> --- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> >>>> +++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+> >>>> @@ -4,6 +4,10 @@ Hi3660 SoC
+> >>>>  Required root node properties:
+> >>>>  	- compatible =3D "hisilicon,hi3660";
+> >>>>  =
+
+> >>>> +Hi3798cv200 Poplar Board
+> >>>> +Required root node properties:
+> >>>> +	- compatible =3D "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798=
+cv200";
+> >>>
+> >>> Please remember to CC previous reviewers.
+> >>>
+> >> Sorry for that.
 > >>
-> >> In fact there are 6 more parameters available according to the
-> >> datasheet. So how should I proceed here? Remove the one's I'm not using
-> >> at the moment, leave them as they are or add the missing 6 too?
-> >
-> > Rob, several of these properties look more like configuration rather
-> > than HW description ('skip-config', '*-id', 'manufacturer', 'product',
-> > 'serial'). Is DT the right place for this? I would expect userspace to
-> > provide the configuration.
-> 
-> Configuration can be okay. The test I use is more who needs to
-> set/control these properties? Would an end-user want to control them?
-> If so, then they should be sysfs controls. If they are configuration
-> for a particular design, then DT is fine. Given these are all
-> typically EEPROM properties, then they aren't really end-user controls
-> and belong in DT.
+> >>> This still looks wrong: Why is this not "hisilicon,poplar" if you cho=
+ose
+> >>> against "tocoding,poplar"? =
 
-Thanks for explaining this, your test sounds very reasonable. And if it
-turns out that runtime access is useful as well, the sysfs properties
-could be added as needed.
+> >>
+> >> I didn't think it was very important thing whether the compatbile stri=
+ng contained
+> >> a preceding SoC name or not. I just referred to the hikey board and so=
+me other
+> >> HiSilicon boards. I wanted to keep using the same rule with them.
+> > =
 
-Regards,
-Jan
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> > The way Jiancheng defined this was consistent with the pattern
+> > used for all other definitions of platforms found in this
+> > documentation file.  Why make this one different?
+> =
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I am not familiar with other HiSilicon DTs but rather with several other
+> vendors' DTs. This seems inconsistent with the rest. The only other one
+> with SoC names in the board compatible I know of is i.MX6, where there's
+> variations between single, dual and quad versions.
+
+I've not checked all the subarchs, but STMicroelectronics chipsets I've been
+involved with upstreaming also use <soc>-<board> compatible strings.
+
+For STi b2120 board it could actually have STiH410 or STiH407 SoC. But
+others like stih418-b2199 and stih410-b2260 only have one SoC. Also stm32
+arch does the same thing.
+
+Just having a quick look around arch/arm64/ as above examples were arch/arm/
+and I see quite a few other examples as well e.g.
+
+compatible =3D "mediatek,mt6755-evb", "mediatek,mt6755";
+compatible =3D "mediatek,mt8173-evb", "mediatek,mt8173";
+compatible =3D "fsl,ls1043a-qds", "fsl,ls1043a";
+compatible =3D "samsung,exynos7-espresso", "samsung,exynos7";
+compatible =3D "zte,zx296718-evb", "zte,zx296718";
+compatible =3D "lge,lg1313-ref", "lge,lg1313";
+compatible =3D "rockchip,rk3368-evb-act8846", "rockchip,rk3368";
+
+Some subarchs have a mix within them, which maybe due to the SoC also
+being part of the board name on some reference boards. But both ways seem t=
+o be
+used in the kernel. So IMHO it would be better to see consistency in
+arch/arm64/hisilicon* even though there is not consistency across all of
+arch/arm64/* and arch/arm/*.
+
+regards,
+
+Peter.
