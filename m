@@ -1,76 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
-Date: Tue, 28 Feb 2017 08:33:40 -0600
-Message-ID: <CAL_Jsq+PO_KT-UY2QdX1a5pvEYJv_E6kyamthXS=hE-jjR0XKA@mail.gmail.com>
-References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
- <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
- <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
- <2b409ff7-54fe-4110-6495-1cc54585e5e2@st.com>
- <CAL_JsqLBZ0DGP62yGb2GjNZMto9hWce_HWNCX5iWhbrnE3ae_Q@mail.gmail.com>
- <0036d551-91bc-9f3f-22a9-9dac2cf3527c@st.com>
- <CAL_JsqLqNzpV1pjz3bX1gowHwJzsKKA=17aD5Ce18sy1B_V-0g@mail.gmail.com>
- <c759770a-f250-7502-4ad1-c2fbb001cf92@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c759770a-f250-7502-4ad1-c2fbb001cf92@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yannick FERTRE <yannick.fertre@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH V2 2/4] MAINTAINERS: Add entry for megachips-stdpxxxx-ge-b850v3-fw
+Date: Tue, 28 Feb 2017 15:28:11 +0100
+Message-ID: <14d5b25144f379c2a44523d613a6fab75073be80.1488287639.git.peter.senna@collabora.com>
+References: <cover.1488287639.git.peter.senna@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1488287639.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <cover.1488287639.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+References: <cover.1488287639.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgNDowNyBBTSwgWWFubmljayBGRVJUUkUgPHlhbm5pY2su
-ZmVydHJlQHN0LmNvbT4gd3JvdGU6Cj4gT24gMDIvMjQvMjAxNyAwMzowNiBQTSwgUm9iIEhlcnJp
-bmcgd3JvdGU6Cj4+IE9uIEZyaSwgRmViIDI0LCAyMDE3IGF0IDI6MTggQU0sIFlhbm5pY2sgRkVS
-VFJFIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+IHdyb3RlOgo+Pj4gT24gMDIvMjEvMjAxNyAwMzow
-NyBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Pj4gT24gTW9uLCBGZWIgMjAsIDIwMTcgYXQgNTow
-MSBBTSwgWWFubmljayBGRVJUUkUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4gd3JvdGU6Cj4+Pj4+
-IE9uIDAyLzE2LzIwMTcgMDM6MzQgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+Pj4+Pj4gT24gRnJp
-LCBGZWIgMTAsIDIwMTcgYXQgMDM6NTQ6NDRQTSArMDEwMCwgWWFubmljayBGZXJ0cmUgd3JvdGU6
-Cj4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0
-LmNvbT4KPj4+Pj4+PiAtLS0KPj4+Pj4+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1w
-aXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCAgICAgICAgIHwgNyArKysrKysrCj4+Pj4+Pj4g
-IDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPj4+Pj4+PiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGly
-ZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQKClsuLi5dCgo+Pj4+PiBUaGlzIGJpbmRpbmcgaXMg
-c2ltaWxhciB0byBhbGwgcGFuZWwgYmluZGluZ3Mgd2hpY2ggYXJlIGxpbmsgdG8gcGFuZWwKPj4+
-Pj4gc2ltcGxlLiBEZXRhaWxzIG9uIGdwaW8gJiBwb3dlciBzdXBwbHkgYXJlIGRlc2NyaWJlIHdp
-dGggc2ltcGxlLXBhbmVsCj4+Pj4+IGJpbmRpbmcuCj4+Pj4KPj4+PiBzaW1wbGUtcGFuZWwudHh0
-IHByb3ZpZGVzIHdoYXQgcG9zc2libGUgc3RhbmRhcmQgcHJvcGVydGllcyB0aGVyZSBhcmUsCj4+
-Pj4gbm90IHdoZXRoZXIgYSBwYW5lbCB1c2VzIHRoZW0uIFRoZSBwb3dlciBzdXBwbHkgbmVlZHMg
-dG8gYmUgZXhwbGljaXQKPj4+PiBiZWNhdXNlIEkgZG9uJ3Qga25vdyBpZiB5b3UgZm9yZ290IGFu
-ZCB0aGVyZSdzIHJlYWxseSAyIHN1cHBsaWVzIG9yCj4+Pj4geW91IGFyZSB1c2luZyAicG93ZXIt
-c3VwcGx5IiBmb3IgYSBzaW5nbGUgc3VwcGx5Lgo+Pj4+Cj4+Pj4gUm9iCj4+Pj4KPgo+Cj4gSGkg
-Um9iLAo+IG9rLCBJJ2xsIHB1c2ggYSBWNCB2ZXJzaW9uIHdpdGggYWxsIGRldGFpbHMgb24gcHJv
-cGVydGllcy4KPiBJIHdyaXRlIGJlbGxvdyAgYSBkcmFmdCBvZiBiaW5kaW5nOgo+Cj4gQW1waXJl
-IEFNLTQ4MDI3MkgzVE1RVy1UMDFIIDQuMyIgV1FWR0EgVEZUIExDRCBwYW5lbAo+Cj4gVGhpcyBi
-aW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNo
-IGlzIHNwZWNpZmllZAo+IGluIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4K
-PiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhbXBpcmUs
-YW0tNDgwMjcyaDN0bXF3LXQwMWgiCj4KPiBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+IC0gcG93ZXIt
-c3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZvbHRhZ2UKPiAtIGRkYy1p
-MmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHBy
-b2JpbmcKCkRvZXNuJ3QgbG9vayBsaWtlIHRoZXJlJ3MgYW55IEREQyBjb25uZWN0aW9uIHRvIHRo
-aXMgcGFuZWwuCgo+IC0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUgb3IgZGlzYWJs
-ZSB0aGUgcGFuZWwKCk5lZWQgdG8gc3RhdGUgdGhpcyBpcyBhY3RpdmUgaGlnaC4KCj4gLSBiYWNr
-bGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBh
-bmVsCj4KPiBPcHRpb25hbCBub2RlczoKPiAtIFZpZGVvIHBvcnQgZm9yIFJHQiBpbnB1dC4KPgo+
-IEV4YW1wbGU6Cj4gICAgICAgICBwYW5lbF9yZ2I6IHBhbmVsLXJnYiB7Cj4gICAgICAgICAgICAg
-ICAgIGNvbXBhdGlibGUgPSAiYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIjsKPiAgICAgICAg
-ICAgICAgICAgZW5hYmxlLWdwaW9zID0gPCZncGlvYSA4IDE+Owo+ICAgICAgICAgICAgICAgICBw
-b3J0IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBwYW5lbF9pbl9yZ2I6IGVuZHBvaW50IHsK
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmY29u
-dHJvbGVyX291dF9yZ2I+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAg
-ICAgICAgIH07Cj4gICAgICAgICB9Owo+Cj4gQmVzdCByZWdhcmRzCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add MAINTAINERS entry for the second video output of the GE B850v3:
+       STDP4028-ge-b850v3-fw bridges (LVDS-DP)
+       STDP2690-ge-b850v3-fw bridges (DP-DP++)
+
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+CC: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+CC: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+CC: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CC: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+Unchanged from V1
+
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d97b1d..5f30b17 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8129,6 +8129,14 @@ L:	linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ S:	Maintained
+ F:	drivers/net/wireless/mediatek/mt7601u/
+ 
++MEGACHIPS STDPXXXX-GE-B850V3-FW LVDS/DP++ BRIDGES
++M:	Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
++M:	Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
++M:	Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
++S:	Maintained
++F:	drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
++F:	Documentation/devicetree/bindings/video/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
++
+ MEGARAID SCSI/SAS DRIVERS
+ M:	Kashyap Desai <kashyap.desai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+ M:	Sumit Saxena <sumit.saxena-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
