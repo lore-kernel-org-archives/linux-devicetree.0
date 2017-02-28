@@ -1,95 +1,58 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH V2 1/3] arm64: dts: Add basic DT to support Spreadtrum's
- SP9860G
-Date: Tue, 28 Feb 2017 15:08:53 +0800
-Message-ID: <CAAfSe-v6O5k57T1zjZ+GM5PsWLLqXP3QdmJvsGPGPeZH7mHLiw@mail.gmail.com>
-References: <1487660104-15693-1-git-send-email-chunyan.zhang@spreadtrum.com>
- <1487660104-15693-2-git-send-email-chunyan.zhang@spreadtrum.com>
- <CAL_JsqJ-VXB8pJw3r_fi9Lbmat2dqH-1jmGy8ibK8=PnoZ-c=Q@mail.gmail.com>
- <20170224075725.GA32714@spreadtrum.com>
- <CAL_Jsq+3JYQsDo92Azf5MX19=QQUEHu=3PYk2U5keACO5rSDrw@mail.gmail.com>
+From: Heiko Schocher <hs@denx.de>
+Subject: Re: [v2] Input: pwm-beeper: support customized freq for SND_BELL
+Date: Tue, 28 Feb 2017 07:13:43 +0100
+Message-ID: <58B51517.4050003@denx.de>
+References: <1487579863-7256-1-git-send-email-hs@denx.de>
+ <06af466d-ac78-ea38-77d2-3bf32a6e157c@lechnology.com>
+ <58B5084A.9000709@denx.de>
+ <b08d4e74-c086-304a-d6cf-ace8d2a372f7@lechnology.com>
+Reply-To: hs@denx.de
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+3JYQsDo92Azf5MX19=QQUEHu=3PYk2U5keACO5rSDrw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?T3Jzb24gWmhhaSjnv5/kuqwp?= <orson.zhai@spreadtrum.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b08d4e74-c086-304a-d6cf-ace8d2a372f7@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: linux-input@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjQgRmVicnVhcnkgMjAxNyBhdCAyMzowNywgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4gT24gRnJpLCBGZWIgMjQsIDIwMTcgYXQgMTo1NyBBTSwgQ2h1bnlhbiBa
-aGFuZwo+IDxjaHVueWFuLnpoYW5nQHNwcmVhZHRydW0uY29tPiB3cm90ZToKPj4gT24g5ZubLCAg
-MuaciCAyMywgMjAxNyBhdCAwNjowMDoyMOS4i+WNiCAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6
-Cj4+PiBPbiBUdWUsIEZlYiAyMSwgMjAxNyBhdCAxMjo1NSBBTSwgQ2h1bnlhbiBaaGFuZwo+Pj4g
-PGNodW55YW4uemhhbmdAc3ByZWFkdHJ1bS5jb20+IHdyb3RlOgo+Pj4gPiBGcm9tOiBPcnNvbiBa
-aGFpIDxvcnNvbi56aGFpQHNwcmVhZHRydW0uY29tPgo+Pj4gPgo+Pj4gPiBTQzk4NjBHIGlzIGEg
-OCBjb3JlcyBvZiBBNTMgU29DIHdpdGggNEcgTFRFIHN1cHBvcnQgU29DIGZyb20gU3ByZWFkdHJ1
-bS4KPj4+ID4KPj4+ID4gQWNjb3JkaW5nIHRvIHJlZ3VsYXIgaGllcmFyY2h5IG9mIHNwcmQgZHRz
-LCB3aGFsZTIuZHRzaSBjb250YWlucyBTb0MKPj4+ID4gcGVyaXBoZXJhbHMgSVAgbm9kZXMsIHNj
-OTg2MC5kdHNpIGNvbnRhaW5zIHN0dWZmIHJlbGF0ZWQgdG8gQVJNIGNvcmUgc3R1ZmYKPj4+ID4g
-YW5kIHNwOTg2MGcgZHRzIGlzIGZvciB0aGUgYm9hcmQgbGV2ZWwuCj4+PiA+Cj4+PiA+IFNpZ25l
-ZC1vZmYtYnk6IE9yc29uIFpoYWkgPG9yc29uLnpoYWlAc3ByZWFkdHJ1bS5jb20+Cj4+PiA+IFNp
-Z25lZC1vZmYtYnk6IENodW55YW4gWmhhbmcgPGNodW55YW4uemhhbmdAc3ByZWFkdHJ1bS5jb20+
-Cj4+PiA+IC0tLQo+Pj4gPiAgYXJjaC9hcm02NC9ib290L2R0cy9zcHJkL01ha2VmaWxlICAgICAg
-ICAgfCAgIDMgKy0KPj4+ID4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9zYzk4NjAuZHRzaSAg
-ICAgIHwgNTMxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4gPiAgYXJjaC9hcm02
-NC9ib290L2R0cy9zcHJkL3NwOTg2MGctMWgxMC5kdHMgfCAgNTYgKysrKwo+Pj4gPiAgYXJjaC9h
-cm02NC9ib290L2R0cy9zcHJkL3doYWxlMi5kdHNpICAgICAgfCAgNzAgKysrKwo+Pj4gPiAgNCBm
-aWxlcyBjaGFuZ2VkLCA2NTkgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+Pj4gPiAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9zYzk4NjAuZHRzaQo+Pj4g
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9zcDk4NjBnLTFo
-MTAuZHRzCj4+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9zcHJk
-L3doYWxlMi5kdHNpCj4+PiA+Cj4+PiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRz
-L3NwcmQvTWFrZWZpbGUgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3NwcmQvTWFrZWZpbGUKPj4+ID4g
-aW5kZXggYjY1OGM1ZS4uZjA1MzVlNiAxMDA2NDQKPj4+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290
-L2R0cy9zcHJkL01ha2VmaWxlCj4+PiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvc3ByZC9N
-YWtlZmlsZQo+Pj4gPiBAQCAtMSw0ICsxLDUgQEAKPj4+ID4gLWR0Yi0kKENPTkZJR19BUkNIX1NQ
-UkQpICs9IHNjOTgzNi1vcGVucGhvbmUuZHRiCj4+PiA+ICtkdGItJChDT05GSUdfQVJDSF9TUFJE
-KSArPSBzYzk4MzYtb3BlbnBob25lLmR0YiBcCj4+PiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IHNwOTg2MGctMWgxMC5kdGIKPj4+ID4KPj4+ID4gIGFsd2F5cyAgICAgICAgIDo9ICQoZHRiLXkp
-Cj4+PiA+ICBzdWJkaXIteSAgICAgICA6PSAkKGR0cy1kaXJzKQo+Pj4gPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm02NC9ib290L2R0cy9zcHJkL3NjOTg2MC5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0
-cy9zcHJkL3NjOTg2MC5kdHNpCj4+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiA+IGluZGV4
-IDAwMDAwMDAuLjczZGViNGUKPj4+ID4gLS0tIC9kZXYvbnVsbAo+Pj4gPiArKysgYi9hcmNoL2Fy
-bTY0L2Jvb3QvZHRzL3NwcmQvc2M5ODYwLmR0c2kKPj4+ID4gQEAgLTAsMCArMSw1MzEgQEAKPj4+
-ID4gKy8qCj4+PiA+ICsgKiBTcHJlYWR0cnVtIFNQOTg2MCBTb0MgRFRTIGZpbGUKPj4+ID4gKyAq
-Cj4+PiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTYsIFNwcmVhZHRydW0gQ29tbXVuaWNhdGlvbnMg
-SW5jLgo+Pj4gPiArICoKPj4+ID4gKyAqIFRoaXMgZmlsZSBpcyBsaWNlbnNlZCB1bmRlciBhIGR1
-YWwgR1BMdjIgb3IgWDExIGxpY2Vuc2UuCj4+Pgo+Pj4gUGxlYXNlIHVzZSBTUERYLUxpY2Vuc2Ut
-SWRlbnRpZmllciB0YWcgaW5zdGVhZC4KPj4+Cj4+Cj4+IEp1c3QgdG8gZG91YmxlIGNoZWNrLCBp
-ZiBJIHVzZSBpdCBsaWtlOgo+Pgo+PiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogKEdQTC0yLjAg
-b3IgWDExKQo+Pgo+PiBJcyB0aGlzIHdoYXQgeW91IG1lYW4/Cj4KPiBZZXMuIEhvd2V2ZXIsIFgx
-MSBpcyBub3QgYWN0dWFsbHkgY29ycmVjdCAocHJldHR5IG11Y2ggYWxsIGR0cyBmaWxlcwo+IGhh
-dmUgaXQgd3JvbmcpLiBUaGlzIGlzIHRoZSBYMTEgbGljZW5zZVsxXSB3aGljaCBpcyBleHBsaWNp
-dGx5IGZvciB0aGUKPiBYIENvbnNvcnRpdW0gYW5kIGhhcyBhIGNvdXBsZSBvZiBleHRyYSBjbGF1
-c2VzLiBXaGlsZSB0aGUgTUlUCj4gbGljZW5zZVsyXSBpcyB0aGUgdGV4dCB0aGF0IG1vc3QgZHRz
-IGZpbGVzIGFjdHVhbGx5IHVzZSAod2hpbGUgYWxzbwo+IHN0YXRpbmcgWDExIGxpY2Vuc2UpLiBJ
-dCdzIG9idmlvdXMgdGhhdCBldmVyeW9uZSBqdXN0IGNvcGllcyBhbmQKPiBwYXN0ZXMgdGhlIGxp
-Y2Vuc2UgYW5kIGhhcyBub3QgY29uc3VsdGVkIHRoZWlyIGxhd3llcnMuCgpPSywgZ290IGl0LgoK
-Pgo+PiBXaWxsIHRoaXMgZmlsZSBzdGlsbCBiZSBsaWNlbnNlZCB1bmRlciB0aGUgc2FtZSB0ZXJt
-cyBpdCB3YXMsIHJpZ2h0Pwo+Cj4gQ29uc3VsdCB5b3VyIGxhd3llci4gOikKPgo+IFsuLi5dCj4K
-Pj4+ID4gKyAgICAgICAgICAgICAgIGV4dF8yNm06IGV4dC0yNm0gewo+Pj4KPj4+IFRoaXMgc2hv
-dWxkIGJlIGF0IHRoZSB0b3AtbGV2ZWwuIEl0IGlzIG5vdCBwYXJ0IG9mIHRoZSBidXMuCj4+Cj4+
-IFRoaXMgY2xvY2sgbm9kZSBpcyBpbiAnc29jJyBub2RlLCBub3QgdW5kZXIgJ2FwLWFwYicuICBT
-aW5jZSB0aGVyZSdyZSBvdGhlcgo+PiBjbG9ja3Mgb24gU0M5ODYwIHdoaWNoIHdvdWxkIGhhdmUg
-J3JlZycgcHJvcGVydHksIHdlIHRob3VnaHQgdGhpcyBmaXhlZAo+PiBjbG9jayB3b3VsZCBiZSBi
-ZXR0ZXIgdW5kZXIgJ3NvYycgd2l0aCBvdGhlciBjbG9ja3MuCj4KPiBCdXQgdGhlIGNsb2NrIGlz
-IHBhcnQgb2YgdGhlIGJvYXJkLCBub3QgdGhlIHNvYy4gT3IgdG8gcHV0IGl0IGFub3RoZXIKPiB3
-YXksIGl0J3Mgbm90IHJlbGF0ZWQgdG8gYW55dGhpbmcgZWxzZSwgc28gaXQgc2hvdWxkbid0IGJl
-IGEgY2hpbGQgb2YKPiBhbnl0aGluZy4KCk9rLCBJIHdpbGwgbW92ZSBpdCB0byB0aGUgdG9wLWxl
-dmVsLgoKVGhhbmtzLApDaHVueWFuCgo+Cj4gUm9iCj4KPiBbMV0gaHR0cHM6Ly9zcGR4Lm9yZy9s
-aWNlbnNlcy9YMTEuaHRtbAo+IFsyXSBodHRwczovL3NwZHgub3JnL2xpY2Vuc2VzL01JVC5odG1s
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+Hello David,
+
+Am 28.02.2017 um 06:30 schrieb David Lechner:
+> On 02/27/2017 11:19 PM, Heiko Schocher wrote:
+>> Hello David,
+>>
+>> Am 27.02.2017 um 19:11 schrieb David Lechner:
+>>> On 02/20/2017 02:37 AM, Heiko Schocher wrote:
+>>>> From: Guan Ben <ben.guan@cn.bosch.com>
+>>>>
+>>>> extend the pwm-beeper driver to support customized frequency
+>>>> for SND_BELL from device tree.
+>>>>
+>>>> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+>>>> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+>>>> [hs@denx.de: adapted to 4.10-rc7]
+>>>> Signed-off-by: Heiko Schocher <hs@denx.de>
+>>>> ---
+>>>>
+>>>> Changes in v2:
+>>>> - add comment from Rob Herring:
+>>>>   rename property name "bell-frequency" to "beeper-hz"
+>>>
+>>> Is there a separate patch for the devicetree bindings documentation?
+>>
+>> No, it is in this patch ... In the meantime I got an
+>> Acked-by from Rob Herring ...
+>>
+>
+> What I should have said is that, in general, I think it is preferred to have the device tree
+> bindings as a separate patch from the code changes.
+
+I can split this into 2 patches ...
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
