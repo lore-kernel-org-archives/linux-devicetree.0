@@ -1,473 +1,449 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] drivers: pwm: pwm-atmel: switch to atomic PWM
-Date: Tue, 28 Feb 2017 22:07:56 +0100
-Message-ID: <20170228220756.3e29b62e@bbrezillon>
-References: <1488278415-2786-1-git-send-email-claudiu.beznea@microchip.com>
-        <1488278415-2786-2-git-send-email-claudiu.beznea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488278415-2786-2-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rick Altherr <raltherr@google.com>
+Subject: [PATCH 2/2] hwmon: Aspeed AST2400/AST2500 ADC
+Date: Tue, 28 Feb 2017 12:14:04 -0800
+Message-ID: <20170228201404.32125-2-raltherr@google.com>
+References: <20170228201404.32125-1-raltherr@google.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170228201404.32125-1-raltherr@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, jdelvare@suse.com, linux@roeck-us.net, joel@jms.id.au, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Claudiu,
+Aspeed AST2400/AST2500 BMC SoCs include a 16 channel, 10-bit ADC. This
+driver implements reading the ADC values, enabling channels via device
+tree, and optionally providing channel labels via device tree.  Low and
+high threshold interrupts are supported by the hardware but not
+implemented.
 
-On Tue, 28 Feb 2017 12:40:14 +0200
-Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
+Signed-off-by: Rick Altherr <raltherr@google.com>
+---
+ drivers/hwmon/Kconfig      |  10 ++
+ drivers/hwmon/Makefile     |   1 +
+ drivers/hwmon/aspeed_adc.c | 383 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 394 insertions(+)
+ create mode 100644 drivers/hwmon/aspeed_adc.c
 
-> The currently Atmel PWM controllers supported by this driver
-> could change period and duty factor without channel disable
-> (sama5d3 supports this by using period and duty factor update
-> registers, sam9rl support this by writing channel update
-> register and select the corresponding update: period or duty
-> factor).
-
-Hm, I had a closer a look at the datasheet, and I'm not sure this is
-possible in a safe way. AFAICT (I might be wrong), there's no way to
-atomically update both the period and duty cycles. So, imagine you're
-just at the end of the current period and you update one of the 2 params
-(either the period or the duty cycle) before the end of the period, but
-the other one is updated just after the beginning of a new period.
-During one cycle you'll have a bad config.
-
-While this should be acceptable in most cases, there are a few cases
-where glitches are not permitted (when the PWM drives a critical
-device). Also, I don't know what happens if we have duty > period.
-
-> The chip doesn't support run time changings of signal
-> polarity. This has been adapted by first disabling the channel,
-> update registers and the enabling the channel.
-
-Yep. I agree with that one.
-
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> ---
->  drivers/pwm/pwm-atmel.c | 217 ++++++++++++++++++++++++++----------------------
->  1 file changed, 118 insertions(+), 99 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> index 67a7023..014b86c 100644
-> --- a/drivers/pwm/pwm-atmel.c
-> +++ b/drivers/pwm/pwm-atmel.c
-> @@ -68,7 +68,7 @@ struct atmel_pwm_chip {
->  	struct mutex isr_lock;
->  
->  	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
-> -		       unsigned long dty, unsigned long prd);
-> +		       unsigned long dty, unsigned long prd, bool enabled);
->  };
->  
->  static inline struct atmel_pwm_chip *to_atmel_pwm_chip(struct pwm_chip *chip)
-> @@ -105,99 +105,120 @@ static inline void atmel_pwm_ch_writel(struct atmel_pwm_chip *chip,
->  	writel_relaxed(val, chip->base + base + offset);
->  }
->  
-> -static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> -			    int duty_ns, int period_ns)
-> +static int atmel_pwm_config_prepare(struct pwm_chip *chip,
-> +				    struct pwm_state *state, unsigned long *prd,
-> +				    unsigned long *dty, unsigned int *pres)
-
-I'd rename the function atmel_pwm_calculate_params(). Also, when the
-period does not change we don't have to calculate prd and pres, so
-maybe we should have one function to calculate prd+pres and another one
-to calculate dty:
-
-static int atmel_pwm_calculate_cprd_and_pres(struct pwm_chip *chip,
-					const struct pwm_state *state,
-					u32 *cprd, u32 *pres)
-{
-	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-	unsigned long long cycles = state->period;
-
-        /* Calculate the period cycles and prescale value */
-        cycles *= clk_get_rate(atmel_pwm->clk);
-        do_div(cycles, NSEC_PER_SEC);
-
-        for (*pres = 0; cycles > PWM_MAX_PRD; cycles >>= 1)
-                (*pres)++;
-
-        if (*pres > PRD_MAX_PRES) {
-                dev_err(chip->dev, "pres exceeds the maximum value\n");
-                return -EINVAL;
-        }
-
-        *cprd = cycles;
-
-        return 0;
-}
-
-static void atmel_pwm_calculate_cdty(const struct pwm_state *state,
-                                     u32 cprd, u32 *cdty)
-{
-        unsigned long long cycles = state->duty_cycle;
-
-        cycles *= cprd;
-        do_div(cycles, state->period);
-
-        *cdty = cycles;
-}
-
-
->  {
->  	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> -	unsigned long prd, dty;
->  	unsigned long long div;
-> -	unsigned int pres = 0;
-> -	u32 val;
-> -	int ret;
-> -
-> -	if (pwm_is_enabled(pwm) && (period_ns != pwm_get_period(pwm))) {
-> -		dev_err(chip->dev, "cannot change PWM period while enabled\n");
-> -		return -EBUSY;
-> -	}
->  
->  	/* Calculate the period cycles and prescale value */
-> -	div = (unsigned long long)clk_get_rate(atmel_pwm->clk) * period_ns;
-> +	div = (unsigned long long)clk_get_rate(atmel_pwm->clk) * state->period;
->  	do_div(div, NSEC_PER_SEC);
->  
-> +	*pres = 0;
->  	while (div > PWM_MAX_PRD) {
->  		div >>= 1;
-> -		pres++;
-> +		(*pres)++;
->  	}
->  
-> -	if (pres > PRD_MAX_PRES) {
-> +	if (*pres > PRD_MAX_PRES) {
->  		dev_err(chip->dev, "pres exceeds the maximum value\n");
->  		return -EINVAL;
->  	}
->  
->  	/* Calculate the duty cycles */
-> -	prd = div;
-> -	div *= duty_ns;
-> -	do_div(div, period_ns);
-> -	dty = prd - div;
-> +	*prd = div;
-> +	div *= state->duty_cycle;
-> +	do_div(div, state->period);
-> +	*dty = *prd - div;
-
-Not sure this subtraction is needed, you just need to revert the
-polarity selection (if polarity == NORMAL => set CPOL, otherwise, clear
-it).
-
->  
-> -	ret = clk_enable(atmel_pwm->clk);
-> -	if (ret) {
-> -		dev_err(chip->dev, "failed to enable PWM clock\n");
-> -		return ret;
-> -	}
-> +	return 0;
-> +}
-> +
-> +static void atmel_pwm_config_set(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				 unsigned long dty, unsigned long prd,
-> +				 unsigned long pres, enum pwm_polarity polarity,
-> +				 bool enabled)
-> +{
-> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> +	u32 val;
->  
->  	/* It is necessary to preserve CPOL, inside CMR */
->  	val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
->  	val = (val & ~PWM_CMR_CPRE_MSK) | (pres & PWM_CMR_CPRE_MSK);
-> +	if (polarity == PWM_POLARITY_NORMAL)
-> +		val &= ~PWM_CMR_CPOL;
-> +	else
-> +		val |= PWM_CMR_CPOL;
->  	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> -	atmel_pwm->config(chip, pwm, dty, prd);
-> +	atmel_pwm->config(chip, pwm, dty, prd, enabled);
->  	mutex_lock(&atmel_pwm->isr_lock);
->  	atmel_pwm->updated_pwms |= atmel_pwm_readl(atmel_pwm, PWM_ISR);
->  	atmel_pwm->updated_pwms &= ~(1 << pwm->hwpwm);
->  	mutex_unlock(&atmel_pwm->isr_lock);
-> -
-> -	clk_disable(atmel_pwm->clk);
-> -	return ret;
->  }
->  
-
-You can move the code in atmel_pwm_config_set() directly in
-atmel_pwm_apply().
-
->  static void atmel_pwm_config_v1(struct pwm_chip *chip, struct pwm_device *pwm,
-> -				unsigned long dty, unsigned long prd)
-> +				unsigned long dty, unsigned long prd,
-> +				bool enabled)
->  {
->  	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
->  	unsigned int val;
-> +	unsigned long timeout;
->  
-> +	if (pwm_is_enabled(pwm) && enabled) {
-> +		/* Update duty factor. */
-> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> +		val &= ~PWM_CMR_UPD_CDTY;
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, dty);
->  
-> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, dty);
-> -
-> -	val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> -	val &= ~PWM_CMR_UPD_CDTY;
-> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> -
-> -	/*
-> -	 * If the PWM channel is enabled, only update CDTY by using the update
-> -	 * register, it needs to set bit 10 of CMR to 0
-> -	 */
-> -	if (pwm_is_enabled(pwm))
-> -		return;
-> -	/*
-> -	 * If the PWM channel is disabled, write value to duty and period
-> -	 * registers directly.
-> -	 */
-> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CDTY, dty);
-> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CPRD, prd);
-> +		/*
-> +		 * Wait for the duty factor update.
-> +		 */
-> +		mutex_lock(&atmel_pwm->isr_lock);
-> +		atmel_pwm->updated_pwms |= atmel_pwm_readl(atmel_pwm, PWM_ISR) &
-> +				~(1 << pwm->hwpwm);
-> +
-> +		timeout = jiffies + 2 * HZ;
-> +		while (!(atmel_pwm->updated_pwms & (1 << pwm->hwpwm)) &&
-> +		       time_before(jiffies, timeout)) {
-> +			usleep_range(10, 100);
-> +			atmel_pwm->updated_pwms |=
-> +					atmel_pwm_readl(atmel_pwm, PWM_ISR);
-> +		}
-> +
-> +		mutex_unlock(&atmel_pwm->isr_lock);
-> +
-> +		/* Update period. */
-> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> +		val |= PWM_CMR_UPD_CDTY;
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, prd);
-
-As I said above, I'm almost sure it's not 100% safe to update both
-parameters. We'd better stick to the existing implementation and see if
-new IPs provide an atomic period+duty update feature.
-
-> +	} else {
-> +		/*
-> +		 * If the PWM channel is disabled, write value to duty and
-> +		 * period registers directly.
-> +		 */
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CDTY, dty);
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CPRD, prd);
-> +	}
->  }
-
-There are 2 different cases in this _config() function, and
-atmel_pwm_apply() is already doing different things when the PWM is
-enabled than when it's disabled, so maybe it's worth creating 2
-different hooks, one for the update-while-running case, and another for
-for the initialization case.
-
-How about having the following hooks in atmel_pwm_data?
-
-	void (*update_cdty)(struct pwm_chip *chip,
-                            struct pwm_device *pwm,
-                            u32 cdty);
-        void (*set_cprd_cdty)(struct pwm_chip *chip,
-                              struct pwm_device *pwm,
-                              u32 cprd, u32 cdty);
-
->  
->  static void atmel_pwm_config_v2(struct pwm_chip *chip, struct pwm_device *pwm,
-> -				unsigned long dty, unsigned long prd)
-> +				unsigned long dty, unsigned long prd,
-> +				bool enabled)
->  {
->  	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
->  
-> -	if (pwm_is_enabled(pwm)) {
-> +	if (pwm_is_enabled(pwm) && enabled) {
->  		/*
-> -		 * If the PWM channel is enabled, using the duty update register
-> -		 * to update the value.
-> +		 * If the PWM channel is enabled, use update registers
-> +		 * to update the duty and period.
->  		 */
->  		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTYUPD, dty);
-> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CPRDUPD, prd);
-
-Same here, I'm not convinced we are guaranteed that both parameters will
-be applied atomically. There's a sync mechanism described in the
-datasheet, but I'm not sure I understand how it works, and anyway,
-you're not using it here, so let's stick to the "update duty only"
-approach for now.
-
->  	} else {
->  		/*
->  		 * If the PWM channel is disabled, write value to duty and
-> @@ -208,49 +229,6 @@ static void atmel_pwm_config_v2(struct pwm_chip *chip, struct pwm_device *pwm,
->  	}
->  }
->  
-> -static int atmel_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-> -				  enum pwm_polarity polarity)
-> -{
-> -	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> -	u32 val;
-> -	int ret;
-> -
-> -	val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> -
-> -	if (polarity == PWM_POLARITY_NORMAL)
-> -		val &= ~PWM_CMR_CPOL;
-> -	else
-> -		val |= PWM_CMR_CPOL;
-> -
-> -	ret = clk_enable(atmel_pwm->clk);
-> -	if (ret) {
-> -		dev_err(chip->dev, "failed to enable PWM clock\n");
-> -		return ret;
-> -	}
-> -
-> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> -
-> -	clk_disable(atmel_pwm->clk);
-> -
-> -	return 0;
-> -}
-> -
-> -static int atmel_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> -{
-> -	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> -	int ret;
-> -
-> -	ret = clk_enable(atmel_pwm->clk);
-> -	if (ret) {
-> -		dev_err(chip->dev, "failed to enable PWM clock\n");
-> -		return ret;
-> -	}
-> -
-> -	atmel_pwm_writel(atmel_pwm, PWM_ENA, 1 << pwm->hwpwm);
-> -
-> -	return 0;
-> -}
-> -
->  static void atmel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  {
->  	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> @@ -285,17 +263,58 @@ static void atmel_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	clk_disable(atmel_pwm->clk);
->  }
->  
-> +static int atmel_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			   struct pwm_state *state)
-> +{
-> +	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> +	struct pwm_state cstate;
-> +	unsigned long prd, dty;
-> +	unsigned int pres;
-> +	bool enabled = true;
-> +	int ret;
-> +
-> +	pwm_get_state(pwm, &cstate);
-> +
-> +	if (state->enabled) {
-> +		ret = atmel_pwm_config_prepare(chip, state, &prd, &dty,
-> +					       &pres);
-> +		if (ret) {
-> +			dev_err(chip->dev, "failed to prepare config\n");
-> +			return ret;
-> +		}
-> +
-> +		if (cstate.polarity != state->polarity) {
-
-Hm, you seem to unconditionally disable the PWM. What if it was already
-disabled? The atmel_pwm->clk refcounting is likely to be wrong after
-that.
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 0649d53f3d16..c99a67b4afe4 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -261,6 +261,16 @@ config SENSORS_ASC7621
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called asc7621.
  
-Moreover, if you follow my previous suggestions, you should have
-
-		if (cstate.enabled &&
-		    (cstate.polarity != state->polarity ||
-		     cstate.period != state->period))
-
-> +			atmel_pwm_disable(chip, pwm);
-> +			enabled = false;
-
-Just set cstate.enabled to false here, no need for an extra variable.
-
-> +		}
-> +
-> +		if (!cstate.enabled || !enabled) {
-
-		if (!cstate.enabled) {
-
-> +			ret = clk_enable(atmel_pwm->clk);
-> +			if (ret) {
-> +				dev_err(chip->dev, "failed to enable clock\n");
-> +				return ret;
-> +			}
-> +		}
-> +
-> +		atmel_pwm_config_set(chip, pwm, dty, prd, pres,
-> +				     state->polarity, enabled);
-> +		if (!cstate.enabled || !enabled)
-> +			atmel_pwm_writel(atmel_pwm, PWM_ENA, 1 << pwm->hwpwm);
-
-I would differentiate the update CDTY only and set CDTY+CPRD+CMR cases
-here. Something like:
-
-		if (cstate.enabled) {
-			/*
-			 * 1/ read CPRD
-			 * 2/ call atmel_pwm_calculate_cdty()
-			 * 3/ call ->update_cdty() hook
-			 */
-		} else {
-			/*
-			 * 1/ enable the clk
-			 * 2/ read CPRD
-			 * 3/ call atmel_pwm_calculate_cprd_and_pres()
-			 * 4/ call atmel_pwm_calculate_cdty()
-			 * 3/ call ->set_cprd_cdty() hook
-			 * 4/ write CMR (PRES + polarity)
-			 * 5/ start the PWM (PWM_ENA)
-			 */
-		}
-
-> +	} else if (cstate.enabled) {
-> +		atmel_pwm_disable(chip, pwm);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static const struct pwm_ops atmel_pwm_ops = {
-> -	.config = atmel_pwm_config,
-> -	.set_polarity = atmel_pwm_set_polarity,
-> -	.enable = atmel_pwm_enable,
-> -	.disable = atmel_pwm_disable,
-> +	.apply = atmel_pwm_apply,
->  	.owner = THIS_MODULE,
->  };
->  
->  struct atmel_pwm_data {
->  	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
-> -		       unsigned long dty, unsigned long prd);
-> +		       unsigned long dty, unsigned long prd, bool enabled);
->  };
->  
->  static const struct atmel_pwm_data atmel_pwm_data_v1 = {
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++config SENSORS_ASPEED_ADC
++	tristate "Aspeed AST2400/AST2500 ADC"
++	depends on ARCH_ASPEED
++	help
++	  If you say yes here you get support for the Aspeed AST2400/AST2500
++	  ADC.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called aspeed_adc.
++
+ config SENSORS_K8TEMP
+ 	tristate "AMD Athlon64/FX or Opteron temperature sensor"
+ 	depends on X86 && PCI
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 5509edf6186a..eede049c9d0d 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -46,6 +46,7 @@ obj-$(CONFIG_SENSORS_ADT7475)	+= adt7475.o
+ obj-$(CONFIG_SENSORS_APPLESMC)	+= applesmc.o
+ obj-$(CONFIG_SENSORS_ARM_SCPI)	+= scpi-hwmon.o
+ obj-$(CONFIG_SENSORS_ASC7621)	+= asc7621.o
++obj-$(CONFIG_SENSORS_ASPEED_ADC) += aspeed_adc.o
+ obj-$(CONFIG_SENSORS_ATXP1)	+= atxp1.o
+ obj-$(CONFIG_SENSORS_CORETEMP)	+= coretemp.o
+ obj-$(CONFIG_SENSORS_DA9052_ADC)+= da9052-hwmon.o
+diff --git a/drivers/hwmon/aspeed_adc.c b/drivers/hwmon/aspeed_adc.c
+new file mode 100644
+index 000000000000..098e32315264
+--- /dev/null
++++ b/drivers/hwmon/aspeed_adc.c
+@@ -0,0 +1,383 @@
++/*
++ * Aspeed AST2400/2500 ADC
++ *
++ * Copyright (C) 2017 Google, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ */
++
++#include <asm/io.h>
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/errno.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++
++#define ASPEED_ADC_NUM_CHANNELS	16
++#define ASPEED_ADC_REF_VOLTAGE	2500 /* millivolts */
++
++#define ASPEED_ADC_REG_ADC00 0x00
++#define ASPEED_ADC_REG_ADC04 0x04
++#define ASPEED_ADC_REG_ADC08 0x08
++#define ASPEED_ADC_REG_ADC0C 0x0C
++#define ASPEED_ADC_REG_ADC10 0x10
++#define ASPEED_ADC_REG_ADC14 0x14
++#define ASPEED_ADC_REG_ADC18 0x18
++#define ASPEED_ADC_REG_ADC1C 0x1C
++#define ASPEED_ADC_REG_ADC20 0x20
++#define ASPEED_ADC_REG_ADC24 0x24
++#define ASPEED_ADC_REG_ADC28 0x28
++#define ASPEED_ADC_REG_ADC2C 0x2C
++
++#define ASPEED_ADC_OPERATION_MODE_POWER_DOWN	(0x0 << 1)
++#define ASPEED_ADC_OPERATION_MODE_STANDBY	(0x1 << 1)
++#define ASPEED_ADC_OPERATION_MODE_NORMAL	(0x7 << 1)
++
++#define ASPEED_ADC_ENGINE_ENABLE	BIT(0)
++
++struct aspeed_adc_data {
++	struct device	*dev;
++	void __iomem	*base;
++	struct clk	*pclk;
++	struct mutex	lock;
++	unsigned long	update_interval_ms;
++	u32		enabled_channel_mask;
++	const char*	channel_labels[ASPEED_ADC_NUM_CHANNELS];
++};
++
++static int aspeed_adc_set_adc_clock_frequency(
++		struct aspeed_adc_data *data,
++		unsigned long desired_update_interval_ms)
++{
++	long pclk_hz = clk_get_rate(data->pclk);
++	long adc_combined_divisor;
++	long adc_pre_divisor;
++	long adc_divisor;
++	long adc_clock_control_reg_val;
++        long num_enabled_channels = hweight32(data->enabled_channel_mask);
++
++	if (desired_update_interval_ms < 1)
++		return -EINVAL;
++
++	/* From the AST2400 datasheet:
++	 *   adc_period_s = pclk_period_s * 2 * (pre_divisor+1) * (divisor+1)
++	 *
++	 *   and
++	 *
++	 *   sample_period_s = 12 * adc_period_s
++	 *
++	 * Substitute pclk_period_s = (1 / pclk_hz)
++	 *
++	 * Solve for (pre-divisor+1) * (divisor+1) as those are settings we need
++	 * to program:
++	 *   (pre-divisor+1) * (divisor+1) = (sample_period_s * pclk_hz) / 24
++	 */
++
++	/* Assume PCLK runs at a fairly high frequency so dividing it first
++	 * loses little accuracy.  Also note that the above formulas have
++	 * sample_period in seconds while our desired_update_interval is in
++	 * milliseconds, hence the divide by 1000.
++	 */
++	adc_combined_divisor = desired_update_interval_ms *
++			(pclk_hz / 24 / 1000 / num_enabled_channels);
++
++	/* Prefer to use the ADC divisor over the ADC pre-divisor.  ADC divisor
++	 * is 10-bits wide so anything over 1024 must use the pre-divisor.
++	 */
++	adc_pre_divisor = 1;
++	while (adc_combined_divisor/adc_pre_divisor > (1<<10)) {
++		adc_pre_divisor += 1;
++	};
++	adc_divisor = adc_combined_divisor / adc_pre_divisor;
++
++	/* Since ADC divisor and pre-divisor are used in division, the register
++	 * value is implicitly incremented by one before use.  This means we
++	 * need to subtract one from our calculated values above.
++	 */
++	adc_pre_divisor -= 1;
++	adc_divisor -= 1;
++
++	adc_clock_control_reg_val = (adc_pre_divisor << 17) | adc_divisor;
++
++	mutex_lock(&data->lock);
++	data->update_interval_ms =
++			(adc_pre_divisor + 1) * (adc_divisor + 1)
++			/ (pclk_hz / 24 / 1000);
++	writel(adc_clock_control_reg_val, data->base + ASPEED_ADC_REG_ADC0C);
++	mutex_unlock(&data->lock);
++
++	return 0;
++}
++
++static int aspeed_adc_get_channel_reading(struct aspeed_adc_data *data,
++						int channel, long *val)
++{
++	u32 data_reg;
++	u32 data_reg_val;
++	long adc_val;
++
++	/* Each 32-bit data register contains 2 10-bit ADC values. */
++	data_reg = ASPEED_ADC_REG_ADC10 + (channel / 2) * 4;
++	data_reg_val = readl(data->base + data_reg);
++	if (channel % 2 == 0) {
++		adc_val = data_reg_val & 0x3FF;
++	} else {
++		adc_val = (data_reg_val >> 16) & 0x3FF;
++	}
++
++	/* Scale 10-bit input reading to millivolts. */
++	*val = adc_val * ASPEED_ADC_REF_VOLTAGE / 1024;
++
++	return 0;
++}
++
++static umode_t aspeed_adc_hwmon_is_visible(const void *_data,
++						enum hwmon_sensor_types type,
++						u32 attr, int channel)
++{
++	const struct aspeed_adc_data* data = _data;
++
++	if (type == hwmon_chip && attr == hwmon_chip_update_interval) {
++		return S_IRUGO | S_IWUSR;
++	} else if (type == hwmon_in) {
++		/* Only channels that are enabled should be visible. */
++		if (channel >= 0 && channel <= ASPEED_ADC_NUM_CHANNELS &&
++		    (data->enabled_channel_mask & BIT(channel))) {
++
++			/* All enabled channels have an input but labels are
++			 * optional in the device tree.
++			 */
++			if (attr == hwmon_in_input) {
++				return S_IRUGO;
++			} else if (attr == hwmon_in_label &&
++					data->channel_labels[channel] != NULL) {
++				return S_IRUGO;
++			}
++		}
++	}
++
++	return 0;
++}
++
++static int aspeed_adc_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			 u32 attr, int channel, long *val)
++{
++	struct aspeed_adc_data *data = dev_get_drvdata(dev);
++
++	if (type == hwmon_chip && attr == hwmon_chip_update_interval) {
++		*val = data->update_interval_ms;
++		return 0;
++	} else if (type == hwmon_in && attr == hwmon_in_input) {
++		return aspeed_adc_get_channel_reading(data, channel, val);
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static int aspeed_adc_hwmon_read_string(struct device *dev,
++					enum hwmon_sensor_types type,
++					u32 attr, int channel, char **str)
++{
++	struct aspeed_adc_data *data = dev_get_drvdata(dev);
++
++	if (type == hwmon_in && attr == hwmon_in_label) {
++		*str = (char*)data->channel_labels[channel];
++		return 0;
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static int aspeed_adc_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
++			  u32 attr, int channel, long val)
++{
++	struct aspeed_adc_data *data = dev_get_drvdata(dev);
++
++	if (type == hwmon_chip && attr == hwmon_chip_update_interval) {
++		return aspeed_adc_set_adc_clock_frequency(data, val);
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static const struct hwmon_ops aspeed_adc_hwmon_ops = {
++	.is_visible = aspeed_adc_hwmon_is_visible,
++	.read = aspeed_adc_hwmon_read,
++	.read_string = aspeed_adc_hwmon_read_string,
++	.write = aspeed_adc_hwmon_write,
++};
++
++static const u32 aspeed_adc_hwmon_chip_config[] = {
++	HWMON_C_UPDATE_INTERVAL,
++	0
++};
++
++static const struct hwmon_channel_info aspeed_adc_hwmon_chip_channel = {
++	.type = hwmon_chip,
++	.config = aspeed_adc_hwmon_chip_config,
++};
++
++static const u32 aspeed_adc_hwmon_in_config[] = {
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	HWMON_I_INPUT | HWMON_I_LABEL,
++	0
++};
++
++static const struct hwmon_channel_info aspeed_adc_hwmon_in_channel = {
++	.type = hwmon_in,
++	.config = aspeed_adc_hwmon_in_config,
++};
++
++static const struct hwmon_channel_info *aspeed_adc_hwmon_channel_info[] = {
++	&aspeed_adc_hwmon_chip_channel,
++	&aspeed_adc_hwmon_in_channel,
++	NULL
++};
++
++static const struct hwmon_chip_info aspeed_adc_hwmon_chip_info = {
++	.ops = &aspeed_adc_hwmon_ops,
++	.info = aspeed_adc_hwmon_channel_info,
++};
++
++static int aspeed_adc_probe(struct platform_device *pdev)
++{
++	struct aspeed_adc_data *data;
++	struct resource *res;
++	int ret;
++	struct device *hwmon_dev;
++	u32 desired_update_interval_ms;
++	u32 adc_engine_control_reg_val;
++	struct device_node* node;
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->pclk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(data->pclk)) {
++		dev_err(&pdev->dev, "clk_get failed\n");
++		return PTR_ERR(data->pclk);
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	data->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(data->base))
++		return PTR_ERR(data->base);
++
++	ret = of_property_read_u32(pdev->dev.of_node,
++			"update-interval-ms", &desired_update_interval_ms);
++	if (ret < 0 || desired_update_interval_ms == 0) {
++		dev_err(&pdev->dev,
++				"Missing or zero update-interval-ms property, "
++				"defaulting to 100ms\n");
++		desired_update_interval_ms = 100;
++	}
++
++	mutex_init(&data->lock);
++
++	ret = clk_prepare_enable(data->pclk);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to enable clock\n");
++		mutex_destroy(&data->lock);
++                return ret;
++	}
++
++	/* Figure out which channels are marked available in the device tree. */
++	data->enabled_channel_mask = 0;
++	for_each_available_child_of_node(pdev->dev.of_node, node) {
++		u32 pval;
++		unsigned int channel;
++
++		if (of_property_read_u32(node, "reg", &pval)) {
++			dev_err(&pdev->dev, "invalid reg on %s\n",
++				node->full_name);
++			continue;
++		}
++
++		channel = pval;
++		if (channel >= ASPEED_ADC_NUM_CHANNELS) {
++			dev_err(&pdev->dev,
++				"invalid channel index %d on %s\n",
++				channel, node->full_name);
++			continue;
++		}
++
++		data->enabled_channel_mask |= BIT(channel);
++
++		/* Cache a pointer to the label if one is specified.  Ignore any
++		 * errors as the label property is optional.
++		 */
++		of_property_read_string(node, "label", &data->channel_labels[channel]);
++	}
++
++	platform_set_drvdata(pdev, data);
++	aspeed_adc_set_adc_clock_frequency(data, desired_update_interval_ms);
++
++	/* Start all the requested channels in normal mode. */
++	adc_engine_control_reg_val = (data->enabled_channel_mask << 16) |
++		ASPEED_ADC_OPERATION_MODE_NORMAL | ASPEED_ADC_ENGINE_ENABLE;
++	writel(adc_engine_control_reg_val, data->base + ASPEED_ADC_REG_ADC00);
++
++	/* Register sysfs hooks */
++	hwmon_dev = devm_hwmon_device_register_with_info(
++			&pdev->dev, "aspeed_adc", data,
++			&aspeed_adc_hwmon_chip_info, NULL);
++	if (IS_ERR(hwmon_dev)) {
++		clk_disable_unprepare(data->pclk);
++		mutex_destroy(&data->lock);
++		return PTR_ERR(hwmon_dev);
++	}
++
++	return 0;
++}
++
++static int aspeed_adc_remove(struct platform_device *pdev) {
++	struct aspeed_adc_data *data = dev_get_drvdata(&pdev->dev);
++	clk_disable_unprepare(data->pclk);
++	mutex_destroy(&data->lock);
++	return 0;
++}
++
++const struct of_device_id aspeed_adc_matches[] = {
++	{ .compatible = "aspeed,ast2400-adc" },
++	{ .compatible = "aspeed,ast2500-adc" },
++};
++MODULE_DEVICE_TABLE(of, aspeed_adc_matches);
++
++static struct platform_driver aspeed_adc_driver = {
++	.probe = aspeed_adc_probe,
++	.remove = aspeed_adc_remove,
++	.driver = {
++		.name = KBUILD_MODNAME,
++		.of_match_table = aspeed_adc_matches,
++	}
++};
++
++module_platform_driver(aspeed_adc_driver);
++
++MODULE_AUTHOR("Rick Altherr <raltherr@google.com>");
++MODULE_DESCRIPTION("Aspeed AST2400/2500 ADC Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.11.0.483.g087da7b7c-goog
