@@ -1,48 +1,84 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 11/25] ARM: dts: Add Actions Semi S500 and LeMaker
- Guitar
-Date: Tue, 28 Feb 2017 12:32:45 +0000
-Message-ID: <20170228123245.GF3691@leverpostej>
-References: <20170228063535.32069-1-afaerber@suse.de>
- <20170228063535.32069-12-afaerber@suse.de>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 4/4] leds: triggers: support timer trigger DT bindings
+Date: Tue, 28 Feb 2017 13:04:52 +0100
+Message-ID: <20170228120452.10043-4-zajec5@gmail.com>
+References: <20170228120452.10043-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170228063535.32069-12-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170228120452.10043-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAwNzozNToyMUFNICswMTAwLCBBbmRyZWFzIEbD
-pHJiZXIgd3JvdGU6Cj4gKy9kdHMtdjEvOwo+ICsKPiArI2luY2x1ZGUgInM1MDAtZ3VpdGFyLmR0
-c2kiCj4gKwo+ICsvIHsKPiArCWNvbXBhdGlibGUgPSAibGVtYWtlcixndWl0YXItYmItcmV2LWIi
-LCAibGVtYWtlcixndWl0YXIiLCAiYWN0aW9ucyxzNTAwIjsKPiArCW1vZGVsID0gIkxlTWFrZXIg
-R3VpdGFyIEJhc2UgQm9hcmQgcmV2LiBCIjsKPiArCj4gKwlhbGlhc2VzIHsKPiArCQlzZXJpYWwz
-ID0gJnVhcnQzOwo+ICsJfTsKPiArCj4gKwljaG9zZW4gewo+ICsJCXN0ZG91dC1wYXRoID0gInNl
-cmlhbDM6MTE1MjAwbjgiOwo+ICsJfTsKPiArfTsKPiArCj4gKyZ1YXJ0MyB7Cj4gKwlzdGF0dXMg
-PSAib2theSI7Cj4gK307Cgo+ICsjaW5jbHVkZSAiczUwMC5kdHNpIgo+ICsKPiArLyB7Cj4gKwlj
-b21wYXRpYmxlID0gImxlbWFrZXIsZ3VpdGFyIiwgImFjdGlvbnMsczUwMCI7Cj4gKwo+ICsJL2Rl
-bGV0ZS1ub2RlLyBtZW1vcnk7CgpFd3cuIElzIHRoaXMganVzdCBib2RnaW5nIGFyb3VuZCBza2Vs
-ZXRvbi5kdHNpPwoKPiArCj4gKwltZW1vcnlAMCB7Cj4gKwkJZGV2aWNlX3R5cGUgPSAibWVtb3J5
-IjsKPiArCQlyZWcgPSA8MHgwIDB4NDAwMDAwMDA+Owo+ICsJfTsKPiArfTsKCj4gKyNpbmNsdWRl
-ICJza2VsZXRvbi5kdHNpIgoKUGxlYXNlIGRvbid0IGluY2x1ZGUgc2tlbGV0b24uZHRzaS4gUGxl
-YXNlIGFkZCB0aGUgcmVsZXZhbnQgbm9kZXMgYW5kCnByb3BlcnRpZXMgZXhwbGNpaXRseSB0byB5
-b3VyIGR0c3tpLH0gZmlsZXMuCgo+ICsKPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVw
-dC1jb250cm9sbGVyL2FybS1naWMuaD4KPiArCj4gKy8gewoKUGxlYXNlIGRlZmluZSB5b3VyICNh
-ZGRyZXNzLWNlbGxzIGFuZCAjc2l6ZS1jZWxscyBoZXJlLgoKSWYgeW91IHdhbnQsIGFkZCBhbiBl
-bXB0eSAvY2hvc2VuIG5vZGUgKG5vdCBzdHJpY3RseSBuZWNlc3Nhcnkgc2luY2UKeW91ciBkdHMg
-ZmlsZSBoYXMgYSBub24tZW1wdHkgb25lIGFueWhvdykuCgpUaGFua3MsCk1hcmsuCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+
+Timer trigger has 2 parameters: delay on and delay off times. This patch
+allows specifying "timer" trigger in DT including both time values.
+
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+ drivers/leds/led-triggers.c          |  2 +-
+ drivers/leds/trigger/ledtrig-timer.c | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
+index 83897e0d6b76..c53c20d676cd 100644
+--- a/drivers/leds/led-triggers.c
++++ b/drivers/leds/led-triggers.c
+@@ -181,7 +181,7 @@ static void led_trigger_of_read_trigger(struct led_classdev *led_cdev)
+ 	}
+ 
+ 	/* Check if trigger specified in DT is supported */
+-	if (1) /* TODO */
++	if (strcmp(trigger_type, "timer"))
+ 		goto err_node_put;
+ 
+ 	led_cdev->default_trigger = trigger_type;
+diff --git a/drivers/leds/trigger/ledtrig-timer.c b/drivers/leds/trigger/ledtrig-timer.c
+index 8d09327b5719..98b58469d705 100644
+--- a/drivers/leds/trigger/ledtrig-timer.c
++++ b/drivers/leds/trigger/ledtrig-timer.c
+@@ -17,6 +17,7 @@
+ #include <linux/device.h>
+ #include <linux/ctype.h>
+ #include <linux/leds.h>
++#include <linux/of.h>
+ 
+ static ssize_t led_delay_on_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+@@ -71,10 +72,25 @@ static ssize_t led_delay_off_store(struct device *dev,
+ static DEVICE_ATTR(delay_on, 0644, led_delay_on_show, led_delay_on_store);
+ static DEVICE_ATTR(delay_off, 0644, led_delay_off_show, led_delay_off_store);
+ 
++static void ledtrig_timer_of_read(struct led_classdev *led_cdev)
++{
++	struct device_node *np = led_cdev->trigger_node;
++
++	if (!np)
++		return;
++
++	of_property_read_u32(np, "delay-on",
++			     (u32 *)&led_cdev->blink_delay_on);
++	of_property_read_u32(np, "delay-off",
++			     (u32 *)&led_cdev->blink_delay_off);
++}
++
+ static void timer_trig_activate(struct led_classdev *led_cdev)
+ {
+ 	int rc;
+ 
++	ledtrig_timer_of_read(led_cdev);
++
+ 	led_cdev->trigger_data = NULL;
+ 
+ 	rc = device_create_file(led_cdev->dev, &dev_attr_delay_on);
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
