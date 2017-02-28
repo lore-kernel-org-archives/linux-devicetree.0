@@ -1,46 +1,167 @@
-From: Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: 289b7bfd48 BUG: KASAN: slab-out-of-bounds in of_device_uevent at
- addr ffff880012049289
-Date: Tue, 28 Feb 2017 12:29:43 +0800
-Message-ID: <20170228042943.zyt2oqqtwuheki5d@wfg-t540p.sh.intel.com>
-References: <20170228042403.tl3d7v7iedqxoe4n@wfg-t540p.sh.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170228042403.tl3d7v7iedqxoe4n@wfg-t540p.sh.intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, LKP <lkp@01.org>
+From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 4/4] iio: accel: adxl345: Add SPI support
+Date: Tue, 28 Feb 2017 10:37:19 +0800
+Message-ID: <698e2cf848231eacde91dd72aa6f73059c9a7752.1488248485.git.eraretuya@gmail.com>
+References: <cover.1488248485.git.eraretuya@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1488248485.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1488248485.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1488248485.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 12:24:03PM +0800, Fengguang Wu wrote:
->Hi Linus Walleij,
->
->I'm not sure if this is a good bisect since the merged gpio branch
->suffers from another early hang problem which could hide the KASAN
->BUG. So also OF people are also included in the loop.
->
->The attached reproduce-* script may easily reproduce the bug.
->
->https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->
->commit 289b7bfd483c8ca3dfde92d7e19a8b70e0b81248
->Merge: 183c948 9b8e3ec
->Author:     Linus Torvalds <torvalds@linux-foundation.org>
->AuthorDate: Sat Apr 9 13:28:50 2016 -0700
->Commit:     Linus Torvalds <torvalds@linux-foundation.org>
->CommitDate: Sat Apr 9 13:28:50 2016 -0700
->
->     Merge tag 'gpio-v4.6-3' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio
+Add SPI driver that initializes SPI regmap for the adxl345 core driver.
+The driver supports the same functionality as I2C namely the x, y, z and
+scale readings.
 
-The below bisect log shows this old bug is still alive in mainline.
-Not sure for linux-next because it now suffers from an early boot hang bug.
+Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes from v4:
+* Add Andy's Reviewed-by tag
 
-># extra tests on tree/branch linus/master
->git bisect  bad e5d56efc97f8240d0b5d66c03949382b6d7e5570  # 10:50      0-      3  Merge tag 'watchdog-for-linus-v4.11' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging
-># extra tests on tree/branch linux-next/master
->git bisect good 3e7350242c6f3d41d28e03418bd781cc1b7bad5f  # 01:04     60+     72  Add linux-next specific files for 20170224
+Changes from v3:
+* Revert to explicit and separate I2C and SPI configuration
+* Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
 
-Thanks,
-Fengguang
+ drivers/iio/accel/Kconfig       | 14 +++++++
+ drivers/iio/accel/Makefile      |  1 +
+ drivers/iio/accel/adxl345_spi.c | 83 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 98 insertions(+)
+ create mode 100644 drivers/iio/accel/adxl345_spi.c
+
+diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+index 9f5a889..8994175 100644
+--- a/drivers/iio/accel/Kconfig
++++ b/drivers/iio/accel/Kconfig
+@@ -22,6 +22,20 @@ config ADXL345_I2C
+ 	  will be called adxl345_i2c and you will also get adxl345_core
+ 	  for the core module.
+ 
++config ADXL345_SPI
++	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer SPI Driver"
++	depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
++	depends on SPI
++	select ADXL345
++	select REGMAP_SPI
++	help
++	  Say Y here if you want to build support for the Analog Devices
++	  ADXL345 3-axis digital accelerometer.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called adxl345_spi and you will also get adxl345_core
++	  for the core module.
++
+ config BMA180
+ 	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
+ 	depends on I2C
+diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+index 3f4a6d6..31fba19 100644
+--- a/drivers/iio/accel/Makefile
++++ b/drivers/iio/accel/Makefile
+@@ -5,6 +5,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_ADXL345) += adxl345_core.o
+ obj-$(CONFIG_ADXL345_I2C) += adxl345_i2c.o
++obj-$(CONFIG_ADXL345_SPI) += adxl345_spi.o
+ obj-$(CONFIG_BMA180) += bma180.o
+ obj-$(CONFIG_BMA220) += bma220_spi.o
+ obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
+diff --git a/drivers/iio/accel/adxl345_spi.c b/drivers/iio/accel/adxl345_spi.c
+new file mode 100644
+index 0000000..b7c2e7f
+--- /dev/null
++++ b/drivers/iio/accel/adxl345_spi.c
+@@ -0,0 +1,83 @@
++/*
++ * ADXL345 3-Axis Digital Accelerometer
++ *
++ * Copyright (c) 2017 Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is subject to the terms and conditions of version 2 of
++ * the GNU General Public License. See the file COPYING in the main
++ * directory of this archive for more details.
++ *
++ * SPI driver for ADXL345
++ */
++
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/spi/spi.h>
++
++#include "adxl345.h"
++
++#define ADXL345_MAX_SPI_FREQ_HZ		5000000
++
++static const struct regmap_config adxl345_spi_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	 /* Setting bits 7 and 6 enables multiple-byte read */
++	.read_flag_mask = BIT(7) | BIT(6),
++};
++
++static int adxl345_spi_probe(struct spi_device *spi)
++{
++	struct regmap *regmap;
++	const struct spi_device_id *id = spi_get_device_id(spi);
++
++	/* Bail out if max_speed_hz exceeds 5 MHz */
++	if (spi->max_speed_hz > ADXL345_MAX_SPI_FREQ_HZ) {
++		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds 5 MHz\n",
++			spi->max_speed_hz);
++		return -EINVAL;
++	}
++
++	regmap = devm_regmap_init_spi(spi, &adxl345_spi_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(&spi->dev, "Error initializing spi regmap: %d\n",
++			(int)PTR_ERR(regmap));
++		return PTR_ERR(regmap);
++	}
++
++	return adxl345_common_probe(&spi->dev, regmap, id->name);
++}
++
++static int adxl345_spi_remove(struct spi_device *spi)
++{
++	return adxl345_common_remove(&spi->dev);
++}
++
++static const struct spi_device_id adxl345_spi_id[] = {
++	{ "adxl345", 0 },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(spi, adxl345_spi_id);
++
++static const struct of_device_id adxl345_of_match[] = {
++	{ .compatible = "adi,adxl345" },
++	{ },
++};
++
++MODULE_DEVICE_TABLE(of, adxl345_of_match);
++
++static struct spi_driver adxl345_spi_driver = {
++	.driver = {
++		.name	= "adxl345_spi",
++		.of_match_table = adxl345_of_match,
++	},
++	.probe		= adxl345_spi_probe,
++	.remove		= adxl345_spi_remove,
++	.id_table	= adxl345_spi_id,
++};
++
++module_spi_driver(adxl345_spi_driver);
++
++MODULE_AUTHOR("Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer SPI driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
