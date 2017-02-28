@@ -1,15 +1,14 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/4] arm: dts: imx: Add iMX6Q-based Kontron SMARC-sAMX6i
- module
-Date: Tue, 28 Feb 2017 17:06:02 -0600
-Message-ID: <CAL_JsqJzP5e0fcM==cqkAe=x9Yf+H7i+k1H0udaknY_h6cbOSQ@mail.gmail.com>
-References: <20170219202801.2082-1-plaes@plaes.org>
- <20170219202801.2082-4-plaes@plaes.org>
+Subject: Re: [PATCH] ARM: mvebu: add support for the Linksys WRT1900ACS
+ (Shelby)
+Date: Tue, 28 Feb 2017 17:08:15 -0600
+Message-ID: <CAL_JsqJsrparnm8wTL4L3W2cvfSuH=1VddUdBP295MAFfCccWA@mail.gmail.com>
+References: <20170214085919.3997-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170219202801.2082-4-plaes@plaes.org>
+In-Reply-To: <20170214085919.3997-1-ralph.sennhauser@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,45 +18,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Priit Laes <plaes@plaes.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Imre Kaloz <kaloz@openwrt.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 19, 2017 at 2:28 PM, Priit Laes <plaes@plaes.org> wrote:
-> SMARC-sAMX6i is a SMARC (Smart Mobility Architecture) compliant
-> module.
+On Tue, Feb 14, 2017 at 2:59 AM, Ralph Sennhauser
+<ralph.sennhauser@gmail.com> wrote:
+> The Linksys WRT1900ACS (Shelby) is another Armada 385 based router in
+> the Linksys WRT AC Series which got released in October 2015.
 >
-> Signed-off-by: Priit Laes <plaes@plaes.org>
+> The file armada-385-linksys-shelby.dts is taken from OpenWrt as-is and
+> originally authored by Imre Kaloz.
+>
+> URL: http://tinyurl.com/j8lz83a
+> CC: Imre Kaloz <kaloz@openwrt.org>
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
 > ---
->  arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi | 434 ++++++++++++++++++++++++++++++
->  1 file changed, 434 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
+>  arch/arm/boot/dts/Makefile                      |   1 +
+>  arch/arm/boot/dts/armada-385-linksys-shelby.dts | 114 ++++++++++++++++++++++++
+>  2 files changed, 115 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-385-linksys-shelby.dts
 >
-> diff --git a/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 0118084..16f1748 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -970,6 +970,7 @@ dtb-$(CONFIG_MACH_ARMADA_38X) += \
+>         armada-385-db-ap.dtb \
+>         armada-385-linksys-caiman.dtb \
+>         armada-385-linksys-cobra.dtb \
+> +       armada-385-linksys-shelby.dtb \
+>         armada-385-turris-omnia.dtb \
+>         armada-388-clearfog.dtb \
+>         armada-388-clearfog-base.dtb \
+> diff --git a/arch/arm/boot/dts/armada-385-linksys-shelby.dts b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
 > new file mode 100644
-> index 0000000..e3d7a35
+> index 0000000..c7a8ddd
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
-> @@ -0,0 +1,434 @@
+> +++ b/arch/arm/boot/dts/armada-385-linksys-shelby.dts
+> @@ -0,0 +1,114 @@
 > +/*
-> + * Copyright 2017 Priit Laes <plaes@plaes.org>
+> + * Device Tree file for the Linksys WRT1900ACS (Shelby)
 > + *
-> + * Based on initial work by Nikita Yushchenko <nyushchenko at dev.rtsoft.ru>
+> + * Copyright (C) 2015 Imre Kaloz <kaloz@openwrt.org>
+> + *
 > + *
 > + * This file is dual-licensed: you can use it either under the terms
 > + * of the GPL or the X11 license, at your option. Note that this dual
 > + * licensing only applies to this file, and not this project as a
 > + * whole.
 > + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of
-> + *     the License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
+> + *  a) This file is licensed under the terms of the GNU General Public
+> + *     License version 2.  This program is licensed "as is" without
+> + *     any warranty of any kind, whether express or implied.
 > + *
 > + * Or, alternatively,
 > + *
@@ -84,6 +97,6 @@ On Sun, Feb 19, 2017 at 2:28 PM, Priit Laes <plaes@plaes.org> wrote:
 
 Use SPDX tags here:
 
-SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
 While it says X11, this is really MIT license text.
