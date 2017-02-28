@@ -1,108 +1,66 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
- binding to OPP nodes
-Date: Tue, 28 Feb 2017 08:10:01 -0600
-Message-ID: <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com>
-References: <cover.1487926924.git.viresh.kumar@linaro.org> <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
- <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop> <20170228065711.GD19417@vireshk-i7>
+Subject: Re: [PATCH v2 3/3] media: dt-bindings: vpif: new optional property
+Date: Tue, 28 Feb 2017 08:26:37 -0600
+Message-ID: <CAL_JsqLBYqGgOA1GUi9mHT-51D5k96w-N0FiOyF+qPY6BGStzA@mail.gmail.com>
+References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
+ <1487771027-7763-4-git-send-email-bgolaszewski@baylibre.com>
+ <20170227225209.26oieqwbafqjga2a@rob-hp-laptop> <6b392a4a-2de8-9981-ad40-ca7201bf813d@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170228065711.GD19417@vireshk-i7>
+In-Reply-To: <6b392a4a-2de8-9981-ad40-ca7201bf813d-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 12:57 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 27-02-17, 18:39, Rob Herring wrote:
->> On Fri, Feb 24, 2017 at 02:36:34PM +0530, Viresh Kumar wrote:
->> > If the consumers don't need the capability of switching to different
->> > domain performance states at runtime, then they can simply define their
->> > required domain performance state in their nodes directly.
->> >
->> > But if the device needs the capability of switching to different domain
->> > performance states, as they may need to support different clock rates,
->> > then the per OPP node can be used to contain that information.
->> >
->> > This patch introduces the domain-performance-state (already defined by
->> > Power Domain bindings) to the per OPP node.
->> >
+On Mon, Feb 27, 2017 at 11:36 PM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
+> On Tuesday 28 February 2017 04:22 AM, Rob Herring wrote:
+>> On Wed, Feb 22, 2017 at 02:43:47PM +0100, Bartosz Golaszewski wrote:
+>>> Add an optional property - enable-gpios - which can be used to specify
+>>> the GPIOs that must be requested to select the vpif functionality.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/media/ti,da850-vpif.txt | 7 +++++++
+>>>  1 file changed, 7 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>>> index df7182a..23c5405 100644
+>>> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+>>> @@ -13,6 +13,9 @@ Required properties:
+>>>  - reg: physical base address and length of the registers set for the device;
+>>>  - interrupts: should contain IRQ line for the VPIF
+>>>
+>>> +Optional properties:
+>>> +- enable-gpios: phandle of the GPIOs used to select the vpif functionality
 >>
->> We already have OPP voltages, why are those not sufficient?
+>> What does this control exactly? The GPIOs belong in the node they are
+>> connected to and having GPIOs routed to this block seems strange.
 >
-> Those are for the regulator that ONLY controls the device, and
-> domain-performance-state belongs to the parent domain which controls many
-> devices.
+> The DA850 EVM board implements on-board muxing which lets the video
+> input (via VPIF) to be routed to a TVP5147 (video decoder) for composite
+> input or to a camera header. There are other mux options which use the
+> same VPIF SoC pins (RMII ethernet or character LCD).
 >
->> > +Example 7: domain-Performance-state:
->> > +(example: For 1GHz require domain state 1 and for 1.1 & 1.2 GHz require state 2)
->> > +
->> > +/ {
->> > +   cpu0_opp_table: opp_table0 {
->> > +           compatible = "operating-points-v2";
->> > +           opp-shared;
->> > +
->> > +           opp@1000000000 {
->> > +                   opp-hz = /bits/ 64 <1000000000>;
->>
->> Thinking about this some more, there's a problem here that you have no
->> link to foo_domain. I guess that resides in the cpu's node?
+> There is a three-to-eight demux on the board which drives enable signals
+> to buffers letting you choose from these options.
 >
-> Right, the "cpus" node below demonstrates that.
->
->> > +   cpus {
->> > +           #address-cells = <1>;
->> > +           #size-cells = <0>;
->> > +
->> > +           cpu@0 {
->> > +                   compatible = "arm,cortex-a9";
->> > +                   reg = <0>;
->> > +                   clocks = <&clk_controller 0>;
->> > +                   clock-names = "cpu";
->> > +                   operating-points-v2 = <&cpu0_opp_table>;
->> > +                   power-domains = <&foo_domain>;
->> > +           };
->> > +   };
->> > +};
->
->> > +                   domain-performance-state = <1>;
->
->> Perhaps instead of a number, this should be a phandle to pstate@1. Then
->> you just get the parent if you need to know the domain.
->
-> That's what I did in V2, but then I turned it down considering the parent/child
-> relationships we may have.
->
-> There are multiple cases we can have:
->
-> A.) DeviceX  --->  Parent-domain-1 (Contains Perfomance states)
->
-> B.) DeviceX  --->  Parent-domain-1  ---> Parent domain-2 (Contains Perfomance states)
->
->                                     ---> Parent domain-2 (Contains Perfomance states)
->                                     |
->                                     |
-> C.) DeviceX  --->  Parent-domain-1  |
->                                     |
->                                     |
->                                     ---> Parent domain-3 (Contains Perfomance states)
+> From your response, it looks like you want the enable-gpios property to
+> be in the TVP5147 or camera node. That does make sense to me.
 
-I'm a bit confused. How does a domain have 2 parent domains?
+Well, seems like they should be part of a mux node. I'd suggest you
+look at the video-multiplexer binding under review[1].
 
-You have the same problem either way. If I have performance state 2
-for the device, that corresponds to domain 2 or 3?
+Though for other non video functions, that would be some sort of board
+level pin mux control. There's a new mux binding too, maybe that would
+work. In any case, it shouldn't be the VPIF driver controlling the
+GPIOs directly.
 
-> The case A.) represents a simple case where the parent domain of the device
-> contains the performance states. The phandle can work pretty well in this case.
-> But the other cases B.) and C.) are a bit complicated as the direct parent
-> domain doesn't allow changing the performance states, but its parents. And so I
-> went ahead with numbers instead of phandles. Yes, we will still be able to get
-> to the performance state node with the help of phandles, but will that be the
-> right thing to do ?
->
-> --
-> viresh
+Rob
+
+[1] https://lkml.org/lkml/2017/1/6/1056
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
