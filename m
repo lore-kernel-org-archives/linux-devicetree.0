@@ -1,80 +1,76 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 2/3] pci: pci-mvebu: remove useless MSI enabling code
-Date: Tue, 28 Feb 2017 15:31:15 +0100
-Message-ID: <1488292276-11106-3-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1488292276-11106-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488292276-11106-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
+Date: Tue, 28 Feb 2017 08:33:40 -0600
+Message-ID: <CAL_Jsq+PO_KT-UY2QdX1a5pvEYJv_E6kyamthXS=hE-jjR0XKA@mail.gmail.com>
+References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
+ <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
+ <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
+ <2b409ff7-54fe-4110-6495-1cc54585e5e2@st.com>
+ <CAL_JsqLBZ0DGP62yGb2GjNZMto9hWce_HWNCX5iWhbrnE3ae_Q@mail.gmail.com>
+ <0036d551-91bc-9f3f-22a9-9dac2cf3527c@st.com>
+ <CAL_JsqLqNzpV1pjz3bX1gowHwJzsKKA=17aD5Ce18sy1B_V-0g@mail.gmail.com>
+ <c759770a-f250-7502-4ad1-c2fbb001cf92@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <c759770a-f250-7502-4ad1-c2fbb001cf92@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yannick FERTRE <yannick.fertre@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Since commit fcc392d501bd2 ("irqchip/armada-370-xp: Use the generic MSI
-infrastructure"), the irqchip driver used on Armada 370, XP, 375, 38x,
-39x for the MPIC interrupt controller has been converted to use the
-generic MSI infrastructure.
-
-Since this commit, it is no longer registering an msi_controller
-structure with the of_pci_msi_chip_add() function. Therefore, having the
-PCI driver used on the same platform calling
-of_pci_find_msi_chip_by_node() is pretty useless.
-
-The MSI resolution is now done in the generic interrupt resolution code,
-since the MSI controller is an irq domain attached to the interrupt
-controller node, which is pointed to by the msi-parent DT property in
-the PCIe controller node.
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Changes since v2:
- - Rebased on v4.10.
-
-Changes since v1:
- - Rebased on v4.9.
----
- drivers/pci/host/pci-mvebu.c | 17 -----------------
- 1 file changed, 17 deletions(-)
-
-diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
-index 45a89d9..2100dbd 100644
---- a/drivers/pci/host/pci-mvebu.c
-+++ b/drivers/pci/host/pci-mvebu.c
-@@ -986,22 +986,6 @@ static int mvebu_get_tgt_attr(struct device_node *np, int devfn,
- 	return -ENOENT;
- }
- 
--static void mvebu_pcie_msi_enable(struct mvebu_pcie *pcie)
--{
--	struct device_node *msi_node;
--
--	msi_node = of_parse_phandle(pcie->pdev->dev.of_node,
--				    "msi-parent", 0);
--	if (!msi_node)
--		return;
--
--	pcie->msi = of_pci_find_msi_chip_by_node(msi_node);
--	of_node_put(msi_node);
--
--	if (pcie->msi)
--		pcie->msi->dev = &pcie->pdev->dev;
--}
--
- #ifdef CONFIG_PM_SLEEP
- static int mvebu_pcie_suspend(struct device *dev)
- {
-@@ -1279,7 +1263,6 @@ static int mvebu_pcie_probe(struct platform_device *pdev)
- 	for (i = 0; i < (IO_SPACE_LIMIT - SZ_64K); i += SZ_64K)
- 		pci_ioremap_io(i, pcie->io.start + i);
- 
--	mvebu_pcie_msi_enable(pcie);
- 	mvebu_pcie_enable(pcie);
- 
- 	platform_set_drvdata(pdev, pcie);
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgNDowNyBBTSwgWWFubmljayBGRVJUUkUgPHlhbm5pY2su
+ZmVydHJlQHN0LmNvbT4gd3JvdGU6Cj4gT24gMDIvMjQvMjAxNyAwMzowNiBQTSwgUm9iIEhlcnJp
+bmcgd3JvdGU6Cj4+IE9uIEZyaSwgRmViIDI0LCAyMDE3IGF0IDI6MTggQU0sIFlhbm5pY2sgRkVS
+VFJFIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+IHdyb3RlOgo+Pj4gT24gMDIvMjEvMjAxNyAwMzow
+NyBQTSwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4+Pj4gT24gTW9uLCBGZWIgMjAsIDIwMTcgYXQgNTow
+MSBBTSwgWWFubmljayBGRVJUUkUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4gd3JvdGU6Cj4+Pj4+
+IE9uIDAyLzE2LzIwMTcgMDM6MzQgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+Pj4+Pj4gT24gRnJp
+LCBGZWIgMTAsIDIwMTcgYXQgMDM6NTQ6NDRQTSArMDEwMCwgWWFubmljayBGZXJ0cmUgd3JvdGU6
+Cj4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0
+LmNvbT4KPj4+Pj4+PiAtLS0KPj4+Pj4+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1w
+aXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCAgICAgICAgIHwgNyArKysrKysrCj4+Pj4+Pj4g
+IDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPj4+Pj4+PiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGly
+ZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQKClsuLi5dCgo+Pj4+PiBUaGlzIGJpbmRpbmcgaXMg
+c2ltaWxhciB0byBhbGwgcGFuZWwgYmluZGluZ3Mgd2hpY2ggYXJlIGxpbmsgdG8gcGFuZWwKPj4+
+Pj4gc2ltcGxlLiBEZXRhaWxzIG9uIGdwaW8gJiBwb3dlciBzdXBwbHkgYXJlIGRlc2NyaWJlIHdp
+dGggc2ltcGxlLXBhbmVsCj4+Pj4+IGJpbmRpbmcuCj4+Pj4KPj4+PiBzaW1wbGUtcGFuZWwudHh0
+IHByb3ZpZGVzIHdoYXQgcG9zc2libGUgc3RhbmRhcmQgcHJvcGVydGllcyB0aGVyZSBhcmUsCj4+
+Pj4gbm90IHdoZXRoZXIgYSBwYW5lbCB1c2VzIHRoZW0uIFRoZSBwb3dlciBzdXBwbHkgbmVlZHMg
+dG8gYmUgZXhwbGljaXQKPj4+PiBiZWNhdXNlIEkgZG9uJ3Qga25vdyBpZiB5b3UgZm9yZ290IGFu
+ZCB0aGVyZSdzIHJlYWxseSAyIHN1cHBsaWVzIG9yCj4+Pj4geW91IGFyZSB1c2luZyAicG93ZXIt
+c3VwcGx5IiBmb3IgYSBzaW5nbGUgc3VwcGx5Lgo+Pj4+Cj4+Pj4gUm9iCj4+Pj4KPgo+Cj4gSGkg
+Um9iLAo+IG9rLCBJJ2xsIHB1c2ggYSBWNCB2ZXJzaW9uIHdpdGggYWxsIGRldGFpbHMgb24gcHJv
+cGVydGllcy4KPiBJIHdyaXRlIGJlbGxvdyAgYSBkcmFmdCBvZiBiaW5kaW5nOgo+Cj4gQW1waXJl
+IEFNLTQ4MDI3MkgzVE1RVy1UMDFIIDQuMyIgV1FWR0EgVEZUIExDRCBwYW5lbAo+Cj4gVGhpcyBi
+aW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNo
+IGlzIHNwZWNpZmllZAo+IGluIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCj4K
+PiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhbXBpcmUs
+YW0tNDgwMjcyaDN0bXF3LXQwMWgiCj4KPiBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+IC0gcG93ZXIt
+c3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZvbHRhZ2UKPiAtIGRkYy1p
+MmMtYnVzOiBwaGFuZGxlIG9mIGFuIEkyQyBjb250cm9sbGVyIHVzZWQgZm9yIEREQyBFRElEIHBy
+b2JpbmcKCkRvZXNuJ3QgbG9vayBsaWtlIHRoZXJlJ3MgYW55IEREQyBjb25uZWN0aW9uIHRvIHRo
+aXMgcGFuZWwuCgo+IC0gZW5hYmxlLWdwaW9zOiBHUElPIHBpbiB0byBlbmFibGUgb3IgZGlzYWJs
+ZSB0aGUgcGFuZWwKCk5lZWQgdG8gc3RhdGUgdGhpcyBpcyBhY3RpdmUgaGlnaC4KCj4gLSBiYWNr
+bGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBh
+bmVsCj4KPiBPcHRpb25hbCBub2RlczoKPiAtIFZpZGVvIHBvcnQgZm9yIFJHQiBpbnB1dC4KPgo+
+IEV4YW1wbGU6Cj4gICAgICAgICBwYW5lbF9yZ2I6IHBhbmVsLXJnYiB7Cj4gICAgICAgICAgICAg
+ICAgIGNvbXBhdGlibGUgPSAiYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoIjsKPiAgICAgICAg
+ICAgICAgICAgZW5hYmxlLWdwaW9zID0gPCZncGlvYSA4IDE+Owo+ICAgICAgICAgICAgICAgICBw
+b3J0IHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBwYW5lbF9pbl9yZ2I6IGVuZHBvaW50IHsK
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmY29u
+dHJvbGVyX291dF9yZ2I+Owo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAg
+ICAgICAgIH07Cj4gICAgICAgICB9Owo+Cj4gQmVzdCByZWdhcmRzCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
