@@ -1,195 +1,119 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
-Date: Tue, 28 Feb 2017 22:51:58 +0100
-Message-ID: <290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
-References: <20170228120452.10043-1-zajec5@gmail.com>
- <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add Gru/Kevin DTS
+Date: Tue, 28 Feb 2017 23:00:25 +0100
+Message-ID: <6978416.eyJmBK6ozI@phil>
+References: <20170210010521.78872-1-briannorris@chromium.org>
+ <20170210010521.78872-5-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20170210010521.78872-5-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
-> I think that it would be simpler if we could initially see
-> a complete sample dts implementation containing all required DT
-> nodes. The example could contain timer trigger as well as usb-port
-> trigger specific bindings.
+Hi Brian,
 
-Please take a look at attached patch. I used it on Tenda AC9 with:
+Am Donnerstag, 9. Februar 2017, 17:05:19 CET schrieb Brian Norris:
+> Kevin is part of a family of boards called Gru. As best as possible, the
+> properties shared by the Gru family are placed in rk3399-gru.dtsi, while
+> Kevin-specific bits are in rk3399-gru-kevin.dts. This does not add full
+> support for the base Gru board.
+> 
 
-usb_trigger: usb-trigger {
-	trigger-type = "usbport";
-	ports = <&ohci_port1>, <&ehci_port1>;
-};
+short summary of what we just talked about, and some more minor things I found
 
-usb {
-	label = "bcm53xx:blue:usb";
-	gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
-	triggers = <&usb_trigger>;
-};
+[...]
+
+> +	/* pp3300 children */
+
+drop that. I may not have caught all of them, but you get the idea ;-)
 
 
-> I suppose that we should see DT nodes containing #list-cells
-> properties that define the quantity of phandle arguments.
->
-> It seems that this approach allows for defining a list of elements
-> with variable number of arguments, i.e. what you were initially
-> asking for.
+> +	pp3300_wifi_bt: pp3300-wifi-bt {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "pp3300_wifi_bt";
+> +		/* NOTE: wlan_module_pd_l pinctrl in pp1800_pcie */
+> +
+> +		enable-active-high;
+> +
+> +		/* NOTE: this GPIO also used in pp1800_pcie */
 
-Are you sure we need #list-cells? Can't we simply use
-of_count_phandle_with_args(np, "triggers", NULL);
-?
+does the gpio subsystem like this double usage?
+
+> +		gpio = <&gpio0 4 GPIO_ACTIVE_HIGH>;
+> +
+> +		vin-supply = <&pp3300>;
+> +	};
+> +
+> +	/* pp5000 aliases; these are always on for AP so just use alias */
+
+drop that
+
+> +
+> +	/* EC turns on w/ usb_a_en */
+> +	pp5000_usb_a_vbus: pp5000 {
+> +	};
+> +
+> +	/* END REGULATORS */
+
+drop that
+
+> +
+> +	io-domains {
+
+&io_domains instead
+
+> +		compatible = "rockchip,rk3399-io-voltage-domain";
+> +		rockchip,grf = <&grf>;
+> +
+> +		bt656-supply = <&pp1800_ap_io>;		/* APIO2_VDD;  2a 2b */
+> +		audio-supply = <&pp1800_audio>;		/* APIO5_VDD;  3d 4a */
+> +		sdmmc-supply = <&ppvar_sd_card_io>;	/* SDMMC0_VDD; 4b    */
+> +		gpio1830-supply = <&pp3000_ap>;		/* APIO4_VDD;  4c 4d */
+> +	};
 
 
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
-Date: Mon, 3 Oct 2016 16:49:05 +0200
-Subject: [PATCH] usb: core: read USB ports from DT in the usbport LED trigger
-  driver
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+> +	pmu-io-domains {
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-  .../devicetree/bindings/leds/triggers-usbport.txt  | 19 ++++++++
-  drivers/leds/led-triggers.c                        |  3 +-
-  drivers/usb/core/ledtrig-usbport.c                 | 56 ++++++++++++++++++++++
-  3 files changed, 77 insertions(+), 1 deletion(-)
-  create mode 100644 Documentation/devicetree/bindings/leds/triggers-usbport.txt
+&pmu_io_domains instead
 
-diff --git a/Documentation/devicetree/bindings/leds/triggers-usbport.txt b/Documentation/devicetree/bindings/leds/triggers-usbport.txt
-new file mode 100644
-index 000000000000..10e55122cded
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/triggers-usbport.txt
-@@ -0,0 +1,19 @@
-+USB port LED trigger properties.
-+
-+USB port trigger can be used for signalling to the user a presence of USB
-+device(s) in given ports. It's possible to specify USB ports in DT by providing
-+their references.
-+
-+Properties:
-+- trigger-type : Must be "usbport".
-+- ports : List of USB ports related to this LED. Some devices may have one USB
-+	  LED for all ports, other may have few of them (e.g. USB version
-+	  specific). It's used by usbport trigger for reading a list of ports
-+	  that should cause LED to turn on whenver device get connected.
-+
-+Examples:
-+
-+usbport-trigger {
-+	trigger-type = "usbport";
-+	ports = <&ohci_port1>, <&ehci_port1>;
-+};
-diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
-index c53c20d676cd..1d8bda9755ca 100644
---- a/drivers/leds/led-triggers.c
-+++ b/drivers/leds/led-triggers.c
-@@ -181,7 +181,8 @@ static void led_trigger_of_read_trigger(struct led_classdev *led_cdev)
-  	}
+> +		compatible = "rockchip,rk3399-pmu-io-voltage-domain";
+> +		rockchip,grf = <&pmugrf>;
+> +
+> +		pmu1830-supply = <&pp1800_pmu>;		/* PMUIO2_VDD */
+> +	};
 
-  	/* Check if trigger specified in DT is supported */
--	if (strcmp(trigger_type, "timer"))
-+	if (strcmp(trigger_type, "timer") &&
-+	    strcmp(trigger_type, "usbport"))
-  		goto err_node_put;
 
-  	led_cdev->default_trigger = trigger_type;
-diff --git a/drivers/usb/core/ledtrig-usbport.c b/drivers/usb/core/ledtrig-usbport.c
-index 1713248ab15a..599f7e6b0ba8 100644
---- a/drivers/usb/core/ledtrig-usbport.c
-+++ b/drivers/usb/core/ledtrig-usbport.c
-@@ -11,8 +11,10 @@
-  #include <linux/device.h>
-  #include <linux/leds.h>
-  #include <linux/module.h>
-+#include <linux/of.h>
-  #include <linux/slab.h>
-  #include <linux/usb.h>
-+#include <linux/usb/of.h>
+> +#include "common/cros-ec-keyboard.dtsi"
+> +#include "common/cros-ec-sbs.dtsi"
 
-  struct usbport_trig_data {
-  	struct led_classdev *led_cdev;
-@@ -123,6 +125,58 @@ static const struct attribute_group ports_group = {
-   * Adding & removing ports
-   ***************************************/
+please try the arm include symlinks instead
 
-+/**
-+ * usbport_trig_port_observed - Check if port should be observed
-+ *
-+ * Each LED may have list of related USB ports specified in a DT. This function
-+ * reads them using ports property and sets a proper state.
-+ */
-+static bool usbport_trig_port_observed(struct usbport_trig_data *usbport_data,
-+				       struct usb_device *usb_dev, int port1)
-+{
-+	struct device_node *led_np = usbport_data->led_cdev->trigger_node;
-+	struct device *dev = usbport_data->led_cdev->dev;
-+	struct of_phandle_args args;
-+	struct device_node *port_np;
-+	int count, i;
-+
-+	if (!led_np)
-+		return false;
-+
-+	/* Get node of port being added */
-+	port_np = usb_of_get_child_node(usb_dev->dev.of_node, port1);
-+	if (!port_np)
-+		return false;
-+
-+	/* Amount of ports this LED references */
-+	count = of_count_phandle_with_args(led_np, "ports", NULL);
-+	if (count < 0) {
-+		dev_warn(dev, "Failed to get USB ports for %s\n",
-+			 led_np->full_name);
-+		return false;
-+	}
-+
-+	/* Check if port is on this LED's list */
-+	for (i = 0; i < count; i++) {
-+		int err;
-+
-+		err = of_parse_phandle_with_args(led_np, "ports", NULL, i,
-+						 &args);
-+		if (err) {
-+			dev_err(dev, "Failed to get USB port phandle at index %d: %d\n",
-+				i, err);
-+			continue;
-+		}
-+
-+		of_node_put(args.np);
-+
-+		if (args.np == port_np)
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-  static int usbport_trig_add_port(struct usbport_trig_data *usbport_data,
-  				 struct usb_device *usb_dev,
-  				 const char *hub_name, int portnum)
-@@ -141,6 +195,7 @@ static int usbport_trig_add_port(struct usbport_trig_data *usbport_data,
-  	port->data = usbport_data;
-  	port->hub = usb_dev;
-  	port->portnum = portnum;
-+	port->observed = usbport_trig_port_observed(usbport_data, usb_dev, portnum);
 
-  	len = strlen(hub_name) + 8;
-  	port->port_name = kzalloc(len, GFP_KERNEL);
-@@ -255,6 +310,7 @@ static void usbport_trig_activate(struct led_classdev *led_cdev)
-  	if (err)
-  		goto err_free;
-  	usb_for_each_dev(usbport_data, usbport_trig_add_usb_dev_ports);
-+	usbport_trig_update_count(usbport_data);
+> +
+> +/* PINCTRL: always below everything else */
+> +
 
-  	/* Notifications */
-  	usbport_data->nb.notifier_call = usbport_trig_notify,
--- 
-2.11.0
+ drop this
+
+> +
+> +/* DON'T PUT ANYTHING BELOW HERE.  PUT IT ABOVE PINCTRL */
+> +/* DON'T PUT ANYTHING BELOW HERE.  PUT IT ABOVE PINCTRL */
+> +/* DON'T PUT ANYTHING BELOW HERE.  PUT IT ABOVE PINCTRL */
+> +
+
+drop these
+
+
+Heiko
