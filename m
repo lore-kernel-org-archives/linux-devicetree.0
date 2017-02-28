@@ -1,69 +1,80 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 3/3] media: dt-bindings: vpif: new optional property
-Date: Tue, 28 Feb 2017 12:00:02 +0100
-Message-ID: <CAMpxmJW4Rd6UvdkeS6GLOJeiGMV_XVTznL5T2L3+K9UgE=bWkw@mail.gmail.com>
-References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
- <1487771027-7763-4-git-send-email-bgolaszewski@baylibre.com>
- <20170227225209.26oieqwbafqjga2a@rob-hp-laptop>
- <6b392a4a-2de8-9981-ad40-ca7201bf813d@ti.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v5] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Tue, 28 Feb 2017 12:14:05 +0100
+Message-ID: <1488280445.2612.35.camel@pengutronix.de>
+References: <1486714767-25930-1-git-send-email-richard.leitner@skidata.com>
+         <20170216023004.25dwzy7ppxdoasfz@rob-hp-laptop>
+         <31fd459f-aed3-9d4a-2a63-651131216542@g0hl1n.net>
+         <CAL_JsqJ=ViO+QnTiZXSL7zyO7xu_+f7C4aSkfA7VmqiU92EeHg@mail.gmail.com>
+         <a44c2244-bdb3-ebc3-cfd2-271d3dabe011@skidata.com>
+         <1488188908.2612.18.camel@pengutronix.de>
+         <CAL_JsqLEtPc+WHg3kAJ_vauX1na6HAb73i1gm+X2T+gsrzgy6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6b392a4a-2de8-9981-ad40-ca7201bf813d@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, David Lechner <david@lechnology.com>, linux-devicetree <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, LKML <linux-kernel@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Patrick Titiano <ptitiano@baylibre.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLEtPc+WHg3kAJ_vauX1na6HAb73i1gm+X2T+gsrzgy6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-02-28 6:36 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
-> On Tuesday 28 February 2017 04:22 AM, Rob Herring wrote:
->> On Wed, Feb 22, 2017 at 02:43:47PM +0100, Bartosz Golaszewski wrote:
->>> Add an optional property - enable-gpios - which can be used to specify
->>> the GPIOs that must be requested to select the vpif functionality.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> ---
->>>  Documentation/devicetree/bindings/media/ti,da850-vpif.txt | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->>> index df7182a..23c5405 100644
->>> --- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->>> +++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
->>> @@ -13,6 +13,9 @@ Required properties:
->>>  - reg: physical base address and length of the registers set for the device;
->>>  - interrupts: should contain IRQ line for the VPIF
->>>
->>> +Optional properties:
->>> +- enable-gpios: phandle of the GPIOs used to select the vpif functionality
->>
->> What does this control exactly? The GPIOs belong in the node they are
->> connected to and having GPIOs routed to this block seems strange.
->
-> The DA850 EVM board implements on-board muxing which lets the video
-> input (via VPIF) to be routed to a TVP5147 (video decoder) for composite
-> input or to a camera header. There are other mux options which use the
-> same VPIF SoC pins (RMII ethernet or character LCD).
->
-> There is a three-to-eight demux on the board which drives enable signals
-> to buffers letting you choose from these options.
->
-> From your response, it looks like you want the enable-gpios property to
-> be in the TVP5147 or camera node. That does make sense to me.
->
+On Mo, 2017-02-27 at 16:27 -0600, Rob Herring wrote:
+> On Mon, Feb 27, 2017 at 3:48 AM, Jan Lübbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > On Di, 2017-02-21 at 15:57 +0100, Richard Leitner wrote:
+> >> >>> This is a lot of properties. Are you really finding a need for all of
+> >> >>> them? Is this to handle h/w designers too cheap to put down the EEPROM?
+> >> >>> Maybe better to just define an eeprom property in the format the h/w
+> >> >>> expects.
+> >> >>
+> >> >>
+> >> >> I need about 15 of these properties. I just exposed them all to dt because I
+> >> >> thought they could be useful for somebody.
+> >> >>
+> >> >> Yes, these are a subset of the settings which can be configured via an
+> >> >> external EEPROM (By strapping some pins of the hub you can select if it
+> >> >> loads its configuration from an EEPROM or receives it via SMBus).
+> >> >>
+> >> >> My first thought was also to define only a byte array in dt, but IMHO these
+> >> >> options are much more readable and convenient for everybody. I'd also be
+> >> >> fine with removing the properties I don't need from dt. But that may lead to
+> >> >> future patches where somebody needs some of the options not already exposed
+> >> >> to dt.
+> >> >
+> >> > Okay. It's really a judgement call. If this is most of the settings,
+> >> > then it's fine. If it was only a fraction of them, then maybe we'd
+> >> > want to do just a byte array. Sounds like it is the former.
+> >>
+> >> In fact there are 6 more parameters available according to the
+> >> datasheet. So how should I proceed here? Remove the one's I'm not using
+> >> at the moment, leave them as they are or add the missing 6 too?
+> >
+> > Rob, several of these properties look more like configuration rather
+> > than HW description ('skip-config', '*-id', 'manufacturer', 'product',
+> > 'serial'). Is DT the right place for this? I would expect userspace to
+> > provide the configuration.
+> 
+> Configuration can be okay. The test I use is more who needs to
+> set/control these properties? Would an end-user want to control them?
+> If so, then they should be sysfs controls. If they are configuration
+> for a particular design, then DT is fine. Given these are all
+> typically EEPROM properties, then they aren't really end-user controls
+> and belong in DT.
 
-Wouldn't that cause races again? The TVP5147 ADC is probed from within
-the vpif driver as a media subdev (after initialize_vpif(),
-v4l2_device_register(), irq requests etc.).
+Thanks for explaining this, your test sounds very reasonable. And if it
+turns out that runtime access is useful as well, the sysfs properties
+could be added as needed.
 
-Thanks,
-Bartosz
+Regards,
+Jan
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
