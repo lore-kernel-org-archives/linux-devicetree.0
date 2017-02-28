@@ -1,47 +1,54 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/1] devicetree: of_node_put() does not require holding
- devtree_lock
-Date: Tue, 28 Feb 2017 08:36:32 +0200
-Message-ID: <bb5607dc-0055-a188-945b-ab385b573acb@linux.intel.com>
-References: <1487755758-6066-1-git-send-email-sakari.ailus@linux.intel.com>
- <58B43DB6.4040009@gmail.com>
- <CAL_JsqJyMqaaMDU81Jes-M8jvxewJnyFD33pqd9NUCZFa0HYcg@mail.gmail.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH] staging: fsl-mc: fix warning in DT ranges parser
+Date: Tue, 28 Feb 2017 10:34:02 +0000
+Message-ID: <58B55219.4070509@nxp.com>
+References: <20170227204235.3547639-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJyMqaaMDU81Jes-M8jvxewJnyFD33pqd9NUCZFa0HYcg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170227204235.3547639-1-arnd@arndb.de>
+Content-Language: en-US
+Content-ID: <093B06925677204A8B48A614EC3103E3@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Arnd Bergmann <arnd@arndb.de>, Stuart Yoder <stuyoder@gmail.com>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, German Rivera <german.rivera@nxp.com>, Frank Rowand <frowand.list@gmail.com>, Itai Katz <itai.katz@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob and Frank,
+Hi Arnd,
 
-Rob Herring wrote:
-> On Mon, Feb 27, 2017 at 8:54 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 02/22/17 01:29, Sakari Ailus wrote:
->>> While holding a reference to a device_node it is allowed to put that node
->>> without holding devtree_lock spinlock. Move of_node_put() after releasing
->>> the spinlock.
->>>
->>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>
->> I would rather leave this code the way it is.
->>
->> The change is a micro-optimization that is not going to have any real
->> impact on performance.
+On 02/27/2017 10:42 PM, Arnd Bergmann wrote:
+> The fsl-mc-bus driver in staging contains a copy of the standard
+> 'ranges' property parsing algorithm with a hack to treat a missing
+> property the same way as an empty one. This code produces false-positive
+> warnings for me in an allmodconfig build:
 >
-> I have the same feelings.
+> drivers/staging/fsl-mc/bus/fsl-mc-bus.c: In function 'fsl_mc_bus_probe':
+> drivers/staging/fsl-mc/bus/fsl-mc-bus.c:645:6: error: 'mc_size_cells' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+> drivers/staging/fsl-mc/bus/fsl-mc-bus.c:682:8: error: 'mc_addr_cells' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+> drivers/staging/fsl-mc/bus/fsl-mc-bus.c:644:6: note: 'mc_addr_cells' was declared here
+> drivers/staging/fsl-mc/bus/fsl-mc-bus.c:684:8: error: 'paddr_cells' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+> drivers/staging/fsl-mc/bus/fsl-mc-bus.c:643:6: note: 'paddr_cells' was declared here
+>
+> To avoid the warnings, I'm simplifying the argument handling to pass
+> the number of valid ranges in the property as the function return code
+> rather than passing it by reference. With this change, gcc can see that
+> we don't evaluate the cell numbers for an missing ranges property.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Fair enough. Feel free to ignore the patch then.
+Looks good to me, i've tested it and did not see any issues, so here's an:
 
--- 
-Kind regards,
+Acked-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+Thanks & Best Regards, Laurentiu
