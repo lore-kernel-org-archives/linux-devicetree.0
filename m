@@ -1,106 +1,88 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/3] coresight: refactor with function of_coresight_get_cpu
-Date: Tue, 28 Feb 2017 23:06:59 +0800
-Message-ID: <1488294420-14188-3-git-send-email-leo.yan@linaro.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 1/3] coresight: bindings for debug module
+Date: Tue, 28 Feb 2017 23:06:58 +0800
+Message-ID: <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
 References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488294420-14188-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This is refactor to add function of_coresight_get_cpu(), so it's used to
-retrieve CPU id for coresight component. Finally can use it as a common
-function for multiple places.
+According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
+Chapter 'Part H: External debug', the CPU can integrate debug module
+and it can support self-hosted debug and external debug. Especially
+for supporting self-hosted debug, this means the program can access
+the debug module from mmio region; and usually the mmio region is
+integrated with coresight.
 
-Suggested-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+So add document for binding debug component, includes binding to APB
+clock; and also need specify the CPU node which the debug module is
+dedicated to specific CPU.
+
+Suggested-by: Mike Leach <mike.leach@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- drivers/hwtracing/coresight/of_coresight.c | 35 ++++++++++++++++++++----------
- include/linux/coresight.h                  |  2 ++
- 2 files changed, 25 insertions(+), 12 deletions(-)
+ .../devicetree/bindings/arm/coresight-debug.txt    | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
 
-diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index 629e031..2e7bbe2 100644
---- a/drivers/hwtracing/coresight/of_coresight.c
-+++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -101,14 +101,34 @@ static int of_coresight_alloc_memory(struct device *dev,
- 	return 0;
- }
- 
-+int of_coresight_get_cpu(struct device_node *node)
-+{
-+	int cpu;
-+	struct device_node *dn;
+diff --git a/Documentation/devicetree/bindings/arm/coresight-debug.txt b/Documentation/devicetree/bindings/arm/coresight-debug.txt
+new file mode 100644
+index 0000000..89820d5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/coresight-debug.txt
+@@ -0,0 +1,40 @@
++* CoreSight Debug Component:
 +
-+	dn = of_parse_phandle(node, "cpu", 0);
++CoreSight debug component are compliant with the ARMv8 architecture reference
++manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The external debug
++module is mainly used for two modes: self-hosted debug and external debug, and
++it can be accessed from mmio region from Coresight and eventually the debug
++module connects with CPU for debugging. And the debug module provides
++sample-based profiling extension, which can be used to sample CPU program
++counter, secure state and exception level, etc; usually every CPU has one
++dedicated debug module to be connected.
 +
-+	/* Affinity defaults to CPU0 */
-+	if (!dn)
-+		return 0;
++Required properties:
 +
-+	for_each_possible_cpu(cpu) {
-+		if (dn == of_get_cpu_node(cpu, NULL))
-+			break;
-+	}
-+	of_node_put(dn);
++- compatible : should be
++	     * "arm,coresight-debug", "arm,primecell"; supplemented with
++	       "arm,primecell" as driver is using the AMBA bus interface.
 +
-+	return cpu;
-+}
-+EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
++- reg : physical base address and length of the register set.
 +
- struct coresight_platform_data *of_get_coresight_platform_data(
- 				struct device *dev, struct device_node *node)
- {
--	int i = 0, ret = 0, cpu;
-+	int i = 0, ret = 0;
- 	struct coresight_platform_data *pdata;
- 	struct of_endpoint endpoint, rendpoint;
- 	struct device *rdev;
--	struct device_node *dn;
- 	struct device_node *ep = NULL;
- 	struct device_node *rparent = NULL;
- 	struct device_node *rport = NULL;
-@@ -175,16 +195,7 @@ struct coresight_platform_data *of_get_coresight_platform_data(
- 		} while (ep);
- 	}
- 
--	/* Affinity defaults to CPU0 */
--	pdata->cpu = 0;
--	dn = of_parse_phandle(node, "cpu", 0);
--	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
--		if (dn == of_get_cpu_node(cpu, NULL)) {
--			pdata->cpu = cpu;
--			break;
--		}
--	}
--	of_node_put(dn);
-+	pdata->cpu = of_coresight_get_cpu(node);
- 
- 	return pdata;
- }
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 2a5982c..6709561 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -263,11 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
- #endif
- 
- #ifdef CONFIG_OF
-+extern int of_coresight_get_cpu(struct device_node *node);
- extern struct coresight_platform_data *of_get_coresight_platform_data(
- 				struct device *dev, struct device_node *node);
- #else
- static inline struct coresight_platform_data *of_get_coresight_platform_data(
- 	struct device *dev, struct device_node *node) { return NULL; }
-+static int of_coresight_get_cpu(struct device_node *node) { return 0; }
- #endif
- 
- #ifdef CONFIG_PID_NS
++- clocks : the clock associated to this component.
++
++- clock-names : the name of the clock referenced by the code. Since we are
++                using the AMBA framework, the name of the clock providing
++		the interconnect should be "apb_pclk" and the clock is
++		mandatory. The interface between the debug logic and the
++		processor core is clocked by the internal CPU clock, so it
++		is enabled with CPU clock by default.
++
++- cpu : the cpu phandle the debug module is affined to. When omitted
++	the source is considered to belong to CPU0.
++
++Example:
++
++	debug@f6590000 {
++		compatible = "arm,coresight-debug","arm,primecell";
++		reg = <0 0xf6590000 0 0x1000>;
++		clocks = <&sys_ctrl HI6220_DAPB_CLK>;
++		clock-names = "apb_pclk";
++		cpu = <&cpu0>;
++	};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
