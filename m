@@ -1,56 +1,77 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/7] clk: meson: update clock controller for audio support
-Date: Tue, 28 Feb 2017 14:29:55 +0100
-Message-ID: <20170228133002.17894-1-jbrunet@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 7/7] dt-bindings: clk: gxbb: expose i2s output clock gates
+Date: Tue, 28 Feb 2017 14:30:02 +0100
+Message-ID: <20170228133002.17894-8-jbrunet@baylibre.com>
+References: <20170228133002.17894-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170228133002.17894-1-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset is a first round of update to the meson clock controllers
-to bring audio support. The patchset is based on clk-next with two
-additional patches from arm-soc next (to avoid conflict later on).
-commit d356a86b1b30 ("clk: meson-gxbb: Export HDMI clocks")
-commit 7d753a742127 ("clk: gxbb: add the SAR ADC clocks and expose them")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ drivers/clk/meson/gxbb.h              | 10 +++++-----
+ include/dt-bindings/clock/gxbb-clkc.h |  5 +++++
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-The 2 first patches of the series put the generic muxes and divisors
-declaration in tables so the register address fixup works in the same way
-as the clock gates. We are going to add more of these clock types for
-audio or gpu support, so we can't continue to fix addresses individually
-like it is currently done.
-
-Patches 3 to 6 improve the support of the mpll clocks, now allowing the
-rate to be set. Among other things, the mplls are the parent clocks of the
-i2s and spdif clocks.
-
-Patch 7 expose the clock gates required to power on the i2s output.
-
-These patches have been tested on the meson gxbb p200 board, as part of the
-ongoing work to bring audio support for meson SoC family.
-
-Jerome Brunet (7):
-  clk: meson8b: put dividers and muxes in tables
-  clk: gxbb: put dividers and muxes in tables
-  clk: meson: mpll: add rw operation
-  clk: meson: gxbb: mpll: use rw operation
-  clk: meson8b: add the mplls clocks 0, 1 and 2
-  clk: meson: mpll: correct N2 maximum value
-  dt-bindings: clk: gxbb: expose i2s output clock gates
-
- drivers/clk/meson/clk-mpll.c          | 152 ++++++++++++++++++++++++++++++++--
- drivers/clk/meson/clkc.h              |   4 +-
- drivers/clk/meson/gxbb.c              |  64 +++++++++++---
- drivers/clk/meson/gxbb.h              |  10 +--
- drivers/clk/meson/meson8b.c           | 126 +++++++++++++++++++++++++++-
- drivers/clk/meson/meson8b.h           |  20 ++++-
- include/dt-bindings/clock/gxbb-clkc.h |   5 ++
- 7 files changed, 354 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+index dc487180f847..95a83b7709ca 100644
+--- a/drivers/clk/meson/gxbb.h
++++ b/drivers/clk/meson/gxbb.h
+@@ -206,16 +206,16 @@
+ #define CLKID_I2S_SPDIF		  35
+ #define CLKID_ETH		  36
+ #define CLKID_DEMUX		  37
+-#define CLKID_AIU_GLUE		  38
++/* CLKID_AIU_GLUE */
+ #define CLKID_IEC958		  39
+-#define CLKID_I2S_OUT		  40
++/* CLKID_I2S_OUT */
+ #define CLKID_AMCLK		  41
+ #define CLKID_AIFIFO2		  42
+ #define CLKID_MIXER		  43
+-#define CLKID_MIXER_IFACE	  44
++/* CLKID_MIXER_IFACE */
+ #define CLKID_ADC		  45
+ #define CLKID_BLKMV		  46
+-#define CLKID_AIU		  47
++/* CLKID_AIU */
+ #define CLKID_UART1		  48
+ #define CLKID_G2D		  49
+ /* CLKID_USB0 */
+@@ -248,7 +248,7 @@
+ /* CLKID_GCLK_VENCI_INT0 */
+ #define CLKID_GCLK_VENCI_INT	  78
+ #define CLKID_DAC_CLK		  79
+-#define CLKID_AOCLK_GATE	  80
++/* CLKID_AOCLK_GATE */
+ #define CLKID_IEC958_GATE	  81
+ #define CLKID_ENC480P		  82
+ #define CLKID_RNG1		  83
+diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
+index 692846c7941b..f08f06dd7702 100644
+--- a/include/dt-bindings/clock/gxbb-clkc.h
++++ b/include/dt-bindings/clock/gxbb-clkc.h
+@@ -16,6 +16,10 @@
+ #define CLKID_I2C		22
+ #define CLKID_SAR_ADC		23
+ #define CLKID_ETH		36
++#define CLKID_AIU_GLUE		38
++#define CLKID_I2S_OUT		40
++#define CLKID_MIXER_IFACE	44
++#define CLKID_AIU		47
+ #define CLKID_USB0		50
+ #define CLKID_USB1		51
+ #define CLKID_USB		55
+@@ -24,6 +28,7 @@
+ #define CLKID_USB0_DDR_BRIDGE	65
+ #define CLKID_SANA		69
+ #define CLKID_GCLK_VENCI_INT0	77
++#define CLKID_AOCLK_GATE	80
+ #define CLKID_AO_I2C		93
+ #define CLKID_SD_EMMC_A		94
+ #define CLKID_SD_EMMC_B		95
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
