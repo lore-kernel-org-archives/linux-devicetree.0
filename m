@@ -1,124 +1,103 @@
-From: Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2] video: fbdev: imxfb: support AUS mode
-Date: Tue, 28 Feb 2017 21:04:16 +0100
-Message-ID: <1488312337-32154-1-git-send-email-martin@kaiser.cx>
-References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org
-Cc: Martin Kaiser <martin@kaiser.cx>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+Date: Tue, 28 Feb 2017 22:38:41 +0100
+Message-ID: <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
+References: <20170228120452.10043-1-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170228120452.10043-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some displays require setting AUS mode in the LDCD AUS Mode Control
-Register to work with the imxfb driver. Like the value of the Panel
-Configuration Register, the AUS Mode Control Register's value depends on
-the display mode.
+Hi Rafał,
 
-Allow setting this register from the device tree. Make the device tree
-node optional to keep the DT ABI stable. This register is available only
-on imx21 and compatible chipsets. Update the device tree bindings with
-this info.
+Thanks for continuing this effort.
 
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
-v2:
-  re-sending DT bindings and code changes as one patch
+I think that it would be simpler if we could initially see
+a complete sample dts implementation containing all required DT
+nodes. The example could contain timer trigger as well as usb-port
+trigger specific bindings.
 
- .../devicetree/bindings/display/imx/fsl,imx-fb.txt    |  2 ++
- drivers/video/fbdev/imxfb.c                           | 19 +++++++++++++++++++
- include/linux/platform_data/video-imxfb.h             |  1 +
- 3 files changed, 22 insertions(+)
+I suppose that we should see DT nodes containing #list-cells
+properties that define the quantity of phandle arguments.
 
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-index 7a5c0e2..bd5077f 100644
---- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-+++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
-@@ -13,6 +13,8 @@ Required nodes:
- 	Additional, the display node has to define properties:
- 	- bits-per-pixel: Bits per pixel
- 	- fsl,pcr: LCDC PCR value
-+	A display node may optionally define
-+	- fsl,lauscr: LCDC AUS Mode Control Register value (only for imx21)
- 
- Optional properties:
- - lcd-supply: Regulator for LCD supply voltage.
-diff --git a/drivers/video/fbdev/imxfb.c b/drivers/video/fbdev/imxfb.c
-index 1b0faad..a05cad4 100644
---- a/drivers/video/fbdev/imxfb.c
-+++ b/drivers/video/fbdev/imxfb.c
-@@ -117,6 +117,8 @@
- 
- #define IMXFB_LSCR1_DEFAULT 0x00120300
- 
-+#define LCDC_LAUSCR	0x80
-+
- /* Used fb-mode. Can be set on kernel command line, therefore file-static. */
- static const char *fb_mode;
- 
-@@ -158,6 +160,7 @@ struct imxfb_info {
- 	dma_addr_t		dbar2;
- 
- 	u_int			pcr;
-+	u_int			lauscr;
- 	u_int			pwmr;
- 	u_int			lscr1;
- 	u_int			dmacr;
-@@ -422,6 +425,11 @@ static int imxfb_check_var(struct fb_var_screeninfo *var, struct fb_info *info)
- 	pcr |= imxfb_mode->pcr & ~(0x3f | (7 << 25));
- 
- 	fbi->pcr = pcr;
-+	/*
-+	 * The LCDC AUS Mode Control Register does not exist on imx1.
-+	 */
-+	if (!is_imx1_fb(fbi))
-+		fbi->lauscr = imxfb_mode->lauscr;
- 
- 	/*
- 	 * Copy the RGB parameters for this display
-@@ -638,6 +646,9 @@ static int imxfb_activate_var(struct fb_var_screeninfo *var, struct fb_info *inf
- 	if (fbi->dmacr)
- 		writel(fbi->dmacr, fbi->regs + LCDC_DMACR);
- 
-+	if (fbi->lauscr)
-+		writel(fbi->lauscr, fbi->regs + LCDC_LAUSCR);
-+
- 	return 0;
- }
- 
-@@ -707,6 +718,7 @@ static int imxfb_of_read_mode(struct device *dev, struct device_node *np,
- 	struct fb_videomode *of_mode = &imxfb_mode->mode;
- 	u32 bpp;
- 	u32 pcr;
-+	u32 lauscr;
- 
- 	ret = of_property_read_string(np, "model", &of_mode->name);
- 	if (ret)
-@@ -734,6 +746,13 @@ static int imxfb_of_read_mode(struct device *dev, struct device_node *np,
- 	imxfb_mode->bpp = bpp;
- 	imxfb_mode->pcr = pcr;
- 
-+	/*
-+	 * fsl,lauscr is optional
-+	 */
-+	ret = of_property_read_u32(np, "fsl,lauscr", &lauscr);
-+	if (ret == 0)
-+		imxfb_mode->lauscr = lauscr;
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/platform_data/video-imxfb.h b/include/linux/platform_data/video-imxfb.h
-index a5c0a71..fdd2d4c 100644
---- a/include/linux/platform_data/video-imxfb.h
-+++ b/include/linux/platform_data/video-imxfb.h
-@@ -50,6 +50,7 @@
- struct imx_fb_videomode {
- 	struct fb_videomode mode;
- 	u32 pcr;
-+	u32 lauscr;
- 	unsigned char	bpp;
- };
- 
--- 
-2.1.4
+It seems that this approach allows for defining a list of elements
+with variable number of arguments, i.e. what you were initially
+asking for.
+
+
+Best regards,
+Jacek Anaszewski
+
+On 02/28/2017 01:04 PM, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> 
+> There was a long discussion on describing LED trigger sources in DT.
+> Few solutions were posted but neither was clear & flexible enough. It's
+> really hard to design DT bindings for a LED node that will allow
+> describing any kinds of triggers.
+> 
+> Finally Jacek suggested a different design. It involved using separated
+> DT node for each trigger.
+> 
+> This documentation follows that idea. It really simplifies DT bindings
+> and allows clear support for different trigger types. With this solution
+> every type can have its own specific properties.
+> 
+> Please note an example will be added later with the first supported
+> trigger bindings. The point is to have nodes like:
+> foo-trigger {
+> 	trigger-type = "foo";
+> 	...
+> };
+> 
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/leds/common.txt   |  3 +++
+>  Documentation/devicetree/bindings/leds/triggers.txt | 13 +++++++++++++
+>  2 files changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/triggers.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> index 696be5792625..0bc91556a47a 100644
+> --- a/Documentation/devicetree/bindings/leds/common.txt
+> +++ b/Documentation/devicetree/bindings/leds/common.txt
+> @@ -49,6 +49,9 @@ Optional properties for child nodes:
+>  - panic-indicator : This property specifies that the LED should be used,
+>  		    if at all possible, as a panic indicator.
+>  
+> +- triggers : List of nodes of triggers that should control this LED state. For
+> +	     more details see triggers.txt.
+> +
+>  Required properties for flash LED child nodes:
+>  - flash-max-microamp : Maximum flash LED supply current in microamperes.
+>  - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
+> diff --git a/Documentation/devicetree/bindings/leds/triggers.txt b/Documentation/devicetree/bindings/leds/triggers.txt
+> new file mode 100644
+> index 000000000000..a1fbf3a75d67
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/triggers.txt
+> @@ -0,0 +1,13 @@
+> +Common trigger properties.
+> +
+> +Triggers describe the way LEDs should be controlled, e.g. under what conditions
+> +they should be turned on or off. Depending on a trigger type various events can
+> +be used to determine a LED state. Some triggers can be hardware independent
+> +(e.g. time based), some can react to a specific hardware events.
+> +
+> +Common properties:
+> +- trigger-type : Type of a trigger. Choosing a trigger determines what kind of
+> +		 events will be used to control LED. See specific trigger
+> +		 documentation for more details.
+> +
+> +More properties can be available depending on the chosen trigger type.
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
