@@ -1,50 +1,47 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH] kbuild: avoid unrecognized option error for external DTC
-Date: Tue, 28 Feb 2017 21:21:02 +1100
-Message-ID: <87tw7epqep.fsf@concordia.ellerman.id.au>
-References: <1488174052-2530-1-git-send-email-yamada.masahiro@socionext.com>
- <1488204416.2819.9.camel@decadent.org.uk>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/1] devicetree: of_node_put() does not require holding
+ devtree_lock
+Date: Tue, 28 Feb 2017 08:36:32 +0200
+Message-ID: <bb5607dc-0055-a188-945b-ab385b573acb@linux.intel.com>
+References: <1487755758-6066-1-git-send-email-sakari.ailus@linux.intel.com>
+ <58B43DB6.4040009@gmail.com>
+ <CAL_JsqJyMqaaMDU81Jes-M8jvxewJnyFD33pqd9NUCZFa0HYcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1488204416.2819.9.camel@decadent.org.uk>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Ben Hutchings <ben@decadent.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kbuild@vger.kernel.org
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Aurelien Jacquiot <a-jacquiot@ti.com>, Paul Mackerras <paulus@samba.org>, Jonas Bonn <jonas@southpole.se>, linux-c6x-dev@linux-c6x.org, Alessio Igor Bogani <alessio.bogani@elettra.eu>, Emese Revfy <re.emese@gmail.com>, Mark Salter <msalter@redhat.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, Scott Wood <oss@buserror.net>, Rob Herring <robh+dt@kernel.org>, Stafford Horne <shorne@gmail.com>, Michal Simek <monstr@monstr.eu>, linux-kernel@vger.kernel.org, Michal Marek <mmarek@suse.com>, Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, Marcin Nowakowski <marcin.nowakowski@imgtec.com>, openrisc@lists.librecores.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJyMqaaMDU81Jes-M8jvxewJnyFD33pqd9NUCZFa0HYcg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ben Hutchings <ben@decadent.org.uk> writes:
+Hi Rob and Frank,
 
-> [ Unknown signature status ]
-> On Mon, 2017-02-27 at 14:40 +0900, Masahiro Yamada wrote:
->> Since commit 6b22b3d1614a ("kbuild: Allow using host dtc instead of
->> kernel's copy"), it is possible to use an external dtc.=C2=A0=C2=A0In th=
-is
->> case, we do not know which options are supported on it.
->>=20
->> Commit bc553986a2f7 ("dtc: turn off dtc unit address warnings by
->> default") gives -Wno-unit_address_vs_reg, but this options is only
->> recognized by v1.4.2 or later.
->>=20
->> If an older version is specified, the build fails:
+Rob Herring wrote:
+> On Mon, Feb 27, 2017 at 8:54 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 02/22/17 01:29, Sakari Ailus wrote:
+>>> While holding a reference to a device_node it is allowed to put that node
+>>> without holding devtree_lock spinlock. Move of_node_put() after releasing
+>>> the spinlock.
+>>>
+>>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>
+>> I would rather leave this code the way it is.
+>>
+>> The change is a micro-optimization that is not going to have any real
+>> impact on performance.
 >
-> But the option to use an external dtc was intended to allow testing of
-> newer versions.  If there's no reason to use this option to run an
-> older version, why bother trying to support that?
+> I have the same feelings.
 
-+1
+Fair enough. Feel free to ignore the patch then.
 
-That's a lot of added complexity, when the answer could just be "use the
-kernel dtc".
+-- 
+Kind regards,
 
-cheers
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
