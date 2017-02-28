@@ -1,49 +1,32 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 1/2] media: dt-bindings: vpif: fix whitespace errors
-Date: Tue, 28 Feb 2017 17:08:53 +0100
-Message-ID: <1488298134-6200-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1488298134-6200-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1488298134-6200-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-media-owner@vger.kernel.org
+Subject: [PATCH v3 0/2] media: dt-bindings: extend the vpif bindings
+Date: Tue, 28 Feb 2017 17:08:52 +0100
+Message-ID: <1488298134-6200-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sekhar Nori <nsekhar@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The examples have been copied from the DT with whitespace errors. Fix
-them.
+This series adds pdata quirks and other changes required to make vpif
+work on the da850-evm board.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/media/ti,da850-vpif.txt | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+v1 -> v2:
+- added patch 3/3
+- specified the purpose of port@0 and port@1 nodes
 
-diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-index 6d25d7f..9c7510b 100644
---- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-+++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
-@@ -30,15 +30,15 @@ I2C-connected TVP5147 decoder:
- 
- 		port {
- 			vpif_ch0: endpoint@0 {
--				  reg = <0>;
--				  bus-width = <8>;
--				  remote-endpoint = <&composite>;
-+				reg = <0>;
-+				bus-width = <8>;
-+				remote-endpoint = <&composite>;
- 			};
- 
- 			vpif_ch1: endpoint@1 {
--				  reg = <1>;
--				  bus-width = <8>;
--				  data-shift = <8>;
-+				reg = <1>;
-+				bus-width = <8>;
-+				data-shift = <8>;
- 			};
- 		};
- 	};
+v2 -> v3:
+- removed patch 3/3 - it may take some more time to determine the
+  correct solution for enable-gpios, so I decided to respin the
+  series without it and send it later as a follow-up
+- added Rob Herring's acks
+
+Bartosz Golaszewski (2):
+  media: dt-bindings: vpif: fix whitespace errors
+  media: dt-bindings: vpif: extend the example with an output port
+
+ .../devicetree/bindings/media/ti,da850-vpif.txt    | 50 ++++++++++++++++------
+ 1 file changed, 37 insertions(+), 13 deletions(-)
+
 -- 
 2.9.3
