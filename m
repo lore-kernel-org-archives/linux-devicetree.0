@@ -1,13 +1,15 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 1/5] pinctrl: sunxi: refactor pinctrl choice
- selecting for ARM64
-Date: Wed,  1 Mar 2017 01:24:40 +0800
-Message-ID: <20170228172444.59655-1-icenowy@aosc.xyz>
+Subject: [PATCH 2/5] arm64: only select PINCTRL_SUNXI for
+ Allwinner platforms
+Date: Wed,  1 Mar 2017 01:24:41 +0800
+Message-ID: <20170228172444.59655-2-icenowy@aosc.xyz>
+References: <20170228172444.59655-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB6PE23CQKGQENXKW76Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBCHF23CQKGQEIAB54WY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170228172444.59655-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,44 +20,30 @@ To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob H
 Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ARM64 Allwinner SoCs used to have every pinctrl driver selected in
-ARCH_SUNXI. Change this to make their default value to (ARM64 &&
-ARCH_SUNXI).
+As the pinctrl driver selecting is refactored in Kconfig file of
+pinctrl-sunxi, now we can select only PINCTRL_SUNXI for Allwinner
+platform, and the default value of several pinctrl drivers useful on
+ARM64 Allwinner SoCs will become Y.
+
+Drop the select of per-SoC pinctrl choices, but select PINCTRL_SUNXI.
 
 Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
- drivers/pinctrl/sunxi/Kconfig | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/arm64/Kconfig.platforms | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index 816015cf7053..92325736d953 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -48,8 +48,9 @@ config PINCTRL_SUN8I_H3
- 	select PINCTRL_SUNXI
- 
- config PINCTRL_SUN8I_H3_R
--	def_bool MACH_SUN8I
--	select PINCTRL_SUNXI_COMMON
-+	def_bool MACH_SUN8I || (ARM64 && ARCH_SUNXI)
-+	depends on RESET_CONTROLLER
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 129cc5ae4091..f6db2a938b1e 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -4,7 +4,7 @@ config ARCH_SUNXI
+ 	bool "Allwinner sunxi 64-bit SoC Family"
+ 	select GENERIC_IRQ_CHIP
+ 	select PINCTRL
+-	select PINCTRL_SUN50I_A64
 +	select PINCTRL_SUNXI
+ 	help
+ 	  This enables support for Allwinner sunxi based SoCs like the A64.
  
- config PINCTRL_SUN8I_V3S
- 	def_bool MACH_SUN8I
-@@ -65,11 +66,11 @@ config PINCTRL_SUN9I_A80_R
- 	select PINCTRL_SUNXI
- 
- config PINCTRL_SUN50I_A64
--	bool
-+	def_bool ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
- config PINCTRL_SUN50I_H5
--	bool
-+	def_bool ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
- endif
 -- 
 2.11.1
