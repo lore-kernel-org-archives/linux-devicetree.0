@@ -1,106 +1,118 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
- binding to OPP nodes
-Date: Tue, 28 Feb 2017 12:27:11 +0530
-Message-ID: <20170228065711.GD19417@vireshk-i7>
-References: <cover.1487926924.git.viresh.kumar@linaro.org>
- <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
- <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop>
+From: Milo Kim <milo.kim@ti.com>
+Subject: [PATCH 1/2] Documentation: dt-bindings: Use generic property for hardware enable pins
+Date: Tue, 28 Feb 2017 16:50:40 +0900
+Message-ID: <20170228075041.7568-1-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27-02-17, 18:39, Rob Herring wrote:
-> On Fri, Feb 24, 2017 at 02:36:34PM +0530, Viresh Kumar wrote:
-> > If the consumers don't need the capability of switching to different
-> > domain performance states at runtime, then they can simply define their
-> > required domain performance state in their nodes directly.
-> > 
-> > But if the device needs the capability of switching to different domain
-> > performance states, as they may need to support different clock rates,
-> > then the per OPP node can be used to contain that information.
-> > 
-> > This patch introduces the domain-performance-state (already defined by
-> > Power Domain bindings) to the per OPP node.
-> > 
-> 
-> We already have OPP voltages, why are those not sufficient?
+With index usages, device specific properties can be replaced with generic
+one. Vpos is index 0 and Vneg is index 1.
+DT examples are added as well.
 
-Those are for the regulator that ONLY controls the device, and
-domain-performance-state belongs to the parent domain which controls many
-devices.
+Signed-off-by: Milo Kim <milo.kim@ti.com>
+---
+ .../bindings/regulator/lm363x-regulator.txt        | 78 +++++++++++++++++++++-
+ 1 file changed, 76 insertions(+), 2 deletions(-)
 
-> > +Example 7: domain-Performance-state:
-> > +(example: For 1GHz require domain state 1 and for 1.1 & 1.2 GHz require state 2)
-> > +
-> > +/ {
-> > +	cpu0_opp_table: opp_table0 {
-> > +		compatible = "operating-points-v2";
-> > +		opp-shared;
-> > +
-> > +		opp@1000000000 {
-> > +			opp-hz = /bits/ 64 <1000000000>;
-> 
-> Thinking about this some more, there's a problem here that you have no 
-> link to foo_domain. I guess that resides in the cpu's node?
-
-Right, the "cpus" node below demonstrates that.
-
-> > +	cpus {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu@0 {
-> > +			compatible = "arm,cortex-a9";
-> > +			reg = <0>;
-> > +			clocks = <&clk_controller 0>;
-> > +			clock-names = "cpu";
-> > +			operating-points-v2 = <&cpu0_opp_table>;
-> > +			power-domains = <&foo_domain>;
-> > +		};
-> > +	};
-> > +};
-
-> > +			domain-performance-state = <1>;
-
-> Perhaps instead of a number, this should be a phandle to pstate@1. Then 
-> you just get the parent if you need to know the domain.
-
-That's what I did in V2, but then I turned it down considering the parent/child
-relationships we may have.
-
-There are multiple cases we can have:
-
-A.) DeviceX  --->  Parent-domain-1 (Contains Perfomance states)
-
-B.) DeviceX  --->  Parent-domain-1  ---> Parent domain-2 (Contains Perfomance states)
-
-                                    ---> Parent domain-2 (Contains Perfomance states)
-                                    |
-                                    |
-C.) DeviceX  --->  Parent-domain-1  |
-                                    |
-                                    |
-                                    ---> Parent domain-3 (Contains Perfomance states)
-
-
-The case A.) represents a simple case where the parent domain of the device
-contains the performance states. The phandle can work pretty well in this case.
-But the other cases B.) and C.) are a bit complicated as the direct parent
-domain doesn't allow changing the performance states, but its parents. And so I
-went ahead with numbers instead of phandles. Yes, we will still be able to get
-to the performance state node with the help of phandles, but will that be the
-right thing to do ?
-
+diff --git a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+index 8f14df9d1205..cc5a6151d85f 100644
+--- a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+@@ -8,8 +8,8 @@ Required property:
+ 
+ Optional properties:
+   LM3632 has external enable pins for two LDOs.
+-  - ti,lcm-en1-gpio: A GPIO specifier for Vpos control pin.
+-  - ti,lcm-en2-gpio: A GPIO specifier for Vneg control pin.
++  - enable-gpios: Two GPIO specifiers for Vpos and Vneg control pins.
++                  The first entry is Vpos, the second is Vneg enable pin.
+ 
+ Child nodes:
+   LM3631
+@@ -30,5 +30,79 @@ Child nodes:
+ 
+ Examples: Please refer to ti-lmu dt-bindings [2].
+ 
++lm3631@29 {
++	compatible = "ti,lm3631";
++	reg = <0x29>;
++
++	regulators {
++		compatible = "ti,lm363x-regulator";
++
++		vboost {
++			regulator-name = "lcd_boost";
++			regulator-min-microvolt = <4500000>;
++			regulator-max-microvolt = <6350000>;
++			regulator-always-on;
++		};
++
++		vcont {
++			regulator-name = "lcd_vcont";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
++		};
++
++		voref {
++			regulator-name = "lcd_voref";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6000000>;
++		};
++
++		vpos {
++			regulator-name = "lcd_vpos";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6000000>;
++			regulator-boot-on;
++		};
++
++		vneg {
++			regulator-name = "lcd_vneg";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6000000>;
++			regulator-boot-on;
++		};
++	};
++};
++
++lm3632@11 {
++	compatible = "ti,lm3632";
++	reg = <0x11>;
++
++	regulators {
++		compatible = "ti,lm363x-regulator";
++
++		/* GPIO1_16 for Vpos, GPIO1_28 is for Vneg */
++		enable-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>,
++				<&gpio1 28 GPIO_ACTIVE_HIGH>;
++
++		vboost {
++			regulator-name = "lcd_boost";
++			regulator-min-microvolt = <4500000>;
++			regulator-max-microvolt = <6400000>;
++			regulator-always-on;
++		};
++
++		vpos {
++			regulator-name = "lcd_vpos";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6000000>;
++		};
++
++		vneg {
++			regulator-name = "lcd_vneg";
++			regulator-min-microvolt = <4000000>;
++			regulator-max-microvolt = <6000000>;
++		};
++	};
++};
++
+ [1] ../regulator/regulator.txt
+ [2] ../mfd/ti-lmu.txt
 -- 
-viresh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
