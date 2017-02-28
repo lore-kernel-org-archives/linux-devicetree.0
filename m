@@ -1,233 +1,32 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/5] clk: tegra: define Tegra210 DMIC sync clocks
-Date: Tue, 28 Feb 2017 10:44:11 +0200
-Message-ID: <20170228084411.GR26640@tbergstrom-lnx.Nvidia.com>
-References: <1487853585-17934-1-git-send-email-pdeschrijver@nvidia.com>
- <1487853585-17934-3-git-send-email-pdeschrijver@nvidia.com>
- <594c6039-4682-8d11-94db-3f88a46f708e@kapsi.fi>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 0/3] media: dt-bindings: extend the vpif bindings
+Date: Tue, 28 Feb 2017 14:31:17 +0530
+Message-ID: <7d425d75-30fa-1767-2ac9-0332e5f0a16a@ti.com>
+References: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <594c6039-4682-8d11-94db-3f88a46f708e-/1wQRMveznE@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>
-Cc: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487771027-7763-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 27, 2017 at 08:27:33PM +0200, Mikko Perttunen wrote:
-> On 02/23/2017 02:39 PM, Peter De Schrijver wrote:
-> >Tegra210 has 3 DMIC inputs which can be clocked from the recovered clock
-> >of several other audio inputs (eg. i2s0, i2s1, ...). To model this, we add
-> >a 3 new clocks similar to the audio* clocks which handle the same function
-> >for the i2s and spdif clocks.
-> >
+On Wednesday 22 February 2017 07:13 PM, Bartosz Golaszewski wrote:
+> This series extends the DT bindings for TI vpif with an output
+> port and enable-gpios property.
 
-Yes, I only noticed that yesterday.. Fixes are on the way.
+This needs to go through Hans / Mauro and the media subsystem list. Can
+you please send with them copied next time.
 
-Peter.
-
-> >Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >---
-> > drivers/clk/tegra/clk-id.h               |  8 ++-
-> > drivers/clk/tegra/clk-tegra-audio.c      | 85 +++++++++++++++++++++++---------
-> > drivers/clk/tegra/clk-tegra210.c         |  6 +++
-> > include/dt-bindings/clock/tegra210-car.h |  9 +++-
-> > 4 files changed, 82 insertions(+), 26 deletions(-)
-> >
-> >diff --git a/drivers/clk/tegra/clk-id.h b/drivers/clk/tegra/clk-id.h
-> >index fc978b2..ab9b347 100644
-> >--- a/drivers/clk/tegra/clk-id.h
-> >+++ b/drivers/clk/tegra/clk-id.h
-> >@@ -307,8 +307,14 @@ enum clk_id {
-> > 	tegra_clk_xusb_ssp_src,
-> > 	tegra_clk_sclk_mux,
-> > 	tegra_clk_sor_safe,
-> >-	tegra_clk_ispa,
-> > 	tegra_clk_cec,
-> >+	tegra_clk_ispa,
-> >+	tegra_clk_dmic1_sync_clk,
-> >+	tegra_clk_dmic2_sync_clk,
-> >+	tegra_clk_dmic3_sync_clk,
-> >+	tegra_clk_dmic1_sync_clk_mux,
-> >+	tegra_clk_dmic2_sync_clk_mux,
-> >+	tegra_clk_dmic3_sync_clk_mux,
-> > 	tegra_clk_max,
-> > };
-> >
-> >diff --git a/drivers/clk/tegra/clk-tegra-audio.c b/drivers/clk/tegra/clk-tegra-audio.c
-> >index e2bfa9b..b4da6e0 100644
-> >--- a/drivers/clk/tegra/clk-tegra-audio.c
-> >+++ b/drivers/clk/tegra/clk-tegra-audio.c
-> >@@ -31,6 +31,9 @@
-> > #define AUDIO_SYNC_CLK_I2S3 0x4ac
-> > #define AUDIO_SYNC_CLK_I2S4 0x4b0
-> > #define AUDIO_SYNC_CLK_SPDIF 0x4b4
-> >+#define AUDIO_SYNC_CLK_DMIC1 0x560
-> >+#define AUDIO_SYNC_CLK_DMIC2 0x564
-> >+#define AUDIO_SYNC_CLK_DMIC3 0x6b8
-> >
-> > #define AUDIO_SYNC_DOUBLER 0x49c
-> >
-> >@@ -91,8 +94,14 @@ struct tegra_audio2x_clk_initdata {
-> >
-> > static DEFINE_SPINLOCK(clk_doubler_lock);
-> >
-> >-static const char *mux_audio_sync_clk[] = { "spdif_in_sync", "i2s0_sync",
-> >-	"i2s1_sync", "i2s2_sync", "i2s3_sync", "i2s4_sync", "vimclk_sync",
-> >+static const char * const mux_audio_sync_clk[] = { "spdif_in_sync",
-> >+	"i2s0_sync", "i2s1_sync", "i2s2_sync", "i2s3_sync", "i2s4_sync",
-> >+	"pll_a_out0", "vimclk_sync",
-> >+};
-> >+
-> >+static const char * const mux_dmic_sync_clk[] = { "unused", "i2s0_sync",
-> >+	"i2s1_sync", "i2s2_sync", "i2s3_sync", "i2s4_sync", "pll_a_out0",
-> >+	"vimclk_sync",
-> > };
-> 
-> My GCC spews a bunch of warnings because these are "const char *
-> const" and are passed to tegra_audio_sync_clk_init which takes
-> "const char **". Similarly for mux_dmic[123] which end up in a
-> struct tegra_periph_init_data which also has a "const char **"
-> field; and finally aclk_parents has the same issue.
-> 
-> Apart from that, the series:
-> 
-> Reviewed-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Tested-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> (booted and verified clocks show up)
-> 
-> >
-> > static struct tegra_sync_source_initdata sync_source_clks[] __initdata = {
-> >@@ -114,6 +123,12 @@ struct tegra_audio2x_clk_initdata {
-> > 	AUDIO(spdif, AUDIO_SYNC_CLK_SPDIF),
-> > };
-> >
-> >+static struct tegra_audio_clk_initdata dmic_clks[] = {
-> >+	AUDIO(dmic1_sync_clk, AUDIO_SYNC_CLK_DMIC1),
-> >+	AUDIO(dmic2_sync_clk, AUDIO_SYNC_CLK_DMIC2),
-> >+	AUDIO(dmic3_sync_clk, AUDIO_SYNC_CLK_DMIC3),
-> >+};
-> >+
-> > static struct tegra_audio2x_clk_initdata audio2x_clks[] = {
-> > 	AUDIO2X(audio0, 113, 24),
-> > 	AUDIO2X(audio1, 114, 25),
-> >@@ -123,6 +138,41 @@ struct tegra_audio2x_clk_initdata {
-> > 	AUDIO2X(spdif, 118, 29),
-> > };
-> >
-> >+static void __init tegra_audio_sync_clk_init(void __iomem *clk_base,
-> >+				      struct tegra_clk *tegra_clks,
-> >+				      struct tegra_audio_clk_initdata *sync,
-> >+				      int num_sync_clks,
-> >+				      const char **mux_names,
-> >+				      int num_mux_inputs)
-> >+{
-> >+	struct clk *clk;
-> >+	struct clk **dt_clk;
-> >+	struct tegra_audio_clk_initdata *data;
-> >+	int i;
-> >+
-> >+	for (i = 0, data = sync; i < num_sync_clks; i++, data++) {
-> >+		dt_clk = tegra_lookup_dt_id(data->mux_clk_id, tegra_clks);
-> >+		if (!dt_clk)
-> >+			continue;
-> >+
-> >+		clk = clk_register_mux(NULL, data->mux_name, mux_names,
-> >+					num_mux_inputs,
-> >+					CLK_SET_RATE_NO_REPARENT,
-> >+					clk_base + data->offset, 0, 3, 0,
-> >+					NULL);
-> >+		*dt_clk = clk;
-> >+
-> >+		dt_clk = tegra_lookup_dt_id(data->gate_clk_id, tegra_clks);
-> >+		if (!dt_clk)
-> >+			continue;
-> >+
-> >+		clk = clk_register_gate(NULL, data->gate_name, data->mux_name,
-> >+					0, clk_base + data->offset, 4,
-> >+					CLK_GATE_SET_TO_DISABLE, NULL);
-> >+		*dt_clk = clk;
-> >+	}
-> >+}
-> >+
-> > void __init tegra_audio_clk_init(void __iomem *clk_base,
-> > 			void __iomem *pmc_base, struct tegra_clk *tegra_clks,
-> > 			struct tegra_audio_clk_info *audio_info,
-> >@@ -176,30 +226,17 @@ void __init tegra_audio_clk_init(void __iomem *clk_base,
-> > 		*dt_clk = clk;
-> > 	}
-> >
-> >-	for (i = 0; i < ARRAY_SIZE(audio_clks); i++) {
-> >-		struct tegra_audio_clk_initdata *data;
-> >+	tegra_audio_sync_clk_init(clk_base, tegra_clks, audio_clks,
-> >+				  ARRAY_SIZE(audio_clks), mux_audio_sync_clk,
-> >+				  ARRAY_SIZE(mux_audio_sync_clk));
-> >
-> >-		data = &audio_clks[i];
-> >-		dt_clk = tegra_lookup_dt_id(data->mux_clk_id, tegra_clks);
-> >+	/* make sure the DMIC sync clocks have a valid parent */
-> >+	for (i = 0; i < ARRAY_SIZE(dmic_clks); i++)
-> >+		writel_relaxed(1, clk_base + dmic_clks[i].offset);
-> >
-> >-		if (!dt_clk)
-> >-			continue;
-> >-		clk = clk_register_mux(NULL, data->mux_name, mux_audio_sync_clk,
-> >-					ARRAY_SIZE(mux_audio_sync_clk),
-> >-					CLK_SET_RATE_NO_REPARENT,
-> >-					clk_base + data->offset, 0, 3, 0,
-> >-					NULL);
-> >-		*dt_clk = clk;
-> >-
-> >-		dt_clk = tegra_lookup_dt_id(data->gate_clk_id, tegra_clks);
-> >-		if (!dt_clk)
-> >-			continue;
-> >-
-> >-		clk = clk_register_gate(NULL, data->gate_name, data->mux_name,
-> >-					0, clk_base + data->offset, 4,
-> >-					CLK_GATE_SET_TO_DISABLE, NULL);
-> >-		*dt_clk = clk;
-> >-	}
-> >+	tegra_audio_sync_clk_init(clk_base, tegra_clks, dmic_clks,
-> >+				  ARRAY_SIZE(dmic_clks), mux_dmic_sync_clk,
-> >+				  ARRAY_SIZE(mux_dmic_sync_clk));
-> >
-> > 	for (i = 0; i < ARRAY_SIZE(audio2x_clks); i++) {
-> > 		struct tegra_audio2x_clk_initdata *data;
-> >diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
-> >index bdb296a..ca63901 100644
-> >--- a/drivers/clk/tegra/clk-tegra210.c
-> >+++ b/drivers/clk/tegra/clk-tegra210.c
-> >@@ -2223,6 +2223,12 @@ static u32 pll_expo_p_to_pdiv(u32 p, u32 *pdiv)
-> > 	[tegra_clk_pll_a1] = { .dt_id = TEGRA210_CLK_PLL_A1, .present = true },
-> > 	[tegra_clk_ispa] = { .dt_id = TEGRA210_CLK_ISPA, .present = true },
-> > 	[tegra_clk_cec] = { .dt_id = TEGRA210_CLK_CEC, .present = true },
-> >+	[tegra_clk_dmic1_sync_clk] = { .dt_id = TEGRA210_CLK_DMIC1_SYNC_CLK, .present = true },
-> >+	[tegra_clk_dmic2_sync_clk] = { .dt_id = TEGRA210_CLK_DMIC2_SYNC_CLK, .present = true },
-> >+	[tegra_clk_dmic3_sync_clk] = { .dt_id = TEGRA210_CLK_DMIC3_SYNC_CLK, .present = true },
-> >+	[tegra_clk_dmic1_sync_clk_mux] = { .dt_id = TEGRA210_CLK_DMIC1_SYNC_CLK_MUX, .present = true },
-> >+	[tegra_clk_dmic2_sync_clk_mux] = { .dt_id = TEGRA210_CLK_DMIC2_SYNC_CLK_MUX, .present = true },
-> >+	[tegra_clk_dmic3_sync_clk_mux] = { .dt_id = TEGRA210_CLK_DMIC3_SYNC_CLK_MUX, .present = true },
-> > };
-> >
-> > static struct tegra_devclk devclks[] __initdata = {
-> >diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
-> >index e7a2578..5aa1027 100644
-> >--- a/include/dt-bindings/clock/tegra210-car.h
-> >+++ b/include/dt-bindings/clock/tegra210-car.h
-> >@@ -396,6 +396,13 @@
-> > #define TEGRA210_CLK_PLL_C_UD 364
-> > #define TEGRA210_CLK_SCLK_MUX 365
-> >
-> >-#define TEGRA210_CLK_CLK_MAX 366
-> >+#define TEGRA210_CLK_DMIC1_SYNC_CLK 388
-> >+#define TEGRA210_CLK_DMIC1_SYNC_CLK_MUX 389
-> >+#define TEGRA210_CLK_DMIC2_SYNC_CLK 390
-> >+#define TEGRA210_CLK_DMIC2_SYNC_CLK_MUX 391
-> >+#define TEGRA210_CLK_DMIC3_SYNC_CLK 392
-> >+#define TEGRA210_CLK_DMIC3_SYNC_CLK_MUX 393
-> >+
-> >+#define TEGRA210_CLK_CLK_MAX 394
-> >
-> > #endif	/* _DT_BINDINGS_CLOCK_TEGRA210_CAR_H */
-> >
+Thanks,
+Sekhar
