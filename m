@@ -1,129 +1,106 @@
-From: Yannick FERTRE <yannick.fertre@st.com>
-Subject: Re: [PATCH v2 4/9] dt-bindings: Add Ampire AM-480272H3TMQW-T01H panel
-Date: Tue, 28 Feb 2017 10:07:22 +0000
-Message-ID: <c759770a-f250-7502-4ad1-c2fbb001cf92@st.com>
-References: <1486738489-22154-1-git-send-email-yannick.fertre@st.com>
- <1486738489-22154-5-git-send-email-yannick.fertre@st.com>
- <20170216023408.apqukipi5zzkrk7j@rob-hp-laptop>
- <2b409ff7-54fe-4110-6495-1cc54585e5e2@st.com>
- <CAL_JsqLBZ0DGP62yGb2GjNZMto9hWce_HWNCX5iWhbrnE3ae_Q@mail.gmail.com>
- <0036d551-91bc-9f3f-22a9-9dac2cf3527c@st.com>
- <CAL_JsqLqNzpV1pjz3bX1gowHwJzsKKA=17aD5Ce18sy1B_V-0g@mail.gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
+ resolution
+Date: Tue, 28 Feb 2017 11:14:20 +0100
+Message-ID: <84b7cbab-1342-7f80-cab6-132324e002a4@st.com>
+References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
+ <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
+ <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
+ <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
+ <d64bd76d-a2c6-6148-c126-fa73e96019a1@kernel.org>
+ <79e01c5c-d27c-89ea-4d8f-9e66a6c091e6@st.com>
+ <f486bd08-b562-5101-01ba-c8e36ac0d83b@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqLqNzpV1pjz3bX1gowHwJzsKKA=17aD5Ce18sy1B_V-0g@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <9690AE428116D740A00A08AD898C7600@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Philippe CORNU <philippe.cornu@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <f486bd08-b562-5101-01ba-c8e36ac0d83b@metafoo.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAyLzI0LzIwMTcgMDM6MDYgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBGcmks
-IEZlYiAyNCwgMjAxNyBhdCAyOjE4IEFNLCBZYW5uaWNrIEZFUlRSRSA8eWFubmljay5mZXJ0cmVA
-c3QuY29tPiB3cm90ZToNCj4+DQo+Pg0KPj4gT24gMDIvMjEvMjAxNyAwMzowNyBQTSwgUm9iIEhl
-cnJpbmcgd3JvdGU6DQo+Pj4gT24gTW9uLCBGZWIgMjAsIDIwMTcgYXQgNTowMSBBTSwgWWFubmlj
-ayBGRVJUUkUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4gd3JvdGU6DQo+Pj4+DQo+Pj4+DQo+Pj4+
-IE9uIDAyLzE2LzIwMTcgMDM6MzQgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPj4+Pj4gT24gRnJp
-LCBGZWIgMTAsIDIwMTcgYXQgMDM6NTQ6NDRQTSArMDEwMCwgWWFubmljayBGZXJ0cmUgd3JvdGU6
-DQo+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0
-LmNvbT4NCj4+Pj4+PiAtLS0NCj4+Pj4+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvYW1w
-aXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dCAgICAgICAgIHwgNyArKysrKysrDQo+Pj4+Pj4g
-IDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykNCj4+Pj4+PiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2FtcGly
-ZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQNCj4+Pj4+Pg0KPj4+Pj4+IGRpZmYgLS1naXQgYS9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0t
-NDgwMjcyaDN0bXF3LXQwMWgudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3MmgzdG1xdy10MDFoLnR4dA0KPj4+Pj4+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0DQo+Pj4+Pj4gaW5kZXggMDAwMDAwMC4uZjU5ZTNjNA0KPj4+Pj4+
-IC0tLSAvZGV2L251bGwNCj4+Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9wYW5lbC9hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQwMWgudHh0DQo+Pj4+
-Pj4gQEAgLTAsMCArMSw3IEBADQo+Pj4+Pj4gK0FtcGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCA0
-LjMiIFdRVkdBIFRGVCBMQ0QgcGFuZWwNCj4+Pj4+PiArDQo+Pj4+Pj4gK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6DQo+Pj4+Pj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJhbXBpcmUsYW0tNDgwMjcy
-aDN0bXF3LXQwMWgiDQo+Pj4+Pg0KPj4+Pj4gTm8gR1BJTyBjb250cm9scyBvciBwb3dlciBzdXBw
-bHkgZm9yIHRoaXMgcGFuZWw/DQo+Pj4+Pg0KPj4+Pj4gUm9iDQo+Pj4+Pg0KPj4+Pg0KPj4+PiBI
-aSBSb2IsDQo+Pj4+IHRoYW5rIGZvciB5b3VyIHJlcGx5Lg0KPj4+PiBUaGVyZSBpcyBubyBncGlv
-IG9yIHBvd2VyIHN1cHBseSBjb250cm9sIGZvciB0aGlzIHBhbmVsIHdpdGggdGhlIGV2YWwNCj4+
-Pj4gYm9hcmQgc3RtNDI5eDlpLg0KPj4+DQo+Pj4gWW91IG5lZWQgdG8gZGVzY3JpYmUgd2hhdCB0
-aGUgcGFuZWwgaGFzLCBub3Qgd2hhdCB5b3UgaGF2ZSBjb250cm9sIG9mDQo+Pj4gb3Igbm90IG9u
-IGEgcGFydGljdWxhciBib2FyZC4NCj4+DQo+PiBZZXMsIEkgZG9uJ3QgaGF2ZSB0byBkZXNjcmli
-ZSBjb250cm9sIG9uIGEgcGFydGljdWxhciBib2FyZC4gVGhpcw0KPj4gYmluZGluZyBjb250YWlu
-cyBmZXcgbGluZXMuIFRoaXMgY29tcGF0aWJsZSBpcyB1c2VkIGJ5IHBhbmVsLXNpbXBsZSB0bw0K
-Pj4gZ2V0IG9ubHkgdGltaW5ncy4gT3RoZXIgc3RhZmYgbGlrZSBncGlvIG9yIHBvd2VyLXN1eXBw
-bHkgaXMgd2VsbCBtYW5hZ2VkDQo+PiBieSBwYW5lbC1zaW1wbGUgaXRzZWxmLg0KPj4NCj4+IFRo
-aXMgYmluZGluZyBpcyBzaW1pbGFyIHRvIHRoZXNlIGJpbmRpbmdzICYgbm90IHJlcXVpcmVkIG1v
-cmUgZGV0YWlsczoNCj4NCj4gRmluZGluZyBiYWQgZXhhbXBsZXMgaXMgbm90IGFuIGFyZ3VtZW50
-LiBBbmQgeWVzLCBsb3RzIHdlbnQgaW4gYmVmb3JlDQo+IHdlIHN0YXJ0ZWQgYmVpbmcgbW9yZSBw
-YXJ0aWN1bGFyIGluIHJldmlld3MsIGJ1dCBub3cgSSB3YW50IHRvIHNlZQ0KPiBwb3dlciBzdXBw
-bGllcyBhbmQgY29udHJvbCBsaW5lcyBhY2N1cmF0ZWx5IGRlc2NyaWJlZC4gTmV4dCB3ZWVrLA0K
-PiB0aGVyZSBtYXkgYmUgYWRkaXRpb25hbCByZXF1aXJlbWVudHMuDQo+DQo+IFRoaXMgaXMgbm8g
-ZGlmZmVyZW50IHRoYW4gY2xvY2sgb3IgaW50ZXJydXB0IGJpbmRpbmdzLiBXZSBkb24ndCBqdXN0
-DQo+IHNheSAidXNlcyBjbG9jay9pbnRlcnJ1cHQgYmluZGluZyIgaW4gYmluZGluZyBkb2NzLiBZ
-b3UgaGF2ZSB0bw0KPiBleHBsaWNpdGx5IHN0YXRlIGhvdyBtYW55IGNsb2Nrcy9pbnRlcnJ1cHRz
-IGFuZCB0aGVpciBvcmRlci4NCj4NCj4NCj4+ICAgIC1hbXBpcmUsYW0tNDgwMjcyaDN0bXF3LXQw
-MWgudHh0LGFtcGlyZSxhbTgwMDQ4MHIzdG1xd2ExaC50eHQsDQo+PiAgICAtYXVvLGIwODB1YW4w
-MS50eHQsYXVvLGIxMDFhdzAzLnR4dCxhdW8sYjEwMWVhbjAxLnR4dCwNCj4+ICAgIC1hdW8sYjEw
-MXh0bjAxLnR4dCxhdW8sYjExNnh3MDMudHh0LGF1byxiMTMzaHRuMDEudHh0LA0KPj4gICAgLWF1
-byxiMTMzeHRuMDEudHh0LGF1byxnMTMzaGFuMDEudHh0LGF1byxnMTg1aGFuMDEudHh0LA0KPj4g
-ICAgLWF1byx0MjE1aHZuMDEudHh0LGF2aWMsdG0wNzBkZGgwMy50eHQsDQo+PiAgICAtYm9lLHR2
-MDgwd3VtLW5sMC50eHQsY2h1bmdod2EsY2xhYTA3MHdwMDN4Zy50eHQsDQo+PiAgICAtY2h1bmdo
-d2EsY2xhYTEwMXdhMDFhLnR4dCxjaHVuZ2h3YSxjbGFhMTAxd2IwMy50eHQsDQo+PiAgICAtZWR0
-LGV0MDU3MDkwZGh1LnR4dCxlZHQsZXQwNzAwODBkaDYudHh0LGVkdCxldG0wNzAwZzBkaDYudHh0
-LA0KPj4gICAgLWZveGxpbmssZmw1MDB3dnIwMC1hMHQudHh0LGdpYW50cGx1cyxncGc0ODI3Mzlx
-czUudHh0LA0KPj4gICAgLWhhbm5zdGFyLGhzZDA3MHB3dzEudHh0LGhhbm5zdGFyLGhzZDEwMHB4
-bjEudHh0LA0KPj4gICAgLWhpdCx0eDIzZDM4dm0wY2FhLnR4dCxpbm5vbHV4LGF0MDQzdG4yNC50
-eHQsDQo+PiAgICAtaW5ub2x1eCxhdDA3MHRuOTIudHh0LGlubm9sdXgsZzEwMWljZS1sMDEudHh0
-LA0KPj4gICAgLWlubm9sdXgsZzEyMWkxLWwwMS50eHQsaW5ub2x1eCxnMTIxeDEtbDAzLnR4dCwN
-Cj4+ICAgIC1pbm5vbHV4LG4xMTZiZ2UudHh0LGlubm9sdXgsbjE1NmJnZS1sMjEudHh0LA0KPj4g
-ICAgLWlubm9sdXgsemowNzBuYS0wMXAudHh0LGt5byx0Y2cxMjF4Z2xwLnR4dCwNCj4+ICAgIC1s
-ZyxsYjA3MHd2OC50eHQsbGcsbGQwNzB3eDMtc2wwMS50eHQsbGcsbGg1MDB3eDEtc2QwMy50eHQs
-DQo+PiAgICAtbGcsbHAwNzlxeDEtc3Awdi50eHQsIGxnLGxwMDk3cXgxLXNwYTEudHh0LGxnLGxw
-MTIwdXAxLnR4dCwNCj4+ICAgIC1sZyxscDEyOXFlLnR4dCwgbmVjLG5sNDgyN2hjMTktMDViLnR4
-dCwNCj4+ICAgIC1udmQsOTEyOC50eHQsb2theWEscnM4MDA0ODB0LTd4MGdwLnR4dCwNCj4+ICAg
-IC1vbGltZXgsbGNkLW9saW51eGluby00My10cy50eHQsb250YXQseXg3MDB3djAzLnR4dCwNCj4+
-ICAgIC1vcnR1c3RlY2gsY29tNDNoNG04NXVsYy50eHQsIHBhbmFzb25pYyx2dngxMGYwMDRiMDAu
-dHh0LA0KPj4gICAgLXFpYW9kaWFuLHFkNDMwMDNjMC00MC50eHQsDQo+PiAgICAtc2Ftc3VuZyxs
-c24xMjJkbDAxLWMwMS50eHQsc2Ftc3VuZyxsdG4xMDFudDA1LnR4dCwNCj4+ICAgIC1zYW1zdW5n
-LGx0bjE0MGF0MjktMzAxLnR4dCxzaGFycCxscTEwMWsxbHkwNC50eHQsDQo+PiAgICAtc2hhcnAs
-bHExMjNwMWp4MzEudHh0LA0KPj4gICAgLXNoZWxseSxzY2EwNzAxMC1iZm4tbG5uLnR4dCxzdGFy
-cnksa3IxMjJlYTBzcmEudHh0LA0KPj4gICAgLXRwayxmMDdhLTAxMDIudHh0LHRwayxmMTBhLTAx
-MDIudHh0LHVydCx1bXNoLTg1OTZtZC50eHQNCj4+DQo+PiBCZXN0IHJlZ2FyZHMNCj4+DQo+Pj4N
-Cj4+Pj4gVGhpcyBiaW5kaW5nIGlzIHNpbWlsYXIgdG8gYWxsIHBhbmVsIGJpbmRpbmdzIHdoaWNo
-IGFyZSBsaW5rIHRvIHBhbmVsDQo+Pj4+IHNpbXBsZS4gRGV0YWlscyBvbiBncGlvICYgcG93ZXIg
-c3VwcGx5IGFyZSBkZXNjcmliZSB3aXRoIHNpbXBsZS1wYW5lbA0KPj4+PiBiaW5kaW5nLg0KPj4+
-DQo+Pj4gc2ltcGxlLXBhbmVsLnR4dCBwcm92aWRlcyB3aGF0IHBvc3NpYmxlIHN0YW5kYXJkIHBy
-b3BlcnRpZXMgdGhlcmUgYXJlLA0KPj4+IG5vdCB3aGV0aGVyIGEgcGFuZWwgdXNlcyB0aGVtLiBU
-aGUgcG93ZXIgc3VwcGx5IG5lZWRzIHRvIGJlIGV4cGxpY2l0DQo+Pj4gYmVjYXVzZSBJIGRvbid0
-IGtub3cgaWYgeW91IGZvcmdvdCBhbmQgdGhlcmUncyByZWFsbHkgMiBzdXBwbGllcyBvcg0KPj4+
-IHlvdSBhcmUgdXNpbmcgInBvd2VyLXN1cHBseSIgZm9yIGEgc2luZ2xlIHN1cHBseS4NCj4+Pg0K
-Pj4+IFJvYg0KPj4+DQoNCg0KSGkgUm9iLA0Kb2ssIEknbGwgcHVzaCBhIFY0IHZlcnNpb24gd2l0
-aCBhbGwgZGV0YWlscyBvbiBwcm9wZXJ0aWVzLg0KSSB3cml0ZSBiZWxsb3cgIGEgZHJhZnQgb2Yg
-YmluZGluZzoNCg0KQW1waXJlIEFNLTQ4MDI3MkgzVE1RVy1UMDFIIDQuMyIgV1FWR0EgVEZUIExD
-RCBwYW5lbA0KDQpUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBzaW1wbGUtcGFu
-ZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkDQppbiBzaW1wbGUtcGFuZWwudHh0IGluIHRo
-aXMgZGlyZWN0b3J5Lg0KDQpSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KLSBjb21wYXRpYmxlOiBzaG91
-bGQgYmUgImFtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaCINCg0KT3B0aW9uYWwgcHJvcGVydGll
-czoNCi0gcG93ZXItc3VwcGx5OiByZWd1bGF0b3IgdG8gcHJvdmlkZSB0aGUgc3VwcGx5IHZvbHRh
-Z2UNCi0gZGRjLWkyYy1idXM6IHBoYW5kbGUgb2YgYW4gSTJDIGNvbnRyb2xsZXIgdXNlZCBmb3Ig
-RERDIEVESUQgcHJvYmluZw0KLSBlbmFibGUtZ3Bpb3M6IEdQSU8gcGluIHRvIGVuYWJsZSBvciBk
-aXNhYmxlIHRoZSBwYW5lbA0KLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBk
-ZXZpY2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsDQoNCk9wdGlvbmFsIG5vZGVzOg0KLSBWaWRlbyBw
-b3J0IGZvciBSR0IgaW5wdXQuDQoNCkV4YW1wbGU6DQoJcGFuZWxfcmdiOiBwYW5lbC1yZ2Igew0K
-CQljb21wYXRpYmxlID0gImFtcGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaCI7DQoJCWVuYWJsZS1n
-cGlvcyA9IDwmZ3Bpb2EgOCAxPjsNCgkJcG9ydCB7DQoJCQlwYW5lbF9pbl9yZ2I6IGVuZHBvaW50
-IHsNCgkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmNvbnRyb2xlcl9vdXRfcmdiPjsNCgkJCX07DQoJ
-CX07DQoJfTsNCg0KQmVzdCByZWdhcmRzDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On 02/28/2017 09:34 AM, Lars-Peter Clausen wrote:
+> On 02/28/2017 09:21 AM, Fabrice Gasnier wrote:
+>> On 02/25/2017 04:11 PM, Jonathan Cameron wrote:
+>>> On 24/02/17 16:04, Fabrice Gasnier wrote:
+>>>> On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
+>>>>> On 15/02/17 16:55, Fabrice Gasnier wrote:
+>>>>>> Add documentation for 'st,adc-res' dt optional property.
+>>>>>>
+>>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>>> I'm happy with this, but would like to leave time for a device tree review.
+>>>>>
+>>>>> Ultimately we may well want to make this a generic property and call it
+>>>>> something
+>>>>> like adc-resolution but perhaps we need to wait until we have a few more
+>>>>> devices
+>>>>> supporting setting it via device tree to figure out what the best
+>>>>> interface is.
+>>>>> It would exactly be a problem to support this as a deprecated binding at
+>>>>> that
+>>>>> point.
+>>>>
+>>>> Hi Jonathan,
+>>>>
+>>>> I agree with you on this... It may be better to have generic property
+>>>> for this, especially if you see that it will come in the near future.
+>>>> May I suggest this prop to be less restrictive, e.g. like
+>>>> resolution-bits as is may also be worth for other device types, e.g.
+>>>> DAC as an example ?>
+>>> Sure, why not - no loss of meaning here.  We may never use it for anything
+>>> else but that doesn't matter.
+>>
+>> Hi Jonathan,
+>>
+>> Following Rob's comment, how you see such a common property can be
+>> integrated. Currently I don't see much devices are doing this.
+>> Do you have ideas or preferences on this ?
+>>
+>> - Do you think replacing 'st,adc-res' by 'resolution-bits' in current
+>> patchset is enough for now ?
+>
+> That name would be a bit confusing. Considering that the devicetree
+> describes th capabilities of the hardware this name would suggest that this
+> is the resolution supported by the device.
+>
+> If we want to allow selecting runtime configuration parameters for IIO
+> devices from the devicetree we should probably follow the precedence set by
+> the clock framework and use properties with the 'assigned-' prefix.
+
+Hi Lars,
+
+This makes sense. Then, do you see 'assigned-resolution-bits' as a
+better candidate ?
+Also, do you think listing all devices caps in property like 
+'resolutions-bits', e.g. 'resolutions-bits = <6 8 10 12>', is
+suitable/necessary ?
+
+>
+> But to be honest I'm not convinced yet that the whole approach of allowing
+> runtime configuration parameters to be configured via the devicetree is the
+> right approach. Converters and sensors often have a lot of runtime
+> configurable parameters, typically we expose them to the application layer
+> to allow maximum flexibility. Why is the resolution special in this case and
+> should be pre-configured via the devicetree instead?
+
+As I understand it, currently lots of devices have hard-coded
+(maximum?) resolution, then exposed to application layer as read only 
+data format. Then resolution depends on HW used (e.g. sensor, 
+converter). Depending on the application board, it may be worth to offer
+pre-configured intermediate/lower resolution depending on analog
+sources. Is it ok to offer devicetree pre-configuration ?
+
+Best Regards,
+Fabrice
+>
+> - Lars
+>
