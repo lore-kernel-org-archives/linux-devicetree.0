@@ -1,119 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 2/3] checks: Add bus checks for simple-bus buses
-Date: Tue, 28 Feb 2017 16:43:09 -0600
-Message-ID: <20170228224310.14162-3-robh@kernel.org>
-References: <20170228224310.14162-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170228224310.14162-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add Gru/Kevin DTS
+Date: Tue, 28 Feb 2017 14:54:33 -0800
+Message-ID: <CAD=FV=VS6YBjUQsix=nHteKG6jt=+LGWpDSqrP4VRu5LxOVc3A@mail.gmail.com>
+References: <20170210010521.78872-1-briannorris@chromium.org>
+ <20170210010521.78872-5-briannorris@chromium.org> <6978416.eyJmBK6ozI@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6978416.eyJmBK6ozI@phil>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Barber <smbarber@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add checks to identify simple-bus bus types and checks for child
-devices. Simple-bus type is generally identified by "simple-bus"
-compatible string. We also treat the root as a simple-bus, but only for
-child nodes with reg property.
+Hi,
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v2:
-- new patch
+On Tue, Feb 28, 2017 at 2:00 PM, Heiko Stuebner <heiko@sntech.de> wrote:
+>> +     pp3300_wifi_bt: pp3300-wifi-bt {
+>> +             compatible = "regulator-fixed";
+>> +             regulator-name = "pp3300_wifi_bt";
+>> +             /* NOTE: wlan_module_pd_l pinctrl in pp1800_pcie */
+>> +
+>> +             enable-active-high;
+>> +
+>> +             /* NOTE: this GPIO also used in pp1800_pcie */
+>
+> does the gpio subsystem like this double usage?
 
- checks.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Yes, see commit f19b00da8ed3 ("regulator: core: support shared enable
+GPIO concept").  ...but there's no great place to put the pinctrl node
+though, unfortunately.  It's either randomly pick one of the two or
+add it as a system-level hog.
 
-diff --git a/checks.c b/checks.c
-index 5ed91ac50a10..c4865b4c8da0 100644
---- a/checks.c
-+++ b/checks.c
-@@ -817,6 +817,72 @@ static void check_pci_device_reg(struct check *c, struct dt_info *dti, struct no
- }
- WARNING(pci_device_reg, check_pci_device_reg, NULL, &reg_format);
-
-+static const struct bus_type simple_bus = {
-+	.name = "simple-bus",
-+};
-+
-+static bool node_is_compatible(struct node *node, const char *compat)
-+{
-+	struct property *prop;
-+	const char *str;
-+
-+	prop = get_property(node, "compatible");
-+	if (!prop)
-+		return false;
-+
-+	for (str = prop->val.val; str < prop->val.val + prop->val.len; str += strlen(str) + 1) {
-+		if (streq(str, compat))
-+			return true;
-+	}
-+	return false;
-+}
-+
-+static void check_simple_bus_bridge(struct check *c, struct dt_info *dti, struct node *node)
-+{
-+	if (node_is_compatible(node, "simple-bus") || !node->parent)
-+		node->bus = &simple_bus;
-+}
-+WARNING(simple_bus_bridge, check_simple_bus_bridge, NULL, &addr_size_cells);
-+
-+static void check_simple_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
-+{
-+	struct property *prop;
-+	const char *unitname = get_unitname(node);
-+	char unit_addr[17];
-+	unsigned int size;
-+	uint64_t reg = 0;
-+	cell_t *cells = NULL;
-+
-+	if (!node->parent || (node->parent->bus != &simple_bus))
-+		return;
-+
-+	prop = get_property(node, "reg");
-+	if (prop)
-+		cells = (cell_t *)prop->val.val;
-+	else {
-+		prop = get_property(node, "ranges");
-+		if (prop && prop->val.len)
-+			/* skip of child address */
-+			cells = ((cell_t *)prop->val.val) + node_addr_cells(node);
-+	}
-+
-+	if (!cells) {
-+		if (node->parent->parent && !(node->bus == &simple_bus))
-+			FAIL(c, dti, "Node %s missing or empty reg/ranges property", node->fullpath);
-+		return;
-+	}
-+
-+	size = node_addr_cells(node->parent);
-+	while (size--)
-+		reg = (reg << 32) | fdt32_to_cpu(*(cells++));
-+
-+	snprintf(unit_addr, sizeof(unit_addr), "%lx", reg);
-+	if (!streq(unitname, unit_addr))
-+		FAIL(c, dti, "Node %s simple-bus unit address format error, expected \"%s\"",
-+		     node->fullpath, unit_addr);
-+}
-+WARNING(simple_bus_reg, check_simple_bus_reg, NULL, &reg_format, &simple_bus_bridge);
-+
- /*
-  * Style checks
-  */
-@@ -893,6 +959,9 @@ static struct check *check_table[] = {
- 	&pci_device_reg,
- 	&pci_device_bus_num,
-
-+	&simple_bus_bridge,
-+	&simple_bus_reg,
-+
- 	&avoid_default_addr_size,
- 	&obsolete_chosen_interrupt_controller,
-
---
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
