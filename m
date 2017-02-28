@@ -1,100 +1,94 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 5/9] dmaengine: sun6i: support V3s SoC
-	variant
-Date: Wed, 01 Mar 2017 01:58:33 +0800
-Message-ID: <535111488304713@web26h.yandex.ru>
-References: <20170225123029.55939-1-icenowy@aosc.xyz>
- <20170225123029.55939-5-icenowy@aosc.xyz>
- <20170227075021.e7e43o54s23jzfto@lukather>
- <1426971488192481@web6g.yandex.ru> <20170228175604.kdlmjjcncfljnbfp@lukather>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/5] pinctrl: sunxi: refactor pinctrl choice
+ selecting for ARM64
+Date: Tue, 28 Feb 2017 18:17:30 +0000
+Message-ID: <488811a1-b64f-c435-e919-7f83dc107697@arm.com>
+References: <20170228172444.59655-1-icenowy@aosc.xyz>
+Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170228175604.kdlmjjcncfljnbfp@lukather>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBWH423CQKGQECDMD7ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170228172444.59655-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-ymACFijhrKM@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgowMS4wMy4yMDE3LCAwMTo1NiwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gTW9uLCBGZWIgMjcsIDIwMTcgYXQgMDY6NDg6MDFQTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAyNy4wMi4yMDE3LCAxNTo1MCwgIk1heGltZSBS
-aXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT46Cj4+IMKgPiBPbiBTYXQs
-IEZlYiAyNSwgMjAxNyBhdCAwODozMDoyNVBNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+
-PiDCoD4+IMKgQWxsd2lubmVyIFYzcyBoYXMgYSBETUEgZW5naW5lIHNpbWlsYXIgdG8gdGhlIG9u
-ZXMgZnJvbSBBMzEsIGJ1dCB3aXRoCj4+IMKgPj4gwqBmZXdlciBjaGFubmVscyBhbmQgRFJRcy4K
-Pj4gwqA+Pgo+PiDCoD4+IMKgQWRkIHN1cHBvcnQgZm9yIGl0Lgo+PiDCoD4+Cj4+IMKgPj4gwqBB
-cyBpdCBhbHNvIG5lZWRzIHRoZSBzcGVjaWFsIGdhdGUgYml0LCBtYWtlIHRoZSBnYXRlIGJpdCBn
-ZW5lcmljLgo+PiDCoD4KPj4gwqA+IFRoYXQgc2hvdWxkIGJlIHBhcnQgb2YgYSBzZXBhcmF0ZSBw
-YXRjaC4KPj4KPj4gwqBPSy4KPj4KPj4gwqA+Cj4+IMKgPj4gwqBBY2NvcmRpbmcgdG8gQlNQIHNv
-dXJjZSBjb2RlLCBTVU44SVc2IChBODNUKSBhbHNvIG5lZWRzIHRoZSBiaXQsIHNvIGl0Cj4+IMKg
-Pj4gwqBoYXZlIGFsc28gYmVlbiBzcGVjaWZpZWQgZ2F0ZV9uZWVkZWQgcHJvcGVydHkuCj4+IMKg
-Pj4KPj4gwqA+PiDCoFNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54
-eXo+Cj4+IMKgPj4gwqAtLS0KPj4gwqA+PiDCoMKgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2RtYS9zdW42aS1kbWEudHh0IHwgMSArCj4+IMKgPj4gwqDCoGRyaXZlcnMvZG1hL3N1
-bjZpLWRtYS5jIHwgMTcgKysrKysrKysrKysrKystLS0KPj4gwqA+PiDCoMKgMiBmaWxlcyBjaGFu
-Z2VkLCAxNSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+PiDCoD4+Cj4+IMKgPj4gwqBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9zdW42aS1k
-bWEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS9zdW42aS1kbWEu
-dHh0Cj4+IMKgPj4gwqBpbmRleCA2YjI2NzA0NWY1MjIuLjk4ZmJlMWE1YzZkZCAxMDA2NDQKPj4g
-wqA+PiDCoC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEvc3VuNmkt
-ZG1hLnR4dAo+PiDCoD4+IMKgKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2RtYS9zdW42aS1kbWEudHh0Cj4+IMKgPj4gwqBAQCAtOSw2ICs5LDcgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoKPj4gwqA+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-ImFsbHdpbm5lcixzdW44aS1hMjMtZG1hIgo+PiDCoD4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAiYWxsd2lubmVyLHN1bjhpLWE4M3QtZG1hIgo+PiDCoD4+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAiYWxsd2lubmVyLHN1bjhpLWgzLWRt
-YSIKPj4gwqA+PiDCoCsgImFsbHdpbm5lcixzdW44aS12M3MtZG1hIgo+PiDCoD4+IMKgwqAtIHJl
-ZzogU2hvdWxkIGNvbnRhaW4gdGhlIHJlZ2lzdGVycyBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aAo+
-PiDCoD4+IMKgwqAtIGludGVycnVwdHM6IFNob3VsZCBjb250YWluIGEgcmVmZXJlbmNlIHRvIHRo
-ZSBpbnRlcnJ1cHQgdXNlZCBieSB0aGlzIGRldmljZQo+PiDCoD4+IMKgwqAtIGNsb2NrczogU2hv
-dWxkIGNvbnRhaW4gYSByZWZlcmVuY2UgdG8gdGhlIHBhcmVudCBBSEIgY2xvY2sKPj4gwqA+PiDC
-oGRpZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9zdW42aS1kbWEuYyBiL2RyaXZlcnMvZG1hL3N1bjZp
-LWRtYS5jCj4+IMKgPj4gwqBpbmRleCBhMjM1ODc4MGFiMmMuLjFmMzg0MjRjMWIxNCAxMDA2NDQK
-Pj4gwqA+PiDCoC0tLSBhL2RyaXZlcnMvZG1hL3N1bjZpLWRtYS5jCj4+IMKgPj4gwqArKysgYi9k
-cml2ZXJzL2RtYS9zdW42aS1kbWEuYwo+PiDCoD4+IMKgQEAgLTEwMSw2ICsxMDEsNyBAQCBzdHJ1
-Y3Qgc3VuNmlfZG1hX2NvbmZpZyB7Cj4+IMKgPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqB1MzIgbnJf
-bWF4X2NoYW5uZWxzOwo+PiDCoD4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgdTMyIG5yX21heF9yZXF1
-ZXN0czsKPj4gwqA+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoHUzMiBucl9tYXhfdmNoYW5zOwo+PiDC
-oD4+IMKgKyBib29sIGdhdGVfbmVlZGVkOwo+PiDCoD4+IMKgwqB9Owo+PiDCoD4+Cj4+IMKgPj4g
-wqDCoC8qCj4+IMKgPj4gwqBAQCAtMTAwOSwxMiArMTAxMCwxNCBAQCBzdGF0aWMgc3RydWN0IHN1
-bjZpX2RtYV9jb25maWcgc3VuOGlfYTIzX2RtYV9jZmcgPSB7Cj4+IMKgPj4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqAubnJfbWF4X2NoYW5uZWxzID0gOCwKPj4gwqA+PiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oC5ucl9tYXhfcmVxdWVzdHMgPSAyNCwKPj4gwqA+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoC5ucl9t
-YXhfdmNoYW5zID0gMzcsCj4+IMKgPj4gwqArIC5nYXRlX25lZWRlZCA9IHRydWUsCj4+IMKgPj4g
-wqDCoH07Cj4+IMKgPj4KPj4gwqA+PiDCoMKgc3RhdGljIHN0cnVjdCBzdW42aV9kbWFfY29uZmln
-IHN1bjhpX2E4M3RfZG1hX2NmZyA9IHsKPj4gwqA+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoC5ucl9t
-YXhfY2hhbm5lbHMgPSA4LAo+PiDCoD4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgLm5yX21heF9yZXF1
-ZXN0cyA9IDI4LAo+PiDCoD4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgLm5yX21heF92Y2hhbnMgPSAz
-OSwKPj4gwqA+PiDCoCsgLmdhdGVfbmVlZGVkID0gdHJ1ZSwKPj4gwqA+PiDCoMKgfTsKPj4gwqA+
-Pgo+PiDCoD4+IMKgwqAvKgo+PiDCoD4+IMKgQEAgLTEwMjgsMTEgKzEwMzEsMTkgQEAgc3RhdGlj
-IHN0cnVjdCBzdW42aV9kbWFfY29uZmlnIHN1bjhpX2gzX2RtYV9jZmcgPSB7Cj4+IMKgPj4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqAubnJfbWF4X3ZjaGFucyA9IDM0LAo+PiDCoD4+IMKgwqB9Owo+PiDC
-oD4+Cj4+IMKgPj4gwqArc3RhdGljIHN0cnVjdCBzdW42aV9kbWFfY29uZmlnIHN1bjhpX3Yzc19k
-bWFfY2ZnID0gewo+PiDCoD4+IMKgKyAubnJfbWF4X2NoYW5uZWxzID0gOCwKPj4gwqA+PiDCoCsg
-Lm5yX21heF9yZXF1ZXN0cyA9IDIzLAo+PiDCoD4+IMKgKyAubnJfbWF4X3ZjaGFucyA9IDI0LAo+
-PiDCoD4KPj4gwqA+IFRoaXMgb25lIGlzIHN1c3BpY2lvdXMuIFRoZXJlJ3MganVzdCBhIHNpbmds
-ZSBlbmRwb2ludCB0aGF0IGNhbiBiZQo+PiDCoD4gdXNlZCBpbiBib3RoIGRpcmVjdGlvbnM/Cj4+
-Cj4+IMKgbnJfbWF4X3ZjaGFucyBpcyB0aGUgZW5kcG9pbnQgbnVtYmVyLiBucl9tYXhfcmVxdWVz
-dHMgaXMgdGhlCj4+IMKgbWF4aW11bSBEUlEgbnVtYmVyLCBmb3IgVjNzLCBhY2NvcmRpbmcgdG8g
-dGhlIGRhdGFzaGVldCwgaXQncwo+PiDCoDIzOiBTUEkwX3tSLFR9WC4KPgo+IFRoZXJlJ3Mgbm90
-IGEgbG90IG9mIGVuZHBvaW50cyBpbmRlZWQsIGJ1dCB5b3UgbmVlZCAyOCB2Y2hhbnMgKDIgKgo+
-IDE0KS4KClNvcnJ5IGJ1dCBJIGNvdW50ZWQgb25seSAxMiBwYWlycyBvZiB2Y2hhbnM6ClBvcnQg
-MC4gU1JBTQpQb3J0IDEuIFNEUkFNClBvcnQgNi4gVUFSVDAKUG9ydCA3LiBVQVJUMQpQb3J0IDgu
-IFVBUlQyClBvcnQgMTUuIEF1ZGlvIENvZGVjClBvcnQgMTYuIENFClBvcnQgMTcuIE9URyBFUDEK
-UG9ydCAxOC4gT1RHIEVQMgpQb3J0IDE5LiBPVEcgRVAzClBvcnQgMjAuIE9URyBFUDQKUG9ydCAy
-My4gU1BJMAoKPgo+IE1heGltZQo+Cj4gLS0KPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9u
-cwo+IEVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1l
-bGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpo
-dHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZl
-bAo=
+Hi Icenowy,
+
+(first thing: could you create your series with --cover-letter and fill
+this in? There you could explain what this series is about and also
+state things like dependencies from other patches and the commit that
+you based that on.)
+
+On 28/02/17 17:24, Icenowy Zheng wrote:
+> ARM64 Allwinner SoCs used to have every pinctrl driver selected in
+> ARCH_SUNXI. Change this to make their default value to (ARM64 &&
+> ARCH_SUNXI).
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+
+Overall this is a nice solution. Thanks for posting this.
+
+> ---
+>  drivers/pinctrl/sunxi/Kconfig | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+> index 816015cf7053..92325736d953 100644
+> --- a/drivers/pinctrl/sunxi/Kconfig
+> +++ b/drivers/pinctrl/sunxi/Kconfig
+> @@ -48,8 +48,9 @@ config PINCTRL_SUN8I_H3
+>  	select PINCTRL_SUNXI
+>  
+>  config PINCTRL_SUN8I_H3_R
+> -	def_bool MACH_SUN8I
+> -	select PINCTRL_SUNXI_COMMON
+> +	def_bool MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+> +	depends on RESET_CONTROLLER
+
+So this looks a bit odd. I take it this is for the extra reset register
+in the PRCM block.
+1) I don't think this belongs into this patch. If this has been
+forgotten in the past, please make an extra patch for this. It's cheap
+to do so ;-)
+2) Is this really a "depends on"? Shouldn't this be a select? With
+sunxi_ng clocks we don't need the reset controller for the normal
+peripherals anymore, so this option might not be selected by default in
+the future. And having this "depends on" leads to the PINCTRL_ option
+being hidden if RESET_CONTROLLER isn't selected.
+I think this bites us already in arm64, where ARCH_HAS_RESET_CONTROLLER
+is not enabled for ARCH_SUNXI.
+
+
+But as the rest of the patch is fine, if you remove this line:
+Reviewed-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+
+Cheers,
+Andre.
+
+> +	select PINCTRL_SUNXI
+>  
+>  config PINCTRL_SUN8I_V3S
+>  	def_bool MACH_SUN8I
+> @@ -65,11 +66,11 @@ config PINCTRL_SUN9I_A80_R
+>  	select PINCTRL_SUNXI
+>  
+>  config PINCTRL_SUN50I_A64
+> -	bool
+> +	def_bool ARM64 && ARCH_SUNXI
+>  	select PINCTRL_SUNXI
+>  
+>  config PINCTRL_SUN50I_H5
+> -	bool
+> +	def_bool ARM64 && ARCH_SUNXI
+>  	select PINCTRL_SUNXI
+>  
+>  endif
+> 
