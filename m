@@ -1,26 +1,63 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am335x-pcm953: Fix legacy wakeup source binding
-Date: Tue, 28 Feb 2017 08:50:54 -0800
-Message-ID: <20170228165054.GU21809@atomide.com>
-References: <1486729747-4604-1-git-send-email-t.remmet@phytec.de>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v3 3/6] dt-bindings: iio: document interrupt trigger support
+Date: Tue, 28 Feb 2017 17:51:16 +0100
+Message-ID: <1488300679-3259-4-git-send-email-fabrice.gasnier@st.com>
+References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486729747-4604-1-git-send-email-t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linus.walleij@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-* Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org> [170210 04:31]:
-> Replaced the legacy binding "gpio-key,wakeup" with "wakeup-source" as
-> noted in the kernel documentation.
+Document interrupt trigger that takes a generic interrupt, and
+can be used as trigger source for sampling devices such as sensors,
+ADCs...
 
-Applying this finally into omap-for-v4.11/fixes thanks.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ .../bindings/iio/trigger/iio-trig-interrupt.txt    | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt b/Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt
+new file mode 100644
+index 0000000..9de9856
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/trigger/iio-trig-interrupt.txt
+@@ -0,0 +1,22 @@
++Interrupt based trigger
++
++Any internal or external interrupt may be used as trigger source for
++devices like sensors, ADCs... As an example, external signal can be
++routed to a GPIO, and turned into an interrupt driven trigger.
++
++Required properties:
++- compatible: Should be "interrupt-trigger"
++- interrupts: The interrupt used as trigger. Generic interrupt client node as
++  described in ../../interrupt-controller/interrupts.txt
++
++Optional properties:
++- #io-trigger-cells = <0>; See the IIO bindings, IIO trigger providers
++  and consumers sections in ../iio-bindings.txt
++
++Example:
++	trig0: interrupt-trigger0 {
++		#io-trigger-cells = <0>;
++		compatible = "interrupt-trigger";
++		interrupts = <11 0>;
++		interrupt-parent = <&gpioa>;
++	}
+-- 
+1.9.1
