@@ -1,56 +1,64 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCHv2 4/5] mfd: altr_a10sr: Add Arria10 DevKit Reset
- Controller
-Date: Tue, 28 Feb 2017 15:42:21 +0100
-Message-ID: <1488292941.2288.55.camel@pengutronix.de>
-References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
-         <1487783419-10912-5-git-send-email-thor.thayer@linux.intel.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 6/6] clk: tegra: add aclk
+Date: Tue, 28 Feb 2017 16:37:22 +0200
+Message-ID: <1488292648-16876-7-git-send-email-pdeschrijver@nvidia.com>
+References: <1488292648-16876-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1487783419-10912-5-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488292648-16876-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-02-22 at 11:10 -0600, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
-> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> 
-> Add Peripheral PHY Reset Controller to the Arria10
-> Development Kit System Resource Chip's MFD.
-> 
-> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
-> v2  Changes to commit header & body for clarification.
-> ---
->  drivers/mfd/altera-a10sr.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-> index 06e1f7f..96e7d2c 100644
-> --- a/drivers/mfd/altera-a10sr.c
-> +++ b/drivers/mfd/altera-a10sr.c
-> @@ -33,6 +33,10 @@
->  		.name = "altr_a10sr_gpio",
->  		.of_compatible = "altr,a10sr-gpio",
->  	},
-> +	{
-> +		.name = "altr_a10sr_reset",
-> +		.of_compatible = "altr,a10sr-reset",
-> +	},
->  };
->  
->  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
+This clock clocks the ADSP cortex-A9.
 
-Lee, should this be merged through the reset tree? Otherwise I'll just
-pick up patches 1-3.
+Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/clk/tegra/clk-tegra210.c         | 10 ++++++++++
+ include/dt-bindings/clock/tegra210-car.h |  2 ++
+ 2 files changed, 12 insertions(+)
 
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra210.c
+index cfe7078..9a2512a 100644
+--- a/drivers/clk/tegra/clk-tegra210.c
++++ b/drivers/clk/tegra/clk-tegra210.c
+@@ -2308,6 +2308,11 @@ static u32 pll_expo_p_to_pdiv(u32 p, u32 *pdiv)
+ 
+ static struct clk **clks;
+ 
++static const char * const aclk_parents[] = {
++	"pll_a1", "pll_c", "pll_p", "pll_a_out0", "pll_c2", "pll_c3",
++	"clk_m"
++};
++
+ static __init void tegra210_periph_clk_init(void __iomem *clk_base,
+ 					    void __iomem *pmc_base)
+ {
+@@ -2369,6 +2374,11 @@ static __init void tegra210_periph_clk_init(void __iomem *clk_base,
+ 	clk_register_clkdev(clk, "cml1", NULL);
+ 	clks[TEGRA210_CLK_CML1] = clk;
+ 
++	clk = tegra_clk_register_super_clk("aclk", aclk_parents,
++				ARRAY_SIZE(aclk_parents), 0, clk_base + 0x6e0,
++				0, NULL);
++	clks[TEGRA210_CLK_ACLK] = clk;
++
+ 	tegra_periph_clk_init(clk_base, pmc_base, tegra210_clks, &pll_p_params);
+ }
+ 
+diff --git a/include/dt-bindings/clock/tegra210-car.h b/include/dt-bindings/clock/tegra210-car.h
+index 5aa1027..8744b19 100644
+--- a/include/dt-bindings/clock/tegra210-car.h
++++ b/include/dt-bindings/clock/tegra210-car.h
+@@ -396,6 +396,8 @@
+ #define TEGRA210_CLK_PLL_C_UD 364
+ #define TEGRA210_CLK_SCLK_MUX 365
+ 
++#define TEGRA210_CLK_ACLK 370
++
+ #define TEGRA210_CLK_DMIC1_SYNC_CLK 388
+ #define TEGRA210_CLK_DMIC1_SYNC_CLK_MUX 389
+ #define TEGRA210_CLK_DMIC2_SYNC_CLK 390
+-- 
+1.9.1
