@@ -1,58 +1,45 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [v2] Input: pwm-beeper: support customized freq for SND_BELL
-Date: Tue, 28 Feb 2017 07:13:43 +0100
-Message-ID: <58B51517.4050003@denx.de>
-References: <1487579863-7256-1-git-send-email-hs@denx.de>
- <06af466d-ac78-ea38-77d2-3bf32a6e157c@lechnology.com>
- <58B5084A.9000709@denx.de>
- <b08d4e74-c086-304a-d6cf-ace8d2a372f7@lechnology.com>
-Reply-To: hs@denx.de
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: apq8016-sbc: Add ramoops
+Date: Mon, 27 Feb 2017 23:19:51 -0800
+Message-ID: <20170228071951.GH25384@codeaurora.org>
+References: <20170201102424.4017-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b08d4e74-c086-304a-d6cf-ace8d2a372f7@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: linux-input@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170201102424.4017-1-bjorn.andersson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Mart Raudsepp <leio@gentoo.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, John Stultz <john.stultz@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello David,
+On 02/01, Bjorn Andersson wrote:
+> Declare a ramoops memory segment to aid debugging for those without UART
+> access. Verified to carry console log when holding volume down for 15
+> seconds.
+> 
+> I was unable to find any ramoops-like memory region used in the 8916
+> downstream kernels, so the picked region is the last MB in System RAM.
+> 
+> No memory region for ramoops-like support was found downstrea, so the
+> arbitrarily picked region is the last MB of System RAM.
 
-Am 28.02.2017 um 06:30 schrieb David Lechner:
-> On 02/27/2017 11:19 PM, Heiko Schocher wrote:
->> Hello David,
->>
->> Am 27.02.2017 um 19:11 schrieb David Lechner:
->>> On 02/20/2017 02:37 AM, Heiko Schocher wrote:
->>>> From: Guan Ben <ben.guan@cn.bosch.com>
->>>>
->>>> extend the pwm-beeper driver to support customized frequency
->>>> for SND_BELL from device tree.
->>>>
->>>> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
->>>> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
->>>> [hs@denx.de: adapted to 4.10-rc7]
->>>> Signed-off-by: Heiko Schocher <hs@denx.de>
->>>> ---
->>>>
->>>> Changes in v2:
->>>> - add comment from Rob Herring:
->>>>   rename property name "bell-frequency" to "beeper-hz"
->>>
->>> Is there a separate patch for the devicetree bindings documentation?
->>
->> No, it is in this patch ... In the meantime I got an
->> Acked-by from Rob Herring ...
->>
->
-> What I should have said is that, in general, I think it is preferred to have the device tree
-> bindings as a separate patch from the code changes.
+Same comment twice? Otherwise it looks ok to me as long as you're
+willing to lose an MB of ram. Does the kernel skip reserving the
+ramoops memory if ramoops isn't enabled? That would be nice to do
+so we don't lose memory if we're not enabling the driver.
 
-I can split this into 2 patches ...
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 
-bye,
-Heiko
 -- 
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
