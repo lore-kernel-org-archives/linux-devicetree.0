@@ -1,73 +1,184 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/2] dts: arm64: add LS1043A DPAA support
-Date: Tue, 28 Feb 2017 17:20:07 -0600
-Message-ID: <CAL_Jsq+RnafS-sM=-NSUK1oXEEPrX4oU-x3qMjcFJpwKBGqPnQ@mail.gmail.com>
-References: <1485787387-12410-1-git-send-email-madalin.bucur@nxp.com>
- <1485787387-12410-2-git-send-email-madalin.bucur@nxp.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/3] phy: sun4i-usb: support automatically
+ switch PHY0 route to MUSB/HCI
+Date: Wed, 1 Mar 2017 00:46:24 +0100
+Message-ID: <51d6a646-3125-5f6a-e5e4-34b74a886319@redhat.com>
+References: <20170228152702.42602-1-icenowy@aosc.xyz>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485787387-12410-2-git-send-email-madalin.bucur@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Madalin Bucur <madalin.bucur@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBVEX3DCQKGQEWO3KWDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170228152702.42602-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 8:43 AM, Madalin Bucur <madalin.bucur@nxp.com> wrote:
-> Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Hi,
+
+On 28-02-17 16:27, Icenowy Zheng wrote:
+> On newer Allwinner SoCs (H3 and after), the PHY0 node is routed to both
+> MUSB controller for peripheral and host support (the host support is
+> slightly broken), and a pair of EHCI/OHCI controllers, which provide a
+> better support for host mode.
+>
+> Add support for automatically switch the route of PHY0 according to the
+> status of dr_mode and id det pin.
+>
+> Only H3 have this function enabled in this patch, as further SoCs will
+> be tested later and then have it enabled.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
+>  drivers/phy/phy-sun4i-usb.c | 55 +++++++++++++++++++++++++++++++--------------
+>  1 file changed, 38 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
+> index a21b5f24a340..8b91afe8f42d 100644
+> --- a/drivers/phy/phy-sun4i-usb.c
+> +++ b/drivers/phy/phy-sun4i-usb.c
+> @@ -49,12 +49,14 @@
+>  #define REG_PHYBIST			0x08
+>  #define REG_PHYTUNE			0x0c
+>  #define REG_PHYCTL_A33			0x10
+> -#define REG_PHY_UNK_H3			0x20
+> +#define REG_PHY_OTGCTL			0x20
+>
+>  #define REG_PMU_UNK1			0x10
+>
+>  #define PHYCTL_DATA			BIT(7)
+>
+> +#define OTGCTL_ROUTE_MUSB		BIT(0)
+> +
+>  #define SUNXI_AHB_ICHR8_EN		BIT(10)
+>  #define SUNXI_AHB_INCR4_BURST_EN	BIT(9)
+>  #define SUNXI_AHB_INCRX_ALIGN_EN	BIT(8)
+> @@ -110,6 +112,7 @@ struct sun4i_usb_phy_cfg {
+>  	u8 phyctl_offset;
+>  	bool dedicated_clocks;
+>  	bool enable_pmu_unk1;
+> +	bool phy0_dual_route;
+>  };
+>
+>  struct sun4i_usb_phy_data {
+> @@ -271,23 +274,16 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+>  		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
+>  	}
+>
+> -	if (data->cfg->type == sun8i_h3_phy) {
+> -		if (phy->index == 0) {
+> -			val = readl(data->base + REG_PHY_UNK_H3);
+> -			writel(val & ~1, data->base + REG_PHY_UNK_H3);
+> -		}
+> -	} else {
+> -		/* Enable USB 45 Ohm resistor calibration */
+> -		if (phy->index == 0)
+> -			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+> +	/* Enable USB 45 Ohm resistor calibration */
+> +	if (phy->index == 0)
+> +		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
+>
+> -		/* Adjust PHY's magnitude and rate */
+> -		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+> +	/* Adjust PHY's magnitude and rate */
+> +	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
+>
+> -		/* Disconnect threshold adjustment */
+> -		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
+> -				    data->cfg->disc_thresh, 2);
+> -	}
+> +	/* Disconnect threshold adjustment */
+> +	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
+> +			    data->cfg->disc_thresh, 2);
+>
+>  	sun4i_usb_phy_passby(phy, 1);
+>
+> @@ -486,6 +482,26 @@ static const struct phy_ops sun4i_usb_phy_ops = {
+>  	.owner		= THIS_MODULE,
+>  };
+>
+> +static void sun4i_usb_phy0_reroute(struct sun4i_usb_phy_data *data, int id_det)
+> +{
+> +	u32 regval;
+> +
+> +	if (data->dr_mode == USB_DR_MODE_HOST)
+> +		id_det = 0; /* Force host */
+> +	if (data->dr_mode == USB_DR_MODE_PERIPHERAL)
+> +		id_det = 1; /* Force peripheral*/
 
-[...]
+The passed in id_det comes from sun4i_usb_phy0_get_id_det() which already
+does:
 
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-bman1-portals.dtsi b/arch/arm64/boot/dts/freescale/qoriq-bman1-portals.dtsi
-> new file mode 100644
-> index 0000000..cfe6c58
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-bman1-portals.dtsi
-> @@ -0,0 +1,93 @@
-> +/*
-> + * QorIQ BMan Portal device tree stub for 9 portals
-> + *
-> + * Copyright 2011-2016 Freescale Semiconductor Inc.
-> + *
-> + * Redistribution and use in source and binary forms, with or without
-> + * modification, are permitted provided that the following conditions are met:
-> + *     * Redistributions of source code must retain the above copyright
-> + *      notice, this list of conditions and the following disclaimer.
-> + *     * Redistributions in binary form must reproduce the above copyright
-> + *      notice, this list of conditions and the following disclaimer in the
-> + *      documentation and/or other materials provided with the distribution.
-> + *     * Neither the name of Freescale Semiconductor nor the
-> + *      names of its contributors may be used to endorse or promote products
-> + *      derived from this software without specific prior written permission.
-> + *
-> + *
-> + * ALTERNATIVELY, this software may be distributed under the terms of the
-> + * GNU General Public License ("GPL") as published by the Free Software
-> + * Foundation, either version 2 of that License or (at your option) any
-> + * later version.
-> + *
-> + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-> + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-> + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-> + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-> + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-> + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-> + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
+         switch (data->dr_mode) {
+         case USB_DR_MODE_OTG:
+                 if (data->id_det_gpio)
+                         return gpiod_get_value_cansleep(data->id_det_gpio);
+                 else
+                         return 1; /* Fallback to peripheral mode */
+         case USB_DR_MODE_HOST:
+                 return 0;
+         case USB_DR_MODE_PERIPHERAL:
+         default:
+                 return 1;
+         }
 
-Use SPDX tags here:
+So the above 4 lines are unnecessary and should be removed.
 
-SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+Otherwise looks good, thank you for doing this.
+
+Regards,
+
+Hans
+
+
+
+> +
+> +	regval = readl(data->base + REG_PHY_OTGCTL);
+> +	if (id_det == 0) {
+> +		/* Host mode. Route phy0 to EHCI/OHCI */
+> +		regval &= ~OTGCTL_ROUTE_MUSB;
+> +	} else {
+> +		/* Peripheral mode. Route phy0 to MUSB */
+> +		regval |= OTGCTL_ROUTE_MUSB;
+> +	}
+> +	writel(regval, data->base + REG_PHY_OTGCTL);
+> +}
+> +
+>  static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+>  {
+>  	struct sun4i_usb_phy_data *data =
+> @@ -511,6 +527,10 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
+>  	data->force_session_end = false;
+>
+>  	if (id_det != data->id_det) {
+> +		/* Re-route PHY0 if necessary */
+> +		if (data->cfg->phy0_dual_route)
+> +			sun4i_usb_phy0_reroute(data, id_det);
+> +
+>  		/* id-change, force session end if we've no vbus detection */
+>  		if (data->dr_mode == USB_DR_MODE_OTG &&
+>  		    !sun4i_usb_phy0_have_vbus_det(data))
+> @@ -700,7 +720,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+>  			return PTR_ERR(phy->reset);
+>  		}
+>
+> -		if (i) { /* No pmu for usbc0 */
+> +		if (i || data->cfg->phy0_dual_route) { /* No pmu for musb */
+>  			snprintf(name, sizeof(name), "pmu%d", i);
+>  			res = platform_get_resource_byname(pdev,
+>  							IORESOURCE_MEM, name);
+> @@ -825,6 +845,7 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
+>  	.disc_thresh = 3,
+>  	.dedicated_clocks = true,
+>  	.enable_pmu_unk1 = true,
+> +	.phy0_dual_route = true,
+>  };
+>
+>  static const struct sun4i_usb_phy_cfg sun8i_v3s_cfg = {
+>
