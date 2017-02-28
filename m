@@ -1,118 +1,52 @@
-From: Milo Kim <milo.kim@ti.com>
-Subject: [PATCH 1/2] Documentation: dt-bindings: Use generic property for hardware enable pins
-Date: Tue, 28 Feb 2017 16:50:40 +0900
-Message-ID: <20170228075041.7568-1-milo.kim@ti.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [RESEND PATCH v2 4/5] arm: dts: Remove the OF graph from DSI node for
+ exynos4412 dts
+Date: Tue, 28 Feb 2017 17:17:58 +0900
+Message-ID: <1488269879-28876-5-git-send-email-hoegeun.kwon@samsung.com>
+References: <1488269879-28876-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170228081812epcas5p3d20eddc91da42ec4a0d973ddc59d184a@epcas5p3.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Milo Kim <milo.kim@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1488269879-28876-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-With index usages, device specific properties can be replaced with generic
-one. Vpos is index 0 and Vneg is index 1.
-DT examples are added as well.
-
-Signed-off-by: Milo Kim <milo.kim@ti.com>
----
- .../bindings/regulator/lm363x-regulator.txt        | 78 +++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-index 8f14df9d1205..cc5a6151d85f 100644
---- a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-@@ -8,8 +8,8 @@ Required property:
- 
- Optional properties:
-   LM3632 has external enable pins for two LDOs.
--  - ti,lcm-en1-gpio: A GPIO specifier for Vpos control pin.
--  - ti,lcm-en2-gpio: A GPIO specifier for Vneg control pin.
-+  - enable-gpios: Two GPIO specifiers for Vpos and Vneg control pins.
-+                  The first entry is Vpos, the second is Vneg enable pin.
- 
- Child nodes:
-   LM3631
-@@ -30,5 +30,79 @@ Child nodes:
- 
- Examples: Please refer to ti-lmu dt-bindings [2].
- 
-+lm3631@29 {
-+	compatible = "ti,lm3631";
-+	reg = <0x29>;
-+
-+	regulators {
-+		compatible = "ti,lm363x-regulator";
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <6350000>;
-+			regulator-always-on;
-+		};
-+
-+		vcont {
-+			regulator-name = "lcd_vcont";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		voref {
-+			regulator-name = "lcd_voref";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+	};
-+};
-+
-+lm3632@11 {
-+	compatible = "ti,lm3632";
-+	reg = <0x11>;
-+
-+	regulators {
-+		compatible = "ti,lm363x-regulator";
-+
-+		/* GPIO1_16 for Vpos, GPIO1_28 is for Vneg */
-+		enable-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>,
-+				<&gpio1 28 GPIO_ACTIVE_HIGH>;
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <6400000>;
-+			regulator-always-on;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+	};
-+};
-+
- [1] ../regulator/regulator.txt
- [2] ../mfd/ti-lmu.txt
--- 
-2.11.0
+VGhlIE9GIGdyYXBoIGlzIG5vdCBuZWVkZWQgYmVjYXVzZSB0aGUgcGFuZWwgaXMgYSBjaGlsZCBv
+ZiBkc2kuIFNvClJlbW92ZSB0aGUgcG9ydHMgbm9kZSBhbmQgbW92ZSBidXJzdCBhbmQgZXNjIGNs
+b2NrIGZyZXF1ZW5jeQpwcm9wZXJ0aWVzIHRvIHRoZSBwYXJlbnQgKERTSSBub2RlKS4KClNpZ25l
+ZC1vZmYtYnk6IEhvZWdldW4gS3dvbiA8aG9lZ2V1bi5rd29uQHNhbXN1bmcuY29tPgpSZXZpZXdl
+ZC1ieTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KLS0tCiBhcmNoL2FybS9i
+b290L2R0cy9leHlub3M0NDEyLXRyYXRzMi5kdHMgfCAyMyArKy0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pCgpkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxMi10cmF0czIuZHRzIGIvYXJjaC9h
+cm0vYm9vdC9kdHMvZXh5bm9zNDQxMi10cmF0czIuZHRzCmluZGV4IDQxZWNkNmQuLjg2Y2U1ZTUg
+MTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTItdHJhdHMyLmR0cworKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9leHlub3M0NDEyLXRyYXRzMi5kdHMKQEAgLTM4NSwyNCArMzg1
+LDExIEBACiAmZHNpXzAgewogCXZkZGNvcmUtc3VwcGx5ID0gPCZsZG84X3JlZz47CiAJdmRkaW8t
+c3VwcGx5ID0gPCZsZG8xMF9yZWc+OworCXNhbXN1bmcsYnVyc3QtY2xvY2stZnJlcXVlbmN5ID0g
+PDUwMDAwMDAwMD47CisJc2Ftc3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwPjsK
+IAlzYW1zdW5nLHBsbC1jbG9jay1mcmVxdWVuY3kgPSA8MjQwMDAwMDA+OwogCXN0YXR1cyA9ICJv
+a2F5IjsKIAotCXBvcnRzIHsKLQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Ci0JCSNzaXplLWNlbGxz
+ID0gPDA+OwotCi0JCXBvcnRAMSB7Ci0JCQlyZWcgPSA8MT47Ci0KLQkJCWRzaV9vdXQ6IGVuZHBv
+aW50IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9pbj47Ci0JCQkJc2Ftc3VuZyxidXJz
+dC1jbG9jay1mcmVxdWVuY3kgPSA8NTAwMDAwMDAwPjsKLQkJCQlzYW1zdW5nLGVzYy1jbG9jay1m
+cmVxdWVuY3kgPSA8MjAwMDAwMDA+OwotCQkJfTsKLQkJfTsKLQl9OwotCiAJcGFuZWxAMCB7CiAJ
+CWNvbXBhdGlibGUgPSAic2Ftc3VuZyxzNmU4YWEwIjsKIAkJcmVnID0gPDA+OwpAQCAtNDMwLDEy
+ICs0MTcsNiBAQAogCQkJCXZzeW5jLWxlbiA9IDwyPjsKIAkJCX07CiAJCX07Ci0KLQkJcG9ydCB7
+Ci0JCQlkc2lfaW46IGVuZHBvaW50IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXQ+
+OwotCQkJfTsKLQkJfTsKIAl9OwogfTsKIAotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
