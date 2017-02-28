@@ -1,16 +1,17 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 1/5] pinctrl: sunxi: refactor pinctrl choice
- selecting for ARM64
-Date: Wed, 01 Mar 2017 02:55:21 +0800
-Message-ID: <345321488308121@web2g.yandex.ru>
-References: <20170228172444.59655-1-icenowy@aosc.xyz> <488811a1-b64f-c435-e919-7f83dc107697@arm.com>
+Subject: Re: [PATCH 2/5] arm64: only select PINCTRL_SUNXI for
+ Allwinner platforms
+Date: Wed, 01 Mar 2017 02:57:20 +0800
+Message-ID: <608421488308240@web22h.yandex.ru>
+References: <20170228172444.59655-1-icenowy@aosc.xyz>
+	 <20170228172444.59655-2-icenowy@aosc.xyz> <c878ba53-a33a-e042-2d65-11f86a47b844@arm.com>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBHEP27CQKGQEI6LTRJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBEUQ27CQKGQEQB2S77Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <488811a1-b64f-c435-e919-7f83dc107697-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <c878ba53-a33a-e042-2d65-11f86a47b844-5wv7dgnIgG8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,105 +24,51 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-01.03.2017, 02:15, "Andre Przywara" <andre.przywara-5wv7dgnIgG8@public.gmane.org>:
-> Hi Icenowy,
->
-> (first thing: could you create your series with --cover-letter and fill
-> this in? There you could explain what this series is about and also
-> state things like dependencies from other patches and the commit that
-> you based that on.)
+01.03.2017, 02:17, "Andre Przywara" <andre.przywara-5wv7dgnIgG8@public.gmane.org>:
+> Hi,
 >
 > On 28/02/17 17:24, Icenowy Zheng wrote:
->> =C2=A0ARM64 Allwinner SoCs used to have every pinctrl driver selected in
->> =C2=A0ARCH_SUNXI. Change this to make their default value to (ARM64 &&
->> =C2=A0ARCH_SUNXI).
+>> =C2=A0As the pinctrl driver selecting is refactored in Kconfig file of
+>> =C2=A0pinctrl-sunxi, now we can select only PINCTRL_SUNXI for Allwinner
+>> =C2=A0platform, and the default value of several pinctrl drivers useful =
+on
+>> =C2=A0ARM64 Allwinner SoCs will become Y.
+>>
+>> =C2=A0Drop the select of per-SoC pinctrl choices, but select PINCTRL_SUN=
+XI.
 >>
 >> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->
-> Overall this is a nice solution. Thanks for posting this.
->
 >> =C2=A0---
->> =C2=A0=C2=A0drivers/pinctrl/sunxi/Kconfig | 9 +++++----
->> =C2=A0=C2=A01 file changed, 5 insertions(+), 4 deletions(-)
+>> =C2=A0=C2=A0arch/arm64/Kconfig.platforms | 2 +-
+>> =C2=A0=C2=A01 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> =C2=A0diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi=
-/Kconfig
->> =C2=A0index 816015cf7053..92325736d953 100644
->> =C2=A0--- a/drivers/pinctrl/sunxi/Kconfig
->> =C2=A0+++ b/drivers/pinctrl/sunxi/Kconfig
->> =C2=A0@@ -48,8 +48,9 @@ config PINCTRL_SUN8I_H3
+>> =C2=A0diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.pla=
+tforms
+>> =C2=A0index 129cc5ae4091..f6db2a938b1e 100644
+>> =C2=A0--- a/arch/arm64/Kconfig.platforms
+>> =C2=A0+++ b/arch/arm64/Kconfig.platforms
+>> =C2=A0@@ -4,7 +4,7 @@ config ARCH_SUNXI
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0bool "Allwin=
+ner sunxi 64-bit SoC Family"
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select GENER=
+IC_IRQ_CHIP
 >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select PINCT=
-RL_SUNXI
->>
->> =C2=A0=C2=A0config PINCTRL_SUN8I_H3_R
->> =C2=A0- def_bool MACH_SUN8I
->> =C2=A0- select PINCTRL_SUNXI_COMMON
->> =C2=A0+ def_bool MACH_SUN8I || (ARM64 && ARCH_SUNXI)
->> =C2=A0+ depends on RESET_CONTROLLER
+RL
+>> =C2=A0- select PINCTRL_SUN50I_A64
+>> =C2=A0+ select PINCTRL_SUNXI
 >
-> So this looks a bit odd. I take it this is for the extra reset register
-> in the PRCM block.
-> 1) I don't think this belongs into this patch. If this has been
-> forgotten in the past, please make an extra patch for this. It's cheap
-> to do so ;-)
-> 2) Is this really a "depends on"? Shouldn't this be a select? With
-> sunxi_ng clocks we don't need the reset controller for the normal
-> peripherals anymore, so this option might not be selected by default in
-> the future. And having this "depends on" leads to the PINCTRL_ option
-> being hidden if RESET_CONTROLLER isn't selected.
-> I think this bites us already in arm64, where ARCH_HAS_RESET_CONTROLLER
-> is not enabled for ARCH_SUNXI.
-
-PINCTRL_ options are always hidden now, Maxime, do you
-want to change that?
-
-We should enable ARCH_HAS_RESET_CONTROLLER for
-ARCH_SUNXI, as sunxi-ng ccu is a reset controller.
-
-Without RESET_CONTROLLER enabled, errors will occur
-when linking:
-```
-drivers/built-in.o: In function `sunxi_ccu_probe':
-of_reserved_mem.c:(.text+0x16058): undefined reference to `reset_controller=
-_register'
-```
-
-If you don't care, I will make it an additional patch.
-
-And there's really a reset line for the R_PIO pinctrls.
-
-But you're right, this line shouldn't occur in this patch.
-I will make a more patch for it.
-
->
-> But as the rest of the patch is fine, if you remove this line:
-> Reviewed-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> Why do we need to add this generic PINCTRL_SUNXI here? This is selected
+> already by the SoC specific PINCTRL symbols (see your previous patch).
 >
 > Cheers,
 > Andre.
+
+Oh yes... You're right...
+
 >
->> =C2=A0+ select PINCTRL_SUNXI
->>
->> =C2=A0=C2=A0config PINCTRL_SUN8I_V3S
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0def_bool MAC=
-H_SUN8I
->> =C2=A0@@ -65,11 +66,11 @@ config PINCTRL_SUN9I_A80_R
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select PINCT=
-RL_SUNXI
->>
->> =C2=A0=C2=A0config PINCTRL_SUN50I_A64
->> =C2=A0- bool
->> =C2=A0+ def_bool ARM64 && ARCH_SUNXI
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select PINCT=
-RL_SUNXI
->>
->> =C2=A0=C2=A0config PINCTRL_SUN50I_H5
->> =C2=A0- bool
->> =C2=A0+ def_bool ARM64 && ARCH_SUNXI
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0select PINCT=
-RL_SUNXI
->>
->> =C2=A0=C2=A0endif
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0help
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+This enables support for Allwinner sunxi based SoCs like the A64.
 
 --=20
 You received this message because you are subscribed to the Google Groups "=
