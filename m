@@ -1,53 +1,69 @@
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Subject: Re: [PATCH v6 1/6] i2c: designware: Cleaning and comment style fixes.
-Date: Tue, 28 Feb 2017 17:07:09 +0200
-Message-ID: <91b9343d-e878-d262-41cd-a29979bf54f9@linux.intel.com>
-References: <cover.1487009294.git.lolivei@synopsys.com>
- <8a176efc405d4f13d3fc1b5565d2a2b1c931a018.1487009294.git.lolivei@synopsys.com>
- <1487164348.2133.485.camel@linux.intel.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 11/25] ARM: dts: Add Actions Semi S500 and LeMaker
+ Guitar
+Date: Tue, 28 Feb 2017 16:13:00 +0100
+Message-ID: <11053e03-8e28-e93d-f1f6-2589a9f7800c@suse.de>
+References: <20170228063535.32069-1-afaerber@suse.de>
+ <20170228063535.32069-12-afaerber@suse.de>
+ <20170228123245.GF3691@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1487164348.2133.485.camel@linux.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170228123245.GF3691@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, outreachy-kernel@googlegroups.com, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-Sorry the delay.
-
-On 02/15/17 15:12, Andy Shevchenko wrote:
-> On Wed, 2017-02-15 at 12:22 +0000, Luis Oliveira wrote:
->> The purpose of this commit is to fix some comments and styling in the
->> existing code due to the need of reuse this code. What is being made
->> here is:
->>
->> - Sorted the headers files
->> - Corrected some comments style (capital letters, lowcase i2c)
->> - Reverse tree in the variables declaration
->> - Add/remove empty lines and tabs where needed
->> - Fix of misspelled word "endianness" and "transferred"
->> - Replaced the return variable "r" with the more standard "ret"
->>
->> The value of this, besides the rules of coding style, is because I
->> will use this code after and it will make my future patch a lot bigger
->> and
->> complicated to review. The work here won't bring any additional work
->> to
->> backported fixes because is just style and reordering.
->>
->
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
->> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
->> Acked-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-
-Unfortunately this doesn't apply anymore due we had to revert commit
-63d0f0a6952a ("i2c: designware: detect when dynamic tar update is 
-possible") for v4.10. Could you rebase and resend.
-
--- 
-Jarkko
+SGkgTWFyaywKCkFtIDI4LjAyLjIwMTcgdW0gMTM6MzIgc2NocmllYiBNYXJrIFJ1dGxhbmQ6Cj4g
+T24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgMDc6MzU6MjFBTSArMDEwMCwgQW5kcmVhcyBGw6RyYmVy
+IHdyb3RlOgo+PiArL2R0cy12MS87Cj4+ICsKPj4gKyNpbmNsdWRlICJzNTAwLWd1aXRhci5kdHNp
+Igo+PiArCj4+ICsvIHsKPj4gKwljb21wYXRpYmxlID0gImxlbWFrZXIsZ3VpdGFyLWJiLXJldi1i
+IiwgImxlbWFrZXIsZ3VpdGFyIiwgImFjdGlvbnMsczUwMCI7Cj4+ICsJbW9kZWwgPSAiTGVNYWtl
+ciBHdWl0YXIgQmFzZSBCb2FyZCByZXYuIEIiOwo+PiArCj4+ICsJYWxpYXNlcyB7Cj4+ICsJCXNl
+cmlhbDMgPSAmdWFydDM7Cj4+ICsJfTsKPj4gKwo+PiArCWNob3NlbiB7Cj4+ICsJCXN0ZG91dC1w
+YXRoID0gInNlcmlhbDM6MTE1MjAwbjgiOwo+PiArCX07Cj4+ICt9Owo+PiArCj4+ICsmdWFydDMg
+ewo+PiArCXN0YXR1cyA9ICJva2F5IjsKPj4gK307Cj4gCj4+ICsjaW5jbHVkZSAiczUwMC5kdHNp
+Igo+PiArCj4+ICsvIHsKPj4gKwljb21wYXRpYmxlID0gImxlbWFrZXIsZ3VpdGFyIiwgImFjdGlv
+bnMsczUwMCI7Cj4+ICsKPj4gKwkvZGVsZXRlLW5vZGUvIG1lbW9yeTsKPiAKPiBFd3cuIElzIHRo
+aXMganVzdCBib2RnaW5nIGFyb3VuZCBza2VsZXRvbi5kdHNpPwoKSSBndWVzcyBzbzogV29ya2lu
+ZyBhcm91bmQgaXRzIGhhcmRjb2RlZCBuYW1lIHdpdGhvdXQgdW5pdCBhZGRyZXNzLCBub3QKZmlu
+ZGluZyBhIC9yZW5hbWUtbm9kZS8gdG8gdGhhdCBlZmZlY3QuCgo+PiArCj4+ICsJbWVtb3J5QDAg
+ewo+PiArCQlkZXZpY2VfdHlwZSA9ICJtZW1vcnkiOwo+PiArCQlyZWcgPSA8MHgwIDB4NDAwMDAw
+MDA+Owo+PiArCX07Cj4+ICt9Owo+IAo+PiArI2luY2x1ZGUgInNrZWxldG9uLmR0c2kiCj4gCj4g
+UGxlYXNlIGRvbid0IGluY2x1ZGUgc2tlbGV0b24uZHRzaS4KCldhc24ndCBhd2FyZSB0aGF0IHdh
+cyBwZXJtaXNzaWJsZS4gSSBub3cgc2VlIGl0IGhhcyBiZWVuIHVwZGF0ZWQgd2l0aCBhCnRleHR1
+YWwgY29tbWVudCwgd2hpY2ggcHJlZGF0ZXMgbXkgcGFzdCB1c2VzIG9mIHNrZWxldG9uLmR0c2kg
+LSBmb3IKb3RoZXIgcGVuZGluZyB3b3JrIHN1Y2ggYXMgRk00IGFuZCBYTUM0NTAwIEkgb25seSBu
+b3RpY2VkIGl0IHdhcyBtb3ZlZApvdXQgb2YgYXJtdjdtLmR0c2kgc28gdGhhdCBkdGMgc3RhcnRl
+ZCBzcGV3aW5nIHNjYXJ5IG1lc3NhZ2VzLiA7KQoKQSAjd2FybmluZyBtaWdodCBiZSBhIG1vcmUg
+ZWZmZWN0aXZlIHdheSB0byBtYWtlIHBlb3BsZSBhd2FyZSBvZiBpdHMKZGVwcmVjYXRpb24gLSBi
+dXQgc2FkbHkgd2UgaGF2ZSB1c2VycyB0aGF0IHByZWRhdGUgI2luY2x1ZGU6CgokIGdpdCBncmVw
+IC9pbmNsdWRlLyAtLSBhcmNoL2FybS9ib290L2R0cy8gfCBncmVwIHNrZWxldG9uLmR0c2kgfCB3
+YyAtLWxpbmVzCjMyCiQgZ2l0IGdyZXAgL2luY2x1ZGUvIC0tIGFyY2gvYXJtL2Jvb3QvZHRzLyB8
+IGdyZXAgc2tlbGV0b242NC5kdHNpIHwgd2MKLS1saW5lcwowCiQgZ2l0IGdyZXAgc2tlbGV0b24g
+LS0gYXJjaC9hcm0vYm9vdC9kdHMvIHwgd2MgLS1saW5lcwoxMTcKCk1pZ2h0IHVwZGF0aW5nIHRo
+b3NlIDMyIHVzZXJzIGJlIGEgc3VpdGFibGUgT3V0cmVhY2h5IHByb2plY3QgKENDJ2VkKSwKdG8g
+dGhlbiBnZXQgdGhlIHJlbWFpbmluZyA4NSBvY2N1cnJlbmNlcyB0byBiZSBlbGltaW5hdGVkIGJ5
+IHRoZWlyCm1haW50YWluZXJzLCBzbyB0aGF0IGl0IGRvZXNuJ3QgZ2V0IGNvcGllZCBmb3IgbmV3
+IFNvQ3MgYW55IG1vcmU/IDopCgo+IFBsZWFzZSBhZGQgdGhlIHJlbGV2YW50IG5vZGVzIGFuZAo+
+IHByb3BlcnRpZXMgZXhwbGNpaXRseSB0byB5b3VyIGR0c3tpLH0gZmlsZXMuCgpHcmVhdCwgd2ls
+bCBkby4KCkJ1dCB0aGlzIHNlcmllcyBoYXMgZ3Jvd24gdG9vIGxhcmdlIHRvIHJlc2VuZCBqdXN0
+IGZvciBzdWNoIG5pdHMuIElzCnRoZXJlIGEgY2hhbmNlIHdlIGNhbiBnZXQgaW5pdGlhbCBwYXRj
+aGVzIHF1ZXVlZCBvbiBzb21lIGFybS1zb2MKZm9yLW5leHQgYnJhbmNoIHNvb25pc2g/IEl0IHNl
+ZW1zIC1yYzEgcHVsbHMgd2VyZSBtZXJnZWQgNSBkYXlzIGFnbz8KClJlZ2FyZHMsCkFuZHJlYXMK
+Ci0tIApTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2Vy
+bWFueQpHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9u
+CkhSQiAyMTI4NCAoQUcgTsO8cm5iZXJnKQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
