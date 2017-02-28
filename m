@@ -1,211 +1,168 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 5/5] pinctrl: sunxi: Add A64 R_PIO controller support
-Date: Wed,  1 Mar 2017 01:24:44 +0800
-Message-ID: <20170228172444.59655-5-icenowy@aosc.xyz>
-References: <20170228172444.59655-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 5/9] dmaengine: sun6i: support V3s SoC
+	variant
+Date: Tue, 28 Feb 2017 18:56:04 +0100
+Message-ID: <20170228175604.kdlmjjcncfljnbfp@lukather>
+References: <20170225123029.55939-1-icenowy@aosc.xyz>
+ <20170225123029.55939-5-icenowy@aosc.xyz>
+ <20170227075021.e7e43o54s23jzfto@lukather>
+ <1426971488192481@web6g.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBUPF23CQKGQERX27UDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170228172444.59655-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============8228053245081889857=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1426971488192481@web6g.yandex.ru>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The A64 has a R_PIO pin controller, similar to the one found on the H3 SoC.
-Add support for the pins controlled by the R_PIO controller.
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- drivers/pinctrl/sunxi/Kconfig                |   5 +
- drivers/pinctrl/sunxi/Makefile               |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c | 143 +++++++++++++++++++++++++++
- 3 files changed, 149 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+--===============8228053245081889857==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="x2rus7yuyqbzeq22"
+Content-Disposition: inline
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index 92325736d953..0738b0df5a0b 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -69,6 +69,11 @@ config PINCTRL_SUN50I_A64
- 	def_bool ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN50I_A64_R
-+	def_bool ARM64 && ARCH_SUNXI
-+	depends on RESET_CONTROLLER
-+	select PINCTRL_SUNXI
-+
- config PINCTRL_SUN50I_H5
- 	def_bool ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index 04ccb88ebd5f..df4ccd6cd44c 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23)		+= pinctrl-sun8i-a23.o
- obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+= pinctrl-sun8i-a23-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A33)		+= pinctrl-sun8i-a33.o
- obj-$(CONFIG_PINCTRL_SUN50I_A64)	+= pinctrl-sun50i-a64.o
-+obj-$(CONFIG_PINCTRL_SUN50I_A64_R)	+= pinctrl-sun50i-a64-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+= pinctrl-sun8i-a83t.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-new file mode 100644
-index 000000000000..90996a63689b
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-@@ -0,0 +1,143 @@
-+/*
-+ * Allwinner A64 SoCs special pins pinctrl driver.
-+ *
-+ * Based on pinctrl-sun8i-a23-r.c
-+ *
-+ * Copyright (C) 2016 Icenowy Zheng
-+ * Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-+ *
-+ * Copyright (C) 2014 Chen-Yu Tsai
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * Copyright (C) 2014 Boris Brezillon
-+ * Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * Copyright (C) 2014 Maxime Ripard
-+ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const struct sunxi_desc_pin sun50i_a64_r_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SCK */
-+		  SUNXI_FUNCTION(0x3, "s_i2c"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PL_EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SDA */
-+		  SUNXI_FUNCTION(0x3, "s_i2c"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),	/* PL_EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart"),	/* TX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),	/* PL_EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart"),	/* RX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),	/* PL_EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* MS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),	/* PL_EINT4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* CK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),	/* PL_EINT5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* DO */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),	/* PL_EINT6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x3, "s_jtag"),	/* DI */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),	/* PL_EINT7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2c"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),	/* PL_EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2c"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),	/* PL_EINT9 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_pwm"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),	/* PL_EINT10 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_cir_rx"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)),	/* PL_EINT11 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 12),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 12)),	/* PL_EINT12 */
-+};
-+
-+static const struct sunxi_pinctrl_desc sun50i_a64_r_pinctrl_data = {
-+	.pins = sun50i_a64_r_pins,
-+	.npins = ARRAY_SIZE(sun50i_a64_r_pins),
-+	.pin_base = PL_BASE,
-+	.irq_banks = 1,
-+};
-+
-+static int sun50i_a64_r_pinctrl_probe(struct platform_device *pdev)
-+{
-+	struct reset_control *rstc;
-+	int ret;
-+
-+	rstc = devm_reset_control_get(&pdev->dev, NULL);
-+	if (IS_ERR(rstc)) {
-+		dev_err(&pdev->dev, "Reset controller missing\n");
-+		return PTR_ERR(rstc);
-+	}
-+
-+	ret = reset_control_deassert(rstc);
-+	if (ret)
-+		return ret;
-+
-+	ret = sunxi_pinctrl_init(pdev,
-+				 &sun50i_a64_r_pinctrl_data);
-+
-+	if (ret)
-+		reset_control_assert(rstc);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id sun50i_a64_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun50i-a64-r-pinctrl", },
-+	{}
-+};
-+
-+static struct platform_driver sun50i_a64_r_pinctrl_driver = {
-+	.probe	= sun50i_a64_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun50i-a64-r-pinctrl",
-+		.of_match_table	= sun50i_a64_r_pinctrl_match,
-+	},
-+};
-+builtin_platform_driver(sun50i_a64_r_pinctrl_driver);
--- 
-2.11.1
+
+--x2rus7yuyqbzeq22
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 27, 2017 at 06:48:01PM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> 27.02.2017, 15:50, "Maxime Ripard" <maxime.ripard@free-electrons.com>:
+> > On Sat, Feb 25, 2017 at 08:30:25PM +0800, Icenowy Zheng wrote:
+> >> =A0Allwinner V3s has a DMA engine similar to the ones from A31, but wi=
+th
+> >> =A0fewer channels and DRQs.
+> >>
+> >> =A0Add support for it.
+> >>
+> >> =A0As it also needs the special gate bit, make the gate bit generic.
+> >
+> > That should be part of a separate patch.
+>=20
+> OK.
+>=20
+> >
+> >> =A0According to BSP source code, SUN8IW6 (A83T) also needs the bit, so=
+ it
+> >> =A0have also been specified gate_needed property.
+> >>
+> >> =A0Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> >> =A0---
+> >> =A0=A0Documentation/devicetree/bindings/dma/sun6i-dma.txt | 1 +
+> >> =A0=A0drivers/dma/sun6i-dma.c | 17 ++++++++++++++---
+> >> =A0=A02 files changed, 15 insertions(+), 3 deletions(-)
+> >>
+> >> =A0diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.txt b/=
+Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> >> =A0index 6b267045f522..98fbe1a5c6dd 100644
+> >> =A0--- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> >> =A0+++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> >> =A0@@ -9,6 +9,7 @@ Required properties:
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0"allwinner=
+,sun8i-a23-dma"
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0"allwinner=
+,sun8i-a83t-dma"
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0"allwinner=
+,sun8i-h3-dma"
+> >> =A0+ "allwinner,sun8i-v3s-dma"
+> >> =A0=A0- reg: Should contain the registers base address and length
+> >> =A0=A0- interrupts: Should contain a reference to the interrupt used b=
+y this device
+> >> =A0=A0- clocks: Should contain a reference to the parent AHB clock
+> >> =A0diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> >> =A0index a2358780ab2c..1f38424c1b14 100644
+> >> =A0--- a/drivers/dma/sun6i-dma.c
+> >> =A0+++ b/drivers/dma/sun6i-dma.c
+> >> =A0@@ -101,6 +101,7 @@ struct sun6i_dma_config {
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u32 nr_max_channels;
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u32 nr_max_requests;
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u32 nr_max_vchans;
+> >> =A0+ bool gate_needed;
+> >> =A0=A0};
+> >>
+> >> =A0=A0/*
+> >> =A0@@ -1009,12 +1010,14 @@ static struct sun6i_dma_config sun8i_a23_dm=
+a_cfg =3D {
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_channels =3D 8,
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_requests =3D 24,
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_vchans =3D 37,
+> >> =A0+ .gate_needed =3D true,
+> >> =A0=A0};
+> >>
+> >> =A0=A0static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_channels =3D 8,
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_requests =3D 28,
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_vchans =3D 39,
+> >> =A0+ .gate_needed =3D true,
+> >> =A0=A0};
+> >>
+> >> =A0=A0/*
+> >> =A0@@ -1028,11 +1031,19 @@ static struct sun6i_dma_config sun8i_h3_dma=
+_cfg =3D {
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_vchans =3D 34,
+> >> =A0=A0};
+> >>
+> >> =A0+static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D {
+> >> =A0+ .nr_max_channels =3D 8,
+> >> =A0+ .nr_max_requests =3D 23,
+> >> =A0+ .nr_max_vchans =3D 24,
+> >
+> > This one is suspicious. There's just a single endpoint that can be
+> > used in both directions?
+>=20
+> nr_max_vchans is the endpoint number. nr_max_requests is the
+> maximum DRQ number, for V3s, according to the datasheet, it's
+> 23: SPI0_{R,T}X.
+
+There's not a lot of endpoints indeed, but you need 28 vchans (2 *
+14).
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--x2rus7yuyqbzeq22
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYtbmwAAoJEBx+YmzsjxAgeccP/0UxEr4x4xFKW5akT/NFg7zk
+wd5pE6xnCGmZv12SQ2R63bnbB0uNLUqsQaaNA44wJFLAaim6Pz99tM6O9dThhYmx
+S3qWcIx4GMiqma1Pmcw7ReZOL1bL/qvtOzCqgLHKuUICE6lMk1b1iAYJ1jyfm4hn
+2hexl1bT0tZt4wem8S6LnUJ21aSdA55JyKjOyU/1ufsuitKYY1QurEQEb3seeGwN
+md1IfFar1rvAr3KrufOdQNdhlaGcJ+Zb4GJ1X+oInEhs5DiynYrsFclJXmHqL71s
+tml6ZlttVGlZ2vFls45XQ+nNrLVgsJb+lLUnp+3lIL1jAaxtLrQlYLbUqf4UGRo2
+mp6UVeFjkxu3/nc2gx19oI5LhRtHeQR3y5H4rLpdWUSVb0QbJOqmdhE0AgDSEE0u
+P7pCujUD/Axs5JcTx9Iw6oOhLabapzWtu7InhveRrFaj1XsMSE1TkayxTshzMbK/
+BoCxDBSrDtlcOzpL1huX/qI4GrPzGrmAtVGcpK8oOvK1p0LDxG2Rtic/ftamYG8G
+5QLzsj8jMJ5+xWrdadImTIJ22c7znCFIMgl6oizyajOHQiagIco4F7gfc3j+w08T
+9xMAARSD16pLHtCa/lKpVoXTb6aaXCVoEx7zulMIFUXAs2FJ1vQ4yl8c9wvLq0XE
+8peD9glZPF+mBf3G/Pbu
+=xvy2
+-----END PGP SIGNATURE-----
+
+--x2rus7yuyqbzeq22--
+
+--===============8228053245081889857==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8228053245081889857==--
