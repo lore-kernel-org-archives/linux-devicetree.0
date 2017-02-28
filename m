@@ -1,7 +1,7 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v3 2/6] iio: trigger: add OF support
-Date: Tue, 28 Feb 2017 17:51:15 +0100
-Message-ID: <1488300679-3259-3-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v3 6/6] iio: adc: stm32: add support for EXTI trigger
+Date: Tue, 28 Feb 2017 17:51:19 +0100
+Message-ID: <1488300679-3259-7-git-send-email-fabrice.gasnier@st.com>
 References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,141 +21,99 @@ To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kerne
 Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linus.walleij@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Provide OF support. Device drivers can get IIO triggers from dt.
-Introduce IIO trigger specifiers, so there are:
-- IIO trigger providers, e.g. dt nodes designated with
-  #io-trigger-cells=<num of cells>
-- IIO trigger consumers, e.g. phandles listed in io-triggers = <...>.
-  Those can be identified by names by using 'io-trigger-names'.
+EXTi (external interrupt) signal can be routed internally as trigger
+source for ADC conversions: STM32F4 ADC can use EXTI11.
+
+Retrieve interrupt trigger from DT, so it can be muxed into ADC IP,
+via extsel.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/iio/industrialio-trigger.c | 100 +++++++++++++++++++++++++++++++++++++
- include/linux/iio/trigger.h        |   4 ++
- 2 files changed, 104 insertions(+)
+ drivers/iio/adc/stm32-adc.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/iio/industrialio-trigger.c b/drivers/iio/industrialio-trigger.c
-index 978e1592..00ee3a7 100644
---- a/drivers/iio/industrialio-trigger.c
-+++ b/drivers/iio/industrialio-trigger.c
-@@ -768,3 +768,103 @@ int iio_triggered_buffer_predisable(struct iio_dev *indio_dev)
- 					     indio_dev->pollfunc);
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index 9b49a6ad..4d9040d 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -108,6 +108,9 @@ enum stm32_adc_extsel {
+ 	STM32_EXT15,
+ };
+ 
++/* EXTI 11 trigger selection on STM32F4 */
++#define STM32F4_EXTI11_EXTSEL		STM32_EXT15
++
+ /**
+  * struct stm32_adc_trig_info - ADC trigger info
+  * @name:		name of the trigger, corresponding to its source
+@@ -146,6 +149,7 @@ struct stm32_adc_regs {
+  * @rx_buf:		dma rx buffer cpu address
+  * @rx_dma_buf:		dma rx buffer bus address
+  * @rx_buf_sz:		dma rx buffer size
++ * @exti_trig		EXTI trigger
+  */
+ struct stm32_adc {
+ 	struct stm32_adc_common	*common;
+@@ -162,6 +166,7 @@ struct stm32_adc {
+ 	u8			*rx_buf;
+ 	dma_addr_t		rx_dma_buf;
+ 	unsigned int		rx_buf_sz;
++	struct iio_trigger	*exti_trig;
+ };
+ 
+ /**
+@@ -395,10 +400,15 @@ static int stm32_adc_conf_scan_seq(struct iio_dev *indio_dev,
+  *
+  * Returns trigger extsel value, if trig matches, -EINVAL otherwise.
+  */
+-static int stm32_adc_get_trig_extsel(struct iio_trigger *trig)
++static int stm32_adc_get_trig_extsel(struct iio_dev *indio_dev,
++				     struct iio_trigger *trig)
+ {
++	struct stm32_adc *adc = iio_priv(indio_dev);
+ 	int i;
+ 
++	if (trig == adc->exti_trig)
++		return STM32F4_EXTI11_EXTSEL;
++
+ 	/* lookup triggers registered by stm32 timer trigger driver */
+ 	for (i = 0; stm32f4_adc_trigs[i].name; i++) {
+ 		/**
+@@ -432,7 +442,7 @@ static int stm32_adc_set_trig(struct iio_dev *indio_dev,
+ 	int ret;
+ 
+ 	if (trig) {
+-		ret = stm32_adc_get_trig_extsel(trig);
++		ret = stm32_adc_get_trig_extsel(indio_dev, trig);
+ 		if (ret < 0)
+ 			return ret;
+ 
+@@ -604,7 +614,7 @@ static irqreturn_t stm32_adc_isr(int irq, void *data)
+ static int stm32_adc_validate_trigger(struct iio_dev *indio_dev,
+ 				      struct iio_trigger *trig)
+ {
+-	return stm32_adc_get_trig_extsel(trig) < 0 ? -EINVAL : 0;
++	return stm32_adc_get_trig_extsel(indio_dev, trig) < 0 ? -EINVAL : 0;
  }
- EXPORT_SYMBOL(iio_triggered_buffer_predisable);
-+
-+#ifdef CONFIG_OF
-+static int iio_trig_node_match(struct device *dev, void *data)
-+{
-+	return dev->of_node == data && dev->type == &iio_trig_type;
-+}
-+
-+static struct iio_trigger *__of_iio_trig_get(struct device_node *np, int index)
-+{
-+	struct of_phandle_args trigspec;
-+	struct device *dev;
-+	int err;
-+
-+	err = of_parse_phandle_with_args(np, "io-triggers",
-+					 "#io-trigger-cells",
-+					 index, &trigspec);
-+	if (err)
-+		return ERR_PTR(err);
-+
-+	dev = bus_find_device(&iio_bus_type, NULL, trigspec.np,
-+			      iio_trig_node_match);
-+	of_node_put(trigspec.np);
-+	if (!dev)
-+		return ERR_PTR(-EPROBE_DEFER);
-+
-+	return to_iio_trigger(dev);
-+}
-+
-+static struct iio_trigger *__of_iio_trig_get_by_name(struct device_node *np,
-+						     const char *name)
-+{
-+	struct iio_trigger *trig;
-+	int index = 0;
-+
-+	if (!np)
-+		return ERR_PTR(-EINVAL);
-+	if (name)
-+		index = of_property_match_string(np, "io-trigger-names", name);
-+	if (index < 0)
-+		return ERR_PTR(index);
-+	trig = __of_iio_trig_get(np, index);
-+	if (!IS_ERR(trig) || PTR_ERR(trig) == -EPROBE_DEFER)
-+		return trig;
-+
-+	if (name && index >= 0)
-+		pr_err("ERROR: could not get IIO trigger %s:%s(%i)\n",
-+		       np->full_name, name ? name : "", index);
-+
-+	return ERR_PTR(-ENOENT);
-+}
-+#else /* CONFIG_OF */
-+static inline struct iio_trigger *
-+__of_iio_trig_get_by_name(struct device_node *np, const char *name)
-+{
-+	return ERR_PTR(-ENOENT);
-+}
-+#endif
-+
-+struct iio_trigger *iio_trigger_get_by_name(struct device *dev,
-+					    const char *name)
-+{
-+	struct iio_trigger *trig;
-+
-+	if (!dev)
-+		return ERR_PTR(-EINVAL);
-+
-+	trig = __of_iio_trig_get_by_name(dev->of_node, name);
-+	if (!IS_ERR(trig))
-+		return iio_trigger_get(trig);
-+
-+	return trig;
-+}
-+EXPORT_SYMBOL_GPL(iio_trigger_get_by_name);
-+
-+static void devm_iio_trigger_put(struct device *dev, void *res)
-+{
-+	iio_trigger_put(*(struct iio_trigger **)res);
-+}
-+
-+struct iio_trigger *devm_iio_trigger_get_by_name(struct device *dev,
-+						 const char *name)
-+{
-+	struct iio_trigger **ptr, *trig;
-+
-+	ptr = devres_alloc(devm_iio_trigger_put, sizeof(*ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	trig = iio_trigger_get_by_name(dev, name);
-+	if (IS_ERR(trig)) {
-+		devres_free(ptr);
-+		return trig;
+ 
+ static int stm32_adc_set_watermark(struct iio_dev *indio_dev, unsigned int val)
+@@ -1030,6 +1040,17 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	if (ret < 0)
+ 		goto err_clk_disable;
+ 
++	adc->exti_trig = devm_iio_trigger_get_by_name(&pdev->dev, "exti");
++	if (IS_ERR(adc->exti_trig)) {
++		ret = PTR_ERR(adc->exti_trig);
++		if (ret == -EPROBE_DEFER)
++			goto err_dma_disable;
++		dev_dbg(&pdev->dev, "No exti trigger found (%d)\n", ret);
++		adc->exti_trig = NULL;
++	} else {
++		dev_info(&pdev->dev, "Can use %s\n", adc->exti_trig->name);
 +	}
 +
-+	*ptr = trig;
-+	devres_add(dev, ptr);
-+
-+	return trig;
-+}
-+EXPORT_SYMBOL_GPL(devm_iio_trigger_get_by_name);
-diff --git a/include/linux/iio/trigger.h b/include/linux/iio/trigger.h
-index ea08302..1f1ec20 100644
---- a/include/linux/iio/trigger.h
-+++ b/include/linux/iio/trigger.h
-@@ -173,6 +173,10 @@ void devm_iio_trigger_unregister(struct device *dev,
- int iio_trigger_validate_own_device(struct iio_trigger *trig,
- 				     struct iio_dev *indio_dev);
- 
-+struct iio_trigger *iio_trigger_get_by_name(struct device *dev,
-+					    const char *name);
-+struct iio_trigger *devm_iio_trigger_get_by_name(struct device *dev,
-+						 const char *name);
- #else
- struct iio_trigger;
- struct iio_trigger_ops;
+ 	ret = iio_triggered_buffer_setup(indio_dev,
+ 					 &iio_pollfunc_store_time,
+ 					 &stm32_adc_trigger_handler,
 -- 
 1.9.1
