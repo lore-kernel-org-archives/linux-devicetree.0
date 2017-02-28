@@ -1,76 +1,59 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v2 2/2] usb: host: ehci-platform: fix usb 1.1 device is
- not connected in system resume
-Date: Tue, 28 Feb 2017 09:04:28 +0800
-Message-ID: <20170228010428.GB1235@b29397-desktop>
-References: <1487674788-12599-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1487674788-12599-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/8] watchdog: s3c2410: Fix infinite interrupt in soft mode
+Date: Mon, 27 Feb 2017 19:12:40 -0600
+Message-ID: <20170228011240.yrucs7odq45xi4q5@rob-hp-laptop>
+References: <20170224151122.12142-1-krzk@kernel.org>
+ <20170224151122.12142-3-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1487674788-12599-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: stern@rowland.harvard.edu, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20170224151122.12142-3-krzk@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 21, 2017 at 07:59:48PM +0900, Yoshihiro Shimoda wrote:
-> This patch fixes an issue that a usb 1.1 device is not connected in
-> system resume and then the following message appeared if debug messages
-> are enabled:
-> 	usb 2-1: Waited 2000ms for CONNECT
+On Fri, Feb 24, 2017 at 05:11:16PM +0200, Krzysztof Kozlowski wrote:
+> In soft (no-reboot) mode, the driver self-pings watchdog upon expiration
+> of an interrupt.  However the interrupt itself was not cleared thus on
+> first hit, the system enters infinite interrupt handling loop.
 > 
-> To resolve this issue, the EHCI controller must be resumed after its
-> companion controllers. So, this patch adds such code on the driver.
+> On Odroid U3 (Exynos4412), when booted with s3c2410_wdt.soft_noboot=1
+> argument the console is flooded:
+> 	# killall -9 watchdog
+> 	[   60.523760] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
+> 	[   60.536744] s3c2410-wdt 10060000.watchdog: watchdog timer expired (irq)
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Fix this by writing something to the WTCLRINT register to clear the
+> interrupt.  The register WTCLRINT however appeared in S3C6410 so a new
+> watchdog quirk and flavor are needed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
 > ---
->  drivers/usb/host/ehci-platform.c | 7 +++++++
->  1 file changed, 7 insertions(+)
 > 
-> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
-> index a268d9e..3214300 100644
-> --- a/drivers/usb/host/ehci-platform.c
-> +++ b/drivers/usb/host/ehci-platform.c
-> @@ -34,6 +34,7 @@
->  #include <linux/usb.h>
->  #include <linux/usb/hcd.h>
->  #include <linux/usb/ehci_pdriver.h>
-> +#include <linux/usb/of.h>
->  
->  #include "ehci.h"
->  
-> @@ -297,6 +298,7 @@ static int ehci_platform_probe(struct platform_device *dev)
->  		goto err_power;
->  
->  	device_wakeup_enable(hcd->self.controller);
-> +	device_enable_async_suspend(hcd->self.controller);
->  	platform_set_drvdata(dev, hcd);
->  
->  	return err;
-> @@ -370,6 +372,7 @@ static int ehci_platform_resume(struct device *dev)
->  	struct usb_ehci_pdata *pdata = dev_get_platdata(dev);
->  	struct platform_device *pdev = to_platform_device(dev);
->  	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
-> +	struct device *companion_dev;
->  
->  	if (pdata->power_on) {
->  		int err = pdata->power_on(pdev);
-> @@ -377,6 +380,10 @@ static int ehci_platform_resume(struct device *dev)
->  			return err;
->  	}
->  
-> +	companion_dev = usb_of_get_companion_dev(hcd->self.controller);
-> +	if (companion_dev)
-> +		device_pm_wait_for_dev(hcd->self.controller, companion_dev);
-> +
->  	ehci_resume(hcd, priv->reset_on_resume);
->  	return 0;
+> I was thinking about CC-ing stable, especially when I thought about
+> adding unconditional WTCLRINT clear.  However it appears that S3C2410
+> does not have the WTCLRINT register, this a new chip flavor has to be
+> added.  This makes the fix spread over driver and DTS changes.
+> 
+> Worth adding:
+> 	Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> ?
+> ---
+>  .../devicetree/bindings/watchdog/samsung-wdt.txt    |  9 +++++----
 
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
 
--- 
-
-Best Regards,
-Peter Chen
+>  drivers/watchdog/s3c2410_wdt.c                      | 21 ++++++++++++++++++---
+>  2 files changed, 23 insertions(+), 7 deletions(-)
