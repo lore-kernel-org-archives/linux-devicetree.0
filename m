@@ -1,58 +1,67 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH RFC 1/3] i2c: bcm2835: Avoid possible NULL ptr dereference
-Date: Tue, 28 Feb 2017 13:47:14 +0100
-Message-ID: <20170228124714.GA1014@kroah.com>
-References: <1487280047-29608-1-git-send-email-stefan.wahren@i2se.com>
- <1487280047-29608-2-git-send-email-stefan.wahren@i2se.com>
- <20170220182214.izi46a7lbzck7q4r@ninjato>
- <23773cd4-a9a4-5323-4cc2-71d1d617b232@i2se.com>
- <20170221201403.GA1481@katana>
- <20170222072058.GA9650@kroah.com>
- <77c2af87-6f0e-4de0-18e9-0aa798f282d0@i2se.com>
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: spi: document bcm63xx HS SPI devicetree bindings
+Date: Tue, 28 Feb 2017 14:11:04 +0100
+Message-ID: <CAOiHx==wHRDqiWFkupmcj0iw8u6w36j8Lb-V_gq8oqKLei6Aww@mail.gmail.com>
+References: <20170222131940.31085-1-jonas.gorski@gmail.com>
+ <20170222131940.31085-2-jonas.gorski@gmail.com> <c21aadc6-cbcf-4948-0e40-b8aae0304430@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <77c2af87-6f0e-4de0-18e9-0aa798f282d0-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <c21aadc6-cbcf-4948-0e40-b8aae0304430-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 01:42:42PM +0100, Stefan Wahren wrote:
-> Hi Greg,
-> 
-> Am 22.02.2017 um 08:20 schrieb Greg Kroah-Hartman:
-> > On Tue, Feb 21, 2017 at 09:14:03PM +0100, Wolfram Sang wrote:
-> > > > > On Thu, Feb 16, 2017 at 09:20:45PM +0000, Stefan Wahren wrote:
-> > > > > > Since commit e2474541032d ("bcm2835: Fix hang for writing messages
-> > > > > > larger than 16 bytes") the interrupt handler is prone to a possible
-> > > > > > NULL pointer dereference. This could happen if an interrupt fires
-> > > > > > before curr_msg is set by bcm2835_i2c_xfer_msg() and randomly occurs
-> > > > > > on the RPi 3. Even this is an unexpected behavior the driver must
-> > > > > > handle that with an error instead of a crash.
-> > > > > > 
-> > > > > > CC: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-> > > > > > CC: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-> > > > > > Reported-by: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > > Fixes: e2474541032d ("bcm2835: Fix hang for writing messages larger than 16 bytes")
-> > > > > > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> > > > > Applied to for-next, thanks (will be in 4.11)!
-> > > > > 
-> > > > since this patch is too late for 4.10, should i resent with CC to stable in
-> > > > order to get it into the next 4.10 release?
-> > > It has the Fixes: tag, that will do.
-> > But it moves it much lower on my "this needs to get into stable now!"
-> > priority list.  I'll try to remember this one when it goes by...
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> should i resend, since i didn't send you the initial patch?
+Hi,
 
-Sure!
+On 27 February 2017 at 23:49, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 02/22/2017 05:19 AM, Jonas Gorski wrote:
+>> Add documentation for the bindings of the high speed SPI controller found
+>> on newer bcm63xx SoCs.
+>>
+>> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 35 ++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+>> new file mode 100644
+>> index 000000000000..3b0a2220b896
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+>> @@ -0,0 +1,35 @@
+>> +Binding for Broadcom BCM6328 SPI controller
+
+I missed a "High Speed" here.
+
+>> +
+>> +Required properties:
+>> +- compatible: must contain of "brcm,bcm6328-hsspi".
+>> +- reg: Base address and size of the controllers memory area.
+>> +- interrupts: Interrupt for the SPI block.
+>> +- clocks: phandle of the SPI clock.
+>> +- clock-names: must be "hsspi".
+>> +- #address-cells: <1>, as required by generic SPI binding.
+>> +- #size-cells: <0>, also as required by generic SPI binding.
+>> +
+>> +Optional properties:
+>> +- num-cs: some controllers have less than 8 cs signals. Defaults to 8
+>> +  if absent.
+>> +- clocks: a second handle for the PLL clock.
+>> +- clock-names: must be named "pll", if present.
+>
+> I have not found chips where the PLL may be optional, but there may be
+> ways to have the same PLL and UBUS clocks feeding into the HSSPI block.
+
+Indeed, I guess I make it just non-optional. Having it as an optional
+clock was (not intentionally) more describing the driver, not the
+hardware. If there is ever only one clock, one could just pass it
+twice. I'll update and send a V2.
+
+
+Jonas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
