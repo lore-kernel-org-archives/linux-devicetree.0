@@ -1,67 +1,81 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/9] ARM: dts: sun8i: add device tree for
- Lichee Pi Zero with Dock
-Date: Tue, 28 Feb 2017 17:02:27 -0600
-Message-ID: <CAL_JsqL_fbCpiH3jvF7UuTrWkNSJmk5UyrYBDZ9hwE29+Hrk0w@mail.gmail.com>
-References: <20170225123029.55939-1-icenowy@aosc.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/4] arm: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual
+ OpenFrame Cap 10.1 initial support
+Date: Tue, 28 Feb 2017 17:04:57 -0600
+Message-ID: <CAL_JsqLZFsBdZyBeJfe-mhxcEc_tUS1GrtPBcMvkwUL0VDcr1g@mail.gmail.com>
+References: <1487653593-3457-1-git-send-email-jagan@openedev.com>
+ <1487653593-3457-2-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170225123029.55939-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, dmaengine@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487653593-3457-2-git-send-email-jagan@openedev.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jagan Teki <jagan@openedev.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matteo Lisi <matteo.lisi@engicam.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Domenico Acri <domenico.acri@engicam.com>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 25, 2017 at 6:30 AM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
-> Lichee Pi Zero features a dock, which adds some functions, and should be
-> soldered with the core board of Lichee Pi Zero.
+On Mon, Feb 20, 2017 at 11:06 PM, Jagan Teki <jagan@openedev.com> wrote:
+> From: Jagan Teki <jagan@amarulasolutions.com>
 >
-> Add support for the dock as a new dts, as soldering is needed to make
-> the dock usable and there's functions enabled on the dock that is
-> unavailable at the 2.54mm pins of the core board.
+> i.CoreM6 Quad/Dual OpenFrame modules are "system on modules plus
+> openframe display carriers" which are good solution for develop
+> user friendly graphic user interface.
 >
-> Currently no new feature on core board is available in the mainline
-> kernel, so the dock dt file only includes the core board device tree.
+> General features:
+> CPU           NXP i.MX6Q rev1.2 at 792 MHz
+> RAM           1GB, 32, 64 bit, DDR3-800/1066
+> NAND          SLC,512MB
+> LVDS Display  TFT 10.1" industrial, 1280x800 resolution
+> Backlight     LED backlight, brightness 350 Cd/m2
+> Power supply  15 to 30 Vdc
 >
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> Cc: Domenico Acri <domenico.acri@engicam.com>
+> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> Cc: Michael Trimarchi <michael@amarulasolutions.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > ---
->  arch/arm/boot/dts/Makefile                         |  3 +-
->  arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts | 49 ++++++++++++++++++++++
->  2 files changed, 51 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
+> Changes for v3:
+> - Use native-mode as timing0 since this is the initial lvds-channel
+> - Rename hsd100pxn1 reference as timing0
+> Changes for v2:
+> - none
+>
+>  arch/arm/boot/dts/Makefile                |  1 +
+>  arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 76 +++++++++++++++++++++++++++++++
+>  2 files changed, 77 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap10.dts
 >
 > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 011808490fed..1aa365306479 100644
+> index 0118084..458ec09 100644
 > --- a/arch/arm/boot/dts/Makefile
 > +++ b/arch/arm/boot/dts/Makefile
-> @@ -876,7 +876,8 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->         sun8i-h3-orangepi-plus.dtb \
->         sun8i-h3-orangepi-plus2e.dtb \
->         sun8i-r16-parrot.dtb \
-> -       sun8i-v3s-licheepi-zero.dtb
-> +       sun8i-v3s-licheepi-zero.dtb \
-> +       sun8i-v3s-licheepi-zero-dock.dtb
->  dtb-$(CONFIG_MACH_SUN9I) += \
->         sun9i-a80-optimus.dtb \
->         sun9i-a80-cubieboard4.dtb
-> diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
+> @@ -398,6 +398,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>         imx6q-h100.dtb \
+>         imx6q-hummingboard.dtb \
+>         imx6q-icore.dtb \
+> +       imx6q-icore-ofcap10.dtb \
+>         imx6q-icore-rqs.dtb \
+>         imx6q-marsboard.dtb \
+>         imx6q-mccmon6.dtb \
+> diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
 > new file mode 100644
-> index 000000000000..68c114d6b939
+> index 0000000..8f40812
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
-> @@ -0,0 +1,49 @@
+> +++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+> @@ -0,0 +1,76 @@
 > +/*
-> + * Copyright (C) 2016 Icenowy Zheng <icenowy@aosc.xyz>
+> + * Copyright (C) 2016 Amarula Solutions B.V.
+> + * Copyright (C) 2016 Engicam S.r.l.
 > + *
 > + * This file is dual-licensed: you can use it either under the terms
 > + * of the GPL or the X11 license, at your option. Note that this dual
@@ -69,9 +83,8 @@ On Sat, Feb 25, 2017 at 6:30 AM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
 > + * whole.
 > + *
 > + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
+> + *     modify it under the terms of the GNU General Public License
+> + *     version 2 as published by the Free Software Foundation.
 > + *
 > + *     This file is distributed in the hope that it will be useful,
 > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -100,22 +113,10 @@ On Sat, Feb 25, 2017 at 6:30 AM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
 > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 > + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 
-Use SPDX tags here:
+If you respin, use SPDX tags here:
 
-SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+SPDX-License-Identifier: (GPL-2.0 OR MIT)
 
 While it says X11, this is really MIT license text.
-
-> + */
-> +
-> +#include "sun8i-v3s-licheepi-zero.dts"
-> +
-> +/ {
-> +       model = "Lichee Pi Zero with Dock";
-> +       compatible = "licheepi,licheepi-zero-dock", "licheepi,licheepi-zero",
-> +                    "allwinner,sun8i-v3s";
-> +};
-> --
-> 2.11.1
->
