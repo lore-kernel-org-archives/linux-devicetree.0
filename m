@@ -1,50 +1,46 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 2/3] nvmem: sunxi-sid: add support for
- H3's SID controller
-Date: Tue, 28 Feb 2017 07:42:58 +0100
-Message-ID: <20170228064258.mqpu33udgokxazkz@lukather>
-References: <20170227192715.50198-1-icenowy@aosc.xyz>
- <20170227192715.50198-2-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v3 13/25] dt-bindings: arm: Document Actions Semi S900
+Date: Tue, 28 Feb 2017 07:35:23 +0100
+Message-ID: <20170228063535.32069-14-afaerber@suse.de>
+References: <20170228063535.32069-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rbkt5tr3xwc2o5rj"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB45X2TCQKGQEMFL3YKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170227192715.50198-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170228063535.32069-1-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, mp-cs@actions-semi.com, 96boards@ucrobotics.com, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---rbkt5tr3xwc2o5rj
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Tue, Feb 28, 2017 at 03:27:14AM +0800, Icenowy Zheng wrote:
-> The H3 SoC have a bigger SID controller, which has its direct read
-> address at 0x200 position in the SID block, not 0x0.
-> 
-> Also, H3 SID controller has some silicon bug that makes the direct read
-> value wrong at cold boot, add code to workaround the bug. (This bug has
-> already been fixed on A64 and later SoCs)
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---rbkt5tr3xwc2o5rj--
+VGhlIEFjdGlvbnMgU2VtaSBTOTAwIGlzIGEgcXVhZC1jb3JlIEFSTSBDb3J0ZXgtQTUzIFNvQy4K
+VGhlIEJ1YmJsZWd1bS05NiBpcyBhIDk2Qm9hcmRzIENvbnN1bWVyIEVkaXRpb24gY29tcGxpYW50
+IGJvYXJkICg0Lzk2KS4KCkNjOiA5NmJvYXJkc0B1Y3JvYm90aWNzLmNvbQpBY2tlZC1ieTogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVy
+IDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIHYyIC0+IHYzOiB1bmNoYW5nZWQKIAogdjEgLT4gdjI6
+CiAqIEFkb3B0ZWQgImFjdGlvbnMiIHZlbmRvciBwcmVmaXgKICogRXh0ZW5kZWQgdGV4dAogCiBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FjdGlvbnMudHh0IHwgMTUgKysr
+KysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTUgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYWN0aW9ucy50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FjdGlvbnMudHh0CmluZGV4IDFk
+Mzc4MmUuLjNiYzdlYTUgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9hcm0vYWN0aW9ucy50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2FybS9hY3Rpb25zLnR4dApAQCAtMjIsMyArMjIsMTggQEAgQm9hcmRzOgogUm9vdCBub2Rl
+IHByb3BlcnR5IGNvbXBhdGlibGUgbXVzdCBjb250YWluLCBkZXBlbmRpbmcgb24gYm9hcmQ6CiAK
+ICAtIExlTWFrZXIgR3VpdGFyIEJhc2UgQm9hcmQgcmV2LiBCOiAibGVtYWtlcixndWl0YXItYmIt
+cmV2LWIiLCAibGVtYWtlcixndWl0YXIiCisKKworUzkwMCBTb0MKKz09PT09PT09CisKK1JlcXVp
+cmVkIHJvb3Qgbm9kZSBwcm9wZXJ0aWVzOgorCistIGNvbXBhdGlibGUgOiAgbXVzdCBjb250YWlu
+ICJhY3Rpb25zLHM5MDAiCisKKworQm9hcmRzOgorCitSb290IG5vZGUgcHJvcGVydHkgY29tcGF0
+aWJsZSBtdXN0IGNvbnRhaW4sIGRlcGVuZGluZyBvbiBib2FyZDoKKworIC0gdUNSb2JvdGljcyBC
+dWJibGVndW0tOTY6ICJ1Y3JvYm90aWNzLGJ1YmJsZWd1bS05NiIKLS0gCjIuMTAuMgoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
