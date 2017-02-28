@@ -1,57 +1,102 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 3/4] ARM: dts: da850-evm: add the UI expander node
-Date: Tue, 28 Feb 2017 17:15:15 +0100
-Message-ID: <1488298516-14363-4-git-send-email-bgolaszewski@baylibre.com>
-References: <1488298516-14363-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488298516-14363-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v3 2/2] media: dt-bindings: vpif: extend the example with an output port
+Date: Tue, 28 Feb 2017 17:08:54 +0100
+Message-ID: <1488298134-6200-3-git-send-email-bgolaszewski@baylibre.com>
+References: <1488298134-6200-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1488298134-6200-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sekhar Nori <nsekhar@ti.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-We need the expander to be probed to allow the VPIF controller to
-receive interrupts from the video decoder.
+This makes the example more or less correspond with the da850-evm
+hardware setup.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/da850-evm.dts | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/media/ti,da850-vpif.txt    | 40 +++++++++++++++++-----
+ 1 file changed, 32 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index dece981..3968a18 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -9,6 +9,7 @@
-  */
- /dts-v1/;
- #include "da850.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
+diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+index 9c7510b..df7182a 100644
+--- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
++++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+@@ -16,8 +16,10 @@ Required properties:
+ Video Capture:
  
- / {
- 	compatible = "ti,da850-evm", "ti,da850";
-@@ -78,7 +79,10 @@
- 				DRVDD-supply = <&vbat>;
- 				DVDD-supply = <&vbat>;
+ VPIF has a 16-bit parallel bus input, supporting 2 8-bit channels or a
+-single 16-bit channel.  It should contain at least one port child node
+-with child 'endpoint' node. Please refer to the bindings defined in
++single 16-bit channel. It should contain one or two port child nodes
++with child 'endpoint' node. If there are two ports then port@0 must
++describe the input and port@1 output channels. Please refer to the
++bindings defined in
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
+ 
+ Example using 2 8-bit input channels, one of which is connected to an
+@@ -28,19 +30,26 @@ I2C-connected TVP5147 decoder:
+ 		reg = <0x217000 0x1000>;
+ 		interrupts = <92>;
+ 
+-		port {
+-			vpif_ch0: endpoint@0 {
++		port@0 {
++			vpif_input_ch0: endpoint@0 {
+ 				reg = <0>;
+ 				bus-width = <8>;
+-				remote-endpoint = <&composite>;
++				remote-endpoint = <&composite_in>;
  			};
--
-+			tca6416: gpio@20 {
-+				compatible = "ti,tca6416";
-+				reg = <0x20>;
-+			};
+ 
+-			vpif_ch1: endpoint@1 {
++			vpif_input_ch1: endpoint@1 {
+ 				reg = <1>;
+ 				bus-width = <8>;
+ 				data-shift = <8>;
+ 			};
  		};
- 		wdt: wdt@21000 {
- 			status = "okay";
++
++		port@1 {
++			vpif_output_ch0: endpoint {
++				bus-width = <8>;
++				remote-endpoint = <&composite_out>;
++			};
++		};
+ 	};
+ 
+ [ ... ]
+@@ -53,13 +62,28 @@ I2C-connected TVP5147 decoder:
+ 		status = "okay";
+ 
+ 		port {
+-			composite: endpoint {
++			composite_in: endpoint {
+ 				hsync-active = <1>;
+ 				vsync-active = <1>;
+ 				pclk-sample = <0>;
+ 
+ 				/* VPIF channel 0 (lower 8-bits) */
+-				remote-endpoint = <&vpif_ch0>;
++				remote-endpoint = <&vpif_input_ch0>;
++				bus-width = <8>;
++			};
++		};
++	};
++
++	adv7343@2a {
++		compatible = "adi,adv7343";
++		reg = <0x2a>;
++
++		port {
++			composite_out: endpoint {
++				adi,dac-enable = <1 1 1>;
++				adi,sd-dac-enable = <1>;
++
++				remote-endpoint = <&vpif_output_ch0>;
+ 				bus-width = <8>;
+ 			};
+ 		};
 -- 
 2.9.3
