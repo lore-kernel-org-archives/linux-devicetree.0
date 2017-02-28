@@ -1,321 +1,108 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM64: dts: meson-gxl: improve support for the P212
- reference design
-Date: Tue, 28 Feb 2017 14:50:44 +0100
-Message-ID: <030baab3-c5c6-0b25-1c18-31ab530d7aa7@baylibre.com>
-References: <20170219224114.17201-1-martin.blumenstingl@googlemail.com>
- <20170219224114.17201-2-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
+ binding to OPP nodes
+Date: Tue, 28 Feb 2017 08:10:01 -0600
+Message-ID: <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com>
+References: <cover.1487926924.git.viresh.kumar@linaro.org> <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
+ <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop> <20170228065711.GD19417@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170219224114.17201-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170228065711.GD19417@vireshk-i7>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lina Iyer <lina.iyer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/19/2017 11:41 PM, Martin Blumenstingl wrote:
-> The Amlogic P212 reference design is used by other devices as well, such
-> as (for example) the Khadas VIM boards. Thus this patch adds and moves
-> all common entries from meson-gxl-s905x-p212.dts to a new, separate
-> meson-gxl-s905x-p212.dtsi (which can be re-used on boards such as the
-> Khadas VIM).
-> Support for all boards based on the P212 reference design includes:
-> - enabling IR support
-> - enabling the SAR ADC (SARADC_CH1 is connected to a resistor which
->   indicates the hardware revision, a similar design is found on the
->   Khadas VIM boards)
-> - all MMC controllers (which means that SDIO wifi, the SD card and the
->   eMMC are now supported)
-> - pwm_ef as dependency for the SDIO wifi module
-> - uart_A which is connected to the bluetooth module (the bluetooth
->   module itself is not enabled yet due to missing devicetree bindings
->   for the Broadcom serial bluetooth devices)
-> - uart_AO is moved to the .dtsi (as all known devices use it as their
->   boot-console)
-> 
-> Specific to the P212 board:
-> - this also enables the CVBS connector (which is not available on the
->   Khadas VIM boards for example)
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  .../boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  21 +-
->  .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     | 214 +++++++++++++++++++++
->  2 files changed, 226 insertions(+), 9 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> index 9639f012b02b..db31e093f40e 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> @@ -43,23 +43,26 @@
->  
->  /dts-v1/;
->  
-> -#include "meson-gxl-s905x.dtsi"
-> +#include "meson-gxl-s905x-p212.dtsi"
->  
->  / {
->  	compatible = "amlogic,p212", "amlogic,s905x", "amlogic,meson-gxl";
->  	model = "Amlogic Meson GXL (S905X) P212 Development Board";
->  
-> -	aliases {
-> -		serial0 = &uart_AO;
-> -	};
-> +	cvbs-connector {
-> +		compatible = "composite-video-connector";
->  
-> -	chosen {
-> -		stdout-path = "serial0:115200n8";
-> +		port {
-> +			cvbs_connector_in: endpoint {
-> +				remote-endpoint = <&cvbs_vdac_out>;
-> +			};
-> +		};
->  	};
-> +};
->  
-> -	memory@0 {
-> -		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +&cvbs_vdac_port {
-> +	cvbs_vdac_out: endpoint {
-> +		remote-endpoint = <&cvbs_connector_in>;
->  	};
->  };
->  
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> new file mode 100644
-> index 000000000000..fb0e7c999cb6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> @@ -0,0 +1,214 @@
-> +/*
-> + * Copyright (c) 2016 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>.
-> + * Based on meson-gx-p23x-q20x.dtsi:
-> + * - Copyright (c) 2016 Endless Computers, Inc.
-> + *   Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> + * - Copyright (c) 2016 BayLibre, SAS.
-> + *   Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/* Common DTSI for devices which are based on the P212 reference board. */
-> +
-> +#include "meson-gxl-s905x.dtsi"
-> +
-> +/ {
-> +	aliases {
-> +		serial0 = &uart_AO;
-> +		serial1 = &uart_A;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x80000000>;
-> +	};
-> +
-> +	vddio_boot: regulator-vddio_boot {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_BOOT";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vddao_3v3: regulator-vddao_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDAO_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	vddio_ao18: regulator-vddio_ao18 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO18";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vcc_3v3: regulator-vcc_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	emmc_pwrseq: emmc-pwrseq {
-> +		compatible = "mmc-pwrseq-emmc";
-> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	wifi32k: wifi32k {
-> +		compatible = "pwm-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-> +	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-> +		clocks = <&wifi32k>;
-> +		clock-names = "ext_clock";
-> +	};
-> +};
-> +
-> +&ethmac {
-> +	status = "okay";
-> +};
-> +
-> +&ir {
-> +	status = "okay";
-> +	pinctrl-0 = <&remote_input_ao_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&saradc {
-> +	status = "okay";
-> +	vref-supply = <&vddio_ao18>;
-> +};
-> +
-> +/* Wireless SDIO Module */
-> +&sd_emmc_a {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdio_pins>;
-> +	pinctrl-names = "default";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <100000000>;
-> +
-> +	non-removable;
-> +	disable-wp;
-> +
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +
-> +	brcmf: bcrmf@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +	};
-> +};
-> +
-> +/* SD card */
-> +&sd_emmc_b {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdcard_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <100000000>;
-> +	disable-wp;
-> +
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> +	cd-inverted;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* eMMC */
-> +&sd_emmc_c {
-> +	status = "okay";
-> +	pinctrl-0 = <&emmc_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <8>;
-> +	cap-sd-highspeed;
-> +	cap-mmc-highspeed;
-> +	max-frequency = <200000000>;
-> +	non-removable;
-> +	disable-wp;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs200-1_8v;
-> +
-> +	mmc-pwrseq = <&emmc_pwrseq>;
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +&pwm_ef {
-> +	status = "okay";
-> +	pinctrl-0 = <&pwm_e_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +};
-> +
-> +/* This is connected to the Bluetooth module: */
-> +&uart_A {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-> +	pinctrl-names = "default";
-> +	uart-has-rtscts;
-> +};
-> +
-> +&uart_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
-> +};
-> 
+On Tue, Feb 28, 2017 at 12:57 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 27-02-17, 18:39, Rob Herring wrote:
+>> On Fri, Feb 24, 2017 at 02:36:34PM +0530, Viresh Kumar wrote:
+>> > If the consumers don't need the capability of switching to different
+>> > domain performance states at runtime, then they can simply define their
+>> > required domain performance state in their nodes directly.
+>> >
+>> > But if the device needs the capability of switching to different domain
+>> > performance states, as they may need to support different clock rates,
+>> > then the per OPP node can be used to contain that information.
+>> >
+>> > This patch introduces the domain-performance-state (already defined by
+>> > Power Domain bindings) to the per OPP node.
+>> >
+>>
+>> We already have OPP voltages, why are those not sufficient?
+>
+> Those are for the regulator that ONLY controls the device, and
+> domain-performance-state belongs to the parent domain which controls many
+> devices.
+>
+>> > +Example 7: domain-Performance-state:
+>> > +(example: For 1GHz require domain state 1 and for 1.1 & 1.2 GHz require state 2)
+>> > +
+>> > +/ {
+>> > +   cpu0_opp_table: opp_table0 {
+>> > +           compatible = "operating-points-v2";
+>> > +           opp-shared;
+>> > +
+>> > +           opp@1000000000 {
+>> > +                   opp-hz = /bits/ 64 <1000000000>;
+>>
+>> Thinking about this some more, there's a problem here that you have no
+>> link to foo_domain. I guess that resides in the cpu's node?
+>
+> Right, the "cpus" node below demonstrates that.
+>
+>> > +   cpus {
+>> > +           #address-cells = <1>;
+>> > +           #size-cells = <0>;
+>> > +
+>> > +           cpu@0 {
+>> > +                   compatible = "arm,cortex-a9";
+>> > +                   reg = <0>;
+>> > +                   clocks = <&clk_controller 0>;
+>> > +                   clock-names = "cpu";
+>> > +                   operating-points-v2 = <&cpu0_opp_table>;
+>> > +                   power-domains = <&foo_domain>;
+>> > +           };
+>> > +   };
+>> > +};
+>
+>> > +                   domain-performance-state = <1>;
+>
+>> Perhaps instead of a number, this should be a phandle to pstate@1. Then
+>> you just get the parent if you need to know the domain.
+>
+> That's what I did in V2, but then I turned it down considering the parent/child
+> relationships we may have.
+>
+> There are multiple cases we can have:
+>
+> A.) DeviceX  --->  Parent-domain-1 (Contains Perfomance states)
+>
+> B.) DeviceX  --->  Parent-domain-1  ---> Parent domain-2 (Contains Perfomance states)
+>
+>                                     ---> Parent domain-2 (Contains Perfomance states)
+>                                     |
+>                                     |
+> C.) DeviceX  --->  Parent-domain-1  |
+>                                     |
+>                                     |
+>                                     ---> Parent domain-3 (Contains Perfomance states)
 
-Great Job !
+I'm a bit confused. How does a domain have 2 parent domains?
 
-It works perfectly on an P212 board.
+You have the same problem either way. If I have performance state 2
+for the device, that corresponds to domain 2 or 3?
 
-Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-Thanks,
-Neil
+> The case A.) represents a simple case where the parent domain of the device
+> contains the performance states. The phandle can work pretty well in this case.
+> But the other cases B.) and C.) are a bit complicated as the direct parent
+> domain doesn't allow changing the performance states, but its parents. And so I
+> went ahead with numbers instead of phandles. Yes, we will still be able to get
+> to the performance state node with the help of phandles, but will that be the
+> right thing to do ?
+>
+> --
+> viresh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
