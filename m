@@ -1,236 +1,564 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 5/5] pinctrl: sunxi: Add A64 R_PIO
- controller support
-Date: Wed, 01 Mar 2017 10:48:30 +0800
-Message-ID: <20170301054851.mj8OjcUQ@smtp3p.mail.yandex.net>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH V2 3/4] drm/bridge: Drivers for
+ megachips-stdpxxxx-ge-b850v3-fw (LVDS-DP++)
+Date: Wed, 1 Mar 2017 09:38:48 +0530
+Message-ID: <8f61b5c1-3c99-6657-2c0b-41a070b322af@codeaurora.org>
+References: <cover.1488287639.git.peter.senna@collabora.com>
+ <5278cd3e4c409ace0d62d6aedcc555b38b8a89a9.1488287639.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBHPN3DCQKGQERPIPI5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "	linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5278cd3e4c409ace0d62d6aedcc555b38b8a89a9.1488287639.git.peter.senna@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Senna Tschudin <peter.senna@collabora.com>, airlied@linux.ie, akpm@linux-foundation.org, daniel.vetter@ffwll.ch, davem@davemloft.net, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, enric.balletbo@collabora.com, eballetbo@gmail.com, galak@codeaurora.org, gregkh@linuxfoundation.org, heiko@sntech.de, ijc+devicetree@hellion.org.uk, javier@dowhile0.org, jslaby@suse.cz, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux@roeck-us.net, mark.rutland@arm.com, martin.donnelly@ge.com, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, pawel.moll@arm.com, peter.senna@gmail.com, p.zabel@pengutronix.de, thierry.reding@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, shawnguo@kernel.org, tiwai@suse.com, treding@nvidia.com, ykk@rock-chips.com, laurent.pinchart@ideasonboard.com
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-CjIwMTflubQz5pyIMeaXpSAxMDozNOS6jiBDaGVuLVl1IFRzYWkgPHdlbnNAY3NpZS5vcmc+5YaZ
-6YGT77yaCj4KPiBPbiBXZWQsIE1hciAxLCAyMDE3IGF0IDI6MjkgQU0sIEFuZHJlIFByenl3YXJh
-IDxhbmRyZS5wcnp5d2FyYUBhcm0uY29tPiB3cm90ZTogCj4gPiBIaSwgCj4gPiAKPiA+IE9uIDI4
-LzAyLzE3IDE3OjI0LCBJY2Vub3d5IFpoZW5nIHdyb3RlOiAKPiA+PiBUaGUgQTY0IGhhcyBhIFJf
-UElPIHBpbiBjb250cm9sbGVyLCBzaW1pbGFyIHRvIHRoZSBvbmUgZm91bmQgb24gdGhlIEgzIFNv
-Qy4gCj4gPj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBwaW5zIGNvbnRyb2xsZWQgYnkgdGhlIFJfUElP
-IGNvbnRyb2xsZXIuIAo+ID4+IAo+ID4+IFNpZ25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGlj
-ZW5vd3lAYW9zYy54eXo+IAo+ID4+IC0tLSAKPiA+PsKgIGRyaXZlcnMvcGluY3RybC9zdW54aS9L
-Y29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIDUgKyAKPiA+PsKgIGRy
-aXZlcnMvcGluY3RybC9zdW54aS9NYWtlZmlsZcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fMKgwqAgMSArIAo+ID4+wqAgZHJpdmVycy9waW5jdHJsL3N1bnhpL3BpbmN0cmwtc3VuNTBpLWE2
-NC1yLmMgfCAxNDMgKysrKysrKysrKysrKysrKysrKysrKysrKysrIAo+ID4+wqAgMyBmaWxlcyBj
-aGFuZ2VkLCAxNDkgaW5zZXJ0aW9ucygrKSAKPiA+PsKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL3BpbmN0cmwvc3VueGkvcGluY3RybC1zdW41MGktYTY0LXIuYyAKPiA+PiAKPiA+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL3N1bnhpL0tjb25maWcgYi9kcml2ZXJzL3BpbmN0cmwv
-c3VueGkvS2NvbmZpZyAKPiA+PiBpbmRleCA5MjMyNTczNmQ5NTMuLjA3MzhiMGRmNWEwYiAxMDA2
-NDQgCj4gPj4gLS0tIGEvZHJpdmVycy9waW5jdHJsL3N1bnhpL0tjb25maWcgCj4gPj4gKysrIGIv
-ZHJpdmVycy9waW5jdHJsL3N1bnhpL0tjb25maWcgCj4gPj4gQEAgLTY5LDYgKzY5LDExIEBAIGNv
-bmZpZyBQSU5DVFJMX1NVTjUwSV9BNjQgCj4gPj7CoMKgwqDCoMKgwqAgZGVmX2Jvb2wgQVJNNjQg
-JiYgQVJDSF9TVU5YSSAKPiA+PsKgwqDCoMKgwqDCoCBzZWxlY3QgUElOQ1RSTF9TVU5YSSAKPiA+
-PiAKPiA+PiArY29uZmlnIFBJTkNUUkxfU1VONTBJX0E2NF9SIAo+ID4+ICvCoMKgwqDCoCBkZWZf
-Ym9vbCBBUk02NCAmJiBBUkNIX1NVTlhJIAo+ID4+ICvCoMKgwqDCoCBkZXBlbmRzIG9uIFJFU0VU
-X0NPTlRST0xMRVIgCj4gPiAKPiA+IFNhbWUgY29tbWVudCBhcyBvbiBwYXRjaCAxLzUgKHNlbGVj
-dCBpbnN0ZWFkIG9mICJkZXBlbmRzIG9uIikuIAo+ID4gSSB0YWtlIGl0IHRoaXMgZm9yIGRyaXZl
-cnMvcmVzZXQvcmVzZXQtc3VueGkuYz8gCj4gPiBTaG91bGRuJ3QgdGhpcyBiZSB0aGUgc3VueGkg
-c3BlY2lmaWMgQ09ORklHX1JFU0VUX1NVTlhJIHRoZW4/IAo+ID4gQWxzbyBmcm9tIGZyb20gaGF2
-aW5nIGEgcXVpY2sgbG9vayBhdCB0aGUgZHJpdmVyIHRoaXMgaXMgYnJva2VuIGZvciAKPiA+IGFy
-bTY0IChCSVRTX1BFUl9MT05HIHVzYWdlKS4gCj4gPiBGcm9tIGhhdmluZyBhIGNsb3NlciBsb29r
-IHRoaXMgZHJpdmVyIGlzIGFjdHVhbGx5IG5vdCBBbGx3aW5uZXIgc3BlY2lmaWMgCj4gPiBhdCBh
-bGwsIHNpbmNlIGl0IGp1c3QgZGVzY3JpYmVzIGEgbnVtYmVyIG9mIGJpdHMgaW4gY29uc2VjdXRp
-dmUgCj4gPiAzMi1iaXQoISkgcmVnaXN0ZXJzIGFzIHJlc2V0IGNlbGxzLiAKPiA+IEFzIEkgdG9k
-YXkgc3R1bWJsZWQgdXBvbiBhbm90aGVyIFNvQyB3aGljaCBoYXMgdGhlIHNhbWUgcmVzZXQgcmVn
-aXN0ZXIgCj4gPiBsYXlvdXQgSSB3YXMgd29uZGVyaW5nIGlmIGl0J3Mgd29ydGggdG8gZ2VuZXJh
-bGlzZSB0aGlzPyBQb3NzaWJseSAKPiA+IHJlbmFtaW5nIHRoZSBkcml2ZXIsIGFuZCBhbGxvd2lu
-ZyBhZGRpdGlvbmFsIGNvbXBhdGlibGVzPyAKPiA+IEkgY2FuIHRha2UgYSBzdGFiIGF0IHRoaXMu
-IAo+Cj4gQ09ORklHX1JFU0VUX1NVTlhJIGVuYWJsZXMgdGhlIG9sZCAocHJlLXN1bnhpLW5nKSBy
-ZXNldCBjb250cm9sbGVyIGRyaXZlci4gCj4gVGhpcyBkcml2ZXIgd2FzIG5ldmVyIHVzZWQgZm9y
-IEFSTTY0IHN1bnhpLiBBcyBmb3IgaXQgYmVpbmcgZ2VuZXJpYywgCj4gSSBndWVzcyBpdCdzIHBy
-ZXR0eSBzdGFuZGFyZCwgYXMgaXQncyBqdXN0IGEgYnVuY2ggb2YgcmVnaXN0ZXJzIHdpdGggZWFj
-aCAKPiBiaXQgYXNzaWduZWQgdG8gc29tZSBwZXJpcGhlcmFsLiAKPgo+IENPTkZJR19SRVNFVCBl
-bmFibGVzIHRoZSByZXNldCBjb250cm9sIHN1YnN5c3RlbSwgd2hpY2ggd2UgbmVlZC4gVGhpcyAK
-PiBpcyBlbmFibGVkIGJ5IGRlZmF1bHQgaWYgdGhlIHBsYXRmb3JtIHNlbGVjdHMgQVJDSF9IQVNf
-UkVTRVRfQ09OVFJPTExFUiwgCj4gd2hpY2ggd2UgZG8uIAo+CgpPbiBBUk02NCBBUkNIX1NVTlhJ
-ICBBUkNIX0hBU19SRVNFVF9DT05UUk9MTEVSCmlzIGZvcmdvdCB0byBiZSBzZWxlY3RlZC4KCkkg
-d2lsbCBzb29uIHNlbmQgb3V0IGEgcGF0Y2ggZm9yIGl0LgoKUC5TLiBJIHRoaW5rIHRodXMgc3Vu
-eGktbmcgc2hvdWxkIHNlbGVjdCBSRVNFVF9DT05UUk9MTEVSIGFnYWluLCBhcyBpdCBtYXkgYmUg
-YnVpbHQgd2l0aCBDT01QSUxFX1RFU1QuCgo+IFJlZ2FyZHMgCj4gQ2hlbll1IAo+Cj4gPiBDaGVl
-cnMsIAo+ID4gQW5kcmUuIAo+ID4gCj4gPj4gK8KgwqDCoMKgIHNlbGVjdCBQSU5DVFJMX1NVTlhJ
-IAo+ID4+ICsgCj4gPj7CoCBjb25maWcgUElOQ1RSTF9TVU41MElfSDUgCj4gPj7CoMKgwqDCoMKg
-wqAgZGVmX2Jvb2wgQVJNNjQgJiYgQVJDSF9TVU5YSSAKPiA+PsKgwqDCoMKgwqDCoCBzZWxlY3Qg
-UElOQ1RSTF9TVU5YSSAKPiA+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL3N1bnhpL01h
-a2VmaWxlIGIvZHJpdmVycy9waW5jdHJsL3N1bnhpL01ha2VmaWxlIAo+ID4+IGluZGV4IDA0Y2Ni
-ODhlYmQ1Zi4uZGY0Y2NkNmNkNDRjIDEwMDY0NCAKPiA+PiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwv
-c3VueGkvTWFrZWZpbGUgCj4gPj4gKysrIGIvZHJpdmVycy9waW5jdHJsL3N1bnhpL01ha2VmaWxl
-IAo+ID4+IEBAIC0xMSw2ICsxMSw3IEBAIG9iai0kKENPTkZJR19QSU5DVFJMX1NVTjhJX0EyMynC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgKz0gcGluY3RybC1zdW44aS1hMjMubyAKPiA+PsKgIG9i
-ai0kKENPTkZJR19QSU5DVFJMX1NVTjhJX0EyM19SKcKgwqDCoCArPSBwaW5jdHJsLXN1bjhpLWEy
-My1yLm8gCj4gPj7CoCBvYmotJChDT05GSUdfUElOQ1RSTF9TVU44SV9BMzMpwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgKz0gcGluY3RybC1zdW44aS1hMzMubyAKPiA+PsKgIG9iai0kKENPTkZJ
-R19QSU5DVFJMX1NVTjUwSV9BNjQpwqDCoMKgwqAgKz0gcGluY3RybC1zdW41MGktYTY0Lm8gCj4g
-Pj4gK29iai0kKENPTkZJR19QSU5DVFJMX1NVTjUwSV9BNjRfUinCoMKgICs9IHBpbmN0cmwtc3Vu
-NTBpLWE2NC1yLm8gCj4gPj7CoCBvYmotJChDT05GSUdfUElOQ1RSTF9TVU44SV9BODNUKcKgwqDC
-oMKgICs9IHBpbmN0cmwtc3VuOGktYTgzdC5vIAo+ID4+wqAgb2JqLSQoQ09ORklHX1BJTkNUUkxf
-U1VOOElfSDMpwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCArPSBwaW5jdHJsLXN1bjhpLWgz
-Lm8gCj4gPj7CoCBvYmotJChDT05GSUdfUElOQ1RSTF9TVU44SV9IM19SKcKgwqDCoMKgICs9IHBp
-bmN0cmwtc3VuOGktaDMtci5vIAo+ID4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BpbmN0cmwvc3Vu
-eGkvcGluY3RybC1zdW41MGktYTY0LXIuYyBiL2RyaXZlcnMvcGluY3RybC9zdW54aS9waW5jdHJs
-LXN1bjUwaS1hNjQtci5jIAo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0IAo+ID4+IGluZGV4IDAw
-MDAwMDAwMDAwMC4uOTA5OTZhNjM2ODliIAo+ID4+IC0tLSAvZGV2L251bGwgCj4gPj4gKysrIGIv
-ZHJpdmVycy9waW5jdHJsL3N1bnhpL3BpbmN0cmwtc3VuNTBpLWE2NC1yLmMgCj4gPj4gQEAgLTAs
-MCArMSwxNDMgQEAgCj4gPj4gKy8qIAo+ID4+ICsgKiBBbGx3aW5uZXIgQTY0IFNvQ3Mgc3BlY2lh
-bCBwaW5zIHBpbmN0cmwgZHJpdmVyLiAKPiA+PiArICogCj4gPj4gKyAqIEJhc2VkIG9uIHBpbmN0
-cmwtc3VuOGktYTIzLXIuYyAKPiA+PiArICogCj4gPj4gKyAqIENvcHlyaWdodCAoQykgMjAxNiBJ
-Y2Vub3d5IFpoZW5nIAo+ID4+ICsgKiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MueHl6PiAK
-PiA+PiArICogCj4gPj4gKyAqIENvcHlyaWdodCAoQykgMjAxNCBDaGVuLVl1IFRzYWkgCj4gPj4g
-KyAqIENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4gCj4gPj4gKyAqIAo+ID4+ICsgKiBDb3B5
-cmlnaHQgKEMpIDIwMTQgQm9yaXMgQnJlemlsbG9uIAo+ID4+ICsgKiBCb3JpcyBCcmV6aWxsb24g
-PGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+IAo+ID4+ICsgKiAKPiA+PiArICog
-Q29weXJpZ2h0IChDKSAyMDE0IE1heGltZSBSaXBhcmQgCj4gPj4gKyAqIE1heGltZSBSaXBhcmQg
-PG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiAKPiA+PiArICogCj4gPj4gKyAqIFRo
-aXMgZmlsZSBpcyBsaWNlbnNlZCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1
-YmxpYyAKPiA+PiArICogTGljZW5zZSB2ZXJzaW9uIDIuwqAgVGhpcyBwcm9ncmFtIGlzIGxpY2Vu
-c2VkICJhcyBpcyIgd2l0aG91dCBhbnkgCj4gPj4gKyAqIHdhcnJhbnR5IG9mIGFueSBraW5kLCB3
-aGV0aGVyIGV4cHJlc3Mgb3IgaW1wbGllZC4gCj4gPj4gKyAqLyAKPiA+PiArIAo+ID4+ICsjaW5j
-bHVkZSA8bGludXgvb2YuaD4gCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4gCj4g
-Pj4gKyNpbmNsdWRlIDxsaW51eC9waW5jdHJsL3BpbmN0cmwuaD4gCj4gPj4gKyNpbmNsdWRlIDxs
-aW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4gCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9yZXNldC5oPiAK
-PiA+PiArIAo+ID4+ICsjaW5jbHVkZSAicGluY3RybC1zdW54aS5oIiAKPiA+PiArIAo+ID4+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IHN1bnhpX2Rlc2NfcGluIHN1bjUwaV9hNjRfcl9waW5zW10gPSB7
-IAo+ID4+ICvCoMKgwqDCoCBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oTCwgMCksIAo+ID4+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9f
-aW4iKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04o
-MHgxLCAiZ3Bpb19vdXQiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VO
-WElfRlVOQ1RJT04oMHgyLCAic19yc2IiKSzCoMKgwqDCoMKgwqDCoMKgIC8qIFNDSyAqLyAKPiA+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDMsICJzX2ky
-YyIpLMKgwqDCoMKgwqDCoMKgwqAgLyogU0NLICovIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5LKDB4NiwgMCwgMCkpLMKgIC8qIFBMX0VJ
-TlQwICovIAo+ID4+ICvCoMKgwqDCoCBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oTCwgMSks
-IAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwg
-ImdwaW9faW4iKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVO
-Q1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgU1VOWElfRlVOQ1RJT04oMHgyLCAic19yc2IiKSzCoMKgwqDCoMKgwqDCoMKgIC8qIFNEQSAq
-LyAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDMs
-ICJzX2kyYyIpLMKgwqDCoMKgwqDCoMKgwqAgLyogU0RBICovIAo+ID4+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5LKDB4NiwgMCwgMSkpLMKgIC8q
-IFBMX0VJTlQxICovIAo+ID4+ICvCoMKgwqDCoCBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4o
-TCwgMiksIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9O
-KDB4MCwgImdwaW9faW4iKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VO
-WElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgyLCAic191YXJ0IikswqDCoMKgwqDCoMKgwqAgLyog
-VFggKi8gCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT05f
-SVJRX0JBTksoMHg2LCAwLCAyKSkswqAgLyogUExfRUlOVDIgKi8gCj4gPj4gK8KgwqDCoMKgIFNV
-TlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAzKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bpb19pbiIpLCAKPiA+PiArwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDEsICJncGlvX291dCIpLCAK
-PiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDIsICJz
-X3VhcnQiKSzCoMKgwqDCoMKgwqDCoCAvKiBSWCAqLyAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTl9JUlFfQkFOSygweDYsIDAsIDMpKSzCoCAvKiBQTF9F
-SU5UMyAqLyAKPiA+PiArwqDCoMKgwqAgU1VOWElfUElOKFNVTlhJX1BJTkNUUkxfUElOKEwsIDQp
-LCAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTigweDAs
-ICJncGlvX2luIiksIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZV
-TkNUSU9OKDB4MSwgImdwaW9fb3V0IiksIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIFNVTlhJX0ZVTkNUSU9OKDB4MywgInNfanRhZyIpLMKgwqDCoMKgwqDCoMKgIC8qIE1TICov
-IAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OX0lSUV9C
-QU5LKDB4NiwgMCwgNCkpLMKgIC8qIFBMX0VJTlQ0ICovIAo+ID4+ICvCoMKgwqDCoCBTVU5YSV9Q
-SU4oU1VOWElfUElOQ1RSTF9QSU4oTCwgNSksIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4iKSwgCj4gPj4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4gPj4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgzLCAic19qdGFn
-IikswqDCoMKgwqDCoMKgwqAgLyogQ0sgKi8gCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCA1KSkswqAgLyogUExfRUlOVDUg
-Ki8gCj4gPj4gK8KgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCA2KSwgCj4g
-Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgwLCAiZ3Bp
-b19pbiIpLCAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElP
-TigweDEsICJncGlvX291dCIpLCAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBT
-VU5YSV9GVU5DVElPTigweDMsICJzX2p0YWciKSzCoMKgwqDCoMKgwqDCoCAvKiBETyAqLyAKPiA+
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTl9JUlFfQkFOSygw
-eDYsIDAsIDYpKSzCoCAvKiBQTF9FSU5UNiAqLyAKPiA+PiArwqDCoMKgwqAgU1VOWElfUElOKFNV
-TlhJX1BJTkNUUkxfUElOKEwsIDcpLCAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCBTVU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiksIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksIAo+ID4+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MywgInNfanRhZyIpLMKg
-wqDCoMKgwqDCoMKgIC8qIERJICovIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IFNVTlhJX0ZVTkNUSU9OX0lSUV9CQU5LKDB4NiwgMCwgNykpLMKgIC8qIFBMX0VJTlQ3ICovIAo+
-ID4+ICvCoMKgwqDCoCBTVU5YSV9QSU4oU1VOWElfUElOQ1RSTF9QSU4oTCwgOCksIAo+ID4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4i
-KSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgx
-LCAiZ3Bpb19vdXQiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElf
-RlVOQ1RJT04oMHgyLCAic19pMmMiKSzCoMKgwqDCoMKgwqDCoMKgIC8qIFNDSyAqLyAKPiA+PiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBTVU5YSV9GVU5DVElPTl9JUlFfQkFOSygweDYs
-IDAsIDgpKSzCoCAvKiBQTF9FSU5UOCAqLyAKPiA+PiArwqDCoMKgwqAgU1VOWElfUElOKFNVTlhJ
-X1BJTkNUUkxfUElOKEwsIDkpLCAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBT
-VU5YSV9GVU5DVElPTigweDAsICJncGlvX2luIiksIAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MSwgImdwaW9fb3V0IiksIAo+ID4+ICvCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MiwgInNfaTJjIikswqDCoMKg
-wqDCoMKgwqDCoCAvKiBTREEgKi8gCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-U1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCA5KSkswqAgLyogUExfRUlOVDkgKi8gCj4g
-Pj4gK8KgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAxMCksIAo+ID4+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9faW4i
-KSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04oMHgx
-LCAiZ3Bpb19vdXQiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElf
-RlVOQ1RJT04oMHgyLCAic19wd20iKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCAxMCkpLCAvKiBQTF9FSU5UMTAgKi8g
-Cj4gPj4gK8KgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAxMSksIAo+ID4+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwgImdwaW9f
-aW4iKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVOQ1RJT04o
-MHgxLCAiZ3Bpb19vdXQiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VO
-WElfRlVOQ1RJT04oMHgyLCAic19jaXJfcngiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCAxMSkpLCAvKiBQTF9FSU5U
-MTEgKi8gCj4gPj4gK8KgwqDCoMKgIFNVTlhJX1BJTihTVU5YSV9QSU5DVFJMX1BJTihMLCAxMiks
-IAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIFNVTlhJX0ZVTkNUSU9OKDB4MCwg
-ImdwaW9faW4iKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgU1VOWElfRlVO
-Q1RJT04oMHgxLCAiZ3Bpb19vdXQiKSwgCj4gPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgU1VOWElfRlVOQ1RJT05fSVJRX0JBTksoMHg2LCAwLCAxMikpLCAvKiBQTF9FSU5UMTIgKi8g
-Cj4gPj4gK307IAo+ID4+ICsgCj4gPj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgc3VueGlfcGluY3Ry
-bF9kZXNjIHN1bjUwaV9hNjRfcl9waW5jdHJsX2RhdGEgPSB7IAo+ID4+ICvCoMKgwqDCoCAucGlu
-cyA9IHN1bjUwaV9hNjRfcl9waW5zLCAKPiA+PiArwqDCoMKgwqAgLm5waW5zID0gQVJSQVlfU0la
-RShzdW41MGlfYTY0X3JfcGlucyksIAo+ID4+ICvCoMKgwqDCoCAucGluX2Jhc2UgPSBQTF9CQVNF
-LCAKPiA+PiArwqDCoMKgwqAgLmlycV9iYW5rcyA9IDEsIAo+ID4+ICt9OyAKPiA+PiArIAo+ID4+
-ICtzdGF0aWMgaW50IHN1bjUwaV9hNjRfcl9waW5jdHJsX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpIAo+ID4+ICt7IAo+ID4+ICvCoMKgwqDCoCBzdHJ1Y3QgcmVzZXRfY29udHJv
-bCAqcnN0YzsgCj4gPj4gK8KgwqDCoMKgIGludCByZXQ7IAo+ID4+ICsgCj4gPj4gK8KgwqDCoMKg
-IHJzdGMgPSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0KCZwZGV2LT5kZXYsIE5VTEwpOyAKPiA+PiAr
-wqDCoMKgwqAgaWYgKElTX0VSUihyc3RjKSkgeyAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGRldl9lcnIoJnBkZXYtPmRldiwgIlJlc2V0IGNvbnRyb2xsZXIgbWlzc2luZ1xuIik7IAo+
-ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIFBUUl9FUlIocnN0Yyk7IAo+ID4+
-ICvCoMKgwqDCoCB9IAo+ID4+ICsgCj4gPj4gK8KgwqDCoMKgIHJldCA9IHJlc2V0X2NvbnRyb2xf
-ZGVhc3NlcnQocnN0Yyk7IAo+ID4+ICvCoMKgwqDCoCBpZiAocmV0KSAKPiA+PiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHJldHVybiByZXQ7IAo+ID4+ICsgCj4gPj4gK8KgwqDCoMKgIHJldCA9
-IHN1bnhpX3BpbmN0cmxfaW5pdChwZGV2LCAKPiA+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAmc3VuNTBpX2E2NF9yX3BpbmN0cmxf
-ZGF0YSk7IAo+ID4+ICsgCj4gPj4gK8KgwqDCoMKgIGlmIChyZXQpIAo+ID4+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgcmVzZXRfY29udHJvbF9hc3NlcnQocnN0Yyk7IAo+ID4+ICsgCj4gPj4g
-K8KgwqDCoMKgIHJldHVybiByZXQ7IAo+ID4+ICt9IAo+ID4+ICsgCj4gPj4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHN1bjUwaV9hNjRfcl9waW5jdHJsX21hdGNoW10gPSB7IAo+
-ID4+ICvCoMKgwqDCoCB7IC5jb21wYXRpYmxlID0gImFsbHdpbm5lcixzdW41MGktYTY0LXItcGlu
-Y3RybCIsIH0sIAo+ID4+ICvCoMKgwqDCoCB7fSAKPiA+PiArfTsgCj4gPj4gKyAKPiA+PiArc3Rh
-dGljIHN0cnVjdCBwbGF0Zm9ybV9kcml2ZXIgc3VuNTBpX2E2NF9yX3BpbmN0cmxfZHJpdmVyID0g
-eyAKPiA+PiArwqDCoMKgwqAgLnByb2JlwqAgPSBzdW41MGlfYTY0X3JfcGluY3RybF9wcm9iZSwg
-Cj4gPj4gK8KgwqDCoMKgIC5kcml2ZXIgPSB7IAo+ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgLm5hbWXCoMKgwqDCoMKgwqDCoMKgwqDCoCA9ICJzdW41MGktYTY0LXItcGluY3RybCIsIAo+
-ID4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgLm9mX21hdGNoX3RhYmxlID0gc3VuNTBpX2E2
-NF9yX3BpbmN0cmxfbWF0Y2gsIAo+ID4+ICvCoMKgwqDCoCB9LCAKPiA+PiArfTsgCj4gPj4gK2J1
-aWx0aW5fcGxhdGZvcm1fZHJpdmVyKHN1bjUwaV9hNjRfcl9waW5jdHJsX2RyaXZlcik7IAo+ID4+
-IAo+Cj4gLS0gCj4gWW91IHJlY2VpdmVkIHRoaXMgbWVzc2FnZSBiZWNhdXNlIHlvdSBhcmUgc3Vi
-c2NyaWJlZCB0byB0aGUgR29vZ2xlIEdyb3VwcyAibGludXgtc3VueGkiIGdyb3VwLiAKPiBUbyB1
-bnN1YnNjcmliZSBmcm9tIHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9t
-IGl0LCBzZW5kIGFuIGVtYWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vw
-cy5jb20uIAo+IEZvciBtb3JlIG9wdGlvbnMsIHZpc2l0IGh0dHBzOi8vZ3JvdXBzLmdvb2dsZS5j
-b20vZC9vcHRvdXQuIAoNCi0tIApZb3UgcmVjZWl2ZWQgdGhpcyBtZXNzYWdlIGJlY2F1c2UgeW91
-IGFyZSBzdWJzY3JpYmVkIHRvIHRoZSBHb29nbGUgR3JvdXBzICJsaW51eC1zdW54aSIgZ3JvdXAu
-ClRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBncm91cCBhbmQgc3RvcCByZWNlaXZpbmcgZW1haWxz
-IGZyb20gaXQsIHNlbmQgYW4gZW1haWwgdG8gbGludXgtc3VueGkrdW5zdWJzY3JpYmVAZ29vZ2xl
-Z3JvdXBzLmNvbS4KRm9yIG1vcmUgb3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29vZ2xl
-LmNvbS9kL29wdG91dC4K
+
+
+On 02/28/2017 07:58 PM, Peter Senna Tschudin wrote:
+> The video processing pipeline on the second output on the GE B850v3:
+>
+>   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+>
+> Each bridge has a dedicated flash containing firmware for supporting the
+> custom design. The result is that in this design neither the STDP4028
+> nor the STDP2690 behave as the stock bridges would. The compatible
+> strings include the suffix "-ge-b850v3-fw" to make it clear that the
+> driver is for the bridges with the firmware which is specific for the GE
+> B850v3.
+>
+> The driver is powerless to control the video processing pipeline, as the
+> two bridges behaves as a single one. The driver is only needed for
+> telling the host about EDID / HPD, and for giving the host powers to ack
+> interrupts.
+>
+> This driver adds one i2c_device for each bridge, but only one
+> drm_bridge. This design allows the creation of a functional connector
+> that is capable of reading EDID from the STDP2690 while handling
+> interrupts on the STDP4028.
+>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
+> Cc: Martin Donnelly <martin.donnelly@ge.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Thierry Reding <treding@nvidia.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Archit Taneja <architt@codeaurora.org>
+> Cc: Enric Balletbo <enric.balletbo@collabora.com>
+> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+> ---
+> Changes from V1:
+>  - Updated copyright year
+>  - Fixed blank line issues
+>  - Updated ge_b850v3_lvds_remove() to not rely on ge_b850v3_lvds_ptr->edid and
+>    added a comment to explain the test.
+>  - Fixed checkpatch strict warnings about continuation lines. In one case
+>    fixing the warning would cause the continuation line to be over 80 chars and
+>    that strict warning remains.
+>
+>  drivers/gpu/drm/bridge/Kconfig                     |  11 +
+>  drivers/gpu/drm/bridge/Makefile                    |   1 +
+>  .../drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c   | 411 +++++++++++++++++++++
+>  3 files changed, 423 insertions(+)
+>  create mode 100644 drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+>
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index eb8688e..4a937f1 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -48,6 +48,17 @@ config DRM_DW_HDMI_I2S_AUDIO
+>  	  Support the I2S Audio interface which is part of the Synopsis
+>  	  Designware HDMI block.
+>
+> +config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
+> +	tristate "MegaChips stdp4028-ge-b850v3-fw and stdp2690-ge-b850v3-fw"
+> +	depends on OF
+> +	select DRM_KMS_HELPER
+> +	select DRM_PANEL
+> +	---help---
+> +          This is a driver for the display bridges of
+> +          GE B850v3 that convert dual channel LVDS
+> +          to DP++. This is used with the i.MX6 imx-ldb
+> +          driver. You are likely to say N here.
+> +
+>  config DRM_NXP_PTN3460
+>  	tristate "NXP PTN3460 DP/LVDS bridge"
+>  	depends on OF
+> diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+> index 2e83a785..af0b7cc 100644
+> --- a/drivers/gpu/drm/bridge/Makefile
+> +++ b/drivers/gpu/drm/bridge/Makefile
+> @@ -5,6 +5,7 @@ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+>  obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
+>  obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
+>  obj-$(CONFIG_DRM_DW_HDMI_I2S_AUDIO) += dw-hdmi-i2s-audio.o
+> +obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+>  obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+>  obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+>  obj-$(CONFIG_DRM_SIL_SII8620) += sil-sii8620.o
+> diff --git a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> new file mode 100644
+> index 0000000..6f82a44
+> --- /dev/null
+> +++ b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+> @@ -0,0 +1,411 @@
+> +/*
+> + * Driver for MegaChips STDP4028 with GE B850v3 firmware (LVDS-DP)
+> + * Driver for MegaChips STDP2690 with GE B850v3 firmware (DP-DP++)
+> +
+> + * Copyright (c) 2017, Collabora Ltd.
+> + * Copyright (c) 2017, General Electric Company
+> +
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> +
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> +
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> +
+> + * This driver creates a drm_bridge and a drm_connector for the LVDS to DP++
+> + * display bridge of the GE B850v3. There are two physical bridges on the video
+> + * signal pipeline: a STDP4028(LVDS to DP) and a STDP2690(DP to DP++). The
+> + * physical bridges are automatically configured by the input video signal, and
+> + * the driver has no access to the video processing pipeline. The driver is
+> + * only needed to read EDID from the STDP2690 and to handle HPD events from the
+> + * STDP4028. The driver communicates with both bridges over i2c. The video
+> + * signal pipeline is as follows:
+> + *
+> + *   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+> + *
+> + */
+> +
+> +#include <linux/gpio.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <drm/drm_atomic.h>
+> +#include <drm/drm_atomic_helper.h>
+> +#include <drm/drm_crtc_helper.h>
+> +#include <drm/drm_edid.h>
+> +#include <drm/drmP.h>
+> +
+> +#define EDID_EXT_BLOCK_CNT 0x7E
+> +
+> +#define STDP4028_IRQ_OUT_CONF_REG 0x02
+> +#define STDP4028_DPTX_IRQ_EN_REG 0x3C
+> +#define STDP4028_DPTX_IRQ_STS_REG 0x3D
+> +#define STDP4028_DPTX_STS_REG 0x3E
+> +
+> +#define STDP4028_DPTX_DP_IRQ_EN 0x1000
+> +
+> +#define STDP4028_DPTX_HOTPLUG_IRQ_EN 0x0400
+> +#define STDP4028_DPTX_LINK_CH_IRQ_EN 0x2000
+> +#define STDP4028_DPTX_IRQ_CONFIG \
+> +		(STDP4028_DPTX_LINK_CH_IRQ_EN | STDP4028_DPTX_HOTPLUG_IRQ_EN)
+> +
+> +#define STDP4028_DPTX_HOTPLUG_STS 0x0200
+> +#define STDP4028_DPTX_LINK_STS 0x1000
+> +#define STDP4028_CON_STATE_CONNECTED \
+> +		(STDP4028_DPTX_HOTPLUG_STS | STDP4028_DPTX_LINK_STS)
+> +
+> +#define STDP4028_DPTX_HOTPLUG_CH_STS 0x0400
+> +#define STDP4028_DPTX_LINK_CH_STS 0x2000
+> +#define STDP4028_DPTX_IRQ_CLEAR \
+> +		(STDP4028_DPTX_LINK_CH_STS | STDP4028_DPTX_HOTPLUG_CH_STS)
+> +
+> +static DEFINE_MUTEX(ge_b850v3_lvds_dev_mutex);
+> +
+> +struct ge_b850v3_lvds {
+> +	struct drm_connector connector;
+> +	struct drm_bridge bridge;
+> +	struct i2c_client *stdp4028_i2c;
+> +	struct i2c_client *stdp2690_i2c;
+> +	struct edid *edid;
+> +};
+> +
+> +static struct ge_b850v3_lvds *ge_b850v3_lvds_ptr;
+> +
+> +u8 *stdp2690_get_edid(struct i2c_client *client)
+> +{
+> +	struct i2c_adapter *adapter = client->adapter;
+> +	unsigned char start = 0x00;
+> +	unsigned int total_size;
+> +	u8 *block = kmalloc(EDID_LENGTH, GFP_KERNEL);
+> +
+> +	struct i2c_msg msgs[] = {
+> +		{
+> +			.addr	= client->addr,
+> +			.flags	= 0,
+> +			.len	= 1,
+> +			.buf	= &start,
+> +		}, {
+> +			.addr	= client->addr,
+> +			.flags	= I2C_M_RD,
+> +			.len	= EDID_LENGTH,
+> +			.buf	= block,
+> +		}
+> +	};
+> +
+> +	if (!block)
+> +		return NULL;
+> +
+> +	if (i2c_transfer(adapter, msgs, 2) != 2) {
+> +		DRM_ERROR("Unable to read EDID.\n");
+> +		goto err;
+> +	}
+> +
+> +	if (!drm_edid_block_valid(block, 0, false, NULL)) {
+> +		DRM_ERROR("Invalid EDID data\n");
+> +		goto err;
+> +	}
+> +
+> +	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
+> +	if (total_size > EDID_LENGTH) {
+> +		kfree(block);
+> +		block = kmalloc(total_size, GFP_KERNEL);
+> +		if (!block)
+> +			return NULL;
+> +
+> +		/* Yes, read the entire buffer, and do not skip the first
+> +		 * EDID_LENGTH bytes.
+> +		 */
+> +		start = 0x00;
+> +		msgs[1].len = total_size;
+> +		msgs[1].buf = block;
+> +
+> +		if (i2c_transfer(adapter, msgs, 2) != 2) {
+> +			DRM_ERROR("Unable to read EDID extension blocks.\n");
+> +			goto err;
+> +		}
+> +		if (!drm_edid_block_valid(block, 1, false, NULL)) {
+> +			DRM_ERROR("Invalid EDID data\n");
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return block;
+> +
+> +err:
+> +	kfree(block);
+> +	return NULL;
+> +}
+> +
+> +static int ge_b850v3_lvds_get_modes(struct drm_connector *connector)
+> +{
+> +	struct i2c_client *client;
+> +	int num_modes = 0;
+> +
+> +	client = ge_b850v3_lvds_ptr->stdp2690_i2c;
+> +
+> +	kfree(ge_b850v3_lvds_ptr->edid);
+> +	ge_b850v3_lvds_ptr->edid = (struct edid *)stdp2690_get_edid(client);
+> +
+> +	if (ge_b850v3_lvds_ptr->edid) {
+> +		drm_mode_connector_update_edid_property(connector,
+> +						      ge_b850v3_lvds_ptr->edid);
+> +		num_modes = drm_add_edid_modes(connector,
+> +					       ge_b850v3_lvds_ptr->edid);
+> +	}
+> +
+> +	return num_modes;
+> +}
+> +
+> +static enum drm_mode_status ge_b850v3_lvds_mode_valid(
+> +		struct drm_connector *connector, struct drm_display_mode *mode)
+> +{
+> +	return MODE_OK;
+> +}
+> +
+> +static const struct
+> +drm_connector_helper_funcs ge_b850v3_lvds_connector_helper_funcs = {
+> +	.get_modes = ge_b850v3_lvds_get_modes,
+> +	.mode_valid = ge_b850v3_lvds_mode_valid,
+> +};
+> +
+> +static enum drm_connector_status ge_b850v3_lvds_detect(
+> +		struct drm_connector *connector, bool force)
+> +{
+> +	struct i2c_client *stdp4028_i2c =
+> +			ge_b850v3_lvds_ptr->stdp4028_i2c;
+> +	s32 link_state;
+> +
+> +	link_state = i2c_smbus_read_word_data(stdp4028_i2c,
+> +					      STDP4028_DPTX_STS_REG);
+> +
+> +	if (link_state == STDP4028_CON_STATE_CONNECTED)
+> +		return connector_status_connected;
+> +
+> +	if (link_state == 0)
+> +		return connector_status_disconnected;
+> +
+> +	return connector_status_unknown;
+> +}
+> +
+> +static const struct drm_connector_funcs ge_b850v3_lvds_connector_funcs = {
+> +	.dpms = drm_atomic_helper_connector_dpms,
+> +	.fill_modes = drm_helper_probe_single_connector_modes,
+> +	.detect = ge_b850v3_lvds_detect,
+> +	.destroy = drm_connector_cleanup,
+> +	.reset = drm_atomic_helper_connector_reset,
+> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+> +};
+> +
+> +static irqreturn_t ge_b850v3_lvds_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct i2c_client *stdp4028_i2c
+> +			= ge_b850v3_lvds_ptr->stdp4028_i2c;
+> +
+> +	i2c_smbus_write_word_data(stdp4028_i2c,
+> +				  STDP4028_DPTX_IRQ_STS_REG,
+> +				  STDP4028_DPTX_IRQ_CLEAR);
+> +
+> +	if (ge_b850v3_lvds_ptr->connector.dev)
+> +		drm_kms_helper_hotplug_event(ge_b850v3_lvds_ptr->connector.dev);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ge_b850v3_lvds_attach(struct drm_bridge *bridge)
+> +{
+> +	struct drm_connector *connector = &ge_b850v3_lvds_ptr->connector;
+> +	struct i2c_client *stdp4028_i2c
+> +			= ge_b850v3_lvds_ptr->stdp4028_i2c;
+> +	int ret;
+> +
+> +	if (!bridge->encoder) {
+> +		DRM_ERROR("Parent encoder object not found");
+> +		return -ENODEV;
+> +	}
+> +
+> +	connector->polled = DRM_CONNECTOR_POLL_HPD;
+> +
+> +	drm_connector_helper_add(connector,
+> +				 &ge_b850v3_lvds_connector_helper_funcs);
+> +
+> +	ret = drm_connector_init(bridge->dev, connector,
+> +				 &ge_b850v3_lvds_connector_funcs,
+> +				 DRM_MODE_CONNECTOR_DisplayPort);
+> +	if (ret) {
+> +		DRM_ERROR("Failed to initialize connector with drm\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = drm_mode_connector_attach_encoder(connector, bridge->encoder);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Configures the bridge to re-enable interrupts after each ack. */
+> +	i2c_smbus_write_word_data(stdp4028_i2c,
+> +				  STDP4028_IRQ_OUT_CONF_REG,
+> +				  STDP4028_DPTX_DP_IRQ_EN);
+> +
+> +	/* Enable interrupts */
+> +	i2c_smbus_write_word_data(stdp4028_i2c,
+> +				  STDP4028_DPTX_IRQ_EN_REG,
+> +				  STDP4028_DPTX_IRQ_CONFIG);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct drm_bridge_funcs ge_b850v3_lvds_funcs = {
+> +	.attach = ge_b850v3_lvds_attach,
+> +};
+> +
+> +static int ge_b850v3_lvds_init(struct device *dev)
+> +{
+> +	mutex_lock(&ge_b850v3_lvds_dev_mutex);
+> +
+> +	if (ge_b850v3_lvds_ptr)
+> +		goto success;
+> +
+> +	ge_b850v3_lvds_ptr = devm_kzalloc(dev,
+> +					  sizeof(*ge_b850v3_lvds_ptr),
+> +					  GFP_KERNEL);
+> +
+> +	if (!ge_b850v3_lvds_ptr) {
+> +		mutex_unlock(&ge_b850v3_lvds_dev_mutex);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ge_b850v3_lvds_ptr->bridge.funcs = &ge_b850v3_lvds_funcs;
+> +	ge_b850v3_lvds_ptr->bridge.of_node = dev->of_node;
+> +	drm_bridge_add(&ge_b850v3_lvds_ptr->bridge);
+> +
+> +success:
+> +	mutex_unlock(&ge_b850v3_lvds_dev_mutex);
+> +	return 0;
+> +}
+> +
+> +static void ge_b850v3_lvds_remove(void)
+> +{
+> +	mutex_lock(&ge_b850v3_lvds_dev_mutex);
+> +	/*
+> +	 * This check is to avoid both the drivers
+> +	 * removing the bridge in their remove() function
+> +	 */
+> +	if (!ge_b850v3_lvds_ptr)
+> +		goto out;
+> +
+> +	drm_bridge_remove(&ge_b850v3_lvds_ptr->bridge);
+> +
+> +	kfree(ge_b850v3_lvds_ptr->edid);
+> +
+> +	ge_b850v3_lvds_ptr = NULL;
+> +out:
+> +	mutex_unlock(&ge_b850v3_lvds_dev_mutex);
+> +}
+> +
+> +static int stdp4028_ge_b850v3_fw_probe(struct i2c_client *stdp4028_i2c,
+> +				       const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &stdp4028_i2c->dev;
+> +
+> +	ge_b850v3_lvds_init(dev);
+> +
+> +	ge_b850v3_lvds_ptr->stdp4028_i2c = stdp4028_i2c;
+> +	i2c_set_clientdata(stdp4028_i2c, ge_b850v3_lvds_ptr);
+> +
+> +	/* Clear pending interrupts since power up. */
+> +	i2c_smbus_write_word_data(stdp4028_i2c,
+> +				  STDP4028_DPTX_IRQ_STS_REG,
+> +				  STDP4028_DPTX_IRQ_CLEAR);
+> +
+> +	if (!stdp4028_i2c->irq)
+> +		return 0;
+> +
+> +	return devm_request_threaded_irq(&stdp4028_i2c->dev,
+> +			stdp4028_i2c->irq, NULL,
+> +			ge_b850v3_lvds_irq_handler,
+> +			IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> +			"ge-b850v3-lvds-dp", ge_b850v3_lvds_ptr);
+> +}
+> +
+> +static int stdp4028_ge_b850v3_fw_remove(struct i2c_client *stdp4028_i2c)
+> +{
+> +	ge_b850v3_lvds_remove();
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id stdp4028_ge_b850v3_fw_i2c_table[] = {
+> +	{"stdp4028_ge_fw", 0},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(i2c, stdp4028_ge_b850v3_fw_i2c_table);
+> +
+> +static const struct of_device_id stdp4028_ge_b850v3_fw_match[] = {
+> +	{ .compatible = "megachips,stdp4028-ge-b850v3-fw" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, stdp4028_ge_b850v3_fw_match);
+> +
+> +static struct i2c_driver stdp4028_ge_b850v3_fw_driver = {
+> +	.id_table	= stdp4028_ge_b850v3_fw_i2c_table,
+> +	.probe		= stdp4028_ge_b850v3_fw_probe,
+> +	.remove		= stdp4028_ge_b850v3_fw_remove,
+> +	.driver		= {
+> +		.name		= "stdp4028-ge-b850v3-fw",
+> +		.of_match_table = stdp4028_ge_b850v3_fw_match,
+> +	},
+> +};
+> +module_i2c_driver(stdp4028_ge_b850v3_fw_driver);
+> +
+> +static int stdp2690_ge_b850v3_fw_probe(struct i2c_client *stdp2690_i2c,
+> +				       const struct i2c_device_id *id)
+> +{
+> +	struct device *dev = &stdp2690_i2c->dev;
+> +
+> +	ge_b850v3_lvds_init(dev);
+> +
+> +	ge_b850v3_lvds_ptr->stdp2690_i2c = stdp2690_i2c;
+> +	i2c_set_clientdata(stdp2690_i2c, ge_b850v3_lvds_ptr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int stdp2690_ge_b850v3_fw_remove(struct i2c_client *stdp2690_i2c)
+> +{
+> +	ge_b850v3_lvds_remove();
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id stdp2690_ge_b850v3_fw_i2c_table[] = {
+> +	{"stdp2690_ge_fw", 0},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(i2c, stdp2690_ge_b850v3_fw_i2c_table);
+> +
+> +static const struct of_device_id stdp2690_ge_b850v3_fw_match[] = {
+> +	{ .compatible = "megachips,stdp2690-ge-b850v3-fw" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, stdp2690_ge_b850v3_fw_match);
+> +
+> +static struct i2c_driver stdp2690_ge_b850v3_fw_driver = {
+> +	.id_table	= stdp2690_ge_b850v3_fw_i2c_table,
+> +	.probe		= stdp2690_ge_b850v3_fw_probe,
+> +	.remove		= stdp2690_ge_b850v3_fw_remove,
+> +	.driver		= {
+> +		.name		= "stdp2690-ge-b850v3-fw",
+> +		.of_match_table = stdp2690_ge_b850v3_fw_match,
+> +	},
+> +};
+> +module_i2c_driver(stdp2690_ge_b850v3_fw_driver);
+
+Didn't catch this in the last series, but there can only be one
+module_init call per module. This breaks compilation when the
+driver is built as a module.
+
+You could do something like:
+
+static int __init stdpxxxx_ge_b850v3_init(void)
+{
+	int ret;
+
+	ret = i2c_add_driver(&stdp4028_ge_b850v3_fw_driver);
+	if (ret)
+		return ret;
+
+	return i2c_add_driver(&stdp2690_ge_b850v3_fw_driver);
+}
+module_init(stdpxxxx_ge_b850v3_init);
+
+static void __exit stdpxxxx_ge_b850v3_exit(void)
+{
+	i2c_del_driver(&stdp2690_ge_b850v3_fw_driver);
+	i2c_del_driver(&stdp4028_ge_b850v3_fw_driver);
+}
+module_exit(stdpxxxx_ge_b850v3_exit);
+
+Thanks,
+Archit
+
+> +
+> +MODULE_AUTHOR("Peter Senna Tschudin <peter.senna@collabora.com>");
+> +MODULE_AUTHOR("Martyn Welch <martyn.welch@collabora.co.uk>");
+> +MODULE_DESCRIPTION("GE LVDS to DP++ display bridge)");
+> +MODULE_LICENSE("GPL v2");
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
