@@ -1,53 +1,96 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
- binding to OPP nodes
-Date: Wed, 1 Mar 2017 09:45:45 +0100
-Message-ID: <CAMuHMdWnDJ2RvGgYOxSiB=2Z32-bZwNjnEQG6TK2Umtf4eiAYw@mail.gmail.com>
-References: <cover.1487926924.git.viresh.kumar@linaro.org> <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
- <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop> <20170228065711.GD19417@vireshk-i7>
- <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com>
- <CAPDyKFo5TjTa-hTzNp5KCpozU87L22piCXaSjWMTr4xVkgP+Pg@mail.gmail.com>
- <CAL_Jsq+7DGX_1U99cc3rhk8zzSj6iKe3kpijp7KTz90xXA_V9g@mail.gmail.com> <20170301061402.GE24323@vireshk-i7>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
+Date: Wed, 1 Mar 2017 09:49:29 +0100
+Message-ID: <20170301094929.5b0b831d@bbrezillon>
+References: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
+ <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
+ <20170221171438.e5hvruoixafpcdps@piout.net>
+ <CACiLriSdRM4ZfoDsxFhf6ZVwAtacJOJ28M8CvOg6kC_XN0T-Mw@mail.gmail.com>
+ <20170224081430.GB19663@samfundet.no>
+ <20170224092742.3ce205e2@bbrezillon>
+ <20170224085209.GA27812@samfundet.no>
+ <20170224095509.777da771@bbrezillon>
+ <20170224090435.GA11313@samfundet.no>
+ <20170301092224.169dc7ae@bbrezillon>
+ <20170301083807.GA12981@samfundet.no>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170301061402.GE24323@vireshk-i7>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170301083807.GA12981@samfundet.no>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, "open
+ list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?SMOldmFyZA==?= Skinnemoen <hskinne>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 1, 2017 at 7:14 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 28-02-17, 09:52, Rob Herring wrote:
->> On Tue, Feb 28, 2017 at 9:14 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> > This comes from the early design of the generic PM domain, thus I
->> > assume we have some HW with such complex PM topology. However, I don't
->> > know if it is actually being used.
->> >
->> > Moreover, the corresponding DT bindings for "power-domains" parents,
->> > can easily be extended to cover more than one parent. See more in
->> > Documentation/devicetree/bindings/power/power_domain.txt
->>
->> I could easily see device having 2 power domains. For example a cpu
->> may have separate domains for RAM/caches and logic.
->
-> An important thing here is that PM domain doesn't support such devices. i.e. a
-> device isn't allowed to have multiple PM domains today. So a way to support such
-> devices can be to create a virtual PM domain, that has two parents and device as
-> its child.
-
-As clock domains (and their support code) are fairly orthogonal to power
-areas, currently our power area controller driver just forwards the
-clock handling
-to the clock driver (cfr. rcar-sysc).
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gV2VkLCAxIE1hciAyMDE3IDA5OjM4OjA3ICswMTAwCkhhbnMtQ2hyaXN0aWFuIE5vcmVuIEVn
+dHZlZHQgPGVndHZlZHRAc2FtZnVuZGV0Lm5vPiB3cm90ZToKCj4gQXJvdW5kIFdlZCAwMSBNYXIg
+MjAxNyAwOToyMjoyNCArMDEwMCBvciB0aGVyZWFib3V0LCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6
+Cj4gPiBIaSBIYW5zLUNocmlzdGlhbiwKPiA+IAo+ID4gT24gRnJpLCAyNCBGZWIgMjAxNyAxMDow
+NDozNSArMDEwMAo+ID4gSGFucy1DaHJpc3RpYW4gTm9yZW4gRWd0dmVkdCA8ZWd0dmVkdEBzYW1m
+dW5kZXQubm8+IHdyb3RlOgo+ID4gICAKPiA+PiBBcm91bmQgRnJpIDI0IEZlYiAyMDE3IDA5OjU1
+OjA5ICswMTAwIG9yIHRoZXJlYWJvdXQsIEJvcmlzIEJyZXppbGxvbiB3cm90ZTogIAo+ID4+ID4g
+T24gRnJpLCAyNCBGZWIgMjAxNyAwOTo1MjowOSArMDEwMAo+ID4+ID4gSGFucy1DaHJpc3RpYW4g
+Tm9yZW4gRWd0dmVkdCA8ZWd0dmVkdEBzYW1mdW5kZXQubm8+IHdyb3RlOiAgICAKPiA+PiA+PiBB
+cm91bmQgRnJpIDI0IEZlYiAyMDE3IDA5OjI3OjQyICswMTAwIG9yIHRoZXJlYWJvdXQsIEJvcmlz
+IEJyZXppbGxvbiB3cm90ZTogICAgCj4gPj4gPj4gPiBPbiBGcmksIDI0IEZlYiAyMDE3IDA5OjE0
+OjMwICswMTAwIEhhbnMtQ2hyaXN0aWFuIE5vcmVuIEVndHZlZHQgPGVndHZlZHRAc2FtZnVuZGV0
+Lm5vPiB3cm90ZTogICAgICAKPiA+PiA+PiA+PiBBcm91bmQgVGh1IDIzIEZlYiAyMDE3IDIxOjE4
+OjEzIC0wODAwIG9yIHRoZXJlYWJvdXQsIEjDpXZhcmQgU2tpbm5lbW9lbiB3cm90ZTogICAgICAK
+PiA+PiA+PiA+PiA+IE9uIFR1ZSwgRmViIDIxLCAyMDE3IGF0IDk6MTQgQU0sIEFsZXhhbmRyZSBC
+ZWxsb25pCj4gPj4gPj4gPj4gPiA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29t
+PiB3cm90ZTogICAgICAgIAo+ID4+ID4+ID4+ID4+IE9uIDIxLzAyLzIwMTcgYXQgMTg6NDM6MzUg
+KzAyMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZTogICAgICAgIAo+ID4+ID4+IAo+ID4+ID4+IDxz
+bmlwcD4KPiA+PiA+PiAgICAgCj4gPj4gPj4gPj4gPj4gSWYgbm9ib2R5IGNvbXBsYWlucyBhYm91
+dCB0aGUgNC4xMCBicmVha2FnZSwgWW91J2xsIGhhdmUgcGxlbnR5IG9mIHRpbWUKPiA+PiA+PiA+
+PiA+PiB0byByZW1vdmUgaXQgZm9yIDQuMTIgICAgICAgIAo+ID4+ID4+ID4+ID4gCj4gPj4gPj4g
+Pj4gPiBJJ20gZmluZSB3aXRoIHRoYXQsIGJ1dCBJIGhhdmVuJ3QgcHV0IG11Y2ggZWZmb3J0IGlu
+dG8ga2VlcGluZyBpdAo+ID4+ID4+ID4+ID4gYWxpdmUgbGF0ZWx5LiBJZiBIYW5zLUNocmlzdGlh
+biBhZ3JlZXMsIEknbSB3aWxsaW5nIHRvIHBvc3QgYSBwYXRjaCB0bwo+ID4+ID4+ID4+ID4gcmVt
+b3ZlIGl0LCBvciBhY2sgc29tZW9uZSBlbHNlJ3MgcGF0Y2guICAgICAgICAKPiA+PiA+PiA+PiAK
+PiA+PiA+PiA+PiBUaGVuIGxldHMgcGxhbiB0aGlzIGZvciA0LjEyLCBlaXRoZXIgeW91IEjDpXZh
+cmQgd2hpcCB1cCBhIHBhdGNoIG9yIEkgY2FuCj4gPj4gPj4gPj4gZXZlbnR1YWxseSBkbyBpdC4K
+PiA+PiA+PiA+PiAKPiA+PiA+PiA+PiBJIGNhbiBwdXNoIGl0IHRocm91Z2ggdGhlIGxpbnV4LWF2
+cjMyIGdpdCB0cmVlIG9uIGtlcm5lbC5vcmcuCj4gPj4gPj4gPj4gICAgICAgCj4gPj4gPj4gPiAK
+PiA+PiA+PiA+IENhbiB5b3UgZG8gdGhhdCBqdXN0IGFmdGVyIDQuMTEtcmMxIGlzIHJlbGVhc2Vk
+IGFuZCBwcm92aWRlIGEgdG9waWMKPiA+PiA+PiA+IGJyYW5jaCBJIGNhbiBwdWxsIGluIG15IG5h
+bmQvbmV4dCBicmFuY2gsIHNvIHRoYXQgSSBjYW4gcmV3b3JrIHRoaXMKPiA+PiA+PiA+IHBhdGNo
+IGFuZCBkcm9wIGFsbCB0aGUgcGRhdGEtY29tcGF0IGNvZGUgKGFzIHN1Z2dlc3RlZCBieSBBbmR5
+KS4gICAgICAKPiA+PiA+PiAKPiA+PiA+PiBPSywgSSB3aWxsIHRyeSB0byBwcmVwYXJlIGl0IGR1
+cmluZyB0aGUgd2Vla2VuZC4KPiA+PiA+PiAKPiA+PiA+PiBBbnkgcmVhc29uIHRvIHdhaXQgZm9y
+IDQuMTEtcmMxPyBBRkFJSyBMaW51cyBwcmVmZXJzIHRoZSBsYXJnZXIgY2hhbmdlcwo+ID4+ID4+
+IGJlZm9yZSBoZSBzdGFydHMgdGFnZ2luZyByYydzLgo+ID4+ID4+ICAgICAKPiA+PiA+IAo+ID4+
+ID4gT2gsIHNvIHlvdSB3YW50IHRvIHF1ZXVlIGl0IGZvciA0LjExLCB0aGF0J3MgZXZlbiBiZXR0
+ZXIuICAgIAo+ID4+IAo+ID4+IFBlcmhhcHMgSSBtaXN1bmRlcnN0b29kIHlvdSwgYnkgYWZ0ZXIg
+NC4xMS1yYzEgeW91IG1lYW4gcXVldWUgaXQgZm9yIDQuMTI/Cj4gPj4gCj4gPj4gSSB3aWxsIHNl
+ZSB3aGF0IEkgZ2V0IGFyb3VuZCB0byBkbyBpbiB0aGUgd2Vla2VuZCwgaXQgc2hvdWxkIGJlIHBy
+ZXR0eQo+ID4+IHN0cmFpZ2h0Zm9yd2FyZCwganVzdCB3YW50IHRvIG1ha2Ugc3VyZSB3ZSByZW1v
+dmUgYWxsIHRoZSBiaXRzLgo+ID4+ICAgCj4gPiAKPiA+IEFueSBwcm9ncmVzcyBvbiB0aGlzPyBJ
+IHBsYW4gdG8gc2VuZCBhIG5ldyB2ZXJzaW9uIG9mIHRoaXMgc2VyaWVzIHNvb24KPiA+IGFuZCBJ
+J2QgbGlrZSB0byBrbm93IGlmIEkgc2hvdWxkIGRyb3AgcGRhdGEvYXZyMzIgc3VwcG9ydCBvciBu
+b3QuIE5vdGUKPiA+IHRoYXQgSSdtIHRhcmdldGluZyA0LjEyLCBzbywgYXMgbG9uZyBhcyB5b3Ug
+ZHJvcCBhdnIzMiBzdXBwb3J0IGluIDQuMTIKPiA+IHdlIHNob3VsZCBiZSBnb29kLiAgCj4gCj4g
+SSBnb3QgYXJvdW5kIHRvIG1ha2UgdGhlIHBhdGNoIHNlcmllcyBkdXJpbmcgdGhlIHdlZWtlbmQs
+IGJ1dCBJIHRob3VnaHQgaXQKPiB3b3VsZCBiZSBhIGdvb2QgaWRlYSBzZW5kaW5nIHRoZW0gdG8g
+dGhlIGtlcm5lbCBtYWlsaW5nIGxpc3QgYXMgYSBGWUkuCgpEZWZpbml0ZWx5LgoKPiAKPiBBbHNv
+LCBJIHdhcyB1bnN1cmUgaWYgSSBzaG91bGQgc2VuZCB0aGUgZHJpdmVyIHJlbW92YWxzIHRocm91
+Z2ggdGhlCj4gc3ViLW1haW50YWluZXJzIHRyZWVzLCBvciBpZiBJIGNhbiBwdXNoIHRoZW0gdGhy
+b3VnaCBsaW51eC1hdnIzMiB0cmVlLgoKSSB0aGluayBpdCBzaG91bGQgZ28gdGhyb3VnaCB0aGUg
+c3ViLW1haW50YWluZXJzIHRyZWVzLCBidXQgSSBndWVzcyB5b3UKY2FuIHJlbW92ZSB0aGUgYXJj
+aCBjb2RlIHdpdGhvdXQgYnJlYWtpbmcgdGhlIGJ1aWxkLCBzbyBpdCBzaG91bGRuJ3QgYmUKYSBw
+cm9ibGVtIGlmIGRyaXZlcnMgcmVtb3ZhbCBkb24ndCBnbyB0aHJvdWdoIHRoZSBhdnIzMiB0cmVl
+LgoKPiAKPiBJIGhhdmUgYSBwYXRjaCByZW1vdmluZyB0aGUgcGF0YSBkcml2ZXIgZm9yIEFWUjMy
+Lgo+IAoKR3JlYXQhIEp1c3Qgc2VuZCBldmVyeXRoaW5nIHRvIHRoZSBNTHMgKGFuZCByZWxldmFu
+dCBtYWludGFpbmVycykuCgpUaGFua3MsCgpCb3JpcwoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
