@@ -1,144 +1,74 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/9] Docs: dt: document qcom iommu bindings
-Date: Wed,  1 Mar 2017 12:42:52 -0500
-Message-ID: <20170301174258.14618-4-robdclark@gmail.com>
-References: <20170301174258.14618-1-robdclark@gmail.com>
+From: Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dt: Add binding for /secure-chosen/stdout-path
+Date: Wed, 1 Mar 2017 17:43:29 +0000
+Message-ID: <CAFEAcA9AX5kSMs-PBQWDeDo=PTLoBHPMKc6ctYvR4LVni3rWAA@mail.gmail.com>
+References: <55a2f3cbe477bc876a7547eeb4693218698b87fe.1488387801.git.jerome.forissier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170301174258.14618-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55a2f3cbe477bc876a7547eeb4693218698b87fe.1488387801.git.jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robin.murphy-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/iommu/qcom,iommu.txt       | 106 +++++++++++++++++++++
- 1 file changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+On 1 March 2017 at 17:08, Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Some platforms may use a single device tree to describe two address
+> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+> for Secure-only devices"). For these platforms it makes sense to define
+> a secure counterpart of /chosen, namely: /secure-chosen. This new node
+> is meant to be used by the secure firmware to pass data to the secure
+> OS. Only the stdout-path property is supported for now.
+>
+> Signed-off-by: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/secure.txt | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+> index e31303f..e7c596a 100644
+> --- a/Documentation/devicetree/bindings/arm/secure.txt
+> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+> @@ -32,7 +32,8 @@ describe the view of Secure world using the standard bindings. These
+>  secure- bindings only need to be used where both the Secure and Normal
+>  world views need to be described in a single device tree.
+>
+> -Valid Secure world properties:
+> +Valid Secure world properties
+> +-----------------------------
+>
+>  - secure-status : specifies whether the device is present and usable
+>    in the secure world. The combination of this with "status" allows
+> @@ -51,3 +52,15 @@ Valid Secure world properties:
+>     status = "disabled"; secure-status = "okay";     /* S-only */
+>     status = "disabled";                             /* disabled in both */
+>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
+> +
+> +The secure-chosen node
+> +----------------------
+> +
+> +Similar to the /chosen node which serves as a place for passing data
+> +between firmware and the operating system, the /secure-chosen node may
+> +be used to pass data to the secure OS. Only the properties defined
+> +below may appear in the /secure-chosen node. They have the same
+> +definition as when used under /chosen, unless explicitely stated
 
-diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-new file mode 100644
-index 0000000..2e69b78
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-@@ -0,0 +1,106 @@
-+* QCOM IOMMU v1 Implementation
-+
-+Qualcomm "B" family devices which are not compatible with arm-smmu have
-+a similar looking IOMMU but without access to the global register space,
-+and optionally requiring additional configuration to route context irqs
-+to non-secure vs secure interrupt line.
-+
-+** Required properties:
-+
-+- compatible       : Should be "qcom,msm-iommu-v1".
-+- clocks           : The interface clock (iface_clk) and bus clock (bus_clk).
-+- #address-cells   : must be 1.
-+- #size-cells      : must be 1.
-+- #iommu-cells     : Must be 1.
-+- ranges           : Base address and size of the iommu context banks.
-+- qcom,iommu-secure-id  : secure-id.
-+
-+- List of sub-nodes, one per translation context bank.  Each sub-node
-+  has the following required properties:
-+
-+  - compatible     : Should be one of:
-+        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-+        - "qcom,msm-iommu-v1-sec" : secure context bank
-+  - reg            : Base address and size of context bank within the iommu
-+  - interrupts     : The context fault irq.
-+
-+** Optional properties:
-+
-+- reg              : Base address and size of the SMMU local base, should
-+                     be only specified if the iommu requires configuration
-+                     for routing of context bank irq's to secure vs non-
-+                     secure lines.  (Ie. if the iommu contains secure
-+                     context banks)
-+
-+
-+** Examples:
-+
-+	apps_iommu: msm-iommu-v1@1e20000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm-iommu-v1";
-+		ranges = <0 0x1e20000 0x40000>;
-+		reg = <0x1ef0000 0x3000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_APSS_TCU_CLK>;
-+		clock-names = "iface_clk", "bus_clk";
-+		qcom,iommu-secure-id = <17>;
-+
-+		// mdp_0:
-+		msm-iommu-v1-ctx@4000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x4000 0x1000>;
-+			interrupts = <GIC_SPI 70 0>;
-+		};
-+
-+		// venus_ns:
-+		msm-iommu-v1-ctx@5000 {
-+			compatible = "qcom,msm-iommu-v1-sec";
-+			reg = <0x5000 0x1000>;
-+			interrupts = <GIC_SPI 70 0>;
-+		};
-+	};
-+
-+	gpu_iommu: msm-iommu-v1@1f08000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm-iommu-v1";
-+		ranges = <0 0x1f08000 0x10000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_GFX_TCU_CLK>;
-+		clock-names = "iface_clk", "bus_clk";
-+		qcom,iommu-secure-id = <18>;
-+
-+		// gfx3d_user:
-+		msm-iommu-v1-ctx@1f09000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <GIC_SPI 241 0>;
-+		};
-+
-+		// gfx3d_priv:
-+		msm-iommu-v1-ctx@1f0a000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x2000 0x1000>;
-+			interrupts = <GIC_SPI 242 0>;
-+		};
-+	};
-+
-+	...
-+
-+	venus: video-codec@1d00000 {
-+		...
-+		iommus = <&apps_iommu 5>;
-+	};
-+
-+	mdp: mdp@1a01000 {
-+		...
-+		iommus = <&apps_iommu 4>;
-+	};
-+
-+	gpu@01c00000 {
-+		...
-+		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-+	};
--- 
-2.9.3
+typo: "explicitly".
+
+> +otherwise.
+> +
+> +- stdout-path
+
+What's the default for the Secure world if (a) the secure-chosen
+node doesn't exist at all or (b) it does exist but doesn't
+define stdout-path? Presumably it should be "fall back to
+using the chosen node's stdout-path", to match the way we
+do fallback for other secure world properties, but it would
+be good to say so explicitly I think.
+
+thanks
+-- PMM
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
