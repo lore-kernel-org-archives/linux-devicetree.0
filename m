@@ -1,7 +1,7 @@
 From: David Daney <david.daney@cavium.com>
-Subject: [PATCH v5 3/6] irqdomain: Add irq_domain_{push,pop}_irq() functions.
-Date: Tue, 28 Feb 2017 17:48:49 -0800
-Message-ID: <1488332932-2691-4-git-send-email-david.daney@cavium.com>
+Subject: [PATCH v5 2/6] genirq: Add handle_fasteoi_{level,edge}_irq flow handlers.
+Date: Tue, 28 Feb 2017 17:48:48 -0800
+Message-ID: <1488332932-2691-3-git-send-email-david.daney@cavium.com>
 References: <1488332932-2691-1-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,184 +12,141 @@ To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.co
 Cc: linux-kernel@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-For an already existing irqdomain hierarchy, as might be obtained via
-a call to pci_enable_msix(), a PCI driver wishing to add an additional
-irqdomain to the hierarchy needs to be able to insert the irqdomain to
-that already initialized hierarchy.  Calling
-irq_domain_create_hierarchy() allows the new irqdomain to be created,
-but no existing code allows for initializing the associated irq_data.
-
-Add a couple of helper functions (irq_domain_push_irq()
-irq_domain_pop_irq()) to initialize the irq_data for the new
-irqdomain.
+Follow-on patch for gpio-thunderx uses a irqdomain hierarchy which
+requires slightly different flow handlers, add them to chip.c which
+contains most of the other flow handlers.
 
 Signed-off-by: David Daney <david.daney@cavium.com>
 ---
- include/linux/irqdomain.h |   3 +
- kernel/irq/irqdomain.c    | 137 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 140 insertions(+)
+ include/linux/irq.h |   2 ++
+ kernel/irq/chip.c   | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 104 insertions(+)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index 188eced..a7a16b7 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -425,6 +425,9 @@ extern void irq_domain_free_irqs_common(struct irq_domain *domain,
- extern void irq_domain_free_irqs_top(struct irq_domain *domain,
- 				     unsigned int virq, unsigned int nr_irqs);
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index f887351..3db0eb8 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -518,6 +518,8 @@ static inline int irq_set_parent(int irq, int parent_irq)
+ extern int irq_chip_pm_get(struct irq_data *data);
+ extern int irq_chip_pm_put(struct irq_data *data);
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
++extern void handle_fasteoi_edge_irq(struct irq_desc *desc);
++extern void handle_fasteoi_level_irq(struct irq_desc *desc);
+ extern void irq_chip_enable_parent(struct irq_data *data);
+ extern void irq_chip_disable_parent(struct irq_data *data);
+ extern void irq_chip_ack_parent(struct irq_data *data);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 73ea90b..213105d 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -981,6 +981,108 @@ void irq_cpu_offline(void)
  
-+extern int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg);
-+extern int irq_domain_pop_irq(struct irq_domain *domain, int virq);
-+
- extern int irq_domain_alloc_irqs_parent(struct irq_domain *domain,
- 					unsigned int irq_base,
- 					unsigned int nr_irqs, void *arg);
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index 31805f2..d5d1c01 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1304,6 +1304,143 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- 	return ret;
- }
- 
-+/* The irq_data was moved, fix the revmap to refer to the new location */
-+static void irq_domain_fix_revmap(struct irq_data *d)
-+{
-+	void **slot;
-+
-+	if (d->hwirq < d->domain->revmap_size)
-+		return; /* Not using radix tree. */
-+
-+	/* Fix up the revmap. */
-+	mutex_lock(&revmap_trees_mutex);
-+	slot = radix_tree_lookup_slot(&d->domain->revmap_tree, d->hwirq);
-+	if (slot)
-+		radix_tree_replace_slot(&d->domain->revmap_tree, slot, d);
-+	mutex_unlock(&revmap_trees_mutex);
-+}
-+
-+/**
-+ * irq_domain_push_irq() - Push a domain in to the top of a hierarchy.
-+ * @domain:	Domain to push.
-+ * @virq:	Irq to push the domain in to.
-+ * @arg:	Passed to the irq_domain_ops alloc() function.
+ #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+ /**
++ *	handle_fasteoi_edge_irq - irq handler for edge hierarchy
++ *	stacked on transparent controllers
 + *
-+ * For an already existing irqdomain hierarchy, as might be obtained
-+ * via a call to pci_enable_msix(), add an additional domain to the
-+ * head of the processing chain.
++ *	@desc:	the interrupt description structure for this irq
++ *
++ *	Like handle_fasteoi_irq(), but for use with hierarchy where
++ *	the irq_chip also needs to have its ->irq_ack() function
++ *	called.
 + */
-+int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
++void handle_fasteoi_edge_irq(struct irq_desc *desc)
 +{
-+	struct irq_data *child_irq_data;
-+	struct irq_data *root_irq_data = irq_get_irq_data(virq);
++	struct irq_chip *chip = desc->irq_data.chip;
 +
-+	if (domain == NULL)
-+		return -EINVAL;
++	raw_spin_lock(&desc->lock);
 +
-+	if (WARN_ON(!domain->ops->alloc))
-+		return -EINVAL;
++	if (!irq_may_run(desc))
++		goto out;
 +
-+	if (!root_irq_data)
-+		return -EINVAL;
-+
-+	child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
-+				      irq_data_get_node(root_irq_data));
-+	if (!child_irq_data)
-+		return -ENOMEM;
-+
-+	mutex_lock(&irq_domain_mutex);
-+
-+	/* Copy the original irq_data. */
-+	*child_irq_data = *root_irq_data;
-+
-+	irq_domain_fix_revmap(child_irq_data);
++	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
 +
 +	/*
-+	 * Overwrite the root_irq_data, which is embedded in struct
-+	 * irq_desc, with values for this domain.
++	 * If its disabled or no action available
++	 * then mask it and get out of here:
 +	 */
-+	root_irq_data->parent_data = child_irq_data;
-+	root_irq_data->domain = domain;
-+	root_irq_data->mask = 0;
-+	root_irq_data->hwirq = 0;
-+	root_irq_data->chip = NULL;
-+	root_irq_data->chip_data = NULL;
-+	domain->ops->alloc(domain, virq, 1, arg);
-+
-+	if (root_irq_data->hwirq < domain->revmap_size) {
-+		domain->linear_revmap[root_irq_data->hwirq] = virq;
-+	} else {
-+		mutex_lock(&revmap_trees_mutex);
-+		radix_tree_insert(&domain->revmap_tree,
-+				  root_irq_data->hwirq, root_irq_data);
-+		mutex_unlock(&revmap_trees_mutex);
++	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
++		desc->istate |= IRQS_PENDING;
++		mask_irq(desc);
++		goto out;
 +	}
 +
-+	mutex_unlock(&irq_domain_mutex);
++	kstat_incr_irqs_this_cpu(desc);
++	if (desc->istate & IRQS_ONESHOT)
++		mask_irq(desc);
 +
-+	return 0;
++	/* Start handling the irq */
++	desc->irq_data.chip->irq_ack(&desc->irq_data);
++
++	preflow_handler(desc);
++	handle_irq_event(desc);
++
++	cond_unmask_eoi_irq(desc, chip);
++
++	raw_spin_unlock(&desc->lock);
++	return;
++out:
++	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
++		chip->irq_eoi(&desc->irq_data);
++	raw_spin_unlock(&desc->lock);
 +}
-+EXPORT_SYMBOL_GPL(irq_domain_push_irq);
++EXPORT_SYMBOL_GPL(handle_fasteoi_edge_irq);
 +
 +/**
-+ * irq_domain_pop_irq() - Remove a domain from the top of a hierarchy.
-+ * @domain:	Domain to remove.
-+ * @virq:	Irq to remove the domain from.
++ *	handle_fasteoi_level_irq - irq handler for level hierarchy
++ *	stacked on transparent controllers
 + *
-+ * Undo the effects of a call to irq_domain_push_irq().
++ *	@desc:	the interrupt description structure for this irq
++ *
++ *	Like handle_fasteoi_irq(), but for use with hierarchy where
++ *	the irq_chip also needs to have its ->irq_mask_ack() function
++ *	called.
 + */
-+int irq_domain_pop_irq(struct irq_domain *domain, int virq)
++void handle_fasteoi_level_irq(struct irq_desc *desc)
 +{
-+	struct irq_data *root_irq_data = irq_get_irq_data(virq);
-+	struct irq_data *child_irq_data;
-+	struct irq_data *tmp_irq_data;
++	struct irq_chip *chip = desc->irq_data.chip;
 +
-+	if (domain == NULL)
-+		return -EINVAL;
++	raw_spin_lock(&desc->lock);
++	mask_ack_irq(desc);
 +
-+	if (!root_irq_data)
-+		return -EINVAL;
++	if (!irq_may_run(desc))
++		goto out;
 +
-+	tmp_irq_data = irq_domain_get_irq_data(domain, virq);
++	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
 +
-+	/* We can only "pop" if this domain is at the top of the list */
-+	if (WARN_ON(root_irq_data != tmp_irq_data))
-+		return -EINVAL;
-+
-+	if (WARN_ON(root_irq_data->domain != domain))
-+		return -EINVAL;
-+
-+	child_irq_data = root_irq_data->parent_data;
-+	if (WARN_ON(!child_irq_data))
-+		return -EINVAL;
-+
-+	mutex_lock(&irq_domain_mutex);
-+
-+	root_irq_data->parent_data = NULL;
-+
-+	if (root_irq_data->hwirq >= domain->revmap_size) {
-+		mutex_lock(&revmap_trees_mutex);
-+		radix_tree_delete(&domain->revmap_tree, root_irq_data->hwirq);
-+		mutex_unlock(&revmap_trees_mutex);
++	/*
++	 * If its disabled or no action available
++	 * then mask it and get out of here:
++	 */
++	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
++		desc->istate |= IRQS_PENDING;
++		mask_irq(desc);
++		goto out;
 +	}
 +
-+	if (domain->ops->free)
-+		domain->ops->free(domain, virq, 1);
++	kstat_incr_irqs_this_cpu(desc);
++	if (desc->istate & IRQS_ONESHOT)
++		mask_irq(desc);
 +
-+	/* Restore the original irq_data. */
-+	*root_irq_data = *child_irq_data;
++	preflow_handler(desc);
++	handle_irq_event(desc);
 +
-+	irq_domain_fix_revmap(root_irq_data);
++	cond_unmask_eoi_irq(desc, chip);
 +
-+	mutex_unlock(&irq_domain_mutex);
-+
-+	kfree(child_irq_data);
-+
-+	return 0;
++	raw_spin_unlock(&desc->lock);
++	return;
++out:
++	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
++		chip->irq_eoi(&desc->irq_data);
++	raw_spin_unlock(&desc->lock);
 +}
-+EXPORT_SYMBOL_GPL(irq_domain_pop_irq);
++EXPORT_SYMBOL_GPL(handle_fasteoi_level_irq);
 +
- /**
-  * irq_domain_free_irqs - Free IRQ number and associated data structures
-  * @virq:	base IRQ number
++/**
+  * irq_chip_enable_parent - Enable the parent interrupt (defaults to unmask if
+  * NULL)
+  * @data:	Pointer to interrupt specific data
 -- 
 1.8.3.1
