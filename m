@@ -1,967 +1,561 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [RESEND PATCH v6 3/6] i2c: designware: MASTER mode as separated driver
-Date: Wed,  1 Mar 2017 15:59:43 +0000
-Message-ID: <d250a2bebe89ee99bf9d1a86503bebf2ee60c85c.1488383202.git.lolivei@synopsys.com>
-References: <cover.1488383202.git.lolivei@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1488383202.git.lolivei@synopsys.com>
-In-Reply-To: <cover.1488383202.git.lolivei@synopsys.com>
-References: <cover.1488383202.git.lolivei@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+From: Peter Senna Tschudin <peter.senna@collabora.com>
+Subject: Re: [PATCH V2 3/4] drm/bridge: Drivers for
+ megachips-stdpxxxx-ge-b850v3-fw (LVDS-DP++)
+Date: Wed, 1 Mar 2017 17:16:56 +0100
+Message-ID: <20170301161656.GE15134@collabora.com>
+References: <cover.1488287639.git.peter.senna@collabora.com>
+ <5278cd3e4c409ace0d62d6aedcc555b38b8a89a9.1488287639.git.peter.senna@collabora.com>
+ <8f61b5c1-3c99-6657-2c0b-41a070b322af@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <8f61b5c1-3c99-6657-2c0b-41a070b322af@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Archit Taneja <architt@codeaurora.org>
+Cc: mark.rutland@arm.com, heiko@sntech.de, airlied@linux.ie, daniel.vetter@ffwll.ch, peter.senna@gmail.com, dri-devel@lists.freedesktop.org, tiwai@suse.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, ykk@rock-chips.com, jslaby@suse.cz, martyn.welch@collabora.co.uk, Rob Herring <robh@kernel.org>, mchehab@osg.samsung.com, linux@armlinux.org.uk, javier@dowhile0.org, treding@nvidia.com, linux@roeck-us.net, martin.donnelly@ge.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, eballetbo@gmail.com, Fabio Estevam <fabio.estevam@nxp.com>, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, galak@codeaurora.org, enric.balletbo@collabora.com, akpm@linux-foundation.org, shawnguo@kernel.org, davem@dave
 List-Id: devicetree@vger.kernel.org
 
-- The functions related to I2C master mode of operation were transformed
-  in a single driver.
-- Common definitions were moved to i2c-designware-core.h
-- The i2c-designware-core is now only a library file, the functions
-  associated are in a source file called i2c-designware-common and
-  are used by both i2c-designware-master and i2c-designware-slave.
-- To decrease noise in namespace common i2c_dw_*() functions are
-  now using ops to keep them private.
+On Wed, Mar 01, 2017 at 09:38:48AM +0530, Archit Taneja wrote:
+[...]
+> > +static const struct i2c_device_id stdp2690_ge_b850v3_fw_i2c_table[] = {
+> > +	{"stdp2690_ge_fw", 0},
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(i2c, stdp2690_ge_b850v3_fw_i2c_table);
+> > +
+> > +static const struct of_device_id stdp2690_ge_b850v3_fw_match[] = {
+> > +	{ .compatible = "megachips,stdp2690-ge-b850v3-fw" },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, stdp2690_ge_b850v3_fw_match);
+> > +
+> > +static struct i2c_driver stdp2690_ge_b850v3_fw_driver = {
+> > +	.id_table	= stdp2690_ge_b850v3_fw_i2c_table,
+> > +	.probe		= stdp2690_ge_b850v3_fw_probe,
+> > +	.remove		= stdp2690_ge_b850v3_fw_remove,
+> > +	.driver		= {
+> > +		.name		= "stdp2690-ge-b850v3-fw",
+> > +		.of_match_table = stdp2690_ge_b850v3_fw_match,
+> > +	},
+> > +};
+> > +module_i2c_driver(stdp2690_ge_b850v3_fw_driver);
+> 
+> Didn't catch this in the last series, but there can only be one
+> module_init call per module. This breaks compilation when the
+> driver is built as a module.
+> 
+> You could do something like:
+> 
+> static int __init stdpxxxx_ge_b850v3_init(void)
+> {
+> 	int ret;
+> 
+> 	ret = i2c_add_driver(&stdp4028_ge_b850v3_fw_driver);
+> 	if (ret)
+> 		return ret;
+> 
+> 	return i2c_add_driver(&stdp2690_ge_b850v3_fw_driver);
+> }
+> module_init(stdpxxxx_ge_b850v3_init);
+> 
+> static void __exit stdpxxxx_ge_b850v3_exit(void)
+> {
+> 	i2c_del_driver(&stdp2690_ge_b850v3_fw_driver);
+> 	i2c_del_driver(&stdp4028_ge_b850v3_fw_driver);
+> }
+> module_exit(stdpxxxx_ge_b850v3_exit);
+> 
+> Thanks,
+> Archit
 
-Almost all of the "core" source is now part of the "master" source. The
-difference is the functions used by both modes and they are in the
-"common" source file.
+This has the init and exit functions merged and no need for the mutex
+anymore. Compiled and run as a module and works fine. What do you think?
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-V5->V6
-- Now using ops
+commit 15f8bf1b50d69454adeb32b5ff86c953124279fd
+Author: Peter Senna Tschudin <peter.senna@collabora.com>
+Date:   Wed May 25 00:59:17 2016 +0200
 
- drivers/i2c/busses/Makefile                        |   1 +
- drivers/i2c/busses/i2c-designware-common.c         | 274 +++++++++++++++
- drivers/i2c/busses/i2c-designware-core.h           | 140 +++++++-
- ...c-designware-core.c => i2c-designware-master.c} | 367 +--------------------
- drivers/i2c/busses/i2c-designware-platdrv.c        |   6 +-
- 5 files changed, 423 insertions(+), 365 deletions(-)
- create mode 100644 drivers/i2c/busses/i2c-designware-common.c
- rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c} (64%)
+    drm/bridge: Drivers for megachips-stdpxxxx-ge-b850v3-fw (LVDS-DP++)
+    
+    The video processing pipeline on the second output on the GE B850v3:
+    
+      Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+    
+    Each bridge has a dedicated flash containing firmware for supporting the
+    custom design. The result is that in this design neither the STDP4028
+    nor the STDP2690 behave as the stock bridges would. The compatible
+    strings include the suffix "-ge-b850v3-fw" to make it clear that the
+    driver is for the bridges with the firmware which is specific for the GE
+    B850v3.
+    
+    The driver is powerless to control the video processing pipeline, as the
+    two bridges behaves as a single one. The driver is only needed for
+    telling the host about EDID / HPD, and for giving the host powers to ack
+    interrupts.
+    
+    This driver adds one i2c_device for each bridge, but only one
+    drm_bridge. This design allows the creation of a functional connector
+    that is capable of reading EDID from the STDP2690 while handling
+    interrupts on the STDP4028.
+    
+    Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+    Cc: Martyn Welch <martyn.welch@collabora.co.uk>
+    Cc: Martin Donnelly <martin.donnelly@ge.com>
+    Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+    Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+    Cc: Philipp Zabel <p.zabel@pengutronix.de>
+    Cc: Rob Herring <robh@kernel.org>
+    Cc: Fabio Estevam <fabio.estevam@nxp.com>
+    Cc: David Airlie <airlied@linux.ie>
+    Cc: Thierry Reding <treding@nvidia.com>
+    Cc: Thierry Reding <thierry.reding@gmail.com>
+    Cc: Archit Taneja <architt@codeaurora.org>
+    Cc: Enric Balletbo <enric.balletbo@collabora.com>
+    Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
 
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index a2c6ff558578..b7abbe167686 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_I2C_CBUS_GPIO)	+= i2c-cbus-gpio.o
- obj-$(CONFIG_I2C_CPM)		+= i2c-cpm.o
- obj-$(CONFIG_I2C_DAVINCI)	+= i2c-davinci.o
- obj-$(CONFIG_I2C_DESIGNWARE_CORE)	+= i2c-designware-core.o
-+i2c-designware-core-objs := i2c-designware-common.o i2c-designware-master.o
- obj-$(CONFIG_I2C_DESIGNWARE_PLATFORM)	+= i2c-designware-platform.o
- i2c-designware-platform-objs := i2c-designware-platdrv.o
- i2c-designware-platform-$(CONFIG_I2C_DESIGNWARE_BAYTRAIL) += i2c-designware-baytrail.o
-diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index eb8688e..4a937f1 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -48,6 +48,17 @@ config DRM_DW_HDMI_I2S_AUDIO
+ 	  Support the I2S Audio interface which is part of the Synopsis
+ 	  Designware HDMI block.
+ 
++config DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW
++	tristate "MegaChips stdp4028-ge-b850v3-fw and stdp2690-ge-b850v3-fw"
++	depends on OF
++	select DRM_KMS_HELPER
++	select DRM_PANEL
++	---help---
++          This is a driver for the display bridges of
++          GE B850v3 that convert dual channel LVDS
++          to DP++. This is used with the i.MX6 imx-ldb
++          driver. You are likely to say N here.
++
+ config DRM_NXP_PTN3460
+ 	tristate "NXP PTN3460 DP/LVDS bridge"
+ 	depends on OF
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index 2e83a785..af0b7cc 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
+ obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
+ obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
+ obj-$(CONFIG_DRM_DW_HDMI_I2S_AUDIO) += dw-hdmi-i2s-audio.o
++obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
+ obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+ obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
+ obj-$(CONFIG_DRM_SIL_SII8620) += sil-sii8620.o
+diff --git a/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
 new file mode 100644
-index 000000000000..6357c7c78f6d
+index 0000000..c1d93aa
 --- /dev/null
-+++ b/drivers/i2c/busses/i2c-designware-common.c
-@@ -0,0 +1,274 @@
++++ b/drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+@@ -0,0 +1,396 @@
 +/*
-+ * Synopsys DesignWare I2C adapter driver.
++ * Driver for MegaChips STDP4028 with GE B850v3 firmware (LVDS-DP)
++ * Driver for MegaChips STDP2690 with GE B850v3 firmware (DP-DP++)
++
++ * Copyright (c) 2017, Collabora Ltd.
++ * Copyright (c) 2017, General Electric Company
++
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++ * This driver creates a drm_bridge and a drm_connector for the LVDS to DP++
++ * display bridge of the GE B850v3. There are two physical bridges on the video
++ * signal pipeline: a STDP4028(LVDS to DP) and a STDP2690(DP to DP++). The
++ * physical bridges are automatically configured by the input video signal, and
++ * the driver has no access to the video processing pipeline. The driver is
++ * only needed to read EDID from the STDP2690 and to handle HPD events from the
++ * STDP4028. The driver communicates with both bridges over i2c. The video
++ * signal pipeline is as follows:
 + *
-+ * Based on the TI DAVINCI I2C adapter driver.
-+ *
-+ * Copyright (C) 2006 Texas Instruments.
-+ * Copyright (C) 2007 MontaVista Software Inc.
-+ * Copyright (C) 2009 Provigent Ltd.
-+ *
-+ * ----------------------------------------------------------------------------
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ * ----------------------------------------------------------------------------
++ *   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
 + *
 + */
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/export.h>
++
++#include <linux/gpio.h>
 +#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
 +#include <linux/module.h>
-+#include <linux/pm_runtime.h>
++#include <linux/of.h>
++#include <drm/drm_atomic.h>
++#include <drm/drm_atomic_helper.h>
++#include <drm/drm_crtc_helper.h>
++#include <drm/drm_edid.h>
++#include <drm/drmP.h>
 +
-+#include "i2c-designware-core.h"
++#define EDID_EXT_BLOCK_CNT 0x7E
 +
-+static char *abort_sources[] = {
-+	[ABRT_7B_ADDR_NOACK] =
-+		"slave address not acknowledged (7bit mode)",
-+	[ABRT_10ADDR1_NOACK] =
-+		"first address byte not acknowledged (10bit mode)",
-+	[ABRT_10ADDR2_NOACK] =
-+		"second address byte not acknowledged (10bit mode)",
-+	[ABRT_TXDATA_NOACK] =
-+		"data not acknowledged",
-+	[ABRT_GCALL_NOACK] =
-+		"no acknowledgement for a general call",
-+	[ABRT_GCALL_READ] =
-+		"read after general call",
-+	[ABRT_SBYTE_ACKDET] =
-+		"start byte acknowledged",
-+	[ABRT_SBYTE_NORSTRT] =
-+		"trying to send start byte when restart is disabled",
-+	[ABRT_10B_RD_NORSTRT] =
-+		"trying to read when restart is disabled (10bit mode)",
-+	[ABRT_MASTER_DIS] =
-+		"trying to use disabled adapter",
-+	[ARB_LOST] =
-+		"lost arbitration",
++#define STDP4028_IRQ_OUT_CONF_REG 0x02
++#define STDP4028_DPTX_IRQ_EN_REG 0x3C
++#define STDP4028_DPTX_IRQ_STS_REG 0x3D
++#define STDP4028_DPTX_STS_REG 0x3E
++
++#define STDP4028_DPTX_DP_IRQ_EN 0x1000
++
++#define STDP4028_DPTX_HOTPLUG_IRQ_EN 0x0400
++#define STDP4028_DPTX_LINK_CH_IRQ_EN 0x2000
++#define STDP4028_DPTX_IRQ_CONFIG \
++		(STDP4028_DPTX_LINK_CH_IRQ_EN | STDP4028_DPTX_HOTPLUG_IRQ_EN)
++
++#define STDP4028_DPTX_HOTPLUG_STS 0x0200
++#define STDP4028_DPTX_LINK_STS 0x1000
++#define STDP4028_CON_STATE_CONNECTED \
++		(STDP4028_DPTX_HOTPLUG_STS | STDP4028_DPTX_LINK_STS)
++
++#define STDP4028_DPTX_HOTPLUG_CH_STS 0x0400
++#define STDP4028_DPTX_LINK_CH_STS 0x2000
++#define STDP4028_DPTX_IRQ_CLEAR \
++		(STDP4028_DPTX_LINK_CH_STS | STDP4028_DPTX_HOTPLUG_CH_STS)
++
++struct ge_b850v3_lvds {
++	struct drm_connector connector;
++	struct drm_bridge bridge;
++	struct i2c_client *stdp4028_i2c;
++	struct i2c_client *stdp2690_i2c;
++	struct edid *edid;
 +};
 +
-+u32 dw_readl(struct dw_i2c_dev *dev, int offset)
++static struct ge_b850v3_lvds *ge_b850v3_lvds_ptr;
++
++u8 *stdp2690_get_edid(struct i2c_client *client)
 +{
-+	u32 value;
++	struct i2c_adapter *adapter = client->adapter;
++	unsigned char start = 0x00;
++	unsigned int total_size;
++	u8 *block = kmalloc(EDID_LENGTH, GFP_KERNEL);
 +
-+	if (dev->accessor_flags & ACCESS_16BIT)
-+		value = readw_relaxed(dev->base + offset) |
-+			(readw_relaxed(dev->base + offset + 2) << 16);
-+	else
-+		value = readl_relaxed(dev->base + offset);
++	struct i2c_msg msgs[] = {
++		{
++			.addr	= client->addr,
++			.flags	= 0,
++			.len	= 1,
++			.buf	= &start,
++		}, {
++			.addr	= client->addr,
++			.flags	= I2C_M_RD,
++			.len	= EDID_LENGTH,
++			.buf	= block,
++		}
++	};
 +
-+	if (dev->accessor_flags & ACCESS_SWAP)
-+		return swab32(value);
-+	else
-+		return value;
-+}
++	if (!block)
++		return NULL;
 +
-+void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset)
-+{
-+	if (dev->accessor_flags & ACCESS_SWAP)
-+		b = swab32(b);
-+
-+	if (dev->accessor_flags & ACCESS_16BIT) {
-+		writew_relaxed((u16)b, dev->base + offset);
-+		writew_relaxed((u16)(b >> 16), dev->base + offset + 2);
-+	} else {
-+		writel_relaxed(b, dev->base + offset);
++	if (i2c_transfer(adapter, msgs, 2) != 2) {
++		DRM_ERROR("Unable to read EDID.\n");
++		goto err;
 +	}
-+}
 +
-+u32 i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
-+{
-+	/*
-+	 * DesignWare I2C core doesn't seem to have solid strategy to meet
-+	 * the tHD;STA timing spec.  Configuring _HCNT based on tHIGH spec
-+	 * will result in violation of the tHD;STA spec.
-+	 */
-+	if (cond)
-+		/*
-+		 * Conditional expression:
-+		 *
-+		 *   IC_[FS]S_SCL_HCNT + (1+4+3) >= IC_CLK * tHIGH
-+		 *
-+		 * This is based on the DW manuals, and represents an ideal
-+		 * configuration.  The resulting I2C bus speed will be
-+		 * faster than any of the others.
-+		 *
-+		 * If your hardware is free from tHD;STA issue, try this one.
++	if (!drm_edid_block_valid(block, 0, false, NULL)) {
++		DRM_ERROR("Invalid EDID data\n");
++		goto err;
++	}
++
++	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
++	if (total_size > EDID_LENGTH) {
++		kfree(block);
++		block = kmalloc(total_size, GFP_KERNEL);
++		if (!block)
++			return NULL;
++
++		/* Yes, read the entire buffer, and do not skip the first
++		 * EDID_LENGTH bytes.
 +		 */
-+		return (ic_clk * tSYMBOL + 500000) / 1000000 - 8 + offset;
-+	else
-+		/*
-+		 * Conditional expression:
-+		 *
-+		 *   IC_[FS]S_SCL_HCNT + 3 >= IC_CLK * (tHD;STA + tf)
-+		 *
-+		 * This is just experimental rule; the tHD;STA period turned
-+		 * out to be proportinal to (_HCNT + 3).  With this setting,
-+		 * we could meet both tHIGH and tHD;STA timing specs.
-+		 *
-+		 * If unsure, you'd better to take this alternative.
-+		 *
-+		 * The reason why we need to take into account "tf" here,
-+		 * is the same as described in i2c_dw_scl_lcnt().
-+		 */
-+		return (ic_clk * (tSYMBOL + tf) + 500000) / 1000000
-+			- 3 + offset;
++		start = 0x00;
++		msgs[1].len = total_size;
++		msgs[1].buf = block;
++
++		if (i2c_transfer(adapter, msgs, 2) != 2) {
++			DRM_ERROR("Unable to read EDID extension blocks.\n");
++			goto err;
++		}
++		if (!drm_edid_block_valid(block, 1, false, NULL)) {
++			DRM_ERROR("Invalid EDID data\n");
++			goto err;
++		}
++	}
++
++	return block;
++
++err:
++	kfree(block);
++	return NULL;
 +}
 +
-+u32 i2c_dw_scl_lcnt(u32 ic_clk, u32 tLOW, u32 tf, int offset)
++static int ge_b850v3_lvds_get_modes(struct drm_connector *connector)
 +{
-+	/*
-+	 * Conditional expression:
-+	 *
-+	 *   IC_[FS]S_SCL_LCNT + 1 >= IC_CLK * (tLOW + tf)
-+	 *
-+	 * DW I2C core starts counting the SCL CNTs for the LOW period
-+	 * of the SCL clock (tLOW) as soon as it pulls the SCL line.
-+	 * In order to meet the tLOW timing spec, we need to take into
-+	 * account the fall time of SCL signal (tf).  Default tf value
-+	 * should be 0.3 us, for safety.
-+	 */
-+	return ((ic_clk * (tLOW + tf) + 500000) / 1000000) - 1 + offset;
++	struct i2c_client *client;
++	int num_modes = 0;
++
++	client = ge_b850v3_lvds_ptr->stdp2690_i2c;
++
++	kfree(ge_b850v3_lvds_ptr->edid);
++	ge_b850v3_lvds_ptr->edid = (struct edid *)stdp2690_get_edid(client);
++
++	if (ge_b850v3_lvds_ptr->edid) {
++		drm_mode_connector_update_edid_property(connector,
++						      ge_b850v3_lvds_ptr->edid);
++		num_modes = drm_add_edid_modes(connector,
++					       ge_b850v3_lvds_ptr->edid);
++	}
++
++	return num_modes;
 +}
 +
-+void __i2c_dw_enable(struct dw_i2c_dev *dev, bool enable)
++static enum drm_mode_status ge_b850v3_lvds_mode_valid(
++		struct drm_connector *connector, struct drm_display_mode *mode)
 +{
-+	dw_writel(dev, enable, DW_IC_ENABLE);
++	return MODE_OK;
 +}
 +
-+void __i2c_dw_enable_and_wait(struct dw_i2c_dev *dev, bool enable)
++static const struct
++drm_connector_helper_funcs ge_b850v3_lvds_connector_helper_funcs = {
++	.get_modes = ge_b850v3_lvds_get_modes,
++	.mode_valid = ge_b850v3_lvds_mode_valid,
++};
++
++static enum drm_connector_status ge_b850v3_lvds_detect(
++		struct drm_connector *connector, bool force)
 +{
-+	int timeout = 100;
++	struct i2c_client *stdp4028_i2c =
++			ge_b850v3_lvds_ptr->stdp4028_i2c;
++	s32 link_state;
 +
-+	do {
-+		__i2c_dw_enable(dev, enable);
-+		if ((dw_readl(dev, DW_IC_ENABLE_STATUS) & 1) == enable)
-+			return;
++	link_state = i2c_smbus_read_word_data(stdp4028_i2c,
++					      STDP4028_DPTX_STS_REG);
 +
-+		/*
-+		 * Wait 10 times the signaling period of the highest I2C
-+		 * transfer supported by the driver (for 400KHz this is
-+		 * 25us) as described in the DesignWare I2C databook.
-+		 */
-+		usleep_range(25, 250);
-+	} while (timeout--);
++	if (link_state == STDP4028_CON_STATE_CONNECTED)
++		return connector_status_connected;
 +
-+	dev_warn(dev->dev, "timeout in %sabling adapter\n",
-+		 enable ? "en" : "dis");
++	if (link_state == 0)
++		return connector_status_disconnected;
++
++	return connector_status_unknown;
 +}
 +
-+unsigned long i2c_dw_clk_rate(struct dw_i2c_dev *dev)
++static const struct drm_connector_funcs ge_b850v3_lvds_connector_funcs = {
++	.dpms = drm_atomic_helper_connector_dpms,
++	.fill_modes = drm_helper_probe_single_connector_modes,
++	.detect = ge_b850v3_lvds_detect,
++	.destroy = drm_connector_cleanup,
++	.reset = drm_atomic_helper_connector_reset,
++	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
++};
++
++static irqreturn_t ge_b850v3_lvds_irq_handler(int irq, void *dev_id)
 +{
-+	/*
-+	 * Clock is not necessary if we got LCNT/HCNT values directly from
-+	 * the platform code.
-+	 */
-+	if (WARN_ON_ONCE(!dev->get_clk_rate_khz))
-+		return 0;
-+	return dev->get_clk_rate_khz(dev);
++	struct i2c_client *stdp4028_i2c
++			= ge_b850v3_lvds_ptr->stdp4028_i2c;
++
++	i2c_smbus_write_word_data(stdp4028_i2c,
++				  STDP4028_DPTX_IRQ_STS_REG,
++				  STDP4028_DPTX_IRQ_CLEAR);
++
++	if (ge_b850v3_lvds_ptr->connector.dev)
++		drm_kms_helper_hotplug_event(ge_b850v3_lvds_ptr->connector.dev);
++
++	return IRQ_HANDLED;
 +}
 +
-+int i2c_dw_acquire_lock(struct dw_i2c_dev *dev)
++static int ge_b850v3_lvds_attach(struct drm_bridge *bridge)
 +{
++	struct drm_connector *connector = &ge_b850v3_lvds_ptr->connector;
++	struct i2c_client *stdp4028_i2c
++			= ge_b850v3_lvds_ptr->stdp4028_i2c;
 +	int ret;
 +
-+	if (!dev->acquire_lock)
-+		return 0;
-+
-+	ret = dev->acquire_lock(dev);
-+	if (!ret)
-+		return 0;
-+
-+	dev_err(dev->dev, "couldn't acquire bus ownership\n");
-+
-+	return ret;
-+}
-+
-+void i2c_dw_release_lock(struct dw_i2c_dev *dev)
-+{
-+	if (dev->release_lock)
-+		dev->release_lock(dev);
-+}
-+
-+/*
-+ * Waiting for bus not busy
-+ */
-+int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
-+{
-+	int timeout = TIMEOUT;
-+
-+	while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
-+		if (timeout <= 0) {
-+			dev_warn(dev->dev, "timeout waiting for bus ready\n");
-+			return -ETIMEDOUT;
-+		}
-+		timeout--;
-+		usleep_range(1000, 1100);
++	if (!bridge->encoder) {
++		DRM_ERROR("Parent encoder object not found");
++		return -ENODEV;
 +	}
++
++	connector->polled = DRM_CONNECTOR_POLL_HPD;
++
++	drm_connector_helper_add(connector,
++				 &ge_b850v3_lvds_connector_helper_funcs);
++
++	ret = drm_connector_init(bridge->dev, connector,
++				 &ge_b850v3_lvds_connector_funcs,
++				 DRM_MODE_CONNECTOR_DisplayPort);
++	if (ret) {
++		DRM_ERROR("Failed to initialize connector with drm\n");
++		return ret;
++	}
++
++	ret = drm_mode_connector_attach_encoder(connector, bridge->encoder);
++	if (ret)
++		return ret;
++
++	/* Configures the bridge to re-enable interrupts after each ack. */
++	i2c_smbus_write_word_data(stdp4028_i2c,
++				  STDP4028_IRQ_OUT_CONF_REG,
++				  STDP4028_DPTX_DP_IRQ_EN);
++
++	/* Enable interrupts */
++	i2c_smbus_write_word_data(stdp4028_i2c,
++				  STDP4028_DPTX_IRQ_EN_REG,
++				  STDP4028_DPTX_IRQ_CONFIG);
 +
 +	return 0;
 +}
 +
-+int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev)
-+{
-+	unsigned long abort_source = dev->abort_source;
-+	int i;
++static const struct drm_bridge_funcs ge_b850v3_lvds_funcs = {
++	.attach = ge_b850v3_lvds_attach,
++};
 +
-+	if (abort_source & DW_IC_TX_ABRT_NOACK) {
-+		for_each_set_bit(i, &abort_source, ARRAY_SIZE(abort_sources))
-+			dev_dbg(dev->dev,
-+				"%s: %s\n", __func__, abort_sources[i]);
-+		return -EREMOTEIO;
++static int stdp4028_ge_b850v3_fw_probe(struct i2c_client *stdp4028_i2c,
++				       const struct i2c_device_id *id)
++{
++	struct device *dev = &stdp4028_i2c->dev;
++
++	ge_b850v3_lvds_ptr->bridge.of_node = dev->of_node;
++
++	ge_b850v3_lvds_ptr->stdp4028_i2c = stdp4028_i2c;
++	i2c_set_clientdata(stdp4028_i2c, ge_b850v3_lvds_ptr);
++
++	/* Clear pending interrupts since power up. */
++	i2c_smbus_write_word_data(stdp4028_i2c,
++				  STDP4028_DPTX_IRQ_STS_REG,
++				  STDP4028_DPTX_IRQ_CLEAR);
++
++	if (!stdp4028_i2c->irq)
++		return 0;
++
++	return devm_request_threaded_irq(&stdp4028_i2c->dev,
++			stdp4028_i2c->irq, NULL,
++			ge_b850v3_lvds_irq_handler,
++			IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
++			"ge-b850v3-lvds-dp", ge_b850v3_lvds_ptr);
++}
++
++static int stdp4028_ge_b850v3_fw_remove(struct i2c_client *stdp4028_i2c)
++{
++	return 0;
++}
++
++static const struct i2c_device_id stdp4028_ge_b850v3_fw_i2c_table[] = {
++	{"stdp4028_ge_fw", 0},
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, stdp4028_ge_b850v3_fw_i2c_table);
++
++static const struct of_device_id stdp4028_ge_b850v3_fw_match[] = {
++	{ .compatible = "megachips,stdp4028-ge-b850v3-fw" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, stdp4028_ge_b850v3_fw_match);
++
++static struct i2c_driver stdp4028_ge_b850v3_fw_driver = {
++	.id_table	= stdp4028_ge_b850v3_fw_i2c_table,
++	.probe		= stdp4028_ge_b850v3_fw_probe,
++	.remove		= stdp4028_ge_b850v3_fw_remove,
++	.driver		= {
++		.name		= "stdp4028-ge-b850v3-fw",
++		.of_match_table = stdp4028_ge_b850v3_fw_match,
++	},
++};
++
++static int stdp2690_ge_b850v3_fw_probe(struct i2c_client *stdp2690_i2c,
++				       const struct i2c_device_id *id)
++{
++	ge_b850v3_lvds_ptr->stdp2690_i2c = stdp2690_i2c;
++	i2c_set_clientdata(stdp2690_i2c, ge_b850v3_lvds_ptr);
++
++	return 0;
++}
++
++static int stdp2690_ge_b850v3_fw_remove(struct i2c_client *stdp2690_i2c)
++{
++	return 0;
++}
++
++static const struct i2c_device_id stdp2690_ge_b850v3_fw_i2c_table[] = {
++	{"stdp2690_ge_fw", 0},
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, stdp2690_ge_b850v3_fw_i2c_table);
++
++static const struct of_device_id stdp2690_ge_b850v3_fw_match[] = {
++	{ .compatible = "megachips,stdp2690-ge-b850v3-fw" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, stdp2690_ge_b850v3_fw_match);
++
++static struct i2c_driver stdp2690_ge_b850v3_fw_driver = {
++	.id_table	= stdp2690_ge_b850v3_fw_i2c_table,
++	.probe		= stdp2690_ge_b850v3_fw_probe,
++	.remove		= stdp2690_ge_b850v3_fw_remove,
++	.driver		= {
++		.name		= "stdp2690-ge-b850v3-fw",
++		.of_match_table = stdp2690_ge_b850v3_fw_match,
++	},
++};
++
++static int __init stdpxxxx_ge_b850v3_init(void)
++{
++	int ret;
++
++	ge_b850v3_lvds_ptr = kzalloc(sizeof(*ge_b850v3_lvds_ptr), GFP_KERNEL);
++
++	if (!ge_b850v3_lvds_ptr)
++		return -ENOMEM;
++
++	ret = i2c_add_driver(&stdp4028_ge_b850v3_fw_driver);
++	if (ret) {
++		kfree(ge_b850v3_lvds_ptr);
++		return ret;
 +	}
 +
-+	for_each_set_bit(i, &abort_source, ARRAY_SIZE(abort_sources))
-+		dev_err(dev->dev, "%s: %s\n", __func__, abort_sources[i]);
++	ret = i2c_add_driver(&stdp2690_ge_b850v3_fw_driver);
++	if (ret) {
++	        i2c_del_driver(&stdp4028_ge_b850v3_fw_driver);
++		kfree(ge_b850v3_lvds_ptr);
++		return ret;
++	}
 +
-+	if (abort_source & DW_IC_TX_ARB_LOST)
-+		return -EAGAIN;
-+	else if (abort_source & DW_IC_TX_ABRT_GCALL_READ)
-+		return -EINVAL; /* wrong msgs[] data */
-+	else
-+		return -EIO;
++	ge_b850v3_lvds_ptr->bridge.funcs = &ge_b850v3_lvds_funcs;
++	drm_bridge_add(&ge_b850v3_lvds_ptr->bridge);
++
++	return 0;
 +}
++module_init(stdpxxxx_ge_b850v3_init);
 +
-+u32 i2c_dw_func(struct i2c_adapter *adap)
++static void __exit stdpxxxx_ge_b850v3_exit(void)
 +{
-+	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
++	drm_bridge_remove(&ge_b850v3_lvds_ptr->bridge);
++	kfree(ge_b850v3_lvds_ptr->edid);
 +
-+	return dev->functionality;
++	i2c_del_driver(&stdp2690_ge_b850v3_fw_driver);
++	i2c_del_driver(&stdp4028_ge_b850v3_fw_driver);
++
++	kfree(ge_b850v3_lvds_ptr);
 +}
-+void i2c_dw_disable(struct dw_i2c_dev *dev)
-+{
-+	/* Disable controller */
-+	__i2c_dw_enable_and_wait(dev, false);
++module_exit(stdpxxxx_ge_b850v3_exit);
 +
-+	/* Disable all interupts */
-+	dw_writel(dev, 0, DW_IC_INTR_MASK);
-+	dw_readl(dev, DW_IC_CLR_INTR);
-+}
-+
-+void i2c_dw_disable_int(struct dw_i2c_dev *dev)
-+{
-+	dw_writel(dev, 0, DW_IC_INTR_MASK);
-+}
-+
-+u32 i2c_dw_read_comp_param(struct dw_i2c_dev *dev)
-+{
-+	return dw_readl(dev, DW_IC_COMP_PARAM_1);
-+}
-+EXPORT_SYMBOL_GPL(i2c_dw_read_comp_param);
-+
-+MODULE_DESCRIPTION("Synopsys DesignWare I2C bus adapter core");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index 1a010730be43..35d7264d9e3a 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -40,6 +40,124 @@
- #define DW_IC_CON_RESTART_EN		0x20
- #define DW_IC_CON_SLAVE_DISABLE		0x40
- 
-+/*
-+ * Registers offset
-+ */
-+#define DW_IC_CON		0x0
-+#define DW_IC_TAR		0x4
-+#define DW_IC_DATA_CMD		0x10
-+#define DW_IC_SS_SCL_HCNT	0x14
-+#define DW_IC_SS_SCL_LCNT	0x18
-+#define DW_IC_FS_SCL_HCNT	0x1c
-+#define DW_IC_FS_SCL_LCNT	0x20
-+#define DW_IC_HS_SCL_HCNT	0x24
-+#define DW_IC_HS_SCL_LCNT	0x28
-+#define DW_IC_INTR_STAT		0x2c
-+#define DW_IC_INTR_MASK		0x30
-+#define DW_IC_RAW_INTR_STAT	0x34
-+#define DW_IC_RX_TL		0x38
-+#define DW_IC_TX_TL		0x3c
-+#define DW_IC_CLR_INTR		0x40
-+#define DW_IC_CLR_RX_UNDER	0x44
-+#define DW_IC_CLR_RX_OVER	0x48
-+#define DW_IC_CLR_TX_OVER	0x4c
-+#define DW_IC_CLR_RD_REQ	0x50
-+#define DW_IC_CLR_TX_ABRT	0x54
-+#define DW_IC_CLR_RX_DONE	0x58
-+#define DW_IC_CLR_ACTIVITY	0x5c
-+#define DW_IC_CLR_STOP_DET	0x60
-+#define DW_IC_CLR_START_DET	0x64
-+#define DW_IC_CLR_GEN_CALL	0x68
-+#define DW_IC_ENABLE		0x6c
-+#define DW_IC_STATUS		0x70
-+#define DW_IC_TXFLR		0x74
-+#define DW_IC_RXFLR		0x78
-+#define DW_IC_SDA_HOLD		0x7c
-+#define DW_IC_TX_ABRT_SOURCE	0x80
-+#define DW_IC_ENABLE_STATUS	0x9c
-+#define DW_IC_COMP_PARAM_1	0xf4
-+#define DW_IC_COMP_VERSION	0xf8
-+#define DW_IC_SDA_HOLD_MIN_VERS	0x3131312A
-+#define DW_IC_COMP_TYPE		0xfc
-+#define DW_IC_COMP_TYPE_VALUE	0x44570140
-+
-+#define DW_IC_INTR_RX_UNDER	0x001
-+#define DW_IC_INTR_RX_OVER	0x002
-+#define DW_IC_INTR_RX_FULL	0x004
-+#define DW_IC_INTR_TX_OVER	0x008
-+#define DW_IC_INTR_TX_EMPTY	0x010
-+#define DW_IC_INTR_RD_REQ	0x020
-+#define DW_IC_INTR_TX_ABRT	0x040
-+#define DW_IC_INTR_RX_DONE	0x080
-+#define DW_IC_INTR_ACTIVITY	0x100
-+#define DW_IC_INTR_STOP_DET	0x200
-+#define DW_IC_INTR_START_DET	0x400
-+#define DW_IC_INTR_GEN_CALL	0x800
-+
-+#define DW_IC_INTR_DEFAULT_MASK		(DW_IC_INTR_RX_FULL | \
-+					 DW_IC_INTR_TX_ABRT | \
-+					 DW_IC_INTR_STOP_DET)
-+#define DW_IC_INTR_MASTER_MASK		(DW_IC_INTR_DEFAULT_MASK | \
-+					 DW_IC_INTR_TX_EMPTY)
-+#define DW_IC_STATUS_ACTIVITY		0x1
-+#define DW_IC_STATUS_TFE		BIT(2)
-+#define DW_IC_STATUS_MASTER_ACTIVITY	BIT(5)
-+
-+#define DW_IC_SDA_HOLD_RX_SHIFT		16
-+#define DW_IC_SDA_HOLD_RX_MASK		GENMASK(23, DW_IC_SDA_HOLD_RX_SHIFT)
-+
-+#define DW_IC_ERR_TX_ABRT	0x1
-+
-+#define DW_IC_TAR_10BITADDR_MASTER BIT(12)
-+
-+#define DW_IC_COMP_PARAM_1_SPEED_MODE_HIGH	(BIT(2) | BIT(3))
-+#define DW_IC_COMP_PARAM_1_SPEED_MODE_MASK	GENMASK(3, 2)
-+
-+/*
-+ * status codes
-+ */
-+#define STATUS_IDLE			0x0
-+#define STATUS_WRITE_IN_PROGRESS	0x1
-+#define STATUS_READ_IN_PROGRESS		0x2
-+
-+#define TIMEOUT			20 /* ms */
-+
-+/*
-+ * hardware abort codes from the DW_IC_TX_ABRT_SOURCE register
-+ *
-+ * only expected abort codes are listed here
-+ * refer to the datasheet for the full list
-+ */
-+#define ABRT_7B_ADDR_NOACK	0
-+#define ABRT_10ADDR1_NOACK	1
-+#define ABRT_10ADDR2_NOACK	2
-+#define ABRT_TXDATA_NOACK	3
-+#define ABRT_GCALL_NOACK	4
-+#define ABRT_GCALL_READ		5
-+#define ABRT_SBYTE_ACKDET	7
-+#define ABRT_SBYTE_NORSTRT	9
-+#define ABRT_10B_RD_NORSTRT	10
-+#define ABRT_MASTER_DIS		11
-+#define ARB_LOST		12
-+
-+#define DW_IC_TX_ABRT_7B_ADDR_NOACK	(1UL << ABRT_7B_ADDR_NOACK)
-+#define DW_IC_TX_ABRT_10ADDR1_NOACK	(1UL << ABRT_10ADDR1_NOACK)
-+#define DW_IC_TX_ABRT_10ADDR2_NOACK	(1UL << ABRT_10ADDR2_NOACK)
-+#define DW_IC_TX_ABRT_TXDATA_NOACK	(1UL << ABRT_TXDATA_NOACK)
-+#define DW_IC_TX_ABRT_GCALL_NOACK	(1UL << ABRT_GCALL_NOACK)
-+#define DW_IC_TX_ABRT_GCALL_READ	(1UL << ABRT_GCALL_READ)
-+#define DW_IC_TX_ABRT_SBYTE_ACKDET	(1UL << ABRT_SBYTE_ACKDET)
-+#define DW_IC_TX_ABRT_SBYTE_NORSTRT	(1UL << ABRT_SBYTE_NORSTRT)
-+#define DW_IC_TX_ABRT_10B_RD_NORSTRT	(1UL << ABRT_10B_RD_NORSTRT)
-+#define DW_IC_TX_ABRT_MASTER_DIS	(1UL << ABRT_MASTER_DIS)
-+#define DW_IC_TX_ARB_LOST		(1UL << ARB_LOST)
-+
-+#define DW_IC_TX_ABRT_NOACK		(DW_IC_TX_ABRT_7B_ADDR_NOACK | \
-+					 DW_IC_TX_ABRT_10ADDR1_NOACK | \
-+					 DW_IC_TX_ABRT_10ADDR2_NOACK | \
-+					 DW_IC_TX_ABRT_TXDATA_NOACK | \
-+					 DW_IC_TX_ABRT_GCALL_NOACK)
-+
- 
- /**
-  * struct dw_i2c_dev - private i2c-designware data
-@@ -125,15 +243,31 @@ struct dw_i2c_dev {
- 	int			(*acquire_lock)(struct dw_i2c_dev *dev);
- 	void			(*release_lock)(struct dw_i2c_dev *dev);
- 	bool			pm_runtime_disabled;
-+	void			(*disable)(struct dw_i2c_dev *dev);
-+	void			(*disable_int)(struct dw_i2c_dev *dev);
-+	int			(*init)(struct dw_i2c_dev *dev);
- };
- 
- #define ACCESS_SWAP		0x00000001
- #define ACCESS_16BIT		0x00000002
- #define ACCESS_INTR_MASK	0x00000004
- 
--extern int i2c_dw_init(struct dw_i2c_dev *dev);
--extern void i2c_dw_disable(struct dw_i2c_dev *dev);
--extern void i2c_dw_disable_int(struct dw_i2c_dev *dev);
-+u32 dw_readl(struct dw_i2c_dev *dev, int offset);
-+void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset);
-+u32 i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset);
-+u32 i2c_dw_scl_lcnt(u32 ic_clk, u32 tLOW, u32 tf, int offset);
-+void __i2c_dw_enable(struct dw_i2c_dev *dev, bool enable);
-+void __i2c_dw_enable_and_wait(struct dw_i2c_dev *dev, bool enable);
-+unsigned long i2c_dw_clk_rate(struct dw_i2c_dev *dev);
-+int i2c_dw_acquire_lock(struct dw_i2c_dev *dev);
-+void i2c_dw_release_lock(struct dw_i2c_dev *dev);
-+int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev);
-+int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev);
-+u32 i2c_dw_func(struct i2c_adapter *adap);
-+void i2c_dw_disable(struct dw_i2c_dev *dev);
-+void i2c_dw_disable_int(struct dw_i2c_dev *dev);
-+int i2c_dw_init(struct dw_i2c_dev *dev);
-+
- extern u32 i2c_dw_read_comp_param(struct dw_i2c_dev *dev);
- extern int i2c_dw_probe(struct dw_i2c_dev *dev);
- 
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-master.c
-similarity index 64%
-rename from drivers/i2c/busses/i2c-designware-core.c
-rename to drivers/i2c/busses/i2c-designware-master.c
-index 8b1b61f06a3f..683bfcf83711 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-master.c
-@@ -22,9 +22,9 @@
-  *
-  */
- #include <linux/delay.h>
--#include <linux/export.h>
--#include <linux/errno.h>
- #include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/export.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -32,175 +32,6 @@
- #include <linux/pm_runtime.h>
- 
- #include "i2c-designware-core.h"
--/*
-- * Registers offset
-- */
--#define DW_IC_CON		0x0
--#define DW_IC_TAR		0x4
--#define DW_IC_DATA_CMD		0x10
--#define DW_IC_SS_SCL_HCNT	0x14
--#define DW_IC_SS_SCL_LCNT	0x18
--#define DW_IC_FS_SCL_HCNT	0x1c
--#define DW_IC_FS_SCL_LCNT	0x20
--#define DW_IC_HS_SCL_HCNT	0x24
--#define DW_IC_HS_SCL_LCNT	0x28
--#define DW_IC_INTR_STAT		0x2c
--#define DW_IC_INTR_MASK		0x30
--#define DW_IC_RAW_INTR_STAT	0x34
--#define DW_IC_RX_TL		0x38
--#define DW_IC_TX_TL		0x3c
--#define DW_IC_CLR_INTR		0x40
--#define DW_IC_CLR_RX_UNDER	0x44
--#define DW_IC_CLR_RX_OVER	0x48
--#define DW_IC_CLR_TX_OVER	0x4c
--#define DW_IC_CLR_RD_REQ	0x50
--#define DW_IC_CLR_TX_ABRT	0x54
--#define DW_IC_CLR_RX_DONE	0x58
--#define DW_IC_CLR_ACTIVITY	0x5c
--#define DW_IC_CLR_STOP_DET	0x60
--#define DW_IC_CLR_START_DET	0x64
--#define DW_IC_CLR_GEN_CALL	0x68
--#define DW_IC_ENABLE		0x6c
--#define DW_IC_STATUS		0x70
--#define DW_IC_TXFLR		0x74
--#define DW_IC_RXFLR		0x78
--#define DW_IC_SDA_HOLD		0x7c
--#define DW_IC_TX_ABRT_SOURCE	0x80
--#define DW_IC_ENABLE_STATUS	0x9c
--#define DW_IC_COMP_PARAM_1	0xf4
--#define DW_IC_COMP_VERSION	0xf8
--#define DW_IC_SDA_HOLD_MIN_VERS	0x3131312A
--#define DW_IC_COMP_TYPE		0xfc
--#define DW_IC_COMP_TYPE_VALUE	0x44570140
--
--#define DW_IC_INTR_RX_UNDER	0x001
--#define DW_IC_INTR_RX_OVER	0x002
--#define DW_IC_INTR_RX_FULL	0x004
--#define DW_IC_INTR_TX_OVER	0x008
--#define DW_IC_INTR_TX_EMPTY	0x010
--#define DW_IC_INTR_RD_REQ	0x020
--#define DW_IC_INTR_TX_ABRT	0x040
--#define DW_IC_INTR_RX_DONE	0x080
--#define DW_IC_INTR_ACTIVITY	0x100
--#define DW_IC_INTR_STOP_DET	0x200
--#define DW_IC_INTR_START_DET	0x400
--#define DW_IC_INTR_GEN_CALL	0x800
--
--#define DW_IC_INTR_DEFAULT_MASK		(DW_IC_INTR_RX_FULL | \
--					 DW_IC_INTR_TX_ABRT | \
--					 DW_IC_INTR_STOP_DET)
--#define DW_IC_INTR_MASTER_MASK		(DW_IC_INTR_DEFAULT_MASK | \
--					 DW_IC_INTR_TX_EMPTY)
--#define DW_IC_STATUS_ACTIVITY	0x1
--
--#define DW_IC_SDA_HOLD_RX_SHIFT		16
--#define DW_IC_SDA_HOLD_RX_MASK		GENMASK(23, DW_IC_SDA_HOLD_RX_SHIFT)
--
--#define DW_IC_ERR_TX_ABRT	0x1
--
--#define DW_IC_TAR_10BITADDR_MASTER		BIT(12)
--
--#define DW_IC_COMP_PARAM_1_SPEED_MODE_HIGH	(BIT(2) | BIT(3))
--#define DW_IC_COMP_PARAM_1_SPEED_MODE_MASK	GENMASK(3, 2)
--
--/*
-- * status codes
-- */
--#define STATUS_IDLE			0x0
--#define STATUS_WRITE_IN_PROGRESS	0x1
--#define STATUS_READ_IN_PROGRESS		0x2
--
--#define TIMEOUT			20 /* ms */
--
--/*
-- * Hardware abort codes from the DW_IC_TX_ABRT_SOURCE register
-- *
-- * Only expected abort codes are listed here,
-- * refer to the datasheet for the full list.
-- */
--#define ABRT_7B_ADDR_NOACK	0
--#define ABRT_10ADDR1_NOACK	1
--#define ABRT_10ADDR2_NOACK	2
--#define ABRT_TXDATA_NOACK	3
--#define ABRT_GCALL_NOACK	4
--#define ABRT_GCALL_READ		5
--#define ABRT_SBYTE_ACKDET	7
--#define ABRT_SBYTE_NORSTRT	9
--#define ABRT_10B_RD_NORSTRT	10
--#define ABRT_MASTER_DIS		11
--#define ARB_LOST		12
--
--#define DW_IC_TX_ABRT_7B_ADDR_NOACK	(1UL << ABRT_7B_ADDR_NOACK)
--#define DW_IC_TX_ABRT_10ADDR1_NOACK	(1UL << ABRT_10ADDR1_NOACK)
--#define DW_IC_TX_ABRT_10ADDR2_NOACK	(1UL << ABRT_10ADDR2_NOACK)
--#define DW_IC_TX_ABRT_TXDATA_NOACK	(1UL << ABRT_TXDATA_NOACK)
--#define DW_IC_TX_ABRT_GCALL_NOACK	(1UL << ABRT_GCALL_NOACK)
--#define DW_IC_TX_ABRT_GCALL_READ	(1UL << ABRT_GCALL_READ)
--#define DW_IC_TX_ABRT_SBYTE_ACKDET	(1UL << ABRT_SBYTE_ACKDET)
--#define DW_IC_TX_ABRT_SBYTE_NORSTRT	(1UL << ABRT_SBYTE_NORSTRT)
--#define DW_IC_TX_ABRT_10B_RD_NORSTRT	(1UL << ABRT_10B_RD_NORSTRT)
--#define DW_IC_TX_ABRT_MASTER_DIS	(1UL << ABRT_MASTER_DIS)
--#define DW_IC_TX_ARB_LOST		(1UL << ARB_LOST)
--
--#define DW_IC_TX_ABRT_NOACK		(DW_IC_TX_ABRT_7B_ADDR_NOACK | \
--					 DW_IC_TX_ABRT_10ADDR1_NOACK | \
--					 DW_IC_TX_ABRT_10ADDR2_NOACK | \
--					 DW_IC_TX_ABRT_TXDATA_NOACK | \
--					 DW_IC_TX_ABRT_GCALL_NOACK)
--
--static char *abort_sources[] = {
--	[ABRT_7B_ADDR_NOACK] =
--		"slave address not acknowledged (7bit mode)",
--	[ABRT_10ADDR1_NOACK] =
--		"first address byte not acknowledged (10bit mode)",
--	[ABRT_10ADDR2_NOACK] =
--		"second address byte not acknowledged (10bit mode)",
--	[ABRT_TXDATA_NOACK] =
--		"data not acknowledged",
--	[ABRT_GCALL_NOACK] =
--		"no acknowledgement for a general call",
--	[ABRT_GCALL_READ] =
--		"read after general call",
--	[ABRT_SBYTE_ACKDET] =
--		"start byte acknowledged",
--	[ABRT_SBYTE_NORSTRT] =
--		"trying to send start byte when restart is disabled",
--	[ABRT_10B_RD_NORSTRT] =
--		"trying to read when restart is disabled (10bit mode)",
--	[ABRT_MASTER_DIS] =
--		"trying to use disabled adapter",
--	[ARB_LOST] =
--		"lost arbitration",
--};
--
--static u32 dw_readl(struct dw_i2c_dev *dev, int offset)
--{
--	u32 value;
--
--	if (dev->accessor_flags & ACCESS_16BIT)
--		value = readw_relaxed(dev->base + offset) |
--			(readw_relaxed(dev->base + offset + 2) << 16);
--	else
--		value = readl_relaxed(dev->base + offset);
--
--	if (dev->accessor_flags & ACCESS_SWAP)
--		return swab32(value);
--	else
--		return value;
--}
--
--static void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset)
--{
--	if (dev->accessor_flags & ACCESS_SWAP)
--		b = swab32(b);
--
--	if (dev->accessor_flags & ACCESS_16BIT) {
--		writew_relaxed((u16)b, dev->base + offset);
--		writew_relaxed((u16)(b >> 16), dev->base + offset + 2);
--	} else {
--		writel_relaxed(b, dev->base + offset);
--	}
--}
- 
- static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
- {
-@@ -212,121 +43,6 @@ static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
- 	dw_writel(dev, dev->master_cfg, DW_IC_CON);
- }
- 
--static u32
--i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
--{
--	/*
--	 * DesignWare I2C core doesn't seem to have solid strategy to meet
--	 * the tHD;STA timing spec.  Configuring _HCNT based on tHIGH spec
--	 * will result in violation of the tHD;STA spec.
--	 */
--	if (cond)
--		/*
--		 * Conditional expression:
--		 *
--		 *   IC_[FS]S_SCL_HCNT + (1+4+3) >= IC_CLK * tHIGH
--		 *
--		 * This is based on the DW manuals, and represents an ideal
--		 * configuration.  The resulting I2C bus speed will be
--		 * faster than any of the others.
--		 *
--		 * If your hardware is free from tHD;STA issue, try this one.
--		 */
--		return (ic_clk * tSYMBOL + 500000) / 1000000 - 8 + offset;
--	else
--		/*
--		 * Conditional expression:
--		 *
--		 *   IC_[FS]S_SCL_HCNT + 3 >= IC_CLK * (tHD;STA + tf)
--		 *
--		 * This is just experimental rule; the tHD;STA period turned
--		 * out to be proportinal to (_HCNT + 3).  With this setting,
--		 * we could meet both tHIGH and tHD;STA timing specs.
--		 *
--		 * If unsure, you'd better to take this alternative.
--		 *
--		 * The reason why we need to take into account "tf" here,
--		 * is the same as described in i2c_dw_scl_lcnt().
--		 */
--		return (ic_clk * (tSYMBOL + tf) + 500000) / 1000000
--			- 3 + offset;
--}
--
--static u32 i2c_dw_scl_lcnt(u32 ic_clk, u32 tLOW, u32 tf, int offset)
--{
--	/*
--	 * Conditional expression:
--	 *
--	 *   IC_[FS]S_SCL_LCNT + 1 >= IC_CLK * (tLOW + tf)
--	 *
--	 * DW I2C core starts counting the SCL CNTs for the LOW period
--	 * of the SCL clock (tLOW) as soon as it pulls the SCL line.
--	 * In order to meet the tLOW timing spec, we need to take into
--	 * account the fall time of SCL signal (tf).  Default tf value
--	 * should be 0.3 us, for safety.
--	 */
--	return ((ic_clk * (tLOW + tf) + 500000) / 1000000) - 1 + offset;
--}
--
--static void __i2c_dw_enable(struct dw_i2c_dev *dev, bool enable)
--{
--	dw_writel(dev, enable, DW_IC_ENABLE);
--}
--
--static void __i2c_dw_enable_and_wait(struct dw_i2c_dev *dev, bool enable)
--{
--	int timeout = 100;
--
--	do {
--		__i2c_dw_enable(dev, enable);
--		if ((dw_readl(dev, DW_IC_ENABLE_STATUS) & 1) == enable)
--			return;
--
--		/*
--		 * Wait 10 times the signaling period of the highest I2C
--		 * transfer supported by the driver (for 400KHz this is
--		 * 25us) as described in the DesignWare I2C databook.
--		 */
--		usleep_range(25, 250);
--	} while (timeout--);
--
--	dev_warn(dev->dev, "timeout in %sabling adapter\n",
--		 enable ? "en" : "dis");
--}
--
--static unsigned long i2c_dw_clk_rate(struct dw_i2c_dev *dev)
--{
--	/*
--	 * Clock is not necessary if we got LCNT/HCNT values directly from
--	 * the platform code.
--	 */
--	if (WARN_ON_ONCE(!dev->get_clk_rate_khz))
--		return 0;
--	return dev->get_clk_rate_khz(dev);
--}
--
--static int i2c_dw_acquire_lock(struct dw_i2c_dev *dev)
--{
--	int ret;
--
--	if (!dev->acquire_lock)
--		return 0;
--
--	ret = dev->acquire_lock(dev);
--	if (!ret)
--		return 0;
--
--	dev_err(dev->dev, "couldn't acquire bus ownership\n");
--
--	return ret;
--}
--
--static void i2c_dw_release_lock(struct dw_i2c_dev *dev)
--{
--	if (dev->release_lock)
--		dev->release_lock(dev);
--}
--
- /**
-  * i2c_dw_init() - Initialize the designware I2C master hardware
-  * @dev: device private data
-@@ -457,25 +173,6 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- }
- EXPORT_SYMBOL_GPL(i2c_dw_init);
- 
--/*
-- * Waiting for bus not busy
-- */
--static int i2c_dw_wait_bus_not_busy(struct dw_i2c_dev *dev)
--{
--	int timeout = TIMEOUT;
--
--	while (dw_readl(dev, DW_IC_STATUS) & DW_IC_STATUS_ACTIVITY) {
--		if (timeout <= 0) {
--			dev_warn(dev->dev, "timeout waiting for bus ready\n");
--			return -ETIMEDOUT;
--		}
--		timeout--;
--		usleep_range(1000, 1100);
--	}
--
--	return 0;
--}
--
- static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
- {
- 	struct i2c_msg *msgs = dev->msgs;
-@@ -708,29 +405,6 @@ i2c_dw_read(struct dw_i2c_dev *dev)
- 	}
- }
- 
--static int i2c_dw_handle_tx_abort(struct dw_i2c_dev *dev)
--{
--	unsigned long abort_source = dev->abort_source;
--	int i;
--
--	if (abort_source & DW_IC_TX_ABRT_NOACK) {
--		for_each_set_bit(i, &abort_source, ARRAY_SIZE(abort_sources))
--			dev_dbg(dev->dev,
--				"%s: %s\n", __func__, abort_sources[i]);
--		return -EREMOTEIO;
--	}
--
--	for_each_set_bit(i, &abort_source, ARRAY_SIZE(abort_sources))
--		dev_err(dev->dev, "%s: %s\n", __func__, abort_sources[i]);
--
--	if (abort_source & DW_IC_TX_ARB_LOST)
--		return -EAGAIN;
--	else if (abort_source & DW_IC_TX_ABRT_GCALL_READ)
--		return -EINVAL; /* wrong msgs[] data */
--	else
--		return -EIO;
--}
--
- /*
-  * Prepare controller for a transaction and call i2c_dw_xfer_msg.
-  */
-@@ -818,12 +492,6 @@ i2c_dw_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
- 	return ret;
- }
- 
--static u32 i2c_dw_func(struct i2c_adapter *adap)
--{
--	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
--	return dev->functionality;
--}
--
- static const struct i2c_algorithm i2c_dw_algo = {
- 	.master_xfer = i2c_dw_xfer,
- 	.functionality = i2c_dw_func,
-@@ -946,29 +614,6 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--void i2c_dw_disable(struct dw_i2c_dev *dev)
--{
--	/* Disable controller */
--	__i2c_dw_enable_and_wait(dev, false);
--
--	/* Disable all interupts */
--	dw_writel(dev, 0, DW_IC_INTR_MASK);
--	dw_readl(dev, DW_IC_CLR_INTR);
--}
--EXPORT_SYMBOL_GPL(i2c_dw_disable);
--
--void i2c_dw_disable_int(struct dw_i2c_dev *dev)
--{
--	dw_writel(dev, 0, DW_IC_INTR_MASK);
--}
--EXPORT_SYMBOL_GPL(i2c_dw_disable_int);
--
--u32 i2c_dw_read_comp_param(struct dw_i2c_dev *dev)
--{
--	return dw_readl(dev, DW_IC_COMP_PARAM_1);
--}
--EXPORT_SYMBOL_GPL(i2c_dw_read_comp_param);
--
- int i2c_dw_probe(struct dw_i2c_dev *dev)
- {
- 	struct i2c_adapter *adap = &dev->adapter;
-@@ -976,7 +621,11 @@ int i2c_dw_probe(struct dw_i2c_dev *dev)
- 	
- 	init_completion(&dev->cmd_complete);
- 
--	ret = i2c_dw_init(dev);
-+	dev->init = i2c_dw_init;
-+	dev->disable = i2c_dw_disable;
-+	dev->disable_int = i2c_dw_disable_int;
-+
-+	ret = dev->init(dev);
- 	if (ret)
- 		return ret;
- 
-@@ -1013,5 +662,5 @@ int i2c_dw_probe(struct dw_i2c_dev *dev)
- }
- EXPORT_SYMBOL_GPL(i2c_dw_probe);
- 
--MODULE_DESCRIPTION("Synopsys DesignWare I2C bus adapter core");
-+MODULE_DESCRIPTION("Synopsys DesignWare I2C bus master adapter");
- MODULE_LICENSE("GPL");
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 206dea03b0d0..671bdc0fdb24 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -307,7 +307,7 @@ static int dw_i2c_plat_remove(struct platform_device *pdev)
- 
- 	i2c_del_adapter(&dev->adapter);
- 
--	i2c_dw_disable(dev);
-+	dev->disable(dev);
- 
- 	pm_runtime_dont_use_autosuspend(&pdev->dev);
- 	pm_runtime_put_sync(&pdev->dev);
-@@ -347,7 +347,7 @@ static int dw_i2c_plat_suspend(struct device *dev)
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct dw_i2c_dev *i_dev = platform_get_drvdata(pdev);
- 
--	i2c_dw_disable(i_dev);
-+	dev->disable(i_dev);
- 	i2c_dw_plat_prepare_clk(i_dev, false);
- 
- 	return 0;
-@@ -361,7 +361,7 @@ static int dw_i2c_plat_resume(struct device *dev)
- 	i2c_dw_plat_prepare_clk(i_dev, true);
- 
- 	if (!i_dev->pm_runtime_disabled)
--		i2c_dw_init(i_dev);
-+		dev->init(i_dev);
- 
- 	return 0;
- }
--- 
-2.11.0
++MODULE_AUTHOR("Peter Senna Tschudin <peter.senna@collabora.com>");
++MODULE_AUTHOR("Martyn Welch <martyn.welch@collabora.co.uk>");
++MODULE_DESCRIPTION("GE LVDS to DP++ display bridge)");
++MODULE_LICENSE("GPL v2");
