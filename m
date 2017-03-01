@@ -1,15 +1,18 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH] Documentation: dt: Add binding for
- /secure-chosen/stdout-path
-Date: Wed, 1 Mar 2017 18:42:37 +0000
-Message-ID: <456c743d-5963-3169-be1b-568c9012a993@arm.com>
-References: <55a2f3cbe477bc876a7547eeb4693218698b87fe.1488387801.git.jerome.forissier@linaro.org>
- <CAFEAcA9AX5kSMs-PBQWDeDo=PTLoBHPMKc6ctYvR4LVni3rWAA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 11/25] ARM: dts: Add Actions Semi S500 and LeMaker
+ Guitar
+Date: Wed, 1 Mar 2017 18:43:13 +0000
+Message-ID: <20170301184313.GO28874@leverpostej>
+References: <20170228063535.32069-1-afaerber@suse.de>
+ <20170228063535.32069-12-afaerber@suse.de>
+ <20170228123245.GF3691@leverpostej>
+ <11053e03-8e28-e93d-f1f6-2589a9f7800c@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFEAcA9AX5kSMs-PBQWDeDo=PTLoBHPMKc6ctYvR4LVni3rWAA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <11053e03-8e28-e93d-f1f6-2589a9f7800c@suse.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,82 +22,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Maydell <peter.maydell@linaro.org>, Jerome Forissier <jerome.forissier@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm-mail-list <linux-arm-kernel@lists.infradead.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: support@lemaker.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, outreachy-kernel@googlegroups.com, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/17 17:43, Peter Maydell wrote:
-> On 1 March 2017 at 17:08, Jerome Forissier <jerome.forissier@linaro.org> wrote:
->> Some platforms may use a single device tree to describe two address
->> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
->> for Secure-only devices"). For these platforms it makes sense to define
->> a secure counterpart of /chosen, namely: /secure-chosen. This new node
->> is meant to be used by the secure firmware to pass data to the secure
->> OS. Only the stdout-path property is supported for now.
->>
->> Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/arm/secure.txt | 15 ++++++++++++++-
->>  1 file changed, 14 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
->> index e31303f..e7c596a 100644
->> --- a/Documentation/devicetree/bindings/arm/secure.txt
->> +++ b/Documentation/devicetree/bindings/arm/secure.txt
->> @@ -32,7 +32,8 @@ describe the view of Secure world using the standard bindings. These
->>  secure- bindings only need to be used where both the Secure and Normal
->>  world views need to be described in a single device tree.
->>
->> -Valid Secure world properties:
->> +Valid Secure world properties
->> +-----------------------------
->>
->>  - secure-status : specifies whether the device is present and usable
->>    in the secure world. The combination of this with "status" allows
->> @@ -51,3 +52,15 @@ Valid Secure world properties:
->>     status = "disabled"; secure-status = "okay";     /* S-only */
->>     status = "disabled";                             /* disabled in both */
->>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
->> +
->> +The secure-chosen node
->> +----------------------
->> +
->> +Similar to the /chosen node which serves as a place for passing data
->> +between firmware and the operating system, the /secure-chosen node may
->> +be used to pass data to the secure OS. Only the properties defined
->> +below may appear in the /secure-chosen node. They have the same
->> +definition as when used under /chosen, unless explicitely stated
-> 
-> typo: "explicitly".
-> 
->> +otherwise.
->> +
->> +- stdout-path
-> 
-> What's the default for the Secure world if (a) the secure-chosen
-> node doesn't exist at all or (b) it does exist but doesn't
-> define stdout-path? Presumably it should be "fall back to
-> using the chosen node's stdout-path", to match the way we
-> do fallback for other secure world properties, but it would
-> be good to say so explicitly I think.
-
-I'd agree that it would be reasonable for the secure OS to fall back to
-parsing /chosen in the absence of /secure-chosen, but if the latter is
-present I would (at least naively) expect it to be authoritative. I can
-imagine the case of a cut-down version of some system implementing only
-one UART, where you might want to tell the Normal world OS to use that
-and the Secure OS to keep its output to itself - allowing fallbacks at
-the individual property level would make that harder than it needs to
-be, and in general seems like it might be more confusing than useful.
-
-Maintaining the principal that "secure-X" takes complete precedence over
-"X" seems to me to be the least surprising; it's just that in this one
-case X gets to be an entire node rather than a property because /chosen
-is special.
-
-Robin.
-
-> 
-> thanks
-> -- PMM
-> 
+T24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgMDQ6MTM6MDBQTSArMDEwMCwgQW5kcmVhcyBGw6RyYmVy
+IHdyb3RlOgo+IEFtIDI4LjAyLjIwMTcgdW0gMTM6MzIgc2NocmllYiBNYXJrIFJ1dGxhbmQ6Cj4g
+PiBPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAwNzozNToyMUFNICswMTAwLCBBbmRyZWFzIEbDpHJi
+ZXIgd3JvdGU6Cgo+ID4+ICsjaW5jbHVkZSAic2tlbGV0b24uZHRzaSIKPiA+IAo+ID4gUGxlYXNl
+IGRvbid0IGluY2x1ZGUgc2tlbGV0b24uZHRzaS4KPiAKPiBXYXNuJ3QgYXdhcmUgdGhhdCB3YXMg
+cGVybWlzc2libGUuIEkgbm93IHNlZSBpdCBoYXMgYmVlbiB1cGRhdGVkIHdpdGggYQo+IHRleHR1
+YWwgY29tbWVudCwgd2hpY2ggcHJlZGF0ZXMgbXkgcGFzdCB1c2VzIG9mIHNrZWxldG9uLmR0c2kg
+LSBmb3IKPiBvdGhlciBwZW5kaW5nIHdvcmsgc3VjaCBhcyBGTTQgYW5kIFhNQzQ1MDAgSSBvbmx5
+IG5vdGljZWQgaXQgd2FzIG1vdmVkCj4gb3V0IG9mIGFybXY3bS5kdHNpIHNvIHRoYXQgZHRjIHN0
+YXJ0ZWQgc3Bld2luZyBzY2FyeSBtZXNzYWdlcy4gOykKPiAKPiBBICN3YXJuaW5nIG1pZ2h0IGJl
+IGEgbW9yZSBlZmZlY3RpdmUgd2F5IHRvIG1ha2UgcGVvcGxlIGF3YXJlIG9mIGl0cwo+IGRlcHJl
+Y2F0aW9uIC0gYnV0IHNhZGx5IHdlIGhhdmUgdXNlcnMgdGhhdCBwcmVkYXRlICNpbmNsdWRlOgo+
+IAo+ICQgZ2l0IGdyZXAgL2luY2x1ZGUvIC0tIGFyY2gvYXJtL2Jvb3QvZHRzLyB8IGdyZXAgc2tl
+bGV0b24uZHRzaSB8IHdjIC0tbGluZXMKPiAzMgo+ICQgZ2l0IGdyZXAgL2luY2x1ZGUvIC0tIGFy
+Y2gvYXJtL2Jvb3QvZHRzLyB8IGdyZXAgc2tlbGV0b242NC5kdHNpIHwgd2MKPiAtLWxpbmVzCj4g
+MAo+ICQgZ2l0IGdyZXAgc2tlbGV0b24gLS0gYXJjaC9hcm0vYm9vdC9kdHMvIHwgd2MgLS1saW5l
+cwo+IDExNwoKSSBkZWxpYmVyYXRlbHkgZGlkbid0IGdvIHRoYXQgcm91dGUsIHNpbmNlIHBlb3Bs
+ZSB3b3VsZCBibGluZGx5IGZpeCB1cAp0aGUgd2FybmluZyBhbmQgbWVzcyBpdCB1cCAoZS5nLiBm
+b3JnZXR0aW5nIHRvIGFkZCB0aGUgcmVxdWlyZWQgbm9kZXMpLgoKV2hpbGUgaXQgc2hvdWxkIGJl
+IGF2b2lkZWQgZm9yIG5ldyBkdHMsIGl0J3MgbGFyZ2VseSBub3QgcHJvYmxlbWF0aWMgZm9yCm9s
+ZCBkdHMsIGFuZCB3ZSBjYW4gZml4IHRob3NlIHVwIGF0IG91ciBsZWlzdXJlLgoKPiA+IFBsZWFz
+ZSBhZGQgdGhlIHJlbGV2YW50IG5vZGVzIGFuZAo+ID4gcHJvcGVydGllcyBleHBsY2lpdGx5IHRv
+IHlvdXIgZHRze2ksfSBmaWxlcy4KPiAKPiBHcmVhdCwgd2lsbCBkby4KPiAKPiBCdXQgdGhpcyBz
+ZXJpZXMgaGFzIGdyb3duIHRvbyBsYXJnZSB0byByZXNlbmQganVzdCBmb3Igc3VjaCBuaXRzLiBJ
+cwo+IHRoZXJlIGEgY2hhbmNlIHdlIGNhbiBnZXQgaW5pdGlhbCBwYXRjaGVzIHF1ZXVlZCBvbiBz
+b21lIGFybS1zb2MKPiBmb3ItbmV4dCBicmFuY2ggc29vbmlzaD8gSXQgc2VlbXMgLXJjMSBwdWxs
+cyB3ZXJlIG1lcmdlZCA1IGRheXMgYWdvPwoKVGhlcmUgc2VlbSB0byBiZSBvdGhlciBjb21tZW50
+cyBvbiB0aGlzIHNlcmllcywgYW5kIEkgd2FzIHVuZGVyIHRoZQppbXByZXNzaW9uIHRoYXQgYXJt
+LXNvYyBnZW5lcmFsbHkgcHVsbGVkIGJyYW5jaGVzLgoKRXZlbiBpZiB5b3UncmUgbm90IGdvaW5n
+IHRvIHJlcG9zdCwgc3VyZWx5IHlvdSBjYW4gZm9sZCBpbiB0aGUgZml4dXAKYmVmb3JlIHNlbmRp
+bmcgdGhlIHB1bGwgcmVxdWVzdD8KClRoYW5rcywKTWFyay4KCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
