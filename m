@@ -1,62 +1,88 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: allwinner: add r_ccu node
-Date: Wed,  1 Mar 2017 12:15:41 +0800
-Message-ID: <20170301041541.24388-4-icenowy@aosc.xyz>
-References: <20170301041541.24388-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH V3 0/4] PCI: exynos: use the PHY generic framework
+Date: Wed, 1 Mar 2017 10:08:20 +0530
+Message-ID: <58B6503C.9090107@ti.com>
+References: <CGME20170213082615epcas5p2f5ecabbd5853a8e27da5f88fcae85158@epcas5p2.samsung.com>
+ <20170213082613.19628-1-jh80.chung@samsung.com>
+ <20170215211120.GC6981@bhelgaas-glaptop.roam.corp.google.com>
+ <04b568d2-d85e-9cbd-1379-d657f574f279@samsung.com>
+ <20170217195146.GA17762@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBVMW3HCQKGQEJIR2TWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170301041541.24388-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170217195146.GA17762@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-pci@vger.kernel.org, bhelgaas@google.com, krzk@kernel.org, linux-kernel@vger.kernel.org, jingoohan1@gmail.com, javier@osg.samsung.com, kgene@kernel.org, linux-samsung-soc@vger.kernel.org, cpgs@samsung.com, niyas.ahmed@samsung.com, alim.akhtar@samsung.com, pankaj.dubey@samsung.com, devicetree@vger.kernel.org, mark.rutland@arm.com, vivek.gautam@codeaurora.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A64 SoC have a CCU (r_ccu) in PRCM block.
+Hi Bjorn,
 
-Add support for it.
+On Saturday 18 February 2017 01:21 AM, Bjorn Helgaas wrote:
+> On Thu, Feb 16, 2017 at 07:33:15AM +0900, Jaehoon Chung wrote:
+>> Dear Bjorn,
+>>
+>> On 02/16/2017 06:11 AM, Bjorn Helgaas wrote:
+>>> On Mon, Feb 13, 2017 at 05:26:09PM +0900, Jaehoon Chung wrote:
+>>>> This patcheset is for using PHY generic framework.
+>>>> Current pci-exyns doesn't use the phy framework since there haven't been on
+>>>> PHY subsystem when Exynos5440 had bean upstreamed.
+>>>> It's making a difficult to upstream the other Exynos variants because of different
+>>>> PHY registers.
+>>>>
+>>>> This patcheset has the below modifications:
+>>>> 1) Introduces the phy-exynos-pcie
+>>>> 2) Handles PHY register from PHY framework for pci-exynos
+>>>> 3) Modifies the dt-binding of pci-exynos
+>>>> 4) Maintains the backward compatibility
+>>>>
+>>>> Changelog on V3:
+>>>> - Drops "ARM: dts: exynos5440: support the phy-pcie node of pcie"
+>>>>   : Will send this patch after applying this patchset.
+>>>> - Fixes typo
+>>>> - Based on latest PCI git repository (host-exynos branch)
+>>>> - Changes commit message
+>>>> - Removes the dependency
+>>>>
+>>>> Changelog on V2:
+>>>> - Keep current codes for backward compatibility
+>>>> - Fixes some typos
+>>>> - Split the patches for removing the dependency
+>>>> - Removes the unnecessary codes
+>>>> - Change the patch's sequence
+>>>> - Based on latest PCI git repository.(next branch)
+>>>>
+>>>> Jaehoon Chung (4):
+>>>>   Documetation: samsung-phy: add the exynos-pcie-phy binding
+>>>>   phy: phy-exynos-pcie: Add support for Exynos PCIe phy
+>>>>   Documetation: binding: modify the exynos5440 pcie binding
+>>>>   PCI: exynos: support the using PHY generic framework
+>>>>
+>>>>  .../bindings/pci/samsung,exynos5440-pcie.txt       |  29 +++
+>>>>  .../devicetree/bindings/phy/samsung-phy.txt        |  17 ++
+>>>>  drivers/pci/host/pci-exynos.c                      |  54 +++-
+>>>>  drivers/phy/Kconfig                                |   8 +
+>>>>  drivers/phy/Makefile                               |   1 +
+>>>>  drivers/phy/phy-exynos-pcie.c                      | 285 +++++++++++++++++++++
+>>>>  6 files changed, 390 insertions(+), 4 deletions(-)
+>>>>  create mode 100644 drivers/phy/phy-exynos-pcie.c
+>>>
+>>> I made the updates Vivek suggested and provisionally added these to my
+>>> pci/host-exynos branch to get some build testing.
+>>
+>> Thanks!
+>>
+>>>
+>>> Kishon, I guess it probably makes more sense for me to apply this
+>>> because even though the drivers/pci changes are small, I think they
+>>> depend on other pci-exynos.c changes that are on my branch but not in
+>>> Linus' tree yet.
+> 
+> I haven't heard from Kishon, but I merged these to my -next branch for
+> v4.11.
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+I might have missed this one. Thanks for taking the patches.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 1c64ea2d23f9..e8be100b91a0 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -43,8 +43,10 @@
-  */
- 
- #include <dt-bindings/clock/sun50i-a64-ccu.h>
-+#include <dt-bindings/clock/sun6i-r-ccu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/sun50i-a64-ccu.h>
-+#include <dt-bindings/reset/sun6i-r-ccu.h>
- 
- / {
- 	interrupt-parent = <&gic>;
-@@ -392,5 +394,14 @@
- 			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
- 		};
-+
-+		r_ccu: clock@1f01400 {
-+			compatible = "allwinner,sun50i-a64-r-ccu";
-+			reg = <0x01cf01400 0x100>;
-+			clocks = <&osc24M>, <&osc32k>;
-+			clock-names = "hosc", "losc";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
- 	};
- };
--- 
-2.11.1
+Thanks
+Kishon
