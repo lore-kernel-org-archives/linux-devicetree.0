@@ -1,139 +1,53 @@
-From: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Wed, 1 Mar 2017 09:38:07 +0100
-Message-ID: <20170301083807.GA12981@samfundet.no>
-References: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
- <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
- <20170221171438.e5hvruoixafpcdps@piout.net>
- <CACiLriSdRM4ZfoDsxFhf6ZVwAtacJOJ28M8CvOg6kC_XN0T-Mw@mail.gmail.com>
- <20170224081430.GB19663@samfundet.no>
- <20170224092742.3ce205e2@bbrezillon>
- <20170224085209.GA27812@samfundet.no>
- <20170224095509.777da771@bbrezillon>
- <20170224090435.GA11313@samfundet.no>
- <20170301092224.169dc7ae@bbrezillon>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
+ binding to OPP nodes
+Date: Wed, 1 Mar 2017 09:45:45 +0100
+Message-ID: <CAMuHMdWnDJ2RvGgYOxSiB=2Z32-bZwNjnEQG6TK2Umtf4eiAYw@mail.gmail.com>
+References: <cover.1487926924.git.viresh.kumar@linaro.org> <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
+ <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop> <20170228065711.GD19417@vireshk-i7>
+ <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com>
+ <CAPDyKFo5TjTa-hTzNp5KCpozU87L22piCXaSjWMTr4xVkgP+Pg@mail.gmail.com>
+ <CAL_Jsq+7DGX_1U99cc3rhk8zzSj6iKe3kpijp7KTz90xXA_V9g@mail.gmail.com> <20170301061402.GE24323@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170301092224.169dc7ae@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?iso-8859-1?Q?H=E5vard?= Skinnemoen <hskinn>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170301061402.GE24323@vireshk-i7>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Around Wed 01 Mar 2017 09:22:24 +0100 or thereabout, Boris Brezillon wrote:
-> Hi Hans-Christian,
-> =
+On Wed, Mar 1, 2017 at 7:14 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 28-02-17, 09:52, Rob Herring wrote:
+>> On Tue, Feb 28, 2017 at 9:14 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> > This comes from the early design of the generic PM domain, thus I
+>> > assume we have some HW with such complex PM topology. However, I don't
+>> > know if it is actually being used.
+>> >
+>> > Moreover, the corresponding DT bindings for "power-domains" parents,
+>> > can easily be extended to cover more than one parent. See more in
+>> > Documentation/devicetree/bindings/power/power_domain.txt
+>>
+>> I could easily see device having 2 power domains. For example a cpu
+>> may have separate domains for RAM/caches and logic.
+>
+> An important thing here is that PM domain doesn't support such devices. i.e. a
+> device isn't allowed to have multiple PM domains today. So a way to support such
+> devices can be to create a virtual PM domain, that has two parents and device as
+> its child.
 
-> On Fri, 24 Feb 2017 10:04:35 +0100
-> Hans-Christian Noren Egtvedt <egtvedt@samfundet.no> wrote:
-> =
+As clock domains (and their support code) are fairly orthogonal to power
+areas, currently our power area controller driver just forwards the
+clock handling
+to the clock driver (cfr. rcar-sysc).
 
->> Around Fri 24 Feb 2017 09:55:09 +0100 or thereabout, Boris Brezillon wro=
-te:
->> > On Fri, 24 Feb 2017 09:52:09 +0100
->> > Hans-Christian Noren Egtvedt <egtvedt@samfundet.no> wrote:  =
+Gr{oetje,eeting}s,
 
->> >> Around Fri 24 Feb 2017 09:27:42 +0100 or thereabout, Boris Brezillon =
-wrote:  =
+                        Geert
 
->> >> > On Fri, 24 Feb 2017 09:14:30 +0100 Hans-Christian Noren Egtvedt <eg=
-tvedt@samfundet.no> wrote:    =
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
->> >> >> Around Thu 23 Feb 2017 21:18:13 -0800 or thereabout, H=E5vard Skin=
-nemoen wrote:    =
-
->> >> >> > On Tue, Feb 21, 2017 at 9:14 AM, Alexandre Belloni
->> >> >> > <alexandre.belloni@free-electrons.com> wrote:      =
-
->> >> >> >> On 21/02/2017 at 18:43:35 +0200, Andy Shevchenko wrote:      =
-
->> >> =
-
->> >> <snipp>
->> >>   =
-
->> >> >> >> If nobody complains about the 4.10 breakage, You'll have plenty=
- of time
->> >> >> >> to remove it for 4.12      =
-
->> >> >> > =
-
->> >> >> > I'm fine with that, but I haven't put much effort into keeping it
->> >> >> > alive lately. If Hans-Christian agrees, I'm willing to post a pa=
-tch to
->> >> >> > remove it, or ack someone else's patch.      =
-
->> >> >> =
-
->> >> >> Then lets plan this for 4.12, either you H=E5vard whip up a patch =
-or I can
->> >> >> eventually do it.
->> >> >> =
-
->> >> >> I can push it through the linux-avr32 git tree on kernel.org.
->> >> >>     =
-
->> >> > =
-
->> >> > Can you do that just after 4.11-rc1 is released and provide a topic
->> >> > branch I can pull in my nand/next branch, so that I can rework this
->> >> > patch and drop all the pdata-compat code (as suggested by Andy).    =
-
->> >> =
-
->> >> OK, I will try to prepare it during the weekend.
->> >> =
-
->> >> Any reason to wait for 4.11-rc1? AFAIK Linus prefers the larger chang=
-es
->> >> before he starts tagging rc's.
->> >>   =
-
->> > =
-
->> > Oh, so you want to queue it for 4.11, that's even better.  =
-
->> =
-
->> Perhaps I misunderstood you, by after 4.11-rc1 you mean queue it for 4.1=
-2?
->> =
-
->> I will see what I get around to do in the weekend, it should be pretty
->> straightforward, just want to make sure we remove all the bits.
->> =
-
-> =
-
-> Any progress on this? I plan to send a new version of this series soon
-> and I'd like to know if I should drop pdata/avr32 support or not. Note
-> that I'm targeting 4.12, so, as long as you drop avr32 support in 4.12
-> we should be good.
-
-I got around to make the patch series during the weekend, but I thought it
-would be a good idea sending them to the kernel mailing list as a FYI.
-
-Also, I was unsure if I should send the driver removals through the
-sub-maintainers trees, or if I can push them through linux-avr32 tree.
-
-I have a patch removing the pata driver for AVR32.
-
--- =
-
-mvh
-Hans-Christian Noren Egtvedt
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
