@@ -1,18 +1,16 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCHv2 1/3] dt-bindings: arm: update Armada CP110 system
- controller binding
-Date: Wed, 1 Mar 2017 11:01:27 -0800
-Message-ID: <20170301190127.GO25384@codeaurora.org>
-References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482316017-22154-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20161222001453.GW8288@codeaurora.org>
- <20170301165245.5f2fbfaf@free-electrons.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v3 2/7] mmc: bcm2835: Add new driver for the sdhost
+ controller.
+Date: Wed, 1 Mar 2017 20:21:52 +0100 (CET)
+Message-ID: <68761051.37200.1488396112552@email.1und1.de>
+References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
+ <1487668026-7100-3-git-send-email-kraxel@redhat.com>
+ <87tw7c27xk.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170301165245.5f2fbfaf@free-electrons.com>
+In-Reply-To: <87tw7c27xk.fsf@eliezer.anholt.net>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,45 +20,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Hanna Hawa <hannah@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Gerd Hoffmann <kraxel@redhat.com>, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, swarren@wwwdotorg.org, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01, Thomas Petazzoni wrote:
-> Stephen,
-> =
-
-> On Wed, 21 Dec 2016 16:14:53 -0800, Stephen Boyd wrote:
-> > On 12/21, Thomas Petazzoni wrote:
-> > > It turns out that in the CP110 HW block present in Marvell Armada
-> > > 7K/8K SoCs, gatable clock n=B018 not only controls SD/MMC, but also t=
-he
-> > > GOP block. This commit updates the Device Tree binding for this piece
-> > > of hardware accordingly.
-> > > =
-
-> > > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> > > ---  =
-
-> > =
-
-> > Applied to clk-next
-> =
-
-> Even though you said you applied it, I still don't see this patch in
-> mainline, while PATCH 2/3 of this series is now in mainline.
-> =
-
-> Was this patch forgotten? Let me know if I should resend it, but I'm
-> pretty sure it still applies, since no other changes on this file have
-> been merged since quite a while.
-> =
-
-
-No worries. I've made a note to put it into the fixes queue to
-send off after rc1.
-
--- =
-
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Cj4gRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gaGF0IGFtIDEuIE3DpHJ6IDIwMTcgdW0g
+MTk6MDAgZ2VzY2hyaWViZW46Cj4gCj4gCj4gR2VyZCBIb2ZmbWFubiA8a3JheGVsQHJlZGhhdC5j
+b20+IHdyaXRlczoKPiAKPiA+IEZyb206IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4g
+Pgo+ID4gVGhlIDI4MzUgaGFzIHR3byBTRCBjb250cm9sbGVyczogVGhlIEFyYXNhbiBzZGhjaSBj
+b250cm9sbGVyIChzdXBwb3J0ZWQKPiA+IGJ5IHRoZSBpcHJvYyBkcml2ZXIpIGFuZCBhIGN1c3Rv
+bSBzZGhvc3QgY29udHJvbGxlci4gIFRoaXMgcGF0Y2ggYWRkcyBhCj4gPiBkcml2ZXIgZm9yIHRo
+ZSBsYXR0ZXIuCj4gPgo+ID4gVGhlIHNkaGNpIGNvbnRyb2xsZXIgc3VwcG9ydHMgYm90aCBzZGNh
+cmQgYW5kIHNkaW8uICBUaGUgc2Rob3N0Cj4gPiBjb250cm9sbGVyIHN1cHBvcnRzIHRoZSBzZGNh
+cmQgb25seSwgYnV0IGhhcyBiZXR0ZXIgcGVyZm9ybWFuY2UuICBBbHNvCj4gPiBub3RlIHRoYXQg
+dGhlIHJwaTMgaGFzIHNkaW8gd2lmaSwgc28gZHJpdmluZyB0aGUgc2RjYXJkIHdpdGggdGhlIHNk
+aG9zdAo+ID4gY29udHJvbGxlciBhbGxvd3MgdG8gdXNlIHRoZSBzZGhjaSBjb250cm9sbGVyIGZv
+ciB3aWZpIHN1cHBvcnQuCj4gPgo+ID4gVGhlIGNvbmZpZ3VyYXRpb24gaXMgZG9uZSBieSBkZXZp
+Y2V0cmVlIHZpYSBwaW4gbXV4aW5nLiAgQm90aCBTRAo+ID4gY29udHJvbGxlciBhcmUgYXZhaWxh
+YmxlIG9uIHRoZSBzYW1lIHBpbnMgKDIgcGluIGdyb3VwcyA9IHBpbiAyMiB0byAyNyArCj4gPiBw
+aW4gNDggdG8gNTMpLiAgU28gaXQncyBwb3NzaWJsZSB0byB1c2UgYm90aCBTRCBjb250cm9sbGVy
+cyBhdCB0aGUgc2FtZQo+ID4gdGltZSB3aXRoIGRpZmZlcmVudCBwaW4gZ3JvdXBzLgo+ID4KPiA+
+IFRoZSBjb2RlIHdhcyBvcmlnaW5hbGx5IHdyaXR0ZW4gYnkgUGhpbCBFbHdlbGwgaW4gdGhlIGRv
+d25zdHJlYW0KPiA+IFJhc2JwZXJyeSBQaSB0cmVlLCBhbmQgSSBkaWQgYSBtYWpvciBjbGVhbnVw
+IG9uIGl0ICgrMzE5LCAtNzA3IGxpbmVzCj4gPiBvdXQgb2YgdGhlIG9yaWdpbmFsIDIwNTUpIGZv
+ciBpbmNsdXNpb24uCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5o
+b2x0Lm5ldD4KPiAKPiBVbGYsIHdoYXQgZG8geW91IG5lZWQgZG9uZSB0byB0aGlzIGRyaXZlciBw
+YXRjaCBiZWZvcmUgaXQgY2FuIGdvIGluPwo+IFRoZSBjb21taXQgbWVzc2FnZSBzZWVtcyBsaWtl
+IGl0IGNvdWxkIHVzZSBzb21lIHJld3JpdGluZyBhdCB0aGlzIHBvaW50Cj4gKFBlcnNvbmFsbHkg
+SSB3b3VsZCBkcm9wIHRoZSBkZXRhaWxlZCBjaGFuZ2Vsb2dzIGZyb20gU3RlZmFuIGFuZCBHZXJk
+LAo+IHVwZGF0aW5nIHRoZSBsYXN0IHBhcmFncmFwaCBoZXJlIHRvIGdpdmUgdGhlbSBjcmVkaXQp
+LCBidXQgd2hhdCdzCj4gaW1wb3J0YW50IHRvIG1lIGlzIGdldHRpbmcgdGhlIGRyaXZlciBpbiBz
+byB0aGF0IGRpc3Ryb3MgZG9uJ3QgaGF2ZSB0bwo+IGNhcnJ5IHRoaXMgcGF0Y2ggZm9yIHdpZmkg
+c3VwcG9ydC4KCkknbSBzdGlsbCB3b3JraW5nIG9uIDMgc21hbGwgcGF0Y2hlcyBmb3IgdGhpcyBk
+cml2ZXI6CgoxLiB0cml2aWFsIGVycm9yIGluIGEgcmVnaXN0ZXIgY29tbWVudAoyLiBpZ25vcmUg
+U0RDTURfRkFJTF9GTEFHIGR1cmluZyBiY20yODM1X2ZpbmlzaF9jb21tYW5kIChkb3duc3RyZWFt
+IFsxXSkKMy4gcmVtb3ZlIHVubmVjZXNzYXJ5IGNhbGwgdG8gYmNtMjgzNV9yZXNldF9pbnRlcm5h
+bAoKSSBwbGFuIHRvIHN1Ym1pdCB0aGVtIG9uIEZyaWRheS4KClsxXSAtIGh0dHBzOi8vZ2l0aHVi
+LmNvbS9yYXNwYmVycnlwaS9saW51eC9jb21taXQvNzExY2FkZTg2NmM5Zjg2NWY5YjI4M2M5MzY5
+ZTk0ODZmMjdkMWZlYwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
