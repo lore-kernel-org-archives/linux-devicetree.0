@@ -1,113 +1,120 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 3/4] arm: dts: imx: Add iMX6Q-based Kontron SMARC-sAMX6i
- module
-Date: Tue, 28 Feb 2017 17:49:57 -0600
-Message-ID: <CAL_Jsq+9EA72_Om4h3q3dGpDVAdkjDKsSkNU_S+3a81zaU73pA@mail.gmail.com>
-References: <20170219202801.2082-1-plaes@plaes.org>
- <20170219202801.2082-4-plaes@plaes.org>
- <CAL_JsqJzP5e0fcM==cqkAe=x9Yf+H7i+k1H0udaknY_h6cbOSQ@mail.gmail.com>
- <20170228231010.GD21222@n2100.armlinux.org.uk>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 01/36] [media] dt-bindings: Add bindings for i.MX media
+ driver
+Date: Tue, 28 Feb 2017 16:00:52 -0800
+Message-ID: <22ce523a-9553-d353-e271-fe47728bd650@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-2-git-send-email-steve_longerbeam@mentor.com>
+ <20170227143823.25oxk72jul3ldvpb@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170228231010.GD21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Priit Laes <plaes@plaes.org>, Heiko Stuebner <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170227143823.25oxk72jul3ldvpb@rob-hp-laptop>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 5:10 PM, Russell King - ARM Linux
-<linux@armlinux.org.uk> wrote:
-> On Tue, Feb 28, 2017 at 05:06:02PM -0600, Rob Herring wrote:
->> On Sun, Feb 19, 2017 at 2:28 PM, Priit Laes <plaes@plaes.org> wrote:
->> > SMARC-sAMX6i is a SMARC (Smart Mobility Architecture) compliant
->> > module.
->> >
->> > Signed-off-by: Priit Laes <plaes@plaes.org>
->> > ---
->> >  arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi | 434 ++++++++++++++++++++++++++++++
->> >  1 file changed, 434 insertions(+)
->> >  create mode 100644 arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
->> >
->> > diff --git a/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
->> > new file mode 100644
->> > index 0000000..e3d7a35
->> > --- /dev/null
->> > +++ b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
->> > @@ -0,0 +1,434 @@
->> > +/*
->> > + * Copyright 2017 Priit Laes <plaes@plaes.org>
->> > + *
->> > + * Based on initial work by Nikita Yushchenko <nyushchenko at dev.rtsoft.ru>
->> > + *
->> > + * This file is dual-licensed: you can use it either under the terms
->> > + * of the GPL or the X11 license, at your option. Note that this dual
->> > + * licensing only applies to this file, and not this project as a
->> > + * whole.
->> > + *
->> > + *  a) This file is free software; you can redistribute it and/or
->> > + *     modify it under the terms of the GNU General Public License as
->> > + *     published by the Free Software Foundation; either version 2 of
->> > + *     the License, or (at your option) any later version.
->> > + *
->> > + *     This file is distributed in the hope that it will be useful,
->> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
->> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> > + *     GNU General Public License for more details.
->> > + *
->> > + * Or, alternatively,
->> > + *
->> > + *  b) Permission is hereby granted, free of charge, to any person
->> > + *     obtaining a copy of this software and associated documentation
->> > + *     files (the "Software"), to deal in the Software without
->> > + *     restriction, including without limitation the rights to use,
->> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
->> > + *     sell copies of the Software, and to permit persons to whom the
->> > + *     Software is furnished to do so, subject to the following
->> > + *     conditions:
->> > + *
->> > + *     The above copyright notice and this permission notice shall be
->> > + *     included in all copies or substantial portions of the Software.
->> > + *
->> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
->> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
->> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
->> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
->> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
->> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
->> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
->> > + *     OTHER DEALINGS IN THE SOFTWARE.
->>
->> Use SPDX tags here:
->>
->> SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->>
->> While it says X11, this is really MIT license text.
->
-> No.  Read the FSF's page on licenses:
->
->    X11 License (#X11License)
-> ...
->            This license is sometimes called the MIT license, but that term is
->            misleading, since MIT has used many licenses for software.
->
-> Never use the term "MIT license", it's ambiguous, and I doubt that such
-> a term (given the above) would stand up in a court of law as identifying
-> any particular license.
+Hi Rob,
 
-The SPDX tags have a very exact, documented meaning. That's the point.
-X11 means this[1]. MIT means this[2].
 
-Rob
+On 02/27/2017 06:38 AM, Rob Herring wrote:
+> On Wed, Feb 15, 2017 at 06:19:03PM -0800, Steve Longerbeam wrote:
+>> Add bindings documentation for the i.MX media driver.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>> ---
+>>   Documentation/devicetree/bindings/media/imx.txt | 66 +++++++++++++++++++++++++
+>>   1 file changed, 66 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
+>> new file mode 100644
+>> index 0000000..fd5af50
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/imx.txt
+>> @@ -0,0 +1,66 @@
+>> +Freescale i.MX Media Video Device
+>> +=================================
+>> +
+>> +Video Media Controller node
+>> +---------------------------
+>> +
+>> +This is the media controller node for video capture support. It is a
+>> +virtual device that lists the camera serial interface nodes that the
+>> +media device will control.
+>> +
+>> +Required properties:
+>> +- compatible : "fsl,imx-capture-subsystem";
+>> +- ports      : Should contain a list of phandles pointing to camera
+>> +		sensor interface ports of IPU devices
+>> +
+>> +example:
+>> +
+>> +capture-subsystem {
+>> +	compatible = "fsl,capture-subsystem";
+>> +	ports = <&ipu1_csi0>, <&ipu1_csi1>;
+>> +};
+>> +
+>> +fim child node
+>> +--------------
+>> +
+>> +This is an optional child node of the ipu_csi port nodes. If present and
+>> +available, it enables the Frame Interval Monitor. Its properties can be
+>> +used to modify the method in which the FIM measures frame intervals.
+>> +Refer to Documentation/media/v4l-drivers/imx.rst for more info on the
+>> +Frame Interval Monitor.
+> This should have a compatible string.
 
-[1] https://spdx.org/licenses/X11.html#licenseText
-[2] https://spdx.org/licenses/MIT.html#licenseText
+I don't think so. The fim child node does not represent a device. The
+CSI supports monitoring frame intervals (reporting via a v4l2 event
+when a measured frame interval falls outside the nominal interval
+by some tolerance value). The fim child node is only to group properties
+for the FIM under a common child node.
+
+>> +
+>> +Optional properties:
+>> +- fsl,input-capture-channel: an input capture channel and channel flags,
+>> +			     specified as <chan flags>. The channel number
+>> +			     must be 0 or 1. The flags can be
+>> +			     IRQ_TYPE_EDGE_RISING, IRQ_TYPE_EDGE_FALLING, or
+>> +			     IRQ_TYPE_EDGE_BOTH, and specify which input
+>> +			     capture signal edge will trigger the input
+>> +			     capture event. If an input capture channel is
+>> +			     specified, the FIM will use this method to
+>> +			     measure frame intervals instead of via the EOF
+>> +			     interrupt. The input capture method is much
+>> +			     preferred over EOF as it is not subject to
+>> +			     interrupt latency errors. However it requires
+>> +			     routing the VSYNC or FIELD output signals of
+>> +			     the camera sensor to one of the i.MX input
+>> +			     capture pads (SD1_DAT0, SD1_DAT1), which also
+>> +			     gives up support for SD1.
+>> +
+>> +
+>> +mipi_csi2 node
+>> +--------------
+>> +
+>> +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
+>> +CSI-2 sensors.
+>> +
+>> +Required properties:
+>> +- compatible	: "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
+>> +- reg           : physical base address and length of the register set;
+>> +- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
+>> +                  (the DPHY clock), video_27m, and eim_podf;
+>> +- clock-names	: must contain "dphy", "cfg", "pix";
+> Don't you need ports to describe the sensor and IPU connections?
+
+Done.
+
+Steve
