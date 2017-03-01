@@ -1,11 +1,15 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v2 5/5] pinctrl: sunxi: Add A64 R_PIO controller support
-Date: Thu,  2 Mar 2017 02:09:30 +0800
-Message-ID: <20170301180930.13155-1-icenowy@aosc.xyz>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] Documentation: dt: Add binding for
+ /secure-chosen/stdout-path
+Date: Wed, 1 Mar 2017 18:42:37 +0000
+Message-ID: <456c743d-5963-3169-be1b-568c9012a993@arm.com>
+References: <55a2f3cbe477bc876a7547eeb4693218698b87fe.1488387801.git.jerome.forissier@linaro.org>
+ <CAFEAcA9AX5kSMs-PBQWDeDo=PTLoBHPMKc6ctYvR4LVni3rWAA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFEAcA9AX5kSMs-PBQWDeDo=PTLoBHPMKc6ctYvR4LVni3rWAA@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,182 +19,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andre Przywara <andre.przywara@arm.com>
-Cc: linux-gpio@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Peter Maydell <peter.maydell@linaro.org>, Jerome Forissier <jerome.forissier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm-mail-list <linux-arm-kernel@lists.infradead.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The A64 has a R_PIO pin controller, similar to the one found on the H3 SoC.
-Add support for the pins controlled by the R_PIO controller.
+On 01/03/17 17:43, Peter Maydell wrote:
+> On 1 March 2017 at 17:08, Jerome Forissier <jerome.forissier@linaro.org> wrote:
+>> Some platforms may use a single device tree to describe two address
+>> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+>> for Secure-only devices"). For these platforms it makes sense to define
+>> a secure counterpart of /chosen, namely: /secure-chosen. This new node
+>> is meant to be used by the secure firmware to pass data to the secure
+>> OS. Only the stdout-path property is supported for now.
+>>
+>> Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/secure.txt | 15 ++++++++++++++-
+>>  1 file changed, 14 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+>> index e31303f..e7c596a 100644
+>> --- a/Documentation/devicetree/bindings/arm/secure.txt
+>> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+>> @@ -32,7 +32,8 @@ describe the view of Secure world using the standard bindings. These
+>>  secure- bindings only need to be used where both the Secure and Normal
+>>  world views need to be described in a single device tree.
+>>
+>> -Valid Secure world properties:
+>> +Valid Secure world properties
+>> +-----------------------------
+>>
+>>  - secure-status : specifies whether the device is present and usable
+>>    in the secure world. The combination of this with "status" allows
+>> @@ -51,3 +52,15 @@ Valid Secure world properties:
+>>     status = "disabled"; secure-status = "okay";     /* S-only */
+>>     status = "disabled";                             /* disabled in both */
+>>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
+>> +
+>> +The secure-chosen node
+>> +----------------------
+>> +
+>> +Similar to the /chosen node which serves as a place for passing data
+>> +between firmware and the operating system, the /secure-chosen node may
+>> +be used to pass data to the secure OS. Only the properties defined
+>> +below may appear in the /secure-chosen node. They have the same
+>> +definition as when used under /chosen, unless explicitely stated
+> 
+> typo: "explicitly".
+> 
+>> +otherwise.
+>> +
+>> +- stdout-path
+> 
+> What's the default for the Secure world if (a) the secure-chosen
+> node doesn't exist at all or (b) it does exist but doesn't
+> define stdout-path? Presumably it should be "fall back to
+> using the chosen node's stdout-path", to match the way we
+> do fallback for other secure world properties, but it would
+> be good to say so explicitly I think.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
----
-Changes in v2:
-- Drop reset line de-assert code (as the reset line in fact does not exist).
+I'd agree that it would be reasonable for the secure OS to fall back to
+parsing /chosen in the absence of /secure-chosen, but if the latter is
+present I would (at least naively) expect it to be authoritative. I can
+imagine the case of a cut-down version of some system implementing only
+one UART, where you might want to tell the Normal world OS to use that
+and the Secure OS to keep its output to itself - allowing fallbacks at
+the individual property level would make that harder than it needs to
+be, and in general seems like it might be more confusing than useful.
 
- drivers/pinctrl/sunxi/Kconfig                |   4 +
- drivers/pinctrl/sunxi/Makefile               |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c | 125 +++++++++++++++++++++++++++
- 3 files changed, 130 insertions(+)
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+Maintaining the principal that "secure-X" takes complete precedence over
+"X" seems to me to be the least surprising; it's just that in this one
+case X gets to be an entire node rather than a property because /chosen
+is special.
 
-diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
-index a84bfa7f3c05..a0c419ac2a3b 100644
---- a/drivers/pinctrl/sunxi/Kconfig
-+++ b/drivers/pinctrl/sunxi/Kconfig
-@@ -68,6 +68,10 @@ config PINCTRL_SUN50I_A64
- 	def_bool ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
- 
-+config PINCTRL_SUN50I_A64_R
-+	def_bool ARM64 && ARCH_SUNXI
-+	select PINCTRL_SUNXI
-+
- config PINCTRL_SUN50I_H5
- 	def_bool ARM64 && ARCH_SUNXI
- 	select PINCTRL_SUNXI
-diff --git a/drivers/pinctrl/sunxi/Makefile b/drivers/pinctrl/sunxi/Makefile
-index 04ccb88ebd5f..df4ccd6cd44c 100644
---- a/drivers/pinctrl/sunxi/Makefile
-+++ b/drivers/pinctrl/sunxi/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_PINCTRL_SUN8I_A23)		+= pinctrl-sun8i-a23.o
- obj-$(CONFIG_PINCTRL_SUN8I_A23_R)	+= pinctrl-sun8i-a23-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A33)		+= pinctrl-sun8i-a33.o
- obj-$(CONFIG_PINCTRL_SUN50I_A64)	+= pinctrl-sun50i-a64.o
-+obj-$(CONFIG_PINCTRL_SUN50I_A64_R)	+= pinctrl-sun50i-a64-r.o
- obj-$(CONFIG_PINCTRL_SUN8I_A83T)	+= pinctrl-sun8i-a83t.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3)		+= pinctrl-sun8i-h3.o
- obj-$(CONFIG_PINCTRL_SUN8I_H3_R)	+= pinctrl-sun8i-h3-r.o
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-new file mode 100644
-index 000000000000..415870e82cbf
---- /dev/null
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
-@@ -0,0 +1,125 @@
-+/*
-+ * Allwinner A64 SoCs special pins pinctrl driver.
-+ *
-+ * Based on pinctrl-sun8i-a23-r.c
-+ *
-+ * Copyright (C) 2016 Icenowy Zheng
-+ * Icenowy Zheng <icenowy@aosc.xyz>
-+ *
-+ * Copyright (C) 2014 Chen-Yu Tsai
-+ * Chen-Yu Tsai <wens@csie.org>
-+ *
-+ * Copyright (C) 2014 Boris Brezillon
-+ * Boris Brezillon <boris.brezillon@free-electrons.com>
-+ *
-+ * Copyright (C) 2014 Maxime Ripard
-+ * Maxime Ripard <maxime.ripard@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset.h>
-+
-+#include "pinctrl-sunxi.h"
-+
-+static const struct sunxi_desc_pin sun50i_a64_r_pins[] = {
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 0),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SCK */
-+		  SUNXI_FUNCTION(0x3, "s_i2c"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 0)),	/* PL_EINT0 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 1),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_rsb"),		/* SDA */
-+		  SUNXI_FUNCTION(0x3, "s_i2c"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 1)),	/* PL_EINT1 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 2),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart"),	/* TX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 2)),	/* PL_EINT2 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 3),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_uart"),	/* RX */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 3)),	/* PL_EINT3 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 4),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_jtag"),	/* MS */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 4)),	/* PL_EINT4 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 5),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_jtag"),	/* CK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 5)),	/* PL_EINT5 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 6),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_jtag"),	/* DO */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 6)),	/* PL_EINT6 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 7),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_jtag"),	/* DI */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 7)),	/* PL_EINT7 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 8),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2c"),		/* SCK */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 8)),	/* PL_EINT8 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 9),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_i2c"),		/* SDA */
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 9)),	/* PL_EINT9 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 10),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_pwm"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 10)),	/* PL_EINT10 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 11),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION(0x2, "s_cir_rx"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 11)),	/* PL_EINT11 */
-+	SUNXI_PIN(SUNXI_PINCTRL_PIN(L, 12),
-+		  SUNXI_FUNCTION(0x0, "gpio_in"),
-+		  SUNXI_FUNCTION(0x1, "gpio_out"),
-+		  SUNXI_FUNCTION_IRQ_BANK(0x6, 0, 12)),	/* PL_EINT12 */
-+};
-+
-+static const struct sunxi_pinctrl_desc sun50i_a64_r_pinctrl_data = {
-+	.pins = sun50i_a64_r_pins,
-+	.npins = ARRAY_SIZE(sun50i_a64_r_pins),
-+	.pin_base = PL_BASE,
-+	.irq_banks = 1,
-+};
-+
-+static int sun50i_a64_r_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return sunxi_pinctrl_init(pdev,
-+				  &sun50i_a64_r_pinctrl_data);
-+}
-+
-+static const struct of_device_id sun50i_a64_r_pinctrl_match[] = {
-+	{ .compatible = "allwinner,sun50i-a64-r-pinctrl", },
-+	{}
-+};
-+
-+static struct platform_driver sun50i_a64_r_pinctrl_driver = {
-+	.probe	= sun50i_a64_r_pinctrl_probe,
-+	.driver	= {
-+		.name		= "sun50i-a64-r-pinctrl",
-+		.of_match_table	= sun50i_a64_r_pinctrl_match,
-+	},
-+};
-+builtin_platform_driver(sun50i_a64_r_pinctrl_driver);
--- 
-2.11.1
+Robin.
+
+> 
+> thanks
+> -- PMM
+> 
