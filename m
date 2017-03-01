@@ -1,267 +1,310 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] drivers: pwm: pwm-atmel: switch to atomic PWM
-Date: Wed, 1 Mar 2017 15:13:20 +0100
-Message-ID: <20170301151320.1d3ebc0e@bbrezillon>
-References: <1488278415-2786-1-git-send-email-claudiu.beznea@microchip.com>
-        <1488278415-2786-2-git-send-email-claudiu.beznea@microchip.com>
-        <20170228220756.3e29b62e@bbrezillon>
-        <4b72b07c-22c6-8224-3a21-5ed052f004a3@microchip.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 02/11] phy: exynos-ufs: add UFS PHY driver for EXYNOS
+ SoC
+Date: Wed, 1 Mar 2017 10:07:05 +0530
+Message-ID: <58B64FF1.3020808@ti.com>
+References: <1447046787-480-1-git-send-email-alim.akhtar@samsung.com>
+ <1447046787-480-3-git-send-email-alim.akhtar@samsung.com>
+ <564AC63F.1000508@ti.com> <564AE11F.50908@samsung.com>
+ <CGME20170203092123epcas4p20b1d56d7a6fdec46903c41fc65718795@epcas4p2.samsung.com>
+ <564DD11D.2060101@ti.com> <aae976f6-18cf-7241-4f76-f842317229d4@samsung.com>
+ <CAGOxZ50gh_SErTiDbkjqNTCds-8ghgxXofSgzSwp6hicAcw23Q@mail.gmail.com>
+ <58B3B87B.7010302@ti.com> <bcab9fcc-1308-7adb-ad2a-88eeea5565c7@samsung.com>
+ <58B4EFC8.2060300@ti.com> <12decf59-0486-9efd-63de-12fee95a8cea@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4b72b07c-22c6-8224-3a21-5ed052f004a3-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+In-Reply-To: <12decf59-0486-9efd-63de-12fee95a8cea-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: m18063 <Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "James E.J. Bottomley" <JBottomley-wo1vFcy6AUs@public.gmane.org>, vinayak holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Claudiu,
+Hi,
 
-On Wed, 1 Mar 2017 15:56:26 +0200
-m18063 <Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
-
-> Hi Boris,
+On Tuesday 28 February 2017 01:51 PM, Alim Akhtar wrote:
+> Hi Kishon,
 > 
-> Thank you for the closer review. Please see my answers
-> inline.
+> On 02/28/2017 09:04 AM, Kishon Vijay Abraham I wrote:
+>> Hi,
+>>
+>> On Monday 27 February 2017 07:40 PM, Alim Akhtar wrote:
+>>> Hi Kishon,
+>>>
+>>> On 02/27/2017 10:56 AM, Kishon Vijay Abraham I wrote:
+>>>> Hi,
+>>>>
+>>>> On Thursday 23 February 2017 12:20 AM, Alim Akhtar wrote:
+>>>>> On Fri, Feb 3, 2017 at 2:49 PM, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>>> Hi Kishon,
+>>>>>>
+>>>>>>
+>>>>>> On 11/19/2015 07:09 PM, Kishon Vijay Abraham I wrote:
+>>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On Tuesday 17 November 2015 01:41 PM, Alim Akhtar wrote:
+>>>>>>>>
+>>>>>>>> Hi
+>>>>>>>> Thanks again for looking into this.
+>>>>>>>>
+>>>>>>>> On 11/17/2015 11:46 AM, Kishon Vijay Abraham I wrote:
+>>>>>>>>>
+>>>>>>>>> Hi,
+>>>>>>>>>
+>>>>>>>>> On Monday 09 November 2015 10:56 AM, Alim Akhtar wrote:
+>>>>>>>>>>
+>>>>>>>>>> From: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>>>>>
+>>>>>>>>>> This patch introduces Exynos UFS PHY driver. This driver
+>>>>>>>>>> supports to deal with phy calibration and power control
+>>>>>>>>>> according to UFS host driver's behavior.
+>>>>>>>>>>
+>>>>>>>>>> Signed-off-by: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>>>>> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>>>>>>> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>>>>>>>>>> ---
+>>>>>>>>>>   drivers/phy/Kconfig                |    7 ++
+>>>>>>>>>>   drivers/phy/Makefile               |    1 +
+>>>>>>>>>>   drivers/phy/phy-exynos-ufs.c       |  241
+>>>>>>>>>> ++++++++++++++++++++++++++++++++++++
+>>>>>>>>>>   drivers/phy/phy-exynos-ufs.h       |   85 +++++++++++++
+>>>>>>>>>>   drivers/phy/phy-exynos7-ufs.h      |   89 +++++++++++++
+>>>>>>>>>>   include/linux/phy/phy-exynos-ufs.h |   85 +++++++++++++
+>>>>>>>>>>   6 files changed, 508 insertions(+)
+>>>>>>>>>>   create mode 100644 drivers/phy/phy-exynos-ufs.c
+>>>>>>>>>>   create mode 100644 drivers/phy/phy-exynos-ufs.h
+>>>>>>>>>>   create mode 100644 drivers/phy/phy-exynos7-ufs.h
+>>>>>>>>>>   create mode 100644 include/linux/phy/phy-exynos-ufs.h
+>>>>>>>>>>
+>>>>>>>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>>>>>>>>> index 7eb5859dd035..7d38a92e0297 100644
+>>>>>>>>>> --- a/drivers/phy/Kconfig
+>>>>>>>>>> +++ b/drivers/phy/Kconfig
+>>>>>>>>>> @@ -389,4 +389,11 @@ config PHY_CYGNUS_PCIE
+>>>>>>>>>>         Enable this to support the Broadcom Cygnus PCIe PHY.
+>>>>>>>>>>         If unsure, say N.
+>>>>>>>>>>
+>>>>>>>>>> +config PHY_EXYNOS_UFS
+>>>>>>>>>> +    tristate "EXYNOS SoC series UFS PHY driver"
+>>>>>>>>>> +    depends on OF && ARCH_EXYNOS || COMPILE_TEST
+>>>>>>>>>> +    select GENERIC_PHY
+>>>>>>>>>> +    help
+>>>>>>>>>> +      Support for UFS PHY on Samsung EXYNOS chipsets.
+>>>>>>>>>> +
+>>>>>>>>>>   endmenu
+>>>>>>>>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>>>>>>>>>> index 075db1a81aa5..9bec4d1a89e1 100644
+>>>>>>>>>> --- a/drivers/phy/Makefile
+>>>>>>>>>> +++ b/drivers/phy/Makefile
+>>>>>>>>>> @@ -10,6 +10,7 @@ obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)    +=
+>>>>>>>>>> phy-armada375-usb2.o
+>>>>>>>>>>   obj-$(CONFIG_BCM_KONA_USB2_PHY)        += phy-bcm-kona-usb2.o
+>>>>>>>>>>   obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)    += phy-exynos-dp-video.o
+>>>>>>>>>>   obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)    += phy-exynos-mipi-video.o
+>>>>>>>>>> +obj-$(CONFIG_PHY_EXYNOS_UFS)    += phy-exynos-ufs.o
+>>>>>>>>>>   obj-$(CONFIG_PHY_LPC18XX_USB_OTG)    += phy-lpc18xx-usb-otg.o
+>>>>>>>>>>   obj-$(CONFIG_PHY_PXA_28NM_USB2)        += phy-pxa-28nm-usb2.o
+>>>>>>>>>>   obj-$(CONFIG_PHY_PXA_28NM_HSIC)        += phy-pxa-28nm-hsic.o
+>>>>>>>>>> diff --git a/drivers/phy/phy-exynos-ufs.c
+>>>>>>>>>> b/drivers/phy/phy-exynos-ufs.c
+>>>>>>>>>> new file mode 100644
+>>>>>>>>>> index 000000000000..cb1aeaa3d4eb
+>>>>>>>>>> --- /dev/null
+>>>>>>>>>> +++ b/drivers/phy/phy-exynos-ufs.c
+>>>>>>>>>> @@ -0,0 +1,241 @@
+>>>>>>>>>> +/*
+>>>>>>>>>> + * UFS PHY driver for Samsung EXYNOS SoC
+>>>>>>>>>> + *
+>>>>>>>>>> + * Copyright (C) 2015 Samsung Electronics Co., Ltd.
+>>>>>>>>>> + * Author: Seungwon Jeon <essuuj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>>>>> + *
+>>>>>>>>>> + * This program is free software; you can redistribute it and/or
+>>>>>>>>>> modify
+>>>>>>>>>> + * it under the terms of the GNU General Public License as published
+>>>>>>>>>> by
+>>>>>>>>>> + * the Free Software Foundation; either version 2 of the License, or
+>>>>>>>>>> + * (at your option) any later version.
+>>>>>>>>>> + */
+>>>>>>>>>> +#include <linux/clk.h>
+>>>>>>>>>> +#include <linux/delay.h>
+>>>>>>>>>> +#include <linux/err.h>
+>>>>>>>>>> +#include <linux/io.h>
+>>>>>>>>>> +#include <linux/iopoll.h>
+>>>>>>>>>> +#include <linux/mfd/syscon.h>
+>>>>>>>>>> +#include <linux/module.h>
+>>>>>>>>>> +#include <linux/of.h>
+>>>>>>>>>> +#include <linux/phy/phy.h>
+>>>>>>>>>> +#include <linux/phy/phy-exynos-ufs.h>
+>>>>>>>>>> +#include <linux/platform_device.h>
+>>>>>>>>>> +#include <linux/regmap.h>
+>>>>>>>>>> +
+>>>>>>>>>> +#include "phy-exynos-ufs.h"
+>>>>>>>>>> +
+>>>>>>>>>> +#define for_each_phy_lane(phy, i) \
+>>>>>>>>>> +    for (i = 0; i < (phy)->lane_cnt; i++)
+>>>>>>>>>> +#define for_each_phy_cfg(cfg) \
+>>>>>>>>>> +    for (; (cfg)->id; (cfg)++)
+>>>>>>>>>> +
+>>>>>>>>>> +#define PHY_DEF_LANE_CNT    1
+>>>>>>>>>> +
+>>>>>>>>>> +static void exynos_ufs_phy_config(struct exynos_ufs_phy *phy,
+>>>>>>>>>> +            const struct exynos_ufs_phy_cfg *cfg, u8 lane)
+>>>>>>>>>> +{
+>>>>>>>>>> +    enum {LANE_0, LANE_1}; /* lane index */
+>>>>>>>>>> +
+>>>>>>>>>> +    switch (lane) {
+>>>>>>>>>> +    case LANE_0:
+>>>>>>>>>> +        writel(cfg->val, (phy)->reg_pma + cfg->off_0);
+>>>>>>>>>> +        break;
+>>>>>>>>>> +    case LANE_1:
+>>>>>>>>>> +        if (cfg->id == PHY_TRSV_BLK)
+>>>>>>>>>> +            writel(cfg->val, (phy)->reg_pma + cfg->off_1);
+>>>>>>>>>> +        break;
+>>>>>>>>>> +    }
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +static bool match_cfg_to_pwr_mode(u8 desc, u8 required_pwr)
+>>>>>>>>>> +{
+>>>>>>>>>> +    if (IS_PWR_MODE_ANY(desc))
+>>>>>>>>>> +        return true;
+>>>>>>>>>> +
+>>>>>>>>>> +    if (IS_PWR_MODE_HS(required_pwr) && IS_PWR_MODE_HS_ANY(desc))
+>>>>>>>>>> +        return true;
+>>>>>>>>>> +
+>>>>>>>>>> +    if (COMP_PWR_MODE(required_pwr, desc))
+>>>>>>>>>> +        return true;
+>>>>>>>>>> +
+>>>>>>>>>> +    if (COMP_PWR_MODE_MD(required_pwr, desc) &&
+>>>>>>>>>> +        COMP_PWR_MODE_GEAR(required_pwr, desc) &&
+>>>>>>>>>> +        COMP_PWR_MODE_SER(required_pwr, desc))
+>>>>>>>>>> +        return true;
+>>>>>>>>>> +
+>>>>>>>>>> +    return false;
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>> +int exynos_ufs_phy_calibrate(struct phy *phy,
+>>>>>>>>>> +                    enum phy_cfg_tag tag, u8 pwr)
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> This is similar to the first version of your patch without
+>>>>>>>>> EXPORT_SYMBOL.
+>>>>>>>>>
+>>>>>>>>> I think you have to create a new generic PHY_OPS for calibrate PHY while
+>>>>>>>>> making
+>>>>>>>>> sure that it is as generic as possible (which means calibrate_phy
+>>>>>>>>> shouldn't
+>>>>>>>>> have tag and pwr arguments or a strong justification as to why those
+>>>>>>>>> arguments
+>>>>>>>>> are required in a generic API).
+>>>>>>>>
+>>>>>>>> I don't see the advantage to making this a generic phy_ops, this is
+>>>>>>>> exynos
+>>>>>>>> specific ufs-phy, please have a look at other implementations
+>>>>>>>
+>>>>>>>
+>>>>>>> only the implementation is specific to exynos. I've seen lot of other
+>>>>>>> vendors
+>>>>>>> want to do something like calibrate phy.
+>>>>>>>
+>>>>>>> So if we add something like (*calibrate)(struct phy *phy), then it can be
+>>>>>>> used
+>>>>>>> by others as well. Russell King also want to minimize the code to program
+>>>>>>> calibration settings. So it would be good to come up with a set of
+>>>>>>> standard
+>>>>>>> bindings like 'phy,tx-swing', 'phy,emphasis', 'phy,amplitude' etc.. to
+>>>>>>> program
+>>>>>>> these settings.
+>>>>>>>>
+>>>>>>>> drivers/phy/phy-qcom-ufs.c (which I belive mereged recently)
+>>>>>>>
+>>>>>>>
+>>>>>>> Thats why I hate when someone else merge PHY drivers :-( That driver can
+>>>>>>> as
+>>>>>>> well be in drivers/misc as it doesn't use PHY framework as it is supposed
+>>>>>>> to be
+>>>>>>> used. It just exports a dozen of API's to be used by controller drivers.
+>>>>>>> ick..
+>>>>>>>
+>>>>>>>> may be other vendors might come with there own implementation of phy.
+>>>>>>>
+>>>>>>>
+>>>>>>> right, it's all about providing the correct callback functions.
+>>>>>>>>
+>>>>>>>> I am using what is currently provided by the generic phy framework.
+>>>>>>>
+>>>>>>>
+>>>>>>> I think for your use case, what is currently provided in the PHY framework
+>>>>>>> is
+>>>>>>> not sufficient.
+>>>>>>>
+>>>>>> Its little over a year since last time we discuss about adding a generic
+>>>>>> calibration API. I can see in the past people tried adding *calibration* API
+>>>>>> [1] but not sure why [1] was not landed in mainline.
+>>>>>> Anyway now we have many users of phy_calibration API, like UFS, USB and may
+>>>>>> be PCIe, there is a real need to add this functionality. So, here is my
+>>>>>> approach:
+>>>>
+>>>> Agree, there are quite a few users that require calibration of phy parameters.
+>>>> I think previously it was accommodated in phy_init, hence it was not merged.
+>>> Ok, thanks for this information.
+>>>
+>>>>>>  * Along with [1], we can add a void *priv for handling device specific phy
+>>>>>> private data, and before calling phy_calibration() from phy consumer,
+>>>>>> phy->priv is populated with private data.
+>>>>
+>>>> Not sure how you plan to use priv here?
+>>>>
+>>>  From ufs driver I am populating PHY _priv_ data and calling phy_calibrate()
+>>>
+>>> e.g
+>>> ----------------------- from ufs-exynos.c
+>>> Instead of using below code earlier
+>>> - exynos_ufs_phy_calibrate(generic_phy,CFG_PRE_INIT,PWR_MODE_ANY);
+>>>
+>>> Now I am using below from ufs-exynos driver
+>>>
+>>> + generic_phy->priv =(void*)CFG_PRE_INIT;
+>>> + phy_calibrate(generic_phy);
+>>>
+>>> and in drivers/phy/phy-exynos-ufs.c
+>>> using phy->priv in calibration function.
+>>
+>> Don't prefer passing of such private pointers between drivers. Why is this needed?
+>>
+> As already explained before, this is needed to pass the calibration 
+> point (when you want to do the calibration?, like before init, after 
+> init or before/after _mode_ change etc).
 > 
-> Thank you,
-> Claudiu
+> I Don't think we have much option here, if we want to make 
+> phy_calibration generic enough.
 > 
+> We have few options:
+> 1> One way is to have phy_calibration takes some argument like 
+> calibration point (which was part of  my v3~v5), but looking at the 
+> current implementation of phy-qcom-ufs.c, this approach might not be 
+> generic enough.
 > 
-> On 28.02.2017 23:07, Boris Brezillon wrote:
-> > Hi Claudiu,
-> >
-> > On Tue, 28 Feb 2017 12:40:14 +0200
-> > Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
-> >  
-> >> The currently Atmel PWM controllers supported by this driver
-> >> could change period and duty factor without channel disable
-> >> (sama5d3 supports this by using period and duty factor update
-> >> registers, sam9rl support this by writing channel update
-> >> register and select the corresponding update: period or duty
-> >> factor).  
-> > Hm, I had a closer a look at the datasheet, and I'm not sure this is
-> > possible in a safe way. AFAICT (I might be wrong), there's no way to
-> > atomically update both the period and duty cycles. So, imagine you're
-> > just at the end of the current period and you update one of the 2 params
-> > (either the period or the duty cycle) before the end of the period, but
-> > the other one is updated just after the beginning of a new period.
-> > During one cycle you'll have a bad config.  
-> I was also think at this scenario. I thought that this should be
-> good for most of the cases.
+> 2> And using EXPORT_SYMBOL way is not encourage (as in my V1, even 
+> though others in phy drivers uses it).
+> 
+> 3> the current proposal of using _priv_ data.
+> 
+> Out of the above 3 option, I feel using _priv_ data is more generic way 
+> (and most of the major sub-system in Linux uses it).
+> 
+> lets see what other people think about __priv__ approach.
+> 
+> Please suggest your prefer way to handle this.
 
-Unlikely, but not impossible.
+Generally calibration has to be done at a single point. Having to do
+calibration in multiple places seems to be specific to Exynos.
 
-> >
-> > While this should be acceptable in most cases, there are a few cases
-> > where glitches are not permitted (when the PWM drives a critical
-> > device). Also, I don't know what happens if we have duty > period.  
-> duty > period is checked by the PWM core before calling apply method.
+Can implementing a small state machine in exynos driver help?
 
-No, I meant that, if you update the period then the duty (or the other
-way around), one update might make it in one period-cycle, and the
-other one might be delayed until the next period. In this case you
-might end up with inconsistent values and possibly duty > period.
-
-> >  
-> >> The chip doesn't support run time changings of signal
-> >> polarity. This has been adapted by first disabling the channel,
-> >> update registers and the enabling the channel.  
-> > Yep. I agree with that one.
-> >  
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> >> ---
-> >>  drivers/pwm/pwm-atmel.c | 217 ++++++++++++++++++++++++++----------------------
-> >>  1 file changed, 118 insertions(+), 99 deletions(-)
-> >>
-> >> diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-> >> index 67a7023..014b86c 100644
-> >> --- a/drivers/pwm/pwm-atmel.c
-> >> +++ b/drivers/pwm/pwm-atmel.c
-> >> @@ -68,7 +68,7 @@ struct atmel_pwm_chip {
-> >>  	struct mutex isr_lock;
-> >>  
-> >>  	void (*config)(struct pwm_chip *chip, struct pwm_device *pwm,
-> >> -		       unsigned long dty, unsigned long prd);
-> >> +		       unsigned long dty, unsigned long prd, bool enabled);
-> >>  };
-> >>  
-> >>  static inline struct atmel_pwm_chip *to_atmel_pwm_chip(struct pwm_chip *chip)
-> >> @@ -105,99 +105,120 @@ static inline void atmel_pwm_ch_writel(struct atmel_pwm_chip *chip,
-> >>  	writel_relaxed(val, chip->base + base + offset);
-> >>  }
-> >>  
-> >> -static int atmel_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> >> -			    int duty_ns, int period_ns)
-> >> +static int atmel_pwm_config_prepare(struct pwm_chip *chip,
-> >> +				    struct pwm_state *state, unsigned long *prd,
-> >> +				    unsigned long *dty, unsigned int *pres)  
-> > I'd rename the function atmel_pwm_calculate_params(). Also, when the
-> > period does not change we don't have to calculate prd and pres, so
-> > maybe we should have one function to calculate prd+pres and another one
-> > to calculate dty:
-> I agree. I didn't want to change the current implementation from
-> this point of view.
-
-Well, I think this is preferable to have a one-time rework than keeping
-things for historical reasons.
-
-
-[...]
-
-> >  
-> >>  {
-> >>  	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> >> -	unsigned long prd, dty;
-> >>  	unsigned long long div;
-> >> -	unsigned int pres = 0;
-> >> -	u32 val;
-> >> -	int ret;
-> >> -
-> >> -	if (pwm_is_enabled(pwm) && (period_ns != pwm_get_period(pwm))) {
-> >> -		dev_err(chip->dev, "cannot change PWM period while enabled\n");
-> >> -		return -EBUSY;
-> >> -	}
-> >>  
-> >>  	/* Calculate the period cycles and prescale value */
-> >> -	div = (unsigned long long)clk_get_rate(atmel_pwm->clk) * period_ns;
-> >> +	div = (unsigned long long)clk_get_rate(atmel_pwm->clk) * state->period;
-> >>  	do_div(div, NSEC_PER_SEC);
-> >>  
-> >> +	*pres = 0;
-> >>  	while (div > PWM_MAX_PRD) {
-> >>  		div >>= 1;
-> >> -		pres++;
-> >> +		(*pres)++;
-> >>  	}
-> >>  
-> >> -	if (pres > PRD_MAX_PRES) {
-> >> +	if (*pres > PRD_MAX_PRES) {
-> >>  		dev_err(chip->dev, "pres exceeds the maximum value\n");
-> >>  		return -EINVAL;
-> >>  	}
-> >>  
-> >>  	/* Calculate the duty cycles */
-> >> -	prd = div;
-> >> -	div *= duty_ns;
-> >> -	do_div(div, period_ns);
-> >> -	dty = prd - div;
-> >> +	*prd = div;
-> >> +	div *= state->duty_cycle;
-> >> +	do_div(div, state->period);
-> >> +	*dty = *prd - div;  
-> > Not sure this subtraction is needed, you just need to revert the
-> > polarity selection (if polarity == NORMAL => set CPOL, otherwise, clear
-> > it).  
-> I didn't want to change the existing implementation.
-
-Again, if it simplifies the whole logic, I think it's preferable to do
-it now, since we're anyway refactoring the driver for the atomic
-transition.
-
-[...]
-
-> >>  static void atmel_pwm_config_v1(struct pwm_chip *chip, struct pwm_device *pwm,
-> >> -				unsigned long dty, unsigned long prd)
-> >> +				unsigned long dty, unsigned long prd,
-> >> +				bool enabled)
-> >>  {
-> >>  	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> >>  	unsigned int val;
-> >> +	unsigned long timeout;
-> >>  
-> >> +	if (pwm_is_enabled(pwm) && enabled) {
-> >> +		/* Update duty factor. */
-> >> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> >> +		val &= ~PWM_CMR_UPD_CDTY;
-> >> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> >> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, dty);
-> >>  
-> >> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, dty);
-> >> -
-> >> -	val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> >> -	val &= ~PWM_CMR_UPD_CDTY;
-> >> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> >> -
-> >> -	/*
-> >> -	 * If the PWM channel is enabled, only update CDTY by using the update
-> >> -	 * register, it needs to set bit 10 of CMR to 0
-> >> -	 */
-> >> -	if (pwm_is_enabled(pwm))
-> >> -		return;
-> >> -	/*
-> >> -	 * If the PWM channel is disabled, write value to duty and period
-> >> -	 * registers directly.
-> >> -	 */
-> >> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CDTY, dty);
-> >> -	atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CPRD, prd);
-> >> +		/*
-> >> +		 * Wait for the duty factor update.
-> >> +		 */
-> >> +		mutex_lock(&atmel_pwm->isr_lock);
-> >> +		atmel_pwm->updated_pwms |= atmel_pwm_readl(atmel_pwm, PWM_ISR) &
-> >> +				~(1 << pwm->hwpwm);
-> >> +
-> >> +		timeout = jiffies + 2 * HZ;
-> >> +		while (!(atmel_pwm->updated_pwms & (1 << pwm->hwpwm)) &&
-> >> +		       time_before(jiffies, timeout)) {
-> >> +			usleep_range(10, 100);
-> >> +			atmel_pwm->updated_pwms |=
-> >> +					atmel_pwm_readl(atmel_pwm, PWM_ISR);
-> >> +		}
-> >> +
-> >> +		mutex_unlock(&atmel_pwm->isr_lock);
-> >> +
-> >> +		/* Update period. */
-> >> +		val = atmel_pwm_ch_readl(atmel_pwm, pwm->hwpwm, PWM_CMR);
-> >> +		val |= PWM_CMR_UPD_CDTY;
-> >> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWM_CMR, val);
-> >> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV1_CUPD, prd);  
-> > As I said above, I'm almost sure it's not 100% safe to update both
-> > parameters. We'd better stick to the existing implementation and see if
-> > new IPs provide an atomic period+duty update feature.  
-> There is such approach only for synchronous channels, which I didn't cover
-> in this implementation.
-
-Yep, that's what I understood. So let's stick to "update duty only" for
-now.
-
-[...]
-
-> >>  static void atmel_pwm_config_v2(struct pwm_chip *chip, struct pwm_device *pwm,
-> >> -				unsigned long dty, unsigned long prd)
-> >> +				unsigned long dty, unsigned long prd,
-> >> +				bool enabled)
-> >>  {
-> >>  	struct atmel_pwm_chip *atmel_pwm = to_atmel_pwm_chip(chip);
-> >>  
-> >> -	if (pwm_is_enabled(pwm)) {
-> >> +	if (pwm_is_enabled(pwm) && enabled) {
-> >>  		/*
-> >> -		 * If the PWM channel is enabled, using the duty update register
-> >> -		 * to update the value.
-> >> +		 * If the PWM channel is enabled, use update registers
-> >> +		 * to update the duty and period.
-> >>  		 */
-> >>  		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CDTYUPD, dty);
-> >> +		atmel_pwm_ch_writel(atmel_pwm, pwm->hwpwm, PWMV2_CPRDUPD, prd);  
-> > Same here, I'm not convinced we are guaranteed that both parameters will
-> > be applied atomically. There's a sync mechanism described in the
-> > datasheet, but I'm not sure I understand how it works, and anyway,
-> > you're not using it here, so let's stick to the "update duty only"
-> > approach for now.  
-> Only for synchronous channels the atomicity is granted. I didn't cover that
-> in this commit. With this approach the dty, period will be changed at the
-> next period but there is no guarantee that they will be synchronously
-> updated.
-
-Ditto, let's stick to the current approach.
-
-Regards,
-
-Boris
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
