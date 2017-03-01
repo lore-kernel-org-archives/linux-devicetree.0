@@ -1,52 +1,66 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 1/3] dt-bindings: arm: update Armada CP110 system
- controller binding
-Date: Wed, 1 Mar 2017 21:26:53 +0100
-Message-ID: <20170301212653.7b58b6a7@free-electrons.com>
-References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482316017-22154-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20161222001453.GW8288@codeaurora.org>
- <20170301165245.5f2fbfaf@free-electrons.com>
- <20170301190127.GO25384@codeaurora.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+Date: Wed, 1 Mar 2017 22:04:30 +0100
+Message-ID: <386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
+References: <20170228120452.10043-1-zajec5@gmail.com>
+ <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
+ <290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
+ <CAL_JsqL-N4HfsG=py+w1NsBOJZzS1kbRM5J6dC-EE-rg9r9C2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170301190127.GO25384@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Hanna Hawa <hannah@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL-N4HfsG=py+w1NsBOJZzS1kbRM5J6dC-EE-rg9r9C2g@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Wed, 1 Mar 2017 11:01:27 -0800, Stephen Boyd wrote:
-
-> > Even though you said you applied it, I still don't see this patch in
-> > mainline, while PATCH 2/3 of this series is now in mainline.
-> > 
-> > Was this patch forgotten? Let me know if I should resend it, but I'm
-> > pretty sure it still applies, since no other changes on this file have
-> > been merged since quite a while.
-> >   
+On 02/28/2017 11:12 PM, Rob Herring wrote:
+> On Tue, Feb 28, 2017 at 3:51 PM, Rafał Miłecki <zajec5@gmail.com> wrote:
+>> On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
+>>>
+>>> I think that it would be simpler if we could initially see
+>>> a complete sample dts implementation containing all required DT
+>>> nodes. The example could contain timer trigger as well as usb-port
+>>> trigger specific bindings.
+>>
+>>
+>> Please take a look at attached patch. I used it on Tenda AC9 with:
 > 
-> No worries. I've made a note to put it into the fixes queue to
-> send off after rc1.
+> I'm not sure about this extra level of indirection. I don't see the need.
+> 
+>> usb_trigger: usb-trigger {
+>>         trigger-type = "usbport";
+> 
+> Why do we need to know the type? The trigger device knows what type it
+> is. All we should need to know here is what device(s) controls an LED.
+> The rest the kernel can figure out.
 
-Great, thanks a lot. It's not a big thing, but it keeps popping up in
-my list of "things accepted by the maintainer, but not yet completely
-merged upstream" :-)
+The thing is that in the proposed approach the trigger is not necessary
+a device. The trigger node is here only a container with initialization
+data.
 
-Thomas
+We could have e,g, two such nodes with different set of ports
+(say usb1-trigger and usb2-trigger). Then if we had two LED nodes usb1
+and usb2, the former could have its triggers property initialized
+to &usb1-trigger and the latter to &usb2-trigger. Thanks to that both
+LEDs after executing "echo usbport > triggers" would listen to events
+from different set of usb ports.
+
+Also, e.g. for the timer trigger we could define two separate DT nodes
+with different delay intervals.
+
+>>         ports = <&ohci_port1>, <&ehci_port1>;
+>> };
+>>
+>> usb {
+>>         label = "bcm53xx:blue:usb";
+>>         gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
+>>         triggers = <&usb_trigger>;
+>> };
+> 
+
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Best regards,
+Jacek Anaszewski
