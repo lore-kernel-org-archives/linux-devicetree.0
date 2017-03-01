@@ -1,82 +1,94 @@
-From: Jerome Forissier <jerome.forissier@linaro.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 Subject: Re: [PATCH] Documentation: dt: Add binding for
  /chosen/secure-stdout-path
-Date: Wed, 1 Mar 2017 16:04:39 +0100
-Message-ID: <4847a1ee-caa7-509f-c540-ee3e1967ef7f@linaro.org>
+Date: Wed, 1 Mar 2017 15:20:58 +0000
+Message-ID: <1a3382c5-57d5-9d99-1569-3211a1844192@arm.com>
 References: <06154a2280a8423af80405825d7201c7aa927696.1488374335.git.jerome.forissier@linaro.org>
  <CAL_JsqKrUCCvGD_LKvOx+s8zh30GC_v=HAyqozgRm=7mcfSZzw@mail.gmail.com>
+ <4847a1ee-caa7-509f-c540-ee3e1967ef7f@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKrUCCvGD_LKvOx+s8zh30GC_v=HAyqozgRm=7mcfSZzw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Maydell <peter.maydell@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4847a1ee-caa7-509f-c540-ee3e1967ef7f-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/01/2017 03:50 PM, Rob Herring wrote:
-> On Wed, Mar 1, 2017 at 7:29 AM, Jerome Forissier
-> <jerome.forissier@linaro.org> wrote:
->> Some platforms may use a single device tree to describe two address
->> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
->> for Secure-only devices"). We extend the use of the secure- prefix to
->> the stdout-path property, so that the Secure firmware may use a
->> different console device than the one used by the kernel.
->>
->> Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/arm/secure.txt | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
->> index e31303f..558c9a1 100644
->> --- a/Documentation/devicetree/bindings/arm/secure.txt
->> +++ b/Documentation/devicetree/bindings/arm/secure.txt
->> @@ -51,3 +51,8 @@ Valid Secure world properties:
->>     status = "disabled"; secure-status = "okay";     /* S-only */
->>     status = "disabled";                             /* disabled in both */
->>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
->> +
->> +- secure-stdout-path (/chosen node): specifies the device to be used
->> +for console output by Secure firmware. The syntax is the same as for
->> +"stdout-path". If "secure-stdout-path" is not specified it defaults to
->> +the same value as "stdout-path".
+On 01/03/17 15:04, Jerome Forissier wrote:
 > 
-> I'm not all that enthusiastic about this. This alone is okay, but
-> continued additions of secure-* properties doesn't seem very scalable.
-> Is this it or do you have other needs? What happens when we have 3
-> modes/address spaces?
+> 
+> On 03/01/2017 03:50 PM, Rob Herring wrote:
+>> On Wed, Mar 1, 2017 at 7:29 AM, Jerome Forissier
+>> <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> Some platforms may use a single device tree to describe two address
+>>> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+>>> for Secure-only devices"). We extend the use of the secure- prefix to
+>>> the stdout-path property, so that the Secure firmware may use a
+>>> different console device than the one used by the kernel.
+>>>
+>>> Signed-off-by: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/secure.txt | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+>>> index e31303f..558c9a1 100644
+>>> --- a/Documentation/devicetree/bindings/arm/secure.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+>>> @@ -51,3 +51,8 @@ Valid Secure world properties:
+>>>     status = "disabled"; secure-status = "okay";     /* S-only */
+>>>     status = "disabled";                             /* disabled in both */
+>>>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
+>>> +
+>>> +- secure-stdout-path (/chosen node): specifies the device to be used
+>>> +for console output by Secure firmware. The syntax is the same as for
+>>> +"stdout-path". If "secure-stdout-path" is not specified it defaults to
+>>> +the same value as "stdout-path".
+>>
+>> I'm not all that enthusiastic about this. This alone is okay, but
+>> continued additions of secure-* properties doesn't seem very scalable.
+>> Is this it or do you have other needs? What happens when we have 3
+>> modes/address spaces?
+> 
+> How is this different from status/secure-status?
+> I have no other needs for the moment. I'm experimenting with the
+> introduction of DT in OP-TEE. The secure-status property (or lack
+> thereof) already allows me to know if a device can be used by the secure
+> OS and how it should be mapped (secure vs. non-secure). This extension
+> allows me to reuse the same TEE binary and change the console, which is
+> a simple use case to demonstrate the advantage of using the DT in the
+> secure FW.
 
-How is this different from status/secure-status?
-I have no other needs for the moment. I'm experimenting with the
-introduction of DT in OP-TEE. The secure-status property (or lack
-thereof) already allows me to know if a device can be used by the secure
-OS and how it should be mapped (secure vs. non-secure). This extension
-allows me to reuse the same TEE binary and change the console, which is
-a simple use case to demonstrate the advantage of using the DT in the
-secure FW.
+Once you start using DT in the secure OS, it doesn't seem too big a leap
+for folks to want to start passing arguments, so I'd consider
+secure-bootargs to be almost inevitable at *some* point down this road.
 
-> Maybe we should allow stdout-path to have multiple strings and secure
-> fw grabs the first one and updates the DT removing it (perhaps only if
-> the device is secure only). Might be nice to have multiple ones
-> supported anyway (like we can do on the kernel command line:
-> "console=ttyS0 console=ttyS1").
+Perhaps we should consider a /secure-chosen node containing standard
+properties instead...
 
-The problem I see with removing entries is that the secure firmware may
-have multiple stages (say, ARM Trusted Firmware plus a secure OS such as
-OP-TEE).
+>> Maybe we should allow stdout-path to have multiple strings and secure
+>> fw grabs the first one and updates the DT removing it (perhaps only if
+>> the device is secure only). Might be nice to have multiple ones
+>> supported anyway (like we can do on the kernel command line:
+>> "console=ttyS0 console=ttyS1").
+> 
+> The problem I see with removing entries is that the secure firmware may
+> have multiple stages (say, ARM Trusted Firmware plus a secure OS such as
+> OP-TEE).
 
-Thanks,
--- 
-Jerome
+...which different elements of firmware would in theory have a lot more
+freedom to mangle between boot stages without the risk of disrupting the
+regular /chosen properties.
+
+Robin.
+
+> 
+> Thanks,
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
