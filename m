@@ -1,148 +1,79 @@
-Return-Path: <SRS0=hcJ5=2L=broadcom.com=jon.mason@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <de705b40-1a8a-faef-846e-3635682671f6@gmail.com>
-References: <1488313886-17155-1-git-send-email-jon.mason@broadcom.com>
- <1488313886-17155-2-git-send-email-jon.mason@broadcom.com> <de705b40-1a8a-faef-846e-3635682671f6@gmail.com>
-From: Jon Mason <jon.mason@broadcom.com>
-Date: Thu, 2 Mar 2017 14:00:45 -0500
-Message-ID: <CAC3K-4pg0TLF-1CV+NtgEh7a0-EHQBvxjNbbGJB32WsNa0U0wA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: bcm5301x: Add TWD WD Support to DT
-Content-Type: multipart/alternative; boundary=001a11443ef6e95fdd0549c40b37
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Jon Mason <jonmason@broadcom.com>
+In-Reply-To: <4847a1ee-caa7-509f-c540-ee3e1967ef7f@linaro.org>
+References: <06154a2280a8423af80405825d7201c7aa927696.1488374335.git.jerome.forissier@linaro.org>
+	<CAL_JsqKrUCCvGD_LKvOx+s8zh30GC_v=HAyqozgRm=7mcfSZzw@mail.gmail.com>
+	<4847a1ee-caa7-509f-c540-ee3e1967ef7f@linaro.org>
+Date: Wed, 1 Mar 2017 09:15:18 -0600
+Message-ID: <CAL_JsqJi2aCBkWixPCfZnSN7J9eQrnLeAaDKauODPF0+8WNQmg@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: dt: Add binding for /chosen/secure-stdout-path
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+To: Jerome Forissier <jerome.forissier@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>, Peter Maydell <peter.maydell@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a11443ef6e95fdd0549c40b37
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Mar 2, 2017 at 1:54 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
-
-> On 02/28/2017 09:31 PM, Jon Mason wrote:
+On Wed, Mar 1, 2017 at 9:04 AM, Jerome Forissier <jerome.forissier@linaro.org> wrote:
 >
->> From: Jon Mason <jonmason@broadcom.com>
+>
+> On 03/01/2017 03:50 PM, Rob Herring wrote:
+>> On Wed, Mar 1, 2017 at 7:29 AM, Jerome Forissier
+>> <jerome.forissier@linaro.org> wrote:
+>>> Some platforms may use a single device tree to describe two address
+>>> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+>>> for Secure-only devices"). We extend the use of the secure- prefix to
+>>> the stdout-path property, so that the Secure firmware may use a
+>>> different console device than the one used by the kernel.
+>>>
+>>> Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/secure.txt | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+>>> index e31303f..558c9a1 100644
+>>> --- a/Documentation/devicetree/bindings/arm/secure.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+>>> @@ -51,3 +51,8 @@ Valid Secure world properties:
+>>>     status = "disabled"; secure-status = "okay";     /* S-only */
+>>>     status = "disabled";                             /* disabled in both */
+>>>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
+>>> +
+>>> +- secure-stdout-path (/chosen node): specifies the device to be used
+>>> +for console output by Secure firmware. The syntax is the same as for
+>>> +"stdout-path". If "secure-stdout-path" is not specified it defaults to
+>>> +the same value as "stdout-path".
 >>
->> Add support for the ARM TWD Watchdog to the bcm5301x device tree.  The
->> ARM TWD timer allocated the register space for the WDT, so this patch
->> necessitated shrinking that.  Also, the GIC masks were added for these.
->>
->> Signed-off-by: Jon Mason <jonmason@broadcom.com>
->> ---
->>  arch/arm/boot/dts/bcm5301x.dtsi | 15 ++++++++++++---
->>  1 file changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi
->> b/arch/arm/boot/dts/bcm5301x.dtsi
->> index 4fbb089..3fbc450 100644
->> --- a/arch/arm/boot/dts/bcm5301x.dtsi
->> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
->> @@ -70,10 +70,19 @@
->>                         clocks =3D <&periph_clk>;
->>                 };
->>
->> -               local-timer@20600 {
->> +               timer@20600 {
->>                         compatible =3D "arm,cortex-a9-twd-timer";
->> -                       reg =3D <0x20600 0x100>;
->> -                       interrupts =3D <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
->> +                       reg =3D <0x20600 0x20>;
->> +                       interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(=
-2) |
->> +                                                 IRQ_TYPE_LEVEL_HIGH)>;
->> +                       clocks =3D <&periph_clk>;
->> +               };
->>
+>> I'm not all that enthusiastic about this. This alone is okay, but
+>> continued additions of secure-* properties doesn't seem very scalable.
+>> Is this it or do you have other needs? What happens when we have 3
+>> modes/address spaces?
 >
-> If you follow my recent e-mail thread:
-> BCM5301X: GIC: PPI11 is secure or misconfigured (same for PPI13)
-> you'll see IRQ_TYPE_LEVEL_HIGH type isn't correct. It should be
-> IRQ_TYPE_EDGE_RISING.
->
-> I believe patch switching to IRQ_TYPE_EDGE_RISING should be sent with Cc
-> stable
-> for kernels 4.8+.
->
-> The same change is needed for "arm,cortex-a9-global-timer".
->
-> Would you find time to revise this patch?
->
+> How is this different from status/secure-status?
 
-I'll do 2 patches.  One to revise this one and one to address the issue
-you've discovered.  Will that be okay for you?
+It is not really, but I had concerns about the proliferation of secure-* properties then as well. That's why it says:
 
---001a11443ef6e95fdd0549c40b37
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+"However, only the properties listed below may validly have "secure-" versions; this list will be enlarged on a case-by-case basis."
 
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Thu, Mar 2, 2017 at 1:54 PM, Rafa=C5=82 Mi=C5=82ecki <span dir=3D"lt=
-r">&lt;<a href=3D"mailto:zajec5@gmail.com" target=3D"_blank">zajec5@gmail.c=
-om</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"marg=
-in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div class=3D"HO=
-EnZb"><div class=3D"h5">On 02/28/2017 09:31 PM, Jon Mason wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-From: Jon Mason &lt;<a href=3D"mailto:jonmason@broadcom.com" target=3D"_bla=
-nk">jonmason@broadcom.com</a>&gt;<br>
-<br>
-Add support for the ARM TWD Watchdog to the bcm5301x device tree.=C2=A0 The=
-<br>
-ARM TWD timer allocated the register space for the WDT, so this patch<br>
-necessitated shrinking that.=C2=A0 Also, the GIC masks were added for these=
-.<br>
-<br>
-Signed-off-by: Jon Mason &lt;<a href=3D"mailto:jonmason@broadcom.com" targe=
-t=3D"_blank">jonmason@broadcom.com</a>&gt;<br>
----<br>
-=C2=A0arch/arm/boot/dts/bcm5301x.dt<wbr>si | 15 ++++++++++++---<br>
-=C2=A01 file changed, 12 insertions(+), 3 deletions(-)<br>
-<br>
-diff --git a/arch/arm/boot/dts/bcm5301x.d<wbr>tsi b/arch/arm/boot/dts/bcm53=
-01x.d<wbr>tsi<br>
-index 4fbb089..3fbc450 100644<br>
---- a/arch/arm/boot/dts/bcm5301x.d<wbr>tsi<br>
-+++ b/arch/arm/boot/dts/bcm5301x.d<wbr>tsi<br>
-@@ -70,10 +70,19 @@<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 clocks =3D &lt;&amp;periph_clk&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
-<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0local-timer@20600 {=
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0timer@20600 {<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 compatible =3D &quot;arm,cortex-a9-twd-timer&quot;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0reg =3D &lt;0x20600 0x100&gt;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0interrupts =3D &lt;GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0reg =3D &lt;0x20600 0x20&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0interrupts =3D &lt;GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0IRQ_TYPE_LEVEL_HIGH)&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0clocks =3D &lt;&amp;periph_clk&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-</blockquote>
-<br></div></div>
-If you follow my recent e-mail thread:<br>
-BCM5301X: GIC: PPI11 is secure or misconfigured (same for PPI13)<br>
-you&#39;ll see IRQ_TYPE_LEVEL_HIGH type isn&#39;t correct. It should be<br>
-IRQ_TYPE_EDGE_RISING.<br>
-<br>
-I believe patch switching to IRQ_TYPE_EDGE_RISING should be sent with Cc st=
-able<br>
-for kernels 4.8+.<br>
-<br>
-The same change is needed for &quot;arm,cortex-a9-global-timer&quot;.<br>
-<br>
-Would you find time to revise this patch?<br></blockquote><div><br></div><d=
-iv>I&#39;ll do 2 patches.=C2=A0 One to revise this one and one to address t=
-he issue you&#39;ve discovered.=C2=A0 Will that be okay for you?</div><div>=
-=C2=A0</div></div><br></div></div>
+> I have no other needs for the moment. I'm experimenting with the
+> introduction of DT in OP-TEE. The secure-status property (or lack
+> thereof) already allows me to know if a device can be used by the secure
+> OS and how it should be mapped (secure vs. non-secure). This extension
+> allows me to reuse the same TEE binary and change the console, which is
+> a simple use case to demonstrate the advantage of using the DT in the
+> secure FW.
+>
+>> Maybe we should allow stdout-path to have multiple strings and secure
+>> fw grabs the first one and updates the DT removing it (perhaps only if
+>> the device is secure only). Might be nice to have multiple ones
+>> supported anyway (like we can do on the kernel command line:
+>> "console=ttyS0 console=ttyS1").
+>
+> The problem I see with removing entries is that the secure firmware may
+> have multiple stages (say, ARM Trusted Firmware plus a secure OS such as
+> OP-TEE).
 
---001a11443ef6e95fdd0549c40b37--
+The only way you can have a shared console is if things are sequential.
+
+
+
+Rob
