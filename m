@@ -1,111 +1,71 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/3] thermal: add support for the thermal sensor on
- Allwinner new SoCs
-Date: Wed, 1 Mar 2017 11:14:56 +0100
-Message-ID: <20170301101456.a745eghkjoz5zzk7@lukather>
-References: <20170301054835.mUDm4hZv@smtp2m.mail.yandex.net>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2814144027513372952=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170301054835.mUDm4hZv@smtp2m.mail.yandex.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
+From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH V2 2/3] dt-bindings: spi: document bcm63xx HS SPI devicetree bindings
+Date: Wed,  1 Mar 2017 10:08:13 +0100
+Message-ID: <20170301090814.7097-2-jonas.gorski@gmail.com>
+References: <20170301090814.7097-1-jonas.gorski@gmail.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170301090814.7097-1-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add documentation for the bindings of the high speed SPI controller found
+on newer bcm63xx SoCs.
 
---===============2814144027513372952==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3bewbit4du2nboip"
-Content-Disposition: inline
+Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes v1 -> v2
+* made the pll clock required
+* added "High speed" (HS) to the first line
 
+ .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
 
---3bewbit4du2nboip
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+diff --git a/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+new file mode 100644
+index 000000000000..37b29ee13860
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+@@ -0,0 +1,33 @@
++Binding for Broadcom BCM6328 High Speed SPI controller
++
++Required properties:
++- compatible: must contain of "brcm,bcm6328-hsspi".
++- reg: Base address and size of the controllers memory area.
++- interrupts: Interrupt for the SPI block.
++- clocks: phandles of the SPI clock and the PLL clock.
++- clock-names: must be "hsspi", "pll".
++- #address-cells: <1>, as required by generic SPI binding.
++- #size-cells: <0>, also as required by generic SPI binding.
++
++Optional properties:
++- num-cs: some controllers have less than 8 cs signals. Defaults to 8
++  if absent.
++
++Child nodes as per the generic SPI binding.
++
++Example:
++
++	spi@10001000 {
++		compatible = "brcm,bcm6328-hsspi";
++		reg = <0x10001000 0x600>;
++
++		interrupts = <29>;
++
++		clocks = <&clkctl 9>, <&hsspi_pll>;
++		clock-names = "hsspi", "pll";
++
++		num-cs = <2>;
++
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
+-- 
+2.11.0
 
-On Tue, Feb 28, 2017 at 03:18:13PM +0800, Icenowy Zheng wrote:
->=20
-> 2017=E5=B9=B42=E6=9C=8828=E6=97=A5 14:44=E4=BA=8E Maxime Ripard <maxime.r=
-ipard@free-electrons.com>=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > On Tue, Feb 28, 2017 at 03:40:53AM +0800, Icenowy Zheng wrote:=20
-> > > From: Ondrej Jirman <megous@megous.com>=20
-> > >=20
-> > > Allwinner SoCs from H3 (including H5, A64, etc) have a new version of=
-=20
-> > > thermal sensor, and needs a new driver for it.=20
-> > >=20
-> > > Add such a driver.=20
-> > >=20
-> > > Currently only H3 is supported, but other SoCs are easily to be=20
-> > > supported by adding new formula and set the sensor number.=20
-> > >=20
-> > > Signed-off-by: Ond=C5=99ej Jirman <megous@megous.com>=20
-> > > [Icenowy: extend to support further multiple-sensor SoCs, change comm=
-it=20
-> > >=C2=A0 message]=20
-> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>=20
-> >
-> > There's no need to create a new driver for that. This can be handled=20
-> > by the GPADC driver we already have.=20
->=20
-> sun8i-ths is not GPADC at all.
->=20
-> The latest SoC I know that use GPADC as thermal sensor is A33.
-
-It's not called the same way, but it definitely is an evolution of the
-same controller. There's no need for a new driver, only reworking what
-is already there.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---3bewbit4du2nboip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYtp8cAAoJEBx+YmzsjxAgZ0IP/0HAvNHaPhYU2o10C+Ls/ofn
-6sTvk875Hba8mgND/7hQ4VJJ4aGqXHamXDZ4DtMyHtpgySBLBvM3MLg2cgPJzO0T
-eFRMQUO8al5P/kuBzpOtNXwYCfZfmPqTBXGTg06wbk90MG0IMXWdaAhSFnU41Ub0
-d/Y9lyW/vf1vRurcioHc8obsbLxn/ZVOoP4Ic/ivZTUaJrfpmoqxjrx4T1VGajgJ
-MHOS8G1CuW9LgTGB5PIhqQHO2x7htWFQujJJ+gBI2cP0NYEdFuB6HMiydHC4/Ni6
-KqeAgbNnL9wZKDPJTvznBaOvjSWsOijjnLlSh2y947seG5xW4thY1VjtqhG225Df
-+C8QbfZQnYJn73TB9lHAlGpKWuxc5DwDbnYTDfGdkLz1yyOWXjF1az/7kYdcCq1Y
-R/pjwe4Wg3K+fiO6SdnXcwMisIBEKg7bakt++IqQje3j3TH2uc1F5uuyCWMlizh+
-WStd+dKpTDM1kAOFFgXo0XnKCtb2LFnD8DpYsO0J4vXv1l7ozMRwKUwi1cC3XChx
-POWSOWeIrnmnitGrWeD8ZCErdrF69aYGR+/xZqWASTTkwXEV1JDLtyBDscmeBiyM
-VcwQBir/aBn5aAHSF2gK5+RH4KJU3Ewx0ltg+Hw+T4wwNgPK9K2VrnIIjFkr/3M7
-XG4kQrW5SJB50VNfnY+c
-=bvLQ
------END PGP SIGNATURE-----
-
---3bewbit4du2nboip--
-
-
---===============2814144027513372952==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============2814144027513372952==--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
