@@ -1,54 +1,194 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
- binding to OPP nodes
-Date: Wed, 1 Mar 2017 14:24:12 +0530
-Message-ID: <20170301085412.GF24323@vireshk-i7>
-References: <cover.1487926924.git.viresh.kumar@linaro.org>
- <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
- <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop>
- <20170228065711.GD19417@vireshk-i7>
- <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com>
- <CAPDyKFo5TjTa-hTzNp5KCpozU87L22piCXaSjWMTr4xVkgP+Pg@mail.gmail.com>
- <CAL_Jsq+7DGX_1U99cc3rhk8zzSj6iKe3kpijp7KTz90xXA_V9g@mail.gmail.com>
- <20170301061402.GE24323@vireshk-i7>
- <CAMuHMdWnDJ2RvGgYOxSiB=2Z32-bZwNjnEQG6TK2Umtf4eiAYw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 5/9] dmaengine: sun6i: support V3s SoC
+	variant
+Date: Wed, 1 Mar 2017 10:32:52 +0100
+Message-ID: <20170301093252.ukeurxvl55tfkymm@lukather>
+References: <20170225123029.55939-1-icenowy@aosc.xyz>
+ <20170225123029.55939-5-icenowy@aosc.xyz>
+ <20170227075021.e7e43o54s23jzfto@lukather>
+ <1426971488192481@web6g.yandex.ru>
+ <20170228175604.kdlmjjcncfljnbfp@lukather>
+ <535111488304713@web26h.yandex.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWnDJ2RvGgYOxSiB=2Z32-bZwNjnEQG6TK2Umtf4eiAYw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============1764454342210549958=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <535111488304713@web26h.yandex.ru>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01-03-17, 09:45, Geert Uytterhoeven wrote:
-> On Wed, Mar 1, 2017 at 7:14 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 28-02-17, 09:52, Rob Herring wrote:
-> >> On Tue, Feb 28, 2017 at 9:14 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> >> > This comes from the early design of the generic PM domain, thus I
-> >> > assume we have some HW with such complex PM topology. However, I don't
-> >> > know if it is actually being used.
-> >> >
-> >> > Moreover, the corresponding DT bindings for "power-domains" parents,
-> >> > can easily be extended to cover more than one parent. See more in
-> >> > Documentation/devicetree/bindings/power/power_domain.txt
+
+--===============1764454342210549958==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fbh524dvpoozskrk"
+Content-Disposition: inline
+
+
+--fbh524dvpoozskrk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Mar 01, 2017 at 01:58:33AM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> 01.03.2017, 01:56, "Maxime Ripard" <maxime.ripard@free-electrons.com>:
+> > On Mon, Feb 27, 2017 at 06:48:01PM +0800, Icenowy Zheng wrote:
+> >> =A027.02.2017, 15:50, "Maxime Ripard" <maxime.ripard@free-electrons.co=
+m>:
+> >> =A0> On Sat, Feb 25, 2017 at 08:30:25PM +0800, Icenowy Zheng wrote:
+> >> =A0>> =A0Allwinner V3s has a DMA engine similar to the ones from A31, =
+but with
+> >> =A0>> =A0fewer channels and DRQs.
+> >> =A0>>
+> >> =A0>> =A0Add support for it.
+> >> =A0>>
+> >> =A0>> =A0As it also needs the special gate bit, make the gate bit gene=
+ric.
+> >> =A0>
+> >> =A0> That should be part of a separate patch.
 > >>
-> >> I could easily see device having 2 power domains. For example a cpu
-> >> may have separate domains for RAM/caches and logic.
+> >> =A0OK.
+> >>
+> >> =A0>
+> >> =A0>> =A0According to BSP source code, SUN8IW6 (A83T) also needs the b=
+it, so it
+> >> =A0>> =A0have also been specified gate_needed property.
+> >> =A0>>
+> >> =A0>> =A0Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> >> =A0>> =A0---
+> >> =A0>> =A0=A0Documentation/devicetree/bindings/dma/sun6i-dma.txt | 1 +
+> >> =A0>> =A0=A0drivers/dma/sun6i-dma.c | 17 ++++++++++++++---
+> >> =A0>> =A0=A02 files changed, 15 insertions(+), 3 deletions(-)
+> >> =A0>>
+> >> =A0>> =A0diff --git a/Documentation/devicetree/bindings/dma/sun6i-dma.=
+txt b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> >> =A0>> =A0index 6b267045f522..98fbe1a5c6dd 100644
+> >> =A0>> =A0--- a/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> >> =A0>> =A0+++ b/Documentation/devicetree/bindings/dma/sun6i-dma.txt
+> >> =A0>> =A0@@ -9,6 +9,7 @@ Required properties:
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0"all=
+winner,sun8i-a23-dma"
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0"all=
+winner,sun8i-a83t-dma"
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0"all=
+winner,sun8i-h3-dma"
+> >> =A0>> =A0+ "allwinner,sun8i-v3s-dma"
+> >> =A0>> =A0=A0- reg: Should contain the registers base address and length
+> >> =A0>> =A0=A0- interrupts: Should contain a reference to the interrupt =
+used by this device
+> >> =A0>> =A0=A0- clocks: Should contain a reference to the parent AHB clo=
+ck
+> >> =A0>> =A0diff --git a/drivers/dma/sun6i-dma.c b/drivers/dma/sun6i-dma.c
+> >> =A0>> =A0index a2358780ab2c..1f38424c1b14 100644
+> >> =A0>> =A0--- a/drivers/dma/sun6i-dma.c
+> >> =A0>> =A0+++ b/drivers/dma/sun6i-dma.c
+> >> =A0>> =A0@@ -101,6 +101,7 @@ struct sun6i_dma_config {
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u32 nr_max_channels;
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u32 nr_max_requests;
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0u32 nr_max_vchans;
+> >> =A0>> =A0+ bool gate_needed;
+> >> =A0>> =A0=A0};
+> >> =A0>>
+> >> =A0>> =A0=A0/*
+> >> =A0>> =A0@@ -1009,12 +1010,14 @@ static struct sun6i_dma_config sun8i_=
+a23_dma_cfg =3D {
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_channels =3D 8,
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_requests =3D 24,
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_vchans =3D 37,
+> >> =A0>> =A0+ .gate_needed =3D true,
+> >> =A0>> =A0=A0};
+> >> =A0>>
+> >> =A0>> =A0=A0static struct sun6i_dma_config sun8i_a83t_dma_cfg =3D {
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_channels =3D 8,
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_requests =3D 28,
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_vchans =3D 39,
+> >> =A0>> =A0+ .gate_needed =3D true,
+> >> =A0>> =A0=A0};
+> >> =A0>>
+> >> =A0>> =A0=A0/*
+> >> =A0>> =A0@@ -1028,11 +1031,19 @@ static struct sun6i_dma_config sun8i_=
+h3_dma_cfg =3D {
+> >> =A0>> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0.nr_max_vchans =3D 34,
+> >> =A0>> =A0=A0};
+> >> =A0>>
+> >> =A0>> =A0+static struct sun6i_dma_config sun8i_v3s_dma_cfg =3D {
+> >> =A0>> =A0+ .nr_max_channels =3D 8,
+> >> =A0>> =A0+ .nr_max_requests =3D 23,
+> >> =A0>> =A0+ .nr_max_vchans =3D 24,
+> >> =A0>
+> >> =A0> This one is suspicious. There's just a single endpoint that can be
+> >> =A0> used in both directions?
+> >>
+> >> =A0nr_max_vchans is the endpoint number. nr_max_requests is the
+> >> =A0maximum DRQ number, for V3s, according to the datasheet, it's
+> >> =A023: SPI0_{R,T}X.
 > >
-> > An important thing here is that PM domain doesn't support such devices. i.e. a
-> > device isn't allowed to have multiple PM domains today. So a way to support such
-> > devices can be to create a virtual PM domain, that has two parents and device as
-> > its child.
-> 
-> As clock domains (and their support code) are fairly orthogonal to power
-> areas, currently our power area controller driver just forwards the
-> clock handling
-> to the clock driver (cfr. rcar-sysc).
+> > There's not a lot of endpoints indeed, but you need 28 vchans (2 *
+> > 14).
+>=20
+> Sorry but I counted only 12 pairs of vchans:
+> Port 0. SRAM
+> Port 1. SDRAM
+> Port 6. UART0
+> Port 7. UART1
+> Port 8. UART2
+> Port 15. Audio Codec
+> Port 16. CE
+> Port 17. OTG EP1
+> Port 18. OTG EP2
+> Port 19. OTG EP3
+> Port 20. OTG EP4
+> Port 23. SPI0
 
-Perhaps Rajendra can explain better but Qcom have a case where they need to
-program two power domains as well.
+It seems like I can't count anymore... Yes, you're right, sorry.
 
--- 
-viresh
+Having a comment on top of the structure, just like all the other SoCs
+would be nice though.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--fbh524dvpoozskrk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYtpVAAAoJEBx+YmzsjxAghKoP/0dYwy6h7SA6CVpqTF/4v61z
+XlfBHzQh2YgoNhUAjejb0rjNZPOT/xiNwjA/ryBlrr8sXA+kPYPsYtVc8OQr+FBR
+PaSZEmJuohSUcRjyLVg75/QH+flqOrQmwrNAhfIQZffnexaBPEpAbPYp8pGhfUEM
+e3g7X9Zt5ffl8ojo/5scSFMHDTbe8uAKLJvC/Dr7w8vngfjaGi0QujyMTR8WqwNJ
+VF61jj9yxMor9zoXrocQF/W/qgNBSCxao0BYAqSVeRLNVCNMPQS2+wKzGHyzPwrL
+lW5n+1jvgSc987z8aEcLafI2zLP91rYRAhcqRBvZ1gJna7PJtq7ESdADZgJhfVmM
+MCz+nFFWYwtd4MFPvXp30pYWcOjGZtbtT6HFWx5YP4aGgMU0esE1AGz0zR8Qp/7O
+0Tw+Wc6eqoYob3vcxVSPL+x3+WgtHQ7OO/wKVykgdDi/HFJvq0VpawJ540RI3CzZ
+UGapBoTqy9IW0ejdogL7kMz8nvNZod8fi1pIgqTfxM5oRqq98kAcZPjjhwXrbZ+a
+I4Hb/6jGM1U6oj88OIF1WtTbbFkrxkWfGIYqfbXtoLPWzGzzQfFfjTiZfUNN0l8q
+uHeYPtKK7r3xTqTwoFMlofbcME4Xik/nfRbftrVxCf+tSREATfu+vcMuepaASc7P
+uadbOwG5MF2hHbS40ZL2
+=oMlw
+-----END PGP SIGNATURE-----
+
+--fbh524dvpoozskrk--
+
+--===============1764454342210549958==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1764454342210549958==--
