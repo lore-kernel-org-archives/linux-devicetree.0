@@ -1,129 +1,55 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 2/3] coresight: refactor with function
- of_coresight_get_cpu
-Date: Wed, 1 Mar 2017 09:02:33 -0700
-Message-ID: <20170301160233.GB4009@linaro.org>
-References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
- <1488294420-14188-3-git-send-email-leo.yan@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1488294420-14188-3-git-send-email-leo.yan@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: [RESEND PATCH v6 0/6] i2c: designware: add I2C SLAVE support
+Date: Wed,  1 Mar 2017 15:59:40 +0000
+Message-ID: <cover.1488383202.git.lolivei@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 11:06:59PM +0800, Leo Yan wrote:
-> This is refactor to add function of_coresight_get_cpu(), so it's used to
-> retrieve CPU id for coresight component. Finally can use it as a common
-> function for multiple places.
-> 
-> Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  drivers/hwtracing/coresight/of_coresight.c | 35 ++++++++++++++++++++----------
->  include/linux/coresight.h                  |  2 ++
->  2 files changed, 25 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> index 629e031..2e7bbe2 100644
-> --- a/drivers/hwtracing/coresight/of_coresight.c
-> +++ b/drivers/hwtracing/coresight/of_coresight.c
-> @@ -101,14 +101,34 @@ static int of_coresight_alloc_memory(struct device *dev,
->  	return 0;
->  }
->  
-> +int of_coresight_get_cpu(struct device_node *node)
-> +{
-> +	int cpu;
-> +	struct device_node *dn;
-> +
-> +	dn = of_parse_phandle(node, "cpu", 0);
-> +
-> +	/* Affinity defaults to CPU0 */
-> +	if (!dn)
-> +		return 0;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		if (dn == of_get_cpu_node(cpu, NULL))
-> +			break;
-> +	}
-> +	of_node_put(dn);
+The purpose of this patchset is to enable Linux to be a I2C slave by 
+enabling the slave functionality in the designware I2C controller and at
+the same time it does some cleaning of the existing code.
 
-In the case where no CPU nodes are found this function will return the number
-of the last CPU that was probed instead of '0'.
+The patch 1 is for cleaning and commentary fix.
+The patch 2 refactors the original i2c-designware-core and extracts all
+master functions to a i2c-designware-master source file as suggested by
+Andy Shevchenko when I first submited the update. The patch 3 then
+separates the MASTER flow from the common flow.
+The patch 4 introduces the SLAVE necessary definitions to the 
+i2c-designware library and adds a how-to-use example to the designware.txt
+in device tree bindings.
+The patch 5 adds the necessary functions to give the ability to be a SLAVE
+to the controller and for that changes also had to be made in the 
+Makefile and Kconfig.
+The patch 6 enables the SLAVE mode to be detected by the platform module.
 
-> +
-> +	return cpu;
-> +}
-> +EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+The functionality was tested using the hardware independent slave-eeprom
+driver based on top of i2c/for-next. The tree I used can be found here:
 
-Any reason you exported this - the fact that is it declared in corsight.h should
-be enough.
+https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/log/?h=i2c/for-next
 
-Thanks,
-Mathieu
+Luis Oliveira (6):
+  i2c: designware: Cleaning and comment style fixes.
+  i2c: designware: refactoring of the i2c-designware
+  i2c: designware: MASTER mode as separated driver
+  i2c: designware: introducing I2C_SLAVE definitions
+  i2c: designware: add SLAVE mode functions
+  i2c: designware: enable SLAVE in platform module
 
-> +
->  struct coresight_platform_data *of_get_coresight_platform_data(
->  				struct device *dev, struct device_node *node)
->  {
-> -	int i = 0, ret = 0, cpu;
-> +	int i = 0, ret = 0;
->  	struct coresight_platform_data *pdata;
->  	struct of_endpoint endpoint, rendpoint;
->  	struct device *rdev;
-> -	struct device_node *dn;
->  	struct device_node *ep = NULL;
->  	struct device_node *rparent = NULL;
->  	struct device_node *rport = NULL;
-> @@ -175,16 +195,7 @@ struct coresight_platform_data *of_get_coresight_platform_data(
->  		} while (ep);
->  	}
->  
-> -	/* Affinity defaults to CPU0 */
-> -	pdata->cpu = 0;
-> -	dn = of_parse_phandle(node, "cpu", 0);
-> -	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
-> -		if (dn == of_get_cpu_node(cpu, NULL)) {
-> -			pdata->cpu = cpu;
-> -			break;
-> -		}
-> -	}
-> -	of_node_put(dn);
-> +	pdata->cpu = of_coresight_get_cpu(node);
->  
->  	return pdata;
->  }
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 2a5982c..6709561 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -263,11 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
->  #endif
->  
->  #ifdef CONFIG_OF
-> +extern int of_coresight_get_cpu(struct device_node *node);
->  extern struct coresight_platform_data *of_get_coresight_platform_data(
->  				struct device *dev, struct device_node *node);
->  #else
->  static inline struct coresight_platform_data *of_get_coresight_platform_data(
->  	struct device *dev, struct device_node *node) { return NULL; }
-> +static int of_coresight_get_cpu(struct device_node *node) { return 0; }
->  #endif
->  
->  #ifdef CONFIG_PID_NS
-> -- 
-> 2.7.4
-> 
+ .../devicetree/bindings/i2c/i2c-designware.txt     |  16 +-
+ drivers/i2c/busses/Kconfig                         |  15 +-
+ drivers/i2c/busses/Makefile                        |   2 +
+ drivers/i2c/busses/i2c-designware-common.c         | 281 ++++++++++++
+ drivers/i2c/busses/i2c-designware-core.h           | 180 +++++++-
+ ...c-designware-core.c => i2c-designware-master.c} | 469 +++------------------
+ drivers/i2c/busses/i2c-designware-platdrv.c        | 116 +++--
+ drivers/i2c/busses/i2c-designware-slave.c          | 403 ++++++++++++++++++
+ 8 files changed, 1031 insertions(+), 451 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-designware-common.c
+ rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c} (59%)
+ create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+
+-- 
+2.11.0
