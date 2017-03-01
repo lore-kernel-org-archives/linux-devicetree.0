@@ -1,79 +1,66 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [RESEND PATCH v7 0/7] Rockchip dw-mipi-dsi driver
-Date: Wed, 1 Mar 2017 15:02:50 -0500
-Message-ID: <20170301200250.GA13635@art_vandelay>
-References: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v6 0/4] Allwinner H5 and Orange Pi PC2 support
+Date: Thu,  2 Mar 2017 04:13:38 +0800
+Message-ID: <20170301201342.47583-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1487577744-2855-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBFOX3TCQKGQEGKPY3VI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgMjAsIDIwMTcgYXQgMDQ6MDI6MTZQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gSGkgYWxsCj4gCj4gW1Jlc2VuZCB0aGlzIHY3IHZlcnNpb24gc2VyaWVzLCBzaW5jZSB0
-aGVyZSBhcmUgNSBtYWlscyBoYXZlIGdvbmUgbWlzc2luZywgbGFzdAo+IHdlZWtdCj4gCj4gVGhp
-cyB2ZXJzaW9uIGRvZXMgbm90IGNoYW5nZSB0aGUgZXhpc3RpbmcgdjYgcGF0Y2hlcywganVzdCB0
-byBhZGQgdGhlCj4gImJhbmR3aWR0aCBmaXgiIHBhdGNoIGJhY2ssIHNpbmNlIHdlIHJlYWxseSBu
-ZWVkIGl0Lgo+IAo+IFRoaXMgcGF0Y2ggc2VyaWFsIGlzIGZvciBSSzMzOTkgTUlQSSBEU0kuIFRo
-ZSBNSVBJIERTSSBjb250cm9sbGVyIG9mCj4gUkszMzk5IGlzIGFsbW9zdCB0aGUgc2FtZSBhcyBS
-SzMyODgsIGV4Y2VwdCBhIGxpdHRsZSBiaXQgb2YgZGlmZmVyZW5jZQo+IGluIHBoeSBjbG9jayBj
-b250cm9sbGluZyBhbmQgcG9ydCBpZCBzZWxlY3Rpb24gcmVnaXN0ZXIuIFRoZXNlIHBhdGNoZXMK
-PiBhZGQgUkszMzk5IHN1cHBvcnQgYW5kIHRoZSBwb3dlciBkb21haW4gc3VwcG9ydC4KPiAKPiBB
-bmQgdGhlc2UgcGF0Y2hlcyBiYXNlIG9uIEpvaG4gS2VlcGluZydzIHYzIHBhdGNoZXNbMF0sIGl0
-IGZpeGVzIG1hbnkgYnVncywKPiB0aGV5IGhhdmUgYmVlbiB0ZXN0ZWQgb24gcmszMjg4IGV2YiBi
-b2FyZC4KPiAKPiBbMF06Cj4gWzAxLzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzk1NDQwODkKPiBbMDIvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
-OTU0NDA2MQo+IFswMy8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0
-MDY1Cj4gWzA0LzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQwNzcK
-PiBbMDUvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMwo+IFsw
-Ni8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDM3Cj4gWzA3LzI0
-XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQwMjkKPiBbMDgvMjRdIGh0
-dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMQo+IFswOS8yNF0gaHR0cHM6
-Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDgzCj4gWzEwLzI0XSBodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQwNjMKPiBbMTEvMjRdIGh0dHBzOi8vcGF0Y2h3
-b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA4NQo+IFsxMi8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsu
-a2VybmVsLm9yZy9wYXRjaC85NTQ0MDkzCj4gWzEzLzI0XSBodHRwczovL3BhdGNod29yay5rZXJu
-ZWwub3JnL3BhdGNoLzk1NDQwODEKPiBbMTQvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvOTU0NDA1Nwo+IFsxNS8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
-YXRjaC85NTQ0MDc5Cj4gWzE2LzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
-Lzk1NDQwMzUKPiBbMTcvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0
-NDEwNQo+IFsxOC8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDU5
-Cj4gWzIxLzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQwMDkKPiBb
-MjIvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA0OQo+IFsyMy8y
-NF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDU1Cj4gWzI0LzI0XSBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQxMDkKPiAKPiAKPiBDaGFuZ2Vz
-IGluIHY2Ogo+IC0gbm8gbmVlZCBjaGVjayBwaHlfY2ZnX2NsayBiZWZvcmUgZW5hYmxlL2Rpc2Fi
-bGUKPiAKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gY2hlY2sgdGhlIGVycm9yIG9mIHBoeV9jZmdfY2xr
-IGluIGR3X21pcGlfZHNpX2JpbmQKPiAKPiBDaGFuZ2VzIGluIHY0Ogo+IC0gcmVtb3ZlIHRoZSB1
-bnJlbGF0ZWQgY2hhbmdlCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIGJhc2Ugb24gSm9obiBLZWVw
-aW5nJ3MgcGF0Y2ggc2VyaWVzCj4gCj4gQ2hyaXMgWmhvbmcgKDcpOgo+ICAgZHQtYmluZGluZ3M6
-IGFkZCByazMzOTkgc3VwcG9ydCBmb3IgZHctbWlwaS1yb2NrY2hpcAo+ICAgZHJtL3JvY2tjaGlw
-L2RzaTogZHctbWlwaTogc3VwcG9ydCBSSzMzOTkgbWlwaSBkc2kKPiAgIGRybS9yb2NrY2hpcC9k
-c2k6IGR3LW1pcGk6IGNvcnJlY3QgdGhlIGNvZGluZyBzdHlsZQo+ICAgZHJtL3JvY2tjaGlwL2Rz
-aTogcmVtb3ZlIG1vZGVfdmFsaWQgZnVuY3Rpb24KPiAgIGR0LWJpbmRpbmdzOiBhZGQgcG93ZXIg
-ZG9tYWluIG5vZGUgZm9yIGR3LW1pcGktcm9ja2NoaXAKPiAgIGRybS9yb2NrY2hpcC9kc2k6IGZp
-eCBpbnN1ZmZpY2llbnQgYmFuZHdpZHRoIG9mIHNvbWUgcGFuZWwKPiAgIGRybS9yb2NrY2hpcC9k
-c2k6IGFkZCBkdy1taXBpIHBvd2VyIGRvbWFpbiBzdXBwb3J0CgpBcHBsaWVkIHRvIGRybS1taXNj
-CgpUaGFua3MsCgpTZWFuCj4gCj4gIC4uLi9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNpX3Jv
-Y2tjaGlwLnR4dCAgICAgIHwgICA3ICstCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
-aXBpLWRzaS5jICAgICAgICAgICAgIHwgMTYwICsrKysrKysrKysrKy0tLS0tLS0tLQo+ICAyIGZp
-bGVzIGNoYW5nZWQsIDEwMCBpbnNlcnRpb25zKCspLCA2NyBkZWxldGlvbnMoLSkKPiAKPiAtLSAK
-PiAyLjYuMwo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Allwinner H5 is a 64-bit SoC with a design like the 32-bit
+H3, and it's pin-to-pin compatible with H3.
+
+This patchset adds support for it, along with the first available
+board -- Orange Pi PC2.
+
+Several H5 boards by Sinovoip Banana Pi and FriendlyARM Nano Pi
+are coming, so we should get ready for them.
+
+The rename of sun8i-h3-ccu driver is dropped in this version,
+according to the recommendation by Maxime Ripard.
+
+This patchset depends on patchset [1] to finally take effect. At
+least the patch 1 of that patchset is needed if you want to test
+the kernel image -- without it the pinctrl driver won't be built
+and the kernel will become unusable without pinctrl.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2017-March/490780.html
+
+Andre Przywara (3):
+  arm: dts: sun8i: split Allwinner H3 .dtsi
+  arm64: dts: allwinner: add Allwinner H5 .dtsi
+  arm64: dts: sunxi: add support for the Orange Pi PC 2 board
+
+Icenowy Zheng (1):
+  clk: sunxi-ng: add Allwinner H5 CCU support for H3 CCU driver
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |   1 +
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 602 ++-------------------
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 586 ++++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 163 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       | 124 +++++
+ arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi     |   1 +
+ drivers/clk/sunxi-ng/Kconfig                       |   2 +-
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.c                | 327 ++++++++++-
+ drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   3 +-
+ include/dt-bindings/clock/sun8i-h3-ccu.h           |   5 +-
+ include/dt-bindings/reset/sun8i-h3-ccu.h           |   5 +-
+ 12 files changed, 1247 insertions(+), 573 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sunxi-h3-h5.dtsi
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+ create mode 120000 arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi
+
+-- 
+2.11.1
