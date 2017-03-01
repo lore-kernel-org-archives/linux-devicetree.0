@@ -1,62 +1,130 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 0/3] watchdog: add wdt and reset for renesas r7s72100
-Date: Wed,  1 Mar 2017 17:54:52 -0500
-Message-ID: <20170301225455.22818-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH] ARM: dts: NSP: GPIO reboot open-source
+Date: Wed,  1 Mar 2017 18:02:28 -0500
+Message-ID: <1488409348-6371-1-git-send-email-jon.mason@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Some Renesas SoCs do not have a reset register and the only way to do a SW
-controlled reset is to use the watchdog timer. So while this series started
-out by only adding a reset feature, now it's a full watchdog timer driver that
-includes a reset handler.
+The libgpio code pre-sets the GPIO values for the gpio-reset in the
+device tree.  This results in the device being reset during bringup.
+To prevent this pre-setting, use the "open-source" flag in the device
+tree.
 
-The longest WDT overflow you can get with a RZ/A1 (R7S72100) with its 8-bit
-wide counter is 125ms. Not very long.
+Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+Fixes: b1aaf88 ("ARM: dts: NSP: Add GPIO reboot method to bcm958625hr DTS file")
+Fixes: 10baed1 ("ARM: dts: NSP: Add GPIO reboot method to bcm958625xmc DTS file")
+Fixes: 088e3148 ("ARM: dts: NSP: Add new DT file for bcm958522er")
+Fixes: e3227c1 ("ARM: dts: NSP: Add new DT file for bcm958525er")
+Fixes: 2f8bc00 ("ARM: dts: NSP: Add new DT file for bcm958622hr")
+Fixes: d454c37 ("ARM: dts: NSP: Add new DT file for bcm958623hr")
+Fixes: f27eacf ("ARM: dts: NSP: Add new DT file for bcm988312hr")
+---
+ arch/arm/boot/dts/bcm958522er.dts  | 1 +
+ arch/arm/boot/dts/bcm958525er.dts  | 1 +
+ arch/arm/boot/dts/bcm958525xmc.dts | 1 +
+ arch/arm/boot/dts/bcm958622hr.dts  | 1 +
+ arch/arm/boot/dts/bcm958623hr.dts  | 1 +
+ arch/arm/boot/dts/bcm958625hr.dts  | 1 +
+ arch/arm/boot/dts/bcm988312hr.dts  | 1 +
+ 7 files changed, 7 insertions(+)
 
-However, by setting max_hw_heartbeat_ms, the watchdog core will now handle
-pinging the WDT automatically and allow the user to set times as big as they
-want. Therefore, the default timeout for this driver is 30 seconds.
-
-Of course if system interrupts are disabled too long and wdt can't be pinged
-by the watchdog core, then the system will reset before the user specified
-timeout. But hey, it's better nothing.
-
-This driver was tested on an RZ/A1 RSK board using watchdog-simple.c from
-samples/watchdog/.
-
-v3:
-* changed from a reset driver to a watchdog timer driver
-* use udelay(20) instead of msleep for reset handler
-* added Reviewed-by for r7s72100.dtsi and renesas-wdt.txt
-* added Acked-by for renesas-wdt.txt
-
-v2:
-* added to renesas-wdt.txt instead of creating a new file
-* changed "renesas,r7s72100-reset" to "renesas,r7s72100-wdt"
-* changed "renesas,wdt-reset" to "renesas,rza-wdt"
-* added "renesas,rza-wdt" as a fallback
-* added interupt property (even though it is not used)
-* added clocks property
-* changed hard coded register values to defines
-* added msleep to while(1) loop
-* removed unnecessary #include files
-* added Reviewed-by: Geert Uytterhoeven for renesas-reset.c
-
-Chris Brandt (3):
-  watchdog: add rza_wdt driver
-  watchdog: renesas-wdt: add support for rza
-  ARM: dts: r7s72100: Add watchdog timer
-
- .../devicetree/bindings/watchdog/renesas-wdt.txt   |   4 +-
- arch/arm/boot/dts/r7s72100.dtsi                    |   7 +
- drivers/watchdog/Kconfig                           |   8 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/rza_wdt.c                         | 208 +++++++++++++++++++++
- 5 files changed, 227 insertions(+), 1 deletion(-)
- create mode 100644 drivers/watchdog/rza_wdt.c
-
+diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
+index 3f04a40..df05e7f 100644
+--- a/arch/arm/boot/dts/bcm958522er.dts
++++ b/arch/arm/boot/dts/bcm958522er.dts
+@@ -55,6 +55,7 @@
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
++		open-source;
+ 		priority = <200>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
+index 9fd5422..4a3ab19 100644
+--- a/arch/arm/boot/dts/bcm958525er.dts
++++ b/arch/arm/boot/dts/bcm958525er.dts
+@@ -55,6 +55,7 @@
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
++		open-source;
+ 		priority = <200>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
+index 41e7fd3..81f7843 100644
+--- a/arch/arm/boot/dts/bcm958525xmc.dts
++++ b/arch/arm/boot/dts/bcm958525xmc.dts
+@@ -55,6 +55,7 @@
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpioa 31 GPIO_ACTIVE_LOW>;
++		open-source;
+ 		priority = <200>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
+index 477c486..c88b8fe 100644
+--- a/arch/arm/boot/dts/bcm958622hr.dts
++++ b/arch/arm/boot/dts/bcm958622hr.dts
+@@ -55,6 +55,7 @@
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
++		open-source;
+ 		priority = <200>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
+index c0a499d..d503fa0 100644
+--- a/arch/arm/boot/dts/bcm958623hr.dts
++++ b/arch/arm/boot/dts/bcm958623hr.dts
+@@ -55,6 +55,7 @@
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
++		open-source;
+ 		priority = <200>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index f7eb585..cc0363b 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -55,6 +55,7 @@
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
++		open-source;
+ 		priority = <200>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm988312hr.dts b/arch/arm/boot/dts/bcm988312hr.dts
+index 16666324..74e15a3 100644
+--- a/arch/arm/boot/dts/bcm988312hr.dts
++++ b/arch/arm/boot/dts/bcm988312hr.dts
+@@ -55,6 +55,7 @@
+ 	gpio-restart {
+ 		compatible = "gpio-restart";
+ 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
++		open-source;
+ 		priority = <200>;
+ 	};
+ };
 -- 
-2.10.1
+2.7.4
