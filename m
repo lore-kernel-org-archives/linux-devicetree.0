@@ -1,61 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: qoriq-clock: Add coreclk
-Date: Wed, 1 Mar 2017 17:17:25 -0600
-Message-ID: <CAL_Jsq+EE-tybQKg+T6TF6T5nGW17KiGuthXj=R9nuF0btNSUg@mail.gmail.com>
-References: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
- <20170227171837.eymnyebgn7ocsp7w@rob-hp-laptop>
- <DB6PR0402MB2837F35D8881AA2E4F12F430F0290@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 0/4] iio: accel: adxl345: Split driver into core and
+ I2C then add SPI support
+Date: Thu, 2 Mar 2017 01:22:11 +0200
+Message-ID: <CAHp75VdtqNAf_PaWBL=YPc9iz=E-0tAz2=Fk-mDYSeBvtU+KYg@mail.gmail.com>
+References: <cover.1488248485.git.eraretuya@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB6PR0402MB2837F35D8881AA2E4F12F430F0290@DB6PR0402MB2837.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "Y.T. Tang" <yuantian.tang@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1488248485.git.eraretuya@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eva Rachel Retuya <eraretuya@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 7:45 PM, Y.T. Tang <yuantian.tang@nxp.com> wrote:
-> Hi Rob,
+On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
+> This patchset modifies the adxl345 to use regmap. In doing so, we can
+> easily introduce SPI support and let regmap handle the rest.
 >
->> -----Original Message-----
->> From: Rob Herring [mailto:robh@kernel.org]
->> Sent: Tuesday, February 28, 2017 1:19 AM
->> To: Y.T. Tang <yuantian.tang@nxp.com>
->> Cc: mturquette@baylibre.com; sboyd@codeaurora.org;
->> mark.rutland@arm.com; linux-clk@vger.kernel.org;
->> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; Scott Wood <oss@buserror.net>
->> Subject: Re: [PATCH 1/2] dt-bindings: qoriq-clock: Add coreclk
->>
->> On Wed, Feb 15, 2017 at 01:47:35PM +0800, yuantian.tang@nxp.com wrote:
->> > From: Tang Yuantian <Yuantian.Tang@nxp.com>
->> >
->> > ls1012a has separate input root clocks for core PLLs versus the
->> > platform PLL, with the latter described as sysclk in the hw docs.
->> > Update the qoriq-clock binding to allow a second input clock, named
->> > "coreclk".  If present, this clock will be used for the core PLLs.
->> >
->> > Signed-off-by: Scott Wood <oss@buserror.net>
->> > Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
->> > ---
->> >  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
->> >  1 file changed, 6 insertions(+)
->>
->> The change looks fine, but sounds like Scott should remain the author (or
->> agree he shouldn't be).
->>
-> Sure, please make Scott the author and apply this patch set.
+> Recap of basic features: read_raw for x, y and z axes, scale. After
+> applying this series, driver now supports the SPI protocol and enumeration
+> of device via device tree.
 
-Fixing the author is your job. Plus you sent this TO Mike, so I'm
-assuming you only want my ack and Mike will apply.
+If I knew you are going to send new version I would have commented on v4...
 
-Rob
+>
+> Changes from v4:
+> [PATCH 1/4]
+> * Update subject-prefix
+> * Update node name from "adxl345@unit-address" to "accelerometer@unit-address"
+> Patches 2-4
+> * Add Andy's Reviewed-by tag
+>
+> Changes from v3:
+> [PATCH 1/4]
+> * None
+> [PATCH 2/4]
+> * Keep intact I2C client structure which was deleted from v3
+> * Make use of regmap_get_device to retrieve struct device, use these for
+>   debugging prints instead of &client->dev.
+> [PATCH 3/4] and [PATCH 4/4]
+> * Revert to explicit and separate I2C and SPI configuration
+> * Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
+>
+> Changes from v2:
+> * Drop PATCH 4 iio: accel: adxl345: Add ACPI support
+> * Add OF match table on both I2C and SPI files and document them
+>
+> Changes from v1:
+> [PATCH 1/4]
+> * Move other deletions from patch 2 in here -- make it clear what got deleted
+>   and/or modified that is hard to see previously
+> * Introduce the driver header file "adxl345.h" here instead of doing it in the
+>   next patch
+> * Completely omit traces of i2c_client and let this file (adxl345.c) mirror the
+>   core file on the next patch.
+> * Improve debugging print about invalid device ID in probe.
+> [PATCH 2/4]
+> * Update Kconfig to Jonathan's preferred style
+> * Improve similarity index from 78% to 100% (rename detection)
+> [PATCH 4/4]
+> * Correct acpi_device_id: ADX0345 -> ADS0345
+>
+> Eva Rachel Retuya (4):
+>   dt-bindings: iio: accel: Document ADXL345 accelerometer binding
+>   iio: accel: adxl345: Use I2C regmap instead of direct I2C access
+>   iio: accel: adxl345: Split driver into core and I2C
+>   iio: accel: adxl345: Add SPI support
+>
+>  .../devicetree/bindings/iio/accel/adxl345.txt      | 38 +++++++++
+>  drivers/iio/accel/Kconfig                          | 26 ++++++-
+>  drivers/iio/accel/Makefile                         |  4 +-
+>  drivers/iio/accel/adxl345.h                        | 18 +++++
+>  drivers/iio/accel/{adxl345.c => adxl345_core.c}    | 89 +++++++++-------------
+>  drivers/iio/accel/adxl345_i2c.c                    | 78 +++++++++++++++++++
+>  drivers/iio/accel/adxl345_spi.c                    | 83 ++++++++++++++++++++
+>  7 files changed, 281 insertions(+), 55 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
+>  create mode 100644 drivers/iio/accel/adxl345.h
+>  rename drivers/iio/accel/{adxl345.c => adxl345_core.c} (62%)
+>  create mode 100644 drivers/iio/accel/adxl345_i2c.c
+>  create mode 100644 drivers/iio/accel/adxl345_spi.c
+>
+> --
+> 2.7.4
+>
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
