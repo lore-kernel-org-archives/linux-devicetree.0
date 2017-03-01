@@ -1,12 +1,12 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: Re: [PATCH 2/3] clk: sunxi-ng: add support for PRCM CCUs
-Date: Wed, 01 Mar 2017 20:17:39 +0800
-Message-ID: <20170301152220.MEgmqtKw@smtp2p.mail.yandex.net>
+Subject: Re: [PATCH 2/3] clk: sunxi-ng: add support for PRCM CCUs
+Date: Wed, 01 Mar 2017 20:22:13 +0800
+Message-ID: <20170301152236.MUXmRgOe@smtp1m.mail.yandex.net>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBBH23LCQKGQER3G3ZQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBFH23LCQKGQEVYGRCKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -121,11 +121,6 @@ d=20
 > > + =C2=A0=C2=A0=C2=A0=C2=A0 "pll-periph0" };=20
 >
 > You need another pll-periph0 here, the value 3 is valid.=20
-
-On SoCs that have materials, the value 3 is never pll-periph0.
-
-Sometimes it's a clock callwd "cpuosc" in BSP driver.
-
 >
 > And that pll should be in your binding.=20
 >
@@ -215,17 +210,20 @@ c24M" };=20
 > I'm a bit worried by that to be honest. You claim to support the A31,=20
 > yet jugdging by the current state of that code you never actually=20
 > tested it on that SoC.=20
-
-I only claim to reserve possibility to extend the driver to support A31, bu=
-t I didn't claim it currently support A31.
-
 >
 > What makes you say that the PRCM clocks are the same for the H3 and=20
 > A64? We have to be sure, otherwise we might not be able to get the DT=20
 > binding right from the very beginning, and we might not be able to fix=20
 > it later.=20
 
-Of course, not so same -- H3 lacks RSB.
+In fact, if we worry about this, we shouldn't make r-ccu, as dedicated cloc=
+ks are more easy to fix.
+
+For newer SoCs' PRCM, we never have enough documents, and Allwinner have sa=
+id that they cannot provide it. (I asked them for this.)
+
+The best solution is to implement mature enough dedicated clocks before we =
+convert to ccu.
 
 >
 > Maxime=20
@@ -234,13 +232,6 @@ Of course, not so same -- H3 lacks RSB.
 > Maxime Ripard, Free Electrons=20
 > Embedded Linux and Kernel engineering=20
 > http://free-electrons.com=20
->
-> --=20
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.=20
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
-> For more options, visit https://groups.google.com/d/optout.=20
 
 --=20
 You received this message because you are subscribed to the Google Groups "=
