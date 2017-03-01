@@ -1,489 +1,144 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] coresight: add support for debug module
-Date: Wed, 1 Mar 2017 10:35:56 -0700
-Message-ID: <20170301173556.GC4009@linaro.org>
-References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
- <1488294420-14188-4-git-send-email-leo.yan@linaro.org>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/9] Docs: dt: document qcom iommu bindings
+Date: Wed,  1 Mar 2017 12:42:52 -0500
+Message-ID: <20170301174258.14618-4-robdclark@gmail.com>
+References: <20170301174258.14618-1-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1488294420-14188-4-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170301174258.14618-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 11:07:00PM +0800, Leo Yan wrote:
-> Coresight includes debug module and usually the module connects with CPU
-> debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
-> description for related info in "Part H: External Debug".
-> 
-> Chapter H7 "The Sample-based Profiling Extension" introduces several
-> sampling registers, e.g. we can check program counter value with
-> combined CPU exception level, secure state, etc. So this is helpful for
-> analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
-> loop with IRQ disabled. In this case the CPU cannot switch context and
-> handle any interrupt (including IPIs), as the result it cannot handle
-> SMP call for stack dump.
-> 
-> This patch is to enable coresight debug module, so firstly this driver
-> is to bind apb clock for debug module and this is to ensure the debug
-> module can be accessed from program or external debugger. And the driver
-> uses sample-based registers for debug purpose, e.g. when system detects
-> the CPU lockup and trigger panic, the driver will dump program counter
-> and combined context registers (EDCIDSR, EDVIDSR); by parsing context
-> registers so can quickly get to know CPU secure state, exception level,
-> etc.
-> 
-> Some of the debug module registers are located in CPU power domain, so
-> in the driver it has checked the power state for CPU before accessing
-> registers within CPU power domain. For most safe way to use this driver,
-> it's suggested to disable CPU low power states, this can simply set
-> "nohlt" in kernel command line.
-> 
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/hwtracing/coresight/Kconfig           |  10 +
->  drivers/hwtracing/coresight/Makefile          |   1 +
->  drivers/hwtracing/coresight/coresight-debug.c | 378 ++++++++++++++++++++++++++
->  3 files changed, 389 insertions(+)
->  create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
-> 
-> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-> index 130cb21..2c8883b 100644
-> --- a/drivers/hwtracing/coresight/Kconfig
-> +++ b/drivers/hwtracing/coresight/Kconfig
-> @@ -89,4 +89,14 @@ config CORESIGHT_STM
->  	  logging useful software events or data coming from various entities
->  	  in the system, possibly running different OSs
->  
-> +config CORESIGHT_DEBUG
-> +	bool "CoreSight debug driver"
-> +	depends on ARM || ARM64
-> +	help
-> +	  This driver provides support for coresight debugging module. This
-> +	  is primarily used to dump sample-based profiling registers for
-> +	  panic.
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/iommu/qcom,iommu.txt       | 106 +++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
 
-> +       By disable CPU low power states (like "nohlt" in kernel
-> +	  command line), this is more safe and avoid lockup issue when
-> +	  access debug module registers.
-
-"To avoid lockups when accessing debug module registers, it is safer to disable
-CPU low power states (like "nohlt" on the kernel command line) when using this
-feature."
-
-> +
->  endif
-> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> index af480d9..d540d45 100644
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
->  					coresight-etm4x-sysfs.o
->  obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
->  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
-> +obj-$(CONFIG_CORESIGHT_DEBUG) += coresight-debug.o
-> diff --git a/drivers/hwtracing/coresight/coresight-debug.c b/drivers/hwtracing/coresight/coresight-debug.c
-> new file mode 100644
-> index 0000000..5214f8e
-> --- /dev/null
-> +++ b/drivers/hwtracing/coresight/coresight-debug.c
-> @@ -0,0 +1,378 @@
-> +/*
-> + * Copyright (c) 2017 Linaro Limited. All rights reserved.
-> + *
-> + * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2 as published by
-> + * the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along with
-> + * this program.  If not, see <http://www.gnu.org/licenses/>.
-> + *
-> + */
-> +#include <linux/amba/bus.h>
-> +#include <linux/coresight.h>
-> +#include <linux/cpu.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/slab.h>
-> +#include <linux/smp.h>
-> +#include <linux/types.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "coresight-priv.h"
-> +
-> +#define EDPCSR				0x0A0
-> +#define EDCIDSR				0x0A4
-> +#define EDVIDSR				0x0A8
-> +#define EDPCSR_HI			0x0AC
-> +#define EDOSLAR				0x300
-> +#define EDPRSR				0x314
-> +#define EDDEVID1			0xFC4
-> +#define EDDEVID				0xFC8
-> +
-> +#define EDPCSR_PROHIBITED		0xFFFFFFFF
-> +
-> +/* bits definition for EDPCSR */
-> +#ifndef CONFIG_64BIT
-> +#define EDPCSR_THUMB			BIT(0)
-> +#define EDPCSR_ARM_INST_MASK		GENMASK(31, 2)
-> +#define EDPCSR_THUMB_INST_MASK		GENMASK(31, 1)
-> +#endif
-> +
-> +/* bits definition for EDPRSR */
-> +#define EDPRSR_DLK			BIT(6)
-> +#define EDPRSR_PU			BIT(0)
-> +
-> +/* bits definition for EDVIDSR */
-> +#define EDVIDSR_NS			BIT(31)
-> +#define EDVIDSR_E2			BIT(30)
-> +#define EDVIDSR_E3			BIT(29)
-> +#define EDVIDSR_HV			BIT(28)
-> +#define EDVIDSR_VMID			GENMASK(7, 0)
-> +
-> +/* bits definition for EDDEVID1 */
-> +#define EDDEVID1_PCSR_OFFSET_MASK	GENMASK(3, 0)
-> +#define EDDEVID1_PCSR_OFFSET_INS_SET	(0x0)
-> +
-> +/* bits definition for EDDEVID */
-> +#define EDDEVID_PCSAMPLE_MODE		GENMASK(3, 0)
-> +#define EDDEVID_IMPL_EDPCSR_EDCIDSR	(0x2)
-> +#define EDDEVID_IMPL_FULL		(0x3)
-> +
-> +struct debug_drvdata {
-> +	void __iomem	*base;
-> +	struct device	*dev;
-> +	int		cpu;
-> +
-> +	bool		edpcsr_present;
-> +	bool		edvidsr_present;
-> +	bool		pc_has_offset;
-> +
-> +	u32		eddevid;
-> +	u32		eddevid1;
-> +
-> +	u32		edpcsr;
-> +	u32		edpcsr_hi;
-> +	u32		edprsr;
-> +	u32		edvidsr;
-> +	u32		edcidsr;
-> +};
-> +
-> +static DEFINE_PER_CPU(struct debug_drvdata *, debug_drvdata);
-> +
-> +static void debug_os_unlock(struct debug_drvdata *drvdata)
-> +{
-> +	/* Unlocks the debug registers */
-> +	writel_relaxed(0x0, drvdata->base + EDOSLAR);
-> +	wmb();
-> +}
-> +
-> +/*
-> + * According to ARM DDI 0487A.k, before access external debug
-> + * registers should firstly check the access permission; if any
-> + * below condition has been met then cannot access debug
-> + * registers to avoid lockup issue:
-> + *
-> + * - CPU power domain is powered off;
-> + * - The OS Double Lock is locked;
-> + *
-> + * By checking EDPRSR can get to know if meet these conditions.
-> + */
-> +static bool debug_access_permitted(struct debug_drvdata *drvdata)
-> +{
-> +	/* CPU is powered off */
-> +	if (!(drvdata->edprsr & EDPRSR_PU))
-> +		return false;
-> +
-> +	/* The OS Double Lock is locked */
-> +	if (drvdata->edprsr & EDPRSR_DLK)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static void debug_read_regs(struct debug_drvdata *drvdata)
-> +{
-> +	drvdata->edprsr = readl_relaxed(drvdata->base + EDPRSR);
-> +
-> +	if (!debug_access_permitted(drvdata))
-> +		return;
-> +
-> +	if (!drvdata->edpcsr_present)
-> +		return;
-> +
-> +	CS_UNLOCK(drvdata->base);
-> +
-> +	debug_os_unlock(drvdata);
-> +
-> +	drvdata->edpcsr = readl_relaxed(drvdata->base + EDPCSR);
-> +
-> +	/*
-> +	 * As described in ARM DDI 0487A.k, if the processing
-> +	 * element (PE) is in debug state, or sample-based
-> +	 * profiling is prohibited, EDPCSR reads as 0xFFFFFFFF;
-> +	 * EDCIDSR, EDVIDSR and EDPCSR_HI registers also become
-> +	 * UNKNOWN state. So directly bail out for this case.
-> +	 */
-> +	if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
-> +		CS_LOCK(drvdata->base);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * A read of the EDPCSR normally has the side-effect of
-> +	 * indirectly writing to EDCIDSR, EDVIDSR and EDPCSR_HI;
-> +	 * at this point it's safe to read value from them.
-> +	 */
-> +	drvdata->edcidsr = readl_relaxed(drvdata->base + EDCIDSR);
-> +#ifdef CONFIG_64BIT
-> +	drvdata->edpcsr_hi = readl_relaxed(drvdata->base + EDPCSR_HI);
-> +#endif
-> +
-> +	if (drvdata->edvidsr_present)
-> +		drvdata->edvidsr = readl_relaxed(drvdata->base + EDVIDSR);
-> +
-> +	CS_LOCK(drvdata->base);
-> +}
-> +
-> +#ifndef CONFIG_64BIT
-> +static bool debug_pc_has_offset(struct debug_drvdata *drvdata)
-> +{
-> +	u32 pcsr_offset;
-> +
-> +	pcsr_offset = drvdata->eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
-> +
-> +	return (pcsr_offset == EDDEVID1_PCSR_OFFSET_INS_SET);
-> +}
-> +
-> +static unsigned long debug_adjust_pc(struct debug_drvdata *drvdata,
-> +				     unsigned long pc)
-> +{
-> +	unsigned long arm_inst_offset = 0, thumb_inst_offset = 0;
-> +
-> +	if (debug_pc_has_offset(drvdata)) {
-> +		arm_inst_offset = 8;
-> +		thumb_inst_offset = 4;
-> +	}
-> +
-> +	/* Handle thumb instruction */
-> +	if (pc & EDPCSR_THUMB) {
-> +		pc = (pc & EDPCSR_THUMB_INST_MASK) - thumb_inst_offset;
-> +		return pc;
-> +	}
-> +
-> +	/*
-> +	 * Handle arm instruction offset, if the arm instruction
-> +	 * is not 4 byte alignment then it's possible the case
-> +	 * for implementation defined; keep original value for this
-> +	 * case and print info for notice.
-> +	 */
-> +	if (pc & BIT(1))
-> +		pr_emerg("Instruction offset is implementation defined\n");
-> +	else
-> +		pc = (pc & EDPCSR_ARM_INST_MASK) - arm_inst_offset;
-> +
-> +	return pc;
-> +}
-> +#endif
-> +
-> +static void debug_dump_regs(struct debug_drvdata *drvdata)
-> +{
-> +	unsigned long pc;
-> +
-> +	pr_emerg("\tEDPRSR:  %08x (Power:%s DLK:%s)\n", drvdata->edprsr,
-> +		 drvdata->edprsr & EDPRSR_PU ? "On" : "Off",
-> +		 drvdata->edprsr & EDPRSR_DLK ? "Lock" : "Unlock");
-> +
-> +	if (!debug_access_permitted(drvdata) || !drvdata->edpcsr_present) {
-> +		pr_emerg("No permission to access debug registers!\n");
-> +		return;
-> +	}
-> +
-> +	if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
-> +		pr_emerg("CPU is in Debug state or profiling is prohibited!\n");
-> +		return;
-> +	}
-> +
-> +#ifdef CONFIG_64BIT
-> +	pc = (unsigned long)drvdata->edpcsr_hi << 32 |
-> +	     (unsigned long)drvdata->edpcsr;
-> +#else
-> +	pc = debug_adjust_pc(drvdata, (unsigned long)drvdata->edpcsr);
-> +#endif
-> +
-> +	pr_emerg("\tEDPCSR:  [<%p>] %pS\n", (void *)pc, (void *)pc);
-> +	pr_emerg("\tEDCIDSR: %08x\n", drvdata->edcidsr);
-> +
-> +	if (!drvdata->edvidsr_present)
-> +		return;
-> +
-> +	pr_emerg("\tEDVIDSR: %08x (State:%s Mode:%s Width:%s VMID:%x)\n",
-> +		 drvdata->edvidsr,
-> +		 drvdata->edvidsr & EDVIDSR_NS ? "Non-secure" : "Secure",
-> +		 drvdata->edvidsr & EDVIDSR_E3 ? "EL3" :
-> +			(drvdata->edvidsr & EDVIDSR_E2 ? "EL2" : "EL1/0"),
-> +		 drvdata->edvidsr & EDVIDSR_HV ? "64bits" : "32bits",
-> +		 drvdata->edvidsr & (u32)EDVIDSR_VMID);
-> +}
-> +
-> +/*
-> + * Dump out information on panic.
-> + */
-> +static int debug_notifier_call(struct notifier_block *self,
-> +			       unsigned long v, void *p)
-> +{
-> +	int cpu;
-> +
-> +	pr_emerg("ARM external debug module:\n");
-> +
-> +	for_each_possible_cpu(cpu) {
-> +
-
-Extra line - please remove.
-
-> +		if (!per_cpu(debug_drvdata, cpu))
-> +			continue;
-> +
-> +		pr_emerg("CPU[%d]:\n", per_cpu(debug_drvdata, cpu)->cpu);
-> +
-> +		debug_read_regs(per_cpu(debug_drvdata, cpu));
-> +		debug_dump_regs(per_cpu(debug_drvdata, cpu));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct notifier_block debug_notifier = {
-> +	.notifier_call = debug_notifier_call,
-> +};
-> +
-> +static void debug_init_arch_data(void *info)
-> +{
-> +	struct debug_drvdata *drvdata = info;
-> +	u32 mode;
-> +
-> +	CS_UNLOCK(drvdata->base);
-> +
-> +	debug_os_unlock(drvdata);
-> +
-> +	/* Read device info */
-> +	drvdata->eddevid  = readl_relaxed(drvdata->base + EDDEVID);
-> +	drvdata->eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
-> +
-> +	/* Parse implementation feature */
-> +	mode = drvdata->eddevid & EDDEVID_PCSAMPLE_MODE;
-> +	if (mode == EDDEVID_IMPL_FULL) {
-> +		drvdata->edpcsr_present  = true;
-> +		drvdata->edvidsr_present = true;
-> +	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
-> +		drvdata->edpcsr_present  = true;
-> +		drvdata->edvidsr_present = false;
-> +	} else {
-> +		drvdata->edpcsr_present  = false;
-> +		drvdata->edvidsr_present = false;
-> +	}
-> +
-> +	CS_LOCK(drvdata->base);
-> +}
-> +
-> +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
-> +{
-> +	void __iomem *base;
-> +	struct device *dev = &adev->dev;
-> +	struct debug_drvdata *drvdata;
-> +	struct resource *res = &adev->res;
-> +	struct device_node *np = adev->dev.of_node;
-> +	char buf[32];
-> +	static int debug_count;
-> +
-> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> +	if (!drvdata)
-> +		return -ENOMEM;
-> +
-> +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
-> +	drvdata->dev = &adev->dev;
-> +
-> +	dev_set_drvdata(dev, drvdata);
-> +
-> +	/* Validity for the resource is already checked by the AMBA core */
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	drvdata->base = base;
-> +
-> +	get_online_cpus();
-> +	per_cpu(debug_drvdata, drvdata->cpu) = drvdata;
-> +
-> +	if (smp_call_function_single(drvdata->cpu,
-> +				debug_init_arch_data, drvdata, 1))
-> +		dev_err(dev, "Debug arch init failed\n");
-> +
-> +	put_online_cpus();
-> +
-> +	if (!debug_count++)
-> +		atomic_notifier_chain_register(&panic_notifier_list,
-> +					       &debug_notifier);
-> +
-> +	sprintf(buf, (char *)id->data, drvdata->cpu);
-> +	dev_info(dev, "%s initialized\n", buf);
-> +	return 0;
-> +}
-> +
-> +static struct amba_id debug_ids[] = {
-> +	{       /* Debug for Cortex-A53 */
-> +		.id	= 0x000bbd03,
-> +		.mask	= 0x000fffff,
-> +		.data   = "Coresight debug-CPU%d",
-> +	},
-> +	{       /* Debug for Cortex-A57 */
-> +		.id	= 0x000bbd07,
-> +		.mask	= 0x000fffff,
-> +		.data   = "Coresight debug-CPU%d",
-> +	},
-> +	{       /* Debug for Cortex-A72 */
-> +		.id	= 0x000bbd08,
-> +		.mask	= 0x000fffff,
-> +		.data   = "Coresight debug-CPU%d",
-> +	},
-> +	{ 0, 0 },
-> +};
-
-What board are you testing this on?  Based on the clock name in the DT example I
-suppose it is HiKey.  If so would you mind sending the DT so that I can test
-things on my side?
-
-Thanks,
-Mathieu
-
-> +
-> +static struct amba_driver debug_driver = {
-> +	.drv = {
-> +		.name   = "coresight-debug",
-> +		.suppress_bind_attrs = true,
-> +	},
-> +	.probe		= debug_probe,
-> +	.id_table	= debug_ids,
-> +};
-> +builtin_amba_driver(debug_driver);
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+new file mode 100644
+index 0000000..2e69b78
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+@@ -0,0 +1,106 @@
++* QCOM IOMMU v1 Implementation
++
++Qualcomm "B" family devices which are not compatible with arm-smmu have
++a similar looking IOMMU but without access to the global register space,
++and optionally requiring additional configuration to route context irqs
++to non-secure vs secure interrupt line.
++
++** Required properties:
++
++- compatible       : Should be "qcom,msm-iommu-v1".
++- clocks           : The interface clock (iface_clk) and bus clock (bus_clk).
++- #address-cells   : must be 1.
++- #size-cells      : must be 1.
++- #iommu-cells     : Must be 1.
++- ranges           : Base address and size of the iommu context banks.
++- qcom,iommu-secure-id  : secure-id.
++
++- List of sub-nodes, one per translation context bank.  Each sub-node
++  has the following required properties:
++
++  - compatible     : Should be one of:
++        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
++        - "qcom,msm-iommu-v1-sec" : secure context bank
++  - reg            : Base address and size of context bank within the iommu
++  - interrupts     : The context fault irq.
++
++** Optional properties:
++
++- reg              : Base address and size of the SMMU local base, should
++                     be only specified if the iommu requires configuration
++                     for routing of context bank irq's to secure vs non-
++                     secure lines.  (Ie. if the iommu contains secure
++                     context banks)
++
++
++** Examples:
++
++	apps_iommu: msm-iommu-v1@1e20000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm-iommu-v1";
++		ranges = <0 0x1e20000 0x40000>;
++		reg = <0x1ef0000 0x3000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_APSS_TCU_CLK>;
++		clock-names = "iface_clk", "bus_clk";
++		qcom,iommu-secure-id = <17>;
++
++		// mdp_0:
++		msm-iommu-v1-ctx@4000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x4000 0x1000>;
++			interrupts = <GIC_SPI 70 0>;
++		};
++
++		// venus_ns:
++		msm-iommu-v1-ctx@5000 {
++			compatible = "qcom,msm-iommu-v1-sec";
++			reg = <0x5000 0x1000>;
++			interrupts = <GIC_SPI 70 0>;
++		};
++	};
++
++	gpu_iommu: msm-iommu-v1@1f08000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm-iommu-v1";
++		ranges = <0 0x1f08000 0x10000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_GFX_TCU_CLK>;
++		clock-names = "iface_clk", "bus_clk";
++		qcom,iommu-secure-id = <18>;
++
++		// gfx3d_user:
++		msm-iommu-v1-ctx@1f09000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x1000 0x1000>;
++			interrupts = <GIC_SPI 241 0>;
++		};
++
++		// gfx3d_priv:
++		msm-iommu-v1-ctx@1f0a000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x2000 0x1000>;
++			interrupts = <GIC_SPI 242 0>;
++		};
++	};
++
++	...
++
++	venus: video-codec@1d00000 {
++		...
++		iommus = <&apps_iommu 5>;
++	};
++
++	mdp: mdp@1a01000 {
++		...
++		iommus = <&apps_iommu 4>;
++	};
++
++	gpu@01c00000 {
++		...
++		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
++	};
+-- 
+2.9.3
