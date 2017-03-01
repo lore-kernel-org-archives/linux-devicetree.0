@@ -1,82 +1,88 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Document bindings for
- Aspeed AST2400/AST2500 ADC
-Date: Wed, 1 Mar 2017 11:20:26 +1030
-Message-ID: <CACPK8Xc9i+SsCFx4PUCC_YhqUAHTWOzP1xwkP8A7o0knJ7TsoQ@mail.gmail.com>
-References: <20170228201404.32125-1-raltherr@google.com>
+From: "Y.T. Tang" <yuantian.tang@nxp.com>
+Subject: RE: [PATCH 1/2] dt-bindings: qoriq-clock: Add coreclk
+Date: Wed, 1 Mar 2017 01:45:54 +0000
+Message-ID: <DB6PR0402MB2837F35D8881AA2E4F12F430F0290@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+References: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
+ <20170227171837.eymnyebgn7ocsp7w@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170228201404.32125-1-raltherr@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rick Altherr <raltherr@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jdelvare@suse.com, Guenter Roeck <linux@roeck-us.net>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170227171837.eymnyebgn7ocsp7w@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 1, 2017 at 6:44 AM, Rick Altherr <raltherr@google.com> wrote:
-> Signed-off-by: Rick Altherr <raltherr@google.com>
+Hi Rob,
 
-Acked-by: Joel Stanley <joel@jms.id.au>
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, February 28, 2017 1:19 AM
+> To: Y.T. Tang <yuantian.tang@nxp.com>
+> Cc: mturquette@baylibre.com; sboyd@codeaurora.org;
+> mark.rutland@arm.com; linux-clk@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; Scott Wood <oss@buserror.net>
+> Subject: Re: [PATCH 1/2] dt-bindings: qoriq-clock: Add coreclk
+> 
+> On Wed, Feb 15, 2017 at 01:47:35PM +0800, yuantian.tang@nxp.com wrote:
+> > From: Tang Yuantian <Yuantian.Tang@nxp.com>
+> >
+> > ls1012a has separate input root clocks for core PLLs versus the
+> > platform PLL, with the latter described as sysclk in the hw docs.
+> > Update the qoriq-clock binding to allow a second input clock, named
+> > "coreclk".  If present, this clock will be used for the core PLLs.
+> >
+> > Signed-off-by: Scott Wood <oss@buserror.net>
+> > Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> 
+> The change looks fine, but sounds like Scott should remain the author (or
+> agree he shouldn't be).
+> 
+Sure, please make Scott the author and apply this patch set.
 
-> ---
->  .../devicetree/bindings/hwmon/aspeed_adc.txt       | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt b/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
-> new file mode 100644
-> index 000000000000..9e481668c4d3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
-> @@ -0,0 +1,48 @@
-> +Aspeed AST2400/2500 ADC
-> +
-> +This device is a 10-bit converter for 16 voltage channels.  All inputs are
-> +single ended.  Each channel can be individually enabled to allow for use of
-> +alternate pin functions.
-> +
-> +1) adc node
-> +
-> +  Required properties:
-> +  - compatible : Should be one of
-> +       "aspeed,ast2400-adc"
-> +       "aspeed,ast2500-adc"
-> +  - reg : memory window mapping address and length
-> +  - #address-cells : must be <1> corresponding to the channel child binding
-> +  - #size-cells : must be <0> corresponding to the channel child binding
-> +  - clocks : Input clock used to derive the sample clock. Expected to be the
-> +    SoC's APB clock.
-> +  - update-interval-ms : initial time between updates on a channel
-> +
-> +  The node contains child nodes for each channel that the platform uses.
-> +
-> +  Example adc node:
-> +    adc@1e6e9000 {
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       compatible = "aspeed,ast2400-adc";
-> +       reg = <0x1e6e9000 0xB0>;
-> +       clocks = <&clk_apb>;
-> +       update-interval-ms = <100>;
-> +
-> +       [ child node definitions... ]
-> +    };
-> +
-> +2) channel nodes
-> +
-> +  Optional properties:
-> +  - status: indicates the operational status of the device.
-> +    Value must be either "disabled" or "okay".
-> +  - label : string describing the monitored value
-> +
-> +  Example channel node:
-> +  channel@1 {
-> +       status = "okay";
-> +       label = "3V3 rail";
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_adc0_default>;
-> +  };
-> --
-> 2.11.0.483.g087da7b7c-goog
->
+Regards,
+Yuantian
+
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > index df9cb5a..97a9666 100644
+> > --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> > @@ -55,6 +55,11 @@ Optional properties:
+> >  - clocks: If clock-frequency is not specified, sysclk may be provided
+> >  	as an input clock.  Either clock-frequency or clocks must be
+> >  	provided.
+> > +	A second input clock, called "coreclk", may be provided if
+> > +	core PLLs are based on a different input clock from the
+> > +	platform PLL.
+> > +- clock-names: Required if a coreclk is present.  Valid names are
+> > +	"sysclk" and "coreclk".
+> >
+> >  2. Clock Provider
+> >
+> > @@ -71,6 +76,7 @@ second cell is the clock index for the specified type.
+> >  	2	hwaccel		index (n in CLKCGnHWACSR)
+> >  	3	fman		0 for fm1, 1 for fm2
+> >  	4	platform pll	0=pll, 1=pll/2, 2=pll/3, 3=pll/4
+> > +	5	coreclk		must be 0
+> >
+> >  3. Example
+> >
+> > --
+> > 2.1.0.27.g96db324
+> >
