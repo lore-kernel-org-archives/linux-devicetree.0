@@ -1,71 +1,113 @@
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 2/3] dt-bindings: spi: document bcm63xx HS SPI devicetree bindings
-Date: Wed,  1 Mar 2017 10:08:13 +0100
-Message-ID: <20170301090814.7097-2-jonas.gorski@gmail.com>
-References: <20170301090814.7097-1-jonas.gorski@gmail.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170301090814.7097-1-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+From: Madalin-Cristian Bucur <madalin.bucur@nxp.com>
+Subject: RE: [PATCH 1/2] dts: arm64: add LS1043A DPAA support
+Date: Wed, 1 Mar 2017 10:19:53 +0000
+Message-ID: <HE1PR04MB1129D57E491AA55E7DF07147EC290@HE1PR04MB1129.eurprd04.prod.outlook.com>
+References: <1485787387-12410-1-git-send-email-madalin.bucur@nxp.com>
+ <1485787387-12410-2-git-send-email-madalin.bucur@nxp.com>
+ <CAL_Jsq+RnafS-sM=-NSUK1oXEEPrX4oU-x3qMjcFJpwKBGqPnQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+RnafS-sM=-NSUK1oXEEPrX4oU-x3qMjcFJpwKBGqPnQ@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Cristi Sovaiala <cristian.sovaiala@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for the bindings of the high speed SPI controller found
-on newer bcm63xx SoCs.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh+dt@kernel.org]
+> Sent: Wednesday, March 01, 2017 1:20 AM
+> 
+> On Mon, Jan 30, 2017 at 8:43 AM, Madalin Bucur <madalin.bucur@nxp.com>
+> wrote:
+> > Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+> > ---
+> 
+> [...]
+> 
+> > diff --git a/arch/arm64/boot/dts/freescale/qoriq-bman1-portals.dtsi
+> b/arch/arm64/boot/dts/freescale/qoriq-bman1-portals.dtsi
+> > new file mode 100644
+> > index 0000000..cfe6c58
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/freescale/qoriq-bman1-portals.dtsi
+> > @@ -0,0 +1,93 @@
+> > +/*
+> > + * QorIQ BMan Portal device tree stub for 9 portals
+> > + *
+> > + * Copyright 2011-2016 Freescale Semiconductor Inc.
+> > + *
+> > + * Redistribution and use in source and binary forms, with or without
+> > + * modification, are permitted provided that the following conditions
+> are met:
+> > + *     * Redistributions of source code must retain the above copyright
+> > + *      notice, this list of conditions and the following disclaimer.
+> > + *     * Redistributions in binary form must reproduce the above
+> copyright
+> > + *      notice, this list of conditions and the following disclaimer in
+> the
+> > + *      documentation and/or other materials provided with the
+> distribution.
+> > + *     * Neither the name of Freescale Semiconductor nor the
+> > + *      names of its contributors may be used to endorse or promote
+> products
+> > + *      derived from this software without specific prior written
+> permission.
+> > + *
+> > + *
+> > + * ALTERNATIVELY, this software may be distributed under the terms of
+> the
+> > + * GNU General Public License ("GPL") as published by the Free Software
+> > + * Foundation, either version 2 of that License or (at your option) any
+> > + * later version.
+> > + *
+> > + * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND
+> ANY
+> > + * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+> IMPLIED
+> > + * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+> ARE
+> > + * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR
+> ANY
+> > + * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+> DAMAGES
+> > + * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+> SERVICES;
+> > + * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+> CAUSED AND
+> > + * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+> OR TORT
+> > + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+> USE OF THIS
+> > + * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> > + */
+> 
+> Use SPDX tags here:
+> 
+> SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
 
-Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes v1 -> v2
-* made the pll clock required
-* added "High speed" (HS) to the first line
+Just to be sure, the copyright banner should look like this?
 
- .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+/*
+ * QorIQ BMan Portal device tree stub for 9 portals
+ *
+ * Copyright 2011-2016 Freescale Semiconductor Inc.
+ * 
+ * SPDX-License-Identifier: (GPL-2.0+ OR BSD-3-Clause)
+ */
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
-new file mode 100644
-index 000000000000..37b29ee13860
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
-@@ -0,0 +1,33 @@
-+Binding for Broadcom BCM6328 High Speed SPI controller
-+
-+Required properties:
-+- compatible: must contain of "brcm,bcm6328-hsspi".
-+- reg: Base address and size of the controllers memory area.
-+- interrupts: Interrupt for the SPI block.
-+- clocks: phandles of the SPI clock and the PLL clock.
-+- clock-names: must be "hsspi", "pll".
-+- #address-cells: <1>, as required by generic SPI binding.
-+- #size-cells: <0>, also as required by generic SPI binding.
-+
-+Optional properties:
-+- num-cs: some controllers have less than 8 cs signals. Defaults to 8
-+  if absent.
-+
-+Child nodes as per the generic SPI binding.
-+
-+Example:
-+
-+	spi@10001000 {
-+		compatible = "brcm,bcm6328-hsspi";
-+		reg = <0x10001000 0x600>;
-+
-+		interrupts = <29>;
-+
-+		clocks = <&clkctl 9>, <&hsspi_pll>;
-+		clock-names = "hsspi", "pll";
-+
-+		num-cs = <2>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
--- 
-2.11.0
+I can make this change for the new added files, for the existing files
+I think a different patch set should take care of the change.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Madalin
