@@ -1,15 +1,16 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v2 1/3] coresight: bindings for debug module
-Date: Wed, 1 Mar 2017 08:45:50 -0700
-Message-ID: <20170301154550.GA4009@linaro.org>
-References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
- <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv2 1/3] dt-bindings: arm: update Armada CP110 system
+ controller binding
+Date: Wed, 1 Mar 2017 16:52:45 +0100
+Message-ID: <20170301165245.5f2fbfaf@free-electrons.com>
+References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1482316017-22154-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20161222001453.GW8288@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
+In-Reply-To: <20161222001453.GW8288@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,86 +20,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Hanna Hawa <hannah@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 11:06:58PM +0800, Leo Yan wrote:
-> According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
-> Chapter 'Part H: External debug', the CPU can integrate debug module
-> and it can support self-hosted debug and external debug. Especially
-> for supporting self-hosted debug, this means the program can access
-> the debug module from mmio region; and usually the mmio region is
-> integrated with coresight.
-> 
-> So add document for binding debug component, includes binding to APB
-> clock; and also need specify the CPU node which the debug module is
-> dedicated to specific CPU.
-> 
-> Suggested-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  .../devicetree/bindings/arm/coresight-debug.txt    | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight-debug.txt b/Documentation/devicetree/bindings/arm/coresight-debug.txt
-> new file mode 100644
-> index 0000000..89820d5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/coresight-debug.txt
-> @@ -0,0 +1,40 @@
-> +* CoreSight Debug Component:
-> +
-> +CoreSight debug component are compliant with the ARMv8 architecture reference
-> +manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The external debug
-> +module is mainly used for two modes: self-hosted debug and external debug, and
-> +it can be accessed from mmio region from Coresight and eventually the debug
-> +module connects with CPU for debugging. And the debug module provides
-> +sample-based profiling extension, which can be used to sample CPU program
-> +counter, secure state and exception level, etc; usually every CPU has one
-> +dedicated debug module to be connected.
-> +
-> +Required properties:
-> +
-> +- compatible : should be
-> +	     * "arm,coresight-debug", "arm,primecell"; supplemented with
-> +	       "arm,primecell" as driver is using the AMBA bus interface.
-
-             * "arm,coresight-debug"; supplemented with "arm,primecell" since
-               this driver is using the AMBA bus interface.
-
-> +
-> +- reg : physical base address and length of the register set.
-> +
-> +- clocks : the clock associated to this component.
-> +
-> +- clock-names : the name of the clock referenced by the code. Since we are
-> +                using the AMBA framework, the name of the clock providing
-> +		the interconnect should be "apb_pclk" and the clock is
-> +		mandatory. The interface between the debug logic and the
-> +		processor core is clocked by the internal CPU clock, so it
-> +		is enabled with CPU clock by default.
-> +
-> +- cpu : the cpu phandle the debug module is affined to. When omitted
-> +	the source is considered to belong to CPU0.
-
-s/source/module
-
-With those change:
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-> +
-> +Example:
-> +
-> +	debug@f6590000 {
-> +		compatible = "arm,coresight-debug","arm,primecell";
-> +		reg = <0 0xf6590000 0 0x1000>;
-> +		clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-> +		clock-names = "apb_pclk";
-> +		cpu = <&cpu0>;
-> +	};
-> -- 
-> 2.7.4
-> 
+U3RlcGhlbiwKCk9uIFdlZCwgMjEgRGVjIDIwMTYgMTY6MTQ6NTMgLTA4MDAsIFN0ZXBoZW4gQm95
+ZCB3cm90ZToKPiBPbiAxMi8yMSwgVGhvbWFzIFBldGF6em9uaSB3cm90ZToKPiA+IEl0IHR1cm5z
+IG91dCB0aGF0IGluIHRoZSBDUDExMCBIVyBibG9jayBwcmVzZW50IGluIE1hcnZlbGwgQXJtYWRh
+Cj4gPiA3Sy84SyBTb0NzLCBnYXRhYmxlIGNsb2NrIG7CsDE4IG5vdCBvbmx5IGNvbnRyb2xzIFNE
+L01NQywgYnV0IGFsc28gdGhlCj4gPiBHT1AgYmxvY2suIFRoaXMgY29tbWl0IHVwZGF0ZXMgdGhl
+IERldmljZSBUcmVlIGJpbmRpbmcgZm9yIHRoaXMgcGllY2UKPiA+IG9mIGhhcmR3YXJlIGFjY29y
+ZGluZ2x5Lgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBUaG9tYXMgUGV0YXp6b25pIDx0aG9tYXMu
+cGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+IC0tLSAgCj4gCj4gQXBwbGllZCB0byBj
+bGstbmV4dAoKRXZlbiB0aG91Z2ggeW91IHNhaWQgeW91IGFwcGxpZWQgaXQsIEkgc3RpbGwgZG9u
+J3Qgc2VlIHRoaXMgcGF0Y2ggaW4KbWFpbmxpbmUsIHdoaWxlIFBBVENIIDIvMyBvZiB0aGlzIHNl
+cmllcyBpcyBub3cgaW4gbWFpbmxpbmUuCgpXYXMgdGhpcyBwYXRjaCBmb3Jnb3R0ZW4/IExldCBt
+ZSBrbm93IGlmIEkgc2hvdWxkIHJlc2VuZCBpdCwgYnV0IEknbQpwcmV0dHkgc3VyZSBpdCBzdGls
+bCBhcHBsaWVzLCBzaW5jZSBubyBvdGhlciBjaGFuZ2VzIG9uIHRoaXMgZmlsZSBoYXZlCmJlZW4g
+bWVyZ2VkIHNpbmNlIHF1aXRlIGEgd2hpbGUuCgpUaGFua3MsCgpUaG9tYXMKLS0gClRob21hcyBQ
+ZXRhenpvbmksIENUTywgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBl
+bmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
