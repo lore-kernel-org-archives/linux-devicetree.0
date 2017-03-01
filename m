@@ -1,105 +1,73 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: sun7i: Convert to CCU
-Date: Wed, 01 Mar 2017 21:41:55 +0200
-Message-ID: <1488397315.29650.1.camel@plaes.org>
-References: <20170227210914.18954-1-plaes@plaes.org>
-	 <20170227210914.18954-4-plaes@plaes.org>
-	 <bca96944-bd58-5011-5eb9-01c4a1440fe2@elopez.com.ar>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v3 2/7] mmc: bcm2835: Add new driver for the sdhost
+ controller.
+Date: Wed, 1 Mar 2017 20:41:16 +0100 (CET)
+Message-ID: <180442771.37741.1488397276709@email.1und1.de>
+References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
+ <1487668026-7100-3-git-send-email-kraxel@redhat.com>
+ <87tw7c27xk.fsf@eliezer.anholt.net>
+ <68761051.37200.1488396112552@email.1und1.de>
+ <87varsequk.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDJLTBEBXENBBBGI3TCQKGQEQXADV5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <bca96944-bd58-5011-5eb9-01c4a1440fe2-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87varsequk.fsf@eliezer.anholt.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerd Hoffmann <kraxel@redhat.com>, Eric Anholt <eric@anholt.net>, linux-rpi-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, swarren@wwwdotorg.org, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-02-28 at 14:01 -0300, Emilio L=C3=B3pez wrote:
-> Hi,
->=20
-> I spotted a couple of things here on a quick look, see below
->=20
-> El 27/02/17 a las 18:09, Priit Laes escribi=C3=B3:
-> > Convert sun7i-a20.dtsi to new CCU driver.
-> >=20
-> > > > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-> > ---
-> > =C2=A0arch/arm/boot/dts/sun7i-a20.dtsi | 719 +++++---------------------=
--------------
-> > =C2=A01 file changed, 86 insertions(+), 633 deletions(-)
-> >=20
-> > diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i=
--a20.dtsi
-> > index 04c9977..6f80cb8 100644
-> > --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> > +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> > @@ -47,7 +47,8 @@
-> > =C2=A0#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > =C2=A0#include <dt-bindings/thermal/thermal.h>
-> > =C2=A0
-> > -#include <dt-bindings/clock/sun4i-a10-pll2.h>
-> > +#include <dt-bindings/clock/sun7i-ccu.h>
-> > +#include <dt-bindings/reset/sun7i-ccu.h>
-> > =C2=A0#include <dt-bindings/dma/sun4i-a10.h>
-> > =C2=A0#include <dt-bindings/pinctrl/sun4i-a10.h>
-> > =C2=A0
-> > @@ -67,19 +68,19 @@
-> > > > =C2=A0			compatible =3D "allwinner,simple-framebuffer",
-> > > > =C2=A0				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0"simple-framebuffer";
-> > > > =C2=A0			allwinner,pipeline =3D "de_be0-lcd0-hdmi";
-> > > > -			clocks =3D <&ahb_gates 36>, <&ahb_gates 43>,
-> > > > -				=C2=A0<&ahb_gates 44>, <&de_be0_clk>,
-> > > > -				=C2=A0<&tcon0_ch1_clk>, <&dram_gates 26>;
-> > > > +			clocks =3D <&ccu CLK_AHB_LCD0>, <&ccu CLK_AHB_HDMI1>,
-> > > > +				=C2=A0<&ccu CLK_AHB_DE_BE0>, <&ccu CLK_DE_BE0>,
-> > > > +				=C2=A0<&ccu CLK_TCON0_CH1>, <&ccu CLK_DRAM_DE_BE0>;
-> > > > =C2=A0			status =3D "disabled";
-> > > > =C2=A0		};
-> > =C2=A0
-> > > > -		framebuffer@1 {
-> > +		framebuffer@0 {
->=20
-> This looks like an unrelated change
-
-Yup, that 's leftover from changes made during initial debugging. Will
-fix in v2.
-
->=20
-> > @@ -184,21 +185,11 @@
-> > =C2=A0
-> > > > > > =C2=A0		osc24M: clk@01c20050 {
-> > > > =C2=A0			#clock-cells =3D <0>;
-> > > > -			compatible =3D "allwinner,sun4i-a10-osc-clk";
-> > > > -			reg =3D <0x01c20050 0x4>;
-> > > > +			compatible =3D "fixed-clock";
-> > > > =C2=A0			clock-frequency =3D <24000000>;
-> > > > =C2=A0			clock-output-names =3D "osc24M";
-> > =C2=A0		};
->=20
-> allwinner,sun4i-a10-osc-clk implements a gate apart from a fixed clock,
-> is the feature loss intended?
-
-This is how most of the existing drivers handle it (A13, A31, A33) so I
-didn't want to do anything fancy..=20
-Besides, the code for clock actually configures gate:
-
-static SUNXI_CCU_GATE(hosc_clk, "hosc", "osc24M", 0x050, BIT(0), 0);
-
-
-P=C3=A4ikest,
-Priit=20
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Cj4gRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gaGF0IGFtIDEuIE3DpHJ6IDIwMTcgdW0g
+MjA6MzEgZ2VzY2hyaWViZW46Cj4gCj4gCj4gU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBp
+MnNlLmNvbT4gd3JpdGVzOgo+IAo+ID4+IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+IGhh
+dCBhbSAxLiBNw6RyeiAyMDE3IHVtIDE5OjAwIGdlc2NocmllYmVuOgo+ID4+IAo+ID4+IAo+ID4+
+IEdlcmQgSG9mZm1hbm4gPGtyYXhlbEByZWRoYXQuY29tPiB3cml0ZXM6Cj4gPj4gCj4gPj4gPiBG
+cm9tOiBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0Pgo+ID4+ID4KPiA+PiA+IFRoZSAyODM1
+IGhhcyB0d28gU0QgY29udHJvbGxlcnM6IFRoZSBBcmFzYW4gc2RoY2kgY29udHJvbGxlciAoc3Vw
+cG9ydGVkCj4gPj4gPiBieSB0aGUgaXByb2MgZHJpdmVyKSBhbmQgYSBjdXN0b20gc2Rob3N0IGNv
+bnRyb2xsZXIuICBUaGlzIHBhdGNoIGFkZHMgYQo+ID4+ID4gZHJpdmVyIGZvciB0aGUgbGF0dGVy
+Lgo+ID4+ID4KPiA+PiA+IFRoZSBzZGhjaSBjb250cm9sbGVyIHN1cHBvcnRzIGJvdGggc2RjYXJk
+IGFuZCBzZGlvLiAgVGhlIHNkaG9zdAo+ID4+ID4gY29udHJvbGxlciBzdXBwb3J0cyB0aGUgc2Rj
+YXJkIG9ubHksIGJ1dCBoYXMgYmV0dGVyIHBlcmZvcm1hbmNlLiAgQWxzbwo+ID4+ID4gbm90ZSB0
+aGF0IHRoZSBycGkzIGhhcyBzZGlvIHdpZmksIHNvIGRyaXZpbmcgdGhlIHNkY2FyZCB3aXRoIHRo
+ZSBzZGhvc3QKPiA+PiA+IGNvbnRyb2xsZXIgYWxsb3dzIHRvIHVzZSB0aGUgc2RoY2kgY29udHJv
+bGxlciBmb3Igd2lmaSBzdXBwb3J0Lgo+ID4+ID4KPiA+PiA+IFRoZSBjb25maWd1cmF0aW9uIGlz
+IGRvbmUgYnkgZGV2aWNldHJlZSB2aWEgcGluIG11eGluZy4gIEJvdGggU0QKPiA+PiA+IGNvbnRy
+b2xsZXIgYXJlIGF2YWlsYWJsZSBvbiB0aGUgc2FtZSBwaW5zICgyIHBpbiBncm91cHMgPSBwaW4g
+MjIgdG8gMjcgKwo+ID4+ID4gcGluIDQ4IHRvIDUzKS4gIFNvIGl0J3MgcG9zc2libGUgdG8gdXNl
+IGJvdGggU0QgY29udHJvbGxlcnMgYXQgdGhlIHNhbWUKPiA+PiA+IHRpbWUgd2l0aCBkaWZmZXJl
+bnQgcGluIGdyb3Vwcy4KPiA+PiA+Cj4gPj4gPiBUaGUgY29kZSB3YXMgb3JpZ2luYWxseSB3cml0
+dGVuIGJ5IFBoaWwgRWx3ZWxsIGluIHRoZSBkb3duc3RyZWFtCj4gPj4gPiBSYXNicGVycnkgUGkg
+dHJlZSwgYW5kIEkgZGlkIGEgbWFqb3IgY2xlYW51cCBvbiBpdCAoKzMxOSwgLTcwNyBsaW5lcwo+
+ID4+ID4gb3V0IG9mIHRoZSBvcmlnaW5hbCAyMDU1KSBmb3IgaW5jbHVzaW9uLgo+ID4+ID4KPiA+
+PiA+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4gPj4gCj4g
+Pj4gVWxmLCB3aGF0IGRvIHlvdSBuZWVkIGRvbmUgdG8gdGhpcyBkcml2ZXIgcGF0Y2ggYmVmb3Jl
+IGl0IGNhbiBnbyBpbj8KPiA+PiBUaGUgY29tbWl0IG1lc3NhZ2Ugc2VlbXMgbGlrZSBpdCBjb3Vs
+ZCB1c2Ugc29tZSByZXdyaXRpbmcgYXQgdGhpcyBwb2ludAo+ID4+IChQZXJzb25hbGx5IEkgd291
+bGQgZHJvcCB0aGUgZGV0YWlsZWQgY2hhbmdlbG9ncyBmcm9tIFN0ZWZhbiBhbmQgR2VyZCwKPiA+
+PiB1cGRhdGluZyB0aGUgbGFzdCBwYXJhZ3JhcGggaGVyZSB0byBnaXZlIHRoZW0gY3JlZGl0KSwg
+YnV0IHdoYXQncwo+ID4+IGltcG9ydGFudCB0byBtZSBpcyBnZXR0aW5nIHRoZSBkcml2ZXIgaW4g
+c28gdGhhdCBkaXN0cm9zIGRvbid0IGhhdmUgdG8KPiA+PiBjYXJyeSB0aGlzIHBhdGNoIGZvciB3
+aWZpIHN1cHBvcnQuCj4gPgo+ID4gSSdtIHN0aWxsIHdvcmtpbmcgb24gMyBzbWFsbCBwYXRjaGVz
+IGZvciB0aGlzIGRyaXZlcjoKPiA+Cj4gPiAxLiB0cml2aWFsIGVycm9yIGluIGEgcmVnaXN0ZXIg
+Y29tbWVudAo+ID4gMi4gaWdub3JlIFNEQ01EX0ZBSUxfRkxBRyBkdXJpbmcgYmNtMjgzNV9maW5p
+c2hfY29tbWFuZCAoZG93bnN0cmVhbSBbMV0pCj4gPiAzLiByZW1vdmUgdW5uZWNlc3NhcnkgY2Fs
+bCB0byBiY20yODM1X3Jlc2V0X2ludGVybmFsCj4gPgo+ID4gSSBwbGFuIHRvIHN1Ym1pdCB0aGVt
+IG9uIEZyaWRheS4KPiA+Cj4gPiBbMV0gLSBodHRwczovL2dpdGh1Yi5jb20vcmFzcGJlcnJ5cGkv
+bGludXgvY29tbWl0LzcxMWNhZGU4NjZjOWY4NjVmOWIyODNjOTM2OWU5NDg2ZjI3ZDFmZWMKPiAK
+PiBTaG91bGQgYW55IG9mIHRob3NlIGNoYW5nZXMgYmxvY2sgbWVyZ2luZyB0aGUgY3VycmVudCBj
+b2RlLCB0aG91Z2g/IAoKTm8sIGJ1dCB0aGUgcmVjdXJzaW9uIGFib3V0IGJjbTI4MzVfZmluaXNo
+X2NvbW1hbmQoKSBhbmQgYmNtMjgzNV90cmFuc2Zlcl9jb21wbGV0ZSgpIGlzIHN0aWxsIHRoZXJl
+LgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
