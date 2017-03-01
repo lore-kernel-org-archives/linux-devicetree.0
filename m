@@ -1,10 +1,8 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
+From: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
 Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Wed, 1 Mar 2017 09:22:24 +0100
-Message-ID: <20170301092224.169dc7ae@bbrezillon>
-References: <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
- <20170221162133.jch6yzpotj4s7zob@piout.net>
- <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
+Date: Wed, 1 Mar 2017 09:38:07 +0100
+Message-ID: <20170301083807.GA12981@samfundet.no>
+References: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
  <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
  <20170221171438.e5hvruoixafpcdps@piout.net>
  <CACiLriSdRM4ZfoDsxFhf6ZVwAtacJOJ28M8CvOg6kC_XN0T-Mw@mail.gmail.com>
@@ -13,66 +11,129 @@ References: <CAHp75VcKjYYAw8gw8yYXrd-vzZo50WOQ06AzPx+0g9Zakzjm-w@mail.gmail.com>
  <20170224085209.GA27812@samfundet.no>
  <20170224095509.777da771@bbrezillon>
  <20170224090435.GA11313@samfundet.no>
+ <20170301092224.169dc7ae@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170224090435.GA11313@samfundet.no>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, "open
- list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?SMOldmFyZA==?= Skinnemoen <hskinne>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170301092224.169dc7ae@bbrezillon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?iso-8859-1?Q?H=E5vard?= Skinnemoen <hskinn>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSGFucy1DaHJpc3RpYW4sCgpPbiBGcmksIDI0IEZlYiAyMDE3IDEwOjA0OjM1ICswMTAwCkhh
-bnMtQ2hyaXN0aWFuIE5vcmVuIEVndHZlZHQgPGVndHZlZHRAc2FtZnVuZGV0Lm5vPiB3cm90ZToK
-Cj4gQXJvdW5kIEZyaSAyNCBGZWIgMjAxNyAwOTo1NTowOSArMDEwMCBvciB0aGVyZWFib3V0LCBC
-b3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBPbiBGcmksIDI0IEZlYiAyMDE3IDA5OjUyOjA5ICsw
-MTAwCj4gPiBIYW5zLUNocmlzdGlhbiBOb3JlbiBFZ3R2ZWR0IDxlZ3R2ZWR0QHNhbWZ1bmRldC5u
-bz4gd3JvdGU6ICAKPiA+PiBBcm91bmQgRnJpIDI0IEZlYiAyMDE3IDA5OjI3OjQyICswMTAwIG9y
-IHRoZXJlYWJvdXQsIEJvcmlzIEJyZXppbGxvbiB3cm90ZTogIAo+ID4+ID4gT24gRnJpLCAyNCBG
-ZWIgMjAxNyAwOToxNDozMCArMDEwMCBIYW5zLUNocmlzdGlhbiBOb3JlbiBFZ3R2ZWR0IDxlZ3R2
-ZWR0QHNhbWZ1bmRldC5ubz4gd3JvdGU6ICAgIAo+ID4+ID4+IEFyb3VuZCBUaHUgMjMgRmViIDIw
-MTcgMjE6MTg6MTMgLTA4MDAgb3IgdGhlcmVhYm91dCwgSMOldmFyZCBTa2lubmVtb2VuIHdyb3Rl
-OiAgICAKPiA+PiA+PiA+IE9uIFR1ZSwgRmViIDIxLCAyMDE3IGF0IDk6MTQgQU0sIEFsZXhhbmRy
-ZSBCZWxsb25pCj4gPj4gPj4gPiA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29t
-PiB3cm90ZTogICAgICAKPiA+PiA+PiA+PiBPbiAyMS8wMi8yMDE3IGF0IDE4OjQzOjM1ICswMjAw
-LCBBbmR5IFNoZXZjaGVua28gd3JvdGU6ICAgICAgCj4gPj4gCj4gPj4gPHNuaXBwPgo+ID4+ICAg
-Cj4gPj4gPj4gPj4gSWYgbm9ib2R5IGNvbXBsYWlucyBhYm91dCB0aGUgNC4xMCBicmVha2FnZSwg
-WW91J2xsIGhhdmUgcGxlbnR5IG9mIHRpbWUKPiA+PiA+PiA+PiB0byByZW1vdmUgaXQgZm9yIDQu
-MTIgICAgICAKPiA+PiA+PiA+IAo+ID4+ID4+ID4gSSdtIGZpbmUgd2l0aCB0aGF0LCBidXQgSSBo
-YXZlbid0IHB1dCBtdWNoIGVmZm9ydCBpbnRvIGtlZXBpbmcgaXQKPiA+PiA+PiA+IGFsaXZlIGxh
-dGVseS4gSWYgSGFucy1DaHJpc3RpYW4gYWdyZWVzLCBJJ20gd2lsbGluZyB0byBwb3N0IGEgcGF0
-Y2ggdG8KPiA+PiA+PiA+IHJlbW92ZSBpdCwgb3IgYWNrIHNvbWVvbmUgZWxzZSdzIHBhdGNoLiAg
-ICAgIAo+ID4+ID4+IAo+ID4+ID4+IFRoZW4gbGV0cyBwbGFuIHRoaXMgZm9yIDQuMTIsIGVpdGhl
-ciB5b3UgSMOldmFyZCB3aGlwIHVwIGEgcGF0Y2ggb3IgSSBjYW4KPiA+PiA+PiBldmVudHVhbGx5
-IGRvIGl0Lgo+ID4+ID4+IAo+ID4+ID4+IEkgY2FuIHB1c2ggaXQgdGhyb3VnaCB0aGUgbGludXgt
-YXZyMzIgZ2l0IHRyZWUgb24ga2VybmVsLm9yZy4KPiA+PiA+PiAgICAgCj4gPj4gPiAKPiA+PiA+
-IENhbiB5b3UgZG8gdGhhdCBqdXN0IGFmdGVyIDQuMTEtcmMxIGlzIHJlbGVhc2VkIGFuZCBwcm92
-aWRlIGEgdG9waWMKPiA+PiA+IGJyYW5jaCBJIGNhbiBwdWxsIGluIG15IG5hbmQvbmV4dCBicmFu
-Y2gsIHNvIHRoYXQgSSBjYW4gcmV3b3JrIHRoaXMKPiA+PiA+IHBhdGNoIGFuZCBkcm9wIGFsbCB0
-aGUgcGRhdGEtY29tcGF0IGNvZGUgKGFzIHN1Z2dlc3RlZCBieSBBbmR5KS4gICAgCj4gPj4gCj4g
-Pj4gT0ssIEkgd2lsbCB0cnkgdG8gcHJlcGFyZSBpdCBkdXJpbmcgdGhlIHdlZWtlbmQuCj4gPj4g
-Cj4gPj4gQW55IHJlYXNvbiB0byB3YWl0IGZvciA0LjExLXJjMT8gQUZBSUsgTGludXMgcHJlZmVy
-cyB0aGUgbGFyZ2VyIGNoYW5nZXMKPiA+PiBiZWZvcmUgaGUgc3RhcnRzIHRhZ2dpbmcgcmMncy4K
-PiA+PiAgIAo+ID4gCj4gPiBPaCwgc28geW91IHdhbnQgdG8gcXVldWUgaXQgZm9yIDQuMTEsIHRo
-YXQncyBldmVuIGJldHRlci4gIAo+IAo+IFBlcmhhcHMgSSBtaXN1bmRlcnN0b29kIHlvdSwgYnkg
-YWZ0ZXIgNC4xMS1yYzEgeW91IG1lYW4gcXVldWUgaXQgZm9yIDQuMTI/Cj4gCj4gSSB3aWxsIHNl
-ZSB3aGF0IEkgZ2V0IGFyb3VuZCB0byBkbyBpbiB0aGUgd2Vla2VuZCwgaXQgc2hvdWxkIGJlIHBy
-ZXR0eQo+IHN0cmFpZ2h0Zm9yd2FyZCwganVzdCB3YW50IHRvIG1ha2Ugc3VyZSB3ZSByZW1vdmUg
-YWxsIHRoZSBiaXRzLgo+IAoKQW55IHByb2dyZXNzIG9uIHRoaXM/IEkgcGxhbiB0byBzZW5kIGEg
-bmV3IHZlcnNpb24gb2YgdGhpcyBzZXJpZXMgc29vbgphbmQgSSdkIGxpa2UgdG8ga25vdyBpZiBJ
-IHNob3VsZCBkcm9wIHBkYXRhL2F2cjMyIHN1cHBvcnQgb3Igbm90LiBOb3RlCnRoYXQgSSdtIHRh
-cmdldGluZyA0LjEyLCBzbywgYXMgbG9uZyBhcyB5b3UgZHJvcCBhdnIzMiBzdXBwb3J0IGluIDQu
-MTIKd2Ugc2hvdWxkIGJlIGdvb2QuCgpUaGFua3MsCgpCb3JpcwoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Around Wed 01 Mar 2017 09:22:24 +0100 or thereabout, Boris Brezillon wrote:
+> Hi Hans-Christian,
+> =
+
+> On Fri, 24 Feb 2017 10:04:35 +0100
+> Hans-Christian Noren Egtvedt <egtvedt@samfundet.no> wrote:
+> =
+
+>> Around Fri 24 Feb 2017 09:55:09 +0100 or thereabout, Boris Brezillon wro=
+te:
+>> > On Fri, 24 Feb 2017 09:52:09 +0100
+>> > Hans-Christian Noren Egtvedt <egtvedt@samfundet.no> wrote:  =
+
+>> >> Around Fri 24 Feb 2017 09:27:42 +0100 or thereabout, Boris Brezillon =
+wrote:  =
+
+>> >> > On Fri, 24 Feb 2017 09:14:30 +0100 Hans-Christian Noren Egtvedt <eg=
+tvedt@samfundet.no> wrote:    =
+
+>> >> >> Around Thu 23 Feb 2017 21:18:13 -0800 or thereabout, H=E5vard Skin=
+nemoen wrote:    =
+
+>> >> >> > On Tue, Feb 21, 2017 at 9:14 AM, Alexandre Belloni
+>> >> >> > <alexandre.belloni@free-electrons.com> wrote:      =
+
+>> >> >> >> On 21/02/2017 at 18:43:35 +0200, Andy Shevchenko wrote:      =
+
+>> >> =
+
+>> >> <snipp>
+>> >>   =
+
+>> >> >> >> If nobody complains about the 4.10 breakage, You'll have plenty=
+ of time
+>> >> >> >> to remove it for 4.12      =
+
+>> >> >> > =
+
+>> >> >> > I'm fine with that, but I haven't put much effort into keeping it
+>> >> >> > alive lately. If Hans-Christian agrees, I'm willing to post a pa=
+tch to
+>> >> >> > remove it, or ack someone else's patch.      =
+
+>> >> >> =
+
+>> >> >> Then lets plan this for 4.12, either you H=E5vard whip up a patch =
+or I can
+>> >> >> eventually do it.
+>> >> >> =
+
+>> >> >> I can push it through the linux-avr32 git tree on kernel.org.
+>> >> >>     =
+
+>> >> > =
+
+>> >> > Can you do that just after 4.11-rc1 is released and provide a topic
+>> >> > branch I can pull in my nand/next branch, so that I can rework this
+>> >> > patch and drop all the pdata-compat code (as suggested by Andy).    =
+
+>> >> =
+
+>> >> OK, I will try to prepare it during the weekend.
+>> >> =
+
+>> >> Any reason to wait for 4.11-rc1? AFAIK Linus prefers the larger chang=
+es
+>> >> before he starts tagging rc's.
+>> >>   =
+
+>> > =
+
+>> > Oh, so you want to queue it for 4.11, that's even better.  =
+
+>> =
+
+>> Perhaps I misunderstood you, by after 4.11-rc1 you mean queue it for 4.1=
+2?
+>> =
+
+>> I will see what I get around to do in the weekend, it should be pretty
+>> straightforward, just want to make sure we remove all the bits.
+>> =
+
+> =
+
+> Any progress on this? I plan to send a new version of this series soon
+> and I'd like to know if I should drop pdata/avr32 support or not. Note
+> that I'm targeting 4.12, so, as long as you drop avr32 support in 4.12
+> we should be good.
+
+I got around to make the patch series during the weekend, but I thought it
+would be a good idea sending them to the kernel mailing list as a FYI.
+
+Also, I was unsure if I should send the driver removals through the
+sub-maintainers trees, or if I can push them through linux-avr32 tree.
+
+I have a patch removing the pata driver for AVR32.
+
+-- =
+
+mvh
+Hans-Christian Noren Egtvedt
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
