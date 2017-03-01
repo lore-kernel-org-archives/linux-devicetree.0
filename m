@@ -1,219 +1,153 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] clk: sunxi-ng: add support for PRCM CCUs
-Date: Wed, 1 Mar 2017 11:47:35 +0100
-Message-ID: <20170301104735.4dkqgxobozkosfgc@lukather>
-References: <20170301041541.24388-1-icenowy@aosc.xyz>
- <20170301041541.24388-3-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kpt6vdu4tcyx4z77"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYGN3LCQKGQE6CL4IKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170301041541.24388-3-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and GXL
+Date: Wed,  1 Mar 2017 11:46:04 +0100
+Message-ID: <1488365164-22861-4-git-send-email-narmstrong@baylibre.com>
+References: <1488365164-22861-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1488365164-22861-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org, khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
 
---kpt6vdu4tcyx4z77
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+The node is simply added in the meson-gxbb.dtsi file.
 
-On Wed, Mar 01, 2017 at 12:15:40PM +0800, Icenowy Zheng wrote:
-> SoCs after A31 has a clock controller module in the PRCM part.
-> 
-> Support the clock controller module on H5 and A64 now.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  drivers/clk/sunxi-ng/Kconfig            |   6 +
->  drivers/clk/sunxi-ng/Makefile           |   1 +
->  drivers/clk/sunxi-ng/ccu-sun6i-r.c      | 209 ++++++++++++++++++++++++++++++++
->  drivers/clk/sunxi-ng/ccu-sun6i-r.h      |  27 +++++
->  include/dt-bindings/clock/sun6i-r-ccu.h |  58 +++++++++
->  include/dt-bindings/reset/sun6i-r-ccu.h |  54 +++++++++
->  6 files changed, 355 insertions(+)
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun6i-r.c
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun6i-r.h
->  create mode 100644 include/dt-bindings/clock/sun6i-r-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun6i-r-ccu.h
-> 
-> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
-> index 695bbf9ef428..44984c050052 100644
-> --- a/drivers/clk/sunxi-ng/Kconfig
-> +++ b/drivers/clk/sunxi-ng/Kconfig
-> @@ -141,4 +141,10 @@ config SUN9I_A80_CCU
->  	select SUNXI_CCU_PHASE
->  	default MACH_SUN9I
->  
-> +config SUN6I_R_CCU
+For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
+patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
+dtsi files.
 
-This is not ordered.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi      | 37 ++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi  | 43 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi |  1 +
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi |  1 +
+ 4 files changed, 82 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
 
-> +	bool "Support for Allwinner SoCs' PRCM CCUs"
-> +	select SUNXI_CCU_DIV
-> +	select SUNXI_CCU_GATE
-> +	default MACH_SUN8I || (ARCH_SUNXI && ARM64)
-
-And you can't build it for A31?
-
-> +
->  endif
-> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-> index 6feaac0c5600..77ebcfd7d2ca 100644
-> --- a/drivers/clk/sunxi-ng/Makefile
-> +++ b/drivers/clk/sunxi-ng/Makefile
-> @@ -21,6 +21,7 @@ obj-$(CONFIG_SUNXI_CCU_MP)	+= ccu_mp.o
->  obj-$(CONFIG_SUN50I_A64_CCU)	+= ccu-sun50i-a64.o
->  obj-$(CONFIG_SUN5I_CCU)		+= ccu-sun5i.o
->  obj-$(CONFIG_SUN6I_A31_CCU)	+= ccu-sun6i-a31.o
-> +obj-$(CONFIG_SUN6I_R_CCU)	+= ccu-sun6i-r.o
->  obj-$(CONFIG_SUN8I_A23_CCU)	+= ccu-sun8i-a23.o
->  obj-$(CONFIG_SUN8I_A33_CCU)	+= ccu-sun8i-a33.o
->  obj-$(CONFIG_SUN8I_H3_CCU)	+= ccu-sun8i-h3.o
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-r.c b/drivers/clk/sunxi-ng/ccu-sun6i-r.c
-> new file mode 100644
-> index 000000000000..988d6b299e91
-> --- /dev/null
-> +++ b/drivers/clk/sunxi-ng/ccu-sun6i-r.c
-> @@ -0,0 +1,209 @@
-> +/*
-> + * Copyright (c) 2016 Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "ccu_common.h"
-> +#include "ccu_reset.h"
-> +
-> +#include "ccu_div.h"
-> +#include "ccu_gate.h"
-> +#include "ccu_mp.h"
-> +#include "ccu_nm.h"
-> +
-> +#include "ccu-sun6i-r.h"
-> +
-> +static const char * const cpus_parents[] = { "osc32k", "osc24M",
-> +					     "pll-periph0" };
-
-You need another pll-periph0 here, the value 3 is valid.
-
-And that pll should be in your binding.
-
-> +
-> +static struct ccu_div cpus_clk = {
-> +	.div		= _SUNXI_CCU_DIV_FLAGS(4, 2, CLK_DIVIDER_POWER_OF_TWO),
-> +
-> +	.mux		= {
-> +		.shift	= 16,
-> +		.width	= 2,
-> +
-> +		.variable_prediv	= {
-> +			.index	= 2,
-> +			.shift	= 8,
-> +			.width	= 5,
-> +		},
-> +	},
-> +
-> +	.common		= {
-> +		.reg		= 0x00,
-> +		.features	= CCU_FEATURE_VARIABLE_PREDIV,
-> +		.hw.init	= CLK_HW_INIT_PARENTS("cpus",
-
-We've been calling it ar100 so far.
-
-> +						      cpus_parents,
-> +						      &ccu_div_ops,
-> +						      0),
-> +	},
-> +};
-> +
-> +static CLK_FIXED_FACTOR(r_ahb0_clk, "r-ahb0", "cpus", 1, 1, 0);
-
-ahb0 is by definition in the PRCM, there's no need to prefix it by
-"r-".
-
-> +
-> +static struct ccu_div r_apb0_clk = {
-> +	.div		= _SUNXI_CCU_DIV_FLAGS(0, 2, CLK_DIVIDER_POWER_OF_TWO),
-> +
-> +	.common		= {
-> +		.reg		= 0x0c,
-> +		.hw.init	= CLK_HW_INIT("r-apb0",
-
-Ditto.
-
-> +					      "r-ahb0",
-> +					      &ccu_div_ops,
-> +					      0),
-> +	},
-> +};
-> +
-> +static SUNXI_CCU_GATE(r_bus_pio_clk,	"r-bus-pio",	"r-apb0",
-> +		      0x28, BIT(0), 0);
-
-apb0-pio
-
-> +static SUNXI_CCU_GATE(r_bus_ir_clk,	"r-bus-ir",	"r-apb0",
-> +		      0x28, BIT(1), 0);
-
-apb0-ir
-
-> +static SUNXI_CCU_GATE(r_bus_timer_clk,	"r-bus-timer",	"r-apb0",
-> +		      0x28, BIT(2), 0);
-
-apb0-timer
-
-> +static SUNXI_CCU_GATE(r_bus_rsb_clk,	"r-bus-rsb",	"r-apb0",
-> +		      0x28, BIT(3), 0);
-
-This is not RSB on the A31
-
-> +static SUNXI_CCU_GATE(r_bus_uart_clk,	"r-bus-uart",	"r-apb0",
-> +		      0x28, BIT(4), 0);
-
-And the A31 also has a 1-wire clock here.
-
-> +static SUNXI_CCU_GATE(r_bus_i2c_clk,	"r-bus-i2c",	"r-apb0",
-> +		      0x28, BIT(6), 0);
-> +
-> +static const char * const r_mod0_default_parents[] = { "osc32K", "osc24M" };
-> +static SUNXI_CCU_MP_WITH_MUX_GATE(r_ir_clk, "r-ir",
-
-ir is enough.
-
-I'm a bit worried by that to be honest. You claim to support the A31,
-yet jugdging by the current state of that code you never actually
-tested it on that SoC.
-
-What makes you say that the PRCM clocks are the same for the H3 and
-A64? We have to be sure, otherwise we might not be able to get the DT
-binding right from the very beginning, and we might not be able to fix
-it later.
-
-Maxime
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index b353073..4f7ae6a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -474,6 +474,43 @@
+ 	};
+ };
+ 
++&apb {
++	mali: gpu@c0000 {
++		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
++		reg = <0x0 0xc0000 0x0 0x40000>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "gp", "gpmmu", "pp", "pmu",
++			"pp0", "ppmmu0", "pp1", "ppmmu1",
++			"pp2", "ppmmu2";
++		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
++		clock-names = "bus", "core";
++
++		/*
++		 * Mali clocking is provided by two identical clock paths
++		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
++		 * free mux to safely change frequency while running.
++		 */
++		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
++				  <&clkc CLKID_MALI_0>,
++				  <&clkc CLKID_MALI>; /* Glitch free mux */
++		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
++					 <0>, /* Do Nothing */
++					 <&clkc CLKID_MALI_0>;
++		assigned-clock-rates = <0>, /* Do Nothing */
++				       <666666666>,
++				       <0>; /* Do Nothing */
++	};
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+new file mode 100644
+index 0000000..f06cc234
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+@@ -0,0 +1,43 @@
++/*
++ * Copyright (c) 2017 BayLibre SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++&apb {
++	mali: gpu@c0000 {
++		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
++		reg = <0x0 0xc0000 0x0 0x40000>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "gp", "gpmmu", "pp", "pmu",
++			"pp0", "ppmmu0", "pp1", "ppmmu1",
++			"pp2", "ppmmu2";
++		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
++		clock-names = "bus", "core";
++
++		/*
++		 * Mali clocking is provided by two identical clock paths
++		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
++		 * free mux to safely change frequency while running.
++		 */
++		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
++				  <&clkc CLKID_MALI_0>,
++				  <&clkc CLKID_MALI>; /* Glitch free mux */
++		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
++					 <0>, /* Do Nothing */
++					 <&clkc CLKID_MALI_0>;
++		assigned-clock-rates = <0>, /* Do Nothing */
++				       <666666666>,
++				       <0>; /* Do Nothing */
++	};
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+index 615308e..5a90e30 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+@@ -42,6 +42,7 @@
+  */
+ 
+ #include "meson-gxl.dtsi"
++#include "meson-gxl-mali.dtsi"
+ 
+ / {
+ 	compatible = "amlogic,s905d", "amlogic,meson-gxl";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+index 08237ee..0f78d83 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+@@ -42,6 +42,7 @@
+  */
+ 
+ #include "meson-gxl.dtsi"
++#include "meson-gxl-mali.dtsi"
+ 
+ / {
+ 	compatible = "amlogic,s905x", "amlogic,meson-gxl";
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---kpt6vdu4tcyx4z77--
+1.9.1
+
