@@ -1,200 +1,76 @@
-Return-Path: <SRS0=UenW=25=broadcom.com=jon.mason@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20170320095721.6724-4-borneo.antonio@gmail.com>
-References: <20170320095721.6724-1-borneo.antonio@gmail.com> <20170320095721.6724-4-borneo.antonio@gmail.com>
-From: Jon Mason <jon.mason@broadcom.com>
-Date: Mon, 20 Mar 2017 16:52:16 -0400
-Message-ID: <CAC3K-4rbHVZgBoLqR1RoLf7noqMu948E0n6CCnfjFnC5Bw1EFw@mail.gmail.com>
-Subject: Re: [PATCH 4/4] arm64: dts: NS2: Remove nonexistent properties
-Content-Type: multipart/alternative; boundary=f403045fc34ce6b910054b2fb3d7
-To: Antonio Borneo <borneo.antonio@gmail.com>
-Cc: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <vireshk@kernel.org>, Shiraz Hashim <shiraz.linux.kernel@gmail.com>, Russell King <linux@armlinux.org.uk>, Brijesh Singh <brijeshkumar.singh@amd.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-spi@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
+References: <20170228120452.10043-1-zajec5@gmail.com>
+	<a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
+	<290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
+	<CAL_JsqL-N4HfsG=py+w1NsBOJZzS1kbRM5J6dC-EE-rg9r9C2g@mail.gmail.com>
+	<386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
+Date: Wed, 1 Mar 2017 16:55:19 -0600
+Message-ID: <CAL_JsqKJrarV__0-CSsT-zuQuDVzbmoKN915HC30HPmfmAKZ=g@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-ID: <devicetree@vger.kernel.org>
 
---f403045fc34ce6b910054b2fb3d7
-Content-Type: text/plain; charset=UTF-8
-
-On Mon, Mar 20, 2017 at 5:57 AM, Antonio Borneo <borneo.antonio@gmail.com>
-wrote:
-
-> The properties "pl022,hierarchy" and "pl022,slave-tx-disable" are
-> not documented in DT binding and don't exist in the driver code.
-> They have no effect and can be removed.
+On Wed, Mar 1, 2017 at 3:04 PM, Jacek Anaszewski <jacek.anaszewski@gmail.co=
+m> wrote:
+> On 02/28/2017 11:12 PM, Rob Herring wrote:
+>> On Tue, Feb 28, 2017 at 3:51 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.c=
+om> wrote:
+>>> On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
+>>>>
+>>>> I think that it would be simpler if we could initially see
+>>>> a complete sample dts implementation containing all required DT
+>>>> nodes. The example could contain timer trigger as well as usb-port
+>>>> trigger specific bindings.
+>>>
+>>>
+>>> Please take a look at attached patch. I used it on Tenda AC9 with:
+>>
+>> I'm not sure about this extra level of indirection. I don't see the need=
+.
+>>
+>>> usb_trigger: usb-trigger {
+>>>         trigger-type =3D "usbport";
+>>
+>> Why do we need to know the type? The trigger device knows what type it
+>> is. All we should need to know here is what device(s) controls an LED.
+>> The rest the kernel can figure out.
 >
-> Signed-off-by: Antonio Borneo <borneo.antonio@gmail.com>
+> The thing is that in the proposed approach the trigger is not necessary
+> a device. The trigger node is here only a container with initialization
+> data.
+
+That sounds like a questionable use of DT.
+
+> We could have e,g, two such nodes with different set of ports
+> (say usb1-trigger and usb2-trigger). Then if we had two LED nodes usb1
+> and usb2, the former could have its triggers property initialized
+> to &usb1-trigger and the latter to &usb2-trigger. Thanks to that both
+> LEDs after executing "echo usbport > triggers" would listen to events
+> from different set of usb ports.
+
+This would still work if the trigger property points directly
+
+> Also, e.g. for the timer trigger we could define two separate DT nodes
+> with different delay intervals.
+
+That sounds like user config to me.
+
 >
-
-A quick grep confirms that it is not used in the driver.  So, I am fine
-with this.
-
-Acked-by: Jon Mason <jon.mason@broadcom.com>
-
-
-
-> ---
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Viresh Kumar <vireshk@kernel.org>
-> Cc: Shiraz Hashim <shiraz.linux.kernel@gmail.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
-> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-> Cc: Tom Lendacky <thomas.lendacky@amd.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> To: Ray Jui <rjui@broadcom.com>
-> To: Scott Branden <sbranden@broadcom.com>
-> To: Jon Mason <jonmason@broadcom.com>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: linux-spi@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  arch/arm64/boot/dts/broadcom/ns2-svk.dts | 4 ----
->  1 file changed, 4 deletions(-)
+>>>         ports =3D <&ohci_port1>, <&ehci_port1>;
+>>> };
+>>>
+>>> usb {
+>>>         label =3D "bcm53xx:blue:usb";
+>>>         gpios =3D <&chipcommon 1 GPIO_ACTIVE_HIGH>;
+>>>         triggers =3D <&usb_trigger>;
+>>> };
+>>
 >
-> diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-> b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-> index 5ae08161649e..2fbd3cd40def 100644
-> --- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-> +++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-> @@ -113,9 +113,7 @@
->                 spi-max-frequency = <5000000>;
->                 spi-cpha = <1>;
->                 spi-cpol = <1>;
-> -               pl022,hierarchy = <0>;
->                 pl022,interface = <0>;
-> -               pl022,slave-tx-disable = <0>;
->                 pl022,com-mode = <0>;
->                 pl022,rx-level-trig = <1>;
->                 pl022,tx-level-trig = <1>;
-> @@ -137,9 +135,7 @@
->                 at25,page-size = <64>;
->                 spi-cpha = <1>;
->                 spi-cpol = <1>;
-> -               pl022,hierarchy = <0>;
->                 pl022,interface = <0>;
-> -               pl022,slave-tx-disable = <0>;
->                 pl022,com-mode = <0>;
->                 pl022,rx-level-trig = <1>;
->                 pl022,tx-level-trig = <1>;
 > --
-> 2.12.0
->
->
-
---f403045fc34ce6b910054b2fb3d7
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On Mon, Mar 20, 2017 at 5:57 AM, Antonio Borneo <span dir=3D"ltr">&lt;<=
-a href=3D"mailto:borneo.antonio@gmail.com" target=3D"_blank">borneo.antonio=
-@gmail.com</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=
-=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
--left:1ex">The properties &quot;pl022,hierarchy&quot; and &quot;pl022,slave=
--tx-disable&quot; are<br>
-not documented in DT binding and don&#39;t exist in the driver code.<br>
-They have no effect and can be removed.<br>
-<br>
-Signed-off-by: Antonio Borneo &lt;<a href=3D"mailto:borneo.antonio@gmail.co=
-m">borneo.antonio@gmail.com</a>&gt;<br></blockquote><div><br></div><div>A q=
-uick grep confirms that it is not used in the driver.=C2=A0 So, I am fine w=
-ith this.</div><div><br></div><div>Acked-by: Jon Mason &lt;<a href=3D"mailt=
-o:jon.mason@broadcom.com">jon.mason@broadcom.com</a>&gt;</div><div><br></di=
-v><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
-x 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
----<br>
-Cc: Mark Brown &lt;<a href=3D"mailto:broonie@kernel.org">broonie@kernel.org=
-</a>&gt;<br>
-Cc: Rob Herring &lt;<a href=3D"mailto:robh%2Bdt@kernel.org">robh+dt@kernel.=
-org</a>&gt;<br>
-Cc: Mark Rutland &lt;<a href=3D"mailto:mark.rutland@arm.com">mark.rutland@a=
-rm.com</a>&gt;<br>
-Cc: Viresh Kumar &lt;<a href=3D"mailto:vireshk@kernel.org">vireshk@kernel.o=
-rg</a>&gt;<br>
-Cc: Shiraz Hashim &lt;<a href=3D"mailto:shiraz.linux.kernel@gmail.com">shir=
-az.linux.kernel@gmail.com</a><wbr>&gt;<br>
-Cc: Russell King &lt;<a href=3D"mailto:linux@armlinux.org.uk">linux@armlinu=
-x.org.uk</a>&gt;<br>
-Cc: Brijesh Singh &lt;<a href=3D"mailto:brijeshkumar.singh@amd.com">brijesh=
-kumar.singh@amd.com</a>&gt;<br>
-Cc: Suravee Suthikulpanit &lt;<a href=3D"mailto:suravee.suthikulpanit@amd.c=
-om">suravee.suthikulpanit@amd.com</a><wbr>&gt;<br>
-Cc: Tom Lendacky &lt;<a href=3D"mailto:thomas.lendacky@amd.com">thomas.lend=
-acky@amd.com</a>&gt;<br>
-Cc: Catalin Marinas &lt;<a href=3D"mailto:catalin.marinas@arm.com">catalin.=
-marinas@arm.com</a>&gt;<br>
-Cc: Will Deacon &lt;<a href=3D"mailto:will.deacon@arm.com">will.deacon@arm.=
-com</a>&gt;<br>
-To: Ray Jui &lt;<a href=3D"mailto:rjui@broadcom.com">rjui@broadcom.com</a>&=
-gt;<br>
-To: Scott Branden &lt;<a href=3D"mailto:sbranden@broadcom.com">sbranden@bro=
-adcom.com</a>&gt;<br>
-To: Jon Mason &lt;<a href=3D"mailto:jonmason@broadcom.com">jonmason@broadco=
-m.com</a>&gt;<br>
-Cc: <a href=3D"mailto:bcm-kernel-feedback-list@broadcom.com">bcm-kernel-fee=
-dback-list@<wbr>broadcom.com</a><br>
-Cc: <a href=3D"mailto:linux-spi@vger.kernel.org">linux-spi@vger.kernel.org<=
-/a><br>
-Cc: <a href=3D"mailto:devicetree@vger.kernel.org">devicetree@vger.kernel.or=
-g</a><br>
-Cc: <a href=3D"mailto:linux-kernel@vger.kernel.org">linux-kernel@vger.kerne=
-l.org</a><br>
-Cc: <a href=3D"mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kerne=
-l@lists.<wbr>infradead.org</a><br>
----<br>
-=C2=A0arch/arm64/boot/dts/broadcom/<wbr>ns2-svk.dts | 4 ----<br>
-=C2=A01 file changed, 4 deletions(-)<br>
-<br>
-diff --git a/arch/arm64/boot/dts/<wbr>broadcom/ns2-svk.dts b/arch/arm64/boo=
-t/dts/<wbr>broadcom/ns2-svk.dts<br>
-index 5ae08161649e..2fbd3cd40def 100644<br>
---- a/arch/arm64/boot/dts/<wbr>broadcom/ns2-svk.dts<br>
-+++ b/arch/arm64/boot/dts/<wbr>broadcom/ns2-svk.dts<br>
-@@ -113,9 +113,7 @@<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 spi-max-frequency =
-=3D &lt;5000000&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 spi-cpha =3D &lt;1&=
-gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 spi-cpol =3D &lt;1&=
-gt;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pl022,hierarchy =3D=
- &lt;0&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,interface =3D=
- &lt;0&gt;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pl022,slave-tx-disa=
-ble =3D &lt;0&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,com-mode =3D =
-&lt;0&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,rx-level-trig=
- =3D &lt;1&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,tx-level-trig=
- =3D &lt;1&gt;;<br>
-@@ -137,9 +135,7 @@<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 at25,page-size =3D =
-&lt;64&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 spi-cpha =3D &lt;1&=
-gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 spi-cpol =3D &lt;1&=
-gt;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pl022,hierarchy =3D=
- &lt;0&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,interface =3D=
- &lt;0&gt;;<br>
--=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pl022,slave-tx-disa=
-ble =3D &lt;0&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,com-mode =3D =
-&lt;0&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,rx-level-trig=
- =3D &lt;1&gt;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pl022,tx-level-trig=
- =3D &lt;1&gt;;<br>
-<span class=3D"gmail-HOEnZb"><font color=3D"#888888">--<br>
-2.12.0<br>
-<br>
-</font></span></blockquote></div><br></div></div>
-
---f403045fc34ce6b910054b2fb3d7--
+> Best regards,
+> Jacek Anaszewski
