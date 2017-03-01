@@ -1,166 +1,54 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4] reset: Add i.MX7 SRC reset driver
-Date: Wed, 01 Mar 2017 09:53:45 +0100
-Message-ID: <1488358425.2310.0.camel@pengutronix.de>
-References: <20170221161331.17012-1-andrew.smirnov@gmail.com>
-         <1488292707.2288.53.camel@pengutronix.de>
-         <CAHQ1cqG4VSr=E1U4CpruYtvzXK0xcJTow0VwurP1S4_Hi-TJzg@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
+ binding to OPP nodes
+Date: Wed, 1 Mar 2017 14:24:12 +0530
+Message-ID: <20170301085412.GF24323@vireshk-i7>
+References: <cover.1487926924.git.viresh.kumar@linaro.org>
+ <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
+ <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop>
+ <20170228065711.GD19417@vireshk-i7>
+ <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com>
+ <CAPDyKFo5TjTa-hTzNp5KCpozU87L22piCXaSjWMTr4xVkgP+Pg@mail.gmail.com>
+ <CAL_Jsq+7DGX_1U99cc3rhk8zzSj6iKe3kpijp7KTz90xXA_V9g@mail.gmail.com>
+ <20170301061402.GE24323@vireshk-i7>
+ <CAMuHMdWnDJ2RvGgYOxSiB=2Z32-bZwNjnEQG6TK2Umtf4eiAYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHQ1cqG4VSr=E1U4CpruYtvzXK0xcJTow0VwurP1S4_Hi-TJzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWnDJ2RvGgYOxSiB=2Z32-bZwNjnEQG6TK2Umtf4eiAYw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-02-28 at 11:46 -0800, Andrey Smirnov wrote:
-> On Tue, Feb 28, 2017 at 6:38 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > On Tue, 2017-02-21 at 08:13 -0800, Andrey Smirnov wrote:
-> >> Add reset controller driver exposing various reset faculties,
-> >> implemented by System Reset Controller IP block.
+On 01-03-17, 09:45, Geert Uytterhoeven wrote:
+> On Wed, Mar 1, 2017 at 7:14 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > On 28-02-17, 09:52, Rob Herring wrote:
+> >> On Tue, Feb 28, 2017 at 9:14 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> >> > This comes from the early design of the generic PM domain, thus I
+> >> > assume we have some HW with such complex PM topology. However, I don't
+> >> > know if it is actually being used.
+> >> >
+> >> > Moreover, the corresponding DT bindings for "power-domains" parents,
+> >> > can easily be extended to cover more than one parent. See more in
+> >> > Documentation/devicetree/bindings/power/power_domain.txt
 > >>
-> >> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> >> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>
-> >> Changes since v3 (see [v3]):
-> >>
-> >>       - Convert code IMX7_RESET_PCIEPHY to change G_RST and BTNRST
-> >>           simultaneously to make all resets be representable as
-> >>           signal->bit in signal->offset register
-> >>
-> >>       - Convert assert/deassert subroutines to be special cases of a
-> >>           common reset subroutine
-> >>
-> >> Changes since v2 (see [v2]):
-> >>
-> >>       - Fix typos
-> >>
-> >>       - Kconfig/Makefile chagnes account for alphabetical sorting of
-> >>           those files
-> >>
-> >>       - Remove redundant includes
-> >>
-> >>       - Make use of regmap_attach_dev and avoid storing refernce to
-> >>           struct *dev in private data
-> >>
-> >>       - Change code and headers to expose almost all of the reset
-> >>           related bits in SRC IP block
-> >>
-> >> Changes since v1 (see [v1]):
-> >>
-> >>       - Various small DT bindings description fixes as per feedback
-> >>           from Rob Herring
-> >>
-> >>
-> >> [v1] https://lkml.org/lkml/2017/2/6/554
-> >> [v2] https://lkml.org/lkml/2017/2/13/488
-> >> [v3] https://lkml.org/lkml/2017/2/20/344
-> >>
-> >>
-> >>  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  47 ++++++
-> >>  drivers/reset/Kconfig                              |   8 ++
-> >>  drivers/reset/Makefile                             |   2 +
-> >>  drivers/reset/reset-imx7.c                         | 158 +++++++++++++++++++++
-> >>  include/dt-bindings/reset/imx7-reset.h             |  62 ++++++++
-> >>  5 files changed, 277 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> >>  create mode 100644 drivers/reset/reset-imx7.c
-> >>  create mode 100644 include/dt-bindings/reset/imx7-reset.h
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> >> new file mode 100644
-> >> index 0000000..5e1afc3
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
-> >> @@ -0,0 +1,47 @@
-> >> +Freescale i.MX7 System Reset Controller
-> >> +======================================
-> >> +
-> >> +Please also refer to reset.txt in this directory for common reset
-> >> +controller binding usage.
-> >> +
-> >> +Required properties:
-> >> +- compatible: Should be "fsl,imx7-src", "syscon"
-> >> +- reg: should be register base and length as documented in the
-> >> +  datasheet
-> >> +- interrupts: Should contain SRC interrupt
-> >> +- #reset-cells: 1, see below
-> >> +
-> >> +example:
-> >> +
-> >> +src: reset-controller@30390000 {
-> >> +     compatible = "fsl,imx7d-src", "syscon";
-> >> +     reg = <0x30390000 0x2000>;
-> >> +     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> >> +     #reset-cells = <1>;
-> >> +};
-> >> +
-> >> +
-> >> +Specifying reset lines connected to IP modules
-> >> +==============================================
-> >> +
-> >> +The system reset controller can be used to reset various set of
-> >> +peripherals. Device nodes that need access to reset lines should
-> >> +specify them as a reset phandle in their corresponding node as
-> >> +specified in reset.txt.
-> >> +
-> >> +Example:
-> >> +
-> >> +     pcie: pcie@33800000 {
-> >> +
-> >> +             ...
-> >> +
-> >> +             resets = <&src IMX7_RESET_PCIEPHY>,
-> >> +                      <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
-> >> +             reset-names = "pciephy", "apps";
-> >> +
-> >> +             ...
-> >> +        };
-> >> +
-> >> +
-> >> +For list of all valid reset indicies see
-> >> +<dt-bindings/reset/imx7-reset.h>
-> >> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> >> index 172dc96..bea1800 100644
-> >> --- a/drivers/reset/Kconfig
-> >> +++ b/drivers/reset/Kconfig
-> >> @@ -27,6 +27,14 @@ config RESET_BERLIN
-> >>       help
-> >>         This enables the reset controller driver for Marvell Berlin SoCs.
-> >>
-> >> +config RESET_IMX7
-> >> +     bool "i.MX7 Reset Driver"
-> >> +     depends on SOC_IMX7D || COMPILE_TEST
-> >> +     select MFD_SYSCON
-> >> +     default SOC_IMX7D
+> >> I could easily see device having 2 power domains. For example a cpu
+> >> may have separate domains for RAM/caches and logic.
 > >
-> > Can we make this
-> >
-> > config RESET_IMX7
-> >         bool "i.MX7 Reset Driver" if COMPILE_TEST
-> >         default SOC_IMX7D
-> >         select MFD_SYSCON
-> >
-> > instead?
-> >
-> > If you agree, I can fix it up while applying.
+> > An important thing here is that PM domain doesn't support such devices. i.e. a
+> > device isn't allowed to have multiple PM domains today. So a way to support such
+> > devices can be to create a virtual PM domain, that has two parents and device as
+> > its child.
 > 
-> Sure, I have no problem with that change.
+> As clock domains (and their support code) are fairly orthogonal to power
+> areas, currently our power area controller driver just forwards the
+> clock handling
+> to the clock driver (cfr. rcar-sysc).
 
-Ok, thank you. Applied to reset/next.
+Perhaps Rajendra can explain better but Qcom have a case where they need to
+program two power domains as well.
 
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+viresh
