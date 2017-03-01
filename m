@@ -1,175 +1,66 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] PM / OPP: Documentation: Fix opp-microvolt in examples
-Date: Wed,  1 Mar 2017 16:39:55 +0530
-Message-ID: <e527318dc8b5a1acf260499c65cf025732d9fc51.1488365712.git.viresh.kumar@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafael Wysocki <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v2 2/2] dt-bindings: extcon: Add support for cros-ec device
+Date: Wed,  1 Mar 2017 12:19:43 +0100
+Message-ID: <20170301111943.12170-3-enric.balletbo@collabora.com>
+References: <20170301111943.12170-1-enric.balletbo@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170301111943.12170-1-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benson Leung <bleung@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-The triplet present in "opp-microvolt" property should be in the order
-<target min max>, while all the examples have it in the order
-<min target max>.
+From: Benson Leung <bleung@chromium.org>
 
-Fix it.
+This patch add documentation for binding of USB Type C cable detection
+mechanism is using EXTCON subsystem. The device can detect the presence
+of display out but it may also detect other external accessories when
+external accessories is attached or detached.
 
-Luckily all of the users of "opp-microvolt" property have applied brain
-instead of copying the examples from documentation and none of the
-actual dts files have it wrong.
-
-Reported-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Benson Leung <bleung@chromium.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- Documentation/devicetree/bindings/opp/opp.txt | 44 +++++++++++++--------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ - Added Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+ Requested by Rob Herring
+ - Remove the Extcon word in the binding and replace it to describe better the
+   h/w.
+ - 'google,extcon-cros-ec' renamed to 'google,extcon-usbc-cros-ec' to indicate
+   this is USB Type C related.
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 9f5ca4457b5f..7951961ef356 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -188,14 +188,14 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
- 
- 		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
--			opp-microvolt = <970000 975000 985000>;
-+			opp-microvolt = <975000 970000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
- 		opp@1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
--			opp-microvolt = <980000 1000000 1010000>;
-+			opp-microvolt = <1000000 980000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
-@@ -267,14 +267,14 @@ independently.
- 
- 		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
--			opp-microvolt = <970000 975000 985000>;
-+			opp-microvolt = <975000 970000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
- 		opp@1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
--			opp-microvolt = <980000 1000000 1010000>;
-+			opp-microvolt = <1000000 980000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
-@@ -343,14 +343,14 @@ DVFS state together.
- 
- 		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
--			opp-microvolt = <970000 975000 985000>;
-+			opp-microvolt = <975000 970000 985000>;
- 			opp-microamp = <70000>;
- 			clock-latency-ns = <300000>;
- 			opp-suspend;
- 		};
- 		opp@1100000000 {
- 			opp-hz = /bits/ 64 <1100000000>;
--			opp-microvolt = <980000 1000000 1010000>;
-+			opp-microvolt = <1000000 980000 1010000>;
- 			opp-microamp = <80000>;
- 			clock-latency-ns = <310000>;
- 		};
-@@ -369,7 +369,7 @@ DVFS state together.
- 
- 		opp@1300000000 {
- 			opp-hz = /bits/ 64 <1300000000>;
--			opp-microvolt = <1045000 1050000 1055000>;
-+			opp-microvolt = <1050000 1045000 1055000>;
- 			opp-microamp = <95000>;
- 			clock-latency-ns = <400000>;
- 			opp-suspend;
-@@ -382,7 +382,7 @@ DVFS state together.
- 		};
- 		opp@1500000000 {
- 			opp-hz = /bits/ 64 <1500000000>;
--			opp-microvolt = <1010000 1100000 1110000>;
-+			opp-microvolt = <1100000 1010000 1110000>;
- 			opp-microamp = <95000>;
- 			clock-latency-ns = <400000>;
- 			turbo-mode;
-@@ -424,9 +424,9 @@ Example 4: Handling multiple regulators
- 
- 		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
--			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
--					<960000 965000 975000>, /* Supply 1 */
--					<960000 965000 975000>; /* Supply 2 */
-+			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
-+					<965000 960000 975000>, /* Supply 1 */
-+					<965000 960000 975000>; /* Supply 2 */
- 			opp-microamp =  <70000>,		/* Supply 0 */
- 					<70000>,		/* Supply 1 */
- 					<70000>;		/* Supply 2 */
-@@ -437,9 +437,9 @@ Example 4: Handling multiple regulators
- 
- 		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
--			opp-microvolt = <970000 975000 985000>, /* Supply 0 */
--					<960000 965000 975000>, /* Supply 1 */
--					<960000 965000 975000>; /* Supply 2 */
-+			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
-+					<965000 960000 975000>, /* Supply 1 */
-+					<965000 960000 975000>; /* Supply 2 */
- 			opp-microamp =  <70000>,		/* Supply 0 */
- 					<0>,			/* Supply 1 doesn't need this */
- 					<70000>;		/* Supply 2 */
-@@ -474,7 +474,7 @@ Example 5: opp-supported-hw
- 			 */
- 			opp-supported-hw = <0xF 0xFFFFFFFF 0xFFFFFFFF>
- 			opp-hz = /bits/ 64 <600000000>;
--			opp-microvolt = <900000 915000 925000>;
-+			opp-microvolt = <915000 900000 925000>;
- 			...
- 		};
- 
-@@ -487,7 +487,7 @@ Example 5: opp-supported-hw
- 			 */
- 			opp-supported-hw = <0x20 0xff0000ff 0x0000f4f0>
- 			opp-hz = /bits/ 64 <800000000>;
--			opp-microvolt = <900000 915000 925000>;
-+			opp-microvolt = <915000 900000 925000>;
- 			...
- 		};
- 	};
-@@ -512,18 +512,18 @@ Example 5: opp-supported-hw
- 
- 		opp@1000000000 {
- 			opp-hz = /bits/ 64 <1000000000>;
--			opp-microvolt-slow = <900000 915000 925000>;
--			opp-microvolt-fast = <970000 975000 985000>;
-+			opp-microvolt-slow = <915000 900000 925000>;
-+			opp-microvolt-fast = <975000 970000 985000>;
- 			opp-microamp-slow =  <70000>;
- 			opp-microamp-fast =  <71000>;
- 		};
- 
- 		opp@1200000000 {
- 			opp-hz = /bits/ 64 <1200000000>;
--			opp-microvolt-slow = <900000 915000 925000>, /* Supply vcc0 */
--					      <910000 925000 935000>; /* Supply vcc1 */
--			opp-microvolt-fast = <970000 975000 985000>, /* Supply vcc0 */
--					     <960000 965000 975000>; /* Supply vcc1 */
-+			opp-microvolt-slow = <915000 900000 925000>, /* Supply vcc0 */
-+					      <925000 910000 935000>; /* Supply vcc1 */
-+			opp-microvolt-fast = <975000 970000 985000>, /* Supply vcc0 */
-+					     <965000 960000 975000>; /* Supply vcc1 */
- 			opp-microamp =  <70000>; /* Will be used for both slow/fast */
- 		};
- 	};
+ .../bindings/extcon/extcon-usbc-cros-ec.txt        | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+new file mode 100644
+index 0000000..8e8625c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+@@ -0,0 +1,24 @@
++ChromeOS EC USB Type-C cable and accessories detection
++
++On ChromeOS systems with USB Type C ports, the ChromeOS Embedded Controller is
++able to detect the state of external accessories such as display adapters
++or USB devices when said accessories are attached or detached.
++
++The node for this device must be under a cros-ec node like google,cros-ec-spi
++or google,cros-ec-i2c.
++
++Required properties:
++- compatible:		Should be "google,extcon-usbc-cros-ec".
++- google,usb-port-id:	Specifies the USB port ID to use.
++
++Example:
++	cros-ec@0 {
++		compatible = "google,cros-ec-i2c";
++
++		...
++
++		extcon {
++			compatible = "google,extcon-usbc-cros-ec";
++			google,usb-port-id = <0>;
++		};
++	}
 -- 
-2.7.1.410.g6faf27b
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
