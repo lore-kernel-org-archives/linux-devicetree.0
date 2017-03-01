@@ -1,18 +1,18 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 11/25] ARM: dts: Add Actions Semi S500 and LeMaker
- Guitar
-Date: Wed, 1 Mar 2017 18:43:13 +0000
-Message-ID: <20170301184313.GO28874@leverpostej>
-References: <20170228063535.32069-1-afaerber@suse.de>
- <20170228063535.32069-12-afaerber@suse.de>
- <20170228123245.GF3691@leverpostej>
- <11053e03-8e28-e93d-f1f6-2589a9f7800c@suse.de>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCHv2 1/3] dt-bindings: arm: update Armada CP110 system
+ controller binding
+Date: Wed, 1 Mar 2017 11:01:27 -0800
+Message-ID: <20170301190127.GO25384@codeaurora.org>
+References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1482316017-22154-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20161222001453.GW8288@codeaurora.org>
+ <20170301165245.5f2fbfaf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <11053e03-8e28-e93d-f1f6-2589a9f7800c@suse.de>
+In-Reply-To: <20170301165245.5f2fbfaf@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,41 +22,45 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: support@lemaker.org, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, outreachy-kernel@googlegroups.com, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Hanna Hawa <hannah@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgMDQ6MTM6MDBQTSArMDEwMCwgQW5kcmVhcyBGw6RyYmVy
-IHdyb3RlOgo+IEFtIDI4LjAyLjIwMTcgdW0gMTM6MzIgc2NocmllYiBNYXJrIFJ1dGxhbmQ6Cj4g
-PiBPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAwNzozNToyMUFNICswMTAwLCBBbmRyZWFzIEbDpHJi
-ZXIgd3JvdGU6Cgo+ID4+ICsjaW5jbHVkZSAic2tlbGV0b24uZHRzaSIKPiA+IAo+ID4gUGxlYXNl
-IGRvbid0IGluY2x1ZGUgc2tlbGV0b24uZHRzaS4KPiAKPiBXYXNuJ3QgYXdhcmUgdGhhdCB3YXMg
-cGVybWlzc2libGUuIEkgbm93IHNlZSBpdCBoYXMgYmVlbiB1cGRhdGVkIHdpdGggYQo+IHRleHR1
-YWwgY29tbWVudCwgd2hpY2ggcHJlZGF0ZXMgbXkgcGFzdCB1c2VzIG9mIHNrZWxldG9uLmR0c2kg
-LSBmb3IKPiBvdGhlciBwZW5kaW5nIHdvcmsgc3VjaCBhcyBGTTQgYW5kIFhNQzQ1MDAgSSBvbmx5
-IG5vdGljZWQgaXQgd2FzIG1vdmVkCj4gb3V0IG9mIGFybXY3bS5kdHNpIHNvIHRoYXQgZHRjIHN0
-YXJ0ZWQgc3Bld2luZyBzY2FyeSBtZXNzYWdlcy4gOykKPiAKPiBBICN3YXJuaW5nIG1pZ2h0IGJl
-IGEgbW9yZSBlZmZlY3RpdmUgd2F5IHRvIG1ha2UgcGVvcGxlIGF3YXJlIG9mIGl0cwo+IGRlcHJl
-Y2F0aW9uIC0gYnV0IHNhZGx5IHdlIGhhdmUgdXNlcnMgdGhhdCBwcmVkYXRlICNpbmNsdWRlOgo+
-IAo+ICQgZ2l0IGdyZXAgL2luY2x1ZGUvIC0tIGFyY2gvYXJtL2Jvb3QvZHRzLyB8IGdyZXAgc2tl
-bGV0b24uZHRzaSB8IHdjIC0tbGluZXMKPiAzMgo+ICQgZ2l0IGdyZXAgL2luY2x1ZGUvIC0tIGFy
-Y2gvYXJtL2Jvb3QvZHRzLyB8IGdyZXAgc2tlbGV0b242NC5kdHNpIHwgd2MKPiAtLWxpbmVzCj4g
-MAo+ICQgZ2l0IGdyZXAgc2tlbGV0b24gLS0gYXJjaC9hcm0vYm9vdC9kdHMvIHwgd2MgLS1saW5l
-cwo+IDExNwoKSSBkZWxpYmVyYXRlbHkgZGlkbid0IGdvIHRoYXQgcm91dGUsIHNpbmNlIHBlb3Bs
-ZSB3b3VsZCBibGluZGx5IGZpeCB1cAp0aGUgd2FybmluZyBhbmQgbWVzcyBpdCB1cCAoZS5nLiBm
-b3JnZXR0aW5nIHRvIGFkZCB0aGUgcmVxdWlyZWQgbm9kZXMpLgoKV2hpbGUgaXQgc2hvdWxkIGJl
-IGF2b2lkZWQgZm9yIG5ldyBkdHMsIGl0J3MgbGFyZ2VseSBub3QgcHJvYmxlbWF0aWMgZm9yCm9s
-ZCBkdHMsIGFuZCB3ZSBjYW4gZml4IHRob3NlIHVwIGF0IG91ciBsZWlzdXJlLgoKPiA+IFBsZWFz
-ZSBhZGQgdGhlIHJlbGV2YW50IG5vZGVzIGFuZAo+ID4gcHJvcGVydGllcyBleHBsY2lpdGx5IHRv
-IHlvdXIgZHRze2ksfSBmaWxlcy4KPiAKPiBHcmVhdCwgd2lsbCBkby4KPiAKPiBCdXQgdGhpcyBz
-ZXJpZXMgaGFzIGdyb3duIHRvbyBsYXJnZSB0byByZXNlbmQganVzdCBmb3Igc3VjaCBuaXRzLiBJ
-cwo+IHRoZXJlIGEgY2hhbmNlIHdlIGNhbiBnZXQgaW5pdGlhbCBwYXRjaGVzIHF1ZXVlZCBvbiBz
-b21lIGFybS1zb2MKPiBmb3ItbmV4dCBicmFuY2ggc29vbmlzaD8gSXQgc2VlbXMgLXJjMSBwdWxs
-cyB3ZXJlIG1lcmdlZCA1IGRheXMgYWdvPwoKVGhlcmUgc2VlbSB0byBiZSBvdGhlciBjb21tZW50
-cyBvbiB0aGlzIHNlcmllcywgYW5kIEkgd2FzIHVuZGVyIHRoZQppbXByZXNzaW9uIHRoYXQgYXJt
-LXNvYyBnZW5lcmFsbHkgcHVsbGVkIGJyYW5jaGVzLgoKRXZlbiBpZiB5b3UncmUgbm90IGdvaW5n
-IHRvIHJlcG9zdCwgc3VyZWx5IHlvdSBjYW4gZm9sZCBpbiB0aGUgZml4dXAKYmVmb3JlIHNlbmRp
-bmcgdGhlIHB1bGwgcmVxdWVzdD8KClRoYW5rcywKTWFyay4KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 03/01, Thomas Petazzoni wrote:
+> Stephen,
+> =
+
+> On Wed, 21 Dec 2016 16:14:53 -0800, Stephen Boyd wrote:
+> > On 12/21, Thomas Petazzoni wrote:
+> > > It turns out that in the CP110 HW block present in Marvell Armada
+> > > 7K/8K SoCs, gatable clock n=B018 not only controls SD/MMC, but also t=
+he
+> > > GOP block. This commit updates the Device Tree binding for this piece
+> > > of hardware accordingly.
+> > > =
+
+> > > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > > ---  =
+
+> > =
+
+> > Applied to clk-next
+> =
+
+> Even though you said you applied it, I still don't see this patch in
+> mainline, while PATCH 2/3 of this series is now in mainline.
+> =
+
+> Was this patch forgotten? Let me know if I should resend it, but I'm
+> pretty sure it still applies, since no other changes on this file have
+> been merged since quite a while.
+> =
+
+
+No worries. I've made a note to put it into the fixes queue to
+send off after rc1.
+
+-- =
+
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
