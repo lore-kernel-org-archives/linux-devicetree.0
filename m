@@ -1,130 +1,57 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH] ARM: dts: NSP: GPIO reboot open-source
-Date: Wed,  1 Mar 2017 18:02:28 -0500
-Message-ID: <1488409348-6371-1-git-send-email-jon.mason@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
+ binding to OPP nodes
+Date: Wed, 1 Mar 2017 17:13:22 -0600
+Message-ID: <CAL_JsqLJ_QYZza4=DobUStWpQ7V-H2dF_2d=25XR+x-eWfszEA@mail.gmail.com>
+References: <cover.1487926924.git.viresh.kumar@linaro.org> <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org>
+ <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop> <20170228065711.GD19417@vireshk-i7>
+ <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com>
+ <CAPDyKFo5TjTa-hTzNp5KCpozU87L22piCXaSjWMTr4xVkgP+Pg@mail.gmail.com>
+ <CAL_Jsq+7DGX_1U99cc3rhk8zzSj6iKe3kpijp7KTz90xXA_V9g@mail.gmail.com> <58B669DD.5010309@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <58B669DD.5010309@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The libgpio code pre-sets the GPIO values for the gpio-reset in the
-device tree.  This results in the device being reset during bringup.
-To prevent this pre-setting, use the "open-source" flag in the device
-tree.
+On Wed, Mar 1, 2017 at 12:27 AM, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>
+>
+> On 02/28/2017 09:22 PM, Rob Herring wrote:
+>> On Tue, Feb 28, 2017 at 9:14 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>> [...]
+>>>
+>>>>>                                     ---> Parent domain-2 (Contains Perfomance states)
+>>>>>                                     |
+>>>>>                                     |
+>>>>> C.) DeviceX  --->  Parent-domain-1  |
+>>>>>                                     |
+>>>>>                                     |
+>>>>>                                     ---> Parent domain-3 (Contains Perfomance states)
+>>>>
+>>>> I'm a bit confused. How does a domain have 2 parent domains?
+>>>
+>>> This comes from the early design of the generic PM domain, thus I
+>>> assume we have some HW with such complex PM topology. However, I don't
+>>> know if it is actually being used.
+>>>
+>>> Moreover, the corresponding DT bindings for "power-domains" parents,
+>>> can easily be extended to cover more than one parent. See more in
+>>> Documentation/devicetree/bindings/power/power_domain.txt
+>>
+>> I could easily see device having 2 power domains. For example a cpu
+>> may have separate domains for RAM/caches and logic. And nesting of
+>
+> yet the bindings for power-domains (for consumer devices) only allows for
+> one powerdomain to be associated with a device.
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
-Fixes: b1aaf88 ("ARM: dts: NSP: Add GPIO reboot method to bcm958625hr DTS file")
-Fixes: 10baed1 ("ARM: dts: NSP: Add GPIO reboot method to bcm958625xmc DTS file")
-Fixes: 088e3148 ("ARM: dts: NSP: Add new DT file for bcm958522er")
-Fixes: e3227c1 ("ARM: dts: NSP: Add new DT file for bcm958525er")
-Fixes: 2f8bc00 ("ARM: dts: NSP: Add new DT file for bcm958622hr")
-Fixes: d454c37 ("ARM: dts: NSP: Add new DT file for bcm958623hr")
-Fixes: f27eacf ("ARM: dts: NSP: Add new DT file for bcm988312hr")
----
- arch/arm/boot/dts/bcm958522er.dts  | 1 +
- arch/arm/boot/dts/bcm958525er.dts  | 1 +
- arch/arm/boot/dts/bcm958525xmc.dts | 1 +
- arch/arm/boot/dts/bcm958622hr.dts  | 1 +
- arch/arm/boot/dts/bcm958623hr.dts  | 1 +
- arch/arm/boot/dts/bcm958625hr.dts  | 1 +
- arch/arm/boot/dts/bcm988312hr.dts  | 1 +
- 7 files changed, 7 insertions(+)
+There's nothing in the binding only allowing that. If that was true,
+then #powerdomain-cells would be pointless as the property size would
+tell you the number of cells. Now it may be that we simply don't have
+any cases with more than 1. Hopefully that's not because bindings are
+working around PM domain limitations/requirements.
 
-diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
-index 3f04a40..df05e7f 100644
---- a/arch/arm/boot/dts/bcm958522er.dts
-+++ b/arch/arm/boot/dts/bcm958522er.dts
-@@ -55,6 +55,7 @@
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-+		open-source;
- 		priority = <200>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
-index 9fd5422..4a3ab19 100644
---- a/arch/arm/boot/dts/bcm958525er.dts
-+++ b/arch/arm/boot/dts/bcm958525er.dts
-@@ -55,6 +55,7 @@
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-+		open-source;
- 		priority = <200>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
-index 41e7fd3..81f7843 100644
---- a/arch/arm/boot/dts/bcm958525xmc.dts
-+++ b/arch/arm/boot/dts/bcm958525xmc.dts
-@@ -55,6 +55,7 @@
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpioa 31 GPIO_ACTIVE_LOW>;
-+		open-source;
- 		priority = <200>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
-index 477c486..c88b8fe 100644
---- a/arch/arm/boot/dts/bcm958622hr.dts
-+++ b/arch/arm/boot/dts/bcm958622hr.dts
-@@ -55,6 +55,7 @@
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-+		open-source;
- 		priority = <200>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
-index c0a499d..d503fa0 100644
---- a/arch/arm/boot/dts/bcm958623hr.dts
-+++ b/arch/arm/boot/dts/bcm958623hr.dts
-@@ -55,6 +55,7 @@
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-+		open-source;
- 		priority = <200>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-index f7eb585..cc0363b 100644
---- a/arch/arm/boot/dts/bcm958625hr.dts
-+++ b/arch/arm/boot/dts/bcm958625hr.dts
-@@ -55,6 +55,7 @@
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-+		open-source;
- 		priority = <200>;
- 	};
- };
-diff --git a/arch/arm/boot/dts/bcm988312hr.dts b/arch/arm/boot/dts/bcm988312hr.dts
-index 16666324..74e15a3 100644
---- a/arch/arm/boot/dts/bcm988312hr.dts
-+++ b/arch/arm/boot/dts/bcm988312hr.dts
-@@ -55,6 +55,7 @@
- 	gpio-restart {
- 		compatible = "gpio-restart";
- 		gpios = <&gpioa 15 GPIO_ACTIVE_LOW>;
-+		open-source;
- 		priority = <200>;
- 	};
- };
--- 
-2.7.4
+Rob
