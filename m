@@ -1,76 +1,56 @@
+Return-Path: <SRS0=xWA/=2K=aosc.xyz=icenowy@kernel.org>
+Message-Id: <20170301190220.2EgSha6N@smtp3o.mail.yandex.net>
+Date: Thu, 02 Mar 2017 00:02:13 +0800
+Subject: Re: [PATCH 2/3] thermal: add support for the thermal sensor on
+ Allwinner new SoCs
+From: Icenowy Zheng <icenowy@aosc.xyz>
 MIME-Version: 1.0
-In-Reply-To: <386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
-References: <20170228120452.10043-1-zajec5@gmail.com>
-	<a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
-	<290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
-	<CAL_JsqL-N4HfsG=py+w1NsBOJZzS1kbRM5J6dC-EE-rg9r9C2g@mail.gmail.com>
-	<386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
-Date: Wed, 1 Mar 2017 16:55:19 -0600
-Message-ID: <CAL_JsqKJrarV__0-CSsT-zuQuDVzbmoKN915HC30HPmfmAKZ=g@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ondrej Jirman <megous@megous.com>, Eduardo Valentin <edubezval@gmail.com>, linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Mar 1, 2017 at 3:04 PM, Jacek Anaszewski <jacek.anaszewski@gmail.co=
-m> wrote:
-> On 02/28/2017 11:12 PM, Rob Herring wrote:
->> On Tue, Feb 28, 2017 at 3:51 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.c=
-om> wrote:
->>> On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
->>>>
->>>> I think that it would be simpler if we could initially see
->>>> a complete sample dts implementation containing all required DT
->>>> nodes. The example could contain timer trigger as well as usb-port
->>>> trigger specific bindings.
->>>
->>>
->>> Please take a look at attached patch. I used it on Tenda AC9 with:
->>
->> I'm not sure about this extra level of indirection. I don't see the need=
-.
->>
->>> usb_trigger: usb-trigger {
->>>         trigger-type =3D "usbport";
->>
->> Why do we need to know the type? The trigger device knows what type it
->> is. All we should need to know here is what device(s) controls an LED.
->> The rest the kernel can figure out.
->
-> The thing is that in the proposed approach the trigger is not necessary
-> a device. The trigger node is here only a container with initialization
-> data.
-
-That sounds like a questionable use of DT.
-
-> We could have e,g, two such nodes with different set of ports
-> (say usb1-trigger and usb2-trigger). Then if we had two LED nodes usb1
-> and usb2, the former could have its triggers property initialized
-> to &usb1-trigger and the latter to &usb2-trigger. Thanks to that both
-> LEDs after executing "echo usbport > triggers" would listen to events
-> from different set of usb ports.
-
-This would still work if the trigger property points directly
-
-> Also, e.g. for the timer trigger we could define two separate DT nodes
-> with different delay intervals.
-
-That sounds like user config to me.
-
->
->>>         ports =3D <&ohci_port1>, <&ehci_port1>;
->>> };
->>>
->>> usb {
->>>         label =3D "bcm53xx:blue:usb";
->>>         gpios =3D <&chipcommon 1 GPIO_ACTIVE_HIGH>;
->>>         triggers =3D <&usb_trigger>;
->>> };
->>
->
-> --
-> Best regards,
-> Jacek Anaszewski
+CjIwMTflubQz5pyIMeaXpSAyMzo1NuS6jiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZy
+ZWUtZWxlY3Ryb25zLmNvbT7lhpnpgZPvvJoKPgo+IE9uIFdlZCwgTWFyIDAxLCAyMDE3IGF0IDA2
+OjIwOjUxUE0gKzA4MDAsIEljZW5vd3kgWmhlbmcgd3JvdGU6IAo+ID4gCj4gPiAyMDE35bm0M+ac
+iDHml6UgMTg6MTTkuo4gTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9u
+cy5jb20+5YaZ6YGT77yaIAo+ID4gPiAKPiA+ID4gT24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgMDM6
+MTg6MTNQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3cm90ZTogCj4gPiA+ID4gCj4gPiA+ID4gMjAx
+N+W5tDLmnIgyOOaXpSAxNDo0NOS6jiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT7lhpnpgZPvvJogCj4gPiA+ID4gPiAKPiA+ID4gPiA+IE9uIFR1ZSwgRmVi
+IDI4LCAyMDE3IGF0IDAzOjQwOjUzQU0gKzA4MDAsIEljZW5vd3kgWmhlbmcgd3JvdGU6IAo+ID4g
+PiA+ID4gPiBGcm9tOiBPbmRyZWogSmlybWFuIDxtZWdvdXNAbWVnb3VzLmNvbT4gCj4gPiA+ID4g
+PiA+IAo+ID4gPiA+ID4gPiBBbGx3aW5uZXIgU29DcyBmcm9tIEgzIChpbmNsdWRpbmcgSDUsIEE2
+NCwgZXRjKSBoYXZlIGEgbmV3IHZlcnNpb24gb2YgCj4gPiA+ID4gPiA+IHRoZXJtYWwgc2Vuc29y
+LCBhbmQgbmVlZHMgYSBuZXcgZHJpdmVyIGZvciBpdC4gCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4g
+PiBBZGQgc3VjaCBhIGRyaXZlci4gCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBDdXJyZW50bHkg
+b25seSBIMyBpcyBzdXBwb3J0ZWQsIGJ1dCBvdGhlciBTb0NzIGFyZSBlYXNpbHkgdG8gYmUgCj4g
+PiA+ID4gPiA+IHN1cHBvcnRlZCBieSBhZGRpbmcgbmV3IGZvcm11bGEgYW5kIHNldCB0aGUgc2Vu
+c29yIG51bWJlci4gCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBPbmTF
+mWVqIEppcm1hbiA8bWVnb3VzQG1lZ291cy5jb20+IAo+ID4gPiA+ID4gPiBbSWNlbm93eTogZXh0
+ZW5kIHRvIHN1cHBvcnQgZnVydGhlciBtdWx0aXBsZS1zZW5zb3IgU29DcywgY2hhbmdlIGNvbW1p
+dCAKPiA+ID4gPiA+ID7CoCBtZXNzYWdlXSAKPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogSWNl
+bm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4gCj4gPiA+ID4gPiAKPiA+ID4gPiA+IFRoZXJl
+J3Mgbm8gbmVlZCB0byBjcmVhdGUgYSBuZXcgZHJpdmVyIGZvciB0aGF0LiBUaGlzIGNhbiBiZSBo
+YW5kbGVkIAo+ID4gPiA+ID4gYnkgdGhlIEdQQURDIGRyaXZlciB3ZSBhbHJlYWR5IGhhdmUuIAo+
+ID4gPiA+IAo+ID4gPiA+IHN1bjhpLXRocyBpcyBub3QgR1BBREMgYXQgYWxsLiAKPiA+ID4gPiAK
+PiA+ID4gPiBUaGUgbGF0ZXN0IFNvQyBJIGtub3cgdGhhdCB1c2UgR1BBREMgYXMgdGhlcm1hbCBz
+ZW5zb3IgaXMgQTMzLiAKPiA+ID4gCj4gPiA+IEl0J3Mgbm90IGNhbGxlZCB0aGUgc2FtZSB3YXks
+IGJ1dCBpdCBkZWZpbml0ZWx5IGlzIGFuIGV2b2x1dGlvbiBvZiB0aGUgCj4gPiA+IHNhbWUgY29u
+dHJvbGxlci4gVGhlcmUncyBubyBuZWVkIGZvciBhIG5ldyBkcml2ZXIsIG9ubHkgcmV3b3JraW5n
+IHdoYXQgCj4gPiA+IGlzIGFscmVhZHkgdGhlcmUuIAo+ID4gCj4gPiBJIGRvbid0IHRoaW5rIHNv
+IC0tIGhlcmUncyBzb21lIGV2aWRlbmNlOiAKCkJ1dCB0aGUgSDMgVEhTIGhhdmUgbWFueSBuZXcg
+SVJRcywgZnVuY3Rpb25zLCBkaWZmZXJlbnQgc2FtcGxpbmcgcmF0ZSBzZXQgbWV0aG9kIGFuZCBh
+IHF1aXRlIGRpZmZlcmVudCByZWdpc3RlciBsYXlvdXQuCgpEb2luZyB0aGlzIGluIEdQQURDIGRy
+aXZlciBpcyBwb3NzaWJsZSBidXQgbWVhbmluZ2xlc3MuCgo+ID4gCj4gPiAxLiBUaGUgb2xkIEdQ
+QURDIGRvIG5vdCBoYXZlIG1vZHVsZSBjbG9jay4gCj4KPiBUaGUgQTMzIGNvdWxkIHVzZSBhIFBM
+TC4gCgpCdXQgaXQncyBhIGRlZGljYXRlZCBtb2QgY2xrIG9uIG5ldyBnZW5lcmF0aW9uIFRIUy4K
+Cj4KPiA+IDIuIFRoZSBvbGQgR1BBREMgZG8gbm90IGhhdmUgY2FsaWJyYXRpb24gc3RvcmVkIGlu
+IGVGVVNFLiAKPgo+IFRoZSBBMzMgaGFkIGNhbGlicmF0aW9uIGRhdGEgc3RvcmVkIGluIHRoZSBl
+ZnVzZXMuIAoKWWVzLi4uIHNvcnJ5IGZvciBpZ25vcmluZyB0aGlzLgoKPgo+ID4gMy4gUjQwIFNv
+QyBoYXZlIGJvdGggUlRQIChpdCBzaG91bGQgYmUgdGhlIG9sZCBHUEFEQykgYW5kIAo+ID4gbmV3
+LWdlbmVyYXRpb24gVEhTLiAKPgo+IEFuZCB0aGlzIGlzIHByb2JhYmx5IGp1c3QgdG8gYmUgY29t
+cGF0aWJsZSB3aXRoIHRoZSBBMjAuIAo+Cj4gTWF4aW1lIAo+Cj4gLS0gCj4gTWF4aW1lIFJpcGFy
+ZCwgRnJlZSBFbGVjdHJvbnMgCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmlu
+ZyAKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tIAo=
