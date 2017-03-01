@@ -1,96 +1,166 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 1/3] mtd: nand: Cleanup/rework the atmel_nand driver
-Date: Wed, 1 Mar 2017 09:49:29 +0100
-Message-ID: <20170301094929.5b0b831d@bbrezillon>
-References: <CAHp75VeB4eVuN5NMfAfQUtssuHezTyAM8FUswuR8FheUk1V-oA@mail.gmail.com>
- <CAHp75Vc54+GR99qM8vUDfQnehFx0g5q137k-w5XY3023UZyr5w@mail.gmail.com>
- <20170221171438.e5hvruoixafpcdps@piout.net>
- <CACiLriSdRM4ZfoDsxFhf6ZVwAtacJOJ28M8CvOg6kC_XN0T-Mw@mail.gmail.com>
- <20170224081430.GB19663@samfundet.no>
- <20170224092742.3ce205e2@bbrezillon>
- <20170224085209.GA27812@samfundet.no>
- <20170224095509.777da771@bbrezillon>
- <20170224090435.GA11313@samfundet.no>
- <20170301092224.169dc7ae@bbrezillon>
- <20170301083807.GA12981@samfundet.no>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4] reset: Add i.MX7 SRC reset driver
+Date: Wed, 01 Mar 2017 09:53:45 +0100
+Message-ID: <1488358425.2310.0.camel@pengutronix.de>
+References: <20170221161331.17012-1-andrew.smirnov@gmail.com>
+         <1488292707.2288.53.camel@pengutronix.de>
+         <CAHQ1cqG4VSr=E1U4CpruYtvzXK0xcJTow0VwurP1S4_Hi-TJzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170301083807.GA12981@samfundet.no>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hans-Christian Noren Egtvedt <egtvedt@samfundet.no>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, "open
- list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, =?UTF-8?B?SMOldmFyZA==?= Skinnemoen <hskinne>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHQ1cqG4VSr=E1U4CpruYtvzXK0xcJTow0VwurP1S4_Hi-TJzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxIE1hciAyMDE3IDA5OjM4OjA3ICswMTAwCkhhbnMtQ2hyaXN0aWFuIE5vcmVuIEVn
-dHZlZHQgPGVndHZlZHRAc2FtZnVuZGV0Lm5vPiB3cm90ZToKCj4gQXJvdW5kIFdlZCAwMSBNYXIg
-MjAxNyAwOToyMjoyNCArMDEwMCBvciB0aGVyZWFib3V0LCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6
-Cj4gPiBIaSBIYW5zLUNocmlzdGlhbiwKPiA+IAo+ID4gT24gRnJpLCAyNCBGZWIgMjAxNyAxMDow
-NDozNSArMDEwMAo+ID4gSGFucy1DaHJpc3RpYW4gTm9yZW4gRWd0dmVkdCA8ZWd0dmVkdEBzYW1m
-dW5kZXQubm8+IHdyb3RlOgo+ID4gICAKPiA+PiBBcm91bmQgRnJpIDI0IEZlYiAyMDE3IDA5OjU1
-OjA5ICswMTAwIG9yIHRoZXJlYWJvdXQsIEJvcmlzIEJyZXppbGxvbiB3cm90ZTogIAo+ID4+ID4g
-T24gRnJpLCAyNCBGZWIgMjAxNyAwOTo1MjowOSArMDEwMAo+ID4+ID4gSGFucy1DaHJpc3RpYW4g
-Tm9yZW4gRWd0dmVkdCA8ZWd0dmVkdEBzYW1mdW5kZXQubm8+IHdyb3RlOiAgICAKPiA+PiA+PiBB
-cm91bmQgRnJpIDI0IEZlYiAyMDE3IDA5OjI3OjQyICswMTAwIG9yIHRoZXJlYWJvdXQsIEJvcmlz
-IEJyZXppbGxvbiB3cm90ZTogICAgCj4gPj4gPj4gPiBPbiBGcmksIDI0IEZlYiAyMDE3IDA5OjE0
-OjMwICswMTAwIEhhbnMtQ2hyaXN0aWFuIE5vcmVuIEVndHZlZHQgPGVndHZlZHRAc2FtZnVuZGV0
-Lm5vPiB3cm90ZTogICAgICAKPiA+PiA+PiA+PiBBcm91bmQgVGh1IDIzIEZlYiAyMDE3IDIxOjE4
-OjEzIC0wODAwIG9yIHRoZXJlYWJvdXQsIEjDpXZhcmQgU2tpbm5lbW9lbiB3cm90ZTogICAgICAK
-PiA+PiA+PiA+PiA+IE9uIFR1ZSwgRmViIDIxLCAyMDE3IGF0IDk6MTQgQU0sIEFsZXhhbmRyZSBC
-ZWxsb25pCj4gPj4gPj4gPj4gPiA8YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMuY29t
-PiB3cm90ZTogICAgICAgIAo+ID4+ID4+ID4+ID4+IE9uIDIxLzAyLzIwMTcgYXQgMTg6NDM6MzUg
-KzAyMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZTogICAgICAgIAo+ID4+ID4+IAo+ID4+ID4+IDxz
-bmlwcD4KPiA+PiA+PiAgICAgCj4gPj4gPj4gPj4gPj4gSWYgbm9ib2R5IGNvbXBsYWlucyBhYm91
-dCB0aGUgNC4xMCBicmVha2FnZSwgWW91J2xsIGhhdmUgcGxlbnR5IG9mIHRpbWUKPiA+PiA+PiA+
-PiA+PiB0byByZW1vdmUgaXQgZm9yIDQuMTIgICAgICAgIAo+ID4+ID4+ID4+ID4gCj4gPj4gPj4g
-Pj4gPiBJJ20gZmluZSB3aXRoIHRoYXQsIGJ1dCBJIGhhdmVuJ3QgcHV0IG11Y2ggZWZmb3J0IGlu
-dG8ga2VlcGluZyBpdAo+ID4+ID4+ID4+ID4gYWxpdmUgbGF0ZWx5LiBJZiBIYW5zLUNocmlzdGlh
-biBhZ3JlZXMsIEknbSB3aWxsaW5nIHRvIHBvc3QgYSBwYXRjaCB0bwo+ID4+ID4+ID4+ID4gcmVt
-b3ZlIGl0LCBvciBhY2sgc29tZW9uZSBlbHNlJ3MgcGF0Y2guICAgICAgICAKPiA+PiA+PiA+PiAK
-PiA+PiA+PiA+PiBUaGVuIGxldHMgcGxhbiB0aGlzIGZvciA0LjEyLCBlaXRoZXIgeW91IEjDpXZh
-cmQgd2hpcCB1cCBhIHBhdGNoIG9yIEkgY2FuCj4gPj4gPj4gPj4gZXZlbnR1YWxseSBkbyBpdC4K
-PiA+PiA+PiA+PiAKPiA+PiA+PiA+PiBJIGNhbiBwdXNoIGl0IHRocm91Z2ggdGhlIGxpbnV4LWF2
-cjMyIGdpdCB0cmVlIG9uIGtlcm5lbC5vcmcuCj4gPj4gPj4gPj4gICAgICAgCj4gPj4gPj4gPiAK
-PiA+PiA+PiA+IENhbiB5b3UgZG8gdGhhdCBqdXN0IGFmdGVyIDQuMTEtcmMxIGlzIHJlbGVhc2Vk
-IGFuZCBwcm92aWRlIGEgdG9waWMKPiA+PiA+PiA+IGJyYW5jaCBJIGNhbiBwdWxsIGluIG15IG5h
-bmQvbmV4dCBicmFuY2gsIHNvIHRoYXQgSSBjYW4gcmV3b3JrIHRoaXMKPiA+PiA+PiA+IHBhdGNo
-IGFuZCBkcm9wIGFsbCB0aGUgcGRhdGEtY29tcGF0IGNvZGUgKGFzIHN1Z2dlc3RlZCBieSBBbmR5
-KS4gICAgICAKPiA+PiA+PiAKPiA+PiA+PiBPSywgSSB3aWxsIHRyeSB0byBwcmVwYXJlIGl0IGR1
-cmluZyB0aGUgd2Vla2VuZC4KPiA+PiA+PiAKPiA+PiA+PiBBbnkgcmVhc29uIHRvIHdhaXQgZm9y
-IDQuMTEtcmMxPyBBRkFJSyBMaW51cyBwcmVmZXJzIHRoZSBsYXJnZXIgY2hhbmdlcwo+ID4+ID4+
-IGJlZm9yZSBoZSBzdGFydHMgdGFnZ2luZyByYydzLgo+ID4+ID4+ICAgICAKPiA+PiA+IAo+ID4+
-ID4gT2gsIHNvIHlvdSB3YW50IHRvIHF1ZXVlIGl0IGZvciA0LjExLCB0aGF0J3MgZXZlbiBiZXR0
-ZXIuICAgIAo+ID4+IAo+ID4+IFBlcmhhcHMgSSBtaXN1bmRlcnN0b29kIHlvdSwgYnkgYWZ0ZXIg
-NC4xMS1yYzEgeW91IG1lYW4gcXVldWUgaXQgZm9yIDQuMTI/Cj4gPj4gCj4gPj4gSSB3aWxsIHNl
-ZSB3aGF0IEkgZ2V0IGFyb3VuZCB0byBkbyBpbiB0aGUgd2Vla2VuZCwgaXQgc2hvdWxkIGJlIHBy
-ZXR0eQo+ID4+IHN0cmFpZ2h0Zm9yd2FyZCwganVzdCB3YW50IHRvIG1ha2Ugc3VyZSB3ZSByZW1v
-dmUgYWxsIHRoZSBiaXRzLgo+ID4+ICAgCj4gPiAKPiA+IEFueSBwcm9ncmVzcyBvbiB0aGlzPyBJ
-IHBsYW4gdG8gc2VuZCBhIG5ldyB2ZXJzaW9uIG9mIHRoaXMgc2VyaWVzIHNvb24KPiA+IGFuZCBJ
-J2QgbGlrZSB0byBrbm93IGlmIEkgc2hvdWxkIGRyb3AgcGRhdGEvYXZyMzIgc3VwcG9ydCBvciBu
-b3QuIE5vdGUKPiA+IHRoYXQgSSdtIHRhcmdldGluZyA0LjEyLCBzbywgYXMgbG9uZyBhcyB5b3Ug
-ZHJvcCBhdnIzMiBzdXBwb3J0IGluIDQuMTIKPiA+IHdlIHNob3VsZCBiZSBnb29kLiAgCj4gCj4g
-SSBnb3QgYXJvdW5kIHRvIG1ha2UgdGhlIHBhdGNoIHNlcmllcyBkdXJpbmcgdGhlIHdlZWtlbmQs
-IGJ1dCBJIHRob3VnaHQgaXQKPiB3b3VsZCBiZSBhIGdvb2QgaWRlYSBzZW5kaW5nIHRoZW0gdG8g
-dGhlIGtlcm5lbCBtYWlsaW5nIGxpc3QgYXMgYSBGWUkuCgpEZWZpbml0ZWx5LgoKPiAKPiBBbHNv
-LCBJIHdhcyB1bnN1cmUgaWYgSSBzaG91bGQgc2VuZCB0aGUgZHJpdmVyIHJlbW92YWxzIHRocm91
-Z2ggdGhlCj4gc3ViLW1haW50YWluZXJzIHRyZWVzLCBvciBpZiBJIGNhbiBwdXNoIHRoZW0gdGhy
-b3VnaCBsaW51eC1hdnIzMiB0cmVlLgoKSSB0aGluayBpdCBzaG91bGQgZ28gdGhyb3VnaCB0aGUg
-c3ViLW1haW50YWluZXJzIHRyZWVzLCBidXQgSSBndWVzcyB5b3UKY2FuIHJlbW92ZSB0aGUgYXJj
-aCBjb2RlIHdpdGhvdXQgYnJlYWtpbmcgdGhlIGJ1aWxkLCBzbyBpdCBzaG91bGRuJ3QgYmUKYSBw
-cm9ibGVtIGlmIGRyaXZlcnMgcmVtb3ZhbCBkb24ndCBnbyB0aHJvdWdoIHRoZSBhdnIzMiB0cmVl
-LgoKPiAKPiBJIGhhdmUgYSBwYXRjaCByZW1vdmluZyB0aGUgcGF0YSBkcml2ZXIgZm9yIEFWUjMy
-Lgo+IAoKR3JlYXQhIEp1c3Qgc2VuZCBldmVyeXRoaW5nIHRvIHRoZSBNTHMgKGFuZCByZWxldmFu
-dCBtYWludGFpbmVycykuCgpUaGFua3MsCgpCb3JpcwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, 2017-02-28 at 11:46 -0800, Andrey Smirnov wrote:
+> On Tue, Feb 28, 2017 at 6:38 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > On Tue, 2017-02-21 at 08:13 -0800, Andrey Smirnov wrote:
+> >> Add reset controller driver exposing various reset faculties,
+> >> implemented by System Reset Controller IP block.
+> >>
+> >> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> >> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>
+> >> Changes since v3 (see [v3]):
+> >>
+> >>       - Convert code IMX7_RESET_PCIEPHY to change G_RST and BTNRST
+> >>           simultaneously to make all resets be representable as
+> >>           signal->bit in signal->offset register
+> >>
+> >>       - Convert assert/deassert subroutines to be special cases of a
+> >>           common reset subroutine
+> >>
+> >> Changes since v2 (see [v2]):
+> >>
+> >>       - Fix typos
+> >>
+> >>       - Kconfig/Makefile chagnes account for alphabetical sorting of
+> >>           those files
+> >>
+> >>       - Remove redundant includes
+> >>
+> >>       - Make use of regmap_attach_dev and avoid storing refernce to
+> >>           struct *dev in private data
+> >>
+> >>       - Change code and headers to expose almost all of the reset
+> >>           related bits in SRC IP block
+> >>
+> >> Changes since v1 (see [v1]):
+> >>
+> >>       - Various small DT bindings description fixes as per feedback
+> >>           from Rob Herring
+> >>
+> >>
+> >> [v1] https://lkml.org/lkml/2017/2/6/554
+> >> [v2] https://lkml.org/lkml/2017/2/13/488
+> >> [v3] https://lkml.org/lkml/2017/2/20/344
+> >>
+> >>
+> >>  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  47 ++++++
+> >>  drivers/reset/Kconfig                              |   8 ++
+> >>  drivers/reset/Makefile                             |   2 +
+> >>  drivers/reset/reset-imx7.c                         | 158 +++++++++++++++++++++
+> >>  include/dt-bindings/reset/imx7-reset.h             |  62 ++++++++
+> >>  5 files changed, 277 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> >>  create mode 100644 drivers/reset/reset-imx7.c
+> >>  create mode 100644 include/dt-bindings/reset/imx7-reset.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> >> new file mode 100644
+> >> index 0000000..5e1afc3
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> >> @@ -0,0 +1,47 @@
+> >> +Freescale i.MX7 System Reset Controller
+> >> +======================================
+> >> +
+> >> +Please also refer to reset.txt in this directory for common reset
+> >> +controller binding usage.
+> >> +
+> >> +Required properties:
+> >> +- compatible: Should be "fsl,imx7-src", "syscon"
+> >> +- reg: should be register base and length as documented in the
+> >> +  datasheet
+> >> +- interrupts: Should contain SRC interrupt
+> >> +- #reset-cells: 1, see below
+> >> +
+> >> +example:
+> >> +
+> >> +src: reset-controller@30390000 {
+> >> +     compatible = "fsl,imx7d-src", "syscon";
+> >> +     reg = <0x30390000 0x2000>;
+> >> +     interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> >> +     #reset-cells = <1>;
+> >> +};
+> >> +
+> >> +
+> >> +Specifying reset lines connected to IP modules
+> >> +==============================================
+> >> +
+> >> +The system reset controller can be used to reset various set of
+> >> +peripherals. Device nodes that need access to reset lines should
+> >> +specify them as a reset phandle in their corresponding node as
+> >> +specified in reset.txt.
+> >> +
+> >> +Example:
+> >> +
+> >> +     pcie: pcie@33800000 {
+> >> +
+> >> +             ...
+> >> +
+> >> +             resets = <&src IMX7_RESET_PCIEPHY>,
+> >> +                      <&src IMX7_RESET_PCIE_CTRL_APPS_EN>;
+> >> +             reset-names = "pciephy", "apps";
+> >> +
+> >> +             ...
+> >> +        };
+> >> +
+> >> +
+> >> +For list of all valid reset indicies see
+> >> +<dt-bindings/reset/imx7-reset.h>
+> >> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> >> index 172dc96..bea1800 100644
+> >> --- a/drivers/reset/Kconfig
+> >> +++ b/drivers/reset/Kconfig
+> >> @@ -27,6 +27,14 @@ config RESET_BERLIN
+> >>       help
+> >>         This enables the reset controller driver for Marvell Berlin SoCs.
+> >>
+> >> +config RESET_IMX7
+> >> +     bool "i.MX7 Reset Driver"
+> >> +     depends on SOC_IMX7D || COMPILE_TEST
+> >> +     select MFD_SYSCON
+> >> +     default SOC_IMX7D
+> >
+> > Can we make this
+> >
+> > config RESET_IMX7
+> >         bool "i.MX7 Reset Driver" if COMPILE_TEST
+> >         default SOC_IMX7D
+> >         select MFD_SYSCON
+> >
+> > instead?
+> >
+> > If you agree, I can fix it up while applying.
+> 
+> Sure, I have no problem with that change.
+
+Ok, thank you. Applied to reset/next.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
