@@ -1,202 +1,97 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [RESEND PATCH v6 2/6] i2c: designware: refactoring of the i2c-designware
-Date: Wed,  1 Mar 2017 15:59:42 +0000
-Message-ID: <6fabfa1a657d6bac108bd91f8ac33295a5086987.1488383202.git.lolivei@synopsys.com>
-References: <cover.1488383202.git.lolivei@synopsys.com>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <cover.1488383202.git.lolivei@synopsys.com>
-In-Reply-To: <cover.1488383202.git.lolivei@synopsys.com>
-References: <cover.1488383202.git.lolivei@synopsys.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+From: Jerome Forissier <jerome.forissier@linaro.org>
+Subject: Re: [PATCH] Documentation: dt: Add binding for
+ /chosen/secure-stdout-path
+Date: Wed, 1 Mar 2017 17:23:23 +0100
+Message-ID: <a1ca0933-5ca9-6bb9-5141-e9337e960735@linaro.org>
+References: <06154a2280a8423af80405825d7201c7aa927696.1488374335.git.jerome.forissier@linaro.org>
+ <CAL_JsqKrUCCvGD_LKvOx+s8zh30GC_v=HAyqozgRm=7mcfSZzw@mail.gmail.com>
+ <4847a1ee-caa7-509f-c540-ee3e1967ef7f@linaro.org>
+ <1a3382c5-57d5-9d99-1569-3211a1844192@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1a3382c5-57d5-9d99-1569-3211a1844192@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Maydell <peter.maydell@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jens Wiklander <jens.wiklander@linaro.org>, Christoffer Dall <christoffer.dall@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-- Factor out all _master() part of code from i2c-designware-core
-  and i2c-designware-platdrv to separate functions.
-- Standardize all code related with MASTER mode.
-- I have to take off DW_IC_INTR_TX_EMPTY from DW_IC_INTR_DEFAULT_MASK
-  because it is master specific.
 
-The purpose of this is to prepare the controller to have is I2C MASTER
-flow in a separate driver. To do this first all the
-functions/definitions related to the MASTER flow were identified.
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-V5->v6
-- Removed the __func__ of dev_dbg prints
-- Fix i2c_dw_configure_master() to accept dw_i2c_dev *
+On 03/01/2017 04:20 PM, Robin Murphy wrote:
+> On 01/03/17 15:04, Jerome Forissier wrote:
+>>
+>>
+>> On 03/01/2017 03:50 PM, Rob Herring wrote:
+>>> On Wed, Mar 1, 2017 at 7:29 AM, Jerome Forissier
+>>> <jerome.forissier@linaro.org> wrote:
+>>>> Some platforms may use a single device tree to describe two address
+>>>> spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+>>>> for Secure-only devices"). We extend the use of the secure- prefix to
+>>>> the stdout-path property, so that the Secure firmware may use a
+>>>> different console device than the one used by the kernel.
+>>>>
+>>>> Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/arm/secure.txt | 5 +++++
+>>>>  1 file changed, 5 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+>>>> index e31303f..558c9a1 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/secure.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/secure.txt
+>>>> @@ -51,3 +51,8 @@ Valid Secure world properties:
+>>>>     status = "disabled"; secure-status = "okay";     /* S-only */
+>>>>     status = "disabled";                             /* disabled in both */
+>>>>     status = "disabled"; secure-status = "disabled"; /* disabled in both */
+>>>> +
+>>>> +- secure-stdout-path (/chosen node): specifies the device to be used
+>>>> +for console output by Secure firmware. The syntax is the same as for
+>>>> +"stdout-path". If "secure-stdout-path" is not specified it defaults to
+>>>> +the same value as "stdout-path".
+>>>
+>>> I'm not all that enthusiastic about this. This alone is okay, but
+>>> continued additions of secure-* properties doesn't seem very scalable.
+>>> Is this it or do you have other needs? What happens when we have 3
+>>> modes/address spaces?
+>>
+>> How is this different from status/secure-status?
+>> I have no other needs for the moment. I'm experimenting with the
+>> introduction of DT in OP-TEE. The secure-status property (or lack
+>> thereof) already allows me to know if a device can be used by the secure
+>> OS and how it should be mapped (secure vs. non-secure). This extension
+>> allows me to reuse the same TEE binary and change the console, which is
+>> a simple use case to demonstrate the advantage of using the DT in the
+>> secure FW.
+> 
+> Once you start using DT in the secure OS, it doesn't seem too big a leap
+> for folks to want to start passing arguments, so I'd consider
+> secure-bootargs to be almost inevitable at *some* point down this road.
+> 
+> Perhaps we should consider a /secure-chosen node containing standard
+> properties instead...
 
- drivers/i2c/busses/i2c-designware-core.c    | 56 +++++++++++++++++------------
- drivers/i2c/busses/i2c-designware-platdrv.c | 31 +++++++++-------
- 2 files changed, 52 insertions(+), 35 deletions(-)
+Fine with me. I'll send a new patch.
 
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index 46937865ef8f..8b1b61f06a3f 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -87,10 +87,10 @@
- #define DW_IC_INTR_GEN_CALL	0x800
- 
- #define DW_IC_INTR_DEFAULT_MASK		(DW_IC_INTR_RX_FULL | \
--					 DW_IC_INTR_TX_EMPTY | \
- 					 DW_IC_INTR_TX_ABRT | \
- 					 DW_IC_INTR_STOP_DET)
--
-+#define DW_IC_INTR_MASTER_MASK		(DW_IC_INTR_DEFAULT_MASK | \
-+					 DW_IC_INTR_TX_EMPTY)
- #define DW_IC_STATUS_ACTIVITY	0x1
- 
- #define DW_IC_SDA_HOLD_RX_SHIFT		16
-@@ -202,6 +202,16 @@ static void dw_writel(struct dw_i2c_dev *dev, u32 b, int offset)
- 	}
- }
- 
-+static void i2c_dw_configure_fifo_master(struct dw_i2c_dev *dev)
-+{
-+	/* Configure Tx/Rx FIFO threshold levels */
-+	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
-+	dw_writel(dev, 0, DW_IC_RX_TL);
-+
-+	/* Configure the I2C master */
-+	dw_writel(dev, dev->master_cfg, DW_IC_CON);
-+}
-+
- static u32
- i2c_dw_scl_hcnt(u32 ic_clk, u32 tSYMBOL, u32 tf, int cond, int offset)
- {
-@@ -440,13 +450,7 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- 			"Hardware too old to adjust SDA hold time.\n");
- 	}
- 
--	/* Configure Tx/Rx FIFO threshold levels */
--	dw_writel(dev, dev->tx_fifo_depth / 2, DW_IC_TX_TL);
--	dw_writel(dev, 0, DW_IC_RX_TL);
--
--	/* Configure the I2C master */
--	dw_writel(dev, dev->master_cfg , DW_IC_CON);
--
-+	i2c_dw_configure_fifo_master(dev);
- 	i2c_dw_release_lock(dev);
- 
- 	return 0;
-@@ -511,7 +515,7 @@ static void i2c_dw_xfer_init(struct dw_i2c_dev *dev)
- 
- 	/* Clear and enable interrupts */
- 	dw_readl(dev, DW_IC_CLR_INTR);
--	dw_writel(dev, DW_IC_INTR_DEFAULT_MASK, DW_IC_INTR_MASK);
-+	dw_writel(dev, DW_IC_INTR_MASTER_MASK, DW_IC_INTR_MASK);
- }
- 
- /*
-@@ -531,7 +535,7 @@ i2c_dw_xfer_msg(struct dw_i2c_dev *dev)
- 	u8 *buf = dev->tx_buf;
- 	bool need_restart = false;
- 
--	intr_mask = DW_IC_INTR_DEFAULT_MASK;
-+	intr_mask = DW_IC_INTR_MASTER_MASK;
- 
- 	for (; dev->msg_write_idx < dev->msgs_num; dev->msg_write_idx++) {
- 		u32 flags = msgs[dev->msg_write_idx].flags;
-@@ -881,22 +885,14 @@ static u32 i2c_dw_read_clear_intrbits(struct dw_i2c_dev *dev)
- }
- 
- /*
-- * Interrupt service routine. This gets called whenever an I2C interrupt
-+ * Interrupt service routine. This gets called whenever an I2C master interrupt
-  * occurs.
-  */
--static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+static int i2c_dw_irq_handler_master(struct dw_i2c_dev *dev)
- {
--	struct dw_i2c_dev *dev = dev_id;
--	u32 stat, enabled;
--
--	enabled = dw_readl(dev, DW_IC_ENABLE);
--	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
--	dev_dbg(dev->dev, "%s: enabled=%#x stat=%#x\n", __func__, enabled, stat);
--	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
--		return IRQ_NONE;
-+	u32 stat;
- 
- 	stat = i2c_dw_read_clear_intrbits(dev);
--
- 	if (stat & DW_IC_INTR_TX_ABRT) {
- 		dev->cmd_err |= DW_IC_ERR_TX_ABRT;
- 		dev->status = STATUS_IDLE;
-@@ -931,6 +927,22 @@ static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
- 		dw_writel(dev, stat, DW_IC_INTR_MASK);
- 	}
- 
-+	return 0;
-+}
-+
-+static irqreturn_t i2c_dw_isr(int this_irq, void *dev_id)
-+{
-+	struct dw_i2c_dev *dev = dev_id;
-+	u32 stat, enabled;
-+
-+	enabled = dw_readl(dev, DW_IC_ENABLE);
-+	stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
-+	dev_dbg(dev->dev, "enabled=%#x stat=%#x\n", enabled, stat);
-+	if (!enabled || !(stat & ~DW_IC_INTR_ACTIVITY))
-+		return IRQ_NONE;
-+
-+	i2c_dw_irq_handler_master(dev);
-+
- 	return IRQ_HANDLED;
- }
- 
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index 381f0c1058b4..206dea03b0d0 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -140,6 +140,23 @@ static inline int dw_i2c_acpi_configure(struct platform_device *pdev)
- }
- #endif
- 
-+static void i2c_dw_configure_master(struct dw_i2c_dev *dev)
-+{
-+	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
-+			  DW_IC_CON_RESTART_EN;
-+
-+	switch (dev->clk_freq) {
-+	case 100000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_STD;
-+		break;
-+	case 3400000:
-+		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
-+		break;
-+	default:
-+		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
-+	}
-+}
-+
- static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
- {
- 	if (IS_ERR(i_dev->clk))
-@@ -246,19 +263,7 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
- 
- 	dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
- 
--	dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
--			  DW_IC_CON_RESTART_EN;
--
--	switch (dev->clk_freq) {
--	case 100000:
--		dev->master_cfg |= DW_IC_CON_SPEED_STD;
--		break;
--	case 3400000:
--		dev->master_cfg |= DW_IC_CON_SPEED_HIGH;
--		break;
--	default:
--		dev->master_cfg |= DW_IC_CON_SPEED_FAST;
--	}
-+	i2c_dw_configure_master(dev);
- 
- 	dev->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (!i2c_dw_plat_prepare_clk(dev, true)) {
--- 
-2.11.0
+>>> Maybe we should allow stdout-path to have multiple strings and secure
+>>> fw grabs the first one and updates the DT removing it (perhaps only if
+>>> the device is secure only). Might be nice to have multiple ones
+>>> supported anyway (like we can do on the kernel command line:
+>>> "console=ttyS0 console=ttyS1").
+>>
+>> The problem I see with removing entries is that the secure firmware may
+>> have multiple stages (say, ARM Trusted Firmware plus a secure OS such as
+>> OP-TEE).
+> 
+> ...which different elements of firmware would in theory have a lot more
+> freedom to mangle between boot stages without the risk of disrupting the
+> regular /chosen properties.
