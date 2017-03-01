@@ -1,152 +1,77 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 3/4] arm: dts: imx: Add iMX6Q-based Kontron SMARC-sAMX6i
- module
-Date: Wed, 1 Mar 2017 00:20:48 +0000
-Message-ID: <20170301002048.GG21222@n2100.armlinux.org.uk>
-References: <20170219202801.2082-1-plaes@plaes.org>
- <20170219202801.2082-4-plaes@plaes.org>
- <CAL_JsqJzP5e0fcM==cqkAe=x9Yf+H7i+k1H0udaknY_h6cbOSQ@mail.gmail.com>
- <20170228231010.GD21222@n2100.armlinux.org.uk>
- <CAL_Jsq+9EA72_Om4h3q3dGpDVAdkjDKsSkNU_S+3a81zaU73pA@mail.gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 24/36] [media] add Omnivision OV5640 sensor driver
+Date: Tue, 28 Feb 2017 16:43:59 -0800
+Message-ID: <7fcea7e2-b684-9824-a46d-46b5e250a728@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-25-git-send-email-steve_longerbeam@mentor.com>
+ <20170227144539.3la2veztkurhwa2p@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+9EA72_Om4h3q3dGpDVAdkjDKsSkNU_S+3a81zaU73pA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Priit Laes <plaes@plaes.org>, Heiko Stuebner <heiko@sntech.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Thierry Reding <treding@nvidia.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170227144539.3la2veztkurhwa2p@rob-hp-laptop>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, Steve Longerbeam <steve_longerbeam@mentor.com>, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 05:49:57PM -0600, Rob Herring wrote:
-> On Tue, Feb 28, 2017 at 5:10 PM, Russell King - ARM Linux
-> <linux@armlinux.org.uk> wrote:
-> > On Tue, Feb 28, 2017 at 05:06:02PM -0600, Rob Herring wrote:
-> >> On Sun, Feb 19, 2017 at 2:28 PM, Priit Laes <plaes@plaes.org> wrote:
-> >> > SMARC-sAMX6i is a SMARC (Smart Mobility Architecture) compliant
-> >> > module.
-> >> >
-> >> > Signed-off-by: Priit Laes <plaes@plaes.org>
-> >> > ---
-> >> >  arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi | 434 ++++++++++++++++++++++++++++++
-> >> >  1 file changed, 434 insertions(+)
-> >> >  create mode 100644 arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
-> >> >
-> >> > diff --git a/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
-> >> > new file mode 100644
-> >> > index 0000000..e3d7a35
-> >> > --- /dev/null
-> >> > +++ b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
-> >> > @@ -0,0 +1,434 @@
-> >> > +/*
-> >> > + * Copyright 2017 Priit Laes <plaes@plaes.org>
-> >> > + *
-> >> > + * Based on initial work by Nikita Yushchenko <nyushchenko at dev.rtsoft.ru>
-> >> > + *
-> >> > + * This file is dual-licensed: you can use it either under the terms
-> >> > + * of the GPL or the X11 license, at your option. Note that this dual
-> >> > + * licensing only applies to this file, and not this project as a
-> >> > + * whole.
-> >> > + *
-> >> > + *  a) This file is free software; you can redistribute it and/or
-> >> > + *     modify it under the terms of the GNU General Public License as
-> >> > + *     published by the Free Software Foundation; either version 2 of
-> >> > + *     the License, or (at your option) any later version.
-> >> > + *
-> >> > + *     This file is distributed in the hope that it will be useful,
-> >> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >> > + *     GNU General Public License for more details.
-> >> > + *
-> >> > + * Or, alternatively,
-> >> > + *
-> >> > + *  b) Permission is hereby granted, free of charge, to any person
-> >> > + *     obtaining a copy of this software and associated documentation
-> >> > + *     files (the "Software"), to deal in the Software without
-> >> > + *     restriction, including without limitation the rights to use,
-> >> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> >> > + *     sell copies of the Software, and to permit persons to whom the
-> >> > + *     Software is furnished to do so, subject to the following
-> >> > + *     conditions:
-> >> > + *
-> >> > + *     The above copyright notice and this permission notice shall be
-> >> > + *     included in all copies or substantial portions of the Software.
-> >> > + *
-> >> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> >> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> >> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> >> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> >> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> >> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> >> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> >> > + *     OTHER DEALINGS IN THE SOFTWARE.
-> >>
-> >> Use SPDX tags here:
-> >>
-> >> SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> >>
-> >> While it says X11, this is really MIT license text.
-> >
-> > No.  Read the FSF's page on licenses:
-> >
-> >    X11 License (#X11License)
-> > ...
-> >            This license is sometimes called the MIT license, but that term is
-> >            misleading, since MIT has used many licenses for software.
-> >
-> > Never use the term "MIT license", it's ambiguous, and I doubt that such
-> > a term (given the above) would stand up in a court of law as identifying
-> > any particular license.
-> 
-> The SPDX tags have a very exact, documented meaning. That's the point.
-> X11 means this[1]. MIT means this[2].
 
-Meanwhile, the FSF appears to disagree, so this creates work for
-solicitors (or lawyers if you're in the US) to have a field day.
 
-Also, if it was _this_ easy, we would have included a web URL to
-point at the license text since 1992 - but we haven't because it's
-a level of indirection that brings with it uncertainty.
+On 02/27/2017 06:45 AM, Rob Herring wrote:
+> On Wed, Feb 15, 2017 at 06:19:26PM -0800, Steve Longerbeam wrote:
+>> This driver is based on ov5640_mipi.c from Freescale imx_3.10.17_1.0.0_beta
+>> branch, modified heavily to bring forward to latest interfaces and code
+>> cleanup.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>> ---
+>>   .../devicetree/bindings/media/i2c/ov5640.txt       |   43 +
+> Please split to separate commit.
 
-Now, you could say "oh we worship the LF, we trust them, they're
-never going to do anything stupid, let's trust SPDX to always
-stay the same and exist" but IMHO that's letting emotional
-judgement cloud the legal issue.
+Done.
 
-There's also very little discussion on spdx.org about the legal
-side of this stuff.
+>
+>>   drivers/media/i2c/Kconfig                          |    7 +
+>>   drivers/media/i2c/Makefile                         |    1 +
+>>   drivers/media/i2c/ov5640.c                         | 2109 ++++++++++++++++++++
+>>   4 files changed, 2160 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>>   create mode 100644 drivers/media/i2c/ov5640.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>> new file mode 100644
+>> index 0000000..4607bbe
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>> @@ -0,0 +1,43 @@
+>> +* Omnivision OV5640 MIPI CSI-2 sensor
+>> +
+>> +Required Properties:
+>> +- compatible: should be "ovti,ov5640"
+>> +- clocks: reference to the xclk input clock.
+>> +- clock-names: should be "xclk".
+>> +- DOVDD-supply: Digital I/O voltage supply, 1.8 volts
+>> +- AVDD-supply: Analog voltage supply, 2.8 volts
+>> +- DVDD-supply: Digital core voltage supply, 1.5 volts
+>> +
+>> +Optional Properties:
+>> +- reset-gpios: reference to the GPIO connected to the reset pin, if any.
+>> +- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
+> Use powerdown-gpios here as that is a somewhat standard name.
 
-So, to me, this spdx stuff looks like a programmers solution to a
-legal problem, looks completely untested legally, and goes against
-recommended practices (which are to include the copyright plus the
-actual notice of intent - not copyright plus a level of indirection.)
+Done.
 
-As I said above, if it was this easy, we'd have been linking to
-(eg) fsf.org's copies of license texts for years or similar.
+>
+> Both need to state what is the active state.
 
-Now, with the FSF.org's different stance on X11 vs MIT compared
-to spdx.org identifying "MIT" differently, I suspect that there
-is ample room here for solicitors/lawyers to make a great deal
-of cash.
+Done.
 
-Another point here is... if LF and/or SPDX.org goes belly-up, or
-becomes unaccessible, eg, spdx.org's name registration expires and
-gets taken over by a rogue party - at that point, this SPDX stuff
-can mean _anything_.
-
-I do hope those who you've been recommending to use SPDX tags stop
-and think about it, and don't blindly follow what you're suggesting.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Steve
