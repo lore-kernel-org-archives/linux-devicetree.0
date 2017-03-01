@@ -1,69 +1,64 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v3 2/7] mmc: bcm2835: Add new driver for the sdhost controller.
-Date: Wed, 01 Mar 2017 10:00:55 -0800
-Message-ID: <87tw7c27xk.fsf@eliezer.anholt.net>
-References: <1487668026-7100-1-git-send-email-kraxel@redhat.com> <1487668026-7100-3-git-send-email-kraxel@redhat.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH v2 0/5] Refactor of ARM64 sunxi pinctrl enabling and add A64
+ R_PIO driver
+Date: Thu,  2 Mar 2017 02:01:06 +0800
+Message-ID: <20170301180111.12365-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1487668026-7100-3-git-send-email-kraxel@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, swarren@wwwdotorg.org, lee@kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Gerd Hoffmann <kraxel@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andre Przywara <andre.przywara@arm.com>
+Cc: linux-gpio@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Nearly all Allwinner SoCs need a per-SoC pinctrl driver, some will need one
+more for the R_PIO pin controller.
 
-Gerd Hoffmann <kraxel@redhat.com> writes:
+This patchset try to refactor the enabling method of pinctrl drivers for
+64-bit Allwinner SoCs, to prevent furthur change of Kconfig.platforms when
+adding new SoC support.
 
-> From: Eric Anholt <eric@anholt.net>
->
-> The 2835 has two SD controllers: The Arasan sdhci controller (supported
-> by the iproc driver) and a custom sdhost controller.  This patch adds a
-> driver for the latter.
->
-> The sdhci controller supports both sdcard and sdio.  The sdhost
-> controller supports the sdcard only, but has better performance.  Also
-> note that the rpi3 has sdio wifi, so driving the sdcard with the sdhost
-> controller allows to use the sdhci controller for wifi support.
->
-> The configuration is done by devicetree via pin muxing.  Both SD
-> controller are available on the same pins (2 pin groups = pin 22 to 27 +
-> pin 48 to 53).  So it's possible to use both SD controllers at the same
-> time with different pin groups.
->
-> The code was originally written by Phil Elwell in the downstream
-> Rasbperry Pi tree, and I did a major cleanup on it (+319, -707 lines
-> out of the original 2055) for inclusion.
->
-> Signed-off-by: Eric Anholt <eric@anholt.net>
+Thus, the R_PIO pin controller driver for A64 will be added, and use the
+new method to get it enabled when building 64-bit sunxi kernel.
 
-Ulf, what do you need done to this driver patch before it can go in?
-The commit message seems like it could use some rewriting at this point
-(Personally I would drop the detailed changelogs from Stefan and Gerd,
-updating the last paragraph here to give them credit), but what's
-important to me is getting the driver in so that distros don't have to
-carry this patch for wifi support.
+The first patch makes the default value of pinctrl drivers about 64-bit
+Allwinner SoCs (ARM64 && ARCH_SUNXI), which means 64-bit Allwinner SoCs.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+The second patch then clean up Kconfig.platforms. It must be applied after
+the first one, otherwise newly built 64-bit Allwinner kernel will have no
+pinctrl drivers and become unusable.
 
------BEGIN PGP SIGNATURE-----
+The third patch is only a small fix for a typo in H5 generic pinctrl
+compatible.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAli3DFcACgkQtdYpNtH8
-nuhmQQ/+KcTfXLSfCfr5vKCaHOtvahSSA6uS8r4KOQ3Dvnjzc+j5riPHFGKNPnh4
-I44JjGJw0KlAacdF1gJZl0DUmJ6iTR/je55iP7Qad52m6XPNos9LHbpZGSc+YFUG
-vabRNCoR2i+tbsZqzafudkgrdo+iup4PUmGt6iYji0YdEl3GUMgID95Pfqt2SEwy
-1vWIghXcRF5GHTutYx0B76ncb3uGzpMWjw9Y+qqCTJfdfezPrW8TgTLNXb97jrgk
-ApQ8qoLTB7C7QOfCYT1EzWkR0THEHVWKyIoUGwri4usvgIvf+rLvAxBYxSJ8U9Gi
-e3k/SmM1YPvd0Roh7Ti/l77kLy7pbSRYXfpT8rvPxZdAQ1+u02TofoXarYnG6Jhk
-4cyp7xlzi7xj5DDEmHv9xcEe9txYOMTyJuPnTydRfihG6NifyM30naAvIXNbc8Ir
-+9MjC6+lbJCet1B5Np23k+KXADrgslGug1qQ5jswWzGigmSDaP1rSQxwqTEEg/Rk
-tcynIlKrBLpBNyFAoLJYlbV9hvb3ZQI3DzWuZSUBdNLclNwMlJNyHQfjYJ9RSDCs
-LTKrgkJtrh/YFjHwOT9liZcXD1ECjfREsFkenyJvBM6TeG/RTfnku6/XLD3w4cSu
-iXN7zlbv1XJlvGl9Uq0vQFu+DQrmv6PtZRJyUVwJ/h9eDXB3dKs=
-=Buu5
------END PGP SIGNATURE-----
---=-=-=--
+The fourth patch adds compatible for A64 R_PIO pin controller.
+
+The fifth patch really introduces the A64 R_PIO pin controller driver,
+it still cannot be enabled in device tree, as we lack the R_CCU driver.
+
+Icenowy Zheng (5):
+  pinctrl: sunxi: refactor pinctrl choice selecting for ARM64
+  arm64: only select PINCTRL for Allwinner platforms
+  dt-bindings: fix for Allwinner H5 pinctrl's compatible
+  dt: bindings: add binding for Allwinner A64 R_PIO pinctrl
+  pinctrl: sunxi: Add A64 R_PIO controller support
+
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   3 +-
+ arch/arm64/Kconfig.platforms                       |   1 -
+ drivers/pinctrl/sunxi/Kconfig                      |  12 +-
+ drivers/pinctrl/sunxi/Makefile                     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c       | 125 +++++++++++++++++++++
+ 5 files changed, 136 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-a64-r.c
+
+-- 
+2.11.1
