@@ -1,112 +1,51 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Thu, 2 Mar 2017 15:48:39 -0800
-Message-ID: <141eb012-eb24-7558-2bc5-1fe82f6b7b4b@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [RFC v0 1/2] interconnect: Add generic interconnect controller API
+Date: Thu, 2 Mar 2017 15:53:35 -0800
+Message-ID: <15929d7a-65e5-f8ba-2fac-0381c5f8e8fc@infradead.org>
+References: <20170301182235.19154-1-georgi.djakov@linaro.org>
+ <20170301182235.19154-2-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170301182235.19154-2-georgi.djakov@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, gregkh@linuxfoundation.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, davidai@quicinc.com, skannan@codeaurora.org, khilman@baylibre.com, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 03/01/17 10:22, Georgi Djakov wrote:
+> 
+> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
+> new file mode 100644
+> index 000000000000..103524b59905
+> --- /dev/null
+> +++ b/drivers/interconnect/Kconfig
+> @@ -0,0 +1,10 @@
+> +menuconfig INTERCONNECT
+> +	bool "On-Chip Interconnect management support"
+
+Why isn't this symbol tristate instead of bool so that the
+interconnect management support can be built as a loadable module?
 
 
-On 03/02/2017 08:02 AM, Sakari Ailus wrote:
-> Hi Steve,
->
-> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
->> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
->> all subdev entities in a pipeline to a given video device.
->>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->> ---
->>  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
->>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
->>  2 files changed, 73 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
->> index 303980b..09d4d97 100644
->> --- a/drivers/media/v4l2-core/v4l2-mc.c
->> +++ b/drivers/media/v4l2-core/v4l2-mc.c
->> @@ -22,6 +22,7 @@
->>  #include <linux/usb.h>
->>  #include <media/media-device.h>
->>  #include <media/media-entity.h>
->> +#include <media/v4l2-ctrls.h>
->>  #include <media/v4l2-fh.h>
->>  #include <media/v4l2-mc.h>
->>  #include <media/v4l2-subdev.h>
->> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
->>  }
->>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
->>
->> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
->> +				     struct media_entity *start_entity)
->
-> I have a few concerns / questions:
->
-> - What's the purpose of this patch? Why not to access the sub-device node
->   directly?
+> +	help
+> +	  Support for management of the on-chip interconnects.
+> +
+> +	  This framework is designed to provide a generic interface for
+> +          managing the interconnects in a SoC.
+> +
+> +	  If unsure, say no.
+> +
 
 
-I don't really understand what you are trying to say. That's exactly
-what this function is doing, accessing every subdevice in a pipeline
-directly, in one convenient function call.
-
-
->
-> - This implementation is only workable as long as you do not modify the
->   pipeline. Once you disable a link along the pipeline, a device where the
->   control was inherited from may no longer be a part of the pipeline.
-
-That's correct. It's up to the media driver to clear the video device's
-inherited controls whenever the pipeline is modified, and then call this
-function again if need be.
-
-In imx-media driver, the function is called in link_setup when the link 
-from a source pad that is attached to a capture video node is enabled.
-This is the last link that must be made to define the pipeline, so it
-is at this time that a complete list of subdevice controls can be
-gathered by walking the pipeline.
-
-
->   Depending on the hardware, it could be a part of another pipeline, in
->   which case it certainly must not be accessible through an unrelated video
->   node. As the function is added to the framework, I would expect it to
->   handle such a case correctly.
-
-The function will not inherit controls from a device that is not
-reachable from the given starting subdevice, so I don't understand
-you're point here.
-
-
->
-> - I assume it is the responsibility of the caller of this function to ensure
->   the device in question will not be powered off whilst the video node is
->   used as another user space interface to such a sub-device. If the driver
->   uses the generic PM functions in the same file, this works, but it still
->   has to be documented.
-
-I guess I'm missing something. Why are you bringing up the subject of
-power? What does this function have to do with whether a subdevice is
-powered or not? The function makes use of v4l2_ctrl_add_handler(), and
-the latter has no requirements about whether the device's owning the
-control handlers are powered or not.
-
-
-Steve
+-- 
+~Randy
