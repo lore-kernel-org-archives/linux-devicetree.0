@@ -1,57 +1,112 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4 v3] ARM: gemini: select
-	MIGHT_HAVE_PCI
-Date: Fri, 3 Mar 2017 00:31:31 +0100
-Message-ID: <CACRpkdZ-9tZPNOnMvA7-Rudg7QPVs=N5SPBd+i59EFb4VjmSYA@mail.gmail.com>
-References: <20170227190720.31409-1-linus.walleij@linaro.org>
- <20170227190720.31409-3-linus.walleij@linaro.org>
- <20170302162931.tyngslqsr2axy5qx@rob-hp-laptop>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Thu, 2 Mar 2017 15:48:39 -0800
+Message-ID: <141eb012-eb24-7558-2bc5-1fe82f6b7b4b@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-In-Reply-To: <20170302162931.tyngslqsr2axy5qx@rob-hp-laptop>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Rob Herring <robh@kernel.org>
-Cc: openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Greentime Hu <green.hu@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMiwgMjAxNyBhdCA1OjI5IFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPiB3cm90ZToKPiBPbiBNb24sIEZlYiAyNywgMjAxNyBhdCAwODowNzoxOVBNICswMTAwLCBM
-aW51cyBXYWxsZWlqIHdyb3RlOgo+PiBBcyB3ZSBoYXZlIGEgUENJIGRyaXZlciBmb3IgdGhlIEdl
-bWluaSwgd2Ugc2hvdWxkIHNlbGVjdAo+PiBNSUdIVF9IQVZFX1BDSS4KPj4KPj4gQ2M6IEphbm9z
-IExhdWJlIDxqYW5vcy5kZXZAZ21haWwuY29tPgo+PiBDYzogUGF1bGl1cyBaYWxlY2thcyA8cGF1
-bGl1cy56YWxlY2thc0BnbWFpbC5jb20+Cj4+IENjOiBIYW5zIFVsbGkgS3JvbGwgPHVsbGkua3Jv
-bGxAZ29vZ2xlbWFpbC5jb20+Cj4+IENjOiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdt
-YWlsLmNvbT4KPj4gQ2M6IEZlbmctSHNpbiBDaGlhbmcgPGpvaG40NTNAZmFyYWRheS10ZWNoLmNv
-bT4KPj4gQ2M6IEdyZWVudGltZSBIdSA8Z3JlZW4uaHVAZ21haWwuY29tPgo+PiBTaWduZWQtb2Zm
-LWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4+IC0tLQo+PiBD
-aGFuZ2VMb2cgdjEtPnYyLT52MzoKPj4gLSBObyBjaGFuZ2VzCj4+Cj4+IFBDSSBtYWludGFpbmVy
-czogdGhpcyBpcyBGWUkgb25seSwgSSB3aWxsIGZ1bm5lbCB0aGlzIHRvIHRoZSBBUk0KPj4gU29D
-IHRyZWUgb25jZSB3ZSBhcmUgZG9uZSB3aXRoIHRoZSBQQ0kgZHJpdmVyLgo+PiAtLS0KPj4gIGFy
-Y2gvYXJtL21hY2gtZ2VtaW5pL0tjb25maWcgfCAxICsKPj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1nZW1pbmkvS2NvbmZp
-ZyBiL2FyY2gvYXJtL21hY2gtZ2VtaW5pL0tjb25maWcKPj4gaW5kZXggYTVlZTVmYmFiNzk2Li4y
-MWY4OWE0YzE2ZmUgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL21hY2gtZ2VtaW5pL0tjb25maWcK
-Pj4gKysrIGIvYXJjaC9hcm0vbWFjaC1nZW1pbmkvS2NvbmZpZwo+PiBAQCAtNiw2ICs2LDcgQEAg
-bWVudWNvbmZpZyBBUkNIX0dFTUlOSQo+PiAgICAgICBzZWxlY3QgRlRUTVIwMTBfVElNRVIKPj4g
-ICAgICAgc2VsZWN0IEdQSU9fR0VNSU5JCj4+ICAgICAgIHNlbGVjdCBHUElPTElCCj4+ICsgICAg
-IHNlbGVjdCBNSUdIVF9IQVZFX1BDSQo+Cj4gRG9lc24ndCBNdWx0aS1wbGF0Zm9ybSBkbyB0aGlz
-IGZvciB5b3U/CgpPaCBpdCBkb2VzLCBJIGp1c3QgbWlzc2VkIHRoYXQuCgo+IElmIG5vdCwgSU1P
-LCB3ZSBzaG91bGQgZG8gdGhhdAo+IG9yIGtpbGwgdGhpcyBvcHRpb24uIFdlIGRvbid0IGRvIGFu
-IG9wdGlvbiBsaWtlIHRoaXMgZm9yIEkyQywgU1BJLAo+IGRpc3BsYXksIGFueXRoaW5nIGVsc2Ug
-KHdlbGwsIGV4Y2VwdCBHUElPTElCIDspKS4KCkkga2lsbGVkIEFSQ0hfV0FOVF9PUFRJT05BTF9H
-UElPTElCIGF0IGxlYXN0CnRoYXQgdGhpbmcgd2FzIHJlYWxseSBjb25mdXNpbmcuCgpNYXliZSB3
-ZSBzaG91bGQgaGF2ZSBNVUxUSVBMQVRGT1JNIHNlbGVjdApHUElPTElCIHRvby4KCllvdXJzLApM
-aW51cyBXYWxsZWlqCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCm9wZW53cnQtZGV2ZWwgbWFpbGluZyBsaXN0Cm9wZW53cnQtZGV2ZWxAbGlzdHMub3Blbndy
-dC5vcmcKaHR0cHM6Ly9saXN0cy5vcGVud3J0Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8v
-b3BlbndydC1kZXZlbAo=
+
+
+On 03/02/2017 08:02 AM, Sakari Ailus wrote:
+> Hi Steve,
+>
+> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
+>> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
+>> all subdev entities in a pipeline to a given video device.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>> ---
+>>  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
+>>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
+>>  2 files changed, 73 insertions(+)
+>>
+>> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
+>> index 303980b..09d4d97 100644
+>> --- a/drivers/media/v4l2-core/v4l2-mc.c
+>> +++ b/drivers/media/v4l2-core/v4l2-mc.c
+>> @@ -22,6 +22,7 @@
+>>  #include <linux/usb.h>
+>>  #include <media/media-device.h>
+>>  #include <media/media-entity.h>
+>> +#include <media/v4l2-ctrls.h>
+>>  #include <media/v4l2-fh.h>
+>>  #include <media/v4l2-mc.h>
+>>  #include <media/v4l2-subdev.h>
+>> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+>>  }
+>>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
+>>
+>> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+>> +				     struct media_entity *start_entity)
+>
+> I have a few concerns / questions:
+>
+> - What's the purpose of this patch? Why not to access the sub-device node
+>   directly?
+
+
+I don't really understand what you are trying to say. That's exactly
+what this function is doing, accessing every subdevice in a pipeline
+directly, in one convenient function call.
+
+
+>
+> - This implementation is only workable as long as you do not modify the
+>   pipeline. Once you disable a link along the pipeline, a device where the
+>   control was inherited from may no longer be a part of the pipeline.
+
+That's correct. It's up to the media driver to clear the video device's
+inherited controls whenever the pipeline is modified, and then call this
+function again if need be.
+
+In imx-media driver, the function is called in link_setup when the link 
+from a source pad that is attached to a capture video node is enabled.
+This is the last link that must be made to define the pipeline, so it
+is at this time that a complete list of subdevice controls can be
+gathered by walking the pipeline.
+
+
+>   Depending on the hardware, it could be a part of another pipeline, in
+>   which case it certainly must not be accessible through an unrelated video
+>   node. As the function is added to the framework, I would expect it to
+>   handle such a case correctly.
+
+The function will not inherit controls from a device that is not
+reachable from the given starting subdevice, so I don't understand
+you're point here.
+
+
+>
+> - I assume it is the responsibility of the caller of this function to ensure
+>   the device in question will not be powered off whilst the video node is
+>   used as another user space interface to such a sub-device. If the driver
+>   uses the generic PM functions in the same file, this works, but it still
+>   has to be documented.
+
+I guess I'm missing something. Why are you bringing up the subject of
+power? What does this function have to do with whether a subdevice is
+powered or not? The function makes use of v4l2_ctrl_add_handler(), and
+the latter has no requirements about whether the device's owning the
+control handlers are powered or not.
+
+
+Steve
