@@ -1,121 +1,107 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to
- NO_BOOTMEM
-Date: Wed, 1 Mar 2017 19:06:54 -0800
-Message-ID: <a40b3b32-ba86-66d7-a5bb-4df42eb5cd62@gmail.com>
-References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
- <7c333d34-fda6-9302-b84e-c0785c23733e@imgtec.com>
+From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/4] iio: accel: adxl345: Split driver into core and
+ I2C then add SPI support
+Date: Thu, 2 Mar 2017 11:02:23 +0800
+Message-ID: <20170302030221.GA4026@Socrates-UM>
+References: <cover.1488248485.git.eraretuya@gmail.com>
+ <CAHp75VdtqNAf_PaWBL=YPc9iz=E-0tAz2=Fk-mDYSeBvtU+KYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <7c333d34-fda6-9302-b84e-c0785c23733e@imgtec.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Marcin Nowakowski <marcin.nowakowski@imgtec.com>, Serge Semin <fancer.lancer@gmail.com>, ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdtqNAf_PaWBL=YPc9iz=E-0tAz2=Fk-mDYSeBvtU+KYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/22/2017 11:55 PM, Marcin Nowakowski wrote:
-> Hi Serge,
+On Thu, Mar 02, 2017 at 01:22:11AM +0200, Andy Shevchenko wrote:
+> On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > This patchset modifies the adxl345 to use regmap. In doing so, we can
+> > easily introduce SPI support and let regmap handle the rest.
+> >
+> > Recap of basic features: read_raw for x, y and z axes, scale. After
+> > applying this series, driver now supports the SPI protocol and enumeration
+> > of device via device tree.
 > 
-> Thanks for this patch series, it's really useful. I've tested it on
-> Malta and Ci40 and it seems to work well (I've posted a few small
-> comments separately).
-
-I have not tested this yet, but this is definitively a very useful patch
-series, thanks a lot for doing this Serge!
-
-One thing that was not obvious to me is that you may have to take care
-of the "NOMAP" memblock type and avoid mapping these regions, which may
-or may not be relevant on MIPS due to the different virtual memory
-model. On ARM it's done in arch/arm/mm/mmu.c::map_lowmem.
-
-Please respin, this is very helpful!
-
-> 
-> 
-> On 19.12.2016 03:07, Serge Semin wrote:
->> Most of the modern platforms supported by linux kernel have already
->> been cleaned up of old bootmem allocator by moving to nobootmem
->> interface wrapping up the memblock. This patchset is the first
->> attempt to do the similar improvement for MIPS for UMA systems
->> only.
->>
->> Even though the porting was performed as much careful as possible
->> there still might be problem with support of some platforms,
->> especially Loonson3 or SGI IP27, which perform early memory manager
->> initialization by their self.
-> 
->> The patchset is split so individual patch being consistent in
->> functional and buildable ways. But the MIPS early memory manager
->> will work correctly only either with or without the whole set being
->> applied. For the same reason a reviewer should not pay much attention
->> to methods bootmem_init(), arch_mem_init(), paging_init() and
->> mem_init() until they are fully refactored.
-> 
-> I'm not sure this can be merged that way? It would be up to Ralf to
-> decide, but it is generally expected that all intermediate patches not
-> only build, but also work correctly. I understand that this might be
-> difficult to achieve given the scale of changes required here.
-> 
->> The patchset is applied on top of kernel v4.9.
-> 
-> Can you please work on cleaning up the issues discussed in the comments
-> so far as well as rebasing (and updating) the changes onto linux-next?
-> There are a few patches I made related to kexec and kernel relocation
-> that will force changes in your code (although I admit that the changes
-> I did for kexec/relocation were in some places unnecessarily complex
-> because of the mess in the bootmem handling in MIPS that you are now
-> trying to clean up).
-> 
-> 
-> Thanks,
-> Marcin
-> 
->> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
->>
->> Serge Semin (21):
->>   MIPS memblock: Unpin dts memblock sanity check method
->>   MIPS memblock: Add dts mem and reserved-mem callbacks
->>   MIPS memblock: Alter traditional add_memory_region() method
->>   MIPS memblock: Alter user-defined memory parameter parser
->>   MIPS memblock: Alter initrd memory reservation method
->>   MIPS memblock: Alter kexec-crashkernel parameters parser
->>   MIPS memblock: Alter elfcorehdr parameters parser
->>   MIPS memblock: Move kernel parameters parser into individual method
->>   MIPS memblock: Move kernel memory reservation to individual method
->>   MIPS memblock: Discard bootmem allocator initialization
->>   MIPS memblock: Add memblock sanity check method
->>   MIPS memblock: Add memblock print outs in debug
->>   MIPS memblock: Add memblock allocator initialization
->>   MIPS memblock: Alter IO resources initialization method
->>   MIPS memblock: Alter weakened MAAR initialization method
->>   MIPS memblock: Alter paging initialization method
->>   MIPS memblock: Alter high memory freeing method
->>   MIPS memblock: Slightly improve buddy allocator init method
->>   MIPS memblock: Add print out method of kernel virtual memory layout
->>   MIPS memblock: Add free low memory test method call
->>   MIPS memblock: Deactivate old bootmem allocator
->>
->>  arch/mips/Kconfig        |   2 +-
->>  arch/mips/kernel/prom.c  |  32 +-
->>  arch/mips/kernel/setup.c | 958 +++++++++++++++--------------
->>  arch/mips/mm/init.c      | 234 ++++---
->>  drivers/of/fdt.c         |  47 +-
->>  include/linux/of_fdt.h   |   1 +
->>  6 files changed, 739 insertions(+), 535 deletions(-)
->>
+> If I knew you are going to send new version I would have commented on v4...
 > 
 
--- 
-Florian
+Hi Andy,
+
+Please state your comments and I will submit a new revision.
+
+Thanks,
+Eva
+
+> >
+> > Changes from v4:
+> > [PATCH 1/4]
+> > * Update subject-prefix
+> > * Update node name from "adxl345@unit-address" to "accelerometer@unit-address"
+> > Patches 2-4
+> > * Add Andy's Reviewed-by tag
+> >
+> > Changes from v3:
+> > [PATCH 1/4]
+> > * None
+> > [PATCH 2/4]
+> > * Keep intact I2C client structure which was deleted from v3
+> > * Make use of regmap_get_device to retrieve struct device, use these for
+> >   debugging prints instead of &client->dev.
+> > [PATCH 3/4] and [PATCH 4/4]
+> > * Revert to explicit and separate I2C and SPI configuration
+> > * Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
+> >
+> > Changes from v2:
+> > * Drop PATCH 4 iio: accel: adxl345: Add ACPI support
+> > * Add OF match table on both I2C and SPI files and document them
+> >
+> > Changes from v1:
+> > [PATCH 1/4]
+> > * Move other deletions from patch 2 in here -- make it clear what got deleted
+> >   and/or modified that is hard to see previously
+> > * Introduce the driver header file "adxl345.h" here instead of doing it in the
+> >   next patch
+> > * Completely omit traces of i2c_client and let this file (adxl345.c) mirror the
+> >   core file on the next patch.
+> > * Improve debugging print about invalid device ID in probe.
+> > [PATCH 2/4]
+> > * Update Kconfig to Jonathan's preferred style
+> > * Improve similarity index from 78% to 100% (rename detection)
+> > [PATCH 4/4]
+> > * Correct acpi_device_id: ADX0345 -> ADS0345
+> >
+> > Eva Rachel Retuya (4):
+> >   dt-bindings: iio: accel: Document ADXL345 accelerometer binding
+> >   iio: accel: adxl345: Use I2C regmap instead of direct I2C access
+> >   iio: accel: adxl345: Split driver into core and I2C
+> >   iio: accel: adxl345: Add SPI support
+> >
+> >  .../devicetree/bindings/iio/accel/adxl345.txt      | 38 +++++++++
+> >  drivers/iio/accel/Kconfig                          | 26 ++++++-
+> >  drivers/iio/accel/Makefile                         |  4 +-
+> >  drivers/iio/accel/adxl345.h                        | 18 +++++
+> >  drivers/iio/accel/{adxl345.c => adxl345_core.c}    | 89 +++++++++-------------
+> >  drivers/iio/accel/adxl345_i2c.c                    | 78 +++++++++++++++++++
+> >  drivers/iio/accel/adxl345_spi.c                    | 83 ++++++++++++++++++++
+> >  7 files changed, 281 insertions(+), 55 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
+> >  create mode 100644 drivers/iio/accel/adxl345.h
+> >  rename drivers/iio/accel/{adxl345.c => adxl345_core.c} (62%)
+> >  create mode 100644 drivers/iio/accel/adxl345_i2c.c
+> >  create mode 100644 drivers/iio/accel/adxl345_spi.c
+> >
+> > --
+> > 2.7.4
+> >
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
