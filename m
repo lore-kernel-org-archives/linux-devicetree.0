@@ -1,73 +1,87 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2 net-next 10/16] net: mvpp2: handle register mapping
- and access for PPv2.2
-Date: Thu, 2 Mar 2017 09:45:33 +0100
-Message-ID: <20170302094533.5e6dfe93@free-electrons.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1482943592-12556-11-git-send-email-thomas.petazzoni@free-electrons.com>
-        <20170106144648.GE14217@n2100.armlinux.org.uk>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Thu, 2 Mar 2017 09:54:56 +0100
+Message-ID: <20170302085456.GA27818@amd>
+References: <20161224152031.GA8420@amd>
+ <20170203123508.GA10286@amd>
+ <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
+ <20170208223017.GA18807@amd>
+ <CAL_JsqKSHvg+iB-SRd=YthauGP8mWeVF0j8X-fgLchwtOppH8A@mail.gmail.com>
+ <CAL_JsqLfbAxBbXOyK0QOCc=wPe6=a+qyrAwtdbt3DtspK6oiaw@mail.gmail.com>
+ <20170210195435.GA1615@amd>
+ <20170210221742.GI13854@valkosipuli.retiisi.org.uk>
+ <20170213095420.GA7065@amd>
+ <20170213102034.GI16975@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170106144648.GE14217-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Chulski <stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170213102034.GI16975@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Fri, 6 Jan 2017 14:46:48 +0000, Russell King - ARM Linux wrote:
+--jRHKVT23PllUwdXP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> I'm not entirely sure this is the best solution - every register access
-> will be wrapped with a preempt_disable() and preempt_enable().  At
-> every site, when preempt is enabled, we will end up with code to:
-> 
-> - get the thread info
-> - increment the preempt count
-> - access the register
-> - decrement the preempt count
-> - test resulting preempt count and branch to __preempt_schedule()
-> 
-> If tracing is enabled, it gets much worse, because the increment and
-> decrement happen out of line, and are even more expensive.
-> 
-> If a function is going to make several register accesses, it's going
-> to be much more efficient to do:
-> 
-> 	void __iomem *base = priv->cpu_base[get_cpu()];
-> 
-> 	...
-> 
-> 	put_cpu();
-> 
-> which means we don't end up with multiple instances of the preempt code
-> consecutive accesses.
+On Mon 2017-02-13 12:20:35, Sakari Ailus wrote:
+> Hi Pavel,
+>=20
+> On Mon, Feb 13, 2017 at 10:54:20AM +0100, Pavel Machek wrote:
+> > Hi!
+> >=20
+> > > > Take a look at the wikipedia. If you do "one at a time" at 100Hz, y=
+ou
+> > > > can claim it is time-domain multiplex. But we are plain switching t=
+he
+> > > > cameras. It takes second (or so) to setup the pipeline.
+> > > >=20
+> > > > This is not multiplex.
+> > >=20
+> > > The functionality is still the same, isn't it? Does it change what it=
+ is if
+> > > the frequency might be 100 Hz or 0,01 Hz?
+> >=20
+> > Well. In your living your you can have a switch, which is switch at
+> > much less than 0.01Hz. You can also have a dimmer, which is a PWM,
+> > which is switch at 100Hz or so. So yes, I'd say switch and mux are
+> > different things.
+>=20
+> Light switches are mostly on/off switches. It'd be interesting to have a
+> light switch that you could use to light either of the light bulbs in a r=
+oom
+> but not to switch both of them on at the same time. Or off... :-)
+>=20
+> I wonder if everyone would be happy with a statement saying that it's a
+> on / on switch which is used to implement a multiplexer?
 
-In the next version, these accessors have been reworked. After getting
-more details about the HW, it turned out that disabling preemption is
-not at all necessary. We just have some global registers (can be
-accessed through any per-CPU window) and some per-CPU registers (must
-be accessed from a specific per-CPU window), with the trick that
-certain sequences of register read/write must occur from the same
-per-CPU window.
+I believe the difference is the timescale. If it switches "slow" it is
+a switch. If it switches fast, it is a dimmer, mux, or something....
 
-So we'll have mvpp2_{read,write} that read/write through the register
-window of CPU0, used for all non-per CPU register accesses. And we'll
-have mvpp2_percpu_{read,write}, taking an additional "cpu" argument,
-used for per-CPU register accesses. Thanks to "cpu" being passed as
-argument, the caller can ensure the same cpu window is used to do
-several reads/writes in a row.
+Anyway, someone else was faster, so they get to name their creation...
 
-Best regards,
+									Pavel
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--jRHKVT23PllUwdXP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAli33eAACgkQMOfwapXb+vIFUgCeP5MP4Ffn+ZAGpA/pIXtj4z1M
+H1QAoJoj6bKMmhWIPr+W5dIKWuqifQSq
+=mtaR
+-----END PGP SIGNATURE-----
+
+--jRHKVT23PllUwdXP--
