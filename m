@@ -1,66 +1,90 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: bcm5301x: Add TWD WD Support to DT
-Date: Thu, 2 Mar 2017 19:54:22 +0100
-Message-ID: <de705b40-1a8a-faef-846e-3635682671f6@gmail.com>
-References: <1488313886-17155-1-git-send-email-jon.mason@broadcom.com>
- <1488313886-17155-2-git-send-email-jon.mason@broadcom.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 1/2] arc: axs10x: Add DT bindings for I2S audio playback
+Date: Thu, 2 Mar 2017 18:57:19 +0000
+Message-ID: <1488481038.2684.14.camel@synopsys.com>
+References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488313886-17155-2-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
+Content-Language: en-US
+Content-ID: <30D0E2AEBD7C7B49B13887A610C2895A@internal.synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2017 09:31 PM, Jon Mason wrote:
-> From: Jon Mason <jonmason@broadcom.com>
->
-> Add support for the ARM TWD Watchdog to the bcm5301x device tree.  The
-> ARM TWD timer allocated the register space for the WDT, so this patch
-> necessitated shrinking that.  Also, the GIC masks were added for these.
->
-> Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> ---
->  arch/arm/boot/dts/bcm5301x.dtsi | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-> index 4fbb089..3fbc450 100644
-> --- a/arch/arm/boot/dts/bcm5301x.dtsi
-> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-> @@ -70,10 +70,19 @@
->  			clocks = <&periph_clk>;
->  		};
->
-> -		local-timer@20600 {
-> +		timer@20600 {
->  			compatible = "arm,cortex-a9-twd-timer";
-> -			reg = <0x20600 0x100>;
-> -			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg = <0x20600 0x20>;
-> +			interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-> +						  IRQ_TYPE_LEVEL_HIGH)>;
-> +			clocks = <&periph_clk>;
-> +		};
-
-If you follow my recent e-mail thread:
-BCM5301X: GIC: PPI11 is secure or misconfigured (same for PPI13)
-you'll see IRQ_TYPE_LEVEL_HIGH type isn't correct. It should be
-IRQ_TYPE_EDGE_RISING.
-
-I believe patch switching to IRQ_TYPE_EDGE_RISING should be sent with Cc stable
-for kernels 4.8+.
-
-The same change is needed for "arm,cortex-a9-global-timer".
-
-Would you find time to revise this patch?
+SGkgSm9zZSwNCg0KT24gV2VkLCAyMDE3LTAyLTIyIGF0IDE4OjE5ICswMDAwLCBKb3NlIEFicmV1
+IHdyb3RlOg0KPiBUaGlzIHBhdGNoIGFkZHMgdGhlIG5lY2Vzc2FyeSBEVCBiaW5kaW5ncyB0byBn
+ZXQgSERNSSBhdWRpbw0KPiBvdXRwdXQgaW4gQVJDIEFYUzEweCBTRFAuIFRoZSBiaW5kaW5ncyBm
+b3IgSTJTIGNvbnRyb2xsZXIgd2VyZQ0KPiBhZGRlZCBhcyB3ZWxsIGFzIHRoZSBiaW5kaW5ncyBm
+b3Igc2ltcGxlIGF1ZGlvIGNhcmQuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBKb3NlIEFicmV1IDxq
+b2FicmV1QHN5bm9wc3lzLmNvbT4NCj4gQ2M6IENhcmxvcyBQYWxtaW5oYSA8cGFsbWluaGFAc3lu
+b3BzeXMuY29tPg0KPiBDYzogQWxleGV5IEJyb2RraW4gPGFicm9ka2luQHN5bm9wc3lzLmNvbT4N
+Cj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+IENjOiBWaW5lZXQgR3Vw
+dGEgPHZndXB0YUBzeW5vcHN5cy5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+Zw0KPiBDYzogbGludXgtc25wcy1hcmNAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBDYzogbGludXgt
+a2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiAtLS0NCj4gwqBhcmNoL2FyYy9ib290L2R0cy9heHMx
+MHhfbWIuZHRzaSB8IDIyICsrKysrKysrKysrKysrKysrKy0tLS0NCj4gwqAxIGZpbGUgY2hhbmdl
+ZCwgMTggaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9h
+cmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaSBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4czEw
+eF9tYi5kdHNpDQo+IGluZGV4IGQ2YzFiYmMuLjlkODgyYjEgMTAwNjQ0DQo+IC0tLSBhL2FyY2gv
+YXJjL2Jvb3QvZHRzL2F4czEweF9tYi5kdHNpDQo+ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4
+czEweF9tYi5kdHNpDQo+IEBAIC0xNDksMTIgKzE0OSwxMyBAQA0KPiDCoAkJCWludGVycnVwdHMg
+PSA8MTQ+Ow0KPiDCoAkJfTsNCj4gwqANCj4gLQkJaTJjQDB4MWUwMDAgew0KPiAtCQkJY29tcGF0
+aWJsZSA9ICJzbnBzLGRlc2lnbndhcmUtaTJjIjsNCj4gKwkJaTJzOiBpMnNAMWUwMDAgew0KPiAr
+CQkJY29tcGF0aWJsZSA9ICJzbnBzLGRlc2lnbndhcmUtaTJzIjsNCj4gwqAJCQlyZWcgPSA8MHgx
+ZTAwMCAweDEwMD47DQo+IC0JCQljbG9jay1mcmVxdWVuY3kgPSA8NDAwMDAwPjsNCj4gLQkJCWNs
+b2NrcyA9IDwmaTJjY2xrPjsNCj4gKwkJCWNsb2NrcyA9IDwmaTJzY2xrIDA+Ow0KPiArCQkJY2xv
+Y2stbmFtZXMgPSAiaTJzY2xrIjsNCj4gwqAJCQlpbnRlcnJ1cHRzID0gPDE1PjsNCj4gKwkJCSNz
+b3VuZC1kYWktY2VsbHMgPSA8MD47DQo+IMKgCQl9Ow0KPiDCoA0KPiDCoAkJaTJjQDB4MWYwMDAg
+ew0KPiBAQCAtMTc0LDYgKzE3NSw3IEBADQo+IMKgCQkJCWFkaSxpbnB1dC1jb2xvcnNwYWNlID0g
+InJnYiI7DQo+IMKgCQkJCWFkaSxpbnB1dC1jbG9jayA9ICIxeCI7DQo+IMKgCQkJCWFkaSxjbG9j
+ay1kZWxheSA9IDwweDAzPjsNCj4gKwkJCQkjc291bmQtZGFpLWNlbGxzID0gPDA+Ow0KPiDCoA0K
+PiDCoAkJCQlwb3J0cyB7DQo+IMKgCQkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4gQEAgLTI5
+NSw1ICsyOTcsMTcgQEANCj4gwqAJCQkJfTsNCj4gwqAJCQl9Ow0KPiDCoAkJfTsNCj4gKw0KPiAr
+CQlzb3VuZF9wbGF5YmFjayB7DQo+ICsJCQljb21wYXRpYmxlID0gInNpbXBsZS1hdWRpby1jYXJk
+IjsNCj4gKwkJCXNpbXBsZS1hdWRpby1jYXJkLG5hbWUgPSAiQVhTMTB4IEhETUkgQXVkaW8iOw0K
+PiArCQkJc2ltcGxlLWF1ZGlvLWNhcmQsZm9ybWF0ID0gImkycyI7DQo+ICsJCQlzaW1wbGUtYXVk
+aW8tY2FyZCxjcHUgew0KPiArCQkJCXNvdW5kLWRhaSA9IDwmaTJzPjsNCj4gKwkJCX07DQo+ICsJ
+CQlzaW1wbGUtYXVkaW8tY2FyZCxjb2RlYyB7DQo+ICsJCQkJc291bmQtZGFpID0gPCZhZHY3NTEx
+PjsNCj4gKwkJCX07DQo+ICsJCX07DQo+IMKgCX07DQo+IMKgfTsNCg0KSnVzdCBmb3IgdGhlIHNh
+a2Ugb2YgaGlzdG9yeSB0aGF0J3MgbXkgbW9kcyB0byBkZWZjb25maWcgdGhhdCBhbGxvd2VkIG1l
+DQp0byBwbGF5IC5wY20gdmlhIEhETUkgZnJvbSBheHMxMDMgYm9hcmQ6DQotLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLT44LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJjL2NvbmZpZ3MvYXhzMTAzX3NtcF9kZWZjb25maWcgYi9hcmNoL2Fy
+Yy9jb25maWdzL2F4czEwM19zbXBfZGVmY29uZmlnDQppbmRleCAzMGEzZDRjZjUzZDIuLmIxMTM2
+MmEzMmU0ZSAxMDA2NDQNCi0tLSBhL2FyY2gvYXJjL2NvbmZpZ3MvYXhzMTAzX3NtcF9kZWZjb25m
+aWcNCisrKyBiL2FyY2gvYXJjL2NvbmZpZ3MvYXhzMTAzX3NtcF9kZWZjb25maWcNCkBAIC02Nywy
+NSArNjcsMjkgQEAgQ09ORklHX01PVVNFX1BTMl9UT1VDSEtJVD15DQrCoENPTkZJR19NT1VTRV9T
+RVJJQUw9eQ0KwqBDT05GSUdfTU9VU0VfU1lOQVBUSUNTX1VTQj15DQrCoCMgQ09ORklHX0xFR0FD
+WV9QVFlTIGlzIG5vdCBzZXQNCi0jIENPTkZJR19ERVZLTUVNIGlzIG5vdCBzZXQNCsKgQ09ORklH
+X1NFUklBTF84MjUwPXkNCsKgQ09ORklHX1NFUklBTF84MjUwX0NPTlNPTEU9eQ0KwqBDT05GSUdf
+U0VSSUFMXzgyNTBfRFc9eQ0KwqBDT05GSUdfU0VSSUFMX09GX1BMQVRGT1JNPXkNCsKgIyBDT05G
+SUdfSFdfUkFORE9NIGlzIG5vdCBzZXQNCi1DT05GSUdfSTJDPXkNCsKgQ09ORklHX0kyQ19DSEFS
+REVWPXkNCsKgQ09ORklHX0kyQ19ERVNJR05XQVJFX1BMQVRGT1JNPXkNCsKgIyBDT05GSUdfSFdN
+T04gaXMgbm90IHNldA0KLUNPTkZJR19EUk09bQ0KLUNPTkZJR19EUk1fSTJDX0FEVjc1MTE9bQ0K
+LUNPTkZJR19EUk1fQVJDUEdVPW0NCi1DT05GSUdfRkI9eQ0KK0NPTkZJR19EUk09eQ0KK0NPTkZJ
+R19EUk1fSTJDX0FEVjc1MTE9eQ0KK0NPTkZJR19EUk1fSTJDX0FEVjc1MTFfQVVESU89eQ0KK0NP
+TkZJR19EUk1fQVJDUEdVPXkNCsKgQ09ORklHX0ZSQU1FQlVGRkVSX0NPTlNPTEU9eQ0KwqBDT05G
+SUdfTE9HTz15DQrCoCMgQ09ORklHX0xPR09fTElOVVhfTU9OTyBpcyBub3Qgc2V0DQrCoCMgQ09O
+RklHX0xPR09fTElOVVhfVkdBMTYgaXMgbm90IHNldA0KwqAjIENPTkZJR19MT0dPX0xJTlVYX0NM
+VVQyMjQgaXMgbm90IHNldA0KK0NPTkZJR19TT1VORD15DQorQ09ORklHX1NORD15DQorQ09ORklH
+X1NORF9TT0M9eQ0KK0NPTkZJR19TTkRfREVTSUdOV0FSRV9JMlM9eQ0KK0NPTkZJR19TTkRfREVT
+SUdOV0FSRV9QQ009eQ0KK0NPTkZJR19TTkRfU0lNUExFX0NBUkQ9eQ0KwqBDT05GSUdfVVNCX0VI
+Q0lfSENEPXkNCsKgQ09ORklHX1VTQl9FSENJX0hDRF9QTEFURk9STT15DQrCoENPTkZJR19VU0Jf
+T0hDSV9IQ0Q9eQ0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0+OC0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0KQW55d2F5cy4uLg0KDQpBY2tlZC1ieTogQWxleGV5IEJy
+b2RraW4gPGFicm9ka2luQHN5bm9wc3lzLmNvbT4KX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtc25wcy1hcmMgbWFpbGluZyBsaXN0CmxpbnV4LXNu
+cHMtYXJjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1zbnBzLWFyYw==
