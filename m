@@ -1,119 +1,234 @@
-From: Jonathan Richardson <jonathan.richardson@broadcom.com>
-Subject: Re: [PATCH v4 2/3] mailbox: Add iProc mailbox controller driver
-Date: Thu, 2 Mar 2017 13:03:12 -0800
-Message-ID: <22d07bb1-9e93-4ae5-7215-923bde9ebfe5@broadcom.com>
-References: <1485463082-27067-1-git-send-email-jonathan.richardson@broadcom.com>
- <1485463082-27067-3-git-send-email-jonathan.richardson@broadcom.com>
- <CABb+yY0rmAFutskhVkQ926QfsvtJ-WnXrQc=+PQNg=7NZEXC+Q@mail.gmail.com>
- <09177a6f-0612-1e17-a12e-0b1969f5b2e1@broadcom.com>
- <CABb+yY1o7QTYLm3HGWNeFDPnfpL7AAJ6+R91Stn-gNvO7afxoA@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
+ nvmem API
+Date: Thu, 2 Mar 2017 22:18:03 +0100
+Message-ID: <20170302221803.223ff23b@bbrezillon>
+References: <1488484223-844-1-git-send-email-albeu@free.fr>
+ <1488484223-844-3-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY1o7QTYLm3HGWNeFDPnfpL7AAJ6+R91Stn-gNvO7afxoA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, Vikram Prakash <vikram.prakash@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1488484223-844-3-git-send-email-albeu@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Alban <albeu@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu,  2 Mar 2017 20:50:22 +0100
+Alban <albeu@free.fr> wrote:
+
+> Allow drivers that use the nvmem API to read data stored on MTD devices.
+> This add a simple mtd user that register itself as a read-only nvmem
+> device.
+> 
+> Signed-off-by: Alban <albeu@free.fr>
+
+Just a few comments, but it looks pretty good already.
+
+> ---
+>  drivers/mtd/Kconfig    |   9 ++++
+>  drivers/mtd/Makefile   |   1 +
+>  drivers/mtd/mtdnvmem.c | 121 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 131 insertions(+)
+>  create mode 100644 drivers/mtd/mtdnvmem.c
+> 
+> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+> index e83a279..9cad86c 100644
+> --- a/drivers/mtd/Kconfig
+> +++ b/drivers/mtd/Kconfig
+> @@ -322,6 +322,15 @@ config MTD_PARTITIONED_MASTER
+>  	  the parent of the partition device be the master device, rather than
+>  	  what lies behind the master.
+>  
+> +config MTD_NVMEM
+> +	tristate "Read config data from MTD devices"
+> +	default y
+> +	depends on NVMEM
+> +	help
+> +	  Provides support for reading config data from MTD devices. This can
+> +	  be used by drivers to read device specific data such as MAC addresses
+> +	  or calibration results.
+> +
+>  source "drivers/mtd/chips/Kconfig"
+>  
+>  source "drivers/mtd/maps/Kconfig"
+> diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+> index 99bb9a1..f62f50b 100644
+> --- a/drivers/mtd/Makefile
+> +++ b/drivers/mtd/Makefile
+> @@ -26,6 +26,7 @@ obj-$(CONFIG_SSFDC)		+= ssfdc.o
+>  obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
+>  obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
+>  obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
+> +obj-$(CONFIG_MTD_NVMEM)		+= mtdnvmem.o
+>  
+>  nftl-objs		:= nftlcore.o nftlmount.o
+>  inftl-objs		:= inftlcore.o inftlmount.o
+> diff --git a/drivers/mtd/mtdnvmem.c b/drivers/mtd/mtdnvmem.c
+> new file mode 100644
+> index 0000000..6eb4216
+> --- /dev/null
+> +++ b/drivers/mtd/mtdnvmem.c
+> @@ -0,0 +1,121 @@
+> +/*
+> + * Copyright (C) 2017 Alban Bedel <albeu@free.fr>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/nvmem-consumer.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +
+> +struct mtd_nvmem {
+> +	struct list_head list;
+> +	struct mtd_info *mtd;
+> +	struct nvmem_device *nvmem;
+> +};
+> +
+> +static DEFINE_MUTEX(mtd_nvmem_list_lock);
+> +static LIST_HEAD(mtd_nvmem_list);
+
+I was wondering if we should have the nvmem pointer directly embedded
+in the mtd_info struct. Your approach has the benefit of keeping then
+nvmem wrapper completely independent, which is a good thing, but you'll
+see below that there's a problem with the MTD notifier approach.
+
+> +
+> +static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
+> +			      void *val, size_t bytes)
+> +{
+> +	struct mtd_info *mtd = priv;
+> +	size_t retlen;
+> +	int err;
+> +
+> +	err = mtd_read(mtd, offset, bytes, &retlen, val);
+> +	if (err && err != -EUCLEAN)
+> +		return err;
+> +
+> +	return retlen == bytes ? 0 : -EIO;
+> +}
+> +
+> +static void mtd_nvmem_add(struct mtd_info *mtd)
+> +{
+> +	struct device *dev = &mtd->dev;
+> +	struct device_node *np = dev_of_node(dev);
+> +	struct nvmem_config config = {};
+> +	struct mtd_nvmem *mtd_nvmem;
+> +
+> +	/* OF devices have to provide the nvmem node */
+> +	if (np && !of_property_read_bool(np, "nvmem-provider"))
+> +		return;
+
+Might have to be adapted according to the DT binding if we decide to
+add an extra subnode, but then, I'm not sure the nvmem cells creation
+will work correctly, because the framework expect nvmem cells to be
+direct children of the nvmem device, which will no longer be the case
+if you add an intermediate node between the MTD device node and the
+nvmem cell nodes.
+
+> +
+> +	config.dev = dev;
+> +	config.owner = THIS_MODULE;
+> +	config.reg_read = mtd_nvmem_reg_read;
+> +	config.size = mtd->size;
+> +	config.word_size = 1;
+> +	config.stride = 1;
+> +	config.read_only = true;
+> +	config.priv = mtd;
+> +
+> +	/* Alloc our struct to keep track of the MTD NVMEM devices */
+> +	mtd_nvmem = kzalloc(sizeof(*mtd_nvmem), GFP_KERNEL);
+> +	if (!mtd_nvmem)
+> +		return;
+> +
+> +	mtd_nvmem->mtd = mtd;
+> +	mtd_nvmem->nvmem = nvmem_register(&config);
+> +	if (IS_ERR(mtd_nvmem->nvmem)) {
+> +		dev_err(dev, "Failed to register NVMEM device\n");
+> +		kfree(mtd_nvmem);
+> +		return;
+> +	}
+> +
+> +	mutex_lock(&mtd_nvmem_list_lock);
+> +	list_add_tail(&mtd_nvmem->list, &mtd_nvmem_list);
+> +	mutex_unlock(&mtd_nvmem_list_lock);
+> +}
+> +
+> +static void mtd_nvmem_remove(struct mtd_info *mtd)
+> +{
+> +	struct mtd_nvmem *mtd_nvmem;
+> +	bool found = false;
+> +
+> +	mutex_lock(&mtd_nvmem_list_lock);
+> +	list_for_each_entry(mtd_nvmem, &mtd_nvmem_list, list) {
+> +		if (mtd_nvmem->mtd == mtd) {
+> +			list_del(&mtd_nvmem->list);
+> +			found = true;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&mtd_nvmem_list_lock);
+> +
+> +	if (found) {
+> +		if (nvmem_unregister(mtd_nvmem->nvmem))
+> +			dev_err(&mtd->dev,
+> +				"Failed to unregister NVMEM device\n");
+
+Ouch! You failed to unregister the NVMEM device but you have no way to
+stop MTD dev removal, which means you have a potential use-after-free
+bug. Not sure this can happen in real life, but I don't like that.
+
+Maybe we should let notifiers return an error if they want to cancel
+the removal, or maybe this is a good reason to put the nvmem pointer
+directly in mtd_info and call mtd_nvmem_add/remove() directly from
+add/del_mtd_device() and allow them to return an error.
+
+Not that, if you go for this solution, you'll also get rid of the
+global mtd_nvmem_list list and the associated lock.
+
+> +		kfree(mtd_nvmem);
+> +	}
+> +}
+> +
+> +static struct mtd_notifier mtd_nvmem_notifier = {
+> +	.add = mtd_nvmem_add,
+> +	.remove = mtd_nvmem_remove,
+> +};
+> +
+> +static int __init mtd_nvmem_init(void)
+> +{
+> +	register_mtd_user(&mtd_nvmem_notifier);
+> +	return 0;
+> +}
+> +module_init(mtd_nvmem_init);
+> +
+> +static void __exit mtd_nvmem_exit(void)
+> +{
+> +	unregister_mtd_user(&mtd_nvmem_notifier);
+> +}
+> +module_exit(mtd_nvmem_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Alban Bedel <albeu@free.fr>");
+> +MODULE_DESCRIPTION("Driver to read config data from MTD devices");
 
 
-On 17-02-23 09:00 PM, Jassi Brar wrote:
-> On Fri, Feb 24, 2017 at 12:29 AM, Jonathan Richardson
-> <jonathan.richardson@broadcom.com> wrote:
->>
->> On 17-02-16 10:20 PM, Jassi Brar wrote:
->>> On Fri, Jan 27, 2017 at 2:08 AM, Jonathan Richardson
->>> <jonathan.richardson@broadcom.com> wrote:
->>>
->>>> +static int iproc_mbox_send_data_m0(struct mbox_chan *chan, void *data)
->>>> +{
->>>> +       struct iproc_mbox *mbox = dev_get_drvdata(chan->mbox->dev);
->>>> +       struct iproc_mbox_msg *msg = (struct iproc_mbox_msg *)data;
->>>> +               unsigned long flags;
->>>> +       int err = 0;
->>>> +       const int poll_period_us = 5;
->>>> +       const int max_retries = (MAX_M0_TIMEOUT_MS * 1000) / poll_period_us;
->>>> +
->>>> +       if (!msg)
->>>> +               return -EINVAL;
->>>> +
->>>> +       spin_lock_irqsave(&mbox->lock, flags);
->>>> +
->>>> +       dev_dbg(mbox->dev, "Send msg to M0: cmd=0x%x, param=0x%x, wait_ack=%d\n",
->>>> +               msg->cmd, msg->param, msg->wait_ack);
->>>> +
->>> prints should be outside the spinlocks.
->>>
->>>> +       writel(msg->cmd, mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
->>>> +       writel(msg->param, mbox->base + IPROC_CRMU_MAILBOX1_OFFSET);
->>>> +
->>>> +       if (msg->wait_ack) {
->>>> +               int retries;
->>>> +
->>> move poll_period_us and max_retries in here or just define' them
->>>
->>>> +               err = msg->reply_code = -ETIMEDOUT;
->>>> +               for (retries = 0; retries < max_retries; retries++) {
->>>> +                       u32 val = readl(
->>>> +                               mbox->base + IPROC_CRMU_MAILBOX0_OFFSET);
->>>> +                       if (val & M0_IPC_CMD_DONE_MASK) {
->>>> +                               /*
->>>> +                                * M0 replied - save reply code and
->>>> +                                * clear error.
->>>> +                                */
->>>> +                               msg->reply_code = (val &
->>>> +                                       M0_IPC_CMD_REPLY_MASK) >>
->>>> +                                       M0_IPC_CMD_REPLY_SHIFT;
->>>> +                               err = 0;
->>>> +                               break;
->>>> +                       }
->>>> +                       udelay(poll_period_us);
->>>>
->>> potentially 2ms inside spin_lock_irqsave. Alternative is to implement
->>> a simple 'peek_data' and call it for requests with 'wait_ack'
->> Hi Jassi. The M0 response is normally 25-30 us.
->>
-> You hardcode the behaviour of your protocol in the controller driver.
-> What if your next platform/protocol has commands that the remote/M0
-> takes upto 10ms to respond (because they are not critical/trivial)?
->
-> If you don't have some h/w indicator (like irq or bit-flag) for
-> tx-done and data-rx , you have to use ack-by-client and peek method.
-There isn't any functionality not in the driver. We write the message to two registers and poll another to know when it's complete. Nothing can touch the registers again until the operation is complete. We can't even pass data back to the controller. We pass pointers to the M0 and it can write to the memory. The only data we sent back to the client is that status code from the polled register. When complete, data will already be written into the clients memory from the M0.
-> Commands that don't get a response will be immediately followed by
-> mbox_client_txdone(), while others would need to call peek_data() to
-> poll for data-rx. Please note, if you implement the tx_prepare
-> callback, you will know when to start peeking for incoming data.
-The driver will need to block access to the registers if we remove the spinlock. If a client sends a message that doesn't get a response and another client has already sent a message that does which is pending, it still needs to be blocked.
-
-The framework queues messages on a per channel basis. We have several clients for various drivers each with their own mbox channel. send_data in the controller could return EBUSY if the channel is being used by another channel (ie- transaction pending). If channel A sends a message, then client B sends one before A is complete, the controller's send_data must return an error. The message remains in the queue until tx_tick is called to re-submit it again. Client A polls the controller until complete then calls mbox_client_txdone. Client B can poll the controller but first needs a way of submitting the queued message again (via tx_tick->msg_submit). Using the ACK model I see no way client B can know when to start polling (ie- when client A's message was completed) or even kick off the msg_su
- bmit again. The submitting of messages from the queue to controller's send_data relies on knowing when sending a prior message on the channel was complete. It doesn't know when another
-channel's message has been sent. The only way I can see this working is using one channel shared among clients. We don't want to add any additional queuing of messages in the controller when the framework already does it (per channel). Hope this makes sense. Thanks.
-
->> We have one message that takes 280us but we can get rid of it if necessary.
->>
-> No. Please don't kill some needed feature just to make the driver simpler.
->
->> Regarding your suggestion of peek_data. I don't see how it can be used
->> without the spinlock to serialize multiple clients/channels over a single
->> mailbox channel. peek_data is going to allow the client to poll for data.
->> But the spinlock is there to prevent other clients from accessing the
->> mailbox channel until any pending transaction is complete. last_tx_done
->> looks like an option but even that will not prevent another client from
->> clobbering a pending transaction. A shared channel among all clients
->> with a blocking model would probably work, but not pretty.
->>
-> Mailbox api provides exclusive access to its clients, just like dma-engine.
-> Please have a look at how other platforms do it.
-
-> Thanks.
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
