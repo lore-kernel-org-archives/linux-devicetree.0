@@ -1,137 +1,173 @@
-From: matthew.gerlach@linux.intel.com
-Subject: [PATCH v4 4/4] fpga pr ip: Platform driver for Altera Partial Reconfiguration IP.
-Date: Thu,  2 Mar 2017 07:57:12 -0800
-Message-ID: <1488470232-20412-5-git-send-email-matthew.gerlach@linux.intel.com>
-References: <1488470232-20412-1-git-send-email-matthew.gerlach@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1488470232-20412-1-git-send-email-matthew.gerlach@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: atull@opensource.altera.com, moritz.fischer@ettus.com, linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Thu, 2 Mar 2017 18:02:57 +0200
+Message-ID: <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Hi Steve,
 
-This adds a platform bus driver for a fpga-mgr driver
-that uses the Altera Partial Reconfiguration IP component.
+On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
+> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
+> all subdev entities in a pipeline to a given video device.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
+>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
+>  2 files changed, 73 insertions(+)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
+> index 303980b..09d4d97 100644
+> --- a/drivers/media/v4l2-core/v4l2-mc.c
+> +++ b/drivers/media/v4l2-core/v4l2-mc.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/usb.h>
+>  #include <media/media-device.h>
+>  #include <media/media-entity.h>
+> +#include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-fh.h>
+>  #include <media/v4l2-mc.h>
+>  #include <media/v4l2-subdev.h>
+> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+>  }
+>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
+>  
+> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				     struct media_entity *start_entity)
 
-v3:
-    s/altr,pr-ip/altr,a10-pr-ip/
-    s/alt_pr_probe/alt_pr_register/
-    s/alt_pr_remove/alt_pr_unregister/
-    fix error found by kbuild robot with more precise Kconfig depends
+I have a few concerns / questions:
 
-v2: s/altr,pr-ip-core/altr,pr-ip/
-====================
+- What's the purpose of this patch? Why not to access the sub-device node
+  directly?
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
----
- drivers/fpga/Kconfig                  |  7 ++++
- drivers/fpga/Makefile                 |  1 +
- drivers/fpga/altera-pr-ip-core-plat.c | 65 +++++++++++++++++++++++++++++++++++
- 3 files changed, 73 insertions(+)
- create mode 100644 drivers/fpga/altera-pr-ip-core-plat.c
+- This implementation is only workable as long as you do not modify the
+  pipeline. Once you disable a link along the pipeline, a device where the
+  control was inherited from may no longer be a part of the pipeline.
+  Depending on the hardware, it could be a part of another pipeline, in
+  which case it certainly must not be accessible through an unrelated video
+  node. As the function is added to the framework, I would expect it to
+  handle such a case correctly.
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index a46c173..0c51427 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -68,6 +68,13 @@ config ALTERA_PR_IP_CORE
-         help
-           Core driver support for Altera Partial Reconfiguration IP component
- 
-+config ALTERA_PR_IP_CORE_PLAT
-+	tristate "Platform support of Altera Partial Reconfiguration IP Core"
-+	depends on ALTERA_PR_IP_CORE && OF && HAS_IOMEM
-+	help
-+	  Platform driver support for Altera Partial Reconfiguration IP
-+	  component
-+
- endif # FPGA
- 
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 82693d2..5b8ae2b 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
- obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
- obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
-+obj-$(CONFIG_ALTERA_PR_IP_CORE_PLAT)    += altera-pr-ip-core-plat.o
- 
- # FPGA Bridge Drivers
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
-diff --git a/drivers/fpga/altera-pr-ip-core-plat.c b/drivers/fpga/altera-pr-ip-core-plat.c
-new file mode 100644
-index 0000000..cff189a
---- /dev/null
-+++ b/drivers/fpga/altera-pr-ip-core-plat.c
-@@ -0,0 +1,65 @@
-+/*
-+ * Driver for Altera Partial Reconfiguration IP Core
-+ *
-+ * Copyright (C) 2016-2017 Intel Corporation
-+ *
-+ * Based on socfpga-a10.c Copyright (C) 2015-2016 Altera Corporation
-+ *  by Alan Tull <atull@opensource.altera.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include "altera-pr-ip-core.h"
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+
-+static int alt_pr_platform_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	void __iomem *reg_base;
-+	struct resource *res;
-+
-+	/* First mmio base is for register access */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+
-+	reg_base = devm_ioremap_resource(dev, res);
-+
-+	if (IS_ERR(reg_base))
-+		return PTR_ERR(reg_base);
-+
-+	return alt_pr_register(dev, reg_base);
-+}
-+
-+static int alt_pr_platform_remove(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	return alt_pr_unregister(dev);
-+}
-+
-+static const struct of_device_id alt_pr_of_match[] = {
-+	{ .compatible = "altr,a10-pr-ip", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, alt_pr_of_match);
-+
-+static struct platform_driver alt_pr_platform_driver = {
-+	.probe = alt_pr_platform_probe,
-+	.remove = alt_pr_platform_remove,
-+	.driver = {
-+		.name	= "alt_a10_pr_ip",
-+		.of_match_table = alt_pr_of_match,
-+	},
-+};
-+
-+module_platform_driver(alt_pr_platform_driver);
+- I assume it is the responsibility of the caller of this function to ensure
+  the device in question will not be powered off whilst the video node is
+  used as another user space interface to such a sub-device. If the driver
+  uses the generic PM functions in the same file, this works, but it still
+  has to be documented.
+
+> +{
+> +	struct media_device *mdev = start_entity->graph_obj.mdev;
+> +	struct media_entity *entity;
+> +	struct media_graph graph;
+> +	struct v4l2_subdev *sd;
+> +	int ret;
+> +
+> +	ret = media_graph_walk_init(&graph, mdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	media_graph_walk_start(&graph, start_entity);
+> +
+> +	while ((entity = media_graph_walk_next(&graph))) {
+> +		if (!is_media_entity_v4l2_subdev(entity))
+> +			continue;
+> +
+> +		sd = media_entity_to_v4l2_subdev(entity);
+> +
+> +		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
+> +					    sd->ctrl_handler,
+> +					    NULL);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	media_graph_walk_cleanup(&graph);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(__v4l2_pipeline_inherit_controls);
+> +
+> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				   struct media_entity *start_entity)
+> +{
+> +	struct media_device *mdev = start_entity->graph_obj.mdev;
+> +	int ret;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +	ret = __v4l2_pipeline_inherit_controls(vfd, start_entity);
+> +	mutex_unlock(&mdev->graph_mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_inherit_controls);
+> +
+>  /* -----------------------------------------------------------------------------
+>   * Pipeline power management
+>   *
+> diff --git a/include/media/v4l2-mc.h b/include/media/v4l2-mc.h
+> index 2634d9d..9848e77 100644
+> --- a/include/media/v4l2-mc.h
+> +++ b/include/media/v4l2-mc.h
+> @@ -171,6 +171,17 @@ void v4l_disable_media_source(struct video_device *vdev);
+>   */
+>  int v4l_vb2q_enable_media_source(struct vb2_queue *q);
+>  
+> +/**
+> + * v4l2_pipeline_inherit_controls - Add the v4l2 controls from all
+> + *				    subdev entities in a pipeline to
+> + *				    the given video device.
+> + * @vfd: the video device
+> + * @start_entity: Starting entity
+> + */
+> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				     struct media_entity *start_entity);
+> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				   struct media_entity *start_entity);
+>  
+>  /**
+>   * v4l2_pipeline_pm_use - Update the use count of an entity
+> @@ -231,6 +242,20 @@ static inline int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+>  	return 0;
+>  }
+>  
+> +static inline int __v4l2_pipeline_inherit_controls(
+> +	struct video_device *vfd,
+> +	struct media_entity *start_entity)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int v4l2_pipeline_inherit_controls(
+> +	struct video_device *vfd,
+> +	struct media_entity *start_entity)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int v4l2_pipeline_pm_use(struct media_entity *entity, int use)
+>  {
+>  	return 0;
+
 -- 
-2.7.4
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
