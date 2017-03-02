@@ -1,13 +1,11 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: imx50: imx50-esdhc use imx53-esdhc
-Date: Thu, 2 Mar 2017 19:12:42 -0300
-Message-ID: <CAOMZO5CK=EijB651LC74Wn=hFAs10wmjxvaCGgGrQ8+XcaF1kw@mail.gmail.com>
-References: <1488488628-11711-1-git-send-email-akurz@blala.de>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] ARM: dts: mvebu: remove unnecessary PCI range from 98dx3236
+Date: Fri,  3 Mar 2017 11:42:39 +1300
+Message-ID: <20170302224239.10062-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488488628-11711-1-git-send-email-akurz@blala.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,17 +15,32 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Kurz <akurz@blala.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-arm-kernel@lists.infradead.org, gregory.clement@free-electrons.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 2, 2017 at 6:03 PM, Alexander Kurz <akurz@blala.de> wrote:
-> According to the reference manuals, both imx50/imx53 SOC seem to share
-> the same eSDHC controller, especially the section on "Multi-block Read"
-> mentioned in commit 361b8482026c ("mmc: sdhci-esdhc-imx: fix multiblock
-> reads on i.MX53") is identical for both SOC.
-> Hence, let imx50 use imx53-esdhc.
->
-> Signed-off-by: Alexander Kurz <akurz@blala.de>
+The Marvell 98dx3236 SoC only has a single PCIe x1 interface. The "Port
+0.1 MEM" range was errantly kept when creating a specific dts for the
+SoC.
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index f6a03dcee5ef..0e63f927c73d 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -95,8 +95,7 @@
+ 			ranges =
+ 			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000   /* Port 0.0 registers */
+ 				0x82000000 0x1 0       MBUS_ID(0x04, 0xe8) 0 1 0 /* Port 0.0 MEM */
+-				0x81000000 0x1 0       MBUS_ID(0x04, 0xe0) 0 1 0 /* Port 0.0 IO  */
+-				0x82000000 0x2 0       MBUS_ID(0x04, 0xd8) 0 1 0 /* Port 0.1 MEM */>;
++				0x81000000 0x1 0       MBUS_ID(0x04, 0xe0) 0 1 0 /* Port 0.0 IO  */>;
+ 
+ 			pcie1: pcie@1,0 {
+ 				device_type = "pci";
+-- 
+2.11.0.24.ge6920cf
