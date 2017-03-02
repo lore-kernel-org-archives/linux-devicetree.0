@@ -1,94 +1,64 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 1/9] devicetree: power: Add battery.txt
-Date: Thu, 2 Mar 2017 09:14:49 -0600
-Message-ID: <20170302151449.j7i3ecpy2ipxu6tq@rob-hp-laptop>
-References: <20170227071117.18934-1-liam@networkimprov.net>
- <20170227071117.18934-2-liam@networkimprov.net>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 0/2] switch to atomic PWM
+Date: Thu, 2 Mar 2017 17:28:43 +0200
+Message-ID: <1488468525-28726-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170227071117.18934-2-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com
+Cc: linux-pwm@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 26, 2017 at 11:11:09PM -0800, Liam Breck wrote:
-> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-> 
-> Documentation of static battery characteristics that can be defined
-> for batteries which cannot self-identify. This information is required
-> by fuel-gauge and charger chips for proper handling of the battery.
-> 
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-> ---
->  .../devicetree/bindings/power/supply/battery.txt   | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> new file mode 100644
-> index 0000000..3d916bd
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -0,0 +1,42 @@
-> +Battery Characteristics
-> +
-> +Required Properties:
-> + - compatible: Must be "fixed-battery"
+Changes since v1:
+- update only duty factor without disabling the PWM channel
+- if PWM channel is enabled, period, as signal polarity, is
+updated by disabling + enabling the PWM channel
+- atmel_pwm_config_prepare() function has been removed and
+added instead two functions, one to compute the CPRD+Prescaler
+(atmel_pwm_calculate_cprd_and_pres()), one to compute CRDY
+(atmel_pwm_calculate_cdty())
+- atmel_pwm_config_set() body was directly moved to atmel_pwm_apply()
+- add 3 new members to atmel_pwm_data: update_cdty, set_cprd_cdty and
+regs:
+	- update_cdty is called to configure duty factor without
+	disabling PWM channel, when necessary
+	- set_cprd_cdty is called to configure both period and
+	duty factor parameters
+	- regs keeps the period and duty registers and was added to
+	have common functions for update_cdty and set_cprd_cdty
+	members of atmel_pwm_data for all boards;
+- add a new parameter to atmel_pwm_disable(); this will be used in
+updating period + signal polarity by disabling + enabling the
+PWM channel. In this case, there is no need to disable PWM clock
+since new configuration will be imediately applied.
+- adapted the other reviewer comments excepts the one regarding
+"cdty = cprd - cycles;" from atmel_pwm_calculate_cdty() since
+in atmel_pwm_apply(), selecting polarity in the other way arround
+than is currently done in this commit will need the changing of DPOLI
+bit from Channel Mode Register, in order to keep the initial
+output level of PWM channel after disable operation; this works
+for sama5d2 but not for sam9rl which hasn't document the DPOLI
+bit in datasheet; sama5d3 also hasn't document the DPOLI bit in
+datasheet; one option was to have different aproach for different
+boards but the code becomes messy.
 
-Still not liking this name, but I don't have a better suggestion. Please 
-describe here what is and isn't a "fixed battery".
+Claudiu Beznea (2):
+  drivers: pwm: pwm-atmel: switch to atomic PWM
+  drivers: pwm: pwm-atmel: enable PWM on sama5d2
 
-> +
-> +Optional Properties:
-> + - voltage-min-design-microvolt: drained battery voltage
-> + - energy-full-design-microwatt-hours: battery design energy
-> + - charge-full-design-microamp-hours: battery design capacity
-> +
-> +Future Properties must be named for the corresponding elements in
-> +enum power_supply_property, defined in include/linux/power_supply.h.
+ .../devicetree/bindings/pwm/atmel-pwm.txt          |   1 +
+ drivers/pwm/pwm-atmel.c                            | 274 +++++++++++----------
+ 2 files changed, 142 insertions(+), 133 deletions(-)
 
-Um, no. That's exactly not how DT bindings should be done.
-
-> +
-> +Batteries must be referenced by chargers and/or fuel-gauges
-> +using a phandle. The phandle's property should be named
-> +"monitored-battery".
-> +
-> +Driver code should call power_supply_get_battery_info() to obtain
-> +battery properties via monitored-battery. For details see:
-> +  drivers/power/supply/power_supply_core.c
-> +  drivers/power/supply/bq27xxx_battery.c
-> +
-> +Example:
-> +
-> +	bat: battery {
-> +		compatible = "fixed-battery";
-> +		voltage-min-design-microvolt = <3200000>;
-> +		energy-full-design-microwatt-hours = <5290000>;
-> +		charge-full-design-microamp-hours = <1430000>;
-> +	};
-> +
-> +	charger: charger@11 {
-> +		....
-> +		monitored-battery = <&bat>;
-> +		...
-> +	};
-> +
-> +	fuel_gauge: fuel-gauge@22 {
-> +		....
-> +		monitored-battery = <&bat>;
-> +		...
-> +	};
-> -- 
-> 2.9.3
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
