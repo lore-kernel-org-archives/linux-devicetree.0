@@ -1,70 +1,62 @@
-From: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove
- the OF graph
-Date: Thu, 02 Mar 2017 10:44:19 +0900
-Message-ID: <a9e52516-bb05-7ad3-01d5-da1fe3bc7548@samsung.com>
-References: <CGME20170228081811epcas5p3c0a8151d94511e47a0e0d2b8787b1fb0@epcas5p3.samsung.com>
- <1488269879-28876-1-git-send-email-hoegeun.kwon@samsung.com>
- <CAJKOXPfv8wJ+0L4G_0sB1Qh-svXx4VvNJH_1THSy5SsXuUstzA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/8] Droid4 DTS update
+Date: Wed, 1 Mar 2017 17:49:11 -0800
+Message-ID: <20170302014910.GM20572@atomide.com>
+References: <20170302010900.28532-1-sre@kernel.org>
+ <20170302013707.GK20572@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAJKOXPfv8wJ+0L4G_0sB1Qh-svXx4VvNJH_1THSy5SsXuUstzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Seung Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170302013707.GK20572@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2017 06:58 PM, Krzysztof Kozlowski wrote:
-> On Tue, Feb 28, 2017 at 10:17 AM, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Hi All,
->>
->> [Resend this v2 patches, because i have missing TO and CC.]
->>
->> The dsi + panel is a parental relationship, so OF grpah is not needed.
->> Therefore, the current dsi_parse_dt function will throw an error,
->> because there is no linked OF graph for case such as fimd + dsi +
->> panel.
->>
->> So the 1/5 patch parse the Pll, burst and esc clock frequency
->> properties in dsi_parse_dt and modified to create a bridge_node only
->> if there is an OF graph associated with dsi.
->>
->> Also fixed the dts, which depend on the 1/5 patch. So removed the
->> ports node and move burst and esc clock frequency properties to the
->> parent (DSI node).
-> Discussions in previous thread lead us to bisectability problem.
-> Bisectability in regular driver changes is one thing but in case of
-> driver + DTS the gap is much bigger. DTS will go through separate tree
-> and branches. How do you want to solve the problem?
+* Tony Lindgren <tony@atomide.com> [170301 17:45]:
+> * Sebastian Reichel <sre@kernel.org> [170301 17:10]:
+> > Hi,
+> > 
+> > Tony, since your omap4-droid4 dts patches were not
+> > yet in a public repository and they would merge conflict
+> > with my patches I put them all together into a single
+> > patchset. I also added my Tested-By to your patches.
+> 
+> OK
+> 
+> > The mounting-matrix for the sensors and the touchscreen's 
+> > rotation assume, that the phone's default rotation is vertical.
+> > I think that's sensible, because
+> > 
+> >  * Android on the phone uses this as default rotation
+> >    (like almost? all other phones)
+> >  * volume buttons make sense (in horizontal position one
+> >    would expect, that left button means lower volume. I
+> >    know at least Maemo swaps them)
+> > 
+> > That should cover all mainline drivers.
+> 
+> Heheheh cool looks like you configured compass and accelerometer :)
+> 
+> I have a better touchscreen patch that also configures the wakeirq
+> that I did not post yet at http://muru.com/linux/d4/patches/ in the
+> updated set droid4-wip-next-20170217.tar.gz.
+> 
+> I have few more interesting ones coming, I got the HDMI working
+> reliably over the weekend. I was planning on waiting until -rc1 to
+> post them but let's see if I can send few patches out before that.
 
-Sorry for the delay in reply, Mar 1st was the holiday.
-I thought of two solutions.
+Oh and I have the poweroff-gpio patch and tmp105 patch.
 
-1. squash the patches in a single patch
+And the LMU backlight patch should be OK to go as the binding was
+already acked a while back.
 
-2. split the dts related patches so that the first part adds the:
-+    samsung,burst-clock-frequency = <512000000>;
-+    samsung,esc-clock-frequency = <16000000>;
+Some of the command mode LCD patches could be sent out too, and
+if the timing patch is OK then we can configure the LCD in the dts
+too. Have you had a chance to look at those related to what all I
+broke for n950?
 
-and the second part at the end removes the 'port' node
-So it consists of 6 patches in total.
+Regards,
 
-Which do you think is better?
-If you have any other ideas, could you tell me?
-
-Best Regards,
-Hoegeun
-
->
-> Best regards,
-> Krzysztof
->
->
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
