@@ -1,70 +1,39 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv2 1/2] mfd: cpcap: implement irq sense helper
-Date: Thu, 2 Mar 2017 08:09:12 -0800
-Message-ID: <20170302160912.GO20572@atomide.com>
-References: <20170224085909.30559-1-sre@kernel.org>
- <20170302002242.21819-1-sre@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: display: imx: entry for LAUSCR
+Date: Thu, 2 Mar 2017 10:13:30 -0600
+Message-ID: <20170302161330.6xguzjv3ttwbv5ek@rob-hp-laptop>
+References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
+ <1488193030-13064-2-git-send-email-martin@kaiser.cx>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170302002242.21819-1-sre@kernel.org>
+In-Reply-To: <1488193030-13064-2-git-send-email-martin@kaiser.cx>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: linux-fbdev@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@kernel.org> [170301 16:24]:
-> CPCAP can sense if IRQ is currently set or not. This
-> functionality is required for a few subdevices, such
-> as the power button and usb phy modules.
+On Mon, Feb 27, 2017 at 11:56:42AM +0100, Martin Kaiser wrote:
+> Allow setting the LCDC AUS Mode Control Register from the device tree.
+> This setting is optional, the register is available only on imx21 and
+> compatible chipsets.
 > 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 > ---
-> Changes since PATCHv1:
->  - Newly introduced patch
-> ---
->  drivers/mfd/motorola-cpcap.c       | 25 +++++++++++++++++++++++++
->  include/linux/mfd/motorola-cpcap.h |  2 ++
->  2 files changed, 27 insertions(+)
+>  Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/mfd/motorola-cpcap.c b/drivers/mfd/motorola-cpcap.c
-> index 6aeada7d7ce5..b2a53750d579 100644
-> --- a/drivers/mfd/motorola-cpcap.c
-> +++ b/drivers/mfd/motorola-cpcap.c
-> @@ -32,6 +32,31 @@ struct cpcap_ddata {
->  	struct regmap *regmap;
->  };
->  
-> +static int cpcap_sense_irq(struct regmap *regmap, int irq)
-> +{
-> +	int reg = CPCAP_REG_INTS1 + (irq / 16) * 4;
-> +	int mask = 1 << (irq % 16);
-> +	int err, val;
-> +
-> +	if (irq < 0 || irq > 64)
-> +		return -EINVAL;
-> +
-> +	err = regmap_read(regmap, reg, &val);
-> +	if (err)
-> +		return err;
-> +
-> +	return !!(val & mask);
-> +}
-> +
-> +int cpcap_sense_virq(struct regmap *regmap, int virq)
-> +{
-> +	struct regmap_irq_chip_data *d = irq_get_chip_data(virq);
-> +	int base = regmap_irq_chip_get_base(d);
-> +
-> +	return cpcap_sense_irq(regmap, virq - base);
-> +}
-> +EXPORT_SYMBOL_GPL(cpcap_sense_irq);
+> diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+> index 7a5c0e2..bd5077f 100644
+> --- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+> +++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+> @@ -13,6 +13,8 @@ Required nodes:
+>  	Additional, the display node has to define properties:
+>  	- bits-per-pixel: Bits per pixel
+>  	- fsl,pcr: LCDC PCR value
+> +	A display node may optionally define
+> +	- fsl,lauscr: LCDC AUS Mode Control Register value (only for imx21)
 
-You have a typo here, should be cpcap_sense_virq for the exported one :)
-
-Other than that my ack is still valid.
-
-Regards,
-
-Tony
+Looks like we already got one, but generally we don't just put magic 
+register values in the DT. What does this register control?
