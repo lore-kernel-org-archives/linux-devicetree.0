@@ -1,107 +1,78 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/4] iio: accel: adxl345: Split driver into core and
- I2C then add SPI support
-Date: Thu, 2 Mar 2017 11:02:23 +0800
-Message-ID: <20170302030221.GA4026@Socrates-UM>
-References: <cover.1488248485.git.eraretuya@gmail.com>
- <CAHp75VdtqNAf_PaWBL=YPc9iz=E-0tAz2=Fk-mDYSeBvtU+KYg@mail.gmail.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH V3 2/7] PM / OPP: Introduce "domain-performance-state"
+ binding to OPP nodes
+Date: Thu, 02 Mar 2017 09:00:49 +0530
+Message-ID: <58B791E9.4000505@codeaurora.org>
+References: <cover.1487926924.git.viresh.kumar@linaro.org> <ceb1bf5f696138c30b30743c24b619336d438d7c.1487926924.git.viresh.kumar@linaro.org> <20170228003948.ihf4c2ppu2rf3lt2@rob-hp-laptop> <20170228065711.GD19417@vireshk-i7> <CAL_JsqLx6Y=JgaVtJPFwERQ_=5qwqp5EY1+B=cdfBJO55Vct4w@mail.gmail.com> <CAPDyKFo5TjTa-hTzNp5KCpozU87L22piCXaSjWMTr4xVkgP+Pg@mail.gmail.com> <CAL_Jsq+7DGX_1U99cc3rhk8zzSj6iKe3kpijp7KTz90xXA_V9g@mail.gmail.com> <58B669DD.5010309@codeaurora.org> <CAL_JsqLJ_QYZza4=DobUStWpQ7V-H2dF_2d=25XR+x-eWfszEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75VdtqNAf_PaWBL=YPc9iz=E-0tAz2=Fk-mDYSeBvtU+KYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLJ_QYZza4=DobUStWpQ7V-H2dF_2d=25XR+x-eWfszEA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Kevin Hilman <khilman@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vincent Guittot <vincent.guittot@linaro.org>, Lina Iyer <lina.iyer@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 02, 2017 at 01:22:11AM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > This patchset modifies the adxl345 to use regmap. In doing so, we can
-> > easily introduce SPI support and let regmap handle the rest.
-> >
-> > Recap of basic features: read_raw for x, y and z axes, scale. After
-> > applying this series, driver now supports the SPI protocol and enumeration
-> > of device via device tree.
+
+On 03/02/2017 04:43 AM, Rob Herring wrote:
+> On Wed, Mar 1, 2017 at 12:27 AM, Rajendra Nayak <rnayak@codeaurora.org> wrote:
+>>
+>>
+>> On 02/28/2017 09:22 PM, Rob Herring wrote:
+>>> On Tue, Feb 28, 2017 at 9:14 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>>> [...]
+>>>>
+>>>>>>                                     ---> Parent domain-2 (Contains Perfomance states)
+>>>>>>                                     |
+>>>>>>                                     |
+>>>>>> C.) DeviceX  --->  Parent-domain-1  |
+>>>>>>                                     |
+>>>>>>                                     |
+>>>>>>                                     ---> Parent domain-3 (Contains Perfomance states)
+>>>>>
+>>>>> I'm a bit confused. How does a domain have 2 parent domains?
+>>>>
+>>>> This comes from the early design of the generic PM domain, thus I
+>>>> assume we have some HW with such complex PM topology. However, I don't
+>>>> know if it is actually being used.
+>>>>
+>>>> Moreover, the corresponding DT bindings for "power-domains" parents,
+>>>> can easily be extended to cover more than one parent. See more in
+>>>> Documentation/devicetree/bindings/power/power_domain.txt
+>>>
+>>> I could easily see device having 2 power domains. For example a cpu
+>>> may have separate domains for RAM/caches and logic. And nesting of
+>>
+>> yet the bindings for power-domains (for consumer devices) only allows for
+>> one powerdomain to be associated with a device.
 > 
-> If I knew you are going to send new version I would have commented on v4...
+> There's nothing in the binding only allowing that. If that was true,
+> then #powerdomain-cells would be pointless
+
+Is't #powerdomain-cells a powerdomain provider property? and used to
+specify if a powerdomain provider supports providing 1 or many powerdomains?
+I was talking about the power domain consumer property.
+Looking at Documentation/devicetree/bindings/power/power_domain.txt..
+
+==PM domain consumers==
+
+Required properties:
+ - power-domains : A phandle and PM domain specifier as defined by bindings of
+                   the power controller specified by phandle.
+
+It clearly says 'A phandle'. If there was a way to specify multiple power-domains
+for a consumer device should it not be saying a list of phandles? Like we do for
+clocks and regulators?
+
+> as the property size would
+> tell you the number of cells. Now it may be that we simply don't have
+> any cases with more than 1. Hopefully that's not because bindings are
+> working around PM domain limitations/requirements.
+> 
+> Rob
 > 
 
-Hi Andy,
-
-Please state your comments and I will submit a new revision.
-
-Thanks,
-Eva
-
-> >
-> > Changes from v4:
-> > [PATCH 1/4]
-> > * Update subject-prefix
-> > * Update node name from "adxl345@unit-address" to "accelerometer@unit-address"
-> > Patches 2-4
-> > * Add Andy's Reviewed-by tag
-> >
-> > Changes from v3:
-> > [PATCH 1/4]
-> > * None
-> > [PATCH 2/4]
-> > * Keep intact I2C client structure which was deleted from v3
-> > * Make use of regmap_get_device to retrieve struct device, use these for
-> >   debugging prints instead of &client->dev.
-> > [PATCH 3/4] and [PATCH 4/4]
-> > * Revert to explicit and separate I2C and SPI configuration
-> > * Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
-> >
-> > Changes from v2:
-> > * Drop PATCH 4 iio: accel: adxl345: Add ACPI support
-> > * Add OF match table on both I2C and SPI files and document them
-> >
-> > Changes from v1:
-> > [PATCH 1/4]
-> > * Move other deletions from patch 2 in here -- make it clear what got deleted
-> >   and/or modified that is hard to see previously
-> > * Introduce the driver header file "adxl345.h" here instead of doing it in the
-> >   next patch
-> > * Completely omit traces of i2c_client and let this file (adxl345.c) mirror the
-> >   core file on the next patch.
-> > * Improve debugging print about invalid device ID in probe.
-> > [PATCH 2/4]
-> > * Update Kconfig to Jonathan's preferred style
-> > * Improve similarity index from 78% to 100% (rename detection)
-> > [PATCH 4/4]
-> > * Correct acpi_device_id: ADX0345 -> ADS0345
-> >
-> > Eva Rachel Retuya (4):
-> >   dt-bindings: iio: accel: Document ADXL345 accelerometer binding
-> >   iio: accel: adxl345: Use I2C regmap instead of direct I2C access
-> >   iio: accel: adxl345: Split driver into core and I2C
-> >   iio: accel: adxl345: Add SPI support
-> >
-> >  .../devicetree/bindings/iio/accel/adxl345.txt      | 38 +++++++++
-> >  drivers/iio/accel/Kconfig                          | 26 ++++++-
-> >  drivers/iio/accel/Makefile                         |  4 +-
-> >  drivers/iio/accel/adxl345.h                        | 18 +++++
-> >  drivers/iio/accel/{adxl345.c => adxl345_core.c}    | 89 +++++++++-------------
-> >  drivers/iio/accel/adxl345_i2c.c                    | 78 +++++++++++++++++++
-> >  drivers/iio/accel/adxl345_spi.c                    | 83 ++++++++++++++++++++
-> >  7 files changed, 281 insertions(+), 55 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
-> >  create mode 100644 drivers/iio/accel/adxl345.h
-> >  rename drivers/iio/accel/{adxl345.c => adxl345_core.c} (62%)
-> >  create mode 100644 drivers/iio/accel/adxl345_i2c.c
-> >  create mode 100644 drivers/iio/accel/adxl345_spi.c
-> >
-> > --
-> > 2.7.4
-> >
-> 
-> 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
