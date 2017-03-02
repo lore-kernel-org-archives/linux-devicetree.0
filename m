@@ -1,154 +1,81 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and
- GXL
-Date: Thu, 2 Mar 2017 13:47:26 +0100
-Message-ID: <e80d9fb0-1d71-7cab-5e32-72316474fdfc@baylibre.com>
-References: <1488365164-22861-1-git-send-email-narmstrong@baylibre.com>
- <1488365164-22861-4-git-send-email-narmstrong@baylibre.com>
- <e26cf584-dab2-2702-f7e6-b28f750fa00c@suse.de>
+From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Subject: Re: [RESEND PATCH v6 4/6] i2c: designware: introducing I2C_SLAVE
+ definitions
+Date: Thu, 2 Mar 2017 15:46:48 +0200
+Message-ID: <3a84bb00-ab25-e36f-5552-0d4232c60e36@linux.intel.com>
+References: <cover.1488383202.git.lolivei@synopsys.com>
+ <01815bce74cdb525f45d4088648b11dcc48da040.1488383202.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e26cf584-dab2-2702-f7e6-b28f750fa00c@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Cc: devicetree@vger.kernel.org, khilman@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <01815bce74cdb525f45d4088648b11dcc48da040.1488383202.git.lolivei@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
-On 03/02/2017 01:31 PM, Andreas F=E4rber wrote:
-> Hi Neil,
-> =
+On 03/01/17 17:59, Luis Oliveira wrote:
+> - Definitions were added to core library
+> - A example was added to designware-core.txt Documentation that shows
+>   how the slave can be setup using DTS
+>
+> SLAVE related definitions were added to the core of the controller.
+>
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> V5->V6
+> - Included an example of use in the device tree binding document
+> (with the RESEND)
+> - Removed the i2c-designware.txt binding leading 0 to add the Rob
+>   Herring ack.
+>
+>  .../devicetree/bindings/i2c/i2c-designware.txt     | 16 +++++++++-
+>  drivers/i2c/busses/i2c-designware-core.h           | 35 ++++++++++++++++++++--
+>  2 files changed, 48 insertions(+), 3 deletions(-)
+>
+...
+> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+> index 35d7264d9e3a..b620d76ffc8d 100644
+> --- a/drivers/i2c/busses/i2c-designware-core.h
+> +++ b/drivers/i2c/busses/i2c-designware-core.h
+> @@ -1,5 +1,5 @@
+...
+> @@ -196,7 +221,11 @@
+>   * @acquire_lock: function to acquire a hardware lock on the bus
+>   * @release_lock: function to release a hardware lock on the bus
+>   * @pm_runtime_disabled: true if pm runtime is disabled
+> - *
+> + * @dynamic_tar_update_enabled: true if dynamic TAR update is enabled
+> + * @disable: function to disable the controller
+> + * @disable_int: function to disable all interrupts
+> + * @init: function to initialize the I2C hardware
+> + * @mode: operation mode - I2C slave or I2C master
+>   * HCNT and LCNT parameters can be used if the platform knows more accurate
+>   * values than the one computed based only on the input clock frequency.
+>   * Leave them to be %0 if not used.
+> @@ -206,6 +235,7 @@ struct dw_i2c_dev {
+>  	void __iomem		*base;
+>  	struct completion	cmd_complete;
+>  	struct clk		*clk;
+> +	struct i2c_client		*slave;
+>  	u32			(*get_clk_rate_khz) (struct dw_i2c_dev *dev);
+>  	struct dw_pci_controller *controller;
+>  	int			cmd_err;
+> @@ -225,6 +255,7 @@ struct dw_i2c_dev {
+>  	struct i2c_adapter	adapter;
+>  	u32			functionality;
+>  	u32			master_cfg;
+> +	u32			slave_cfg;
+>  	unsigned int		tx_fifo_depth;
+>  	unsigned int		rx_fifo_depth;
+>  	int			rx_outstanding;
 
-> Am 01.03.2017 um 11:46 schrieb Neil Armstrong:
->> The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
-> =
+You should add comments for "slave" and "slave_cfg" since they are added 
+here and move comments for other members variables to patches 3/6 and 
+5/6 where they are added.
 
-> First of all, any reason you're upper-casing Mali in the commit message?
-> ARM doesn't.
-
-No reason, only a type, indeed it was lower-casing on the v1.
-Will fix in v2.
-
-> =
-
->>
->> The node is simply added in the meson-gxbb.dtsi file.
-> =
-
-> The GXBB part looks fine on a quick look.
-> =
-
->>
->> For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
->> patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
->> dtsi files.
-> =
-
-> This part is slightly confusing though.
-> =
-
-> What exactly is the GXL vs. GXM difference that this can't be handled by
-> overriding node properties compatible/interrupts/clocks? I am missing a
-> GXM patch in this series as rationale for doing it this way.
-> =
-
-> In particular I am wondering whether the whole GXM-inherits-from-GXL
-> concept is flawed and should be adjusted if this leads to secondary
-> .dtsi files like this: My proposal would be to instead create a
-> meson-gxl-gxm.dtsi, that meson-gxl.dtsi and meson-gxm.dtsi can inherit
-> the current common parts from, then the Mali bits can simply go into
-> meson-gxl.dtsi without extra #includes needed in S905X and S905D. While
-> it's slightly more work to split once again, I think it would be cleaner.
-
-The GXL and GXM differences are very small :
- - They share the same clock tree
- - They share the same pinctrl and even the same pinout (S905D and S912 are=
- pin-to-pin compatible)
- - They share all the peripherals
-
-The only changes are :
- - Enhanced video encoding and decoding support, this will need a family-sp=
-ecific compatible when pushed
- - Slightly differences in the Video Processing Unit, this is why I introdu=
-ced family-specific compatibles
- - A secondary Cortex-A53 cluster
- - A secondary SCPI cpufreq clock entry
- - A different Mali core, but with the same interrupts (less but they share=
- the same lower interrupts), clocks and memory space
-
-This is why it was decided to have a sub-dtsi, having a secondary dtsi will=
- simply copy 99% of the GXL dtsi,
-but surely we could also have an intermediate dtsi but for boards I'm ok wi=
-th it, but less for a SoC dtsi,
-since it could lead to some confusion.
-
-Finally, yes I could have added the mali node to the GXL dtsi, but the midg=
-ard Mali dt-bindings are not upstream
-and the family is too big and recent enough to consider having stable bindi=
-ngs for now.
-
-Nevertheless, nothing is final, this gxl-mali.dtsi could be merged into the=
- GXL dtsi in the future when we
-have proper dt-bindings and a real support of the T820 Mali on the S912.
-
-Kevin, what's your thought about this ?
-
-Neil
-
-> Regards,
-> Andreas
-> =
-
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi      | 37 +++++++++++++++++=
-+++
->>  arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi  | 43 +++++++++++++++++=
-+++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi |  1 +
->>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi |  1 +
->>  4 files changed, 82 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
-> [...]
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi b/arch/arm=
-64/boot/dts/amlogic/meson-gxl-s905d.dtsi
->> index 615308e..5a90e30 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
->> @@ -42,6 +42,7 @@
->>   */
->>  =
-
->>  #include "meson-gxl.dtsi"
->> +#include "meson-gxl-mali.dtsi"
->>  =
-
->>  / {
->>  	compatible =3D "amlogic,s905d", "amlogic,meson-gxl";
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm=
-64/boot/dts/amlogic/meson-gxl-s905x.dtsi
->> index 08237ee..0f78d83 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
->> @@ -42,6 +42,7 @@
->>   */
->>  =
-
->>  #include "meson-gxl.dtsi"
->> +#include "meson-gxl-mali.dtsi"
->>  =
-
->>  / {
->>  	compatible =3D "amlogic,s905x", "amlogic,meson-gxl";
-> =
+-- 
+Jarkko
