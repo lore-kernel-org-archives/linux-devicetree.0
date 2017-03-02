@@ -1,92 +1,73 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 0/4] iio: accel: adxl345: Split driver into core and
- I2C then add SPI support
-Date: Thu, 2 Mar 2017 01:22:11 +0200
-Message-ID: <CAHp75VdtqNAf_PaWBL=YPc9iz=E-0tAz2=Fk-mDYSeBvtU+KYg@mail.gmail.com>
-References: <cover.1488248485.git.eraretuya@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Sebastian Reichel <sre@kernel.org>
+Subject: [PATCHv2 1/2] mfd: cpcap: implement irq sense helper
+Date: Thu,  2 Mar 2017 01:22:41 +0100
+Message-ID: <20170302002242.21819-1-sre@kernel.org>
+References: <20170224085909.30559-1-sre@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1488248485.git.eraretuya@gmail.com>
+In-Reply-To: <20170224085909.30559-1-sre@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eva Rachel Retuya <eraretuya@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+To: Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
-> This patchset modifies the adxl345 to use regmap. In doing so, we can
-> easily introduce SPI support and let regmap handle the rest.
->
-> Recap of basic features: read_raw for x, y and z axes, scale. After
-> applying this series, driver now supports the SPI protocol and enumeration
-> of device via device tree.
+CPCAP can sense if IRQ is currently set or not. This
+functionality is required for a few subdevices, such
+as the power button and usb phy modules.
 
-If I knew you are going to send new version I would have commented on v4...
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
+---
+Changes since PATCHv1:
+ - Newly introduced patch
+---
+ drivers/mfd/motorola-cpcap.c       | 25 +++++++++++++++++++++++++
+ include/linux/mfd/motorola-cpcap.h |  2 ++
+ 2 files changed, 27 insertions(+)
 
->
-> Changes from v4:
-> [PATCH 1/4]
-> * Update subject-prefix
-> * Update node name from "adxl345@unit-address" to "accelerometer@unit-address"
-> Patches 2-4
-> * Add Andy's Reviewed-by tag
->
-> Changes from v3:
-> [PATCH 1/4]
-> * None
-> [PATCH 2/4]
-> * Keep intact I2C client structure which was deleted from v3
-> * Make use of regmap_get_device to retrieve struct device, use these for
->   debugging prints instead of &client->dev.
-> [PATCH 3/4] and [PATCH 4/4]
-> * Revert to explicit and separate I2C and SPI configuration
-> * Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
->
-> Changes from v2:
-> * Drop PATCH 4 iio: accel: adxl345: Add ACPI support
-> * Add OF match table on both I2C and SPI files and document them
->
-> Changes from v1:
-> [PATCH 1/4]
-> * Move other deletions from patch 2 in here -- make it clear what got deleted
->   and/or modified that is hard to see previously
-> * Introduce the driver header file "adxl345.h" here instead of doing it in the
->   next patch
-> * Completely omit traces of i2c_client and let this file (adxl345.c) mirror the
->   core file on the next patch.
-> * Improve debugging print about invalid device ID in probe.
-> [PATCH 2/4]
-> * Update Kconfig to Jonathan's preferred style
-> * Improve similarity index from 78% to 100% (rename detection)
-> [PATCH 4/4]
-> * Correct acpi_device_id: ADX0345 -> ADS0345
->
-> Eva Rachel Retuya (4):
->   dt-bindings: iio: accel: Document ADXL345 accelerometer binding
->   iio: accel: adxl345: Use I2C regmap instead of direct I2C access
->   iio: accel: adxl345: Split driver into core and I2C
->   iio: accel: adxl345: Add SPI support
->
->  .../devicetree/bindings/iio/accel/adxl345.txt      | 38 +++++++++
->  drivers/iio/accel/Kconfig                          | 26 ++++++-
->  drivers/iio/accel/Makefile                         |  4 +-
->  drivers/iio/accel/adxl345.h                        | 18 +++++
->  drivers/iio/accel/{adxl345.c => adxl345_core.c}    | 89 +++++++++-------------
->  drivers/iio/accel/adxl345_i2c.c                    | 78 +++++++++++++++++++
->  drivers/iio/accel/adxl345_spi.c                    | 83 ++++++++++++++++++++
->  7 files changed, 281 insertions(+), 55 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
->  create mode 100644 drivers/iio/accel/adxl345.h
->  rename drivers/iio/accel/{adxl345.c => adxl345_core.c} (62%)
->  create mode 100644 drivers/iio/accel/adxl345_i2c.c
->  create mode 100644 drivers/iio/accel/adxl345_spi.c
->
-> --
-> 2.7.4
->
-
-
-
+diff --git a/drivers/mfd/motorola-cpcap.c b/drivers/mfd/motorola-cpcap.c
+index 6aeada7d7ce5..b2a53750d579 100644
+--- a/drivers/mfd/motorola-cpcap.c
++++ b/drivers/mfd/motorola-cpcap.c
+@@ -32,6 +32,31 @@ struct cpcap_ddata {
+ 	struct regmap *regmap;
+ };
+ 
++static int cpcap_sense_irq(struct regmap *regmap, int irq)
++{
++	int reg = CPCAP_REG_INTS1 + (irq / 16) * 4;
++	int mask = 1 << (irq % 16);
++	int err, val;
++
++	if (irq < 0 || irq > 64)
++		return -EINVAL;
++
++	err = regmap_read(regmap, reg, &val);
++	if (err)
++		return err;
++
++	return !!(val & mask);
++}
++
++int cpcap_sense_virq(struct regmap *regmap, int virq)
++{
++	struct regmap_irq_chip_data *d = irq_get_chip_data(virq);
++	int base = regmap_irq_chip_get_base(d);
++
++	return cpcap_sense_irq(regmap, virq - base);
++}
++EXPORT_SYMBOL_GPL(cpcap_sense_irq);
++
+ static int cpcap_check_revision(struct cpcap_ddata *cpcap)
+ {
+ 	u16 vendor, rev;
+diff --git a/include/linux/mfd/motorola-cpcap.h b/include/linux/mfd/motorola-cpcap.h
+index b4031c2b2214..7629e0d24d26 100644
+--- a/include/linux/mfd/motorola-cpcap.h
++++ b/include/linux/mfd/motorola-cpcap.h
+@@ -290,3 +290,5 @@ static inline int cpcap_get_vendor(struct device *dev,
+ 
+ 	return 0;
+ }
++
++int cpcap_sense_virq(struct regmap *regmap, int virq);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.0
