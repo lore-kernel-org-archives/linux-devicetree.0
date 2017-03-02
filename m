@@ -1,63 +1,57 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
-Date: Thu, 2 Mar 2017 15:07:21 -0800
-Message-ID: <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
- <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4 v3] ARM: gemini: select
+	MIGHT_HAVE_PCI
+Date: Fri, 3 Mar 2017 00:31:31 +0100
+Message-ID: <CACRpkdZ-9tZPNOnMvA7-Rudg7QPVs=N5SPBd+i59EFb4VjmSYA@mail.gmail.com>
+References: <20170227190720.31409-1-linus.walleij@linaro.org>
+ <20170227190720.31409-3-linus.walleij@linaro.org>
+ <20170302162931.tyngslqsr2axy5qx@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+In-Reply-To: <20170302162931.tyngslqsr2axy5qx@rob-hp-laptop>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: Rob Herring <robh@kernel.org>
+Cc: openwrt-devel@openwrt.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Greentime Hu <green.hu@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Janos Laube <janos.dev@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/02/2017 07:53 AM, Sakari Ailus wrote:
-> Hi Steve,
->
-> On Wed, Feb 15, 2017 at 06:19:15PM -0800, Steve Longerbeam wrote:
->> Add a new FRAME_TIMEOUT event to signal that a video capture or
->> output device has timed out waiting for reception or transmit
->> completion of a video frame.
->>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->> ---
->>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 5 +++++
->>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>  include/uapi/linux/videodev2.h                  | 1 +
->>  3 files changed, 7 insertions(+)
->>
->> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> index 8d663a7..dd77d9b 100644
->> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> @@ -197,6 +197,11 @@ call.
->>  	the regions changes. This event has a struct
->>  	:c:type:`v4l2_event_motion_det`
->>  	associated with it.
->> +    * - ``V4L2_EVENT_FRAME_TIMEOUT``
->> +      - 7
->> +      - This event is triggered when the video capture or output device
->> +	has timed out waiting for the reception or transmit completion of
->> +	a frame of video.
->
-> As you're adding a new interface, I suppose you have an implementation
-> around. How do you determine what that timeout should be?
-
-The imx-media driver sets the timeout to 1 second, or 30 frame
-periods at 30 fps.
-
-Steve
+T24gVGh1LCBNYXIgMiwgMjAxNyBhdCA1OjI5IFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPiB3cm90ZToKPiBPbiBNb24sIEZlYiAyNywgMjAxNyBhdCAwODowNzoxOVBNICswMTAwLCBM
+aW51cyBXYWxsZWlqIHdyb3RlOgo+PiBBcyB3ZSBoYXZlIGEgUENJIGRyaXZlciBmb3IgdGhlIEdl
+bWluaSwgd2Ugc2hvdWxkIHNlbGVjdAo+PiBNSUdIVF9IQVZFX1BDSS4KPj4KPj4gQ2M6IEphbm9z
+IExhdWJlIDxqYW5vcy5kZXZAZ21haWwuY29tPgo+PiBDYzogUGF1bGl1cyBaYWxlY2thcyA8cGF1
+bGl1cy56YWxlY2thc0BnbWFpbC5jb20+Cj4+IENjOiBIYW5zIFVsbGkgS3JvbGwgPHVsbGkua3Jv
+bGxAZ29vZ2xlbWFpbC5jb20+Cj4+IENjOiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdt
+YWlsLmNvbT4KPj4gQ2M6IEZlbmctSHNpbiBDaGlhbmcgPGpvaG40NTNAZmFyYWRheS10ZWNoLmNv
+bT4KPj4gQ2M6IEdyZWVudGltZSBIdSA8Z3JlZW4uaHVAZ21haWwuY29tPgo+PiBTaWduZWQtb2Zm
+LWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Cj4+IC0tLQo+PiBD
+aGFuZ2VMb2cgdjEtPnYyLT52MzoKPj4gLSBObyBjaGFuZ2VzCj4+Cj4+IFBDSSBtYWludGFpbmVy
+czogdGhpcyBpcyBGWUkgb25seSwgSSB3aWxsIGZ1bm5lbCB0aGlzIHRvIHRoZSBBUk0KPj4gU29D
+IHRyZWUgb25jZSB3ZSBhcmUgZG9uZSB3aXRoIHRoZSBQQ0kgZHJpdmVyLgo+PiAtLS0KPj4gIGFy
+Y2gvYXJtL21hY2gtZ2VtaW5pL0tjb25maWcgfCAxICsKPj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1nZW1pbmkvS2NvbmZp
+ZyBiL2FyY2gvYXJtL21hY2gtZ2VtaW5pL0tjb25maWcKPj4gaW5kZXggYTVlZTVmYmFiNzk2Li4y
+MWY4OWE0YzE2ZmUgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL21hY2gtZ2VtaW5pL0tjb25maWcK
+Pj4gKysrIGIvYXJjaC9hcm0vbWFjaC1nZW1pbmkvS2NvbmZpZwo+PiBAQCAtNiw2ICs2LDcgQEAg
+bWVudWNvbmZpZyBBUkNIX0dFTUlOSQo+PiAgICAgICBzZWxlY3QgRlRUTVIwMTBfVElNRVIKPj4g
+ICAgICAgc2VsZWN0IEdQSU9fR0VNSU5JCj4+ICAgICAgIHNlbGVjdCBHUElPTElCCj4+ICsgICAg
+IHNlbGVjdCBNSUdIVF9IQVZFX1BDSQo+Cj4gRG9lc24ndCBNdWx0aS1wbGF0Zm9ybSBkbyB0aGlz
+IGZvciB5b3U/CgpPaCBpdCBkb2VzLCBJIGp1c3QgbWlzc2VkIHRoYXQuCgo+IElmIG5vdCwgSU1P
+LCB3ZSBzaG91bGQgZG8gdGhhdAo+IG9yIGtpbGwgdGhpcyBvcHRpb24uIFdlIGRvbid0IGRvIGFu
+IG9wdGlvbiBsaWtlIHRoaXMgZm9yIEkyQywgU1BJLAo+IGRpc3BsYXksIGFueXRoaW5nIGVsc2Ug
+KHdlbGwsIGV4Y2VwdCBHUElPTElCIDspKS4KCkkga2lsbGVkIEFSQ0hfV0FOVF9PUFRJT05BTF9H
+UElPTElCIGF0IGxlYXN0CnRoYXQgdGhpbmcgd2FzIHJlYWxseSBjb25mdXNpbmcuCgpNYXliZSB3
+ZSBzaG91bGQgaGF2ZSBNVUxUSVBMQVRGT1JNIHNlbGVjdApHUElPTElCIHRvby4KCllvdXJzLApM
+aW51cyBXYWxsZWlqCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCm9wZW53cnQtZGV2ZWwgbWFpbGluZyBsaXN0Cm9wZW53cnQtZGV2ZWxAbGlzdHMub3Blbndy
+dC5vcmcKaHR0cHM6Ly9saXN0cy5vcGVud3J0Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8v
+b3BlbndydC1kZXZlbAo=
