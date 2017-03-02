@@ -1,8 +1,8 @@
 From: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 2/3] Documentation: bindings: add DT documentation for
- u2phy and u2phy grf
-Date: Thu,  2 Mar 2017 15:49:04 +0800
-Message-ID: <1488440945-27291-3-git-send-email-daniel.meng@rock-chips.com>
+Subject: [PATCH v2 3/3] phy: rockchip-inno-usb2: add support of u2phy for
+ rk3328
+Date: Thu,  2 Mar 2017 15:49:05 +0800
+Message-ID: <1488440945-27291-4-git-send-email-daniel.meng@rock-chips.com>
 References: <1488440945-27291-1-git-send-email-daniel.meng@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,54 +22,86 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to the u2phy registers are separated from general grf, we need to
-add u2phy grf node and place u2phy node in it. So this patch add u2phy
-grf node.
+Add u2phy config information in the data of match table for
+rk3328.
 
 Changes in v2:
- - add u2phy grf specification
+ - add support of otg port
 
 Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- Documentation/devicetree/bindings/soc/rockchip/grf.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/phy/phy-rockchip-inno-usb2.c | 52 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-index 013e71a..6ac23f9 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-+++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-@@ -7,6 +7,9 @@ From RK3368 SoCs, the GRF is divided into two sections,
- - GRF, used for general non-secure system,
- - PMUGRF, used for always on system
+diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
+index 4ea95c2..0dcccc6 100644
+--- a/drivers/phy/phy-rockchip-inno-usb2.c
++++ b/drivers/phy/phy-rockchip-inno-usb2.c
+@@ -1141,6 +1141,57 @@ static int rockchip_usb2phy_probe(struct platform_device *pdev)
+ 	return ret;
+ }
  
-+On RK3328 SoCs, the GRF is divided into three sections,
-+except GRF and PMUGRF, add a section for USB2PHYGRF,
++static const struct rockchip_usb2phy_cfg rk3328_phy_cfgs[] = {
++	{
++		.reg = 0x100,
++		.num_ports	= 2,
++		.phy_tuning	= rk3328_usb2phy_tuning,
++		.clkout_ctl	= { 0x108, 4, 4, 1, 0 },
++		.port_cfgs	= {
++			[USB2PHY_PORT_OTG] = {
++				.phy_sus	= { 0x0100, 15, 0, 0, 0x1d1 },
++				.bvalid_det_en	= { 0x0110, 2, 2, 0, 1 },
++				.bvalid_det_st	= { 0x0114, 2, 2, 0, 1 },
++				.bvalid_det_clr = { 0x0118, 2, 2, 0, 1 },
++				.idfall_det_en	= { 0x0110, 5, 5, 0, 1 },
++				.idfall_det_st	= { 0x0114, 5, 5, 0, 1 },
++				.idfall_det_clr = { 0x0118, 5, 5, 0, 1 },
++				.idrise_det_en	= { 0x0110, 4, 4, 0, 1 },
++				.idrise_det_st	= { 0x0114, 4, 4, 0, 1 },
++				.idrise_det_clr = { 0x0118, 4, 4, 0, 1 },
++				.ls_det_en	= { 0x0110, 0, 0, 0, 1 },
++				.ls_det_st	= { 0x0114, 0, 0, 0, 1 },
++				.ls_det_clr	= { 0x0118, 0, 0, 0, 1 },
++				.utmi_avalid	= { 0x0120, 10, 10, 0, 1 },
++				.utmi_bvalid	= { 0x0120, 9, 9, 0, 1 },
++				.utmi_iddig	= { 0x0120, 6, 6, 0, 1 },
++				.utmi_ls	= { 0x0120, 5, 4, 0, 1 },
++			},
++			[USB2PHY_PORT_HOST] = {
++				.phy_sus	= { 0x104, 15, 0, 0, 0x1d1 },
++				.ls_det_en	= { 0x110, 1, 1, 0, 1 },
++				.ls_det_st	= { 0x114, 1, 1, 0, 1 },
++				.ls_det_clr	= { 0x118, 1, 1, 0, 1 },
++				.utmi_ls	= { 0x120, 17, 16, 0, 1 },
++				.utmi_hstdet	= { 0x120, 19, 19, 0, 1 }
++			}
++		},
++		.chg_det = {
++			.opmode		= { 0x0100, 3, 0, 5, 1 },
++			.cp_det		= { 0x0120, 24, 24, 0, 1 },
++			.dcp_det	= { 0x0120, 23, 23, 0, 1 },
++			.dp_det		= { 0x0120, 25, 25, 0, 1 },
++			.idm_sink_en	= { 0x0108, 8, 8, 0, 1 },
++			.idp_sink_en	= { 0x0108, 7, 7, 0, 1 },
++			.idp_src_en	= { 0x0108, 9, 9, 0, 1 },
++			.rdm_pdwn_en	= { 0x0108, 10, 10, 0, 1 },
++			.vdm_src_en	= { 0x0108, 12, 12, 0, 1 },
++			.vdp_src_en	= { 0x0108, 11, 11, 0, 1 },
++		},
++	},
++	{ /* sentinel */ }
++};
 +
- Required Properties:
+ static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] = {
+ 	{
+ 		.reg = 0x700,
+@@ -1223,6 +1274,7 @@ static int rockchip_usb2phy_probe(struct platform_device *pdev)
+ };
  
- - compatible: GRF should be one of the followings
-@@ -19,6 +22,8 @@ Required Properties:
- - compatible: PMUGRF should be one of the followings
-    - "rockchip,rk3368-pmugrf", "syscon": for rk3368
-    - "rockchip,rk3399-pmugrf", "syscon": for rk3399
-+- compatible: USB2GRF should be one of the followings
-+   - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
- - reg: physical base address of the controller and length of memory mapped
-   region.
- 
-@@ -33,3 +38,13 @@ Example: GRF and PMUGRF of RK3399 SoCs
- 		compatible = "rockchip,rk3399-grf", "syscon";
- 		reg = <0x0 0xff770000 0x0 0x10000>;
- 	};
-+
-+Example: USB2GRF of RK3328 SoCs
-+
-+	usb2phy_grf: syscon@ff450000 {
-+		compatible = "rockchip,rk3328-usb2phy-grf", "syscon",
-+			     "simple-mfd";
-+		reg = <0x0 0xff450000 0x0 0x10000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
+ static const struct of_device_id rockchip_usb2phy_dt_match[] = {
++	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
+ 	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
+ 	{ .compatible = "rockchip,rk3399-usb2phy", .data = &rk3399_phy_cfgs },
+ 	{}
 -- 
 1.9.1
