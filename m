@@ -1,60 +1,29 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 2/2] drivers: pwm: pwm-atmel: enable PWM on sama5d2
-Date: Thu, 2 Mar 2017 17:28:45 +0200
-Message-ID: <1488468525-28726-3-git-send-email-claudiu.beznea@microchip.com>
-References: <1488468525-28726-1-git-send-email-claudiu.beznea@microchip.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 1/2] mfd: cpcap: implement irq sense helper
+Date: Thu, 2 Mar 2017 07:17:32 -0800
+Message-ID: <20170302151732.GN20572@atomide.com>
+References: <20170224085909.30559-1-sre@kernel.org>
+ <20170302002242.21819-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488468525-28726-1-git-send-email-claudiu.beznea@microchip.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, boris.brezillon@free-electrons.com, alexandre.belloni@free-electrons.com
-Cc: linux-pwm@vger.kernel.org, Claudiu Beznea <claudiu.beznea@microchip.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170302002242.21819-1-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-sama5d2 can use the same atmel_pwm_data as sama5d3.
+* Sebastian Reichel <sre@kernel.org> [170301 16:24]:
+> CPCAP can sense if IRQ is currently set or not. This
+> functionality is required for a few subdevices, such
+> as the power button and usb phy modules.
+> 
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> ---
+> Changes since PATCHv1:
+>  - Newly introduced patch
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Works for me:
 
----
- Documentation/devicetree/bindings/pwm/atmel-pwm.txt | 1 +
- drivers/pwm/pwm-atmel.c                             | 3 +++
- 2 files changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-index 02331b9..c8c831d 100644
---- a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-+++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-@@ -4,6 +4,7 @@ Required properties:
-   - compatible: should be one of:
-     - "atmel,at91sam9rl-pwm"
-     - "atmel,sama5d3-pwm"
-+    - "atmel,sama5d2-pwm"
-   - reg: physical base address and length of the controller's registers
-   - #pwm-cells: Should be 3. See pwm.txt in this directory for a
-     description of the cells format.
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 3db82c3..e773311 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -332,6 +332,9 @@ static const struct of_device_id atmel_pwm_dt_ids[] = {
- 		.compatible = "atmel,sama5d3-pwm",
- 		.data = &atmel_pwm_data_v2,
- 	}, {
-+		.compatible = "atmel,sama5d2-pwm",
-+		.data = &atmel_pwm_data_v2,
-+	}, {
- 		/* sentinel */
- 	},
- };
--- 
-2.7.4
+Acked-by: Tony Lindgren <tony@atomide.com>
