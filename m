@@ -1,142 +1,133 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
-Date: Thu, 2 Mar 2017 16:48:03 +0000
-Message-ID: <72610bd3-71b2-0b4b-eb6c-5e9df7ec1aac@arm.com>
-References: <ad6b6a4937b1fe183e6d48ccbaf4cb46db92fed4.1481893907.git.robin.murphy@arm.com>
-	<DB6PR0402MB2694957C2D7C648CC342627FE69F0@DB6PR0402MB2694.eurprd04.prod.outlook.com>
-	<AM5PR0401MB251438AFDE691D570353B537E6280@AM5PR0401MB2514.eurprd04.prod.outlook.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom chips
+Date: Thu, 2 Mar 2017 22:10:41 +0530
+Message-ID: <CAFp+6iFdSaJYz+eQ0Vwqk0dtqmhAVTZLCNNYWW6gpcJwatgEfA@mail.gmail.com>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
+ <587C880E.90803@ti.com> <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
+ <20170118180347.GO10531@minitux> <CAFp+6iG3KxX=G64EyJFgGn9ZffzjCtEeR4HUPdOK-uhE8A=PwA@mail.gmail.com>
+ <58871C39.50403@ti.com> <20170126181527.GB10531@minitux> <692975a4-e735-975f-7152-fdd81324c42b@codeaurora.org>
+ <CAFp+6iHvgPVSbZ-uGRAHK3Wh+k7Apy+U7YcSVrgegx-AJ1=ZTA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <AM5PR0401MB251438AFDE691D570353B537E6280-oQ3wXcTHOqqdzUSUbRy2lY3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iHvgPVSbZ-uGRAHK3Wh+k7Apy+U7YcSVrgegx-AJ1=ZTA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: robh+dt <robh+dt@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/17 04:18, Nipun Gupta wrote:
-> 
-> Hi Robin/Will,
-> 
-> This patch is currently not applied on the tree.
-> I had verified the patch and it seems good.
-> Is ack required on the patch or do I need to send a non RFC patch (with Robin's signoff)?
-> This is very much required to support SMMU on NXP platform.
+Hi Kishon,
 
-It's still sat in my "patches to do something with" queue - I don't
-think we ever reached a concrete decision on the property name for a DT
-maintainer ack, but I've tweaked the description per Will's comment;
-thanks for the reminder. I'll send an rc1-based version out next week to
-reboot the discussion.
 
-Robin.
+On Wed, Feb 22, 2017 at 9:29 AM, Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+> Hi Kishon,
+>
+>
+> On Fri, Jan 27, 2017 at 11:54 AM, Vivek Gautam
+> <vivek.gautam@codeaurora.org> wrote:
+>>
+>>
+>> On 01/26/2017 11:45 PM, Bjorn Andersson wrote:
+>>>
+>>> On Tue 24 Jan 01:19 PST 2017, Kishon Vijay Abraham I wrote:
+>>>>
+>>>> On Monday 23 January 2017 03:43 PM, Vivek Gautam wrote:
+>>>>>
+>>>>> On Wed, Jan 18, 2017 at 11:33 PM, Bjorn Andersson
+>>>
+>>> [..]
+>>>>>
+>>>>> Yes, that's correct. The QMP and QUSB2 phy init sequences are a bunch
+>>>>> of static values for a particular IP version. These values hardly give a
+>>>>> meaningful data to put few phy bindings that could be referenced
+>>>>> to configure the phy further.
+>>>>
+>>>> Not really. You can have clearly defined phy binding to give meaningful
+>>>> data.
+>>>> Every driver doing the same configuration bloats the driver and these
+>>>> configuration values are just magic values which hardly can be reviewed
+>>>> by anyone.
+>>>>>>
+>>>>>> Further more moving this blob to devicetree will not allow us to treat
+>>>>>> the various QMP configurations as one HW block, as there are other
+>>>>>> differences as well.
+>>>>>>
+>>>>>> Like many other drivers it's possible to create a generic version that
+>>>>>> has every bit of logic driven by configuration from devicetree, but
+>>>>>> like
+>>>>>> most of those cases this is not the way we split things.
+>>>>>>
+>>>>>> And this has the side effect of keeping the dts files human readable,
+>>>>>> human understandable and human maintainable.
+>>>>
+>>>> right. That's why I recommend having clearly defined bindings.
+>>>>         phy,tx-<param1> = <val, offset, mask>
+>>>>         phy,tx-<param2> = <val, offset, mask>
+>>>>         phy,tx-<param3> = <val, offset, mask>
+>>>
+>>> There's no doubt that this table needs to be encoded somewhere, so the
+>>> question is should we hard code this in a C file or in a DTSI file.
+>>>
+>>> Skimming through [1] I see examples of things that differs based on how
+>>> the specific component is integrated in a SoC or on a particular board -
+>>> properties that are relevant to a "system integrator".
+>>>
+>>> As far as I can tell this blob will, if ever, only be changed by a
+>>> driver developer and as such it's not carry information about how this
+>>> component relates to the rest of the system and should as such not be
+>>> part of the device tree.
+>>>
+>>>
+>>> If there are properties of the hardware that is affected by how the
+>>> component is integrated in the system I really would like for those to
+>>> be exposed as human-readable properties that I can understand and alter
+>>> without deep knowledge about the register map of the hardware block.
+>>
+>>
+>> I am reaching out to our internal teams to get more information
+>> on different possible phy configurations, based on which the registers
+>> values are decided.
+>> This is something that i tried to understand in the past as well, but
+>> couldn't
+>> grab much information that time.
+>> Will come back with relevant information on this.
+>>
+>
+> We have started looking into understanding the PHYs on msm and
+> eventually create a set of generic phy bindings that can serve multiple
+> platforms.
+> But this task, I presume, will take its course and will involve multi-party
+> discussions.
+>
+> For these QUSB2 and QMP phy drivers, a good amount of work has
+> already gone in getting these drivers in upstream state.
+> The common QMP phy driver supports a bunch of controllers on msm
+> platforms - USB, PCIe and UFS and there are platforms such as DB820c
+> and others that want to pull in these changes from upstream.
+> The future phy controllers also depend on these drivers and we don't want
+> to hold other developers to contribute to these drivers.
+> So, we wish to not delay these drivers further because of the phy bindings.
+> I see that there are phys that still program the registers-value pairs for
+> phy initialization.
+>
+> We will keep working on the bindings while these patches
+> make way to upstream.
+>
+> Can you consider pulling in these drivers?
+> I can send the next version of these drivers with other comments addressed.
+> Please let me know your comments.
 
-> 
-> Thanks,
-> Nipun
-> 
-> 
->> -----Original Message-----
->> From: Nipun Gupta
->> Sent: Sunday, December 18, 2016 2:37
->> To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
->> foundation.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
->> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Stuart Yoder
->> <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
->> Subject: RE: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+Gentle ping. Any thoughts on this ?
+
 >>
->>
->>
->>> -----Original Message-----
->>> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
->>> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Robin Murphy
->>> Sent: Friday, December 16, 2016 18:49
->>> To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
->> arm-
->>> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Stuart Yoder
->>> <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
->>> Subject: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+>>>> [1] -> https://www.linuxplumbersconf.org/2016/ocw/proposals/4047
 >>>
->>> The current SMR masking support using a 2-cell iommu-specifier is
->>> primarily intended to handle individual masters with large and/or
->>> complex Stream ID assignments; it quickly gets a bit clunky in other SMR
->>> use-cases where we just want to consistently mask out the same part of
->>> every Stream ID (e.g. for MMU-500 configurations where the appended TBU
->>> number gets in the way unnecessarily). Let's add a new property to allow
->>> a single global mask value to better fit the latter situation.
->>>
->>> CC: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
->>
->> Tested-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
->>
->>> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
->>> ---
->>>
->>> Compile-tested only...
->>>
->>>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 8 ++++++++
->>>  drivers/iommu/arm-smmu.c                             | 4 +++-
->>>  2 files changed, 11 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->>> b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->>> index e862d1485205..98f5cbe5fdb4 100644
->>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->>> @@ -60,6 +60,14 @@ conditions.
->>>                    aliases of secure registers have to be used during
->>>                    SMMU configuration.
->>>
->>> +- stream-match-mask : Specifies a fixed SMR mask value to combine with
->>> +                  the Stream ID value from every iommu-specifier. This
->>> +                  may be used instead of an "#iommu-cells" value of 2
->>> +                  when there is no need for per-master SMR masks, but
->>> +                  it is still desired to mask some portion of every
->>> +                  Stream ID (e.g. for certain MMU-500 configurations
->>> +                  given globally unique external IDs).
->>> +
->>>  ** Deprecated properties:
->>>
->>>  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
->>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
->>> index 8f7281444551..f1abcb7dde36 100644
->>> --- a/drivers/iommu/arm-smmu.c
->>> +++ b/drivers/iommu/arm-smmu.c
->>> @@ -1534,13 +1534,15 @@ static int arm_smmu_domain_set_attr(struct
->>> iommu_domain *domain,
->>>
->>>  static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args
->> *args)
->>>  {
->>> -	u32 fwid = 0;
->>> +	u32 mask, fwid = 0;
->>>
->>>  	if (args->args_count > 0)
->>>  		fwid |= (u16)args->args[0];
->>>
->>>  	if (args->args_count > 1)
->>>  		fwid |= (u16)args->args[1] << SMR_MASK_SHIFT;
->>> +	else if (!of_property_read_u32(args->np, "stream-match-mask",
->>> &mask))
->>> +		fwid |= (u16)mask << SMR_MASK_SHIFT;
->>>
->>>  	return iommu_fwspec_add_ids(dev, &fwid, 1);
->>>  }
->>> --
->>> 2.10.2.dirty
->>>
->>> _______________________________________________
->>> iommu mailing list
->>> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
->>> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+>>> Regards,
+>>> Bjorn
+
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
