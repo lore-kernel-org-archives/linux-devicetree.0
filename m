@@ -1,78 +1,63 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RESEND PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove
- the OF graph
-Date: Thu, 2 Mar 2017 09:23:27 +0200
-Message-ID: <CAJKOXPeP-86=AsNH-xodkMpLJm1uLG0tKq2bz93FE5oFBDB4mw@mail.gmail.com>
-References: <CGME20170228081811epcas5p3c0a8151d94511e47a0e0d2b8787b1fb0@epcas5p3.samsung.com>
- <1488269879-28876-1-git-send-email-hoegeun.kwon@samsung.com>
- <CAJKOXPfv8wJ+0L4G_0sB1Qh-svXx4VvNJH_1THSy5SsXuUstzA@mail.gmail.com>
- <a9e52516-bb05-7ad3-01d5-da1fe3bc7548@samsung.com>
+From: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 1/3] Documentation: bindings: add assign clock property in
+ u2phy node
+Date: Thu,  2 Mar 2017 15:49:03 +0800
+Message-ID: <1488440945-27291-2-git-send-email-daniel.meng@rock-chips.com>
+References: <1488440945-27291-1-git-send-email-daniel.meng@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a9e52516-bb05-7ad3-01d5-da1fe3bc7548@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, airlied@linux.ie, catalin.marinas@arm.com, Seung Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Inki Dae <inki.dae@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, kgene@kernel.org, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1488440945-27291-1-git-send-email-daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 2, 2017 at 3:44 AM, Hoegeun Kwon <hoegeun.kwon@samsung.com> wrote:
-> On 02/28/2017 06:58 PM, Krzysztof Kozlowski wrote:
->> Discussions in previous thread lead us to bisectability problem.
->> Bisectability in regular driver changes is one thing but in case of
->> driver + DTS the gap is much bigger. DTS will go through separate tree
->> and branches. How do you want to solve the problem?
->
->
-> Sorry for the delay in reply, Mar 1st was the holiday.
-> I thought of two solutions.
->
-> 1. squash the patches in a single patch
+On some platform such as RK3328, the 480m clock may need to assign
+clock parent in dts in stead of clock driver. So this patch add
+property of assigned-clocks and assigned-clock-parents to assign
+parent for 480m clock.
 
-No, for the same reason. DTS code/patches have to go through arm-soc
-DTS branch without mixing with any driver changes. Otherwise arm-soc
-guys are angry.
+Changes in v2:
+ - move u2phy grf specification to grf.txt
 
-> 2. split the dts related patches so that the first part adds the:
-> +    samsung,burst-clock-frequency = <512000000>;
-> +    samsung,esc-clock-frequency = <16000000>;
->
-> and the second part at the end removes the 'port' node
-> So it consists of 6 patches in total.
+Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-That's a solution. The remaining DTS patches would go in next release...
-
-Another solution would be for this release cycle:
-        if (of_property_does_not_exist(node, "samsung,burst-clock-frequency") {
-                // Fallback to old parsing mode
-                node = of_graph_get_endpoint_by_regs(node, DSI_PORT_OUT, 0);
-                if (!node) {
-                        dev_err(dev, "no burst-clock-frequency nor
-output port with endpoint specified\n");
-                        return -EINVAL;
-                }
-        }
-        ret = exynos_dsi_of_read_u32(node, "samsung,burst-clock-frequency",
-                                     &dsi->burst_clk_rate);
-        ...
-
-...and in next release the DTS patches would go in. This would give
-you also DTB backward compatibility. However still DTS could be
-applied later, after driver changes gets into mainline.
-
-Personally I would prefer your solution #2 (with separate DTS patch
-adding new properties). Does it sound reasonable for Inki?
-
-Thanks for looking into this problem.
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+index 3c29c77..e71a8d2 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+@@ -2,6 +2,7 @@ ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+ 
+ Required properties (phy (parent) node):
+  - compatible : should be one of the listed compatibles:
++	* "rockchip,rk3328-usb2phy"
+ 	* "rockchip,rk3366-usb2phy"
+ 	* "rockchip,rk3399-usb2phy"
+  - reg : the address offset of grf for usb-phy configuration.
+@@ -11,6 +12,11 @@ Required properties (phy (parent) node):
+ Optional properties:
+  - clocks : phandle + phy specifier pair, for the input clock of phy.
+  - clock-names : input clock name of phy, must be "phyclk".
++ - assigned-clocks : phandle of usb 480m clock.
++ - assigned-clock-parents : parent of usb 480m clock, select between
++		 usb-phy output 480m and xin24m.
++		 Refer to clk/clock-bindings.txt for generic clock
++		 consumer properties.
+ 
+ Required nodes : a sub-node is required for each port the phy provides.
+ 		 The sub-node name is used to identify host or otg port,
+-- 
+1.9.1
