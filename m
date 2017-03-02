@@ -1,46 +1,63 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] ARM: dts: mvebu: remove unnecessary PCI range from 98dx3236
-Date: Fri,  3 Mar 2017 11:42:39 +1300
-Message-ID: <20170302224239.10062-1-chris.packham@alliedtelesis.co.nz>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
+Date: Thu, 2 Mar 2017 15:07:21 -0800
+Message-ID: <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
+ <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, gregory.clement@free-electrons.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
-The Marvell 98dx3236 SoC only has a single PCIe x1 interface. The "Port
-0.1 MEM" range was errantly kept when creating a specific dts for the
-SoC.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-index f6a03dcee5ef..0e63f927c73d 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -95,8 +95,7 @@
- 			ranges =
- 			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000   /* Port 0.0 registers */
- 				0x82000000 0x1 0       MBUS_ID(0x04, 0xe8) 0 1 0 /* Port 0.0 MEM */
--				0x81000000 0x1 0       MBUS_ID(0x04, 0xe0) 0 1 0 /* Port 0.0 IO  */
--				0x82000000 0x2 0       MBUS_ID(0x04, 0xd8) 0 1 0 /* Port 0.1 MEM */>;
-+				0x81000000 0x1 0       MBUS_ID(0x04, 0xe0) 0 1 0 /* Port 0.0 IO  */>;
- 
- 			pcie1: pcie@1,0 {
- 				device_type = "pci";
--- 
-2.11.0.24.ge6920cf
+On 03/02/2017 07:53 AM, Sakari Ailus wrote:
+> Hi Steve,
+>
+> On Wed, Feb 15, 2017 at 06:19:15PM -0800, Steve Longerbeam wrote:
+>> Add a new FRAME_TIMEOUT event to signal that a video capture or
+>> output device has timed out waiting for reception or transmit
+>> completion of a video frame.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>> ---
+>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 5 +++++
+>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>  include/uapi/linux/videodev2.h                  | 1 +
+>>  3 files changed, 7 insertions(+)
+>>
+>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> index 8d663a7..dd77d9b 100644
+>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>> @@ -197,6 +197,11 @@ call.
+>>  	the regions changes. This event has a struct
+>>  	:c:type:`v4l2_event_motion_det`
+>>  	associated with it.
+>> +    * - ``V4L2_EVENT_FRAME_TIMEOUT``
+>> +      - 7
+>> +      - This event is triggered when the video capture or output device
+>> +	has timed out waiting for the reception or transmit completion of
+>> +	a frame of video.
+>
+> As you're adding a new interface, I suppose you have an implementation
+> around. How do you determine what that timeout should be?
+
+The imx-media driver sets the timeout to 1 second, or 30 frame
+periods at 30 fps.
+
+Steve
