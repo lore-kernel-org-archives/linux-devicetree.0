@@ -1,567 +1,132 @@
-From: Rick Altherr <raltherr@google.com>
-Subject: Re: [PATCH 2/2] hwmon: Aspeed AST2400/AST2500 ADC
-Date: Wed, 1 Mar 2017 19:29:52 -0800
-Message-ID: <CAPLgG==wCZn6Zx5eYdVRsRb6qBEU1g5176jn852EjKcZ9OUPtQ@mail.gmail.com>
-References: <20170228201404.32125-1-raltherr@google.com> <20170228201404.32125-2-raltherr@google.com>
- <CACPK8XfOZiNdrQJaDZcSZkJ4gSZZpGy-r9RQAeykeyUS0yzXMA@mail.gmail.com> <a512cd6c-972b-0a3b-0c2c-5eb18545798a@roeck-us.net>
+From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+Date: Thu, 2 Mar 2017 04:18:56 +0000
+Message-ID: <AM5PR0401MB251438AFDE691D570353B537E6280@AM5PR0401MB2514.eurprd04.prod.outlook.com>
+References: <ad6b6a4937b1fe183e6d48ccbaf4cb46db92fed4.1481893907.git.robin.murphy@arm.com>
+	<DB6PR0402MB2694957C2D7C648CC342627FE69F0@DB6PR0402MB2694.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a512cd6c-972b-0a3b-0c2c-5eb18545798a@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <DB6PR0402MB2694957C2D7C648CC342627FE69F0-2mNvjAGDOPn2WJ5A9zev/o3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Resending in plain text.
 
-On Tue, Feb 28, 2017 at 7:45 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 02/28/2017 04:49 PM, Joel Stanley wrote:
->>
->> On Wed, Mar 1, 2017 at 6:44 AM, Rick Altherr <raltherr@google.com> wrote:
->>>
->>> Aspeed AST2400/AST2500 BMC SoCs include a 16 channel, 10-bit ADC. This
->>> driver implements reading the ADC values, enabling channels via device
->>> tree, and optionally providing channel labels via device tree.  Low and
->>> high threshold interrupts are supported by the hardware but not
->>> implemented.
->>>
->>> Signed-off-by: Rick Altherr <raltherr@google.com>
->>
->>
->> Looks good. Some minor comments below.
->>
->> Is there a reason you wrote a hwmon driver instead of an iio driver? I
->> wasn't sure what the recommended subsystem is.
->
->
-> Excellent point. Question is really if there is a plan to add support for
-> thresholds. If not, an iio driver might be more appropriate.
->
-> Guenter
->
+Hi Robin/Will,
 
-The hardware supports firing interrupts on high and low thresholds.
-I'm not planning to use that feature yet so I didn't implement it.
-Would you prefer that I leave it as is (maybe with a TODO), implement
-the thresholding, or change to iio?
+This patch is currently not applied on the tree.
+I had verified the patch and it seems good.
+Is ack required on the patch or do I need to send a non RFC patch (with Robin's signoff)?
+This is very much required to support SMMU on NXP platform.
 
-Rick
+Thanks,
+Nipun
 
->>
->>> ---
->>>  drivers/hwmon/Kconfig      |  10 ++
->>>  drivers/hwmon/Makefile     |   1 +
->>>  drivers/hwmon/aspeed_adc.c | 383
->>> +++++++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 394 insertions(+)
->>>  create mode 100644 drivers/hwmon/aspeed_adc.c
->>>
->>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->>> index 0649d53f3d16..c99a67b4afe4 100644
->>> --- a/drivers/hwmon/Kconfig
->>> +++ b/drivers/hwmon/Kconfig
->>> @@ -261,6 +261,16 @@ config SENSORS_ASC7621
->>>           This driver can also be built as a module.  If so, the module
->>>           will be called asc7621.
->>>
->>> +config SENSORS_ASPEED_ADC
->>> +       tristate "Aspeed AST2400/AST2500 ADC"
->>> +       depends on ARCH_ASPEED
->>
->>
->> depends on ARCH_ASPEED || COMPILE_TEST.
->>
->>> +       help
->>> +         If you say yes here you get support for the Aspeed
->>> AST2400/AST2500
->>> +         ADC.
->>> +
->>> +         This driver can also be built as a module.  If so, the module
->>> +         will be called aspeed_adc.
->>> +
->>>  config SENSORS_K8TEMP
->>>         tristate "AMD Athlon64/FX or Opteron temperature sensor"
->>>         depends on X86 && PCI
->>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
->>> index 5509edf6186a..eede049c9d0d 100644
->>> --- a/drivers/hwmon/Makefile
->>> +++ b/drivers/hwmon/Makefile
->>> @@ -46,6 +46,7 @@ obj-$(CONFIG_SENSORS_ADT7475) += adt7475.o
->>>  obj-$(CONFIG_SENSORS_APPLESMC) += applesmc.o
->>>  obj-$(CONFIG_SENSORS_ARM_SCPI) += scpi-hwmon.o
->>>  obj-$(CONFIG_SENSORS_ASC7621)  += asc7621.o
->>> +obj-$(CONFIG_SENSORS_ASPEED_ADC) += aspeed_adc.o
->>>  obj-$(CONFIG_SENSORS_ATXP1)    += atxp1.o
->>>  obj-$(CONFIG_SENSORS_CORETEMP) += coretemp.o
->>>  obj-$(CONFIG_SENSORS_DA9052_ADC)+= da9052-hwmon.o
->>> diff --git a/drivers/hwmon/aspeed_adc.c b/drivers/hwmon/aspeed_adc.c
->>> new file mode 100644
->>> index 000000000000..098e32315264
->>> --- /dev/null
->>> +++ b/drivers/hwmon/aspeed_adc.c
->>> @@ -0,0 +1,383 @@
->>> +/*
->>> + * Aspeed AST2400/2500 ADC
->>> + *
->>> + * Copyright (C) 2017 Google, Inc.
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> it
->>> + * under the terms and conditions of the GNU General Public License,
->>> + * version 2, as published by the Free Software Foundation.
->>> + *
->>> + */
->>> +
->>> +#include <asm/io.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/err.h>
->>> +#include <linux/errno.h>
->>> +#include <linux/hwmon.h>
->>> +#include <linux/hwmon-sysfs.h>
->>> +#include <linux/module.h>
->>> +#include <linux/mutex.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/types.h>
->>> +
->>> +#define ASPEED_ADC_NUM_CHANNELS        16
->>> +#define ASPEED_ADC_REF_VOLTAGE 2500 /* millivolts */
->>> +
->>> +#define ASPEED_ADC_REG_ADC00 0x00
->>> +#define ASPEED_ADC_REG_ADC04 0x04
->>> +#define ASPEED_ADC_REG_ADC08 0x08
->>> +#define ASPEED_ADC_REG_ADC0C 0x0C
->>> +#define ASPEED_ADC_REG_ADC10 0x10
->>> +#define ASPEED_ADC_REG_ADC14 0x14
->>> +#define ASPEED_ADC_REG_ADC18 0x18
->>> +#define ASPEED_ADC_REG_ADC1C 0x1C
->>> +#define ASPEED_ADC_REG_ADC20 0x20
->>> +#define ASPEED_ADC_REG_ADC24 0x24
->>> +#define ASPEED_ADC_REG_ADC28 0x28
->>> +#define ASPEED_ADC_REG_ADC2C 0x2C
->>
->>
->> I'm not sure that these defines add any value. I'd either give them
->> names such as "ASPEED_ADC_ENGINE_CTRL". or just use the register
->> offset directly.
->>
->>> +
->>> +#define ASPEED_ADC_OPERATION_MODE_POWER_DOWN   (0x0 << 1)
->>> +#define ASPEED_ADC_OPERATION_MODE_STANDBY      (0x1 << 1)
->>> +#define ASPEED_ADC_OPERATION_MODE_NORMAL       (0x7 << 1)
->>> +
->>> +#define ASPEED_ADC_ENGINE_ENABLE       BIT(0)
->>> +
->>> +struct aspeed_adc_data {
->>> +       struct device   *dev;
->>> +       void __iomem    *base;
->>> +       struct clk      *pclk;
->>> +       struct mutex    lock;
->>> +       unsigned long   update_interval_ms;
->>> +       u32             enabled_channel_mask;
->>> +       const char*     channel_labels[ASPEED_ADC_NUM_CHANNELS];
->>> +};
->>> +
->>> +static int aspeed_adc_set_adc_clock_frequency(
->>> +               struct aspeed_adc_data *data,
->>> +               unsigned long desired_update_interval_ms)
->>> +{
->>> +       long pclk_hz = clk_get_rate(data->pclk);
->>> +       long adc_combined_divisor;
->>> +       long adc_pre_divisor;
->>> +       long adc_divisor;
->>> +       long adc_clock_control_reg_val;
->>> +        long num_enabled_channels =
->>> hweight32(data->enabled_channel_mask);
->>
->>
->> Some whitespace damage here.
->>
->>> +
->>> +       if (desired_update_interval_ms < 1)
->>> +               return -EINVAL;
->>> +
->>> +       /* From the AST2400 datasheet:
->>
->>
->> Nit: kernel style is to leave a blank line on the first line of
->> multi-line comments:
->>
->>  /*
->>   * Foo
->>   * etc
->>
->>> +        *   adc_period_s = pclk_period_s * 2 * (pre_divisor+1) *
->>> (divisor+1)
->>> +        *
->>> +        *   and
->>> +        *
->>> +        *   sample_period_s = 12 * adc_period_s
->>> +        *
->>> +        * Substitute pclk_period_s = (1 / pclk_hz)
->>> +        *
->>> +        * Solve for (pre-divisor+1) * (divisor+1) as those are settings
->>> we need
->>> +        * to program:
->>> +        *   (pre-divisor+1) * (divisor+1) = (sample_period_s * pclk_hz)
->>> / 24
->>> +        */
->>> +
->>> +       /* Assume PCLK runs at a fairly high frequency so dividing it
->>> first
->>> +        * loses little accuracy.  Also note that the above formulas have
->>> +        * sample_period in seconds while our desired_update_interval is
->>> in
->>> +        * milliseconds, hence the divide by 1000.
->>> +        */
->>> +       adc_combined_divisor = desired_update_interval_ms *
->>> +                       (pclk_hz / 24 / 1000 / num_enabled_channels);
->>> +
->>> +       /* Prefer to use the ADC divisor over the ADC pre-divisor.  ADC
->>> divisor
->>> +        * is 10-bits wide so anything over 1024 must use the
->>> pre-divisor.
->>> +        */
->>> +       adc_pre_divisor = 1;
->>> +       while (adc_combined_divisor/adc_pre_divisor > (1<<10)) {
->>> +               adc_pre_divisor += 1;
->>> +       };
->>> +       adc_divisor = adc_combined_divisor / adc_pre_divisor;
->>> +
->>> +       /* Since ADC divisor and pre-divisor are used in division, the
->>> register
->>> +        * value is implicitly incremented by one before use.  This means
->>> we
->>> +        * need to subtract one from our calculated values above.
->>> +        */
->>> +       adc_pre_divisor -= 1;
->>> +       adc_divisor -= 1;
->>> +
->>> +       adc_clock_control_reg_val = (adc_pre_divisor << 17) |
->>> adc_divisor;
->>> +
->>> +       mutex_lock(&data->lock);
->>> +       data->update_interval_ms =
->>> +                       (adc_pre_divisor + 1) * (adc_divisor + 1)
->>> +                       / (pclk_hz / 24 / 1000);
->>> +       writel(adc_clock_control_reg_val, data->base +
->>> ASPEED_ADC_REG_ADC0C);
->>> +       mutex_unlock(&data->lock);
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static int aspeed_adc_get_channel_reading(struct aspeed_adc_data *data,
->>> +                                               int channel, long *val)
->>> +{
->>> +       u32 data_reg;
->>> +       u32 data_reg_val;
->>> +       long adc_val;
->>> +
->>> +       /* Each 32-bit data register contains 2 10-bit ADC values. */
->>> +       data_reg = ASPEED_ADC_REG_ADC10 + (channel / 2) * 4;
->>> +       data_reg_val = readl(data->base + data_reg);
->>> +       if (channel % 2 == 0) {
->>> +               adc_val = data_reg_val & 0x3FF;
->>> +       } else {
->>> +               adc_val = (data_reg_val >> 16) & 0x3FF;
->>> +       }
->>
->>
->> I wonder if you could replace the above block with:
->>
->>             adc_val = readw(data->base + ASPEED_ADC_REG_ADC10 + channel);
->>
->>> +
->>> +       /* Scale 10-bit input reading to millivolts. */
->>> +       *val = adc_val * ASPEED_ADC_REF_VOLTAGE / 1024;
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static umode_t aspeed_adc_hwmon_is_visible(const void *_data,
->>> +                                               enum hwmon_sensor_types
->>> type,
->>> +                                               u32 attr, int channel)
->>> +{
->>> +       const struct aspeed_adc_data* data = _data;
->>> +
->>> +       if (type == hwmon_chip && attr == hwmon_chip_update_interval) {
->>> +               return S_IRUGO | S_IWUSR;
->>> +       } else if (type == hwmon_in) {
->>> +               /* Only channels that are enabled should be visible. */
->>> +               if (channel >= 0 && channel <= ASPEED_ADC_NUM_CHANNELS &&
->>> +                   (data->enabled_channel_mask & BIT(channel))) {
->>> +
->>> +                       /* All enabled channels have an input but labels
->>> are
->>> +                        * optional in the device tree.
->>> +                        */
->>> +                       if (attr == hwmon_in_input) {
->>> +                               return S_IRUGO;
->>> +                       } else if (attr == hwmon_in_label &&
->>> +                                       data->channel_labels[channel] !=
->>> NULL) {
->>> +                               return S_IRUGO;
->>> +                       }
->>> +               }
->>> +       }
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static int aspeed_adc_hwmon_read(struct device *dev, enum
->>> hwmon_sensor_types type,
->>> +                        u32 attr, int channel, long *val)
->>> +{
->>> +       struct aspeed_adc_data *data = dev_get_drvdata(dev);
->>> +
->>> +       if (type == hwmon_chip && attr == hwmon_chip_update_interval) {
->>> +               *val = data->update_interval_ms;
->>> +               return 0;
->>> +       } else if (type == hwmon_in && attr == hwmon_in_input) {
->>> +               return aspeed_adc_get_channel_reading(data, channel,
->>> val);
->>> +       }
->>> +
->>> +       return -EOPNOTSUPP;
->>> +}
->>> +
->>> +static int aspeed_adc_hwmon_read_string(struct device *dev,
->>> +                                       enum hwmon_sensor_types type,
->>> +                                       u32 attr, int channel, char
->>> **str)
->>> +{
->>> +       struct aspeed_adc_data *data = dev_get_drvdata(dev);
->>> +
->>> +       if (type == hwmon_in && attr == hwmon_in_label) {
->>> +               *str = (char*)data->channel_labels[channel];
->>> +               return 0;
->>> +       }
->>> +
->>> +       return -EOPNOTSUPP;
->>> +}
->>> +
->>> +static int aspeed_adc_hwmon_write(struct device *dev, enum
->>> hwmon_sensor_types type,
->>> +                         u32 attr, int channel, long val)
->>> +{
->>> +       struct aspeed_adc_data *data = dev_get_drvdata(dev);
->>> +
->>> +       if (type == hwmon_chip && attr == hwmon_chip_update_interval) {
->>> +               return aspeed_adc_set_adc_clock_frequency(data, val);
->>> +       }
->>> +
->>> +       return -EOPNOTSUPP;
->>> +}
->>> +
->>> +static const struct hwmon_ops aspeed_adc_hwmon_ops = {
->>> +       .is_visible = aspeed_adc_hwmon_is_visible,
->>> +       .read = aspeed_adc_hwmon_read,
->>> +       .read_string = aspeed_adc_hwmon_read_string,
->>> +       .write = aspeed_adc_hwmon_write,
->>> +};
->>> +
->>> +static const u32 aspeed_adc_hwmon_chip_config[] = {
->>> +       HWMON_C_UPDATE_INTERVAL,
->>> +       0
->>> +};
->>> +
->>> +static const struct hwmon_channel_info aspeed_adc_hwmon_chip_channel = {
->>> +       .type = hwmon_chip,
->>> +       .config = aspeed_adc_hwmon_chip_config,
->>> +};
->>> +
->>> +static const u32 aspeed_adc_hwmon_in_config[] = {
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       HWMON_I_INPUT | HWMON_I_LABEL,
->>> +       0
->>> +};
->>> +
->>> +static const struct hwmon_channel_info aspeed_adc_hwmon_in_channel = {
->>> +       .type = hwmon_in,
->>> +       .config = aspeed_adc_hwmon_in_config,
->>> +};
->>> +
->>> +static const struct hwmon_channel_info *aspeed_adc_hwmon_channel_info[]
->>> = {
->>> +       &aspeed_adc_hwmon_chip_channel,
->>> +       &aspeed_adc_hwmon_in_channel,
->>> +       NULL
->>> +};
->>> +
->>> +static const struct hwmon_chip_info aspeed_adc_hwmon_chip_info = {
->>> +       .ops = &aspeed_adc_hwmon_ops,
->>> +       .info = aspeed_adc_hwmon_channel_info,
->>> +};
->>> +
->>> +static int aspeed_adc_probe(struct platform_device *pdev)
->>> +{
->>> +       struct aspeed_adc_data *data;
->>> +       struct resource *res;
->>> +       int ret;
->>> +       struct device *hwmon_dev;
->>> +       u32 desired_update_interval_ms;
->>> +       u32 adc_engine_control_reg_val;
->>> +       struct device_node* node;
->>> +
->>> +       data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->>> +       if (!data)
->>> +               return -ENOMEM;
->>> +
->>> +       data->pclk = devm_clk_get(&pdev->dev, NULL);
->>> +       if (IS_ERR(data->pclk)) {
->>> +               dev_err(&pdev->dev, "clk_get failed\n");
->>> +               return PTR_ERR(data->pclk);
->>> +       }
->>> +
->>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +       data->base = devm_ioremap_resource(&pdev->dev, res);
->>> +       if (IS_ERR(data->base))
->>> +               return PTR_ERR(data->base);
->>> +
->>> +       ret = of_property_read_u32(pdev->dev.of_node,
->>> +                       "update-interval-ms",
->>> &desired_update_interval_ms);
->>> +       if (ret < 0 || desired_update_interval_ms == 0) {
->>> +               dev_err(&pdev->dev,
->>> +                               "Missing or zero update-interval-ms
->>> property, "
->>> +                               "defaulting to 100ms\n");
->>
->>
->> Put the string on one line so it can be easily searched for.
->>
->>> +               desired_update_interval_ms = 100;
->>> +       }
->>> +
->>> +       mutex_init(&data->lock);
->>> +
->>> +       ret = clk_prepare_enable(data->pclk);
->>> +       if (ret) {
->>> +               dev_err(&pdev->dev, "failed to enable clock\n");
->>> +               mutex_destroy(&data->lock);
->>> +                return ret;
->>
->>
->> Strange whitespace here.
->>
->>> +       }
->>> +
->>> +       /* Figure out which channels are marked available in the device
->>> tree. */
->>> +       data->enabled_channel_mask = 0;
->>> +       for_each_available_child_of_node(pdev->dev.of_node, node) {
->>> +               u32 pval;
->>> +               unsigned int channel;
->>> +
->>> +               if (of_property_read_u32(node, "reg", &pval)) {
->>> +                       dev_err(&pdev->dev, "invalid reg on %s\n",
->>> +                               node->full_name);
->>> +                       continue;
->>> +               }
->>> +
->>> +               channel = pval;
->>> +               if (channel >= ASPEED_ADC_NUM_CHANNELS) {
->>> +                       dev_err(&pdev->dev,
->>> +                               "invalid channel index %d on %s\n",
->>> +                               channel, node->full_name);
->>> +                       continue;
->>> +               }
->>> +
->>> +               data->enabled_channel_mask |= BIT(channel);
->>> +
->>> +               /* Cache a pointer to the label if one is specified.
->>> Ignore any
->>> +                * errors as the label property is optional.
->>> +                */
->>> +               of_property_read_string(node, "label",
->>> &data->channel_labels[channel]);
->>
->>
->> I was wondering how long we could keep that pointer around. I think we
->> are ok for the lifetime of the driver, as we hold a reference to the
->> node in dev.of_node.
->>
->>> +       }
->>> +
->>> +       platform_set_drvdata(pdev, data);
->>> +       aspeed_adc_set_adc_clock_frequency(data,
->>> desired_update_interval_ms);
->>
->>
->> This reads funny. aspeed_adc_set_clock_frequency instead?
->>
->>> +
->>> +       /* Start all the requested channels in normal mode. */
->>> +       adc_engine_control_reg_val = (data->enabled_channel_mask << 16) |
->>> +               ASPEED_ADC_OPERATION_MODE_NORMAL |
->>> ASPEED_ADC_ENGINE_ENABLE;
->>> +       writel(adc_engine_control_reg_val, data->base +
->>> ASPEED_ADC_REG_ADC00);
->>> +
->>> +       /* Register sysfs hooks */
->>> +       hwmon_dev = devm_hwmon_device_register_with_info(
->>> +                       &pdev->dev, "aspeed_adc", data,
->>> +                       &aspeed_adc_hwmon_chip_info, NULL);
->>> +       if (IS_ERR(hwmon_dev)) {
->>> +               clk_disable_unprepare(data->pclk);
->>> +               mutex_destroy(&data->lock);
->>> +               return PTR_ERR(hwmon_dev);
->>> +       }
->>> +
->>> +       return 0;
->>> +}
->>> +
->>> +static int aspeed_adc_remove(struct platform_device *pdev) {
->>> +       struct aspeed_adc_data *data = dev_get_drvdata(&pdev->dev);
->>> +       clk_disable_unprepare(data->pclk);
->>> +       mutex_destroy(&data->lock);
->>> +       return 0;
->>> +}
->>> +
->>> +const struct of_device_id aspeed_adc_matches[] = {
->>> +       { .compatible = "aspeed,ast2400-adc" },
->>> +       { .compatible = "aspeed,ast2500-adc" },
->>> +};
->>> +MODULE_DEVICE_TABLE(of, aspeed_adc_matches);
->>> +
->>> +static struct platform_driver aspeed_adc_driver = {
->>> +       .probe = aspeed_adc_probe,
->>> +       .remove = aspeed_adc_remove,
->>> +       .driver = {
->>> +               .name = KBUILD_MODNAME,
->>> +               .of_match_table = aspeed_adc_matches,
->>> +       }
->>> +};
->>> +
->>> +module_platform_driver(aspeed_adc_driver);
->>> +
->>> +MODULE_AUTHOR("Rick Altherr <raltherr@google.com>");
->>> +MODULE_DESCRIPTION("Aspeed AST2400/2500 ADC Driver");
->>> +MODULE_LICENSE("GPL");
->>> --
->>> 2.11.0.483.g087da7b7c-goog
->>>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-hwmon" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->
+
+> -----Original Message-----
+> From: Nipun Gupta
+> Sent: Sunday, December 18, 2016 2:37
+> To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
+> foundation.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Stuart Yoder
+> <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> Subject: RE: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> > bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Robin Murphy
+> > Sent: Friday, December 16, 2016 18:49
+> > To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> arm-
+> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; Stuart Yoder
+> > <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> > Subject: [RFC PATCH] iommu/arm-smmu: Add global SMR masking property
+> >
+> > The current SMR masking support using a 2-cell iommu-specifier is
+> > primarily intended to handle individual masters with large and/or
+> > complex Stream ID assignments; it quickly gets a bit clunky in other SMR
+> > use-cases where we just want to consistently mask out the same part of
+> > every Stream ID (e.g. for MMU-500 configurations where the appended TBU
+> > number gets in the way unnecessarily). Let's add a new property to allow
+> > a single global mask value to better fit the latter situation.
+> >
+> > CC: Stuart Yoder <stuart.yoder-3arQi8VN3Tc@public.gmane.org>
+> 
+> Tested-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+> 
+> > Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >
+> > Compile-tested only...
+> >
+> >  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 8 ++++++++
+> >  drivers/iommu/arm-smmu.c                             | 4 +++-
+> >  2 files changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > index e862d1485205..98f5cbe5fdb4 100644
+> > --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+> > @@ -60,6 +60,14 @@ conditions.
+> >                    aliases of secure registers have to be used during
+> >                    SMMU configuration.
+> >
+> > +- stream-match-mask : Specifies a fixed SMR mask value to combine with
+> > +                  the Stream ID value from every iommu-specifier. This
+> > +                  may be used instead of an "#iommu-cells" value of 2
+> > +                  when there is no need for per-master SMR masks, but
+> > +                  it is still desired to mask some portion of every
+> > +                  Stream ID (e.g. for certain MMU-500 configurations
+> > +                  given globally unique external IDs).
+> > +
+> >  ** Deprecated properties:
+> >
+> >  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > index 8f7281444551..f1abcb7dde36 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -1534,13 +1534,15 @@ static int arm_smmu_domain_set_attr(struct
+> > iommu_domain *domain,
+> >
+> >  static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args
+> *args)
+> >  {
+> > -	u32 fwid = 0;
+> > +	u32 mask, fwid = 0;
+> >
+> >  	if (args->args_count > 0)
+> >  		fwid |= (u16)args->args[0];
+> >
+> >  	if (args->args_count > 1)
+> >  		fwid |= (u16)args->args[1] << SMR_MASK_SHIFT;
+> > +	else if (!of_property_read_u32(args->np, "stream-match-mask",
+> > &mask))
+> > +		fwid |= (u16)mask << SMR_MASK_SHIFT;
+> >
+> >  	return iommu_fwspec_add_ids(dev, &fwid, 1);
+> >  }
+> > --
+> > 2.10.2.dirty
+> >
+> > _______________________________________________
+> > iommu mailing list
+> > iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
