@@ -1,11 +1,15 @@
-From: Anurup M <anurupvasu@gmail.com>
-Subject: [PATCH v5 11/11] dts: arm64: hip07: Add Hisilicon SoC PMU support
-Date: Thu,  2 Mar 2017 05:50:09 -0500
-Message-ID: <1488451809-89120-1-git-send-email-anurup.m@huawei.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and
+ GXL
+Date: Thu, 2 Mar 2017 13:31:38 +0100
+Message-ID: <e26cf584-dab2-2702-f7e6-b28f750fa00c@suse.de>
+References: <1488365164-22861-1-git-send-email-narmstrong@baylibre.com>
+ <1488365164-22861-4-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488365164-22861-4-git-send-email-narmstrong@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,104 +19,93 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mark.rutland@arm.com, will.deacon@arm.com, robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com
-Cc: dikshit.n@huawei.com, devicetree@vger.kernel.org, anurupvasu@gmail.com, gabriele.paoloni@huawei.com, huangdaode@hisilicon.com, john.garry@huawei.com, shyju.pv@huawei.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, zhangshaokun@hisilicon.com, sanil.kumar@hisilicon.com, linux-arm-kernel@lists.infradead.org, shiju.jose@huawei.com, tanxiaojun@huawei.com, anurup.m@huawei.com
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, khilman@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for djtag, L3 cache and MN to support uncore events.
+Hi Neil,
 
-Signed-off-by: Anurup M <anurup.m@huawei.com>
----
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 79 ++++++++++++++++++++++++++++++++
- 1 file changed, 79 insertions(+)
+Am 01.03.2017 um 11:46 schrieb Neil Armstrong:
+> The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index dcd1117..70d9c93 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -1083,4 +1083,83 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	djtag0: djtag@60010000 {
-+		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		reg = <0x0 0x60010000 0x0 0x10000>;
-+		hisilicon,scl-id = <0x03>;
-+
-+		/* L3 cache bank 0 for socket0 CPU die scl#3 */
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01 0x01>;
-+		};
-+
-+		/* L3 cache bank 1 for socket0 CPU die scl#3 */
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02 0x01>;
-+		};
-+
-+		/* L3 cache bank 2 for socket0 CPU die scl#3 */
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03 0x01>;
-+		};
-+
-+		/* L3 cache bank 3 for socket0 CPU die scl#3 */
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04 0x01>;
-+		};
-+
-+		/*
-+		 * Miscellaneous node for socket0
-+		 * CPU die scl#2
-+		 */
-+		pmumn0 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+		};
-+	};
-+
-+	djtag1: djtag@40010000 {
-+		compatible = "hisilicon,hip07-cpu-djtag-v2";
-+		reg = <0x0 0x40010000 0x0 0x10000>;
-+		hisilicon,scl-id = <0x01>;
-+
-+		/* L3 cache bank 0 for socket0 CPU die scl#1 */
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01 0x01>;
-+		};
-+
-+		/* L3 cache bank 1 for socket0 CPU die scl#1 */
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02 0x01>;
-+		};
-+
-+		/* L3 cache bank 2 for socket0 CPU die scl#1 */
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03 0x01>;
-+		};
-+
-+		/* L3 cache bank 3 for socket0 CPU die scl#1 */
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04 0x01>;
-+		};
-+
-+		/*
-+		 * Miscellaneous node for socket0
-+		 * CPU die scl#1
-+		 */
-+		pmumn1 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+		};
-+	};
-+
- };
--- 
-2.1.4
+First of all, any reason you're upper-casing Mali in the commit message?
+ARM doesn't.
+
+> =
+
+> The node is simply added in the meson-gxbb.dtsi file.
+
+The GXBB part looks fine on a quick look.
+
+> =
+
+> For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
+> patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
+> dtsi files.
+
+This part is slightly confusing though.
+
+What exactly is the GXL vs. GXM difference that this can't be handled by
+overriding node properties compatible/interrupts/clocks? I am missing a
+GXM patch in this series as rationale for doing it this way.
+
+In particular I am wondering whether the whole GXM-inherits-from-GXL
+concept is flawed and should be adjusted if this leads to secondary
+.dtsi files like this: My proposal would be to instead create a
+meson-gxl-gxm.dtsi, that meson-gxl.dtsi and meson-gxm.dtsi can inherit
+the current common parts from, then the Mali bits can simply go into
+meson-gxl.dtsi without extra #includes needed in S905X and S905D. While
+it's slightly more work to split once again, I think it would be cleaner.
+
+Regards,
+Andreas
+
+> =
+
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi      | 37 ++++++++++++++++++=
+++
+>  arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi  | 43 ++++++++++++++++++=
+++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi |  1 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi |  1 +
+>  4 files changed, 82 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+[...]
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi b/arch/arm6=
+4/boot/dts/amlogic/meson-gxl-s905d.dtsi
+> index 615308e..5a90e30 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+> @@ -42,6 +42,7 @@
+>   */
+>  =
+
+>  #include "meson-gxl.dtsi"
+> +#include "meson-gxl-mali.dtsi"
+>  =
+
+>  / {
+>  	compatible =3D "amlogic,s905d", "amlogic,meson-gxl";
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm6=
+4/boot/dts/amlogic/meson-gxl-s905x.dtsi
+> index 08237ee..0f78d83 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+> @@ -42,6 +42,7 @@
+>   */
+>  =
+
+>  #include "meson-gxl.dtsi"
+> +#include "meson-gxl-mali.dtsi"
+>  =
+
+>  / {
+>  	compatible =3D "amlogic,s905x", "amlogic,meson-gxl";
+
+-- =
+
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
+HRB 21284 (AG N=FCrnberg)
