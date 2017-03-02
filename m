@@ -1,173 +1,96 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Thu, 2 Mar 2017 18:02:57 +0200
-Message-ID: <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [RESEND PATCH v6 3/6] i2c: designware: MASTER mode as separated
+ driver
+Date: Thu, 2 Mar 2017 15:34:18 +0000
+Message-ID: <113b5d86-970b-ec86-0a38-735573f1eec2@synopsys.com>
+References: <cover.1488383202.git.lolivei@synopsys.com>
+ <d250a2bebe89ee99bf9d1a86503bebf2ee60c85c.1488383202.git.lolivei@synopsys.com>
+ <da9fb29b-7920-eb74-9102-65b3f253eb4d@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <da9fb29b-7920-eb74-9102-65b3f253eb4d@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
-
-On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
-> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
-> all subdev entities in a pipeline to a given video device.
+On 02-Mar-17 13:41, Jarkko Nikula wrote:
+> On 03/01/17 17:59, Luis Oliveira wrote:
+>> - The functions related to I2C master mode of operation were transformed
+>>   in a single driver.
+>> - Common definitions were moved to i2c-designware-core.h
+>> - The i2c-designware-core is now only a library file, the functions
+>>   associated are in a source file called i2c-designware-common and
+>>   are used by both i2c-designware-master and i2c-designware-slave.
+>> - To decrease noise in namespace common i2c_dw_*() functions are
+>>   now using ops to keep them private.
+>>
+>> Almost all of the "core" source is now part of the "master" source. The
+>> difference is the functions used by both modes and they are in the
+>> "common" source file.
+>>
+>> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+>> Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> ---
+>> V5->V6
+>> - Now using ops
+>>
+>>  drivers/i2c/busses/Makefile                        |   1 +
+>>  drivers/i2c/busses/i2c-designware-common.c         | 274 +++++++++++++++
+>>  drivers/i2c/busses/i2c-designware-core.h           | 140 +++++++-
+>>  ...c-designware-core.c => i2c-designware-master.c} | 367 +--------------------
+>>  drivers/i2c/busses/i2c-designware-platdrv.c        |   6 +-
+>>  5 files changed, 423 insertions(+), 365 deletions(-)
+>>  create mode 100644 drivers/i2c/busses/i2c-designware-common.c
+>>  rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c}
+>> (64%)
+>>
+> ...
+>> diff --git a/drivers/i2c/busses/i2c-designware-core.h
+>> b/drivers/i2c/busses/i2c-designware-core.h
+>> index 1a010730be43..35d7264d9e3a 100644
+>> --- a/drivers/i2c/busses/i2c-designware-core.h
+>> +++ b/drivers/i2c/busses/i2c-designware-core.h
+>> @@ -40,6 +40,124 @@
+> ...
+>>  /**
+>>   * struct dw_i2c_dev - private i2c-designware data
+>> @@ -125,15 +243,31 @@ struct dw_i2c_dev {
+>>      int            (*acquire_lock)(struct dw_i2c_dev *dev);
+>>      void            (*release_lock)(struct dw_i2c_dev *dev);
+>>      bool            pm_runtime_disabled;
+>> +    void            (*disable)(struct dw_i2c_dev *dev);
+>> +    void            (*disable_int)(struct dw_i2c_dev *dev);
+>> +    int            (*init)(struct dw_i2c_dev *dev);
 > 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> ---
->  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
->  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
->  2 files changed, 73 insertions(+)
+> Please move kernel doc comments for these members from patch 4/6 here. Adding
+> new members and comments should go together.
+
+I will. Thanks
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
-> index 303980b..09d4d97 100644
-> --- a/drivers/media/v4l2-core/v4l2-mc.c
-> +++ b/drivers/media/v4l2-core/v4l2-mc.c
-> @@ -22,6 +22,7 @@
->  #include <linux/usb.h>
->  #include <media/media-device.h>
->  #include <media/media-entity.h>
-> +#include <media/v4l2-ctrls.h>
->  #include <media/v4l2-fh.h>
->  #include <media/v4l2-mc.h>
->  #include <media/v4l2-subdev.h>
-> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
->  }
->  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
->  
-> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				     struct media_entity *start_entity)
+>> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c
+>> b/drivers/i2c/busses/i2c-designware-platdrv.c
+>> index 206dea03b0d0..671bdc0fdb24 100644
+>> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+>> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> ...
+>> @@ -347,7 +347,7 @@ static int dw_i2c_plat_suspend(struct device *dev)
+>>      struct platform_device *pdev = to_platform_device(dev);
+>>      struct dw_i2c_dev *i_dev = platform_get_drvdata(pdev);
+>>
+>> -    i2c_dw_disable(i_dev);
+>> +    dev->disable(i_dev);
+>>      i2c_dw_plat_prepare_clk(i_dev, false);
+> 
+> This doesn't compile. Looks like copy-paste from your dw_i2c_plat_remove()
+> change but here you must access through the i_dev.
 
-I have a few concerns / questions:
+It's true! sorry, I forgot to change the "i_dev". And with the CONFIG_PM not
+defined I didn't get the compile error.
+> 
+> You need to convert also the i2c-designware-pcidrv.c.
 
-- What's the purpose of this patch? Why not to access the sub-device node
-  directly?
-
-- This implementation is only workable as long as you do not modify the
-  pipeline. Once you disable a link along the pipeline, a device where the
-  control was inherited from may no longer be a part of the pipeline.
-  Depending on the hardware, it could be a part of another pipeline, in
-  which case it certainly must not be accessible through an unrelated video
-  node. As the function is added to the framework, I would expect it to
-  handle such a case correctly.
-
-- I assume it is the responsibility of the caller of this function to ensure
-  the device in question will not be powered off whilst the video node is
-  used as another user space interface to such a sub-device. If the driver
-  uses the generic PM functions in the same file, this works, but it still
-  has to be documented.
-
-> +{
-> +	struct media_device *mdev = start_entity->graph_obj.mdev;
-> +	struct media_entity *entity;
-> +	struct media_graph graph;
-> +	struct v4l2_subdev *sd;
-> +	int ret;
-> +
-> +	ret = media_graph_walk_init(&graph, mdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	media_graph_walk_start(&graph, start_entity);
-> +
-> +	while ((entity = media_graph_walk_next(&graph))) {
-> +		if (!is_media_entity_v4l2_subdev(entity))
-> +			continue;
-> +
-> +		sd = media_entity_to_v4l2_subdev(entity);
-> +
-> +		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
-> +					    sd->ctrl_handler,
-> +					    NULL);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	media_graph_walk_cleanup(&graph);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(__v4l2_pipeline_inherit_controls);
-> +
-> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				   struct media_entity *start_entity)
-> +{
-> +	struct media_device *mdev = start_entity->graph_obj.mdev;
-> +	int ret;
-> +
-> +	mutex_lock(&mdev->graph_mutex);
-> +	ret = __v4l2_pipeline_inherit_controls(vfd, start_entity);
-> +	mutex_unlock(&mdev->graph_mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_pipeline_inherit_controls);
-> +
->  /* -----------------------------------------------------------------------------
->   * Pipeline power management
->   *
-> diff --git a/include/media/v4l2-mc.h b/include/media/v4l2-mc.h
-> index 2634d9d..9848e77 100644
-> --- a/include/media/v4l2-mc.h
-> +++ b/include/media/v4l2-mc.h
-> @@ -171,6 +171,17 @@ void v4l_disable_media_source(struct video_device *vdev);
->   */
->  int v4l_vb2q_enable_media_source(struct vb2_queue *q);
->  
-> +/**
-> + * v4l2_pipeline_inherit_controls - Add the v4l2 controls from all
-> + *				    subdev entities in a pipeline to
-> + *				    the given video device.
-> + * @vfd: the video device
-> + * @start_entity: Starting entity
-> + */
-> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				     struct media_entity *start_entity);
-> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				   struct media_entity *start_entity);
->  
->  /**
->   * v4l2_pipeline_pm_use - Update the use count of an entity
-> @@ -231,6 +242,20 @@ static inline int v4l_vb2q_enable_media_source(struct vb2_queue *q)
->  	return 0;
->  }
->  
-> +static inline int __v4l2_pipeline_inherit_controls(
-> +	struct video_device *vfd,
-> +	struct media_entity *start_entity)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline int v4l2_pipeline_inherit_controls(
-> +	struct video_device *vfd,
-> +	struct media_entity *start_entity)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int v4l2_pipeline_pm_use(struct media_entity *entity, int use)
->  {
->  	return 0;
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+I will check that
+> 
