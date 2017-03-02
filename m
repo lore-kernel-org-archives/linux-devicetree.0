@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 5/9] mmc: sdhci-of-esdhc: add tuning block support
-Date: Thu, 2 Mar 2017 17:47:26 +0800
-Message-ID: <1488448050-7574-6-git-send-email-yangbo.lu@nxp.com>
+Subject: [PATCH 4/9] mmc: sdhci: add a callback for using tuning block
+Date: Thu, 2 Mar 2017 17:47:25 +0800
+Message-ID: <1488448050-7574-5-git-send-email-yangbo.lu@nxp.com>
 References: <1488448050-7574-1-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,75 +12,41 @@ To: linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, Adrian Hunter <adrian.hun
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Xiaobo Xie <xiaobo.xie@nxp.com>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add tuning block support for eSDHC.
+Some non-standard SD host controllers may use tuning block
+for executing tuning procedure.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
- drivers/mmc/host/sdhci-esdhc.h    |  5 +++++
- drivers/mmc/host/sdhci-of-esdhc.c | 17 +++++++++++++++++
- 2 files changed, 22 insertions(+)
+ drivers/mmc/host/sdhci.c | 3 +++
+ drivers/mmc/host/sdhci.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/drivers/mmc/host/sdhci-esdhc.h b/drivers/mmc/host/sdhci-esdhc.h
-index 6869567..c4bbd74 100644
---- a/drivers/mmc/host/sdhci-esdhc.h
-+++ b/drivers/mmc/host/sdhci-esdhc.h
-@@ -53,9 +53,14 @@
- #define ESDHC_CLOCK_HCKEN		0x00000002
- #define ESDHC_CLOCK_IPGEN		0x00000001
- 
-+/* Tuning Block Control Register */
-+#define ESDHC_TBCTL			0x120
-+#define ESDHC_TB_EN			0x00000004
-+
- /* Control Register for DMA transfer */
- #define ESDHC_DMA_SYSCTL		0x40c
- #define ESDHC_PERIPHERAL_CLK_SEL	0x00080000
-+#define ESDHC_FLUSH_ASYNC_FIFO		0x00040000
- #define ESDHC_DMA_SNOOP			0x00000040
- 
- #endif /* _DRIVERS_MMC_SDHCI_ESDHC_H */
-diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-index c2619f1..b26a780 100644
---- a/drivers/mmc/host/sdhci-of-esdhc.c
-+++ b/drivers/mmc/host/sdhci-of-esdhc.c
-@@ -622,6 +622,21 @@ static int esdhc_signal_voltage_switch(struct sdhci_host *host,
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 3c9a924..051b192 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -2166,6 +2166,9 @@ int sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 		goto out_unlock;
  	}
- }
  
-+void esdhc_set_tuning_block(struct sdhci_host *host)
-+{
-+	u32 val;
++	if (host->ops->set_tuning_block)
++		host->ops->set_tuning_block(host);
 +
-+	esdhc_clock_enable(host, false);
-+	val = sdhci_readl(host, ESDHC_DMA_SYSCTL);
-+	val |= ESDHC_FLUSH_ASYNC_FIFO;
-+	sdhci_writel(host, val, ESDHC_DMA_SYSCTL);
-+
-+	val = sdhci_readl(host, ESDHC_TBCTL);
-+	val |= ESDHC_TB_EN;
-+	sdhci_writel(host, val, ESDHC_TBCTL);
-+	esdhc_clock_enable(host, true);
-+}
-+
- #ifdef CONFIG_PM_SLEEP
- static u32 esdhc_proctl;
- static int esdhc_of_suspend(struct device *dev)
-@@ -667,6 +682,7 @@ static const struct sdhci_ops sdhci_esdhc_be_ops = {
- 	.reset = esdhc_reset,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.start_signal_voltage_switch = esdhc_signal_voltage_switch,
-+	.set_tuning_block = esdhc_set_tuning_block,
+ 	host->mmc->retune_period = tuning_count;
+ 
+ 	sdhci_start_tuning(host);
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index 04af687..d43519b 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -568,6 +568,7 @@ struct sdhci_ops {
+ 					 int card_drv, int *drv_type);
+ 	int	(*start_signal_voltage_switch)(struct sdhci_host *host,
+ 					       unsigned char signal_voltage);
++	void	(*set_tuning_block)(struct sdhci_host *host);
  };
  
- static const struct sdhci_ops sdhci_esdhc_le_ops = {
-@@ -685,6 +701,7 @@ static const struct sdhci_ops sdhci_esdhc_le_ops = {
- 	.reset = esdhc_reset,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- 	.start_signal_voltage_switch = esdhc_signal_voltage_switch,
-+	.set_tuning_block = esdhc_set_tuning_block,
- };
- 
- static const struct sdhci_pltfm_data sdhci_esdhc_be_pdata = {
+ #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
 -- 
 2.1.0.27.g96db324
 
