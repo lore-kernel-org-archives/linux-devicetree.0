@@ -1,55 +1,78 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] devicetree: Document of_property_read_string_array()
- better
-Date: Wed, 1 Mar 2017 22:52:44 -0800
-Message-ID: <58B7C13C.70304@gmail.com>
-References: <1488267006-29945-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RESEND PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove
+ the OF graph
+Date: Thu, 2 Mar 2017 09:23:27 +0200
+Message-ID: <CAJKOXPeP-86=AsNH-xodkMpLJm1uLG0tKq2bz93FE5oFBDB4mw@mail.gmail.com>
+References: <CGME20170228081811epcas5p3c0a8151d94511e47a0e0d2b8787b1fb0@epcas5p3.samsung.com>
+ <1488269879-28876-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CAJKOXPfv8wJ+0L4G_0sB1Qh-svXx4VvNJH_1THSy5SsXuUstzA@mail.gmail.com>
+ <a9e52516-bb05-7ad3-01d5-da1fe3bc7548@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488267006-29945-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a9e52516-bb05-7ad3-01d5-da1fe3bc7548@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, airlied@linux.ie, catalin.marinas@arm.com, Seung Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Inki Dae <inki.dae@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, kgene@kernel.org, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/17 23:30, Sakari Ailus wrote:
-> of_property_read_string_array() is documented to return the number of
-> strings present in a string array property if its target string buffer is
-> NULL. What is not documented, however, is that is returned if the buffer
-> is non-NULL. It returns the number of strings read. Document this, as well
-> as the error codes.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  include/linux/of.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index d72f010..5856765 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -952,7 +952,11 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
->   * Search for a property in a device tree node and retrieve a list of
->   * terminated string values (pointer to data, not a copy) in that property.
->   *
-> - * If @out_strs is NULL, the number of strings in the property is returned.
-> + * If @out_strs is NULL, the number of strings in the property is returned. If
-> + * $out_strs is non-NULL, returns the number of strings read. On error, the
-> + * function returns -EINVAL if the property does not exist, -ENODATA if
-> + * property does not have a value, and -EILSEQ if the string is not
-> + * null-terminated within the length of the property data.
->   */
->  static inline int of_property_read_string_array(const struct device_node *np,
->  						const char *propname, const char **out_strs,
-> 
+On Thu, Mar 2, 2017 at 3:44 AM, Hoegeun Kwon <hoegeun.kwon@samsung.com> wrote:
+> On 02/28/2017 06:58 PM, Krzysztof Kozlowski wrote:
+>> Discussions in previous thread lead us to bisectability problem.
+>> Bisectability in regular driver changes is one thing but in case of
+>> driver + DTS the gap is much bigger. DTS will go through separate tree
+>> and branches. How do you want to solve the problem?
+>
+>
+> Sorry for the delay in reply, Mar 1st was the holiday.
+> I thought of two solutions.
+>
+> 1. squash the patches in a single patch
 
-Thanks.
+No, for the same reason. DTS code/patches have to go through arm-soc
+DTS branch without mixing with any driver changes. Otherwise arm-soc
+guys are angry.
 
-Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> 2. split the dts related patches so that the first part adds the:
+> +    samsung,burst-clock-frequency = <512000000>;
+> +    samsung,esc-clock-frequency = <16000000>;
+>
+> and the second part at the end removes the 'port' node
+> So it consists of 6 patches in total.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That's a solution. The remaining DTS patches would go in next release...
+
+Another solution would be for this release cycle:
+        if (of_property_does_not_exist(node, "samsung,burst-clock-frequency") {
+                // Fallback to old parsing mode
+                node = of_graph_get_endpoint_by_regs(node, DSI_PORT_OUT, 0);
+                if (!node) {
+                        dev_err(dev, "no burst-clock-frequency nor
+output port with endpoint specified\n");
+                        return -EINVAL;
+                }
+        }
+        ret = exynos_dsi_of_read_u32(node, "samsung,burst-clock-frequency",
+                                     &dsi->burst_clk_rate);
+        ...
+
+...and in next release the DTS patches would go in. This would give
+you also DTB backward compatibility. However still DTS could be
+applied later, after driver changes gets into mainline.
+
+Personally I would prefer your solution #2 (with separate DTS patch
+adding new properties). Does it sound reasonable for Inki?
+
+Thanks for looking into this problem.
+
+Best regards,
+Krzysztof
