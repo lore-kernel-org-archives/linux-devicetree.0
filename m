@@ -1,8 +1,7 @@
 From: Anurup M <anurupvasu@gmail.com>
-Subject: [PATCH v5 03/11] dt-bindings: perf: hisi: Add Devicetree bindings for
- Hisilicon SoC PMU
-Date: Thu,  2 Mar 2017 05:48:53 -0500
-Message-ID: <1488451733-88778-1-git-send-email-anurup.m@huawei.com>
+Subject: [PATCH v5 11/11] dts: arm64: hip07: Add Hisilicon SoC PMU support
+Date: Thu,  2 Mar 2017 05:50:09 -0500
+Message-ID: <1488451809-89120-1-git-send-email-anurup.m@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,150 +15,104 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, will.deacon@arm.com
-Cc: dikshit.n@huawei.com, devicetree@vger.kernel.org, wangkefeng.wang@huawei.com, anurupvasu@gmail.com, gabriele.paoloni@huawei.com, huangdaode@hisilicon.com, john.garry@huawei.com, shyju.pv@huawei.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, zhangshaokun@hisilicon.com, sanil.kumar@hisilicon.com, linux-arm-kernel@lists.infradead.org, shiju.jose@huawei.com, tanxiaojun@huawei.com, anurup.m@huawei.com
+To: mark.rutland@arm.com, will.deacon@arm.com, robh+dt@kernel.org, xuwei5@hisilicon.com, catalin.marinas@arm.com
+Cc: dikshit.n@huawei.com, devicetree@vger.kernel.org, anurupvasu@gmail.com, gabriele.paoloni@huawei.com, huangdaode@hisilicon.com, john.garry@huawei.com, shyju.pv@huawei.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, zhangshaokun@hisilicon.com, sanil.kumar@hisilicon.com, linux-arm-kernel@lists.infradead.org, shiju.jose@huawei.com, tanxiaojun@huawei.com, anurup.m@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-1) Device tree bindings for Hisilicon SoC PMU.
-2) Add example for Hisilicon L3 cache and MN PMU.
-3) Add child nodes of L3C and MN in djtag bindings example.
+Add nodes for djtag, L3 cache and MN to support uncore events.
 
 Signed-off-by: Anurup M <anurup.m@huawei.com>
-Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
 ---
- .../devicetree/bindings/arm/hisilicon/djtag.txt    | 25 +++++++
- .../devicetree/bindings/arm/hisilicon/pmu.txt      | 87 ++++++++++++++++++++++
- 2 files changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
+ arch/arm64/boot/dts/hisilicon/hip07.dtsi | 79 ++++++++++++++++++++++++++++++++
+ 1 file changed, 79 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-index fde5bab..5c46a9c 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
-@@ -27,6 +27,31 @@ Example 1: Djtag for CPU die in HiP07
- 		hisilicon,scl-id = <0x03>;
- 
- 		/* All connecting components will appear as child nodes */
-+
-+		pmul3c0 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x01 0x01>;
-+		};
-+
-+		pmul3c1 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x02 0x01>;
-+		};
-+
-+		pmul3c2 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x03 0x01>;
-+		};
-+
-+		pmul3c3 {
-+			compatible = "hisilicon,hip07-pmu-l3c-v2";
-+			hisilicon,module-id = <0x04 0x01>;
-+		};
-+
-+		pmumn0 {
-+			compatible = "hisilicon,hip07-pmu-mn-v2";
-+			hisilicon,module-id = <0x21>;
-+		};
+diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+index dcd1117..70d9c93 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+@@ -1083,4 +1083,83 @@
+ 			status = "disabled";
+ 		};
  	};
- 
- Hisilicon HiP05/06/07 djtag for IO die
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-new file mode 100644
-index 0000000..ad38cf4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/pmu.txt
-@@ -0,0 +1,87 @@
-+Hisilicon SoC HiP05/06/07 ARMv8 PMU
-+===================================
-+
-+The Hisilicon SoC chips like HiP05/06/07 etc. consist of various independent
-+system device PMUs such as L3 cache (L3C) and Miscellaneous Nodes(MN). These
-+PMU devices are independent and have hardware logic to gather statistics and
-+performance information.
-+
-+HiSilicon SoC chip is encapsulated by multiple CPU and IO dies. The CPU die
-+is called as Super CPU cluster (SCCL) which includes 16 cpu-cores. Every SCCL
-+in HiP05/06/07 chips are further grouped as CPU clusters (CCL) which includes
-+4 cpu-cores each.
-+e.g. In the case of HiP05/06/07, each SCCL has 1 L3 cache and 1 MN PMU device.
-+The L3 cache is further grouped as 4 L3 cache banks in a SCCL.
-+
-+The Hisilicon SoC PMU DT node bindings for uncore PMU devices are as below.
-+For PMU devices like L3 cache. MN etc. which are accessed using the djtag,
-+the parent node will be the djtag node of the corresponding CPU die (SCCL).
-+
-+L3 cache
-+---------
-+The L3 cache is dedicated for each SCCL. Each SCCL in HiP05/06/07 chips have 4
-+L3 cache banks. Each L3 cache bank have separate DT nodes.
-+
-+Required properties:
-+
-+	- compatible : This value should be as follows
-+		(a) "hisilicon,hip05-pmu-l3c-v1" for v1 hw in HiP05 chipset
-+		(b) "hisilicon,hip06-pmu-l3c-v1" for v1 hw in HiP06 chipset
-+		(c) "hisilicon,hip07-pmu-l3c-v2" for v2 hw in HiP07 chipset
-+
-+	- hisilicon,module-id : This property is a combination of two values
-+	    in the below order.
-+		a) Module ID: The module identifier for djtag.
-+		b) Instance or Bank ID: This will identify the L3 cache bank
-+		 or instance.
-+
-+	*The counter overflow IRQ is not supported in v1, v2 hardware (HiP05/06/07).
-+
-+Miscellaneous Node
-+------------------
-+The MN is dedicated for each SCCL and hence there are separate DT nodes for MN
-+for each SCCL.
-+
-+Required properties:
-+
-+	- compatible : This value should be as follows
-+		(a) "hisilicon,hip05-pmu-mn-v1" for v1 hw in HiP05 chipset
-+		(b) "hisilicon,hip06-pmu-mn-v1" for v1 hw in HiP06 chipset
-+		(c) "hisilicon,hip07-pmu-mn-v2" for v2 hw in HiP07 chipset
-+
-+	- hisilicon,module-id : Module ID to input for djtag.
-+
-+	*The counter overflow IRQ is not supported in v1, v2 hardware (HiP05/06/07).
-+
-+Example:
 +
 +	djtag0: djtag@60010000 {
 +		compatible = "hisilicon,hip07-cpu-djtag-v2";
 +		reg = <0x0 0x60010000 0x0 0x10000>;
 +		hisilicon,scl-id = <0x03>;
 +
++		/* L3 cache bank 0 for socket0 CPU die scl#3 */
 +		pmul3c0 {
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x01 0x01>;
 +		};
 +
++		/* L3 cache bank 1 for socket0 CPU die scl#3 */
 +		pmul3c1 {
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x02 0x01>;
 +		};
 +
++		/* L3 cache bank 2 for socket0 CPU die scl#3 */
 +		pmul3c2 {
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x03 0x01>;
 +		};
 +
++		/* L3 cache bank 3 for socket0 CPU die scl#3 */
 +		pmul3c3 {
 +			compatible = "hisilicon,hip07-pmu-l3c-v2";
 +			hisilicon,module-id = <0x04 0x01>;
 +		};
 +
++		/*
++		 * Miscellaneous node for socket0
++		 * CPU die scl#2
++		 */
 +		pmumn0 {
 +			compatible = "hisilicon,hip07-pmu-mn-v2";
 +			hisilicon,module-id = <0x21>;
 +		};
 +	};
++
++	djtag1: djtag@40010000 {
++		compatible = "hisilicon,hip07-cpu-djtag-v2";
++		reg = <0x0 0x40010000 0x0 0x10000>;
++		hisilicon,scl-id = <0x01>;
++
++		/* L3 cache bank 0 for socket0 CPU die scl#1 */
++		pmul3c0 {
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x01 0x01>;
++		};
++
++		/* L3 cache bank 1 for socket0 CPU die scl#1 */
++		pmul3c1 {
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x02 0x01>;
++		};
++
++		/* L3 cache bank 2 for socket0 CPU die scl#1 */
++		pmul3c2 {
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x03 0x01>;
++		};
++
++		/* L3 cache bank 3 for socket0 CPU die scl#1 */
++		pmul3c3 {
++			compatible = "hisilicon,hip07-pmu-l3c-v2";
++			hisilicon,module-id = <0x04 0x01>;
++		};
++
++		/*
++		 * Miscellaneous node for socket0
++		 * CPU die scl#1
++		 */
++		pmumn1 {
++			compatible = "hisilicon,hip07-pmu-mn-v2";
++			hisilicon,module-id = <0x21>;
++		};
++	};
++
+ };
 -- 
 2.1.4
