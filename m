@@ -1,66 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4 v3] PCI: add DT bindings for Faraday Technology PCI
- Host Bridge
-Date: Thu, 2 Mar 2017 10:31:26 -0600
-Message-ID: <20170302163126.imrelpsfzeucfy3r@rob-hp-laptop>
-References: <20170227190720.31409-1-linus.walleij@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 1/2] mfd: cpcap: implement irq sense helper
+Date: Thu, 2 Mar 2017 08:09:12 -0800
+Message-ID: <20170302160912.GO20572@atomide.com>
+References: <20170224085909.30559-1-sre@kernel.org>
+ <20170302002242.21819-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170227190720.31409-1-linus.walleij@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci@vger.kernel.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Greentime Hu <green.hu@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170302002242.21819-1-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 27, 2017 at 08:07:17PM +0100, Linus Walleij wrote:
-> This adds device tree bindings for the Faraday technology PCI
-> Host Bridge. This IP is found in the Storlink/Storm/Cortina
-> Gemini SoC platform.
+* Sebastian Reichel <sre@kernel.org> [170301 16:24]:
+> CPCAP can sense if IRQ is currently set or not. This
+> functionality is required for a few subdevices, such
+> as the power button and usb phy modules.
 > 
-> Cc: Janos Laube <janos.dev@gmail.com>
-> Cc: Paulius Zaleckas <paulius.zaleckas@gmail.com>
-> Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Feng-Hsin Chiang <john453@faraday-tech.com>
-> Cc: Greentime Hu <green.hu@gmail.com>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
 > ---
-> ChangeLog v2->v3:
-> - Reinstate the specific-to-generic bindings also specifying the
->   "cortina,gemini-pci" fixture for the Faraday block.
-> - Set compatible to "faraday,ftpci100" and "faraday,ftpci100-dual"
->   this is clearly closer to or equal to what the IP blocks from
->   Faraday are actually named.
-> - Add "dma-ranges" property, after deciphering that some hardcoded
->   constants in the driver is really about this.
-> ChangeLog v1->v2:
-> - Rename from Cortina prefixes to Faraday. This is clearly
->   a Faraday IP block.
-> - Support both the version with cascaded interrupts and the
->   "dual" version with 1-to-1 mapped interrupts.
-> - Change bus-range to <0x00 0xff>
-> - Fix spelling mistake
-> - Write a bit about swizzling interrupts on the interrupt
->   controller side
-> - Reasonable swizzling in the interrupt mapping example
+> Changes since PATCHv1:
+>  - Newly introduced patch
+> ---
+>  drivers/mfd/motorola-cpcap.c       | 25 +++++++++++++++++++++++++
+>  include/linux/mfd/motorola-cpcap.h |  2 ++
+>  2 files changed, 27 insertions(+)
 > 
-> This can be merged to the PCI tree whenever it is considered
-> fine for inclusion.
-> ---
->  .../devicetree/bindings/pci/faraday,ftpci100.txt   | 129 +++++++++++++++++++++
->  1 file changed, 129 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/faraday,ftpci100.txt
+> diff --git a/drivers/mfd/motorola-cpcap.c b/drivers/mfd/motorola-cpcap.c
+> index 6aeada7d7ce5..b2a53750d579 100644
+> --- a/drivers/mfd/motorola-cpcap.c
+> +++ b/drivers/mfd/motorola-cpcap.c
+> @@ -32,6 +32,31 @@ struct cpcap_ddata {
+>  	struct regmap *regmap;
+>  };
+>  
+> +static int cpcap_sense_irq(struct regmap *regmap, int irq)
+> +{
+> +	int reg = CPCAP_REG_INTS1 + (irq / 16) * 4;
+> +	int mask = 1 << (irq % 16);
+> +	int err, val;
+> +
+> +	if (irq < 0 || irq > 64)
+> +		return -EINVAL;
+> +
+> +	err = regmap_read(regmap, reg, &val);
+> +	if (err)
+> +		return err;
+> +
+> +	return !!(val & mask);
+> +}
+> +
+> +int cpcap_sense_virq(struct regmap *regmap, int virq)
+> +{
+> +	struct regmap_irq_chip_data *d = irq_get_chip_data(virq);
+> +	int base = regmap_irq_chip_get_base(d);
+> +
+> +	return cpcap_sense_irq(regmap, virq - base);
+> +}
+> +EXPORT_SYMBOL_GPL(cpcap_sense_irq);
 
-Acked-by: Rob Herring <robh@kernel.org>
+You have a typo here, should be cpcap_sense_virq for the exported one :)
+
+Other than that my ack is still valid.
+
+Regards,
+
+Tony
