@@ -1,34 +1,66 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: es7134: add dt-bindings for the
-	es7134 dac
-Date: Thu, 2 Mar 2017 10:25:53 -0600
-Message-ID: <20170302162553.pholygfbvlhyoty7@rob-hp-laptop>
-References: <20170227154724.13724-1-jbrunet@baylibre.com>
- <20170227154724.13724-3-jbrunet@baylibre.com>
+Subject: Re: [PATCH 3/4 v3] ARM: gemini: select MIGHT_HAVE_PCI
+Date: Thu, 2 Mar 2017 10:29:31 -0600
+Message-ID: <20170302162931.tyngslqsr2axy5qx@rob-hp-laptop>
+References: <20170227190720.31409-1-linus.walleij@linaro.org>
+ <20170227190720.31409-3-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170227154724.13724-3-jbrunet@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20170227190720.31409-3-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci@vger.kernel.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Greentime Hu <green.hu@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 27, 2017 at 04:47:24PM +0100, Jerome Brunet wrote:
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+On Mon, Feb 27, 2017 at 08:07:19PM +0100, Linus Walleij wrote:
+> As we have a PCI driver for the Gemini, we should select
+> MIGHT_HAVE_PCI.
+> 
+> Cc: Janos Laube <janos.dev@gmail.com>
+> Cc: Paulius Zaleckas <paulius.zaleckas@gmail.com>
+> Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Feng-Hsin Chiang <john453@faraday-tech.com>
+> Cc: Greentime Hu <green.hu@gmail.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
->  Documentation/devicetree/bindings/sound/everest,es7134.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/everest,es7134.txt
+> ChangeLog v1->v2->v3:
+> - No changes
+> 
+> PCI maintainers: this is FYI only, I will funnel this to the ARM
+> SoC tree once we are done with the PCI driver.
+> ---
+>  arch/arm/mach-gemini/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/mach-gemini/Kconfig b/arch/arm/mach-gemini/Kconfig
+> index a5ee5fbab796..21f89a4c16fe 100644
+> --- a/arch/arm/mach-gemini/Kconfig
+> +++ b/arch/arm/mach-gemini/Kconfig
+> @@ -6,6 +6,7 @@ menuconfig ARCH_GEMINI
+>  	select FTTMR010_TIMER
+>  	select GPIO_GEMINI
+>  	select GPIOLIB
+> +	select MIGHT_HAVE_PCI
 
-Acked-by: Rob Herring <robh@kernel.org>
+Doesn't Multi-platform do this for you? If not, IMO, we should do that 
+or kill this option. We don't do an option like this for I2C, SPI, 
+display, anything else (well, except GPIOLIB ;)).
+
+>  	select POWER_RESET
+>  	select POWER_RESET_SYSCON
+>  	select SERIAL_OF_PLATFORM
+> -- 
+> 2.9.3
+> 
