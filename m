@@ -1,52 +1,82 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 4/7] arm: dts: r7s72100: Add pin controller node
-Date: Thu, 2 Mar 2017 20:17:26 +0000
-Message-ID: <SG2PR06MB1165DCCA724AD6A8325862668A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487610788-6939-5-git-send-email-jacopo+renesas@jmondi.org>
- <3dd69ef5-e8a4-b69c-b4fa-1be6ba777cfa@jmondi.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 1/3] doc: bindings: Add bindings documentation for mtd
+ nvmem
+Date: Thu, 2 Mar 2017 21:22:20 +0100
+Message-ID: <20170302212220.4c3c7bef@bbrezillon>
+References: <1488484223-844-1-git-send-email-albeu@free.fr>
+ <1488484223-844-2-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <3dd69ef5-e8a4-b69c-b4fa-1be6ba777cfa@jmondi.org>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1488484223-844-2-git-send-email-albeu@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Alban <albeu@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Thu,  2 Mar 2017 20:50:21 +0100
+Alban <albeu@free.fr> wrote:
 
-On Tuesday, February 21, 2017, jacopo mondi wrote:
-> > +			gpio-controller;
-> > +			#gpio-cells =3D <2>;
-> > +			gpio-ranges =3D <&pinctrl 0 0 16>;
->=20
-> Not all ports have 16 pins available.
-> This is one of the differences between different RZ/A1 SoC versions
-> (RZ/A1H, RZ/A1L etc)
->=20
-> I'll change the number of pins to the actual available ones on each port
-> for r7s72100 (RZ/A1H)
+> Add the binding to expose MTD partitions as nvmem providers.
 
-But wait, what if someone wants to use a RZ/A1L???
+Looks good. Maybe you should take the case you describe in your
+cover-letter into account and add an extra layer: add an nvmem sub-node
+containing the nvmem cells, so that you can expose nvmem cells directly
+under master MTD devices (and not only partitions). 
 
-I don't want to make a separate dtsi file for RZ/A1L.
+> 
+> Signed-off-by: Alban <albeu@free.fr>
+> ---
+>  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> new file mode 100644
+> index 0000000..47602f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> @@ -0,0 +1,29 @@
+> += NVMEM in MTD =
+> +
+> +Config data for drivers is often stored in MTD devices. This binding
+> +define how such data can be represented in device tree.
+> +
+> +An MTD can be defined as an NVMEM provider by adding the `nvmem-provider`
+> +property to their node. Data cells can then be defined as child nodes
+> +of the partition as defined in nvmem.txt.
+> +
+> +Example:
+> +
+> +	flash@0 {
+> +		...
+> +
+> +		partition@2 {
+> +			label = "art";
+> +			reg = <0x7F0000 0x010000>;
+> +			read-only;
+> +
+> +			nvmem-provider;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			eeprom@1000 {
+> +				label = "wmac-eeprom";
+> +				reg = <0x1000 0x1000>;
+> +			};
+> +		};
+> +	};
 
-Is it possible to change the number of port pins in the board dts file?
-For example:
-  RZ/A1H: P5_0 - P5_10
-  RZ/A1L: P5_0 - P5_16
 
-So, in a rza1l-board.dts file I would put:
-
-&port5 {
-	gpio-ranges =3D <&pinctrl 0 80 16>;
-}
-
-Will this work?
-
-
-Chris
-
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
