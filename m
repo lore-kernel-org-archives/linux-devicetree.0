@@ -1,35 +1,97 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 3/9] devicetree: power: bq27xxx: Add monitored-battery
- documentation
-Date: Thu, 2 Mar 2017 09:16:01 -0600
-Message-ID: <20170302151601.bfwcx6venw77a3mk@rob-hp-laptop>
-References: <20170227071117.18934-1-liam@networkimprov.net>
- <20170227071117.18934-4-liam@networkimprov.net>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [RESEND PATCH v6 5/6] i2c: designware: add SLAVE mode functions
+Date: Thu, 2 Mar 2017 15:17:43 +0000
+Message-ID: <d6183e8c-5ff8-32c9-44ff-bef038ee0baa@synopsys.com>
+References: <cover.1488383202.git.lolivei@synopsys.com>
+ <07463ebe12af8c88c21c24601cf54b0cd2077e07.1488383202.git.lolivei@synopsys.com>
+ <be10879b-a81b-9047-6c67-45916a85ef31@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170227071117.18934-4-liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <be10879b-a81b-9047-6c67-45916a85ef31@linux.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 26, 2017 at 11:11:11PM -0800, Liam Breck wrote:
-> From: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+On 02-Mar-17 14:33, Jarkko Nikula wrote:
+> On 03/01/17 17:59, Luis Oliveira wrote:
+>> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
+>> - Slave functions added to core library file
+>> - Slave abort sources added to common source file
+>> - New driver: i2c-designware-slave added
+>> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
+>>   when supported by the architecture.
+>>
+>> All the SLAVE flow is added but it is not enabled via platform
+>> driver.
+>>
+>> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+>> ---
+>> V5->V6
+>> - Enable Slave mode using a different option (kbuild reported an error)
+>> - Identation fixes needed
+>> - Changed debug prints to dev_vdbg
+>> - Fixed slave enumeration
+>>
+>>  drivers/i2c/busses/Kconfig                 |  14 +-
+>>  drivers/i2c/busses/Makefile                |   1 +
+>>  drivers/i2c/busses/i2c-designware-common.c |   7 +
+>>  drivers/i2c/busses/i2c-designware-core.h   |   3 +
+>>  drivers/i2c/busses/i2c-designware-slave.c  | 403 +++++++++++++++++++++++++++++
+>>  5 files changed, 427 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+>>
+> ...
+>> diff --git a/drivers/i2c/busses/i2c-designware-common.c
+>> b/drivers/i2c/busses/i2c-designware-common.c
+>> index 6357c7c78f6d..24641635aa20 100644
+>> --- a/drivers/i2c/busses/i2c-designware-common.c
+>> +++ b/drivers/i2c/busses/i2c-designware-common.c
+>> @@ -56,6 +56,13 @@ static char *abort_sources[] = {
+>>          "trying to use disabled adapter",
+>>      [ARB_LOST] =
+>>          "lost arbitration",
+>> +    [ABRT_SLAVE_FLUSH_TXFIFO] =
+>> +        "read command so flush old data in the TX FIFO",
+>> +    [ABRT_SLAVE_ARBLOST] =
+>> +        "slave lost the bus while transmitting data to a remote master",
+>> +    [ABRT_SLAVE_RD_INTX] =
+>> +        "slave request for data to be transmitted and there is a 1 in "
+>> +        "bit 8 of IC_DATA_CMD",
+>>  };
 > 
-> Document monitored-battery = <&battery_node>
+> I know ABRT_SLAVE_RD_INTX case is from the specification but I would prefer here
+> one-line error text so it will be easier to grep from sources.
 > 
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> Signed-off-by: Liam Breck <kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/power/supply/bq27xxx.txt | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> I would like it to be also be more understandable. I don't know did I understood
+> it correctly but does it occur when attempting to read controller while
+> transmitting or something like that?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It happens in the "slave-transmitter" mode, when the processor side responds to
+a request for data to be transmitted and at the same time someone writes 1 to
+the bit 8 of the IC_DATA_CMD. This bit in "slave-transmitter" mode has to be "0"
+to indicate the data is to be transmitted.
+
+In "slave-receiver" mode it has no purpose since writes to this register are not
+required.
+
+> 
+>> diff --git a/drivers/i2c/busses/i2c-designware-core.h
+>> b/drivers/i2c/busses/i2c-designware-core.h
+>> index b620d76ffc8d..6c70945cccea 100644
+>> --- a/drivers/i2c/busses/i2c-designware-core.h
+>> +++ b/drivers/i2c/busses/i2c-designware-core.h
+>> @@ -277,6 +277,7 @@ struct dw_i2c_dev {
+>>      void            (*disable)(struct dw_i2c_dev *dev);
+>>      void            (*disable_int)(struct dw_i2c_dev *dev);
+>>      int            (*init)(struct dw_i2c_dev *dev);
+>> +    bool            mode;
+>>  };
+>>
+> 
+> As I mentioned add here comment for "mode" not in patch 4/6.
+> 
+Ok, I will.
+Thanks.
