@@ -1,50 +1,55 @@
-From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V3 4/4] serial: sprd: adjust TIMEOUT to a big value
-Date: Thu, 2 Mar 2017 14:22:10 +0800
-Message-ID: <1488435730-6711-5-git-send-email-chunyan.zhang@spreadtrum.com>
-References: <1488435730-6711-1-git-send-email-chunyan.zhang@spreadtrum.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/1] devicetree: Document of_property_read_string_array()
+ better
+Date: Wed, 1 Mar 2017 22:52:44 -0800
+Message-ID: <58B7C13C.70304@gmail.com>
+References: <1488267006-29945-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488435730-6711-1-git-send-email-chunyan.zhang@spreadtrum.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, zhang.lyra@gmail.com, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, chunyan.zhang@spreadtrum.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488267006-29945-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Qiao <wei.qiao@spreadtrum.com>
+On 02/27/17 23:30, Sakari Ailus wrote:
+> of_property_read_string_array() is documented to return the number of
+> strings present in a string array property if its target string buffer is
+> NULL. What is not documented, however, is that is returned if the buffer
+> is non-NULL. It returns the number of strings read. Document this, as well
+> as the error codes.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  include/linux/of.h | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index d72f010..5856765 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -952,7 +952,11 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
+>   * Search for a property in a device tree node and retrieve a list of
+>   * terminated string values (pointer to data, not a copy) in that property.
+>   *
+> - * If @out_strs is NULL, the number of strings in the property is returned.
+> + * If @out_strs is NULL, the number of strings in the property is returned. If
+> + * $out_strs is non-NULL, returns the number of strings read. On error, the
+> + * function returns -EINVAL if the property does not exist, -ENODATA if
+> + * property does not have a value, and -EILSEQ if the string is not
+> + * null-terminated within the length of the property data.
+>   */
+>  static inline int of_property_read_string_array(const struct device_node *np,
+>  						const char *propname, const char **out_strs,
+> 
 
-SPRD_TIMEOUT was 256, which is too small to wait until the status
-switched to workable in a while loop, so that the earlycon could
-not work correctly.
+Thanks.
 
-Signed-off-by: Wei Qiao <wei.qiao@spreadtrum.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
----
- drivers/tty/serial/sprd_serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-diff --git a/drivers/tty/serial/sprd_serial.c b/drivers/tty/serial/sprd_serial.c
-index 699447a..cc1a55e 100644
---- a/drivers/tty/serial/sprd_serial.c
-+++ b/drivers/tty/serial/sprd_serial.c
-@@ -36,7 +36,7 @@
- #define SPRD_FIFO_SIZE		128
- #define SPRD_DEF_RATE		26000000
- #define SPRD_BAUD_IO_LIMIT	3000000
--#define SPRD_TIMEOUT		256
-+#define SPRD_TIMEOUT		256000
- 
- /* the offset of serial registers and BITs for them */
- /* data registers */
--- 
-2.7.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
