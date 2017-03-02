@@ -1,52 +1,61 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v5 0/9] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Thu, 02 Mar 2017 09:02:06 -0800
-Message-ID: <m2varry5m9.fsf@baylibre.com>
-References: <20170122181028.5014-1-martin.blumenstingl@googlemail.com>
- <20170219214149.30418-1-martin.blumenstingl@googlemail.com>
- <1487581719.3734.1.camel@baylibre.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 2/2] arc: axs10x: Fix ARC PGU default clock frequency
+Date: Thu, 2 Mar 2017 17:35:52 +0000
+Message-ID: <1488476152.2684.10.camel@synopsys.com>
+References: <7ed6deaf1ae6d5819364c793835aa30316077a7e.1487787376.git.joabreu@synopsys.com>
+ <16273b3a26ec770f8d169f04f7cb9eb2fac55909.1487787376.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1487581719.3734.1.camel@baylibre.com> (Jerome Brunet's message
- of "Mon, 20 Feb 2017 10:08:39 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, andrew@lunn.ch, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <16273b3a26ec770f8d169f04f7cb9eb2fac55909.1487787376.git.joabreu@synopsys.com>
+Content-Language: en-US
+Content-ID: <C69019F928112F4BB3AAE4CEE70D63D9@internal.synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> On Sun, 2017-02-19 at 22:41 +0100, Martin Blumenstingl wrote:
->> This series adds the reset GPIOs for the (external) ethernet PHYs on
->> all
->> GXBB boards.
->> Additionally it provides a ethernet PHY node which can be used to
->> specify
->> PHY-specific properties (this may be required if more boards require
->> the
->> "eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board
->> .dts
->> consistent I chose to add the PHY node also for boards which don't
->> have a
->> RTL8211F PHY.
->> 
->
-> Looks good to me. For the patchset:
-> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
->
-
-Applying to v4.12/dt64 with Jerome's review.
-
-Thanks,
-
-Kevin
+SGkgSm9zZSwNCg0KT24gV2VkLCAyMDE3LTAyLTIyIGF0IDE4OjE5ICswMDAwLCBKb3NlIEFicmV1
+IHdyb3RlOg0KPiBEZWZhdWx0IGNsb2NrIGZyZXF1ZW5jeSBmb3IgQVJDIFBHVSBkb2VzIG5vdCBt
+YXRjaCBhbnkNCj4gZXhpc3RpbmcgSERNSSBtb2RlLCBpbnN0ZWFkIHRoZSBkZWZhdWx0IHZhbHVl
+IG1hdGNoZXMgYQ0KPiBEVkkgbW9kZS4gQ2hhbmdlIHRoZSBjbG9jayBmcmVxdWVuY3kgdG8gNzQu
+MjVNSHogc28gdGhhdA0KPiBpdCBtYXRjaGVzIEhETUkgbW9kZSAxMjgweDcyMEA2MEh6DQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBKb3NlIEFicmV1IDxqb2FicmV1QHN5bm9wc3lzLmNvbT4NCj4gQ2M6
+IENhcmxvcyBQYWxtaW5oYSA8cGFsbWluaGFAc3lub3BzeXMuY29tPg0KPiBDYzogQWxleGV5IEJy
+b2RraW4gPGFicm9ka2luQHN5bm9wc3lzLmNvbT4NCj4gQ2M6IFJvYiBIZXJyaW5nIDxyb2JoK2R0
+QGtlcm5lbC5vcmc+DQo+IENjOiBWaW5lZXQgR3VwdGEgPHZndXB0YUBzeW5vcHN5cy5jb20+DQo+
+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBDYzogbGludXgtc25wcy1hcmNAbGlz
+dHMuaW5mcmFkZWFkLm9yZw0KPiBDYzogbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiAt
+LS0NCj4gwqBhcmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaSB8IDIgKy0NCj4gwqAxIGZp
+bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaSBiL2FyY2gvYXJjL2Jvb3QvZHRz
+L2F4czEweF9tYi5kdHNpDQo+IGluZGV4IDlkODgyYjEuLjQxY2ZiMjkgMTAwNjQ0DQo+IC0tLSBh
+L2FyY2gvYXJjL2Jvb3QvZHRzL2F4czEweF9tYi5kdHNpDQo+ICsrKyBiL2FyY2gvYXJjL2Jvb3Qv
+ZHRzL2F4czEweF9tYi5kdHNpDQo+IEBAIC01MSw3ICs1MSw3IEBADQo+IMKgCQkJcGd1Y2xrOiBw
+Z3VjbGsgew0KPiDCoAkJCQkjY2xvY2stY2VsbHMgPSA8MD47DQo+IMKgCQkJCWNvbXBhdGlibGUg
+PSAiZml4ZWQtY2xvY2siOw0KPiAtCQkJCWNsb2NrLWZyZXF1ZW5jeSA9IDw3NDQ0MDAwMD47DQo+
+ICsJCQkJY2xvY2stZnJlcXVlbmN5ID0gPDc0MjUwMDAwPjsNCj4gwqAJCQl9Ow0KPiDCoAkJfTsN
+Cg0KTG9va3MgZ29vZCB0byBtZSBidXQgSSBoYXZlIHRvIG5vdGUgdGhhdCB3aXRoIHRoaXMgY2hh
+bmdlIGluIHBsYWNlDQptb25pdG9ycyB0aGF0IGRvbid0IHJlcG9ydCBbY29ycmVjdF0gRURJRCB3
+b24ndCB3b3JrIGp1c3QgYmVjYXVzZQ0KaWYgRURJRCBpcyBtaXNzaW5nIExpbnV4IGtlcm5lbCBj
+YWxjdWxhdGVzIHBpeGVsIGNsb2NrIG9uIGl0cw0Kb3duIGFuZCBmb3IgMTI4MHg3MjBANjDCoGl0
+IGdldHMgNzQuNDAgTUh6IHdoaWNoIG9idmlvdXNseSBkaWZmZXJzIGZyb20NCnlvdXJzIDc0LjI1
+IE1IeiBhbmQgc2/CoGFyY19wZ3VfY3J0Y19hdG9taWNfY2hlY2soKSByZXR1cm5zwqAtRUlOVkFM
+Lg0KDQpCdXQgd2l0aCB0aGUgZml4IEkganVzdCBzZW50LCBzZWUNCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL3BpcGVybWFpbC9saW51eC1zbnBzLWFyYy8yMDE3LU1hcmNoLzAwMjE3My5odG1s
+DQpldmVyeXRoaW5nIHdpbGwgd29yayBhZ2Fpbi4NCg0KQW5kIG9uY2UgVmxhZCdzIHBhdGNoIGZv
+ciBBWFMgUExMcyBnZXRzIGFjY2VwdGVkIHdlJ2xsIGZpbmFsbHkgZ2V0DQpzdXBwb3J0IG9mIG11
+bHRpcGxlIG1vZGVzIG9uIEFYUzEweCBib2FyZHMuDQoNClRoYXQgc2FpZC4uLg0KDQpBY2tlZC1i
+eTogQWxleGV5IEJyb2RraW4gPGFicm9ka2luQHN5bm9wc3lzLmNvbT4KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtc25wcy1hcmMgbWFpbGluZyBs
+aXN0CmxpbnV4LXNucHMtYXJjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1zbnBzLWFyYw==
