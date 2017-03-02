@@ -1,107 +1,88 @@
-From: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 3/3] phy: rockchip-inno-usb2: add support of u2phy for
- rk3328
-Date: Thu,  2 Mar 2017 15:49:05 +0800
-Message-ID: <1488440945-27291-4-git-send-email-daniel.meng@rock-chips.com>
-References: <1488440945-27291-1-git-send-email-daniel.meng@rock-chips.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 1/5] pinctrl: sunxi: refactor pinctrl choice selecting
+ for ARM64
+Date: Thu, 2 Mar 2017 09:25:38 +0100
+Message-ID: <20170302082538.dej6h3l5zfdgttj4@lukather>
+References: <20170301180111.12365-1-icenowy@aosc.xyz>
+ <20170301180111.12365-2-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1488440945-27291-1-git-send-email-daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0244244545554071398=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170301180111.12365-2-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Andre Przywara <andre.przywara@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add u2phy config information in the data of match table for
-rk3328.
 
-Changes in v2:
- - add support of otg port
+--===============0244244545554071398==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hecc5wjup6fbpjxa"
+Content-Disposition: inline
 
-Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- drivers/phy/phy-rockchip-inno-usb2.c | 52 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
 
-diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
-index 4ea95c2..0dcccc6 100644
---- a/drivers/phy/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/phy-rockchip-inno-usb2.c
-@@ -1141,6 +1141,57 @@ static int rockchip_usb2phy_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static const struct rockchip_usb2phy_cfg rk3328_phy_cfgs[] = {
-+	{
-+		.reg = 0x100,
-+		.num_ports	= 2,
-+		.phy_tuning	= rk3328_usb2phy_tuning,
-+		.clkout_ctl	= { 0x108, 4, 4, 1, 0 },
-+		.port_cfgs	= {
-+			[USB2PHY_PORT_OTG] = {
-+				.phy_sus	= { 0x0100, 15, 0, 0, 0x1d1 },
-+				.bvalid_det_en	= { 0x0110, 2, 2, 0, 1 },
-+				.bvalid_det_st	= { 0x0114, 2, 2, 0, 1 },
-+				.bvalid_det_clr = { 0x0118, 2, 2, 0, 1 },
-+				.idfall_det_en	= { 0x0110, 5, 5, 0, 1 },
-+				.idfall_det_st	= { 0x0114, 5, 5, 0, 1 },
-+				.idfall_det_clr = { 0x0118, 5, 5, 0, 1 },
-+				.idrise_det_en	= { 0x0110, 4, 4, 0, 1 },
-+				.idrise_det_st	= { 0x0114, 4, 4, 0, 1 },
-+				.idrise_det_clr = { 0x0118, 4, 4, 0, 1 },
-+				.ls_det_en	= { 0x0110, 0, 0, 0, 1 },
-+				.ls_det_st	= { 0x0114, 0, 0, 0, 1 },
-+				.ls_det_clr	= { 0x0118, 0, 0, 0, 1 },
-+				.utmi_avalid	= { 0x0120, 10, 10, 0, 1 },
-+				.utmi_bvalid	= { 0x0120, 9, 9, 0, 1 },
-+				.utmi_iddig	= { 0x0120, 6, 6, 0, 1 },
-+				.utmi_ls	= { 0x0120, 5, 4, 0, 1 },
-+			},
-+			[USB2PHY_PORT_HOST] = {
-+				.phy_sus	= { 0x104, 15, 0, 0, 0x1d1 },
-+				.ls_det_en	= { 0x110, 1, 1, 0, 1 },
-+				.ls_det_st	= { 0x114, 1, 1, 0, 1 },
-+				.ls_det_clr	= { 0x118, 1, 1, 0, 1 },
-+				.utmi_ls	= { 0x120, 17, 16, 0, 1 },
-+				.utmi_hstdet	= { 0x120, 19, 19, 0, 1 }
-+			}
-+		},
-+		.chg_det = {
-+			.opmode		= { 0x0100, 3, 0, 5, 1 },
-+			.cp_det		= { 0x0120, 24, 24, 0, 1 },
-+			.dcp_det	= { 0x0120, 23, 23, 0, 1 },
-+			.dp_det		= { 0x0120, 25, 25, 0, 1 },
-+			.idm_sink_en	= { 0x0108, 8, 8, 0, 1 },
-+			.idp_sink_en	= { 0x0108, 7, 7, 0, 1 },
-+			.idp_src_en	= { 0x0108, 9, 9, 0, 1 },
-+			.rdm_pdwn_en	= { 0x0108, 10, 10, 0, 1 },
-+			.vdm_src_en	= { 0x0108, 12, 12, 0, 1 },
-+			.vdp_src_en	= { 0x0108, 11, 11, 0, 1 },
-+		},
-+	},
-+	{ /* sentinel */ }
-+};
-+
- static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] = {
- 	{
- 		.reg = 0x700,
-@@ -1223,6 +1274,7 @@ static int rockchip_usb2phy_probe(struct platform_device *pdev)
- };
- 
- static const struct of_device_id rockchip_usb2phy_dt_match[] = {
-+	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
- 	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
- 	{ .compatible = "rockchip,rk3399-usb2phy", .data = &rk3399_phy_cfgs },
- 	{}
--- 
-1.9.1
+--hecc5wjup6fbpjxa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 02, 2017 at 02:01:07AM +0800, Icenowy Zheng wrote:
+> ARM64 Allwinner SoCs used to have every pinctrl driver selected in
+> ARCH_SUNXI. Change this to make their default value to (ARM64 &&
+> ARCH_SUNXI).
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--hecc5wjup6fbpjxa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYt9b+AAoJEBx+YmzsjxAg768P/3Bo7ZqIEKaplKW0WJWXz4/6
+wM5fBCsu4C/2HUTqp7uBjF2P3bNJLbbZ0MrcKaALaw356/w9JsL3OxMzsXVRa5m/
+gr5+s50MoXNXP1xkd6T3T1CYxLTCxSA8Eee3MP0Rg0L+5QlVUOTm0+HLFYeQchtb
+Rx0Bbc9ZHD8tL3DbqvxIF4mAHYCvzW9+hPFybHRKqsHRsF2FnXDMxLCU8rRHvgnN
+fKKSnW0U32R3JFNjWgtW/z5kKrlYcuvaa1+kziVaqU7XYgaEXN0lYvECqhwV3DY7
+a4YZx6S3Q+kKOPV3DMI8+Dg5InORrreH9MtkthZd5bIIfs8KEEaUHOniateOkkeK
+bvGzBoi12zkYpKiR15bIJZE4YjvgxQwn6Ygb28GsZNKpXD1cfLxALrrtrc4QUQUh
+jSF9rRYODxcfah88stNjz+T//egN4k8DOWmRbMDl/vvxk17cAwNwlogncgPZoRAg
+DaM96B2gurhtnRfNOt1gamxMMH6ZMdyrir7kUvBeUj8tYqTi7Pei+GKhxnTeRWQE
+4i84G3H9lAZN2XemWeRdDBqBD/fYbsGlQgz+b1KwDE7rAGSApAjf0XH/PNXZaaiE
+uxeWVSvJRKM/QGn6nDMmFafXZmXry9ZFnCmQAKHWT3zh6gu1wh9WT6zzDkJAMfP2
+WKPbkAWusjXiHOB5ZfdV
+=1SKa
+-----END PGP SIGNATURE-----
+
+--hecc5wjup6fbpjxa--
+
+
+--===============0244244545554071398==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============0244244545554071398==--
