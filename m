@@ -1,443 +1,498 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv4 2/2] rtc: cpcap: new rtc driver
-Date: Thu,  2 Mar 2017 01:27:09 +0100
-Message-ID: <20170302002709.22276-2-sre@kernel.org>
-References: <20170220073535.27393-1-sre@kernel.org>
- <20170302002709.22276-1-sre@kernel.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] coresight: add support for debug module
+Date: Thu, 2 Mar 2017 08:37:42 +0800
+Message-ID: <20170302003742.GB1906@leoy-linaro>
+References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
+ <1488294420-14188-4-git-send-email-leo.yan@linaro.org>
+ <20170301173556.GC4009@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDXMLNOH5ANRB2ON3XCQKGQEE3PWYZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170302002709.22276-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170301173556.GC4009-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver supports the Motorola CPCAP PMIC found on
-some of Motorola's mobile phones, such as the Droid 4.
+On Wed, Mar 01, 2017 at 10:35:56AM -0700, Mathieu Poirier wrote:
+> On Tue, Feb 28, 2017 at 11:07:00PM +0800, Leo Yan wrote:
+> > Coresight includes debug module and usually the module connects with CPU
+> > debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
+> > description for related info in "Part H: External Debug".
+> > 
+> > Chapter H7 "The Sample-based Profiling Extension" introduces several
+> > sampling registers, e.g. we can check program counter value with
+> > combined CPU exception level, secure state, etc. So this is helpful for
+> > analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
+> > loop with IRQ disabled. In this case the CPU cannot switch context and
+> > handle any interrupt (including IPIs), as the result it cannot handle
+> > SMP call for stack dump.
+> > 
+> > This patch is to enable coresight debug module, so firstly this driver
+> > is to bind apb clock for debug module and this is to ensure the debug
+> > module can be accessed from program or external debugger. And the driver
+> > uses sample-based registers for debug purpose, e.g. when system detects
+> > the CPU lockup and trigger panic, the driver will dump program counter
+> > and combined context registers (EDCIDSR, EDVIDSR); by parsing context
+> > registers so can quickly get to know CPU secure state, exception level,
+> > etc.
+> > 
+> > Some of the debug module registers are located in CPU power domain, so
+> > in the driver it has checked the power state for CPU before accessing
+> > registers within CPU power domain. For most safe way to use this driver,
+> > it's suggested to disable CPU low power states, this can simply set
+> > "nohlt" in kernel command line.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/hwtracing/coresight/Kconfig           |  10 +
+> >  drivers/hwtracing/coresight/Makefile          |   1 +
+> >  drivers/hwtracing/coresight/coresight-debug.c | 378 ++++++++++++++++++++++++++
+> >  3 files changed, 389 insertions(+)
+> >  create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
+> > 
+> > diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> > index 130cb21..2c8883b 100644
+> > --- a/drivers/hwtracing/coresight/Kconfig
+> > +++ b/drivers/hwtracing/coresight/Kconfig
+> > @@ -89,4 +89,14 @@ config CORESIGHT_STM
+> >  	  logging useful software events or data coming from various entities
+> >  	  in the system, possibly running different OSs
+> >  
+> > +config CORESIGHT_DEBUG
+> > +	bool "CoreSight debug driver"
+> > +	depends on ARM || ARM64
+> > +	help
+> > +	  This driver provides support for coresight debugging module. This
+> > +	  is primarily used to dump sample-based profiling registers for
+> > +	  panic.
+> 
+> > +       By disable CPU low power states (like "nohlt" in kernel
+> > +	  command line), this is more safe and avoid lockup issue when
+> > +	  access debug module registers.
+> 
+> "To avoid lockups when accessing debug module registers, it is safer to disable
+> CPU low power states (like "nohlt" on the kernel command line) when using this
+> feature."
 
-Tested-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Changes since PATCHv3:
- - Modified DT binding document to mention parent device
----
- .../devicetree/bindings/rtc/cpcap-rtc.txt          |  18 ++
- drivers/rtc/Kconfig                                |   7 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-cpcap.c                            | 332 +++++++++++++++++++++
- 4 files changed, 358 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/cpcap-rtc.txt
- create mode 100644 drivers/rtc/rtc-cpcap.c
+Will fix.
 
-diff --git a/Documentation/devicetree/bindings/rtc/cpcap-rtc.txt b/Documentation/devicetree/bindings/rtc/cpcap-rtc.txt
-new file mode 100644
-index 000000000000..45750ff3112d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/cpcap-rtc.txt
-@@ -0,0 +1,18 @@
-+Motorola CPCAP PMIC RTC
-+-----------------------
-+
-+This module is part of the CPCAP. For more details about the whole
-+chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
-+
-+Requires node properties:
-+- compatible: should contain "motorola,cpcap-rtc"
-+- interrupts: An interrupt specifier for alarm and 1 Hz irq
-+
-+Example:
-+
-+&cpcap {
-+	cpcap_rtc: rtc {
-+		compatible = "motorola,cpcap-rtc";
-+		interrupts = <39 IRQ_TYPE_NONE>, <26 IRQ_TYPE_NONE>;
-+	};
-+};
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index ee1b0e9dde79..050bec749fae 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1731,6 +1731,13 @@ config RTC_DRV_STM32
- 	   This driver can also be built as a module, if so, the module
- 	   will be called "rtc-stm32".
- 
-+config RTC_DRV_CPCAP
-+	depends on MFD_CPCAP
-+	tristate "Motorola CPCAP RTC"
-+	help
-+	   Say y here for CPCAP rtc found on some Motorola phones
-+	   and tablets such as Droid 4.
-+
- comment "HID Sensor RTC drivers"
- 
- config RTC_DRV_HID_SENSOR_TIME
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index f07297b1460a..13857d2fce09 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_RTC_DRV_BQ32K)	+= rtc-bq32k.o
- obj-$(CONFIG_RTC_DRV_BQ4802)	+= rtc-bq4802.o
- obj-$(CONFIG_RTC_DRV_CMOS)	+= rtc-cmos.o
- obj-$(CONFIG_RTC_DRV_COH901331)	+= rtc-coh901331.o
-+obj-$(CONFIG_RTC_DRV_CPCAP)	+= rtc-cpcap.o
- obj-$(CONFIG_RTC_DRV_DA9052)	+= rtc-da9052.o
- obj-$(CONFIG_RTC_DRV_DA9055)	+= rtc-da9055.o
- obj-$(CONFIG_RTC_DRV_DA9063)	+= rtc-da9063.o
-diff --git a/drivers/rtc/rtc-cpcap.c b/drivers/rtc/rtc-cpcap.c
-new file mode 100644
-index 000000000000..7c6a3c3167bd
---- /dev/null
-+++ b/drivers/rtc/rtc-cpcap.c
-@@ -0,0 +1,332 @@
-+/*
-+ * Motorola CPCAP PMIC RTC driver
-+ *
-+ * Based on cpcap-regulator.c from Motorola Linux kernel tree
-+ * Copyright (C) 2009 Motorola, Inc.
-+ *
-+ * Rewritten for mainline kernel
-+ *  - use DT
-+ *  - use regmap
-+ *  - use standard interrupt framework
-+ *  - use managed device resources
-+ *  - remove custom "secure clock daemon" helpers
-+ *
-+ * Copyright (C) 2017 Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/rtc.h>
-+#include <linux/err.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/motorola-cpcap.h>
-+#include <linux/slab.h>
-+#include <linux/sched.h>
-+
-+#define SECS_PER_DAY 86400
-+#define DAY_MASK  0x7FFF
-+#define TOD1_MASK 0x00FF
-+#define TOD2_MASK 0x01FF
-+
-+struct cpcap_time {
-+	int day;
-+	int tod1;
-+	int tod2;
-+};
-+
-+struct cpcap_rtc {
-+	struct regmap *regmap;
-+	struct rtc_device *rtc_dev;
-+	u16 vendor;
-+	int alarm_irq;
-+	bool alarm_enabled;
-+	int update_irq;
-+	bool update_enabled;
-+};
-+
-+static void cpcap2rtc_time(struct rtc_time *rtc, struct cpcap_time *cpcap)
-+{
-+	unsigned long int tod;
-+	unsigned long int time;
-+
-+	tod = (cpcap->tod1 & TOD1_MASK) | ((cpcap->tod2 & TOD2_MASK) << 8);
-+	time = tod + ((cpcap->day & DAY_MASK) * SECS_PER_DAY);
-+
-+	rtc_time_to_tm(time, rtc);
-+}
-+
-+static void rtc2cpcap_time(struct cpcap_time *cpcap, struct rtc_time *rtc)
-+{
-+	unsigned long time;
-+
-+	rtc_tm_to_time(rtc, &time);
-+
-+	cpcap->day = time / SECS_PER_DAY;
-+	time %= SECS_PER_DAY;
-+	cpcap->tod2 = (time >> 8) & TOD2_MASK;
-+	cpcap->tod1 = time & TOD1_MASK;
-+}
-+
-+static int cpcap_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct cpcap_rtc *rtc = dev_get_drvdata(dev);
-+
-+	if (rtc->alarm_enabled == enabled)
-+		return 0;
-+
-+	if (enabled)
-+		enable_irq(rtc->alarm_irq);
-+	else
-+		disable_irq(rtc->alarm_irq);
-+
-+	rtc->alarm_enabled = !!enabled;
-+
-+	return 0;
-+}
-+
-+static int cpcap_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct cpcap_rtc *rtc;
-+	struct cpcap_time cpcap_tm;
-+	int temp_tod2;
-+	int ret;
-+
-+	rtc = dev_get_drvdata(dev);
-+
-+	ret = regmap_read(rtc->regmap, CPCAP_REG_TOD2, &temp_tod2);
-+	ret |= regmap_read(rtc->regmap, CPCAP_REG_DAY, &cpcap_tm.day);
-+	ret |= regmap_read(rtc->regmap, CPCAP_REG_TOD1, &cpcap_tm.tod1);
-+	ret |= regmap_read(rtc->regmap, CPCAP_REG_TOD2, &cpcap_tm.tod2);
-+
-+	if (temp_tod2 > cpcap_tm.tod2)
-+		ret |= regmap_read(rtc->regmap, CPCAP_REG_DAY, &cpcap_tm.day);
-+
-+	if (ret) {
-+		dev_err(dev, "Failed to read time\n");
-+		return -EIO;
-+	}
-+
-+	cpcap2rtc_time(tm, &cpcap_tm);
-+
-+	return rtc_valid_tm(tm);
-+}
-+
-+static int cpcap_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct cpcap_rtc *rtc;
-+	struct cpcap_time cpcap_tm;
-+	int ret = 0;
-+
-+	rtc = dev_get_drvdata(dev);
-+
-+	rtc2cpcap_time(&cpcap_tm, tm);
-+
-+	if (rtc->alarm_enabled)
-+		disable_irq(rtc->alarm_irq);
-+	if (rtc->update_enabled)
-+		disable_irq(rtc->update_irq);
-+
-+	if (rtc->vendor == CPCAP_VENDOR_ST) {
-+		/* The TOD1 and TOD2 registers MUST be written in this order
-+		 * for the change to properly set.
-+		 */
-+		ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_TOD1,
-+					  TOD1_MASK, cpcap_tm.tod1);
-+		ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_TOD2,
-+					  TOD2_MASK, cpcap_tm.tod2);
-+		ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_DAY,
-+					  DAY_MASK, cpcap_tm.day);
-+	} else {
-+		/* Clearing the upper lower 8 bits of the TOD guarantees that
-+		 * the upper half of TOD (TOD2) will not increment for 0xFF RTC
-+		 * ticks (255 seconds).  During this time we can safely write
-+		 * to DAY, TOD2, then TOD1 (in that order) and expect RTC to be
-+		 * synchronized to the exact time requested upon the final write
-+		 * to TOD1.
-+		 */
-+		ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_TOD1,
-+					  TOD1_MASK, 0);
-+		ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_DAY,
-+					  DAY_MASK, cpcap_tm.day);
-+		ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_TOD2,
-+					  TOD2_MASK, cpcap_tm.tod2);
-+		ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_TOD1,
-+					  TOD1_MASK, cpcap_tm.tod1);
-+	}
-+
-+	if (rtc->update_enabled)
-+		enable_irq(rtc->update_irq);
-+	if (rtc->alarm_enabled)
-+		enable_irq(rtc->alarm_irq);
-+
-+	return ret;
-+}
-+
-+static int cpcap_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct cpcap_rtc *rtc;
-+	struct cpcap_time cpcap_tm;
-+	int ret;
-+
-+	rtc = dev_get_drvdata(dev);
-+
-+	alrm->enabled = rtc->alarm_enabled;
-+
-+	ret = regmap_read(rtc->regmap, CPCAP_REG_DAYA, &cpcap_tm.day);
-+	ret |= regmap_read(rtc->regmap, CPCAP_REG_TODA2, &cpcap_tm.tod2);
-+	ret |= regmap_read(rtc->regmap, CPCAP_REG_TODA1, &cpcap_tm.tod1);
-+
-+	if (ret) {
-+		dev_err(dev, "Failed to read time\n");
-+		return -EIO;
-+	}
-+
-+	cpcap2rtc_time(&alrm->time, &cpcap_tm);
-+	return rtc_valid_tm(&alrm->time);
-+}
-+
-+static int cpcap_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct cpcap_rtc *rtc;
-+	struct cpcap_time cpcap_tm;
-+	int ret;
-+
-+	rtc = dev_get_drvdata(dev);
-+
-+	rtc2cpcap_time(&cpcap_tm, &alrm->time);
-+
-+	if (rtc->alarm_enabled)
-+		disable_irq(rtc->alarm_irq);
-+
-+	ret = regmap_update_bits(rtc->regmap, CPCAP_REG_DAYA, DAY_MASK,
-+				 cpcap_tm.day);
-+	ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_TODA2, TOD2_MASK,
-+				  cpcap_tm.tod2);
-+	ret |= regmap_update_bits(rtc->regmap, CPCAP_REG_TODA1, TOD1_MASK,
-+				  cpcap_tm.tod1);
-+
-+	if (!ret) {
-+		enable_irq(rtc->alarm_irq);
-+		rtc->alarm_enabled = true;
-+	}
-+
-+	return ret;
-+}
-+
-+static const struct rtc_class_ops cpcap_rtc_ops = {
-+	.read_time		= cpcap_rtc_read_time,
-+	.set_time		= cpcap_rtc_set_time,
-+	.read_alarm		= cpcap_rtc_read_alarm,
-+	.set_alarm		= cpcap_rtc_set_alarm,
-+	.alarm_irq_enable	= cpcap_rtc_alarm_irq_enable,
-+};
-+
-+static irqreturn_t cpcap_rtc_alarm_irq(int irq, void *data)
-+{
-+	struct cpcap_rtc *rtc = data;
-+
-+	rtc_update_irq(rtc->rtc_dev, 1, RTC_AF | RTC_IRQF);
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t cpcap_rtc_update_irq(int irq, void *data)
-+{
-+	struct cpcap_rtc *rtc = data;
-+
-+	rtc_update_irq(rtc->rtc_dev, 1, RTC_UF | RTC_IRQF);
-+	return IRQ_HANDLED;
-+}
-+
-+static int cpcap_rtc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct cpcap_rtc *rtc;
-+	int err;
-+
-+	rtc = devm_kzalloc(dev, sizeof(*rtc), GFP_KERNEL);
-+	if (!rtc)
-+		return -ENOMEM;
-+
-+	rtc->regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!rtc->regmap)
-+		return -ENODEV;
-+
-+	platform_set_drvdata(pdev, rtc);
-+	rtc->rtc_dev = devm_rtc_device_register(dev, "cpcap_rtc",
-+						&cpcap_rtc_ops, THIS_MODULE);
-+
-+	if (IS_ERR(rtc->rtc_dev)) {
-+		kfree(rtc);
-+		return PTR_ERR(rtc->rtc_dev);
-+	}
-+
-+	err = cpcap_get_vendor(dev, rtc->regmap, &rtc->vendor);
-+	if (err)
-+		return err;
-+
-+	rtc->alarm_irq = platform_get_irq(pdev, 0);
-+	err = devm_request_threaded_irq(dev, rtc->alarm_irq, NULL,
-+					cpcap_rtc_alarm_irq, IRQ_NONE,
-+					"rtc_alarm", rtc);
-+	if (err) {
-+		dev_err(dev, "Could not request alarm irq: %d\n", err);
-+		return err;
-+	}
-+	disable_irq(rtc->alarm_irq);
-+
-+	/* Stock Android uses the 1 Hz interrupt for "secure clock daemon",
-+	 * which is not supported by the mainline kernel. The mainline kernel
-+	 * does not use the irq at the moment, but we explicitly request and
-+	 * disable it, so that its masked and does not wake up the processor
-+	 * every second.
-+	 */
-+	rtc->update_irq = platform_get_irq(pdev, 1);
-+	err = devm_request_threaded_irq(dev, rtc->update_irq, NULL,
-+					cpcap_rtc_update_irq, IRQ_NONE,
-+					"rtc_1hz", rtc);
-+	if (err) {
-+		dev_err(dev, "Could not request update irq: %d\n", err);
-+		return err;
-+	}
-+	disable_irq(rtc->update_irq);
-+
-+	err = device_init_wakeup(dev, 1);
-+	if (err) {
-+		dev_err(dev, "wakeup initialization failed (%d)\n", err);
-+		/* ignore error and continue without wakeup support */
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cpcap_rtc_of_match[] = {
-+	{ .compatible = "motorola,cpcap-rtc", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cpcap_rtc_of_match);
-+
-+static struct platform_driver cpcap_rtc_driver = {
-+	.probe		= cpcap_rtc_probe,
-+	.driver		= {
-+		.name	= "cpcap-rtc",
-+		.of_match_table = cpcap_rtc_of_match,
-+	},
-+};
-+
-+module_platform_driver(cpcap_rtc_driver);
-+
-+MODULE_ALIAS("platform:cpcap-rtc");
-+MODULE_DESCRIPTION("CPCAP RTC driver");
-+MODULE_AUTHOR("Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
-+MODULE_LICENSE("GPL");
--- 
-2.11.0
+> > +
+> >  endif
+> > diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> > index af480d9..d540d45 100644
+> > --- a/drivers/hwtracing/coresight/Makefile
+> > +++ b/drivers/hwtracing/coresight/Makefile
+> > @@ -16,3 +16,4 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
+> >  					coresight-etm4x-sysfs.o
+> >  obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
+> >  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
+> > +obj-$(CONFIG_CORESIGHT_DEBUG) += coresight-debug.o
+> > diff --git a/drivers/hwtracing/coresight/coresight-debug.c b/drivers/hwtracing/coresight/coresight-debug.c
+> > new file mode 100644
+> > index 0000000..5214f8e
+> > --- /dev/null
+> > +++ b/drivers/hwtracing/coresight/coresight-debug.c
+> > @@ -0,0 +1,378 @@
+> > +/*
+> > + * Copyright (c) 2017 Linaro Limited. All rights reserved.
+> > + *
+> > + * Author: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify it
+> > + * under the terms of the GNU General Public License version 2 as published by
+> > + * the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful, but WITHOUT
+> > + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> > + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> > + * more details.
+> > + *
+> > + * You should have received a copy of the GNU General Public License along with
+> > + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> > + *
+> > + */
+> > +#include <linux/amba/bus.h>
+> > +#include <linux/coresight.h>
+> > +#include <linux/cpu.h>
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/init.h>
+> > +#include <linux/io.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/moduleparam.h>
+> > +#include <linux/slab.h>
+> > +#include <linux/smp.h>
+> > +#include <linux/types.h>
+> > +#include <linux/uaccess.h>
+> > +
+> > +#include "coresight-priv.h"
+> > +
+> > +#define EDPCSR				0x0A0
+> > +#define EDCIDSR				0x0A4
+> > +#define EDVIDSR				0x0A8
+> > +#define EDPCSR_HI			0x0AC
+> > +#define EDOSLAR				0x300
+> > +#define EDPRSR				0x314
+> > +#define EDDEVID1			0xFC4
+> > +#define EDDEVID				0xFC8
+> > +
+> > +#define EDPCSR_PROHIBITED		0xFFFFFFFF
+> > +
+> > +/* bits definition for EDPCSR */
+> > +#ifndef CONFIG_64BIT
+> > +#define EDPCSR_THUMB			BIT(0)
+> > +#define EDPCSR_ARM_INST_MASK		GENMASK(31, 2)
+> > +#define EDPCSR_THUMB_INST_MASK		GENMASK(31, 1)
+> > +#endif
+> > +
+> > +/* bits definition for EDPRSR */
+> > +#define EDPRSR_DLK			BIT(6)
+> > +#define EDPRSR_PU			BIT(0)
+> > +
+> > +/* bits definition for EDVIDSR */
+> > +#define EDVIDSR_NS			BIT(31)
+> > +#define EDVIDSR_E2			BIT(30)
+> > +#define EDVIDSR_E3			BIT(29)
+> > +#define EDVIDSR_HV			BIT(28)
+> > +#define EDVIDSR_VMID			GENMASK(7, 0)
+> > +
+> > +/* bits definition for EDDEVID1 */
+> > +#define EDDEVID1_PCSR_OFFSET_MASK	GENMASK(3, 0)
+> > +#define EDDEVID1_PCSR_OFFSET_INS_SET	(0x0)
+> > +
+> > +/* bits definition for EDDEVID */
+> > +#define EDDEVID_PCSAMPLE_MODE		GENMASK(3, 0)
+> > +#define EDDEVID_IMPL_EDPCSR_EDCIDSR	(0x2)
+> > +#define EDDEVID_IMPL_FULL		(0x3)
+> > +
+> > +struct debug_drvdata {
+> > +	void __iomem	*base;
+> > +	struct device	*dev;
+> > +	int		cpu;
+> > +
+> > +	bool		edpcsr_present;
+> > +	bool		edvidsr_present;
+> > +	bool		pc_has_offset;
+> > +
+> > +	u32		eddevid;
+> > +	u32		eddevid1;
+> > +
+> > +	u32		edpcsr;
+> > +	u32		edpcsr_hi;
+> > +	u32		edprsr;
+> > +	u32		edvidsr;
+> > +	u32		edcidsr;
+> > +};
+> > +
+> > +static DEFINE_PER_CPU(struct debug_drvdata *, debug_drvdata);
+> > +
+> > +static void debug_os_unlock(struct debug_drvdata *drvdata)
+> > +{
+> > +	/* Unlocks the debug registers */
+> > +	writel_relaxed(0x0, drvdata->base + EDOSLAR);
+> > +	wmb();
+> > +}
+> > +
+> > +/*
+> > + * According to ARM DDI 0487A.k, before access external debug
+> > + * registers should firstly check the access permission; if any
+> > + * below condition has been met then cannot access debug
+> > + * registers to avoid lockup issue:
+> > + *
+> > + * - CPU power domain is powered off;
+> > + * - The OS Double Lock is locked;
+> > + *
+> > + * By checking EDPRSR can get to know if meet these conditions.
+> > + */
+> > +static bool debug_access_permitted(struct debug_drvdata *drvdata)
+> > +{
+> > +	/* CPU is powered off */
+> > +	if (!(drvdata->edprsr & EDPRSR_PU))
+> > +		return false;
+> > +
+> > +	/* The OS Double Lock is locked */
+> > +	if (drvdata->edprsr & EDPRSR_DLK)
+> > +		return false;
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static void debug_read_regs(struct debug_drvdata *drvdata)
+> > +{
+> > +	drvdata->edprsr = readl_relaxed(drvdata->base + EDPRSR);
+> > +
+> > +	if (!debug_access_permitted(drvdata))
+> > +		return;
+> > +
+> > +	if (!drvdata->edpcsr_present)
+> > +		return;
+> > +
+> > +	CS_UNLOCK(drvdata->base);
+> > +
+> > +	debug_os_unlock(drvdata);
+> > +
+> > +	drvdata->edpcsr = readl_relaxed(drvdata->base + EDPCSR);
+> > +
+> > +	/*
+> > +	 * As described in ARM DDI 0487A.k, if the processing
+> > +	 * element (PE) is in debug state, or sample-based
+> > +	 * profiling is prohibited, EDPCSR reads as 0xFFFFFFFF;
+> > +	 * EDCIDSR, EDVIDSR and EDPCSR_HI registers also become
+> > +	 * UNKNOWN state. So directly bail out for this case.
+> > +	 */
+> > +	if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
+> > +		CS_LOCK(drvdata->base);
+> > +		return;
+> > +	}
+> > +
+> > +	/*
+> > +	 * A read of the EDPCSR normally has the side-effect of
+> > +	 * indirectly writing to EDCIDSR, EDVIDSR and EDPCSR_HI;
+> > +	 * at this point it's safe to read value from them.
+> > +	 */
+> > +	drvdata->edcidsr = readl_relaxed(drvdata->base + EDCIDSR);
+> > +#ifdef CONFIG_64BIT
+> > +	drvdata->edpcsr_hi = readl_relaxed(drvdata->base + EDPCSR_HI);
+> > +#endif
+> > +
+> > +	if (drvdata->edvidsr_present)
+> > +		drvdata->edvidsr = readl_relaxed(drvdata->base + EDVIDSR);
+> > +
+> > +	CS_LOCK(drvdata->base);
+> > +}
+> > +
+> > +#ifndef CONFIG_64BIT
+> > +static bool debug_pc_has_offset(struct debug_drvdata *drvdata)
+> > +{
+> > +	u32 pcsr_offset;
+> > +
+> > +	pcsr_offset = drvdata->eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
+> > +
+> > +	return (pcsr_offset == EDDEVID1_PCSR_OFFSET_INS_SET);
+> > +}
+> > +
+> > +static unsigned long debug_adjust_pc(struct debug_drvdata *drvdata,
+> > +				     unsigned long pc)
+> > +{
+> > +	unsigned long arm_inst_offset = 0, thumb_inst_offset = 0;
+> > +
+> > +	if (debug_pc_has_offset(drvdata)) {
+> > +		arm_inst_offset = 8;
+> > +		thumb_inst_offset = 4;
+> > +	}
+> > +
+> > +	/* Handle thumb instruction */
+> > +	if (pc & EDPCSR_THUMB) {
+> > +		pc = (pc & EDPCSR_THUMB_INST_MASK) - thumb_inst_offset;
+> > +		return pc;
+> > +	}
+> > +
+> > +	/*
+> > +	 * Handle arm instruction offset, if the arm instruction
+> > +	 * is not 4 byte alignment then it's possible the case
+> > +	 * for implementation defined; keep original value for this
+> > +	 * case and print info for notice.
+> > +	 */
+> > +	if (pc & BIT(1))
+> > +		pr_emerg("Instruction offset is implementation defined\n");
+> > +	else
+> > +		pc = (pc & EDPCSR_ARM_INST_MASK) - arm_inst_offset;
+> > +
+> > +	return pc;
+> > +}
+> > +#endif
+> > +
+> > +static void debug_dump_regs(struct debug_drvdata *drvdata)
+> > +{
+> > +	unsigned long pc;
+> > +
+> > +	pr_emerg("\tEDPRSR:  %08x (Power:%s DLK:%s)\n", drvdata->edprsr,
+> > +		 drvdata->edprsr & EDPRSR_PU ? "On" : "Off",
+> > +		 drvdata->edprsr & EDPRSR_DLK ? "Lock" : "Unlock");
+> > +
+> > +	if (!debug_access_permitted(drvdata) || !drvdata->edpcsr_present) {
+> > +		pr_emerg("No permission to access debug registers!\n");
+> > +		return;
+> > +	}
+> > +
+> > +	if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
+> > +		pr_emerg("CPU is in Debug state or profiling is prohibited!\n");
+> > +		return;
+> > +	}
+> > +
+> > +#ifdef CONFIG_64BIT
+> > +	pc = (unsigned long)drvdata->edpcsr_hi << 32 |
+> > +	     (unsigned long)drvdata->edpcsr;
+> > +#else
+> > +	pc = debug_adjust_pc(drvdata, (unsigned long)drvdata->edpcsr);
+> > +#endif
+> > +
+> > +	pr_emerg("\tEDPCSR:  [<%p>] %pS\n", (void *)pc, (void *)pc);
+> > +	pr_emerg("\tEDCIDSR: %08x\n", drvdata->edcidsr);
+> > +
+> > +	if (!drvdata->edvidsr_present)
+> > +		return;
+> > +
+> > +	pr_emerg("\tEDVIDSR: %08x (State:%s Mode:%s Width:%s VMID:%x)\n",
+> > +		 drvdata->edvidsr,
+> > +		 drvdata->edvidsr & EDVIDSR_NS ? "Non-secure" : "Secure",
+> > +		 drvdata->edvidsr & EDVIDSR_E3 ? "EL3" :
+> > +			(drvdata->edvidsr & EDVIDSR_E2 ? "EL2" : "EL1/0"),
+> > +		 drvdata->edvidsr & EDVIDSR_HV ? "64bits" : "32bits",
+> > +		 drvdata->edvidsr & (u32)EDVIDSR_VMID);
+> > +}
+> > +
+> > +/*
+> > + * Dump out information on panic.
+> > + */
+> > +static int debug_notifier_call(struct notifier_block *self,
+> > +			       unsigned long v, void *p)
+> > +{
+> > +	int cpu;
+> > +
+> > +	pr_emerg("ARM external debug module:\n");
+> > +
+> > +	for_each_possible_cpu(cpu) {
+> > +
+> 
+> Extra line - please remove.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Will remove.
+
+> > +		if (!per_cpu(debug_drvdata, cpu))
+> > +			continue;
+> > +
+> > +		pr_emerg("CPU[%d]:\n", per_cpu(debug_drvdata, cpu)->cpu);
+> > +
+> > +		debug_read_regs(per_cpu(debug_drvdata, cpu));
+> > +		debug_dump_regs(per_cpu(debug_drvdata, cpu));
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static struct notifier_block debug_notifier = {
+> > +	.notifier_call = debug_notifier_call,
+> > +};
+> > +
+> > +static void debug_init_arch_data(void *info)
+> > +{
+> > +	struct debug_drvdata *drvdata = info;
+> > +	u32 mode;
+> > +
+> > +	CS_UNLOCK(drvdata->base);
+> > +
+> > +	debug_os_unlock(drvdata);
+> > +
+> > +	/* Read device info */
+> > +	drvdata->eddevid  = readl_relaxed(drvdata->base + EDDEVID);
+> > +	drvdata->eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
+> > +
+> > +	/* Parse implementation feature */
+> > +	mode = drvdata->eddevid & EDDEVID_PCSAMPLE_MODE;
+> > +	if (mode == EDDEVID_IMPL_FULL) {
+> > +		drvdata->edpcsr_present  = true;
+> > +		drvdata->edvidsr_present = true;
+> > +	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
+> > +		drvdata->edpcsr_present  = true;
+> > +		drvdata->edvidsr_present = false;
+> > +	} else {
+> > +		drvdata->edpcsr_present  = false;
+> > +		drvdata->edvidsr_present = false;
+> > +	}
+> > +
+> > +	CS_LOCK(drvdata->base);
+> > +}
+> > +
+> > +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> > +{
+> > +	void __iomem *base;
+> > +	struct device *dev = &adev->dev;
+> > +	struct debug_drvdata *drvdata;
+> > +	struct resource *res = &adev->res;
+> > +	struct device_node *np = adev->dev.of_node;
+> > +	char buf[32];
+> > +	static int debug_count;
+> > +
+> > +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> > +	if (!drvdata)
+> > +		return -ENOMEM;
+> > +
+> > +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
+> > +	drvdata->dev = &adev->dev;
+> > +
+> > +	dev_set_drvdata(dev, drvdata);
+> > +
+> > +	/* Validity for the resource is already checked by the AMBA core */
+> > +	base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	drvdata->base = base;
+> > +
+> > +	get_online_cpus();
+> > +	per_cpu(debug_drvdata, drvdata->cpu) = drvdata;
+> > +
+> > +	if (smp_call_function_single(drvdata->cpu,
+> > +				debug_init_arch_data, drvdata, 1))
+> > +		dev_err(dev, "Debug arch init failed\n");
+> > +
+> > +	put_online_cpus();
+> > +
+> > +	if (!debug_count++)
+> > +		atomic_notifier_chain_register(&panic_notifier_list,
+> > +					       &debug_notifier);
+> > +
+> > +	sprintf(buf, (char *)id->data, drvdata->cpu);
+> > +	dev_info(dev, "%s initialized\n", buf);
+> > +	return 0;
+> > +}
+> > +
+> > +static struct amba_id debug_ids[] = {
+> > +	{       /* Debug for Cortex-A53 */
+> > +		.id	= 0x000bbd03,
+> > +		.mask	= 0x000fffff,
+> > +		.data   = "Coresight debug-CPU%d",
+> > +	},
+> > +	{       /* Debug for Cortex-A57 */
+> > +		.id	= 0x000bbd07,
+> > +		.mask	= 0x000fffff,
+> > +		.data   = "Coresight debug-CPU%d",
+> > +	},
+> > +	{       /* Debug for Cortex-A72 */
+> > +		.id	= 0x000bbd08,
+> > +		.mask	= 0x000fffff,
+> > +		.data   = "Coresight debug-CPU%d",
+> > +	},
+> > +	{ 0, 0 },
+> > +};
+> 
+> What board are you testing this on?  Based on the clock name in the DT example I
+> suppose it is HiKey.  If so would you mind sending the DT so that I can test
+> things on my side?
+
+Yes, I tested on Hikey. Will send a new version and include DT related
+patches for your testing.
+
+Thanks,
+Leo Yan
+
+> > +
+> > +static struct amba_driver debug_driver = {
+> > +	.drv = {
+> > +		.name   = "coresight-debug",
+> > +		.suppress_bind_attrs = true,
+> > +	},
+> > +	.probe		= debug_probe,
+> > +	.id_table	= debug_ids,
+> > +};
+> > +builtin_amba_driver(debug_driver);
+> > -- 
+> > 2.7.4
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
