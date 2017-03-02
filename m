@@ -1,56 +1,61 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] nvmem: core: Allow allocating several anonymous
- nvmem devices
-Date: Thu, 2 Mar 2017 21:03:51 +0100
-Message-ID: <20170302210351.1f740ffc@bbrezillon>
-References: <1488484223-844-1-git-send-email-albeu@free.fr>
-        <1488484223-844-4-git-send-email-albeu@free.fr>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: Renesas RZ/A1 pin and gpio controller
+Date: Thu, 2 Mar 2017 20:16:51 +0000
+Message-ID: <SG2PR06MB1165E84107B921961C4C0C2E8A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488484223-844-4-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  2 Mar 2017 20:50:23 +0100
-Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+Hi Jacopo,
 
-> Currently the nvmem core expect the config to provide a name and ID
-> that are then used to create the device name. When no device name is
-> given 'nvmem' is used. However if there is several such anonymous
-> devices they all get named 'nvmem0', which doesn't work.
-> 
-> To fix this problem use the ID from the config only when the config
-> also provides a name. When no name is provided take the uinque ID of
-> the nvmem device instead.
-> 
-> Signed-off-by: Alban <albeu-GANU6spQydw@public.gmane.org>
+On Monday, February 20, 2017, Jacopo Mondi wrote:
+> Hello,
+>    this is the first submission of combined GPIO and pin controller drive=
+r
+> for Renesas RZ/A1 SoC.
+>=20
+> Compared to my RFC series on the same subject, this new implementation
+> supports a single SoC. If more devices with a similar pin controller will
+> arrive later, we will consider supporting them through this driver.
+>=20
+> The series adds the driver itself and register the pincontroller in dtsi.
+> The pin controller hardware supports 12 ports, each of them is also a gpi=
+o
+> controller.
+>=20
+> The series makes use of pinctrl and pinmux generic function currently
+> available in Linus Walleij's linux-pinctrl.git tree.
+>=20
+> Testing done veryfing functionalities of hardware modules enabled in
+> device tree (SCIF2 for serial output, RIIC for accessing an internal
+> eeprom chip and user visible leds).
+> Gpio have been also verified using a i2c-gpio device in place of the
+> native RIIC one to access the same eeprom device.
 
-Reviewed-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> ---
->  drivers/nvmem/core.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 408b521..8c830a8 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -468,7 +468,8 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->  	np = config->dev->of_node;
->  	nvmem->dev.of_node = np;
->  	dev_set_name(&nvmem->dev, "%s%d",
-> -		     config->name ? : "nvmem", config->id);
-> +		     config->name ? : "nvmem",
-> +		     config->name ? config->id : nvmem->id);
->  
->  	nvmem->read_only = of_property_read_bool(np, "read-only") |
->  			   config->read_only;
+Functionally, I tested these patches on an RZ/A1H RSK board (after modifyin=
+g the DT for the RSK vs the GENMAI board).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The following worked fine:
+ * SCIF
+ * I2C
+ * SDHI
+ * Ethernet
+
+  (The trick is you have to know what pins need to be set as bi-directional=
+)
+
+
+I will look over the code and provide feedback separately.
+
+Cheers
+
+Chris
