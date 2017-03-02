@@ -1,125 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux v3 1/1] Documentation: dt-bindings: Document
- bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device
- driver
-Date: Thu, 2 Mar 2017 09:07:33 -0600
-Message-ID: <20170302150733.absd7shfyionhgy7@rob-hp-laptop>
-References: <20170214061935.17827-1-jaghu@google.com>
- <20170214061935.17827-2-jaghu@google.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: Re: [PATCH 2/3] clk: sunxi-ng: add support for PRCM CCUs
+Date: Thu, 02 Mar 2017 23:13:18 +0800
+Message-ID: <3232491488467598@web22o.yandex.ru>
+References: <20170301152220.MEgmqtKw@smtp2p.mail.yandex.net> <20170302140859.aqvwtgzxkdi2lqbc@lukather>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170214061935.17827-2-jaghu@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-Cc: joel@jms.id.au, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBEPN4DCQKGQEWFPBHRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170302140859.aqvwtgzxkdi2lqbc@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 13, 2017 at 10:19:35PM -0800, Jaghathiswari Rankappagounder Natarajan wrote:
-> This binding provides interface for adding values related to ASPEED
-> AST2400/2500 PWM and Fan tach controller support.
-> The PWM controller can support upto 8 PWM output ports.
-> The Fan tach controller can support upto 16 tachometer inputs.
-> 
-> Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-> ---
-> v3:
->  Made the structure more common
-> 
->  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 73 ++++++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> new file mode 100644
-> index 000000000000..c2de3709e554
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> @@ -0,0 +1,73 @@
-> +ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
-> +
-> +The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
-> +controller can support upto 16 Fan tachometer inputs.
-> +
-> +There can be upto 8 fans supported. Each fan can have one PWM output and
-> +one/two Fan tach inputs.
-> +
-> +Required properties for pwm-tacho node:
-> +- #address-cells : should be 1.
-> +
-> +- #size-cells : should be 1.
-> +
-> +- reg : address and length of the register set for the device.
-> +
-> +- pinctrl-names : a pinctrl state named "default" must be defined.
-> +
-> +- pinctrl-0 : phandle referencing pin configuration of the PWM ports.
-> +
-> +- compatible : should be "aspeed,aspeed2400-pwm-tacho" for AST2400 or
-> +	       "aspeed,aspeed2500-pwm-tacho" for AST2500.
-> +
-> +- clocks : a fixed clock providing input clock frequency(PWM
-> +	   and Fan Tach clock)
-> +
-> +fan subnode format:
-> +========================
-> +Under fan subnode there can upto 8 child nodes, with each child node
-> +representing a fan. If there are 8 fans each fan can have one PWM port and
-> +one/two Fan tach inputs.
-> +
-> +Required properties for each child node(starting from PWM A through PWM H):
-> +- pwm-port : should specify PWM source port.
-> +	     integer value in the range 0 to 7 with 0 indicating PWM port
-> +	     A and 7 indicating PWM port H.
-> +
-> +- fan-ctrl-gpios : should specify the tachometer input GPIO pin on the hardware.
-> +		   Fan Tachometer function can only work when GPIO is in
-> +		   ”input mode”.
 
-This still sounds like pin muxing, not actual GPIO usage.
 
-> +
-> +- fan-tach-ch : should specify the Fan tach input channel.
-> +	        integer value in the range 0 through 15, with 0 indicating
-> +		Fan tach channel 0 and 15 indicating Fan tach channel 15.
-> +
-> +Examples:
-> +
-> +pwm-tacho-fixed-clk: fixedclk {
-> +	compatible = "fixed-clock";
-> +	#clock-cells = <0>;
-> +	clock-frequency = <24000000>;
-> +}
-> +
-> +pwm-tacho: pwm-tacho-controller@1e786000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	reg = <0x1E786000 0x1000>;
-> +	compatible = "aspeed,aspeed2500-pwm-tacho";
-> +	clocks = <&pwm-tacho-fixed-clk>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-> +
-> +	fan0 {
-> +		pwm-port = /bits/ 8 <0x00>;
+02.03.2017, 22:09, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Wed, Mar 01, 2017 at 08:17:39PM +0800, Icenowy Zheng wrote:
+>> =C2=A0> I'm a bit worried by that to be honest. You claim to support the=
+ A31,
+>> =C2=A0> yet jugdging by the current state of that code you never actuall=
+y
+>> =C2=A0> tested it on that SoC.
+>>
+>> =C2=A0I only claim to reserve possibility to extend the driver to suppor=
+t
+>> =C2=A0A31, but I didn't claim it currently support A31.
+>
+> Well, you did call it sun6i.
+>
+> Please rename it, and we will consolidate in due time.
 
-Since fans and pwms are 1-1, I'd just use reg here.
+Then rename it back when it really gains support for A31?
 
-I still think this should probably use PWM binding, but given this is 
-all self contained it is okay.
-
-> +		fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_HIGH>;
-> +		fan-tach-ch = /bits/ 8 <0x00>;
-> +	};
-> +
-> +	fan1 {
-> +		pwm-port = /bits/ 8 <0x01>;
-> +		fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 1) GPIO_ACTIVE_HIGH>;
-> +		fan-tach-ch = /bits/ 8 <0x01>;
-> +	};
-> +};
+>
+> Maxime
+>
 > --
-> 2.11.0.483.g087da7b7c-goog
-> 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
