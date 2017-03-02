@@ -1,108 +1,167 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 10/11] dt-bindings: Add bindings for the Amlogic Meson dw-hdmi
- extension
-Date: Thu,  2 Mar 2017 16:40:06 +0100
-Message-ID: <1488469207-523-11-git-send-email-narmstrong@baylibre.com>
-References: <1488469207-523-1-git-send-email-narmstrong@baylibre.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v4 1/3] watchdog: add rza_wdt driver
+Date: Thu, 2 Mar 2017 15:38:07 +0000
+Message-ID: <SG2PR06MB11656FE3E3CF8BAA1B8A86688A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170302135746.30550-1-chris.brandt@renesas.com>
+ <20170302135746.30550-2-chris.brandt@renesas.com>
+ <bf76e106-9272-622c-8d4e-c270a6b51d16@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1488469207-523-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <bf76e106-9272-622c-8d4e-c270a6b51d16-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBiaW5kaW5nIGRlc2NyaWJlcyB0aGUgQW1sb2dpYyBNZXNvbiBzcGVjaWZpYyBleHRlbnNp
-b24gdG8gdGhlClN5bm9wc3lzIERlc2lnbndhcmUgSERNSSBDb250cm9sbGVyLgoKU2lnbmVkLW9m
-Zi1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgotLS0KIC4uLi9i
-aW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tZHctaGRtaS50eHQgICAgIHwgMTExICsrKysr
-KysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDExMSBpbnNlcnRpb25zKCspCiBjcmVh
-dGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-YW1sb2dpYyxtZXNvbi1kdy1oZG1pLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FtbG9naWMsbWVzb24tZHctaGRtaS50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hbWxvZ2ljLG1lc29uLWR3LWhk
-bWkudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjdmMDQwZWQKLS0tIC9k
-ZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9h
-bWxvZ2ljLG1lc29uLWR3LWhkbWkudHh0CkBAIC0wLDAgKzEsMTExIEBACitBbWxvZ2ljIHNwZWNp
-ZmljIGV4dGVuc2lvbnMgdG8gdGhlIFN5bm9wc3lzIERlc2lnbndhcmUgSERNSSBDb250cm9sbGVy
-Cis9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09CisKK1RoZSBBbWxvZ2ljIE1lc29uIFN5bm9wc3lzIERlc2lnbndhcmUg
-SW50ZWdyYXRpb24gaXMgY29tcG9zZWQgb2YgOgorLSBBIFN5bm9wc3lzIERlc2lnbldhcmUgSERN
-SSBDb250cm9sbGVyIElQCistIEEgVE9QIGNvbnRyb2wgYmxvY2sgY29udHJvbGxpbmcgdGhlIENs
-b2NrcyBhbmQgUEhZCistIEEgY3VzdG9tIEhETUkgUEhZIGluIG9yZGVyIHRvIGNvbnZlcnQgdmlk
-ZW8gdG8gVE1EUyBzaWduYWwKKyBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwor
-fCAgICAgICAgICAgIEhETUkgVE9QICAgICAgICAgICAgICAgfDw9IEhQRAorfF9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19ffAorfCAgICAgICAgICAgICAgICAgIHwgICAgICAgICAg
-ICAgICAgfAorfCAgU3lub3BzeXMgSERNSSAgIHwgICBIRE1JIFBIWSAgICAgfD0+IFRNRFMKK3wg
-ICAgQ29udHJvbGxlciAgICB8X19fX19fX19fX19fX19fX3wKK3xfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX3w8PT4gRERDCisKK1RoZSBIRE1JIFRPUCBibG9jayBvbmx5IHN1cHBv
-cnRzIEhQRCBzZW5zaW5nLgorVGhlIFN5bm9wc3lzIEhETUkgQ29udHJvbGxlciBpbnRlcnJ1cHQg
-aXMgcm91dGVkIHRocm91Z2ggdGhlCitUT1AgQmxvY2sgaW50ZXJydXB0LgorQ29tbXVuaWNhdGlv
-biB0byB0aGUgVE9QIEJsb2NrIGFuZCB0aGUgU3lub3BzeXMgSERNSSBDb250cm9sbGVyIGlzIGRv
-bmUKK3ZpYSBhIHBhaXIgb2YgZGVkaWNhdGVkIGFkZHIrcmVhZC93cml0ZSByZWdpc3RlcnMuCitU
-aGUgSERNSSBQSFkgaXMgY29uZmlndXJlZCBieSByZWdpc3RlcnMgaW4gdGhlIEhISSByZWdpc3Rl
-ciBibG9jay4KKworUGl4ZWwgZGF0YSBhcnJpdmVzIGluIDQ6NDo0IGZvcm1hdCBmcm9tIHRoZSBW
-RU5DIGJsb2NrIGFuZCB0aGUgVlBVIEhETUkgbXV4CitzZWxlY3RzIGVpdGhlciB0aGUgRU5DSSBl
-bmNvZGVyIGZvciB0aGUgNTc2aSBvciA0ODBpIGZvcm1hdHMgb3IgdGhlIEVOQ1AKK2VuY29kZXIg
-Zm9yIGFsbCB0aGUgb3RoZXIgZm9ybWF0cyBpbmNsdWRpbmcgaW50ZXJsYWNlZCBIRCBmb3JtYXRz
-LgorCitUaGUgVkVOQyB1c2VzIGEgRFZJIGVuY29kZXIgb24gdG9wIG9mIHRoZSBFTkNJIG9yIEVO
-Q1AgZW5jb2RlcnMgdG8gZ2VuZXJhdGUKK0RWSSB0aW1pbmdzIGZvciB0aGUgSERNSSBjb250cm9s
-bGVyLgorCitBbWxvZ2ljIE1lc29uIEdYQkIsIEdYTCBhbmQgR1hNIFNvQ3MgZmFtaWxpZXMgZW1i
-ZWRzIHRoZSBTeW5vcHN5cyBEZXNpZ25XYXJlCitIRE1JIFRYIElQIHZlcnNpb24gMi4wMWEgd2l0
-aCBIRENQIGFuZCBJMkMgJiBTL1BESUYKK2F1ZGlvIHNvdXJjZSBpbnRlcmZhY2VzLgorCitSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiB2YWx1ZSBzaG91bGQgYmUgZGlmZmVyZW50
-IGZvciBlYWNoIFNvQyBmYW1pbHkgYXMgOgorCS0gR1hCQiAoUzkwNSkgOiAiYW1sb2dpYyxtZXNv
-bi1neGJiLWR3LWhkbWkiCisJLSBHWEwgKFM5MDVYLCBTOTA1RCkgOiAiYW1sb2dpYyxtZXNvbi1n
-eGwtZHctaGRtaSIKKwktIEdYTSAoUzkxMikgOiAiYW1sb2dpYyxtZXNvbi1neG0tZHctaGRtaSIK
-Kwlmb2xsb3dlZCBieSB0aGUgY29tbW9uICJhbWxvZ2ljLG1lc29uLWd4LWR3LWhkbWkiCistIHJl
-ZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyBy
-ZWdpc3RlcnMuCistIGludGVycnVwdHM6IFRoZSBIRE1JIGludGVycnVwdCBudW1iZXIKKy0gY2xv
-Y2tzLCBjbG9jay1uYW1lcyA6IG11c3QgaGF2ZSB0aGUgcGhhbmRsZXMgdG8gdGhlIEhETUkgaWFo
-YiBhbmQgaXNmciBjbG9ja3MsCisgIGFuZCB0aGUgQW1sb2dpYyBNZXNvbiB2ZW5jaSBjbG9ja3Mg
-YXMgZGVzY3JpYmVkIGluCisgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9j
-ay9jbG9jay1iaW5kaW5ncy50eHQsCisgIHRoZSBjbG9ja3MgYXJlIHNvYyBzcGVjaWZpYywgdGhl
-IGNsb2NrLW5hbWVzIHNob3VsZCBiZSAiaWFoYiIsICJpc2ZyIiwgInZlbmNpIgorLSByZXNldHMs
-IHJlc2V0cy1uYW1lczogbXVzdCBoYXZlIHRoZSBwaGFuZGxlcyB0byB0aGUgSERNSSBhcGIsIGds
-dWUgYW5kIHBoeQorICByZXNldHMgYXMgZGVzY3JpYmVkIGluIDoKKyAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L3Jlc2V0LnR4dCwKKyAgdGhlIHJlc2V0LW5hbWVzIHNo
-b3VsZCBiZSAiaGRtaXR4X2FwYiIsICJoZG1pdHgiLCAiaGRtaXR4X3BoeSIKKworUmVxdWlyZWQg
-bm9kZXM6CisKK1RoZSBjb25uZWN0aW9ucyB0byB0aGUgSERNSSBwb3J0cyBhcmUgbW9kZWxlZCB1
-c2luZyB0aGUgT0YgZ3JhcGgKK2JpbmRpbmdzIHNwZWNpZmllZCBpbiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0LgorCitUaGUgZm9sbG93aW5nIHRhYmxlIGxpc3Rz
-IGZvciBlYWNoIHN1cHBvcnRlZCBtb2RlbCB0aGUgcG9ydCBudW1iZXIKK2NvcnJlc3BvbmRpbmcg
-dG8gZWFjaCBIRE1JIG91dHB1dCBhbmQgaW5wdXQuCisKKwkJUG9ydCAwCQlQb3J0IDEKKy0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCisgUzkwNSAoR1hCQikJVkVOQyBJ
-bnB1dAlUTURTIE91dHB1dAorIFM5MDVYIChHWEwpCVZFTkMgSW5wdXQJVE1EUyBPdXRwdXQKKyBT
-OTA1RCAoR1hMKQlWRU5DIElucHV0CVRNRFMgT3V0cHV0CisgUzkxMiAoR1hNKQlWRU5DIElucHV0
-CVRNRFMgT3V0cHV0CisKK0V4YW1wbGU6CisKK2hkbWktY29ubmVjdG9yIHsKKwljb21wYXRpYmxl
-ID0gImhkbWktY29ubmVjdG9yIjsKKwl0eXBlID0gImEiOworCisJcG9ydCB7CisJCWhkbWlfY29u
-bmVjdG9yX2luOiBlbmRwb2ludCB7CisJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWlfdHhfdG1k
-c19vdXQ+OworCQl9OworCX07Cit9OworCitoZG1pX3R4OiBoZG1pLXR4QGM4ODNhMDAwIHsKKwlj
-b21wYXRpYmxlID0gImFtbG9naWMsbWVzb24tZ3hiYi1kdy1oZG1pIiwgImFtbG9naWMsbWVzb24t
-Z3gtZHctaGRtaSI7CisJcmVnID0gPDB4MCAweGM4ODNhMDAwIDB4MCAweDFjPjsKKwlpbnRlcnJ1
-cHRzID0gPEdJQ19TUEkgNTcgSVJRX1RZUEVfRURHRV9SSVNJTkc+OworCXJlc2V0cyA9IDwmcmVz
-ZXQgUkVTRVRfSERNSVRYX0NBUEIzPiwKKwkJIDwmcmVzZXQgUkVTRVRfSERNSV9TWVNURU1fUkVT
-RVQ+LAorCQkgPCZyZXNldCBSRVNFVF9IRE1JX1RYPjsKKwlyZXNldC1uYW1lcyA9ICJoZG1pdHhf
-YXBiIiwgImhkbWl0eCIsICJoZG1pdHhfcGh5IjsKKwljbG9ja3MgPSA8JmNsa2MgQ0xLSURfSERN
-SV9QQ0xLPiwKKwkJIDwmY2xrYyBDTEtJRF9DTEs4MT4sCisJCSA8JmNsa2MgQ0xLSURfR0NMS19W
-RU5DSV9JTlQwPjsKKwljbG9jay1uYW1lcyA9ICJpc2ZyIiwgImlhaGIiLCAidmVuY2kiOworCSNh
-ZGRyZXNzLWNlbGxzID0gPDE+OworCSNzaXplLWNlbGxzID0gPDA+OworCisJLyogVlBVIFZFTkMg
-SW5wdXQgKi8KKwloZG1pX3R4X3ZlbmNfcG9ydDogcG9ydEAwIHsKKwkJcmVnID0gPDA+OworCisJ
-CWhkbWlfdHhfaW46IGVuZHBvaW50IHsKKwkJCXJlbW90ZS1lbmRwb2ludCA9IDwmaGRtaV90eF9v
-dXQ+OworCQl9OworCX07CisKKwkvKiBUTURTIE91dHB1dCAqLworCWhkbWlfdHhfdG1kc19wb3J0
-OiBwb3J0QDEgeworCQlyZWcgPSA8MT47CisKKwkJaGRtaV90eF90bWRzX291dDogZW5kcG9pbnQg
-eworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1pX2Nvbm5lY3Rvcl9pbj47CisJCX07CisJfTsK
-K307Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Hello Guenter,
+
+Thank you for your review!
+
+
+On Thursday, March 02, 2017, Guenter Roeck wrote:
+> > +/*
+> > + * Renesas RZ/A Series WDT Driver
+> > + *
+> > + * Copyright (C) 2017 Renesas Electronics America, Inc.
+> > + * Copyright (C) 2017 Chris Brandt
+> > + *
+> > + * This file is subject to the terms and conditions of the GNU
+> > +General Public
+> > + * License.  See the file "COPYING" in the main directory of this
+> > +archive
+> > + * for more details.
+> > + *
+> > + *
+>=20
+> The above two lines are unnecessary.
+
+OK.
+
+#I'll assume you mean take out just the last sentence (2 lines), not both
+sentences (all 3 lines).
+
+=20
+> > +/* Watchdog Timer Registers */
+> > +#define WTCSR 0
+> > +#define WTCSR_MAGIC 0xA500
+> > +#define WTSCR_WT (1<<6)
+> > +#define WTSCR_TME (1<<5)
+>=20
+> BIT()
+
+OK.
+
+> > +#define WTSCR_CKS(i) i
+>=20
+> (i)
+
+OK.
+
+
+> > +#define WRCSR_CLEAR_WOVF 0xA500 /* special value */
+>=20
+> Please use
+> #define SOMETHING<tab>value
+> throughout and make sure value is aligned.
+
+OK.
+
+> > +	rate =3D clk_get_rate(priv->clk);
+> > +	if (!rate)
+> > +		return -ENOENT;
+> > +
+> > +	/* Assume slowest clock rate possible (CKS=3D7) */
+> > +	rate /=3D 16384;
+> > +
+>=20
+> The rate check should probably be here to avoid situations where rate <
+> 16384.
+
+Do I need that if it's technically not possible to have a 'rate' less than =
+25MHz?
+
+These watchdogs HW are always feed directly from the peripheral clock and t=
+here
+is no such thing as a 16kHz peripheral block an any Renesas SoC.
+
+
+> > +	priv->wdev.info =3D &rza_wdt_ident,
+> > +	priv->wdev.ops =3D &rza_wdt_ops,
+> > +	priv->wdev.parent =3D &pdev->dev;
+> > +
+> > +	/*
+> > +	 * Since the max possible timeout of our 8-bit count register is
+> less
+> > +	 * than a second, we must use max_hw_heartbeat_ms.
+> > +	 */
+> > +	priv->wdev.max_hw_heartbeat_ms =3D (1000 * U8_MAX)/rate;
+>=20
+> space before and after /
+
+OK.
+#Funny because checkpatch.pl said it didn't like a space on one side but
+ not the other, so I choose no spaces and it was happy. I'm way below 80
+ characters for that line so it doesn't matter to me.
+
+
+> > +	dev_info(&pdev->dev, "max hw timeout of %dms\n",
+> > +		 priv->wdev.max_hw_heartbeat_ms);
+>=20
+> dev_dbg ?
+
+OK.
+#I guess we don't need to see that info on every boot.
+
+=20
+> > +
+> > +	priv->wdev.min_timeout =3D 1;
+> > +	priv->wdev.timeout =3D DEFAULT_TIMEOUT;
+> > +
+>=20
+> Add watchdog_init_timeout(&priv->wdev, 0, &pdev->dev); to optionally get
+> the timeout from dt ?
+
+OK. Good idea.
+
+> > +	platform_set_drvdata(pdev, priv);
+> > +	watchdog_set_drvdata(&priv->wdev, priv);
+> > +
+> > +	ret =3D watchdog_register_device(&priv->wdev);
+>=20
+> devm_watchdog_register_device()
+
+OK.
+
+=20
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int rza_wdt_remove(struct platform_device *pdev) {
+> > +	struct rza_wdt *priv =3D platform_get_drvdata(pdev);
+> > +
+> > +	watchdog_unregister_device(&priv->wdev);
+> > +	iounmap(priv->base);
+>=20
+> iounmap is unnecessary (and wrong).
+
+Anything mapped with devm_ioremap_resource() automatically gets unmapped
+when the drive gets unloaded?
+I didn't know that.
+
+
+
+I'll wait till the end of the day to see if anyone finds anything else, and
+then I'll send out a v5.
+
+
+Chris
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
