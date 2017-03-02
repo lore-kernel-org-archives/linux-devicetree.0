@@ -1,17 +1,16 @@
 From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v2 2/3] coresight: refactor with function
- of_coresight_get_cpu
-Date: Thu, 2 Mar 2017 08:39:19 +0800
-Message-ID: <20170302003919.GC1906@leoy-linaro>
+Subject: Re: [PATCH v2 1/3] coresight: bindings for debug module
+Date: Thu, 2 Mar 2017 08:43:18 +0800
+Message-ID: <20170302004318.GD1906@leoy-linaro>
 References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
- <1488294420-14188-3-git-send-email-leo.yan@linaro.org>
- <20170301160233.GB4009@linaro.org>
+ <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
+ <20170301154550.GA4009@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170301160233.GB4009@linaro.org>
+In-Reply-To: <20170301154550.GA4009@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,111 +24,85 @@ To: Mathieu Poirier <mathieu.poirier@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 01, 2017 at 09:02:33AM -0700, Mathieu Poirier wrote:
-> On Tue, Feb 28, 2017 at 11:06:59PM +0800, Leo Yan wrote:
-> > This is refactor to add function of_coresight_get_cpu(), so it's used to
-> > retrieve CPU id for coresight component. Finally can use it as a common
-> > function for multiple places.
+On Wed, Mar 01, 2017 at 08:45:50AM -0700, Mathieu Poirier wrote:
+> On Tue, Feb 28, 2017 at 11:06:58PM +0800, Leo Yan wrote:
+> > According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
+> > Chapter 'Part H: External debug', the CPU can integrate debug module
+> > and it can support self-hosted debug and external debug. Especially
+> > for supporting self-hosted debug, this means the program can access
+> > the debug module from mmio region; and usually the mmio region is
+> > integrated with coresight.
 > > 
-> > Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > So add document for binding debug component, includes binding to APB
+> > clock; and also need specify the CPU node which the debug module is
+> > dedicated to specific CPU.
+> > 
+> > Suggested-by: Mike Leach <mike.leach@linaro.org>
 > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > > ---
-> >  drivers/hwtracing/coresight/of_coresight.c | 35 ++++++++++++++++++++----------
-> >  include/linux/coresight.h                  |  2 ++
-> >  2 files changed, 25 insertions(+), 12 deletions(-)
+> >  .../devicetree/bindings/arm/coresight-debug.txt    | 40 ++++++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
 > > 
-> > diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> > index 629e031..2e7bbe2 100644
-> > --- a/drivers/hwtracing/coresight/of_coresight.c
-> > +++ b/drivers/hwtracing/coresight/of_coresight.c
-> > @@ -101,14 +101,34 @@ static int of_coresight_alloc_memory(struct device *dev,
-> >  	return 0;
-> >  }
-> >  
-> > +int of_coresight_get_cpu(struct device_node *node)
-> > +{
-> > +	int cpu;
-> > +	struct device_node *dn;
+> > diff --git a/Documentation/devicetree/bindings/arm/coresight-debug.txt b/Documentation/devicetree/bindings/arm/coresight-debug.txt
+> > new file mode 100644
+> > index 0000000..89820d5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/coresight-debug.txt
+> > @@ -0,0 +1,40 @@
+> > +* CoreSight Debug Component:
 > > +
-> > +	dn = of_parse_phandle(node, "cpu", 0);
+> > +CoreSight debug component are compliant with the ARMv8 architecture reference
+> > +manual (ARM DDI 0487A.k) Chapter 'Part H: External debug'. The external debug
+> > +module is mainly used for two modes: self-hosted debug and external debug, and
+> > +it can be accessed from mmio region from Coresight and eventually the debug
+> > +module connects with CPU for debugging. And the debug module provides
+> > +sample-based profiling extension, which can be used to sample CPU program
+> > +counter, secure state and exception level, etc; usually every CPU has one
+> > +dedicated debug module to be connected.
 > > +
-> > +	/* Affinity defaults to CPU0 */
-> > +	if (!dn)
-> > +		return 0;
+> > +Required properties:
 > > +
-> > +	for_each_possible_cpu(cpu) {
-> > +		if (dn == of_get_cpu_node(cpu, NULL))
-> > +			break;
-> > +	}
-> > +	of_node_put(dn);
+> > +- compatible : should be
+> > +	     * "arm,coresight-debug", "arm,primecell"; supplemented with
+> > +	       "arm,primecell" as driver is using the AMBA bus interface.
 > 
-> In the case where no CPU nodes are found this function will return the number
-> of the last CPU that was probed instead of '0'.
-
-Sure, will fix this.
-
-> > +
-> > +	return cpu;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+>              * "arm,coresight-debug"; supplemented with "arm,primecell" since
+>                this driver is using the AMBA bus interface.
 > 
-> Any reason you exported this - the fact that is it declared in corsight.h should
-> be enough.
+> > +
+> > +- reg : physical base address and length of the register set.
+> > +
+> > +- clocks : the clock associated to this component.
+> > +
+> > +- clock-names : the name of the clock referenced by the code. Since we are
+> > +                using the AMBA framework, the name of the clock providing
+> > +		the interconnect should be "apb_pclk" and the clock is
+> > +		mandatory. The interface between the debug logic and the
+> > +		processor core is clocked by the internal CPU clock, so it
+> > +		is enabled with CPU clock by default.
+> > +
+> > +- cpu : the cpu phandle the debug module is affined to. When omitted
+> > +	the source is considered to belong to CPU0.
+> 
+> s/source/module
+> 
+> With those change:
+> 
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Will remove it.
-
-Thanks,
-Leo Yan
+Thanks for reviewing :)
 
 > > +
-> >  struct coresight_platform_data *of_get_coresight_platform_data(
-> >  				struct device *dev, struct device_node *node)
-> >  {
-> > -	int i = 0, ret = 0, cpu;
-> > +	int i = 0, ret = 0;
-> >  	struct coresight_platform_data *pdata;
-> >  	struct of_endpoint endpoint, rendpoint;
-> >  	struct device *rdev;
-> > -	struct device_node *dn;
-> >  	struct device_node *ep = NULL;
-> >  	struct device_node *rparent = NULL;
-> >  	struct device_node *rport = NULL;
-> > @@ -175,16 +195,7 @@ struct coresight_platform_data *of_get_coresight_platform_data(
-> >  		} while (ep);
-> >  	}
-> >  
-> > -	/* Affinity defaults to CPU0 */
-> > -	pdata->cpu = 0;
-> > -	dn = of_parse_phandle(node, "cpu", 0);
-> > -	for (cpu = 0; dn && cpu < nr_cpu_ids; cpu++) {
-> > -		if (dn == of_get_cpu_node(cpu, NULL)) {
-> > -			pdata->cpu = cpu;
-> > -			break;
-> > -		}
-> > -	}
-> > -	of_node_put(dn);
-> > +	pdata->cpu = of_coresight_get_cpu(node);
-> >  
-> >  	return pdata;
-> >  }
-> > diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> > index 2a5982c..6709561 100644
-> > --- a/include/linux/coresight.h
-> > +++ b/include/linux/coresight.h
-> > @@ -263,11 +263,13 @@ static inline int coresight_timeout(void __iomem *addr, u32 offset,
-> >  #endif
-> >  
-> >  #ifdef CONFIG_OF
-> > +extern int of_coresight_get_cpu(struct device_node *node);
-> >  extern struct coresight_platform_data *of_get_coresight_platform_data(
-> >  				struct device *dev, struct device_node *node);
-> >  #else
-> >  static inline struct coresight_platform_data *of_get_coresight_platform_data(
-> >  	struct device *dev, struct device_node *node) { return NULL; }
-> > +static int of_coresight_get_cpu(struct device_node *node) { return 0; }
-> >  #endif
-> >  
-> >  #ifdef CONFIG_PID_NS
+> > +Example:
+> > +
+> > +	debug@f6590000 {
+> > +		compatible = "arm,coresight-debug","arm,primecell";
+> > +		reg = <0 0xf6590000 0 0x1000>;
+> > +		clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> > +		clock-names = "apb_pclk";
+> > +		cpu = <&cpu0>;
+> > +	};
 > > -- 
 > > 2.7.4
 > > 
