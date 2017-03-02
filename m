@@ -1,87 +1,59 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Thu, 2 Mar 2017 09:54:56 +0100
-Message-ID: <20170302085456.GA27818@amd>
-References: <20161224152031.GA8420@amd>
- <20170203123508.GA10286@amd>
- <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
- <20170208223017.GA18807@amd>
- <CAL_JsqKSHvg+iB-SRd=YthauGP8mWeVF0j8X-fgLchwtOppH8A@mail.gmail.com>
- <CAL_JsqLfbAxBbXOyK0QOCc=wPe6=a+qyrAwtdbt3DtspK6oiaw@mail.gmail.com>
- <20170210195435.GA1615@amd>
- <20170210221742.GI13854@valkosipuli.retiisi.org.uk>
- <20170213095420.GA7065@amd>
- <20170213102034.GI16975@valkosipuli.retiisi.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 3/3] ARM: dts: r7s72100: Add watchdog timer
+Date: Thu, 2 Mar 2017 12:08:40 +0300
+Message-ID: <3944a62e-b061-eb4b-5351-da155a68852e@cogentembedded.com>
+References: <20170301225455.22818-1-chris.brandt@renesas.com>
+ <20170301225455.22818-4-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170213102034.GI16975@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>, p.zabel@pengutronix.de
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170301225455.22818-4-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello!
 
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/2/2017 1:54 AM, Chris Brandt wrote:
 
-On Mon 2017-02-13 12:20:35, Sakari Ailus wrote:
-> Hi Pavel,
->=20
-> On Mon, Feb 13, 2017 at 10:54:20AM +0100, Pavel Machek wrote:
-> > Hi!
-> >=20
-> > > > Take a look at the wikipedia. If you do "one at a time" at 100Hz, y=
-ou
-> > > > can claim it is time-domain multiplex. But we are plain switching t=
-he
-> > > > cameras. It takes second (or so) to setup the pipeline.
-> > > >=20
-> > > > This is not multiplex.
-> > >=20
-> > > The functionality is still the same, isn't it? Does it change what it=
- is if
-> > > the frequency might be 100 Hz or 0,01 Hz?
-> >=20
-> > Well. In your living your you can have a switch, which is switch at
-> > much less than 0.01Hz. You can also have a dimmer, which is a PWM,
-> > which is switch at 100Hz or so. So yes, I'd say switch and mux are
-> > different things.
->=20
-> Light switches are mostly on/off switches. It'd be interesting to have a
-> light switch that you could use to light either of the light bulbs in a r=
-oom
-> but not to switch both of them on at the same time. Or off... :-)
->=20
-> I wonder if everyone would be happy with a statement saying that it's a
-> on / on switch which is used to implement a multiplexer?
+> Add watchdog timer support for RZ/A1.
+> For the RZ/A1, the only way to do a reset is to overflow the WDT, so this
+> is useful even if you don't need the watchdog functionality.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+> * added Reviewed-by
+> v2:
+> * changed "renesas,r7s72100-reset" to "renesas,r7s72100-wdt"
+> * changed "renesas,wdt-reset" to "renesas,rza-wdt"
+> * added interupt property (even though it is not used)
+> * added clocks property
+> ---
+>  arch/arm/boot/dts/r7s72100.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+> index ed62e19..6ecee72 100644
+> --- a/arch/arm/boot/dts/r7s72100.dtsi
+> +++ b/arch/arm/boot/dts/r7s72100.dtsi
+> @@ -382,6 +382,13 @@
+>  		cache-level = <2>;
+>  	};
+>
+> +	wdt: timer@fcfe0000 {
 
-I believe the difference is the timescale. If it switches "slow" it is
-a switch. If it switches fast, it is a dimmer, mux, or something....
+    Why not watchdog@...? That name is standardized in ePAPR...
 
-Anyway, someone else was faster, so they get to name their creation...
+> +		compatible = "renesas,r7s72100-wdt", "renesas,rza-wdt";
+> +		reg = <0xfcfe0000 0x6>;
+> +		interrupts = <GIC_SPI 106 IRQ_TYPE_EDGE_RISING>;
+> +		clocks = <&p0_clk>;
+> +	};
+> +
+[...]
 
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAli33eAACgkQMOfwapXb+vIFUgCeP5MP4Ffn+ZAGpA/pIXtj4z1M
-H1QAoJoj6bKMmhWIPr+W5dIKWuqifQSq
-=mtaR
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+MBR, Sergei
