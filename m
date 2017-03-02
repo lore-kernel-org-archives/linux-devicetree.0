@@ -1,63 +1,75 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v2 0/3] Add dual-role OTG support for Allwinner H3
-Date: Thu,  2 Mar 2017 23:11:53 +0800
-Message-ID: <20170302151156.49295-1-icenowy@aosc.xyz>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: Re: [PATCH 2/3] clk: sunxi-ng: add support for PRCM CCUs
+Date: Thu, 02 Mar 2017 23:13:53 +0800
+Message-ID: <2899221488467633@web38j.yandex.ru>
+References: <20170301152236.MUXmRgOe@smtp1m.mail.yandex.net> <20170302140931.tq3vpncln6giyjpr@lukather>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Kishon Vijay Abraham I <kishon@ti.com>, Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.xyz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBMXN4DCQKGQEYNV7NIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170302140931.tq3vpncln6giyjpr@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H3 have a its USB PHY0 routed to two USB controllers: one is
-a MUSB controller, which can work in peripheral mode, but works badly in
-host mode (several hardware will fail on the MUSB controller, even connect
-one MUSB controller in peripheral mode to another one in host mode cannot
-work); the other is a pair of EHCI/OHCI controller, which can work only
-in host mode, but have better compatibillity. The route is controlled in
-a register, which we have set it to HCI only when we do not know about
-it well.
 
-Add support to route to the best controller according to current USB mode
-(host/peripheral).
 
-Note: Currently even if hardware only support hostmode, we should still
-enable the MUSB controller, as it controls the USB mode. (Some this kind
-of hardware can also work in peripheral mode by settings in the sysfs
-node of MUSB, then connect it to another host via a USB Type-A to Type-A
-cable.)
+02.03.2017, 22:09, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Wed, Mar 01, 2017 at 08:22:13PM +0800, Icenowy Zheng wrote:
+>> =C2=A0> I'm a bit worried by that to be honest. You claim to support the=
+ A31,
+>> =C2=A0> yet jugdging by the current state of that code you never actuall=
+y
+>> =C2=A0> tested it on that SoC.
+>> =C2=A0>
+>> =C2=A0> What makes you say that the PRCM clocks are the same for the H3 =
+and
+>> =C2=A0> A64? We have to be sure, otherwise we might not be able to get t=
+he DT
+>> =C2=A0> binding right from the very beginning, and we might not be able =
+to fix
+>> =C2=A0> it later.
+>>
+>> =C2=A0In fact, if we worry about this, we shouldn't make r-ccu, as
+>> =C2=A0dedicated clocks are more easy to fix.
+>>
+>> =C2=A0For newer SoCs' PRCM, we never have enough documents, and Allwinne=
+r
+>> =C2=A0have said that they cannot provide it. (I asked them for this.)
+>>
+>> =C2=A0The best solution is to implement mature enough dedicated clocks
+>> =C2=A0before we convert to ccu.
+>
+> What do you mean by dedicated clocks?
 
-Patch 1 adds support for auto routing of PHY0. It's currently only enabled
-on H3, but it's easy to extend it to other SoCs which feature this
-route control.
+The legacy form of clocks.
 
-Patch 2 adds necessary device tree nodes to the H3 DTSI file. Note: The
-phy is not bind for OHCI/EHCI0, as OHCI/EHCI drivers will keep the VBUS
-on. Only MUSB driver can properly handle a dual-role PHY.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+>
+> --
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
 
-Patch 3 enables USB OTG functionality on Orange Pi One board, which is
-the only H3 board I have that have proper OTG function. It's easy to
-enable OTG on other boards with their schematics.
-
-Icenowy Zheng (3):
-  phy: sun4i-usb: support automatically switch PHY0 route to MUSB/HCI
-  ARM: dts: sun8i: add usb_otg and OHCI/EHCI for usbc0 on H3
-  ARM: dts: sun8i: enable USB OTG on Orange Pi One
-
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 22 ++++++++++++-
- arch/arm/boot/dts/sun8i-h3.dtsi             | 32 ++++++++++++++++++
- drivers/phy/phy-sun4i-usb.c                 | 50 +++++++++++++++++++----------
- 3 files changed, 86 insertions(+), 18 deletions(-)
-
--- 
-2.11.1
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
