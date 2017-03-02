@@ -1,53 +1,44 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [PATCH 9/9] arm64: dts: ls1046ardb: add MMC HS200/UHS-1 modes support
-Date: Thu, 2 Mar 2017 17:47:30 +0800
-Message-ID: <1488448050-7574-10-git-send-email-yangbo.lu@nxp.com>
-References: <1488448050-7574-1-git-send-email-yangbo.lu@nxp.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v3 3/7] arm: dts: Add the burst and esc clock frequency
+ properties for exynos4412 dts
+Date: Thu, 02 Mar 2017 19:20:15 +0900
+Message-ID: <1488450019-6482-4-git-send-email-hoegeun.kwon@samsung.com>
+References: <1488450019-6482-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170302102113epcas5p4c93024f46ed53ac962b332b559553cd5@epcas5p4.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488448050-7574-1-git-send-email-yangbo.lu@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, Xiaobo Xie <xiaobo.xie@nxp.com>, linux-arm-kernel@lists.infradead.org, Yangbo Lu <yangbo.lu@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1488450019-6482-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add HS200/UHS-1 properties in eSDHC node to support these
-speed modes in driver.
-
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-index d1ccc00..08528c2 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-@@ -64,6 +64,14 @@
- 	};
- };
- 
-+&esdhc {
-+	mmc-hs200-1_8v;
-+	sd-uhs-sdr104;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr12;
-+};
-+
- &duart0 {
- 	status = "okay";
- };
--- 
-2.1.0.27.g96db324
+VGhlIE9GIGdyYXBoIGlzIG5vdCBuZWVkZWQgYmVjYXVzZSB0aGUgcGFuZWwgaXMgYSBjaGlsZCBv
+ZiBkc2kuIFNvCmFkZGVkIHRoZSBidXJzdCBhbmQgZXNjIGNsb2NrIGZyZXF1ZW5jeSBwcm9wZXJ0
+aWVzIHRvIHRoZSBwYXJlbnQgKERTSQpub2RlKSwgdGFraW5nIGludG8gYWNjb3VudCB0aGUgYmlz
+ZWN0YWJpbGl0eSBwcm9ibGVtIHNvIHRoYXQgcmVtb3ZlCnRoZSBPRiBncmFwaCBmcm9tIERTSSBu
+b2RlLgoKU2lnbmVkLW9mZi1ieTogSG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5j
+b20+ClJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgotLS0K
+IGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0MTItdHJhdHMyLmR0cyB8IDIgKysKIDEgZmlsZSBj
+aGFuZ2VkLCAyIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9l
+eHlub3M0NDEyLXRyYXRzMi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M0NDEyLXRyYXRz
+Mi5kdHMKaW5kZXggNDFlY2Q2ZC4uODIyMjFhMCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9k
+dHMvZXh5bm9zNDQxMi10cmF0czIuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQ0
+MTItdHJhdHMyLmR0cwpAQCAtMzg1LDYgKzM4NSw4IEBACiAmZHNpXzAgewogCXZkZGNvcmUtc3Vw
+cGx5ID0gPCZsZG84X3JlZz47CiAJdmRkaW8tc3VwcGx5ID0gPCZsZG8xMF9yZWc+OworCXNhbXN1
+bmcsYnVyc3QtY2xvY2stZnJlcXVlbmN5ID0gPDUwMDAwMDAwMD47CisJc2Ftc3VuZyxlc2MtY2xv
+Y2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwPjsKIAlzYW1zdW5nLHBsbC1jbG9jay1mcmVxdWVuY3kg
+PSA8MjQwMDAwMDA+OwogCXN0YXR1cyA9ICJva2F5IjsKIAotLSAKMS45LjEKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
