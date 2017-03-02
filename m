@@ -1,157 +1,32 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: [PATCH v2 1/3] phy: sun4i-usb: support automatically switch PHY0
- route to MUSB/HCI
-Date: Thu,  2 Mar 2017 23:11:54 +0800
-Message-ID: <20170302151156.49295-2-icenowy@aosc.xyz>
-References: <20170302151156.49295-1-icenowy@aosc.xyz>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: net: generalize moxart-mac to support
+ all faraday based ftmac IP
+Date: Thu, 2 Mar 2017 09:10:22 -0600
+Message-ID: <20170302151022.bb3facfy2hxjcrzz@rob-hp-laptop>
+References: <20170223025338.GA5982@app09>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170302151156.49295-1-icenowy@aosc.xyz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Kishon Vijay Abraham I <kishon@ti.com>, Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.xyz>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170223025338.GA5982@app09>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greentime Hu <green.hu@gmail.com>
+Cc: arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On newer Allwinner SoCs (H3 and after), the PHY0 node is routed to both
-MUSB controller for peripheral and host support (the host support is
-slightly broken), and a pair of EHCI/OHCI controllers, which provide a
-better support for host mode.
+On Thu, Feb 23, 2017 at 10:53:47AM +0800, Greentime Hu wrote:
+> Andestech and moxa use the same faraday mac IP, so we use faraday,ftmac.txt to
+> describe it.
+> 
+> Signed-off-by: Greentime Hu <green.hu@gmail.com>
+> ---
+> Changes in v2:
+>  - Wrap the commit messages and remove the hunk that are already applied.
+> ---
+>  .../net/{moxa,moxart-mac.txt => faraday,ftmac.txt} |    7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>  rename Documentation/devicetree/bindings/net/{moxa,moxart-mac.txt => faraday,ftmac.txt} (68%)
 
-Add support for automatically switch the route of PHY0 according to the
-status of dr_mode and id det pin.
+Applied, thanks.
 
-Only H3 have this function enabled in this patch, as further SoCs will
-be tested later and then have it enabled.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
----
-Changes in v2:
-- Re-route after force session end.
-- Drop id_det based on role code in reroute function, as we already
-  properly set id_det in id_det getting function.
-
- drivers/phy/phy-sun4i-usb.c | 50 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index a21b5f24a340..b4458878ece7 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -49,12 +49,14 @@
- #define REG_PHYBIST			0x08
- #define REG_PHYTUNE			0x0c
- #define REG_PHYCTL_A33			0x10
--#define REG_PHY_UNK_H3			0x20
-+#define REG_PHY_OTGCTL			0x20
- 
- #define REG_PMU_UNK1			0x10
- 
- #define PHYCTL_DATA			BIT(7)
- 
-+#define OTGCTL_ROUTE_MUSB		BIT(0)
-+
- #define SUNXI_AHB_ICHR8_EN		BIT(10)
- #define SUNXI_AHB_INCR4_BURST_EN	BIT(9)
- #define SUNXI_AHB_INCRX_ALIGN_EN	BIT(8)
-@@ -110,6 +112,7 @@ struct sun4i_usb_phy_cfg {
- 	u8 phyctl_offset;
- 	bool dedicated_clocks;
- 	bool enable_pmu_unk1;
-+	bool phy0_dual_route;
- };
- 
- struct sun4i_usb_phy_data {
-@@ -271,23 +274,16 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
- 	}
- 
--	if (data->cfg->type == sun8i_h3_phy) {
--		if (phy->index == 0) {
--			val = readl(data->base + REG_PHY_UNK_H3);
--			writel(val & ~1, data->base + REG_PHY_UNK_H3);
--		}
--	} else {
--		/* Enable USB 45 Ohm resistor calibration */
--		if (phy->index == 0)
--			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-+	/* Enable USB 45 Ohm resistor calibration */
-+	if (phy->index == 0)
-+		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
- 
--		/* Adjust PHY's magnitude and rate */
--		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+	/* Adjust PHY's magnitude and rate */
-+	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
- 
--		/* Disconnect threshold adjustment */
--		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
--				    data->cfg->disc_thresh, 2);
--	}
-+	/* Disconnect threshold adjustment */
-+	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-+			    data->cfg->disc_thresh, 2);
- 
- 	sun4i_usb_phy_passby(phy, 1);
- 
-@@ -486,6 +482,21 @@ static const struct phy_ops sun4i_usb_phy_ops = {
- 	.owner		= THIS_MODULE,
- };
- 
-+static void sun4i_usb_phy0_reroute(struct sun4i_usb_phy_data *data, int id_det)
-+{
-+	u32 regval;
-+
-+	regval = readl(data->base + REG_PHY_OTGCTL);
-+	if (id_det == 0) {
-+		/* Host mode. Route phy0 to EHCI/OHCI */
-+		regval &= ~OTGCTL_ROUTE_MUSB;
-+	} else {
-+		/* Peripheral mode. Route phy0 to MUSB */
-+		regval |= OTGCTL_ROUTE_MUSB;
-+	}
-+	writel(regval, data->base + REG_PHY_OTGCTL);
-+}
-+
- static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- {
- 	struct sun4i_usb_phy_data *data =
-@@ -546,6 +557,10 @@ static void sun4i_usb_phy0_id_vbus_det_scan(struct work_struct *work)
- 			sun4i_usb_phy0_set_vbus_detect(phy0, 1);
- 			mutex_unlock(&phy0->mutex);
- 		}
-+
-+		/* Re-route PHY0 if necessary */
-+		if (data->cfg->phy0_dual_route)
-+			sun4i_usb_phy0_reroute(data, id_det);
- 	}
- 
- 	if (vbus_notify)
-@@ -700,7 +715,7 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
- 			return PTR_ERR(phy->reset);
- 		}
- 
--		if (i) { /* No pmu for usbc0 */
-+		if (i || data->cfg->phy0_dual_route) { /* No pmu for musb */
- 			snprintf(name, sizeof(name), "pmu%d", i);
- 			res = platform_get_resource_byname(pdev,
- 							IORESOURCE_MEM, name);
-@@ -825,6 +840,7 @@ static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
- 	.disc_thresh = 3,
- 	.dedicated_clocks = true,
- 	.enable_pmu_unk1 = true,
-+	.phy0_dual_route = true,
- };
- 
- static const struct sun4i_usb_phy_cfg sun8i_v3s_cfg = {
--- 
-2.11.1
+Rob
