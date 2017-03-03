@@ -1,123 +1,41 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Use thermal fuse value for thermal zone
- 0 on Exynos5420
-Date: Fri, 3 Mar 2017 18:50:06 -0300
-Message-ID: <252f9e32-ff2c-a1ce-3c98-6383a1148e02@osg.samsung.com>
-References: <20170211201456.27974-1-krzk@kernel.org>
+From: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
+ nvmem API
+Date: Fri, 3 Mar 2017 23:21:29 +0100
+Message-ID: <54c76650-b61f-8a4c-70c7-febe76e16d3b@nod.at>
+References: <1488484223-844-1-git-send-email-albeu@free.fr>
+ <1488484223-844-3-git-send-email-albeu@free.fr>
+ <20170302221803.223ff23b@bbrezillon> <20170303133629.3aac2945@tock>
+ <20170303143658.5d89a329@bbrezillon> <20170303145726.16cd67fd@tock>
+ <20170303151107.36754d19@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170211201456.27974-1-krzk@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Anand Moon <linux.amoon@gmail.com>, Willy WOLFF <willy.mh.wolff@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170303151107.36754d19@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
-
-On 02/11/2017 05:14 PM, Krzysztof Kozlowski wrote:
-> In Odroid XU3 Lite board, the temperature levels reported for thermal
-> zone 0 were weird. In warm room:
-> 	/sys/class/thermal/thermal_zone0/temp:32000
-> 	/sys/class/thermal/thermal_zone1/temp:51000
-> 	/sys/class/thermal/thermal_zone2/temp:55000
-> 	/sys/class/thermal/thermal_zone3/temp:54000
-> 	/sys/class/thermal/thermal_zone4/temp:51000
+Am 03.03.2017 um 15:11 schrieb Boris Brezillon:
+>> And add a list of successfully added notifiers, along with their
+>> data pointer, to the MTD device. That's simple and would also remove
+>> the need for notifier to have a private list of their instances as I
+>> had to do here.
 > 
-> Sometimes after booting the value was even equal to ambient temperature
-> which is highly unlikely to be a real temperature of sensor in SoC.
-> 
-> The thermal sensor's calibration (trimming) is based on fused values.
-> In case of the board above, the fused values are: 35, 52, 43, 58 and 43
-> (corresponding to each TMU device).  However driver defined a minimum value
-> for fused data as 40 and for smaller values it was using a hard-coded 55
-> instead.  This lead to mapping data from sensor to wrong temperatures
-> for thermal zone 0.
-> 
-> Various vendor 3.10 trees (Hardkernel's based on Samsung LSI, Artik 10)
-> do not impose any limits on fused values.  Since we do not have any
-> knowledge about these limits, use 0 as a minimum accepted fused value.
-> This should essentially allow accepting any reasonable fused value thus
-> behaving like vendor driver.
-> 
-> The exynos5420-tmu-sensor-conf.dtsi is copied directly from existing
-> exynso4412 with one change - the samsung,tmu_min_efuse_value.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> 
-> ---
-> 
-> Testing on other Exynos542x boards is much appreciated. Especially I
-> wonder what efuse values are there.
+> And then you're abusing the notifier concept. As said earlier, a
+> notifier is not necessarily using the device, and thus, don't
+> necessarily need private data.
+> It's not only about what is the simplest solution for your use case,
+> but also what other users want/need.
 
-I tested on both Exynos5422 Odroid XU4 and Exynos5800 Peach Pi boards.
+Yes, please don't use the mtd_notifier.
+I strongly vote to embed the nvmem pointer into struct mtd_info.
 
-The temperatures levels reported for these two boards on a warm room are:
-
-Odroid XU4
-
-# cat /sys/class/thermal/thermal_zone*/temp
-50000
-50000
-54000
-51000
-48000
-
-Peach Pi
-
-# cat /sys/class/thermal/thermal_zone*/temp
-42000
-44000
-27000 <-- weird value for thermal zone 2 like zone 0 in your XU3 lite
-45000
-45000
-
-And the efuse values for the TMU devices are:
-
-Odroid XU4
-
-TMU0 = 45
-TMU1 = 44
-TMU2 = 44
-TMU3 = 46
-TMU3 = 46
-
-Peach Pi
-
-TMU0 = 44
-TMU1 = 46
-TMU2 = 36
-TMU3 = 53
-TMU3 = 46
-
-The fused value for TMU2 is < 40 so that explains the weird temperature
-level for thermal zone 2 in Peach. So after your patch, makes more sense:
-
-# cat /sys/class/thermal/thermal_zone*/temp
-41000
-42000
-45000
-43000
-43000
-
-I wonder though if 0 is the best value or if we should just lower more
-to cover the used e-fuse values in Exynos5 boards. But as you said,
-we have no knowledge about these limits...
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Thanks,
+//richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
