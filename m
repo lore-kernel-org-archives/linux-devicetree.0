@@ -1,35 +1,178 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] dt-bindings: List devicetree binding
- for the CCU of Allwinner A20
-Date: Fri, 3 Mar 2017 00:20:49 -0600
-Message-ID: <20170303062049.svbwwalcxkoaexo5@rob-hp-laptop>
-References: <20170227210914.18954-1-plaes@plaes.org>
- <20170227210914.18954-5-plaes@plaes.org>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH 3/9] Docs: dt: document qcom iommu bindings
+Date: Fri, 3 Mar 2017 00:21:43 -0600
+Message-ID: <20170303062143.x6m3mxfnavn4iwlo@rob-hp-laptop>
+References: <20170301174258.14618-1-robdclark@gmail.com>
+	<20170301174258.14618-4-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBREW4TCQKGQESSNXTZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170227210914.18954-5-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170301174258.14618-4-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 27, 2017 at 11:09:14PM +0200, Priit Laes wrote:
-> Allwinner A20 is now driven by sunxi-ng CCU driver.
-> 
-> Add devicetree binding for it.
-> 
-> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 1 +
->  1 file changed, 1 insertion(+)
+On Wed, Mar 01, 2017 at 12:42:52PM -0500, Rob Clark wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Nit: use "dt-bindings: iommu: ..." for subject. And a commit message 
+would be nice.
+
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/qcom,iommu.txt       | 106 +++++++++++++++++++++
+>  1 file changed, 106 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> new file mode 100644
+> index 0000000..2e69b78
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+> @@ -0,0 +1,106 @@
+> +* QCOM IOMMU v1 Implementation
+> +
+> +Qualcomm "B" family devices which are not compatible with arm-smmu have
+> +a similar looking IOMMU but without access to the global register space,
+> +and optionally requiring additional configuration to route context irqs
+> +to non-secure vs secure interrupt line.
+> +
+> +** Required properties:
+> +
+> +- compatible       : Should be "qcom,msm-iommu-v1".
+
+Fine as a fallback, but this needs chip specific compatibles.
+
+> +- clocks           : The interface clock (iface_clk) and bus clock (bus_clk).
+
+The names need to be documented under clock-names prop.
+
+'_clk' is redundant.
+
+> +- #address-cells   : must be 1.
+> +- #size-cells      : must be 1.
+> +- #iommu-cells     : Must be 1.
+> +- ranges           : Base address and size of the iommu context banks.
+> +- qcom,iommu-secure-id  : secure-id.
+> +
+> +- List of sub-nodes, one per translation context bank.  Each sub-node
+> +  has the following required properties:
+> +
+> +  - compatible     : Should be one of:
+> +        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
+> +        - "qcom,msm-iommu-v1-sec" : secure context bank
+
+These are okay without chip specific strings.
+
+> +  - reg            : Base address and size of context bank within the iommu
+> +  - interrupts     : The context fault irq.
+> +
+> +** Optional properties:
+> +
+> +- reg              : Base address and size of the SMMU local base, should
+> +                     be only specified if the iommu requires configuration
+> +                     for routing of context bank irq's to secure vs non-
+> +                     secure lines.  (Ie. if the iommu contains secure
+> +                     context banks)
+> +
+> +
+> +** Examples:
+> +
+> +	apps_iommu: msm-iommu-v1@1e20000 {
+
+iommu@...
+
+And this should be the reg address, not the ranges address.
+
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		#iommu-cells = <1>;
+> +		compatible = "qcom,msm-iommu-v1";
+> +		ranges = <0 0x1e20000 0x40000>;
+> +		reg = <0x1ef0000 0x3000>;
+> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
+> +			 <&gcc GCC_APSS_TCU_CLK>;
+> +		clock-names = "iface_clk", "bus_clk";
+> +		qcom,iommu-secure-id = <17>;
+> +
+> +		// mdp_0:
+> +		msm-iommu-v1-ctx@4000 {
+
+iommu@...
+
+> +			compatible = "qcom,msm-iommu-v1-ns";
+> +			reg = <0x4000 0x1000>;
+> +			interrupts = <GIC_SPI 70 0>;
+> +		};
+> +
+> +		// venus_ns:
+> +		msm-iommu-v1-ctx@5000 {
+> +			compatible = "qcom,msm-iommu-v1-sec";
+> +			reg = <0x5000 0x1000>;
+> +			interrupts = <GIC_SPI 70 0>;
+> +		};
+> +	};
+> +
+> +	gpu_iommu: msm-iommu-v1@1f08000 {
+
+ditto.
+
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		#iommu-cells = <1>;
+> +		compatible = "qcom,msm-iommu-v1";
+> +		ranges = <0 0x1f08000 0x10000>;
+> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
+> +			 <&gcc GCC_GFX_TCU_CLK>;
+> +		clock-names = "iface_clk", "bus_clk";
+> +		qcom,iommu-secure-id = <18>;
+> +
+> +		// gfx3d_user:
+> +		msm-iommu-v1-ctx@1f09000 {
+> +			compatible = "qcom,msm-iommu-v1-ns";
+> +			reg = <0x1000 0x1000>;
+> +			interrupts = <GIC_SPI 241 0>;
+> +		};
+> +
+> +		// gfx3d_priv:
+> +		msm-iommu-v1-ctx@1f0a000 {
+> +			compatible = "qcom,msm-iommu-v1-ns";
+> +			reg = <0x2000 0x1000>;
+> +			interrupts = <GIC_SPI 242 0>;
+> +		};
+> +	};
+> +
+> +	...
+> +
+> +	venus: video-codec@1d00000 {
+> +		...
+> +		iommus = <&apps_iommu 5>;
+> +	};
+> +
+> +	mdp: mdp@1a01000 {
+> +		...
+> +		iommus = <&apps_iommu 4>;
+> +	};
+> +
+> +	gpu@01c00000 {
+> +		...
+> +		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
+> +	};
+> -- 
+> 2.9.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
