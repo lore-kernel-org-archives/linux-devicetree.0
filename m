@@ -1,276 +1,70 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v5 1/3] watchdog: add rza_wdt driver
-Date: Fri,  3 Mar 2017 12:31:59 -0500
-Message-ID: <20170303173201.5597-2-chris.brandt@renesas.com>
-References: <20170303173201.5597-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170303173201.5597-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH] drm/arcpgu: Get rid of "encoder-slave" property
+Date: Fri, 3 Mar 2017 18:21:02 +0000
+Message-ID: <20170303182102.GP917@e110455-lin.cambridge.arm.com>
+References: <1488554364-25579-1-git-send-email-abrodkin@synopsys.com>
+ <20170303162837.GO917@e110455-lin.cambridge.arm.com>
+ <1488563298.2940.33.camel@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1488563298.2940.33.camel@synopsys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds a watchdog timer driver for the Renesas RZ/A Series SoCs. A reset
-handler is also included since a WDT overflow is the only method for
-restarting an RZ/A SoC.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
-* removed extra lines from file header comments
-* changed (1<<#) to BIT(#)
-* changed #define WTSCR_CKS(i) i to (i)
-* changed format to #define SOMETHING<tab>value (and align values)
-* now check if clock rate < 16384
-* added space before and after '/' for "(1000 * U8_MAX) / rate"
-* changed dev_info to dev_dbg for printing max_hw_heartbeat_ms
-* added watchdog_init_timeout() for user to set timeout in DT
-* switched to using devm_watchdog_register_device()
-* added error message if register fails
-* simplified rza_wdt_probe() return
-* removed function rza_wdt_remove()
----
- drivers/watchdog/Kconfig   |   8 ++
- drivers/watchdog/Makefile  |   1 +
- drivers/watchdog/rza_wdt.c | 199 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 208 insertions(+)
- create mode 100644 drivers/watchdog/rza_wdt.c
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index acb00b5..123c516 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -701,6 +701,14 @@ config RENESAS_WDT
- 	  This driver adds watchdog support for the integrated watchdogs in the
- 	  Renesas R-Car and other SH-Mobile SoCs (usually named RWDT or SWDT).
- 
-+config RENESAS_RZAWDT
-+	tristate "Renesas RZ/A WDT Watchdog"
-+	depends on ARCH_RENESAS || COMPILE_TEST
-+	select WATCHDOG_CORE
-+	help
-+	  This driver adds watchdog support for the integrated watchdogs in the
-+	  Renesas RZ/A SoCs. These watchdogs can be used to reset a system.
-+
- config ASPEED_WATCHDOG
- 	tristate "Aspeed 2400 watchdog support"
- 	depends on ARCH_ASPEED || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 0c3d35e..84b897c 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -81,6 +81,7 @@ obj-$(CONFIG_LPC18XX_WATCHDOG) += lpc18xx_wdt.o
- obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
- obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
- obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
-+obj-$(CONFIG_RENESAS_RZAWDT) += rza_wdt.o
- obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
- 
- # AVR32 Architecture
-diff --git a/drivers/watchdog/rza_wdt.c b/drivers/watchdog/rza_wdt.c
-new file mode 100644
-index 0000000..76a9c1f
---- /dev/null
-+++ b/drivers/watchdog/rza_wdt.c
-@@ -0,0 +1,199 @@
-+/*
-+ * Renesas RZ/A Series WDT Driver
-+ *
-+ * Copyright (C) 2017 Renesas Electronics America, Inc.
-+ * Copyright (C) 2017 Chris Brandt
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ */
-+
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/delay.h>
-+#include <linux/watchdog.h>
-+#include <linux/clk.h>
-+
-+#define DEFAULT_TIMEOUT		30
-+
-+/* Watchdog Timer Registers */
-+#define WTCSR			0
-+#define WTCSR_MAGIC		0xA500
-+#define WTSCR_WT		BIT(6)
-+#define WTSCR_TME		BIT(5)
-+#define WTSCR_CKS(i)		(i)
-+
-+#define WTCNT			2
-+#define WTCNT_MAGIC		0x5A00
-+
-+#define WRCSR			4
-+#define WRCSR_MAGIC		0x5A00
-+#define WRCSR_RSTE		BIT(6)
-+#define WRCSR_CLEAR_WOVF	0xA500	/* special value */
-+
-+struct rza_wdt {
-+	struct watchdog_device wdev;
-+	void __iomem *base;
-+	struct clk *clk;
-+};
-+
-+static int rza_wdt_start(struct watchdog_device *wdev)
-+{
-+	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
-+
-+	/* Stop timer */
-+	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
-+
-+	/* Must dummy read WRCSR:WOVF at least once before clearing */
-+	readb(priv->base + WRCSR);
-+	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
-+
-+	/*
-+	 * Start timer with slowest clock source and reset option enabled.
-+	 */
-+	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
-+	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
-+	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME | WTSCR_CKS(7),
-+	       priv->base + WTCSR);
-+
-+	return 0;
-+}
-+
-+static int rza_wdt_stop(struct watchdog_device *wdev)
-+{
-+	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
-+
-+	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
-+
-+	return 0;
-+}
-+
-+static int rza_wdt_ping(struct watchdog_device *wdev)
-+{
-+	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
-+
-+	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
-+
-+	return 0;
-+}
-+
-+static int rza_wdt_restart(struct watchdog_device *wdev, unsigned long action,
-+			    void *data)
-+{
-+	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
-+
-+	/* Stop timer */
-+	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
-+
-+	/* Must dummy read WRCSR:WOVF at least once before clearing */
-+	readb(priv->base + WRCSR);
-+	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
-+
-+	/*
-+	 * Start timer with fastest clock source and only 1 clock left before
-+	 * overflow with reset option enabled.
-+	 */
-+	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
-+	writew(WTCNT_MAGIC | 255, priv->base + WTCNT);
-+	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME, priv->base + WTCSR);
-+
-+	/*
-+	 * Actually make sure the above sequence hits hardware before sleeping.
-+	 */
-+	wmb();
-+
-+	/* Wait for WDT overflow (reset) */
-+	udelay(20);
-+
-+	return 0;
-+}
-+
-+static const struct watchdog_info rza_wdt_ident = {
-+	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
-+	.identity = "Renesas RZ/A WDT Watchdog",
-+};
-+
-+static const struct watchdog_ops rza_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = rza_wdt_start,
-+	.stop = rza_wdt_stop,
-+	.ping = rza_wdt_ping,
-+	.restart = rza_wdt_restart,
-+};
-+
-+static int rza_wdt_probe(struct platform_device *pdev)
-+{
-+	struct rza_wdt *priv;
-+	struct resource *res;
-+	unsigned long rate;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
-+
-+	rate = clk_get_rate(priv->clk);
-+	if (rate < 16384) {
-+		dev_err(&pdev->dev, "invalid clock rate (%ld)\n", rate);
-+		return -ENOENT;
-+	}
-+
-+	/* Assume slowest clock rate possible (CKS=7) */
-+	rate /= 16384;
-+
-+	priv->wdev.info = &rza_wdt_ident,
-+	priv->wdev.ops = &rza_wdt_ops,
-+	priv->wdev.parent = &pdev->dev;
-+
-+	/*
-+	 * Since the max possible timeout of our 8-bit count register is less
-+	 * than a second, we must use max_hw_heartbeat_ms.
-+	 */
-+	priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
-+	dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
-+		 priv->wdev.max_hw_heartbeat_ms);
-+
-+	priv->wdev.min_timeout = 1;
-+	priv->wdev.timeout = DEFAULT_TIMEOUT;
-+
-+	platform_set_drvdata(pdev, priv);
-+	watchdog_init_timeout(&priv->wdev, 0, &pdev->dev);
-+	watchdog_set_drvdata(&priv->wdev, priv);
-+
-+	ret = devm_watchdog_register_device(&pdev->dev, &priv->wdev);
-+	if (ret)
-+		dev_err(&pdev->dev, "Cannot register watchdog device\n");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id rza_wdt_of_match[] = {
-+	{ .compatible = "renesas,rza-wdt", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rza_wdt_of_match);
-+
-+static struct platform_driver rza_wdt_driver = {
-+	.probe = rza_wdt_probe,
-+	.driver = {
-+		.name = "rza_wdt",
-+		.of_match_table = rza_wdt_of_match,
-+	},
-+};
-+
-+module_platform_driver(rza_wdt_driver);
-+
-+MODULE_DESCRIPTION("Renesas RZ/A WDT Driver");
-+MODULE_AUTHOR("Chris Brandt <chris.brandt@renesas.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.10.1
+T24gRnJpLCBNYXIgMDMsIDIwMTcgYXQgMDU6NDg6MTlQTSArMDAwMCwgQWxleGV5IEJyb2RraW4g
+d3JvdGU6Cj4gSGkgTGl2aXUsCj4gCj4gT24gRnJpLCAyMDE3LTAzLTAzIGF0IDE2OjI4ICswMDAw
+LCBMaXZpdSBEdWRhdSB3cm90ZToKPiA+IE9uIEZyaSwgTWFyIDAzLCAyMDE3IGF0IDA2OjE5OjI0
+UE0gKzAzMDAsIEFsZXhleSBCcm9ka2luIHdyb3RlOgo+ID4gPiAKPiA+ID4gLQkvKiBmaW5kIHRo
+ZSBlbmNvZGVyIG5vZGUgYW5kIGluaXRpYWxpemUgaXQgKi8KPiA+ID4gLQllbmNvZGVyX25vZGUg
+PSBvZl9wYXJzZV9waGFuZGxlKGRybS0+ZGV2LT5vZl9ub2RlLCAiZW5jb2Rlci1zbGF2ZSIsIDAp
+Owo+ID4gPiAtCWlmIChlbmNvZGVyX25vZGUpIHsKPiA+ID4gLQkJcmV0ID0gYXJjcGd1X2RybV9o
+ZG1pX2luaXQoZHJtLCBlbmNvZGVyX25vZGUpOwo+ID4gPiAtCQlvZl9ub2RlX3B1dChlbmNvZGVy
+X25vZGUpOwo+ID4gPiArCS8qIFRoZXJlIGlzIG9ubHkgb25lIG91dHB1dCBwb3J0IGluc2lkZSBl
+YWNoIGRldmljZSwgZmluZCBpdCAqLwo+ID4gPiArCXBvcnQgPSBvZl9ncmFwaF9nZXRfbmV4dF9l
+bmRwb2ludChwZGV2LT5kZXYub2Zfbm9kZSwgTlVMTCk7Cj4gPiA+ICsKPiA+ID4gKwlpZiAocG9y
+dCkgewo+ID4gPiArCQlpZiAob2ZfZGV2aWNlX2lzX2F2YWlsYWJsZShwb3J0KSkKPiA+ID4gKwkJ
+CWVuY29kZXIgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KHBvcnQpOwo+ID4gPiAr
+CQlvZl9ub2RlX3B1dChwb3J0KTsKPiA+ID4gKwl9Cj4gPiAKPiA+IFlvdSBtdXN0J3ZlIGJlZW4g
+bG9va2luZyBhdCBzb21lIG9sZCB2ZXJzaW9uLiBDdXJyZW50IHZlcnNpb24gaW4gLW5leHQgdXNl
+cwo+ID4gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9ub2RlKCkgdG8gcmVwbGFjZSBhbGwgdGhvc2UgbGlu
+ZXMgeW91IGhhdmUgYWRkZWQgKHNlZSBSb2IKPiA+IEhlcnJpbmcncyBzZXJpZXMgdG8gaW50cm9k
+dWNlIG9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZSgpIGZ1bmN0aW9uKQo+IAo+IEhtLCBJJ20gbm90
+IG9uIExpbnVzJyBtYXN0ZXIgdHJlZSBbMV0gYW5kIHNvIEkgdGhvdWdodCBJIHdhcyBxdWl0ZSB1
+cCB0byBkYXRlIDopCj4gU3RpbGwgSSBtYWRlIGEgY2hlY2sgb2YgbGludXgtbmV4dCBhbmQgZG9u
+J3Qgc2VlIGFueSBjaGFuZ2VzIGluCj4gImRyaXZlcnMvZ3B1L2RybS9hcm0iIGNvbXBhcmVkIHRv
+IExpbnVzJyB0cmVlLgo+IAo+IFsxXcKgaHR0cDovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgv
+a2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0L2RyaXZlcnMvZ3B1L2RybS9hcm0/
+aWQ9ZTQ1NjNmNmJhNzE3OTJjNzdhZWNjYjIwOTJjYzIzMTQ5YjQ0ZTY0Mgo+IFsyXcKgaHR0cDov
+L2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC9uZXh0L2xpbnV4LW5leHQuZ2l0
+L2NvbW1pdC9kcml2ZXJzL2dwdS9kcm0vYXJtP2lkPWU0NTYzZjZiYTcxNzkyYzc3YWVjY2IyMDky
+Y2MyMzE0OWI0NGU2NDIKPiAKPiBDb3VsZCB5b3UgcGxlYXNlIGNsYXJpZnkgd2hpY2ggZXhhY3Qg
+dHJlZSBkaWQgeW91IG1lYW4/CgpTb3JyeSwgSSB0aG91Z2h0IHRoZSBzZXJpZXMgZ290IHB1bGxl
+ZCBieSBvbmUgb2YgdGhlIERSTSB0cmVlcywgYnV0IGl0IGxvb2tzIGxpa2UKSSB3YXMgd3Jvbmcu
+IEkgd2FzIGNhcnJ5aW5nIGEgcHJpdmF0ZSBjb3B5IGluIG15IGludGVybmFsIHRyZWUsIHdhaXRp
+bmcgZm9yIHRoZQptb21lbnQgd2hlbiBpdCBnb3QgcHVsbGVkIGludG8gZHJtLW5leHQgb3IgZHJt
+LW1pc2MtbmV4dC4KClJvYiwgZG8geW91IGhhdmUgYW4gdXBkYXRlIG9uIHlvdXIgc2VyaWVzIGlu
+dHJvZHVjaW5nIG9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZSgpID8KCkJlc3QgcmVnYXJkcywKTGl2
+aXUKCj4gCj4gQW55d2F5cyBJIGp1c3QgdHJpZWQgdG8gcmViYXNlIG15IHBhdGNoIG9uIHRvcCBv
+ZiBsaW51eC1uZXh0IHRyZWUgYW5kIG5vdwo+IHZpZGVvIG91dHB1dCBpcyBicm9rZW4gZm9yIG1l
+IC0gSSBvbmx5IHNlZSBzb21lIGdhcmJhZ2Ugb24gdG9wIG9mIHRoZSBzY3JlZW4KPiBzbyBJJ2xs
+IG5lZWQgdG8gaW52ZXN0aWdhdGUgaXQgZmlyc3QgYmVmb3JlIG1vdmluZyBmb3J3YXJkIHdpdGgg
+c3R1ZmYgeW91Cj4gcHJvcG9zZWQgOikKPiAKPiAtQWxleGV5CgotLSAKPT09PT09PT09PT09PT09
+PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkn
+cmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0t
+LS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
