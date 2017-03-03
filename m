@@ -1,18 +1,18 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: Re: [PATCH 2/3] clk: sunxi-ng: add support for PRCM CCUs
-Date: Fri, 3 Mar 2017 15:48:39 +0100
-Message-ID: <20170303144839.snrm5wgjyj5fvko7@lukather>
-References: <20170301152220.MEgmqtKw@smtp2p.mail.yandex.net>
- <20170302140859.aqvwtgzxkdi2lqbc@lukather>
- <3232491488467598@web22o.yandex.ru>
+Date: Fri, 3 Mar 2017 15:51:01 +0100
+Message-ID: <20170303145101.ynv6vmmy4fyrgezw@lukather>
+References: <20170301152236.MUXmRgOe@smtp1m.mail.yandex.net>
+ <20170302140931.tq3vpncln6giyjpr@lukather>
+ <2899221488467633@web38j.yandex.ru>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pgkebievbicil76d"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVEE43CQKGQE26SS7CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="4gigtnz6xr37pscm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBX4F43CQKGQEBWEHGPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <3232491488467598-MaJ972yi255xpj1cXAZ9Bg@public.gmane.org>
+In-Reply-To: <2899221488467633-+LZv1VrpgWBxpj1cXAZ9Bg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,33 +24,51 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel 
 List-Id: devicetree@vger.kernel.org
 
 
---pgkebievbicil76d
+--4gigtnz6xr37pscm
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 02, 2017 at 11:13:18PM +0800, Icenowy Zheng wrote:
+On Thu, Mar 02, 2017 at 11:13:53PM +0800, Icenowy Zheng wrote:
 >=20
 >=20
 > 02.03.2017, 22:09, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > On Wed, Mar 01, 2017 at 08:17:39PM +0800, Icenowy Zheng wrote:
+> > On Wed, Mar 01, 2017 at 08:22:13PM +0800, Icenowy Zheng wrote:
 > >> =C2=A0> I'm a bit worried by that to be honest. You claim to support t=
 he A31,
 > >> =C2=A0> yet jugdging by the current state of that code you never actua=
 lly
 > >> =C2=A0> tested it on that SoC.
+> >> =C2=A0>
+> >> =C2=A0> What makes you say that the PRCM clocks are the same for the H=
+3 and
+> >> =C2=A0> A64? We have to be sure, otherwise we might not be able to get=
+ the DT
+> >> =C2=A0> binding right from the very beginning, and we might not be abl=
+e to fix
+> >> =C2=A0> it later.
 > >>
-> >> =C2=A0I only claim to reserve possibility to extend the driver to supp=
-ort
-> >> =C2=A0A31, but I didn't claim it currently support A31.
+> >> =C2=A0In fact, if we worry about this, we shouldn't make r-ccu, as
+> >> =C2=A0dedicated clocks are more easy to fix.
+> >>
+> >> =C2=A0For newer SoCs' PRCM, we never have enough documents, and Allwin=
+ner
+> >> =C2=A0have said that they cannot provide it. (I asked them for this.)
+> >>
+> >> =C2=A0The best solution is to implement mature enough dedicated clocks
+> >> =C2=A0before we convert to ccu.
 > >
-> > Well, you did call it sun6i.
-> >
-> > Please rename it, and we will consolidate in due time.
+> > What do you mean by dedicated clocks?
 >=20
-> Then rename it back when it really gains support for A31?
+> The legacy form of clocks.
 
-Yes.
+Which itself creates another form of issues. What happens if we get
+something wrong on those clocks (as it is likely to happen)?
+
+We potentially can't fix it at all, that's what happens.
+
+And that's leaving aside the DT and clocks maintainers regular
+complaints that we should get away from those.
 
 Maxime
 
@@ -66,24 +84,24 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---pgkebievbicil76d
+--4gigtnz6xr37pscm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYuYJHAAoJEBx+YmzsjxAg54sP/0OEdB/HBABcvxabUHLqI8e+
-kFkByqFTFfyvGIIYlmSr9IOsFerGaqMpqC+mmK30FUa/QsO1qZtfLpQj5uj8lcz0
-Qn7ZW8GAWglzTtqeLiK6EFVh52SGOyw7M8uXRAnx1lQkk1F9xFbYa58GffwDt9MA
-TCPBka7M5vOHu9RfkBOPnz3eh/40bjOIJhLN2G8xAb2R/p4jDK4oDH20fUQUB2RJ
-sWDSYPoSSMXo2nnCRJBRsdF8D4CFSc7uSlrXHd7u0Ruf+0QKkyjU42P9zKzBkNbb
-0Hwx3a9lRC2r/ozQY5DJhor1s5GHFFgD/21aqgkRXX/KL0wrznD48NbwCZyFCZ1o
-OWf908XOOgNtzRPEQQdzEBut5qss9IO4COz+fA5FVKjNoYY/6riIfBr+Kb9kfPv9
-rWBnGMjned0VCXE4kw2nnt/T9lw+yeyr81AQpiMNIdtySNWqlms8sftI1280uBsm
-8X2QWnWmtxf77O8a8hq7BLwITb326xRU5X7tr+CwG46YOF1sqAjZZGhkUOVudmmJ
-YuPbLwqSXVZXKM3qEcLm2mKB95iKuSBhlcUTZRmlk19guwKzDgRDiDaDddZfF2Kz
-qEd6Ie45pRUUaBlmmKfhrOIwOzJLoc6kFvPUVgXw0DKgM9OGKc62EeKc9l/vTkml
-L1Zy7kv7mfqiG2eJM5yJ
-=OCc9
+iQIcBAEBCAAGBQJYuYLUAAoJEBx+YmzsjxAg2boP/jRp+PhB10cbAfLy3OfaTsp+
+/6G/n20IVUiEi3ldTj15PHnj/QSm6TI+WO63iVkGGprdsf6CPgF+05IkhDSdWqCk
+hn8cy2yJYM74RWBdXh7kwwTI5uXWNXX1NEwN0nAZV9ctrPmeCjbRcF6V5w9f1b4F
+PJc1u67/Q9nU7rqnlCEntujraj+AWB2PN8RCzlWl8LkF4SdBesgsB8Oth7u7xf01
+K13BqJIzFo4H7nO8Av3MMFeg5Z2ErbCAV1s9q6VhZlDHyc+TRfLLW9ppsGyAY384
+FQLNOO9vh1E8/d6vp9MGSGIQf6By6ZkD3kze+0gMrxzTNv9Ee7uKX02p6FAZCedJ
+kSWaWH94KKYKhh0T/i3vXryoG7BdLxz6jPgakQoANMFO6EHKD0ngnznHFsS7MGs3
+4BBry+6Ufmks1SbwMr3jHZas5v5w38v8SMonBT6hZUjf6yQYBPM6MKGXSFK4gONp
+y68x9sAowJ4zKaRA/LF0y5vR5gWjPgCiWaN/ILsGRsIEs2ojln2aCzm6E+PU52DP
+MMvVKH9ughA4AaxHzcF383D1q6OYCTuRpfrWp3frsbigQJxa3bfN9bl54c7OStwg
+sV4B1qEFmCU4/C+YcVWqQ1SgjEHOuESz2yhggWqHS1C7bCo2zfx9R4j4Zsx0TD+B
+1Gn9mHgOVNYomaG/Zbox
+=3D9K
 -----END PGP SIGNATURE-----
 
---pgkebievbicil76d--
+--4gigtnz6xr37pscm--
