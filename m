@@ -1,43 +1,60 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v9 00/10] mux controller abstraction and iio/i2c muxes
-Date: Fri, 03 Mar 2017 17:20:36 +0000
-Message-ID: <C3B088E3-75B2-4F7C-850D-99B788BA1FBC@jic23.retrosnub.co.uk>
-References: <1486568517-6997-1-git-send-email-peda@axentia.se> <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se> <20170228171842.GA11127@kroah.com> <569c18b3-b1d8-f2e6-7fc4-897aa7df6775@axentia.se> <20170303165247.el4mcsmo4fbnkjir@ninjato>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH] drm/arcpgu: Get rid of "encoder-slave" property
+Date: Fri, 3 Mar 2017 17:48:19 +0000
+Message-ID: <1488563298.2940.33.camel@synopsys.com>
+References: <1488554364-25579-1-git-send-email-abrodkin@synopsys.com>
+ <20170303162837.GO917@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170303165247.el4mcsmo4fbnkjir@ninjato>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170303162837.GO917@e110455-lin.cambridge.arm.com>
+Content-Language: en-US
+Content-ID: <1813302EC06FDE46A08990C92D967D08@internal.synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 3 March 2017 16:52:47 GMT+00:00, Wolfram Sang <wsa@the-dreams.de> wrote:
->
->> Jonathan, Wolfram, do you have any preferences on how this should be
->> coordinated regarding the new iio and i2c drivers (and iio changes)?
->
->You got the acks, all is fine, I think.
->
->> My plan is to at some point declare the branch immutable. Then both
->of
->> you can pull it in. Or? 
->
->Yup, sounds good.
->
->> But now that I think about it I wonder what the point is of having
->> Greg pull it in also? Sure, third time's a charm and all that, but...
->
->AFAIU, Greg will be your "upstream", so he should definately pull the
->branch. I will just pull it in to avoid merge conflicts in my tree.
->Or did I misunderstand your question?
-Agreed, will do the same if needed. Btw Greg is a very nice upstream to have!
-
-Jonathan
-
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+SGkgTGl2aXUsDQoNCk9uIEZyaSwgMjAxNy0wMy0wMyBhdCAxNjoyOCArMDAwMCwgTGl2aXUgRHVk
+YXUgd3JvdGU6DQo+IE9uIEZyaSwgTWFyIDAzLCAyMDE3IGF0IDA2OjE5OjI0UE0gKzAzMDAsIEFs
+ZXhleSBCcm9ka2luIHdyb3RlOg0KPiA+IA0KPiA+IC0JLyogZmluZCB0aGUgZW5jb2RlciBub2Rl
+IGFuZCBpbml0aWFsaXplIGl0ICovDQo+ID4gLQllbmNvZGVyX25vZGUgPSBvZl9wYXJzZV9waGFu
+ZGxlKGRybS0+ZGV2LT5vZl9ub2RlLCAiZW5jb2Rlci1zbGF2ZSIsIDApOw0KPiA+IC0JaWYgKGVu
+Y29kZXJfbm9kZSkgew0KPiA+IC0JCXJldCA9IGFyY3BndV9kcm1faGRtaV9pbml0KGRybSwgZW5j
+b2Rlcl9ub2RlKTsNCj4gPiAtCQlvZl9ub2RlX3B1dChlbmNvZGVyX25vZGUpOw0KPiA+ICsJLyog
+VGhlcmUgaXMgb25seSBvbmUgb3V0cHV0IHBvcnQgaW5zaWRlIGVhY2ggZGV2aWNlLCBmaW5kIGl0
+ICovDQo+ID4gKwlwb3J0ID0gb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQocGRldi0+ZGV2Lm9m
+X25vZGUsIE5VTEwpOw0KPiA+ICsNCj4gPiArCWlmIChwb3J0KSB7DQo+ID4gKwkJaWYgKG9mX2Rl
+dmljZV9pc19hdmFpbGFibGUocG9ydCkpDQo+ID4gKwkJCWVuY29kZXIgPSBvZl9ncmFwaF9nZXRf
+cmVtb3RlX3BvcnRfcGFyZW50KHBvcnQpOw0KPiA+ICsJCW9mX25vZGVfcHV0KHBvcnQpOw0KPiA+
+ICsJfQ0KPiANCj4gWW91IG11c3QndmUgYmVlbiBsb29raW5nIGF0IHNvbWUgb2xkIHZlcnNpb24u
+IEN1cnJlbnQgdmVyc2lvbiBpbiAtbmV4dCB1c2VzDQo+IG9mX2dyYXBoX2dldF9yZW1vdGVfbm9k
+ZSgpIHRvIHJlcGxhY2UgYWxsIHRob3NlIGxpbmVzIHlvdSBoYXZlIGFkZGVkIChzZWUgUm9iDQo+
+IEhlcnJpbmcncyBzZXJpZXMgdG8gaW50cm9kdWNlIG9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZSgp
+IGZ1bmN0aW9uKQ0KDQpIbSwgSSdtIG5vdCBvbiBMaW51cycgbWFzdGVyIHRyZWUgWzFdIGFuZCBz
+byBJIHRob3VnaHQgSSB3YXMgcXVpdGUgdXAgdG8gZGF0ZSA6KQ0KU3RpbGwgSSBtYWRlIGEgY2hl
+Y2sgb2YgbGludXgtbmV4dCBhbmQgZG9uJ3Qgc2VlIGFueSBjaGFuZ2VzIGluDQoiZHJpdmVycy9n
+cHUvZHJtL2FybSIgY29tcGFyZWQgdG8gTGludXMnIHRyZWUuDQoNClsxXcKgaHR0cDovL2dpdC5r
+ZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0
+L2RyaXZlcnMvZ3B1L2RybS9hcm0/aWQ9ZTQ1NjNmNmJhNzE3OTJjNzdhZWNjYjIwOTJjYzIzMTQ5
+YjQ0ZTY0Mg0KWzJdwqBodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0
+L25leHQvbGludXgtbmV4dC5naXQvY29tbWl0L2RyaXZlcnMvZ3B1L2RybS9hcm0/aWQ9ZTQ1NjNm
+NmJhNzE3OTJjNzdhZWNjYjIwOTJjYzIzMTQ5YjQ0ZTY0Mg0KDQpDb3VsZCB5b3UgcGxlYXNlIGNs
+YXJpZnkgd2hpY2ggZXhhY3QgdHJlZSBkaWQgeW91IG1lYW4/DQoNCkFueXdheXMgSSBqdXN0IHRy
+aWVkIHRvIHJlYmFzZSBteSBwYXRjaCBvbiB0b3Agb2YgbGludXgtbmV4dCB0cmVlIGFuZCBub3cN
+CnZpZGVvIG91dHB1dCBpcyBicm9rZW4gZm9yIG1lIC0gSSBvbmx5IHNlZSBzb21lIGdhcmJhZ2Ug
+b24gdG9wIG9mIHRoZSBzY3JlZW4NCnNvIEknbGwgbmVlZCB0byBpbnZlc3RpZ2F0ZSBpdCBmaXJz
+dCBiZWZvcmUgbW92aW5nIGZvcndhcmQgd2l0aCBzdHVmZiB5b3UNCnByb3Bvc2VkIDopDQoNCi1B
+bGV4ZXkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtc25wcy1hcmMgbWFpbGluZyBsaXN0CmxpbnV4LXNucHMtYXJjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1zbnBz
+LWFyYw==
