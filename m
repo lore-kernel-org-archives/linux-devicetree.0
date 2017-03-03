@@ -1,56 +1,99 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3] tpm: do not suspend/resume if power
-	stays on
-Date: Fri, 3 Mar 2017 10:11:07 -0700
-Message-ID: <20170303171107.GA2273@obsidianresearch.com>
-References: <20170303160959.27422-1-enric.balletbo@collabora.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] ARM: DTS armada: Add support for 2 more mvebu model
+Date: Fri, 3 Mar 2017 18:26:38 +0100
+Message-ID: <20170303172638.GD1488@lunn.ch>
+References: <1488560855-421-1-git-send-email-ansuelsmth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170303160959.27422-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1488560855-421-1-git-send-email-ansuelsmth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ansuel Smith <ansuelsmth@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari@gmail.com>, jason@lakedaemon.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, gregory.clement@free-electrons.com, Imre Kaloz <kaloz@openwrt.org>, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 05:09:59PM +0100, Enric Balletbo i Serra wrote:
-> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> The suspend/resume behavior of the TPM can be controlled by setting
-> "powered-while-suspended" in the DTS. This is useful for the cases
-> when hardware does not power-off the TPM.
-> 
-> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+On Fri, Mar 03, 2017 at 06:07:35PM +0100, Ansuel Smith wrote:
+> This patch add support for 2 Linksys router model
+> (shelby and rango). With this we now support all
+> the mvebu board on the market.
+> =
 
-Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Imre Kaloz <kaloz@openwrt.org>
+> Signed-off-by: =C1lvaro Fern=E1ndez Rojas <noltari@gmail.com>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> ---
+>  arch/arm/boot/dts/armada-385-linksys-rango.dts  | 443 ++++++++++++++++++=
+++++++
+>  arch/arm/boot/dts/armada-385-linksys-shelby.dts | 115 ++++++
+>  2 files changed, 558 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-385-linksys-rango.dts
+>  create mode 100644 arch/arm/boot/dts/armada-385-linksys-shelby.dts
+> =
 
-> +++ b/drivers/char/tpm/tpm_of.c
-> @@ -34,6 +34,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
->  	else
->  		return -ENODEV;
->  
-> +	if (of_property_read_bool(np, "powered-while-suspended"))
-> +		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
+> diff --git a/arch/arm/boot/dts/armada-385-linksys-rango.dts b/arch/arm/bo=
+ot/dts/armada-385-linksys-rango.dts
+> new file mode 100644
+> index 0000000..61f4592
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/armada-385-linksys-rango.dts
+> @@ -0,0 +1,443 @@
+> +/*
+> + * Device Tree file for the Linksys WRT3200ACM (Rango)
+> + *
+> + * Copyright (C) 2016 Imre Kaloz <kaloz@openwrt.org>
+> + *
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is licensed under the terms of the GNU General Public
+> + *     License version 2.  This program is licensed "as is" without
+> + *     any warranty of any kind, whether express or implied.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
 > +
+> +/dts-v1/;
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include "armada-385.dtsi"
 
-It is really weird that this is in a function called tpm_read_log_of,
-but it makes sense to use the existing conditional infrastructure for
-OF as well.
+Hi Ansuel
 
-We should try to tidy this later...
+Please could you explain why you did not use armada-385-linksys.dtsi
 
-Jason
-
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most
-engaging tech sites, SlashDot.org! http://sdm.link/slashdot
+Thanks
+	Andrew
