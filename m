@@ -1,73 +1,113 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 4/7] arm: dts: r7s72100: Add pin controller node
-Date: Fri, 3 Mar 2017 13:24:51 +0000
-Message-ID: <SG2PR06MB1165E8FAE15523F7D3EC83718A2B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487610788-6939-5-git-send-email-jacopo+renesas@jmondi.org>
- <3dd69ef5-e8a4-b69c-b4fa-1be6ba777cfa@jmondi.org>
- <SG2PR06MB1165DCCA724AD6A8325862668A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdVdiMWNq1or9JgzAKfWXsDg1VD9ehG6U=E_snes04Y1Mg@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 1/9] dt-bindings: mmc: Add Cavium SOCs MMC bindings
+Date: Fri, 3 Mar 2017 12:47:06 +0100
+Message-ID: <CAPDyKFrE546UMc3QBHw_C1a6Dz5mOQfURroiCBTOV3SbreR-EQ@mail.gmail.com>
+References: <20170206133953.8390-1-jglauber@cavium.com> <20170206133953.8390-2-jglauber@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVdiMWNq1or9JgzAKfWXsDg1VD9ehG6U=E_snes04Y1Mg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: jacopo mondi <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170206133953.8390-2-jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "Steven J . Hill" <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIEZyaWRheSwgTWFyY2ggMDMsIDIwMTcsIEdlZXJ0IFV5dHRlcmhvZXZl
-biB3cm90ZToNCj4gPiBJcyBpdCBwb3NzaWJsZSB0byBjaGFuZ2UgdGhlIG51bWJlciBvZiBwb3J0
-IHBpbnMgaW4gdGhlIGJvYXJkIGR0cyBmaWxlPw0KPiA+IEZvciBleGFtcGxlOg0KPiA+ICAgUlov
-QTFIOiBQNV8wIC0gUDVfMTANCj4gPiAgIFJaL0ExTDogUDVfMCAtIFA1XzE2DQo+IA0KPiBUaGF0
-J3MgMTcgcGlucywgbm90IDE2Pw0KDQpPb3BzLCBJIG1lYW50IFA1XzE1DQoNCkxvb2tpbmcgYXQg
-dGhlIHBhcnRzLCBoZXJlIGFyZSB0aGUgZGlmZmVyZW5jZXM6DQoNClJaL0ExSCAgICBSWi9BMUwN
-Ci0tLS0tLS0tLS0tLS0tLS0tLQ0KUDJfMDoxNSAgIFAyXzA6OQ0KUDRfMDoxNSAgIFA0XzA6Nw0K
-UDVfMDoxMCAgIFA1XzA6MTUNClA3XzA6MTUgICBQN18wOjExDQpQOV8wOjcgICAgUDlfMDo1DQpQ
-MTBfMDoxNSAgbm9uZQ0KUDExXzA6MTUgIG5vbmUNCg0KPiA+IFNvLCBpbiBhIHJ6YTFsLWJvYXJk
-LmR0cyBmaWxlIEkgd291bGQgcHV0Og0KPiA+DQo+ID4gJnBvcnQ1IHsNCj4gPiAgICAgICAgIGdw
-aW8tcmFuZ2VzID0gPCZwaW5jdHJsIDAgODAgMTY+Ow0KPiA+IH0NCj4gPg0KPiA+IFdpbGwgdGhp
-cyB3b3JrPw0KPiANCj4gWWVzLCBvdmVycmlkaW5nIHNob3VsZCB3b3JrLiBCdXQgdGhlIG51bWJl
-ciBvZiBwaW5zIGlzIGFuIFNvQy1wcm9wZXJ0eSwNCj4gbm90DQo+IGEgYm9hcmQtcHJvcGVydHk/
-DQoNClRydWUsIGJ1dCBJIGFtIHRyeWluZyB0byBmaWd1cmUgb3V0IGhvdyB0byBzb2x2ZSB0aGlz
-IGxvY2FsbHkgYW5kIG5vdCBtYWtlDQppdCBhbiB1cHN0cmVhbSBwcm9ibGVtLg0KDQoNCj4gQXJl
-IHRoZSBkaWZmZXJlbmNlcyBiZXR3ZWVuIFJaL0ExSCBhbmQgUlovQTFMIGp1c3QgdGhlIG51bWJl
-ciBvZiBwaW5zPw0KDQpZZXMvTm8uDQoNCkludGVybmFsbHksIHRoZSBJUCBibG9ja3MgYXJlIHRo
-ZSBzYW1lLCBhbmQgbG9jYXRlZCBhdCB0aGUgc2FtZSByZWdpc3Rlcg0KYWRkcmVzc2VzLCBidXQg
-Y29tZSBvdXQgdG8gZGlmZmVyZW50IHBvcnQgcGlucyBkdWUgdG8gdGhlIFJaL0ExTCBoYXZpbmcg
-c21hbGxlcg0KcGFja2FnZXMuDQoNCkFsc28sIHRoZSBMIGhhcyBsZXNzIGNoYW5uZWxzIHRoYW4g
-dGhlIEguDQpGb3IgZXhhbXBsZToNCiBRU1BJOiBIPTIsIEw9MQ0KICBMQ0Q6IEg9MiwgTD0xDQog
-U0NJRjogSD04LCBMPTUNCiAgQ0FOOiBIPTUsIEw9Mg0KDQpPZiBjb3Vyc2UgdGhlcmUgaXMgc29t
-ZSBJUCB0aGF0IG9ubHkgY29tZXMgaW4gdGhlIEguDQoNClRoaXMgaXMgd2h5IEkgZGlkbid0IHdh
-bnQgdG8gYXNzb2NpYXRlICJuYW1lcyIgd2l0aCB0aGUgcGlucyBpbiBhIHBmYyBkcml2ZXIuDQpJ
-IGp1c3Qgd2FudGVkIHRoZSBib2FyZCBEVCB0byBhc3NpZ24gYSBwaW4gdG8gYSAnZnVuY3Rpb24g
-bnVtYmVyJy4NCg0KDQoNCj4gSWYgeWVzLCB5b3UgY291bGQgdXNlIGEgaGllcmFyY2hpY2FsIERU
-UyBzdHJ1Y3R1cmU6DQo+IA0KPiByemExaC08Ym9hcmQ+LmR0czoNCj4gDQo+ICAgICAjaW5jbHVk
-ZSAicnphMWguZHRzaSINCj4gDQo+ICAgICAvLyBib2FyZCBzcGVjaWZpY3MgaGVyZQ0KPiANCj4g
-cnphMWwtPGJvYXJkPi5kdHM6DQo+IA0KPiAgICAgI2luY2x1ZGUgInJ6YTFsLmR0c2kiDQo+IA0K
-PiAgICAgLy8gYm9hcmQgc3BlY2lmaWNzIGhlcmUNCj4gDQo+IHJ6YTFoLmR0c2k6DQo+IA0KPiAg
-ICAgI2luY2x1ZGUgInJ6YS5kdHNpIiAgLy8gcjdzNzIxMDAuZHRzaT8NCj4gDQo+ICAgICAvLyBi
-YXNlIFNvQyBvdmVycmlkZXMNCj4gICAgICZwb3J0NSB7DQo+ICAgICAgICAgZ3Bpby1yYW5nZXMg
-PSA8JnBpbmN0cmwgMCA4MCAxMT47DQo+ICAgICB9DQo+IA0KPiByemExbC5kdHNpOg0KPiANCj4g
-ICAgICNpbmNsdWRlICJyemEuZHRzaSIgIC8vIHI3czcyMTAwLmR0c2k/DQo+IA0KPiAgICAgLy8g
-YmFzZSBTb0Mgb3ZlcnJpZGVzDQo+ICAgICAmcG9ydDUgew0KPiAgICAgICAgIGdwaW8tcmFuZ2Vz
-ID0gPCZwaW5jdHJsIDAgODAgMTY+Ow0KPiAgICAgfQ0KPiANCj4gQWN0dWFsIG5hbWluZyBvZiBE
-VFMgZmlsZXMgVEJELg0KDQpPSywgc28ganVzdCBwdXQgdGhlIHBpbiBkaWZmZXJlbmNlcyBpbiB0
-aGUgdHdvIGZpbGVzLiBUaGF0J3MgYSBnb29kIGlkZWEuIEJ1dCwNCnRoZW4gdGhhdCdzIDIgbW9y
-ZSBmaWxlcyB0byBhZGQgdXBzdHJlYW0uDQpBcyB0aGUgUlovQSBzZXJpZXMgY29udGludWVzLCB0
-aGV5IG1pZ2h0IGtlZXAgZG9pbmcgdGhpcyBraW5kIG9mIHRoaW5nLCBzbyBJDQpkb24ndCB3YW50
-IHRvIGdldCBpbnRvIHRoZSBoYWJpdCBvZiBhZGRpbmcgbW9yZSBhbmQgbW9yZSBEVCBmaWxlcy4N
-Cg0KIyBJIHdpc2ggdGhlcmUgd2FzIHNvbWUgdHlwZSBvZiBpZi1lbHNlIHN5bnRheCBpbiBEZXZp
-Y2UgVHJlZSBzbyBpbiB0aGUNCmJvYXJkIGZpbGUgSSBjb3VsZCBqdXN0IHNheToNCg0KLyB7DQoJ
-bW9kZWwgPSAiUlNLUlpBMSI7DQoJY29tcGF0aWJsZSA9ICJyZW5lc2FzLHJza3J6YTEiLCAicmVu
-ZXNhcyxyN3M3MjEwMCI7DQoNCgl2YXJpYW50ID0gInJ6YTFsIjsNCg0KDQo+IFdlIGNvdWxkIGFs
-c28gZGVjaWRlIHRvIG5vdCBoYXZlIHJ6YTFoLmR0c2ksIGFuZCBhc3N1bWUgdGhlIGJhc2UgZHRz
-aSBpcw0KPiBmb3INCj4gUlovQTFILg0KDQpIb25lc3RseSwgSSdtIGZpbmUgd2l0aCBSWi9BMUgg
-YmVpbmcgdGhlIGZsYWdzaGlwIHVwc3RyZWFtIFNvQyBzaW5jZSBpdCBpcyBhDQpzdXBlcnNldCBv
-ZiBhbGwgdGhlIHBlcmlwaGVyYWxzIGluIFJaL0ExTSwvQTFMLC9BMUxVLC9BMUxDLiBNZWFuaW5n
-LCB0aGlzIHNtYWxsDQpkaWZmZXJlbmNlIGNhbiBiZSBoYW5kbGVkIGluIGEgc2ltcGxlIGJvYXJk
-IGZpbGUgYWRkaXRpb24uDQoNCkkgd2FzIHRoaW5raW5nIEkgd2FzIGdvaW5nIHRvIHBvc3Qgc29t
-ZSBEVCBleGFtcGxlcyBvbiBlTGludXgub3JnIGFueXdheSwgc28gb25lIG9mDQp0aGVtIHdvdWxk
-IGp1c3QgYmUgdGhpcyBSWi9BMUwgZml4Lg0KDQpDaGVlcnMNCg0KQ2hyaXMNCg0K
+On 6 February 2017 at 14:39, Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+> Add description of Cavium Octeon and ThunderX SOC device tree bindings.
+>
+> CC: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>
+> Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Steven J. Hill <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mmc/cavium-mmc.txt         | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/cavium-mmc.txt b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> new file mode 100644
+> index 0000000..b79e356
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> @@ -0,0 +1,60 @@
+> +* Cavium Octeon & ThunderX MMC controller
+> +
+> +The highspeed MMC host controller on Caviums SoCs provides an interface
+> +for MMC and SD types of memory cards.
+> +
+> +Supported maximum speeds are the ones of the eMMC standard 4.41 as well
+> +as the speed of SD standard 4.0. Only 3.3 Volt is supported.
+> +
+> +Required properties:
+> + - compatible : should be one of:
+> +   cavium,octeon-6130-mmc
+> +   cavium,octeon-6130-mmc-slot
+> +   cavium,octeon-7890-mmc
+> +   cavium,octeon-7890-mmc-slot
+> +   cavium,thunder-8190-mmc
+> +   cavium,thunder-8190-mmc-slot
+> +   cavium,thunder-8390-mmc
+> +   cavium,thunder-8390-mmc-slot
+> + - reg : mmc controller base registers
+> + - clocks : phandle
+> +
+> +Optional properties:
+> + - for cd, bus-width and additional generic mmc parameters
+> +   please refer to mmc.txt within this directory
+> + - cavium,cmd-clk-skew : number of coprocessor clocks before sampling command
+> + - cavium,dat-clk-skew : number of coprocessor clocks before sampling data
+> +
+> +Deprecated properties:
+> +- spi-max-frequency : use max-frequency instead
+> +- cavium,bus-max-width : use bus-width instead
+> +
+> +Examples:
+> +       mmc_1_4: mmc@1,4 {
+> +               compatible = "cavium,thunder-8390-mmc";
+> +               reg = <0x0c00 0 0 0 0>; /* DEVFN = 0x0c (1:4) */
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +               clocks = <&sclk>;
+> +
+> +               mmc-slot@0 {
+> +                       compatible = "cavium,thunder-8390-mmc-slot";
+> +                       reg = <0>;
+> +                       voltage-ranges = <3300 3300>;
+> +                       vmmc-supply = <&mmc_supply_3v3>;
+
+The vmmc supply as a regulator provides you with the voltage range,
+thus you don't need the "voltage-ranges" here. Please remove this.
+
+> +                       max-frequency = <42000000>;
+> +                       bus-width = <4>;
+> +                       cap-sd-highspeed;
+> +               };
+> +
+> +               mmc-slot@1 {
+> +                       compatible = "cavium,thunder-8390-mmc-slot";
+> +                       reg = <1>;
+> +                       voltage-ranges = <3300 3300>;
+> +                       vmmc-supply = <&mmc_supply_3v3>;
+
+Ditto.
+
+> +                       max-frequency = <42000000>;
+> +                       bus-width = <8>;
+> +                       cap-mmc-highspeed;
+> +                       non-removable;
+> +               };
+> +       };
+> --
+> 2.9.0.rc0.21.g7777322
+>
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
