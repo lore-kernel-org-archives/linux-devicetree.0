@@ -1,36 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] dt-bindings: spi: document bcm63xx HS SPI
- devicetree bindings
-Date: Fri, 3 Mar 2017 00:21:37 -0600
-Message-ID: <20170303062137.e4if6he2qq6b64au@rob-hp-laptop>
-References: <20170301090814.7097-1-jonas.gorski@gmail.com>
- <20170301090814.7097-2-jonas.gorski@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/2] hwmon: Aspeed AST2400/AST2500 ADC
+Date: Fri, 3 Mar 2017 00:21:33 -0600
+Message-ID: <20170303062133.dvt5g32n26gqio52@rob-hp-laptop>
+References: <20170228201404.32125-1-raltherr@google.com>
+ <20170228201404.32125-2-raltherr@google.com>
+ <CACPK8XfOZiNdrQJaDZcSZkJ4gSZZpGy-r9RQAeykeyUS0yzXMA@mail.gmail.com>
+ <a512cd6c-972b-0a3b-0c2c-5eb18545798a@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170301090814.7097-2-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+In-Reply-To: <a512cd6c-972b-0a3b-0c2c-5eb18545798a@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Joel Stanley <joel@jms.id.au>, Rick Altherr <raltherr@google.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 01, 2017 at 10:08:13AM +0100, Jonas Gorski wrote:
-> Add documentation for the bindings of the high speed SPI controller found
-> on newer bcm63xx SoCs.
+On Tue, Feb 28, 2017 at 07:45:23PM -0800, Guenter Roeck wrote:
+> On 02/28/2017 04:49 PM, Joel Stanley wrote:
+> > On Wed, Mar 1, 2017 at 6:44 AM, Rick Altherr <raltherr@google.com> wrote:
+> > > Aspeed AST2400/AST2500 BMC SoCs include a 16 channel, 10-bit ADC. This
+> > > driver implements reading the ADC values, enabling channels via device
+> > > tree, and optionally providing channel labels via device tree.  Low and
+> > > high threshold interrupts are supported by the hardware but not
+> > > implemented.
+> > > 
+> > > Signed-off-by: Rick Altherr <raltherr@google.com>
+> > 
+> > Looks good. Some minor comments below.
+> > 
+> > Is there a reason you wrote a hwmon driver instead of an iio driver? I
+> > wasn't sure what the recommended subsystem is.
 > 
-> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Changes v1 -> v2
-> * made the pll clock required
-> * added "High speed" (HS) to the first line
-> 
->  .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+> Excellent point. Question is really if there is a plan to add support for
+> thresholds. If not, an iio driver might be more appropriate.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sigh. We have ADCs in 2 places? Fine for the kernel I guess, but not 
+bindings.
+
+Rob
