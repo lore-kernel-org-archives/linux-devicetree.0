@@ -1,124 +1,93 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] Documentation: bindings: add DT documentation for
- u2phy and u2phy grf
-Date: Fri, 03 Mar 2017 08:13:35 +0100
-Message-ID: <1836183.aHLuUaOhIY@phil>
-References: <1488440945-27291-1-git-send-email-daniel.meng@rock-chips.com>
- <1488440945-27291-3-git-send-email-daniel.meng@rock-chips.com>
- <20170303062156.cofjy6sndxz3gch5@rob-hp-laptop>
+From: "Y.B. Lu" <yangbo.lu@nxp.com>
+Subject: RE: [PATCH 2/9] mmc: sdhci: add a callback for signal voltage
+ switching
+Date: Fri, 3 Mar 2017 07:38:01 +0000
+Message-ID: <DB6PR0401MB253689E333DF8974968CB03CF82B0@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+References: <1488448050-7574-1-git-send-email-yangbo.lu@nxp.com>
+ <1488448050-7574-3-git-send-email-yangbo.lu@nxp.com>
+ <bf18ad90-e622-1b9f-d6f7-0becbe57ea76@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20170303062156.cofjy6sndxz3gch5@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bf18ad90-e622-1b9f-d6f7-0becbe57ea76@intel.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will.deacon@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 3. M=E4rz 2017, 00:21:56 CET schrieb Rob Herring:
-> On Thu, Mar 02, 2017 at 03:49:04PM +0800, Meng Dongyang wrote:
-> > Due to the u2phy registers are separated from general grf, we need to
-> > add u2phy grf node and place u2phy node in it. So this patch add u2phy
-> > grf node.
-> =
+> -----Original Message-----
+> From: Adrian Hunter [mailto:adrian.hunter@intel.com]
+> Sent: Thursday, March 02, 2017 10:19 PM
+> To: Y.B. Lu; linux-mmc@vger.kernel.org; ulf.hansson@linaro.org; Rob
+> Herring; Mark Rutland; Catalin Marinas; Will Deacon
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> Xiaobo Xie
+> Subject: Re: [PATCH 2/9] mmc: sdhci: add a callback for signal voltage
+> switching
+> 
+> On 02/03/17 11:47, Yangbo Lu wrote:
+> > Add a callback for signal voltage switching to let host driver switch
+> > signal voltage in its own way.
+> 
+> That is not how we do things now.  Please just replace the host operation
+> instead e.g.
+> 
+> host->mmc_host_ops.start_signal_voltage_switch =
+> 				esdhc_signal_voltage_switch;
+> 
 
-> Similar comment on the subject.
-> =
+[Lu Yangbo-B47093] Hi Adrian, your method is great! I will use this in v2.
+Thanks.
 
-> > Changes in v2:
-> >  - add u2phy grf specification
-> > =
-
-> > Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> 
+> >
+> > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 > > ---
-> > =
-
-> >  Documentation/devicetree/bindings/soc/rockchip/grf.txt | 15
-> >  +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > =
-
-> > diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-> > b/Documentation/devicetree/bindings/soc/rockchip/grf.txt index
-> > 013e71a..6ac23f9 100644
-> > --- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-> > +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-> > @@ -7,6 +7,9 @@ From RK3368 SoCs, the GRF is divided into two sections,
-> > =
-
-> >  - GRF, used for general non-secure system,
-> >  - PMUGRF, used for always on system
-> > =
-
-> > +On RK3328 SoCs, the GRF is divided into three sections,
-> > +except GRF and PMUGRF, add a section for USB2PHYGRF,
+> >  drivers/mmc/host/sdhci.c | 6 ++++++
+> >  drivers/mmc/host/sdhci.h | 2 ++
+> >  2 files changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c index
+> > 6fdd7a7..3c9a924 100644
+> > --- a/drivers/mmc/host/sdhci.c
+> > +++ b/drivers/mmc/host/sdhci.c
+> > @@ -1852,6 +1852,12 @@ static int
+> sdhci_start_signal_voltage_switch(struct mmc_host *mmc,
+> >  	if (host->version < SDHCI_SPEC_300)
+> >  		return 0;
+> >
+> > +	if (host->ops->start_signal_voltage_switch) {
+> > +		ret = host->ops->start_signal_voltage_switch(
+> > +					host, ios->signal_voltage);
+> > +		return ret;
+> > +	}
 > > +
-> > =
-
-> >  Required Properties:
-> >  =
-
-> >  - compatible: GRF should be one of the followings
-> > =
-
-> > @@ -19,6 +22,8 @@ Required Properties:
-> >  - compatible: PMUGRF should be one of the followings
-> >  =
-
-> >     - "rockchip,rk3368-pmugrf", "syscon": for rk3368
-> >     - "rockchip,rk3399-pmugrf", "syscon": for rk3399
-> > =
-
-> > +- compatible: USB2GRF should be one of the followings
-> > +   - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
-> > =
-
-> >  - reg: physical base address of the controller and length of memory
-> >  mapped
-> >  =
-
-> >    region.
-> > =
-
-> > @@ -33,3 +38,13 @@ Example: GRF and PMUGRF of RK3399 SoCs
-> > =
-
-> >  		compatible =3D "rockchip,rk3399-grf", "syscon";
-> >  		reg =3D <0x0 0xff770000 0x0 0x10000>;
-> >  	=
-
-> >  	};
-> > =
-
-> > +
-> > +Example: USB2GRF of RK3328 SoCs
-> > +
-> > +	usb2phy_grf: syscon@ff450000 {
-> > +		compatible =3D "rockchip,rk3328-usb2phy-grf", "syscon",
-> > +			     "simple-mfd";
-> =
-
-> simple-mfd is not documented. Do you have child nodes?
-
-Yes, this will have child nodes and I guess we don't really need the =
-
-additional example, that only differs in the compatible.
-
-
-> What makes this a syscon? It has non-PHY registers?
-
-It is still a "General Register Files" block in all of the socs manual
-and yes, that special area also contains registers not used by the phy driv=
-er.
-
-
-Heiko
+> >  	ctrl = sdhci_readw(host, SDHCI_HOST_CONTROL2);
+> >
+> >  	switch (ios->signal_voltage) {
+> > diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h index
+> > edf3adf..04af687 100644
+> > --- a/drivers/mmc/host/sdhci.h
+> > +++ b/drivers/mmc/host/sdhci.h
+> > @@ -566,6 +566,8 @@ struct sdhci_ops {
+> >  					 struct mmc_card *card,
+> >  					 unsigned int max_dtr, int host_drv,
+> >  					 int card_drv, int *drv_type);
+> > +	int	(*start_signal_voltage_switch)(struct sdhci_host *host,
+> > +					       unsigned char signal_voltage);
+> >  };
+> >
+> >  #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
+> >
