@@ -1,106 +1,35 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v3 5/5] arm64: dts: hi6220: register debug module
-Date: Fri,  3 Mar 2017 14:00:09 +0800
-Message-ID: <1488520809-31670-6-git-send-email-leo.yan@linaro.org>
-References: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] dt-bindings: List devicetree binding
+ for the CCU of Allwinner A20
+Date: Fri, 3 Mar 2017 00:20:49 -0600
+Message-ID: <20170303062049.svbwwalcxkoaexo5@rob-hp-laptop>
+References: <20170227210914.18954-1-plaes@plaes.org>
+ <20170227210914.18954-5-plaes@plaes.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mike.leach@linaro.org
-Cc: Leo Yan <leo.yan@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJIP47K7MERBREW4TCQKGQESSNXTZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170227210914.18954-5-plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Bind debug module driver for Hi6220.
+On Mon, Feb 27, 2017 at 11:09:14PM +0200, Priit Laes wrote:
+> Allwinner A20 is now driven by sunxi-ng CCU driver.
+> 
+> Add devicetree binding for it.
+> 
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 470461d..ed271ed 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -913,5 +913,69 @@
- 				};
- 			};
- 		};
-+
-+		debug@f6590000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf6590000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu0>;
-+		};
-+
-+		debug@f6592000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf6592000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu1>;
-+		};
-+
-+		debug@f6594000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf6594000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu2>;
-+		};
-+
-+		debug@f6596000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf6596000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu3>;
-+		};
-+
-+		debug@f65d0000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf65d0000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu4>;
-+		};
-+
-+		debug@f65d2000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf65d2000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu5>;
-+		};
-+
-+		debug@f65d4000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf65d4000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu6>;
-+		};
-+
-+		debug@f65d6000 {
-+			compatible = "arm,coresight-debug","arm,primecell";
-+			reg = <0 0xf65d6000 0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
-+			clock-names = "apb_pclk";
-+			cpu = <&cpu7>;
-+		};
- 	};
- };
--- 
-2.7.4
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
