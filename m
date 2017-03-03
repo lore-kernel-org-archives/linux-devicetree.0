@@ -1,48 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Use generic property for
- hardware enable pins
-Date: Fri, 3 Mar 2017 00:21:19 -0600
-Message-ID: <20170303062119.kdogozkkhsvwewwa@rob-hp-laptop>
-References: <20170228075041.7568-1-milo.kim@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] video: fbdev: imxfb: support AUS mode
+Date: Fri, 3 Mar 2017 00:21:30 -0600
+Message-ID: <20170303062130.eu5i6kcusxuodoea@rob-hp-laptop>
+References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
+ <1488312337-32154-1-git-send-email-martin@kaiser.cx>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170228075041.7568-1-milo.kim-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1488312337-32154-1-git-send-email-martin@kaiser.cx>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: linux-fbdev@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 04:50:40PM +0900, Milo Kim wrote:
-> With index usages, device specific properties can be replaced with generic
-> one. Vpos is index 0 and Vneg is index 1.
-> DT examples are added as well.
+On Tue, Feb 28, 2017 at 09:04:16PM +0100, Martin Kaiser wrote:
+> Some displays require setting AUS mode in the LDCD AUS Mode Control
+> Register to work with the imxfb driver. Like the value of the Panel
+> Configuration Register, the AUS Mode Control Register's value depends on
+> the display mode.
 > 
-> Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+> Allow setting this register from the device tree. Make the device tree
+> node optional to keep the DT ABI stable. This register is available only
+> on imx21 and compatible chipsets. Update the device tree bindings with
+> this info.
+> 
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 > ---
->  .../bindings/regulator/lm363x-regulator.txt        | 78 +++++++++++++++++++++-
->  1 file changed, 76 insertions(+), 2 deletions(-)
+> v2:
+>   re-sending DT bindings and code changes as one patch
+
+The opposite is what is prefered.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-> index 8f14df9d1205..cc5a6151d85f 100644
-> --- a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-> @@ -8,8 +8,8 @@ Required property:
->  
->  Optional properties:
->    LM3632 has external enable pins for two LDOs.
-> -  - ti,lcm-en1-gpio: A GPIO specifier for Vpos control pin.
-> -  - ti,lcm-en2-gpio: A GPIO specifier for Vneg control pin.
-> +  - enable-gpios: Two GPIO specifiers for Vpos and Vneg control pins.
-> +                  The first entry is Vpos, the second is Vneg enable pin.
-
-You're breaking compatibility with existing DTBs. You need to explain 
-that and why it is okay in the commit message. In this case, I don't 
-think it is okay as this chip could be used across vendors' platforms.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  .../devicetree/bindings/display/imx/fsl,imx-fb.txt    |  2 ++
+>  drivers/video/fbdev/imxfb.c                           | 19 +++++++++++++++++++
+>  include/linux/platform_data/video-imxfb.h             |  1 +
+>  3 files changed, 22 insertions(+)
