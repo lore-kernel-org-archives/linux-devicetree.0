@@ -1,15 +1,14 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 03/25] dt-bindings: timer: Document Owl timer
-Date: Fri, 3 Mar 2017 22:36:02 +0100
-Message-ID: <cef60449-a6e3-c513-d1d8-ed5824fc0550@suse.de>
-References: <20170228063535.32069-1-afaerber@suse.de>
- <20170228063535.32069-4-afaerber@suse.de> <20170228123908.GG3691@leverpostej>
- <20170303062058.yvekr5kawqtzxgpn@rob-hp-laptop>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH V5 5/6] dt/bindings: Update binding for hierarchical PSCI
+ states
+Date: Fri,  3 Mar 2017 13:48:16 -0800
+Message-ID: <1488577697-127445-6-git-send-email-lina.iyer@linaro.org>
+References: <1488577697-127445-1-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170303062058.yvekr5kawqtzxgpn@rob-hp-laptop>
+In-Reply-To: <1488577697-127445-1-git-send-email-lina.iyer@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,66 +18,189 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, brendan.jackman@arm.com, sudeep.holla@arm.com, andy.gross@linaro.org, Lina Iyer <lina.iyer@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 03.03.2017 um 07:20 schrieb Rob Herring:
-> On Tue, Feb 28, 2017 at 12:39:08PM +0000, Mark Rutland wrote:
->> On Tue, Feb 28, 2017 at 07:35:13AM +0100, Andreas F=E4rber wrote:
->>> The Actions Semi S500 SoC contains a timer block with two 2 Hz and two
->>> 32-bit timers. The S900 SoC timer block has four 32-bit timers.
->>>
->>> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
->>> ---
->>>  v2 -> v3:
->>>  * Adopted interrupt-names
->>>  * Changed compatible for S500
->>>  * Added S900 compatible and interrupt names
->>>  =
+Update device bindings to represent hierarchical CPU and CPU domain idle
+states. Also update the examples to clearly show how flattened and
+hierarchical states can be represented in DT.
 
->>>  v2: new
->>>  =
+Cc: <devicetree@vger.kernel.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/psci.txt | 156 +++++++++++++++++++++++++
+ 1 file changed, 156 insertions(+)
 
->>>  .../devicetree/bindings/timer/actions,owl-timer.txt  | 20 ++++++++++++=
-++++++++
->>>  1 file changed, 20 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/timer/actions,owl=
--timer.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/timer/actions,owl-timer.=
-txt b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
->>> new file mode 100644
->>> index 0000000..5b4834d
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
->>> @@ -0,0 +1,20 @@
->>> +Actions Semi Owl Timer
->>> +
->>> +Required properties:
->>> +- compatible      :  "actions,s500-timer" for S500
->>> +                     "actions,s900-timer" for S900
->>> +- reg             :  Offset and length of the register set for the dev=
-ice.
->>> +- interrupts      :  Should contain the interrupts.
->>> +- interrupt-names :  Valid names are: "2Hz0", "2Hz1",
->>> +                                      "Timer0", "Timer1", "Timer2", "T=
-imer3"
->>
->> Sticking to lower case for the names would be preferable.
-
-Done.
-
-> With that,
-> =
-
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Thanks,
-Andreas
-
--- =
-
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
-HRB 21284 (AG N=FCrnberg)
+diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
+index a2c4f1d..e0e9281 100644
+--- a/Documentation/devicetree/bindings/arm/psci.txt
++++ b/Documentation/devicetree/bindings/arm/psci.txt
+@@ -105,7 +105,163 @@ Case 3: PSCI v0.2 and PSCI v0.1.
+ 		...
+ 	};
+ 
++PSCI v1.0 onwards, supports OS-Initiated mode for powering off CPU domains
++from the firmware. Such PM domains for which the PSCI firmware driver acts as
++pseudo-controller, may also be specified in the DT under the psci node. The
++domain definitions must follow the domain idle state specifications per [3].
++The domain states themselves must be compatible with 'domain-idle-state'
++defined in [1] and need to specify the arm,psci-suspend-param property for
++each idle state.
++
++DT allows representing CPU and CPU cluster idle states in two different ways -
++
++The flattened model as given in Example 1, lists CPU's idle states followed by
++the domain idle state that the CPUs may choose. This is the general practice
++followed in PSCI firmwares that support Platform Coordinated mode. Note that
++the idle states are all compatible with "arm,idle-state".
++
++Example 2 represents the hierarchical model of CPU and domain idle states.
++CPUs define their domain provider in their DT node. The domain controls the
++power to the CPU and possibly other h/w blocks that would be powered off when
++the CPU is powered off. The CPU's idle states may therefore be considered as
++the domain's idle states and have the compatible "arm,idle-state". Such
++domains may be embedded within another domain that represents common h/w
++blocks between these CPUs viz., the cluster. The idle states of the cluster
++would be represented as the domain's idle states. In order to use OS-Initiated
++mode of PSCI in the firmware, the hierarchial representation must be used.
++
++More information on defining CPU PM domains is available in [4].
++
++Example 1: Flattened representation of CPU and domain idle states
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0>;
++			enable-method = "psci";
++			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
++					  <&CLUSTER_PWR_DWN>;
++		};
++
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57", "arm,armv8";
++			reg = <0x100>;
++			enable-method = "psci";
++			cpu-idle-states = <&CPU_PWRDN>, <&CLUSTER_RET>,
++					  <&CLUSTER_PWR_DWN>;
++		};
++
++		idle-states {
++			CPU_PWRDN: cpu_power_down{
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x000001>;
++				entry-latency-us = <10>;
++				exit-latency-us = <10>;
++				min-residency-us = <100>;
++			};
++
++			CLUSTER_RET: domain_ret {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x1000010>;
++				entry-latency-us = <500>;
++				exit-latency-us = <500>;
++				min-residency-us = <2000>;
++			};
++
++			CLUSTER_PWR_DWN: domain_off {
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x1000030>;
++				entry-latency-us = <2000>;
++				exit-latency-us = <2000>;
++				min-residency-us = <6000>;
++			};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++Example 2: Hierarchical representation of CPU and domain idle states
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		CPU0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0>;
++			enable-method = "psci";
++			power-domains = <&CPU_PD0>;
++		};
++
++		CPU1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57", "arm,armv8";
++			reg = <0x100>;
++			enable-method = "psci";
++			power-domains = <&CPU_PD1>;
++		};
++
++		idle-states {
++			CPU_PWRDN: cpu_power_down{
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x000001>;
++				entry-latency-us = <10>;
++				exit-latency-us = <10>;
++				min-residency-us = <100>;
++			};
++
++			CLUSTER_RET: domain_ret {
++				compatible = "domain-idle-state";
++				arm,psci-suspend-param = <0x1000010>;
++				entry-latency-us = <500>;
++				exit-latency-us = <500>;
++				min-residency-us = <2000>;
++			};
++
++			CLUSTER_PWR_DWN: domain_off {
++				compatible = "domain-idle-state";
++				arm,psci-suspend-param = <0x1000030>;
++				entry-latency-us = <2000>;
++				exit-latency-us = <2000>;
++				min-residency-us = <6000>;
++			};
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++
++		CPU_PD0: cpu-pd@0 {
++			#power-domain-cells = <0>;
++			domain-idle-states = <&CPU_PWRDN>;
++			power-domains = <&CLUSTER_PD>;
++		};
++
++		CPU_PD1: cpu-pd@1 {
++			#power-domain-cells = <0>;
++			domain-idle-states =  <&CPU_PWRDN>;
++			power-domains = <&CLUSTER_PD>;
++		};
++
++		CLUSTER_PD: cluster-pd@0 {
++			#power-domain-cells = <0>;
++			domain-idle-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
++		};
++	};
++
+ [1] Kernel documentation - ARM idle states bindings
+     Documentation/devicetree/bindings/arm/idle-states.txt
+ [2] Power State Coordination Interface (PSCI) specification
+     http://infocenter.arm.com/help/topic/com.arm.doc.den0022c/DEN0022C_Power_State_Coordination_Interface.pdf
++[3]. PM Domains description
++    Documentation/devicetree/bindings/power/power_domain.txt
++[4]. CPU PM Domains description
++    Documentation/power/cpu_domains.txt
+-- 
+2.7.4
