@@ -1,68 +1,72 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v5 2/4] iio: accel: adxl345: Use I2C regmap instead of
- direct I2C access
-Date: Fri, 3 Mar 2017 18:44:27 +0200
-Message-ID: <CAHp75VduHU+q9B9LUMj1PoXFyTqZnuTtDboNyMvOmrOrRgBstw@mail.gmail.com>
-References: <cover.1488248485.git.eraretuya@gmail.com> <e40679afd338899c9f5d2c7581c3d89754d726ec.1488248485.git.eraretuya@gmail.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/4] iio: accel: adxl345: Split driver into core and I2C
+Date: Fri, 3 Mar 2017 18:51:28 +0200
+Message-ID: <CAHp75VdntzxWpQvnYe346yjJ4e2wwpfFizSxLuUanc7F_QAm+Q@mail.gmail.com>
+References: <cover.1488248485.git.eraretuya@gmail.com> <f15e3023ba4cabd1a236943378caa6ab6c1b4d85.1488248485.git.eraretuya@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e40679afd338899c9f5d2c7581c3d89754d726ec.1488248485.git.eraretuya@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eva Rachel Retuya <eraretuya@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f15e3023ba4cabd1a236943378caa6ab6c1b4d85.1488248485.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
-> Convert the driver to use regmap instead of I2C-specific functions. This
-> is done in preparation for splitting this driver into core and
-> I2C-specific code as well as introduction of SPI driver.
->
-> Signed-off-by: Eva Rachel Retuya <eraretuya@gmail.com>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Move I2C-specific code into its own file and rely on regmap to access
+> registers. The core code provides access to x, y, z and scale readings.
 
-Okay, my another set of comments.
-> @@ -70,6 +76,7 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
->  {
->         struct adxl345_data *data = iio_priv(indio_dev);
+Portion of minor comments.
 
->         int ret;
-> +       __le16 regval;
+> +config ADXL345_I2C
+> +       tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer I2C Driver"
+
+>         depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
+
+I'm wondering if it works in a form of
+
+depends on INPUT_ADXL34X=n
+
+> +int adxl345_common_probe(struct device *dev, struct regmap *regmap,
+> +                        const char *name);
+> +int adxl345_common_remove(struct device *dev);
+
+I think a "common" word is redundant.
+
+> - * IIO driver for ADXL345
+> - * 7-bit I2C slave address: 0x1D (ALT ADDRESS pin tied to VDDIO) or
+> - * 0x53 (ALT ADDRESS pin grounded)
+
+> + * IIO core driver for ADXL345
+
+Should not it be at the beginning of header comment?
+
+> +static int adxl345_i2c_probe(struct i2c_client *client,
+> +                            const struct i2c_device_id *id)
+> +{
+
+> +       struct regmap *regmap;
+> +       const char *name = NULL;
 
 Reverse tree order, please.
 
-     __le16 regval;
-     int ret;
-
-> @@ -104,37 +112,50 @@ static int adxl345_probe(struct i2c_client *client,
->  {
->         struct adxl345_data *data;
->         struct iio_dev *indio_dev;
-> +       struct device *dev;
-> +       struct regmap *regmap;
-
->         int ret;
-> +       u32 regval;
-
-Ditto.
-
 > +
-> +       regmap = devm_regmap_init_i2c(client, &adxl345_regmap_config);
+> +       regmap = devm_regmap_init_i2c(client, &adxl345_i2c_regmap_config);
 > +       if (IS_ERR(regmap)) {
-> +               dev_err(&client->dev, "Error initializing regmap: %d\n",
+> +               dev_err(&client->dev, "Error initializing i2c regmap: %d\n",
 > +                       (int)PTR_ERR(regmap));
+> +               return PTR_ERR(regmap);
+> +       }
+> +
 
-I don't like explicit casting in such cases at all. Why not to use
-%ld? Same for the similar places in the series.
+> +       if (id)
+> +               name = id->name;
+> +
+> +       return adxl345_common_probe(&client->dev, regmap, name);
 
-> -       if (ret != ADXL345_DEVID) {
-> -               dev_err(&client->dev, "Invalid device ID: %d\n", ret);
-> +       if (regval != ADXL345_DEVID) {
-> +               dev_err(dev, "Invalid device ID: %x, expected %x\n",
-> +                       regval, ADXL345_DEVID);
+Do you need temporary variable?
 
-So, originally it was in decimal form. Does hex looks better or what
-is behind the change?
+return adxl345_probe(&client->dev, regmap, id ? id->name : NULL);
 
 -- 
 With Best Regards,
