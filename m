@@ -1,115 +1,43 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 3 Mar 2017 14:47:24 -0800
-Message-ID: <e657f59e-6ac7-bad0-c35b-626b53946d01@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <141eb012-eb24-7558-2bc5-1fe82f6b7b4b@gmail.com>
- <fc8168ef-bf36-b2d9-627b-e4b8c6a5024e@gmail.com>
- <20170303191745.GQ3220@valkosipuli.retiisi.org.uk>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH] PM / OPP: Documentation: Fix opp-microvolt in examples
+Date: Fri, 03 Mar 2017 23:43:09 +0100
+Message-ID: <2085253.6mAybrNraj@aspire.rjw.lan>
+References: <e527318dc8b5a1acf260499c65cf025732d9fc51.1488365712.git.viresh.kumar@linaro.org> <756a9b97-ba24-4cc2-7236-b3bd94d74f6f@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170303191745.GQ3220@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <756a9b97-ba24-4cc2-7236-b3bd94d74f6f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Friday, March 03, 2017 09:28:05 AM Stephen Boyd wrote:
+> On 03/01/2017 03:09 AM, Viresh Kumar wrote:
+> > The triplet present in "opp-microvolt" property should be in the order
+> > <target min max>, while all the examples have it in the order
+> > <min target max>.
+> >
+> > Fix it.
+> >
+> > Luckily all of the users of "opp-microvolt" property have applied brain
+> > instead of copying the examples from documentation and none of the
+> > actual dts files have it wrong.
+> >
+> > Reported-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Reviewed-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> Did you want a fixes tag too? Sure it's just documentation.
 
+It's in the Linus' tree already.
 
-On 03/03/2017 11:17 AM, Sakari Ailus wrote:
-> Hi Steve,
->
-> On Thu, Mar 02, 2017 at 06:12:43PM -0800, Steve Longerbeam wrote:
->>
->>
->> On 03/02/2017 03:48 PM, Steve Longerbeam wrote:
->>>
->>>
->>> On 03/02/2017 08:02 AM, Sakari Ailus wrote:
->>>> Hi Steve,
->>>>
->>>> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
->>>>> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
->>>>> all subdev entities in a pipeline to a given video device.
->>>>>
->>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>>> ---
->>>>> drivers/media/v4l2-core/v4l2-mc.c | 48
->>>>> +++++++++++++++++++++++++++++++++++++++
->>>>> include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
->>>>> 2 files changed, 73 insertions(+)
->>>>>
->>>>> diff --git a/drivers/media/v4l2-core/v4l2-mc.c
->>>>> b/drivers/media/v4l2-core/v4l2-mc.c
->>>>> index 303980b..09d4d97 100644
->>>>> --- a/drivers/media/v4l2-core/v4l2-mc.c
->>>>> +++ b/drivers/media/v4l2-core/v4l2-mc.c
->>>>> @@ -22,6 +22,7 @@
->>>>> #include <linux/usb.h>
->>>>> #include <media/media-device.h>
->>>>> #include <media/media-entity.h>
->>>>> +#include <media/v4l2-ctrls.h>
->>>>> #include <media/v4l2-fh.h>
->>>>> #include <media/v4l2-mc.h>
->>>>> #include <media/v4l2-subdev.h>
->>>>> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct
->>>>> vb2_queue *q)
->>>>> }
->>>>> EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
->>>>>
->>>>> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
->>>>> +                     struct media_entity *start_entity)
->>>>
->>>> I have a few concerns / questions:
->>>>
->>>> - What's the purpose of this patch? Why not to access the sub-device node
->>>>  directly?
->>>
->>>
->>> I don't really understand what you are trying to say.<snip>
->>>
->>
->> Actually I think I understand what you mean now. Yes, the user can
->> always access a subdev's control directly from its /dev/v4l-subdevXX.
->> I'm only providing this feature as a convenience to the user, so that
->> all controls in a pipeline can be accessed from one place, i.e. the
->> main capture device node.
->
-> No other MC based V4L2 driver does this. You'd be creating device specific
-> behaviour that differs from what the rest of the drivers do. The purpose of
-> MC is to provide the user with knowledge of what devices are there, and the
-> V4L2 sub-devices interface is used to access them in this case.
+Thanks,
+Rafael
 
-Well, again, I don't mind removing this. As I said it is only a
-convenience (although quite a nice one in my opinion). I'd like
-to hear from others whether this is worth keeping though.
-
-
->
-> It does matter where a control is implemented, too. If the pipeline contains
-> multiple sub-devices that implement the same control, only one of them may
-> be accessed. The driver calling the function (or even less the function)
-> would not know which one of them should be ignored.
-
-Yes the pipeline should not have any duplicate controls. On imx-media no
-pipelines that can be configured have duplicate controls.
-
-Steve
-
->
-> If you need such functionality, it should be implemented in the user space
-> instead.
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
