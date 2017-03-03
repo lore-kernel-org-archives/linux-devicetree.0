@@ -1,47 +1,35 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v9 00/10] mux controller abstraction and iio/i2c muxes
-Date: Fri, 3 Mar 2017 19:44:46 +0100
-Message-ID: <92e37b84-d368-f161-322e-3f9709cb2ccf@axentia.se>
-References: <1486568517-6997-1-git-send-email-peda@axentia.se>
- <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se>
- <20170228171842.GA11127@kroah.com>
- <569c18b3-b1d8-f2e6-7fc4-897aa7df6775@axentia.se>
- <20170303165247.el4mcsmo4fbnkjir@ninjato>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170303165247.el4mcsmo4fbnkjir@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: mfd: Fix path to atmel/hlcdc-dc.txt
+Date: Fri,  3 Mar 2017 15:41:46 +0100
+Message-ID: <20170303144147.22246-1-richard.genoud@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-03-03 17:52, Wolfram Sang wrote:
-> 
->> Jonathan, Wolfram, do you have any preferences on how this should be
->> coordinated regarding the new iio and i2c drivers (and iio changes)?
-> 
-> You got the acks, all is fine, I think.
-> 
->> My plan is to at some point declare the branch immutable. Then both of
->> you can pull it in. Or? 
-> 
-> Yup, sounds good.
-> 
->> But now that I think about it I wonder what the point is of having
->> Greg pull it in also? Sure, third time's a charm and all that, but...
-> 
-> AFAIU, Greg will be your "upstream", so he should definately pull the
-> branch. I will just pull it in to avoid merge conflicts in my tree.
-> Or did I misunderstand your question?
+Atmel hlcdc-dc documentation is actually in
+Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
 
-You got the gist of it. The piece I was missing was the conditional
-pull into iio/i2c. If you only pull in order to resolve conflicts
-it of course makes total sense, thanks.
+Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-And conflicts -- if they show up -- will probably be trivial given the
-nature of the series. Famous last words...
-
-Cheers,
-peda
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+index 670831b29565..eec40be7f79a 100644
+--- a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
++++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+@@ -15,7 +15,7 @@ Required properties:
+ 
+ The HLCDC IP exposes two subdevices:
+  - a PWM chip: see ../pwm/atmel-hlcdc-pwm.txt
+- - a Display Controller: see ../display/atmel-hlcdc-dc.txt
++ - a Display Controller: see ../display/atmel/hlcdc-dc.txt
+ 
+ Example:
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
