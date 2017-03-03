@@ -1,41 +1,97 @@
-From: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
- nvmem API
-Date: Fri, 3 Mar 2017 23:21:29 +0100
-Message-ID: <54c76650-b61f-8a4c-70c7-febe76e16d3b@nod.at>
-References: <1488484223-844-1-git-send-email-albeu@free.fr>
- <1488484223-844-3-git-send-email-albeu@free.fr>
- <20170302221803.223ff23b@bbrezillon> <20170303133629.3aac2945@tock>
- <20170303143658.5d89a329@bbrezillon> <20170303145726.16cd67fd@tock>
- <20170303151107.36754d19@bbrezillon>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
+Date: Fri, 3 Mar 2017 14:43:51 -0800
+Message-ID: <59663ea1-b277-1543-e770-6a102ac733a4@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
+ <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
+ <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
+ <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170303151107.36754d19@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
-Am 03.03.2017 um 15:11 schrieb Boris Brezillon:
->> And add a list of successfully added notifiers, along with their
->> data pointer, to the MTD device. That's simple and would also remove
->> the need for notifier to have a private list of their instances as I
->> had to do here.
-> 
-> And then you're abusing the notifier concept. As said earlier, a
-> notifier is not necessarily using the device, and thus, don't
-> necessarily need private data.
-> It's not only about what is the simplest solution for your use case,
-> but also what other users want/need.
 
-Yes, please don't use the mtd_notifier.
-I strongly vote to embed the nvmem pointer into struct mtd_info.
 
-Thanks,
-//richard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 03/03/2017 03:45 AM, Sakari Ailus wrote:
+> On Thu, Mar 02, 2017 at 03:07:21PM -0800, Steve Longerbeam wrote:
+>>
+>>
+>> On 03/02/2017 07:53 AM, Sakari Ailus wrote:
+>>> Hi Steve,
+>>>
+>>> On Wed, Feb 15, 2017 at 06:19:15PM -0800, Steve Longerbeam wrote:
+>>>> Add a new FRAME_TIMEOUT event to signal that a video capture or
+>>>> output device has timed out waiting for reception or transmit
+>>>> completion of a video frame.
+>>>>
+>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>>>> ---
+>>>> Documentation/media/uapi/v4l/vidioc-dqevent.rst | 5 +++++
+>>>> Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>>>> include/uapi/linux/videodev2.h                  | 1 +
+>>>> 3 files changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>> index 8d663a7..dd77d9b 100644
+>>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+>>>> @@ -197,6 +197,11 @@ call.
+>>>> 	the regions changes. This event has a struct
+>>>> 	:c:type:`v4l2_event_motion_det`
+>>>> 	associated with it.
+>>>> +    * - ``V4L2_EVENT_FRAME_TIMEOUT``
+>>>> +      - 7
+>>>> +      - This event is triggered when the video capture or output device
+>>>> +	has timed out waiting for the reception or transmit completion of
+>>>> +	a frame of video.
+>>>
+>>> As you're adding a new interface, I suppose you have an implementation
+>>> around. How do you determine what that timeout should be?
+>>
+>> The imx-media driver sets the timeout to 1 second, or 30 frame
+>> periods at 30 fps.
+>
+> The frame rate is not necessarily constant during streaming. It may well
+> change as a result of lighting conditions.
+
+I think you mean that would be a _temporary_ change in frame rate, but
+yes I agree the data rate can temporarily fluctuate. Although I doubt
+lighting conditions would cause a sensor to pause data transmission
+for a full 1 second.
+
+
+> I wouldn't add an event for this:
+> this is unreliable and 30 times the frame period is an arbitrary value
+> anyway. No other drivers do this either.
+
+If no other drivers do this I don't mind removing it. It is really meant
+to deal with the ADV718x CVBS decoder, which often simply stops sending
+data on the BT.656 bus if there is an interruption in the input analog
+signal. But I agree that user space could detect this timeout instead.
+Unless I hear from someone else that they would like to keep this
+feature I'll remove it in version 5.
+
+Steve
+
+
+>
+> The user space is generally in control of the frame period (or on some
+> devices it could be the sensor, too, but *not* the CSI-2 receiver driver),
+> so detecting the condition of not receiving any frames is more reliably done
+> in the user space --- if needed.
+>
