@@ -1,85 +1,70 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 1/3] doc: bindings: Add bindings documentation for mtd
- nvmem
-Date: Fri, 3 Mar 2017 11:27:34 +0000
-Message-ID: <6d5ef869-a1d5-c8d2-847d-1c7aaafa74cf@linaro.org>
-References: <1488484223-844-1-git-send-email-albeu@free.fr>
- <1488484223-844-2-git-send-email-albeu@free.fr>
+From: Sergio Prado <sergio.prado@e-labworks.com>
+Subject: Re: [PATCH v4 2/2] mmc: host: s3cmci: allow probing from device tree
+Date: Fri, 3 Mar 2017 08:38:47 -0300
+Message-ID: <20170303113847.GA17377@sprado-desktop>
+References: <1488417536-15110-1-git-send-email-sergio.prado@e-labworks.com>
+ <CGME20170302012845epcas4p3d7e48f13c80b2115cea89e914b067eeb@epcas4p3.samsung.com>
+ <1488417536-15110-3-git-send-email-sergio.prado@e-labworks.com>
+ <39c2b81b-6519-826b-2c8d-344725ce2882@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1488484223-844-2-git-send-email-albeu@free.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Alban <albeu@free.fr>, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <39c2b81b-6519-826b-2c8d-344725ce2882@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 03, 2017 at 11:14:29AM +0900, Jaehoon Chung wrote:
+> On 03/02/2017 10:18 AM, Sergio Prado wrote:
+> > Allows configuring Samsung S3C24XX MMC/SD/SDIO controller using a device
+> > tree.
+> > 
+> > Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+> > ---
+> >  drivers/mmc/host/s3cmci.c | 298 ++++++++++++++++++++++++----------------------
+> >  drivers/mmc/host/s3cmci.h |   3 +-
+> >  2 files changed, 158 insertions(+), 143 deletions(-)
+> > 
+> > diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
+> > index 7a173f8c455b..d066dbdb957c 100644
+> > --- a/drivers/mmc/host/s3cmci.c
+> > +++ b/drivers/mmc/host/s3cmci.c
+> > @@ -24,6 +24,10 @@
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irq.h>
+> >  #include <linux/io.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/of_gpio.h>
+> > +#include <linux/mmc/slot-gpio.h>
+> >  
+> >  #include <plat/gpio-cfg.h>
+> >  #include <mach/dma.h>
+> > @@ -128,6 +132,22 @@ enum dbg_channels {
+> >  	dbg_conf  = (1 << 8),
+> >  };
+> >  
+> > +struct s3cmci_variant_data {
+> > +	int s3c2440_compatible;
+> > +};
+> 
+> I didn't understand why this structure needs.
+> 
+> Before this patch,
+> host->is2440;
+> 
+> After this patch,
+> host->variant->s3c2440_compatible;
+> 
+> Just add the one pointer for checking s3c2400 compatible..
+> Is it really meaningful?
+> (I didn't read the previous comments fully.)
 
+Although just a pointer would be enought, having a structure makes it
+more flexible to extend it in the future.
 
-On 02/03/17 19:50, Alban wrote:
-> Add the binding to expose MTD partitions as nvmem providers.
+Best regards,
 
-It would be nice to see more description of this patch, explaining the 
-real use case.
->
-> Signed-off-by: Alban <albeu@free.fr>
-> ---
->  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> new file mode 100644
-> index 0000000..47602f7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> @@ -0,0 +1,29 @@
-> += NVMEM in MTD =
-> +
-> +Config data for drivers is often stored in MTD devices. This binding
-> +define how such data can be represented in device tree.
-> +
-> +An MTD can be defined as an NVMEM provider by adding the `nvmem-provider`
-We should prefix this property with "mtd" to make it more explicit that 
-this is specific to mtd devices.
-
-May be we should put this under "Required Properties" section, marking 
-it as mandatory for mtd nvmem providers.
-
-> +property to their node. Data cells can then be defined as child nodes
-> +of the partition as defined in nvmem.txt.
-> +
-> +Example:
-> +
-> +	flash@0 {
-> +		...
-> +
-> +		partition@2 {
-> +			label = "art";
-> +			reg = <0x7F0000 0x010000>;
-> +			read-only;
-> +
-> +			nvmem-provider;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			eeprom@1000 {
-> +				label = "wmac-eeprom";
-> +				reg = <0x1000 0x1000>;
-> +			};
-> +		};
-> +	};
->
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Sergio Prado
