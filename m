@@ -1,62 +1,124 @@
-From: "Kim, Milo" <milo.kim-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Use generic property for
- hardware enable pins
-Date: Fri, 3 Mar 2017 15:56:15 +0900
-Message-ID: <be14e98c-62c8-10bd-fc36-d7c146f39194@ti.com>
-References: <20170228075041.7568-1-milo.kim@ti.com>
- <20170303062119.kdogozkkhsvwewwa@rob-hp-laptop>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] Documentation: bindings: add DT documentation for
+ u2phy and u2phy grf
+Date: Fri, 03 Mar 2017 08:13:35 +0100
+Message-ID: <1836183.aHLuUaOhIY@phil>
+References: <1488440945-27291-1-git-send-email-daniel.meng@rock-chips.com>
+ <1488440945-27291-3-git-send-email-daniel.meng@rock-chips.com>
+ <20170303062156.cofjy6sndxz3gch5@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170303062119.kdogozkkhsvwewwa@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20170303062156.cofjy6sndxz3gch5@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/3/2017 3:21 PM, Rob Herring wrote:
-> On Tue, Feb 28, 2017 at 04:50:40PM +0900, Milo Kim wrote:
->> With index usages, device specific properties can be replaced with generic
->> one. Vpos is index 0 and Vneg is index 1.
->> DT examples are added as well.
->>
->> Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../bindings/regulator/lm363x-regulator.txt        | 78 +++++++++++++++++++++-
->>  1 file changed, 76 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
->> index 8f14df9d1205..cc5a6151d85f 100644
->> --- a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
->> +++ b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
->> @@ -8,8 +8,8 @@ Required property:
->>
->>  Optional properties:
->>    LM3632 has external enable pins for two LDOs.
->> -  - ti,lcm-en1-gpio: A GPIO specifier for Vpos control pin.
->> -  - ti,lcm-en2-gpio: A GPIO specifier for Vneg control pin.
->> +  - enable-gpios: Two GPIO specifiers for Vpos and Vneg control pins.
->> +                  The first entry is Vpos, the second is Vneg enable pin.
->
-> You're breaking compatibility with existing DTBs. You need to explain
-> that and why it is okay in the commit message. In this case, I don't
-> think it is okay as this chip could be used across vendors' platforms.
+Am Freitag, 3. M=E4rz 2017, 00:21:56 CET schrieb Rob Herring:
+> On Thu, Mar 02, 2017 at 03:49:04PM +0800, Meng Dongyang wrote:
+> > Due to the u2phy registers are separated from general grf, we need to
+> > add u2phy grf node and place u2phy node in it. So this patch add u2phy
+> > grf node.
+> =
 
-Thanks for your comment.
+> Similar comment on the subject.
+> =
 
-The lm363x-regulator has a dependency on ti-lmu MFD driver which is not 
-upstreamed. So I don't think this patch will break the compatibility 
-because two properties are not used anywhere at this moment.
-Please correct me if it's incorrect.
+> > Changes in v2:
+> >  - add u2phy grf specification
+> > =
 
-Using general DT property is simple/clear because two enable pins are 
-differentiable by selecting the index number. That's the main reason of 
-this patch.
+> > Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > ---
+> > =
 
-Best regards,
-Milo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >  Documentation/devicetree/bindings/soc/rockchip/grf.txt | 15
+> >  +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> > =
+
+> > diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+> > b/Documentation/devicetree/bindings/soc/rockchip/grf.txt index
+> > 013e71a..6ac23f9 100644
+> > --- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+> > +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+> > @@ -7,6 +7,9 @@ From RK3368 SoCs, the GRF is divided into two sections,
+> > =
+
+> >  - GRF, used for general non-secure system,
+> >  - PMUGRF, used for always on system
+> > =
+
+> > +On RK3328 SoCs, the GRF is divided into three sections,
+> > +except GRF and PMUGRF, add a section for USB2PHYGRF,
+> > +
+> > =
+
+> >  Required Properties:
+> >  =
+
+> >  - compatible: GRF should be one of the followings
+> > =
+
+> > @@ -19,6 +22,8 @@ Required Properties:
+> >  - compatible: PMUGRF should be one of the followings
+> >  =
+
+> >     - "rockchip,rk3368-pmugrf", "syscon": for rk3368
+> >     - "rockchip,rk3399-pmugrf", "syscon": for rk3399
+> > =
+
+> > +- compatible: USB2GRF should be one of the followings
+> > +   - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
+> > =
+
+> >  - reg: physical base address of the controller and length of memory
+> >  mapped
+> >  =
+
+> >    region.
+> > =
+
+> > @@ -33,3 +38,13 @@ Example: GRF and PMUGRF of RK3399 SoCs
+> > =
+
+> >  		compatible =3D "rockchip,rk3399-grf", "syscon";
+> >  		reg =3D <0x0 0xff770000 0x0 0x10000>;
+> >  	=
+
+> >  	};
+> > =
+
+> > +
+> > +Example: USB2GRF of RK3328 SoCs
+> > +
+> > +	usb2phy_grf: syscon@ff450000 {
+> > +		compatible =3D "rockchip,rk3328-usb2phy-grf", "syscon",
+> > +			     "simple-mfd";
+> =
+
+> simple-mfd is not documented. Do you have child nodes?
+
+Yes, this will have child nodes and I guess we don't really need the =
+
+additional example, that only differs in the compatible.
+
+
+> What makes this a syscon? It has non-PHY registers?
+
+It is still a "General Register Files" block in all of the socs manual
+and yes, that special area also contains registers not used by the phy driv=
+er.
+
+
+Heiko
