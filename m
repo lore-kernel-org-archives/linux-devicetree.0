@@ -1,60 +1,276 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH] drm/arcpgu: Get rid of "encoder-slave" property
-Date: Fri, 3 Mar 2017 17:48:19 +0000
-Message-ID: <1488563298.2940.33.camel@synopsys.com>
-References: <1488554364-25579-1-git-send-email-abrodkin@synopsys.com>
- <20170303162837.GO917@e110455-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170303162837.GO917@e110455-lin.cambridge.arm.com>
-Content-Language: en-US
-Content-ID: <1813302EC06FDE46A08990C92D967D08@internal.synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: "Liviu.Dudau@arm.com" <Liviu.Dudau@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "daniel@ffwll.ch" <daniel@ffwll.ch>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v5 1/3] watchdog: add rza_wdt driver
+Date: Fri,  3 Mar 2017 12:31:59 -0500
+Message-ID: <20170303173201.5597-2-chris.brandt@renesas.com>
+References: <20170303173201.5597-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170303173201.5597-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGl2aXUsDQoNCk9uIEZyaSwgMjAxNy0wMy0wMyBhdCAxNjoyOCArMDAwMCwgTGl2aXUgRHVk
-YXUgd3JvdGU6DQo+IE9uIEZyaSwgTWFyIDAzLCAyMDE3IGF0IDA2OjE5OjI0UE0gKzAzMDAsIEFs
-ZXhleSBCcm9ka2luIHdyb3RlOg0KPiA+IA0KPiA+IC0JLyogZmluZCB0aGUgZW5jb2RlciBub2Rl
-IGFuZCBpbml0aWFsaXplIGl0ICovDQo+ID4gLQllbmNvZGVyX25vZGUgPSBvZl9wYXJzZV9waGFu
-ZGxlKGRybS0+ZGV2LT5vZl9ub2RlLCAiZW5jb2Rlci1zbGF2ZSIsIDApOw0KPiA+IC0JaWYgKGVu
-Y29kZXJfbm9kZSkgew0KPiA+IC0JCXJldCA9IGFyY3BndV9kcm1faGRtaV9pbml0KGRybSwgZW5j
-b2Rlcl9ub2RlKTsNCj4gPiAtCQlvZl9ub2RlX3B1dChlbmNvZGVyX25vZGUpOw0KPiA+ICsJLyog
-VGhlcmUgaXMgb25seSBvbmUgb3V0cHV0IHBvcnQgaW5zaWRlIGVhY2ggZGV2aWNlLCBmaW5kIGl0
-ICovDQo+ID4gKwlwb3J0ID0gb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQocGRldi0+ZGV2Lm9m
-X25vZGUsIE5VTEwpOw0KPiA+ICsNCj4gPiArCWlmIChwb3J0KSB7DQo+ID4gKwkJaWYgKG9mX2Rl
-dmljZV9pc19hdmFpbGFibGUocG9ydCkpDQo+ID4gKwkJCWVuY29kZXIgPSBvZl9ncmFwaF9nZXRf
-cmVtb3RlX3BvcnRfcGFyZW50KHBvcnQpOw0KPiA+ICsJCW9mX25vZGVfcHV0KHBvcnQpOw0KPiA+
-ICsJfQ0KPiANCj4gWW91IG11c3QndmUgYmVlbiBsb29raW5nIGF0IHNvbWUgb2xkIHZlcnNpb24u
-IEN1cnJlbnQgdmVyc2lvbiBpbiAtbmV4dCB1c2VzDQo+IG9mX2dyYXBoX2dldF9yZW1vdGVfbm9k
-ZSgpIHRvIHJlcGxhY2UgYWxsIHRob3NlIGxpbmVzIHlvdSBoYXZlIGFkZGVkIChzZWUgUm9iDQo+
-IEhlcnJpbmcncyBzZXJpZXMgdG8gaW50cm9kdWNlIG9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZSgp
-IGZ1bmN0aW9uKQ0KDQpIbSwgSSdtIG5vdCBvbiBMaW51cycgbWFzdGVyIHRyZWUgWzFdIGFuZCBz
-byBJIHRob3VnaHQgSSB3YXMgcXVpdGUgdXAgdG8gZGF0ZSA6KQ0KU3RpbGwgSSBtYWRlIGEgY2hl
-Y2sgb2YgbGludXgtbmV4dCBhbmQgZG9uJ3Qgc2VlIGFueSBjaGFuZ2VzIGluDQoiZHJpdmVycy9n
-cHUvZHJtL2FybSIgY29tcGFyZWQgdG8gTGludXMnIHRyZWUuDQoNClsxXcKgaHR0cDovL2dpdC5r
-ZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0
-L2RyaXZlcnMvZ3B1L2RybS9hcm0/aWQ9ZTQ1NjNmNmJhNzE3OTJjNzdhZWNjYjIwOTJjYzIzMTQ5
-YjQ0ZTY0Mg0KWzJdwqBodHRwOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0
-L25leHQvbGludXgtbmV4dC5naXQvY29tbWl0L2RyaXZlcnMvZ3B1L2RybS9hcm0/aWQ9ZTQ1NjNm
-NmJhNzE3OTJjNzdhZWNjYjIwOTJjYzIzMTQ5YjQ0ZTY0Mg0KDQpDb3VsZCB5b3UgcGxlYXNlIGNs
-YXJpZnkgd2hpY2ggZXhhY3QgdHJlZSBkaWQgeW91IG1lYW4/DQoNCkFueXdheXMgSSBqdXN0IHRy
-aWVkIHRvIHJlYmFzZSBteSBwYXRjaCBvbiB0b3Agb2YgbGludXgtbmV4dCB0cmVlIGFuZCBub3cN
-CnZpZGVvIG91dHB1dCBpcyBicm9rZW4gZm9yIG1lIC0gSSBvbmx5IHNlZSBzb21lIGdhcmJhZ2Ug
-b24gdG9wIG9mIHRoZSBzY3JlZW4NCnNvIEknbGwgbmVlZCB0byBpbnZlc3RpZ2F0ZSBpdCBmaXJz
-dCBiZWZvcmUgbW92aW5nIGZvcndhcmQgd2l0aCBzdHVmZiB5b3UNCnByb3Bvc2VkIDopDQoNCi1B
-bGV4ZXkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtc25wcy1hcmMgbWFpbGluZyBsaXN0CmxpbnV4LXNucHMtYXJjQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1zbnBz
-LWFyYw==
+Adds a watchdog timer driver for the Renesas RZ/A Series SoCs. A reset
+handler is also included since a WDT overflow is the only method for
+restarting an RZ/A SoC.
+
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
+v2:
+* removed extra lines from file header comments
+* changed (1<<#) to BIT(#)
+* changed #define WTSCR_CKS(i) i to (i)
+* changed format to #define SOMETHING<tab>value (and align values)
+* now check if clock rate < 16384
+* added space before and after '/' for "(1000 * U8_MAX) / rate"
+* changed dev_info to dev_dbg for printing max_hw_heartbeat_ms
+* added watchdog_init_timeout() for user to set timeout in DT
+* switched to using devm_watchdog_register_device()
+* added error message if register fails
+* simplified rza_wdt_probe() return
+* removed function rza_wdt_remove()
+---
+ drivers/watchdog/Kconfig   |   8 ++
+ drivers/watchdog/Makefile  |   1 +
+ drivers/watchdog/rza_wdt.c | 199 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 208 insertions(+)
+ create mode 100644 drivers/watchdog/rza_wdt.c
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index acb00b5..123c516 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -701,6 +701,14 @@ config RENESAS_WDT
+ 	  This driver adds watchdog support for the integrated watchdogs in the
+ 	  Renesas R-Car and other SH-Mobile SoCs (usually named RWDT or SWDT).
+ 
++config RENESAS_RZAWDT
++	tristate "Renesas RZ/A WDT Watchdog"
++	depends on ARCH_RENESAS || COMPILE_TEST
++	select WATCHDOG_CORE
++	help
++	  This driver adds watchdog support for the integrated watchdogs in the
++	  Renesas RZ/A SoCs. These watchdogs can be used to reset a system.
++
+ config ASPEED_WATCHDOG
+ 	tristate "Aspeed 2400 watchdog support"
+ 	depends on ARCH_ASPEED || COMPILE_TEST
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 0c3d35e..84b897c 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -81,6 +81,7 @@ obj-$(CONFIG_LPC18XX_WATCHDOG) += lpc18xx_wdt.o
+ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+ obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+ obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
++obj-$(CONFIG_RENESAS_RZAWDT) += rza_wdt.o
+ obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+ 
+ # AVR32 Architecture
+diff --git a/drivers/watchdog/rza_wdt.c b/drivers/watchdog/rza_wdt.c
+new file mode 100644
+index 0000000..76a9c1f
+--- /dev/null
++++ b/drivers/watchdog/rza_wdt.c
+@@ -0,0 +1,199 @@
++/*
++ * Renesas RZ/A Series WDT Driver
++ *
++ * Copyright (C) 2017 Renesas Electronics America, Inc.
++ * Copyright (C) 2017 Chris Brandt
++ *
++ * This file is subject to the terms and conditions of the GNU General Public
++ * License.  See the file "COPYING" in the main directory of this archive
++ * for more details.
++ */
++
++#include <linux/platform_device.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/delay.h>
++#include <linux/watchdog.h>
++#include <linux/clk.h>
++
++#define DEFAULT_TIMEOUT		30
++
++/* Watchdog Timer Registers */
++#define WTCSR			0
++#define WTCSR_MAGIC		0xA500
++#define WTSCR_WT		BIT(6)
++#define WTSCR_TME		BIT(5)
++#define WTSCR_CKS(i)		(i)
++
++#define WTCNT			2
++#define WTCNT_MAGIC		0x5A00
++
++#define WRCSR			4
++#define WRCSR_MAGIC		0x5A00
++#define WRCSR_RSTE		BIT(6)
++#define WRCSR_CLEAR_WOVF	0xA500	/* special value */
++
++struct rza_wdt {
++	struct watchdog_device wdev;
++	void __iomem *base;
++	struct clk *clk;
++};
++
++static int rza_wdt_start(struct watchdog_device *wdev)
++{
++	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
++
++	/* Stop timer */
++	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
++
++	/* Must dummy read WRCSR:WOVF at least once before clearing */
++	readb(priv->base + WRCSR);
++	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
++
++	/*
++	 * Start timer with slowest clock source and reset option enabled.
++	 */
++	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
++	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
++	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME | WTSCR_CKS(7),
++	       priv->base + WTCSR);
++
++	return 0;
++}
++
++static int rza_wdt_stop(struct watchdog_device *wdev)
++{
++	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
++
++	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
++
++	return 0;
++}
++
++static int rza_wdt_ping(struct watchdog_device *wdev)
++{
++	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
++
++	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
++
++	return 0;
++}
++
++static int rza_wdt_restart(struct watchdog_device *wdev, unsigned long action,
++			    void *data)
++{
++	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
++
++	/* Stop timer */
++	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
++
++	/* Must dummy read WRCSR:WOVF at least once before clearing */
++	readb(priv->base + WRCSR);
++	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
++
++	/*
++	 * Start timer with fastest clock source and only 1 clock left before
++	 * overflow with reset option enabled.
++	 */
++	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
++	writew(WTCNT_MAGIC | 255, priv->base + WTCNT);
++	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME, priv->base + WTCSR);
++
++	/*
++	 * Actually make sure the above sequence hits hardware before sleeping.
++	 */
++	wmb();
++
++	/* Wait for WDT overflow (reset) */
++	udelay(20);
++
++	return 0;
++}
++
++static const struct watchdog_info rza_wdt_ident = {
++	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
++	.identity = "Renesas RZ/A WDT Watchdog",
++};
++
++static const struct watchdog_ops rza_wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = rza_wdt_start,
++	.stop = rza_wdt_stop,
++	.ping = rza_wdt_ping,
++	.restart = rza_wdt_restart,
++};
++
++static int rza_wdt_probe(struct platform_device *pdev)
++{
++	struct rza_wdt *priv;
++	struct resource *res;
++	unsigned long rate;
++	int ret;
++
++	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(priv->clk))
++		return PTR_ERR(priv->clk);
++
++	rate = clk_get_rate(priv->clk);
++	if (rate < 16384) {
++		dev_err(&pdev->dev, "invalid clock rate (%ld)\n", rate);
++		return -ENOENT;
++	}
++
++	/* Assume slowest clock rate possible (CKS=7) */
++	rate /= 16384;
++
++	priv->wdev.info = &rza_wdt_ident,
++	priv->wdev.ops = &rza_wdt_ops,
++	priv->wdev.parent = &pdev->dev;
++
++	/*
++	 * Since the max possible timeout of our 8-bit count register is less
++	 * than a second, we must use max_hw_heartbeat_ms.
++	 */
++	priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
++	dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
++		 priv->wdev.max_hw_heartbeat_ms);
++
++	priv->wdev.min_timeout = 1;
++	priv->wdev.timeout = DEFAULT_TIMEOUT;
++
++	platform_set_drvdata(pdev, priv);
++	watchdog_init_timeout(&priv->wdev, 0, &pdev->dev);
++	watchdog_set_drvdata(&priv->wdev, priv);
++
++	ret = devm_watchdog_register_device(&pdev->dev, &priv->wdev);
++	if (ret)
++		dev_err(&pdev->dev, "Cannot register watchdog device\n");
++
++	return ret;
++}
++
++static const struct of_device_id rza_wdt_of_match[] = {
++	{ .compatible = "renesas,rza-wdt", },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, rza_wdt_of_match);
++
++static struct platform_driver rza_wdt_driver = {
++	.probe = rza_wdt_probe,
++	.driver = {
++		.name = "rza_wdt",
++		.of_match_table = rza_wdt_of_match,
++	},
++};
++
++module_platform_driver(rza_wdt_driver);
++
++MODULE_DESCRIPTION("Renesas RZ/A WDT Driver");
++MODULE_AUTHOR("Chris Brandt <chris.brandt@renesas.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.10.1
