@@ -1,16 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: iio: introduce trigger providers,
- consumers
-Date: Fri, 3 Mar 2017 00:21:26 -0600
-Message-ID: <20170303062126.5bewa5u6o7wu7sy4@rob-hp-laptop>
-References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
- <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH V3 3/4] dt-bindings: serial: add a new compatible string
+ for SC9860
+Date: Fri, 3 Mar 2017 00:21:49 -0600
+Message-ID: <20170303062149.xeernsjqhipwk7tq@rob-hp-laptop>
+References: <1488435730-6711-1-git-send-email-chunyan.zhang@spreadtrum.com>
+ <1488435730-6711-4-git-send-email-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1488300679-3259-2-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <1488435730-6711-4-git-send-email-chunyan.zhang@spreadtrum.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,68 +20,56 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, jic23@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, orson.zhai@spreadtrum.com, arnd@arndb.de, gregkh@linuxfoundation.org, sudeep.holla@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, zhang.lyra@gmail.com, catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 05:51:14PM +0100, Fabrice Gasnier wrote:
-> Document iio provider and consumer bindings.
+On Thu, Mar 02, 2017 at 02:22:09PM +0800, Chunyan Zhang wrote:
+> SC9860 use the same serial device, so added a new compatible string to
+> support SC9860 as well, also added an example of how to describe this
+> serial device in DT.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 > ---
->  .../devicetree/bindings/iio/iio-bindings.txt       | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
+>  Documentation/devicetree/bindings/serial/sprd-uart.txt | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> index 68d6f8c..01765e9 100644
-> --- a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> @@ -95,3 +95,41 @@ vdd channel is connected to output 0 of the &ref device.
->  		io-channels = <&adc 10>, <&adc 11>;
->  		io-channel-names = "adc1", "adc2";
->  	};
+> diff --git a/Documentation/devicetree/bindings/serial/sprd-uart.txt b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> index 2aff0f2..8bd8144 100644
+> --- a/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/sprd-uart.txt
+> @@ -1,7 +1,20 @@
+>  * Spreadtrum serial UART
+>  
+>  Required properties:
+> -- compatible: must be "sprd,sc9836-uart"
+> +- compatible must contain:
+> +  * "sprd,sc9836-uart" for SC9836 and all Spreadtrum SoCs
+> +  This also can be specific with:
+> +  * "sprd,sc9860-uart" for SC9860
+
+Just say:
+
+- compatible: must be one of:
+	"sprd,sc9836-uart"
+	"sprd,sc9860-uart", "sprd,sc9836-uart"
+
 > +
-> +==IIO trigger providers==
-> +Sources of IIO triggers can be represented by any node in the device
-> +tree. Those nodes are designated as IIO trigger providers. IIO trigger
-> +consumer uses a phandle and an IIO trigger specifier to connect to an
-> +IIO trigger provider.
-> +An IIO trigger specifier is an array of one or more cells identifying
-> +the IIO trigger output on a device. The length of an IIO trigger
-> +specifier is defined by the value of a #io-trigger-cells property in
-> +the IIO trigger provider node.
-> +
-> +Required properties:
-> +#io-trigger-cells:
-> +		Number of cells in an IIO trigger specifier; Typically
-> +		0 for nodes with a simple IIO trigger output.
+>  - reg: offset and length of the register set for the device
+>  - interrupts: exactly one interrupt specifier
+>  - clocks: phandles to input clocks.
 > +
 > +Example:
-> +	trig0: interrupt-trigger0 {
-> +		#io-trigger-cells = <0>;
-> +		compatible = "interrupt-trigger";
-> +		interrupts = <11 0>;
-> +		interrupt-parent = <&gpioa>;
-> +	}
-> +
-> +==IIO trigger consumers==
-> +Required properties:
-> +- io-triggers:	List of phandle representing the IIO trigger specifier.
-> +
-> +Optional properties:
-> +- io-trigger-names :
-> +		List of IIO trigger name strings that matches elements
-> +		in 'io-triggers' list property.
-> +
-> +Example:
-> +	some_trigger_consumer {
-> +		io-triggers = <&trig0>;
-> +		io-trigger-names = "mytrig";
-> +	}
+> +	uart0: serial@70000000 {
+> +		compatible = "sprd,sc9860-uart",
+> +			     "sprd,sc9836-uart";
+> +		reg = <0x000000 0x100>;
 
-I have some reservations about this. We could just as easily add the 
-interrupt directly to the consumer node and use "trigger" for a standard 
-interrupt name. So the question is whether this extra level of 
-indirection is needed? 
+unit address doesn't match the reg property.
 
-Rob
+> +		interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&ext_26m>;
+> +	};
+> -- 
+> 2.7.4
+> 
