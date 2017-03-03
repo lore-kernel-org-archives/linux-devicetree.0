@@ -1,36 +1,80 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] PM / OPP: Documentation: Fix opp-microvolt in examples
-Date: Fri, 3 Mar 2017 09:28:05 -0800
-Message-ID: <756a9b97-ba24-4cc2-7236-b3bd94d74f6f@codeaurora.org>
-References: <e527318dc8b5a1acf260499c65cf025732d9fc51.1488365712.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <e527318dc8b5a1acf260499c65cf025732d9fc51.1488365712.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v5 0/3] watchdog: add wdt and reset for renesas r7s72100
+Date: Fri,  3 Mar 2017 12:31:58 -0500
+Message-ID: <20170303173201.5597-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2017 03:09 AM, Viresh Kumar wrote:
-> The triplet present in "opp-microvolt" property should be in the order
-> <target min max>, while all the examples have it in the order
-> <min target max>.
->
-> Fix it.
->
-> Luckily all of the users of "opp-microvolt" property have applied brain
-> instead of copying the examples from documentation and none of the
-> actual dts files have it wrong.
->
-> Reported-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Some Renesas SoCs do not have a reset register and the only way to do a SW
+controlled reset is to use the watchdog timer. So while this series started
+out by only adding a reset feature, now it's a full watchdog timer driver that
+includes a reset handler.
 
-Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+The longest WDT overflow you can get with a RZ/A1 (R7S72100) with its 8-bit
+wide counter is 125ms. Not very long.
 
-Did you want a fixes tag too? Sure it's just documentation.
+However, by setting max_hw_heartbeat_ms, the watchdog core will now handle
+pinging the WDT automatically and allow the user to set times as big as they
+want. Therefore, the default timeout for this driver is 30 seconds.
+
+Of course if system interrupts are disabled too long and wdt can't be pinged
+by the watchdog core, then the system will reset before the user specified
+timeout. But hey, it's better nothing.
+
+This driver was tested on an RZ/A1 RSK board using watchdog-simple.c from
+samples/watchdog/.
+
+v5:
+* rza_wdt.c changes only
+* removed extra lines from file header comments
+* changed (1<<#) to BIT(#)
+* changed #define WTSCR_CKS(i) i to (i)
+* changed format to #define SOMETHING<tab>value (and align values)
+* now check if clock rate < 16384
+* added space before and after '/' for "(1000 * U8_MAX) / rate"
+* changed dev_info to dev_dbg for printing max_hw_heartbeat_ms
+* added watchdog_init_timeout() for user to set timeout in DT
+* switched to using devm_watchdog_register_device()
+* added error message if register fails
+* simplified rza_wdt_probe() return
+* removed function rza_wdt_remove()
+
+v4:
+* r7s72100.dtsi: changed from timer@ to watchdog@
+
+v3:
+* changed from a reset driver to a watchdog timer driver
+* use udelay(20) instead of msleep for reset handler
+* added Reviewed-by for r7s72100.dtsi and renesas-wdt.txt
+* added Acked-by for renesas-wdt.txt
+
+v2:
+* added to renesas-wdt.txt instead of creating a new file
+* changed "renesas,r7s72100-reset" to "renesas,r7s72100-wdt"
+* changed "renesas,wdt-reset" to "renesas,rza-wdt"
+* added "renesas,rza-wdt" as a fallback
+* added interupt property (even though it is not used)
+* added clocks property
+* changed hard coded register values to defines
+* added msleep to while(1) loop
+* removed unnecessary #include files
+* added Reviewed-by: Geert Uytterhoeven for renesas-reset.c
+
+Chris Brandt (3):
+  watchdog: add rza_wdt driver
+  watchdog: renesas-wdt: add support for rza
+  ARM: dts: r7s72100: Add watchdog timer
+
+ .../devicetree/bindings/watchdog/renesas-wdt.txt   |   4 +-
+ arch/arm/boot/dts/r7s72100.dtsi                    |   7 +
+ drivers/watchdog/Kconfig                           |   8 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/rza_wdt.c                         | 199 +++++++++++++++++++++
+ 5 files changed, 218 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/watchdog/rza_wdt.c
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.10.1
