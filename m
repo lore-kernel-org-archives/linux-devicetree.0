@@ -1,237 +1,60 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
-Date: Fri, 03 Mar 2017 11:00:08 -0800
-Message-ID: <m260jq2nk7.fsf@baylibre.com>
-References: <20170222163131.14136-1-carlo@caione.org>
-        <20170222163131.14136-3-carlo@caione.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dt-bindings: drm: rcar-du: Document optional reset
+ properties
+Date: Fri, 3 Mar 2017 20:03:09 +0100
+Message-ID: <CAMuHMdU=1O_ZZgAXWSecO=HRtZdY8s0LfEMuUkpgvr528HV+Jw@mail.gmail.com>
+References: <1488547835-25229-1-git-send-email-geert+renesas@glider.be>
+ <2423895.QcDWT1fsiC@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170222163131.14136-3-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> (Carlo Caione's message
-        of "Wed, 22 Feb 2017 17:31:31 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2423895.QcDWT1fsiC@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
-
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->
-> This patch adds support for the HwaCom AmazeTV set-top-box. The
-> hardware configuration is really similar to the other GXL boards but
-> for this hardware we need to limit the max-frequency of the eMMC to
-> have it working.
->
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
->  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
->  .../boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts  | 164 +++++++++++++++++++++
-
-nit: this should be meson-gxl-s905x-*
-
-Looks like you followed the pattern of the GXL nexbox, but that's
-now fixed in linux-next too.
-
-Kevin
-
-
->  3 files changed, 166 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
->
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-> index 9b2b41a..c369a55 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-> @@ -47,3 +47,4 @@ Board compatible values:
->    - "amlogic,q201" (Meson gxm s912)
->    - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
->    - "nexbox,a1" (Meson gxm s912)
-> +  - "hwacom,amazetv" (Meson gxl s905x)
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index 0d7bfbf..2932755 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -9,6 +9,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-nexbox-a95x.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-hwacom-amazetv.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q201.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
-> new file mode 100644
-> index 0000000..9a2c60d
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-hwacom-amazetv.dts
-> @@ -0,0 +1,164 @@
-> +/*
-> + * Copyright (c) 2017 Carlo Caione
-> + * Copyright (c) 2016 BayLibre, Inc.
-> + * Author: Neil Armstrong <narmstrong-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: GPL-2.0+ OR MIT
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "meson-gxl-s905x.dtsi"
-> +
-> +/ {
-> +	compatible = "hwacom,amazetv", "amlogic,s905x", "amlogic,meson-gxl";
-> +	model = "Hwacom AmazeTV (S905X)";
-> +
-> +	aliases {
-> +		serial0 = &uart_AO;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x80000000>;
-> +	};
-> +
-> +	vddio_card: gpio-regulator {
-> +		compatible = "regulator-gpio";
-> +
-> +		regulator-name = "VDDIO_CARD";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +
-> +		gpios = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
-> +		gpios-states = <1>;
-> +
-> +		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
-> +		states = <1800000 0
-> +			  3300000 1>;
-> +	};
-> +
-> +	vddio_boot: regulator-vddio_boot {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_BOOT";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vddao_3v3: regulator-vddao_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDAO_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	vcc_3v3: regulator-vcc_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	emmc_pwrseq: emmc-pwrseq {
-> +		compatible = "mmc-pwrseq-emmc";
-> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	wifi32k: wifi32k {
-> +		compatible = "pwm-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-> +	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-> +		clocks = <&wifi32k>;
-> +		clock-names = "ext_clock";
-> +	};
-> +
-> +	cvbs-connector {
-> +		compatible = "composite-video-connector";
-> +
-> +		port {
-> +			cvbs_connector_in: endpoint {
-> +				remote-endpoint = <&cvbs_vdac_out>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&uart_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&ethmac {
-> +	status = "okay";
-> +	phy-mode = "rmii";
-> +	phy-handle = <&internal_phy>;
-> +};
-> +
-> +&ir {
-> +	status = "okay";
-> +	pinctrl-0 = <&remote_input_ao_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +/* SD card */
-> +&sd_emmc_b {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdcard_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <100000000>;
-> +	disable-wp;
-> +
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> +	cd-inverted;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_card>;
-> +};
-> +
-> +/* eMMC */
-> +&sd_emmc_c {
-> +	status = "okay";
-> +	pinctrl-0 = <&emmc_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <8>;
-> +	cap-sd-highspeed;
-> +	cap-mmc-highspeed;
-> +	max-frequency = <100000000>;
-> +	non-removable;
-> +	disable-wp;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs200-1_8v;
-> +
-> +	mmc-pwrseq = <&emmc_pwrseq>;
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +&pwm_ef {
-> +	status = "okay";
-> +	pinctrl-0 = <&pwm_e_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +};
-> +
-> +&cvbs_vdac_port {
-> +	cvbs_vdac_out: endpoint {
-> +		remote-endpoint = <&cvbs_connector_in>;
-> +	};
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgTGF1cmVudCwKCk9uIEZyaSwgTWFyIDMsIDIwMTcgYXQgMzo0MSBQTSwgTGF1cmVudCBQaW5j
+aGFydAo8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPiBPbiBGcmlk
+YXkgMDMgTWFyIDIwMTcgMTQ6MzA6MzUgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+PiBEb2N1
+bWVudCB0aGUgb3B0aW9uYWwgcHJvcGVydGllcyBmb3IgZGVzY3JpYmluZyBtb2R1bGUgcmVzZXRz
+LCB0bwo+PiBzdXBwb3J0IHJlc2V0dGluZyBkaXNwbGF5IGNoYW5uZWxzIGFuZCBMVkRTIGVuY29k
+ZXJzIG9uIFItQ2FyIEdlbjIgYW5kCj4+IEdlbjMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEdlZXJ0
+IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+Cj4+IC0tLQo+PiAgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAxMCAr
+KysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZm
+IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNh
+cyxkdS50eHQKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
+ZW5lc2FzLGR1LnR4dCBpbmRleAo+PiAxYTAyZjA5OWEwZmYwYTNhLi43ODczZDUzNzY0YTI5N2My
+IDEwMDY0NAo+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9yZW5lc2FzLGR1LnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dAo+PiBAQCAtMzYsNiArMzYsMTYgQEAgUmVxdWlyZWQg
+UHJvcGVydGllczoKPj4gICAgICAgIFdoZW4gc3VwcGxpZWQgdGhleSBtdXN0IGJlIG5hbWVkICJk
+Y2xraW4ueCIgd2l0aCAieCIgYmVpbmcgdGhlIGlucHV0Cj4+ICAgICAgICBjbG9jayBudW1lcmlj
+YWwgaW5kZXguCj4+Cj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArICAtIHJlc2V0czogQSBs
+aXN0IG9mIHBoYW5kbGVzICsgcmVzZXQtc3BlY2lmaWVyIHBhaXJzLCBvbmUgZm9yIGVhY2ggZW50
+cnkKPj4gaW4KPgo+IHMvcGhhbmRsZXJzL3BoYW5kbGUvCgpZb3UncmUgc2VlaW5nIHR5cG9zIHRo
+YXQgZG8gbm90IGV4aXN0IDstKQoKPj4gKyAgICB0aGUgcmVzZXQtbmFtZXMgcHJvcGVydHkuCj4K
+PiBXaGF0J3MgaW4gdGhlIHJlc2V0IHNwZWNpZmllciA/CgpUaGF0IGRlcGVuZHMgb24gdGhlIHJl
+c2V0IHByb3ZpZGVyLgoKU2VlICJbdjIsMS80XSBkdC1iaW5kaW5nczogY2xvY2s6IHJlbmVzYXM6
+IGNwZy1tc3NyOiBEb2N1bWVudCByZXNldCBjb250cm9sCnN1cHBvcnQiIChodHRwczovL3BhdGNo
+d29yay5rZXJuZWwub3JnL3BhdGNoLzk1MzY2MjcvKSBmb3IgdGhlIFJlbmVzYXMKQ1BHL01TU1Ig
+Y2FzZS4KCkUuZy4gInJlc2V0cyA9IDwmY3BnIDMxMD47IgoKR3J7b2V0amUsZWV0aW5nfXMsCgog
+ICAgICAgICAgICAgICAgICAgICAgICBHZWVydAoKLS0KR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRo
+ZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZwoK
+SW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBt
+eXNlbGYgYSBoYWNrZXIuIEJ1dAp3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVz
+dCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
