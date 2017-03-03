@@ -1,105 +1,46 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Thu, 2 Mar 2017 16:46:20 -0800
-Message-ID: <b4221709-5965-ac9a-d73a-ffe61c9bed9f@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <141eb012-eb24-7558-2bc5-1fe82f6b7b4b@gmail.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
+Date: Fri,  3 Mar 2017 09:01:48 +0800
+Message-ID: <1488502909-22160-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <141eb012-eb24-7558-2bc5-1fe82f6b7b4b@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-rockchip@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/02/2017 03:48 PM, Steve Longerbeam wrote:
->
->
-> On 03/02/2017 08:02 AM, Sakari Ailus wrote:
->> Hi Steve,
->>
->> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
->>> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
->>> all subdev entities in a pipeline to a given video device.
->>>
->>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>> ---
->>>  drivers/media/v4l2-core/v4l2-mc.c | 48
->>> +++++++++++++++++++++++++++++++++++++++
->>>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
->>>  2 files changed, 73 insertions(+)
->>>
->>> diff --git a/drivers/media/v4l2-core/v4l2-mc.c
->>> b/drivers/media/v4l2-core/v4l2-mc.c
->>> index 303980b..09d4d97 100644
->>> --- a/drivers/media/v4l2-core/v4l2-mc.c
->>> +++ b/drivers/media/v4l2-core/v4l2-mc.c
->>> @@ -22,6 +22,7 @@
->>>  #include <linux/usb.h>
->>>  #include <media/media-device.h>
->>>  #include <media/media-entity.h>
->>> +#include <media/v4l2-ctrls.h>
->>>  #include <media/v4l2-fh.h>
->>>  #include <media/v4l2-mc.h>
->>>  #include <media/v4l2-subdev.h>
->>> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct
->>> vb2_queue *q)
->>>  }
->>>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
->>>
->>> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
->>> +                     struct media_entity *start_entity)
->>
->> I have a few concerns / questions:
->>
->> - What's the purpose of this patch? Why not to access the sub-device node
->>   directly?
->
->
-> I don't really understand what you are trying to say. That's exactly
-> what this function is doing, accessing every subdevice in a pipeline
-> directly, in one convenient function call.
->
->
->>
->> - This implementation is only workable as long as you do not modify the
->>   pipeline. Once you disable a link along the pipeline, a device where
->> the
->>   control was inherited from may no longer be a part of the pipeline.
->
-> That's correct. It's up to the media driver to clear the video device's
-> inherited controls whenever the pipeline is modified, and then call this
-> function again if need be.
-
-And here is where I need to eat my words :). I'm not actually
-clearing the inherited controls if an upstream link from the
-device node link is modified after the whole pipeline has been
-configured. If the user does that the controls can become
-invalid. Need to fix that by clearing device node controls in
-the link_notify callback.
-
-Steve
-
-
->
-> In imx-media driver, the function is called in link_setup when the link
-> from a source pad that is attached to a capture video node is enabled.
-> This is the last link that must be made to define the pipeline, so it
-> is at this time that a complete list of subdevice controls can be
-> gathered by walking the pipeline.
->
+VGhlIElubm9sdXggUDA3OVpDQSBpcyBhIDcuODUiIHBhbmVsIHdpdGggYSA3NjhYMTAyNCByZXNv
+bHV0aW9uIGFuZApjb25uZWN0ZWQgdG8gRFNJIHVzaW5nIGZvdXIgbGFuZXMuCgpTaWduZWQtb2Zm
+LWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgotLS0KCiAuLi4vYmluZGluZ3Mv
+ZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0ICAgICB8IDIyICsrKysrKysrKysrKysr
+KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvaW5u
+b2x1eCxwMDc5emNhLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9kaXNwbGF5L3BhbmVsL2lubm9sdXgscDA3OXpjYS50eHQgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5vbHV4LHAwNzl6Y2EudHh0Cm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLmM0MGM4ZTQKLS0tIC9kZXYvbnVsbAor
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9pbm5v
+bHV4LHAwNzl6Y2EudHh0CkBAIC0wLDAgKzEsMjIgQEAKK0lubm9sdXggUDA3OVpDQSA3Ljg1IiA3
+Njh4MTAyNCBURlQgTENEIHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGli
+bGU6IHNob3VsZCBiZSAiaW5ub2x1eCxwMDc5emNhIgorLSBwb3dlci1zdXBwbHk6IHBoYW5kbGUg
+b2YgdGhlIHJlZ3VsYXRvciB0aGF0IHByb3ZpZGVzIHRoZSBzdXBwbHkgdm9sdGFnZQorLSBlbmFi
+bGUtZ3Bpb3M6IHBhbmVsIGVuYWJsZSBncGlvCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGJh
+Y2tsaWdodDogcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUg
+cGFuZWwKKworRXhhbXBsZToKKworCSZtaXBpX2RzaSB7CisJCXBhbmVsIHsKKwkJCWNvbXBhdGli
+bGUgPSAiaW5ub2x1eCxwMDc5emNhIjsKKwkJCXJlZyA9IDwwPjsKKwkJCXBvd2VyLXN1cHBseSA9
+IDwuLi4+OworCQkJYmFja2xpZ2h0ID0gPCZiYWNrbGlnaHQ+OworCQkJZW5hYmxlLWdwaW9zID0g
+PCZncGlvMSAxMyBHUElPX0FDVElWRV9ISUdIPjsKKwkJCXN0YXR1cyA9ICJva2F5IjsKKwkJfTsK
+Kwl9OwotLSAKMi42LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
