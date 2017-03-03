@@ -1,17 +1,11 @@
-From: Yong Mao <yong.mao@mediatek.com>
-Subject: Re: [PATCH v4 1/3] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Fri, 3 Mar 2017 11:49:55 +0800
-Message-ID: <1488512995.21451.16.camel@mhfsdcap03>
-References: <1484988923-1543-1-git-send-email-yong.mao@mediatek.com>
- <1484988923-1543-2-git-send-email-yong.mao@mediatek.com>
- <CAPDyKFqo7fMTp3YPJwgoa4u3iAie2U884VUfTnMQ_js8neMqTQ@mail.gmail.com>
- <1487930376.22858.14.camel@mhfsdcap03>
- <CAL_Jsq+eo-Fy8Wf2yZpE3Ufp4V_7Gn+w9fTyjZDP6V7tY-=gdw@mail.gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v3 0/5] coresight: enable debug module
+Date: Fri,  3 Mar 2017 14:00:04 +0800
+Message-ID: <1488520809-31670-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+eo-Fy8Wf2yZpE3Ufp4V_7Gn+w9fTyjZDP6V7tY-=gdw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,56 +15,83 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, srv_heupstream <srv_heupstream@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mike.leach@linaro.org
+Cc: Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-02-24 at 16:47 -0600, Rob Herring wrote:
-> On Fri, Feb 24, 2017 at 3:59 AM, Yong Mao <yong.mao@mediatek.com> wrote:
-> > Dear Rob,
-> >
-> > Could you please help to make comments for this patch?
-> > Thanks.
-> 
-> I already did comment. It's still wrong as Ulf commented. So fix and
-> send a new version. It has to go to the DT list if you want to be in
-> my queue.
-> 
-> Rob
+ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+Sample-based Profiling Extension" has description for sampling
+registers, we can utilize these registers to check program counter
+value with combined CPU exception level, secure state, etc. So this is
+helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+interrupt, so it cannot handle SMP call for stack dump, etc.
 
-After reviewing the history, We guess your mentioned Ulf's comments is as below.
-  
-"> +- mtk-hs200-cmd-int-delay: HS200 command internal delay setting.
-> + The value is an integer from 0 to 31
+This patch series is to enable coresight debug module with sample-based
+registers and register call back notifier for PCSR register dumping
+when panic happens, so we can see below dumping info for panic; and
+this patch series has considered the conditions for access permission
+for debug registers self, so this can avoid access debug registers when
+CPU power domain is off; the driver also try to figure out the CPU is
+in secure or non-secure state.
 
-Please change to:
+The last two patches in this series is to enable debug unit on 96boards
+Hikey, the first patch is to add apb clock for debug unit and the second
+patch is to add DT nodes for debug unit. As result we can below log
+after input command: echo c > /proc/sysrq-trigger:
 
-mediatek,hs200-cmd-delay
+ARM external debug module:
+CPU[0]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff00000808eb54>] handle_IPI+0xe4/0x150
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
+CPU[1]:
+ EDPRSR:  0000000b (Power:On DLK:Unlock)
+ EDPCSR:  [<ffff0000087a64c0>] debug_notifier_call+0x108/0x288
+ EDCIDSR: 00000000
+ EDVIDSR: 90000000 (State:Non-secure Mode:EL1/0 Width:64bits VMID:0)
 
-... and if there is a unit, like ns or us, please add that a suffix.
+[...]
 
-> +- mtk-hs400-cmd-int-delay: HS400 command internal delay setting
-> + The value is an integer from 0 to 31
+Changes from v2:
+* According to Mathieu Poirier suggestion, applied some minor fixes.
+* Added two extra patches for enabling debug module on Hikey.
 
-mediatek,hs400-cmd-delay and add unit if applicable.
+Changes from v1:
+* According to Mike Leach suggestion, removed the binding for debug
+  module clocks which have been directly provided by CPU clocks.
+* According to Mathieu Poirier suggestion, added function
+  of_coresight_get_cpu() and some minor refactors for debug module
+  driver.
 
-> +- mtk-hs400-cmd-resp-sel: HS400 command response sample selection
-> + The value is an integer from 0 to 1
+Changes from RFC:
+* According to Mike Leach suggestion, added check for EDPRSR to avoid
+  lockup; added supporting EDVIDSR and EDCIDSR registers.
+* According to Mark Rutland and Mathieu Poirier suggestion, rewrote
+  the documentation for DT binding.
+* According to Mark and Mathieu suggestion, refined debug driver.
 
-mediatek,hs400-cmd-resp-sel
 
-And make it a boolean value instead!"
+Leo Yan (5):
+  coresight: bindings for debug module
+  coresight: refactor with function of_coresight_get_cpu
+  coresight: add support for debug module
+  clk: hi6220: add debug APB clock
+  arm64: dts: hi6220: register debug module
 
-==> We already fix this comment in v4. 
-We use "mediatek,hs200-cmd-int-delay" to replace "mtk-hs200-cmd-int-delay", 
-but not use "mediatek,hs200-cmd-delay". This is because "-int-" here means internal.
-We should not drop it.
+ .../devicetree/bindings/arm/coresight-debug.txt    |  40 +++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++++
+ drivers/clk/hisilicon/clk-hi6220.c                 |   1 +
+ drivers/hwtracing/coresight/Kconfig                |  10 +
+ drivers/hwtracing/coresight/Makefile               |   1 +
+ drivers/hwtracing/coresight/coresight-debug.c      | 377 +++++++++++++++++++++
+ drivers/hwtracing/coresight/of_coresight.c         |  37 +-
+ include/dt-bindings/clock/hi6220-clock.h           |   5 +-
+ include/linux/coresight.h                          |   2 +
+ 9 files changed, 524 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
+ create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
 
-And this field does not have unit, it only have total 32 stages.
-We also change the description in v4.
-
-For comment about "mtk-hs400-cmd-resp-sel", we also make it a boolean value in v4.
-And re-name it as "mediatek,hs400-cmd-resp-rising".
-
-Please help to point out where we need to modify.
-Thanks.
+-- 
+2.7.4
