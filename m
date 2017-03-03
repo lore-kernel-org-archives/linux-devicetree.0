@@ -1,62 +1,51 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 2/3] watchdog: renesas-wdt: add support for rza
-Date: Fri,  3 Mar 2017 12:32:00 -0500
-Message-ID: <20170303173201.5597-3-chris.brandt@renesas.com>
-References: <20170303173201.5597-1-chris.brandt@renesas.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170303173201.5597-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: Add vendor prefix for Hwacom Systems Inc.
+Date: Fri, 03 Mar 2017 10:57:25 -0800
+Message-ID: <m2a8922noq.fsf@baylibre.com>
+References: <20170222163131.14136-1-carlo@caione.org>
+        <20170222163131.14136-2-carlo@caione.org>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170222163131.14136-2-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> (Carlo Caione's message
+        of "Wed, 22 Feb 2017 17:31:30 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe the WDT hardware in the RZ/A series.
+Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v3:
-* Add Acked-by, Reviewed-by.
-v2:
-* added to renesas-wdt.txt instead of creating a new file
-* changed commit title
-* added "renesas,rza-wdt" as a fallback
-* added interrupts property
----
- Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> Hwacom Systems Inc. is a broadband system integrator and supplier of
+> mobile, fixed and IP networks related services as well as
+> multimedia application. Website: http://www.hwacom.com/
+>
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-index da24e31..9e306af 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-@@ -2,10 +2,11 @@ Renesas Watchdog Timer (WDT) Controller
- 
- Required properties:
- - compatible : Should be "renesas,<soctype>-wdt", and
--	       "renesas,rcar-gen3-wdt" as fallback.
-+	       "renesas,rcar-gen3-wdt" or "renesas,rza-wdt" as fallback.
- 	       Examples with soctypes are:
- 	         - "renesas,r8a7795-wdt" (R-Car H3)
- 	         - "renesas,r8a7796-wdt" (R-Car M3-W)
-+	         - "renesas,r7s72100-wdt" (RZ/A1)
- 
-   When compatible with the generic version, nodes must list the SoC-specific
-   version corresponding to the platform first, followed by the generic
-@@ -17,6 +18,7 @@ Required properties:
- Optional properties:
- - timeout-sec : Contains the watchdog timeout in seconds
- - power-domains : the power domain the WDT belongs to
-+- interrupts: Some WDTs have an interrupt when used in interval timer mode
- 
- Examples:
- 
--- 
-2.10.1
+Applied to v4.12/dt64 after changing subject prefix to "dt-bindings:"
 
+Kevin
 
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 16d3b5e..a1704a6 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -131,6 +131,7 @@ holt	Holt Integrated Circuits, Inc.
+>  honeywell	Honeywell
+>  hp	Hewlett Packard
+>  holtek	Holtek Semiconductor, Inc.
+> +hwacom	HwaCom Systems Inc.
+>  i2se	I2SE GmbH
+>  ibm	International Business Machines (IBM)
+>  idt	Integrated Device Technologies, Inc.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
