@@ -1,113 +1,92 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 1/9] dt-bindings: mmc: Add Cavium SOCs MMC bindings
-Date: Fri, 3 Mar 2017 12:47:06 +0100
-Message-ID: <CAPDyKFrE546UMc3QBHw_C1a6Dz5mOQfURroiCBTOV3SbreR-EQ@mail.gmail.com>
-References: <20170206133953.8390-1-jglauber@cavium.com> <20170206133953.8390-2-jglauber@cavium.com>
+From: Alban <albeu@free.fr>
+Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
+ nvmem API
+Date: Fri, 3 Mar 2017 14:30:21 +0100
+Message-ID: <20170303143021.46381429@tock>
+References: <1488484223-844-1-git-send-email-albeu@free.fr>
+        <1488484223-844-3-git-send-email-albeu@free.fr>
+        <b2df74bb-dd86-bac1-ab8b-cbff6ca29b6f@linaro.org>
+        <20170303133419.2383dbce@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170206133953.8390-2-jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Cc: "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, "Steven J . Hill" <Steven.Hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/m9S=jHwykYWTowWyRBAGNZR"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170303133419.2383dbce@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Aban Bedel <albeu@free.fr>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Moritz Fischer <moritz.fischer@ettus.com>
 List-Id: devicetree@vger.kernel.org
 
-On 6 February 2017 at 14:39, Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
-> Add description of Cavium Octeon and ThunderX SOC device tree bindings.
->
-> CC: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->
-> Signed-off-by: Jan Glauber <jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Steven J. Hill <steven.hill-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/mmc/cavium-mmc.txt         | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/cavium-mmc.txt
->
-> diff --git a/Documentation/devicetree/bindings/mmc/cavium-mmc.txt b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
-> new file mode 100644
-> index 0000000..b79e356
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
-> @@ -0,0 +1,60 @@
-> +* Cavium Octeon & ThunderX MMC controller
-> +
-> +The highspeed MMC host controller on Caviums SoCs provides an interface
-> +for MMC and SD types of memory cards.
-> +
-> +Supported maximum speeds are the ones of the eMMC standard 4.41 as well
-> +as the speed of SD standard 4.0. Only 3.3 Volt is supported.
-> +
-> +Required properties:
-> + - compatible : should be one of:
-> +   cavium,octeon-6130-mmc
-> +   cavium,octeon-6130-mmc-slot
-> +   cavium,octeon-7890-mmc
-> +   cavium,octeon-7890-mmc-slot
-> +   cavium,thunder-8190-mmc
-> +   cavium,thunder-8190-mmc-slot
-> +   cavium,thunder-8390-mmc
-> +   cavium,thunder-8390-mmc-slot
-> + - reg : mmc controller base registers
-> + - clocks : phandle
-> +
-> +Optional properties:
-> + - for cd, bus-width and additional generic mmc parameters
-> +   please refer to mmc.txt within this directory
-> + - cavium,cmd-clk-skew : number of coprocessor clocks before sampling command
-> + - cavium,dat-clk-skew : number of coprocessor clocks before sampling data
-> +
-> +Deprecated properties:
-> +- spi-max-frequency : use max-frequency instead
-> +- cavium,bus-max-width : use bus-width instead
-> +
-> +Examples:
-> +       mmc_1_4: mmc@1,4 {
-> +               compatible = "cavium,thunder-8390-mmc";
-> +               reg = <0x0c00 0 0 0 0>; /* DEVFN = 0x0c (1:4) */
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               clocks = <&sclk>;
-> +
-> +               mmc-slot@0 {
-> +                       compatible = "cavium,thunder-8390-mmc-slot";
-> +                       reg = <0>;
-> +                       voltage-ranges = <3300 3300>;
-> +                       vmmc-supply = <&mmc_supply_3v3>;
+--Sig_/m9S=jHwykYWTowWyRBAGNZR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The vmmc supply as a regulator provides you with the voltage range,
-thus you don't need the "voltage-ranges" here. Please remove this.
+On Fri, 3 Mar 2017 13:34:19 +0100
+Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
 
-> +                       max-frequency = <42000000>;
-> +                       bus-width = <4>;
-> +                       cap-sd-highspeed;
-> +               };
-> +
-> +               mmc-slot@1 {
-> +                       compatible = "cavium,thunder-8390-mmc-slot";
-> +                       reg = <1>;
-> +                       voltage-ranges = <3300 3300>;
-> +                       vmmc-supply = <&mmc_supply_3v3>;
+> On Fri, 3 Mar 2017 11:23:16 +0000
+> Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+>=20
+>=20
+> >  =20
+> > > +	mutex_lock(&mtd_nvmem_list_lock);
+> > > +	list_for_each_entry(mtd_nvmem, &mtd_nvmem_list, list) {
+> > > +		if (mtd_nvmem->mtd =3D=3D mtd) {
+> > > +			list_del(&mtd_nvmem->list);
+> > > +			found =3D true;
+> > > +			break;
+> > > +		}
+> > > +	}
+> > > +	mutex_unlock(&mtd_nvmem_list_lock);
+> > > +
+> > > +	if (found) {
+> > > +		if (nvmem_unregister(mtd_nvmem->nvmem))
+> > > +			dev_err(&mtd->dev,
+> > > +				"Failed to unregister NVMEM device\n");   =20
+> >=20
+> > I will be nice to feedback error to top layer, as it does not make sens=
+e=20
+> > to remove providers if there are active consumers using it.
+> >=20
+> > del_mtd_device(), unregister_mtd_user() have return values, I see no=20
+> > reason why notifiers  should not return errors.
+> > May be if we should fix the remove() call backs to handle and return er=
+rors. =20
+>=20
+> It's more complicated than that. What should you do if one of the
+> ->remove() notifier in the middle of the list is returning an error? =20
+> Some of them have already taken the remove notification into account.
+> Should we call ->add() back on those notifiers? Also, I'm not sure they
+> are all safe against double ->remove() calls, so if we might be in
+> trouble when the removal is retried.
 
-Ditto.
+Re-adding make no sense as that could also fails. Keep it simple,
+remove the notifier from the list when remove() succeed, abort when one
+fails. In such a scenario that mean there is a dependency, the sys
+admin should then solve this dependency and re-trigger the MTD removal.
 
-> +                       max-frequency = <42000000>;
-> +                       bus-width = <8>;
-> +                       cap-mmc-highspeed;
-> +                       non-removable;
-> +               };
-> +       };
-> --
-> 2.9.0.rc0.21.g7777322
->
+Alban
 
-Kind regards
-Uffe
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Sig_/m9S=jHwykYWTowWyRBAGNZR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYuW/tAAoJEHSUmkuduC28FR4QAKkZDGpJu9pxKg990lTjTVzT
+N86Wi7OUzhIoBbAnE99Q7a92ZuT/nlgCqyuMvq8RdH+G1UqNiApsBJpr13YRMDKy
+c12GHdjgjOllwhIlG+Q+59yCTi2cIPEwXlBQQ3iIXZFsZb1FKO4jKOGIRQt+JJmj
+/J1KTP7ruHj/7yuZuTRuq7xDr2mZErDi8uY5bw46PRRwpQxrQdhpFeiDbSm60dg7
+mkzFLYD9IujoxrBfghlZH7ItNTXeFE2FPdkXIFPyz1Ts7Urq/cw3XSi2zMPM30qE
+HadaF2y8+9d7qGYHD0nvio2EgQvuiOF3DayFXA5oh6oMtHRUDe/eFSHg+m4ok0kM
+3XFLrZUxz+4QPN8br7TWUgP3xicmxpOnRZ3RZeoYwHdNeG67uZ+YFjaP5otevhj4
+fwTz1jE1y7s3RtATpLyEpZcEyi3rXkdfCNAOxHKLPY/b0A2nLPordhKPEfzfA/Dy
+j9PCZqwIJMQdCoMgixbHKf5gyw12b5Agn6IjJY9cICT2C9qcZut4BnQy9iFlyrvY
+9yyjqHmArF/yUJlhu0N2HxxOfPsJ21vvCPNd1i3sj1se81OYOCbvbXEVuDtop9LV
+xFiRa4pbcLlUEnQ+AwQhVNrthSbN63ZPpZTCCRXquWWSFTOWg2/QBxjzBWrIDLX2
+nM1owW0SqubBHs7Mqod8
+=00YK
+-----END PGP SIGNATURE-----
+
+--Sig_/m9S=jHwykYWTowWyRBAGNZR--
