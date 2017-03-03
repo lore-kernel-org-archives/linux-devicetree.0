@@ -1,207 +1,108 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/9] Docs: dt: document qcom iommu bindings
-Date: Fri, 3 Mar 2017 11:04:57 -0500
-Message-ID: <CAF6AEGu-La5jeUKMRYsPSw69UpBpSqW_+UepHXLpyQxqd0oNjA@mail.gmail.com>
-References: <20170301174258.14618-1-robdclark@gmail.com>
-	<20170301174258.14618-4-robdclark@gmail.com>
-	<20170303062143.x6m3mxfnavn4iwlo@rob-hp-laptop>
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v3] tpm: do not suspend/resume if power stays
+	on
+Date: Fri,  3 Mar 2017 17:09:59 +0100
+Message-ID: <20170303160959.27422-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170303062143.x6m3mxfnavn4iwlo@rob-hp-laptop>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 3, 2017 at 1:21 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Mar 01, 2017 at 12:42:52PM -0500, Rob Clark wrote:
->
-> Nit: use "dt-bindings: iommu: ..." for subject. And a commit message
-> would be nice.
->
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/iommu/qcom,iommu.txt       | 106 +++++++++++++++++++++
->>  1 file changed, 106 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
->> new file mode 100644
->> index 0000000..2e69b78
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
->> @@ -0,0 +1,106 @@
->> +* QCOM IOMMU v1 Implementation
->> +
->> +Qualcomm "B" family devices which are not compatible with arm-smmu have
->> +a similar looking IOMMU but without access to the global register space,
->> +and optionally requiring additional configuration to route context irqs
->> +to non-secure vs secure interrupt line.
->> +
->> +** Required properties:
->> +
->> +- compatible       : Should be "qcom,msm-iommu-v1".
->
-> Fine as a fallback, but this needs chip specific compatibles.
+From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-ok, so maybe:
+The suspend/resume behavior of the TPM can be controlled by setting
+"powered-while-suspended" in the DTS. This is useful for the cases
+when hardware does not power-off the TPM.
 
-   compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
+Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+Changes since v2:
+ Jarkko Sakkinen
+  - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
+  - Remove a trailing newline.
+Changes since v1:
+ Jason Gunthorpe :
+  - Move the code to handle suspend/resume in the common chip code.
 
->> +- clocks           : The interface clock (iface_clk) and bus clock (bus_clk).
->
-> The names need to be documented under clock-names prop.
->
-> '_clk' is redundant.
+ Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
+ drivers/char/tpm/tpm-interface.c                           | 3 +++
+ drivers/char/tpm/tpm.h                                     | 1 +
+ drivers/char/tpm/tpm_of.c                                  | 3 +++
+ 4 files changed, 13 insertions(+)
 
-ok
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+index 8cb638b..85c8216 100644
+--- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
++++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+@@ -8,6 +8,12 @@ Required properties:
+                    the firmware event log
+ - linux,sml-size : size of the memory allocated for the firmware event log
+ 
++Optional properties:
++
++- powered-while-suspended: present when the TPM is left powered on between
++                           suspend and resume (makes the suspend/resume
++                           callbacks do nothing).
++
+ Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
+ ----------------------------------------------------------
+ 
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index a2688ac..6869093 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -944,6 +944,9 @@ int tpm_pm_suspend(struct device *dev)
+ 	if (chip == NULL)
+ 		return -ENODEV;
+ 
++	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
++		return 0;
++
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+ 		tpm2_shutdown(chip, TPM2_SU_STATE);
+ 		return 0;
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index 1ae9768..0ce379c 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -146,6 +146,7 @@ enum tpm_chip_flags {
+ 	TPM_CHIP_FLAG_IRQ		= BIT(2),
+ 	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
+ 	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
++	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
+ };
+ 
+ struct tpm_chip_seqops {
+diff --git a/drivers/char/tpm/tpm_of.c b/drivers/char/tpm/tpm_of.c
+index 7dee42d7..e89276c 100644
+--- a/drivers/char/tpm/tpm_of.c
++++ b/drivers/char/tpm/tpm_of.c
+@@ -34,6 +34,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
+ 	else
+ 		return -ENODEV;
+ 
++	if (of_property_read_bool(np, "powered-while-suspended"))
++		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
++
+ 	sizep = of_get_property(np, "linux,sml-size", NULL);
+ 	basep = of_get_property(np, "linux,sml-base", NULL);
+ 	if (sizep == NULL && basep == NULL)
+-- 
+2.9.3
 
->> +- #address-cells   : must be 1.
->> +- #size-cells      : must be 1.
->> +- #iommu-cells     : Must be 1.
->> +- ranges           : Base address and size of the iommu context banks.
->> +- qcom,iommu-secure-id  : secure-id.
->> +
->> +- List of sub-nodes, one per translation context bank.  Each sub-node
->> +  has the following required properties:
->> +
->> +  - compatible     : Should be one of:
->> +        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
->> +        - "qcom,msm-iommu-v1-sec" : secure context bank
->
-> These are okay without chip specific strings.
->
->> +  - reg            : Base address and size of context bank within the iommu
->> +  - interrupts     : The context fault irq.
->> +
->> +** Optional properties:
->> +
->> +- reg              : Base address and size of the SMMU local base, should
->> +                     be only specified if the iommu requires configuration
->> +                     for routing of context bank irq's to secure vs non-
->> +                     secure lines.  (Ie. if the iommu contains secure
->> +                     context banks)
->> +
->> +
->> +** Examples:
->> +
->> +     apps_iommu: msm-iommu-v1@1e20000 {
->
-> iommu@...
->
-> And this should be the reg address, not the ranges address.
 
-ok.. but I'm not entirely sure what to do w/ gpu_iommu, which doesn't
-have a reg address.
-
-I guess I could have a required reg address (which is the unaccessible
-global register space), and make the "SMMU local base" thing a 2nd
-optional address.  Not sure if that is weird, since we can't actually
-do anything with the global register space.
-
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             #iommu-cells = <1>;
->> +             compatible = "qcom,msm-iommu-v1";
->> +             ranges = <0 0x1e20000 0x40000>;
->> +             reg = <0x1ef0000 0x3000>;
->> +             clocks = <&gcc GCC_SMMU_CFG_CLK>,
->> +                      <&gcc GCC_APSS_TCU_CLK>;
->> +             clock-names = "iface_clk", "bus_clk";
->> +             qcom,iommu-secure-id = <17>;
->> +
->> +             // mdp_0:
->> +             msm-iommu-v1-ctx@4000 {
->
-> iommu@...
-
-it's not weird to have:
-
-  iommu@1e20000 {
-    ...
-    iommu@4000 {
-       ...
-    };
-  };
-
-??
-
-BR,
--R
-
->> +                     compatible = "qcom,msm-iommu-v1-ns";
->> +                     reg = <0x4000 0x1000>;
->> +                     interrupts = <GIC_SPI 70 0>;
->> +             };
->> +
->> +             // venus_ns:
->> +             msm-iommu-v1-ctx@5000 {
->> +                     compatible = "qcom,msm-iommu-v1-sec";
->> +                     reg = <0x5000 0x1000>;
->> +                     interrupts = <GIC_SPI 70 0>;
->> +             };
->> +     };
->> +
->> +     gpu_iommu: msm-iommu-v1@1f08000 {
->
-> ditto.
->
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             #iommu-cells = <1>;
->> +             compatible = "qcom,msm-iommu-v1";
->> +             ranges = <0 0x1f08000 0x10000>;
->> +             clocks = <&gcc GCC_SMMU_CFG_CLK>,
->> +                      <&gcc GCC_GFX_TCU_CLK>;
->> +             clock-names = "iface_clk", "bus_clk";
->> +             qcom,iommu-secure-id = <18>;
->> +
->> +             // gfx3d_user:
->> +             msm-iommu-v1-ctx@1f09000 {
->> +                     compatible = "qcom,msm-iommu-v1-ns";
->> +                     reg = <0x1000 0x1000>;
->> +                     interrupts = <GIC_SPI 241 0>;
->> +             };
->> +
->> +             // gfx3d_priv:
->> +             msm-iommu-v1-ctx@1f0a000 {
->> +                     compatible = "qcom,msm-iommu-v1-ns";
->> +                     reg = <0x2000 0x1000>;
->> +                     interrupts = <GIC_SPI 242 0>;
->> +             };
->> +     };
->> +
->> +     ...
->> +
->> +     venus: video-codec@1d00000 {
->> +             ...
->> +             iommus = <&apps_iommu 5>;
->> +     };
->> +
->> +     mdp: mdp@1a01000 {
->> +             ...
->> +             iommus = <&apps_iommu 4>;
->> +     };
->> +
->> +     gpu@01c00000 {
->> +             ...
->> +             iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
->> +     };
->> --
->> 2.9.3
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, SlashDot.org! http://sdm.link/slashdot
