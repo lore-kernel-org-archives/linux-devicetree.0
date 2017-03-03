@@ -1,178 +1,75 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] Docs: dt: document qcom iommu bindings
-Date: Fri, 3 Mar 2017 00:21:43 -0600
-Message-ID: <20170303062143.x6m3mxfnavn4iwlo@rob-hp-laptop>
-References: <20170301174258.14618-1-robdclark@gmail.com>
-	<20170301174258.14618-4-robdclark@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 03/25] dt-bindings: timer: Document Owl timer
+Date: Fri, 3 Mar 2017 00:20:58 -0600
+Message-ID: <20170303062058.yvekr5kawqtzxgpn@rob-hp-laptop>
+References: <20170228063535.32069-1-afaerber@suse.de>
+ <20170228063535.32069-4-afaerber@suse.de>
+ <20170228123908.GG3691@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170301174258.14618-4-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+In-Reply-To: <20170228123908.GG3691@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 01, 2017 at 12:42:52PM -0500, Rob Clark wrote:
+On Tue, Feb 28, 2017 at 12:39:08PM +0000, Mark Rutland wrote:
+> On Tue, Feb 28, 2017 at 07:35:13AM +0100, Andreas F=E4rber wrote:
+> > The Actions Semi S500 SoC contains a timer block with two 2 Hz and two
+> > 32-bit timers. The S900 SoC timer block has four 32-bit timers.
+> > =
 
-Nit: use "dt-bindings: iommu: ..." for subject. And a commit message 
-would be nice.
+> > Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
+> > ---
+> >  v2 -> v3:
+> >  * Adopted interrupt-names
+> >  * Changed compatible for S500
+> >  * Added S900 compatible and interrupt names
+> >  =
 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iommu/qcom,iommu.txt       | 106 +++++++++++++++++++++
->  1 file changed, 106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-> new file mode 100644
-> index 0000000..2e69b78
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-> @@ -0,0 +1,106 @@
-> +* QCOM IOMMU v1 Implementation
-> +
-> +Qualcomm "B" family devices which are not compatible with arm-smmu have
-> +a similar looking IOMMU but without access to the global register space,
-> +and optionally requiring additional configuration to route context irqs
-> +to non-secure vs secure interrupt line.
-> +
-> +** Required properties:
-> +
-> +- compatible       : Should be "qcom,msm-iommu-v1".
+> >  v2: new
+> >  =
 
-Fine as a fallback, but this needs chip specific compatibles.
+> >  .../devicetree/bindings/timer/actions,owl-timer.txt  | 20 ++++++++++++=
+++++++++
+> >  1 file changed, 20 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/timer/actions,owl=
+-timer.txt
+> > =
 
-> +- clocks           : The interface clock (iface_clk) and bus clock (bus_clk).
+> > diff --git a/Documentation/devicetree/bindings/timer/actions,owl-timer.=
+txt b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+> > new file mode 100644
+> > index 0000000..5b4834d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+> > @@ -0,0 +1,20 @@
+> > +Actions Semi Owl Timer
+> > +
+> > +Required properties:
+> > +- compatible      :  "actions,s500-timer" for S500
+> > +                     "actions,s900-timer" for S900
+> > +- reg             :  Offset and length of the register set for the dev=
+ice.
+> > +- interrupts      :  Should contain the interrupts.
+> > +- interrupt-names :  Valid names are: "2Hz0", "2Hz1",
+> > +                                      "Timer0", "Timer1", "Timer2", "T=
+imer3"
+> =
 
-The names need to be documented under clock-names prop.
+> Sticking to lower case for the names would be preferable.
 
-'_clk' is redundant.
+With that,
 
-> +- #address-cells   : must be 1.
-> +- #size-cells      : must be 1.
-> +- #iommu-cells     : Must be 1.
-> +- ranges           : Base address and size of the iommu context banks.
-> +- qcom,iommu-secure-id  : secure-id.
-> +
-> +- List of sub-nodes, one per translation context bank.  Each sub-node
-> +  has the following required properties:
-> +
-> +  - compatible     : Should be one of:
-> +        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-> +        - "qcom,msm-iommu-v1-sec" : secure context bank
-
-These are okay without chip specific strings.
-
-> +  - reg            : Base address and size of context bank within the iommu
-> +  - interrupts     : The context fault irq.
-> +
-> +** Optional properties:
-> +
-> +- reg              : Base address and size of the SMMU local base, should
-> +                     be only specified if the iommu requires configuration
-> +                     for routing of context bank irq's to secure vs non-
-> +                     secure lines.  (Ie. if the iommu contains secure
-> +                     context banks)
-> +
-> +
-> +** Examples:
-> +
-> +	apps_iommu: msm-iommu-v1@1e20000 {
-
-iommu@...
-
-And this should be the reg address, not the ranges address.
-
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		#iommu-cells = <1>;
-> +		compatible = "qcom,msm-iommu-v1";
-> +		ranges = <0 0x1e20000 0x40000>;
-> +		reg = <0x1ef0000 0x3000>;
-> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-> +			 <&gcc GCC_APSS_TCU_CLK>;
-> +		clock-names = "iface_clk", "bus_clk";
-> +		qcom,iommu-secure-id = <17>;
-> +
-> +		// mdp_0:
-> +		msm-iommu-v1-ctx@4000 {
-
-iommu@...
-
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x4000 0x1000>;
-> +			interrupts = <GIC_SPI 70 0>;
-> +		};
-> +
-> +		// venus_ns:
-> +		msm-iommu-v1-ctx@5000 {
-> +			compatible = "qcom,msm-iommu-v1-sec";
-> +			reg = <0x5000 0x1000>;
-> +			interrupts = <GIC_SPI 70 0>;
-> +		};
-> +	};
-> +
-> +	gpu_iommu: msm-iommu-v1@1f08000 {
-
-ditto.
-
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		#iommu-cells = <1>;
-> +		compatible = "qcom,msm-iommu-v1";
-> +		ranges = <0 0x1f08000 0x10000>;
-> +		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-> +			 <&gcc GCC_GFX_TCU_CLK>;
-> +		clock-names = "iface_clk", "bus_clk";
-> +		qcom,iommu-secure-id = <18>;
-> +
-> +		// gfx3d_user:
-> +		msm-iommu-v1-ctx@1f09000 {
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x1000 0x1000>;
-> +			interrupts = <GIC_SPI 241 0>;
-> +		};
-> +
-> +		// gfx3d_priv:
-> +		msm-iommu-v1-ctx@1f0a000 {
-> +			compatible = "qcom,msm-iommu-v1-ns";
-> +			reg = <0x2000 0x1000>;
-> +			interrupts = <GIC_SPI 242 0>;
-> +		};
-> +	};
-> +
-> +	...
-> +
-> +	venus: video-codec@1d00000 {
-> +		...
-> +		iommus = <&apps_iommu 5>;
-> +	};
-> +
-> +	mdp: mdp@1a01000 {
-> +		...
-> +		iommus = <&apps_iommu 4>;
-> +	};
-> +
-> +	gpu@01c00000 {
-> +		...
-> +		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-> +	};
-> -- 
-> 2.9.3
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
