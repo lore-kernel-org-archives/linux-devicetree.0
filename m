@@ -1,40 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 02/11] dt-bindings: hisi: Add Hisilicon HiP05/06/07
- Djtag dts bindings
-Date: Fri, 3 Mar 2017 00:50:48 -0600
-Message-ID: <20170303065048.zhyujv4bsuvmlrcq@rob-hp-laptop>
-References: <1488451716-88735-1-git-send-email-anurup.m@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Use generic property for
+ hardware enable pins
+Date: Fri, 3 Mar 2017 00:21:19 -0600
+Message-ID: <20170303062119.kdogozkkhsvwewwa@rob-hp-laptop>
+References: <20170228075041.7568-1-milo.kim@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1488451716-88735-1-git-send-email-anurup.m@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anurup M <anurupvasu@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, wangkefeng.wang@huawei.com, gabriele.paoloni@huawei.com, huangdaode@hisilicon.com, tanxiaojun@huawei.com, john.garry@huawei.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, linuxarm@huawei.com, zhangshaokun@hisilicon.com, sanil.kumar@hisilicon.com, anurup.m@huawei.com, dikshit.n@huawei.com, shyju.pv@huawei.com, linux-arm-kernel@lists.infradead.org, shiju.jose@huawei.com
+In-Reply-To: <20170228075041.7568-1-milo.kim-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 02, 2017 at 05:48:36AM -0500, Anurup M wrote:
-> From: Tan Xiaojun <tanxiaojun@huawei.com>
+On Tue, Feb 28, 2017 at 04:50:40PM +0900, Milo Kim wrote:
+> With index usages, device specific properties can be replaced with generic
+> one. Vpos is index 0 and Vneg is index 1.
+> DT examples are added as well.
 > 
-> Add Hisilicon HiP05/06/07 Djtag dts bindings for CPU and IO Die
-> 
-> Signed-off-by: Tan Xiaojun <tanxiaojun@huawei.com>
-> Signed-off-by: Anurup M <anurup.m@huawei.com>
+> Signed-off-by: Milo Kim <milo.kim-l0cyMroinI0@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/hisilicon/djtag.txt    | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/djtag.txt
+>  .../bindings/regulator/lm363x-regulator.txt        | 78 +++++++++++++++++++++-
+>  1 file changed, 76 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+> index 8f14df9d1205..cc5a6151d85f 100644
+> --- a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
+> @@ -8,8 +8,8 @@ Required property:
+>  
+>  Optional properties:
+>    LM3632 has external enable pins for two LDOs.
+> -  - ti,lcm-en1-gpio: A GPIO specifier for Vpos control pin.
+> -  - ti,lcm-en2-gpio: A GPIO specifier for Vneg control pin.
+> +  - enable-gpios: Two GPIO specifiers for Vpos and Vneg control pins.
+> +                  The first entry is Vpos, the second is Vneg enable pin.
 
-Please add acks when posting new versions.
+You're breaking compatibility with existing DTBs. You need to explain 
+that and why it is okay in the commit message. In this case, I don't 
+think it is okay as this chip could be used across vendors' platforms.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
