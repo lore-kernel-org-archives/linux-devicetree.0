@@ -1,110 +1,109 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
  nvmem API
-Date: Fri, 3 Mar 2017 15:03:31 +0100
-Message-ID: <20170303150331.702e0e41@bbrezillon>
+Date: Fri, 3 Mar 2017 15:11:07 +0100
+Message-ID: <20170303151107.36754d19@bbrezillon>
 References: <1488484223-844-1-git-send-email-albeu@free.fr>
- <1488484223-844-3-git-send-email-albeu@free.fr>
- <b2df74bb-dd86-bac1-ab8b-cbff6ca29b6f@linaro.org>
- <20170303133419.2383dbce@bbrezillon> <20170303143021.46381429@tock>
+        <1488484223-844-3-git-send-email-albeu@free.fr>
+        <20170302221803.223ff23b@bbrezillon>
+        <20170303133629.3aac2945@tock>
+        <20170303143658.5d89a329@bbrezillon>
+        <20170303145726.16cd67fd@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170303143021.46381429@tock>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Alban <albeu@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170303145726.16cd67fd@tock>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 3 Mar 2017 14:30:21 +0100
-Alban <albeu@free.fr> wrote:
+On Fri, 3 Mar 2017 14:57:26 +0100
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
 
-> On Fri, 3 Mar 2017 13:34:19 +0100
-> Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> On Fri, 3 Mar 2017 14:36:58 +0100
+> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 > 
-> > On Fri, 3 Mar 2017 11:23:16 +0000
-> > Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
-> > 
+> > On Fri, 3 Mar 2017 13:36:29 +0100
+> > Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
 > >   
+> > > On Thu, 2 Mar 2017 22:18:03 +0100
+> > > Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 > > >     
-> > > > +	mutex_lock(&mtd_nvmem_list_lock);
-> > > > +	list_for_each_entry(mtd_nvmem, &mtd_nvmem_list, list) {
-> > > > +		if (mtd_nvmem->mtd == mtd) {
-> > > > +			list_del(&mtd_nvmem->list);
-> > > > +			found = true;
-> > > > +			break;
-> > > > +		}
-> > > > +	}
-> > > > +	mutex_unlock(&mtd_nvmem_list_lock);
-> > > > +
-> > > > +	if (found) {
-> > > > +		if (nvmem_unregister(mtd_nvmem->nvmem))
-> > > > +			dev_err(&mtd->dev,
-> > > > +				"Failed to unregister NVMEM device\n");      
+> > > > On Thu,  2 Mar 2017 20:50:22 +0100
+> > > > Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+> > > > 
+> > > > [snip]
+> > > >      
+> > [snip]
+> >     
+> > > > Maybe we should let notifiers return an error if they want to cancel
+> > > > the removal, or maybe this is a good reason to put the nvmem pointer
+> > > > directly in mtd_info and call mtd_nvmem_add/remove() directly from
+> > > > add/del_mtd_device() and allow them to return an error.
+> > > > 
+> > > > Not that, if you go for this solution, you'll also get rid of the
+> > > > global mtd_nvmem_list list and the associated lock.      
 > > > 
-> > > I will be nice to feedback error to top layer, as it does not make sense 
-> > > to remove providers if there are active consumers using it.
-> > > 
-> > > del_mtd_device(), unregister_mtd_user() have return values, I see no 
-> > > reason why notifiers  should not return errors.
-> > > May be if we should fix the remove() call backs to handle and return errors.    
+> > > IMHO the MTD users framework has to be re-worked to be useful. First
+> > > both the add and remove callbacks should have return values. Users where
+> > > the add failed shouldn't be removed later and users where the remove
+> > > fails should block the removal of the MTD.    
 > > 
-> > It's more complicated than that. What should you do if one of the  
-> > ->remove() notifier in the middle of the list is returning an error?    
-> > Some of them have already taken the remove notification into account.
-> > Should we call ->add() back on those notifiers? Also, I'm not sure they
-> > are all safe against double ->remove() calls, so if we might be in
-> > trouble when the removal is retried.  
+> > As said in my previous reply, it's not just about returning an error. I
+> > had a closer look at the code, and it seems that using
+> > __get_mtd_device() properly should prevent the problem we are talking
+> > about (call __get_mtd_device() after your nvmem_register() and call
+> > __put_mtd_device() only if nvmem_unregister() succeed).  
 > 
-> Re-adding make no sense as that could also fails.
+> That's not going to work. If the notifier add increase the MTD reference
+> count it can never be removed again.
 
-I agree.
+That's not true, see the del_mtd_device() function [1], it's calling
+the ->remove() notifiers before even testing ->usecount, so, if you
+call __put_mtd_device() in your ->remove() hook you should be fine.
 
-> Keep it simple,
-> remove the notifier from the list when remove() succeed, abort when one
-> fails. In such a scenario that mean there is a dependency, the sys
-> admin should then solve this dependency and re-trigger the MTD removal.
+> What could work would be to
+> propagate the nvmem device ref counting down to the MTD device, but that
+> sound complex and would require some non-trivial locking to still allow
+> for an "always succeed" removal.
+> 
+> > > 
+> > > Furthermore only passing the MTD device to the add/remove callback
+> > > force the users to keep their own list, which is annoying to say the
+> > > least. A simple fix would be to have the add callback return a pointer
+> > > that would be passed back to the remove callback. Trivial to implement
+> > > and the MTD user wouldn't have to keep any list. I will look into this
+> > > in the next days.    
+> > 
+> > That's a different problem, and I'm not sure I like the idea of
+> > changing the ->add() prototype into
+> > 
+> > 	void *(*add)(struct mtd_info *);
+> > 
+> > If we want to do that, I'd rather see an API extension allowing one to
+> > attach/detach/query/update user data to an MTD device.  
+> 
+> Under which condition would these be triggered? That sound more than is
+> needed. I would just use the above add along with:
+> 
+>  int (*remove)(struct mtd_info *, void *);
+> 
+> And add a list of successfully added notifiers, along with their
+> data pointer, to the MTD device. That's simple and would also remove
+> the need for notifier to have a private list of their instances as I
+> had to do here.
 
-Except notifiers are by definition not attached to a specific MTD
-device. I get your point, but I think we should clarify the different
-concepts.
+And then you're abusing the notifier concept. As said earlier, a
+notifier is not necessarily using the device, and thus, don't
+necessarily need private data.
+It's not only about what is the simplest solution for your use case,
+but also what other users want/need.
 
-An mtd_notifier (which seems to also be called a user in a few places)
-is something that should be called each time you have an MTD
-creation/removal event (or when you add a notifier to the list). You
-could have notifiers that don't do anything special with the MTD
-device, hence they don't require private data.
 
-I think we should add the mtd_user concept, which would be a specific
-user of an MTD device that can contain private data and is likely to be
-attached to the MTD device after the notifier's ->add() method is
-called.
-
-struct mtd_user_ops {
-	int (*remove)(struct mtd_user *);
-};
-
-struct mtd_user {
-	struct list_node node;
-	const struct mtd_user_ops *ops;
-}
-
-int mtd_attach_user(struct mtd_info *mtd, struct mtd_user *user);
-int mtd_detach_user(struct mtd_info *mtd, struct mtd_user *user);
-
-and then inside the del_mtd_device() function, before you iterate over
-all notifiers, you could iterate over all attached users and call their
-->remove() method. If one fails, then you stop the removal procedure.
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+[1]http://lxr.free-electrons.com/source/drivers/mtd/mtdcore.c#L592
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
