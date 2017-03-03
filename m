@@ -1,52 +1,43 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v5 3/3] ARM: dts: r7s72100: Add watchdog timer
-Date: Fri,  3 Mar 2017 12:32:01 -0500
-Message-ID: <20170303173201.5597-4-chris.brandt@renesas.com>
-References: <20170303173201.5597-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170303173201.5597-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v9 00/10] mux controller abstraction and iio/i2c muxes
+Date: Fri, 03 Mar 2017 17:20:36 +0000
+Message-ID: <C3B088E3-75B2-4F7C-850D-99B788BA1FBC@jic23.retrosnub.co.uk>
+References: <1486568517-6997-1-git-send-email-peda@axentia.se> <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se> <20170228171842.GA11127@kroah.com> <569c18b3-b1d8-f2e6-7fc4-897aa7df6775@axentia.se> <20170303165247.el4mcsmo4fbnkjir@ninjato>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170303165247.el4mcsmo4fbnkjir@ninjato>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add watchdog timer support for RZ/A1.
-For the RZ/A1, the only way to do a reset is to overflow the WDT, so this
-is useful even if you don't need the watchdog functionality.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v4:
-* changed from timer@ to watchdog@
-v3:
-* added Reviewed-by
-v2:
-* changed "renesas,r7s72100-reset" to "renesas,r7s72100-wdt"
-* changed "renesas,wdt-reset" to "renesas,rza-wdt"
-* added interupt property (even though it is not used)
-* added clocks property
----
- arch/arm/boot/dts/r7s72100.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index ed62e19..22f96b7 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -382,6 +382,13 @@
- 		cache-level = <2>;
- 	};
- 
-+	wdt: watchdog@fcfe0000 {
-+		compatible = "renesas,r7s72100-wdt", "renesas,rza-wdt";
-+		reg = <0xfcfe0000 0x6>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&p0_clk>;
-+	};
-+
- 	i2c0: i2c@fcfee000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+On 3 March 2017 16:52:47 GMT+00:00, Wolfram Sang <wsa@the-dreams.de> wrote:
+>
+>> Jonathan, Wolfram, do you have any preferences on how this should be
+>> coordinated regarding the new iio and i2c drivers (and iio changes)?
+>
+>You got the acks, all is fine, I think.
+>
+>> My plan is to at some point declare the branch immutable. Then both
+>of
+>> you can pull it in. Or? 
+>
+>Yup, sounds good.
+>
+>> But now that I think about it I wonder what the point is of having
+>> Greg pull it in also? Sure, third time's a charm and all that, but...
+>
+>AFAIU, Greg will be your "upstream", so he should definately pull the
+>branch. I will just pull it in to avoid merge conflicts in my tree.
+>Or did I misunderstand your question?
+Agreed, will do the same if needed. Btw Greg is a very nice upstream to have!
+
+Jonathan
+
 -- 
-2.10.1
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
