@@ -1,39 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] video: fbdev: imxfb: support AUS mode
-Date: Fri, 3 Mar 2017 00:21:30 -0600
-Message-ID: <20170303062130.eu5i6kcusxuodoea@rob-hp-laptop>
-References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
- <1488312337-32154-1-git-send-email-martin@kaiser.cx>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] dt-bindings: spi: document bcm63xx HS SPI
+ devicetree bindings
+Date: Fri, 3 Mar 2017 00:21:37 -0600
+Message-ID: <20170303062137.e4if6he2qq6b64au@rob-hp-laptop>
+References: <20170301090814.7097-1-jonas.gorski@gmail.com>
+ <20170301090814.7097-2-jonas.gorski@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1488312337-32154-1-git-send-email-martin@kaiser.cx>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: linux-fbdev@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170301090814.7097-2-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 09:04:16PM +0100, Martin Kaiser wrote:
-> Some displays require setting AUS mode in the LDCD AUS Mode Control
-> Register to work with the imxfb driver. Like the value of the Panel
-> Configuration Register, the AUS Mode Control Register's value depends on
-> the display mode.
+On Wed, Mar 01, 2017 at 10:08:13AM +0100, Jonas Gorski wrote:
+> Add documentation for the bindings of the high speed SPI controller found
+> on newer bcm63xx SoCs.
 > 
-> Allow setting this register from the device tree. Make the device tree
-> node optional to keep the DT ABI stable. This register is available only
-> on imx21 and compatible chipsets. Update the device tree bindings with
-> this info.
-> 
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> v2:
->   re-sending DT bindings and code changes as one patch
-
-The opposite is what is prefered.
-
+> Changes v1 -> v2
+> * made the pll clock required
+> * added "High speed" (HS) to the first line
 > 
->  .../devicetree/bindings/display/imx/fsl,imx-fb.txt    |  2 ++
->  drivers/video/fbdev/imxfb.c                           | 19 +++++++++++++++++++
->  include/linux/platform_data/video-imxfb.h             |  1 +
->  3 files changed, 22 insertions(+)
+>  .../devicetree/bindings/spi/spi-bcm63xx-hsspi.txt  | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-bcm63xx-hsspi.txt
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
