@@ -1,55 +1,65 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] iio: accel: adxl345: Add SPI support
-Date: Fri, 3 Mar 2017 18:55:26 +0200
-Message-ID: <CAHp75VcgLTgi51a_A3Jg+uDLeT1S9m8KnotdeZgsD9HHRQkR3Q@mail.gmail.com>
-References: <cover.1488248485.git.eraretuya@gmail.com> <698e2cf848231eacde91dd72aa6f73059c9a7752.1488248485.git.eraretuya@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v9 00/10] mux controller abstraction and iio/i2c muxes
+Date: Fri, 3 Mar 2017 17:52:47 +0100
+Message-ID: <20170303165247.el4mcsmo4fbnkjir@ninjato>
+References: <1486568517-6997-1-git-send-email-peda@axentia.se>
+ <6d87465f-b983-3f62-c7cf-41ed4e50170d@axentia.se>
+ <20170228171842.GA11127@kroah.com>
+ <569c18b3-b1d8-f2e6-7fc4-897aa7df6775@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <698e2cf848231eacde91dd72aa6f73059c9a7752.1488248485.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vvu4op7gukyogeiw"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <569c18b3-b1d8-f2e6-7fc4-897aa7df6775@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Add SPI driver that initializes SPI regmap for the adxl345 core driver.
-> The driver supports the same functionality as I2C namely the x, y, z and
-> scale readings.
 
-Portion of minor comments.
+--vvu4op7gukyogeiw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +config ADXL345_SPI
-> +       tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer SPI Driver"
 
-> +       depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
+> Jonathan, Wolfram, do you have any preferences on how this should be
+> coordinated regarding the new iio and i2c drivers (and iio changes)?
 
-Same question. Would it be just
+You got the acks, all is fine, I think.
 
-depends on INPUT_ADXL34X=n
+> My plan is to at some point declare the branch immutable. Then both of
+> you can pull it in. Or?=20
 
-?
+Yup, sounds good.
 
-> +        /* Setting bits 7 and 6 enables multiple-byte read */
-> +       .read_flag_mask = BIT(7) | BIT(6),
+> But now that I think about it I wonder what the point is of having
+> Greg pull it in also? Sure, third time's a charm and all that, but...
 
-GENMASK(7, 6) ?
+AFAIU, Greg will be your "upstream", so he should definately pull the
+branch. I will just pull it in to avoid merge conflicts in my tree.
+Or did I misunderstand your question?
 
-> +static int adxl345_spi_probe(struct spi_device *spi)
-> +{
 
-> +       struct regmap *regmap;
-> +       const struct spi_device_id *id = spi_get_device_id(spi);
+--vvu4op7gukyogeiw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Reverse order.
+-----BEGIN PGP SIGNATURE-----
 
-And usually we do assignments from function parameters first.
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAli5n1AACgkQFA3kzBSg
+KbY6Aw/9EwKWYKXpfLhfHTMt0GlzEO7d/msK1aPqQ7+r23Lm4UoVaDTjlf+f5TnU
+zOCwwSb21oRcaRwlhJNNjcC9C5r4kRnv+wGTF34quGj0bmxgQbZrhynVNVulLclX
+8S+WOqugjF9pi8B3UkURl5LX30zv0tfJUg7Ebv7Yhk1dXeVM9tCxjqD6Rkjy8NH3
+WL1zS9aaDgiNAJz2tMOPdQnPilK216UPFdo+9UaUOFAVu0O2SiEciErTVaTQngL+
+uag9m1Yx6V0kh9k8HpfjRUMuVIu/EFboTR+abpGRWvKc9C/Tqt5x5tVMlpRRVVr3
+v3ZBBMiyheH9JAF9hkbTGhKm3VZ53gLM3mwRYMg7fecDP/QKceo4ITqqlElWHDVo
+9dreH4ZFhROY7G+B11zdu/Ba/8sQud9x/jRrj0IxYHrF38jA/fWLsDuCvBPSFC5s
+ZI5Sb54kF6Y9XrUICDX7neWUHWBU/5O+HKQA9tlq4eP1O8T1EFjJjkIqJrNRLBDR
+lfihsKOErAV4R+UkeDa/qmGLWQeC00zehbdNBB1NDC94bydHcsG6fcY8l4ZzVPYh
+TyvnQYjkVEUgVWBzxxWRAAru7h0MeHPX3n5UxddusKJqSuL6FOSyfzcfNzaSMN4h
+VHEbhUIlK36gJAD20/R5l7/nPUxboBaLMgOduD9MhJc+TSiclcE=
+=qJWE
+-----END PGP SIGNATURE-----
 
-> +               dev_err(&spi->dev, "Error initializing spi regmap: %d\n",
-> +                       (int)PTR_ERR(regmap));
-
-Ugly casting!
-
--- 
-With Best Regards,
-Andy Shevchenko
+--vvu4op7gukyogeiw--
