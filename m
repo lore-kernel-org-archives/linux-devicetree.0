@@ -1,15 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 19/25] dt-bindings: arm: cpus: Add S500 enable-method
-Date: Fri, 3 Mar 2017 00:21:09 -0600
-Message-ID: <20170303062109.k3hjpsyoxzuivt35@rob-hp-laptop>
+Subject: Re: [PATCH v3 22/25] dt-bindings: power: Add Owl SPS power domains
+Date: Fri, 3 Mar 2017 00:21:17 -0600
+Message-ID: <20170303062117.yt3nnkzg75nfkq7e@rob-hp-laptop>
 References: <20170228063535.32069-1-afaerber@suse.de>
- <20170228063535.32069-20-afaerber@suse.de>
+ <20170228063535.32069-23-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170228063535.32069-20-afaerber@suse.de>
+In-Reply-To: <20170228063535.32069-23-afaerber@suse.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,8 +23,8 @@ To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
 Cc: Mark Rutland <mark.rutland@arm.com>, support@lemaker.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arm@kernel.org, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 07:35:29AM +0100, Andreas F=E4rber wrote:
-> The Actions Semi S500 SoC requires a special secondary CPU boot procedure.
+On Tue, Feb 28, 2017 at 07:35:32AM +0100, Andreas F=E4rber wrote:
+> Define power domains for all non-reserved S500 power gates.
 > =
 
 > Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
@@ -32,7 +32,13 @@ On Tue, Feb 28, 2017 at 07:35:29AM +0100, Andreas F=E4rber wrote:
 >  v3: new
 >  =
 
->  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/power/actions,owl-sps.txt     | 17 +++++++++++++=
+++++
+>  include/dt-bindings/power/s500-powergate.h            | 19 +++++++++++++=
+++++++
+>  2 files changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/actions,owl-s=
+ps.txt
+>  create mode 100644 include/dt-bindings/power/s500-powergate.h
 
 Acked-by: Rob Herring <robh@kernel.org>
