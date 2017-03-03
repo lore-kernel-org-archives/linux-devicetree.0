@@ -1,131 +1,84 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
- nvmem API
-Date: Fri, 3 Mar 2017 14:36:58 +0100
-Message-ID: <20170303143658.5d89a329@bbrezillon>
-References: <1488484223-844-1-git-send-email-albeu@free.fr>
- <1488484223-844-3-git-send-email-albeu@free.fr>
- <20170302221803.223ff23b@bbrezillon> <20170303133629.3aac2945@tock>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v5 0/4] leds: add leds-mt6323 support on MT7623 SoC
+Date: Fri, 3 Mar 2017 21:56:21 +0800
+Message-ID: <1488549385-19899-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170303133629.3aac2945@tock>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Alban <albeu@free.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rpurdie@rpsys.net, jacek.anaszewski@gmail.com, lee.jones@linaro.org, matthias.bgg@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 3 Mar 2017 13:36:29 +0100
-Alban <albeu@free.fr> wrote:
+From: Sean Wang <sean.wang@mediatek.com>
 
-> On Thu, 2 Mar 2017 22:18:03 +0100
-> Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
-> 
-> > On Thu,  2 Mar 2017 20:50:22 +0100
-> > Alban <albeu@free.fr> wrote:
-> > 
-> > [snip]
-> >  
-> > > +static void mtd_nvmem_add(struct mtd_info *mtd)
-> > > +{
-> > > +	struct device *dev = &mtd->dev;
-> > > +	struct device_node *np = dev_of_node(dev);
-> > > +	struct nvmem_config config = {};
-> > > +	struct mtd_nvmem *mtd_nvmem;
-> > > +
-> > > +	/* OF devices have to provide the nvmem node */
-> > > +	if (np && !of_property_read_bool(np, "nvmem-provider"))
-> > > +		return;    
-> > 
-> > Might have to be adapted according to the DT binding if we decide to
-> > add an extra subnode, but then, I'm not sure the nvmem cells creation
-> > will work correctly, because the framework expect nvmem cells to be
-> > direct children of the nvmem device, which will no longer be the case
-> > if you add an intermediate node between the MTD device node and the
-> > nvmem cell nodes.  
-> 
-> Yes to support such a binding we would have to fix of_nvmem_cell_get(),
-> but that should be quiet simple to have it support both the new and old
-> binding.
-> 
-> >
-> > [snip]
-> >  
-> > > +static void mtd_nvmem_remove(struct mtd_info *mtd)
-> > > +{
-> > > +	struct mtd_nvmem *mtd_nvmem;
-> > > +	bool found = false;
-> > > +
-> > > +	mutex_lock(&mtd_nvmem_list_lock);
-> > > +	list_for_each_entry(mtd_nvmem, &mtd_nvmem_list, list) {
-> > > +		if (mtd_nvmem->mtd == mtd) {
-> > > +			list_del(&mtd_nvmem->list);
-> > > +			found = true;
-> > > +			break;
-> > > +		}
-> > > +	}
-> > > +	mutex_unlock(&mtd_nvmem_list_lock);
-> > > +
-> > > +	if (found) {
-> > > +		if (nvmem_unregister(mtd_nvmem->nvmem))
-> > > +			dev_err(&mtd->dev,
-> > > +				"Failed to unregister NVMEM device\n");    
-> > 
-> > Ouch! You failed to unregister the NVMEM device but you have no way to
-> > stop MTD dev removal, which means you have a potential use-after-free
-> > bug. Not sure this can happen in real life, but I don't like that.  
-> 
-> Yes, I'm aware of this problem. Sorry, I forgot to mention this in the
-> cover letter.
+MT7623 SoC uses MT6323 PMIC as the default power supply
+which has LED function insides. The patchset introduces
+the LED support for MT6323 with on, off and hardware
+dimmed and blinked and it should work on other similar
+SoCs if also using MT6323.
 
-No problem.
+Changes since v1:
+- fixed typo in the comments
+- sorted include directives alphabetically
+- applied all register definitions with MT6323 prefix
+- removed the redundant structure declaration
+- fixed coding style defined in kernel doc format consistently
+- added error handling into all the occurrences where regmap APIs
+  are used
+- removed loudly debug message
+- made magic constant into meaningful macro
+- added missing mutex_destroy when module removed called
+- updated module license with GPL
+- fixed sparse warnings
 
-> 
-> > Maybe we should let notifiers return an error if they want to cancel
-> > the removal, or maybe this is a good reason to put the nvmem pointer
-> > directly in mtd_info and call mtd_nvmem_add/remove() directly from
-> > add/del_mtd_device() and allow them to return an error.
-> > 
-> > Not that, if you go for this solution, you'll also get rid of the
-> > global mtd_nvmem_list list and the associated lock.  
-> 
-> IMHO the MTD users framework has to be re-worked to be useful. First
-> both the add and remove callbacks should have return values. Users where
-> the add failed shouldn't be removed later and users where the remove
-> fails should block the removal of the MTD.
+Changes since v2:
+- fixed the typo in devicetree Documentation
+- cleaned up the style and explanation in the comments
+- applied all macro/struct/function definitions with MT6323 prefix
+- put the logic about the setup from device tree into function for simplicity
 
-As said in my previous reply, it's not just about returning an error. I
-had a closer look at the code, and it seems that using
-__get_mtd_device() properly should prevent the problem we are talking
-about (call __get_mtd_device() after your nvmem_register() and call
-__put_mtd_device() only if nvmem_unregister() succeed).
+Changes since v3:
+- changed the variable current_brightness into the proper type
+- removed the redundant member led_num from mt6323_leds structure
+- collected the brightness setting into mt6323_led_hw_brightness() call
+- added brightness_get() support into the core layer
+- fixed zero duty cycle handling due to hardware doesn't support
+- fixed duty cycle calculation mapping to the hardware register
+- added the brightness as the input in mt6323_led_hw_on() call
+- enhanced error handling in mt6323_led_set_dt_default() call
+- fixed potential issue which caused accessing unallocated memory if excessive
+  the led controller nodes are defined
+- fixed redundant memory allocation in mt6323_leds structure
+- added reg property for defining the led controller for which the child
+  node is predestined
 
-> 
-> Furthermore only passing the MTD device to the add/remove callback
-> force the users to keep their own list, which is annoying to say the
-> least. A simple fix would be to have the add callback return a pointer
-> that would be passed back to the remove callback. Trivial to implement
-> and the MTD user wouldn't have to keep any list. I will look into this
-> in the next days.
+Changes since v4:
+- enhanced the example in leds-mt6323.txt for patch 1/4 with adding the missing
+  #address-cell and #size-cell, correcting sub-node naming with led@0 style,
+  removing the unrelated setup for LED and moving the description for the node
+  properties into the right place
+- enhanced the documentation in mt6397.txt for patch 2/4
+- changed the subject prefixes into "dt-bindings: ..." for the device tree commits
+- fixed that missing of_node_put() in the error path called from mt6323_led_probe()
+- fixed that incorrect duty_cycle calculation mapping into the hardware register in
+case duty ratio is lower than 1/64 rather than 0
 
-That's a different problem, and I'm not sure I like the idea of
-changing the ->add() prototype into
+Sean Wang (4):
+  dt-bindings: leds: Add document bindings for leds-mt6323
+  dt-bindings: mfd: Add LED subnode binding for MT6323 PMIC
+  leds: Add LED support for MT6323 PMIC
+  mfd: mt6397: Add MT6323 LED support into MT6397 driver
 
-	void *(*add)(struct mtd_info *);
+ .../devicetree/bindings/leds/leds-mt6323.txt       |  63 +++
+ Documentation/devicetree/bindings/mfd/mt6397.txt   |   5 +
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-mt6323.c                         | 502 +++++++++++++++++++++
+ drivers/mfd/mt6397-core.c                          |   4 +
+ 6 files changed, 583 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6323.txt
+ create mode 100644 drivers/leds/leds-mt6323.c
 
-If we want to do that, I'd rather see an API extension allowing one to
-attach/detach/query/update user data to an MTD device.
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+1.9.1
