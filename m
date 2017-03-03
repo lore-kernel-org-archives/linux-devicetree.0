@@ -1,48 +1,87 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/8] Droid4 DTS update
-Date: Fri, 3 Mar 2017 08:28:24 -0800
-Message-ID: <20170303162824.GW20572@atomide.com>
-References: <20170302010900.28532-1-sre@kernel.org>
- <20170302013707.GK20572@atomide.com>
- <20170302014910.GM20572@atomide.com>
- <20170303110144.seoxa6xwago7q5ir@earth>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH] drm/arcpgu: Get rid of "encoder-slave" property
+Date: Fri, 3 Mar 2017 16:28:37 +0000
+Message-ID: <20170303162837.GO917@e110455-lin.cambridge.arm.com>
+References: <1488554364-25579-1-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170303110144.seoxa6xwago7q5ir@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1488554364-25579-1-git-send-email-abrodkin@synopsys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170303 03:03]:
-> On Wed, Mar 01, 2017 at 05:49:11PM -0800, Tony Lindgren wrote:
-> > Some of the command mode LCD patches could be sent out too, and
-> > if the timing patch is OK then we can configure the LCD in the dts
-> > too. Have you had a chance to look at those related to what all I
-> > broke for n950?
-> 
-> I took your patchset and fixed it for N950. The main problem was,
-> that you dropped the fifo size update, which is required for OMAP3
-> (HW bug). Here is a branch based on recent master branch from
-> torvalds. I had a quick test with droid4 and dmesg still looked fine,
-> but I did not have the lm3532 patches in that branch and nothing is
-> visible without display backlight. Can you check if the branch works
-> for you on D4?
-
-OK good to hear you figured it out. Yeah I tried to cut down the
-changes to minimum to get some idea what's going on and noticed I did
-not need the fifo changes for droid 4. I'll take a look later on today
-or over the weekend.
-
-Regards,
-
-Tony
-
-> http://git.kernel.org/cgit/linux/kernel/git/sre/linux-n900.git/log/?h=n950-display-tony
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBNYXIgMDMsIDIwMTcgYXQgMDY6MTk6MjRQTSArMDMwMCwgQWxleGV5IEJyb2RraW4g
+d3JvdGU6Cj4gV2UgdXNlZCB0byB1c2UgImVuY29kZXItc2xhdmUiIHByb3BlcnR5IGluIFBHVSdz
+Cj4gRGV2aWNlIFRyZWUgbm9kZSB0byByZWZlciB0byB0aGUgZW5jb2RlciwgYnV0IHNpbmNlIHRo
+ZXJlJ3MKPiBhIHdheSB0byBmaW5kIGl0IHdpdGggc29tZSBjb2RlIHNtYXJ0cyB3ZSBnZXQgcmlk
+IG9mCj4gb2J2aW91c2x5IGV4dHJhIGNvbXBsaWNhdGlvbiBpbiBQR1Ugbm9kZS4KPiAKPiBBZ2Fp
+biBpbnNwaXJlZCBieSBBUk0ncyBIRExDRCBjb2RlLgoKQWdhaW4sIFJldmlld2VkLWJ5OiBMaXZp
+dSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4gIDopCgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFs
+ZXhleSBCcm9ka2luIDxhYnJvZGtpbkBzeW5vcHN5cy5jb20+Cj4gQ2M6IExpdml1IER1ZGF1IDxM
+aXZpdS5EdWRhdUBhcm0uY29tPgo+IENjOiBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwuY2g+
+Cj4gQ2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4KPiBDYzogUm9iIEhlcnJpbmcg
+PHJvYmgrZHRAa2VybmVsLm9yZz4KPiAtLS0KPiAgYXJjaC9hcmMvYm9vdC9kdHMvYXhzMTB4X21i
+LmR0c2kgfCAgMSAtCj4gIGRyaXZlcnMvZ3B1L2RybS9hcmMvYXJjcGd1X2Rydi5jIHwgMjMgKysr
+KysrKysrKysrKysrKystLS0tLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCsp
+LCA3IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FyYy9ib290L2R0cy9heHMx
+MHhfbWIuZHRzaSBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4czEweF9tYi5kdHNpCj4gaW5kZXggNDFj
+ZmIyOWI2MmMxLi4yZmUwMzAxODZiOWQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcmMvYm9vdC9kdHMv
+YXhzMTB4X21iLmR0c2kKPiArKysgYi9hcmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzaQo+
+IEBAIC0yODcsNyArMjg3LDYgQEAKPiAgCQlwZ3VAMTcwMDAgewo+ICAJCQljb21wYXRpYmxlID0g
+InNucHMsYXJjcGd1IjsKPiAgCQkJcmVnID0gPDB4MTcwMDAgMHg0MDA+Owo+IC0JCQllbmNvZGVy
+LXNsYXZlID0gPCZhZHY3NTExPjsKPiAgCQkJY2xvY2tzID0gPCZwZ3VjbGs+Owo+ICAJCQljbG9j
+ay1uYW1lcyA9ICJweGxjbGsiOwo+ICAJCQltZW1vcnktcmVnaW9uID0gPCZmcmFtZV9idWZmZXI+
+Owo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJjL2FyY3BndV9kcnYuYyBiL2RyaXZl
+cnMvZ3B1L2RybS9hcmMvYXJjcGd1X2Rydi5jCj4gaW5kZXggNWM4MmY1MmZiYTgwLi5iMWIyMjg2
+YmRhOTUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FyYy9hcmNwZ3VfZHJ2LmMKPiAr
+KysgYi9kcml2ZXJzL2dwdS9kcm0vYXJjL2FyY3BndV9kcnYuYwo+IEBAIC0xOSw2ICsxOSw3IEBA
+Cj4gICNpbmNsdWRlIDxkcm0vZHJtX2ZiX2NtYV9oZWxwZXIuaD4KPiAgI2luY2x1ZGUgPGRybS9k
+cm1fZ2VtX2NtYV9oZWxwZXIuaD4KPiAgI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hlbHBlci5o
+Pgo+ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPiAgI2luY2x1ZGUgPGxpbnV4L29mX3Jl
+c2VydmVkX21lbS5oPgo+ICAKPiAgI2luY2x1ZGUgImFyY3BndS5oIgo+IEBAIC04Myw3ICs4NCw3
+IEBAIHN0YXRpYyBpbnQgYXJjcGd1X2xvYWQoc3RydWN0IGRybV9kZXZpY2UgKmRybSkKPiAgewo+
+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IHRvX3BsYXRmb3JtX2RldmljZShkcm0t
+PmRldik7Cj4gIAlzdHJ1Y3QgYXJjcGd1X2RybV9wcml2YXRlICphcmNwZ3U7Cj4gLQlzdHJ1Y3Qg
+ZGV2aWNlX25vZGUgKmVuY29kZXJfbm9kZTsKPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqZW5jb2Rl
+ciwgKnBvcnQ7Cj4gIAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPiAgCWludCByZXQ7Cj4gIAo+IEBA
+IC0xMTgsMTQgKzExOSwyNCBAQCBzdGF0aWMgaW50IGFyY3BndV9sb2FkKHN0cnVjdCBkcm1fZGV2
+aWNlICpkcm0pCj4gIAlpZiAoYXJjX3BndV9zZXR1cF9jcnRjKGRybSkgPCAwKQo+ICAJCXJldHVy
+biAtRU5PREVWOwo+ICAKPiAtCS8qIGZpbmQgdGhlIGVuY29kZXIgbm9kZSBhbmQgaW5pdGlhbGl6
+ZSBpdCAqLwo+IC0JZW5jb2Rlcl9ub2RlID0gb2ZfcGFyc2VfcGhhbmRsZShkcm0tPmRldi0+b2Zf
+bm9kZSwgImVuY29kZXItc2xhdmUiLCAwKTsKPiAtCWlmIChlbmNvZGVyX25vZGUpIHsKPiAtCQly
+ZXQgPSBhcmNwZ3VfZHJtX2hkbWlfaW5pdChkcm0sIGVuY29kZXJfbm9kZSk7Cj4gLQkJb2Zfbm9k
+ZV9wdXQoZW5jb2Rlcl9ub2RlKTsKPiArCS8qIFRoZXJlIGlzIG9ubHkgb25lIG91dHB1dCBwb3J0
+IGluc2lkZSBlYWNoIGRldmljZSwgZmluZCBpdCAqLwo+ICsJcG9ydCA9IG9mX2dyYXBoX2dldF9u
+ZXh0X2VuZHBvaW50KHBkZXYtPmRldi5vZl9ub2RlLCBOVUxMKTsKPiArCj4gKwlpZiAocG9ydCkg
+ewo+ICsJCWlmIChvZl9kZXZpY2VfaXNfYXZhaWxhYmxlKHBvcnQpKQo+ICsJCQllbmNvZGVyID0g
+b2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChwb3J0KTsKPiArCQlvZl9ub2RlX3B1dChw
+b3J0KTsKPiArCX0KCllvdSBtdXN0J3ZlIGJlZW4gbG9va2luZyBhdCBzb21lIG9sZCB2ZXJzaW9u
+LiBDdXJyZW50IHZlcnNpb24gaW4gLW5leHQgdXNlcwpvZl9ncmFwaF9nZXRfcmVtb3RlX25vZGUo
+KSB0byByZXBsYWNlIGFsbCB0aG9zZSBsaW5lcyB5b3UgaGF2ZSBhZGRlZCAoc2VlIFJvYgpIZXJy
+aW5nJ3Mgc2VyaWVzIHRvIGludHJvZHVjZSBvZl9ncmFwaF9nZXRfcmVtb3RlX25vZGUoKSBmdW5j
+dGlvbikKCkJlc3QgcmVnYXJkcywKTGl2aXUKCgo+ICsKPiArCWlmIChlbmNvZGVyICYmIG9mX2Rl
+dmljZV9pc19hdmFpbGFibGUoZW5jb2RlcikpIHsKPiArCQlkZXZfaW5mbyhkcm0tPmRldiwgIkZv
+dW5kIGVuY29kZXIgbm9kZSAlcywgcHJvY2VlZGluZyB3aXRoIGl0XG4iLAo+ICsJCQkgZW5jb2Rl
+ci0+bmFtZSk7Cj4gKwkJcmV0ID0gYXJjcGd1X2RybV9oZG1pX2luaXQoZHJtLCBlbmNvZGVyKTsK
+PiArCQlvZl9ub2RlX3B1dChlbmNvZGVyKTsKPiAgCQlpZiAocmV0IDwgMCkKPiAgCQkJcmV0dXJu
+IHJldDsKPiAgCX0gZWxzZSB7Cj4gKwkJZGV2X2luZm8oZHJtLT5kZXYsICJObyBlbmNvZGVyIG5v
+ZGUsIGFzc3VtZSBzaW11bGF0aW9uXG4iKTsKPiAgCQlyZXQgPSBhcmNwZ3VfZHJtX3NpbV9pbml0
+KGRybSwgTlVMTCk7Cj4gIAkJaWYgKHJldCA8IDApCj4gIAkJCXJldHVybiByZXQ7Cj4gLS0gCj4g
+Mi43LjQKPiAKCi0tIAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8Cnwg
+Zml4IHRoZSB3b3JsZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8
+CiBcIHNvdXJjZSBjb2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/Crwpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
