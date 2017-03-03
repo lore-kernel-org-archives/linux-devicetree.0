@@ -1,101 +1,206 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/7] arm: dts: r7s72100: Add pin controller node
-Date: Fri, 3 Mar 2017 11:08:51 +0100
-Message-ID: <CAMuHMdVdiMWNq1or9JgzAKfWXsDg1VD9ehG6U=E_snes04Y1Mg@mail.gmail.com>
-References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487610788-6939-5-git-send-email-jacopo+renesas@jmondi.org>
- <3dd69ef5-e8a4-b69c-b4fa-1be6ba777cfa@jmondi.org> <SG2PR06MB1165DCCA724AD6A8325862668A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v5 2/3] nvmem: sunxi-sid: add support for H3's SID
+ controller
+Date: Fri, 3 Mar 2017 10:18:38 +0000
+Message-ID: <49ffb57b-d1e8-14b2-627d-f132c676a807@linaro.org>
+References: <20170227192715.50198-1-icenowy@aosc.xyz>
+ <20170227192715.50198-2-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1165DCCA724AD6A8325862668A280@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: jacopo mondi <jacopo@jmondi.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170227192715.50198-2-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
 
-On Thu, Mar 2, 2017 at 9:17 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Tuesday, February 21, 2017, jacopo mondi wrote:
->> > +                   gpio-controller;
->> > +                   #gpio-cells = <2>;
->> > +                   gpio-ranges = <&pinctrl 0 0 16>;
->>
->> Not all ports have 16 pins available.
->> This is one of the differences between different RZ/A1 SoC versions
->> (RZ/A1H, RZ/A1L etc)
->>
->> I'll change the number of pins to the actual available ones on each port
->> for r7s72100 (RZ/A1H)
+
+On 27/02/17 19:27, Icenowy Zheng wrote:
+> The H3 SoC have a bigger SID controller, which has its direct read
+> address at 0x200 position in the SID block, not 0x0.
 >
-> But wait, what if someone wants to use a RZ/A1L???
+> Also, H3 SID controller has some silicon bug that makes the direct read
+> value wrong at cold boot, add code to workaround the bug. (This bug has
+> already been fixed on A64 and later SoCs)
 >
-> I don't want to make a separate dtsi file for RZ/A1L.
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> ---
+> Changes in v5:
+> - Removed some bits in binding documentation.
+> - Removed some default values in cfg struct.
 >
-> Is it possible to change the number of port pins in the board dts file?
-> For example:
->   RZ/A1H: P5_0 - P5_10
->   RZ/A1L: P5_0 - P5_16
-
-That's 17 pins, not 16?
-
+> Changes in v4:
+> - Use readl_poll_timeout.
+> - Do register offset in sunxi_sid_read.
+> - Merge SUN8I_SID_OP_LOCK and SUN8I_SID_LOCK_SHIFT into one macro.
+> - Drop the result of register-based read operation.
 >
-> So, in a rza1l-board.dts file I would put:
+>  .../bindings/nvmem/allwinner,sunxi-sid.txt         |  6 ++-
+>  drivers/nvmem/sunxi_sid.c                          | 62 ++++++++++++++++++++++
+>  2 files changed, 67 insertions(+), 1 deletion(-)
+
+
+
+I will queue this and 1/3 patch for next cycle, but the dts patch has to 
+go via arm-soc tree.
+
+Thanks,
+srini
 >
-> &port5 {
->         gpio-ranges = <&pinctrl 0 80 16>;
-> }
+> diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+> index d543ed3f5363..ef06d061913c 100644
+> --- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+> +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+> @@ -1,7 +1,11 @@
+>  Allwinner sunxi-sid
 >
-> Will this work?
-
-Yes, overriding should work. But the number of pins is an SoC-property, not
-a board-property?
-
-Are the differences between RZ/A1H and RZ/A1L just the number of pins?
-If yes, you could use a hierarchical DTS structure:
-
-rza1h-<board>.dts:
-
-    #include "rza1h.dtsi"
-
-    // board specifics here
-
-rza1l-<board>.dts:
-
-    #include "rza1l.dtsi"
-
-    // board specifics here
-
-rza1h.dtsi:
-
-    #include "rza.dtsi"  // r7s72100.dtsi?
-
-    // base SoC overrides
-    &port5 {
-        gpio-ranges = <&pinctrl 0 80 11>;
-    }
-
-rza1l.dtsi:
-
-    #include "rza.dtsi"  // r7s72100.dtsi?
-
-    // base SoC overrides
-    &port5 {
-        gpio-ranges = <&pinctrl 0 80 16>;
-    }
-
-Actual naming of DTS files TBD.
-We could also decide to not have rza1h.dtsi, and assume the base dtsi is for
-RZ/A1H.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  Required properties:
+> -- compatible: "allwinner,sun4i-a10-sid" or "allwinner,sun7i-a20-sid"
+> +- compatible: Should be one of the following:
+> +  "allwinner,sun4i-a10-sid"
+> +  "allwinner,sun7i-a20-sid"
+> +  "allwinner,sun8i-h3-sid"
+> +
+>  - reg: Should contain registers location and length
+>
+>  = Data cells =
+> diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+> index 69524b67007f..0d6648be93b8 100644
+> --- a/drivers/nvmem/sunxi_sid.c
+> +++ b/drivers/nvmem/sunxi_sid.c
+> @@ -17,6 +17,7 @@
+>
+>  #include <linux/device.h>
+>  #include <linux/io.h>
+> +#include <linux/iopoll.h>
+>  #include <linux/module.h>
+>  #include <linux/nvmem-provider.h>
+>  #include <linux/of.h>
+> @@ -25,6 +26,15 @@
+>  #include <linux/slab.h>
+>  #include <linux/random.h>
+>
+> +/* Registers and special values for doing register-based SID readout on H3 */
+> +#define SUN8I_SID_PRCTL		0x40
+> +#define SUN8I_SID_RDKEY		0x60
+> +
+> +#define SUN8I_SID_OFFSET_MASK	0x1FF
+> +#define SUN8I_SID_OFFSET_SHIFT	16
+> +#define SUN8I_SID_OP_LOCK	(0xAC << 8)
+> +#define SUN8I_SID_READ		BIT(1)
+> +
+>  static struct nvmem_config econfig = {
+>  	.name = "sunxi-sid",
+>  	.read_only = true,
+> @@ -34,11 +44,14 @@ static struct nvmem_config econfig = {
+>  };
+>
+>  struct sunxi_sid_cfg {
+> +	u32	value_offset;
+>  	u32	size;
+> +	bool	need_register_readout;
+>  };
+>
+>  struct sunxi_sid {
+>  	void __iomem		*base;
+> +	u32			value_offset;
+>  };
+>
+>  /* We read the entire key, due to a 32 bit read alignment requirement. Since we
+> @@ -63,12 +76,36 @@ static int sunxi_sid_read(void *context, unsigned int offset,
+>  	struct sunxi_sid *sid = context;
+>  	u8 *buf = val;
+>
+> +	/* Offset the read operation to the real position of SID */
+> +	offset += sid->value_offset;
+> +
+>  	while (bytes--)
+>  		*buf++ = sunxi_sid_read_byte(sid, offset++);
+>
+>  	return 0;
+>  }
+>
+> +static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
+> +				      const unsigned int word)
+> +{
+> +	u32 reg_val;
+> +	int ret;
+> +
+> +	/* Set word, lock access, and set read command */
+> +	reg_val = (word & SUN8I_SID_OFFSET_MASK)
+> +		  << SUN8I_SID_OFFSET_SHIFT;
+> +	reg_val |= SUN8I_SID_OP_LOCK | SUN8I_SID_READ;
+> +	writel(reg_val, sid->base + SUN8I_SID_PRCTL);
+> +
+> +	ret = readl_poll_timeout(sid->base + SUN8I_SID_PRCTL, reg_val,
+> +				 !(reg_val & SUN8I_SID_READ), 100, 250000);
+> +	if (ret)
+> +		return ret;
+> +
+> +	writel(0, sid->base + SUN8I_SID_PRCTL);
+> +	return 0;
+> +}
+> +
+>  static int sunxi_sid_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -86,6 +123,7 @@ static int sunxi_sid_probe(struct platform_device *pdev)
+>  	cfg = of_device_get_match_data(dev);
+>  	if (!cfg)
+>  		return -EINVAL;
+> +	sid->value_offset = cfg->value_offset;
+>
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	sid->base = devm_ioremap_resource(dev, res);
+> @@ -94,6 +132,23 @@ static int sunxi_sid_probe(struct platform_device *pdev)
+>
+>  	size = cfg->size;
+>
+> +	if (cfg->need_register_readout) {
+> +		/*
+> +		 * H3's SID controller have a bug that the value at 0x200
+> +		 * offset is not the correct value when the hardware is reseted.
+> +		 * However, after doing a register-based read operation, the
+> +		 * value become right.
+> +		 * Do a full read operation here, but ignore its value
+> +		 * (as it's more fast to read by direct MMIO value than
+> +		 * with registers)
+> +		 */
+> +		for (i = 0; i < (size >> 2); i++) {
+> +			ret = sun8i_sid_register_readout(sid, i);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +
+>  	econfig.size = size;
+>  	econfig.dev = dev;
+>  	econfig.reg_read = sunxi_sid_read;
+> @@ -138,9 +193,16 @@ static const struct sunxi_sid_cfg sun7i_a20_cfg = {
+>  	.size = 0x200,
+>  };
+>
+> +static const struct sunxi_sid_cfg sun8i_h3_cfg = {
+> +	.value_offset = 0x200,
+> +	.size = 0x100,
+> +	.need_register_readout = true,
+> +};
+> +
+>  static const struct of_device_id sunxi_sid_of_match[] = {
+>  	{ .compatible = "allwinner,sun4i-a10-sid", .data = &sun4i_a10_cfg },
+>  	{ .compatible = "allwinner,sun7i-a20-sid", .data = &sun7i_a20_cfg },
+> +	{ .compatible = "allwinner,sun8i-h3-sid", .data = &sun8i_h3_cfg },
+>  	{/* sentinel */},
+>  };
+>  MODULE_DEVICE_TABLE(of, sunxi_sid_of_match);
+>
