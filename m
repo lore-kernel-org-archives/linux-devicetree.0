@@ -1,14 +1,11 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [RFC v0 1/2] interconnect: Add generic interconnect controller API
-Date: Thu, 2 Mar 2017 15:53:35 -0800
-Message-ID: <15929d7a-65e5-f8ba-2fac-0381c5f8e8fc@infradead.org>
-References: <20170301182235.19154-1-georgi.djakov@linaro.org>
- <20170301182235.19154-2-georgi.djakov@linaro.org>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH v2 0/3] ARM: dts: BCM5301X: GIC_PPI bug, TWD WD and i2c Support
+Date: Thu,  2 Mar 2017 19:21:31 -0500
+Message-ID: <1488500494-20622-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170301182235.19154-2-georgi.djakov@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,34 +15,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, gregkh@linuxfoundation.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, davidai@quicinc.com, skannan@codeaurora.org, khilman@baylibre.com, andy.gross@linaro.org, linux-arm-kernel@lists.infradead.org
+To: Hauke Mehrtens <hauke@hauke-m.de>, zajec5@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/17 10:22, Georgi Djakov wrote:
-> 
-> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
-> new file mode 100644
-> index 000000000000..103524b59905
-> --- /dev/null
-> +++ b/drivers/interconnect/Kconfig
-> @@ -0,0 +1,10 @@
-> +menuconfig INTERCONNECT
-> +	bool "On-Chip Interconnect management support"
-
-Why isn't this symbol tristate instead of bool so that the
-interconnect management support can be built as a loadable module?
+Changes in v2: 
+* Rafal discovered an issue with the GIC_PPI flags being incorrect.
+  Since there was a dependency on that DT entry in this series, I added
+  a patch to correct the issue and reworked the TWD patch with the
+  changes.
 
 
-> +	help
-> +	  Support for management of the on-chip interconnects.
-> +
-> +	  This framework is designed to provide a generic interface for
-> +          managing the interconnects in a SoC.
-> +
-> +	  If unsure, say no.
-> +
+These seemed to have been lost sometime last year.  See
+https://lkml.org/lkml/2016/5/11/953
 
+I am dropping the syscon reboot from the series, as I believe that was
+the sticking point, and resending the TWD and i2c patches.
+
+
+Jon Mason (3):
+  ARM: dts: BCM5301X: Correct GIC_PPI interrupt flags
+  ARM: dts: bcm5301x: Add TWD WD Support to DT
+  ARM: dts: bcm5301x: Add I2C support to the DT
+
+ arch/arm/boot/dts/bcm5301x.dtsi | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
 -- 
-~Randy
+2.7.4
