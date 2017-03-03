@@ -1,102 +1,51 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: [PATCH V5 1/9] PM / Domains: Ignore domain-idle-states that are not
- compatible
-Date: Fri,  3 Mar 2017 12:41:27 -0800
-Message-ID: <1488573695-106680-2-git-send-email-lina.iyer@linaro.org>
-References: <1488573695-106680-1-git-send-email-lina.iyer@linaro.org>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: display: rk3288-mipi-dsi: add reset property
+Date: Fri, 3 Mar 2017 12:41:49 -0800
+Message-ID: <20170303204148.GA78598@google.com>
+References: <20170224125506.21533-1-john@metanate.com>
+ <20170224125506.21533-24-john@metanate.com>
+ <20170302215643.GA49163@google.com>
+ <20170303113945.3bd2cbd9.john@metanate.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488573695-106680-1-git-send-email-lina.iyer@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, Juri.Lelli@arm.com, Rob Herring <robh@kernel.org>, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, brendan.jackman@arm.com, sudeep.holla@arm.com, andy.gross@linaro.org, Lina Iyer <lina.iyer@linaro.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170303113945.3bd2cbd9.john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-domain-idle-states property may have phandles to idle state bindings
-that may not be compatible with idle state definition defined in [1].
-Such phandles would just be ignored and not throw and error when read by
-the domain core.
+On Fri, Mar 03, 2017 at 11:39:45AM +0000, John Keeping wrote:
+> This reset is required in order to fully reset the internal state of the
+> MIPI controller.
+> 
+> Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+> ---
+> On Thu, 2 Mar 2017 13:56:46 -0800, Brian Norris wrote:
+> > On Fri, Feb 24, 2017 at 12:55:06PM +0000, John Keeping wrote:
+> > > +	/*
+> > > +	 * Note that the reset was not defined in the initial device tree, so
+> > > +	 * we have to be prepared for it not being found.
+> > > +	 */
+> > > +	apb_rst = devm_reset_control_get(dev, "apb");  
+> > 
+> > Did this reset ever get documented in the device tree bindings? I
+> > couldn't find it. Perhaps a follow-up patch is in order?
+> 
+> Here's a patch to do that.
 
-Cc: <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
----
- Documentation/devicetree/bindings/power/power_domain.txt |  4 +++-
- drivers/base/power/domain.c                              | 16 +++++++++-------
- 2 files changed, 12 insertions(+), 8 deletions(-)
+FWIW:
 
-diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-index 723e1ad..940707d 100644
---- a/Documentation/devicetree/bindings/power/power_domain.txt
-+++ b/Documentation/devicetree/bindings/power/power_domain.txt
-@@ -31,7 +31,9 @@ Optional properties:
- 
- - domain-idle-states : A phandle of an idle-state that shall be soaked into a
-                 generic domain power state. The idle state definitions are
--                compatible with domain-idle-state specified in [1].
-+                compatible with domain-idle-state specified in [1]. phandles
-+                that are not compatible with domain-idle-state will be
-+                ignored.
-   The domain-idle-state property reflects the idle state of this PM domain and
-   not the idle states of the devices or sub-domains in the PM domain. Devices
-   and sub-domains have their own idle-states independent of the parent
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index e697dec..de3e489 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -2079,11 +2079,6 @@ static int genpd_parse_state(struct genpd_power_state *genpd_state,
- 	int err;
- 	u32 residency;
- 	u32 entry_latency, exit_latency;
--	const struct of_device_id *match_id;
--
--	match_id = of_match_node(idle_state_match, state_node);
--	if (!match_id)
--		return -EINVAL;
- 
- 	err = of_property_read_u32(state_node, "entry-latency-us",
- 						&entry_latency);
-@@ -2132,6 +2127,7 @@ int of_genpd_parse_idle_states(struct device_node *dn,
- 	int err, ret;
- 	int count;
- 	struct of_phandle_iterator it;
-+	const struct of_device_id *match_id;
- 
- 	count = of_count_phandle_with_args(dn, "domain-idle-states", NULL);
- 	if (count <= 0)
-@@ -2144,6 +2140,9 @@ int of_genpd_parse_idle_states(struct device_node *dn,
- 	/* Loop over the phandles until all the requested entry is found */
- 	of_for_each_phandle(&it, err, dn, "domain-idle-states", NULL, 0) {
- 		np = it.node;
-+		match_id = of_match_node(idle_state_match, np);
-+		if (!match_id)
-+			continue;
- 		ret = genpd_parse_state(&st[i++], np);
- 		if (ret) {
- 			pr_err
-@@ -2155,8 +2154,11 @@ int of_genpd_parse_idle_states(struct device_node *dn,
- 		}
- 	}
- 
--	*n = count;
--	*states = st;
-+	*n = i;
-+	if (!i)
-+		kfree(st);
-+	else
-+		*states = st;
- 
- 	return 0;
- }
--- 
-2.7.4
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+Thanks.
