@@ -1,105 +1,49 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 3 Mar 2017 21:17:46 +0200
-Message-ID: <20170303191745.GQ3220@valkosipuli.retiisi.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <141eb012-eb24-7558-2bc5-1fe82f6b7b4b@gmail.com>
- <fc8168ef-bf36-b2d9-627b-e4b8c6a5024e@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] dt-bindings: drm: rcar-du: Document optional reset
+ properties
+Date: Fri, 3 Mar 2017 20:23:34 +0100
+Message-ID: <CAMuHMdXgow=oF3e52MHANKywzFSeV8hzBUSY4GSxCOiti-EaJQ@mail.gmail.com>
+References: <1488547835-25229-1-git-send-email-geert+renesas@glider.be>
+ <2423895.QcDWT1fsiC@avalon>
+ <CAMuHMdU=1O_ZZgAXWSecO=HRtZdY8s0LfEMuUkpgvr528HV+Jw@mail.gmail.com>
+ <5304812.zzcGWdqkpi@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <fc8168ef-bf36-b2d9-627b-e4b8c6a5024e@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5304812.zzcGWdqkpi@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, DRI Development <dri-devel@lists.freedesktop.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
-
-On Thu, Mar 02, 2017 at 06:12:43PM -0800, Steve Longerbeam wrote:
-> 
-> 
-> On 03/02/2017 03:48 PM, Steve Longerbeam wrote:
-> >
-> >
-> >On 03/02/2017 08:02 AM, Sakari Ailus wrote:
-> >>Hi Steve,
-> >>
-> >>On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
-> >>>v4l2_pipeline_inherit_controls() will add the v4l2 controls from
-> >>>all subdev entities in a pipeline to a given video device.
-> >>>
-> >>>Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>---
-> >>> drivers/media/v4l2-core/v4l2-mc.c | 48
-> >>>+++++++++++++++++++++++++++++++++++++++
-> >>> include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
-> >>> 2 files changed, 73 insertions(+)
-> >>>
-> >>>diff --git a/drivers/media/v4l2-core/v4l2-mc.c
-> >>>b/drivers/media/v4l2-core/v4l2-mc.c
-> >>>index 303980b..09d4d97 100644
-> >>>--- a/drivers/media/v4l2-core/v4l2-mc.c
-> >>>+++ b/drivers/media/v4l2-core/v4l2-mc.c
-> >>>@@ -22,6 +22,7 @@
-> >>> #include <linux/usb.h>
-> >>> #include <media/media-device.h>
-> >>> #include <media/media-entity.h>
-> >>>+#include <media/v4l2-ctrls.h>
-> >>> #include <media/v4l2-fh.h>
-> >>> #include <media/v4l2-mc.h>
-> >>> #include <media/v4l2-subdev.h>
-> >>>@@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct
-> >>>vb2_queue *q)
-> >>> }
-> >>> EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
-> >>>
-> >>>+int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> >>>+                     struct media_entity *start_entity)
-> >>
-> >>I have a few concerns / questions:
-> >>
-> >>- What's the purpose of this patch? Why not to access the sub-device node
-> >>  directly?
-> >
-> >
-> >I don't really understand what you are trying to say.<snip>
-> >
-> 
-> Actually I think I understand what you mean now. Yes, the user can
-> always access a subdev's control directly from its /dev/v4l-subdevXX.
-> I'm only providing this feature as a convenience to the user, so that
-> all controls in a pipeline can be accessed from one place, i.e. the
-> main capture device node.
-
-No other MC based V4L2 driver does this. You'd be creating device specific
-behaviour that differs from what the rest of the drivers do. The purpose of
-MC is to provide the user with knowledge of what devices are there, and the
-V4L2 sub-devices interface is used to access them in this case.
-
-It does matter where a control is implemented, too. If the pipeline contains
-multiple sub-devices that implement the same control, only one of them may
-be accessed. The driver calling the function (or even less the function)
-would not know which one of them should be ignored.
-
-If you need such functionality, it should be implemented in the user space
-instead.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+SGkgTGF1cmVudCwKCk9uIEZyaSwgTWFyIDMsIDIwMTcgYXQgODoxNyBQTSwgTGF1cmVudCBQaW5j
+aGFydAo8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPiB3cm90ZToKPiBPbiBGcmlk
+YXkgMDMgTWFyIDIwMTcgMjA6MDM6MDkgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOgo+PiBPbiBG
+cmksIE1hciAzLCAyMDE3IGF0IDM6NDEgUE0sIExhdXJlbnQgUGluY2hhcnQgd3JvdGU6Cj4+ID4g
+V2hhdCdzIGluIHRoZSByZXNldCBzcGVjaWZpZXIgPwo+Pgo+PiBUaGF0IGRlcGVuZHMgb24gdGhl
+IHJlc2V0IHByb3ZpZGVyLgo+Pgo+PiBTZWUgIlt2MiwxLzRdIGR0LWJpbmRpbmdzOiBjbG9jazog
+cmVuZXNhczogY3BnLW1zc3I6IERvY3VtZW50IHJlc2V0IGNvbnRyb2wKPj4gc3VwcG9ydCIgKGh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTUzNjYyNy8pIGZvciB0aGUgUmVuZXNh
+cwo+PiBDUEcvTVNTUiBjYXNlLgo+Pgo+PiBFLmcuICJyZXNldHMgPSA8JmNwZyAzMTA+OyIKPgo+
+IFRoYW5rcy4gSSBuZXZlciBrbm93IHdoZXRoZXIgdGhlIHNwZWNpZmllZCBpcyB0aGUgY29tYmlu
+YXRpb24gb2YgcGhhbmRsZSArCj4gZGF0YSwgb3IgaXMgb25seSB0aGUgY2VsbHMgZm9sbG93aW5n
+IHRoZSBwaGFuZGxlLgoKVHJpY2sgdG8gcmVtZW1iZXI6IHRoZSAjPGZvbz4tY2VsbHMgcHJvcGVy
+dHkgdGVsbHMgaG93IG1hbnkgY2VsbHMgdGhlcmUKYXJlIGluIHRoZSBzcGVjaWZpZXIuCgpHcntv
+ZXRqZSxlZXRpbmd9cywKCiAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLQpHZWVydCBV
+eXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0
+QGxpbnV4LW02OGsub3JnCgpJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2Fs
+IHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8g
+am91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhh
+dC4KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
