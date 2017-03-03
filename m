@@ -1,15 +1,15 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] drivers: pwm: pwm-atmel: enable pwm on sama5d2
-Date: Fri, 3 Mar 2017 00:21:20 -0600
-Message-ID: <20170303062120.uippq2ajtnrxfcx5@rob-hp-laptop>
-References: <1488278415-2786-1-git-send-email-claudiu.beznea@microchip.com>
- <1488278415-2786-3-git-send-email-claudiu.beznea@microchip.com>
+Subject: Re: [PATCH v2 1/3] coresight: bindings for debug module
+Date: Fri, 3 Mar 2017 00:21:24 -0600
+Message-ID: <20170303062124.rc2fw6axs3cp7ofc@rob-hp-laptop>
+References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
+ <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1488278415-2786-3-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,30 +19,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, thierry.reding@gmail.com, alexandre.belloni@free-electrons.com, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 12:40:15PM +0200, Claudiu Beznea wrote:
-> sama5d2 can use the same atmel_pwm_data as sama5d3.
+On Tue, Feb 28, 2017 at 11:06:58PM +0800, Leo Yan wrote:
+> According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
+> Chapter 'Part H: External debug', the CPU can integrate debug module
+> and it can support self-hosted debug and external debug. Especially
+> for supporting self-hosted debug, this means the program can access
+> the debug module from mmio region; and usually the mmio region is
+> integrated with coresight.
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> So add document for binding debug component, includes binding to APB
+> clock; and also need specify the CPU node which the debug module is
+> dedicated to specific CPU.
+> 
+> Suggested-by: Mike Leach <mike.leach@linaro.org>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
->  Documentation/devicetree/bindings/pwm/atmel-pwm.txt | 1 +
->  drivers/pwm/pwm-atmel.c                             | 3 +++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-> index 02331b9..c8c831d 100644
-> --- a/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-> +++ b/Documentation/devicetree/bindings/pwm/atmel-pwm.txt
-> @@ -4,6 +4,7 @@ Required properties:
->    - compatible: should be one of:
->      - "atmel,at91sam9rl-pwm"
->      - "atmel,sama5d3-pwm"
-> +    - "atmel,sama5d2-pwm"
+>  .../devicetree/bindings/arm/coresight-debug.txt    | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
 
-Perhaps sama5d3 should be a fallback, then you don't need a driver 
-change.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
