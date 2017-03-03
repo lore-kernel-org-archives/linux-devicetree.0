@@ -1,45 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] coresight: bindings for debug module
-Date: Fri, 3 Mar 2017 00:21:24 -0600
-Message-ID: <20170303062124.rc2fw6axs3cp7ofc@rob-hp-laptop>
-References: <1488294420-14188-1-git-send-email-leo.yan@linaro.org>
- <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
+Subject: Re: [PATCH] PM / OPP: Documentation: Fix opp-microvolt in examples
+Date: Fri, 3 Mar 2017 00:21:38 -0600
+Message-ID: <20170303062138.5gwbkbw4g33d4bvc@rob-hp-laptop>
+References: <e527318dc8b5a1acf260499c65cf025732d9fc51.1488365712.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1488294420-14188-2-git-send-email-leo.yan@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+In-Reply-To: <e527318dc8b5a1acf260499c65cf025732d9fc51.1488365712.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 28, 2017 at 11:06:58PM +0800, Leo Yan wrote:
-> According to ARMv8 architecture reference manual (ARM DDI 0487A.k)
-> Chapter 'Part H: External debug', the CPU can integrate debug module
-> and it can support self-hosted debug and external debug. Especially
-> for supporting self-hosted debug, this means the program can access
-> the debug module from mmio region; and usually the mmio region is
-> integrated with coresight.
+On Wed, Mar 01, 2017 at 04:39:55PM +0530, Viresh Kumar wrote:
+> The triplet present in "opp-microvolt" property should be in the order
+> <target min max>, while all the examples have it in the order
+> <min target max>.
 > 
-> So add document for binding debug component, includes binding to APB
-> clock; and also need specify the CPU node which the debug module is
-> dedicated to specific CPU.
+> Fix it.
 > 
-> Suggested-by: Mike Leach <mike.leach@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> Luckily all of the users of "opp-microvolt" property have applied brain
+> instead of copying the examples from documentation and none of the
+> actual dts files have it wrong.
+> 
+> Reported-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->  .../devicetree/bindings/arm/coresight-debug.txt    | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/coresight-debug.txt
+>  Documentation/devicetree/bindings/opp/opp.txt | 44 +++++++++++++--------------
+>  1 file changed, 22 insertions(+), 22 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
