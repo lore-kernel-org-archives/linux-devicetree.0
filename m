@@ -1,41 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: extcon: Add support for cros-ec
- device
-Date: Fri, 3 Mar 2017 00:43:20 -0600
-Message-ID: <20170303064320.icrc7nbujptarsiu@rob-hp-laptop>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
- <20170301111943.12170-3-enric.balletbo@collabora.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio:light: Add support for STMicro VL6180 sensor
+Date: Fri, 3 Mar 2017 01:05:41 -0600
+Message-ID: <20170303070541.aevjulduzucui3wm@rob-hp-laptop>
+References: <20170302184031.GA27741@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170301111943.12170-3-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benson Leung <bleung@chromium.org>
+In-Reply-To: <20170302184031.GA27741-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 01, 2017 at 12:19:43PM +0100, Enric Balletbo i Serra wrote:
-> From: Benson Leung <bleung@chromium.org>
+On Fri, Mar 03, 2017 at 12:10:31AM +0530, Manivannan Sadhasivam wrote:
+> This patch adds support for STMicro VL6180 - ALS and proximity sensor. Sensor is capable of measuring the light
+> intensity as well as object distance using TOF(Time of Flight) technology.
 > 
-> This patch add documentation for binding of USB Type C cable detection
-> mechanism is using EXTCON subsystem. The device can detect the presence
-> of display out but it may also detect other external accessories when
-> external accessories is attached or detached.
-> 
-> Signed-off-by: Benson Leung <bleung@chromium.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  - Added Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->  Requested by Rob Herring
->  - Remove the Extcon word in the binding and replace it to describe better the
->    h/w.
->  - 'google,extcon-cros-ec' renamed to 'google,extcon-usbc-cros-ec' to indicate
->    this is USB Type C related.
-> 
->  .../bindings/extcon/extcon-usbc-cros-ec.txt        | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/extcon/extcon-usbc-cros-ec.txt
+>  .../devicetree/bindings/iio/light/vl6180.txt       |  16 +
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/iio/light/Kconfig                          |  10 +
+>  drivers/iio/light/Makefile                         |   1 +
+>  drivers/iio/light/vl6180.c                         | 544 +++++++++++++++++++++
+>  4 files changed, 571 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/vl6180.txt
+>  create mode 100644 drivers/iio/light/vl6180.c
