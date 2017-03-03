@@ -1,63 +1,104 @@
-From: John Keeping <john@metanate.com>
-Subject: [PATCH] dt-bindings: display: rk3288-mipi-dsi: add reset property
-Date: Fri, 3 Mar 2017 11:39:45 +0000
-Message-ID: <20170303113945.3bd2cbd9.john@metanate.com>
-References: <20170224125506.21533-1-john@metanate.com>
- <20170224125506.21533-24-john@metanate.com>
- <20170302215643.GA49163@google.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/8] Droid4 DTS update
+Date: Fri, 3 Mar 2017 12:17:03 +0100
+Message-ID: <20170303111703.jxl3prdisencuddu@earth>
+References: <20170302010900.28532-1-sre@kernel.org>
+ <20170302013707.GK20572@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170302215643.GA49163@google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Norris <briannorris@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="tieslaqwnab6kga4"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170302013707.GK20572-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyByZXNldCBpcyByZXF1aXJlZCBpbiBvcmRlciB0byBmdWxseSByZXNldCB0aGUgaW50ZXJu
-YWwgc3RhdGUgb2YgdGhlCk1JUEkgY29udHJvbGxlci4KClNpZ25lZC1vZmYtYnk6IEpvaG4gS2Vl
-cGluZyA8am9obkBtZXRhbmF0ZS5jb20+Ci0tLQpPbiBUaHUsIDIgTWFyIDIwMTcgMTM6NTY6NDYg
-LTA4MDAsIEJyaWFuIE5vcnJpcyB3cm90ZToKPiBPbiBGcmksIEZlYiAyNCwgMjAxNyBhdCAxMjo1
-NTowNlBNICswMDAwLCBKb2huIEtlZXBpbmcgd3JvdGU6Cj4gPiArCS8qCj4gPiArCSAqIE5vdGUg
-dGhhdCB0aGUgcmVzZXQgd2FzIG5vdCBkZWZpbmVkIGluIHRoZSBpbml0aWFsIGRldmljZSB0cmVl
-LCBzbwo+ID4gKwkgKiB3ZSBoYXZlIHRvIGJlIHByZXBhcmVkIGZvciBpdCBub3QgYmVpbmcgZm91
-bmQuCj4gPiArCSAqLwo+ID4gKwlhcGJfcnN0ID0gZGV2bV9yZXNldF9jb250cm9sX2dldChkZXYs
-ICJhcGIiKTsgIAo+IAo+IERpZCB0aGlzIHJlc2V0IGV2ZXIgZ2V0IGRvY3VtZW50ZWQgaW4gdGhl
-IGRldmljZSB0cmVlIGJpbmRpbmdzPyBJCj4gY291bGRuJ3QgZmluZCBpdC4gUGVyaGFwcyBhIGZv
-bGxvdy11cCBwYXRjaCBpcyBpbiBvcmRlcj8KCkhlcmUncyBhIHBhdGNoIHRvIGRvIHRoYXQuCgog
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2Nr
-Y2hpcC50eHQgIHwgNyArKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCgpk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9j
-a2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CmluZGV4
-IDE3NTNmMGNjNmZhZC4uMjhkMGI0MzdkM2NkIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50
-eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2No
-aXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0CkBAIC0xMyw4ICsxMywxMyBAQCBSZXF1aXJlZCBw
-cm9wZXJ0aWVzOgogLSBwb3J0czogY29udGFpbiBhIHBvcnQgbm9kZSB3aXRoIGVuZHBvaW50IGRl
-ZmluaXRpb25zIGFzIGRlZmluZWQgaW4gWzJdLgogICBGb3Igdm9wYixzZXQgdGhlIHJlZyA9IDww
-PiBhbmQgc2V0IHRoZSByZWcgPSA8MT4gZm9yIHZvcGwuCiAKK09wdGlvbmFsIHByb3BlcnRpZXM6
-CistIHJlc2V0czogbGlzdCBvZiBwaGFuZGxlICsgcmVzZXQgc3BlY2lmaWVyIHBhaXJzLCBhcyBk
-ZXNjcmliZWQgaW4gWzNdLgorLSByZXNldC1uYW1lczogc3RyaW5nIHJlc2V0IG5hbWUsIG11c3Qg
-YmUgImFwYiIuCisKIFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
-Y2xvY2stYmluZGluZ3MudHh0CiBbMl0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CitbM10gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3Jlc2V0L3Jlc2V0LnR4dAogCiBFeGFtcGxlOgogCW1pcGlfZHNpOiBtaXBpQGZm
-OTYwMDAwIHsKQEAgLTI1LDYgKzMwLDggQEAgRXhhbXBsZToKIAkJaW50ZXJydXB0cyA9IDxHSUNf
-U1BJIDgzIElSUV9UWVBFX0xFVkVMX0hJR0g+OwogCQljbG9ja3MgPSA8JmNydSBTQ0xLX01JUElf
-MjRNPiwgPCZjcnUgUENMS19NSVBJX0RTSTA+OwogCQljbG9jay1uYW1lcyA9ICJyZWYiLCAicGNs
-ayI7CisJCXJlc2V0cyA9IDwmY3J1IFNSU1RfTUlQSURTSTA+OworCQlyZXNldC1uYW1lcyA9ICJh
-cGIiOwogCQlyb2NrY2hpcCxncmYgPSA8JmdyZj47CiAJCXN0YXR1cyA9ICJva2F5IjsKIAotLSAK
-Mi4xMi4wLnJjMi4yMzAuZ2EyOGVkYzA3Y2QuZGlydHkKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--tieslaqwnab6kga4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Mar 01, 2017 at 05:37:08PM -0800, Tony Lindgren wrote:
+> * Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170301 17:10]:
+> > Hi,
+> >=20
+> > Tony, since your omap4-droid4 dts patches were not
+> > yet in a public repository and they would merge conflict
+> > with my patches I put them all together into a single
+> > patchset. I also added my Tested-By to your patches.
+>=20
+> OK
+>=20
+> > The mounting-matrix for the sensors and the touchscreen's=20
+> > rotation assume, that the phone's default rotation is vertical.
+> > I think that's sensible, because
+> >=20
+> >  * Android on the phone uses this as default rotation
+> >    (like almost? all other phones)
+> >  * volume buttons make sense (in horizontal position one
+> >    would expect, that left button means lower volume. I
+> >    know at least Maemo swaps them)
+> >=20
+> > That should cover all mainline drivers.
+>=20
+> Heheheh cool looks like you configured compass and accelerometer :)
+
+Easy targets with driver already available :)
+
+One of them actually does not forward the mount rotation matrix
+to sysfs/userspace at the moment due to missing driver support,
+but the binding is generic.
+
+> I have a better touchscreen patch that also configures the wakeirq
+> that I did not post yet at http://muru.com/linux/d4/patches/ in the
+> updated set droid4-wip-next-20170217.tar.gz.
+
+It's part of the LCD patch, so I missed it.
+
+> I have few more interesting ones coming, I got the HDMI working
+> reliably over the weekend. I was planning on waiting until -rc1 to
+> post them but let's see if I can send few patches out before that.
+
+Thanks for the reminder, that I still have to buy an adapter from
+=B5HDMI to HDMI.
+
+> I was planning on waiting until -rc1 to post them but let's see if
+> I can send few patches out before that.
+>=20
+> Anyways, I'll post a better touchscreen patch then let's apply these
+> into omap-for-v4.12/dt-droid4 branch when -rc1 is tagged.
+
+Sure.
+
+-- Sebastian
+
+--tieslaqwnab6kga4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAli5UKwACgkQ2O7X88g7
++poGahAAlYhFKDSIqKdkcW3ViIw5NrnS2uS7FXzk6ykje9eW5/RhjDY1KlkrMEdt
+Mn54HN6Hl2tgZS/ncFaQfNvVl5wFxTKAwIsiv50Tbn/1cLPFkfnpQIou/K+Gmbet
+a4MZCtUsrWHCqb5gwd2kM1gj5E7T3J0F1SxK/KSXPim70voKADFwwEYbBBKt70Xr
+XF5tALl9Lr02uNf1aCkdNyAlebCVi/xM/7BUS45eiQ0GawnFE6EAHDQZe9UdCh16
+wEyAzzhgMc4m2F/YpfwoE7ImauaN8dZKV0ojkIpRe37XYL1Gmrryr8S1nMAYUz7n
++k+UlMY9fa8cW651obtKpVBtdNotdyRDap2n3mM9TUfZNb0r75XvRUWmlXtckPUJ
++gkZSwC/lWGXaFvHN7tFbPDeq6K0hjiinw+i8/k1DrIYhtsoDW+6lQwc6NleeIyb
+5Uf8DJw38Xqc1R7IfVEd6jCjgM6hmMdolRY8K0syrvlbhitKiYeSmx1WqRUqevXh
+z1r7qiynK+Qvl0duIzkryeEsXHAe9f/XsuaceYFLBaetbInWyy5SRW8yaS3GN1QN
+yplb7ZbCcCTjZltVFuE8pSLG79D81YZfe2hRFWKM4XncFXPwpGRwxAiefNLSlf40
+EJ0QeXLJ8uZVDf6NazhmZMJFrsp3AQLkq3mMlCfMglpdgEMaDtE=
+=DjMY
+-----END PGP SIGNATURE-----
+
+--tieslaqwnab6kga4--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
