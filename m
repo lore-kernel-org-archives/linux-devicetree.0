@@ -1,81 +1,54 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH 2/2] drm/panel: simple: Add support for Winstar WF35LTIACD
-Date: Fri,  3 Mar 2017 16:21:56 +0100
-Message-ID: <20170303152156.31370-2-richard.genoud@gmail.com>
-References: <20170303152156.31370-1-richard.genoud@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170303152156.31370-1-richard.genoud@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v3 6/6] iio: adc: stm32: add support for EXTI trigger
+Date: Fri, 3 Mar 2017 16:46:39 +0100
+Message-ID: <9f39b0ac-a6fb-8a9f-7280-c6718b56aabe@metafoo.de>
+References: <1488300679-3259-1-git-send-email-fabrice.gasnier@st.com>
+ <1488300679-3259-7-git-send-email-fabrice.gasnier@st.com>
+ <5be44ed9-2c86-ac51-d964-d231d5ca62fa@metafoo.de>
+ <abeb2ef6-8bc8-bbea-e8e1-4b2ebe72b5f9@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <abeb2ef6-8bc8-bbea-e8e1-4b2ebe72b5f9@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@linaro.org, alexandre.torgue@st.com, linux-iio@vger.kernel.org, linus.walleij@linaro.org, pmeerw@pmeerw.net, knaack.h@gmx.de, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Winstar Display Co. WF35LTIACD 3.5" QVGA TFT
-LCD panel, which can be supported by the simple panel driver.
+On 03/03/2017 02:00 PM, Fabrice Gasnier wrote:
+> On 03/03/2017 12:45 PM, Lars-Peter Clausen wrote:
+>> On 02/28/2017 05:51 PM, Fabrice Gasnier wrote:
+>>> EXTi (external interrupt) signal can be routed internally as trigger
+>>> source for ADC conversions: STM32F4 ADC can use EXTI11.
+>>>
+>>> Retrieve interrupt trigger from DT, so it can be muxed into ADC IP,
+>>> via extsel.
+>>
+>> Hi,
+>>
+>> Sorry, I have some trouble understanding the specifics of this. Is EXTI a
+>> hardware input signal into the ADC that automatically triggers a conversion
+>> when asserted? If yes how is it configured which external signal is used
+>> here. Your bindings suggest that any GPIO can be used, but the driver only
+>> differentiates between EXTI on or EXTI off.
+> Hi Lars,
+> 
+> Yes, STM32 EXTI is external interrupt/event line. In case of STM32 ADC,
+> EXTI11 signal can be used to start a conversion. In this case, it must
+> be selected inside ADC IP using extsel bitfield. This EXTI11 line can
+> mapped from any GPIO bank A,B... line 11 (e.g. PA11 or PB11...) by using
+> interrupt binding.
+> This is why I expose this in DT.
 
-Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
----
- .../bindings/display/panel/winstar,wf35ltiacd      |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
-
-diff --git a/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
-new file mode 100644
-index 000000000000..68408adf239f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
-@@ -0,0 +1,7 @@
-+Winstar Display Corporation 3.5" QVGA (320x240) TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "winstar,wf35ltiacd"
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 06aaf79de8c8..5d45664c6c0e 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1713,6 +1713,31 @@ static const struct panel_desc urt_umsh_8596md_parallel = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
- 
-+static const struct drm_display_mode winstar_wf35ltiacd_mode = {
-+	.clock = 6410,
-+	.hdisplay = 320,
-+	.hsync_start = 320 + 20,
-+	.hsync_end = 320 + 20 + 30,
-+	.htotal = 320 + 20 + 30 + 38,
-+	.vdisplay = 240,
-+	.vsync_start = 240 + 4,
-+	.vsync_end = 240 + 4 + 3,
-+	.vtotal = 240 + 4 + 3 + 15,
-+	.vrefresh = 60,
-+	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
-+};
-+
-+static const struct panel_desc winstar_wf35ltiacd = {
-+	.modes = &winstar_wf35ltiacd_mode,
-+	.num_modes = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 70,
-+		.height = 53,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-+};
-+
- static const struct of_device_id platform_of_match[] = {
- 	{
- 		.compatible = "ampire,am800480r3tmqwa1h",
-@@ -1892,6 +1917,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "urt,umsh-8596md-20t",
- 		.data = &urt_umsh_8596md_parallel,
- 	}, {
-+		.compatible = "winstar,wf35ltiacd",
-+		.data = &winstar_wf35ltiacd,
-+	}, {
- 		/* sentinel */
- 	}
- };
+How is the mapping? That's the part I don't understand. How does requesting
+the IRQ for the GPIO as a generic software IRQ establish the hardware
+connection between the GPIO block and the ADC?
