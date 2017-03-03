@@ -1,104 +1,80 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/8] Droid4 DTS update
-Date: Fri, 3 Mar 2017 12:17:03 +0100
-Message-ID: <20170303111703.jxl3prdisencuddu@earth>
-References: <20170302010900.28532-1-sre@kernel.org>
- <20170302013707.GK20572@atomide.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
+Date: Fri, 3 Mar 2017 13:45:06 +0200
+Message-ID: <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
+ <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
+ <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tieslaqwnab6kga4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20170302013707.GK20572-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 02, 2017 at 03:07:21PM -0800, Steve Longerbeam wrote:
+> 
+> 
+> On 03/02/2017 07:53 AM, Sakari Ailus wrote:
+> >Hi Steve,
+> >
+> >On Wed, Feb 15, 2017 at 06:19:15PM -0800, Steve Longerbeam wrote:
+> >>Add a new FRAME_TIMEOUT event to signal that a video capture or
+> >>output device has timed out waiting for reception or transmit
+> >>completion of a video frame.
+> >>
+> >>Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >>---
+> >> Documentation/media/uapi/v4l/vidioc-dqevent.rst | 5 +++++
+> >> Documentation/media/videodev2.h.rst.exceptions  | 1 +
+> >> include/uapi/linux/videodev2.h                  | 1 +
+> >> 3 files changed, 7 insertions(+)
+> >>
+> >>diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >>index 8d663a7..dd77d9b 100644
+> >>--- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >>+++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >>@@ -197,6 +197,11 @@ call.
+> >> 	the regions changes. This event has a struct
+> >> 	:c:type:`v4l2_event_motion_det`
+> >> 	associated with it.
+> >>+    * - ``V4L2_EVENT_FRAME_TIMEOUT``
+> >>+      - 7
+> >>+      - This event is triggered when the video capture or output device
+> >>+	has timed out waiting for the reception or transmit completion of
+> >>+	a frame of video.
+> >
+> >As you're adding a new interface, I suppose you have an implementation
+> >around. How do you determine what that timeout should be?
+> 
+> The imx-media driver sets the timeout to 1 second, or 30 frame
+> periods at 30 fps.
 
---tieslaqwnab6kga4
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The frame rate is not necessarily constant during streaming. It may well
+change as a result of lighting conditions. I wouldn't add an event for this:
+this is unreliable and 30 times the frame period is an arbitrary value
+anyway. No other drivers do this either.
 
-Hi,
+The user space is generally in control of the frame period (or on some
+devices it could be the sensor, too, but *not* the CSI-2 receiver driver),
+so detecting the condition of not receiving any frames is more reliably done
+in the user space --- if needed.
 
-On Wed, Mar 01, 2017 at 05:37:08PM -0800, Tony Lindgren wrote:
-> * Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170301 17:10]:
-> > Hi,
-> >=20
-> > Tony, since your omap4-droid4 dts patches were not
-> > yet in a public repository and they would merge conflict
-> > with my patches I put them all together into a single
-> > patchset. I also added my Tested-By to your patches.
->=20
-> OK
->=20
-> > The mounting-matrix for the sensors and the touchscreen's=20
-> > rotation assume, that the phone's default rotation is vertical.
-> > I think that's sensible, because
-> >=20
-> >  * Android on the phone uses this as default rotation
-> >    (like almost? all other phones)
-> >  * volume buttons make sense (in horizontal position one
-> >    would expect, that left button means lower volume. I
-> >    know at least Maemo swaps them)
-> >=20
-> > That should cover all mainline drivers.
->=20
-> Heheheh cool looks like you configured compass and accelerometer :)
+-- 
+Regards,
 
-Easy targets with driver already available :)
-
-One of them actually does not forward the mount rotation matrix
-to sysfs/userspace at the moment due to missing driver support,
-but the binding is generic.
-
-> I have a better touchscreen patch that also configures the wakeirq
-> that I did not post yet at http://muru.com/linux/d4/patches/ in the
-> updated set droid4-wip-next-20170217.tar.gz.
-
-It's part of the LCD patch, so I missed it.
-
-> I have few more interesting ones coming, I got the HDMI working
-> reliably over the weekend. I was planning on waiting until -rc1 to
-> post them but let's see if I can send few patches out before that.
-
-Thanks for the reminder, that I still have to buy an adapter from
-=B5HDMI to HDMI.
-
-> I was planning on waiting until -rc1 to post them but let's see if
-> I can send few patches out before that.
->=20
-> Anyways, I'll post a better touchscreen patch then let's apply these
-> into omap-for-v4.12/dt-droid4 branch when -rc1 is tagged.
-
-Sure.
-
--- Sebastian
-
---tieslaqwnab6kga4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAli5UKwACgkQ2O7X88g7
-+poGahAAlYhFKDSIqKdkcW3ViIw5NrnS2uS7FXzk6ykje9eW5/RhjDY1KlkrMEdt
-Mn54HN6Hl2tgZS/ncFaQfNvVl5wFxTKAwIsiv50Tbn/1cLPFkfnpQIou/K+Gmbet
-a4MZCtUsrWHCqb5gwd2kM1gj5E7T3J0F1SxK/KSXPim70voKADFwwEYbBBKt70Xr
-XF5tALl9Lr02uNf1aCkdNyAlebCVi/xM/7BUS45eiQ0GawnFE6EAHDQZe9UdCh16
-wEyAzzhgMc4m2F/YpfwoE7ImauaN8dZKV0ojkIpRe37XYL1Gmrryr8S1nMAYUz7n
-+k+UlMY9fa8cW651obtKpVBtdNotdyRDap2n3mM9TUfZNb0r75XvRUWmlXtckPUJ
-+gkZSwC/lWGXaFvHN7tFbPDeq6K0hjiinw+i8/k1DrIYhtsoDW+6lQwc6NleeIyb
-5Uf8DJw38Xqc1R7IfVEd6jCjgM6hmMdolRY8K0syrvlbhitKiYeSmx1WqRUqevXh
-z1r7qiynK+Qvl0duIzkryeEsXHAe9f/XsuaceYFLBaetbInWyy5SRW8yaS3GN1QN
-yplb7ZbCcCTjZltVFuE8pSLG79D81YZfe2hRFWKM4XncFXPwpGRwxAiefNLSlf40
-EJ0QeXLJ8uZVDf6NazhmZMJFrsp3AQLkq3mMlCfMglpdgEMaDtE=
-=DjMY
------END PGP SIGNATURE-----
-
---tieslaqwnab6kga4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
