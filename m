@@ -1,67 +1,69 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/8] Droid4 DTS update
-Date: Fri, 3 Mar 2017 08:31:13 -0800
-Message-ID: <20170303163113.GX20572@atomide.com>
-References: <20170302010900.28532-1-sre@kernel.org>
- <20170302013707.GK20572@atomide.com>
- <20170303111703.jxl3prdisencuddu@earth>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v5 2/4] iio: accel: adxl345: Use I2C regmap instead of
+ direct I2C access
+Date: Fri, 3 Mar 2017 18:44:27 +0200
+Message-ID: <CAHp75VduHU+q9B9LUMj1PoXFyTqZnuTtDboNyMvOmrOrRgBstw@mail.gmail.com>
+References: <cover.1488248485.git.eraretuya@gmail.com> <e40679afd338899c9f5d2c7581c3d89754d726ec.1488248485.git.eraretuya@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170303111703.jxl3prdisencuddu@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e40679afd338899c9f5d2c7581c3d89754d726ec.1488248485.git.eraretuya@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eva Rachel Retuya <eraretuya@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170303 03:18]:
-> Hi,
-> 
-> On Wed, Mar 01, 2017 at 05:37:08PM -0800, Tony Lindgren wrote:
-> > * Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170301 17:10]:
-> > > Hi,
-> > > 
-> > > Tony, since your omap4-droid4 dts patches were not
-> > > yet in a public repository and they would merge conflict
-> > > with my patches I put them all together into a single
-> > > patchset. I also added my Tested-By to your patches.
-> > 
-> > OK
-> > 
-> > > The mounting-matrix for the sensors and the touchscreen's 
-> > > rotation assume, that the phone's default rotation is vertical.
-> > > I think that's sensible, because
-> > > 
-> > >  * Android on the phone uses this as default rotation
-> > >    (like almost? all other phones)
-> > >  * volume buttons make sense (in horizontal position one
-> > >    would expect, that left button means lower volume. I
-> > >    know at least Maemo swaps them)
-> > > 
-> > > That should cover all mainline drivers.
-> > 
-> > Heheheh cool looks like you configured compass and accelerometer :)
-> 
-> Easy targets with driver already available :)
-> 
-> One of them actually does not forward the mount rotation matrix
-> to sysfs/userspace at the moment due to missing driver support,
-> but the binding is generic.
-> 
-> > I have a better touchscreen patch that also configures the wakeirq
-> > that I did not post yet at http://muru.com/linux/d4/patches/ in the
-> > updated set droid4-wip-next-20170217.tar.gz.
-> 
-> It's part of the LCD patch, so I missed it.
+On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
+> Convert the driver to use regmap instead of I2C-specific functions. This
+> is done in preparation for splitting this driver into core and
+> I2C-specific code as well as introduction of SPI driver.
+>
+> Signed-off-by: Eva Rachel Retuya <eraretuya@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Yeah so it seems sorry. I got most of the patches split out last
-night, still need some time before I can send them out.
+Okay, my another set of comments.
+> @@ -70,6 +76,7 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
+>  {
+>         struct adxl345_data *data = iio_priv(indio_dev);
 
-Regards,
+>         int ret;
+> +       __le16 regval;
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reverse tree order, please.
+
+     __le16 regval;
+     int ret;
+
+> @@ -104,37 +112,50 @@ static int adxl345_probe(struct i2c_client *client,
+>  {
+>         struct adxl345_data *data;
+>         struct iio_dev *indio_dev;
+> +       struct device *dev;
+> +       struct regmap *regmap;
+
+>         int ret;
+> +       u32 regval;
+
+Ditto.
+
+> +
+> +       regmap = devm_regmap_init_i2c(client, &adxl345_regmap_config);
+> +       if (IS_ERR(regmap)) {
+> +               dev_err(&client->dev, "Error initializing regmap: %d\n",
+> +                       (int)PTR_ERR(regmap));
+
+I don't like explicit casting in such cases at all. Why not to use
+%ld? Same for the similar places in the series.
+
+> -       if (ret != ADXL345_DEVID) {
+> -               dev_err(&client->dev, "Invalid device ID: %d\n", ret);
+> +       if (regval != ADXL345_DEVID) {
+> +               dev_err(dev, "Invalid device ID: %x, expected %x\n",
+> +                       regval, ADXL345_DEVID);
+
+So, originally it was in decimal form. Does hex looks better or what
+is behind the change?
+
+-- 
+With Best Regards,
+Andy Shevchenko
