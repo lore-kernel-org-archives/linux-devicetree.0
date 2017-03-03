@@ -1,98 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Document bindings for
- Aspeed AST2400/AST2500 ADC
-Date: Fri, 3 Mar 2017 00:21:31 -0600
-Message-ID: <20170303062131.u5gjyv2odbafkkpg@rob-hp-laptop>
-References: <20170228201404.32125-1-raltherr@google.com>
+From: Jerome Forissier <jerome.forissier@linaro.org>
+Subject: [PATCH] Documentation: dt: Add binding for /secure-chosen/stdout-path
+Date: Fri,  3 Mar 2017 10:24:33 +0100
+Message-ID: <e3e007ef9ee6a622ae4ccc74fd0fca32b3c5dfb5.1488531370.git.jerome.forissier@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170228201404.32125-1-raltherr@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rick Altherr <raltherr@google.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jdelvare@suse.com, linux@roeck-us.net, joel@jms.id.au, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, peter.maydell@linaro.org, Jerome Forissier <jerome.forissier@linaro.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, robin.murphy@arm.com, jens.wiklander@linaro.org, christoffer.dall@linaro.org
 List-Id: devicetree@vger.kernel.org
 
- On Tue, Feb 28, 2017 at 12:14:03PM -0800, Rick Altherr wrote:
-> Signed-off-by: Rick Altherr <raltherr@google.com>
-> ---
->  .../devicetree/bindings/hwmon/aspeed_adc.txt       | 48 ++++++++++++++++++++++
+Some platforms may use a single device tree to describe two address
+spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+for Secure-only devices"). For these platforms it makes sense to define
+a secure counterpart of /chosen, namely: /secure-chosen. This new node
+is meant to be used by the secure firmware to pass data to the secure
+OS. Only the stdout-path property is supported for now.
 
-ADCs should really be documented in one place regardless of whether 
-hwmon or IIO is used. Don't need to move it now, but certainly the 
-bindings need to be compatible.
+Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
+---
+ Documentation/devicetree/bindings/arm/secure.txt | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt b/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
-> new file mode 100644
-> index 000000000000..9e481668c4d3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
-> @@ -0,0 +1,48 @@
-> +Aspeed AST2400/2500 ADC
-> +
-> +This device is a 10-bit converter for 16 voltage channels.  All inputs are
-> +single ended.  Each channel can be individually enabled to allow for use of
-> +alternate pin functions.
-> +
-> +1) adc node
-> +
-> +  Required properties:
-> +  - compatible : Should be one of
-> +	"aspeed,ast2400-adc"
-> +	"aspeed,ast2500-adc"
-> +  - reg : memory window mapping address and length
-> +  - #address-cells : must be <1> corresponding to the channel child binding
-> +  - #size-cells : must be <0> corresponding to the channel child binding
-> +  - clocks : Input clock used to derive the sample clock. Expected to be the
-> +    SoC's APB clock.
-> +  - update-interval-ms : initial time between updates on a channel
+v2
 
-This is like sampling rate? I think we have a standard ADC property for 
-that.
+- Clarify the expected behavior when /secure-chosen/stdout-path is not
+present (either the property or the node itself), as proposed by Peter
+and Robin. Note that I have made the fallback to /chosen optional.
 
-> +
-> +  The node contains child nodes for each channel that the platform uses.
-> +
-> +  Example adc node:
-> +    adc@1e6e9000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "aspeed,ast2400-adc";
-> +	reg = <0x1e6e9000 0xB0>;
-> +	clocks = <&clk_apb>;
-> +	update-interval-ms = <100>;
-> +
-> +	[ child node definitions... ]
-> +    };
-> +
-> +2) channel nodes
-> +
-> +  Optional properties:
-> +  - status: indicates the operational status of the device.
-> +    Value must be either "disabled" or "okay".
-
-Don't need to document this.
-
-> +  - label : string describing the monitored value
-
-You need a reg property for the channel number.
-
-> +
-> +  Example channel node:
-> +  channel@1 {
-> +	status = "okay";
-> +	label = "3V3 rail";
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_adc0_default>;
-
-Need to document these.
-
-> +  };
-> -- 
-> 2.11.0.483.g087da7b7c-goog
-> 
+diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+index e31303f..c4a818e 100644
+--- a/Documentation/devicetree/bindings/arm/secure.txt
++++ b/Documentation/devicetree/bindings/arm/secure.txt
+@@ -32,7 +32,8 @@ describe the view of Secure world using the standard bindings. These
+ secure- bindings only need to be used where both the Secure and Normal
+ world views need to be described in a single device tree.
+ 
+-Valid Secure world properties:
++Valid Secure world properties
++-----------------------------
+ 
+ - secure-status : specifies whether the device is present and usable
+   in the secure world. The combination of this with "status" allows
+@@ -51,3 +52,19 @@ Valid Secure world properties:
+    status = "disabled"; secure-status = "okay";     /* S-only */
+    status = "disabled";                             /* disabled in both */
+    status = "disabled"; secure-status = "disabled"; /* disabled in both */
++
++The secure-chosen node
++----------------------
++
++Similar to the /chosen node which serves as a place for passing data
++between firmware and the operating system, the /secure-chosen node may
++be used to pass data to the Secure OS. Only the properties defined
++below may appear in the /secure-chosen node.
++
++- stdout-path : specifies the device to be used by the Secure OS for
++  its console output. The syntax is the same as for /chosen/stdout-path.
++  If the /secure-chosen node exists but the stdout-path property is not
++  present, the Secure OS should not perform any console output. If
++  /secure-chosen does not exist, the Secure OS may use the value of
++  /chosen/stdout-path instead (that is, use the same device as the
++  Normal world OS).
+-- 
+2.7.4
