@@ -1,17 +1,19 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
-Date: Fri, 3 Mar 2017 14:43:51 -0800
-Message-ID: <59663ea1-b277-1543-e770-6a102ac733a4@gmail.com>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Fri, 3 Mar 2017 14:47:24 -0800
+Message-ID: <e657f59e-6ac7-bad0-c35b-626b53946d01@gmail.com>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
- <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
- <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
- <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+ <141eb012-eb24-7558-2bc5-1fe82f6b7b4b@gmail.com>
+ <fc8168ef-bf36-b2d9-627b-e4b8c6a5024e@gmail.com>
+ <20170303191745.GQ3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
+In-Reply-To: <20170303191745.GQ3220@valkosipuli.retiisi.org.uk>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -27,71 +29,87 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 03/03/2017 03:45 AM, Sakari Ailus wrote:
-> On Thu, Mar 02, 2017 at 03:07:21PM -0800, Steve Longerbeam wrote:
->>
->>
->> On 03/02/2017 07:53 AM, Sakari Ailus wrote:
->>> Hi Steve,
->>>
->>> On Wed, Feb 15, 2017 at 06:19:15PM -0800, Steve Longerbeam wrote:
->>>> Add a new FRAME_TIMEOUT event to signal that a video capture or
->>>> output device has timed out waiting for reception or transmit
->>>> completion of a video frame.
->>>>
->>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>> ---
->>>> Documentation/media/uapi/v4l/vidioc-dqevent.rst | 5 +++++
->>>> Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>>> include/uapi/linux/videodev2.h                  | 1 +
->>>> 3 files changed, 7 insertions(+)
->>>>
->>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>> index 8d663a7..dd77d9b 100644
->>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>> @@ -197,6 +197,11 @@ call.
->>>> 	the regions changes. This event has a struct
->>>> 	:c:type:`v4l2_event_motion_det`
->>>> 	associated with it.
->>>> +    * - ``V4L2_EVENT_FRAME_TIMEOUT``
->>>> +      - 7
->>>> +      - This event is triggered when the video capture or output device
->>>> +	has timed out waiting for the reception or transmit completion of
->>>> +	a frame of video.
->>>
->>> As you're adding a new interface, I suppose you have an implementation
->>> around. How do you determine what that timeout should be?
->>
->> The imx-media driver sets the timeout to 1 second, or 30 frame
->> periods at 30 fps.
+On 03/03/2017 11:17 AM, Sakari Ailus wrote:
+> Hi Steve,
 >
-> The frame rate is not necessarily constant during streaming. It may well
-> change as a result of lighting conditions.
+> On Thu, Mar 02, 2017 at 06:12:43PM -0800, Steve Longerbeam wrote:
+>>
+>>
+>> On 03/02/2017 03:48 PM, Steve Longerbeam wrote:
+>>>
+>>>
+>>> On 03/02/2017 08:02 AM, Sakari Ailus wrote:
+>>>> Hi Steve,
+>>>>
+>>>> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
+>>>>> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
+>>>>> all subdev entities in a pipeline to a given video device.
+>>>>>
+>>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>>>>> ---
+>>>>> drivers/media/v4l2-core/v4l2-mc.c | 48
+>>>>> +++++++++++++++++++++++++++++++++++++++
+>>>>> include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
+>>>>> 2 files changed, 73 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/media/v4l2-core/v4l2-mc.c
+>>>>> b/drivers/media/v4l2-core/v4l2-mc.c
+>>>>> index 303980b..09d4d97 100644
+>>>>> --- a/drivers/media/v4l2-core/v4l2-mc.c
+>>>>> +++ b/drivers/media/v4l2-core/v4l2-mc.c
+>>>>> @@ -22,6 +22,7 @@
+>>>>> #include <linux/usb.h>
+>>>>> #include <media/media-device.h>
+>>>>> #include <media/media-entity.h>
+>>>>> +#include <media/v4l2-ctrls.h>
+>>>>> #include <media/v4l2-fh.h>
+>>>>> #include <media/v4l2-mc.h>
+>>>>> #include <media/v4l2-subdev.h>
+>>>>> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct
+>>>>> vb2_queue *q)
+>>>>> }
+>>>>> EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
+>>>>>
+>>>>> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+>>>>> +                     struct media_entity *start_entity)
+>>>>
+>>>> I have a few concerns / questions:
+>>>>
+>>>> - What's the purpose of this patch? Why not to access the sub-device node
+>>>>  directly?
+>>>
+>>>
+>>> I don't really understand what you are trying to say.<snip>
+>>>
+>>
+>> Actually I think I understand what you mean now. Yes, the user can
+>> always access a subdev's control directly from its /dev/v4l-subdevXX.
+>> I'm only providing this feature as a convenience to the user, so that
+>> all controls in a pipeline can be accessed from one place, i.e. the
+>> main capture device node.
+>
+> No other MC based V4L2 driver does this. You'd be creating device specific
+> behaviour that differs from what the rest of the drivers do. The purpose of
+> MC is to provide the user with knowledge of what devices are there, and the
+> V4L2 sub-devices interface is used to access them in this case.
 
-I think you mean that would be a _temporary_ change in frame rate, but
-yes I agree the data rate can temporarily fluctuate. Although I doubt
-lighting conditions would cause a sensor to pause data transmission
-for a full 1 second.
+Well, again, I don't mind removing this. As I said it is only a
+convenience (although quite a nice one in my opinion). I'd like
+to hear from others whether this is worth keeping though.
 
 
-> I wouldn't add an event for this:
-> this is unreliable and 30 times the frame period is an arbitrary value
-> anyway. No other drivers do this either.
+>
+> It does matter where a control is implemented, too. If the pipeline contains
+> multiple sub-devices that implement the same control, only one of them may
+> be accessed. The driver calling the function (or even less the function)
+> would not know which one of them should be ignored.
 
-If no other drivers do this I don't mind removing it. It is really meant
-to deal with the ADV718x CVBS decoder, which often simply stops sending
-data on the BT.656 bus if there is an interruption in the input analog
-signal. But I agree that user space could detect this timeout instead.
-Unless I hear from someone else that they would like to keep this
-feature I'll remove it in version 5.
+Yes the pipeline should not have any duplicate controls. On imx-media no
+pipelines that can be configured have duplicate controls.
 
 Steve
 
-
 >
-> The user space is generally in control of the frame period (or on some
-> devices it could be the sensor, too, but *not* the CSI-2 receiver driver),
-> so detecting the condition of not receiving any frames is more reliably done
-> in the user space --- if needed.
+> If you need such functionality, it should be implemented in the user space
+> instead.
 >
