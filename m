@@ -1,64 +1,210 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/8] Droid4 DTS update
-Date: Sat, 4 Mar 2017 08:26:55 -0800
-Message-ID: <20170304162655.GZ20572@atomide.com>
-References: <20170302010900.28532-1-sre@kernel.org>
- <20170302013707.GK20572@atomide.com>
- <20170302014910.GM20572@atomide.com>
- <20170303110144.seoxa6xwago7q5ir@earth>
- <20170303162824.GW20572@atomide.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/4] iio: accel: adxl345: Use I2C regmap instead of
+ direct I2C access
+Date: Sat, 4 Mar 2017 16:43:22 +0000
+Message-ID: <b5950af0-4b0b-fa56-6cdd-597c13ac638e@kernel.org>
+References: <cover.1488615230.git.eraretuya@gmail.com>
+ <5c19b374e20a749e0287ebdf2d9c41a08f7545a1.1488615230.git.eraretuya@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170303162824.GW20572-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5c19b374e20a749e0287ebdf2d9c41a08f7545a1.1488615230.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170303 08:31]:
-> * Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170303 03:03]:
-> > On Wed, Mar 01, 2017 at 05:49:11PM -0800, Tony Lindgren wrote:
-> > > Some of the command mode LCD patches could be sent out too, and
-> > > if the timing patch is OK then we can configure the LCD in the dts
-> > > too. Have you had a chance to look at those related to what all I
-> > > broke for n950?
-> > 
-> > I took your patchset and fixed it for N950. The main problem was,
-> > that you dropped the fifo size update, which is required for OMAP3
-> > (HW bug). Here is a branch based on recent master branch from
-> > torvalds. I had a quick test with droid4 and dmesg still looked fine,
-> > but I did not have the lm3532 patches in that branch and nothing is
-> > visible without display backlight. Can you check if the branch works
-> > for you on D4?
+On 04/03/17 08:31, Eva Rachel Retuya wrote:
+> Convert the driver to use regmap instead of I2C-specific functions. This
+> is done in preparation for splitting this driver into core and
+> I2C-specific code as well as introduction of SPI driver.
 > 
-> OK good to hear you figured it out. Yeah I tried to cut down the
-> changes to minimum to get some idea what's going on and noticed I did
-> not need the fifo changes for droid 4. I'll take a look later on today
-> or over the weekend.
+> Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing for the
+autobuilders to play with it.
 
-I tested your branch and those patches work just fine on droid 4.
+Thanks,
 
-I did not test the fifo patch as it's missing something compiles
-as loadable modules:
-
-ERROR: "dispc_ovl_set_fifo_threshold" [drivers/gpu/drm/omapdrm/omapdrm.ko] undefined!
-ERROR: "dispc_ovl_compute_fifo_thresholds" [drivers/gpu/drm/omapdrm/omapdrm.ko] undefined!
-
-Probably just EXPORT_SYMBOL missing?
-
-Anyways, yeah I guess that set is pretty much ready to be sent for
-review if you feel like sending it. Or let me know if you want me to
-send it.
-
-Regards,
-
-Tony
+Jonathan
+> ---
+> Changes from v5:
+> * Re-order local variable declarations from longest to shortest line
+Whilst I've no objection to this, it's definitely more of a personal taste thing
+than anything.  Probably wise to just agree though as quicker than arguing and Andy
+did say they were minor points that he would have done differently rather than
+important!
 
 
-> > http://git.kernel.org/cgit/linux/kernel/git/sre/linux-n900.git/log/?h=n950-display-tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> * Remove explicit casting to int in handling devm_regmap_init_i2c() error,
+>   use %ld instead
+> 
+>  drivers/iio/accel/Kconfig   |  1 +
+>  drivers/iio/accel/adxl345.c | 66 +++++++++++++++++++++++++++++----------------
+>  2 files changed, 44 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index 2308bac..26b8614 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -9,6 +9,7 @@ config ADXL345
+>  	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer Driver"
+>  	depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
+>  	depends on I2C
+> +	select REGMAP_I2C
+>  	help
+>  	  Say Y here if you want to build support for the Analog Devices
+>  	  ADXL345 3-axis digital accelerometer.
+> diff --git a/drivers/iio/accel/adxl345.c b/drivers/iio/accel/adxl345.c
+> index c34991f..87fdd9f 100644
+> --- a/drivers/iio/accel/adxl345.c
+> +++ b/drivers/iio/accel/adxl345.c
+> @@ -14,6 +14,7 @@
+>  
+>  #include <linux/i2c.h>
+>  #include <linux/module.h>
+> +#include <linux/regmap.h>
+>  
+>  #include <linux/iio/iio.h>
+>  
+> @@ -45,10 +46,15 @@
+>  static const int adxl345_uscale = 38300;
+>  
+>  struct adxl345_data {
+> -	struct i2c_client *client;
+> +	struct regmap *regmap;
+>  	u8 data_range;
+>  };
+>  
+> +static const struct regmap_config adxl345_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +};
+> +
+>  #define ADXL345_CHANNEL(reg, axis) {					\
+>  	.type = IIO_ACCEL,						\
+>  	.modified = 1,							\
+> @@ -69,6 +75,7 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
+>  			    int *val, int *val2, long mask)
+>  {
+>  	struct adxl345_data *data = iio_priv(indio_dev);
+> +	__le16 regval;
+>  	int ret;
+>  
+>  	switch (mask) {
+> @@ -78,11 +85,12 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
+>  		 * ADXL345_REG_DATA(X0/Y0/Z0) contain the least significant byte
+>  		 * and ADXL345_REG_DATA(X0/Y0/Z0) + 1 the most significant byte
+>  		 */
+> -		ret = i2c_smbus_read_word_data(data->client, chan->address);
+> +		ret = regmap_bulk_read(data->regmap, chan->address, &regval,
+> +				       sizeof(regval));
+>  		if (ret < 0)
+>  			return ret;
+>  
+> -		*val = sign_extend32(ret, 12);
+> +		*val = sign_extend32(le16_to_cpu(regval), 12);
+>  		return IIO_VAL_INT;
+>  	case IIO_CHAN_INFO_SCALE:
+>  		*val = 0;
+> @@ -104,37 +112,50 @@ static int adxl345_probe(struct i2c_client *client,
+>  {
+>  	struct adxl345_data *data;
+>  	struct iio_dev *indio_dev;
+> +	struct regmap *regmap;
+> +	struct device *dev;
+> +	u32 regval;
+>  	int ret;
+>  
+> -	ret = i2c_smbus_read_byte_data(client, ADXL345_REG_DEVID);
+> +	regmap = devm_regmap_init_i2c(client, &adxl345_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&client->dev, "Error initializing regmap: %ld\n",
+> +			PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	dev = regmap_get_device(regmap);
+> +
+> +	ret = regmap_read(regmap, ADXL345_REG_DEVID, &regval);
+>  	if (ret < 0) {
+> -		dev_err(&client->dev, "Error reading device ID: %d\n", ret);
+> +		dev_err(dev, "Error reading device ID: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	if (ret != ADXL345_DEVID) {
+> -		dev_err(&client->dev, "Invalid device ID: %d\n", ret);
+> +	if (regval != ADXL345_DEVID) {
+> +		dev_err(dev, "Invalid device ID: %x, expected %x\n",
+> +			regval, ADXL345_DEVID);
+>  		return -ENODEV;
+>  	}
+>  
+> -	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+>  	data = iio_priv(indio_dev);
+> -	i2c_set_clientdata(client, indio_dev);
+> -	data->client = client;
+> +	dev_set_drvdata(dev, indio_dev);
+> +	data->regmap = regmap;
+>  	/* Enable full-resolution mode */
+>  	data->data_range = ADXL345_DATA_FORMAT_FULL_RES;
+>  
+> -	ret = i2c_smbus_write_byte_data(data->client, ADXL345_REG_DATA_FORMAT,
+> -					data->data_range);
+> +	ret = regmap_write(data->regmap, ADXL345_REG_DATA_FORMAT,
+> +			   data->data_range);
+>  	if (ret < 0) {
+> -		dev_err(&client->dev, "Failed to set data range: %d\n", ret);
+> +		dev_err(dev, "Failed to set data range: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	indio_dev->dev.parent = &client->dev;
+> +	indio_dev->dev.parent = dev;
+>  	indio_dev->name = id->name;
+>  	indio_dev->info = &adxl345_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+> @@ -142,19 +163,18 @@ static int adxl345_probe(struct i2c_client *client,
+>  	indio_dev->num_channels = ARRAY_SIZE(adxl345_channels);
+>  
+>  	/* Enable measurement mode */
+> -	ret = i2c_smbus_write_byte_data(data->client, ADXL345_REG_POWER_CTL,
+> -					ADXL345_POWER_CTL_MEASURE);
+> +	ret = regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
+> +			   ADXL345_POWER_CTL_MEASURE);
+>  	if (ret < 0) {
+> -		dev_err(&client->dev, "Failed to enable measurement mode: %d\n",
+> -			ret);
+> +		dev_err(dev, "Failed to enable measurement mode: %d\n", ret);
+>  		return ret;
+>  	}
+>  
+>  	ret = iio_device_register(indio_dev);
+>  	if (ret < 0) {
+> -		dev_err(&client->dev, "iio_device_register failed: %d\n", ret);
+> -		i2c_smbus_write_byte_data(data->client, ADXL345_REG_POWER_CTL,
+> -					  ADXL345_POWER_CTL_STANDBY);
+> +		dev_err(dev, "iio_device_register failed: %d\n", ret);
+> +		regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
+> +			     ADXL345_POWER_CTL_STANDBY);
+>  	}
+>  
+>  	return ret;
+> @@ -167,8 +187,8 @@ static int adxl345_remove(struct i2c_client *client)
+>  
+>  	iio_device_unregister(indio_dev);
+>  
+> -	return i2c_smbus_write_byte_data(data->client, ADXL345_REG_POWER_CTL,
+> -					 ADXL345_POWER_CTL_STANDBY);
+> +	return regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
+> +			    ADXL345_POWER_CTL_STANDBY);
+>  }
+>  
+>  static const struct i2c_device_id adxl345_i2c_id[] = {
+> 
