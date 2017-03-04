@@ -1,87 +1,168 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/4] dt-bindings: iio: accel: Document ADXL345
- accelerometer binding
-Date: Sat, 4 Mar 2017 16:39:33 +0000
-Message-ID: <5b10adf0-647f-da2d-86b5-adcbaca218db@kernel.org>
+Subject: Re: [PATCH v6 4/4] iio: accel: adxl345: Add SPI support
+Date: Sat, 4 Mar 2017 16:50:08 +0000
+Message-ID: <201fd952-289c-622b-437f-36cd7f4d7f3c@kernel.org>
 References: <cover.1488615230.git.eraretuya@gmail.com>
- <8bdf46e166cc98c75f9ef73b5c6911ae97165da3.1488615230.git.eraretuya@gmail.com>
+ <211e687f6848450067db4c1a294303a40aa66d57.1488615230.git.eraretuya@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8bdf46e166cc98c75f9ef73b5c6911ae97165da3.1488615230.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <211e687f6848450067db4c1a294303a40aa66d57.1488615230.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 04/03/17 08:31, Eva Rachel Retuya wrote:
-> Add the device tree binding documentation for the ADXL345 3-axis digital
-> accelerometer.
+> Add SPI driver that initializes SPI regmap for the adxl345 core driver.
+> The driver supports the same functionality as I2C namely the x, y, z and
+> scale readings.
 > 
 > Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with.
+> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Applied to the togreg branch og iio.git and pushed out as testing.
 
 Thanks,
 
 Jonathan
 > ---
-> Change from v5:
-> * Add Rob's Acked-by tag
+> Changes from v5:
+> * Simplify configuration dependency to "depends on INPUT_ADXL34X=n"
+> * Modify header comment: place indication at the beginning
+> * Re-order local variable declarations from longest to shortest line
+> * Remove explicit casting to int in handling devm_regmap_init_spi() error,
+>   use %ld instead
+> * Rename functions calls from *_common_* to *_core_*
 > 
->  .../devicetree/bindings/iio/accel/adxl345.txt      | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
+>  drivers/iio/accel/Kconfig       | 14 +++++++
+>  drivers/iio/accel/Makefile      |  1 +
+>  drivers/iio/accel/adxl345_spi.c | 81 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 96 insertions(+)
+>  create mode 100644 drivers/iio/accel/adxl345_spi.c
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adxl345.txt b/Documentation/devicetree/bindings/iio/accel/adxl345.txt
+> diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+> index a725227..15de262 100644
+> --- a/drivers/iio/accel/Kconfig
+> +++ b/drivers/iio/accel/Kconfig
+> @@ -22,6 +22,20 @@ config ADXL345_I2C
+>  	  will be called adxl345_i2c and you will also get adxl345_core
+>  	  for the core module.
+>  
+> +config ADXL345_SPI
+> +	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer SPI Driver"
+> +	depends on INPUT_ADXL34X=n
+> +	depends on SPI
+> +	select ADXL345
+> +	select REGMAP_SPI
+> +	help
+> +	  Say Y here if you want to build support for the Analog Devices
+> +	  ADXL345 3-axis digital accelerometer.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called adxl345_spi and you will also get adxl345_core
+> +	  for the core module.
+> +
+>  config BMA180
+>  	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
+>  	depends on I2C
+> diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+> index 3f4a6d6..31fba19 100644
+> --- a/drivers/iio/accel/Makefile
+> +++ b/drivers/iio/accel/Makefile
+> @@ -5,6 +5,7 @@
+>  # When adding new entries keep the list in alphabetical order
+>  obj-$(CONFIG_ADXL345) += adxl345_core.o
+>  obj-$(CONFIG_ADXL345_I2C) += adxl345_i2c.o
+> +obj-$(CONFIG_ADXL345_SPI) += adxl345_spi.o
+>  obj-$(CONFIG_BMA180) += bma180.o
+>  obj-$(CONFIG_BMA220) += bma220_spi.o
+>  obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
+> diff --git a/drivers/iio/accel/adxl345_spi.c b/drivers/iio/accel/adxl345_spi.c
 > new file mode 100644
-> index 0000000..e7111b0
+> index 0000000..6d65819
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/accel/adxl345.txt
-> @@ -0,0 +1,38 @@
-> +Analog Devices ADXL345 3-Axis, +/-(2g/4g/8g/16g) Digital Accelerometer
+> +++ b/drivers/iio/accel/adxl345_spi.c
+> @@ -0,0 +1,81 @@
+> +/*
+> + * ADXL345 3-Axis Digital Accelerometer SPI driver
+> + *
+> + * Copyright (c) 2017 Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is subject to the terms and conditions of version 2 of
+> + * the GNU General Public License. See the file COPYING in the main
+> + * directory of this archive for more details.
+> + */
 > +
-> +http://www.analog.com/en/products/mems/accelerometers/adxl345.html
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/spi/spi.h>
 > +
-> +Required properties:
-> + - compatible : should be "adi,adxl345"
-> + - reg : the I2C address or SPI chip select number of the sensor
+> +#include "adxl345.h"
 > +
-> +Required properties for SPI bus usage:
-> + - spi-max-frequency : set maximum clock frequency, must be 5000000
-> + - spi-cpol and spi-cpha : must be defined for adxl345 to enable SPI mode 3
+> +#define ADXL345_MAX_SPI_FREQ_HZ		5000000
 > +
-> +Optional properties:
-> + - interrupt-parent : phandle to the parent interrupt controller as documented
-> +   in Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> + - interrupts: interrupt mapping for IRQ as documented in
-> +   Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +static const struct regmap_config adxl345_spi_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	 /* Setting bits 7 and 6 enables multiple-byte read */
+> +	.read_flag_mask = BIT(7) | BIT(6),
+> +};
 > +
-> +Example for a I2C device node:
+> +static int adxl345_spi_probe(struct spi_device *spi)
+> +{
+> +	const struct spi_device_id *id = spi_get_device_id(spi);
+> +	struct regmap *regmap;
 > +
-> +	accelerometer@2a {
-> +		compatible = "adi,adxl345";
-> +		reg = <0x53>;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
+> +	/* Bail out if max_speed_hz exceeds 5 MHz */
+> +	if (spi->max_speed_hz > ADXL345_MAX_SPI_FREQ_HZ) {
+> +		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds 5 MHz\n",
+> +			spi->max_speed_hz);
+> +		return -EINVAL;
+> +	}
 > +
-> +Example for a SPI device node:
+> +	regmap = devm_regmap_init_spi(spi, &adxl345_spi_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(&spi->dev, "Error initializing spi regmap: %ld\n",
+> +			PTR_ERR(regmap));
+> +		return PTR_ERR(regmap);
+> +	}
 > +
-> +	accelerometer@0 {
-> +		compatible = "adi,adxl345";
-> +		reg = <0>;
-> +		spi-max-frequency = <5000000>;
-> +		spi-cpol;
-> +		spi-cpha;
-> +		interrupt-parent = <&gpio1>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
+> +	return adxl345_core_probe(&spi->dev, regmap, id->name);
+> +}
+> +
+> +static int adxl345_spi_remove(struct spi_device *spi)
+> +{
+> +	return adxl345_core_remove(&spi->dev);
+> +}
+> +
+> +static const struct spi_device_id adxl345_spi_id[] = {
+> +	{ "adxl345", 0 },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(spi, adxl345_spi_id);
+> +
+> +static const struct of_device_id adxl345_of_match[] = {
+> +	{ .compatible = "adi,adxl345" },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, adxl345_of_match);
+> +
+> +static struct spi_driver adxl345_spi_driver = {
+> +	.driver = {
+> +		.name	= "adxl345_spi",
+> +		.of_match_table = adxl345_of_match,
+> +	},
+> +	.probe		= adxl345_spi_probe,
+> +	.remove		= adxl345_spi_remove,
+> +	.id_table	= adxl345_spi_id,
+> +};
+> +
+> +module_spi_driver(adxl345_spi_driver);
+> +
+> +MODULE_AUTHOR("Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer SPI driver");
+> +MODULE_LICENSE("GPL v2");
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
