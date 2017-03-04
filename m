@@ -1,59 +1,228 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 00/10] Nokia H4+ support
-Date: Sat,  4 Mar 2017 12:58:23 +0100
-Message-ID: <20170304115833.3538-1-sre@kernel.org>
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v2] ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
+Date: Sat, 4 Mar 2017 13:17:55 +0100
+Message-ID: <6bec7bbc-cc4b-389c-2b5d-fa078629a4c9@suse.de>
+References: <20170304092651.6979-1-carlo@caione.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170304092651.6979-1-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Am 04.03.2017 um 10:26 schrieb Carlo Caione:
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index c246cd2730d9..9c39c766cfdb 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -49,3 +49,4 @@ Board compatible values:
+>    - "amlogic,q201" (Meson gxm s912)
+>    - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+>    - "nexbox,a1" (Meson gxm s912)
+> +  - "hwacom,amazetv" (Meson gxl s905x)
 
-As the title suggest here is another try to get the Nokia bluetooth
-supported mainline. The driver is based on the serdev work from Rob
-Herring, which got merged into 4.11-rc1 (this patchset is based on
-recent master branch from torvalds).
+Really in the bottom and after gxm? Please don't make it harder to fix.
+Also, shouldn't that be a preceding dt-bindings: patch?
 
-The driver was tested on N950 (I can connect to different devices
-with bluetoothctl and fetch their info). It does not yet run completly
-stable (especially on N900), but its better than no device support
-at all.
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index 3f94bce33b7f..1f4102833e59 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-hwacom-amazetv.dtb
 
--- Sebastian
+Please sort alphabetically.
 
-Rob Herring (1):
-  Bluetooth: hci_uart: add serdev driver support library
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+> new file mode 100644
+> index 000000000000..1f087e8805c7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+> @@ -0,0 +1,164 @@
+> +/*
+> + * Copyright (c) 2017 Carlo Caione
+> + * Copyright (c) 2016 BayLibre, Inc.
+> + * Author: Neil Armstrong <narmstrong-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "meson-gxl-s905x.dtsi"
+> +
+> +/ {
+> +	compatible = "hwacom,amazetv", "amlogic,s905x", "amlogic,meson-gxl";
+> +	model = "Hwacom AmazeTV (S905X)";
+> +
+> +	aliases {
+> +		serial0 = &uart_AO;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x80000000>;
+> +	};
+> +
+> +	vddio_card: gpio-regulator {
+> +		compatible = "regulator-gpio";
+> +
+> +		regulator-name = "VDDIO_CARD";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpios = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
+> +		gpios-states = <1>;
+> +
+> +		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
+> +		states = <1800000 0
+> +			  3300000 1>;
+> +	};
+> +
+> +	vddio_boot: regulator-vddio_boot {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDIO_BOOT";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+> +
+> +	vddao_3v3: regulator-vddao_3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDDAO_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	vcc_3v3: regulator-vcc_3v3 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VCC_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	emmc_pwrseq: emmc-pwrseq {
+> +		compatible = "mmc-pwrseq-emmc";
+> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
+> +	};
+> +
+> +	wifi32k: wifi32k {
+> +		compatible = "pwm-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
+> +	};
+> +
+> +	sdio_pwrseq: sdio-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
+> +		clocks = <&wifi32k>;
+> +		clock-names = "ext_clock";
+> +	};
+> +
+> +	cvbs-connector {
+> +		compatible = "composite-video-connector";
+> +
+> +		port {
+> +			cvbs_connector_in: endpoint {
+> +				remote-endpoint = <&cvbs_vdac_out>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&uart_AO {
+> +	status = "okay";
+> +	pinctrl-0 = <&uart_ao_a_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +&ethmac {
+> +	status = "okay";
+> +	phy-mode = "rmii";
+> +	phy-handle = <&internal_phy>;
+> +};
+> +
+> +&ir {
+> +	status = "okay";
+> +	pinctrl-0 = <&remote_input_ao_pins>;
+> +	pinctrl-names = "default";
+> +};
+> +
+> +/* SD card */
+> +&sd_emmc_b {
+> +	status = "okay";
+> +	pinctrl-0 = <&sdcard_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	max-frequency = <100000000>;
+> +	disable-wp;
+> +
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> +	cd-inverted;
+> +
+> +	vmmc-supply = <&vddao_3v3>;
+> +	vqmmc-supply = <&vddio_card>;
+> +};
+> +
+> +/* eMMC */
+> +&sd_emmc_c {
+> +	status = "okay";
+> +	pinctrl-0 = <&emmc_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	bus-width = <8>;
+> +	cap-sd-highspeed;
+> +	cap-mmc-highspeed;
+> +	max-frequency = <100000000>;
+> +	non-removable;
+> +	disable-wp;
+> +	mmc-ddr-1_8v;
+> +	mmc-hs200-1_8v;
+> +
+> +	mmc-pwrseq = <&emmc_pwrseq>;
+> +	vmmc-supply = <&vcc_3v3>;
+> +	vqmmc-supply = <&vddio_boot>;
+> +};
+> +
+> +&pwm_ef {
+> +	status = "okay";
+> +	pinctrl-0 = <&pwm_e_pins>;
+> +	pinctrl-names = "default";
+> +	clocks = <&clkc CLKID_FCLK_DIV4>;
+> +	clock-names = "clkin0";
+> +};
+> +
+> +&cvbs_vdac_port {
+> +	cvbs_vdac_out: endpoint {
+> +		remote-endpoint = <&cvbs_connector_in>;
+> +	};
+> +};
 
-Sebastian Reichel (9):
-  ARM: dts: N9/N950: add bluetooth
-  ARM: dts: N900: Add bluetooth
-  Bluetooth: hci_uart: add support for word alignment
-  Bluetooth: hci_serdev: do not open device in hci open
-  tty: serial: omap: add UPF_BOOT_AUTOCONF flag for DT init
-  serdev: add serdev_device_wait_until_sent
-  serdev: add serdev_device_get_cts
-  serdev: add serdev_device_set_rts
-  Bluetooth: add nokia driver
+These nodes are not sorted alphabetically.
 
- .../devicetree/bindings/net/nokia-bluetooth.txt    |  51 ++
- arch/arm/boot/dts/omap3-n900.dts                   |  23 +-
- arch/arm/boot/dts/omap3-n950-n9.dtsi               |  32 +
- drivers/bluetooth/Kconfig                          |  12 +
- drivers/bluetooth/Makefile                         |   3 +
- drivers/bluetooth/hci_h4.c                         |  17 +
- drivers/bluetooth/hci_ldisc.c                      |   4 +
- drivers/bluetooth/hci_nokia.c                      | 839 +++++++++++++++++++++
- drivers/bluetooth/hci_serdev.c                     | 365 +++++++++
- drivers/bluetooth/hci_uart.h                       |   7 +
- drivers/tty/serdev/core.c                          |  33 +
- drivers/tty/serdev/serdev-ttyport.c                |  62 +-
- drivers/tty/serial/omap-serial.c                   |   3 +
- include/linux/serdev.h                             |  12 +
- 14 files changed, 1460 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/nokia-bluetooth.txt
- create mode 100644 drivers/bluetooth/hci_nokia.c
- create mode 100644 drivers/bluetooth/hci_serdev.c
+Regards,
+Andreas
 
 -- 
-2.11.0
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
