@@ -1,96 +1,230 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 0/4] iio: accel: adxl345: Split driver into core and I2C then add SPI support
-Date: Sat,  4 Mar 2017 16:31:22 +0800
-Message-ID: <cover.1488615230.git.eraretuya@gmail.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Carlo Caione <carlo@caione.org>
+Subject: [PATCH v2] ARM64: dts: meson-gxl: Add support for HwaCom AmazeTV
+Date: Sat,  4 Mar 2017 10:26:51 +0100
+Message-ID: <20170304092651.6979-1-carlo@caione.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, narmstrong@baylibre.com, robh+dt@kernel.org, linux-amlogic@lists.infradead.org, linux@endlessm.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
+Cc: Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset modifies the adxl345 to use regmap. In doing so, we can
-easily introduce SPI support and let regmap handle the rest.
+From: Carlo Caione <carlo@endlessm.com>
 
-Recap of basic features: read_raw for x, y and z axes, scale. After
-applying this series, driver now supports the SPI protocol and enumeration
-of device via device tree.
+This patch adds support for the HwaCom AmazeTV set-top-box. The
+hardware configuration is really similar to the other GXL boards but
+for this hardware we need to limit the max-frequency of the eMMC to
+have it working.
 
-Changes from v5:
-[PATCH 1/4]
-* Add Rob's Acked-by tag
-[PATCH 2/4]
-* Re-order local variable declarations from longest to shortest line
-* Remove explicit casting to int in handling devm_regmap_init_i2c() error,
-  use %ld instead
-[PATCH 3/4]
-* Simplify configuration dependency to "depends on INPUT_ADXL34X=n"
-* Rename functions from *_common_* to *_core_*
-* Modify header comment: place indication at the beginning
-* Remove explicit casting to int in handling devm_regmap_init_i2c() error,
-  use %ld instead
-* Remove temporary variable 'name'
-[PATCH 4/4]
-* Simplify configuration dependency to "depends on INPUT_ADXL34X=n"
-* Modify header comment: place indication at the beginning
-* Re-order local variable declarations from longest to shortest line
-* Remove explicit casting to int in handling devm_regmap_init_spi() error,
-  use %ld instead
-* Rename functions calls from *_common_* to *_core_*
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Carlo Caione <carlo@endlessm.com>
+---
+ Documentation/devicetree/bindings/arm/amlogic.txt  |   1 +
+ arch/arm64/boot/dts/amlogic/Makefile               |   1 +
+ .../dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 164 +++++++++++++++++++++
+ 3 files changed, 166 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
 
-Changes from v4:
-* Update subject-prefix of [PATCH 1/4]
-* Update node name from "adxl345@unit-address" to "accelerometer@unit-address"
-* Add Andy's Reviewed-by tag
-
-Changes from v3:
-[PATCH 1/4]
-* None
-[PATCH 2/4]
-* Keep intact I2C client structure which was deleted from v3
-* Make use of regmap_get_device to retrieve struct device, use these for
-  debugging prints instead of &client->dev.
-[PATCH 3/4] and [PATCH 4/4]
-* Revert to explicit and separate I2C and SPI configuration
-* Add OF match table, make it enumerable in ACPI environment (Andy's suggestion)
-
-Changes from v2:
-* Drop PATCH 4 iio: accel: adxl345: Add ACPI support
-* Add OF match table on both I2C and SPI files and document them
-
-Changes from v1:
-[PATCH 1/4]
-* Move other deletions from patch 2 in here -- make it clear what got deleted
-  and/or modified that is hard to see previously
-* Introduce the driver header file "adxl345.h" here instead of doing it in the
-  next patch
-* Completely omit traces of i2c_client and let this file (adxl345.c) mirror the
-  core file on the next patch.
-* Improve debugging print about invalid device ID in probe.
-[PATCH 2/4]
-* Update Kconfig to Jonathan's preferred style
-* Improve similarity index from 78% to 100% (rename detection)
-[PATCH 4/4]
-* Correct acpi_device_id: ADX0345 -> ADS0345
-
-Eva Rachel Retuya (4):
-  dt-bindings: iio: accel: Document ADXL345 accelerometer binding
-  iio: accel: adxl345: Use I2C regmap instead of direct I2C access
-  iio: accel: adxl345: Split driver into core and I2C
-  iio: accel: adxl345: Add SPI support
-
- .../devicetree/bindings/iio/accel/adxl345.txt      | 38 +++++++++
- drivers/iio/accel/Kconfig                          | 28 ++++++-
- drivers/iio/accel/Makefile                         |  4 +-
- drivers/iio/accel/adxl345.h                        | 18 +++++
- drivers/iio/accel/{adxl345.c => adxl345_core.c}    | 91 +++++++++-------------
- drivers/iio/accel/adxl345_i2c.c                    | 73 +++++++++++++++++
- drivers/iio/accel/adxl345_spi.c                    | 81 +++++++++++++++++++
- 7 files changed, 275 insertions(+), 58 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/accel/adxl345.txt
- create mode 100644 drivers/iio/accel/adxl345.h
- rename drivers/iio/accel/{adxl345.c => adxl345_core.c} (61%)
- create mode 100644 drivers/iio/accel/adxl345_i2c.c
- create mode 100644 drivers/iio/accel/adxl345_spi.c
-
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index c246cd2730d9..9c39c766cfdb 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -49,3 +49,4 @@ Board compatible values:
+   - "amlogic,q201" (Meson gxm s912)
+   - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+   - "nexbox,a1" (Meson gxm s912)
++  - "hwacom,amazetv" (Meson gxl s905x)
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index 3f94bce33b7f..1f4102833e59 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -11,6 +11,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-hwacom-amazetv.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q200.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-q201.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+new file mode 100644
+index 000000000000..1f087e8805c7
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+@@ -0,0 +1,164 @@
++/*
++ * Copyright (c) 2017 Carlo Caione
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Neil Armstrong <narmstrong@kernel.org>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++
++#include "meson-gxl-s905x.dtsi"
++
++/ {
++	compatible = "hwacom,amazetv", "amlogic,s905x", "amlogic,meson-gxl";
++	model = "Hwacom AmazeTV (S905X)";
++
++	aliases {
++		serial0 = &uart_AO;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++
++	vddio_card: gpio-regulator {
++		compatible = "regulator-gpio";
++
++		regulator-name = "VDDIO_CARD";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
++		gpios-states = <1>;
++
++		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
++		states = <1800000 0
++			  3300000 1>;
++	};
++
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	vddao_3v3: regulator-vddao_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDAO_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
++	wifi32k: wifi32k {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32768>;
++		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
++	};
++
++	sdio_pwrseq: sdio-pwrseq {
++		compatible = "mmc-pwrseq-simple";
++		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
++		clocks = <&wifi32k>;
++		clock-names = "ext_clock";
++	};
++
++	cvbs-connector {
++		compatible = "composite-video-connector";
++
++		port {
++			cvbs_connector_in: endpoint {
++				remote-endpoint = <&cvbs_vdac_out>;
++			};
++		};
++	};
++};
++
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
++};
++
++&ethmac {
++	status = "okay";
++	phy-mode = "rmii";
++	phy-handle = <&internal_phy>;
++};
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
++
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++
++	vmmc-supply = <&vddao_3v3>;
++	vqmmc-supply = <&vddio_card>;
++};
++
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <8>;
++	cap-sd-highspeed;
++	cap-mmc-highspeed;
++	max-frequency = <100000000>;
++	non-removable;
++	disable-wp;
++	mmc-ddr-1_8v;
++	mmc-hs200-1_8v;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
++};
++
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
++	};
++};
 -- 
-2.7.4
+2.12.0
