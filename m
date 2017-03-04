@@ -1,119 +1,57 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 3 Mar 2017 16:36:40 -0800
-Message-ID: <c4108ed3-5ad7-900d-1a9b-cded4f763db6@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
+ SMP2P drivers
+Date: Fri, 3 Mar 2017 17:20:32 -0800
+Message-ID: <20170304012032.GA1694@minitux>
+References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
+ <20170215045157.11659-2-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170303230645.GR21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170215045157.11659-2-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Neusch?fer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue 14 Feb 20:51 PST 2017, Jonathan Neusch?fer wrote:
 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+> ---
+>  arch/arm/configs/qcom_defconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
+> index 4ffdd607205d..97b9e9cd2292 100644
+> --- a/arch/arm/configs/qcom_defconfig
+> +++ b/arch/arm/configs/qcom_defconfig
+> @@ -190,11 +190,16 @@ CONFIG_MDM_LCC_9615=y
+>  CONFIG_MSM_MMCC_8960=y
+>  CONFIG_MSM_MMCC_8974=y
+>  CONFIG_HWSPINLOCK_QCOM=y
+> +CONFIG_REMOTEPROC=y
+> +CONFIG_QCOM_ADSP_PIL=y
+> +CONFIG_QCOM_Q6V5_PIL=y
+> +CONFIG_QCOM_WCNSS_PIL=y
+>  CONFIG_QCOM_GSBI=y
+>  CONFIG_QCOM_PM=y
+>  CONFIG_QCOM_SMEM=y
+>  CONFIG_QCOM_SMD=y
+>  CONFIG_QCOM_SMD_RPM=y
+> +CONFIG_QCOM_SMP2P=y
 
-On 03/03/2017 03:06 PM, Russell King - ARM Linux wrote:
-> On Thu, Mar 02, 2017 at 06:02:57PM +0200, Sakari Ailus wrote:
->> Hi Steve,
->>
->> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
->>> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
->>> all subdev entities in a pipeline to a given video device.
->>>
->>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>> ---
->>>  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
->>>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
->>>  2 files changed, 73 insertions(+)
->>>
->>> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
->>> index 303980b..09d4d97 100644
->>> --- a/drivers/media/v4l2-core/v4l2-mc.c
->>> +++ b/drivers/media/v4l2-core/v4l2-mc.c
->>> @@ -22,6 +22,7 @@
->>>  #include <linux/usb.h>
->>>  #include <media/media-device.h>
->>>  #include <media/media-entity.h>
->>> +#include <media/v4l2-ctrls.h>
->>>  #include <media/v4l2-fh.h>
->>>  #include <media/v4l2-mc.h>
->>>  #include <media/v4l2-subdev.h>
->>> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
->>>  }
->>>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
->>>
->>> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
->>> +				     struct media_entity *start_entity)
->>
->> I have a few concerns / questions:
->>
->> - What's the purpose of this patch? Why not to access the sub-device node
->>   directly?
->
-> What tools are in existance _today_ to provide access to these controls
-> via the sub-device nodes?
->
-> v4l-tools doesn't last time I looked - in fact, the only tool in v4l-tools
-> which is capable of accessing the subdevices is media-ctl, and that only
-> provides functionality for configuring the pipeline.
->
-> So, pointing people at vapourware userspace is really quite rediculous.
+We also need CONFIG_QCOM_SMSM=y here, its currently used to signal state
+of the ring buffers for WiFi.
 
+With the addition of that you have my:
 
-Hi Russell,
+Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Yes, that's a big reason why I added this capability. The v4l2-ctl
-tool won't accept subdev nodes, although Philipp Zabel has a quick hack
-to get around this (ignore return code from VIDIOC_QUERYCAP).
-
-
->
-> The established way to control video capture is through the main video
-> capture device, not through the sub-devices.  Yes, the controls are
-> exposed through sub-devices too, but that does not mean that is the
-> correct way to access them.
->
-> The v4l2 documentation (Documentation/media/kapi/v4l2-controls.rst)
-> even disagrees with your statements.  That talks about control
-> inheritence from sub-devices to the main video device, and the core
-> v4l2 code provides _automatic_ support for this - see
-> v4l2_device_register_subdev():
->
->         /* This just returns 0 if either of the two args is NULL */
->         err = v4l2_ctrl_add_handler(v4l2_dev->ctrl_handler, sd->ctrl_handler, NULL);
->
-> which merges the subdev's controls into the main device's control
-> handler.
-
-Actually v4l2_dev->ctrl_handler is not of much use to me. This will
-compose a list of controls from all registered subdevs, i.e. _all
-possible controls_.
-
-What v4l2_pipeline_inherit_controls() does is compose a list of
-controls that are reachable and available in the currently configured
-pipeline.
-
-Steve
-
->
-> So, (a) I don't think Steve needs to add this code, and (b) I think
-> your statements about not inheriting controls goes against the
-> documentation and API compatibility with _existing_ applications,
-> and ultimately hurts the user experience, since there's nothing
-> existing today to support what you're suggesting in userspace.
->
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
