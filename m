@@ -1,42 +1,55 @@
-From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: display: imx: entry for LAUSCR
-Date: Sat, 4 Mar 2017 09:52:35 +0100
-Message-ID: <20170304085235.GA25286@botnar.kaiser.cx>
-References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
- <1488193030-13064-2-git-send-email-martin@kaiser.cx>
- <20170302161330.6xguzjv3ttwbv5ek@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v2 0/1] meson-gxl: improve support for the P212 board
+Date: Sat,  4 Mar 2017 10:52:12 +0100
+Message-ID: <20170304095213.8221-1-martin.blumenstingl@googlemail.com>
+References: <20170219224114.17201-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170302161330.6xguzjv3ttwbv5ek@rob-hp-laptop>
+In-Reply-To: <20170219224114.17201-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The P212 board is a reference design and re-used by other boards (similar
+to the meson-gxbb-p20x.dtsi which is inherited by the Wetek boards).
+Until now only very basic functionality was supported, but most of the
+interesting things (wifi, SD, eMMC, IR, etc.) are not enabled yet - which
+changes with this patch.
 
-Thus wrote Rob Herring (robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org):
+Neil Armstrong kindly took take the information he had from Amlogic for
+the P212 board itself and built a list of supported features and
+differences with the Khadas VIM boards (which are based on the P212
+reference design). This patch is a result of that.
 
-> On Mon, Feb 27, 2017 at 11:56:42AM +0100, Martin Kaiser wrote:
+I have tested this with a Khadas VIM board (patch for this will follow)
+as I don't have a P212 board itself. Thus it would be nice if someone
+could test it on an actual P212 board.
 
-> >  	- fsl,pcr: LCDC PCR value
-> > +	A display node may optionally define
-> > +	- fsl,lauscr: LCDC AUS Mode Control Register value (only for imx21)
+Please also specifically review the copyright statements in
+meson-gxl-s905x-p212.dtsi - I want to make sure I didn't mess anything
+up there.
 
-> Looks like we already got one, but generally we don't just put magic 
-> register values in the DT. What does this register control?
 
-it contains settings related to AUS mode. This mode sets different
-mappings between framebuffer memory and display pixels. It seems that
-these mappings were originally defined for displays from AUO.
+Changes since v1:
+- update the cover letter to indicate where the information about the
+  P212 reference design came from
+- use SPDX tags instead of including the full license text
+- removed the brcmf sub-node of the sd_emmc_a node as the P212 reference
+  design uses a Realtek based wifi chip (and updated the commit
+  description accordingly)
+- included Neil's Tested-By
 
-The only bit from this register that I really need is "AUS mode on/off".
-I could put this into the device tree instead of the entire register.
+Martin Blumenstingl (1):
+  ARM64: dts: meson-gxl: improve support for the P212 reference design
 
-Best regards,
-Martin
+ .../boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  21 +--
+ .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     | 173 +++++++++++++++++++++
+ 2 files changed, 185 insertions(+), 9 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+
+-- 
+2.12.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
