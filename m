@@ -1,97 +1,129 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] iio: accel: adxl345: Split driver into core and
- I2C
-Date: Sat, 4 Mar 2017 13:56:34 +0800
-Message-ID: <20170304055633.GB6948@Socrates-UM>
-References: <cover.1488248485.git.eraretuya@gmail.com>
- <f15e3023ba4cabd1a236943378caa6ab6c1b4d85.1488248485.git.eraretuya@gmail.com>
- <CAHp75VdntzxWpQvnYe346yjJ4e2wwpfFizSxLuUanc7F_QAm+Q@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Use thermal fuse value for thermal
+ zone 0 on Exynos5420
+Date: Sat, 4 Mar 2017 10:01:09 +0200
+Message-ID: <20170304080109.j2kuwmqj7mgfx3ky@kozik-lap>
+References: <20170211201456.27974-1-krzk@kernel.org>
+ <252f9e32-ff2c-a1ce-3c98-6383a1148e02@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VdntzxWpQvnYe346yjJ4e2wwpfFizSxLuUanc7F_QAm+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <252f9e32-ff2c-a1ce-3c98-6383a1148e02@osg.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, Anand Moon <linux.amoon@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Willy WOLFF <willy.mh.wolff@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 06:51:28PM +0200, Andy Shevchenko wrote:
-> On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > Move I2C-specific code into its own file and rely on regmap to access
-> > registers. The core code provides access to x, y, z and scale readings.
+On Fri, Mar 03, 2017 at 06:50:06PM -0300, Javier Martinez Canillas wrote:
+> Hello Krzysztof,
 > 
-> Portion of minor comments.
+> On 02/11/2017 05:14 PM, Krzysztof Kozlowski wrote:
+> > In Odroid XU3 Lite board, the temperature levels reported for thermal
+> > zone 0 were weird. In warm room:
+> > 	/sys/class/thermal/thermal_zone0/temp:32000
+> > 	/sys/class/thermal/thermal_zone1/temp:51000
+> > 	/sys/class/thermal/thermal_zone2/temp:55000
+> > 	/sys/class/thermal/thermal_zone3/temp:54000
+> > 	/sys/class/thermal/thermal_zone4/temp:51000
+> > 
+> > Sometimes after booting the value was even equal to ambient temperature
+> > which is highly unlikely to be a real temperature of sensor in SoC.
+> > 
+> > The thermal sensor's calibration (trimming) is based on fused values.
+> > In case of the board above, the fused values are: 35, 52, 43, 58 and 43
+> > (corresponding to each TMU device).  However driver defined a minimum value
+> > for fused data as 40 and for smaller values it was using a hard-coded 55
+> > instead.  This lead to mapping data from sensor to wrong temperatures
+> > for thermal zone 0.
+> > 
+> > Various vendor 3.10 trees (Hardkernel's based on Samsung LSI, Artik 10)
+> > do not impose any limits on fused values.  Since we do not have any
+> > knowledge about these limits, use 0 as a minimum accepted fused value.
+> > This should essentially allow accepting any reasonable fused value thus
+> > behaving like vendor driver.
+> > 
+> > The exynos5420-tmu-sensor-conf.dtsi is copied directly from existing
+> > exynso4412 with one change - the samsung,tmu_min_efuse_value.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > Testing on other Exynos542x boards is much appreciated. Especially I
+> > wonder what efuse values are there.
 > 
-> > +config ADXL345_I2C
-> > +       tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer I2C Driver"
+> I tested on both Exynos5422 Odroid XU4 and Exynos5800 Peach Pi boards.
 > 
-> >         depends on !(INPUT_ADXL34X=y || INPUT_ADXL34X=m)
+> The temperatures levels reported for these two boards on a warm room are:
 > 
-> I'm wondering if it works in a form of
+> Odroid XU4
 > 
-> depends on INPUT_ADXL34X=n
+> # cat /sys/class/thermal/thermal_zone*/temp
+> 50000
+> 50000
+> 54000
+> 51000
+> 48000
 > 
+> Peach Pi
+> 
+> # cat /sys/class/thermal/thermal_zone*/temp
+> 42000
+> 44000
+> 27000 <-- weird value for thermal zone 2 like zone 0 in your XU3 lite
+> 45000
+> 45000
+> 
+> And the efuse values for the TMU devices are:
+> 
+> Odroid XU4
+> 
+> TMU0 = 45
+> TMU1 = 44
+> TMU2 = 44
+> TMU3 = 46
+> TMU3 = 46
+> 
+> Peach Pi
+> 
+> TMU0 = 44
+> TMU1 = 46
+> TMU2 = 36
+> TMU3 = 53
+> TMU3 = 46
+> 
+> The fused value for TMU2 is < 40 so that explains the weird temperature
+> level for thermal zone 2 in Peach. So after your patch, makes more sense:
+> 
+> # cat /sys/class/thermal/thermal_zone*/temp
+> 41000
+> 42000
+> 45000
+> 43000
+> 43000
 
-Yes it works. Will change it into this form.
+Great! Thanks for testing!
 
-> > +int adxl345_common_probe(struct device *dev, struct regmap *regmap,
-> > +                        const char *name);
-> > +int adxl345_common_remove(struct device *dev);
-> 
-> I think a "common" word is redundant.
-> 
 
-OK. I will use "core" instead.
+> I wonder though if 0 is the best value or if we should just lower more
+> to cover the used e-fuse values in Exynos5 boards. But as you said,
+> we have no knowledge about these limits...
 
-> > - * IIO driver for ADXL345
-> > - * 7-bit I2C slave address: 0x1D (ALT ADDRESS pin tied to VDDIO) or
-> > - * 0x53 (ALT ADDRESS pin grounded)
+Yeah... we could set value of 10 or 20... but that would be blind shot.
 > 
-> > + * IIO core driver for ADXL345
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
 > 
-> Should not it be at the beginning of header comment?
-> 
-
-Ack.
-
-> > +static int adxl345_i2c_probe(struct i2c_client *client,
-> > +                            const struct i2c_device_id *id)
-> > +{
-> 
-> > +       struct regmap *regmap;
-> > +       const char *name = NULL;
-> 
-> Reverse tree order, please.
-> 
-> > +
-> > +       regmap = devm_regmap_init_i2c(client, &adxl345_i2c_regmap_config);
-> > +       if (IS_ERR(regmap)) {
-> > +               dev_err(&client->dev, "Error initializing i2c regmap: %d\n",
-> > +                       (int)PTR_ERR(regmap));
-> > +               return PTR_ERR(regmap);
-> > +       }
-> > +
-> 
-> > +       if (id)
-> > +               name = id->name;
-> > +
-> > +       return adxl345_common_probe(&client->dev, regmap, name);
-> 
-> Do you need temporary variable?
-> 
-> return adxl345_probe(&client->dev, regmap, id ? id->name : NULL);
-> 
-
-Will remove it and use the form you suggest.
 
 Thanks,
-Eva
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Krzysztof
