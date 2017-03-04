@@ -1,221 +1,292 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 4/5] ARM64: dts: Prepare Realtek RTD1295 and Zidoo X9S
-Date: Sat, 4 Mar 2017 14:15:39 +0100
-Message-ID: <c8f9941f-17ab-5db0-5f6c-186fe1a87bbf@suse.de>
-References: <20170223164553.3715-1-afaerber@suse.de>
- <20170223164553.3715-5-afaerber@suse.de>
- <20170228000327.hnenlharcmiqxkpb@rob-hp-laptop>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] watchdog: add rza_wdt driver
+Date: Sat, 4 Mar 2017 07:14:57 -0800
+Message-ID: <64cc8948-1940-f219-fb87-800b3d617030@roeck-us.net>
+References: <20170303173201.5597-1-chris.brandt@renesas.com>
+ <20170303173201.5597-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170228000327.hnenlharcmiqxkpb@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Roc He <hepeng@zidoo.tv>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170303173201.5597-2-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 28.02.2017 um 01:03 schrieb Rob Herring:
-> On Thu, Feb 23, 2017 at 05:45:51PM +0100, Andreas F=E4rber wrote:
->> Add initial device trees for the RTD1295 SoC and the Zidoo X9S TV box.
->>
->> The CPUs lack the enable-method property because the vendor device tree
->> uses a custom "rtk-spin-table" method and "psci" did not appear to work.
->>
->> The UARTs lack the interrupts properties because the vendor device tree
->> connects them to a custom interrupt controller. earlycon works without.
->>
->> A list of memory reservations is adopted from v1.2.11 vendor device tree:
->> 0x02200000 can be used for an initrd, 0x01b00000 is audio-related;
->> ion-related 0x02600000, 0x02c00000 and 0x11000000 are left out;
->> 0x10000000 is used for sharing the U-Boot environment; others remain
->> to be investigated.
->>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
->> ---
->>  v1 -> v2:
->>  * Dropped 0x0000000010000000 /memreserve/
->>  =
+On 03/03/2017 09:31 AM, Chris Brandt wrote:
+> Adds a watchdog timer driver for the Renesas RZ/A Series SoCs. A reset
+> handler is also included since a WDT overflow is the only method for
+> restarting an RZ/A SoC.
+>
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v2:
+> * removed extra lines from file header comments
+> * changed (1<<#) to BIT(#)
+> * changed #define WTSCR_CKS(i) i to (i)
+> * changed format to #define SOMETHING<tab>value (and align values)
+> * now check if clock rate < 16384
+> * added space before and after '/' for "(1000 * U8_MAX) / rate"
+> * changed dev_info to dev_dbg for printing max_hw_heartbeat_ms
+> * added watchdog_init_timeout() for user to set timeout in DT
+> * switched to using devm_watchdog_register_device()
+> * added error message if register fails
+> * simplified rza_wdt_probe() return
+> * removed function rza_wdt_remove()
+> ---
+>  drivers/watchdog/Kconfig   |   8 ++
+>  drivers/watchdog/Makefile  |   1 +
+>  drivers/watchdog/rza_wdt.c | 199 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 208 insertions(+)
+>  create mode 100644 drivers/watchdog/rza_wdt.c
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index acb00b5..123c516 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -701,6 +701,14 @@ config RENESAS_WDT
+>  	  This driver adds watchdog support for the integrated watchdogs in the
+>  	  Renesas R-Car and other SH-Mobile SoCs (usually named RWDT or SWDT).
+>
+> +config RENESAS_RZAWDT
+> +	tristate "Renesas RZ/A WDT Watchdog"
+> +	depends on ARCH_RENESAS || COMPILE_TEST
+> +	select WATCHDOG_CORE
+> +	help
+> +	  This driver adds watchdog support for the integrated watchdogs in the
+> +	  Renesas RZ/A SoCs. These watchdogs can be used to reset a system.
+> +
+>  config ASPEED_WATCHDOG
+>  	tristate "Aspeed 2400 watchdog support"
+>  	depends on ARCH_ASPEED || COMPILE_TEST
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 0c3d35e..84b897c 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -81,6 +81,7 @@ obj-$(CONFIG_LPC18XX_WATCHDOG) += lpc18xx_wdt.o
+>  obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+>  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+>  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+> +obj-$(CONFIG_RENESAS_RZAWDT) += rza_wdt.o
+>  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+>
+>  # AVR32 Architecture
+> diff --git a/drivers/watchdog/rza_wdt.c b/drivers/watchdog/rza_wdt.c
+> new file mode 100644
+> index 0000000..76a9c1f
+> --- /dev/null
+> +++ b/drivers/watchdog/rza_wdt.c
+> @@ -0,0 +1,199 @@
+> +/*
+> + * Renesas RZ/A Series WDT Driver
+> + *
+> + * Copyright (C) 2017 Renesas Electronics America, Inc.
+> + * Copyright (C) 2017 Chris Brandt
+> + *
+> + * This file is subject to the terms and conditions of the GNU General Public
+> + * License.  See the file "COPYING" in the main directory of this archive
+> + * for more details.
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/delay.h>
+> +#include <linux/watchdog.h>
+> +#include <linux/clk.h>
+> +
 
->>  arch/arm64/boot/dts/Makefile                      |   1 +
->>  arch/arm64/boot/dts/realtek/Makefile              |   5 +
->>  arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts |  78 +++++++++++
->>  arch/arm64/boot/dts/realtek/rtd1295.dtsi          | 162 +++++++++++++++=
-+++++++
->>  4 files changed, 246 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/realtek/Makefile
->>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
->>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1295.dtsi
->>
->> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
->> index 080232b..78f7991 100644
->> --- a/arch/arm64/boot/dts/Makefile
->> +++ b/arch/arm64/boot/dts/Makefile
->> @@ -14,6 +14,7 @@ dts-dirs +=3D marvell
->>  dts-dirs +=3D mediatek
->>  dts-dirs +=3D nvidia
->>  dts-dirs +=3D qcom
->> +dts-dirs +=3D realtek
->>  dts-dirs +=3D renesas
->>  dts-dirs +=3D rockchip
->>  dts-dirs +=3D socionext
->> diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/=
-realtek/Makefile
->> new file mode 100644
->> index 0000000..8521e92
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/realtek/Makefile
->> @@ -0,0 +1,5 @@
->> +dtb-$(CONFIG_ARCH_REALTEK) +=3D rtd1295-zidoo-x9s.dtb
->> +
->> +always		:=3D $(dtb-y)
->> +subdir-y	:=3D $(dts-dirs)
->> +clean-files	:=3D *.dtb
->> diff --git a/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts b/arch/ar=
-m64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
->> new file mode 100644
->> index 0000000..53302bb
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/realtek/rtd1295-zidoo-x9s.dts
->> @@ -0,0 +1,78 @@
->> +/*
->> + * Copyright (c) 2016-2017 Andreas F=E4rber
->> + *
->> + * This file is dual-licensed: you can use it either under the terms
->> + * of the GPL or the X11 license, at your option. Note that this dual
->> + * licensing only applies to this file, and not this project as a
->> + * whole.
-> =
+Also needs to include <linux/bitops.h>. While at it, please order include
+files alphabetically.
 
-> You can use SPDX tag here instead.
+> +#define DEFAULT_TIMEOUT		30
+> +
+> +/* Watchdog Timer Registers */
+> +#define WTCSR			0
+> +#define WTCSR_MAGIC		0xA500
+> +#define WTSCR_WT		BIT(6)
+> +#define WTSCR_TME		BIT(5)
+> +#define WTSCR_CKS(i)		(i)
+> +
+> +#define WTCNT			2
+> +#define WTCNT_MAGIC		0x5A00
+> +
+> +#define WRCSR			4
+> +#define WRCSR_MAGIC		0x5A00
+> +#define WRCSR_RSTE		BIT(6)
+> +#define WRCSR_CLEAR_WOVF	0xA500	/* special value */
+> +
+> +struct rza_wdt {
+> +	struct watchdog_device wdev;
+> +	void __iomem *base;
+> +	struct clk *clk;
+> +};
+> +
+> +static int rza_wdt_start(struct watchdog_device *wdev)
+> +{
+> +	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
+> +
+> +	/* Stop timer */
+> +	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
+> +
+> +	/* Must dummy read WRCSR:WOVF at least once before clearing */
+> +	readb(priv->base + WRCSR);
+> +	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
+> +
+> +	/*
+> +	 * Start timer with slowest clock source and reset option enabled.
+> +	 */
+> +	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
+> +	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
+> +	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME | WTSCR_CKS(7),
+> +	       priv->base + WTCSR);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rza_wdt_stop(struct watchdog_device *wdev)
+> +{
+> +	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
+> +
+> +	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rza_wdt_ping(struct watchdog_device *wdev)
+> +{
+> +	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
+> +
+> +	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
+> +
+> +	return 0;
+> +}
+> +
+> +static int rza_wdt_restart(struct watchdog_device *wdev, unsigned long action,
+> +			    void *data)
+> +{
+> +	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
+> +
+> +	/* Stop timer */
+> +	writew(WTCSR_MAGIC | 0, priv->base + WTCSR);
+> +
+> +	/* Must dummy read WRCSR:WOVF at least once before clearing */
+> +	readb(priv->base + WRCSR);
+> +	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
+> +
+> +	/*
+> +	 * Start timer with fastest clock source and only 1 clock left before
+> +	 * overflow with reset option enabled.
+> +	 */
+> +	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
+> +	writew(WTCNT_MAGIC | 255, priv->base + WTCNT);
+> +	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME, priv->base + WTCSR);
+> +
+> +	/*
+> +	 * Actually make sure the above sequence hits hardware before sleeping.
+> +	 */
+> +	wmb();
+> +
+> +	/* Wait for WDT overflow (reset) */
+> +	udelay(20);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_info rza_wdt_ident = {
+> +	.options = WDIOF_MAGICCLOSE | WDIOF_KEEPALIVEPING | WDIOF_SETTIMEOUT,
+> +	.identity = "Renesas RZ/A WDT Watchdog",
+> +};
+> +
+> +static const struct watchdog_ops rza_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = rza_wdt_start,
+> +	.stop = rza_wdt_stop,
+> +	.ping = rza_wdt_ping,
+> +	.restart = rza_wdt_restart,
+> +};
+> +
+> +static int rza_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct rza_wdt *priv;
+> +	struct resource *res;
+> +	unsigned long rate;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	priv->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		return PTR_ERR(priv->clk);
+> +
+> +	rate = clk_get_rate(priv->clk);
+> +	if (rate < 16384) {
+> +		dev_err(&pdev->dev, "invalid clock rate (%ld)\n", rate);
+> +		return -ENOENT;
+> +	}
+> +
+> +	/* Assume slowest clock rate possible (CKS=7) */
+> +	rate /= 16384;
+> +
+> +	priv->wdev.info = &rza_wdt_ident,
+> +	priv->wdev.ops = &rza_wdt_ops,
+> +	priv->wdev.parent = &pdev->dev;
+> +
+> +	/*
+> +	 * Since the max possible timeout of our 8-bit count register is less
+> +	 * than a second, we must use max_hw_heartbeat_ms.
+> +	 */
+> +	priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
+> +	dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
+> +		 priv->wdev.max_hw_heartbeat_ms);
+> +
+> +	priv->wdev.min_timeout = 1;
+> +	priv->wdev.timeout = DEFAULT_TIMEOUT;
+> +
+> +	platform_set_drvdata(pdev, priv);
 
-Already done. :)
+This is now unnecessary.
 
->> +	reserved-memory {
->> +		#address-cells =3D <2>;
->> +		#size-cells =3D <2>;
-> =
+> +	watchdog_init_timeout(&priv->wdev, 0, &pdev->dev);
+> +	watchdog_set_drvdata(&priv->wdev, priv);
+> +
+> +	ret = devm_watchdog_register_device(&pdev->dev, &priv->wdev);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Cannot register watchdog device\n");
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct of_device_id rza_wdt_of_match[] = {
+> +	{ .compatible = "renesas,rza-wdt", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rza_wdt_of_match);
+> +
+> +static struct platform_driver rza_wdt_driver = {
+> +	.probe = rza_wdt_probe,
+> +	.driver = {
+> +		.name = "rza_wdt",
+> +		.of_match_table = rza_wdt_of_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(rza_wdt_driver);
+> +
+> +MODULE_DESCRIPTION("Renesas RZ/A WDT Driver");
+> +MODULE_AUTHOR("Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+>
 
-> Unless you have >4GB regions, you don't really need 2 cells here.
-
-Correct, but using less cells than in the root node requires a ranges
-mapping, and we don't have size information available for that. So I
-would rather leave it like this initially.
-
->> +		ranges;
->> +
->> +		tee@10100000 {
->> +			reg =3D <0x0 0x10100000 0x0 0xf00000>;
->> +			no-map;
->> +		};
->> +	};
-> =
-
-> =
-
->> +	soc {
->> +		compatible =3D "simple-bus";
->> +		#address-cells =3D <2>;
->> +		#size-cells =3D <2>;
-> =
-
-> Same here. And use ranges to narrow the address space to what you need.
-
-By my definition, SoC is the whole memory range.
-
-And as pointed out in the v1 cover letter, I don't have sufficient
-documentation for this chip - there's not even a general address map in
-the datasheet, nor any bus information - so any attempt to restrict it
-would be a wild guess and specific to the 2G .dts rather than suitable
-for the generic .dtsi here.
-
-If we had the info, I would still want to leave the soc node like this
-and instead have bus sub-nodes with suitable ranges, like we did for
-meson-gxbb. I don't see harm in having the .dts be a few cells larger.
-
->> +		ranges;
->> +
->> +		uart0: serial@98007800 {
->> +			compatible =3D "snps,dw-apb-uart";
->> +			reg =3D <0x0 0x98007800 0x0 0x400>,
->> +			      <0x0 0x98007000 0x0 0x100>;
->> +			reg-shift =3D <2>;
->> +			reg-io-width =3D <4>;
->> +			clock-frequency =3D <27000000>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		uart1: serial@9801b200 {
->> +			compatible =3D "snps,dw-apb-uart";
->> +			reg =3D <0x0 0x9801b200 0x0 0x100>,
->> +			      <0x0 0x9801b00c 0x0 0x100>;
->> +			reg-shift =3D <2>;
->> +			reg-io-width =3D <4>;
->> +			clock-frequency =3D <432000000>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		uart2: serial@9801b400 {
->> +			compatible =3D "snps,dw-apb-uart";
->> +			reg =3D <0x0 0x9801b400 0x0 0x100>,
->> +			      <0x0 0x9801b00c 0x0 0x100>;
->> +			reg-shift =3D <2>;
->> +			reg-io-width =3D <4>;
->> +			clock-frequency =3D <432000000>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		gic: interrupt-controller@ff011000 {
->> +			compatible =3D "arm,gic-400";
->> +			reg =3D <0x0 0xff011000 0x0 0x1000>,
->> +			      <0x0 0xff012000 0x0 0x1000>;
-> =
-
-> You are missing some register ranges and the sizes may be wrong. Check =
-
-> the binding doc.
-
-I have in the meantime tested that 1k, 2k, 2k, 2k plus PPI 9 lets KVM
-initialize the vGIC:
-
-[    0.256915] kvm [1]: 8-bit VMID
-[    0.256951] kvm [1]: IDMAP page: 73f000
-[    0.256986] kvm [1]: HYP VA range: 800000000000:ffffffffffff
-[    0.257417] kvm [1]: Hyp mode initialized successfully
-[    0.257479] kvm [1]: vgic-v2@ff014000
-[    0.257554] kvm [1]: vgic interrupt IRQ1
-[    0.257600] kvm [1]: virtual timer IRQ4
-
-As usual, not yet tested with a guest for lack of proper rootfs.
-
-Mark, is there any benefit in using a raw 0xf mask over a simple 4, when
-there are only 4 CPUs? I tested the simple 4 copied from my S900,
-whereas the timer based on the vendor device tree uses raw 0xf, i.e.,
-simple 8. Should I change that to be consistently simple 4?
-
->> +			interrupt-controller;
->> +			#interrupt-cells =3D <3>;
->> +		};
->> +	};
->> +};
-
-Additionally I am dropping the irq.h include, because arm-gic.h already
-does that for us.
-
-Regards,
-Andreas
-
--- =
-
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
-HRB 21284 (AG N=FCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
