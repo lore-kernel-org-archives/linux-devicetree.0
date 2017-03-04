@@ -1,57 +1,123 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
- SMP2P drivers
-Date: Fri, 3 Mar 2017 17:20:32 -0800
-Message-ID: <20170304012032.GA1694@minitux>
-References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
- <20170215045157.11659-2-j.neuschaefer@gmx.net>
+From: ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Subject: Re: [PATCH v10 1/2] usb: dwc2: assert phy reset when waking up in
+ rk3288 platform
+Date: Sat, 4 Mar 2017 10:56:38 +0800
+Message-ID: <883a4ae4-4e0c-afbc-c6b6-1a02ea37f681@soulik.info>
+References: <1481470568-32072-1-git-send-email-ayaka@soulik.info>
+ <1481470568-32072-2-git-send-email-ayaka@soulik.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170215045157.11659-2-j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Neusch?fer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1481470568-32072-2-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 14 Feb 20:51 PST 2017, Jonathan Neusch?fer wrote:
+What is wrong with this patch? I have not seen it is merged in 
+next-20170303.
 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer-hi6Y0CQ0nG0@public.gmane.org>
+
+On 12/11/2016 11:36 PM, Randy Li wrote:
+> On the rk3288 USB host-only port (the one that's not the OTG-enabled
+> port) the PHY can get into a bad state when a wakeup is asserted (not
+> just a wakeup from full system suspend but also a wakeup from
+> autosuspend).
+>
+> We can get the PHY out of its bad state by asserting its "port reset",
+> but unfortunately that seems to assert a reset onto the USB bus so it
+> could confuse things if we don't actually deenumerate / reenumerate the
+> device.
+>
+> We can also get the PHY out of its bad state by fully resetting it using
+> the reset from the CRU (clock reset unit) in chip, which does a more full
+> reset.  The CRU-based reset appears to actually cause devices on the bus
+> to be removed and reinserted, which fixes the problem (albeit in a hacky
+> way).
+>
+> It's unfortunate that we need to do a full re-enumeration of devices at
+> wakeup time, but this is better than alternative of letting the bus get
+> wedged.
+>
+> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+> Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 > ---
->  arch/arm/configs/qcom_defconfig | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-> index 4ffdd607205d..97b9e9cd2292 100644
-> --- a/arch/arm/configs/qcom_defconfig
-> +++ b/arch/arm/configs/qcom_defconfig
-> @@ -190,11 +190,16 @@ CONFIG_MDM_LCC_9615=y
->  CONFIG_MSM_MMCC_8960=y
->  CONFIG_MSM_MMCC_8974=y
->  CONFIG_HWSPINLOCK_QCOM=y
-> +CONFIG_REMOTEPROC=y
-> +CONFIG_QCOM_ADSP_PIL=y
-> +CONFIG_QCOM_Q6V5_PIL=y
-> +CONFIG_QCOM_WCNSS_PIL=y
->  CONFIG_QCOM_GSBI=y
->  CONFIG_QCOM_PM=y
->  CONFIG_QCOM_SMEM=y
->  CONFIG_QCOM_SMD=y
->  CONFIG_QCOM_SMD_RPM=y
-> +CONFIG_QCOM_SMP2P=y
+>   drivers/usb/dwc2/core.h      |  1 +
+>   drivers/usb/dwc2/core_intr.c | 11 +++++++++++
+>   drivers/usb/dwc2/platform.c  |  9 +++++++++
+>   3 files changed, 21 insertions(+)
+>
+> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+> index 9548d3e..0cd5896 100644
+> --- a/drivers/usb/dwc2/core.h
+> +++ b/drivers/usb/dwc2/core.h
+> @@ -919,6 +919,7 @@ struct dwc2_hsotg {
+>   	unsigned int ll_hw_enabled:1;
+>   
+>   	struct phy *phy;
+> +	struct work_struct phy_rst_work;
+>   	struct usb_phy *uphy;
+>   	struct dwc2_hsotg_plat *plat;
+>   	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
+> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+> index 5b228ba..bf1c029 100644
+> --- a/drivers/usb/dwc2/core_intr.c
+> +++ b/drivers/usb/dwc2/core_intr.c
+> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
+>   static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>   {
+>   	int ret;
+> +	struct device_node *np = hsotg->dev->of_node;
+>   
+>   	/* Clear interrupt */
+>   	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
+> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+>   			/* Restart the Phy Clock */
+>   			pcgcctl &= ~PCGCTL_STOPPCLK;
+>   			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
+> +
+> +			/*
+> +			 * It is a quirk in Rockchip RK3288, causing by
+> +			 * a hardware bug. This will propagate out and
+> +			 * eventually we'll re-enumerate the device.
+> +			 * Not great but the best we can do.
+> +			 */
+> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
+> +				schedule_work(&hsotg->phy_rst_work);
+> +
+>   			mod_timer(&hsotg->wkp_timer,
+>   				  jiffies + msecs_to_jiffies(71));
+>   		} else {
+> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+> index 4fc8c60..8ef278e 100644
+> --- a/drivers/usb/dwc2/platform.c
+> +++ b/drivers/usb/dwc2/platform.c
+> @@ -207,6 +207,14 @@ int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
+>   	return ret;
+>   }
+>   
+> +/* Only used to reset usb phy at interrupter runtime */
+> +static void dwc2_reset_phy_work(struct work_struct *data)
+> +{
+> +	struct dwc2_hsotg *hsotg = container_of(data, struct dwc2_hsotg,
+> +			phy_rst_work);
+> +	phy_reset(hsotg->phy);
+> +}
+> +
+>   static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+>   {
+>   	int i, ret;
+> @@ -251,6 +259,7 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+>   			return ret;
+>   		}
+>   	}
+> +	INIT_WORK(&hsotg->phy_rst_work, dwc2_reset_phy_work);
+>   
+>   	if (!hsotg->phy) {
+>   		hsotg->uphy = devm_usb_get_phy(hsotg->dev, USB_PHY_TYPE_USB2);
 
-We also need CONFIG_QCOM_SMSM=y here, its currently used to signal state
-of the ring buffers for WiFi.
-
-With the addition of that you have my:
-
-Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Regards,
-Bjorn
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
