@@ -1,83 +1,120 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and
- GXL
-Date: Sat, 4 Mar 2017 13:38:04 +0100
-Message-ID: <9f3a17e8-63fa-6c14-4d17-0539ef7cd5a2@suse.de>
-References: <1488365164-22861-1-git-send-email-narmstrong@baylibre.com>
- <1488365164-22861-4-git-send-email-narmstrong@baylibre.com>
- <e26cf584-dab2-2702-f7e6-b28f750fa00c@suse.de>
- <e80d9fb0-1d71-7cab-5e32-72316474fdfc@baylibre.com>
- <m2tw7a17nb.fsf@baylibre.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sat, 4 Mar 2017 15:13:29 +0200
+Message-ID: <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+ <20170303230645.GR21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <m2tw7a17nb.fsf@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170303230645.GR21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gMDMuMDMuMjAxNyB1bSAyMDoyOSBzY2hyaWViIEtldmluIEhpbG1hbjoKPiBOZWlsIEFybXN0
-cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJyZS5jb20+IHdyaXRlczoKPj4gT24gMDMvMDIvMjAxNyAw
-MTozMSBQTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOgo+Pj4gQW0gMDEuMDMuMjAxNyB1bSAxMTo0
-NiBzY2hyaWViIE5laWwgQXJtc3Ryb25nOgo+Pj4+IFRoZSBzYW1lIE1BTEktNDUwIE1QMyBHUFUg
-aXMgcHJlc2VudCBpbiB0aGUgR1hCQiBhbmQgR1hMIFNvQ3MuClsuLi5dCj4+Pj4gVGhlIG5vZGUg
-aXMgc2ltcGx5IGFkZGVkIGluIHRoZSBtZXNvbi1neGJiLmR0c2kgZmlsZS4KWy4uLl0KPj4+PiBG
-b3IgR1hMLCBzaW5jZSBhIGxvdCBpcyBzaGFyZWQgd2l0aCB0aGUgR1hNIHRoYXQgaGFzIGEgTUFM
-SS1UODIwIElQLCB0aGlzCj4+Pj4gcGF0Y2ggYWRkcyBhIG5ldyBtZXNvbi1neGwtbWFsaS5kdHNp
-IGFuZCBpcyBpbmNsdWRlZCBpbiB0aGUgU29DIHNwZWNpZmljCj4+Pj4gZHRzaSBmaWxlcy4KPj4+
-Cj4+PiBUaGlzIHBhcnQgaXMgc2xpZ2h0bHkgY29uZnVzaW5nIHRob3VnaC4KPj4+Cj4+PiBXaGF0
-IGV4YWN0bHkgaXMgdGhlIEdYTCB2cy4gR1hNIGRpZmZlcmVuY2UgdGhhdCB0aGlzIGNhbid0IGJl
-IGhhbmRsZWQgYnkKPj4+IG92ZXJyaWRpbmcgbm9kZSBwcm9wZXJ0aWVzIGNvbXBhdGlibGUvaW50
-ZXJydXB0cy9jbG9ja3M/IEkgYW0gbWlzc2luZyBhCj4+PiBHWE0gcGF0Y2ggaW4gdGhpcyBzZXJp
-ZXMgYXMgcmF0aW9uYWxlIGZvciBkb2luZyBpdCB0aGlzIHdheS4KPj4+Cj4+PiBJbiBwYXJ0aWN1
-bGFyIEkgYW0gd29uZGVyaW5nIHdoZXRoZXIgdGhlIHdob2xlIEdYTS1pbmhlcml0cy1mcm9tLUdY
-TAo+Pj4gY29uY2VwdCBpcyBmbGF3ZWQgYW5kIHNob3VsZCBiZSBhZGp1c3RlZCBpZiB0aGlzIGxl
-YWRzIHRvIHNlY29uZGFyeQo+Pj4gLmR0c2kgZmlsZXMgbGlrZSB0aGlzOiBNeSBwcm9wb3NhbCB3
-b3VsZCBiZSB0byBpbnN0ZWFkIGNyZWF0ZSBhCj4+PiBtZXNvbi1neGwtZ3htLmR0c2ksIHRoYXQg
-bWVzb24tZ3hsLmR0c2kgYW5kIG1lc29uLWd4bS5kdHNpIGNhbiBpbmhlcml0Cj4+PiB0aGUgY3Vy
-cmVudCBjb21tb24gcGFydHMgZnJvbSwgdGhlbiB0aGUgTWFsaSBiaXRzIGNhbiBzaW1wbHkgZ28g
-aW50bwo+Pj4gbWVzb24tZ3hsLmR0c2kgd2l0aG91dCBleHRyYSAjaW5jbHVkZXMgbmVlZGVkIGlu
-IFM5MDVYIGFuZCBTOTA1RC4gV2hpbGUKPj4+IGl0J3Mgc2xpZ2h0bHkgbW9yZSB3b3JrIHRvIHNw
-bGl0IG9uY2UgYWdhaW4sIEkgdGhpbmsgaXQgd291bGQgYmUgY2xlYW5lci4KWy4uLl0KPj4gVGhl
-IG9ubHkgY2hhbmdlcyBhcmUgOgpbLi4uXQo+PiAgLSBBIGRpZmZlcmVudCBNYWxpIGNvcmUsIGJ1
-dCB3aXRoIHRoZSBzYW1lIGludGVycnVwdHMgKGxlc3MgYnV0IHRoZXkgc2hhcmUgdGhlIHNhbWUg
-bG93ZXIgaW50ZXJydXB0cyksIGNsb2NrcyBhbmQgbWVtb3J5IHNwYWNlCj4+Cj4+IFRoaXMgaXMg
-d2h5IGl0IHdhcyBkZWNpZGVkIHRvIGhhdmUgYSBzdWItZHRzaSwgaGF2aW5nIGEgc2Vjb25kYXJ5
-IGR0c2kgd2lsbCBzaW1wbHkgY29weSA5OSUgb2YgdGhlIEdYTCBkdHNpLAo+PiBidXQgc3VyZWx5
-IHdlIGNvdWxkIGFsc28gaGF2ZSBhbiBpbnRlcm1lZGlhdGUgZHRzaSBidXQgZm9yIGJvYXJkcyBJ
-J20gb2sgd2l0aCBpdCwgYnV0IGxlc3MgZm9yIGEgU29DIGR0c2ksCj4+IHNpbmNlIGl0IGNvdWxk
-IGxlYWQgdG8gc29tZSBjb25mdXNpb24uCj4+Cj4+IEZpbmFsbHksIHllcyBJIGNvdWxkIGhhdmUg
-YWRkZWQgdGhlIG1hbGkgbm9kZSB0byB0aGUgR1hMIGR0c2ksIGJ1dCB0aGUgbWlkZ2FyZCBNYWxp
-IGR0LWJpbmRpbmdzIGFyZSBub3QgdXBzdHJlYW0KPj4gYW5kIHRoZSBmYW1pbHkgaXMgdG9vIGJp
-ZyBhbmQgcmVjZW50IGVub3VnaCB0byBjb25zaWRlciBoYXZpbmcgc3RhYmxlIGJpbmRpbmdzIGZv
-ciBub3cuCj4+Cj4+IE5ldmVydGhlbGVzcywgbm90aGluZyBpcyBmaW5hbCwgdGhpcyBneGwtbWFs
-aS5kdHNpIGNvdWxkIGJlIG1lcmdlZCBpbnRvIHRoZSBHWEwgZHRzaSBpbiB0aGUgZnV0dXJlIHdo
-ZW4gd2UKPj4gaGF2ZSBwcm9wZXIgZHQtYmluZGluZ3MgYW5kIGEgcmVhbCBzdXBwb3J0IG9mIHRo
-ZSBUODIwIE1hbGkgb24gdGhlIFM5MTIuCj4+Cj4+IEtldmluLCB3aGF0J3MgeW91ciB0aG91Z2h0
-IGFib3V0IHRoaXMgPwo+IAo+IEkgZG9uJ3QgaGF2ZSBhIHN0cm9uZyBwcmVmZXJlbmNlLiAgSSdt
-IE9LIHdpdGggYSBzZXBhcmF0ZSBNYWxpIC5kdHNpIGR1ZQo+IHRvIHRoZSBzaWduZmljYW50IG92
-ZXJsYXAgYmV0d2VlbiBHWEwvR1hNIGluIHRlcm1zIG9mIGNsb2NrcywgaW50ZXJydXB0cwo+IGV0
-Yy4KPiAKPiBIb3dldmVyLCBpZiB0aGUgcGxhbiBpcyB0byAjaW5jbHVkZSB0aGlzIGZyb20gR1hN
-IC5kdHMgZmlsZXMsIHdob3VsZCBhCj4gYmV0dGVyIG5hbWUgYmUgbWVzb24tZ3gtbWFsaS5kdHNp
-PwoKSSB0aG91Z2h0IHRoZSBwdXJwb3NlIHdhcyBzcGVjaWZpY2FsbHkgdG8gbm90IGhhdmUgR1hN
-IGluY2x1ZGUgaXQKYmVjYXVzZSBpdCB1c2VzIGEgTWlkZ2FyZCBJUC4KCklmIHlvdSB3YW50IHRv
-IHNoYXJlIHRoZSBmcmFnbWVudCB3aXRoIEdYQkIgdG9vIChneCksIHdlIHNob3VsZCByYXRoZXIK
-dXNlIG1lc29uLWd4LW1hbGktdXRnYXJkLmR0c2ksIHdoaWNoIHdvdWxkIGRpZmZlcmVudGlhdGUg
-ZnJvbSBHWE0ncwpNaWRnYXJkIHdoaWxlIHN0aWxsIGFsbG93aW5nIGZvciB2YXJpYXRpb24gb24g
-dGhlIDR4eCBzaWRlIChlLmcuLCA0NzApLgoKUmVnYXJkcywKQW5kcmVhcwoKLS0gClNVU0UgTGlu
-dXggR21iSCwgTWF4ZmVsZHN0ci4gNSwgOTA0MDkgTsO8cm5iZXJnLCBHZXJtYW55CkdGOiBGZWxp
-eCBJbWVuZMO2cmZmZXIsIEphbmUgU21pdGhhcmQsIEdyYWhhbSBOb3J0b24KSFJCIDIxMjg0IChB
-RyBOw7xybmJlcmcpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+Hi Russell,
+
+On Fri, Mar 03, 2017 at 11:06:45PM +0000, Russell King - ARM Linux wrote:
+> On Thu, Mar 02, 2017 at 06:02:57PM +0200, Sakari Ailus wrote:
+> > Hi Steve,
+> > 
+> > On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
+> > > v4l2_pipeline_inherit_controls() will add the v4l2 controls from
+> > > all subdev entities in a pipeline to a given video device.
+> > > 
+> > > Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> > > ---
+> > >  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
+> > >  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
+> > >  2 files changed, 73 insertions(+)
+> > > 
+> > > diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
+> > > index 303980b..09d4d97 100644
+> > > --- a/drivers/media/v4l2-core/v4l2-mc.c
+> > > +++ b/drivers/media/v4l2-core/v4l2-mc.c
+> > > @@ -22,6 +22,7 @@
+> > >  #include <linux/usb.h>
+> > >  #include <media/media-device.h>
+> > >  #include <media/media-entity.h>
+> > > +#include <media/v4l2-ctrls.h>
+> > >  #include <media/v4l2-fh.h>
+> > >  #include <media/v4l2-mc.h>
+> > >  #include <media/v4l2-subdev.h>
+> > > @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
+> > >  
+> > > +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> > > +				     struct media_entity *start_entity)
+> > 
+> > I have a few concerns / questions:
+> > 
+> > - What's the purpose of this patch? Why not to access the sub-device node
+> >   directly?
+> 
+> What tools are in existance _today_ to provide access to these controls
+> via the sub-device nodes?
+
+yavta, for instance:
+
+<URL:http://git.ideasonboard.org/yavta.git>
+
+VIDIOC_QUERYCAP isn't supported on sub-devices and v4l2-ctl appears to be
+checking for that. That check should be removed (with possible other
+implications taken into account).
+
+> 
+> v4l-tools doesn't last time I looked - in fact, the only tool in v4l-tools
+> which is capable of accessing the subdevices is media-ctl, and that only
+> provides functionality for configuring the pipeline.
+> 
+> So, pointing people at vapourware userspace is really quite rediculous.
+
+Do bear in mind that there are other programs that can make use of these
+interfaces. It's not just the test programs, or a test program you attempted
+to use.
+
+> 
+> The established way to control video capture is through the main video
+> capture device, not through the sub-devices.  Yes, the controls are
+> exposed through sub-devices too, but that does not mean that is the
+> correct way to access them.
+
+It is. That's the very purpose of the sub-devices: to provide access to the
+hardware independently of how the links are configured.
+
+> 
+> The v4l2 documentation (Documentation/media/kapi/v4l2-controls.rst)
+> even disagrees with your statements.  That talks about control
+> inheritence from sub-devices to the main video device, and the core
+> v4l2 code provides _automatic_ support for this - see
+> v4l2_device_register_subdev():
+> 
+>         /* This just returns 0 if either of the two args is NULL */
+>         err = v4l2_ctrl_add_handler(v4l2_dev->ctrl_handler, sd->ctrl_handler, NULL);
+> 
+> which merges the subdev's controls into the main device's control
+> handler.
+
+That's done on different kind of devices: those that provide plain V4L2 API
+to control the entire device. V4L2 sub-device interface is used *in kernel*
+as an interface to control sub-devices that do not need to be exposed to the
+user space.
+
+Devices that have complex pipeline that do essentially require using the
+Media controller interface to configure them are out of that scope.
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
