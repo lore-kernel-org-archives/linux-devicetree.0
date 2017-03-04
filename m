@@ -1,66 +1,161 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 0/7] Fix the parse_dt of exynos dsi and remove the OF
- graph
-Date: Sat, 4 Mar 2017 10:23:13 +0200
-Message-ID: <20170304082313.c6muov76oiwl23tr@kozik-lap>
-References: <CGME20170302102112epcas5p476b30508bbaffbf1fe9781b941cd418f@epcas5p4.samsung.com>
- <1488450019-6482-1-git-send-email-hoegeun.kwon@samsung.com>
- <20170303002206.zh56dsx7iuysg374@gangnam.samsung>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170303002206.zh56dsx7iuysg374@gangnam.samsung>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, airlied@linux.ie, catalin.marinas@arm.com, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, inki.dae@samsung.com, javier@osg.samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, will.deacon@arm.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 4/4] iio: accel: adxl345: Add SPI support
+Date: Sat,  4 Mar 2017 16:31:26 +0800
+Message-ID: <211e687f6848450067db4c1a294303a40aa66d57.1488615230.git.eraretuya@gmail.com>
+References: <cover.1488615230.git.eraretuya@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1488615230.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <cover.1488615230.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+References: <cover.1488615230.git.eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 09:22:06AM +0900, Andi Shyti wrote:
-> Hi Hoegeun,
-> 
-> > Hoegeun Kwon (7):
-> >   arm64: dts: exynos: Add the burst and esc clock frequency properties
-> >     for exynos5433 dts
-> >   arm: dts: Add the burst and esc clock frequency properties for
-> >     exynos3250 dts
-> >   arm: dts: Add the burst and esc clock frequency properties for
-> >     exynos4412 dts
-> >   arm: dts: Add the burst and esc clock frequency properties for
-> >     exynos4210 dts
-> >   drm/exynos: dsi: Fix the parse_dt function
-> >   arm64: dts: exynos: Remove the OF graph from DSI node
-> >   arm: dts: Remove the OF graph from DSI node
-> 
-> for all of them:
-> 
-> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+Add SPI driver that initializes SPI regmap for the adxl345 core driver.
+The driver supports the same functionality as I2C namely the x, y, z and
+scale readings.
 
-Andi,
+Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+Changes from v5:
+* Simplify configuration dependency to "depends on INPUT_ADXL34X=n"
+* Modify header comment: place indication at the beginning
+* Re-order local variable declarations from longest to shortest line
+* Remove explicit casting to int in handling devm_regmap_init_spi() error,
+  use %ld instead
+* Rename functions calls from *_common_* to *_core_*
 
-Thanks for review. It is much welcomed.
+ drivers/iio/accel/Kconfig       | 14 +++++++
+ drivers/iio/accel/Makefile      |  1 +
+ drivers/iio/accel/adxl345_spi.c | 81 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 96 insertions(+)
+ create mode 100644 drivers/iio/accel/adxl345_spi.c
 
-I am trying not loose such review tags but it might happen because:
-1. Patchwork does not store them,
-2. Mail does not sit in inbox for long (inbox zero),
-so if it is possible the most convenient for me is to reply with review
-to each email.
-
-> 
-> although I would have squashed patch 2, 3 and 4, but no need to
-> resend, unless someone else agrees.
-
-Yes, these are small additions to the same arch so they could be
-indeed squashed. I don't mind keeping them separated though.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
+index a725227..15de262 100644
+--- a/drivers/iio/accel/Kconfig
++++ b/drivers/iio/accel/Kconfig
+@@ -22,6 +22,20 @@ config ADXL345_I2C
+ 	  will be called adxl345_i2c and you will also get adxl345_core
+ 	  for the core module.
+ 
++config ADXL345_SPI
++	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer SPI Driver"
++	depends on INPUT_ADXL34X=n
++	depends on SPI
++	select ADXL345
++	select REGMAP_SPI
++	help
++	  Say Y here if you want to build support for the Analog Devices
++	  ADXL345 3-axis digital accelerometer.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called adxl345_spi and you will also get adxl345_core
++	  for the core module.
++
+ config BMA180
+ 	tristate "Bosch BMA180/BMA250 3-Axis Accelerometer Driver"
+ 	depends on I2C
+diff --git a/drivers/iio/accel/Makefile b/drivers/iio/accel/Makefile
+index 3f4a6d6..31fba19 100644
+--- a/drivers/iio/accel/Makefile
++++ b/drivers/iio/accel/Makefile
+@@ -5,6 +5,7 @@
+ # When adding new entries keep the list in alphabetical order
+ obj-$(CONFIG_ADXL345) += adxl345_core.o
+ obj-$(CONFIG_ADXL345_I2C) += adxl345_i2c.o
++obj-$(CONFIG_ADXL345_SPI) += adxl345_spi.o
+ obj-$(CONFIG_BMA180) += bma180.o
+ obj-$(CONFIG_BMA220) += bma220_spi.o
+ obj-$(CONFIG_BMC150_ACCEL) += bmc150-accel-core.o
+diff --git a/drivers/iio/accel/adxl345_spi.c b/drivers/iio/accel/adxl345_spi.c
+new file mode 100644
+index 0000000..6d65819
+--- /dev/null
++++ b/drivers/iio/accel/adxl345_spi.c
+@@ -0,0 +1,81 @@
++/*
++ * ADXL345 3-Axis Digital Accelerometer SPI driver
++ *
++ * Copyright (c) 2017 Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This file is subject to the terms and conditions of version 2 of
++ * the GNU General Public License. See the file COPYING in the main
++ * directory of this archive for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/regmap.h>
++#include <linux/spi/spi.h>
++
++#include "adxl345.h"
++
++#define ADXL345_MAX_SPI_FREQ_HZ		5000000
++
++static const struct regmap_config adxl345_spi_regmap_config = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	 /* Setting bits 7 and 6 enables multiple-byte read */
++	.read_flag_mask = BIT(7) | BIT(6),
++};
++
++static int adxl345_spi_probe(struct spi_device *spi)
++{
++	const struct spi_device_id *id = spi_get_device_id(spi);
++	struct regmap *regmap;
++
++	/* Bail out if max_speed_hz exceeds 5 MHz */
++	if (spi->max_speed_hz > ADXL345_MAX_SPI_FREQ_HZ) {
++		dev_err(&spi->dev, "SPI CLK, %d Hz exceeds 5 MHz\n",
++			spi->max_speed_hz);
++		return -EINVAL;
++	}
++
++	regmap = devm_regmap_init_spi(spi, &adxl345_spi_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(&spi->dev, "Error initializing spi regmap: %ld\n",
++			PTR_ERR(regmap));
++		return PTR_ERR(regmap);
++	}
++
++	return adxl345_core_probe(&spi->dev, regmap, id->name);
++}
++
++static int adxl345_spi_remove(struct spi_device *spi)
++{
++	return adxl345_core_remove(&spi->dev);
++}
++
++static const struct spi_device_id adxl345_spi_id[] = {
++	{ "adxl345", 0 },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(spi, adxl345_spi_id);
++
++static const struct of_device_id adxl345_of_match[] = {
++	{ .compatible = "adi,adxl345" },
++	{ },
++};
++
++MODULE_DEVICE_TABLE(of, adxl345_of_match);
++
++static struct spi_driver adxl345_spi_driver = {
++	.driver = {
++		.name	= "adxl345_spi",
++		.of_match_table = adxl345_of_match,
++	},
++	.probe		= adxl345_spi_probe,
++	.remove		= adxl345_spi_remove,
++	.id_table	= adxl345_spi_id,
++};
++
++module_spi_driver(adxl345_spi_driver);
++
++MODULE_AUTHOR("Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("ADXL345 3-Axis Digital Accelerometer SPI driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
