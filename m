@@ -1,136 +1,32 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Add more recommended generic node names
-Date: Sat, 4 Mar 2017 13:36:26 -0800
-Message-ID: <c4906f48-dc13-caba-2671-72dba9905e92@gmail.com>
-References: <20170120222932.14753-1-robh@kernel.org>
+Subject: Extending /memreserve/ to allow defining descriptions
+Date: Sat, 4 Mar 2017 13:40:39 -0800
+Message-ID: <9c1cb5e8-2afd-e266-72b9-20ca6622956e@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120222932.14753-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 01/20/17 à 14:29, Rob Herring a écrit :
-> DT usage and hardware types have evolved quite a bit and the generic
-> node names list is quite out of date. Add new entries to the list based
-> on dumping out node names from dts files. This is by no means complete,
-> but is low hanging fruit.
+Hello,
 
-FWIW:
+I am considering extending the /memreserve node syntax with the ability
+to pass a description string that would be describing what kind of
+memory is being reserved here, e:g:
 
-Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+/memreserve/ 0x0 0x10000 type = "psci"
 
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  source/devicetree-basics.rst | 51 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/source/devicetree-basics.rst b/source/devicetree-basics.rst
-> index be80af3d825b..93cea8e82a64 100644
-> --- a/source/devicetree-basics.rst
-> +++ b/source/devicetree-basics.rst
-> @@ -182,44 +182,95 @@ name should be one of the following choices:
->  .. hlist::
->     :columns: 3
->  
-> +   * adc
-> +   * accelerometer
->     * atm
-> +   * audio-codec
-> +   * audio-controller
-> +   * backlight
-> +   * bluetooth
-> +   * bus
->     * cache-controller
-> +   * camera
-> +   * can
-> +   * charger
-> +   * clock
-> +   * clock-controller
->     * compact-flash
->     * can
->     * cpu
-> +   * cpus
->     * crypto
->     * disk
->     * display
->     * dma-controller
-> +   * dsp
-> +   * eeprom
-> +   * efuse
-> +   * endpoint
->     * ethernet
->     * ethernet-phy
->     * fdc
->     * flash
->     * gpio
-> +   * gpu
-> +   * gyrometer
-> +   * hdmi
->     * i2c
->     * ide
->     * interrupt-controller
->     * isa
->     * keyboard
-> +   * key
-> +   * keys
-> +   * lcd-controller
-> +   * led
-> +   * leds
-> +   * led-controller
-> +   * light-sensor
-> +   * magnetometer
-> +   * mailbox
->     * mdio
->     * memory
->     * memory-controller
-> +   * mmc
-> +   * mmc-slot
->     * mouse
-> +   * nand-controller
->     * nvram
-> +   * oscillator
->     * parallel
->     * pc-card
->     * pci
->     * pcie
-> +   * phy
-> +   * pinctrl
-> +   * pmic
-> +   * pmu
-> +   * port
-> +   * ports
-> +   * pwm
-> +   * regulator
-> +   * reset-controller
->     * rtc
->     * sata
->     * scsi
->     * serial
->     * sound
->     * spi
-> +   * sram-controller
-> +   * ssi-controller
-> +   * syscon
-> +   * temperature-sensor
->     * timer
-> +   * touchscreen
->     * usb
-> +   * usb-hub
-> +   * usb-phy
-> +   * video-codec
->     * vme
->     * watchdog
-> +   * wifi
->  
->  Path Names
->  ~~~~~~~~~~
-> 
+The rationale would be for a client program to be able to list these
+reserved regions e.g: from /proc/iomem in a way that could be made
+available to other applications.
 
-
+What do you think?
 -- 
 Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
