@@ -1,123 +1,86 @@
-From: ayaka <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Subject: Re: [PATCH v10 1/2] usb: dwc2: assert phy reset when waking up in
- rk3288 platform
-Date: Sat, 4 Mar 2017 10:56:38 +0800
-Message-ID: <883a4ae4-4e0c-afbc-c6b6-1a02ea37f681@soulik.info>
-References: <1481470568-32072-1-git-send-email-ayaka@soulik.info>
- <1481470568-32072-2-git-send-email-ayaka@soulik.info>
+From: Eva Rachel Retuya <eraretuya@gmail.com>
+Subject: Re: [PATCH v5 2/4] iio: accel: adxl345: Use I2C regmap instead of
+ direct I2C access
+Date: Sat, 4 Mar 2017 13:52:50 +0800
+Message-ID: <20170304055249.GA6948@Socrates-UM>
+References: <cover.1488248485.git.eraretuya@gmail.com>
+ <e40679afd338899c9f5d2c7581c3d89754d726ec.1488248485.git.eraretuya@gmail.com>
+ <CAHp75VduHU+q9B9LUMj1PoXFyTqZnuTtDboNyMvOmrOrRgBstw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1481470568-32072-2-git-send-email-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, randy.li-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VduHU+q9B9LUMj1PoXFyTqZnuTtDboNyMvOmrOrRgBstw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Hennerich <michael.hennerich@analog.com>, Daniel Baluta <daniel.baluta@gmail.com>, Alison Schofield <amsfield22@gmail.com>, Florian Vaussard <florian.vaussard@heig-vd.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-What is wrong with this patch? I have not seen it is merged in 
-next-20170303.
+On Fri, Mar 03, 2017 at 06:44:27PM +0200, Andy Shevchenko wrote:
+> On Tue, Feb 28, 2017 at 4:37 AM, Eva Rachel Retuya <eraretuya@gmail.com> wrote:
+> > Convert the driver to use regmap instead of I2C-specific functions. This
+> > is done in preparation for splitting this driver into core and
+> > I2C-specific code as well as introduction of SPI driver.
+> >
+> > Signed-off-by: Eva Rachel Retuya <eraretuya@gmail.com>
+> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> Okay, my another set of comments.
+> > @@ -70,6 +76,7 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
+> >  {
+> >         struct adxl345_data *data = iio_priv(indio_dev);
+> 
+> >         int ret;
+> > +       __le16 regval;
+> 
+> Reverse tree order, please.
+> 
+>      __le16 regval;
+>      int ret;
+> 
 
+Ack.
 
-On 12/11/2016 11:36 PM, Randy Li wrote:
-> On the rk3288 USB host-only port (the one that's not the OTG-enabled
-> port) the PHY can get into a bad state when a wakeup is asserted (not
-> just a wakeup from full system suspend but also a wakeup from
-> autosuspend).
->
-> We can get the PHY out of its bad state by asserting its "port reset",
-> but unfortunately that seems to assert a reset onto the USB bus so it
-> could confuse things if we don't actually deenumerate / reenumerate the
-> device.
->
-> We can also get the PHY out of its bad state by fully resetting it using
-> the reset from the CRU (clock reset unit) in chip, which does a more full
-> reset.  The CRU-based reset appears to actually cause devices on the bus
-> to be removed and reinserted, which fixes the problem (albeit in a hacky
-> way).
->
-> It's unfortunate that we need to do a full re-enumeration of devices at
-> wakeup time, but this is better than alternative of letting the bus get
-> wedged.
->
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
-> Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
->   drivers/usb/dwc2/core.h      |  1 +
->   drivers/usb/dwc2/core_intr.c | 11 +++++++++++
->   drivers/usb/dwc2/platform.c  |  9 +++++++++
->   3 files changed, 21 insertions(+)
->
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index 9548d3e..0cd5896 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -919,6 +919,7 @@ struct dwc2_hsotg {
->   	unsigned int ll_hw_enabled:1;
->   
->   	struct phy *phy;
-> +	struct work_struct phy_rst_work;
->   	struct usb_phy *uphy;
->   	struct dwc2_hsotg_plat *plat;
->   	struct regulator_bulk_data supplies[ARRAY_SIZE(dwc2_hsotg_supply_names)];
-> diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
-> index 5b228ba..bf1c029 100644
-> --- a/drivers/usb/dwc2/core_intr.c
-> +++ b/drivers/usb/dwc2/core_intr.c
-> @@ -345,6 +345,7 @@ static void dwc2_handle_session_req_intr(struct dwc2_hsotg *hsotg)
->   static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->   {
->   	int ret;
-> +	struct device_node *np = hsotg->dev->of_node;
->   
->   	/* Clear interrupt */
->   	dwc2_writel(GINTSTS_WKUPINT, hsotg->regs + GINTSTS);
-> @@ -379,6 +380,16 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
->   			/* Restart the Phy Clock */
->   			pcgcctl &= ~PCGCTL_STOPPCLK;
->   			dwc2_writel(pcgcctl, hsotg->regs + PCGCTL);
-> +
-> +			/*
-> +			 * It is a quirk in Rockchip RK3288, causing by
-> +			 * a hardware bug. This will propagate out and
-> +			 * eventually we'll re-enumerate the device.
-> +			 * Not great but the best we can do.
-> +			 */
-> +			if (of_device_is_compatible(np, "rockchip,rk3288-usb"))
-> +				schedule_work(&hsotg->phy_rst_work);
-> +
->   			mod_timer(&hsotg->wkp_timer,
->   				  jiffies + msecs_to_jiffies(71));
->   		} else {
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index 4fc8c60..8ef278e 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -207,6 +207,14 @@ int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg)
->   	return ret;
->   }
->   
-> +/* Only used to reset usb phy at interrupter runtime */
-> +static void dwc2_reset_phy_work(struct work_struct *data)
-> +{
-> +	struct dwc2_hsotg *hsotg = container_of(data, struct dwc2_hsotg,
-> +			phy_rst_work);
-> +	phy_reset(hsotg->phy);
-> +}
-> +
->   static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->   {
->   	int i, ret;
-> @@ -251,6 +259,7 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->   			return ret;
->   		}
->   	}
-> +	INIT_WORK(&hsotg->phy_rst_work, dwc2_reset_phy_work);
->   
->   	if (!hsotg->phy) {
->   		hsotg->uphy = devm_usb_get_phy(hsotg->dev, USB_PHY_TYPE_USB2);
+> > @@ -104,37 +112,50 @@ static int adxl345_probe(struct i2c_client *client,
+> >  {
+> >         struct adxl345_data *data;
+> >         struct iio_dev *indio_dev;
+> > +       struct device *dev;
+> > +       struct regmap *regmap;
+> 
+> >         int ret;
+> > +       u32 regval;
+> 
+> Ditto.
+> 
+> > +
+> > +       regmap = devm_regmap_init_i2c(client, &adxl345_regmap_config);
+> > +       if (IS_ERR(regmap)) {
+> > +               dev_err(&client->dev, "Error initializing regmap: %d\n",
+> > +                       (int)PTR_ERR(regmap));
+> 
+> I don't like explicit casting in such cases at all. Why not to use
+> %ld? Same for the similar places in the series.
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK. Will do that instead.
+
+> > -       if (ret != ADXL345_DEVID) {
+> > -               dev_err(&client->dev, "Invalid device ID: %d\n", ret);
+> > +       if (regval != ADXL345_DEVID) {
+> > +               dev_err(dev, "Invalid device ID: %x, expected %x\n",
+> > +                       regval, ADXL345_DEVID);
+> 
+> So, originally it was in decimal form. Does hex looks better or what
+> is behind the change?
+
+Yes it looks better. I made the change to make it easily seen what it
+read in hex compared to the known DEVID.
+
+Thanks,
+Eva
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
