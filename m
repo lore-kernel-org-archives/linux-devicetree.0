@@ -1,79 +1,129 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
- SMP2P drivers
-Date: Sun, 5 Mar 2017 06:01:25 +0100
-Message-ID: <20170305050125.b6lzx2fiest4xmre@latitude>
-References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
- <20170215045157.11659-2-j.neuschaefer@gmx.net>
- <20170304012032.GA1694@minitux>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ojukx5qtu2svexhk"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170304012032.GA1694@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jonathan Neusch?fer <j.neuschaefer@gmx.net>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 5/6] ARM: dts: omap4-droid4: Add HDMI support
+Date: Sat,  4 Mar 2017 21:43:58 -0800
+Message-ID: <20170305054359.8293-6-tony@atomide.com>
+References: <20170305054359.8293-1-tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170305054359.8293-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+We can get HDMI working as long as the 5V regulator is on. There is
+probably an encoder chip there too, but so far no idea what it might be.
+Let's keep the 5V HDMI regulator always enabled for now as otherwise we
+cannot detect the monitor properly.
 
---ojukx5qtu2svexhk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/omap4-droid4-xt894.dts | 65 ++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-On Fri, Mar 03, 2017 at 05:20:32PM -0800, Bjorn Andersson wrote:
-> On Tue 14 Feb 20:51 PST 2017, Jonathan Neusch?fer wrote:
->=20
-> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-> > ---
-> >  arch/arm/configs/qcom_defconfig | 5 +++++
-> >  1 file changed, 5 insertions(+)
-[...]
-> > +CONFIG_QCOM_SMP2P=3Dy
->=20
-> We also need CONFIG_QCOM_SMSM=3Dy here, its currently used to signal state
-> of the ring buffers for WiFi.
-
-FWIW, I enabled CONFIG_QCOM_SMSM on my test system (an Asus Padfone,
-based on MSM8974; I'm using the Sony Xperia Honami DT because it's close
-enough), and I think it failed to initialize:
-
-[    0.647743] qcom-smsm smsm: no smsm size info, using defaults
-[    0.647775] qcom-smsm smsm: unable to allocate shared state entry
-
-I think CONFIG_QCOM_WCNSS_CTRL may be needed too, but I'll leave that
-for a future patch because I don't understand WCNSS well enough.
-
-> With the addition of that you have my:
->=20
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-I'll send a v2 of this series with your R-b and A-b tags.
-
-
-Jonathan Neusch=C3=A4fer
-
---ojukx5qtu2svexhk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJYu5ucAAoJEAgwRJqO81/bBP4QAMG/AxLzp3y7VII+z3IF6/Fg
-h0hAj7+GzhzVwaiTCD9HqthKuUJcRxirBgcBbAMfqJNZ+zB5giZTkrVFddZPGqEp
-sXeKgB75YopBQhVTYg7pasw+G1mKUhND4Weqj/75f0PJS4mDgoB4ZGDRvE0g9J9E
-PUxlTL7jMPU6FU1ROGHNzXlvMn9eUdcQYPcG6M3IAbAt4k6BV2SLwT+feD/dR7E3
-8R3wsU8eu2w2XVWIRTO999Yoanneybjkg0vdaumyqrsaux0mruevA7sya4kg7GAt
-WuISVznd8Pmk2Sg6NdZF0CeU4AJ5WUX2f6TRVbnvVJNJuBVgRX7bSHK2NvngwXTW
-UZ/juT4f5MjFqjxvfOv1VZwVf0dJ8gE+WndC8n/c/k00GabJxst3f3pR7ux6kSrV
-tjm6qNNIZY1ToLipVHizymtZRhRmK9dGbMluUNvmmDibc4/5at8O8sVtq8KsGu4d
-cbA4KIyFjx88em21yXYsC56tcfXJ2yfX6dmvY7/KbLQ+cbdS0ZB7Zjvkan31FYX6
-0t0HMa7/C5GuPygq7IxXCdJrhIm+qI/XoPZmZupMFy1LKvpIJA5K23sHRt84nV8l
-DTIzQqmPaV84Qxhhk/QoICB8dvRFRopoRPjYJhTN3lKs8TOsj3d9xLXrS1tEjQRg
-KbbM0EAitz1D5rBguaYl
-=TA4z
------END PGP SIGNATURE-----
-
---ojukx5qtu2svexhk--
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -35,6 +35,37 @@
+ 		gpios = <&gpio2 18 GPIO_ACTIVE_LOW>;	/* gpio50 */
+ 	};
+ 
++	hdmi0: connector {
++		compatible = "hdmi-connector";
++		pinctrl-0 = <&hdmi_hpd_gpio>;
++		pinctrl-names = "default";
++		label = "hdmi";
++		type = "d";
++
++		hpd-gpios = <&gpio2 31 GPIO_ACTIVE_HIGH>;	/* gpio63 */
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_out>;
++			};
++		};
++	};
++
++	/*
++	 * HDMI 5V regulator probably sourced from battery. Let's keep
++	 * keep this as always enabled for HDMI to work until we've
++	 * figured what the encoder chip is.
++	 */
++	hdmi_regulator: regulator-hdmi {
++		compatible = "regulator-fixed";
++		regulator-name = "hdmi";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio2 27 GPIO_ACTIVE_HIGH>;	/* gpio59 */
++		enable-active-high;
++		regulator-always-on;
++	};
++
+ 	/* This is probably coming straight from the battery.. */
+ 	wl12xx_vmmc: regulator-wl12xx {
+ 		compatible = "regulator-fixed";
+@@ -67,6 +98,10 @@
+ 	};
+ };
+ 
++&dss {
++	status = "okay";
++};
++
+ &gpio6 {
+ 	touchscreen_reset {
+ 		gpio-hog;
+@@ -81,6 +116,20 @@
+ 	status = "disabled";
+ };
+ 
++&hdmi {
++	status = "okay";
++	pinctrl-0 = <&dss_hdmi_pins>;
++	pinctrl-names = "default";
++	vdda-supply = <&vdac>;
++
++	port {
++		hdmi_out: endpoint {
++			remote-endpoint = <&hdmi_connector_in>;
++			lanes = <1 0 3 2 5 4 7 6>;
++		};
++	};
++};
++
+ &i2c1 {
+ 	tmp105@48 {
+ 		compatible = "ti,tmp105";
+@@ -249,6 +298,22 @@
+ 
+ &omap4_pmx_core {
+ 
++	/* hdmi_hpd.gpio_63 */
++	hdmi_hpd_gpio: pinmux_hdmi_hpd_pins {
++		pinctrl-single,pins = <
++                OMAP4_IOPAD(0x098, PIN_INPUT | MUX_MODE3)
++		>;
++	};
++
++	/* hdmi_cec.hdmi_cec, hdmi_scl.hdmi_scl, hdmi_sda.hdmi_sda */
++	dss_hdmi_pins: pinmux_dss_hdmi_pins {
++		pinctrl-single,pins = <
++		OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)
++		OMAP4_IOPAD(0x09c, PIN_INPUT | MUX_MODE0)
++		OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)
++		>;
++	};
++
+ 	/* gpmc_ncs0.gpio_50 */
+ 	poweroff_gpio: pinmux_poweroff_pins {
+ 		pinctrl-single,pins = <
+-- 
+2.11.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
