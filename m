@@ -1,160 +1,447 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v2 03/12] ASoC: sun8i-codec-analog: split
- out mbias
-Date: Sun, 05 Mar 2017 21:49:59 +0800
-Message-ID: <6803451488721799@web16g.yandex.ru>
-References: <20170305133709.6288-1-icenowy@aosc.xyz> <20170305133709.6288-4-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio: adc: add max1117/max1118/max1119 ADC driver
+Date: Sun, 5 Mar 2017 14:31:59 +0000
+Message-ID: <dba84b94-e398-4362-2a7b-1f5dcfa9e5a0@kernel.org>
+References: <1488717210-25151-1-git-send-email-akinobu.mita@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBCVP6DCQKGQE3HKNFLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170305133709.6288-4-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488717210-25151-1-git-send-email-akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/03/17 12:33, Akinobu Mita wrote:
+> This adds max1117/max1118/max1119 8-bit, dual-channel ADC driver.
+> 
+> Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+> Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Hi Akinobu,
 
+The SPI usage is 'unusual' enough that I'd like Mark Brown to take a quick
+look and give a view on whether it will always work or not.
+cc'd Mark and linux-spi.
 
-05.03.2017, 21:38, "Icenowy Zheng" <icenowy-ymACFijhrKM@public.gmane.org>:
-> Allwinner V3s features an analog codec without MBIAS pin.
->
-> Split out this part, in order to prepare for the V3s analog codec.
->
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+A few other comments inline.
+
+Thanks,
+
+Jonathan
 > ---
-> =C2=A0sound/soc/sunxi/sun8i-codec-analog.c | 34 +++++++++++++++++++++++++=
-++++-----
-> =C2=A01 file changed, 29 insertions(+), 5 deletions(-)
->
-
-Sorry a definiation of has_mbias is mising in the patch...
-
-It's
-
-diff --git a/sound/soc/sunxi/sun8i-codec-analog.c b/sound/soc/sunxi/sun8i-c=
-odec-analog.c
-index af56afe5c403..edcc3eb7cd9a 100644
---- a/sound/soc/sunxi/sun8i-codec-analog.c
-+++ b/sound/soc/sunxi/sun8i-codec-analog.c
-@@ -695,6 +695,7 @@ struct sun8i_codec_analog_quirks {
-  	bool has_hmic;
- 	bool has_linein;
- 	bool has_lineout;
-+	bool has_mbias;
- 	bool has_mic2;
- };
-=20
-
-> diff --git a/sound/soc/sunxi/sun8i-codec-analog.c b/sound/soc/sunxi/sun8i=
--codec-analog.c
-> index 6c17c99c2c8d..af56afe5c403 100644
-> --- a/sound/soc/sunxi/sun8i-codec-analog.c
-> +++ b/sound/soc/sunxi/sun8i-codec-analog.c
-> @@ -289,11 +289,6 @@ static const struct snd_soc_dapm_widget sun8i_codec_=
-common_widgets[] =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Microphone input=
- */
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0SND_SOC_DAPM_INPUT(=
-"MIC1"),
->
-> - /* Microphone Bias */
-> - SND_SOC_DAPM_SUPPLY("MBIAS", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
-> - SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MMICBIASEN,
-> - 0, NULL, 0),
-> -
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* Mic input path *=
-/
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0SND_SOC_DAPM_PGA("M=
-ic1 Amplifier", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MIC1AMPEN, 0, NULL, 0),
-> @@ -453,6 +448,27 @@ static int sun8i_codec_add_headphone(struct snd_soc_=
-component *cmpnt)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> =C2=A0}
->
-> +/* mbias specific widget */
-> +static const struct snd_soc_dapm_widget sun8i_codec_mbias_widgets[] =3D =
-{
-> + SND_SOC_DAPM_SUPPLY("MBIAS", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
-> + SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MMICBIASEN,
-> + 0, NULL, 0),
+>  .../devicetree/bindings/iio/adc/max1118.txt        |  21 ++
+>  drivers/iio/adc/Kconfig                            |  12 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/iio/adc/max1118.c                          | 310 +++++++++++++++++++++
+>  4 files changed, 344 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max1118.txt
+>  create mode 100644 drivers/iio/adc/max1118.c
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/max1118.txt b/Documentation/devicetree/bindings/iio/adc/max1118.txt
+> new file mode 100644
+> index 0000000..cf33d0b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/max1118.txt
+> @@ -0,0 +1,21 @@
+> +* MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs
+> +
+> +Required properties:
+> + - compatible: Should be one of
+> +	* "maxim,max1117"
+> +	* "maxim,max1118"
+> +	* "maxim,max1119"
+> + - reg: spi chip select number for the device
+> + - (max1118 only) vref-supply: The regulator supply for ADC reference voltage
+> +
+> +Recommended properties:
+> + - spi-max-frequency: Definition as per
+> +		Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Example:
+> +adc@0 {
+> +	compatible = "maxim,max1118";
+> +	reg = <0>;
+> +	vref-supply = <&vdd_supply>;
+> +	spi-max-frequency = <1000000>;
+> +};
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index dedae7a..66262d1 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -335,6 +335,18 @@ config MAX11100
+>  	  To compile this driver as a module, choose M here: the module will be
+>  	  called max11100.
+>  
+> +config MAX1118
+> +	tristate "Maxim max1117/max1118/max1119 ADCs driver"
+> +	depends on SPI
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	  Say yes here to build support for Maxim max1117/max1118/max1119
+> +	  8-bit, dual-channel ADCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called max1118.
+> +
+>  config MAX1363
+>  	tristate "Maxim max1363 ADC driver"
+>  	depends on I2C
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index d001262..5ef3470 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -33,6 +33,7 @@ obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
+>  obj-$(CONFIG_LTC2485) += ltc2485.o
+>  obj-$(CONFIG_MAX1027) += max1027.o
+>  obj-$(CONFIG_MAX11100) += max11100.o
+> +obj-$(CONFIG_MAX1118) += max1118.o
+>  obj-$(CONFIG_MAX1363) += max1363.o
+>  obj-$(CONFIG_MCP320X) += mcp320x.o
+>  obj-$(CONFIG_MCP3422) += mcp3422.o
+> diff --git a/drivers/iio/adc/max1118.c b/drivers/iio/adc/max1118.c
+> new file mode 100644
+> index 0000000..f2597b7
+> --- /dev/null
+> +++ b/drivers/iio/adc/max1118.c
+> @@ -0,0 +1,310 @@
+> +/*
+> + * MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs driver
+> + *
+> + * Copyright (c) 2017 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is subject to the terms and conditions of version 2 of
+> + * the GNU General Public License.  See the file COPYING in the main
+> + * directory of this archive for more details.
+> + *
+> + * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1117-MAX1119.pdf
+> + *
+> + * SPI interface connections
+> + *
+> + * SPI                MAXIM
+> + * Master  Direction  MAX1117/8/9
+> + * ------  ---------  -----------
+> + * nCS        -->     CNVST
+> + * SCK        -->     SCLK
+> + * MISO       <--     DOUT
+> + * ------  ---------  -----------
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +enum max1118_id {
+> +	max1117,
+> +	max1118,
+> +	max1119,
 > +};
 > +
-> +static int sun8i_codec_add_mbias(struct snd_soc_component *cmpnt)
+> +struct max1118 {
+> +	struct spi_device *spi;
+> +	struct mutex lock;
+> +	struct regulator *reg;
+> +
+> +	u8 data ____cacheline_aligned;
+> +};
+> +
+> +#define MAX1118_CHANNEL(ch)						\
+> +	{								\
+> +		.type = IIO_VOLTAGE,					\
+> +		.indexed = 1,						\
+> +		.channel = (ch),					\
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
+> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
+> +		.scan_index = ch,					\
+> +		.scan_type = {						\
+> +			.sign = 'u',					\
+> +			.realbits = 8,					\
+> +			.storagebits = 8,				\
+> +		},							\
+> +	}
+> +
+> +static const struct iio_chan_spec max1118_channels[] = {
+> +	MAX1118_CHANNEL(0),
+> +	MAX1118_CHANNEL(1),
+> +	IIO_CHAN_SOFT_TIMESTAMP(2),
+> +};
+> +
+> +static int max1118_read(struct spi_device *spi, int channel)
 > +{
-> + struct snd_soc_dapm_context *dapm =3D snd_soc_component_get_dapm(cmpnt)=
-;
-> + struct device *dev =3D cmpnt->dev;
-> + int ret;
+> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> +	struct max1118 *adc = iio_priv(indio_dev);
+> +	struct spi_transfer xfers[] = {
+> +		/*
+> +		 * To select CH1 for conversion, CNVST pin must be brought high
+> +		 * and low for a second time.
+> +		 */
+> +		{
+> +			.len = 0,
+> +			.delay_usecs = 1,	/* > CNVST Low Time 100 ns */
+> +			.cs_change = 1,
+> +		},
+> +		/*
+> +		 * The acquisition interval begins with the falling edge of
+> +		 * CNVST.  The total acquisition and conversion process takes
+> +		 * <7.5us.
+> +		 */
+> +		{
+> +			.len = 0,
+Is this guaranteed to actually work?  I've no idea what the spi core
+does with a zero length transfer.
+> +			.delay_usecs = 8,
+> +		},
+> +		{
+> +			.rx_buf = &adc->data,
+> +			.len = 1,
+> +		},
+> +	};
+> +	int ret;
 > +
-> + ret =3D snd_soc_dapm_new_controls(dapm, sun8i_codec_mbias_widgets,
-> + ARRAY_SIZE(sun8i_codec_mbias_widgets));
-> + if (ret)
-> + dev_err(dev, "Failed to add MBIAS DAPM widgets: %d\n", ret);
+> +	if (channel == 0)
+> +		ret = spi_sync_transfer(spi, xfers + 1, 2);
+> +	else
+> +		ret = spi_sync_transfer(spi, xfers, 3);
 > +
-> + return ret;
+> +	if (ret)
+> +		return ret;
+> +
+> +	return adc->data;
 > +}
 > +
-> =C2=A0/* hmic specific widget */
-> =C2=A0static const struct snd_soc_dapm_widget sun8i_codec_hmic_widgets[] =
-=3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0SND_SOC_DAPM_SUPPLY=
-("HBIAS", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
-> @@ -686,12 +702,14 @@ static const struct sun8i_codec_analog_quirks sun8i=
-_a23_quirks =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.has_headphone =3D =
-true,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.has_hmic =3D true,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.has_linein =3D tru=
-e,
-> + .has_mbias =3D true,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.has_mic2 =3D true,
-> =C2=A0};
->
-> =C2=A0static const struct sun8i_codec_analog_quirks sun8i_h3_quirks =3D {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.has_linein =3D tru=
-e,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.has_lineout =3D tr=
-ue,
-> + .has_mbias =3D true,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.has_mic2 =3D true,
-> =C2=A0};
->
-> @@ -734,6 +752,12 @@ static int sun8i_codec_analog_cmpnt_probe(struct snd=
-_soc_component *cmpnt)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0return ret;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
->
-> + if (quirks->has_mbias) {
-> + ret =3D sun8i_codec_add_mbias(cmpnt);
-> + if (ret)
-> + return ret;
-> + }
+> +static int max1118_get_vref_mV(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> +	struct max1118 *adc = iio_priv(indio_dev);
+> +	const struct spi_device_id *id = spi_get_device_id(spi);
+> +	int vref_uV;
 > +
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (quirks->has_mic=
-2) {
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D sun8i_codec_add_mic2(cmpnt);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
-> --
-> 2.11.1
+> +	switch (id->driver_data) {
+> +	case max1117:
+> +		return 2048;
+> +	case max1119:
+> +		return 4096;
+> +	case max1118:
+> +		if (IS_ERR_OR_NULL(adc->reg))
+> +			return -EINVAL;
+Again, make it non optional and drop it.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+If it really is optional, you should have two iio_info structures and
+not have the scale available on one of them...
+> +
+> +		vref_uV = regulator_get_voltage(adc->reg);
+> +		if (vref_uV < 0)
+> +			return vref_uV;
+> +		return vref_uV / 1000;
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +static int max1118_read_raw(struct iio_dev *indio_dev,
+> +			struct iio_chan_spec const *chan,
+> +			int *val, int *val2, long mask)
+> +{
+> +	struct max1118 *adc = iio_priv(indio_dev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		mutex_lock(&adc->lock);
+> +		*val = max1118_read(adc->spi, chan->channel);
+> +		mutex_unlock(&adc->lock);
+> +		if (*val < 0)
+> +			return *val;
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = max1118_get_vref_mV(adc->spi);
+> +		if (*val < 0)
+> +			return *val;
+> +		*val2 = 8;
+> +
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info max1118_info = {
+> +	.read_raw = max1118_read_raw,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static int max1118_remove(struct spi_device *spi)
+Code ordering is a little unusual.  Please move this to after the probe.
+> +{
+> +	struct iio_dev *indio_dev = spi_get_drvdata(spi);
+> +	struct max1118 *adc = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +	if (!IS_ERR_OR_NULL(adc->reg))
+The regulator isn't optional so to have gotten here you have succesfully
+acquired it or been passed a fake one.
+> +		return regulator_disable(adc->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static irqreturn_t max1118_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct max1118 *adc = iio_priv(indio_dev);
+> +	u8 data[16] = { }; /* 2x 8-bit ADC data + padding + 8 bytes timestamp */
+> +	int scan_index;
+> +	int i = 0;
+> +
+> +	mutex_lock(&adc->lock);
+> +
+> +	for_each_set_bit(scan_index, indio_dev->active_scan_mask,
+> +			indio_dev->masklength) {
+> +		const struct iio_chan_spec *scan_chan =
+> +				&indio_dev->channels[scan_index];
+> +		int ret = max1118_read(adc->spi, scan_chan->channel);
+> +
+> +		if (ret < 0) {
+> +			dev_warn(&adc->spi->dev,
+> +				"failed to get conversion data\n");
+> +			goto out;
+> +		}
+> +
+> +		data[i] = ret;
+> +		i++;
+> +	}
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +					   iio_get_time_ns(indio_dev));
+> +out:
+> +	mutex_unlock(&adc->lock);
+> +
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int max1118_probe(struct spi_device *spi)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct max1118 *adc;
+> +	const struct spi_device_id *id = spi_get_device_id(spi);
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	adc = iio_priv(indio_dev);
+> +	adc->spi = spi;
+> +	mutex_init(&adc->lock);
+> +
+> +	adc->reg = devm_regulator_get(&spi->dev, "vref");
+> +	if (PTR_ERR(adc->reg) == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+> +	if (IS_ERR_OR_NULL(adc->reg) && id->driver_data == max1118) {
+> +		dev_warn(&spi->dev, "max1118 requires vref-supply\n");
+Not a warning as it's not optional.  Error out on this.
+If one isn't specified, the regulator framework will feed you a fake
+one anyway..
+
+Looking further up, this should only be requested for the max1118, but
+should be required for that one part.
+> +	} else {
+> +		ret = regulator_enable(adc->reg);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	spi_set_drvdata(spi, indio_dev);
+> +
+> +	indio_dev->name = spi_get_device_id(spi)->name;
+> +	indio_dev->dev.parent = &spi->dev;
+> +	indio_dev->info = &max1118_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = max1118_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(max1118_channels);
+> +
+> +	/*
+> +	 * To reinitiate a conversion on CH0, it is necessary to allow for a
+> +	 * conversion to be complete and all of the data to be read out.  Once
+> +	 * a conversion has been completed, the MAX1117/MAX1118/MAX1119 will go
+> +	 * into AutoShutdown mode until the next conversion is initiated.
+> +	 */
+> +	max1118_read(spi, 0);
+> +
+> +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> +					max1118_trigger_handler, NULL);
+> +	if (ret)
+> +		goto err_reg_disable;
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret)
+> +		goto err_buffer_cleanup;
+> +
+> +	return 0;
+> +
+> +err_buffer_cleanup:
+> +	iio_triggered_buffer_cleanup(indio_dev);
+> +err_reg_disable:
+Clean this up once you have made a failure to get the regulator drop out.
+Needs to be dependent on the device type not whether there is a regulator
+or not.
+> +	if (!IS_ERR_OR_NULL(adc->reg))
+> +		regulator_disable(adc->reg);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct spi_device_id max1118_id[] = {
+> +	{ "max1117", max1117 },
+> +	{ "max1118", max1118 },
+> +	{ "max1119", max1119 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(spi, max1118_id);
+> +
+> +#ifdef CONFIG_OF
+> +
+> +static const struct of_device_id max1118_dt_ids[] = {
+> +	{ .compatible = "maxim,max1117" },
+> +	{ .compatible = "maxim,max1118" },
+> +	{ .compatible = "maxim,max1119" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, max1118_dt_ids);
+> +
+> +#endif
+> +
+> +static struct spi_driver max1118_spi_driver = {
+> +	.driver = {
+> +		.name = "max1118",
+> +		.of_match_table = of_match_ptr(max1118_dt_ids),
+> +	},
+> +	.probe = max1118_probe,
+> +	.remove = max1118_remove,
+> +	.id_table = max1118_id,
+> +};
+> +module_spi_driver(max1118_spi_driver);
+> +
+> +MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("MAXIM MAX1117/MAX1118/MAX1119 ADCs driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
