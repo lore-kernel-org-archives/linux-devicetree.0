@@ -1,408 +1,680 @@
-From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] iio: adc: add max1117/max1118/max1119 ADC driver
-Date: Sun,  5 Mar 2017 21:33:30 +0900
-Message-ID: <1488717210-25151-1-git-send-email-akinobu.mita@gmail.com>
+From: Mani Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] iio:light: Add support for STMicro VL6180 sensor
+Date: Sun, 5 Mar 2017 18:32:49 +0530
+Message-ID: <20170305130249.GA5467@gmail.com>
+References: <20170302184031.GA27741@gmail.com>
+ <2e6ed211-baf2-9877-fbb4-b39aa75f4dee@kernel.org>
+ <e205a6eb-e7cf-2f19-5b81-15dd70d573a7@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e205a6eb-e7cf-2f19-5b81-15dd70d573a7-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds max1117/max1118/max1119 8-bit, dual-channel ADC driver.
+On Sat, Mar 04, 2017 at 06:37:28PM +0000, Jonathan Cameron wrote:
+> On 04/03/17 17:53, Jonathan Cameron wrote:
+> > On 02/03/17 18:40, Manivannan Sadhasivam wrote:
+> >> This patch adds support for STMicro VL6180 - ALS and proximity sensor. Sensor is capable of measuring the light
+> >> intensity as well as object distance using TOF(Time of Flight) technology.
+> >>
+> >> Signed-off-by: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Few more comments from me.
+> One more thing (from browsing datasheet). I would have expected to see
+> some control of the gpios as it seems to have a very explicit start up
+> sequence described.  Is this something you are doing some other way?
+>
+Hi Jonathan,
 
-Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Cc: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
----
- .../devicetree/bindings/iio/adc/max1118.txt        |  21 ++
- drivers/iio/adc/Kconfig                            |  12 +
- drivers/iio/adc/Makefile                           |   1 +
- drivers/iio/adc/max1118.c                          | 310 +++++++++++++++++++++
- 4 files changed, 344 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/max1118.txt
- create mode 100644 drivers/iio/adc/max1118.c
+Though the use of GPIO0 during start-up is recommended in the datasheet, it is also mentioned
+that it could be optional. Most of the breakout boards available has the GPIO0 connected to
+AVDD, which ensures proper hw reset.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max1118.txt b/Documentation/devicetree/bindings/iio/adc/max1118.txt
-new file mode 100644
-index 0000000..cf33d0b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/max1118.txt
-@@ -0,0 +1,21 @@
-+* MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs
-+
-+Required properties:
-+ - compatible: Should be one of
-+	* "maxim,max1117"
-+	* "maxim,max1118"
-+	* "maxim,max1119"
-+ - reg: spi chip select number for the device
-+ - (max1118 only) vref-supply: The regulator supply for ADC reference voltage
-+
-+Recommended properties:
-+ - spi-max-frequency: Definition as per
-+		Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Example:
-+adc@0 {
-+	compatible = "maxim,max1118";
-+	reg = <0>;
-+	vref-supply = <&vdd_supply>;
-+	spi-max-frequency = <1000000>;
-+};
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index dedae7a..66262d1 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -335,6 +335,18 @@ config MAX11100
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called max11100.
- 
-+config MAX1118
-+	tristate "Maxim max1117/max1118/max1119 ADCs driver"
-+	depends on SPI
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	help
-+	  Say yes here to build support for Maxim max1117/max1118/max1119
-+	  8-bit, dual-channel ADCs.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max1118.
-+
- config MAX1363
- 	tristate "Maxim max1363 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index d001262..5ef3470 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -33,6 +33,7 @@ obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
- obj-$(CONFIG_LTC2485) += ltc2485.o
- obj-$(CONFIG_MAX1027) += max1027.o
- obj-$(CONFIG_MAX11100) += max11100.o
-+obj-$(CONFIG_MAX1118) += max1118.o
- obj-$(CONFIG_MAX1363) += max1363.o
- obj-$(CONFIG_MCP320X) += mcp320x.o
- obj-$(CONFIG_MCP3422) += mcp3422.o
-diff --git a/drivers/iio/adc/max1118.c b/drivers/iio/adc/max1118.c
-new file mode 100644
-index 0000000..f2597b7
---- /dev/null
-+++ b/drivers/iio/adc/max1118.c
-@@ -0,0 +1,310 @@
-+/*
-+ * MAX1117/MAX1118/MAX1119 8-bit, dual-channel ADCs driver
-+ *
-+ * Copyright (c) 2017 Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is subject to the terms and conditions of version 2 of
-+ * the GNU General Public License.  See the file COPYING in the main
-+ * directory of this archive for more details.
-+ *
-+ * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX1117-MAX1119.pdf
-+ *
-+ * SPI interface connections
-+ *
-+ * SPI                MAXIM
-+ * Master  Direction  MAX1117/8/9
-+ * ------  ---------  -----------
-+ * nCS        -->     CNVST
-+ * SCK        -->     SCLK
-+ * MISO       <--     DOUT
-+ * ------  ---------  -----------
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/spi/spi.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/regulator/consumer.h>
-+
-+enum max1118_id {
-+	max1117,
-+	max1118,
-+	max1119,
-+};
-+
-+struct max1118 {
-+	struct spi_device *spi;
-+	struct mutex lock;
-+	struct regulator *reg;
-+
-+	u8 data ____cacheline_aligned;
-+};
-+
-+#define MAX1118_CHANNEL(ch)						\
-+	{								\
-+		.type = IIO_VOLTAGE,					\
-+		.indexed = 1,						\
-+		.channel = (ch),					\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.scan_index = ch,					\
-+		.scan_type = {						\
-+			.sign = 'u',					\
-+			.realbits = 8,					\
-+			.storagebits = 8,				\
-+		},							\
-+	}
-+
-+static const struct iio_chan_spec max1118_channels[] = {
-+	MAX1118_CHANNEL(0),
-+	MAX1118_CHANNEL(1),
-+	IIO_CHAN_SOFT_TIMESTAMP(2),
-+};
-+
-+static int max1118_read(struct spi_device *spi, int channel)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct max1118 *adc = iio_priv(indio_dev);
-+	struct spi_transfer xfers[] = {
-+		/*
-+		 * To select CH1 for conversion, CNVST pin must be brought high
-+		 * and low for a second time.
-+		 */
-+		{
-+			.len = 0,
-+			.delay_usecs = 1,	/* > CNVST Low Time 100 ns */
-+			.cs_change = 1,
-+		},
-+		/*
-+		 * The acquisition interval begins with the falling edge of
-+		 * CNVST.  The total acquisition and conversion process takes
-+		 * <7.5us.
-+		 */
-+		{
-+			.len = 0,
-+			.delay_usecs = 8,
-+		},
-+		{
-+			.rx_buf = &adc->data,
-+			.len = 1,
-+		},
-+	};
-+	int ret;
-+
-+	if (channel == 0)
-+		ret = spi_sync_transfer(spi, xfers + 1, 2);
-+	else
-+		ret = spi_sync_transfer(spi, xfers, 3);
-+
-+	if (ret)
-+		return ret;
-+
-+	return adc->data;
-+}
-+
-+static int max1118_get_vref_mV(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct max1118 *adc = iio_priv(indio_dev);
-+	const struct spi_device_id *id = spi_get_device_id(spi);
-+	int vref_uV;
-+
-+	switch (id->driver_data) {
-+	case max1117:
-+		return 2048;
-+	case max1119:
-+		return 4096;
-+	case max1118:
-+		if (IS_ERR_OR_NULL(adc->reg))
-+			return -EINVAL;
-+
-+		vref_uV = regulator_get_voltage(adc->reg);
-+		if (vref_uV < 0)
-+			return vref_uV;
-+		return vref_uV / 1000;
-+	}
-+
-+	return -ENODEV;
-+}
-+
-+static int max1118_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	struct max1118 *adc = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&adc->lock);
-+		*val = max1118_read(adc->spi, chan->channel);
-+		mutex_unlock(&adc->lock);
-+		if (*val < 0)
-+			return *val;
-+
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		*val = max1118_get_vref_mV(adc->spi);
-+		if (*val < 0)
-+			return *val;
-+		*val2 = 8;
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct iio_info max1118_info = {
-+	.read_raw = max1118_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static int max1118_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+	struct max1118 *adc = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+	if (!IS_ERR_OR_NULL(adc->reg))
-+		return regulator_disable(adc->reg);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t max1118_trigger_handler(int irq, void *p)
-+{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct max1118 *adc = iio_priv(indio_dev);
-+	u8 data[16] = { }; /* 2x 8-bit ADC data + padding + 8 bytes timestamp */
-+	int scan_index;
-+	int i = 0;
-+
-+	mutex_lock(&adc->lock);
-+
-+	for_each_set_bit(scan_index, indio_dev->active_scan_mask,
-+			indio_dev->masklength) {
-+		const struct iio_chan_spec *scan_chan =
-+				&indio_dev->channels[scan_index];
-+		int ret = max1118_read(adc->spi, scan_chan->channel);
-+
-+		if (ret < 0) {
-+			dev_warn(&adc->spi->dev,
-+				"failed to get conversion data\n");
-+			goto out;
-+		}
-+
-+		data[i] = ret;
-+		i++;
-+	}
-+	iio_push_to_buffers_with_timestamp(indio_dev, data,
-+					   iio_get_time_ns(indio_dev));
-+out:
-+	mutex_unlock(&adc->lock);
-+
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max1118_probe(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev;
-+	struct max1118 *adc;
-+	const struct spi_device_id *id = spi_get_device_id(spi);
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*adc));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(indio_dev);
-+	adc->spi = spi;
-+	mutex_init(&adc->lock);
-+
-+	adc->reg = devm_regulator_get(&spi->dev, "vref");
-+	if (PTR_ERR(adc->reg) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
-+
-+	if (IS_ERR_OR_NULL(adc->reg) && id->driver_data == max1118) {
-+		dev_warn(&spi->dev, "max1118 requires vref-supply\n");
-+	} else {
-+		ret = regulator_enable(adc->reg);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->info = &max1118_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = max1118_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(max1118_channels);
-+
-+	/*
-+	 * To reinitiate a conversion on CH0, it is necessary to allow for a
-+	 * conversion to be complete and all of the data to be read out.  Once
-+	 * a conversion has been completed, the MAX1117/MAX1118/MAX1119 will go
-+	 * into AutoShutdown mode until the next conversion is initiated.
-+	 */
-+	max1118_read(spi, 0);
-+
-+	ret = iio_triggered_buffer_setup(indio_dev, NULL,
-+					max1118_trigger_handler, NULL);
-+	if (ret)
-+		goto err_reg_disable;
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret)
-+		goto err_buffer_cleanup;
-+
-+	return 0;
-+
-+err_buffer_cleanup:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+err_reg_disable:
-+	if (!IS_ERR_OR_NULL(adc->reg))
-+		regulator_disable(adc->reg);
-+
-+	return ret;
-+}
-+
-+static const struct spi_device_id max1118_id[] = {
-+	{ "max1117", max1117 },
-+	{ "max1118", max1118 },
-+	{ "max1119", max1119 },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, max1118_id);
-+
-+#ifdef CONFIG_OF
-+
-+static const struct of_device_id max1118_dt_ids[] = {
-+	{ .compatible = "maxim,max1117" },
-+	{ .compatible = "maxim,max1118" },
-+	{ .compatible = "maxim,max1119" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, max1118_dt_ids);
-+
-+#endif
-+
-+static struct spi_driver max1118_spi_driver = {
-+	.driver = {
-+		.name = "max1118",
-+		.of_match_table = of_match_ptr(max1118_dt_ids),
-+	},
-+	.probe = max1118_probe,
-+	.remove = max1118_remove,
-+	.id_table = max1118_id,
-+};
-+module_spi_driver(max1118_spi_driver);
-+
-+MODULE_AUTHOR("Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-+MODULE_DESCRIPTION("MAXIM MAX1117/MAX1118/MAX1119 ADCs driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+-Mani
+> Jonathan
+> > 
+> > Jonathan
+> >> ---
+> >>  .../devicetree/bindings/iio/light/vl6180.txt       |  16 +
+> >>  drivers/iio/light/Kconfig                          |  10 +
+> >>  drivers/iio/light/Makefile                         |   1 +
+> >>  drivers/iio/light/vl6180.c                         | 544 +++++++++++++++++++++
+> >>  4 files changed, 571 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/iio/light/vl6180.txt
+> >>  create mode 100644 drivers/iio/light/vl6180.c
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/light/vl6180.txt b/Documentation/devicetree/bindings/iio/light/vl6180.txt
+> >> new file mode 100644
+> >> index 0000000..bc1820a
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/light/vl6180.txt
+> >> @@ -0,0 +1,16 @@
+> >> +STMicro VL6180 -  ALS and proximity sensor
+> >> +
+> >> +Link to datasheet: http://www.st.com/resource/en/datasheet/vl6180x.pdf
+> >> +
+> >> +Required properties:
+> >> +
+> >> +	-compatible: should be "st,vl6180"
+> >> +	-reg: the I2C address of the sensor
+> >> +
+> >> +Example:
+> >> +
+> >> +vl6180@29 {
+> >> +	compatible = "st,vl6180";
+> >> +	reg = <0x29>;
+> >> +};
+> >> +	
+> >> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
+> >> index 7c566f5..c26113a 100644
+> >> --- a/drivers/iio/light/Kconfig
+> >> +++ b/drivers/iio/light/Kconfig
+> >> @@ -352,4 +352,14 @@ config VEML6070
+> >>  	 To compile this driver as a module, choose M here: the
+> >>  	 module will be called veml6070.
+> >>  
+> >> +config VL6180
+> >> +	tristate "VL6180 ALS and proximity sensor"
+> >> +	depends on I2C
+> >> +	help
+> >> +	 Say Y here if you want to build a driver for the STMicroelectronics
+> >> +	 VL6180 combined ambient light and proximity sensor.
+> >> +
+> >> +	 To compile this driver as a module, choose M here: the
+> >> +	 module will be called vl6180.
+> >> +
+> >>  endmenu
+> >> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
+> >> index 6f2a3c6..24a8d72 100644
+> >> --- a/drivers/iio/light/Makefile
+> >> +++ b/drivers/iio/light/Makefile
+> >> @@ -33,3 +33,4 @@ obj-$(CONFIG_TSL4531)		+= tsl4531.o
+> >>  obj-$(CONFIG_US5182D)		+= us5182d.o
+> >>  obj-$(CONFIG_VCNL4000)		+= vcnl4000.o
+> >>  obj-$(CONFIG_VEML6070)		+= veml6070.o
+> >> +obj-$(CONFIG_VL6180)		+= vl6180.o
+> >> diff --git a/drivers/iio/light/vl6180.c b/drivers/iio/light/vl6180.c
+> >> new file mode 100644
+> >> index 0000000..de80d96
+> >> --- /dev/null
+> >> +++ b/drivers/iio/light/vl6180.c
+> >> @@ -0,0 +1,544 @@
+> >> +/*
+> >> + * vl6180.c - Support for STMicroelectronics VL6180 ALS and proximity sensor
+> >> + *
+> >> + * Copyright 2017 Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+> >> + * Copyright 2017 Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> + *
+> >> + * This file is subject to the terms and conditions of version 2 of
+> >> + * the GNU General Public License.  See the file COPYING in the main
+> >> + * directory of this archive for more details.
+> >> + *
+> >> + * IIO driver for VL6180 (7-bit I2C slave addresses 0x29)
+> >> + *
+> >> + * Range: 0 to 100mm
+> >> + * ALS: < 1 Lux up to 100 kLux
+> >> + * IR: 850nm
+> >> + *
+> >> + * TODO: irq, threshold events, continuous mode, hardware buffer
+> >> + */
+> >> +
+> >> +#include <linux/module.h>
+> >> +#include <linux/i2c.h>
+> >> +#include <linux/mutex.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/delay.h>
+> >> +
+> >> +#include <linux/iio/iio.h>
+> >> +#include <linux/iio/sysfs.h>
+> >> +
+> >> +#define VL6180_DRV_NAME "vl6180"
+> >> +
+> >> +/* Device identification register and value */
+> >> +#define VL6180_MODEL_ID	0x000
+> >> +#define VL6180_MODEL_ID_VAL 0xb4
+> >> +
+> >> +/* Configuration registers */
+> >> +#define VL6180_INTR_CONFIG 0x014
+> >> +#define VL6180_INTR_CLEAR 0x015
+> >> +#define VL6180_OUT_OF_RESET 0x016
+> >> +#define VL6180_HOLD 0x017
+> >> +#define VL6180_RANGE_START 0x018
+> >> +#define VL6180_ALS_START 0x038
+> >> +#define VL6180_ALS_GAIN 0x03f
+> >> +#define VL6180_ALS_IT 0x040
+> >> +
+> >> +/* Status registers */
+> >> +#define VL6180_RANGE_STATUS 0x04d
+> >> +#define VL6180_ALS_STATUS 0x04e
+> >> +#define VL6180_INTR_STATUS 0x04f
+> >> +
+> >> +/* Result value registers */
+> >> +#define VL6180_ALS_VALUE 0x050
+> >> +#define VL6180_RANGE_VALUE 0x062
+> >> +#define VL6180_RANGE_RATE 0x066
+> >> +
+> >> +/* bits of the RANGE_START and ALS_START register */
+> >> +#define VL6180_MODE_CONT BIT(1) /* continuous mode */
+> >> +#define VL6180_STARTSTOP BIT(0) /* start measurement, auto-reset */
+> >> +
+> >> +/* bits of the INTR_STATUS and INTR_CONFIG register */
+> >> +#define VL6180_ALS_READY BIT(5)
+> >> +#define VL6180_RANGE_READY BIT(2)
+> >> +
+> >> +/* bits of the INTR_CLEAR register */
+> >> +#define VL6180_CLEAR_ERROR BIT(2)
+> >> +#define VL6180_CLEAR_ALS BIT(1)
+> >> +#define VL6180_CLEAR_RANGE BIT(0)
+> >> +
+> >> +/* bits of the HOLD register */
+> >> +#define VL6180_HOLD_ON BIT(0)
+> >> +
+> >> +/* default value for the ALS_IT register */
+> >> +#define VL6180_ALS_IT_100 0x063 /* 100 ms */
+> >> +
+> >> +/* values for the ALS_GAIN register */
+> >> +#define VL6180_ALS_GAIN_1 0x46
+> >> +#define VL6180_ALS_GAIN_1_25 0x45
+> >> +#define VL6180_ALS_GAIN_1_67 0x44
+> >> +#define VL6180_ALS_GAIN_2_5 0x43
+> >> +#define VL6180_ALS_GAIN_5 0x42
+> >> +#define VL6180_ALS_GAIN_10 0x41
+> >> +#define VL6180_ALS_GAIN_20 0x40
+> >> +#define VL6180_ALS_GAIN_40 0x47
+> >> +
+> >> +struct vl6180_data {
+> >> +	struct i2c_client *client;
+> >> +	struct mutex lock;
+> >> +};
+> >> +
+> >> +enum { VL6180_ALS, VL6180_RANGE, VL6180_PROX };
+> >> +
+> >> +/**
+> >> + * struct vl6180_chan_regs - Registers for accessing channels
+> >> + * @drdy_mask:			Data ready bits in status register
+> >> + * @start_reg:			Conversion start registeir
+> >> + * @value_reg:			Result value register
+> >> + */
+> >> +struct vl6180_chan_regs {
+> >> +	u8 drdy_mask;
+> >> +	u16 start_reg, value_reg;
+> >> +	bool word;
+> >> +};
+> >> +
+> >> +static const struct vl6180_chan_regs vl6180_chan_regs_table[] = {
+> >> +	[VL6180_ALS] = {
+> >> +		.drdy_mask = VL6180_ALS_READY,
+> >> +		.start_reg = VL6180_ALS_START,
+> >> +		.value_reg = VL6180_ALS_VALUE,
+> >> +		.word = true,
+> >> +	},
+> >> +	[VL6180_RANGE] = {
+> >> +		.drdy_mask = VL6180_RANGE_READY,
+> >> +		.start_reg = VL6180_RANGE_START,
+> >> +		.value_reg = VL6180_RANGE_VALUE,
+> >> +		.word = false,
+> >> +	},
+> >> +	[VL6180_PROX] = {
+> >> +		.drdy_mask = VL6180_RANGE_READY,
+> >> +		.start_reg = VL6180_RANGE_START,
+> >> +		.value_reg = VL6180_RANGE_RATE,
+> >> +		.word = true,
+> >> +	},
+> >> +};
+> >> +
+> >> +static int vl6180_read(struct i2c_client *client, u16 cmd, void *databuf,
+> >> +		       u8 len)
+> >> +{
+> >> +	u16 cmdbuf = cpu_to_be16(cmd);
+> >> +	struct i2c_msg msgs[2] = {
+> >> +		{ .addr = client->addr, .len = 2, .buf = (u8 *) &cmdbuf },
+> >> +		{ .addr = client->addr, .len = len, .buf = databuf,
+> >> +		  .flags = I2C_M_RD } };
+> >> +	int ret;
+> > Hmm. could wrap this up in regmap rather neatly I think, but fair enough
+> > to keep it all obvious here if you prefer.
+> >> +
+> >> +	ret = i2c_transfer(client->adapter, msgs, 2);
+> >> +	if (ret < 0)
+> >> +		dev_err(&client->dev, "failed reading register 0x%04x\n", cmd);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int vl6180_read_byte(struct i2c_client *client, u16 cmd)
+> >> +{
+> >> +	u8 data;
+> >> +	int ret;
+> >> +
+> >> +	ret = vl6180_read(client, cmd, &data, sizeof(data));
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	return data;
+> >> +}
+> >> +
+> >> +static int vl6180_read_word(struct i2c_client *client, u16 cmd)
+> >> +{
+> >> +	__be16 data;
+> >> +	int ret;
+> >> +
+> >> +	ret = vl6180_read(client, cmd, &data, sizeof(data));
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	return be16_to_cpu(data);
+> >> +}
+> >> +
+> >> +static int vl6180_write_byte(struct i2c_client *client, u16 cmd, u8 val)
+> >> +{
+> >> +	u8 buf[3];
+> >> +	struct i2c_msg msgs[1] = {
+> >> +		{ .addr = client->addr, .len = 3, .buf = buf } };
+> >> +	int ret;
+> >> +
+> >> +	buf[0] = cmd >> 8;
+> >> +	buf[1] = cmd & 0xff;
+> > Here you end up with a mix that makes it harder to force the endianness than
+> > below, but it can still be done by using cpu_to_be16p and again makes
+> > that conversion explicit.
+> >> +	buf[2] = val;
+> >> +
+> >> +	ret = i2c_transfer(client->adapter, msgs, 1);
+> >> +	if (ret < 0) {
+> >> +		dev_err(&client->dev, "failed writing register 0x%04x\n", cmd);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int vl6180_write_word(struct i2c_client *client, u16 cmd, u16 val)
+> >> +{
+> >> +	u8 buf[4];
+> >> +	struct i2c_msg msgs[1] = {
+> >> +		{ .addr = client->addr, .len = 4, .buf = buf } };
+> >> +	int ret;
+> >> +
+> >> +	buf[0] = cmd >> 8;
+> >> +	buf[1] = cmd & 0xff;
+> > Could be done 'slightly' more efficiently by using the fact these are clearly
+> > u16s.  Then in the case where the system is of the same endianness these
+> > become simple copies.  cpu_to_be16 should do the trick (assuming I've got
+> > the write one;)
+> > 
+> > Make buf __be16 and this becomes explicit in the code which is always a
+> > nice bonus.
+> >> +	buf[2] = val >> 8;
+> >> +	buf[3] = val & 0xff;
+> >> +
+> >> +	ret = i2c_transfer(client->adapter, msgs, 1);
+> >> +	if (ret < 0) {
+> >> +		dev_err(&client->dev, "failed writing register 0x%04x\n", cmd);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int vl6180_measure(struct vl6180_data *data, int addr)
+> >> +{
+> >> +	struct i2c_client *client = data->client;
+> >> +	int tries = 20, ret;
+> >> +	u16 value;
+> >> +
+> >> +	mutex_lock(&data->lock);
+> >> +	/* Start single shot measurement */
+> >> +	ret = vl6180_write_byte(client,
+> >> +		vl6180_chan_regs_table[addr].start_reg, VL6180_STARTSTOP);
+> >> +	if (ret < 0)
+> >> +		goto fail;
+> >> +
+> >> +	while (tries--) {
+> >> +		ret = vl6180_read_byte(client, VL6180_INTR_STATUS);
+> >> +		if (ret < 0)
+> >> +			goto fail;
+> >> +
+> >> +		if (ret & vl6180_chan_regs_table[addr].drdy_mask)
+> >> +			break;
+> >> +		msleep(20);
+> > Presumably we can know approximately how long this is going to take depending
+> > on state and perhaps reduce the bus traffic by guessing 'about' right.
+> >> +	}
+> >> +
+> >> +	if (tries < 0) {
+> >> +		ret = -EIO;
+> >> +		goto fail;
+> >> +	}
+> >> +
+> >> +	/* Read result value from appropriate registers */
+> >> +	ret = vl6180_chan_regs_table[addr].word ?
+> >> +		vl6180_read_word(client, vl6180_chan_regs_table[addr].value_reg) :
+> >> +		vl6180_read_byte(client, vl6180_chan_regs_table[addr].value_reg);
+> >> +	if (ret < 0)
+> >> +		goto fail;
+> >> +	value = ret;
+> >> +
+> >> +	/* Clear the interrupt flag after data read */
+> >> +	ret = vl6180_write_byte(client, VL6180_INTR_CLEAR,
+> >> +		VL6180_CLEAR_ERROR | VL6180_CLEAR_ALS | VL6180_CLEAR_RANGE);
+> >> +	if (ret < 0)
+> >> +		goto fail;
+> >> +
+> >> +	ret = value;
+> >> +
+> >> +fail:
+> >> +	mutex_unlock(&data->lock);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static const struct iio_chan_spec vl6180_channels[] = {
+> >> +	{
+> >> +		.type = IIO_LIGHT,
+> >> +		.address = VL6180_ALS,
+> >> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> >> +			BIT(IIO_CHAN_INFO_INT_TIME) |
+> >> +			BIT(IIO_CHAN_INFO_SCALE) |
+> >> +			BIT(IIO_CHAN_INFO_HARDWAREGAIN),
+> >> +	}, {
+> >> +		.type = IIO_DISTANCE,
+> >> +		.address = VL6180_RANGE,
+> >> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> >> +			BIT(IIO_CHAN_INFO_SCALE),
+> >> +	}, {
+> >> +		.type = IIO_PROXIMITY,
+> >> +		.address = VL6180_PROX,
+> >> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
+> >> +	}
+> >> +};
+> >> +
+> > As Peter raised, not that obvious what these are. Please add a comment
+> > explaining.
+> >> +static const int vl6180_als_gain[8][4] = {
+> >> +	{ 1,	0,	70,	VL6180_ALS_GAIN_1 },
+> >> +	{ 1,    250000, 69,	VL6180_ALS_GAIN_1_25 },
+> >> +	{ 1,    670000, 68,	VL6180_ALS_GAIN_1_67 },
+> >> +	{ 2,    500000, 67,	VL6180_ALS_GAIN_2_5 },
+> >> +	{ 5,    0,      66,	VL6180_ALS_GAIN_5 },
+> >> +	{ 10,   0,      65,	VL6180_ALS_GAIN_10 },
+> >> +	{ 20,   0,      64,	VL6180_ALS_GAIN_20 },
+> >> +	{ 40,   0,      71,	VL6180_ALS_GAIN_40 }
+> >> +};
+> >> +
+> >> +
+> >> +static int vl6180_read_raw(struct iio_dev *indio_dev,
+> >> +				struct iio_chan_spec const *chan,
+> >> +				int *val, int *val2, long mask)
+> >> +{
+> >> +	struct vl6180_data *data = iio_priv(indio_dev);
+> >> +	int ret, i;
+> >> +
+> >> +	switch (mask) {
+> >> +	case IIO_CHAN_INFO_RAW:
+> >> +		ret = vl6180_measure(data, chan->address);
+> >> +		if (ret < 0)
+> >> +			return ret;
+> >> +		*val = ret;
+> >> +
+> >> +		return IIO_VAL_INT;
+> >> +	case IIO_CHAN_INFO_INT_TIME:
+> >> +		ret = vl6180_read_word(data->client, VL6180_ALS_IT);
+> >> +		if (ret < 0)
+> >> +			return ret;
+> >> +		*val = 0; /* 1 count = 1ms (0 = 1ms) */
+> >> +		*val2 = (ret + 1) * 1000; /* convert to seconds */
+> >> +
+> >> +		return IIO_VAL_INT_PLUS_MICRO;
+> >> +	case IIO_CHAN_INFO_SCALE:
+> >> +		switch (chan->type) {
+> >> +		case IIO_LIGHT:
+> >> +			*val = 0; /* one ALS count is 0.32 Lux */
+> >> +			*val2 = 320000;
+> >> +			break;
+> >> +		case IIO_DISTANCE:
+> >> +			*val = 0; /* sensor reports mm, scale to meter */
+> >> +			*val2 = 1000;
+> >> +			break;
+> >> +		default:
+> >> +			return -EINVAL;
+> >> +		}
+> >> +
+> >> +		return IIO_VAL_INT_PLUS_MICRO;
+> >> +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> >> +		ret = vl6180_read_byte(data->client, VL6180_ALS_GAIN);
+> >> +		if (ret < 0)
+> >> +			return -EINVAL;
+> >> +		for (i = 0; i < ARRAY_SIZE(vl6180_als_gain); i++) {
+> >> +			if (ret == vl6180_als_gain[i][2]) {
+> >> +				*val = vl6180_als_gain[i][0];
+> >> +				*val2 = vl6180_als_gain[i][1];
+> >> +			}
+> >> +		}
+> >> +
+> >> +		return IIO_VAL_INT_PLUS_MICRO;
+> >> +	default:
+> >> +		return -EINVAL;
+> >> +	}
+> >> +}
+> >> +
+> >> +static IIO_CONST_ATTR(als_gain_available, "1 1.25 1.67 2.5 5 10 20 40");
+> >> +
+> >> +static struct attribute *vl6180_attributes[] = {
+> >> +	&iio_const_attr_als_gain_available.dev_attr.attr,
+> >> +	NULL
+> >> +};
+> >> +
+> >> +static const struct attribute_group vl6180_attribute_group = {
+> >> +	.attrs = vl6180_attributes,
+> >> +};
+> >> +
+> >> +/* HOLD is needed before updading any config registers */
+> >> +static int vl6180_hold(struct vl6180_data *data, bool hold)
+> >> +{
+> >> +	return vl6180_write_byte(data->client, VL6180_HOLD,
+> >> +		hold ? VL6180_HOLD_ON : 0);
+> >> +}
+> >> +
+> >> +static int vl6180_set_als_gain(struct vl6180_data *data, int val, int val2)
+> >> +{
+> >> +	int i, ret;
+> >> +
+> >> +	for (i = 0; i < ARRAY_SIZE(vl6180_als_gain); i++) {
+> >> +		if (val == vl6180_als_gain[i][0] &&
+> >> +			val2 == vl6180_als_gain[i][1]) {
+> >> +			mutex_lock(&data->lock);
+> >> +			ret = vl6180_hold(data, true);
+> >> +			if (ret < 0)
+> >> +				goto fail;
+> >> +			ret = vl6180_write_byte(data->client, VL6180_ALS_GAIN,
+> >> +				vl6180_als_gain[i][3]);
+> >> +fail:
+> >> +			vl6180_hold(data, false);
+> >> +			mutex_unlock(&data->lock);
+> >> +			return ret;
+> >> +		}
+> >> +	}
+> >> +
+> >> +	return -EINVAL;
+> >> +}
+> >> +
+> >> +static int vl6180_set_it(struct vl6180_data *data, int val2)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	mutex_lock(&data->lock);
+> >> +	ret = vl6180_hold(data, true);
+> >> +	if (ret < 0)
+> >> +		goto fail;
+> >> +	ret = vl6180_write_word(data->client, VL6180_ALS_IT,
+> >> +		(val2 - 500) / 1000); /* write value in ms */
+> >> +fail:
+> >> +	vl6180_hold(data, false);
+> >> +	mutex_unlock(&data->lock);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int vl6180_write_raw(struct iio_dev *indio_dev,
+> >> +			     struct iio_chan_spec const *chan,
+> >> +			     int val, int val2, long mask)
+> >> +{
+> >> +	struct vl6180_data *data = iio_priv(indio_dev);
+> >> +
+> >> +	switch (mask) {
+> >> +	case IIO_CHAN_INFO_INT_TIME:
+> >> +		if (val != 0 || val2 < 500 || val2 >= 512500)
+> >> +			return -EINVAL;
+> >> +
+> >> +		return vl6180_set_it(data, val2);
+> >> +	case IIO_CHAN_INFO_HARDWAREGAIN:
+> >> +		if (chan->type != IIO_LIGHT)
+> >> +			return -EINVAL;
+> >> +
+> >> +		return vl6180_set_als_gain(data, val, val2);
+> >> +	default:
+> >> +		return -EINVAL;
+> >> +	}
+> >> +}
+> >> +
+> >> +static const struct iio_info vl6180_info = {
+> >> +	.read_raw = vl6180_read_raw,
+> >> +	.write_raw = vl6180_write_raw,
+> >> +	.attrs = &vl6180_attribute_group,
+> >> +	.driver_module = THIS_MODULE,
+> >> +};
+> >> +
+> >> +/**
+> >> + * Following settings are enabled:
+> >> + * 1. ALS and Range ready interrupts
+> > I'd prefer to see these comments next to the place they are implemented.
+> > Much less likely to end up out of date there.
+> >> + * 2. ALS integration time: 100ms
+> >> + * 3. ALS gain: 1
+> >> + */
+> >> +static int vl6180_init(struct vl6180_data *data)
+> >> +{
+> >> +	struct i2c_client *client = data->client;
+> >> +	int ret;
+> >> +
+> >> +	ret = vl6180_read_byte(client, VL6180_MODEL_ID);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	if (ret != VL6180_MODEL_ID_VAL) {
+> >> +		dev_err(&client->dev, "invalid model ID %02x\n", ret);
+> >> +		return -ENODEV;
+> >> +	}
+> >> +
+> >> +	ret = vl6180_hold(data, true);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	ret = vl6180_read_byte(client, VL6180_OUT_OF_RESET);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	if (ret != 0x01) {
+> >> +		dev_err(&client->dev, "device is not fresh out of reset\n");
+> >> +		return -EINVAL;
+> >> +	}
+> > Why would it necessarily be fresh out of reset? If it is in some fashion
+> > supposed to be guaranteed here, please add a comment explaining why.
+> >> +
+> >> +	ret = vl6180_write_byte(client, VL6180_INTR_CONFIG,
+> >> +				VL6180_ALS_READY | VL6180_RANGE_READY);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	ret = vl6180_write_word(client, VL6180_ALS_IT, VL6180_ALS_IT_100);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	ret = vl6180_write_byte(client, VL6180_ALS_GAIN, VL6180_ALS_GAIN_1);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	ret = vl6180_write_byte(client, VL6180_OUT_OF_RESET, 0x00);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	return vl6180_hold(data, false);
+> >> +}
+> >> +
+> >> +static int vl6180_probe(struct i2c_client *client,
+> >> +			  const struct i2c_device_id *id)
+> >> +{
+> >> +	struct vl6180_data *data;
+> >> +	struct iio_dev *indio_dev;
+> >> +	int ret;
+> >> +
+> >> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+> >> +	if (!indio_dev)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	data = iio_priv(indio_dev);
+> >> +	i2c_set_clientdata(client, indio_dev);
+> >> +	data->client = client;
+> >> +	mutex_init(&data->lock);
+> >> +
+> >> +	indio_dev->dev.parent = &client->dev;
+> >> +	indio_dev->info = &vl6180_info;
+> >> +	indio_dev->channels = vl6180_channels;
+> >> +	indio_dev->num_channels = ARRAY_SIZE(vl6180_channels);
+> >> +	indio_dev->name = VL6180_DRV_NAME;
+> >> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> >> +
+> >> +	ret = vl6180_init(data);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	ret = devm_iio_device_register(&client->dev, indio_dev);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> > return devm_iio_device_register directly.
+> > 
+> > The static checkers will fire on this anyway, but best to fix
+> > it now.
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static const struct of_device_id vl6180_of_match[] = {
+> >> +	{ .compatible = "st,vl6180", },
+> >> +	{ },
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, vl6180_of_match);
+> >> +
+> >> +static const struct i2c_device_id vl6180_id[] = {
+> >> +	{ "vl6180", 0 },
+> >> +	{ }
+> >> +};
+> >> +MODULE_DEVICE_TABLE(i2c, vl6180_id);
+> >> +
+> >> +static struct i2c_driver vl6180_driver = {
+> >> +	.driver = {
+> >> +		.name   = VL6180_DRV_NAME,
+> >> +		.of_match_table = of_match_ptr(vl6180_of_match),
+> >> +	},
+> >> +	.probe  = vl6180_probe,
+> >> +	.id_table = vl6180_id,
+> >> +};
+> >> +
+> >> +module_i2c_driver(vl6180_driver);
+> >> +
+> >> +MODULE_AUTHOR("Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>");
+> >> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> >> +MODULE_DESCRIPTION("STMicro VL6180 ALS and proximity sensor driver");
+> >> +MODULE_LICENSE("GPL");
+> >>
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
+> 
