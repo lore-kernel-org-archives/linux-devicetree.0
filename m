@@ -1,350 +1,155 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCH 1/2] leds: cpcap: new driver
-Date: Sun,  5 Mar 2017 18:22:33 +0100
-Message-ID: <20170305172234.24120-1-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
+Date: Sun, 5 Mar 2017 23:31:09 +0200
+Message-ID: <20170305213108.GD3220@valkosipuli.retiisi.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
+ <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
+ <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
+ <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
+ <59663ea1-b277-1543-e770-6a102ac733a4@gmail.com>
+ <20170304105600.GS3220@valkosipuli.retiisi.org.uk>
+ <03c9b05c-d3ba-c890-f9fa-ad5e1a49430c@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <03c9b05c-d3ba-c890-f9fa-ad5e1a49430c@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
-Motorola CPCAP is a PMIC found in multiple smartphones.
-This driver adds support for the chip's LED controllers.
-It has explicit support for all controllers used by the
-Droid 4. Since no datasheets are available the other
-available controllers are not supported until somebody
-verified, that the register layout matches.
+On Sat, Mar 04, 2017 at 04:37:43PM -0800, Steve Longerbeam wrote:
+> 
+> 
+> On 03/04/2017 02:56 AM, Sakari Ailus wrote:
+> >Hi Steve,
+> >
+> >On Fri, Mar 03, 2017 at 02:43:51PM -0800, Steve Longerbeam wrote:
+> >>
+> >>
+> >>On 03/03/2017 03:45 AM, Sakari Ailus wrote:
+> >>>On Thu, Mar 02, 2017 at 03:07:21PM -0800, Steve Longerbeam wrote:
+> >>>>
+> >>>>
+> >>>>On 03/02/2017 07:53 AM, Sakari Ailus wrote:
+> >>>>>Hi Steve,
+> >>>>>
+> >>>>>On Wed, Feb 15, 2017 at 06:19:15PM -0800, Steve Longerbeam wrote:
+> >>>>>>Add a new FRAME_TIMEOUT event to signal that a video capture or
+> >>>>>>output device has timed out waiting for reception or transmit
+> >>>>>>completion of a video frame.
+> >>>>>>
+> >>>>>>Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >>>>>>---
+> >>>>>>Documentation/media/uapi/v4l/vidioc-dqevent.rst | 5 +++++
+> >>>>>>Documentation/media/videodev2.h.rst.exceptions  | 1 +
+> >>>>>>include/uapi/linux/videodev2.h                  | 1 +
+> >>>>>>3 files changed, 7 insertions(+)
+> >>>>>>
+> >>>>>>diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >>>>>>index 8d663a7..dd77d9b 100644
+> >>>>>>--- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >>>>>>+++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> >>>>>>@@ -197,6 +197,11 @@ call.
+> >>>>>>	the regions changes. This event has a struct
+> >>>>>>	:c:type:`v4l2_event_motion_det`
+> >>>>>>	associated with it.
+> >>>>>>+    * - ``V4L2_EVENT_FRAME_TIMEOUT``
+> >>>>>>+      - 7
+> >>>>>>+      - This event is triggered when the video capture or output device
+> >>>>>>+	has timed out waiting for the reception or transmit completion of
+> >>>>>>+	a frame of video.
+> >>>>>
+> >>>>>As you're adding a new interface, I suppose you have an implementation
+> >>>>>around. How do you determine what that timeout should be?
+> >>>>
+> >>>>The imx-media driver sets the timeout to 1 second, or 30 frame
+> >>>>periods at 30 fps.
+> >>>
+> >>>The frame rate is not necessarily constant during streaming. It may well
+> >>>change as a result of lighting conditions.
+> >>
+> >>I think you mean that would be a _temporary_ change in frame rate, but
+> >>yes I agree the data rate can temporarily fluctuate. Although I doubt
+> >>lighting conditions would cause a sensor to pause data transmission
+> >>for a full 1 second.
+> >
+> >Likely not, at least not in typical conditions. The exposure time is still
+> >quite specific to applications: it could be minutes if you take photos e.g.
+> >of the night sky.
+> >
+> >What I'm saying here is that any static value is likely not both reasonable
+> >and workable in all potential situations all the time. Still there are cases
+> >(as yours below) that may happen in relatively common cases on some hardware
+> >(more common than taking long exposure photos of the night sky with the said
+> >hardware :)).
+> 
+> I doubt night photography will ever be a use-case for i.MX. The most
+> common use-case for this driver will be used in automotive applications
+> such as rear-view or 360 degree view cameras.
 
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
- .../devicetree/bindings/leds/cpcap-leds.txt        |  29 +++
- drivers/leds/Kconfig                               |   9 +
- drivers/leds/Makefile                              |   1 +
- drivers/leds/leds-cpcap.c                          | 248 +++++++++++++++++++++
- 4 files changed, 287 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/cpcap-leds.txt
- create mode 100644 drivers/leds/leds-cpcap.c
+Ack.
 
-diff --git a/Documentation/devicetree/bindings/leds/cpcap-leds.txt b/Documentation/devicetree/bindings/leds/cpcap-leds.txt
-new file mode 100644
-index 000000000000..d523f8c3c358
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/cpcap-leds.txt
-@@ -0,0 +1,29 @@
-+Motorola CPCAP PMIC LEDs
-+------------------------
-+
-+This module is part of the CPCAP. For more details about the whole
-+chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
-+
-+Requires node properties:
-+- compatible: should be one of
-+   * "motorola,cpcap-led-mdl"		(Main Display Lighting)
-+   * "motorola,cpcap-led-kl"		(Keyboard Lighting)
-+   * "motorola,cpcap-led-adl"		(Aux Display Lighting)
-+   * "motorola,cpcap-led-red"		(Red Triode)
-+   * "motorola,cpcap-led-green"		(Green Triode)
-+   * "motorola,cpcap-led-blue"		(Blue Triode)
-+   * "motorola,cpcap-led-cf"		(Camera Flash)
-+   * "motorola,cpcap-led-bt"		(Bluetooth)
-+   * "motorola,cpcap-led-cp"		(Camera Privacy LED)
-+- label: The label for this LED
-+- vdd-supply: A phandle to the regulator powering the LED
-+
-+Example:
-+
-+&cpcap {
-+	cpcap_led_red: red-led {
-+		compatible = "motorola,cpcap-led-red";
-+		label = "cpcap:red";
-+		vdd-supply = <&sw5>;
-+	};
-+};
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 275f467956ee..043f02a4fe73 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -76,6 +76,15 @@ config LEDS_BCM6358
- 	  This option enables support for LEDs connected to the BCM6358
- 	  LED HW controller accessed via MMIO registers.
- 
-+config LEDS_CPCAP
-+	tristate "LED Support for Motorola CPCAP"
-+	depends on LEDS_CLASS
-+	depends on MFD_CPCAP
-+	depends on OF
-+	help
-+	  This option enables support for LEDs offered by Motorola's
-+	  CPCAP PMIC.
-+
- config LEDS_LM3530
- 	tristate "LCD Backlight driver for LM3530"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 6b8273736478..333e84ce5d3b 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
- obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
- obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-+obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
- obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
- obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
- obj-$(CONFIG_LEDS_LM3533)		+= leds-lm3533.o
-diff --git a/drivers/leds/leds-cpcap.c b/drivers/leds/leds-cpcap.c
-new file mode 100644
-index 000000000000..e2fe13aae2f1
---- /dev/null
-+++ b/drivers/leds/leds-cpcap.c
-@@ -0,0 +1,248 @@
-+/*
-+ * Copyright (c) 2017 Sebastian Reichel <sre@kernel.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define DEBUG
-+
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/mfd/motorola-cpcap.h>
-+
-+#define CPCAP_LED_NO_CURRENT 0x0001
-+#define CPCAP_LED_OFF 0x0000
-+
-+struct cpcap_led_info {
-+	u16 reg;
-+	u16 mask;
-+	u16 limit;
-+	u16 init_mask;
-+	u16 init_val;
-+};
-+
-+static const struct cpcap_led_info cpcap_led_red = {
-+	.reg	= CPCAP_REG_REDC,
-+	.mask	= 0x03FF,
-+	.limit	= 31,
-+};
-+
-+static const struct cpcap_led_info cpcap_led_green = {
-+	.reg	= CPCAP_REG_GREENC,
-+	.mask	= 0x03FF,
-+	.limit	= 31,
-+};
-+
-+static const struct cpcap_led_info cpcap_led_blue = {
-+	.reg	= CPCAP_REG_BLUEC,
-+	.mask	= 0x03FF,
-+	.limit	= 31,
-+};
-+
-+/* aux display light */
-+static const struct cpcap_led_info cpcap_led_adl = {
-+	.reg		= CPCAP_REG_ADLC,
-+	.mask		= 0x000F,
-+	.limit		= 1,
-+	.init_mask	= 0x7FFF,
-+	.init_val	= 0x5FF0,
-+};
-+
-+/* camera privacy led */
-+static const struct cpcap_led_info cpcap_led_cp = {
-+	.reg		= CPCAP_REG_CLEDC,
-+	.mask		= 0x0007,
-+	.limit		= 1,
-+	.init_mask	= 0x03FF,
-+	.init_val	= 0x0008,
-+};
-+
-+/* unsupported led */
-+static const struct cpcap_led_info cpcap_led_unsup = {
-+	.reg		= 0x0000,
-+};
-+
-+struct cpcap_led {
-+	struct led_classdev led;
-+	const struct cpcap_led_info *info;
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct regulator *vdd;
-+	bool powered;
-+
-+	u32 current_limit;
-+};
-+
-+static u16 cpcap_led_val(u8 current_limit, u8 duty_cycle)
-+{
-+	current_limit &= 0x1f; /* 5 bit */
-+	duty_cycle &= 0x0f; /* 4 bit */
-+
-+	return current_limit << 4 | duty_cycle;
-+}
-+
-+static int cpcap_led_set_power(struct cpcap_led *led, bool status)
-+{
-+	int err;
-+
-+	if (status == led->powered)
-+		return 0;
-+
-+	if (status)
-+		err = regulator_enable(led->vdd);
-+	else
-+		err = regulator_disable(led->vdd);
-+
-+	if (err) {
-+		dev_err(led->dev, "regulator failure: %d", err);
-+		return err;
-+	}
-+
-+	led->powered = status;
-+
-+	return 0;
-+}
-+
-+static int cpcap_led_set(struct led_classdev *ledc, enum led_brightness value)
-+{
-+	struct cpcap_led *led = container_of(ledc, struct cpcap_led, led);
-+	int brightness;
-+	int err;
-+
-+	if (value > LED_OFF) {
-+		err = cpcap_led_set_power(led, true);
-+		if (err)
-+			return err;
-+	}
-+
-+	if (value == LED_OFF) {
-+		/* Avoid HW issue by turning off current before duty cycle */
-+		err = regmap_update_bits(led->regmap,
-+			led->info->reg, led->info->mask, CPCAP_LED_NO_CURRENT);
-+		if (err) {
-+			dev_err(led->dev, "regmap failed: %d", err);
-+			return err;
-+		}
-+
-+		brightness = CPCAP_LED_OFF;
-+	} else {
-+		brightness = cpcap_led_val(value, 0x01);
-+	}
-+
-+	dev_dbg(led->dev, "regmap: reg=%04x mask=%04x val=%04x",
-+		led->info->reg, led->info->mask, brightness);
-+
-+	err = regmap_update_bits(led->regmap, led->info->reg, led->info->mask,
-+		brightness);
-+	if (err) {
-+		dev_err(led->dev, "regmap failed: %d", err);
-+		return err;
-+	}
-+
-+	if (value == LED_OFF) {
-+		err = cpcap_led_set_power(led, false);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cpcap_led_of_match[] = {
-+	{ .compatible = "motorola,cpcap-led-red", .data = &cpcap_led_red },
-+	{ .compatible = "motorola,cpcap-led-green", .data = &cpcap_led_green },
-+	{ .compatible = "motorola,cpcap-led-blue",  .data = &cpcap_led_blue },
-+	{ .compatible = "motorola,cpcap-led-adl", .data = &cpcap_led_adl },
-+	{ .compatible = "motorola,cpcap-led-cp", .data = &cpcap_led_cp },
-+
-+	{ .compatible = "motorola,cpcap-led-cf", .data = &cpcap_led_unsup },
-+	{ .compatible = "motorola,cpcap-led-mdl", .data = &cpcap_led_unsup },
-+	{ .compatible = "motorola,cpcap-led-kl", .data = &cpcap_led_unsup },
-+	{ .compatible = "motorola,cpcap-led-bt", .data = &cpcap_led_unsup },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cpcap_led_of_match);
-+
-+static int cpcap_led_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+	struct cpcap_led *led;
-+	int err;
-+
-+	match = of_match_device(of_match_ptr(cpcap_led_of_match), &pdev->dev);
-+	if (!match || !match->data)
-+		return -EINVAL;
-+
-+	led = devm_kzalloc(&pdev->dev, sizeof(*led), GFP_KERNEL);
-+	if (!led)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, led);
-+	led->info = match->data;
-+	led->dev = &pdev->dev;
-+
-+	if (led->info->reg == 0x0000) {
-+		dev_err(led->dev, "Unsupported LED");
-+		return -ENODEV;
-+	}
-+
-+	led->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!led->regmap)
-+		return -ENODEV;
-+
-+	led->vdd = devm_regulator_get(&pdev->dev, "vdd");
-+	if (IS_ERR(led->vdd)) {
-+		err = PTR_ERR(led->vdd);
-+		dev_err(led->dev, "Couldn't get regulator: %d", err);
-+		return err;
-+	}
-+
-+	err = device_property_read_string(&pdev->dev, "label", &led->led.name);
-+	if (err) {
-+		dev_err(led->dev, "Couldn't read led label: %d", err);
-+		return err;
-+	}
-+
-+	led->led.max_brightness = led->info->limit;
-+
-+	led->led.brightness_set_blocking = cpcap_led_set;
-+	err = devm_led_classdev_register(&pdev->dev, &led->led);
-+	if (err) {
-+		dev_err(led->dev, "Couldn't register led: %d", err);
-+		return err;
-+	}
-+
-+	if (led->info->init_mask) {
-+		err = regmap_update_bits(led->regmap, led->info->reg,
-+			led->info->init_mask, led->info->init_val);
-+		if (err) {
-+			dev_err(led->dev, "regmap failed: %d", err);
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver cpcap_led_driver = {
-+	.probe = cpcap_led_probe,
-+	.driver = {
-+		.name = "cpcap-led",
-+		.of_match_table = cpcap_led_of_match,
-+	},
-+};
-+module_platform_driver(cpcap_led_driver);
-+
-+MODULE_DESCRIPTION("CPCAP LED driver");
-+MODULE_AUTHOR("Sebastian Reichel <sre@kernel.org>");
-+MODULE_LICENSE("GPL");
+> 
+> 
+> >
+> >>
+> >>
+> >>>I wouldn't add an event for this:
+> >>>this is unreliable and 30 times the frame period is an arbitrary value
+> >>>anyway. No other drivers do this either.
+> >>
+> >>If no other drivers do this I don't mind removing it. It is really meant
+> >>to deal with the ADV718x CVBS decoder, which often simply stops sending
+> >>data on the BT.656 bus if there is an interruption in the input analog
+> >>signal. But I agree that user space could detect this timeout instead.
+> >>Unless I hear from someone else that they would like to keep this
+> >>feature I'll remove it in version 5.
+> >
+> >That's a bit of a special situation --- still there are alike conditions on
+> >existing hardware. You should return the buffers to the user with the ERROR
+> >flag set --- or return -EIO from VIDIOC_DQBUF, if the condition will
+> >persist:
+> 
+> On i.MX an EOF timeout is not recoverable without a stream restart, so
+> I decided to call vb2_queue_error() when the timeout occurs (instead
+> of sending an event). The user will then get -EIO when it attempts to
+> queue or dequeue further buffers.
+
+It believe that's the correct thing to do.
+
+> 
+> 
+> >
+> ><URL:https://www.linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/vidioc-qbuf.html>
+> >
+> >Do you already obtain the frame rate from the image source (e.g. tuner,
+> >sensor, decoder) and multiply the frame time by some number in the current
+> >implementation?
+> 
+> No the timeout is a constant value, regardless of the source frame
+> rate. Should the timeout be based on a constant time, or based on a
+> constant # of frames? I really don't think it matters much, what matters
+> is that it be long enough to be reasonably sure no data is forthcoming,
+> for most use-cases.
+
+That should be fine. If there is a use case that requires something else,
+then the implementation can be changed: it's not visible to the user space
+anyway.
+
 -- 
-2.11.0
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
