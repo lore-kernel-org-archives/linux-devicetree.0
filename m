@@ -1,59 +1,52 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v6 3/3] ARM: dts: r7s72100: Add watchdog timer
-Date: Sun, 5 Mar 2017 08:04:57 -0800
-Message-ID: <ef7f631f-efa9-9d8b-658d-aeaa5bce5bc7@roeck-us.net>
-References: <20170304223737.20419-1-chris.brandt@renesas.com>
- <20170304223737.20419-4-chris.brandt@renesas.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] hwmon: Aspeed AST2400/AST2500 ADC
+Date: Sun, 5 Mar 2017 08:14:57 -0800
+Message-ID: <adbb9c99-d4dc-d5d7-2f44-be835aa51f0a@roeck-us.net>
+References: <20170228201404.32125-1-raltherr@google.com>
+ <20170228201404.32125-2-raltherr@google.com>
+ <CACPK8XfOZiNdrQJaDZcSZkJ4gSZZpGy-r9RQAeykeyUS0yzXMA@mail.gmail.com>
+ <a512cd6c-972b-0a3b-0c2c-5eb18545798a@roeck-us.net>
+ <20170303062133.dvt5g32n26gqio52@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170304223737.20419-4-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>, Wim Van Sebroeck <wim@iguana.be>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170303062133.dvt5g32n26gqio52@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2017 02:37 PM, Chris Brandt wrote:
-> Add watchdog timer support for RZ/A1.
-> For the RZ/A1, the only way to do a reset is to overflow the WDT, so this
-> is useful even if you don't need the watchdog functionality.
+On 03/02/2017 10:21 PM, Rob Herring wrote:
+> On Tue, Feb 28, 2017 at 07:45:23PM -0800, Guenter Roeck wrote:
+>> On 02/28/2017 04:49 PM, Joel Stanley wrote:
+>>> On Wed, Mar 1, 2017 at 6:44 AM, Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> Aspeed AST2400/AST2500 BMC SoCs include a 16 channel, 10-bit ADC. This
+>>>> driver implements reading the ADC values, enabling channels via device
+>>>> tree, and optionally providing channel labels via device tree.  Low and
+>>>> high threshold interrupts are supported by the hardware but not
+>>>> implemented.
+>>>>
+>>>> Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Looks good. Some minor comments below.
+>>>
+>>> Is there a reason you wrote a hwmon driver instead of an iio driver? I
+>>> wasn't sure what the recommended subsystem is.
+>>
+>> Excellent point. Question is really if there is a plan to add support for
+>> thresholds. If not, an iio driver might be more appropriate.
 >
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Sigh. We have ADCs in 2 places? Fine for the kernel I guess, but not
+> bindings.
+>
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Almost every {voltage, current, power, temperature} sensor chip is implemented
+as ADC. Given that, we have (at least) three places. hwmon, iio, thermal.
 
-> ---
-> v4:
-> * changed from timer@ to watchdog@
-> v3:
-> * added Reviewed-by
-> v2:
-> * changed "renesas,r7s72100-reset" to "renesas,r7s72100-wdt"
-> * changed "renesas,wdt-reset" to "renesas,rza-wdt"
-> * added interupt property (even though it is not used)
-> * added clocks property
-> ---
->  arch/arm/boot/dts/r7s72100.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index ed62e19..22f96b7 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -382,6 +382,13 @@
->  		cache-level = <2>;
->  	};
->
-> +	wdt: watchdog@fcfe0000 {
-> +		compatible = "renesas,r7s72100-wdt", "renesas,rza-wdt";
-> +		reg = <0xfcfe0000 0x6>;
-> +		interrupts = <GIC_SPI 106 IRQ_TYPE_EDGE_RISING>;
-> +		clocks = <&p0_clk>;
-> +	};
-> +
->  	i2c0: i2c@fcfee000 {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
->
+Guenter
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
