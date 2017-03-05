@@ -1,144 +1,79 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
-Date: Sat, 4 Mar 2017 16:37:43 -0800
-Message-ID: <03c9b05c-d3ba-c890-f9fa-ad5e1a49430c@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
- <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
- <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
- <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
- <59663ea1-b277-1543-e770-6a102ac733a4@gmail.com>
- <20170304105600.GS3220@valkosipuli.retiisi.org.uk>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
+ SMP2P drivers
+Date: Sun, 5 Mar 2017 06:01:25 +0100
+Message-ID: <20170305050125.b6lzx2fiest4xmre@latitude>
+References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
+ <20170215045157.11659-2-j.neuschaefer@gmx.net>
+ <20170304012032.GA1694@minitux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170304105600.GS3220@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ojukx5qtu2svexhk"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170304012032.GA1694@minitux>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jonathan Neusch?fer <j.neuschaefer@gmx.net>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--ojukx5qtu2svexhk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 03/04/2017 02:56 AM, Sakari Ailus wrote:
-> Hi Steve,
->
-> On Fri, Mar 03, 2017 at 02:43:51PM -0800, Steve Longerbeam wrote:
->>
->>
->> On 03/03/2017 03:45 AM, Sakari Ailus wrote:
->>> On Thu, Mar 02, 2017 at 03:07:21PM -0800, Steve Longerbeam wrote:
->>>>
->>>>
->>>> On 03/02/2017 07:53 AM, Sakari Ailus wrote:
->>>>> Hi Steve,
->>>>>
->>>>> On Wed, Feb 15, 2017 at 06:19:15PM -0800, Steve Longerbeam wrote:
->>>>>> Add a new FRAME_TIMEOUT event to signal that a video capture or
->>>>>> output device has timed out waiting for reception or transmit
->>>>>> completion of a video frame.
->>>>>>
->>>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>>>> ---
->>>>>> Documentation/media/uapi/v4l/vidioc-dqevent.rst | 5 +++++
->>>>>> Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>>>>> include/uapi/linux/videodev2.h                  | 1 +
->>>>>> 3 files changed, 7 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>>>> index 8d663a7..dd77d9b 100644
->>>>>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>>>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>>>>> @@ -197,6 +197,11 @@ call.
->>>>>> 	the regions changes. This event has a struct
->>>>>> 	:c:type:`v4l2_event_motion_det`
->>>>>> 	associated with it.
->>>>>> +    * - ``V4L2_EVENT_FRAME_TIMEOUT``
->>>>>> +      - 7
->>>>>> +      - This event is triggered when the video capture or output device
->>>>>> +	has timed out waiting for the reception or transmit completion of
->>>>>> +	a frame of video.
->>>>>
->>>>> As you're adding a new interface, I suppose you have an implementation
->>>>> around. How do you determine what that timeout should be?
->>>>
->>>> The imx-media driver sets the timeout to 1 second, or 30 frame
->>>> periods at 30 fps.
->>>
->>> The frame rate is not necessarily constant during streaming. It may well
->>> change as a result of lighting conditions.
->>
->> I think you mean that would be a _temporary_ change in frame rate, but
->> yes I agree the data rate can temporarily fluctuate. Although I doubt
->> lighting conditions would cause a sensor to pause data transmission
->> for a full 1 second.
->
-> Likely not, at least not in typical conditions. The exposure time is still
-> quite specific to applications: it could be minutes if you take photos e.g.
-> of the night sky.
->
-> What I'm saying here is that any static value is likely not both reasonable
-> and workable in all potential situations all the time. Still there are cases
-> (as yours below) that may happen in relatively common cases on some hardware
-> (more common than taking long exposure photos of the night sky with the said
-> hardware :)).
+On Fri, Mar 03, 2017 at 05:20:32PM -0800, Bjorn Andersson wrote:
+> On Tue 14 Feb 20:51 PST 2017, Jonathan Neusch?fer wrote:
+>=20
+> > Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+> > ---
+> >  arch/arm/configs/qcom_defconfig | 5 +++++
+> >  1 file changed, 5 insertions(+)
+[...]
+> > +CONFIG_QCOM_SMP2P=3Dy
+>=20
+> We also need CONFIG_QCOM_SMSM=3Dy here, its currently used to signal state
+> of the ring buffers for WiFi.
 
-I doubt night photography will ever be a use-case for i.MX. The most
-common use-case for this driver will be used in automotive applications
-such as rear-view or 360 degree view cameras.
+FWIW, I enabled CONFIG_QCOM_SMSM on my test system (an Asus Padfone,
+based on MSM8974; I'm using the Sony Xperia Honami DT because it's close
+enough), and I think it failed to initialize:
+
+[    0.647743] qcom-smsm smsm: no smsm size info, using defaults
+[    0.647775] qcom-smsm smsm: unable to allocate shared state entry
+
+I think CONFIG_QCOM_WCNSS_CTRL may be needed too, but I'll leave that
+for a future patch because I don't understand WCNSS well enough.
+
+> With the addition of that you have my:
+>=20
+> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+I'll send a v2 of this series with your R-b and A-b tags.
 
 
->
->>
->>
->>> I wouldn't add an event for this:
->>> this is unreliable and 30 times the frame period is an arbitrary value
->>> anyway. No other drivers do this either.
->>
->> If no other drivers do this I don't mind removing it. It is really meant
->> to deal with the ADV718x CVBS decoder, which often simply stops sending
->> data on the BT.656 bus if there is an interruption in the input analog
->> signal. But I agree that user space could detect this timeout instead.
->> Unless I hear from someone else that they would like to keep this
->> feature I'll remove it in version 5.
->
-> That's a bit of a special situation --- still there are alike conditions on
-> existing hardware. You should return the buffers to the user with the ERROR
-> flag set --- or return -EIO from VIDIOC_DQBUF, if the condition will
-> persist:
+Jonathan Neusch=C3=A4fer
 
-On i.MX an EOF timeout is not recoverable without a stream restart, so
-I decided to call vb2_queue_error() when the timeout occurs (instead
-of sending an event). The user will then get -EIO when it attempts to
-queue or dequeue further buffers.
+--ojukx5qtu2svexhk
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
->
-> <URL:https://www.linuxtv.org/downloads/v4l-dvb-apis/uapi/v4l/vidioc-qbuf.html>
->
-> Do you already obtain the frame rate from the image source (e.g. tuner,
-> sensor, decoder) and multiply the frame time by some number in the current
-> implementation?
+iQIcBAABAgAGBQJYu5ucAAoJEAgwRJqO81/bBP4QAMG/AxLzp3y7VII+z3IF6/Fg
+h0hAj7+GzhzVwaiTCD9HqthKuUJcRxirBgcBbAMfqJNZ+zB5giZTkrVFddZPGqEp
+sXeKgB75YopBQhVTYg7pasw+G1mKUhND4Weqj/75f0PJS4mDgoB4ZGDRvE0g9J9E
+PUxlTL7jMPU6FU1ROGHNzXlvMn9eUdcQYPcG6M3IAbAt4k6BV2SLwT+feD/dR7E3
+8R3wsU8eu2w2XVWIRTO999Yoanneybjkg0vdaumyqrsaux0mruevA7sya4kg7GAt
+WuISVznd8Pmk2Sg6NdZF0CeU4AJ5WUX2f6TRVbnvVJNJuBVgRX7bSHK2NvngwXTW
+UZ/juT4f5MjFqjxvfOv1VZwVf0dJ8gE+WndC8n/c/k00GabJxst3f3pR7ux6kSrV
+tjm6qNNIZY1ToLipVHizymtZRhRmK9dGbMluUNvmmDibc4/5at8O8sVtq8KsGu4d
+cbA4KIyFjx88em21yXYsC56tcfXJ2yfX6dmvY7/KbLQ+cbdS0ZB7Zjvkan31FYX6
+0t0HMa7/C5GuPygq7IxXCdJrhIm+qI/XoPZmZupMFy1LKvpIJA5K23sHRt84nV8l
+DTIzQqmPaV84Qxhhk/QoICB8dvRFRopoRPjYJhTN3lKs8TOsj3d9xLXrS1tEjQRg
+KbbM0EAitz1D5rBguaYl
+=TA4z
+-----END PGP SIGNATURE-----
 
-No the timeout is a constant value, regardless of the source frame
-rate. Should the timeout be based on a constant time, or based on a
-constant # of frames? I really don't think it matters much, what matters
-is that it be long enough to be reasonably sure no data is forthcoming,
-for most use-cases.
-
-Steve
-
-
-
-> Not all sub-device drivers may implement g_frame_interval()
-> so I'd disable the timeout in that case.
->
+--ojukx5qtu2svexhk--
