@@ -1,62 +1,45 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
-Date: Sun, 5 Mar 2017 22:41:15 +0000
-Message-ID: <20170305224114.GV21222@n2100.armlinux.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
- <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
- <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
- <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
- <59663ea1-b277-1543-e770-6a102ac733a4@gmail.com>
- <20170304105600.GS3220@valkosipuli.retiisi.org.uk>
- <03c9b05c-d3ba-c890-f9fa-ad5e1a49430c@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH] ARM: at91/dt: Disable SPI on at91sam9x5ek to allow MCI1
+ to work.
+Date: Sun, 5 Mar 2017 23:55:42 +0100
+Message-ID: <20170305225542.dptirws7djsrrlas@piout.net>
+References: <1487265388-29390-1-git-send-email-cristian.birsan@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <03c9b05c-d3ba-c890-f9fa-ad5e1a49430c@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, laurent.pinchart+renesas@ideasonboard.com, horms+renesas@verge.net.au, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mu
+In-Reply-To: <1487265388-29390-1-git-send-email-cristian.birsan@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: cristian.birsan@microchip.com
+Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, devicetree@vger.kernel.org, nicolas.ferre@atmel.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, cyrille.pitchen@atmel.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 04, 2017 at 04:37:43PM -0800, Steve Longerbeam wrote:
-> 
-> 
-> On 03/04/2017 02:56 AM, Sakari Ailus wrote:
-> >That's a bit of a special situation --- still there are alike conditions on
-> >existing hardware. You should return the buffers to the user with the ERROR
-> >flag set --- or return -EIO from VIDIOC_DQBUF, if the condition will
-> >persist:
-> 
-> On i.MX an EOF timeout is not recoverable without a stream restart, so
-> I decided to call vb2_queue_error() when the timeout occurs (instead
-> of sending an event). The user will then get -EIO when it attempts to
-> queue or dequeue further buffers.
+The proper commit prefix was "ARM: dts: at91:"
 
-I'm not sure that statement is entirely accurate.  With the IMX219
-camera, I _could_ (with previous iterations of the iMX capture code)
-stop it streaming, wait a while, and restart it, and everything
-continues to work.
-
-Are you sure that the problem you have here is caused by the iMX6
-rather than the ADV718x CVBS decoder (your initial description said
-it was the decoder.)
-
-If it _is_ the decoder that's going wrong, that doesn't justify
-cripping the rest of the driver for one instance of broken hardware
-that _might_ be attached to it.
+On 16/02/2017 at 19:16:28 +0200, cristian.birsan@microchip.com wrote:
+> From: Cristian Birsan <cristian.birsan@microchip.com>
+> 
+> The A13 hardware line is shared by SPI and MCI1 controller.This patch
+> disables the SPI controller so that the MCI1 (the big MMC card slot) can
+> be used.
+> 
+> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+> ---
+>  arch/arm/boot/dts/at91sam9x5ek.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+Applied, thanks.
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
