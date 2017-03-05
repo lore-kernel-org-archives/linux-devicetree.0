@@ -1,108 +1,130 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [RFC v2 2/7] IIO: Add bindings for simple sigma
-	delta adc
-Date: Sun, 5 Mar 2017 11:04:06 +0000
-Message-ID: <dbf92596-d7b7-5bb0-2e59-cd54ffc78f4e@kernel.org>
-References: <1487003909-11710-1-git-send-email-arnaud.pouliquen@st.com>
- <1487003909-11710-3-git-send-email-arnaud.pouliquen@st.com>
- <20170222151750.h5d7gycltwnk7b4t@rob-hp-laptop>
- <6943aaf5-b580-0fd1-7a2e-b99f7a266388@st.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: stm32-adc: add option to set
+ resolution
+Date: Sun, 5 Mar 2017 11:14:30 +0000
+Message-ID: <c306b51a-da1f-2e92-afb5-1bd2c19484a0@kernel.org>
+References: <1487177757-19427-1-git-send-email-fabrice.gasnier@st.com>
+ <1487177757-19427-2-git-send-email-fabrice.gasnier@st.com>
+ <c2b73482-ae01-34b5-3c16-b7e63893259e@kernel.org>
+ <b9f59559-c7a8-f575-0868-bd3b149a35c9@st.com>
+ <d64bd76d-a2c6-6148-c126-fa73e96019a1@kernel.org>
+ <79e01c5c-d27c-89ea-4d8f-9e66a6c091e6@st.com>
+ <f486bd08-b562-5101-01ba-c8e36ac0d83b@metafoo.de>
+ <84b7cbab-1342-7f80-cab6-132324e002a4@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <6943aaf5-b580-0fd1-7a2e-b99f7a266388@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Olivier MOYSAN <olivier.moysan@st.com>, "kernel@stlinux.com" <kernel@stlinux.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Brown <broonie@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <84b7cbab-1342-7f80-cab6-132324e002a4-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/02/17 11:15, Arnaud Pouliquen wrote:
-> Hello Rob,
-> 
-> Please find my answers in-line
-> 
-> Regards,
-> 
-> Arnaud
-> 
-> On 02/22/2017 04:17 PM, Rob Herring wrote:
->> On Mon, Feb 13, 2017 at 05:38:24PM +0100, Arnaud Pouliquen wrote:
->>> Add documentation of device tree bindings to support
->>> sigma delta modulator in IIO framework.
+On 28/02/17 10:14, Fabrice Gasnier wrote:
+> On 02/28/2017 09:34 AM, Lars-Peter Clausen wrote:
+>> On 02/28/2017 09:21 AM, Fabrice Gasnier wrote:
+>>> On 02/25/2017 04:11 PM, Jonathan Cameron wrote:
+>>>> On 24/02/17 16:04, Fabrice Gasnier wrote:
+>>>>> On 02/19/2017 01:09 PM, Jonathan Cameron wrote:
+>>>>>> On 15/02/17 16:55, Fabrice Gasnier wrote:
+>>>>>>> Add documentation for 'st,adc-res' dt optional property.
+>>>>>>>
+>>>>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+>>>>>> I'm happy with this, but would like to leave time for a device tree review.
+>>>>>>
+>>>>>> Ultimately we may well want to make this a generic property and call it
+>>>>>> something
+>>>>>> like adc-resolution but perhaps we need to wait until we have a few more
+>>>>>> devices
+>>>>>> supporting setting it via device tree to figure out what the best
+>>>>>> interface is.
+>>>>>> It would exactly be a problem to support this as a deprecated binding at
+>>>>>> that
+>>>>>> point.
+>>>>>
+>>>>> Hi Jonathan,
+>>>>>
+>>>>> I agree with you on this... It may be better to have generic property
+>>>>> for this, especially if you see that it will come in the near future.
+>>>>> May I suggest this prop to be less restrictive, e.g. like
+>>>>> resolution-bits as is may also be worth for other device types, e.g.
+>>>>> DAC as an example ?>
+>>>> Sure, why not - no loss of meaning here.  We may never use it for anything
+>>>> else but that doesn't matter.
 >>>
->>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>> ---
->>>  Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt | 13 +++++++++++++
->>>  1 file changed, 13 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
+>>> Hi Jonathan,
 >>>
->>> diff --git a/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt b/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
->>> new file mode 100644
->>> index 0000000..2b3968a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/adc/simple_sd_adc.txt
->>> @@ -0,0 +1,13 @@
->>> +Device-Tree bindings for simple sigma delta adc
+>>> Following Rob's comment, how you see such a common property can be
+>>> integrated. Currently I don't see much devices are doing this.
+>>> Do you have ideas or preferences on this ?
+>>>
+>>> - Do you think replacing 'st,adc-res' by 'resolution-bits' in current
+>>> patchset is enough for now ?
 >>
->> What makes it "simple"?
-> "simple" sigma delta modulator are external chip that just converts
-> analog signal in sigma delta modulation. No configuration needs.
-> "Simple" is use to differentiate SD ADC that offers interfaces to
-> activate some internal processing ( gain, offset compensation...)
-My gut feeling would be to drop the term simple.  If device is more complex
-it needs to be explicitly supported, hence will be named whatever!
+>> That name would be a bit confusing. Considering that the devicetree
+>> describes th capabilities of the hardware this name would suggest that this
+>> is the resolution supported by the device.
+>>
+>> If we want to allow selecting runtime configuration parameters for IIO
+>> devices from the devicetree we should probably follow the precedence set by
+>> the clock framework and use properties with the 'assigned-' prefix.
+> 
+> Hi Lars,
+> 
+> This makes sense. Then, do you see 'assigned-resolution-bits' as a
+> better candidate ?
+> Also, do you think listing all devices caps in property like 'resolutions-bits', e.g. 'resolutions-bits = <6 8 10 12>', is
+> suitable/necessary ?
+Only suitable / necessary if what the options are is dependent on the hardware
+in some way that is not adequately described by the compatibility element.
 > 
 >>
->>> +
->>> +Required properties:
->>> +- compatible: should be "sd-modulator".
->>> +- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
->>> +
->>> +Example node:
->>> +
->>> +	ads1202: simple_sd_adc@0 {
->>
->> Is ads1202 the actual chip? Then it should be in the compatible list.
-> I tried to define a generic device to support several SD modulator
-> chips, inspired by ALSA "dmic-codec" device.
-> I have none exhaustive list of chip that can be handled by the driver,
-> but i found several devices that could match...
-> That why i did not use chip name in compatible list.
-> What should be the best way to do it?
-Rob, would the fallback approach (I brought this up in  another branch of
-this discussion) work here,
+>> But to be honest I'm not convinced yet that the whole approach of allowing
+>> runtime configuration parameters to be configured via the devicetree is the
+>> right approach. Converters and sensors often have a lot of runtime
+>> configurable parameters, typically we expose them to the application layer
+>> to allow maximum flexibility. Why is the resolution special in this case and
+>> should be pre-configured via the devicetree instead?
+> 
+To be cynical because it is PITA to change the assumption of it being
+fixed :)  Oh well, another design decision that we got wrong a long time
+back.
 
-compatible = "ads1201", "sd-modulator'?
-
-Main advantage is that people won't then lie in their board files just to
-avoid changing the driver to introduce their new part.  They'll just
-be less specific than would be ideal.
+> As I understand it, currently lots of devices have hard-coded 
+> (maximum?) resolution, then exposed to application layer as read only
+> data format. Then resolution depends on HW used (e.g. sensor,
+> converter). Depending on the application board, it may be worth to
+> offer pre-configured intermediate/lower resolution depending on
+> analog sources. Is it ok to offer devicetree pre-configuration ?
 > 
+Hmm.  It is in theory acceptable to put default values that make sense
+for a given set of hardware in device tree.  They are kind of a 
+'well this will work' state.  Make sense if there are states that
+don't make sense for a given hardware setup.
+
+If all states make equally good sense, then perhaps we should look at
+fixing up the IIO core to handle variable resolution devices.
+That strikes me as a non trivial exercise, but could probably be
+done.  We'd need to keep the simplicity of the current code
+for the vast majority of devices, but provide some relatively clean
+way of changing it when needed.
+
+Whilst I'm happy if someone else wants to look at this, it is
+nowhere near the top of my list!
+
+Jonathan
+> Best Regards,
+> Fabrice
 >>
->> unit address without a reg prop is an error. The node name should be 
->> "adc".
+>> - Lars
 >>
->>> +		compatible = "sd-modulator";
->>> +		#io-channel-cells = <1>;
->>> +		status = "okay";
->>
->> Drop status from examples.
->>
->>> +	};
->>> -- 
->>> 1.9.1
->>>
-> --
+> -- 
 > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
