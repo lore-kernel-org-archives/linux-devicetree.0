@@ -1,101 +1,82 @@
-From: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 3/3] phy: rockchip-inno-usb2: add support of usb2-phy for
- rk3328
-Date: Mon,  6 Mar 2017 09:29:38 +0800
-Message-ID: <1488763778-27499-4-git-send-email-daniel.meng@rock-chips.com>
-References: <1488763778-27499-1-git-send-email-daniel.meng@rock-chips.com>
+From: Brian Kim <brian.kim@hardkernel.com>
+Subject: [PATCH] ARM: dts: exynos: Add power button for Odroid XU3/4
+Date: Mon,  6 Mar 2017 11:52:09 +0900
+Message-ID: <1488768729-9435-1-git-send-email-brian.kim@hardkernel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1488763778-27499-1-git-send-email-daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux.amoon@gmail.com, l.majewski@samsung.com, krzk@kernel.org, robh+dt@kernel.org, kgene@kernel.org, mark.rutland@arm.com, javier@osg.samsung.com
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add usb2-phy config information in the data of match table for
-rk3328.
+The power button on Odroid XU3/4 is connected with the PWRON pin of
+s2mps11 PMIC. The s2mps11 sends low signal to GPIO input in exynos 5422
+via ONOB pin.
 
-Changes in v2:
- - add support of otg port
-Changes in v3:
- - remove tuning function and id pin configs
+This patch adds devicetree bindings for the power button of Odroid
+XU3/4.
 
-Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Brian Kim <brian.kim@hardkernel.com>
 ---
- drivers/phy/phy-rockchip-inno-usb2.c | 44 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
-index 4ea95c2..257c5d9 100644
---- a/drivers/phy/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/phy-rockchip-inno-usb2.c
-@@ -1141,6 +1141,49 @@ static int rockchip_usb2phy_probe(struct platform_device *pdev)
- 	return ret;
- }
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+index 05b9afdd..671d87f 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+@@ -13,6 +13,7 @@
+ */
  
-+static const struct rockchip_usb2phy_cfg rk3328_phy_cfgs[] = {
-+	{
-+		.reg = 0x100,
-+		.num_ports	= 2,
-+		.clkout_ctl	= { 0x108, 4, 4, 1, 0 },
-+		.port_cfgs	= {
-+			[USB2PHY_PORT_OTG] = {
-+				.phy_sus	= { 0x0100, 15, 0, 0, 0x1d1 },
-+				.bvalid_det_en	= { 0x0110, 2, 2, 0, 1 },
-+				.bvalid_det_st	= { 0x0114, 2, 2, 0, 1 },
-+				.bvalid_det_clr = { 0x0118, 2, 2, 0, 1 },
-+				.ls_det_en	= { 0x0110, 0, 0, 0, 1 },
-+				.ls_det_st	= { 0x0114, 0, 0, 0, 1 },
-+				.ls_det_clr	= { 0x0118, 0, 0, 0, 1 },
-+				.utmi_avalid	= { 0x0120, 10, 10, 0, 1 },
-+				.utmi_bvalid	= { 0x0120, 9, 9, 0, 1 },
-+				.utmi_ls	= { 0x0120, 5, 4, 0, 1 },
-+			},
-+			[USB2PHY_PORT_HOST] = {
-+				.phy_sus	= { 0x104, 15, 0, 0, 0x1d1 },
-+				.ls_det_en	= { 0x110, 1, 1, 0, 1 },
-+				.ls_det_st	= { 0x114, 1, 1, 0, 1 },
-+				.ls_det_clr	= { 0x118, 1, 1, 0, 1 },
-+				.utmi_ls	= { 0x120, 17, 16, 0, 1 },
-+				.utmi_hstdet	= { 0x120, 19, 19, 0, 1 }
-+			}
-+		},
-+		.chg_det = {
-+			.opmode		= { 0x0100, 3, 0, 5, 1 },
-+			.cp_det		= { 0x0120, 24, 24, 0, 1 },
-+			.dcp_det	= { 0x0120, 23, 23, 0, 1 },
-+			.dp_det		= { 0x0120, 25, 25, 0, 1 },
-+			.idm_sink_en	= { 0x0108, 8, 8, 0, 1 },
-+			.idp_sink_en	= { 0x0108, 7, 7, 0, 1 },
-+			.idp_src_en	= { 0x0108, 9, 9, 0, 1 },
-+			.rdm_pdwn_en	= { 0x0108, 10, 10, 0, 1 },
-+			.vdm_src_en	= { 0x0108, 12, 12, 0, 1 },
-+			.vdp_src_en	= { 0x0108, 11, 11, 0, 1 },
-+		},
-+	},
-+	{ /* sentinel */ }
-+};
+ #include <dt-bindings/clock/samsung,s2mps11.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/sound/samsung-i2s.h>
+@@ -42,6 +43,22 @@
+ 		};
+ 	};
+ 
++	gpio_keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gpio_power_key>;
 +
- static const struct rockchip_usb2phy_cfg rk3366_phy_cfgs[] = {
- 	{
- 		.reg = 0x700,
-@@ -1223,6 +1266,7 @@ static int rockchip_usb2phy_probe(struct platform_device *pdev)
++		power_key {
++			interrupt-parent = <&gpx0>;
++			interrupts = <3 0>;
++			gpios = <&gpx0 3 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			label = "power key";
++			debounce-interval = <10>;
++			wakeup-source;
++		};
++	};
++
+ 	emmc_pwrseq: pwrseq {
+ 		pinctrl-0 = <&emmc_nrst_pin>;
+ 		pinctrl-names = "default";
+@@ -557,6 +574,11 @@
  };
  
- static const struct of_device_id rockchip_usb2phy_dt_match[] = {
-+	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
- 	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
- 	{ .compatible = "rockchip,rk3399-usb2phy", .data = &rk3399_phy_cfgs },
- 	{}
+ &pinctrl_0 {
++	gpio_power_key: power_key {
++		samsung,pins = "gpx0-3";
++		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
++	};
++
+ 	hdmi_hpd_irq: hdmi-hpd-irq {
+ 		samsung,pins = "gpx3-7";
+ 		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
 -- 
-1.9.1
+2.7.4
