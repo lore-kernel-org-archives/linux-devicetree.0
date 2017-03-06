@@ -1,171 +1,159 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Use thermal fuse value for thermal zone
- 0 on Exynos5420
-Date: Mon, 6 Mar 2017 12:59:06 +0530
-Message-ID: <CANAwSgR9kstsMXAoDxLzW_nrLFo1esggDdHO9uqfmqCJ5--AJQ@mail.gmail.com>
-References: <20170211201456.27974-1-krzk@kernel.org> <252f9e32-ff2c-a1ce-3c98-6383a1148e02@osg.samsung.com>
- <20170304080109.j2kuwmqj7mgfx3ky@kozik-lap>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH 1/2] ARM: dts: aspeed: add SPI controller bindings
+Date: Mon, 6 Mar 2017 08:35:52 +0100
+Message-ID: <1506a763-5038-f630-e70c-f877a332659f@kaod.org>
+References: <1488378403-24640-1-git-send-email-clg@kaod.org>
+ <1488378403-24640-2-git-send-email-clg@kaod.org>
+ <CACPK8XeaSh8MVTfPjwt=+NBPWCkMK7QqpAXF7+BYYQBViVSNKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170304080109.j2kuwmqj7mgfx3ky@kozik-lap>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kukjin Kim <kgene@kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Willy WOLFF <willy.mh.wolff@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACPK8XeaSh8MVTfPjwt=+NBPWCkMK7QqpAXF7+BYYQBViVSNKg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-On 4 March 2017 at 13:31, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Fri, Mar 03, 2017 at 06:50:06PM -0300, Javier Martinez Canillas wrote:
->> Hello Krzysztof,
->>
->> On 02/11/2017 05:14 PM, Krzysztof Kozlowski wrote:
->> > In Odroid XU3 Lite board, the temperature levels reported for thermal
->> > zone 0 were weird. In warm room:
->> >     /sys/class/thermal/thermal_zone0/temp:32000
->> >     /sys/class/thermal/thermal_zone1/temp:51000
->> >     /sys/class/thermal/thermal_zone2/temp:55000
->> >     /sys/class/thermal/thermal_zone3/temp:54000
->> >     /sys/class/thermal/thermal_zone4/temp:51000
->> >
->> > Sometimes after booting the value was even equal to ambient temperature
->> > which is highly unlikely to be a real temperature of sensor in SoC.
->> >
->> > The thermal sensor's calibration (trimming) is based on fused values.
->> > In case of the board above, the fused values are: 35, 52, 43, 58 and 43
->> > (corresponding to each TMU device).  However driver defined a minimum value
->> > for fused data as 40 and for smaller values it was using a hard-coded 55
->> > instead.  This lead to mapping data from sensor to wrong temperatures
->> > for thermal zone 0.
->> >
->> > Various vendor 3.10 trees (Hardkernel's based on Samsung LSI, Artik 10)
->> > do not impose any limits on fused values.  Since we do not have any
->> > knowledge about these limits, use 0 as a minimum accepted fused value.
->> > This should essentially allow accepting any reasonable fused value thus
->> > behaving like vendor driver.
->> >
->> > The exynos5420-tmu-sensor-conf.dtsi is copied directly from existing
->> > exynso4412 with one change - the samsung,tmu_min_efuse_value.
->> >
->> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->> >
->> > ---
->> >
->> > Testing on other Exynos542x boards is much appreciated. Especially I
->> > wonder what efuse values are there.
->>
->> I tested on both Exynos5422 Odroid XU4 and Exynos5800 Peach Pi boards.
->>
->> The temperatures levels reported for these two boards on a warm room are:
->>
->> Odroid XU4
->>
->> # cat /sys/class/thermal/thermal_zone*/temp
->> 50000
->> 50000
->> 54000
->> 51000
->> 48000
->>
->> Peach Pi
->>
->> # cat /sys/class/thermal/thermal_zone*/temp
->> 42000
->> 44000
->> 27000 <-- weird value for thermal zone 2 like zone 0 in your XU3 lite
->> 45000
->> 45000
->>
->> And the efuse values for the TMU devices are:
->>
->> Odroid XU4
->>
->> TMU0 = 45
->> TMU1 = 44
->> TMU2 = 44
->> TMU3 = 46
->> TMU3 = 46
->>
->> Peach Pi
->>
->> TMU0 = 44
->> TMU1 = 46
->> TMU2 = 36
->> TMU3 = 53
->> TMU3 = 46
->>
->> The fused value for TMU2 is < 40 so that explains the weird temperature
->> level for thermal zone 2 in Peach. So after your patch, makes more sense:
->>
->> # cat /sys/class/thermal/thermal_zone*/temp
->> 41000
->> 42000
->> 45000
->> 43000
->> 43000
->
-> Great! Thanks for testing!
->
->
->> I wonder though if 0 is the best value or if we should just lower more
->> to cover the used e-fuse values in Exynos5 boards. But as you said,
->> we have no knowledge about these limits...
->
-> Yeah... we could set value of 10 or 20... but that would be blind shot.
->>
->> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> Tested-by: Javier Martinez Canillas <javier@osg.samsung.com>
->>
->
-> Thanks,
-> Krzysztof
-
-Reviewed-by: Anand Moon <linux.amoon@gmail.com>
-Tested-by: Anand Moon <linux.amoon@gmail.com>
-
-I have being trying to change the trips temperature in the dts to some
-higher values
-in order to improve the performance of the board.
-Here are the results under idle state and stress state.
-
-root@odroidxu4n:~# cat /sys/class/thermal/thermal_zone*/temp
-58000
-58000
-61000
-60000
-56000
-root@odroidxu4n:~# stress --vm 16 --vm-bytes 128M --timeout 10s
-stress: info: [2138] dispatching hogs: 0 cpu, 0 io, 16 vm, 0 hdd
-stress: info: [2138] successful run completed in 10s
-root@odroidxu4n:~# cat /sys/class/thermal/thermal_zone*/temp
-58000
-58000
-61000
-60000
-56000
-
-Which is too high for in idle state.
-
-Second part of my testcase is the pm-qa from linaro.
-
-[1] git://git.linaro.org/tools/pm-qa.git
-
-pm-qa# make -C thermal check
-
-I have observer in the testcase that their is use moderate heating of heat_cpu
-get started by the testcase but it dose not get signal to kill on
-exiting of the testcase.
-most of these testcase failed to Odroid XU4, but the same case pass on
-Odroid U3.
-
-I have also tested with different e-fuse values [10,20,30,40] but the
-results are same.
-
-Going through the source code for HK it seen to set exynos_tmu_control
-set more trigger level
-
-[2] https://github.com/hardkernel/linux/blob/odroidxu3-3.10.y/drivers/thermal/exynos_thermal.c#L1144
-
-Best Regards
--Anand Moon
+T24gMDMvMDYvMjAxNyAxMjoxMyBBTSwgSm9lbCBTdGFubGV5IHdyb3RlOgo+IEhpIENlZHJpYywK
+PiAKPiBPbiBUaHUsIE1hciAyLCAyMDE3IGF0IDEyOjU2IEFNLCBDw6lkcmljIExlIEdvYXRlciA8
+Y2xnQGthb2Qub3JnPiB3cm90ZToKPj4gTGV0J3MgZGVmaW5lIHRoZSBTUEkgY29udHJvbGxlcnMg
+aW4gdGhlIEFzcGVlZCBTb0NzIEFTVDI1MDAgYW5kCj4+IEFTVDI0MDAgYW5kIGFsc28gZW5hYmxl
+IHRoZXNlLCBhcyB3ZWxsIGFzIHRoZSBjaGlwcywgb24gdGhlIGFzc29jaWF0ZWQKPj4gcGxhdGZv
+cm1zLgo+IAo+IFRoYW5rcyBmb3IgdGhpcy4gV2FzIHRoZXJlIGEgcmVhc29uIHlvdSBkaWRuJ3Qg
+bW9kaWZ5IHRoZSByb211bHVzIGR0cyBhcyB3ZWxsPwoKTW9zdGx5IGJlY2F1c2UgdGhpcyBpcyBh
+IHByZS1yb211bHVzIHBhdGNoIHRoYXQgSSByZWZyZXNoZWQuIApJIHdpbGwgc2VuZCBhIGV4dHJh
+IHBhdGNoIGZvciB0aGUgcm9tdWx1cyBwbGF0Zm9ybS4gCgpUaGFua3MsCgpDLiAKCgo+IENoZWVy
+cywKPiAKPiBKb2VsCj4gCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IEPDqWRyaWMgTGUgR29hdGVyIDxj
+bGdAa2FvZC5vcmc+Cj4+IC0tLQo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWFzdDI1MDAt
+ZXZiLmR0cyAgICAgIHwgMjAgKysrKysrKysrCj4+ICBhcmNoL2FybS9ib290L2R0cy9hc3BlZWQt
+Ym1jLW9wcC1wYWxtZXR0by5kdHMgfCAxNiArKysrKysrCj4+ICBhcmNoL2FybS9ib290L2R0cy9h
+c3BlZWQtZzQuZHRzaSAgICAgICAgICAgICAgfCAyOSArKysrKysrKysrKysKPj4gIGFyY2gvYXJt
+L2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpICAgICAgICAgICAgICB8IDYzICsrKysrKysrKysrKysr
+KysrKysrKysrKysrKwo+PiAgNCBmaWxlcyBjaGFuZ2VkLCAxMjggaW5zZXJ0aW9ucygrKQo+Pgo+
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWFzdDI1MDAtZXZiLmR0cyBi
+L2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1hc3QyNTAwLWV2Yi5kdHMKPj4gaW5kZXggZDk2NzYw
+M2RhZGU4Li44ZjgyZThhYjE4NzUgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Fz
+cGVlZC1hc3QyNTAwLWV2Yi5kdHMKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWFz
+dDI1MDAtZXZiLmR0cwo+PiBAQCAtMjAsNiArMjAsMjYgQEAKPj4gICAgICAgICB9Owo+PiAgfTsK
+Pj4KPj4gKyZmbWMgewo+PiArICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gKyAgICAgICBmbGFz
+aEAwIHsKPj4gKyAgICAgICAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gKyAgICAgICAgICAg
+ICAgIGxhYmVsID0gImJtYyI7Cj4+ICsgICAgICAgfTsKPj4gK307Cj4+ICsKPj4gKyZzcGkxIHsK
+Pj4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4+ICsgICAgICAgZmxhc2hAMCB7Cj4+ICsgICAg
+ICAgICAgICAgICBzdGF0dXMgPSAib2theSI7Cj4+ICsgICAgICAgICAgICAgICBsYWJlbCA9ICJw
+bm9yIjsKPj4gKyAgICAgICB9Owo+PiArfTsKPj4gKwo+PiArJnNwaTIgewo+PiArICAgICAgIHN0
+YXR1cyA9ICJva2F5IjsKPj4gK307Cj4+ICsKPj4gICZ1YXJ0NSB7Cj4+ICAgICAgICAgc3RhdHVz
+ID0gIm9rYXkiOwo+PiAgfTsKPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVl
+ZC1ibWMtb3BwLXBhbG1ldHRvLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3Bw
+LXBhbG1ldHRvLmR0cwo+PiBpbmRleCAxZDJmYzFlMWRjMjkuLmFhYjE4ODlmNzAyZiAxMDA2NDQK
+Pj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1vcHAtcGFsbWV0dG8uZHRzCj4+
+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtb3BwLXBhbG1ldHRvLmR0cwo+PiBA
+QCAtMzEsNiArMzEsMjIgQEAKPj4gICAgICAgICB9Owo+PiAgfTsKPj4KPj4gKyZmbWMgewo+PiAr
+ICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gKyAgICAgICBmbGFzaEAwIHsKPj4gKyAgICAgICAg
+ICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4gKyAgICAgICAgICAgICAgIGxhYmVsID0gImJtYyI7
+Cj4+ICsgICAgICAgfTsKPj4gK307Cj4+ICsKPj4gKyZzcGkgewo+PiArICAgICAgIHN0YXR1cyA9
+ICJva2F5IjsKPj4gKyAgICAgICBmbGFzaEAwIHsKPj4gKyAgICAgICAgICAgICAgIHN0YXR1cyA9
+ICJva2F5IjsKPj4gKyAgICAgICAgICAgICAgIGxhYmVsID0gInBub3IiOwo+PiArICAgICAgIH07
+Cj4+ICt9Owo+PiArCj4+ICAmdWFydDUgewo+PiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPj4g
+IH07Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRzaSBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNC5kdHNpCj4+IGluZGV4IDBiNDkzMmNjMDJhOC4uN2Vm
+NjQ0MmQwYWRlIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRz
+aQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzQuZHRzaQo+PiBAQCAtMzMsNiAr
+MzMsMzUgQEAKPj4gICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDE+Owo+PiAgICAgICAg
+ICAgICAgICAgcmFuZ2VzOwo+Pgo+PiArICAgICAgICAgICAgICAgZm1jOiBmbGFzaC1jb250cm9s
+bGVyQDFlNjIwMDAwIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPCAweDFlNjIw
+MDAwIDB4OTQKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDIwMDAwMDAwIDB4
+MDIwMDAwMDAgPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8
+MT47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+Owo+PiArICAg
+ICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNDAwLWZtYyI7Cj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MTk+Owo+PiArICAgICAgICAgICAgICAgICAg
+ICAgICBmbGFzaEAwIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
+IDAgPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImpl
+ZGVjLHNwaS1ub3IiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9
+ICJkaXNhYmxlZCI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgICAg
+ICAgICB9Owo+PiArCj4+ICsgICAgICAgICAgICAgICBzcGk6IGZsYXNoLWNvbnRyb2xsZXJAMWU2
+MzAwMDAgewo+PiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8IDB4MWU2MzAwMDAgMHgx
+OAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MzAwMDAwMDAgMHgwMjAwMDAw
+MCA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXNwZWVkLGFzdDI0MDAtc3BpIjsKPj4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgZmxhc2hAMCB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVn
+ID0gPCAwID47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9
+ICJqZWRlYyxzcGktbm9yIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0
+dXMgPSAiZGlzYWJsZWQiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArICAgICAg
+ICAgICAgICAgfTsKPj4gKwo+PiAgICAgICAgICAgICAgICAgdmljOiBpbnRlcnJ1cHQtY29udHJv
+bGxlckAxZTZjMDA4MCB7Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAi
+YXNwZWVkLGFzdDI0MDAtdmljIjsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0
+LWNvbnRyb2xsZXI7Cj4+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUu
+ZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1nNS5kdHNpCj4+IGluZGV4IGI2NjRmZTM4
+MDkzNi4uODk3MGYzY2I4ZTJiIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3Bl
+ZWQtZzUuZHRzaQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtZzUuZHRzaQo+PiBA
+QCAtMjQsNiArMjQsNjkgQEAKPj4gICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDE+Owo+
+PiAgICAgICAgICAgICAgICAgcmFuZ2VzOwo+Pgo+PiArICAgICAgICAgICAgICAgZm1jOiBmbGFz
+aC1jb250cm9sbGVyQDFlNjIwMDAwIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0g
+PCAweDFlNjIwMDAwIDB4YzQKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDIw
+MDAwMDAwIDB4MTAwMDAwMDAgPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3Mt
+Y2VsbHMgPSA8MT47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+
+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImFzcGVlZCxhc3QyNTAw
+LWZtYyI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMgPSA8MTk+Owo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBmbGFzaEAwIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICByZWcgPSA8IDAgPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRp
+YmxlID0gImplZGVjLHNwaS1ub3IiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgIGZsYXNoQDEgewo+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHJlZyA9IDwgMSA+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGNvbXBhdGlibGUgPSAiamVkZWMsc3BpLW5vciI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+fTsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgZmxhc2hAMiB7Cj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgcmVnID0gPCAyID47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJqZWRlYyxzcGktbm9yIjsKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgfTsKPj4gKwo+PiArICAgICAgICAgICAgICAg
+c3BpMTogZmxhc2gtY29udHJvbGxlckAxZTYzMDAwMCB7Cj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIHJlZyA9IDwgMHgxZTYzMDAwMCAweGM0Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgMHgzMDAwMDAwMCAweDA4MDAwMDAwID47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArICAgICAgICAgICAgICAgICAgICAgICAjc2l6ZS1j
+ZWxscyA9IDwwPjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhc3Bl
+ZWQsYXN0MjUwMC1zcGkiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlz
+YWJsZWQiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICBmbGFzaEAwIHsKPj4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8IDAgPjsKPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImplZGVjLHNwaS1ub3IiOwo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGZsYXNoQDEgewo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlZyA9IDwgMSA+Owo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiamVkZWMsc3BpLW5vciI7Cj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgfTsKPj4gKyAgICAgICAgICAgICAgIH07Cj4+ICsKPj4gKyAg
+ICAgICAgICAgICAgIHNwaTI6IGZsYXNoLWNvbnRyb2xsZXJAMWU2MzEwMDAgewo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICByZWcgPSA8IDB4MWU2MzEwMDAgMHhjNAo+PiArICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDB4MzgwMDAwMDAgMHgwODAwMDAwMCA+Owo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBh
+dGlibGUgPSAiYXNwZWVkLGFzdDI1MDAtc3BpIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+c3RhdHVzID0gImRpc2FibGVkIjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgZmxhc2hAMCB7
+Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPCAwID47Cj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJqZWRlYyxzcGktbm9yIjsK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+
+PiArICAgICAgICAgICAgICAgICAgICAgICB9Owo+PiArICAgICAgICAgICAgICAgICAgICAgICBm
+bGFzaEAxIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8IDEgPjsK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gImplZGVjLHNw
+aS1ub3IiOwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNh
+YmxlZCI7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4+ICsgICAgICAgICAgICAgICB9
+Owo+PiArCj4+ICAgICAgICAgICAgICAgICB2aWM6IGludGVycnVwdC1jb250cm9sbGVyQDFlNmMw
+MDgwIHsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJhc3BlZWQsYXN0
+MjQwMC12aWMiOwo+PiAgICAgICAgICAgICAgICAgICAgICAgICBpbnRlcnJ1cHQtY29udHJvbGxl
+cjsKPj4gLS0KPj4gMi43LjQKPj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
+bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
