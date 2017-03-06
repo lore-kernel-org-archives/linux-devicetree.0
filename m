@@ -1,170 +1,78 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 03/22] PCI: endpoint: Introduce configfs entry for
- configuring EP functions
-Date: Mon, 6 Mar 2017 15:11:23 +0530
-Message-ID: <58BD2EC3.4030604@ti.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-4-git-send-email-kishon@ti.com>
- <20170217170459.GA15276@infradead.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170217170459.GA15276@infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [PATCH v6 1/4] lib/raid6: Add log-of-2 table for RAID6 HW requiring disk position
+Date: Mon,  6 Mar 2017 15:13:25 +0530
+Message-ID: <1488793408-25592-2-git-send-email-anup.patel@broadcom.com>
+References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-raid@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The raid6_gfexp table represents {2}^n values for 0 <= n < 256. The
+Linux async_tx framework pass values from raid6_gfexp as coefficients
+for each source to prep_dma_pq() callback of DMA channel with PQ
+capability. This creates problem for RAID6 offload engines (such as
+Broadcom SBA) which take disk position (i.e. log of {2}) instead of
+multiplicative cofficients from raid6_gfexp table.
 
-On Friday 17 February 2017 10:34 PM, Christoph Hellwig wrote:
-> On Fri, Feb 17, 2017 at 03:20:23PM +0530, Kishon Vijay Abraham I wrote:
->> Introduce a new configfs entry to configure the EP function (like
->> configuring the standard configuration header entries) and to
->> bind the EP function with EP controller.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/endpoint/Kconfig      |   14 +-
->>  drivers/pci/endpoint/Makefile     |    1 +
->>  drivers/pci/endpoint/pci-ep-cfs.c |  427 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 440 insertions(+), 2 deletions(-)
->>  create mode 100644 drivers/pci/endpoint/pci-ep-cfs.c
->>
->> diff --git a/drivers/pci/endpoint/Kconfig b/drivers/pci/endpoint/Kconfig
->> index 7eb1c79..8470f0b 100644
->> --- a/drivers/pci/endpoint/Kconfig
->> +++ b/drivers/pci/endpoint/Kconfig
->> @@ -6,7 +6,6 @@ menu "PCI Endpoint"
->>  
->>  config PCI_ENDPOINT
->>  	bool "PCI Endpoint Support"
->> -	select CONFIGFS_FS
->>  	help
->>  	   Enable this configuration option to support configurable PCI
->>  	   endpoint. This should be enabled if the platform has a PCI
->> @@ -14,8 +13,19 @@ config PCI_ENDPOINT
->>  
->>  	   Enabling this option will build the endpoint library, which
->>  	   includes endpoint controller library and endpoint function
->> -	   library.
->> +	   library. This will also enable the configfs entry required to
->> +	   configure the endpoint function and used to bind the
->> +	   function with a endpoint controller.
->>  
->>  	   If in doubt, say "N" to disable Endpoint support.
->>  
->> +config PCI_ENDPOINT_CONFIGFS
->> +	bool "PCI Endpoint Configfs Support"
->> +	depends on PCI_ENDPOINT
->> +	select CONFIGFS_FS
->> +	help
->> +	   This will enable the configfs entry that can be used to
->> +	   configure the endpoint function and used to bind the
->> +	   function with a endpoint controller.
->> +
->>  endmenu
->> diff --git a/drivers/pci/endpoint/Makefile b/drivers/pci/endpoint/Makefile
->> index dc1bc16..dd9163c 100644
->> --- a/drivers/pci/endpoint/Makefile
->> +++ b/drivers/pci/endpoint/Makefile
->> @@ -4,3 +4,4 @@
->>  
->>  obj-$(CONFIG_PCI_ENDPOINT)		+= pci-epc-core.o pci-epf-core.o\
->>  					   pci-epc-mem.o
->> +obj-$(CONFIG_PCI_ENDPOINT_CONFIGFS)	+= pci-ep-cfs.o
->> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
->> new file mode 100644
->> index 0000000..ed0f8c2
->> --- /dev/null
->> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
->> @@ -0,0 +1,427 @@
->> +/**
->> + * configfs to configure the PCI endpoint
->> + *
->> + * Copyright (C) 2017 Texas Instruments
->> + * Author: Kishon Vijay Abraham I <kishon@ti.com>
->> + *
->> + * This program is free software: you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 of
->> + * the License as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/configfs.h>
->> +#include <linux/module.h>
->> +#include <linux/slab.h>
->> +
->> +#include <linux/pci-epc.h>
->> +#include <linux/pci-epf.h>
->> +
->> +struct pci_epf_info {
->> +	struct config_group group;
->> +	struct list_head list;
->> +	struct pci_epf *epf;
->> +};
->> +
->> +struct pci_ep_info {
->> +	struct config_group group;
->> +	struct config_group pci_epf_group;
->> +	/* mutex to protect pci_epf list */
->> +	struct mutex lock;
->> +	struct list_head pci_epf;
->> +	const char *epc_name;
->> +	struct pci_epc *epc;
->> +};
->> +
->> +static inline struct pci_epf_info *to_pci_epf_info(struct config_item *item)
->> +{
->> +	return container_of(to_config_group(item), struct pci_epf_info, group);
->> +}
->> +
->> +static inline struct pci_ep_info *to_pci_ep_info(struct config_item *item)
->> +{
->> +	return container_of(to_config_group(item), struct pci_ep_info, group);
->> +}
->> +
->> +#define PCI_EPF_HEADER_R(_name)						       \
->> +static ssize_t pci_epf_##_name##_show(struct config_item *item,	char *page)    \
->> +{									       \
->> +	struct pci_epf *epf = to_pci_epf_info(item)->epf;		       \
->> +	if (!epf->header) {						       \
->> +		WARN_ON_ONCE("epf device not bound to function driver\n");     \
-> 
-> WARN_ON_ONCE takes a string to evaluate as argument, not a message
-> 
->> +		return 0;					
-> 
-> and if we return 0 here the callers will retry because that is
-> interpreted as a short read.  The code should be something like:
-> 
-> 	if (WARN_ON_ONCE(!epf->header))
-> 		return -EINVAL;
-> 
->> +	if (!epf->header) {						       \
->> +		WARN_ON_ONCE("epf device not bound to function driver\n");     \
->> +		return 0;						       \
->> +	}								       \
-> 
-> Same here, and a couple more instances down below.
+This patch adds raid6_gflog table having log-of-2 value for any given
+x such that 0 <= x < 256. For any given disk coefficient x, the
+corresponding disk position is given by raid6_gflog[x]. The RAID6
+offload engine driver can use this newly added raid6_gflog table to
+get disk position from multiplicative coefficient.
 
-sure, fixed it now.
+Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+---
+ include/linux/raid/pq.h |  1 +
+ lib/raid6/mktables.c    | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-Thanks
-Kishon
+diff --git a/include/linux/raid/pq.h b/include/linux/raid/pq.h
+index 4d57bba..30f9453 100644
+--- a/include/linux/raid/pq.h
++++ b/include/linux/raid/pq.h
+@@ -142,6 +142,7 @@ int raid6_select_algo(void);
+ extern const u8 raid6_gfmul[256][256] __attribute__((aligned(256)));
+ extern const u8 raid6_vgfmul[256][32] __attribute__((aligned(256)));
+ extern const u8 raid6_gfexp[256]      __attribute__((aligned(256)));
++extern const u8 raid6_gflog[256]      __attribute__((aligned(256)));
+ extern const u8 raid6_gfinv[256]      __attribute__((aligned(256)));
+ extern const u8 raid6_gfexi[256]      __attribute__((aligned(256)));
+ 
+diff --git a/lib/raid6/mktables.c b/lib/raid6/mktables.c
+index 39787db..e824d08 100644
+--- a/lib/raid6/mktables.c
++++ b/lib/raid6/mktables.c
+@@ -125,6 +125,26 @@ int main(int argc, char *argv[])
+ 	printf("EXPORT_SYMBOL(raid6_gfexp);\n");
+ 	printf("#endif\n");
+ 
++	/* Compute log-of-2 table */
++	printf("\nconst u8 __attribute__((aligned(256)))\n"
++	       "raid6_gflog[256] =\n" "{\n");
++	for (i = 0; i < 256; i += 8) {
++		printf("\t");
++		for (j = 0; j < 8; j++) {
++			v = 255;
++			for (k = 0; k < 256; k++)
++				if (exptbl[k] == (i + j)) {
++					v = k;
++					break;
++				}
++			printf("0x%02x,%c", v, (j == 7) ? '\n' : ' ');
++		}
++	}
++	printf("};\n");
++	printf("#ifdef __KERNEL__\n");
++	printf("EXPORT_SYMBOL(raid6_gflog);\n");
++	printf("#endif\n");
++
+ 	/* Compute inverse table x^-1 == x^254 */
+ 	printf("\nconst u8 __attribute__((aligned(256)))\n"
+ 	       "raid6_gfinv[256] =\n" "{\n");
+-- 
+2.7.4
