@@ -1,51 +1,65 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset properties
-Date: Mon,  6 Mar 2017 17:25:56 +0100
-Message-ID: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset
+ properties
+Date: Mon, 06 Mar 2017 18:32:55 +0200
+Message-ID: <1503576.T3vfvR3RGC@avalon>
+References: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the optional properties for describing module resets, to
-support resetting display channels and LVDS encoders on R-Car Gen2 and
-Gen3.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-See "[v2,1/4] dt-bindings: clock: renesas: cpg-mssr: Document reset control
-support" (https://patchwork.kernel.org/patch/9536627/) for the format of
-a reset specifier in the Renesas CPG/MSSR case.
-
-E.g. "resets = <&cpg 310>;"
-
-v2:
-  - s/phandles/phandle/.
----
- Documentation/devicetree/bindings/display/renesas,du.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-index 1a02f099a0ff0a3a..3db418c827193e82 100644
---- a/Documentation/devicetree/bindings/display/renesas,du.txt
-+++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-@@ -36,6 +36,16 @@ Required Properties:
-       When supplied they must be named "dclkin.x" with "x" being the input
-       clock numerical index.
- 
-+Optional properties:
-+  - resets: A list of phandle + reset-specifier pairs, one for each entry in
-+    the reset-names property.
-+  - reset-names: Names of the resets. This property is model-dependent.
-+    - R8A779[0123456] use one reset for a group of one or more successive
-+      channels, and one reset per LVDS encoder (if available). The resets
-+      must be named "du.x" with "x" being the numerical index of the lowest
-+      channel in the group. The LVDS resets must be named "lvds.x" with "x"
-+      being the LVDS encoder numerical index.
-+
- Required nodes:
- 
- The connections to the DU output video ports are modeled using the OF graph
--- 
-2.7.4
+SGkgR2VlcnQsCgpUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KCk9uIE1vbmRheSAwNiBNYXIgMjAx
+NyAxNzoyNTo1NiBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6Cj4gRG9jdW1lbnQgdGhlIG9wdGlv
+bmFsIHByb3BlcnRpZXMgZm9yIGRlc2NyaWJpbmcgbW9kdWxlIHJlc2V0cywgdG8KPiBzdXBwb3J0
+IHJlc2V0dGluZyBkaXNwbGF5IGNoYW5uZWxzIGFuZCBMVkRTIGVuY29kZXJzIG9uIFItQ2FyIEdl
+bjIgYW5kCj4gR2VuMy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdl
+ZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPgoKVGhpcyBsb29rcyBnb29kIHRvIG1lLgoKQWNrZWQtYnk6
+IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCkkg
+dGhpbmsgd2Ugc2hvdWxkIHRyeSBpbXBsZW1lbnRpbmcgc3VwcG9ydCBmb3IgcmVzZXQgaW4gdGhl
+IERVIGRyaXZlciBiZWZvcmUgCm1lcmdpbmcgdGhpcyB0aG91Z2gsIGl0IGFsd2F5cyBoZWxwcyB0
+byB0ZXN0IHRoZSBwcm9wb3NlZCBEVCBiaW5kaW5ncy4KCj4gLS0tCj4gU2VlICJbdjIsMS80XSBk
+dC1iaW5kaW5nczogY2xvY2s6IHJlbmVzYXM6IGNwZy1tc3NyOiBEb2N1bWVudCByZXNldCBjb250
+cm9sCj4gc3VwcG9ydCIgKGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTUzNjYy
+Ny8pIGZvciB0aGUgZm9ybWF0IG9mCj4gYSByZXNldCBzcGVjaWZpZXIgaW4gdGhlIFJlbmVzYXMg
+Q1BHL01TU1IgY2FzZS4KPiAKPiBFLmcuICJyZXNldHMgPSA8JmNwZyAzMTA+OyIKPiAKPiB2MjoK
+PiAgIC0gcy9waGFuZGxlcy9waGFuZGxlLy4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQgfCAxMCArKysrKysrKysrCj4gIDEg
+ZmlsZSBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0Cj4gYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCBpbmRl
+eAo+IDFhMDJmMDk5YTBmZjBhM2EuLjNkYjQxOGM4MjcxOTNlODIgMTAwNjQ0Cj4gLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcmVuZXNhcyxkdS50eHQKPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1
+LnR4dAo+IEBAIC0zNiw2ICszNiwxNiBAQCBSZXF1aXJlZCBQcm9wZXJ0aWVzOgo+ICAgICAgICBX
+aGVuIHN1cHBsaWVkIHRoZXkgbXVzdCBiZSBuYW1lZCAiZGNsa2luLngiIHdpdGggIngiIGJlaW5n
+IHRoZSBpbnB1dAo+ICAgICAgICBjbG9jayBudW1lcmljYWwgaW5kZXguCj4gCj4gK09wdGlvbmFs
+IHByb3BlcnRpZXM6Cj4gKyAgLSByZXNldHM6IEEgbGlzdCBvZiBwaGFuZGxlICsgcmVzZXQtc3Bl
+Y2lmaWVyIHBhaXJzLCBvbmUgZm9yIGVhY2ggZW50cnkKPiBpbiArICAgIHRoZSByZXNldC1uYW1l
+cyBwcm9wZXJ0eS4KPiArICAtIHJlc2V0LW5hbWVzOiBOYW1lcyBvZiB0aGUgcmVzZXRzLiBUaGlz
+IHByb3BlcnR5IGlzIG1vZGVsLWRlcGVuZGVudC4KPiArICAgIC0gUjhBNzc5WzAxMjM0NTZdIHVz
+ZSBvbmUgcmVzZXQgZm9yIGEgZ3JvdXAgb2Ygb25lIG9yIG1vcmUgc3VjY2Vzc2l2ZQo+ICsgICAg
+ICBjaGFubmVscywgYW5kIG9uZSByZXNldCBwZXIgTFZEUyBlbmNvZGVyIChpZiBhdmFpbGFibGUp
+LiBUaGUgcmVzZXRzCj4gKyAgICAgIG11c3QgYmUgbmFtZWQgImR1LngiIHdpdGggIngiIGJlaW5n
+IHRoZSBudW1lcmljYWwgaW5kZXggb2YgdGhlIGxvd2VzdAo+ICsgICAgICBjaGFubmVsIGluIHRo
+ZSBncm91cC4gVGhlIExWRFMgcmVzZXRzIG11c3QgYmUgbmFtZWQgImx2ZHMueCIgd2l0aAo+ICJ4
+IiArICAgICAgYmVpbmcgdGhlIExWRFMgZW5jb2RlciBudW1lcmljYWwgaW5kZXguCj4gKwo+ICBS
+ZXF1aXJlZCBub2RlczoKPiAKPiAgVGhlIGNvbm5lY3Rpb25zIHRvIHRoZSBEVSBvdXRwdXQgdmlk
+ZW8gcG9ydHMgYXJlIG1vZGVsZWQgdXNpbmcgdGhlIE9GIGdyYXBoCgotLSAKUmVnYXJkcywKCkxh
+dXJlbnQgUGluY2hhcnQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
