@@ -1,80 +1,63 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v3] tpm: do not suspend/resume if power
-	stays on
-Date: Mon, 6 Mar 2017 22:59:25 +0200
-Message-ID: <20170306205925.ynkwmy7acsunpewd@intel.com>
-References: <20170303160959.27422-1-enric.balletbo@collabora.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
+ nvmem API
+Date: Mon, 6 Mar 2017 22:02:38 +0100
+Message-ID: <20170306220238.6cc3a897@bbrezillon>
+References: <1488484223-844-1-git-send-email-albeu@free.fr>
+ <1488484223-844-3-git-send-email-albeu@free.fr>
+ <20170302221803.223ff23b@bbrezillon> <20170303133629.3aac2945@tock>
+ <20170303143658.5d89a329@bbrezillon> <20170303145726.16cd67fd@tock>
+ <20170303151107.36754d19@bbrezillon>
+ <54c76650-b61f-8a4c-70c7-febe76e16d3b@nod.at>
+ <20170306182147.65d59d33@avionic-0020>
+ <ad8f9469-2574-4fb5-2baa-37c6bca0dfa8@nod.at>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170303160959.27422-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <ad8f9469-2574-4fb5-2baa-37c6bca0dfa8@nod.at>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Richard Weinberger <richard@nod.at>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alban <albeu@free.fr>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 05:09:59PM +0100, Enric Balletbo i Serra wrote:
-> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> 
-> The suspend/resume behavior of the TPM can be controlled by setting
-> "powered-while-suspended" in the DTS. This is useful for the cases
-> when hardware does not power-off the TPM.
-> 
-> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
-> Changes since v2:
->  Jarkko Sakkinen
->   - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
->   - Remove a trailing newline.
-> Changes since v1:
->  Jason Gunthorpe :
->   - Move the code to handle suspend/resume in the common chip code.
-> 
->  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
->  drivers/char/tpm/tpm-interface.c                           | 3 +++
->  drivers/char/tpm/tpm.h                                     | 1 +
->  drivers/char/tpm/tpm_of.c                                  | 3 +++
->  4 files changed, 13 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> index 8cb638b..85c8216 100644
-> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> @@ -8,6 +8,12 @@ Required properties:
->                     the firmware event log
->  - linux,sml-size : size of the memory allocated for the firmware event log
->  
-> +Optional properties:
-> +
-> +- powered-while-suspended: present when the TPM is left powered on between
-> +                           suspend and resume (makes the suspend/resume
-> +                           callbacks do nothing).
-> +
->  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
->  ----------------------------------------------------------
+On Mon, 6 Mar 2017 20:03:28 +0100
+Richard Weinberger <richard@nod.at> wrote:
 
-Hey, just noticed something. Shouldn't this be a separate commit?
-I'm also wondering whether this can be submitted through my tree
-upper maintainers.
+> Am 06.03.2017 um 18:21 schrieb Alban:
+> > On Fri, 3 Mar 2017 23:21:29 +0100
+> > Richard Weinberger <richard@nod.at> wrote:
+> >   
+> >> Am 03.03.2017 um 15:11 schrieb Boris Brezillon:  
+> >>>> And add a list of successfully added notifiers, along with their
+> >>>> data pointer, to the MTD device. That's simple and would also remove
+> >>>> the need for notifier to have a private list of their instances as I
+> >>>> had to do here.    
+> >>>
+> >>> And then you're abusing the notifier concept. As said earlier, a
+> >>> notifier is not necessarily using the device, and thus, don't
+> >>> necessarily need private data.
+> >>> It's not only about what is the simplest solution for your use case,
+> >>> but also what other users want/need.    
+> >>
+> >> Yes, please don't use the mtd_notifier.
+> >> I strongly vote to embed the nvmem pointer into struct mtd_info.  
+> > 
+> > Ok, I'll do that. However it mean it will have to stays in
+> > drivers/mtd as it then become part of the MTD core.  
+> 
+> Brian, are you fine with this?
 
-Does not change my reviewed-by for the actual code change but you
-would have to split this into a patch set if this is the case.
+Same question to Srinivas.
 
-/Jarkko
-
-------------------------------------------------------------------------------
-Announcing the Oxford Dictionaries API! The API offers world-renowned
-dictionary content that is easy and intuitive to access. Sign up for an
-account today to start using our lexical data to power your apps and
-projects. Get started today and enter our developer competition.
-http://sdm.link/oxford
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
