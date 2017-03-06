@@ -1,185 +1,61 @@
-From: <christopher.spinrath@rwth-aachen.de>
-Subject: [PATCH 1/2] drm/bridge: ti-tfp410: support hpd via gpio
-Date: Mon, 6 Mar 2017 22:40:43 +0100
-Message-ID: <2e47786ab3d04078ae70d0c4064f7c4d@rwthex-s1-b.rwth-ad.de>
+From: <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: imx6q-utilite-pro: add hpd gpio
+Date: Mon, 6 Mar 2017 22:40:44 +0100
+Message-ID: <079b2ad39e0f4d37a181aab822b68fe6@rwthex-s1-b.rwth-ad.de>
+References: <20170306214044.2043-1-christopher.spinrath@rwth-aachen.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: architt@codeaurora.org, airlied@linux.ie, shawnguo@kernel.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, grinberg@compulab.co.il, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170306214044.2043-1-christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 
-On some boards the hpd pin of a hdmi connector is wired up to a gpio
-pin. Since in the DRM world the tfp410 driver is responsible for
-handling the connector, add support for hpd gpios in this very driver.
+The hpd pin of the second hdmi connector of the Utilite Pro is wired
+up to a gpio pin of the SoC. Reflect this in the device tree.
 
-Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 ---
- drivers/gpu/drm/bridge/ti-tfp410.c | 72 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 70 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6q-utilite-pro.dts | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-index b054ea3..77c3390 100644
---- a/drivers/gpu/drm/bridge/ti-tfp410.c
-+++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-@@ -8,6 +8,10 @@
-  *
-  */
+diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+index 69bdd82..d900ad6 100644
+--- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
++++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+@@ -101,9 +101,11 @@
  
-+#include <linux/delay.h>
-+#include <linux/fwnode.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/irq.h>
- #include <linux/module.h>
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
-@@ -18,11 +22,15 @@
- #include <drm/drm_crtc.h>
- #include <drm/drm_crtc_helper.h>
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+-
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_hpd>;
+ 		type = "a";
+ 		ddc-i2c-bus = <&i2c_dvi_ddc>;
++		hpd-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
  
-+#define HOTPLUG_DEBOUNCE_MS		1100
+ 		port {
+ 			hdmi_connector_in: endpoint {
+@@ -209,6 +211,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_hpd: hpdgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_4__GPIO1_IO04 0x1b0b0
++		>;
++	};
 +
- struct tfp410 {
- 	struct drm_bridge	bridge;
- 	struct drm_connector	connector;
- 
- 	struct i2c_adapter	*ddc;
-+	struct gpio_desc	*hpd;
-+	struct delayed_work	hpd_work;
- 
- 	struct device *dev;
- };
-@@ -76,6 +84,13 @@ tfp410_connector_detect(struct drm_connector *connector, bool force)
- {
- 	struct tfp410 *dvi = drm_connector_to_tfp410(connector);
- 
-+	if (dvi->hpd) {
-+		if (gpiod_get_value_cansleep(dvi->hpd))
-+			return connector_status_connected;
-+		else
-+			return connector_status_disconnected;
-+	}
-+
- 	if (dvi->ddc) {
- 		if (drm_probe_ddc(dvi->ddc))
- 			return connector_status_connected;
-@@ -106,6 +121,9 @@ static int tfp410_attach(struct drm_bridge *bridge)
- 		return -ENODEV;
- 	}
- 
-+	if (dvi->hpd)
-+		dvi->connector.polled = DRM_CONNECTOR_POLL_HPD;
-+
- 	drm_connector_helper_add(&dvi->connector,
- 				 &tfp410_con_helper_funcs);
- 	ret = drm_connector_init(bridge->dev, &dvi->connector,
-@@ -125,7 +143,27 @@ static const struct drm_bridge_funcs tfp410_bridge_funcs = {
- 	.attach		= tfp410_attach,
- };
- 
--static int tfp410_get_connector_ddc(struct tfp410 *dvi)
-+static void tfp410_hpd_work_func(struct work_struct *work)
-+{
-+	struct tfp410 *dvi;
-+
-+	dvi = container_of(work, struct tfp410, hpd_work.work);
-+
-+	if (dvi->bridge.dev)
-+		drm_helper_hpd_irq_event(dvi->bridge.dev);
-+}
-+
-+static irqreturn_t tfp410_hpd_irq_thread(int irq, void *arg)
-+{
-+	struct tfp410 *dvi = arg;
-+
-+	mod_delayed_work(system_wq, &dvi->hpd_work,
-+			msecs_to_jiffies(HOTPLUG_DEBOUNCE_MS));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int tfp410_get_connector_properties(struct tfp410 *dvi)
- {
- 	struct device_node *ep = NULL, *connector_node = NULL;
- 	struct device_node *ddc_phandle = NULL;
-@@ -140,6 +178,17 @@ static int tfp410_get_connector_ddc(struct tfp410 *dvi)
- 	if (!connector_node)
- 		goto fail;
- 
-+	dvi->hpd = fwnode_get_named_gpiod(&connector_node->fwnode,
-+					"hpd-gpios", 0, GPIOD_IN, "hpd");
-+	if (IS_ERR(dvi->hpd)) {
-+		ret = PTR_ERR(dvi->hpd);
-+		dvi->hpd = NULL;
-+		if (ret == -ENOENT)
-+			ret = 0;
-+		else
-+			goto fail;
-+	}
-+
- 	ddc_phandle = of_parse_phandle(connector_node, "ddc-i2c-bus", 0);
- 	if (!ddc_phandle)
- 		goto fail;
-@@ -176,10 +225,23 @@ static int tfp410_init(struct device *dev)
- 	dvi->bridge.of_node = dev->of_node;
- 	dvi->dev = dev;
- 
--	ret = tfp410_get_connector_ddc(dvi);
-+	ret = tfp410_get_connector_properties(dvi);
- 	if (ret)
- 		goto fail;
- 
-+	if (dvi->hpd) {
-+		INIT_DELAYED_WORK(&dvi->hpd_work, tfp410_hpd_work_func);
-+
-+		ret = devm_request_threaded_irq(dev, gpiod_to_irq(dvi->hpd),
-+			NULL, tfp410_hpd_irq_thread, IRQF_TRIGGER_RISING |
-+			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+			"hdmi-hpd", dvi);
-+		if (ret) {
-+			DRM_ERROR("failed to register hpd interrupt\n");
-+			goto fail;
-+		}
-+	}
-+
- 	ret = drm_bridge_add(&dvi->bridge);
- 	if (ret) {
- 		dev_err(dev, "drm_bridge_add() failed: %d\n", ret);
-@@ -189,6 +251,8 @@ static int tfp410_init(struct device *dev)
- 	return 0;
- fail:
- 	i2c_put_adapter(dvi->ddc);
-+	if (dvi->hpd)
-+		gpiod_put(dvi->hpd);
- 	return ret;
- }
- 
-@@ -196,10 +260,14 @@ static int tfp410_fini(struct device *dev)
- {
- 	struct tfp410 *dvi = dev_get_drvdata(dev);
- 
-+	cancel_delayed_work_sync(&dvi->hpd_work);
-+
- 	drm_bridge_remove(&dvi->bridge);
- 
- 	if (dvi->ddc)
- 		i2c_put_adapter(dvi->ddc);
-+	if (dvi->hpd)
-+		gpiod_put(dvi->hpd);
- 
- 	return 0;
- }
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
