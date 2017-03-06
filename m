@@ -1,11 +1,13 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 0/3] ASoC: add dio2125 amplifier support
-Date: Mon,  6 Mar 2017 18:44:48 +0100
-Message-ID: <20170306174451.24406-1-jbrunet@baylibre.com>
+Subject: [PATCH 1/3] dt-bindings: add vendor prefix for Dioo
+Date: Mon,  6 Mar 2017 18:44:49 +0100
+Message-ID: <20170306174451.24406-2-jbrunet@baylibre.com>
+References: <20170306174451.24406-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170306174451.24406-1-jbrunet@baylibre.com>
 List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
  <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
 List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
@@ -19,31 +21,25 @@ To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
 Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds the support for the dio2125 from Dioo microcircuits.
-The dio2125 is audio driver with adjustable gain. The EN pad allows to
-enable or disable the outputs of the driver.
+Dioo (http://http://www.dioo.com) design and produce power analog and
+mixed signal IC.
 
-The link to the datasheet is not provided as part of the commit. It is not
-provided the manufacturer and it is doubtful it will still be available a
-few years from now. Still provided here in case anyone is interested [0].
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-This patchset has been tested on Amlogic's meson-gxbb-p200 board.
-
-[0]: http://www.winine.com/Line%E9%9F%B3/DIO2125XM10%20V1.0.pdf
-
-Jerome Brunet (3):
-  dt-bindings: add vendor prefix for Dioo
-  ASoC: dio2125: add dio2125 amp driver
-  ASoC: dio2125: add dt-bindings
-
- .../devicetree/bindings/sound/dioo,dio2125.txt     |  12 +++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- sound/soc/codecs/Kconfig                           |   5 +
- sound/soc/codecs/Makefile                          |   2 +
- sound/soc/codecs/dio2125.c                         | 120 +++++++++++++++++++++
- 5 files changed, 140 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/dioo,dio2125.txt
- create mode 100644 sound/soc/codecs/dio2125.c
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ec0bfb9bbebd..bb0edca6ec05 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -79,6 +79,7 @@ denx	Denx Software Engineering
+ devantech	Devantech, Ltd.
+ digi	Digi International Inc.
+ digilent	Diglent, Inc.
++dioo	Dioo Microcircuit Co., Ltd
+ dlg	Dialog Semiconductor
+ dlink	D-Link Corporation
+ dmo	Data Modul AG
 -- 
 2.9.3
