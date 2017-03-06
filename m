@@ -1,71 +1,196 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: phy: add DT bindings for usb2-phy grf
-Date: Mon, 06 Mar 2017 04:59:44 +0100
-Message-ID: <2314169.2PShvd0WLX@diego>
-References: <1488763778-27499-1-git-send-email-daniel.meng@rock-chips.com>
- <1488763778-27499-3-git-send-email-daniel.meng@rock-chips.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 05/12] ASoC: sun4i-codec: Add support for
+ V3s codec
+Date: Mon, 6 Mar 2017 12:05:53 +0800
+Message-ID: <CAGb2v66TZj7EjcAf3PyYky5adjTc4xdHUAh7jFChe2LWs7cYjA@mail.gmail.com>
+References: <20170305133709.6288-1-icenowy@aosc.xyz> <20170305133709.6288-6-icenowy@aosc.xyz>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1488763778-27499-3-git-send-email-daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOOA6PCQKGQEAGQSKIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170305133709.6288-6-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 6. M=E4rz 2017, 09:29:37 CET schrieb Meng Dongyang:
-> Adds the device tree bindings description for usb2-phy grf
-> of RK3328 platform.
-> =
-
-> Changes in v2:
->  - add usb2-phy grf specification
-> Chagnes in v3:
->  - remove the example of usb2-phy grf
-> =
-
-> Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-looks good now,
-
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
+On Sun, Mar 5, 2017 at 9:37 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> The codec in the V3s is similar to the one found on the A31. One key
+> difference is the analog path controls are routed through the PRCM
+> block. This is supported by the sun8i-codec-analog driver, and tied
+> into this codec driver with the audio card's aux_dev.
+>
+> In addition, the V3s does not have LINEIN, LINEOUT, MBIAS and MIC2,
+> MIC3, and the FIFO related registers are like H3.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/soc/rockchip/grf.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> =
-
-> diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-> b/Documentation/devicetree/bindings/soc/rockchip/grf.txt index
-> 013e71a..af5b44d 100644
-> --- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-> @@ -7,6 +7,8 @@ From RK3368 SoCs, the GRF is divided into two sections,
->  - GRF, used for general non-secure system,
->  - PMUGRF, used for always on system
-> =
-
-> +On RK3328 SoCs, the GRF adds a section for USB2PHYGRF,
+>  .../devicetree/bindings/sound/sun4i-codec.txt      | 11 ++--
+>  sound/soc/sunxi/sun4i-codec.c                      | 59 ++++++++++++++++++++++
+>  2 files changed, 66 insertions(+), 4 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/sound/sun4i-codec.txt b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> index 3863531d1e6d..2d4e10deb6f4 100644
+> --- a/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> +++ b/Documentation/devicetree/bindings/sound/sun4i-codec.txt
+> @@ -7,6 +7,7 @@ Required properties:
+>                 - "allwinner,sun7i-a20-codec"
+>                 - "allwinner,sun8i-a23-codec"
+>                 - "allwinner,sun8i-h3-codec"
+> +               - "allwinner,sun8i-v3s-codec"
+>  - reg: must contain the registers location and length
+>  - interrupts: must contain the codec interrupt
+>  - dmas: DMA channels for tx and rx dma. See the DMA client binding,
+> @@ -25,6 +26,7 @@ Required properties for the following compatibles:
+>                 - "allwinner,sun6i-a31-codec"
+>                 - "allwinner,sun8i-a23-codec"
+>                 - "allwinner,sun8i-h3-codec"
+> +               - "allwinner,sun8i-v3s-codec"
+>  - resets: phandle to the reset control for this device
+>  - allwinner,audio-routing: A list of the connections between audio components.
+>                            Each entry is a pair of strings, the first being the
+> @@ -34,15 +36,15 @@ Required properties for the following compatibles:
+>                            Audio pins on the SoC:
+>                            "HP"
+>                            "HPCOM"
+> -                          "LINEIN"
+> -                          "LINEOUT"    (not on sun8i-a23)
+> +                          "LINEIN"     (not on sun8i-v3s)
+> +                          "LINEOUT"    (not on sun8i-a23 or sun8i-v3s)
+>                            "MIC1"
+> -                          "MIC2"
+> +                          "MIC2"       (not on sun8i-v3s)
+>                            "MIC3"       (sun6i-a31 only)
+>
+>                            Microphone biases from the SoC:
+>                            "HBIAS"
+> -                          "MBIAS"
+> +                          "MBIAS"      (not on sun8i-v3s)
+>
+>                            Board connectors:
+>                            "Headphone"
+> @@ -55,6 +57,7 @@ Required properties for the following compatibles:
+>  Required properties for the following compatibles:
+>                 - "allwinner,sun8i-a23-codec"
+>                 - "allwinner,sun8i-h3-codec"
+> +               - "allwinner,sun8i-v3s-codec"
+>  - allwinner,codec-analog-controls: A phandle to the codec analog controls
+>                                    block in the PRCM.
+>
+> diff --git a/sound/soc/sunxi/sun4i-codec.c b/sound/soc/sunxi/sun4i-codec.c
+> index c3aab10fa085..7f1b1aa95e0b 100644
+> --- a/sound/soc/sunxi/sun4i-codec.c
+> +++ b/sound/soc/sunxi/sun4i-codec.c
+> @@ -1339,6 +1339,44 @@ static struct snd_soc_card *sun8i_h3_codec_create_card(struct device *dev)
+>         return card;
+>  };
+>
+> +static struct snd_soc_card *sun8i_v3s_codec_create_card(struct device *dev)
+> +{
+> +       struct snd_soc_card *card;
+> +       int ret;
 > +
->  Required Properties:
-> =
+> +       card = devm_kzalloc(dev, sizeof(*card), GFP_KERNEL);
+> +       if (!card)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       aux_dev.codec_of_node = of_parse_phandle(dev->of_node,
+> +                                                "allwinner,codec-analog-controls",
+> +                                                0);
+> +       if (!aux_dev.codec_of_node) {
+> +               dev_err(dev, "Can't find analog controls for codec.\n");
+> +               return ERR_PTR(-EINVAL);
+> +       };
+> +
+> +       card->dai_link = sun4i_codec_create_link(dev, &card->num_links);
+> +       if (!card->dai_link)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       card->dev               = dev;
+> +       card->name              = "V3s Audio Codec";
+> +       card->dapm_widgets      = sun6i_codec_card_dapm_widgets;
+> +       card->num_dapm_widgets  = ARRAY_SIZE(sun6i_codec_card_dapm_widgets);
+> +       card->dapm_routes       = sun8i_codec_card_routes;
+> +       card->num_dapm_routes   = ARRAY_SIZE(sun8i_codec_card_routes);
+> +       card->aux_dev           = &aux_dev;
+> +       card->num_aux_devs      = 1;
+> +       card->fully_routed      = true;
+> +
+> +       ret = snd_soc_of_parse_audio_routing(card, "allwinner,audio-routing");
+> +       if (ret)
+> +               dev_warn(dev, "failed to parse audio-routing: %d\n", ret);
+> +
+> +       return card;
+> +};
+> +
+>  static const struct regmap_config sun4i_codec_regmap_config = {
+>         .reg_bits       = 32,
+>         .reg_stride     = 4,
+> @@ -1374,6 +1412,13 @@ static const struct regmap_config sun8i_h3_codec_regmap_config = {
+>         .max_register   = SUN8I_H3_CODEC_ADC_DBG,
+>  };
+>
+> +static const struct regmap_config sun8i_v3s_codec_regmap_config = {
+> +       .reg_bits       = 32,
+> +       .reg_stride     = 4,
+> +       .val_bits       = 32,
+> +       .max_register   = SUN6I_CODEC_HMIC_DATA,
 
->  - compatible: GRF should be one of the followings
-> @@ -19,6 +21,8 @@ Required Properties:
->  - compatible: PMUGRF should be one of the followings
->     - "rockchip,rk3368-pmugrf", "syscon": for rk3368
->     - "rockchip,rk3399-pmugrf", "syscon": for rk3399
-> +- compatible: USB2PHYGRF should be one of the followings
-> +   - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
->  - reg: physical base address of the controller and length of memory mapp=
-ed
->    region.
+The last defined register for the non digital audio processing parts is
+SUN8I_H3_CODEC_ADC_DBG.
+
+Or if you want you could include everything, which goes up to 0x400.
+
+> +};
+> +
+>  struct sun4i_codec_quirks {
+>         const struct regmap_config *regmap_config;
+>         const struct snd_soc_codec_driver *codec;
+> @@ -1422,6 +1467,16 @@ static const struct sun4i_codec_quirks sun8i_a23_codec_quirks = {
+>         .has_reset      = true,
+>  };
+>
+> +static const struct sun4i_codec_quirks sun8i_v3s_codec_quirks = {
+> +       .regmap_config  = &sun8i_v3s_codec_regmap_config,
+> +       .codec          = &sun8i_a23_codec_codec,
+
+Please leave a note, like the H3, that this should be changed if digital audio
+processing is added.
+
+Regards
+ChenYu
+
+> +       .create_card    = sun8i_v3s_codec_create_card,
+> +       .reg_adc_fifoc  = REG_FIELD(SUN6I_CODEC_ADC_FIFOC, 0, 31),
+> +       .reg_dac_txdata = SUN8I_H3_CODEC_DAC_TXDATA,
+> +       .reg_adc_rxdata = SUN6I_CODEC_ADC_RXDATA,
+> +       .has_reset      = true,
+> +};
+> +
+>  static const struct sun4i_codec_quirks sun8i_h3_codec_quirks = {
+>         .regmap_config  = &sun8i_h3_codec_regmap_config,
+>         /*
+> @@ -1458,6 +1513,10 @@ static const struct of_device_id sun4i_codec_of_match[] = {
+>                 .compatible = "allwinner,sun8i-h3-codec",
+>                 .data = &sun8i_h3_codec_quirks,
+>         },
+> +       {
+> +               .compatible = "allwinner,sun8i-v3s-codec",
+> +               .data = &sun8i_v3s_codec_quirks,
+> +       },
+>         {}
+>  };
+>  MODULE_DEVICE_TABLE(of, sun4i_codec_of_match);
+> --
+> 2.11.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
