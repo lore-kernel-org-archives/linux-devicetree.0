@@ -1,396 +1,185 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] leds: cpcap: new driver
-Date: Mon, 6 Mar 2017 22:41:03 +0100
-Message-ID: <5419497d-e95f-ea73-b027-79f78e8f20d9@gmail.com>
-References: <20170305172234.24120-1-sre@kernel.org>
+From: <christopher.spinrath@rwth-aachen.de>
+Subject: [PATCH 1/2] drm/bridge: ti-tfp410: support hpd via gpio
+Date: Mon, 6 Mar 2017 22:40:43 +0100
+Message-ID: <2e47786ab3d04078ae70d0c4064f7c4d@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170305172234.24120-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: architt@codeaurora.org, airlied@linux.ie, shawnguo@kernel.org, kernel@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, grinberg@compulab.co.il, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
 
-Thanks for the patch. I have few comments in the code below.
+On some boards the hpd pin of a hdmi connector is wired up to a gpio
+pin. Since in the DRM world the tfp410 driver is responsible for
+handling the connector, add support for hpd gpios in this very driver.
 
-On 03/05/2017 06:22 PM, Sebastian Reichel wrote:
-> Motorola CPCAP is a PMIC found in multiple smartphones.
-> This driver adds support for the chip's LED controllers.
-> It has explicit support for all controllers used by the
-> Droid 4. Since no datasheets are available the other
-> available controllers are not supported until somebody
-> verified, that the register layout matches.
-> 
-> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/leds/cpcap-leds.txt        |  29 +++
->  drivers/leds/Kconfig                               |   9 +
->  drivers/leds/Makefile                              |   1 +
->  drivers/leds/leds-cpcap.c                          | 248 +++++++++++++++++++++
->  4 files changed, 287 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/cpcap-leds.txt
->  create mode 100644 drivers/leds/leds-cpcap.c
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/cpcap-leds.txt b/Documentation/devicetree/bindings/leds/cpcap-leds.txt
-> new file mode 100644
-> index 000000000000..d523f8c3c358
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/cpcap-leds.txt
-> @@ -0,0 +1,29 @@
-> +Motorola CPCAP PMIC LEDs
-> +------------------------
-> +
-> +This module is part of the CPCAP. For more details about the whole
-> +chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
-> +
-> +Requires node properties:
-> +- compatible: should be one of
-> +   * "motorola,cpcap-led-mdl"		(Main Display Lighting)
-> +   * "motorola,cpcap-led-kl"		(Keyboard Lighting)
-> +   * "motorola,cpcap-led-adl"		(Aux Display Lighting)
-> +   * "motorola,cpcap-led-red"		(Red Triode)
-> +   * "motorola,cpcap-led-green"		(Green Triode)
-> +   * "motorola,cpcap-led-blue"		(Blue Triode)
-> +   * "motorola,cpcap-led-cf"		(Camera Flash)
-> +   * "motorola,cpcap-led-bt"		(Bluetooth)
-> +   * "motorola,cpcap-led-cp"		(Camera Privacy LED)
-> +- label: The label for this LED
+Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+---
+ drivers/gpu/drm/bridge/ti-tfp410.c | 72 ++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 70 insertions(+), 2 deletions(-)
 
-Please change the property description to the following:
-
-see Documentation/devicetree/bindings/leds/common.txt
-
-> +- vdd-supply: A phandle to the regulator powering the LED
-> +
-> +Example:
-> +
-> +&cpcap {
-> +	cpcap_led_red: red-led {
-> +		compatible = "motorola,cpcap-led-red";
-> +		label = "cpcap:red";
-> +		vdd-supply = <&sw5>;
-> +	};
-> +};
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 275f467956ee..043f02a4fe73 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -76,6 +76,15 @@ config LEDS_BCM6358
->  	  This option enables support for LEDs connected to the BCM6358
->  	  LED HW controller accessed via MMIO registers.
->  
-> +config LEDS_CPCAP
-> +	tristate "LED Support for Motorola CPCAP"
-> +	depends on LEDS_CLASS
-> +	depends on MFD_CPCAP
-> +	depends on OF
-> +	help
-> +	  This option enables support for LEDs offered by Motorola's
-> +	  CPCAP PMIC.
-> +
->  config LEDS_LM3530
->  	tristate "LCD Backlight driver for LM3530"
->  	depends on LEDS_CLASS
-> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> index 6b8273736478..333e84ce5d3b 100644
-> --- a/drivers/leds/Makefile
-> +++ b/drivers/leds/Makefile
-> @@ -11,6 +11,7 @@ obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
->  obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
->  obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
->  obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-> +obj-$(CONFIG_LEDS_CPCAP)		+= leds-cpcap.o
->  obj-$(CONFIG_LEDS_LOCOMO)		+= leds-locomo.o
->  obj-$(CONFIG_LEDS_LM3530)		+= leds-lm3530.o
->  obj-$(CONFIG_LEDS_LM3533)		+= leds-lm3533.o
-> diff --git a/drivers/leds/leds-cpcap.c b/drivers/leds/leds-cpcap.c
-> new file mode 100644
-> index 000000000000..e2fe13aae2f1
-> --- /dev/null
-> +++ b/drivers/leds/leds-cpcap.c
-> @@ -0,0 +1,248 @@
-> +/*
-> + * Copyright (c) 2017 Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#define DEBUG
-
-This is stray debug macro I believe.
-
-> +
-> +#include <linux/leds.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/mfd/motorola-cpcap.h>
-
-Please sort these directives alphabetically. I.e. the last entry
-should go after linux/leds.h.
-
-> +
-> +#define CPCAP_LED_NO_CURRENT 0x0001
-> +#define CPCAP_LED_OFF 0x0000
-> +
-> +struct cpcap_led_info {
-> +	u16 reg;
-> +	u16 mask;
-> +	u16 limit;
-> +	u16 init_mask;
-> +	u16 init_val;
-> +};
-> +
-> +static const struct cpcap_led_info cpcap_led_red = {
-> +	.reg	= CPCAP_REG_REDC,
-> +	.mask	= 0x03FF,
-> +	.limit	= 31,
-> +};
-> +
-> +static const struct cpcap_led_info cpcap_led_green = {
-> +	.reg	= CPCAP_REG_GREENC,
-> +	.mask	= 0x03FF,
-> +	.limit	= 31,
-> +};
-> +
-> +static const struct cpcap_led_info cpcap_led_blue = {
-> +	.reg	= CPCAP_REG_BLUEC,
-> +	.mask	= 0x03FF,
-> +	.limit	= 31,
-> +};
-> +
-> +/* aux display light */
-> +static const struct cpcap_led_info cpcap_led_adl = {
-> +	.reg		= CPCAP_REG_ADLC,
-> +	.mask		= 0x000F,
-> +	.limit		= 1,
-> +	.init_mask	= 0x7FFF,
-> +	.init_val	= 0x5FF0,
-> +};
-> +
-> +/* camera privacy led */
-> +static const struct cpcap_led_info cpcap_led_cp = {
-> +	.reg		= CPCAP_REG_CLEDC,
-> +	.mask		= 0x0007,
-> +	.limit		= 1,
-> +	.init_mask	= 0x03FF,
-> +	.init_val	= 0x0008,
-> +};
-> +
-> +/* unsupported led */
-> +static const struct cpcap_led_info cpcap_led_unsup = {
-> +	.reg		= 0x0000,
-> +};
-> +
-> +struct cpcap_led {
-> +	struct led_classdev led;
-> +	const struct cpcap_led_info *info;
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	struct regulator *vdd;
-> +	bool powered;
-> +
-> +	u32 current_limit;
-> +};
-> +
-> +static u16 cpcap_led_val(u8 current_limit, u8 duty_cycle)
-> +{
-> +	current_limit &= 0x1f; /* 5 bit */
-> +	duty_cycle &= 0x0f; /* 4 bit */
-> +
-> +	return current_limit << 4 | duty_cycle;
-> +}
-> +
-> +static int cpcap_led_set_power(struct cpcap_led *led, bool status)
-> +{
-> +	int err;
-> +
-> +	if (status == led->powered)
-> +		return 0;
-> +
-> +	if (status)
-> +		err = regulator_enable(led->vdd);
-> +	else
-> +		err = regulator_disable(led->vdd);
-> +
-> +	if (err) {
-> +		dev_err(led->dev, "regulator failure: %d", err);
-> +		return err;
-> +	}
-> +
-> +	led->powered = status;
-> +
-> +	return 0;
-> +}
-> +
-> +static int cpcap_led_set(struct led_classdev *ledc, enum led_brightness value)
-> +{
-> +	struct cpcap_led *led = container_of(ledc, struct cpcap_led, led);
-> +	int brightness;
-> +	int err;
-
-You need mutex protection here so as not to leave the device in an
-inconsistent state when concurrent access occurs.
-The operation of brightness setting is not atomic here.
-
-> +	if (value > LED_OFF) {
-> +		err = cpcap_led_set_power(led, true);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	if (value == LED_OFF) {
-> +		/* Avoid HW issue by turning off current before duty cycle */
-> +		err = regmap_update_bits(led->regmap,
-> +			led->info->reg, led->info->mask, CPCAP_LED_NO_CURRENT);
-> +		if (err) {
-> +			dev_err(led->dev, "regmap failed: %d", err);
-> +			return err;
-> +		}
-> +
-> +		brightness = CPCAP_LED_OFF;
-> +	} else {
-> +		brightness = cpcap_led_val(value, 0x01);
-
-Please add a macro for 0x01.
-
-> +	}
-> +
-> +	dev_dbg(led->dev, "regmap: reg=%04x mask=%04x val=%04x",
-> +		led->info->reg, led->info->mask, brightness);
-
-Please remove this debug logging. You can always enable CONFIG_DEBUG_FS.
-
-> +	err = regmap_update_bits(led->regmap, led->info->reg, led->info->mask,
-> +		brightness);
-> +	if (err) {
-> +		dev_err(led->dev, "regmap failed: %d", err);
-> +		return err;
-> +	}
-> +
-> +	if (value == LED_OFF) {
-
-Why can't we accomplish this in the second condition?
-
-> +		err = cpcap_led_set_power(led, false);
-> +		if (err)
-> +			return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id cpcap_led_of_match[] = {
-> +	{ .compatible = "motorola,cpcap-led-red", .data = &cpcap_led_red },
-> +	{ .compatible = "motorola,cpcap-led-green", .data = &cpcap_led_green },
-> +	{ .compatible = "motorola,cpcap-led-blue",  .data = &cpcap_led_blue },
-> +	{ .compatible = "motorola,cpcap-led-adl", .data = &cpcap_led_adl },
-> +	{ .compatible = "motorola,cpcap-led-cp", .data = &cpcap_led_cp },
-> +
-> +	{ .compatible = "motorola,cpcap-led-cf", .data = &cpcap_led_unsup },
-> +	{ .compatible = "motorola,cpcap-led-mdl", .data = &cpcap_led_unsup },
-> +	{ .compatible = "motorola,cpcap-led-kl", .data = &cpcap_led_unsup },
-> +	{ .compatible = "motorola,cpcap-led-bt", .data = &cpcap_led_unsup },
-
-Does it make sense to provide entries for unsupported LEDs?
-
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, cpcap_led_of_match);
-> +
-> +static int cpcap_led_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *match;
-> +	struct cpcap_led *led;
-> +	int err;
-> +
-> +	match = of_match_device(of_match_ptr(cpcap_led_of_match), &pdev->dev);
-> +	if (!match || !match->data)
-> +		return -EINVAL;
-> +
-> +	led = devm_kzalloc(&pdev->dev, sizeof(*led), GFP_KERNEL);
-> +	if (!led)
-> +		return -ENOMEM;
-> +	platform_set_drvdata(pdev, led);
-> +	led->info = match->data;
-> +	led->dev = &pdev->dev;
-> +
-> +	if (led->info->reg == 0x0000) {
-> +		dev_err(led->dev, "Unsupported LED");
-> +		return -ENODEV;
-> +	}
-> +
-> +	led->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!led->regmap)
-> +		return -ENODEV;
-> +
-> +	led->vdd = devm_regulator_get(&pdev->dev, "vdd");
-> +	if (IS_ERR(led->vdd)) {
-> +		err = PTR_ERR(led->vdd);
-> +		dev_err(led->dev, "Couldn't get regulator: %d", err);
-> +		return err;
-> +	}
-> +
-> +	err = device_property_read_string(&pdev->dev, "label", &led->led.name);
-> +	if (err) {
-> +		dev_err(led->dev, "Couldn't read led label: %d", err);
-> +		return err;
-> +	}
-> +
-> +	led->led.max_brightness = led->info->limit;
-> +
-> +	led->led.brightness_set_blocking = cpcap_led_set;
-> +	err = devm_led_classdev_register(&pdev->dev, &led->led);
-> +	if (err) {
-> +		dev_err(led->dev, "Couldn't register led: %d", err);
-> +		return err;
-> +	}
-> +
-> +	if (led->info->init_mask) {
-> +		err = regmap_update_bits(led->regmap, led->info->reg,
-> +			led->info->init_mask, led->info->init_val);
-> +		if (err) {
-> +			dev_err(led->dev, "regmap failed: %d", err);
-> +			return err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver cpcap_led_driver = {
-> +	.probe = cpcap_led_probe,
-> +	.driver = {
-> +		.name = "cpcap-led",
-> +		.of_match_table = cpcap_led_of_match,
-> +	},
-> +};
-> +module_platform_driver(cpcap_led_driver);
-> +
-> +MODULE_DESCRIPTION("CPCAP LED driver");
-> +MODULE_AUTHOR("Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
-
-Your copyright note claims "GPL v2".
-
-
+diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
+index b054ea3..77c3390 100644
+--- a/drivers/gpu/drm/bridge/ti-tfp410.c
++++ b/drivers/gpu/drm/bridge/ti-tfp410.c
+@@ -8,6 +8,10 @@
+  *
+  */
+ 
++#include <linux/delay.h>
++#include <linux/fwnode.h>
++#include <linux/gpio/consumer.h>
++#include <linux/irq.h>
+ #include <linux/module.h>
+ #include <linux/of_graph.h>
+ #include <linux/platform_device.h>
+@@ -18,11 +22,15 @@
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_crtc_helper.h>
+ 
++#define HOTPLUG_DEBOUNCE_MS		1100
++
+ struct tfp410 {
+ 	struct drm_bridge	bridge;
+ 	struct drm_connector	connector;
+ 
+ 	struct i2c_adapter	*ddc;
++	struct gpio_desc	*hpd;
++	struct delayed_work	hpd_work;
+ 
+ 	struct device *dev;
+ };
+@@ -76,6 +84,13 @@ tfp410_connector_detect(struct drm_connector *connector, bool force)
+ {
+ 	struct tfp410 *dvi = drm_connector_to_tfp410(connector);
+ 
++	if (dvi->hpd) {
++		if (gpiod_get_value_cansleep(dvi->hpd))
++			return connector_status_connected;
++		else
++			return connector_status_disconnected;
++	}
++
+ 	if (dvi->ddc) {
+ 		if (drm_probe_ddc(dvi->ddc))
+ 			return connector_status_connected;
+@@ -106,6 +121,9 @@ static int tfp410_attach(struct drm_bridge *bridge)
+ 		return -ENODEV;
+ 	}
+ 
++	if (dvi->hpd)
++		dvi->connector.polled = DRM_CONNECTOR_POLL_HPD;
++
+ 	drm_connector_helper_add(&dvi->connector,
+ 				 &tfp410_con_helper_funcs);
+ 	ret = drm_connector_init(bridge->dev, &dvi->connector,
+@@ -125,7 +143,27 @@ static const struct drm_bridge_funcs tfp410_bridge_funcs = {
+ 	.attach		= tfp410_attach,
+ };
+ 
+-static int tfp410_get_connector_ddc(struct tfp410 *dvi)
++static void tfp410_hpd_work_func(struct work_struct *work)
++{
++	struct tfp410 *dvi;
++
++	dvi = container_of(work, struct tfp410, hpd_work.work);
++
++	if (dvi->bridge.dev)
++		drm_helper_hpd_irq_event(dvi->bridge.dev);
++}
++
++static irqreturn_t tfp410_hpd_irq_thread(int irq, void *arg)
++{
++	struct tfp410 *dvi = arg;
++
++	mod_delayed_work(system_wq, &dvi->hpd_work,
++			msecs_to_jiffies(HOTPLUG_DEBOUNCE_MS));
++
++	return IRQ_HANDLED;
++}
++
++static int tfp410_get_connector_properties(struct tfp410 *dvi)
+ {
+ 	struct device_node *ep = NULL, *connector_node = NULL;
+ 	struct device_node *ddc_phandle = NULL;
+@@ -140,6 +178,17 @@ static int tfp410_get_connector_ddc(struct tfp410 *dvi)
+ 	if (!connector_node)
+ 		goto fail;
+ 
++	dvi->hpd = fwnode_get_named_gpiod(&connector_node->fwnode,
++					"hpd-gpios", 0, GPIOD_IN, "hpd");
++	if (IS_ERR(dvi->hpd)) {
++		ret = PTR_ERR(dvi->hpd);
++		dvi->hpd = NULL;
++		if (ret == -ENOENT)
++			ret = 0;
++		else
++			goto fail;
++	}
++
+ 	ddc_phandle = of_parse_phandle(connector_node, "ddc-i2c-bus", 0);
+ 	if (!ddc_phandle)
+ 		goto fail;
+@@ -176,10 +225,23 @@ static int tfp410_init(struct device *dev)
+ 	dvi->bridge.of_node = dev->of_node;
+ 	dvi->dev = dev;
+ 
+-	ret = tfp410_get_connector_ddc(dvi);
++	ret = tfp410_get_connector_properties(dvi);
+ 	if (ret)
+ 		goto fail;
+ 
++	if (dvi->hpd) {
++		INIT_DELAYED_WORK(&dvi->hpd_work, tfp410_hpd_work_func);
++
++		ret = devm_request_threaded_irq(dev, gpiod_to_irq(dvi->hpd),
++			NULL, tfp410_hpd_irq_thread, IRQF_TRIGGER_RISING |
++			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++			"hdmi-hpd", dvi);
++		if (ret) {
++			DRM_ERROR("failed to register hpd interrupt\n");
++			goto fail;
++		}
++	}
++
+ 	ret = drm_bridge_add(&dvi->bridge);
+ 	if (ret) {
+ 		dev_err(dev, "drm_bridge_add() failed: %d\n", ret);
+@@ -189,6 +251,8 @@ static int tfp410_init(struct device *dev)
+ 	return 0;
+ fail:
+ 	i2c_put_adapter(dvi->ddc);
++	if (dvi->hpd)
++		gpiod_put(dvi->hpd);
+ 	return ret;
+ }
+ 
+@@ -196,10 +260,14 @@ static int tfp410_fini(struct device *dev)
+ {
+ 	struct tfp410 *dvi = dev_get_drvdata(dev);
+ 
++	cancel_delayed_work_sync(&dvi->hpd_work);
++
+ 	drm_bridge_remove(&dvi->bridge);
+ 
+ 	if (dvi->ddc)
+ 		i2c_put_adapter(dvi->ddc);
++	if (dvi->hpd)
++		gpiod_put(dvi->hpd);
+ 
+ 	return 0;
+ }
 -- 
-Best regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.2
