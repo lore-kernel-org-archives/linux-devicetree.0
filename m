@@ -1,206 +1,62 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v4 03/16] ACPI / property: Add fwnode_get_next_child_node()
-Date: Mon,  6 Mar 2017 16:19:17 +0200
-Message-ID: <1488809970-25568-4-git-send-email-sakari.ailus@linux.intel.com>
-References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Piotr Sroka <piotrs@cadence.com>
+Subject: [v2 PATCH 2/3] Documentation: bindings: add description of PHY delays for sdhci-cadence
+Date: Mon, 6 Mar 2017 13:39:36 +0000
+Message-ID: <1488807576-4571-1-git-send-email-piotrs@cadence.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Piotr Sroka <piotrs@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Add description of new DLL PHY delays.
 
-The ACPI _DSD hierarchical data extension [1] makes it possible to have
-hierarchies deeper than one level in similar way than DT allows. These
-"subsubnodes" have not been accessible because device property
-implementation only provides device_get_next_child_node() that is limited
-to direct descendants of a device.
-
-We need this ability in order support things like remote endpoints
-currently supported in DT with of_graph_* APIs.
-
-Modify acpi_get_next_subnode() to accept fwnode handle instead and update
-callers accordingly. Also add a new function fwnode_get_next_child_node()
-that works directly with fwnodes and modify device_get_next_child_node() to
-call it directly. While there add a macro fwnode_for_each_child_node()
-analogous to the current device_for_each_child_node() but it works with
-fwnodes instead of devices.
-
-[1] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.pdf
-
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Signed-off-by: Piotr Sroka <piotrs@cadence.com>
 ---
- drivers/acpi/property.c  | 27 +++++++++++++++++----------
- drivers/base/property.c  | 38 ++++++++++++++++++++++++++++++--------
- include/linux/acpi.h     |  8 ++++----
- include/linux/property.h |  6 ++++++
- 4 files changed, 57 insertions(+), 22 deletions(-)
+Changes for v2:
+- file was created in v2. It was a part of driver source file patch.
+- most delays were moved from dts file 
+  to data associated with an SoC specific compatible
+- description of delays was updated to be more clearly
+---
+ .../devicetree/bindings/mmc/sdhci-cadence.txt          | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 587c9d0..8730ce7 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -880,21 +880,22 @@ int acpi_node_prop_read(struct fwnode_handle *fwnode,  const char *propname,
- }
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+index c0f37cb..77c4b99 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-cadence.txt
+@@ -19,6 +19,23 @@ if supported.  See mmc.txt for details.
+ - mmc-hs400-1_8v
+ - mmc-hs400-1_2v
  
- /**
-- * acpi_get_next_subnode - Return the next child node handle for a device.
-- * @dev: Device to find the next child node for.
-+ * acpi_get_next_subnode - Return the next child node handle for a fwnode
-+ * @fwnode: Firmware node to find the next child node for.
-  * @child: Handle to one of the device's child nodes or a null handle.
-  */
--struct fwnode_handle *acpi_get_next_subnode(struct device *dev,
-+struct fwnode_handle *acpi_get_next_subnode(struct fwnode_handle *fwnode,
- 					    struct fwnode_handle *child)
- {
--	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct acpi_device *adev = to_acpi_device_node(fwnode);
- 	struct list_head *head, *next;
- 
--	if (!adev)
--		return NULL;
--
- 	if (!child || child->type == FWNODE_ACPI) {
--		head = &adev->children;
-+		if (adev)
-+			head = &adev->children;
-+		else
-+			goto nondev;
++Some PHY delays can be configured by following properties.
++Each delay property represents the fraction of the clock period.
++The approximate delay value will be
++(<delay property value>/128)*sdmclk_clock_period.
++- phy-dll-delay-sdclk:
++  Value of the delay introduced on the sdclk output
++  for all modes except HS200, HS400 and HS400_ES.
++  Valid range = [0:0x7F].
++- phy-dll-delay-sdclk-hsmmc:
++  Value of the delay introduced on the sdclk output
++  for HS200, HS400 and HS400_ES speed modes.
++  Valid range = [0:0x7F].
++- phy-dll-delay-strobe:
++  Value of the delay introduced on the dat_strobe input
++  used in HS400 / HS400_ES speed modes.
++  Valid range = [0:0x7F].
 +
- 		if (list_empty(head))
- 			goto nondev;
- 
-@@ -903,7 +904,6 @@ struct fwnode_handle *acpi_get_next_subnode(struct device *dev,
- 			next = adev->node.next;
- 			if (next == head) {
- 				child = NULL;
--				adev = ACPI_COMPANION(dev);
- 				goto nondev;
- 			}
- 			adev = list_entry(next, struct acpi_device, node);
-@@ -915,9 +915,16 @@ struct fwnode_handle *acpi_get_next_subnode(struct device *dev,
- 
-  nondev:
- 	if (!child || child->type == FWNODE_ACPI_DATA) {
-+		struct acpi_data_node *data = to_acpi_data_node(fwnode);
- 		struct acpi_data_node *dn;
- 
--		head = &adev->data.subnodes;
-+		if (adev)
-+			head = &adev->data.subnodes;
-+		else if (data)
-+			head = &data->data.subnodes;
-+		else
-+			return NULL;
-+
- 		if (list_empty(head))
- 			return NULL;
- 
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 1023e50..55d994d 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -983,24 +983,46 @@ struct fwnode_handle *fwnode_get_parent(struct fwnode_handle *fwnode)
- EXPORT_SYMBOL_GPL(fwnode_get_parent);
- 
- /**
-- * device_get_next_child_node - Return the next child node handle for a device
-- * @dev: Device to find the next child node for.
-- * @child: Handle to one of the device's child nodes or a null handle.
-+ * fwnode_get_next_child_node - Return the next child node handle for a node
-+ * @fwnode: Firmware node to find the next child node for.
-+ * @child: Handle to one of the node's child nodes or a %NULL handle.
-  */
--struct fwnode_handle *device_get_next_child_node(struct device *dev,
-+struct fwnode_handle *fwnode_get_next_child_node(struct fwnode_handle *fwnode,
- 						 struct fwnode_handle *child)
- {
--	if (IS_ENABLED(CONFIG_OF) && dev->of_node) {
-+	if (is_of_node(fwnode)) {
- 		struct device_node *node;
- 
--		node = of_get_next_available_child(dev->of_node, to_of_node(child));
-+		node = of_get_next_available_child(to_of_node(fwnode),
-+						   to_of_node(child));
- 		if (node)
- 			return &node->fwnode;
--	} else if (IS_ENABLED(CONFIG_ACPI)) {
--		return acpi_get_next_subnode(dev, child);
-+	} else if (is_acpi_node(fwnode)) {
-+		return acpi_get_next_subnode(fwnode, child);
- 	}
-+
- 	return NULL;
- }
-+EXPORT_SYMBOL_GPL(fwnode_get_next_child_node);
-+
-+/**
-+ * device_get_next_child_node - Return the next child node handle for a device
-+ * @dev: Device to find the next child node for.
-+ * @child: Handle to one of the device's child nodes or a null handle.
-+ */
-+struct fwnode_handle *device_get_next_child_node(struct device *dev,
-+						 struct fwnode_handle *child)
-+{
-+	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct fwnode_handle *fwnode = NULL;
-+
-+	if (dev->of_node)
-+		fwnode = &dev->of_node->fwnode;
-+	else if (adev)
-+		fwnode = acpi_fwnode_handle(adev);
-+
-+	return fwnode_get_next_child_node(fwnode, child);
-+}
- EXPORT_SYMBOL_GPL(device_get_next_child_node);
- 
- /**
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index a6f1b74..8096b3a 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1000,8 +1000,8 @@ int acpi_node_prop_read(struct fwnode_handle *fwnode, const char *propname,
- int acpi_dev_prop_read(struct acpi_device *adev, const char *propname,
- 		       enum dev_prop_type proptype, void *val, size_t nval);
- 
--struct fwnode_handle *acpi_get_next_subnode(struct device *dev,
--					    struct fwnode_handle *subnode);
-+struct fwnode_handle *acpi_get_next_subnode(struct fwnode_handle *fwnode,
-+					    struct fwnode_handle *child);
- struct fwnode_handle *acpi_node_get_parent(struct fwnode_handle *fwnode);
- 
- struct acpi_probe_entry;
-@@ -1119,8 +1119,8 @@ static inline int acpi_dev_prop_read(struct acpi_device *adev,
- 	return -ENXIO;
- }
- 
--static inline struct fwnode_handle *acpi_get_next_subnode(struct device *dev,
--						struct fwnode_handle *subnode)
-+static inline struct fwnode_handle *
-+acpi_get_next_subnode(struct fwnode_handle *fwnode, struct fwnode_handle *child)
- {
- 	return NULL;
- }
-diff --git a/include/linux/property.h b/include/linux/property.h
-index ab0a816..f4786a86 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -71,6 +71,12 @@ int fwnode_property_match_string(struct fwnode_handle *fwnode,
- 				 const char *propname, const char *string);
- 
- struct fwnode_handle *fwnode_get_parent(struct fwnode_handle *fwnode);
-+struct fwnode_handle *fwnode_get_next_child_node(struct fwnode_handle *fwnode,
-+						 struct fwnode_handle *child);
-+
-+#define fwnode_for_each_child_node(fwnode, child)			\
-+	for (child = fwnode_get_next_child_node(fwnode, NULL); child;	\
-+	     child = fwnode_get_next_child_node(fwnode, child))
- 
- struct fwnode_handle *device_get_next_child_node(struct device *dev,
- 						 struct fwnode_handle *child);
+ Example:
+ 	emmc: sdhci@5a000000 {
+ 		compatible = "socionext,uniphier-sd4hc", "cdns,sd4hc";
+@@ -29,4 +46,5 @@ Example:
+ 		mmc-ddr-1_8v;
+ 		mmc-hs200-1_8v;
+ 		mmc-hs400-1_8v;
++		phy-dll-delay-sdclk = <0>;
+ 	};
 -- 
-2.7.4
+2.2.2
 
