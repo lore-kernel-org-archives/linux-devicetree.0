@@ -1,26 +1,72 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/3][RESEND] Add QorIQ LS2088A platform support
-Date: Mon, 6 Mar 2017 11:01:06 +0100
-Message-ID: <20170306100105.GA6023@x250>
-References: <1485930516-23146-1-git-send-email-abhimanyu.saini@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 04/22] Documentation: PCI: Guide to use pci endpoint
+ configfs
+Date: Mon, 6 Mar 2017 15:46:15 +0530
+Message-ID: <58BD36EF.9070804@ti.com>
+References: <1487325042-28227-1-git-send-email-kishon@ti.com>
+ <1487325042-28227-5-git-send-email-kishon@ti.com>
+ <20170217171506.GB15276@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485930516-23146-1-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170217171506.GB15276@infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Christoph Hellwig <hch@infradead.org>
+Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 11:58:33AM +0530, Abhimanyu Saini wrote:
-> Abhimanyu Saini (3):
->   dt-bindings: Add compatible for LS2088A QDS and RDB board
->   arm64: dts: freescale: ls2080a: Split devicetree for code resuability
->   arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
+Hi,
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Friday 17 February 2017 10:45 PM, Christoph Hellwig wrote:
+> I'm commenting on the configfs layout here instead of the patch with the
+> code as the issues are easier to explain that way.  I think the layout
+> is a bit confusing and could be cleaner by making use of pre-created
+> entries and symlinks.  Here is my suggestion:
+> 
+> /sys/kernel/config/pci_ep/functions/		
+>     .. test/					# a directory for each function driver
+>        ... user-specified-name1/
+>        ... user-specified-name2
+>     .. nvme/
+>        ... user-specified-name42/		
+> 
+> Each directory under /sys/kernel/config/pci_ep/functions/ is owned
+> by a function drivers.  Under that function driver's directory you
+> can create a directory for each instance of a function driver.  The
+> configfs layout is controlled by the function driver.  E.g. your current
+> EPF fields would move into the test function driver, while the nvme
+> function would expose totally different fields.
+> 
+> 
+> /sys/kernel/config/pci_ep/controllers/
+> 	... dwc-0/
+> 	    ... function
+> 	... dwc-1/
+> 	    ... function
+> 	... vhost-0/
+> 	    ... function
+> 
+> 	Here you have a directory for each controller that can be bound
+> 	to a function.  The directories are pre-created for each
+> 	controller port that is EP capable.
+> 	Function is a symlink to the function instance above.
+> 	Additional parameters might also be present depending on the
+> 	EPC driver.
+
+I've changed the configfs entry according to your suggestion. However I've
+considered only the generic test function and a standard EP controller and
+implemented the configfs in a single file pci-ep-cfs.c. But I think this will
+get more complex as we add custom parameters for individual EPC, new functions
+etc..
+
+Thanks
+Kishon
