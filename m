@@ -1,82 +1,37 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH v4 2/5] arm: dts: Add the burst and esc clock frequency
- properties to DSI node
-Date: Mon, 6 Mar 2017 09:38:51 +0100
-Message-ID: <20170306093851.3870ab29@ipc1.ka-ro>
-References: <1488775343-6236-1-git-send-email-hoegeun.kwon@samsung.com>
-        <CGME20170306044234epcas1p22e9481182e11330cea0d169ce0ad2666@epcas1p2.samsung.com>
-        <1488775343-6236-3-git-send-email-hoegeun.kwon@samsung.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 3/9] gpu: ipu-v3: add driver for Prefetch Resolve Engine
+Date: Mon, 06 Mar 2017 09:42:38 +0100
+Message-ID: <1488789758.2464.13.camel@pengutronix.de>
+References: <20170217182830.32618-1-l.stach@pengutronix.de>
+ <20170217182830.32618-4-l.stach@pengutronix.de>
+ <1487604055.3878.25.camel@pengutronix.de>
+ <1488565539.11464.1.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488775343-6236-3-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1488565539.11464.1.camel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, 06 Mar 2017 13:42:20 +0900 Hoegeun Kwon wrote:
-> The OF graph is not needed because the panel is a child of dsi. Add
->
-This is obviously from your patch #5 and doesn't make sense in this
-context.
-
-> the burst and esc clock frequency properties to the parent (DSI node).
-> 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos3250-rinato.dts | 2 ++
->  arch/arm/boot/dts/exynos4210-trats.dts  | 2 ++
->  arch/arm/boot/dts/exynos4412-trats2.dts | 2 ++
->  3 files changed, 6 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-> index 548413e..c9f191c 100644
-> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
-> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-> @@ -215,6 +215,8 @@
->  &dsi_0 {
->  	vddcore-supply = <&ldo6_reg>;
->  	vddio-supply = <&ldo6_reg>;
-> +	samsung,burst-clock-frequency = <250000000>;
-> +	samsung,esc-clock-frequency = <20000000>;
->  	samsung,pll-clock-frequency = <24000000>;
->  	status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
-> index 0ca1b4d..1743ca8 100644
-> --- a/arch/arm/boot/dts/exynos4210-trats.dts
-> +++ b/arch/arm/boot/dts/exynos4210-trats.dts
-> @@ -197,6 +197,8 @@
->  &dsi_0 {
->  	vddcore-supply = <&vusb_reg>;
->  	vddio-supply = <&vmipi_reg>;
-> +	samsung,burst-clock-frequency = <500000000>;
-> +	samsung,esc-clock-frequency = <20000000>;
->  	samsung,pll-clock-frequency = <24000000>;
->  	status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> index 41ecd6d..82221a0 100644
-> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -385,6 +385,8 @@
->  &dsi_0 {
->  	vddcore-supply = <&ldo8_reg>;
->  	vddio-supply = <&ldo10_reg>;
-> +	samsung,burst-clock-frequency = <500000000>;
-> +	samsung,esc-clock-frequency = <20000000>;
->  	samsung,pll-clock-frequency = <24000000>;
->  	status = "okay";
->  
-
-
-Lothar Waßmann
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMDE3LTAzLTAzIGF0IDE5OjI1ICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKWy4u
+Ll0KPiA+ID4gK2ludCBpcHVfcHJlX2dldChzdHJ1Y3QgaXB1X3ByZSAqcHJlKQo+ID4gPiArewo+
+ID4gPiArCXUzMiB2YWw7Cj4gPiA+ICsKPiA+ID4gKwlpZiAocHJlLT5pbl91c2UpCj4gPiA+ICsJ
+CXJldHVybiAtRUJVU1k7Cj4gPiAKPiA+IFRoaXMgY291bGQgcmFjZSBmb3IgaW5fdXNlIC4uLgo+
+IAo+IEFsbCB0aGUgUFJFL1BSRyBjb25maWd1cmF0aW9uIGZ1bmN0aW9ucyBhcmUgdGhyZWFkIHVu
+c2FmZSwgd2l0aCB0aGUKPiBwcmVtaXNlIHRoYXQgdGhleSBhcmUgb25seSB1c2VkIGR1cmluZyBh
+biBhdG9taWMgY29tbWl0LCBbLi4uXQoKT2gsIG9rYXkuIEl0IHdvdWxkIGJlIG5pY2UgdG8gcG9p
+bnQgdGhpcyBvdXQgaW4gYSBjb21tZW50LgoKcmVnYXJkcwpQaGlsaXBwCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
