@@ -1,8 +1,7 @@
 From: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 1/3] dt-bindings: phy: add assign clock property in
- usb2-phy node
-Date: Mon,  6 Mar 2017 09:29:36 +0800
-Message-ID: <1488763778-27499-2-git-send-email-daniel.meng@rock-chips.com>
+Subject: [PATCH v3 2/3] dt-bindings: phy: add DT bindings for usb2-phy grf
+Date: Mon,  6 Mar 2017 09:29:37 +0800
+Message-ID: <1488763778-27499-3-git-send-email-daniel.meng@rock-chips.com>
 References: <1488763778-27499-1-git-send-email-daniel.meng@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,43 +21,40 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On some platform such as RK3328, the 480m clock may need to assign
-clock parent in dts in stead of clock driver. So this patch add
-property of assigned-clocks and assigned-clock-parents to assign
-parent for 480m clock.
+Adds the device tree bindings description for usb2-phy grf
+of RK3328 platform.
 
 Changes in v2:
- - move usb2-phy grf specification to grf.txt
-Changes in v3: None
+ - add usb2-phy grf specification
+Chagnes in v3:
+ - remove the example of usb2-phy grf
 
 Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/soc/rockchip/grf.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-index 3c29c77..e71a8d2 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-@@ -2,6 +2,7 @@ ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+index 013e71a..af5b44d 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
++++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+@@ -7,6 +7,8 @@ From RK3368 SoCs, the GRF is divided into two sections,
+ - GRF, used for general non-secure system,
+ - PMUGRF, used for always on system
  
- Required properties (phy (parent) node):
-  - compatible : should be one of the listed compatibles:
-+	* "rockchip,rk3328-usb2phy"
- 	* "rockchip,rk3366-usb2phy"
- 	* "rockchip,rk3399-usb2phy"
-  - reg : the address offset of grf for usb-phy configuration.
-@@ -11,6 +12,11 @@ Required properties (phy (parent) node):
- Optional properties:
-  - clocks : phandle + phy specifier pair, for the input clock of phy.
-  - clock-names : input clock name of phy, must be "phyclk".
-+ - assigned-clocks : phandle of usb 480m clock.
-+ - assigned-clock-parents : parent of usb 480m clock, select between
-+		 usb-phy output 480m and xin24m.
-+		 Refer to clk/clock-bindings.txt for generic clock
-+		 consumer properties.
++On RK3328 SoCs, the GRF adds a section for USB2PHYGRF,
++
+ Required Properties:
  
- Required nodes : a sub-node is required for each port the phy provides.
- 		 The sub-node name is used to identify host or otg port,
+ - compatible: GRF should be one of the followings
+@@ -19,6 +21,8 @@ Required Properties:
+ - compatible: PMUGRF should be one of the followings
+    - "rockchip,rk3368-pmugrf", "syscon": for rk3368
+    - "rockchip,rk3399-pmugrf", "syscon": for rk3399
++- compatible: USB2PHYGRF should be one of the followings
++   - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ 
 -- 
 1.9.1
