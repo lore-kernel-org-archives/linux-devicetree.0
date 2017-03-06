@@ -1,79 +1,69 @@
-From: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] regulator: tps65132: add device-tree binding
-Date: Mon, 6 Mar 2017 22:07:40 +0530
-Message-ID: <1488818260-25882-1-git-send-email-vreddytalla@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 0/8] ARM: dts: renesas: Remove unit-addresses and regs from integrated caches
+Date: Mon,  6 Mar 2017 17:40:35 +0100
+Message-ID: <1488818443-25196-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Adding tps65132 regulator devicetree binding documentation
+	Hi Simon, Magnus,
 
-Signed-off-by: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/regulator/tps65132-regulator.txt      | 46 ++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
+This patch series removes the bogus unit-addresses and reg properties
+from the device nodes representing Cortex-A15/A7 cache controllers.
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
-new file mode 100644
-index 0000000..1ef6ede
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
-@@ -0,0 +1,46 @@
-+TPS65132 regulators
-+
-+Required properties:
-+- compatible: "ti,tps65132"
-+- reg: I2C slave address
-+
-+Optional Subnode:
-+Device supports two regulators OUTP and OUTN. A sub node within the
-+   device node descrbe the properties of these regulators. The sub-node
-+   names must be as follows:
-+	-For regulator outp, the sub node name should be "outp".
-+	-For regulator outn, the sub node name should be "outn".
-+
-+-ti,enable-gpio: Regulators are controlled by the input pins. If
-+   it is connected to GPIO through host system then provide the
-+   gpio number as per gpio.txt.
-+-ti,disable-active-discharge: Boolean, presence of this property
-+   will disable active discharge on the regulator output.
-+-ti,active-discharge-gpio: Some configurations use delay mechanisms
-+  on the enable pin, to keep the regulator enabled for some time after
-+  the enable signal goes low. This GPIO is used to actively discharge
-+  the delay mechanism. Requires specification of ti,active-discharge-time
-+-ti,active-discharge-time: how long the active discharge gpio should be
-+  asserted for during active discharge, in microseconds.
-+
-+Each regulator is defined using the standard binding for regulators.
-+
-+Example:
-+
-+	tps65132@3e {
-+		compatible = "ti,tps65132";
-+
-+		outp {
-+			regulator-name = "outp";
-+			regulator-boot-on;
-+			regulator-always-on;
-+			ti,enable-gpio = <&gpio 23 0>;
-+		};
-+
-+		outn {
-+			regulator-name = "outn";
-+			regulator-boot-on;
-+			regulator-always-on;
-+			ti,enable-gpio = <&gpio 40 0>;
-+		};
-+	};
+Note that the latter were added to remove warnings from dtc when using
+W=1:
+
+    Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit name, but no reg property
+
+In hindsight, adding the reg properties turned out to be the wrong fix.
+Indeed, the Cortex-A15/A7 cache controllers are integrated controllers,
+and thus the device nodes representing them should not have
+unit-addresses or reg properties.
+
+This series does not have a runtime effect, as Linux doesn't rely much
+on the properties of the cache-controller nodes.
+
+This series is the arm32 counterpart of "[PATCH 0/2] arm64: dts: renesas:
+Remove unit-addresses and regs from integrated caches", which you've just
+applied.
+
+Thanks for applying!
+
+Geert Uytterhoeven (8):
+  ARM: dts: r8a73a4: Remove unit-addresses and regs from integrated
+    caches
+  ARM: dts: r8a7743: Remove unit-address and reg from integrated cache
+  ARM: dts: r8a7745: Remove unit-address and reg from integrated cache
+  ARM: dts: r8a7790: Remove unit-addresses and regs from integrated
+    caches
+  ARM: dts: r8a7791: Remove unit-address and reg from integrated cache
+  ARM: dts: r8a7792: Remove unit-address and reg from integrated cache
+  ARM: dts: r8a7793: Remove unit-address and reg from integrated cache
+  ARM: dts: r8a7794: Remove unit-address and reg from integrated cache
+
+ arch/arm/boot/dts/r8a73a4.dtsi | 6 ++----
+ arch/arm/boot/dts/r8a7743.dtsi | 3 +--
+ arch/arm/boot/dts/r8a7745.dtsi | 3 +--
+ arch/arm/boot/dts/r8a7790.dtsi | 6 ++----
+ arch/arm/boot/dts/r8a7791.dtsi | 3 +--
+ arch/arm/boot/dts/r8a7792.dtsi | 3 +--
+ arch/arm/boot/dts/r8a7793.dtsi | 3 +--
+ arch/arm/boot/dts/r8a7794.dtsi | 3 +--
+ 8 files changed, 10 insertions(+), 20 deletions(-)
+
 -- 
-2.1.4
+2.7.4
+
+Gr{oetje,eeting}s,
+
+						Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
