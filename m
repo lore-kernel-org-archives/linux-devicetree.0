@@ -1,75 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 01/10] ALSA SoC MAX98927 driver - Initial
-	release
-Date: Mon, 6 Mar 2017 11:35:50 +0100
-Message-ID: <20170306103550.wwxkbhvizbrgdthd@sirena.org.uk>
-References: <1488552768-14901-1-git-send-email-ryans.lee@maximintegrated.com>
- <1488552768-14901-2-git-send-email-ryans.lee@maximintegrated.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 6/6] arm64: dts: sunxi: add support for
+ the Orange Pi PC 2 board
+Date: Mon, 6 Mar 2017 11:37:29 +0100
+Message-ID: <20170306103729.y7tsj6dyydf2zmmr@lukather>
+References: <20170305233138.64574-1-icenowy@aosc.xyz>
+ <20170305233138.64574-7-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3877185005444369442=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1488552768-14901-2-git-send-email-ryans.lee@maximintegrated.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ryan Lee <ryans.lee@maximintegrated.com>
-Cc: mark.rutland@arm.com, oder_chiou@realtek.com, Damien.Horsley@imgtec.com, michael@amarulasolutions.com, kuninori.morimoto.gx@renesas.com, arnd@arndb.de, yesanishhere@gmail.com, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, tiwai@suse.com, nh6z@nh6z.net, lgirdwood@gmail.com, petr@barix.com, alsa-devel@alsa-project.org, jacob@teenage.engineering, robh+dt@kernel.org, bardliao@realtek.com, lars@metafoo.de, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="i53faqghmsgutwnl"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2PX6TCQKGQEW4PPK3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170305233138.64574-7-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---===============3877185005444369442==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ohltba6jdxnpkvzg"
+--i53faqghmsgutwnl
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
+On Mon, Mar 06, 2017 at 07:31:38AM +0800, Icenowy Zheng wrote:
+> From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> 
+> The Orange Pi PC 2 is a typical single board computer using the
+> Allwinner H5 SoC. Apart from the usual suspects it features three
+> separately driven USB ports and a Gigabit Ethernet port.
+> Also it has a SPI NOR flash soldered, from which the board can boot
+> from. This enables the SBC to behave like a "real computer" with
+> built-in firmware.
+> 
+> Add the board specific .dts file, which includes the H5 .dtsi and
+> enables the peripherals that we support so far.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+> [Icenowy: dropped all GPIO pinctrl nodes, change red LED gpio,
+>  change MMC cd to active-low, rename some node names to prevent
+>  underscores]
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
---ohltba6jdxnpkvzg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+And here your prefix should be "arm64: allwinner: h5:"
 
-On Fri, Mar 03, 2017 at 11:52:39PM +0900, Ryan Lee wrote:
-> From: Ryan Lee <RyanS.Lee@maximintegrated.com>
->=20
-> Signed-off-by: Ryan Lee <ryans.lee@maximintegrated.com>
-> ---
->=20
-> Initial release of ALSA SoC MAX98927 driver.
+(This also applies to your previous patch).
 
-The rest of this patch series appears to be bug fixes to this driver.
-Please don't submit things like this, if there are problems with code
-you're trying to add then squash those fixes into the initial patch.
-Otherwise you're making it harder for people to review the series by
-sending code with known problems in it.
+Maxime
 
---ohltba6jdxnpkvzg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAli9O4UACgkQJNaLcl1U
-h9C/0wf+LAR36MZR8HKNAffJtN2chCa2ckH8xcCG7W8COZDMjG2U1Xe1VeY2/5hn
-msZFExtrBHqQiUpZ9mQh6HEq/Q4c0oxqT0LgbAQCxXjMeT8+dDGSsz9/UY4G3wsp
-9NHXbrFLzn5vbPeVknyhqUh8zRLbzie2zX478XA5PpXib7wbL29tXDBPCCOIiEzi
-8OLGrY5c8pGLPueASmkwzTu3LCvcjTNDPyIxAaIe3CxEK6d72FQNEHyaKDxGL1lV
-RTN800cJ16vl0AQtCu7Yifq4zaxlhKKPra+lK+OS3Wc/rtqgF4MvspSCxZ4NrYeD
-qbm20DylNiZEtjDkEkTpA/IVY3EPlQ==
-=WWUL
------END PGP SIGNATURE-----
-
---ohltba6jdxnpkvzg--
-
---===============3877185005444369442==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3877185005444369442==--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--i53faqghmsgutwnl--
