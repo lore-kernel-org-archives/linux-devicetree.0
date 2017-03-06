@@ -1,90 +1,30 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v4 2/2] mmc: host: s3cmci: allow probing from device tree
-Date: Mon, 06 Mar 2017 12:41:22 +0900
-Message-ID: <b13fb653-9449-8744-a30b-9634d46eff8b@samsung.com>
-References: <1488417536-15110-1-git-send-email-sergio.prado@e-labworks.com>
- <CGME20170302012845epcas4p3d7e48f13c80b2115cea89e914b067eeb@epcas4p3.samsung.com>
- <1488417536-15110-3-git-send-email-sergio.prado@e-labworks.com>
- <39c2b81b-6519-826b-2c8d-344725ce2882@samsung.com>
- <20170303113847.GA17377@sprado-desktop>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 01/12] ASoC: sun8i-codec-analog: split
+ out mic2
+Date: Mon, 6 Mar 2017 11:43:19 +0800
+Message-ID: <CAGb2v6785Oj+RxK-TqeyGHw4OntKEzt_nnTxLbVVmym4JR+oTg@mail.gmail.com>
+References: <20170305133709.6288-1-icenowy@aosc.xyz> <20170305133709.6288-2-icenowy@aosc.xyz>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20170303113847.GA17377@sprado-desktop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergio Prado <sergio.prado@e-labworks.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB4FV6PCQKGQEB7VSRNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170305133709.6288-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2017 08:38 PM, Sergio Prado wrote:
-> On Fri, Mar 03, 2017 at 11:14:29AM +0900, Jaehoon Chung wrote:
->> On 03/02/2017 10:18 AM, Sergio Prado wrote:
->>> Allows configuring Samsung S3C24XX MMC/SD/SDIO controller using a device
->>> tree.
->>>
->>> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
->>> ---
->>>  drivers/mmc/host/s3cmci.c | 298 ++++++++++++++++++++++++----------------------
->>>  drivers/mmc/host/s3cmci.h |   3 +-
->>>  2 files changed, 158 insertions(+), 143 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
->>> index 7a173f8c455b..d066dbdb957c 100644
->>> --- a/drivers/mmc/host/s3cmci.c
->>> +++ b/drivers/mmc/host/s3cmci.c
->>> @@ -24,6 +24,10 @@
->>>  #include <linux/interrupt.h>
->>>  #include <linux/irq.h>
->>>  #include <linux/io.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/of_gpio.h>
->>> +#include <linux/mmc/slot-gpio.h>
->>>  
->>>  #include <plat/gpio-cfg.h>
->>>  #include <mach/dma.h>
->>> @@ -128,6 +132,22 @@ enum dbg_channels {
->>>  	dbg_conf  = (1 << 8),
->>>  };
->>>  
->>> +struct s3cmci_variant_data {
->>> +	int s3c2440_compatible;
->>> +};
->>
->> I didn't understand why this structure needs.
->>
->> Before this patch,
->> host->is2440;
->>
->> After this patch,
->> host->variant->s3c2440_compatible;
->>
->> Just add the one pointer for checking s3c2400 compatible..
->> Is it really meaningful?
->> (I didn't read the previous comments fully.)
-> 
-> Although just a pointer would be enought, having a structure makes it
-> more flexible to extend it in the future.
+On Sun, Mar 5, 2017 at 9:36 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> Allwinner V3s features an analog codec without MIC2.
+>
+> Split out this part, in order to prepare for the V3s analog codec.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-If you will add the other members in this structure, it's ok.
-But if it's only for compatible, i don't agree this.
-
-Best Regards,
-Jaehoon Chung
-
-> 
-> Best regards,
-> 
-> Sergio Prado
-> 
-> 
-> 
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
