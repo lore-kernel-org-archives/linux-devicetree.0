@@ -1,34 +1,71 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH v2 07/12] dmaengine: sun6i:
-	support V3s SoC variant
-Date: Mon, 6 Mar 2017 11:58:17 +0800
-Message-ID: <CAGb2v64RG2YVFk18MrKikutOA-4P8DtD3hHy1gZ3bth95PkuYg@mail.gmail.com>
-References: <20170305133709.6288-1-icenowy@aosc.xyz>
- <20170305133709.6288-8-icenowy@aosc.xyz>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: phy: add DT bindings for usb2-phy grf
+Date: Mon, 06 Mar 2017 04:59:44 +0100
+Message-ID: <2314169.2PShvd0WLX@diego>
+References: <1488763778-27499-1-git-send-email-daniel.meng@rock-chips.com>
+ <1488763778-27499-3-git-send-email-daniel.meng@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170305133709.6288-8-icenowy@aosc.xyz>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, dmaengine@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1488763778-27499-3-git-send-email-daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 5, 2017 at 9:37 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
-> Allwinner V3s has a DMA engine similar to the ones from A31, but with
-> fewer channels and DRQs.
->
-> Add support for it.
->
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+Am Montag, 6. M=E4rz 2017, 09:29:37 CET schrieb Meng Dongyang:
+> Adds the device tree bindings description for usb2-phy grf
+> of RK3328 platform.
+> =
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+> Changes in v2:
+>  - add usb2-phy grf specification
+> Chagnes in v3:
+>  - remove the example of usb2-phy grf
+> =
+
+> Signed-off-by: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+looks good now,
+
+Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/soc/rockchip/grf.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> =
+
+> diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+> b/Documentation/devicetree/bindings/soc/rockchip/grf.txt index
+> 013e71a..af5b44d 100644
+> --- a/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+> @@ -7,6 +7,8 @@ From RK3368 SoCs, the GRF is divided into two sections,
+>  - GRF, used for general non-secure system,
+>  - PMUGRF, used for always on system
+> =
+
+> +On RK3328 SoCs, the GRF adds a section for USB2PHYGRF,
+> +
+>  Required Properties:
+> =
+
+>  - compatible: GRF should be one of the followings
+> @@ -19,6 +21,8 @@ Required Properties:
+>  - compatible: PMUGRF should be one of the followings
+>     - "rockchip,rk3368-pmugrf", "syscon": for rk3368
+>     - "rockchip,rk3399-pmugrf", "syscon": for rk3399
+> +- compatible: USB2PHYGRF should be one of the followings
+> +   - "rockchip,rk3328-usb2phy-grf", "syscon": for rk3328
+>  - reg: physical base address of the controller and length of memory mapp=
+ed
+>    region.
