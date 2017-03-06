@@ -1,156 +1,79 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv3 14/15] sama5d3 dts: enable atmel-isi
-Date: Mon,  6 Mar 2017 15:56:15 +0100
-Message-ID: <20170306145616.38485-15-hverkuil@xs4all.nl>
-References: <20170306145616.38485-1-hverkuil@xs4all.nl>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170306145616.38485-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: bcm5301x: Add I2C support to the DT
+Date: Mon, 6 Mar 2017 10:12:26 -0500
+Message-ID: <CAC3K-4qHPpFJj_UKo3VePw-1qwk-y6Zt2R00O9UpyXqJnt31rA@mail.gmail.com>
+References: <1488500494-20622-1-git-send-email-jon.mason@broadcom.com>
+ <1488500494-20622-4-git-send-email-jon.mason@broadcom.com>
+ <bb91cbbd-f5e5-9ce8-e925-89e6f831e50c@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bb91cbbd-f5e5-9ce8-e925-89e6f831e50c@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+On Sun, Mar 5, 2017 at 8:13 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+> On 03/02/2017 04:21 PM, Jon Mason wrote:
+>> From: Jon Mason <jonmason@broadcom.com>
+>>
+>> Add I2C support to the bcm5301x Device Tree.  Since no driver changes
+>> are needed to enable this hardware, only the device tree changes are
+>> required to make this functional.
+>>
+>> Signed-off-by: Jon Mason <jonmason@broadcom.com>
+>> ---
+>>  arch/arm/boot/dts/bcm5301x.dtsi | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+>> index 4e3fbce..2a343f2 100644
+>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
+>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+>> @@ -338,6 +338,15 @@
+>>               };
+>>       };
+>>
+>> +     i2c0: i2c@18009000 {
+>> +             compatible = "brcm,iproc-i2c";
+>> +             reg = <0x18009000 0x50>;
+>> +             interrupts = <GIC_SPI 121 IRQ_TYPE_NONE>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +             clock-frequency = <100000>;
+>
+> Should not this have a:
+>                 status = "disabled"
+>
+> property by default such that boards can override this by phandle when
+> there are actual I2C devices available?
 
-This illustrates the changes needed to the dts in order to hook up the
-ov7670. I don't plan on merging this.
+Your comment appears to match the way it is being done in most device trees.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
----
- arch/arm/boot/dts/at91-sama5d3_xplained.dts | 60 ++++++++++++++++++++++++++---
- arch/arm/boot/dts/sama5d3.dtsi              |  4 +-
- 2 files changed, 57 insertions(+), 7 deletions(-)
+NSP implementation is identical to this.  So, if I should change it
+here, I should make there too.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-index c51fc652f6c7..b10f8b9e6375 100644
---- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-@@ -65,18 +65,52 @@
- 				status = "okay";
- 			};
- 
-+			isi0: isi@f0034000 {
-+				status = "okay";
-+				port {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					isi_0: endpoint {
-+						remote-endpoint = <&ov7670_0>;
-+						bus-width = <8>;
-+						vsync-active = <1>;
-+						hsync-active = <1>;
-+					};
-+				};
-+			};
-+
- 			i2c0: i2c@f0014000 {
- 				pinctrl-0 = <&pinctrl_i2c0_pu>;
--				status = "okay";
-+				status = "disabled";
- 			};
- 
- 			i2c1: i2c@f0018000 {
- 				status = "okay";
- 
-+				ov7670: camera@21 {
-+					compatible = "ovti,ov7670";
-+					reg = <0x21>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-+					reset-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-+					powerdown-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-+					clocks = <&pck0>;
-+					clock-names = "xclk";
-+					assigned-clocks = <&pck0>;
-+					assigned-clock-rates = <25000000>;
-+
-+					port {
-+						ov7670_0: endpoint {
-+							remote-endpoint = <&isi_0>;
-+							bus-width = <8>;
-+						};
-+					};
-+				};
-+
- 				pmic: act8865@5b {
- 					compatible = "active-semi,act8865";
- 					reg = <0x5b>;
--					status = "disabled";
-+					status = "okay";
- 
- 					regulators {
- 						vcc_1v8_reg: DCDC_REG1 {
-@@ -130,7 +164,7 @@
- 			pwm0: pwm@f002c000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_pwm0_pwmh0_0 &pinctrl_pwm0_pwmh1_0>;
--				status = "okay";
-+				status = "disabled";
- 			};
- 
- 			usart0: serial@f001c000 {
-@@ -143,7 +177,7 @@
- 			};
- 
- 			uart0: serial@f0024000 {
--				status = "okay";
-+				status = "disabled";
- 			};
- 
- 			mmc1: mmc@f8000000 {
-@@ -181,7 +215,7 @@
- 			i2c2: i2c@f801c000 {
- 				dmas = <0>, <0>;	/* Do not use DMA for i2c2 */
- 				pinctrl-0 = <&pinctrl_i2c2_pu>;
--				status = "okay";
-+				status = "disabled";
- 			};
- 
- 			macb1: ethernet@f802c000 {
-@@ -200,6 +234,22 @@
- 			};
- 
- 			pinctrl@fffff200 {
-+				camera_sensor {
-+					pinctrl_pck0_as_isi_mck: pck0_as_isi_mck-0 {
-+						atmel,pins =
-+							<AT91_PIOD 30 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* ISI_MCK */
-+					};
-+
-+					pinctrl_sensor_power: sensor_power-0 {
-+						atmel,pins =
-+							<AT91_PIOE 13 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_sensor_reset: sensor_reset-0 {
-+						atmel,pins =
-+							<AT91_PIOE 11 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
-+					};
-+				};
- 				board {
- 					pinctrl_i2c0_pu: i2c0_pu {
- 						atmel,pins =
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index b06448ba6649..099570e4b90a 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -176,7 +176,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				clocks = <&twi1_clk>;
--				status = "disabled";
-+				status = "ok";
- 			};
- 
- 			usart0: serial@f001c000 {
-@@ -235,7 +235,7 @@
- 				pinctrl-0 = <&pinctrl_isi_data_0_7>;
- 				clocks = <&isi_clk>;
- 				clock-names = "isi_clk";
--				status = "disabled";
-+				status = "ok";
- 				port {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--- 
-2.11.0
+Thanks,
+Jon
+
+>> +     };
+>> +
+>>       lcpll0: lcpll0@1800c100 {
+>>               #clock-cells = <1>;
+>>               compatible = "brcm,nsp-lcpll0";
+>>
+>
+> --
+> Florian
