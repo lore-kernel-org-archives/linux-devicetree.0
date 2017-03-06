@@ -1,49 +1,43 @@
-From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/2] dma: xilinx: Edit device tree bindings documentation
-Date: Mon,  6 Mar 2017 12:17:38 +0000
-Message-ID: <ce2a9ee846013b452e53e05c2be3c7861fa6d169.1488801913.git.roliveir@synopsys.com>
-References: <cover.1488801913.git.roliveir@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1488801913.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-In-Reply-To: <cover.1488801913.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-References: <cover.1488801913.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Anurag Kumar Vulisha <anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: [PATCH] dma: xilinx: Make Xilinx VDMA support ARC
+Date: Mon,  6 Mar 2017 12:27:33 +0000
+Message-ID: <ec057c7b16c414a1cf9a9eba87c33f8bcf9f01f9.1488803103.git.roliveir@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Vinod Koul <vinod.koul@intel.com>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Dan Williams <dan.j.williams@intel.com>, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Add reset property documentation for Xilinx DMA
+Add option in Kconfig to use Xilinx VDMA in ARC processors.
 
-Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
 ---
- Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-index a2b8bfaec43c..96c469a4717f 100644
---- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-@@ -40,6 +40,7 @@ Required properties for VDMA:
- Optional properties:
- - xlnx,include-sg: Tells configured for Scatter-mode in
- 	the hardware.
-+- resets : External reset specifier. See ../../reset/reset.txt for details.
- Optional properties for AXI DMA:
- - xlnx,mcdma: Tells whether configured for multi-channel mode in the hardware.
- Optional properties for VDMA:
-@@ -83,6 +84,7 @@ axi_vdma_0: axivdma@40030000 {
- 	clocks = <&clk 0>, <&clk 1>, <&clk 2>, <&clk 3>, <&clk 4>;
- 	clock-names = "s_axi_lite_aclk", "m_axi_mm2s_aclk", "m_axi_s2mm_aclk",
- 		      "m_axis_mm2s_aclk", "s_axis_s2mm_aclk";
-+	resets = <&rst 2>;
- 	dma-channel@40030000 {
- 		compatible = "xlnx,axi-vdma-mm2s-channel";
- 		interrupts = < 0 54 4 >;
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 263495d0adbd..b6b6c0581ad7 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -546,7 +546,7 @@ config XGENE_DMA
+ 
+ config XILINX_DMA
+ 	tristate "Xilinx AXI DMAS Engine"
+-	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
++	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64|| ARC)
+ 	select DMA_ENGINE
+ 	help
+ 	  Enable support for Xilinx AXI VDMA Soft IP.
 -- 
 2.11.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
