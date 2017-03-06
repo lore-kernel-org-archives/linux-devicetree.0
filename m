@@ -1,77 +1,95 @@
-From: Alban <albeu-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
- nvmem API
-Date: Mon, 6 Mar 2017 18:21:47 +0100
-Message-ID: <20170306182147.65d59d33@avionic-0020>
-References: <1488484223-844-1-git-send-email-albeu@free.fr>
-        <1488484223-844-3-git-send-email-albeu@free.fr>
-        <20170302221803.223ff23b@bbrezillon>
-        <20170303133629.3aac2945@tock>
-        <20170303143658.5d89a329@bbrezillon>
-        <20170303145726.16cd67fd@tock>
-        <20170303151107.36754d19@bbrezillon>
-        <54c76650-b61f-8a4c-70c7-febe76e16d3b@nod.at>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and
+ GXL
+Date: Mon, 06 Mar 2017 09:27:47 -0800
+Message-ID: <m2efya1fjg.fsf@baylibre.com>
+References: <1488365164-22861-1-git-send-email-narmstrong@baylibre.com>
+ <1488365164-22861-4-git-send-email-narmstrong@baylibre.com>
+ <e26cf584-dab2-2702-f7e6-b28f750fa00c@suse.de>
+ <e80d9fb0-1d71-7cab-5e32-72316474fdfc@baylibre.com>
+ <m2tw7a17nb.fsf@baylibre.com>
+ <9f3a17e8-63fa-6c14-4d17-0539ef7cd5a2@suse.de>
+ <1825920f-586f-7c84-8e0e-958046397b64@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/l7dWwI+Jrsu9BvxOJC+_QSw"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <54c76650-b61f-8a4c-70c7-febe76e16d3b-/L3Ra7n9ekc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1825920f-586f-7c84-8e0e-958046397b64@baylibre.com> (Neil
+ Armstrong's message of "Mon, 6 Mar 2017 09:58:33 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/l7dWwI+Jrsu9BvxOJC+_QSw
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 3 Mar 2017 23:21:29 +0100
-Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org> wrote:
-
-> Am 03.03.2017 um 15:11 schrieb Boris Brezillon:
-> >> And add a list of successfully added notifiers, along with their
-> >> data pointer, to the MTD device. That's simple and would also remove
-> >> the need for notifier to have a private list of their instances as I
-> >> had to do here. =20
-> >=20
-> > And then you're abusing the notifier concept. As said earlier, a
-> > notifier is not necessarily using the device, and thus, don't
-> > necessarily need private data.
-> > It's not only about what is the simplest solution for your use case,
-> > but also what other users want/need. =20
->=20
-> Yes, please don't use the mtd_notifier.
-> I strongly vote to embed the nvmem pointer into struct mtd_info.
-
-Ok, I'll do that. However it mean it will have to stays in
-drivers/mtd as it then become part of the MTD core.
-
-Alban
-
---Sig_/l7dWwI+Jrsu9BvxOJC+_QSw
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYvZqrAAoJEHSUmkuduC28S5EP/0bO3Eskc4K+JgOmDjek7rGD
-QXt3w4TPPm1KphK8MAdH2s0jofNVI7gM1gTme0zIrRTbdc2zx6QWk8BTMR4gWv3G
-f0yDzsNM4kvdNGc1xPnlqy2d1KR2CfG6/+QPM2Tw0HHYJwJ7KloSmiTs8VKc7fpa
-TJrLCX56tvzl3Usv5kNAzXg9mDPHEkRn8YRle6h327/JgiK+i+3aFyEODzYA1ECJ
-Ia4fkcUZXDe1Td+fMDAau5wjlWi4lz991F+k29ra3LXJ2GGHTdBjxh9jAtgpZ9w3
-WVq1LpeeJ050mSBWjLkhIWCGnNDhSa3cxGOWxVMzz0du3NtGF6Eoo1bIM+efhiKo
-IMhmLySZZNPufjV7QDeVo1dfcZshJ7EMR/veu37qzoSPuqCFKXafGxk5CNTm4W8g
-/4IgWeYmBVedv+VgG0YPjLKCqo/AMG1pl14Tc58lcdo/d2dfsQIOaKooLdK0SUWN
-xHDsUCKFYwiqtLGhdPTiX7V9xc0JqavGcMdDQlfv+kRwnSHIknRAOixMqCJpRIB8
-dopMIyV3DNdGztFx9UVdw7SMGpMlby0ObRoc8fA7dxP5Z7GFjTHA8bd5A9uRKlkz
-CMiF8qRYHqUvi8w7383mHbsuH+HHK+dpJYzBCdvVu/l2idDd7iW8mEcQtSiIMO67
-9PIDTjYXcZsuKpBVaY+e
-=IEpt
------END PGP SIGNATURE-----
-
---Sig_/l7dWwI+Jrsu9BvxOJC+_QSw--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPiB3cml0ZXM6Cgo+IE9uIDAz
+LzA0LzIwMTcgMDE6MzggUE0sIEFuZHJlYXMgRsOkcmJlciB3cm90ZToKPj4gQW0gMDMuMDMuMjAx
+NyB1bSAyMDoyOSBzY2hyaWViIEtldmluIEhpbG1hbjoKPj4+IE5laWwgQXJtc3Ryb25nIDxuYXJt
+c3Ryb25nQGJheWxpYnJlLmNvbT4gd3JpdGVzOgo+Pj4+IE9uIDAzLzAyLzIwMTcgMDE6MzEgUE0s
+IEFuZHJlYXMgRsOkcmJlciB3cm90ZToKPj4+Pj4gQW0gMDEuMDMuMjAxNyB1bSAxMTo0NiBzY2hy
+aWViIE5laWwgQXJtc3Ryb25nOgo+Pj4+Pj4gVGhlIHNhbWUgTUFMSS00NTAgTVAzIEdQVSBpcyBw
+cmVzZW50IGluIHRoZSBHWEJCIGFuZCBHWEwgU29Dcy4KPj4gWy4uLl0KPj4+Pj4+IFRoZSBub2Rl
+IGlzIHNpbXBseSBhZGRlZCBpbiB0aGUgbWVzb24tZ3hiYi5kdHNpIGZpbGUuCj4+IFsuLi5dCj4+
+Pj4+PiBGb3IgR1hMLCBzaW5jZSBhIGxvdCBpcyBzaGFyZWQgd2l0aCB0aGUgR1hNIHRoYXQgaGFz
+IGEgTUFMSS1UODIwIElQLCB0aGlzCj4+Pj4+PiBwYXRjaCBhZGRzIGEgbmV3IG1lc29uLWd4bC1t
+YWxpLmR0c2kgYW5kIGlzIGluY2x1ZGVkIGluIHRoZSBTb0Mgc3BlY2lmaWMKPj4+Pj4+IGR0c2kg
+ZmlsZXMuCj4+Pj4+Cj4+Pj4+IFRoaXMgcGFydCBpcyBzbGlnaHRseSBjb25mdXNpbmcgdGhvdWdo
+Lgo+Pj4+Pgo+Pj4+PiBXaGF0IGV4YWN0bHkgaXMgdGhlIEdYTCB2cy4gR1hNIGRpZmZlcmVuY2Ug
+dGhhdCB0aGlzIGNhbid0IGJlIGhhbmRsZWQgYnkKPj4+Pj4gb3ZlcnJpZGluZyBub2RlIHByb3Bl
+cnRpZXMgY29tcGF0aWJsZS9pbnRlcnJ1cHRzL2Nsb2Nrcz8gSSBhbSBtaXNzaW5nIGEKPj4+Pj4g
+R1hNIHBhdGNoIGluIHRoaXMgc2VyaWVzIGFzIHJhdGlvbmFsZSBmb3IgZG9pbmcgaXQgdGhpcyB3
+YXkuCj4+Pj4+Cj4+Pj4+IEluIHBhcnRpY3VsYXIgSSBhbSB3b25kZXJpbmcgd2hldGhlciB0aGUg
+d2hvbGUgR1hNLWluaGVyaXRzLWZyb20tR1hMCj4+Pj4+IGNvbmNlcHQgaXMgZmxhd2VkIGFuZCBz
+aG91bGQgYmUgYWRqdXN0ZWQgaWYgdGhpcyBsZWFkcyB0byBzZWNvbmRhcnkKPj4+Pj4gLmR0c2kg
+ZmlsZXMgbGlrZSB0aGlzOiBNeSBwcm9wb3NhbCB3b3VsZCBiZSB0byBpbnN0ZWFkIGNyZWF0ZSBh
+Cj4+Pj4+IG1lc29uLWd4bC1neG0uZHRzaSwgdGhhdCBtZXNvbi1neGwuZHRzaSBhbmQgbWVzb24t
+Z3htLmR0c2kgY2FuIGluaGVyaXQKPj4+Pj4gdGhlIGN1cnJlbnQgY29tbW9uIHBhcnRzIGZyb20s
+IHRoZW4gdGhlIE1hbGkgYml0cyBjYW4gc2ltcGx5IGdvIGludG8KPj4+Pj4gbWVzb24tZ3hsLmR0
+c2kgd2l0aG91dCBleHRyYSAjaW5jbHVkZXMgbmVlZGVkIGluIFM5MDVYIGFuZCBTOTA1RC4gV2hp
+bGUKPj4+Pj4gaXQncyBzbGlnaHRseSBtb3JlIHdvcmsgdG8gc3BsaXQgb25jZSBhZ2FpbiwgSSB0
+aGluayBpdCB3b3VsZCBiZSBjbGVhbmVyLgo+PiBbLi4uXQo+Pj4+IFRoZSBvbmx5IGNoYW5nZXMg
+YXJlIDoKPj4gWy4uLl0KPj4+PiAgLSBBIGRpZmZlcmVudCBNYWxpIGNvcmUsIGJ1dCB3aXRoIHRo
+ZSBzYW1lIGludGVycnVwdHMgKGxlc3MgYnV0IHRoZXkgc2hhcmUgdGhlIHNhbWUgbG93ZXIgaW50
+ZXJydXB0cyksIGNsb2NrcyBhbmQgbWVtb3J5IHNwYWNlCj4+Pj4KPj4+PiBUaGlzIGlzIHdoeSBp
+dCB3YXMgZGVjaWRlZCB0byBoYXZlIGEgc3ViLWR0c2ksIGhhdmluZyBhIHNlY29uZGFyeSBkdHNp
+IHdpbGwgc2ltcGx5IGNvcHkgOTklIG9mIHRoZSBHWEwgZHRzaSwKPj4+PiBidXQgc3VyZWx5IHdl
+IGNvdWxkIGFsc28gaGF2ZSBhbiBpbnRlcm1lZGlhdGUgZHRzaSBidXQgZm9yIGJvYXJkcyBJJ20g
+b2sgd2l0aCBpdCwgYnV0IGxlc3MgZm9yIGEgU29DIGR0c2ksCj4+Pj4gc2luY2UgaXQgY291bGQg
+bGVhZCB0byBzb21lIGNvbmZ1c2lvbi4KPj4+Pgo+Pj4+IEZpbmFsbHksIHllcyBJIGNvdWxkIGhh
+dmUgYWRkZWQgdGhlIG1hbGkgbm9kZSB0byB0aGUgR1hMIGR0c2ksIGJ1dCB0aGUgbWlkZ2FyZCBN
+YWxpIGR0LWJpbmRpbmdzIGFyZSBub3QgdXBzdHJlYW0KPj4+PiBhbmQgdGhlIGZhbWlseSBpcyB0
+b28gYmlnIGFuZCByZWNlbnQgZW5vdWdoIHRvIGNvbnNpZGVyIGhhdmluZyBzdGFibGUgYmluZGlu
+Z3MgZm9yIG5vdy4KPj4+Pgo+Pj4+IE5ldmVydGhlbGVzcywgbm90aGluZyBpcyBmaW5hbCwgdGhp
+cyBneGwtbWFsaS5kdHNpIGNvdWxkIGJlIG1lcmdlZCBpbnRvIHRoZSBHWEwgZHRzaSBpbiB0aGUg
+ZnV0dXJlIHdoZW4gd2UKPj4+PiBoYXZlIHByb3BlciBkdC1iaW5kaW5ncyBhbmQgYSByZWFsIHN1
+cHBvcnQgb2YgdGhlIFQ4MjAgTWFsaSBvbiB0aGUgUzkxMi4KPj4+Pgo+Pj4+IEtldmluLCB3aGF0
+J3MgeW91ciB0aG91Z2h0IGFib3V0IHRoaXMgPwo+Pj4KPj4+IEkgZG9uJ3QgaGF2ZSBhIHN0cm9u
+ZyBwcmVmZXJlbmNlLiAgSSdtIE9LIHdpdGggYSBzZXBhcmF0ZSBNYWxpIC5kdHNpIGR1ZQo+Pj4g
+dG8gdGhlIHNpZ25maWNhbnQgb3ZlcmxhcCBiZXR3ZWVuIEdYTC9HWE0gaW4gdGVybXMgb2YgY2xv
+Y2tzLCBpbnRlcnJ1cHRzCj4+PiBldGMuCj4+Pgo+Pj4gSG93ZXZlciwgaWYgdGhlIHBsYW4gaXMg
+dG8gI2luY2x1ZGUgdGhpcyBmcm9tIEdYTSAuZHRzIGZpbGVzLCB3aG91bGQgYQo+Pj4gYmV0dGVy
+IG5hbWUgYmUgbWVzb24tZ3gtbWFsaS5kdHNpPwo+PiAKPj4gSSB0aG91Z2h0IHRoZSBwdXJwb3Nl
+IHdhcyBzcGVjaWZpY2FsbHkgdG8gbm90IGhhdmUgR1hNIGluY2x1ZGUgaXQKPj4gYmVjYXVzZSBp
+dCB1c2VzIGEgTWlkZ2FyZCBJUC4KPj4gCj4+IElmIHlvdSB3YW50IHRvIHNoYXJlIHRoZSBmcmFn
+bWVudCB3aXRoIEdYQkIgdG9vIChneCksIHdlIHNob3VsZCByYXRoZXIKPj4gdXNlIG1lc29uLWd4
+LW1hbGktdXRnYXJkLmR0c2ksIHdoaWNoIHdvdWxkIGRpZmZlcmVudGlhdGUgZnJvbSBHWE0ncwo+
+PiBNaWRnYXJkIHdoaWxlIHN0aWxsIGFsbG93aW5nIGZvciB2YXJpYXRpb24gb24gdGhlIDR4eCBz
+aWRlIChlLmcuLCA0NzApLgo+PiAKPj4gUmVnYXJkcywKPj4gQW5kcmVhcwo+PiAKPgo+IEV4YWN0
+LCB0aGVyZSBpcyBubyBwbGFuIHRvIGluY2x1ZGUgaXQgZnJvbSBHWE0uCj4KPiBJJ20gbm90IGZh
+biBvZiBoYXZpbmcgbWVzb24tZ3gtbWFsaS11dGdhcmQuZHRzaSwgd2Ugc2hvdWxkIHN0aWxsIG5l
+ZWQgc29tZSBhdHRyaWJ1dGVzIGFkZGl0aW9ucyBmb3IKPiB0aGUgY2xvY2tzIHRvIHRoZSBtYWxp
+IG5vZGUgaW4gdGhlIGd4YmIgZHRzaSBhbmQgZWFjaCBzOTA1eCBhbmQgczkwNWQgZHRzaSBmaWxl
+cy4KPiBJJ20gbm90IHN1cmUgdGhpcyBpcyBldmVuIGNsZWFuZXIuLi4KCk9LLCBJIG1pc3VuZGVy
+c3Rvb2QgdGhlIGludGVudCBvZiBoYXZpbmcgaXQgc2VwYXJhdGVkIGZyb20gb3V0IGZyb20gdGhl
+CkdYTCAuZHN0aSB0aGVuLiAgQ291bGQgeW91IHBsZWFzZSBjbGFyaWZ5PwoKS2V2aW4KCgoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
