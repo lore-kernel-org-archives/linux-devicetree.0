@@ -1,83 +1,118 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] checks: Add bus checks for simple-bus buses
-Date: Mon, 6 Mar 2017 04:48:18 -0600
-Message-ID: <CAL_JsqJzWAiBUZeRMx0i5Y_NAFH6_jrASWcFp_U4MwVf2+=h0w@mail.gmail.com>
-References: <20170228224310.14162-1-robh@kernel.org> <20170228224310.14162-3-robh@kernel.org>
- <20170303021206.GD4067@umbus.fritz.box>
+From: Jan Glauber <jan.glauber@caviumnetworks.com>
+Subject: Re: [PATCH v11 1/9] dt-bindings: mmc: Add Cavium SOCs MMC bindings
+Date: Mon, 6 Mar 2017 12:09:59 +0100
+Message-ID: <20170306110959.GA5049@hardcore>
+References: <20170206133953.8390-1-jglauber@cavium.com>
+ <20170206133953.8390-2-jglauber@cavium.com>
+ <CAPDyKFrE546UMc3QBHw_C1a6Dz5mOQfURroiCBTOV3SbreR-EQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170303021206.GD4067-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFrE546UMc3QBHw_C1a6Dz5mOQfURroiCBTOV3SbreR-EQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <ddaney@caviumnetworks.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 2, 2017 at 8:12 PM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Tue, Feb 28, 2017 at 04:43:09PM -0600, Rob Herring wrote:
->> Add checks to identify simple-bus bus types and checks for child
->> devices. Simple-bus type is generally identified by "simple-bus"
->> compatible string. We also treat the root as a simple-bus, but only for
->> child nodes with reg property.
->>
->> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->> v2:
->> - new patch
->>
->>  checks.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 69 insertions(+)
->>
->> diff --git a/checks.c b/checks.c
->> index 5ed91ac50a10..c4865b4c8da0 100644
->> --- a/checks.c
->> +++ b/checks.c
->> @@ -817,6 +817,72 @@ static void check_pci_device_reg(struct check *c, struct dt_info *dti, struct no
->>  }
->>  WARNING(pci_device_reg, check_pci_device_reg, NULL, &reg_format);
->>
->> +static const struct bus_type simple_bus = {
->> +     .name = "simple-bus",
->> +};
->> +
->> +static bool node_is_compatible(struct node *node, const char *compat)
->> +{
->> +     struct property *prop;
->> +     const char *str;
->> +
->> +     prop = get_property(node, "compatible");
->> +     if (!prop)
->> +             return false;
->> +
->> +     for (str = prop->val.val; str < prop->val.val + prop->val.len; str += strlen(str) + 1) {
->
-> This isn't safe if the compatible property is filled with garbage (not
-> '\0' terminated) - the strlen() could access beyond the end of the
-> property value.
+On Fri, Mar 03, 2017 at 12:47:06PM +0100, Ulf Hansson wrote:
+> On 6 February 2017 at 14:39, Jan Glauber <jglauber@cavium.com> wrote:
+> > Add description of Cavium Octeon and ThunderX SOC device tree bindings.
+> >
+> > CC: Ulf Hansson <ulf.hansson@linaro.org>
+> > CC: Rob Herring <robh+dt@kernel.org>
+> > CC: Mark Rutland <mark.rutland@arm.com>
+> > CC: devicetree@vger.kernel.org
+> >
+> > Signed-off-by: Jan Glauber <jglauber@cavium.com>
+> > Signed-off-by: David Daney <david.daney@cavium.com>
+> > Signed-off-by: Steven J. Hill <steven.hill@cavium.com>
+> > ---
+> >  .../devicetree/bindings/mmc/cavium-mmc.txt         | 60 ++++++++++++++++++++++
+> >  1 file changed, 60 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/mmc/cavium-mmc.txt b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> > new file mode 100644
+> > index 0000000..b79e356
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+> > @@ -0,0 +1,60 @@
+> > +* Cavium Octeon & ThunderX MMC controller
+> > +
+> > +The highspeed MMC host controller on Caviums SoCs provides an interface
+> > +for MMC and SD types of memory cards.
+> > +
+> > +Supported maximum speeds are the ones of the eMMC standard 4.41 as well
+> > +as the speed of SD standard 4.0. Only 3.3 Volt is supported.
+> > +
+> > +Required properties:
+> > + - compatible : should be one of:
+> > +   cavium,octeon-6130-mmc
+> > +   cavium,octeon-6130-mmc-slot
+> > +   cavium,octeon-7890-mmc
+> > +   cavium,octeon-7890-mmc-slot
+> > +   cavium,thunder-8190-mmc
+> > +   cavium,thunder-8190-mmc-slot
+> > +   cavium,thunder-8390-mmc
+> > +   cavium,thunder-8390-mmc-slot
+> > + - reg : mmc controller base registers
+> > + - clocks : phandle
+> > +
+> > +Optional properties:
+> > + - for cd, bus-width and additional generic mmc parameters
+> > +   please refer to mmc.txt within this directory
+> > + - cavium,cmd-clk-skew : number of coprocessor clocks before sampling command
+> > + - cavium,dat-clk-skew : number of coprocessor clocks before sampling data
+> > +
+> > +Deprecated properties:
+> > +- spi-max-frequency : use max-frequency instead
+> > +- cavium,bus-max-width : use bus-width instead
+> > +
+> > +Examples:
+> > +       mmc_1_4: mmc@1,4 {
+> > +               compatible = "cavium,thunder-8390-mmc";
+> > +               reg = <0x0c00 0 0 0 0>; /* DEVFN = 0x0c (1:4) */
+> > +               #address-cells = <1>;
+> > +               #size-cells = <0>;
+> > +               clocks = <&sclk>;
+> > +
+> > +               mmc-slot@0 {
+> > +                       compatible = "cavium,thunder-8390-mmc-slot";
+> > +                       reg = <0>;
+> > +                       voltage-ranges = <3300 3300>;
+> > +                       vmmc-supply = <&mmc_supply_3v3>;
+> 
+> The vmmc supply as a regulator provides you with the voltage range,
+> thus you don't need the "voltage-ranges" here. Please remove this.
 
-Okay, I guess I can check that prop->val.val[prop->val.len - 1] == 0 up front.
+OK, I'll drop these.
 
->
->> +             if (streq(str, compat))
->> +                     return true;
->> +     }
->> +     return false;
->> +}
->> +
->> +static void check_simple_bus_bridge(struct check *c, struct dt_info *dti, struct node *node)
->> +{
->> +     if (node_is_compatible(node, "simple-bus") || !node->parent)
->> +             node->bus = &simple_bus;
->
-> I don't think it's correct to assume the root bus is always a
-> simple-bus.  If it is, it really should be listed explicitly in the
-> root node's compatible property.
+thanks,
+Jan
 
-It is in the sense that Linux treats the root the same and creates
-devices for top level children and then descends for nodes with
-"simple-bus". And since unit addresses are a single address space for
-a given level, we can't have any other bus type. IOW, any other
-defined bus type like I2C is going to be a child of its controller.
-
-Rob
+> > +                       max-frequency = <42000000>;
+> > +                       bus-width = <4>;
+> > +                       cap-sd-highspeed;
+> > +               };
+> > +
+> > +               mmc-slot@1 {
+> > +                       compatible = "cavium,thunder-8390-mmc-slot";
+> > +                       reg = <1>;
+> > +                       voltage-ranges = <3300 3300>;
+> > +                       vmmc-supply = <&mmc_supply_3v3>;
+> 
+> Ditto.
+> 
+> > +                       max-frequency = <42000000>;
+> > +                       bus-width = <8>;
+> > +                       cap-mmc-highspeed;
+> > +                       non-removable;
+> > +               };
+> > +       };
+> > --
+> > 2.9.0.rc0.21.g7777322
+> >
+> 
+> Kind regards
+> Uffe
