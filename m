@@ -1,59 +1,36 @@
-From: Artur Jedrysek <jartur@cadence.com>
-Subject: [PATCH 3/3] dt-bindings: mtd: Add Octal SPI support to Cadence QSPI.
-Date: Mon, 6 Mar 2017 12:34:31 +0000
-Message-ID: <1488803671-418-1-git-send-email-jartur@cadence.com>
+From: Jiri Kosina <jikos@kernel.org>
+Subject: Re: [PATCH v5 1/2] devicetree: i2c-hid: Add regulator support
+Date: Mon, 6 Mar 2017 13:50:18 +0100 (CET)
+Message-ID: <alpine.LSU.2.20.1703061349090.31814@cbobk.fhfr.pm>
+References: <20170210020357.10679-1-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Artur Jedrysek <jartur@cadence.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170210020357.10679-1-briannorris@chromium.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Caesar Wang <wxt@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates Cadence QSPI Device Tree documentation to include
-information about new property used to indicate, whether or not
-Octal SPI transfers are supported by the device.
+On Thu, 9 Feb 2017, Brian Norris wrote:
 
-Signed-off-by: Artur Jedrysek <jartur@cadence.com>
----
- Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+> From: Caesar Wang <wxt@rock-chips.com>
+> 
+> Document a "vdd-supply" and an initialization delay. Can be used for
+> powering on/off a HID.
+> 
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Jiri Kosina <jikos@kernel.org>
+> Cc: linux-input@vger.kernel.org
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+> Sorry for the delay on resending this. I *think* I've addressed all the
+> concerns from last time though?
 
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-index f248056..8438184 100644
---- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-@@ -14,6 +14,9 @@ Required properties:
- 
- Optional properties:
- - cdns,is-decoded-cs : Flag to indicate whether decoder is used or not.
-+- cdns,octal-controller : Flag to indicate, that used controller supports Octal
-+                          SPI transfer mode. May be intentionally omitted to
-+                          switch it back to Quad SPI mode.
- 
- Optional subnodes:
- Subnodes of the Cadence Quad SPI controller are spi slave nodes with additional
-@@ -44,6 +47,7 @@ Example:
- 		cdns,fifo-depth = <128>;
- 		cdns,fifo-width = <4>;
- 		cdns,trigger-address = <0x00000000>;
-+		#cdns,octal-controller
- 
- 		flash0: n25q00@0 {
- 			...
+Both patches applied to for-4.12/i2c-hid. Thanks,
+
 -- 
-2.2.2
+Jiri Kosina
+SUSE Labs
 
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
