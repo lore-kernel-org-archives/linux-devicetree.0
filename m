@@ -1,100 +1,236 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Extending /memreserve/ to allow defining descriptions
-Date: Mon, 6 Mar 2017 14:58:56 +1100
-Message-ID: <20170306035856.GF12030@umbus.fritz.box>
-References: <9c1cb5e8-2afd-e266-72b9-20ca6622956e@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 08/12] ARM: dts: sun8i: restore the
+ inclusion of ccu headers in V3s DTSI
+Date: Mon, 6 Mar 2017 12:12:18 +0800
+Message-ID: <CAGb2v65uPa3ZNmvCfDqoj6o0MfxTij3jJZhDyHJE=WpE4s6OYg@mail.gmail.com>
+References: <20170305133709.6288-1-icenowy@aosc.xyz> <20170305133709.6288-9-icenowy@aosc.xyz>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="AH+kv8CCoFf6qPuz"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <9c1cb5e8-2afd-e266-72b9-20ca6622956e-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBOWD6PCQKGQEHSIIOSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170305133709.6288-9-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---AH+kv8CCoFf6qPuz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Mar 5, 2017 at 9:37 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
+> When the V3s support patchset is applied, CCU headers and V3s DTSI went
+> into different trees, so the CCU inclusion is removed in the DTSI.
+>
+> Add back them.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-v3s.dtsi | 67 ++++++++++++++++++++--------------------
+>  1 file changed, 34 insertions(+), 33 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-v3s.dtsi b/arch/arm/boot/dts/sun8i-v3s.dtsi
+> index 71075969e5e6..b3f8b7f9c0bb 100644
+> --- a/arch/arm/boot/dts/sun8i-v3s.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-v3s.dtsi
+> @@ -40,6 +40,8 @@
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>
+> +#include <dt-bindings/clock/sun8i-v3s-ccu.h>
+> +#include <dt-bindings/reset/sun8i-v3s-ccu.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
 
-On Sat, Mar 04, 2017 at 01:40:39PM -0800, Florian Fainelli wrote:
-> Hello,
->=20
-> I am considering extending the /memreserve node syntax with the ability
-> to pass a description string that would be describing what kind of
-> memory is being reserved here, e:g:
->=20
-> /memreserve/ 0x0 0x10000 type =3D "psci"
->=20
-> The rationale would be for a client program to be able to list these
-> reserved regions e.g: from /proc/iomem in a way that could be made
-> available to other applications.
->=20
-> What do you think?
+Please sort alphabetically. Or if you want, put the sunxi specific headers
+in a separate group, separated by an empty line from the arm-gic one.
 
-Suggestions like this have come up before, and I think it's a bad
-idea.
+>
+>  / {
+> @@ -55,7 +57,7 @@
+>                         compatible = "arm,cortex-a7";
+>                         device_type = "cpu";
+>                         reg = <0>;
+> -                       clocks = <&ccu 14>;
+> +                       clocks = <&ccu CLK_CPU>;
+>                 };
+>         };
+>
+> @@ -96,15 +98,15 @@
+>                 mmc0: mmc@01c0f000 {
+>                         compatible = "allwinner,sun7i-a20-mmc";
+>                         reg = <0x01c0f000 0x1000>;
+> -                       clocks = <&ccu 22>,
+> -                                <&ccu 45>,
+> -                                <&ccu 47>,
+> -                                <&ccu 46>;
+> +                       clocks = <&ccu CLK_BUS_MMC0>,
+> +                                <&ccu CLK_MMC0>,
+> +                                <&ccu CLK_MMC0_OUTPUT>,
+> +                                <&ccu CLK_MMC0_SAMPLE>;
+>                         clock-names = "ahb",
+>                                       "mmc",
+>                                       "output",
+>                                       "sample";
+> -                       resets = <&ccu 7>;
+> +                       resets = <&ccu RST_BUS_MMC0>;
+>                         reset-names = "ahb";
+>                         interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+>                         status = "disabled";
+> @@ -115,15 +117,15 @@
+>                 mmc1: mmc@01c10000 {
+>                         compatible = "allwinner,sun7i-a20-mmc";
+>                         reg = <0x01c10000 0x1000>;
+> -                       clocks = <&ccu 23>,
+> -                                <&ccu 48>,
+> -                                <&ccu 50>,
+> -                                <&ccu 49>;
+> +                       clocks = <&ccu CLK_BUS_MMC1>,
+> +                                <&ccu CLK_MMC1>,
+> +                                <&ccu CLK_MMC1_OUTPUT>,
+> +                                <&ccu CLK_MMC1_SAMPLE>;
+>                         clock-names = "ahb",
+>                                       "mmc",
+>                                       "output",
+>                                       "sample";
+> -                       resets = <&ccu 8>;
+> +                       resets = <&ccu RST_BUS_MMC1>;
+>                         reset-names = "ahb";
+>                         interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+>                         status = "disabled";
+> @@ -134,15 +136,15 @@
+>                 mmc2: mmc@01c11000 {
+>                         compatible = "allwinner,sun7i-a20-mmc";
+>                         reg = <0x01c11000 0x1000>;
+> -                       clocks = <&ccu 24>,
+> -                                <&ccu 51>,
+> -                                <&ccu 53>,
+> -                                <&ccu 52>;
+> +                       clocks = <&ccu CLK_BUS_MMC2>,
+> +                                <&ccu CLK_MMC2>,
+> +                                <&ccu CLK_MMC2_OUTPUT>,
+> +                                <&ccu CLK_MMC2_SAMPLE>;
+>                         clock-names = "ahb",
+>                                       "mmc",
+>                                       "output",
+>                                       "sample";
+> -                       resets = <&ccu 9>;
+> +                       resets = <&ccu RST_BUS_MMC2>;
+>                         reset-names = "ahb";
+>                         interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+>                         status = "disabled";
+> @@ -153,8 +155,8 @@
+>                 usb_otg: usb@01c19000 {
+>                         compatible = "allwinner,sun8i-h3-musb";
+>                         reg = <0x01c19000 0x0400>;
+> -                       clocks = <&ccu 29>;
+> -                       resets = <&ccu 17>;
+> +                       clocks = <&ccu CLK_BUS_OTG>;
+> +                       resets = <&ccu RST_BUS_OTG>;
+>                         interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
+>                         interrupt-names = "mc";
+>                         phys = <&usbphy 0>;
+> @@ -169,9 +171,9 @@
+>                               <0x01c1a800 0x4>;
+>                         reg-names = "phy_ctrl",
+>                                     "pmu0";
+> -                       clocks = <&ccu 56>;
+> +                       clocks = <&ccu CLK_USB_PHY0>;
+>                         clock-names = "usb0_phy";
+> -                       resets = <&ccu 0>;
+> +                       resets = <&ccu RST_USB_PHY0>;
+>                         reset-names = "usb0_reset";
+>                         status = "disabled";
+>                         #phy-cells = <1>;
+> @@ -198,7 +200,7 @@
+>                         reg = <0x01c20800 0x400>;
+>                         interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> -                       clocks = <&ccu 37>, <&osc24M>, <&osc32k>;
+> +                       clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
+>                         clock-names = "apb", "hosc", "losc";
+>                         gpio-controller;
+>                         #gpio-cells = <3>;
+> @@ -213,6 +215,7 @@
+>                         uart0_pins_a: uart0@0 {
+>                                 pins = "PB8", "PB9";
+>                                 function = "uart0";
+> +                               bias-pull-up;
 
-First of all, note that it's not merely a matter of extending the dtc
-syntax - you'd need to add a way of encoding the extra labels into the
-flattened format as well.
+This is an unrelated change. Please split it out. On the other hand,
+if the board has proper external pull-ups, you might not need this.
 
-Second, the reserve list as a separate piece of the flattened tree
-exists for one reason: to allow really early boot code to exclude
-memory regions it needs to without having to parse the flat tree.
-Labels and other additional information doesn't help that purpose.
-BenH (who created the flattened tree format) has opined that having
-memory reserves as a separate structure (rather than properties within
-the tree) was probably a design error.
+Otherwise,
 
-Most fundamentally, there isn't always a clear 1:1 correspondance
-between each memory region and a single specific purpose.  For
-example, firmware could reserve a single region which is uses for
-several purposes.
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-What you could do is to add properties within the device tree further
-annotating the reservations, with the extra structure essentially just
-acting as an easy-to-parse summary of that.  In fact I know that POWER
-systems firmware use 'reserved-ranges' and 'reserved-names' properties
-for this.  I don't know if anyone else has adopted that though.
-
-I would certainly be willing to look at patches to have dtc verify the
-/memreserve/ statements against such properties, or to autogenerate
-the reserved table from the properties, instead of from explicit
-/memreserve/ statements.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---AH+kv8CCoFf6qPuz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYvN5+AAoJEGw4ysog2bOS2GkP/AxUNP9AL+8/jAQkaXcEgD59
-mjP4a4qDzr489V3uaRKT7ApJ1sUmnbXuXRu85bd1Jw8Sk2jj5rWvuWzBCdXwOTvR
-3JbZy/XRw5WwImszbeH/mpHLeULIPV5w00DNwYmsaPZXwzcrY+wvudwIrBYoNanK
-idXAQ5dR2aIvAbE+ljKd4pqTPnJ/tcw/Q9IooXkmthf/Axd2r+/ufEqfw8ndnDlG
-27oQq8UQvpeZUZmLJLlD8z1eMvO3FonjOi1Stb0FTqPtFhiZdDDvRZnHYl/kYjjB
-nPd2QHGthQn7Ex258zzvrj8Y8v3ROOHaiVVq/MIBg2b37MmPQdDTdFF/gSfE4Y0i
-xGXleVPab1RklIb6cALJ6vjeMCirYq239TSiBf3hZlNUE5VN84piHYFKv4pGwgdH
-dNRccoH8bXs/7vutx1bgQwcyylpsdPdSRoczAeQSU3J97XbKIiYvW7R2BN762TWy
-uSFlYn5J/LmwO7OfK9TxNTIWuKZ/yQJYfhF/Hs1HcOxmFXep/Y16uVjj1GHWU1jr
-U8FEwaBPx/0pH5o7j5pVJdXVKLDlMGKnis2Ln8HKQsrzs2waNAFsoorV6E3teWkA
-aPM8x069xWZGPnpQyOL3LjBZpSodi1uP9N7jl6IARP5nwZIoKXppASPjufkCYmuI
-Rj8VnakJfjizsyg+5wYo
-=n7mR
------END PGP SIGNATURE-----
-
---AH+kv8CCoFf6qPuz--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>                         };
+>
+>                         mmc0_pins_a: mmc0@0 {
+> @@ -244,8 +247,8 @@
+>                         interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+>                         reg-shift = <2>;
+>                         reg-io-width = <4>;
+> -                       clocks = <&ccu 40>;
+> -                       resets = <&ccu 49>;
+> +                       clocks = <&ccu CLK_BUS_UART0>;
+> +                       resets = <&ccu RST_BUS_UART0>;
+>                         status = "disabled";
+>                 };
+>
+> @@ -255,8 +258,8 @@
+>                         interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+>                         reg-shift = <2>;
+>                         reg-io-width = <4>;
+> -                       clocks = <&ccu 41>;
+> -                       resets = <&ccu 50>;
+> +                       clocks = <&ccu CLK_BUS_UART1>;
+> +                       resets = <&ccu RST_BUS_UART1>;
+>                         status = "disabled";
+>                 };
+>
+> @@ -266,8 +269,8 @@
+>                         interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
+>                         reg-shift = <2>;
+>                         reg-io-width = <4>;
+> -                       clocks = <&ccu 42>;
+> -                       resets = <&ccu 51>;
+> +                       clocks = <&ccu CLK_BUS_UART2>;
+> +                       resets = <&ccu RST_BUS_UART2>;
+>                         status = "disabled";
+>                 };
+>
+> @@ -275,10 +278,8 @@
+>                         compatible = "allwinner,sun6i-a31-i2c";
+>                         reg = <0x01c2ac00 0x400>;
+>                         interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+> -                       clocks = <&ccu 38>;
+> -                       resets = <&ccu 46>;
+> -                       pinctrl-names = "default";
+> -                       pinctrl-0 = <&i2c0_pins>;
+> +                       clocks = <&ccu CLK_BUS_I2C0>;
+> +                       resets = <&ccu RST_BUS_I2C0>;
+>                         status = "disabled";
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+> @@ -288,8 +289,8 @@
+>                         compatible = "allwinner,sun6i-a31-i2c";
+>                         reg = <0x01c2b000 0x400>;
+>                         interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> -                       clocks = <&ccu 39>;
+> -                       resets = <&ccu 47>;
+> +                       clocks = <&ccu CLK_BUS_I2C1>;
+> +                       resets = <&ccu RST_BUS_I2C1>;
+>                         status = "disabled";
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+> --
+> 2.11.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
