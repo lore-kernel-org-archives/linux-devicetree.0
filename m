@@ -1,80 +1,82 @@
-From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/4] doc: dt-bindings: usb251xb: mark reg as required
-Date: Mon, 6 Mar 2017 09:24:22 +0100
-Message-ID: <1488788663-21084-4-git-send-email-richard.leitner@skidata.com>
-References: <1488788663-21084-1-git-send-email-richard.leitner@skidata.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH v4 2/5] arm: dts: Add the burst and esc clock frequency
+ properties to DSI node
+Date: Mon, 6 Mar 2017 09:38:51 +0100
+Message-ID: <20170306093851.3870ab29@ipc1.ka-ro>
+References: <1488775343-6236-1-git-send-email-hoegeun.kwon@samsung.com>
+        <CGME20170306044234epcas1p22e9481182e11330cea0d169ce0ad2666@epcas1p2.samsung.com>
+        <1488775343-6236-3-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488788663-21084-1-git-send-email-richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488775343-6236-3-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark the reg property as required and furthermore fix some typos and
-spellings in the documentation.
+Hi,
 
-Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb251xb.txt | 23 +++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+On Mon, 06 Mar 2017 13:42:20 +0900 Hoegeun Kwon wrote:
+> The OF graph is not needed because the panel is a child of dsi. Add
+>
+This is obviously from your patch #5 and doesn't make sense in this
+context.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-index 91499ae..3957d4e 100644
---- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-+++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-@@ -7,18 +7,18 @@ Required properties :
-  - compatible : Should be "microchip,usb251xb" or one of the specific types:
- 	"microchip,usb2512b", "microchip,usb2512bi", "microchip,usb2513b",
- 	"microchip,usb2513bi", "microchip,usb2514b", "microchip,usb2514bi"
-- - hub-reset-gpios : Should specify the gpio for hub reset
-+ - reset-gpios : Should specify the gpio for hub reset
-+ - reg : I2C address on the selected bus (default is <0x2C>)
- 
- Optional properties :
-- - reg : I2C address on the selected bus (default is <0x2C>)
-  - skip-config : Skip Hub configuration, but only send the USB-Attach command
-- - vendor-id : USB Vendor ID of the hub (16 bit, default is 0x0424)
-- - product-id : USB Product ID of the hub (16 bit, default depends on type)
-- - device-id : USB Device ID of the hub (16 bit, default is 0x0bb3)
-- - language-id : USB Language ID (16 bit, default is 0x0000)
-- - manufacturer : USB Manufacturer string (max 31 characters long)
-- - product : USB Product string (max 31 characters long)
-- - serial : USB Serial string (max 31 characters long)
-+ - vendor-id : Set USB Vendor ID of the hub (16 bit, default is 0x0424)
-+ - product-id : Set USB Product ID of the hub (16 bit, default depends on type)
-+ - device-id : Set USB Device ID of the hub (16 bit, default is 0x0bb3)
-+ - language-id : Set USB Language ID (16 bit, default is 0x0000)
-+ - manufacturer : Set USB Manufacturer string (max 31 characters long)
-+ - product : Set USB Product string (max 31 characters long)
-+ - serial : Set USB Serial string (max 31 characters long)
-  - {bus,self}-powered : selects between self- and bus-powered operation (default
- 	is self-powered)
-  - disable-hi-speed : disable USB Hi-Speed support
-@@ -34,7 +34,7 @@ Optional properties :
-  - oc-delay-us : Delay time (in microseconds) for filtering the over-current
- 	sense inputs. Valid values are 100, 4000, 8000 (default) and 16000. If
- 	an invalid value is given, the default is used instead.
-- - compound-device : indicated the hub is part of a compound device
-+ - compound-device : indicate the hub is part of a compound device
-  - port-mapping-mode : enable port mapping mode
-  - string-support : enable string descriptor support (required for manufacturer,
- 	product and serial string configuration)
-@@ -49,7 +49,8 @@ Optional properties :
- Examples:
- 	usb2512b@2c {
- 		compatible = "microchip,usb2512b";
--		hub-reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+		reg = <0x2c>;
-+		reset-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
- 	};
- 
- 	usb2514b@2c {
--- 
-2.1.4
+> the burst and esc clock frequency properties to the parent (DSI node).
+> 
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos3250-rinato.dts | 2 ++
+>  arch/arm/boot/dts/exynos4210-trats.dts  | 2 ++
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 2 ++
+>  3 files changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
+> index 548413e..c9f191c 100644
+> --- a/arch/arm/boot/dts/exynos3250-rinato.dts
+> +++ b/arch/arm/boot/dts/exynos3250-rinato.dts
+> @@ -215,6 +215,8 @@
+>  &dsi_0 {
+>  	vddcore-supply = <&ldo6_reg>;
+>  	vddio-supply = <&ldo6_reg>;
+> +	samsung,burst-clock-frequency = <250000000>;
+> +	samsung,esc-clock-frequency = <20000000>;
+>  	samsung,pll-clock-frequency = <24000000>;
+>  	status = "okay";
+>  
+> diff --git a/arch/arm/boot/dts/exynos4210-trats.dts b/arch/arm/boot/dts/exynos4210-trats.dts
+> index 0ca1b4d..1743ca8 100644
+> --- a/arch/arm/boot/dts/exynos4210-trats.dts
+> +++ b/arch/arm/boot/dts/exynos4210-trats.dts
+> @@ -197,6 +197,8 @@
+>  &dsi_0 {
+>  	vddcore-supply = <&vusb_reg>;
+>  	vddio-supply = <&vmipi_reg>;
+> +	samsung,burst-clock-frequency = <500000000>;
+> +	samsung,esc-clock-frequency = <20000000>;
+>  	samsung,pll-clock-frequency = <24000000>;
+>  	status = "okay";
+>  
+> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> index 41ecd6d..82221a0 100644
+> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> @@ -385,6 +385,8 @@
+>  &dsi_0 {
+>  	vddcore-supply = <&ldo8_reg>;
+>  	vddio-supply = <&ldo10_reg>;
+> +	samsung,burst-clock-frequency = <500000000>;
+> +	samsung,esc-clock-frequency = <20000000>;
+>  	samsung,pll-clock-frequency = <24000000>;
+>  	status = "okay";
+>  
 
+
+Lothar Waßmann
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
