@@ -1,84 +1,50 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
-Date: Mon, 6 Mar 2017 07:06:32 +0100
-Message-ID: <b80fe65c-2fc9-94ac-9de2-29aee6b62033@milecki.pl>
-References: <20170228120452.10043-1-zajec5@gmail.com>
- <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
- <290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
- <CAL_JsqL-N4HfsG=py+w1NsBOJZzS1kbRM5J6dC-EE-rg9r9C2g@mail.gmail.com>
- <386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Add power button for Odroid XU3/4
+Date: Mon, 6 Mar 2017 09:24:48 +0200
+Message-ID: <CAJKOXPcwzy_hAMLoUNcJxYHjHfUF+YmeqSLPy2spvyCwck=TaA@mail.gmail.com>
+References: <1488768729-9435-1-git-send-email-brian.kim@hardkernel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <386c5b7b-0bc0-d286-6cbb-745a5adbc1e9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Linux LED Subsystem <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488768729-9435-1-git-send-email-brian.kim@hardkernel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Brian Kim <brian.kim@hardkernel.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, =?UTF-8?Q?=C5=81ukasz_Majewski?= <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, robh+dt@kernel.org, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2017 10:04 PM, Jacek Anaszewski wrote:
-> On 02/28/2017 11:12 PM, Rob Herring wrote:
->> On Tue, Feb 28, 2017 at 3:51 PM, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
->>>>
->>>> I think that it would be simpler if we could initially see
->>>> a complete sample dts implementation containing all required DT
->>>> nodes. The example could contain timer trigger as well as usb-port
->>>> trigger specific bindings.
->>>
->>>
->>> Please take a look at attached patch. I used it on Tenda AC9 with:
->>
->> I'm not sure about this extra level of indirection. I don't see the need.
->>
->>> usb_trigger: usb-trigger {
->>>         trigger-type = "usbport";
->>
->> Why do we need to know the type? The trigger device knows what type it
->> is. All we should need to know here is what device(s) controls an LED.
->> The rest the kernel can figure out.
+On Mon, Mar 6, 2017 at 4:52 AM, Brian Kim <brian.kim@hardkernel.com> wrote:
+> The power button on Odroid XU3/4 is connected with the PWRON pin of
+> s2mps11 PMIC. The s2mps11 sends low signal to GPIO input in exynos 5422
+> via ONOB pin.
 >
-> The thing is that in the proposed approach the trigger is not necessary
-> a device. The trigger node is here only a container with initialization
-> data.
+> This patch adds devicetree bindings for the power button of Odroid
+> XU3/4.
 >
-> We could have e,g, two such nodes with different set of ports
-> (say usb1-trigger and usb2-trigger). Then if we had two LED nodes usb1
-> and usb2, the former could have its triggers property initialized
-> to &usb1-trigger and the latter to &usb2-trigger. Thanks to that both
-> LEDs after executing "echo usbport > triggers" would listen to events
-> from different set of usb ports.
+> Signed-off-by: Brian Kim <brian.kim@hardkernel.com>
+> ---
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 >
-> Also, e.g. for the timer trigger we could define two separate DT nodes
-> with different delay intervals.
 
-Hi Rob, what do you think about this?
+Hi,
 
-Jacek is correct, we could have e.g.
-timer-trigger-1 {
-	trigger-type = "timer";
-	delay-on = <200>;
-	delay-off = <500>;
-};
-timer-trigger-2 {
-	trigger-type = "timer";
-	delay-on = <500>;
-	delay-off = <1000>;
-};
+Thanks for the patch.
 
-or something like:
-usbport-2-0-trigger {
-	trigger-type = "usbport";
-	ports = <&ohci_port1>, <&ehci_port1>;
-};
-usbport-3-0-trigger {
-	trigger-type = "usbport";
-	ports = <&xhci_port1>;
-};
+You sent almost the same patch as Anand did some time ago (with few
+missing things) :
+https://patchwork.kernel.org/patch/8388491/
 
-Does it make more sense?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All previous comments apply, including that you added a key for gpx0-3
+which is not a PWRON and it does not match description at all.
+
+Best regards,
+Krzysztof
