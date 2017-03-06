@@ -1,42 +1,80 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm,arm64: dts: uniphier: remove skeleton.dtsi
- inclusion and fix warnings
-Date: Tue, 7 Mar 2017 05:26:36 +0900
-Message-ID: <CAK7LNAT0JNuSAVvRJKOpjm=+y8eMWyJSPs_uOoRLFa1OvYhXvw@mail.gmail.com>
-References: <1488085449-28922-1-git-send-email-yamada.masahiro@socionext.com>
+From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v3] tpm: do not suspend/resume if power
+	stays on
+Date: Mon, 6 Mar 2017 22:59:25 +0200
+Message-ID: <20170306205925.ynkwmy7acsunpewd@intel.com>
+References: <20170303160959.27422-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488085449-28922-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170303160959.27422-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-02-26 14:04 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
->   - The inclusion of skeleton.dtsi is deprecated.
->     Specify #address-cells and #size-cells explicitly
->
->   - If built with W=1, many warnings are displayed.  Fix them.
->
->
-> Masahiro Yamada (3):
->   ARM: dts: uniphier: remove skeleton.dtsi inclusion
->   ARM: dts: uniphier: fix no unit name warnings
->   arm64: dts: uniphier: fix no unit name warnings
+On Fri, Mar 03, 2017 at 05:09:59PM +0100, Enric Balletbo i Serra wrote:
+> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> 
+> The suspend/resume behavior of the TPM can be controlled by setting
+> "powered-while-suspended" in the DTS. This is useful for the cases
+> when hardware does not power-off the TPM.
+> 
+> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Changes since v2:
+>  Jarkko Sakkinen
+>   - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
+>   - Remove a trailing newline.
+> Changes since v1:
+>  Jason Gunthorpe :
+>   - Move the code to handle suspend/resume in the common chip code.
+> 
+>  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
+>  drivers/char/tpm/tpm-interface.c                           | 3 +++
+>  drivers/char/tpm/tpm.h                                     | 1 +
+>  drivers/char/tpm/tpm_of.c                                  | 3 +++
+>  4 files changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> index 8cb638b..85c8216 100644
+> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> @@ -8,6 +8,12 @@ Required properties:
+>                     the firmware event log
+>  - linux,sml-size : size of the memory allocated for the firmware event log
+>  
+> +Optional properties:
+> +
+> +- powered-while-suspended: present when the TPM is left powered on between
+> +                           suspend and resume (makes the suspend/resume
+> +                           callbacks do nothing).
+> +
+>  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
+>  ----------------------------------------------------------
 
+Hey, just noticed something. Shouldn't this be a separate commit?
+I'm also wondering whether this can be submitted through my tree
+upper maintainers.
 
-Series, applied to linux-uniphier.
+Does not change my reviewed-by for the actual code change but you
+would have to split this into a patch set if this is the case.
 
+/Jarkko
 
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
+Announcing the Oxford Dictionaries API! The API offers world-renowned
+dictionary content that is easy and intuitive to access. Sign up for an
+account today to start using our lexical data to power your apps and
+projects. Get started today and enter our developer competition.
+http://sdm.link/oxford
