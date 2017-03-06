@@ -1,72 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 02/10] Updated max98927_reg table with
- physical defaults. Replaced max98927.h for better legibility
-Date: Mon, 6 Mar 2017 11:30:14 +0100
-Message-ID: <20170306103014.c3alwel45g7gn7su@sirena.org.uk>
-References: <1488552768-14901-1-git-send-email-ryans.lee@maximintegrated.com>
- <1488552768-14901-3-git-send-email-ryans.lee@maximintegrated.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 1/6] ARM: dts: sun8i: drop skeleton.dtsi
+ inclusion in H3 DTSI
+Date: Mon, 6 Mar 2017 11:35:35 +0100
+Message-ID: <20170306103535.jdaiwr65gtrhh7jp@lukather>
+References: <20170305233138.64574-1-icenowy@aosc.xyz>
+ <20170305233138.64574-2-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0471241256540404197=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1488552768-14901-3-git-send-email-ryans.lee@maximintegrated.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Ryan Lee <ryans.lee@maximintegrated.com>
-Cc: mark.rutland@arm.com, oder_chiou@realtek.com, Damien.Horsley@imgtec.com, michael@amarulasolutions.com, kuninori.morimoto.gx@renesas.com, arnd@arndb.de, yesanishhere@gmail.com, linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, tiwai@suse.com, nh6z@nh6z.net, lgirdwood@gmail.com, petr@barix.com, alsa-devel@alsa-project.org, jacob@teenage.engineering, robh+dt@kernel.org, bardliao@realtek.com, lars@metafoo.de, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dnantuzg2aew7xl6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6HW6TCQKGQEVZ562AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170305233138.64574-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0471241256540404197==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pjsgxa3cd2mhwtj2"
+--dnantuzg2aew7xl6
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
+Hi,
 
---pjsgxa3cd2mhwtj2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Mon, Mar 06, 2017 at 07:31:33AM +0800, Icenowy Zheng wrote:
+> The skeleton.dtsi file is now deprecated, and do not exist in ARM64
+> environment.
+> 
+> Since we will soon reuse most part of H3 DTSI for H5, which is an ARM64
+> chip, drop skeleton.dtsi inclusion now.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 
-On Fri, Mar 03, 2017 at 11:52:40PM +0900, Ryan Lee wrote:
-> Signed-off-by: Ryan Lee <ryans.lee@maximintegrated.com>
-> ---
-> Some register values in 'max98927_reg_map' table was not physical default.
-> Random mix of strangely formatted #defines and numbers was fixed.
-> Reclassified register definition in 'max98927.h' for better legibility. Unused definition has been removed, too.
+Your prefix (and in the three later patches) should be
+ARM: sun8i: h3
 
-Please place the changelog before the ---, as covered in
-SubmttingPatches the changelog after the --- is for inter-version
-changelogs and other administrative things that shouldn't end up in the
-git history.
+Maxime
 
---pjsgxa3cd2mhwtj2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAli9OjUACgkQJNaLcl1U
-h9DVSwf9Ffp1857WRWAnYyqlG1Gjo0sFTifzUTTI0VG91fTF+WbwBEUIvL2p0HSL
-WPqWcwOBIPtOG4RtWZ6BwYcY+FAhB2VkZvlfSRGl+ELp8H0UaZCXU4x6PDHoJFWA
-oEmTHbkSLqAm7EccHl3LfohnHifSIHuPras2aq16h1RWuEP11UKwREwElyd5JRY4
-VUuZve7o+6J+K3UJQIV3kSfmL5qoaAzBkJxJ9llhoyjLBPb2bGDZNRHT8FTAFHWr
-98YlotHGVmZArWwtLN4Bp7ScBl6dC68weji3Lgww25taz0fG4TTASwawqyQI0P6i
-aYuT0q4ocCehtnghX7St87h5NmaR4A==
-=nsY+
------END PGP SIGNATURE-----
-
---pjsgxa3cd2mhwtj2--
-
---===============0471241256540404197==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0471241256540404197==--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--dnantuzg2aew7xl6--
