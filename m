@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v8 1/6] ARM: dts: sun8i: h3: drop skeleton.dtsi
- inclusion in H3 DTSI
-Date: Tue,  7 Mar 2017 01:17:45 +0800
-Message-ID: <20170306171750.7491-2-icenowy@aosc.xyz>
+Subject: [PATCH v8 2/6] ARM: dts: sun8i: h3: drop pinctrl-a10.h
+ inclusion for H3 DTSI
+Date: Tue,  7 Mar 2017 01:17:46 +0800
+Message-ID: <20170306171750.7491-3-icenowy@aosc.xyz>
 References: <20170306171750.7491-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB2NT63CQKGQENKKXURA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBCNU63CQKGQEKO5EQXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170306171750.7491-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,32 +20,30 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The skeleton.dtsi file is now deprecated, and do not exist in ARM64
-environment.
+After converting to generic pinconf binding, pinctrl-a10.h is now not
+used at all.
 
-Since we will soon reuse most part of H3 DTSI for H5, which is an ARM64
-chip, drop skeleton.dtsi inclusion now.
+Drop its inclusion for H3 DTSI.
 
 Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
 Changes in v8:
 - Add h3: in commit message.
 
- arch/arm/boot/dts/sun8i-h3.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 27780b97c863..9a3435527fde 100644
+index 9a3435527fde..b250e6d03b57 100644
 --- a/arch/arm/boot/dts/sun8i-h3.dtsi
 +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -40,8 +40,6 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
+@@ -42,7 +42,6 @@
  
--#include "skeleton.dtsi"
--
  #include <dt-bindings/clock/sun8i-h3-ccu.h>
  #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/sun4i-a10.h>
+-#include <dt-bindings/pinctrl/sun4i-a10.h>
+ #include <dt-bindings/reset/sun8i-h3-ccu.h>
+ 
+ / {
 -- 
 2.11.1
