@@ -1,83 +1,130 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v3 5/5] ARM: dts: sun8i: h2+: enable USB OTG for
- Orange Pi Zero board
-Date: Tue,  7 Mar 2017 06:34:49 +0800
-Message-ID: <20170306223449.21404-6-icenowy@aosc.xyz>
-References: <20170306223449.21404-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] leds: cpcap: new driver
+Date: Mon, 6 Mar 2017 23:11:47 +0100
+Message-ID: <20170306221147.GA24272@amd>
+References: <20170305172234.24120-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBAOK67CQKGQEDWUQZHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170306223449.21404-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170305172234.24120-1-sre@kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Orange Pi Zero board features a USB OTG port, which has a ID pin, and
-can be used to power up the board. However, even if the board is powered
-via +5V pin in GPIO/expansion headers, the VBUS in the OTG port cannot
-be powered up, thus it's impossible to use it in host mode with simple
-OTG cables.
 
-Add support for it in peripheral mode.
+--huq684BweRXVnRxX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If someone really want to use it in host mode, the mode of PHY can be
-switch via sysfs, then use a powered USB OTG cable or powered USB HUB to
-power up external USB devices.
+Hi!
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
-New patch in v3.
+> Motorola CPCAP is a PMIC found in multiple smartphones.
+> This driver adds support for the chip's LED controllers.
+> It has explicit support for all controllers used by the
+> Droid 4. Since no datasheets are available the other
+> available controllers are not supported until somebody
+> verified, that the register layout matches.
 
- arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+This of course leads me to two questions:
 
-diff --git a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-index b7ca916d871d..63f819394b98 100644
---- a/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-+++ b/arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts
-@@ -96,6 +96,10 @@
- 	};
- };
- 
-+&ehci0 {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
-@@ -132,6 +136,10 @@
- 	bias-pull-up;
- };
- 
-+&ohci0 {
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
-@@ -154,7 +162,13 @@
- 	status = "disabled";
- };
- 
-+&usb_otg {
-+	dr_mode = "peripheral";
-+	status = "okay";
-+};
-+
- &usbphy {
- 	/* USB VBUS is always on */
- 	status = "okay";
-+	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
- };
--- 
-2.11.1
+1) Where can I get Droid 4?
+
+2) How well is it supported?
+
+> index 000000000000..d523f8c3c358
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/cpcap-leds.txt
+> @@ -0,0 +1,29 @@
+> +Motorola CPCAP PMIC LEDs
+> +------------------------
+> +
+> +This module is part of the CPCAP. For more details about the whole
+> +chip see Documentation/devicetree/bindings/mfd/motorola-cpcap.txt.
+> +
+> +Requires node properties:
+> +- compatible: should be one of
+> +   * "motorola,cpcap-led-mdl"		(Main Display Lighting)
+> +   * "motorola,cpcap-led-kl"		(Keyboard Lighting)
+> +   * "motorola,cpcap-led-adl"		(Aux Display Lighting)
+> +   * "motorola,cpcap-led-red"		(Red Triode)
+> +   * "motorola,cpcap-led-green"		(Green Triode)
+> +   * "motorola,cpcap-led-blue"		(Blue Triode)
+> +   * "motorola,cpcap-led-cf"		(Camera Flash)
+> +   * "motorola,cpcap-led-bt"		(Bluetooth)
+> +   * "motorola,cpcap-led-cp"		(Camera Privacy LED)
+
+BTW. Does the RGB controller support any kind of "patterns" similar to
+what n900 can do?
+
+> +&cpcap {
+> +	cpcap_led_red: red-led {
+> +		compatible =3D "motorola,cpcap-led-red";
+> +		label =3D "cpcap:red";
+> +		vdd-supply =3D <&sw5>;
+> +	};
+> +};
+
+This should be copied to the device tree people.
+
+> index 275f467956ee..043f02a4fe73 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -76,6 +76,15 @@ config LEDS_BCM6358
+>  	  This option enables support for LEDs connected to the BCM6358
+>  	  LED HW controller accessed via MMIO registers.
+> =20
+> +config LEDS_CPCAP
+> +	tristate "LED Support for Motorola CPCAP"
+> +	depends on LEDS_CLASS
+> +	depends on MFD_CPCAP
+> +	depends on OF
+> +	help
+> +	  This option enables support for LEDs offered by Motorola's
+> +	  CPCAP PMIC.
+> +
+
+Umm. That help explains exactly what I oculd tell from the name. Can
+you spell out "CPCAP" and "PMIC"... and maybe mention that it is used
+on the Droid 4 phone?
+
+> +#define DEBUG
+
+Remove for production?
+
+> +	err =3D device_property_read_string(&pdev->dev, "label", &led->led.name=
+);
+> +	if (err) {
+> +		dev_err(led->dev, "Couldn't read led label: %d", err);
+
+s/led/LED/.
+
+> +	if (err) {
+> +		dev_err(led->dev, "Couldn't register led: %d", err);
+> +		return err;
+
+And here.
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--huq684BweRXVnRxX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAli93qMACgkQMOfwapXb+vKOTACeJaoGvHzFAzHBsklWc8IEAAvH
+9dkAni90YTwvtJY9JUyH5frwWAJn5zUL
+=CyAt
+-----END PGP SIGNATURE-----
+
+--huq684BweRXVnRxX--
