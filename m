@@ -1,54 +1,67 @@
-From: Brian Kim <brian.kim@hardkernel.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Add power button for Odroid XU3/4
-Date: Mon, 6 Mar 2017 18:49:43 +0900
-Message-ID: <ae78c84d-796b-609b-ba00-c253a1f63a84@hardkernel.com>
-References: <1488768729-9435-1-git-send-email-brian.kim@hardkernel.com>
- <CAJKOXPcwzy_hAMLoUNcJxYHjHfUF+YmeqSLPy2spvyCwck=TaA@mail.gmail.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+Date: Mon, 6 Mar 2017 07:16:26 +0100
+Message-ID: <cd92c387-f484-4806-c5fd-9c55d0fc0aef@milecki.pl>
+References: <20170228120452.10043-1-zajec5@gmail.com>
+ <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
+ <290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
+ <28982a47-20b5-f90b-c1d8-b470e4019a08@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAJKOXPcwzy_hAMLoUNcJxYHjHfUF+YmeqSLPy2spvyCwck=TaA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, =?UTF-8?Q?=c5=81ukasz_Majewski?= <l.majewski@samsung.com>, linux-samsung-soc@vger.kernel.org, linux.amoon@gmail.com, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, robh+dt@kernel.org, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <28982a47-20b5-f90b-c1d8-b470e4019a08@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxN+uFhCAwM+yblCAwNuydvCAxNjoyNCwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToK
-PiBPbiBNb24sIE1hciA2LCAyMDE3IGF0IDQ6NTIgQU0sIEJyaWFuIEtpbSA8YnJpYW4ua2ltQGhh
-cmRrZXJuZWwuY29tPiB3cm90ZToKPj4gVGhlIHBvd2VyIGJ1dHRvbiBvbiBPZHJvaWQgWFUzLzQg
-aXMgY29ubmVjdGVkIHdpdGggdGhlIFBXUk9OIHBpbiBvZgo+PiBzMm1wczExIFBNSUMuIFRoZSBz
-Mm1wczExIHNlbmRzIGxvdyBzaWduYWwgdG8gR1BJTyBpbnB1dCBpbiBleHlub3MgNTQyMgo+PiB2
-aWEgT05PQiBwaW4uCj4+Cj4+IFRoaXMgcGF0Y2ggYWRkcyBkZXZpY2V0cmVlIGJpbmRpbmdzIGZv
-ciB0aGUgcG93ZXIgYnV0dG9uIG9mIE9kcm9pZAo+PiBYVTMvNC4KPj4KPj4gU2lnbmVkLW9mZi1i
-eTogQnJpYW4gS2ltIDxicmlhbi5raW1AaGFyZGtlcm5lbC5jb20+Cj4+IC0tLQo+PiAgYXJjaC9h
-cm0vYm9vdC9kdHMvZXh5bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kgfCAyMiArKysrKysr
-KysrKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0aW9ucygrKQo+Pgo+
-IEhpLAo+Cj4gVGhhbmtzIGZvciB0aGUgcGF0Y2guCj4KPiBZb3Ugc2VudCBhbG1vc3QgdGhlIHNh
-bWUgcGF0Y2ggYXMgQW5hbmQgZGlkIHNvbWUgdGltZSBhZ28gKHdpdGggZmV3Cj4gbWlzc2luZyB0
-aGluZ3MpIDoKPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzgzODg0OTEvCkkn
-bSBzb3JyeSwgS3J6eXN6dG9mLiBJIGhhdmVuJ3Qgc2VlbiBpdCBiZWZvcmUuCgpXaGVuIEkgY2hl
-Y2tlZCBnaXQgbG9nIGhpc3RvcnkgaW4gdGhlIGtlcm5lbCBzb3VyY2UsIHRoaXMgcGF0Y2ggd2Fz
-IG1pc3NlZC4KU28sIEkgc3VibWl0dGVkIGl0LgoKPgo+IEFsbCBwcmV2aW91cyBjb21tZW50cyBh
-cHBseSwgaW5jbHVkaW5nIHRoYXQgeW91IGFkZGVkIGEga2V5IGZvciBncHgwLTMKPiB3aGljaCBp
-cyBub3QgYSBQV1JPTiBhbmQgaXQgZG9lcyBub3QgbWF0Y2ggZGVzY3JpcHRpb24gYXQgYWxsLgpZ
-ZXMsIGdweDAtMyBpcyBub3QgUFdST04uClBXUk9OIGlzIHRoZSA1ViBwb3dlciBpbnB1dCBzaWdu
-YWwgZ2VuZXJhdGVkIGJ5IHRoZSBTVzIgcHVzaCBidXR0b24gb24gT2Ryb2lkLVh1My80IGJvYXJk
-cwoKKGFjdGl2ZSBoaWdoKS4gUFdST04gbm90aWZpZXMgInBvd2VyIHVwIGV2ZW50IHRvIHN0YXJ0
-IiB0byBzMm1wczEzIFBNSUMuCgpncHgwLTMgaW4gRXh5bm9zIDU0MjIgaXMgY29ubmVjdGVkIHRv
-IHRoZSBPTk9CIHBpbiBvZiBQTUlDLgpBY2NvcmRpbmcgdG8gczJtcHMxMyBkYXRhc2hlZXQsIE9O
-T0Igb3BlcmF0ZXMgYXMgJ1BXUk9OIGtleSBhY3RpdmUgbG93IHNpZ25hbCcuCnMybXBzMTMgUE1J
-QyBnZW5lcmF0ZXMgdGhlIG9wcG9zaXRlIHNpZ25hbCBmcm9tIHRoZSBQV1JPTiB2aWEgT05PQiAo
-YWN0aXZlIGxvdykuClNvLCB3ZSBjYW4gZ2V0IHRoZSBzdGF0ZSBvZiBwb3dlciBidXR0b24gYnkg
-Z3B4MC0zLgoKPgo+IEJlc3QgcmVnYXJkcywKPiBLcnp5c3p0b2YKPgoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 03/01/2017 10:04 PM, Jacek Anaszewski wrote:
+> On 02/28/2017 10:51 PM, Rafał Miłecki wrote:
+>> On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
+>>> I think that it would be simpler if we could initially see
+>>> a complete sample dts implementation containing all required DT
+>>> nodes. The example could contain timer trigger as well as usb-port
+>>> trigger specific bindings.
+>>
+>> Please take a look at attached patch. I used it on Tenda AC9 with:
+>>
+>> usb_trigger: usb-trigger {
+>>     trigger-type = "usbport";
+>>     ports = <&ohci_port1>, <&ehci_port1>;
+>> };
+>>
+>> usb {
+>>     label = "bcm53xx:blue:usb";
+>>     gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
+>>     triggers = <&usb_trigger>;
+>> };
+>
+> OK, I got it, thanks.
+>
+>>
+>>> I suppose that we should see DT nodes containing #list-cells
+>>> properties that define the quantity of phandle arguments.
+>>>
+>>> It seems that this approach allows for defining a list of elements
+>>> with variable number of arguments, i.e. what you were initially
+>>> asking for.
+>>
+>> Are you sure we need #list-cells? Can't we simply use
+>> of_count_phandle_with_args(np, "triggers", NULL);
+>> ?
+>
+> I'm not sure, I just read the function documentation :-)
+> I haven't verified nor have I used this API.
+
+So we could use #list-cells to support something like:
+
+usb {
+	label = "bcm53xx:blue:usb";
+	gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
+	triggers = <&usb_trigger 1 2>, <&timer_trigger 3 4 5>;
+};
+
+but I don't see any need for this. Just specifying triggers like:
+triggers = <&usb_trigger>, <&timer_trigger>, <&foo>;
+should be always enough, especially with the new trigger nodes you suggested.
