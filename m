@@ -1,237 +1,77 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH v8 6/6] arm64: dts: allwinner: h5: add support
- for the Orange Pi PC 2 board
-Date: Tue,  7 Mar 2017 01:17:50 +0800
-Message-ID: <20170306171750.7491-7-icenowy@aosc.xyz>
-References: <20170306171750.7491-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Alban <albeu-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 2/3] mtd: Add support for reading MTD devices via the
+ nvmem API
+Date: Mon, 6 Mar 2017 18:21:47 +0100
+Message-ID: <20170306182147.65d59d33@avionic-0020>
+References: <1488484223-844-1-git-send-email-albeu@free.fr>
+        <1488484223-844-3-git-send-email-albeu@free.fr>
+        <20170302221803.223ff23b@bbrezillon>
+        <20170303133629.3aac2945@tock>
+        <20170303143658.5d89a329@bbrezillon>
+        <20170303145726.16cd67fd@tock>
+        <20170303151107.36754d19@bbrezillon>
+        <54c76650-b61f-8a4c-70c7-febe76e16d3b@nod.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBXVU63CQKGQEZRRHR5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170306171750.7491-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/l7dWwI+Jrsu9BvxOJC+_QSw"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <54c76650-b61f-8a4c-70c7-febe76e16d3b-/L3Ra7n9ekc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+--Sig_/l7dWwI+Jrsu9BvxOJC+_QSw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-The Orange Pi PC 2 is a typical single board computer using the
-Allwinner H5 SoC. Apart from the usual suspects it features three
-separately driven USB ports and a Gigabit Ethernet port.
-Also it has a SPI NOR flash soldered, from which the board can boot
-from. This enables the SBC to behave like a "real computer" with
-built-in firmware.
+On Fri, 3 Mar 2017 23:21:29 +0100
+Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org> wrote:
 
-Add the board specific .dts file, which includes the H5 .dtsi and
-enables the peripherals that we support so far.
+> Am 03.03.2017 um 15:11 schrieb Boris Brezillon:
+> >> And add a list of successfully added notifiers, along with their
+> >> data pointer, to the MTD device. That's simple and would also remove
+> >> the need for notifier to have a private list of their instances as I
+> >> had to do here. =20
+> >=20
+> > And then you're abusing the notifier concept. As said earlier, a
+> > notifier is not necessarily using the device, and thus, don't
+> > necessarily need private data.
+> > It's not only about what is the simplest solution for your use case,
+> > but also what other users want/need. =20
+>=20
+> Yes, please don't use the mtd_notifier.
+> I strongly vote to embed the nvmem pointer into struct mtd_info.
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-[Icenowy: dropped all GPIO pinctrl nodes, change red LED gpio,
- change MMC cd to active-low, rename some node names to prevent
- underscores]
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
-Changes in v8:
-- Added h5: in commit message.
-Changes in v6:
-- Renamed some node names to prevent underscores and changed MMC card
-  detect GPIO to active-low. Thanks to Rask Ingemann Lambertsen.
-Changes in v2:
-- Dropped all GPIO pinctrl nodes.
-- Changed red LED gpio to the correct one.
-- Added audio codec configuration copied from Orange Pi PC.
+Ok, I'll do that. However it mean it will have to stays in
+drivers/mtd as it then become part of the MTD core.
 
- arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 163 +++++++++++++++++++++
- 2 files changed, 164 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+Alban
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index bc6f342be59f..244e8b7565f9 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -1,5 +1,6 @@
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-new file mode 100644
-index 000000000000..30639729920d
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-@@ -0,0 +1,163 @@
-+/*
-+ * Copyright (C) 2016 ARM Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun50i-h5.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Xunlong Orange Pi PC 2";
-+	compatible = "xunlong,orangepi-pc2", "allwinner,sun50i-h5";
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		pwr {
-+			label = "orangepi:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "orangepi:red:status";
-+			gpios = <&pio 0 20 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	r-gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		sw4 {
-+			label = "sw4";
-+			linux,code = <BTN_0>;
-+			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&codec {
-+	allwinner,audio-routing =
-+		"Line Out", "LINEOUT",
-+		"MIC1", "Mic",
-+		"Mic",  "MBIAS";
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&ehci2 {
-+	status = "okay";
-+};
-+
-+&ehci3 {
-+	status = "okay";
-+};
-+
-+&ir {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir_pins_a>;
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&ohci2 {
-+	status = "okay";
-+};
-+
-+&ohci3 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>;
-+	status = "disabled";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart2_pins>;
-+	status = "disabled";
-+};
-+
-+&usbphy {
-+	/* USB VBUS is always on */
-+	status = "okay";
-+};
--- 
-2.11.1
+--Sig_/l7dWwI+Jrsu9BvxOJC+_QSw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYvZqrAAoJEHSUmkuduC28S5EP/0bO3Eskc4K+JgOmDjek7rGD
+QXt3w4TPPm1KphK8MAdH2s0jofNVI7gM1gTme0zIrRTbdc2zx6QWk8BTMR4gWv3G
+f0yDzsNM4kvdNGc1xPnlqy2d1KR2CfG6/+QPM2Tw0HHYJwJ7KloSmiTs8VKc7fpa
+TJrLCX56tvzl3Usv5kNAzXg9mDPHEkRn8YRle6h327/JgiK+i+3aFyEODzYA1ECJ
+Ia4fkcUZXDe1Td+fMDAau5wjlWi4lz991F+k29ra3LXJ2GGHTdBjxh9jAtgpZ9w3
+WVq1LpeeJ050mSBWjLkhIWCGnNDhSa3cxGOWxVMzz0du3NtGF6Eoo1bIM+efhiKo
+IMhmLySZZNPufjV7QDeVo1dfcZshJ7EMR/veu37qzoSPuqCFKXafGxk5CNTm4W8g
+/4IgWeYmBVedv+VgG0YPjLKCqo/AMG1pl14Tc58lcdo/d2dfsQIOaKooLdK0SUWN
+xHDsUCKFYwiqtLGhdPTiX7V9xc0JqavGcMdDQlfv+kRwnSHIknRAOixMqCJpRIB8
+dopMIyV3DNdGztFx9UVdw7SMGpMlby0ObRoc8fA7dxP5Z7GFjTHA8bd5A9uRKlkz
+CMiF8qRYHqUvi8w7383mHbsuH+HHK+dpJYzBCdvVu/l2idDd7iW8mEcQtSiIMO67
+9PIDTjYXcZsuKpBVaY+e
+=IEpt
+-----END PGP SIGNATURE-----
+
+--Sig_/l7dWwI+Jrsu9BvxOJC+_QSw--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
