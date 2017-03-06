@@ -1,7 +1,7 @@
 From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH 3/3] device property: of_property_read_string_array() returns number of strings
-Date: Mon,  6 Mar 2017 15:26:31 +0200
-Message-ID: <1488806791-25488-4-git-send-email-sakari.ailus@linux.intel.com>
+Subject: [PATCH 2/3] device property: Fix reading pset strings using array access functions
+Date: Mon,  6 Mar 2017 15:26:30 +0200
+Message-ID: <1488806791-25488-3-git-send-email-sakari.ailus@linux.intel.com>
 References: <1488806791-25488-1-git-send-email-sakari.ailus@linux.intel.com>
 Return-path: <linux-acpi-owner@vger.kernel.org>
 In-Reply-To: <1488806791-25488-1-git-send-email-sakari.ailus@linux.intel.com>
@@ -10,50 +10,54 @@ To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-of_property_read_string_array() returns number of strings read if the
-target array of pointers is non-NULL. fwnode_property_read_string_array()
-is documented to return 0 in that case. Fix this.
+The length field value of non-array string properties is the length of the
+string itself. Non-array string properties thus require specific handling.
+Fix this.
 
 Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/base/property.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+ drivers/base/property.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/base/property.c b/drivers/base/property.c
-index 9224541a..e67ec24 100644
+index 19a3dc5..9224541a 100644
 --- a/drivers/base/property.c
 +++ b/drivers/base/property.c
-@@ -544,12 +544,24 @@ static int __fwnode_property_read_string_array(struct fwnode_handle *fwnode,
- 					       const char *propname,
- 					       const char **val, size_t nval)
- {
--	if (is_of_node(fwnode))
--		return val ?
--			of_property_read_string_array(to_of_node(fwnode),
--						      propname, val, nval) :
--			of_property_count_strings(to_of_node(fwnode), propname);
--	else if (is_acpi_node(fwnode))
-+	if (is_of_node(fwnode)) {
-+		int rval;
-+
-+		if (!val)
-+			return of_property_count_strings(to_of_node(fwnode),
-+							 propname);
-+
-+		rval = of_property_read_string_array(to_of_node(fwnode),
-+						     propname, val, nval);
-+
-+		if (rval < 0)
-+			return rval;
-+
-+		if (rval == nval)
-+			return 0;
-+
-+		return -EOVERFLOW;
-+	} else if (is_acpi_node(fwnode))
+@@ -552,13 +552,27 @@ static int __fwnode_property_read_string_array(struct fwnode_handle *fwnode,
+ 	else if (is_acpi_node(fwnode))
  		return acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
  					   val, nval);
- 	else if (is_pset_node(fwnode)) {
+-	else if (is_pset_node(fwnode))
+-		return val ?
+-			pset_prop_read_string_array(to_pset_node(fwnode),
+-						    propname, val, nval) :
+-			pset_prop_count_elems_of_size(to_pset_node(fwnode),
+-						      propname,
+-						      sizeof(const char *));
++	else if (is_pset_node(fwnode)) {
++		struct property_set *node = to_pset_node(fwnode);
++		struct property_entry *prop;
++
++		/* Read properties if val is non-NULL */
++		if (val)
++			return pset_prop_read_string_array(node, propname,
++							   val, nval);
++
++		prop = pset_prop_get(node, propname);
++		if (!prop)
++			return -EINVAL;
++
++		/* The array length for a non-array string property is 1. */
++		if (!prop->is_array)
++			return 1;
++
++		/* Return the length of an array. */
++		return pset_prop_count_elems_of_size(node, propname,
++						     sizeof(const char *));
++	}
+ 	return -ENXIO;
+ }
+ 
 -- 
 2.7.4
 
