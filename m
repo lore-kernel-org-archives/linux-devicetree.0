@@ -1,92 +1,118 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 4/4] ASoC: sun8i-codec: Convert to use
-	SND_SOC_DAPM_AIF_IN
-Date: Mon, 6 Mar 2017 17:56:28 +0800
-Message-ID: <CAGb2v64Q0LysCPq2SpoNSqpyWDzNQ_CDhNipOGjW43dfnDABpw@mail.gmail.com>
-References: <20170210094133.11382-1-mylene.josserand@free-electrons.com>
- <20170210094133.11382-5-mylene.josserand@free-electrons.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH V3 0/4] megachips-stdpxxxx-ge-b850v3-fw
+Date: Mon, 6 Mar 2017 15:27:16 +0530
+Message-ID: <3583de63-eda5-5d9c-741e-040db1ccee69@codeaurora.org>
+References: <cover.1488555615.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170210094133.11382-5-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1488555615.git.peter.senna@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Senna Tschudin <peter.senna@collabora.com>
+Cc: mark.rutland@arm.com, heiko@sntech.de, airlied@linux.ie, daniel.vetter@ffwll.ch, peter.senna@gmail.com, dri-devel@lists.freedesktop.org, tiwai@suse.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, jslaby@suse.cz, martyn.welch@collabora.co.uk, mchehab@osg.samsung.com, linux@armlinux.org.uk, javier@dowhile0.org, treding@nvidia.com, linux@roeck-us.net, martin.donnelly@ge.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, eballetbo@gmail.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, galak@codeaurora.org, enric.balletbo@collabora.com, akpm@linux-foundation.org, shawnguo@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMTAsIDIwMTcgYXQgNTo0MSBQTSwgTXlsw6huZSBKb3NzZXJhbmQKPG15bGVu
-ZS5qb3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiBVcGRhdGUgdGhlIGRyaXZl
-ciB0byB1c2UgU05EX1NPQ19EQVBNX0FJRl9JTiBpbnN0ZWFkIG9mCj4gU05EX1NPQ19EQVBNX0RB
-Qy4KPgo+IFNldCB0aGUgcm91dGUgbmFtZXMgc28gaXQgbXVzdCBiZSB1cGRhdGVkIG9uIHRoZSBk
-ZXZpY2UgdHJlZSB0b28uCj4KPiBTaWduZWQtb2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXls
-ZW5lLmpvc3NlcmFuZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjhpLWEzMy5kdHNpIHwgIDQgKystLQoKVGhpcyBwYXRjaCBsb29rcyBPSywgYnV0IGhh
-dmluZyB0aGUgRFRTIGNoYW5nZXMgaW4gdGhlIHNhbWUgcGF0Y2gKcHJvYmFibHkgaXNuJ3QgYSBn
-b29kIGlkZWEuIEkgd291bGQgcmVhbGx5IGxpa2UgdG8gc2VlIHRoaXMgc2VyaWVzCm1lcmdlZCBm
-b3IgNC4xMSwgc28gd2UgY2FuIGV4cG9zZSBhIGdvb2QgbWl4ZXIgaW50ZXJmYWNlIHRvIHVzZXJz
-cGFjZQpkdXJpbmcgdGhlIGZpcnN0IGtlcm5lbCByZWxlYXNlIHN1cHBvcnRpbmcgdGhlIEEzMyBj
-b2RlYy4gVGhhdCBsaWtlbHkKbWVhbnMgc29tZSBicmVha2FnZSBiZXR3ZWVuIHdoZW4gdGhlIGFz
-b2MgYml0cyBhbmQgdGhlIGR0cyBiaXRzIGxhbmQKdGhvdWdoLgoKTWF4aW1lLCBhbnkgaWRlYXM/
-CgoKUmVnYXJkcwpDaGVuWXUKCj4gIHNvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jICAgIHwg
-MjAgKysrKysrKysrKystLS0tLS0tLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMyBpbnNlcnRpb25z
-KCspLCAxMSBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
-dW44aS1hMzMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCj4gaW5kZXgg
-NGUzNGVjNjYxM2EwLi5lOWUyZTczMTI0NjAgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvc3VuOGktYTMzLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMuZHRz
-aQo+IEBAIC03OCw4ICs3OCw4IEBACj4gICAgICAgICAgICAgICAgIHNpbXBsZS1hdWRpby1jYXJk
-LG1jbGstZnMgPSA8NTEyPjsKPiAgICAgICAgICAgICAgICAgc2ltcGxlLWF1ZGlvLWNhcmQsYXV4
-LWRldnMgPSA8JmNvZGVjX2FuYWxvZz47Cj4gICAgICAgICAgICAgICAgIHNpbXBsZS1hdWRpby1j
-YXJkLHJvdXRpbmcgPQo+IC0gICAgICAgICAgICAgICAgICAgICAgICJMZWZ0IERBQyIsICJEaWdp
-dGFsIExlZnQgREFDIiwKPiAtICAgICAgICAgICAgICAgICAgICAgICAiUmlnaHQgREFDIiwgIkRp
-Z2l0YWwgUmlnaHQgREFDIjsKPiArICAgICAgICAgICAgICAgICAgICAgICAiTGVmdCBEQUMiLCAi
-QUlGMSBTbG90IDAgTGVmdCIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgIlJpZ2h0IERBQyIs
-ICJBSUYxIFNsb3QgMCBSaWdodCI7Cj4gICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxl
-ZCI7Cj4KPiAgICAgICAgICAgICAgICAgc2ltcGxlLWF1ZGlvLWNhcmQsY3B1IHsKPiBkaWZmIC0t
-Z2l0IGEvc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMgYi9zb3VuZC9zb2Mvc3VueGkvc3Vu
-OGktY29kZWMuYwo+IGluZGV4IGE3NWE5ODM5NzRkOS4uOWIxNWE1ZWUyMzVmIDEwMDY0NAo+IC0t
-LSBhL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jCj4gKysrIGIvc291bmQvc29jL3N1bnhp
-L3N1bjhpLWNvZGVjLmMKPiBAQCAtMjgxLDExICsyODEsMTMgQEAgc3RhdGljIGNvbnN0IHN0cnVj
-dCBzbmRfc29jX2RhcG1fd2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lkZ2V0c1tdID0gewo+ICAg
-ICAgICAgU05EX1NPQ19EQVBNX1NVUFBMWSgiREFDIiwgU1VOOElfREFDX0RJR19DVFJMLCBTVU44
-SV9EQUNfRElHX0NUUkxfRU5EQSwKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMCwgTlVM
-TCwgMCksCj4KPiAtICAgICAgIC8qIEFuYWxvZyBEQUMgKi8KPiAtICAgICAgIFNORF9TT0NfREFQ
-TV9EQUMoIkRpZ2l0YWwgTGVmdCBEQUMiLCAiUGxheWJhY2siLCBTVU44SV9BSUYxX0RBQ0RBVF9D
-VFJMLAo+IC0gICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJ
-RjFfREEwTF9FTkEsIDApLAo+IC0gICAgICAgU05EX1NPQ19EQVBNX0RBQygiRGlnaXRhbCBSaWdo
-dCBEQUMiLCAiUGxheWJhY2siLCBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMLAo+IC0gICAgICAgICAg
-ICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwUl9FTkEsIDApLAo+
-ICsgICAgICAgLyogQW5hbG9nIERBQyBBSUYgKi8KPiArICAgICAgIFNORF9TT0NfREFQTV9BSUZf
-SU4oIkFJRjEgU2xvdCAwIExlZnQiLCAiUGxheWJhY2siLCAwLAo+ICsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMLAo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwTF9FTkEsIDApLAo+ICsgICAg
-ICAgU05EX1NPQ19EQVBNX0FJRl9JTigiQUlGMSBTbG90IDAgUmlnaHQiLCAiUGxheWJhY2siLCAw
-LAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMLAo+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFf
-REEwUl9FTkEsIDApLAo+Cj4gICAgICAgICAvKiBEQUMgTWl4ZXJzICovCj4gICAgICAgICBTT0Nf
-TUlYRVJfQVJSQVkoIkxlZnQgRGlnaXRhbCBEQUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAsIDAs
-Cj4gQEAgLTMyOSwxNCArMzMxLDE0IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc25kX3NvY19kYXBt
-X3JvdXRlIHN1bjhpX2NvZGVjX2RhcG1fcm91dGVzW10gPSB7Cj4gICAgICAgICB7ICJEQUMiLCBO
-VUxMLCAiTU9EQ0xLIERBQyIgfSwKPgo+ICAgICAgICAgLyogREFDIFJvdXRlcyAqLwo+IC0gICAg
-ICAgeyAiRGlnaXRhbCBMZWZ0IERBQyIsIE5VTEwsICJEQUMiIH0sCj4gLSAgICAgICB7ICJEaWdp
-dGFsIFJpZ2h0IERBQyIsIE5VTEwsICJEQUMiIH0sCj4gKyAgICAgICB7ICJBSUYxIFNsb3QgMCBS
-aWdodCIsIE5VTEwsICJEQUMiIH0sCj4gKyAgICAgICB7ICJBSUYxIFNsb3QgMCBMZWZ0IiwgTlVM
-TCwgIkRBQyIgfSwKPgo+ICAgICAgICAgLyogREFDIE1peGVyIFJvdXRlcyAqLwo+ICAgICAgICAg
-eyAiTGVmdCBEaWdpdGFsIERBQyBNaXhlciIsICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5
-YmFjayBTd2l0Y2giLAo+IC0gICAgICAgICAiRGlnaXRhbCBMZWZ0IERBQyJ9LAo+ICsgICAgICAg
-ICAiQUlGMSBTbG90IDAgTGVmdCJ9LAo+ICAgICAgICAgeyAiUmlnaHQgRGlnaXRhbCBEQUMgTWl4
-ZXIiLCAiQUlGMSBTbG90IDAgRGlnaXRhbCBEQUMgUGxheWJhY2sgU3dpdGNoICIsCj4gLSAgICAg
-ICAgICJEaWdpdGFsIFJpZ2h0IERBQyJ9LAo+ICsgICAgICAgICAiQUlGMSBTbG90IDAgUmlnaHQi
-fSwKPiAgfTsKPgo+ICBzdGF0aWMgc3RydWN0IHNuZF9zb2NfZGFpX29wcyBzdW44aV9jb2RlY19k
-YWlfb3BzID0gewo+IC0tCj4gMi4xMS4wCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNh
-LXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9hbHNhLWRldmVsCg==
+Hi,
+
+On 3/3/2017 9:27 PM, Peter Senna Tschudin wrote:
+> The video processing pipeline on the second output on the GE B850v3:
+>
+>   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video output
+>
+> Each bridge has a dedicated flash containing firmware for supporting the
+> custom design. The result is that in this design neither the STDP4028
+> nor the STDP2690 behave as the stock bridges would. The compatible
+> strings include the suffix "-ge-b850v3-fw" to make it clear that the
+> driver is for the bridges with the firmware which is specific for the GE
+> B850v3.
+>
+> The driver is powerless to control the video processing pipeline, as the
+> two bridges behaves as a single one. The driver is only needed for
+> telling the host about EDID / HPD, and for giving the host powers to ack
+> interrupts.
+
+queued Patches 1,2 and 3 to drm-misc-next. Made stdp2690_get_edid static
+in Patch #3 to fix a sparse warning.
+
+Thanks,
+Archit
+
+>
+> Changes from V2:
+>  - Added Acked-by: Rob Herring <robh@kernel.org> on patch 1/4
+>  - Fixed the driver to allow it to be compiled as a module
+>
+> Changes from V1:
+>  - Fix bindings documentation
+>  - Fix white space issues on the driver
+>  - Improved ge_b850v3_lvds_remove() to not rely on ge_b850v3_lvds_ptr->edid
+>
+> Changes from V7(was GE B850v3 LVDS/DP++ Bridge):
+>  - New devicetree binding with one node per bridge, and two ports per bridge
+>  - Two i2c_devices, one per bridge
+>  - Removed uneeded mutexes
+>  - Moved documentation to bindings/display/bridge
+>  - Included test for EDID extension blocks
+>  - Renamed bridge pointer to ge_b850v3_lvds_ptr
+>  - Removed the call to drm_helper_hpd_irq_event()
+>  - Removed assignments to bridge.driver_private
+>
+> Changes from V6:
+>  - Removed check for pixel clock as the bridge supports up to 330Mhz while the
+>    host is limited to 264 MHz in very specific conditions.
+>  - Added a second mutex to avoid concurrency issues while acking interrupts
+>    from threaded interrupt handlers.
+>  - Renamed the edid mutex to be more descriptive.
+>  - Added a .detach() function that disables the interrupts.
+>  - Adopted i2c_new_secondary_device() and updated the dts and documentation to
+>    match the new method.
+>  - Removed useless test to drm_bridge_add()
+>  - Did some refactoring around devm_request_threaded_irq()
+>  - Added a missing call to i2c_unregister_device() on the i2c_driver.remove()
+>    function.
+>
+> Changes from V5:
+>  - Change to MAINTAINERS in a separate patch
+>  - Reworked interrupt handler initialization
+>  - Removed useless calls to: drm_connector_register(),
+>    drm_helper_hpd_irq_event(), and drm_bridge_enable()
+>
+> Changes from V4:
+>  - Renamed the i2c_driver.name from "ge,b850v3-lvds-dp" to "b850v3-lvds-dp" to
+>    remove the comma from the driver name
+>
+> Changes from V3:
+>  - Removed the patch that was configuring the mapping between IPUs and external
+>    displays on the dts file
+>
+> Peter Senna Tschudin (4):
+>   dt-bindings: display: megachips-stdpxxxx-ge-b850v3-fw
+>   MAINTAINERS: Add entry for megachips-stdpxxxx-ge-b850v3-fw
+>   drm/bridge: Drivers for megachips-stdpxxxx-ge-b850v3-fw (LVDS-DP++)
+>   dts/imx6q-b850v3: Use megachips-stdpxxxx-ge-b850v3-fw bridges
+>     (LVDS-DP++)
+>
+>  .../bridge/megachips-stdpxxxx-ge-b850v3-fw.txt     |  94 +++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  MAINTAINERS                                        |   8 +
+>  arch/arm/boot/dts/imx6q-b850v3.dts                 |  68 ++++
+>  drivers/gpu/drm/bridge/Kconfig                     |  11 +
+>  drivers/gpu/drm/bridge/Makefile                    |   1 +
+>  .../drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c   | 428 +++++++++++++++++++++
+>  7 files changed, 611 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
+>  create mode 100644 drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
+>
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
