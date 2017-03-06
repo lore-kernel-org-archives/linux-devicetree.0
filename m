@@ -1,198 +1,51 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH] arm64: dts: NS2: convert "ok" to "okay"
-Date: Mon,  6 Mar 2017 11:29:04 -0500
-Message-ID: <1488817744-7844-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] dt-bindings: drm: rcar-du: Document optional reset properties
+Date: Mon,  6 Mar 2017 17:25:56 +0100
+Message-ID: <1488817556-21410-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, David Airlie <airlied@linux.ie>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Per e-mail from Sergei Shtylyov, the DT spec dictates it should be
-"okay" (although "ok" is also recognized).  Thus, changing all "ok" to
-"okay" in NS2 device tree files
+Document the optional properties for describing module resets, to
+support resetting display channels and LVDS encoders on R-Car Gen2 and
+Gen3.
 
-Suggested-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/broadcom/ns2-svk.dts | 38 ++++++++++++++++----------------
- arch/arm64/boot/dts/broadcom/ns2-xmc.dts | 20 ++++++++---------
- 2 files changed, 29 insertions(+), 29 deletions(-)
+See "[v2,1/4] dt-bindings: clock: renesas: cpg-mssr: Document reset control
+support" (https://patchwork.kernel.org/patch/9536627/) for the format of
+a reset specifier in the Renesas CPG/MSSR case.
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index 5ae0816..ec19fbf 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -57,55 +57,55 @@
- };
+E.g. "resets = <&cpg 310>;"
+
+v2:
+  - s/phandles/phandle/.
+---
+ Documentation/devicetree/bindings/display/renesas,du.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index 1a02f099a0ff0a3a..3db418c827193e82 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -36,6 +36,16 @@ Required Properties:
+       When supplied they must be named "dclkin.x" with "x" being the input
+       clock numerical index.
  
- &enet {
--	status = "ok";
-+	status = "okay";
- };
++Optional properties:
++  - resets: A list of phandle + reset-specifier pairs, one for each entry in
++    the reset-names property.
++  - reset-names: Names of the resets. This property is model-dependent.
++    - R8A779[0123456] use one reset for a group of one or more successive
++      channels, and one reset per LVDS encoder (if available). The resets
++      must be named "du.x" with "x" being the numerical index of the lowest
++      channel in the group. The LVDS resets must be named "lvds.x" with "x"
++      being the LVDS encoder numerical index.
++
+ Required nodes:
  
- &pci_phy0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &pci_phy1 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &pcie0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &pcie4 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &pcie8 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &i2c0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &i2c1 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &uart0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &uart1 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &uart2 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &uart3 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &ssp0 {
--	status = "ok";
-+	status = "okay";
- 
- 	slic@0 {
- 		compatible = "silabs,si3226x";
-@@ -126,7 +126,7 @@
- };
- 
- &ssp1 {
--	status = "ok";
-+	status = "okay";
- 
- 	at25@0 {
- 		compatible = "atmel,at25";
-@@ -150,23 +150,23 @@
- };
- 
- &sata_phy0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &sata_phy1 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &sata {
--	status = "ok";
-+	status = "okay";
- };
- 
- &sdio0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &sdio1 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &nand {
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-xmc.dts b/arch/arm64/boot/dts/broadcom/ns2-xmc.dts
-index 99a2723..ab4ae1a 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-xmc.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-xmc.dts
-@@ -54,15 +54,15 @@
- };
- 
- &enet {
--	status = "ok";
-+	status = "okay";
- };
- 
- &i2c0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &i2c1 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &mdio_mux_iproc {
-@@ -122,27 +122,27 @@
- };
- 
- &pci_phy0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &pcie0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &pcie8 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &sata_phy0 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &sata_phy1 {
--	status = "ok";
-+	status = "okay";
- };
- 
- &sata {
--	status = "ok";
-+	status = "okay";
- };
- 
- &qspi {
-@@ -187,5 +187,5 @@
- };
- 
- &uart3 {
--	status = "ok";
-+	status = "okay";
- };
+ The connections to the DU output video ports are modeled using the OF graph
 -- 
 2.7.4
