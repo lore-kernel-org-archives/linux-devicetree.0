@@ -1,56 +1,73 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH v3 2/3] gpio: wm831x: Add basic device tree support
-Date: Mon, 6 Mar 2017 16:46:43 +0000
-Message-ID: <1488818804-9406-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1488818804-9406-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH] dt-bindings: display: rk3288-mipi-dsi: add reset property
+Date: Mon, 6 Mar 2017 11:52:12 -0500
+Message-ID: <20170306165212.GC13635@art_vandelay>
+References: <20170224125506.21533-1-john@metanate.com>
+ <20170224125506.21533-24-john@metanate.com>
+ <20170302215643.GA49163@google.com>
+ <20170303113945.3bd2cbd9.john@metanate.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488818804-9406-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170303113945.3bd2cbd9.john@metanate.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: John Keeping <john@metanate.com>, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Now the wm831x-core has basic DT support we can update this driver to
-allow use of the GPIOs within a device tree system.
-
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-
-No changes since v2.
-
- drivers/gpio/gpio-wm831x.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-wm831x.c b/drivers/gpio/gpio-wm831x.c
-index 533707f..110453c7 100644
---- a/drivers/gpio/gpio-wm831x.c
-+++ b/drivers/gpio/gpio-wm831x.c
-@@ -264,7 +264,7 @@ static const struct gpio_chip template_chip = {
- static int wm831x_gpio_probe(struct platform_device *pdev)
- {
- 	struct wm831x *wm831x = dev_get_drvdata(pdev->dev.parent);
--	struct wm831x_pdata *pdata = dev_get_platdata(wm831x->dev);
-+	struct wm831x_pdata *pdata = &wm831x->pdata;
- 	struct wm831x_gpio *wm831x_gpio;
- 	int ret;
- 
-@@ -281,6 +281,9 @@ static int wm831x_gpio_probe(struct platform_device *pdev)
- 		wm831x_gpio->gpio_chip.base = pdata->gpio_base;
- 	else
- 		wm831x_gpio->gpio_chip.base = -1;
-+#ifdef CONFIG_OF_GPIO
-+	wm831x_gpio->gpio_chip.of_node = wm831x->dev->of_node;
-+#endif
- 
- 	ret = devm_gpiochip_add_data(&pdev->dev, &wm831x_gpio->gpio_chip,
- 				     wm831x_gpio);
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBNYXIgMDMsIDIwMTcgYXQgMTE6Mzk6NDVBTSArMDAwMCwgSm9obiBLZWVwaW5nIHdy
+b3RlOgo+IFRoaXMgcmVzZXQgaXMgcmVxdWlyZWQgaW4gb3JkZXIgdG8gZnVsbHkgcmVzZXQgdGhl
+IGludGVybmFsIHN0YXRlIG9mIHRoZQo+IE1JUEkgY29udHJvbGxlci4KPiAKPiBTaWduZWQtb2Zm
+LWJ5OiBKb2huIEtlZXBpbmcgPGpvaG5AbWV0YW5hdGUuY29tPgoKSSdtIHNvcnJ5IEkgbWlzc2Vk
+IHRoaXMgaW4gbXkgcmV2aWV3LiBBZGRpbmcgUm9iIEhlcnJpbmcgZGlyZWN0bHkgZm9yIGhpcyBh
+Y2suCgpBbHNvLAoKUmV2aWV3ZWQtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hyb21pdW0ub3Jn
+PgoKPiAtLS0KPiBPbiBUaHUsIDIgTWFyIDIwMTcgMTM6NTY6NDYgLTA4MDAsIEJyaWFuIE5vcnJp
+cyB3cm90ZToKPiA+IE9uIEZyaSwgRmViIDI0LCAyMDE3IGF0IDEyOjU1OjA2UE0gKzAwMDAsIEpv
+aG4gS2VlcGluZyB3cm90ZToKPiA+ID4gKwkvKgo+ID4gPiArCSAqIE5vdGUgdGhhdCB0aGUgcmVz
+ZXQgd2FzIG5vdCBkZWZpbmVkIGluIHRoZSBpbml0aWFsIGRldmljZSB0cmVlLCBzbwo+ID4gPiAr
+CSAqIHdlIGhhdmUgdG8gYmUgcHJlcGFyZWQgZm9yIGl0IG5vdCBiZWluZyBmb3VuZC4KPiA+ID4g
+KwkgKi8KPiA+ID4gKwlhcGJfcnN0ID0gZGV2bV9yZXNldF9jb250cm9sX2dldChkZXYsICJhcGIi
+KTsgIAo+ID4gCj4gPiBEaWQgdGhpcyByZXNldCBldmVyIGdldCBkb2N1bWVudGVkIGluIHRoZSBk
+ZXZpY2UgdHJlZSBiaW5kaW5ncz8gSQo+ID4gY291bGRuJ3QgZmluZCBpdC4gUGVyaGFwcyBhIGZv
+bGxvdy11cCBwYXRjaCBpcyBpbiBvcmRlcj8KPiAKPiBIZXJlJ3MgYSBwYXRjaCB0byBkbyB0aGF0
+Lgo+IAo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlf
+ZHNpX3JvY2tjaGlwLnR4dCAgfCA3ICsrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0
+aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2Nr
+Y2hpcC50eHQKPiBpbmRleCAxNzUzZjBjYzZmYWQuLjI4ZDBiNDM3ZDNjZCAxMDA2NDQKPiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19t
+aXBpX2RzaV9yb2NrY2hpcC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKPiBAQCAtMTMs
+OCArMTMsMTMgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgLSBwb3J0czogY29udGFpbiBhIHBv
+cnQgbm9kZSB3aXRoIGVuZHBvaW50IGRlZmluaXRpb25zIGFzIGRlZmluZWQgaW4gWzJdLgo+ICAg
+IEZvciB2b3BiLHNldCB0aGUgcmVnID0gPDA+IGFuZCBzZXQgdGhlIHJlZyA9IDwxPiBmb3Igdm9w
+bC4KPiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gcmVzZXRzOiBsaXN0IG9mIHBoYW5k
+bGUgKyByZXNldCBzcGVjaWZpZXIgcGFpcnMsIGFzIGRlc2NyaWJlZCBpbiBbM10uCj4gKy0gcmVz
+ZXQtbmFtZXM6IHN0cmluZyByZXNldCBuYW1lLCBtdXN0IGJlICJhcGIiLgo+ICsKPiAgWzFdIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5ncy50eHQK
+PiAgWzJdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRl
+cmZhY2VzLnR4dAo+ICtbM10gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0
+L3Jlc2V0LnR4dAo+ICAKPiAgRXhhbXBsZToKPiAgCW1pcGlfZHNpOiBtaXBpQGZmOTYwMDAwIHsK
+PiBAQCAtMjUsNiArMzAsOCBAQCBFeGFtcGxlOgo+ICAJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4
+MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiAgCQljbG9ja3MgPSA8JmNydSBTQ0xLX01JUElfMjRN
+PiwgPCZjcnUgUENMS19NSVBJX0RTSTA+Owo+ICAJCWNsb2NrLW5hbWVzID0gInJlZiIsICJwY2xr
+IjsKPiArCQlyZXNldHMgPSA8JmNydSBTUlNUX01JUElEU0kwPjsKPiArCQlyZXNldC1uYW1lcyA9
+ICJhcGIiOwo+ICAJCXJvY2tjaGlwLGdyZiA9IDwmZ3JmPjsKPiAgCQlzdGF0dXMgPSAib2theSI7
+Cj4gIAo+IC0tIAo+IDIuMTIuMC5yYzIuMjMwLmdhMjhlZGMwN2NkLmRpcnR5Cj4gCj4gX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
