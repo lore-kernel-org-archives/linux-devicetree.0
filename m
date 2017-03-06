@@ -1,36 +1,36 @@
-From: Jiri Kosina <jikos@kernel.org>
-Subject: Re: [PATCH v5 1/2] devicetree: i2c-hid: Add regulator support
-Date: Mon, 6 Mar 2017 13:50:18 +0100 (CET)
-Message-ID: <alpine.LSU.2.20.1703061349090.31814@cbobk.fhfr.pm>
-References: <20170210020357.10679-1-briannorris@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170210020357.10679-1-briannorris@chromium.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Caesar Wang <wxt@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 1/3] device property: fwnode_property_read_string_array() may return -EILSEQ
+Date: Mon,  6 Mar 2017 15:26:29 +0200
+Message-ID: <1488806791-25488-2-git-send-email-sakari.ailus@linux.intel.com>
+References: <1488806791-25488-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1488806791-25488-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 9 Feb 2017, Brian Norris wrote:
+fwnode_property_read_string_array() may return -EILSEQ through
+of_property_read_string_array(). Document this.
 
-> From: Caesar Wang <wxt@rock-chips.com>
-> 
-> Document a "vdd-supply" and an initialization delay. Can be used for
-> powering on/off a HID.
-> 
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Jiri Kosina <jikos@kernel.org>
-> Cc: linux-input@vger.kernel.org
-> Signed-off-by: Brian Norris <briannorris@chromium.org>
-> ---
-> Sorry for the delay on resending this. I *think* I've addressed all the
-> concerns from last time though?
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/base/property.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Both patches applied to for-4.12/i2c-hid. Thanks,
-
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index c458c63..19a3dc5 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -589,7 +589,7 @@ static int __fwnode_property_read_string(struct fwnode_handle *fwnode,
+  *         %0 if the property was found (success),
+  *	   %-EINVAL if given arguments are not valid,
+  *	   %-ENODATA if the property does not have a value,
+- *	   %-EPROTO if the property is not an array of strings,
++ *	   %-EPROTO or %-EILSEQ if the property is not an array of strings,
+  *	   %-EOVERFLOW if the size of the property is not as expected,
+  *	   %-ENXIO if no suitable firmware interface is present.
+  */
 -- 
-Jiri Kosina
-SUSE Labs
+2.7.4
 
