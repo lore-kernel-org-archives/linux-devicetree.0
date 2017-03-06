@@ -1,49 +1,56 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 3/3] ASoC: dio2125: add dt-bindings
-Date: Mon,  6 Mar 2017 18:44:51 +0100
-Message-ID: <20170306174451.24406-4-jbrunet@baylibre.com>
-References: <20170306174451.24406-1-jbrunet@baylibre.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am57xx-idk: Add DCAN support
+Date: Mon, 6 Mar 2017 10:41:13 -0800
+Message-ID: <20170306184113.GN20572@atomide.com>
+References: <8981d49e7011a7246ff7dc6a9a9da0a56dfe5621.1487670384.git.nsekhar@ti.com>
+ <f8862417-e9e0-e2ac-865a-9684f96a5128@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170306174451.24406-1-jbrunet@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <f8862417-e9e0-e2ac-865a-9684f96a5128@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Schuyler Patton <spatton@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "Quadros,
+ Roger" <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- Documentation/devicetree/bindings/sound/dioo,dio2125.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/dioo,dio2125.txt
+* Sekhar Nori <nsekhar@ti.com> [170221 02:13]:
+> On Tuesday 21 February 2017 03:30 PM, Sekhar Nori wrote:
+> > From: Schuyler Patton <spatton@ti.com>
+> > 
+> > AM571x IDK and the AM572x IDK use CAN1 interface.
+> > This patch enables it for both boards.
+> > 
+> > Tested on AM572x IDK using cansequence.
+> > 
+> > Signed-off-by: Schuyler Patton <spatton@ti.com>
+> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> > Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> > [nsekhar@ti.com: move to use DRA7XX_CORE_IOPAD())
+> > Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> 
+> I should have noted that although CAN does function on the IDK with this
+> patch, there are "omap_hwmod: dcan1: _wait_target_disable failed"
+> messages that come up due to lack of workaround for errata i893[1]
+> 
+> Roger does have some patches to workaround that errata. If you want to
+> wait for those patches to be submitted and accepted first, it should be
+> fine as well.
 
-diff --git a/Documentation/devicetree/bindings/sound/dioo,dio2125.txt b/Documentation/devicetree/bindings/sound/dioo,dio2125.txt
-new file mode 100644
-index 000000000000..63dbfe0f11d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/dioo,dio2125.txt
-@@ -0,0 +1,12 @@
-+DIO2125 Audio Driver
-+
-+Required properties:
-+- compatible : "dioo,dio2125"
-+- enable-gpios : the gpio connected to the enable pin of the dio2125
-+
-+Example:
-+
-+amp: analog-amplifier {
-+	compatible = "dioo,dio2125";
-+	enable-gpios = <&gpio GPIOH_3 0>;
-+};
--- 
-2.9.3
+OK let's wait a bit on this then to avoid introducing extra warnings.
+
+Regards,
+
+Tony
+
+> [1] http://www.ti.com/lit/er/sprz436b/sprz436b.pdf
