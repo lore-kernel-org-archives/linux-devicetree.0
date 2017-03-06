@@ -1,48 +1,121 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH 1/2] drm/bridge: ti-tfp410: support hpd via gpio
-Date: Mon, 6 Mar 2017 22:51:19 +0100
-Message-ID: <6dfb2b66ec2a408dabe80d703f411ce0@rwthex-s1-b.rwth-ad.de>
-References: <2e47786ab3d04078ae70d0c4064f7c4d@rwthex-s1-b.rwth-ad.de>
- <093b4e9c0ae6413499e5bf8ec309fa41@rwthex-s1-b.rwth-ad.de>
+From: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Document bindings for
+ Aspeed AST2400/AST2500 ADC
+Date: Mon, 6 Mar 2017 14:01:44 -0800
+Message-ID: <CAPLgG=nkkom+zMTTJ-b-OUADAn2g=Hiupj6ku5pqheVnsJYYgg@mail.gmail.com>
+References: <20170228201404.32125-1-raltherr@google.com> <20170303062131.u5gjyv2odbafkkpg@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <093b4e9c0ae6413499e5bf8ec309fa41-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
+In-Reply-To: <20170303062131.u5gjyv2odbafkkpg@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-
-On 03/06/2017 10:46 PM, Fabio Estevam wrote:
-> Hi Christopher,
->
-> On Mon, Mar 6, 2017 at 6:40 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
->> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
->>
->> On some boards the hpd pin of a hdmi connector is wired up to a gpio
->> pin. Since in the DRM world the tfp410 driver is responsible for
->> handling the connector, add support for hpd gpios in this very driver.
->>
->> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+On Thu, Mar 2, 2017 at 10:21 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>  On Tue, Feb 28, 2017 at 12:14:03PM -0800, Rick Altherr wrote:
+>> Signed-off-by: Rick Altherr <raltherr-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 >> ---
->>  drivers/gpu/drm/bridge/ti-tfp410.c | 72 ++++++++++++++++++++++++++++++++++++--
+>>  .../devicetree/bindings/hwmon/aspeed_adc.txt       | 48 ++++++++++++++++++++++
 >
-> It would be nice to add 'hpd-gpios' property in the binding doc as well:
-> Documentation/devicetree/bindings/display/bridge/ti,tfp410.txt
+> ADCs should really be documented in one place regardless of whether
+> hwmon or IIO is used. Don't need to move it now, but certainly the
+> bindings need to be compatible.
+>
 
-The hpd-gpios property does *not* belong to the ti,tfp410 binding but to 
-the hdmi-connector one where it is already documented:
-Documentation/devicetree/bindings/display/connector/hdmi-connector.txt
+hwmon maintainers suggested IIO as well.  Looks like there is an IIO
+to hwmon bridge so no concerns there.  I think IIO looks like a
+plausible framework for this part based on my cursory look at the IIO
+docs.  I'll be working on v2 as an IIO driver.
 
-Unfortunatly, there is no dedicated driver for the connector in Linux; 
-the connector properties have to be handled by the encoder (here  the 
-tfp410) driver. Note that this already happens for the ddc-i2c-bus property.
+>>  1 file changed, 48 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt b/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
+>> new file mode 100644
+>> index 000000000000..9e481668c4d3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwmon/aspeed_adc.txt
+>> @@ -0,0 +1,48 @@
+>> +Aspeed AST2400/2500 ADC
+>> +
+>> +This device is a 10-bit converter for 16 voltage channels.  All inputs are
+>> +single ended.  Each channel can be individually enabled to allow for use of
+>> +alternate pin functions.
+>> +
+>> +1) adc node
+>> +
+>> +  Required properties:
+>> +  - compatible : Should be one of
+>> +     "aspeed,ast2400-adc"
+>> +     "aspeed,ast2500-adc"
+>> +  - reg : memory window mapping address and length
+>> +  - #address-cells : must be <1> corresponding to the channel child binding
+>> +  - #size-cells : must be <0> corresponding to the channel child binding
+>> +  - clocks : Input clock used to derive the sample clock. Expected to be the
+>> +    SoC's APB clock.
+>> +  - update-interval-ms : initial time between updates on a channel
+>
+> This is like sampling rate? I think we have a standard ADC property for
+> that.
+>
 
-Cheers,
-Christopher
+Will look.
+
+>> +
+>> +  The node contains child nodes for each channel that the platform uses.
+>> +
+>> +  Example adc node:
+>> +    adc@1e6e9000 {
+>> +     #address-cells = <1>;
+>> +     #size-cells = <0>;
+>> +     compatible = "aspeed,ast2400-adc";
+>> +     reg = <0x1e6e9000 0xB0>;
+>> +     clocks = <&clk_apb>;
+>> +     update-interval-ms = <100>;
+>> +
+>> +     [ child node definitions... ]
+>> +    };
+>> +
+>> +2) channel nodes
+>> +
+>> +  Optional properties:
+>> +  - status: indicates the operational status of the device.
+>> +    Value must be either "disabled" or "okay".
+>
+> Don't need to document this.
+>
+
+OK
+
+>> +  - label : string describing the monitored value
+>
+> You need a reg property for the channel number.
+>
+
+Missed that when I fixed the code.  Will include in next revision.
+
+>> +
+>> +  Example channel node:
+>> +  channel@1 {
+>> +     status = "okay";
+>> +     label = "3V3 rail";
+>> +
+>> +     pinctrl-names = "default";
+>> +     pinctrl-0 = <&pinctrl_adc0_default>;
+>
+> Need to document these.
+
+These are described in the pinctrl bindings.  I only put them in the
+example as they will be commonly used together but the driver does not
+use them.
+
+>
+>> +  };
+>> --
+>> 2.11.0.483.g087da7b7c-goog
+>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
