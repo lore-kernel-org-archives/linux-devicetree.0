@@ -1,38 +1,75 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 1/2] drm/bridge: ti-tfp410: support hpd via gpio
-Date: Mon, 6 Mar 2017 18:46:24 -0300
-Message-ID: <CAOMZO5C90EVY1oyhMu8Ahm++YeVq_qE1x6RwzB6hxKJZEuL10Q@mail.gmail.com>
-References: <2e47786ab3d04078ae70d0c4064f7c4d@rwthex-s1-b.rwth-ad.de>
+From: Rask Ingemann Lambertsen <rask@formelder.dk>
+Subject: Re: [PATCH v8 6/6] arm64: dts: allwinner: h5: add support for the
+ Orange Pi PC 2 board
+Date: Mon, 6 Mar 2017 22:49:05 +0100
+Message-ID: <20170306214904.o2zpw3q3fvtrmsmd@localhost>
+References: <20170306171750.7491-1-icenowy@aosc.xyz>
+ <20170306171750.7491-7-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2e47786ab3d04078ae70d0c4064f7c4d@rwthex-s1-b.rwth-ad.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Igor Grinberg <grinberg@compulab.co.il>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170306171750.7491-7-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hyaXN0b3BoZXIsCgpPbiBNb24sIE1hciA2LCAyMDE3IGF0IDY6NDAgUE0sICA8Y2hyaXN0
-b3BoZXIuc3BpbnJhdGhAcnd0aC1hYWNoZW4uZGU+IHdyb3RlOgo+IEZyb206IENocmlzdG9waGVy
-IFNwaW5yYXRoIDxjaHJpc3RvcGhlci5zcGlucmF0aEByd3RoLWFhY2hlbi5kZT4KPgo+IE9uIHNv
-bWUgYm9hcmRzIHRoZSBocGQgcGluIG9mIGEgaGRtaSBjb25uZWN0b3IgaXMgd2lyZWQgdXAgdG8g
-YSBncGlvCj4gcGluLiBTaW5jZSBpbiB0aGUgRFJNIHdvcmxkIHRoZSB0ZnA0MTAgZHJpdmVyIGlz
-IHJlc3BvbnNpYmxlIGZvcgo+IGhhbmRsaW5nIHRoZSBjb25uZWN0b3IsIGFkZCBzdXBwb3J0IGZv
-ciBocGQgZ3Bpb3MgaW4gdGhpcyB2ZXJ5IGRyaXZlci4KPgo+IFNpZ25lZC1vZmYtYnk6IENocmlz
-dG9waGVyIFNwaW5yYXRoIDxjaHJpc3RvcGhlci5zcGlucmF0aEByd3RoLWFhY2hlbi5kZT4KPiAt
-LS0KPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS10ZnA0MTAuYyB8IDcyICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKy0tCgpJdCB3b3VsZCBiZSBuaWNlIHRvIGFkZCAnaHBk
-LWdwaW9zJyBwcm9wZXJ0eSBpbiB0aGUgYmluZGluZyBkb2MgYXMgd2VsbDoKRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRmcDQxMC50eHQKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Mar 07, 2017 at 01:17:50AM +0800, Icenowy Zheng wrote:
+> From: Andre Przywara <andre.przywara@arm.com>
+> 
+> The Orange Pi PC 2 is a typical single board computer using the
+> Allwinner H5 SoC. Apart from the usual suspects it features three
+> separately driven USB ports and a Gigabit Ethernet port.
+> Also it has a SPI NOR flash soldered, from which the board can boot
+> from. This enables the SBC to behave like a "real computer" with
+> built-in firmware.
+> 
+> Add the board specific .dts file, which includes the H5 .dtsi and
+> enables the peripherals that we support so far.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> [Icenowy: dropped all GPIO pinctrl nodes, change red LED gpio,
+>  change MMC cd to active-low, rename some node names to prevent
+>  underscores]
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+
+Reviewed-by: Rask Ingemann Lambertsen <rask@formelder.dk>
+
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> new file mode 100644
+> index 000000000000..30639729920d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+> @@ -0,0 +1,163 @@
+> +/*
+> + * Copyright (C) 2016 ARM Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+
+I didn't catch any sort of announcement of it, but it seems as if we've
+started using SPDX license identifiers in dts files. Thus you can simply
+include the line
+SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+after the copyright notice and omit the license notices themselves. Even
+though the comment refers to "the X11 license", the license text matches that
+associated with the MIT license identifier [1] rather than that of the X11
+license [2]. The same goes for patch 5/6.
+
+[1] https://spdx.org/licenses/MIT.html#licenseText
+[2] https://spdx.org/licenses/X11.html#licenseText
+
+-- 
+Rask Ingemann Lambertsen
