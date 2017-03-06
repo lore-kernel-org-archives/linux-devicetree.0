@@ -1,65 +1,79 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH 5/5] ARM: omap2plus_defconfig: Enable support for
- ti-cpufreq
-Date: Mon, 6 Mar 2017 17:24:30 +0100
-Message-ID: <20170306172430.5e91b576@jawa>
-References: <1488813822-26042-1-git-send-email-d-gerlach@ti.com>
- <1488813822-26042-6-git-send-email-d-gerlach@ti.com>
+From: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 2/2] regulator: tps65132: add device-tree binding
+Date: Mon, 6 Mar 2017 22:07:40 +0530
+Message-ID: <1488818260-25882-1-git-send-email-vreddytalla@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488813822-26042-6-git-send-email-d-gerlach@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Viresh Kumar <viresh.kumar@linaro.org>, Yegor Yefremov <yegorslists@googlemail.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 6 Mar 2017 09:23:42 -0600
-Dave Gerlach <d-gerlach@ti.com> wrote:
+Adding tps65132 regulator devicetree binding documentation
 
-> AM335x, AM437x, DRA7xx, and AM57xx platforms all now depend on
-> ti-cpufreq driver to enable proper OPPs for use with cpufreq, so
-> enable the same.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Venkat Reddy Talla <vreddytalla-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../bindings/regulator/tps65132-regulator.txt      | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
 
-Reviewed-by: Lukasz Majewski <lukma@denx.de>
-
-> ---
->  arch/arm/configs/omap2plus_defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/omap2plus_defconfig
-> b/arch/arm/configs/omap2plus_defconfig index
-> f2462a6bdba6..62a4b6cf16f0 100644 ---
-> a/arch/arm/configs/omap2plus_defconfig +++
-> b/arch/arm/configs/omap2plus_defconfig @@ -64,6 +64,7 @@
-> CONFIG_CPU_FREQ_GOV_POWERSAVE=y CONFIG_CPU_FREQ_GOV_USERSPACE=y
->  CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
->  CONFIG_CPUFREQ_DT=m
-> +CONFIG_ARM_TI_CPUFREQ=y
->  # CONFIG_ARM_OMAP2PLUS_CPUFREQ is not set
->  CONFIG_CPU_IDLE=y
->  CONFIG_BINFMT_MISC=y
-
-
-
-
-Best regards,
-
-Lukasz Majewski
+diff --git a/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
+new file mode 100644
+index 0000000..1ef6ede
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/tps65132-regulator.txt
+@@ -0,0 +1,46 @@
++TPS65132 regulators
++
++Required properties:
++- compatible: "ti,tps65132"
++- reg: I2C slave address
++
++Optional Subnode:
++Device supports two regulators OUTP and OUTN. A sub node within the
++   device node descrbe the properties of these regulators. The sub-node
++   names must be as follows:
++	-For regulator outp, the sub node name should be "outp".
++	-For regulator outn, the sub node name should be "outn".
++
++-ti,enable-gpio: Regulators are controlled by the input pins. If
++   it is connected to GPIO through host system then provide the
++   gpio number as per gpio.txt.
++-ti,disable-active-discharge: Boolean, presence of this property
++   will disable active discharge on the regulator output.
++-ti,active-discharge-gpio: Some configurations use delay mechanisms
++  on the enable pin, to keep the regulator enabled for some time after
++  the enable signal goes low. This GPIO is used to actively discharge
++  the delay mechanism. Requires specification of ti,active-discharge-time
++-ti,active-discharge-time: how long the active discharge gpio should be
++  asserted for during active discharge, in microseconds.
++
++Each regulator is defined using the standard binding for regulators.
++
++Example:
++
++	tps65132@3e {
++		compatible = "ti,tps65132";
++
++		outp {
++			regulator-name = "outp";
++			regulator-boot-on;
++			regulator-always-on;
++			ti,enable-gpio = <&gpio 23 0>;
++		};
++
++		outn {
++			regulator-name = "outn";
++			regulator-boot-on;
++			regulator-always-on;
++			ti,enable-gpio = <&gpio 40 0>;
++		};
++	};
+-- 
+2.1.4
 
 --
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
