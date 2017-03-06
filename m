@@ -1,49 +1,44 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/8] ARM: dts: r8a73a4: Remove unit-addresses and regs from integrated caches
-Date: Mon,  6 Mar 2017 17:40:36 +0100
-Message-ID: <1488818443-25196-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 8/8] ARM: dts: r8a7794: Remove unit-address and reg from integrated cache
+Date: Mon,  6 Mar 2017 17:40:43 +0100
+Message-ID: <1488818443-25196-9-git-send-email-geert+renesas@glider.be>
 References: <1488818443-25196-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1488818443-25196-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488818443-25196-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Cortex-A15/A7 cache controllers are integrated controllers, and thus
-the device nodes representing them should not have unit-addresses or reg
-properties.
+The Cortex-A7 cache controller is an integrated controller, and thus the
+device node representing it should not have a unit-addresses or reg
+property.
 
-Fixes: b0da45c60d2f7b08 ("ARM: dts: r8a73a4: Fix W=1 dtc warnings")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 34ea4b4a827b4ee7 ("ARM: dts: r8a7794: Fix W=1 dtc warnings")
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a73a4.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/r8a7794.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index 00eb9a7114dc2621..6fb7eaba91262edf 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -32,18 +32,16 @@
- 			next-level-cache = <&L2_CA15>;
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index 319c1069b7eeb722..cb31cd2232f9166f 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -56,9 +56,8 @@
+ 			next-level-cache = <&L2_CA7>;
  		};
  
--		L2_CA15: cache-controller@0 {
-+		L2_CA15: cache-controller-0 {
+-		L2_CA7: cache-controller@0 {
++		L2_CA7: cache-controller-0 {
  			compatible = "cache";
 -			reg = <0>;
- 			clocks = <&cpg_clocks R8A73A4_CLK_Z>;
- 			power-domains = <&pd_a3sm>;
+ 			power-domains = <&sysc R8A7794_PD_CA7_SCU>;
  			cache-unified;
  			cache-level = <2>;
- 		};
- 
--		L2_CA7: cache-controller@100 {
-+		L2_CA7: cache-controller-1 {
- 			compatible = "cache";
--			reg = <0x100>;
- 			clocks = <&cpg_clocks R8A73A4_CLK_Z2>;
- 			power-domains = <&pd_a3km>;
- 			cache-unified;
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
