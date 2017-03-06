@@ -1,61 +1,38 @@
-From: <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: imx6q-utilite-pro: add hpd gpio
-Date: Mon, 6 Mar 2017 22:40:44 +0100
-Message-ID: <079b2ad39e0f4d37a181aab822b68fe6@rwthex-s1-b.rwth-ad.de>
-References: <20170306214044.2043-1-christopher.spinrath@rwth-aachen.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 1/2] drm/bridge: ti-tfp410: support hpd via gpio
+Date: Mon, 6 Mar 2017 18:46:24 -0300
+Message-ID: <CAOMZO5C90EVY1oyhMu8Ahm++YeVq_qE1x6RwzB6hxKJZEuL10Q@mail.gmail.com>
+References: <2e47786ab3d04078ae70d0c4064f7c4d@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170306214044.2043-1-christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2e47786ab3d04078ae70d0c4064f7c4d@rwthex-s1-b.rwth-ad.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, DRI mailing list <dri-devel@lists.freedesktop.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Igor Grinberg <grinberg@compulab.co.il>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-
-The hpd pin of the second hdmi connector of the Utilite Pro is wired
-up to a gpio pin of the SoC. Reflect this in the device tree.
-
-Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-utilite-pro.dts | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-index 69bdd82..d900ad6 100644
---- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
-+++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-@@ -101,9 +101,11 @@
- 
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
--
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_hpd>;
- 		type = "a";
- 		ddc-i2c-bus = <&i2c_dvi_ddc>;
-+		hpd-gpios = <&gpio1 4 GPIO_ACTIVE_HIGH>;
- 
- 		port {
- 			hdmi_connector_in: endpoint {
-@@ -209,6 +211,12 @@
- 		>;
- 	};
- 
-+	pinctrl_hpd: hpdgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_4__GPIO1_IO04 0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQ2hyaXN0b3BoZXIsCgpPbiBNb24sIE1hciA2LCAyMDE3IGF0IDY6NDAgUE0sICA8Y2hyaXN0
+b3BoZXIuc3BpbnJhdGhAcnd0aC1hYWNoZW4uZGU+IHdyb3RlOgo+IEZyb206IENocmlzdG9waGVy
+IFNwaW5yYXRoIDxjaHJpc3RvcGhlci5zcGlucmF0aEByd3RoLWFhY2hlbi5kZT4KPgo+IE9uIHNv
+bWUgYm9hcmRzIHRoZSBocGQgcGluIG9mIGEgaGRtaSBjb25uZWN0b3IgaXMgd2lyZWQgdXAgdG8g
+YSBncGlvCj4gcGluLiBTaW5jZSBpbiB0aGUgRFJNIHdvcmxkIHRoZSB0ZnA0MTAgZHJpdmVyIGlz
+IHJlc3BvbnNpYmxlIGZvcgo+IGhhbmRsaW5nIHRoZSBjb25uZWN0b3IsIGFkZCBzdXBwb3J0IGZv
+ciBocGQgZ3Bpb3MgaW4gdGhpcyB2ZXJ5IGRyaXZlci4KPgo+IFNpZ25lZC1vZmYtYnk6IENocmlz
+dG9waGVyIFNwaW5yYXRoIDxjaHJpc3RvcGhlci5zcGlucmF0aEByd3RoLWFhY2hlbi5kZT4KPiAt
+LS0KPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS90aS10ZnA0MTAuYyB8IDcyICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKy0tCgpJdCB3b3VsZCBiZSBuaWNlIHRvIGFkZCAnaHBk
+LWdwaW9zJyBwcm9wZXJ0eSBpbiB0aGUgYmluZGluZyBkb2MgYXMgd2VsbDoKRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLHRmcDQxMC50eHQKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
