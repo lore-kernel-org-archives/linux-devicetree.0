@@ -1,69 +1,45 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 3/3] ARM: dts: bcm5301x: Add I2C support to the DT
-Date: Sun, 5 Mar 2017 17:13:34 -0800
-Message-ID: <bb91cbbd-f5e5-9ce8-e925-89e6f831e50c@gmail.com>
-References: <1488500494-20622-1-git-send-email-jon.mason@broadcom.com>
- <1488500494-20622-4-git-send-email-jon.mason@broadcom.com>
+From: Meng Dongyang <daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/3] add support of usb2-phy for rk3328
+Date: Mon,  6 Mar 2017 09:29:35 +0800
+Message-ID: <1488763778-27499-1-git-send-email-daniel.meng@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488500494-20622-4-git-send-email-jon.mason@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, zajec5@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+The config information of RK3328 about address and port property
+is different from other platform. So adds config information in the
+data of match table and the device tree bindings description for
+usb2-phy.
 
+Changes in v2:
+ - move usb2-phy grf specification to .../devicetree/bindings/soc/rockchip/grf.txt
+ - add otg port config information of rk3328
+Changes in v3:
+ - remove tuning function and id pin configs
+ - delete example of usb2-phy grf in grf.txt
 
-On 03/02/2017 04:21 PM, Jon Mason wrote:
-> From: Jon Mason <jonmason@broadcom.com>
-> 
-> Add I2C support to the bcm5301x Device Tree.  Since no driver changes
-> are needed to enable this hardware, only the device tree changes are
-> required to make this functional.
-> 
-> Signed-off-by: Jon Mason <jonmason@broadcom.com>
-> ---
->  arch/arm/boot/dts/bcm5301x.dtsi | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-> index 4e3fbce..2a343f2 100644
-> --- a/arch/arm/boot/dts/bcm5301x.dtsi
-> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
-> @@ -338,6 +338,15 @@
->  		};
->  	};
->  
-> +	i2c0: i2c@18009000 {
-> +		compatible = "brcm,iproc-i2c";
-> +		reg = <0x18009000 0x50>;
-> +		interrupts = <GIC_SPI 121 IRQ_TYPE_NONE>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		clock-frequency = <100000>;
+Meng Dongyang (3):
+  dt-bindings: phy: add assign clock property in usb2-phy node
+  dt-bindings: phy: add DT bindings for usb2-phy grf
+  phy: rockchip-inno-usb2: add support of usb2-phy for rk3328
 
-Should not this have a:
-		status = "disabled"
-
-property by default such that boards can override this by phandle when
-there are actual I2C devices available?
-
-> +	};
-> +
->  	lcpll0: lcpll0@1800c100 {
->  		#clock-cells = <1>;
->  		compatible = "brcm,nsp-lcpll0";
-> 
+ .../bindings/phy/phy-rockchip-inno-usb2.txt        |  6 +++
+ .../devicetree/bindings/soc/rockchip/grf.txt       |  4 ++
+ drivers/phy/phy-rockchip-inno-usb2.c               | 44 ++++++++++++++++++++++
+ 3 files changed, 54 insertions(+)
 
 -- 
-Florian
+1.9.1
