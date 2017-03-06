@@ -1,26 +1,72 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH] Documentation: devicetree: move trivial-devices out of I2C realm
-Date: Mon,  6 Mar 2017 15:38:59 +0100
-Message-ID: <20170306143859.11881-1-wsa@the-dreams.de>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-i2c@vger.kernel.org, Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@the-dreams.de>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv3 04/15] ov7670: get xclk
+Date: Mon,  6 Mar 2017 15:56:05 +0100
+Message-ID: <20170306145616.38485-5-hverkuil@xs4all.nl>
+References: <20170306145616.38485-1-hverkuil@xs4all.nl>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170306145616.38485-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The I2C directory is for I2C master controllers, not for clients. So,
-move the file describing trivial devices one layer upwards where it
-fits its generic nature way better.
+From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Get the clock for this sensor.
+
+Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/{i2c => }/trivial-devices.txt | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{i2c => }/trivial-devices.txt (100%)
+ drivers/media/i2c/ov7670.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/i2c/trivial-devices.txt
-rename to Documentation/devicetree/bindings/trivial-devices.txt
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index 50e4466a2b37..da0843617a49 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -10,6 +10,7 @@
+  * This file may be distributed under the terms of the GNU General
+  * Public License, version 2.
+  */
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -227,6 +228,7 @@ struct ov7670_info {
+ 		struct v4l2_ctrl *hue;
+ 	};
+ 	struct ov7670_format_struct *fmt;  /* Current format */
++	struct clk *clk;
+ 	int min_width;			/* Filter out smaller sizes */
+ 	int min_height;			/* Filter out smaller sizes */
+ 	int clock_speed;		/* External clock speed (MHz) */
+@@ -1587,6 +1589,15 @@ static int ov7670_probe(struct i2c_client *client,
+ 			info->pclk_hb_disable = true;
+ 	}
+ 
++	info->clk = devm_clk_get(&client->dev, "xclk");
++	if (IS_ERR(info->clk))
++		return -EPROBE_DEFER;
++	clk_prepare_enable(info->clk);
++
++	info->clock_speed = clk_get_rate(info->clk) / 1000000;
++	if (info->clock_speed < 10 || info->clock_speed > 48)
++		return -EINVAL;
++
+ 	/* Make sure it's an ov7670 */
+ 	ret = ov7670_detect(sd);
+ 	if (ret) {
+@@ -1667,6 +1678,7 @@ static int ov7670_remove(struct i2c_client *client)
+ 
+ 	v4l2_device_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&info->hdl);
++	clk_disable_unprepare(info->clk);
+ 	return 0;
+ }
+ 
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
