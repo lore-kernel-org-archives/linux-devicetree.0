@@ -1,11 +1,17 @@
-From: Brian Kim <brian.kim@hardkernel.com>
-Subject: [PATCH] ARM: dts: exynos: Add power button for Odroid XU3/4
-Date: Mon,  6 Mar 2017 11:52:09 +0900
-Message-ID: <1488768729-9435-1-git-send-email-brian.kim@hardkernel.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v4 2/2] mmc: host: s3cmci: allow probing from device tree
+Date: Mon, 06 Mar 2017 12:41:22 +0900
+Message-ID: <b13fb653-9449-8744-a30b-9634d46eff8b@samsung.com>
+References: <1488417536-15110-1-git-send-email-sergio.prado@e-labworks.com>
+ <CGME20170302012845epcas4p3d7e48f13c80b2115cea89e914b067eeb@epcas4p3.samsung.com>
+ <1488417536-15110-3-git-send-email-sergio.prado@e-labworks.com>
+ <39c2b81b-6519-826b-2c8d-344725ce2882@samsung.com>
+ <20170303113847.GA17377@sprado-desktop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20170303113847.GA17377@sprado-desktop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,68 +21,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux.amoon@gmail.com, l.majewski@samsung.com, krzk@kernel.org, robh+dt@kernel.org, kgene@kernel.org, mark.rutland@arm.com, javier@osg.samsung.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Sergio Prado <sergio.prado@e-labworks.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The power button on Odroid XU3/4 is connected with the PWRON pin of
-s2mps11 PMIC. The s2mps11 sends low signal to GPIO input in exynos 5422
-via ONOB pin.
+On 03/03/2017 08:38 PM, Sergio Prado wrote:
+> On Fri, Mar 03, 2017 at 11:14:29AM +0900, Jaehoon Chung wrote:
+>> On 03/02/2017 10:18 AM, Sergio Prado wrote:
+>>> Allows configuring Samsung S3C24XX MMC/SD/SDIO controller using a device
+>>> tree.
+>>>
+>>> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+>>> ---
+>>>  drivers/mmc/host/s3cmci.c | 298 ++++++++++++++++++++++++----------------------
+>>>  drivers/mmc/host/s3cmci.h |   3 +-
+>>>  2 files changed, 158 insertions(+), 143 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/s3cmci.c b/drivers/mmc/host/s3cmci.c
+>>> index 7a173f8c455b..d066dbdb957c 100644
+>>> --- a/drivers/mmc/host/s3cmci.c
+>>> +++ b/drivers/mmc/host/s3cmci.c
+>>> @@ -24,6 +24,10 @@
+>>>  #include <linux/interrupt.h>
+>>>  #include <linux/irq.h>
+>>>  #include <linux/io.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_device.h>
+>>> +#include <linux/of_gpio.h>
+>>> +#include <linux/mmc/slot-gpio.h>
+>>>  
+>>>  #include <plat/gpio-cfg.h>
+>>>  #include <mach/dma.h>
+>>> @@ -128,6 +132,22 @@ enum dbg_channels {
+>>>  	dbg_conf  = (1 << 8),
+>>>  };
+>>>  
+>>> +struct s3cmci_variant_data {
+>>> +	int s3c2440_compatible;
+>>> +};
+>>
+>> I didn't understand why this structure needs.
+>>
+>> Before this patch,
+>> host->is2440;
+>>
+>> After this patch,
+>> host->variant->s3c2440_compatible;
+>>
+>> Just add the one pointer for checking s3c2400 compatible..
+>> Is it really meaningful?
+>> (I didn't read the previous comments fully.)
+> 
+> Although just a pointer would be enought, having a structure makes it
+> more flexible to extend it in the future.
 
-This patch adds devicetree bindings for the power button of Odroid
-XU3/4.
+If you will add the other members in this structure, it's ok.
+But if it's only for compatible, i don't agree this.
 
-Signed-off-by: Brian Kim <brian.kim@hardkernel.com>
----
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+Best Regards,
+Jaehoon Chung
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 05b9afdd..671d87f 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -13,6 +13,7 @@
- */
- 
- #include <dt-bindings/clock/samsung,s2mps11.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/sound/samsung-i2s.h>
-@@ -42,6 +43,22 @@
- 		};
- 	};
- 
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_power_key>;
-+
-+		power_key {
-+			interrupt-parent = <&gpx0>;
-+			interrupts = <3 0>;
-+			gpios = <&gpx0 3 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			label = "power key";
-+			debounce-interval = <10>;
-+			wakeup-source;
-+		};
-+	};
-+
- 	emmc_pwrseq: pwrseq {
- 		pinctrl-0 = <&emmc_nrst_pin>;
- 		pinctrl-names = "default";
-@@ -557,6 +574,11 @@
- };
- 
- &pinctrl_0 {
-+	gpio_power_key: power_key {
-+		samsung,pins = "gpx0-3";
-+		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-+	};
-+
- 	hdmi_hpd_irq: hdmi-hpd-irq {
- 		samsung,pins = "gpx3-7";
- 		samsung,pin-function = <EXYNOS_PIN_FUNC_INPUT>;
--- 
-2.7.4
+> 
+> Best regards,
+> 
+> Sergio Prado
+> 
+> 
+> 
