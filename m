@@ -1,53 +1,94 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH 0/5] ARM: OMAP2+: Add and enable operating-points-v2
-Date: Mon, 6 Mar 2017 09:23:37 -0600
-Message-ID: <1488813822-26042-1-git-send-email-d-gerlach@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Nishanth Menon <nm@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Lukasz Majewski <lukma@denx.de>, Yegor Yefremov <yegorslists@googlemail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v4 04/16] device property: Add fwnode_get_named_child_node()
+Date: Mon,  6 Mar 2017 16:19:18 +0200
+Message-ID: <1488809970-25568-5-git-send-email-sakari.ailus@linux.intel.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This series adds the necessary changes to get proper operating-points-v2 tables
-for AM335x/AM437x/DRA7xx/AM57xx TI SoCs. Doing this enables the ti-cpufreq
-driver and allows the platform to detect which CPU OPPs are valid for the
-configuration in use and enable them.
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-This series adds complete tables for am335x and adds 1GHz support for all
-beaglebone black boards and updates the already merged but unused am437x table
-to match the finalized DT bindings. It also moves the existing dra7xx/am57xx
-OPPs to OPPv2 but does not enable 1.5GHz yet as this requires multiregulator
-support which will come at a later date.
+Since now we have means to enumerate all children of any fwnode even in
+ACPI we can implement fwnode_get_named_child_node(). This is similar than
+device_get_named_child_node() with the exception that it can be called to
+any fwnode handle. Make device_get_named_child_node() call directly this
+new function.
 
-Also, now that so many TI platforms will depend on the ti-cpufreq driver let's
-add CONFIG_ARM_TI_CPUFREQ to omap2plus_defconfig to enable it as part of the
-default configuration.
+This is useful in cases where we need to be able to find child nodes which
+are not direct descendants of the parent device.
 
-Pushed a branch containing these patches on top of v4.11-rc1 if anyone wants
-to try it out [1].
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/base/property.c  | 22 +++++++++++++++++-----
+ include/linux/property.h |  2 ++
+ 2 files changed, 19 insertions(+), 5 deletions(-)
 
-Regards,
-Dave
-
-[1] https://github.com/dgerlach/linux-pm/tree/upstream/v4.11/ti-cpufreq-dts
-
-Dave Gerlach (5):
-  ARM: dts: am33xx: Add updated operating-points-v2 table for cpu
-  ARM: dts: am335x-boneblack: Enable 1GHz OPP for cpu
-  ARM: dts: am4372: Update operating-points-v2 table for cpu
-  ARM: dts: dra7: Add updated operating-points-v2 table for cpu
-  ARM: omap2plus_defconfig: Enable support for ti-cpufreq
-
- arch/arm/boot/dts/am335x-boneblack.dts | 11 +++++
- arch/arm/boot/dts/am33xx.dtsi          | 87 +++++++++++++++++++++++++++++-----
- arch/arm/boot/dts/am4372.dtsi          |  7 ++-
- arch/arm/boot/dts/dra7.dtsi            | 24 ++++++++--
- arch/arm/boot/dts/dra74x.dtsi          |  5 ++
- arch/arm/configs/omap2plus_defconfig   |  1 +
- 6 files changed, 113 insertions(+), 22 deletions(-)
-
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 55d994d..ed9ee94 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -1026,20 +1026,20 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+ EXPORT_SYMBOL_GPL(device_get_next_child_node);
+ 
+ /**
+- * device_get_named_child_node - Return first matching named child node handle
+- * @dev: Device to find the named child node for.
++ * fwnode_get_named_child_node - Return first matching named child node handle
++ * @fwnode: Firmware node to find the named child node for.
+  * @childname: String to match child node name against.
+  */
+-struct fwnode_handle *device_get_named_child_node(struct device *dev,
++struct fwnode_handle *fwnode_get_named_child_node(struct fwnode_handle *fwnode,
+ 						  const char *childname)
+ {
+ 	struct fwnode_handle *child;
+ 
+ 	/*
+-	 * Find first matching named child node of this device.
++	 * Find first matching named child node of this fwnode.
+ 	 * For ACPI this will be a data only sub-node.
+ 	 */
+-	device_for_each_child_node(dev, child) {
++	fwnode_for_each_child_node(fwnode, child) {
+ 		if (is_of_node(child)) {
+ 			if (!of_node_cmp(to_of_node(child)->name, childname))
+ 				return child;
+@@ -1051,6 +1051,18 @@ struct fwnode_handle *device_get_named_child_node(struct device *dev,
+ 
+ 	return NULL;
+ }
++EXPORT_SYMBOL_GPL(fwnode_get_named_child_node);
++
++/**
++ * device_get_named_child_node - Return first matching named child node handle
++ * @dev: Device to find the named child node for.
++ * @childname: String to match child node name against.
++ */
++struct fwnode_handle *device_get_named_child_node(struct device *dev,
++						  const char *childname)
++{
++	return fwnode_get_named_child_node(dev_fwnode(dev), childname);
++}
+ EXPORT_SYMBOL_GPL(device_get_named_child_node);
+ 
+ /**
+diff --git a/include/linux/property.h b/include/linux/property.h
+index f4786a86..514b195 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -85,6 +85,8 @@ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+ 	for (child = device_get_next_child_node(dev, NULL); child;	\
+ 	     child = device_get_next_child_node(dev, child))
+ 
++struct fwnode_handle *fwnode_get_named_child_node(struct fwnode_handle *fwnode,
++						  const char *childname);
+ struct fwnode_handle *device_get_named_child_node(struct device *dev,
+ 						  const char *childname);
+ 
 -- 
-2.11.0
+2.7.4
+
