@@ -1,699 +1,432 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [RESEND PATCH v3 5/8] phy: phy-mt65xx-usb3: add support for new
- version phy
-Date: Mon, 6 Mar 2017 21:49:26 +0800
-Message-ID: <1488808169-6031-5-git-send-email-chunfeng.yun@mediatek.com>
-References: <1488808169-6031-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [Patch v2 02/11] s5p-mfc: Adding initial support for MFC v10.10
+Date: Mon, 06 Mar 2017 14:58:52 +0100
+Message-ID: <f1399128-a4ae-6cfc-ae99-b6eafe849853@samsung.com>
+References: <1488532036-13044-1-git-send-email-smitha.t@samsung.com>
+ <CGME20170303090436epcas1p2097d589d9c5e6f7ee634ab9917cc987e@epcas1p2.samsung.com>
+ <1488532036-13044-3-git-send-email-smitha.t@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1488808169-6031-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1488532036-13044-3-git-send-email-smitha.t@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Smitha T Murthy <smitha.t@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: kyungmin.park@samsung.com, kamil@wypas.org, jtp.park@samsung.com, mchehab@kernel.org, pankaj.dubey@samsung.com, krzk@kernel.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There are some variations from mt2701 to mt2712:
-1. banks shared by multiple ports are put back into each port,
-    such as SPLLC and U2FREQ;
-2. add a new bank MISC for u2port, and CHIP for u3port;
-3. bank's offset in each port are also rearranged;
+On 03.03.2017 10:07, Smitha T Murthy wrote:
+> Adding the support for MFC v10.10, with new register file and
+> necessary hw control, decoder, encoder and structural changes.
+>
+> Signed-off-by: Smitha T Murthy <smitha.t@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/phy/phy-mt65xx-usb3.c |  344 ++++++++++++++++++++++++++---------------
- 1 file changed, 217 insertions(+), 127 deletions(-)
+Few nitpicks below.
 
-diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-index f4a3505..eb33499 100644
---- a/drivers/phy/phy-mt65xx-usb3.c
-+++ b/drivers/phy/phy-mt65xx-usb3.c
-@@ -23,46 +23,54 @@
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- 
--/*
-- * for sifslv2 register, but exclude port's;
-- * relative to USB3_SIF2_BASE base address
-- */
--#define SSUSB_SIFSLV_SPLLC		0x0000
--#define SSUSB_SIFSLV_U2FREQ		0x0100
--
--/* offsets of banks in each u2phy registers */
--#define SSUSB_SIFSLV_U2PHY_COM_BASE	0x0000
--/* offsets of banks in each u3phy registers */
--#define SSUSB_SIFSLV_U3PHYD_BASE	0x0000
--#define SSUSB_SIFSLV_U3PHYA_BASE	0x0200
--
--#define U3P_USBPHYACR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0000)
-+/* version V1 sub-banks offset base address */
-+/* banks shared by multiple phys */
-+#define SSUSB_SIFSLV_V1_SPLLC		0x000	/* shared by u3 phys */
-+#define SSUSB_SIFSLV_V1_U2FREQ		0x100	/* shared by u2 phys */
-+/* u2 phy bank */
-+#define SSUSB_SIFSLV_V1_U2PHY_COM	0x000
-+/* u3 phy banks */
-+#define SSUSB_SIFSLV_V1_U3PHYD		0x000
-+#define SSUSB_SIFSLV_V1_U3PHYA		0x200
-+
-+/* version V2 sub-banks offset base address */
-+/* u2 phy banks */
-+#define SSUSB_SIFSLV_V2_MISC		0x000
-+#define SSUSB_SIFSLV_V2_U2FREQ		0x100
-+#define SSUSB_SIFSLV_V2_U2PHY_COM	0x300
-+/* u3 phy banks */
-+#define SSUSB_SIFSLV_V2_SPLLC		0x000
-+#define SSUSB_SIFSLV_V2_CHIP		0x100
-+#define SSUSB_SIFSLV_V2_U3PHYD		0x200
-+#define SSUSB_SIFSLV_V2_U3PHYA		0x400
-+
-+#define U3P_USBPHYACR0		0x000
- #define PA0_RG_U2PLL_FORCE_ON		BIT(15)
- 
--#define U3P_USBPHYACR2		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0008)
-+#define U3P_USBPHYACR2		0x008
- #define PA2_RG_SIF_U2PLL_FORCE_EN	BIT(18)
- 
--#define U3P_USBPHYACR5		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0014)
-+#define U3P_USBPHYACR5		0x014
- #define PA5_RG_U2_HSTX_SRCAL_EN	BIT(15)
- #define PA5_RG_U2_HSTX_SRCTRL		GENMASK(14, 12)
- #define PA5_RG_U2_HSTX_SRCTRL_VAL(x)	((0x7 & (x)) << 12)
- #define PA5_RG_U2_HS_100U_U3_EN	BIT(11)
- 
--#define U3P_USBPHYACR6		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0018)
-+#define U3P_USBPHYACR6		0x018
- #define PA6_RG_U2_BC11_SW_EN		BIT(23)
- #define PA6_RG_U2_OTG_VBUSCMP_EN	BIT(20)
- #define PA6_RG_U2_SQTH		GENMASK(3, 0)
- #define PA6_RG_U2_SQTH_VAL(x)	(0xf & (x))
- 
--#define U3P_U2PHYACR4		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0020)
-+#define U3P_U2PHYACR4		0x020
- #define P2C_RG_USB20_GPIO_CTL		BIT(9)
- #define P2C_USB20_GPIO_MODE		BIT(8)
- #define P2C_U2_GPIO_CTR_MSK	(P2C_RG_USB20_GPIO_CTL | P2C_USB20_GPIO_MODE)
- 
--#define U3D_U2PHYDCR0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0060)
-+#define U3D_U2PHYDCR0		0x060
- #define P2C_RG_SIF_U2PLL_FORCE_ON	BIT(24)
- 
--#define U3P_U2PHYDTM0		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x0068)
-+#define U3P_U2PHYDTM0		0x068
- #define P2C_FORCE_UART_EN		BIT(26)
- #define P2C_FORCE_DATAIN		BIT(23)
- #define P2C_FORCE_DM_PULLDOWN		BIT(21)
-@@ -84,59 +92,56 @@
- 		P2C_FORCE_TERMSEL | P2C_RG_DMPULLDOWN | \
- 		P2C_RG_DPPULLDOWN | P2C_RG_TERMSEL)
- 
--#define U3P_U2PHYDTM1		(SSUSB_SIFSLV_U2PHY_COM_BASE + 0x006C)
-+#define U3P_U2PHYDTM1		0x06C
- #define P2C_RG_UART_EN			BIT(16)
- #define P2C_RG_VBUSVALID		BIT(5)
- #define P2C_RG_SESSEND			BIT(4)
- #define P2C_RG_AVALID			BIT(2)
- 
--#define U3P_U3_PHYA_REG0	(SSUSB_SIFSLV_U3PHYA_BASE + 0x0000)
--#define P3A_RG_U3_VUSB10_ON		BIT(5)
--
--#define U3P_U3_PHYA_REG6	(SSUSB_SIFSLV_U3PHYA_BASE + 0x0018)
-+#define U3P_U3_PHYA_REG6	0x018
- #define P3A_RG_TX_EIDLE_CM		GENMASK(31, 28)
- #define P3A_RG_TX_EIDLE_CM_VAL(x)	((0xf & (x)) << 28)
- 
--#define U3P_U3_PHYA_REG9	(SSUSB_SIFSLV_U3PHYA_BASE + 0x0024)
-+#define U3P_U3_PHYA_REG9	0x024
- #define P3A_RG_RX_DAC_MUX		GENMASK(5, 1)
- #define P3A_RG_RX_DAC_MUX_VAL(x)	((0x1f & (x)) << 1)
- 
--#define U3P_U3PHYA_DA_REG0	(SSUSB_SIFSLV_U3PHYA_BASE + 0x0100)
-+#define U3P_U3_PHYA_DA_REG0	0x100
- #define P3A_RG_XTAL_EXT_EN_U3		GENMASK(11, 10)
- #define P3A_RG_XTAL_EXT_EN_U3_VAL(x)	((0x3 & (x)) << 10)
- 
--#define U3P_U3_PHYD_LFPS1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x000c)
-+#define U3P_U3_PHYD_LFPS1		0x00c
- #define P3D_RG_FWAKE_TH		GENMASK(21, 16)
- #define P3D_RG_FWAKE_TH_VAL(x)	((0x3f & (x)) << 16)
- 
--#define U3P_PHYD_CDR1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x005c)
-+#define U3P_U3_PHYD_CDR1		0x05c
- #define P3D_RG_CDR_BIR_LTD1		GENMASK(28, 24)
- #define P3D_RG_CDR_BIR_LTD1_VAL(x)	((0x1f & (x)) << 24)
- #define P3D_RG_CDR_BIR_LTD0		GENMASK(12, 8)
- #define P3D_RG_CDR_BIR_LTD0_VAL(x)	((0x1f & (x)) << 8)
- 
--#define U3P_U3_PHYD_RXDET1		(SSUSB_SIFSLV_U3PHYD_BASE + 0x128)
-+#define U3P_U3_PHYD_RXDET1		0x128
- #define P3D_RG_RXDET_STB2_SET		GENMASK(17, 9)
- #define P3D_RG_RXDET_STB2_SET_VAL(x)	((0x1ff & (x)) << 9)
- 
--#define U3P_U3_PHYD_RXDET2		(SSUSB_SIFSLV_U3PHYD_BASE + 0x12c)
-+#define U3P_U3_PHYD_RXDET2		0x12c
- #define P3D_RG_RXDET_STB2_SET_P3	GENMASK(8, 0)
- #define P3D_RG_RXDET_STB2_SET_P3_VAL(x)	(0x1ff & (x))
- 
--#define U3P_XTALCTL3		(SSUSB_SIFSLV_SPLLC + 0x0018)
-+#define U3P_SPLLC_XTALCTL3		0x018
- #define XC3_RG_U3_XTAL_RX_PWD		BIT(9)
- #define XC3_RG_U3_FRC_XTAL_RX_PWD	BIT(8)
- 
--#define U3P_U2FREQ_FMCR0	(SSUSB_SIFSLV_U2FREQ + 0x00)
-+#define U3P_U2FREQ_FMCR0	0x00
- #define P2F_RG_MONCLK_SEL	GENMASK(27, 26)
- #define P2F_RG_MONCLK_SEL_VAL(x)	((0x3 & (x)) << 26)
- #define P2F_RG_FREQDET_EN	BIT(24)
- #define P2F_RG_CYCLECNT		GENMASK(23, 0)
- #define P2F_RG_CYCLECNT_VAL(x)	((P2F_RG_CYCLECNT) & (x))
- 
--#define U3P_U2FREQ_VALUE	(SSUSB_SIFSLV_U2FREQ + 0x0c)
-+#define U3P_U2FREQ_VALUE	0x0c
- 
--#define U3P_U2FREQ_FMMONR1	(SSUSB_SIFSLV_U2FREQ + 0x10)
-+#define U3P_U2FREQ_FMMONR1	0x10
- #define P2F_USB_FM_VALID	BIT(0)
- #define P2F_RG_FRCK_EN		BIT(8)
- 
-@@ -145,14 +150,37 @@
- #define U3P_SR_COEF_DIVISOR	1000
- #define U3P_FM_DET_CYCLE_CNT	1024
- 
-+enum mt_phy_version {
-+	MT_PHY_V1 = 1,
-+	MT_PHY_V2,
-+};
-+
- struct mt65xx_phy_pdata {
- 	/* avoid RX sensitivity level degradation only for mt8173 */
- 	bool avoid_rx_sen_degradation;
-+	enum mt_phy_version version;
-+};
-+
-+struct u2phy_banks {
-+	void __iomem *misc;
-+	void __iomem *fmreg;
-+	void __iomem *com;
-+};
-+
-+struct u3phy_banks {
-+	void __iomem *spllc;
-+	void __iomem *chip;
-+	void __iomem *phyd; /* include u3phyd_bank2 */
-+	void __iomem *phya; /* include u3phya_da */
- };
- 
- struct mt65xx_phy_instance {
- 	struct phy *phy;
- 	void __iomem *port_base;
-+	union {
-+		struct u2phy_banks u2_banks;
-+		struct u3phy_banks u3_banks;
-+	};
- 	struct clk *ref_clk;	/* reference clock of anolog phy */
- 	u32 index;
- 	u8 type;
-@@ -169,49 +197,53 @@ struct mt65xx_u3phy {
- static void hs_slew_rate_calibrate(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
--	void __iomem *sif_base = u3phy->sif_base;
-+	struct u2phy_banks *u2_banks = &instance->u2_banks;
-+	void __iomem *fmreg = u2_banks->fmreg;
-+	void __iomem *com = u2_banks->com;
- 	int calibration_val;
- 	int fm_out;
- 	u32 tmp;
- 
- 	/* enable USB ring oscillator */
--	tmp = readl(instance->port_base + U3P_USBPHYACR5);
-+	tmp = readl(com + U3P_USBPHYACR5);
- 	tmp |= PA5_RG_U2_HSTX_SRCAL_EN;
--	writel(tmp, instance->port_base + U3P_USBPHYACR5);
-+	writel(tmp, com + U3P_USBPHYACR5);
- 	udelay(1);
- 
- 	/*enable free run clock */
--	tmp = readl(sif_base + U3P_U2FREQ_FMMONR1);
-+	tmp = readl(fmreg + U3P_U2FREQ_FMMONR1);
- 	tmp |= P2F_RG_FRCK_EN;
--	writel(tmp, sif_base + U3P_U2FREQ_FMMONR1);
-+	writel(tmp, fmreg + U3P_U2FREQ_FMMONR1);
- 
- 	/* set cycle count as 1024, and select u2 channel */
--	tmp = readl(sif_base + U3P_U2FREQ_FMCR0);
-+	tmp = readl(fmreg + U3P_U2FREQ_FMCR0);
- 	tmp &= ~(P2F_RG_CYCLECNT | P2F_RG_MONCLK_SEL);
- 	tmp |= P2F_RG_CYCLECNT_VAL(U3P_FM_DET_CYCLE_CNT);
--	tmp |= P2F_RG_MONCLK_SEL_VAL(instance->index >> 1);
--	writel(tmp, sif_base + U3P_U2FREQ_FMCR0);
-+	if (u3phy->pdata->version == MT_PHY_V1)
-+		tmp |= P2F_RG_MONCLK_SEL_VAL(instance->index >> 1);
-+
-+	writel(tmp, fmreg + U3P_U2FREQ_FMCR0);
- 
- 	/* enable frequency meter */
--	tmp = readl(sif_base + U3P_U2FREQ_FMCR0);
-+	tmp = readl(fmreg + U3P_U2FREQ_FMCR0);
- 	tmp |= P2F_RG_FREQDET_EN;
--	writel(tmp, sif_base + U3P_U2FREQ_FMCR0);
-+	writel(tmp, fmreg + U3P_U2FREQ_FMCR0);
- 
- 	/* ignore return value */
--	readl_poll_timeout(sif_base + U3P_U2FREQ_FMMONR1, tmp,
-+	readl_poll_timeout(fmreg + U3P_U2FREQ_FMMONR1, tmp,
- 		  (tmp & P2F_USB_FM_VALID), 10, 200);
- 
--	fm_out = readl(sif_base + U3P_U2FREQ_VALUE);
-+	fm_out = readl(fmreg + U3P_U2FREQ_VALUE);
- 
- 	/* disable frequency meter */
--	tmp = readl(sif_base + U3P_U2FREQ_FMCR0);
-+	tmp = readl(fmreg + U3P_U2FREQ_FMCR0);
- 	tmp &= ~P2F_RG_FREQDET_EN;
--	writel(tmp, sif_base + U3P_U2FREQ_FMCR0);
-+	writel(tmp, fmreg + U3P_U2FREQ_FMCR0);
- 
- 	/*disable free run clock */
--	tmp = readl(sif_base + U3P_U2FREQ_FMMONR1);
-+	tmp = readl(fmreg + U3P_U2FREQ_FMMONR1);
- 	tmp &= ~P2F_RG_FRCK_EN;
--	writel(tmp, sif_base + U3P_U2FREQ_FMMONR1);
-+	writel(tmp, fmreg + U3P_U2FREQ_FMMONR1);
- 
- 	if (fm_out) {
- 		/* ( 1024 / FM_OUT ) x reference clock frequency x 0.028 */
-@@ -226,63 +258,63 @@ static void hs_slew_rate_calibrate(struct mt65xx_u3phy *u3phy,
- 		instance->index, fm_out, calibration_val);
- 
- 	/* set HS slew rate */
--	tmp = readl(instance->port_base + U3P_USBPHYACR5);
-+	tmp = readl(com + U3P_USBPHYACR5);
- 	tmp &= ~PA5_RG_U2_HSTX_SRCTRL;
- 	tmp |= PA5_RG_U2_HSTX_SRCTRL_VAL(calibration_val);
--	writel(tmp, instance->port_base + U3P_USBPHYACR5);
-+	writel(tmp, com + U3P_USBPHYACR5);
- 
- 	/* disable USB ring oscillator */
--	tmp = readl(instance->port_base + U3P_USBPHYACR5);
-+	tmp = readl(com + U3P_USBPHYACR5);
- 	tmp &= ~PA5_RG_U2_HSTX_SRCAL_EN;
--	writel(tmp, instance->port_base + U3P_USBPHYACR5);
-+	writel(tmp, com + U3P_USBPHYACR5);
- }
- 
- static void u3_phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
--	void __iomem *port_base = instance->port_base;
-+	struct u3phy_banks *u3_banks = &instance->u3_banks;
- 	u32 tmp;
- 
- 	/* gating PCIe Analog XTAL clock */
--	tmp = readl(u3phy->sif_base + U3P_XTALCTL3);
-+	tmp = readl(u3_banks->spllc + U3P_SPLLC_XTALCTL3);
- 	tmp |= XC3_RG_U3_XTAL_RX_PWD | XC3_RG_U3_FRC_XTAL_RX_PWD;
--	writel(tmp, u3phy->sif_base + U3P_XTALCTL3);
-+	writel(tmp, u3_banks->spllc + U3P_SPLLC_XTALCTL3);
- 
- 	/* gating XSQ */
--	tmp = readl(port_base + U3P_U3PHYA_DA_REG0);
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG0);
- 	tmp &= ~P3A_RG_XTAL_EXT_EN_U3;
- 	tmp |= P3A_RG_XTAL_EXT_EN_U3_VAL(2);
--	writel(tmp, port_base + U3P_U3PHYA_DA_REG0);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG0);
- 
--	tmp = readl(port_base + U3P_U3_PHYA_REG9);
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_REG9);
- 	tmp &= ~P3A_RG_RX_DAC_MUX;
- 	tmp |= P3A_RG_RX_DAC_MUX_VAL(4);
--	writel(tmp, port_base + U3P_U3_PHYA_REG9);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_REG9);
- 
--	tmp = readl(port_base + U3P_U3_PHYA_REG6);
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_REG6);
- 	tmp &= ~P3A_RG_TX_EIDLE_CM;
- 	tmp |= P3A_RG_TX_EIDLE_CM_VAL(0xe);
--	writel(tmp, port_base + U3P_U3_PHYA_REG6);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_REG6);
- 
--	tmp = readl(port_base + U3P_PHYD_CDR1);
-+	tmp = readl(u3_banks->phyd + U3P_U3_PHYD_CDR1);
- 	tmp &= ~(P3D_RG_CDR_BIR_LTD0 | P3D_RG_CDR_BIR_LTD1);
- 	tmp |= P3D_RG_CDR_BIR_LTD0_VAL(0xc) | P3D_RG_CDR_BIR_LTD1_VAL(0x3);
--	writel(tmp, port_base + U3P_PHYD_CDR1);
-+	writel(tmp, u3_banks->phyd + U3P_U3_PHYD_CDR1);
- 
--	tmp = readl(port_base + U3P_U3_PHYD_LFPS1);
-+	tmp = readl(u3_banks->phyd + U3P_U3_PHYD_LFPS1);
- 	tmp &= ~P3D_RG_FWAKE_TH;
- 	tmp |= P3D_RG_FWAKE_TH_VAL(0x34);
--	writel(tmp, port_base + U3P_U3_PHYD_LFPS1);
-+	writel(tmp, u3_banks->phyd + U3P_U3_PHYD_LFPS1);
- 
--	tmp = readl(port_base + U3P_U3_PHYD_RXDET1);
-+	tmp = readl(u3_banks->phyd + U3P_U3_PHYD_RXDET1);
- 	tmp &= ~P3D_RG_RXDET_STB2_SET;
- 	tmp |= P3D_RG_RXDET_STB2_SET_VAL(0x10);
--	writel(tmp, port_base + U3P_U3_PHYD_RXDET1);
-+	writel(tmp, u3_banks->phyd + U3P_U3_PHYD_RXDET1);
- 
--	tmp = readl(port_base + U3P_U3_PHYD_RXDET2);
-+	tmp = readl(u3_banks->phyd + U3P_U3_PHYD_RXDET2);
- 	tmp &= ~P3D_RG_RXDET_STB2_SET_P3;
- 	tmp |= P3D_RG_RXDET_STB2_SET_P3_VAL(0x10);
--	writel(tmp, port_base + U3P_U3_PHYD_RXDET2);
-+	writel(tmp, u3_banks->phyd + U3P_U3_PHYD_RXDET2);
- 
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, instance->index);
- }
-@@ -290,51 +322,52 @@ static void u3_phy_instance_init(struct mt65xx_u3phy *u3phy,
- static void phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
--	void __iomem *port_base = instance->port_base;
-+	struct u2phy_banks *u2_banks = &instance->u2_banks;
-+	void __iomem *com = u2_banks->com;
- 	u32 index = instance->index;
- 	u32 tmp;
- 
- 	/* switch to USB function. (system register, force ip into usb mode) */
--	tmp = readl(port_base + U3P_U2PHYDTM0);
-+	tmp = readl(com + U3P_U2PHYDTM0);
- 	tmp &= ~P2C_FORCE_UART_EN;
- 	tmp |= P2C_RG_XCVRSEL_VAL(1) | P2C_RG_DATAIN_VAL(0);
--	writel(tmp, port_base + U3P_U2PHYDTM0);
-+	writel(tmp, com + U3P_U2PHYDTM0);
- 
--	tmp = readl(port_base + U3P_U2PHYDTM1);
-+	tmp = readl(com + U3P_U2PHYDTM1);
- 	tmp &= ~P2C_RG_UART_EN;
--	writel(tmp, port_base + U3P_U2PHYDTM1);
-+	writel(tmp, com + U3P_U2PHYDTM1);
- 
- 	if (!index) {
--		tmp = readl(port_base + U3P_U2PHYACR4);
-+		tmp = readl(com + U3P_U2PHYACR4);
- 		tmp &= ~P2C_U2_GPIO_CTR_MSK;
--		writel(tmp, port_base + U3P_U2PHYACR4);
-+		writel(tmp, com + U3P_U2PHYACR4);
- 	}
- 
- 	if (u3phy->pdata->avoid_rx_sen_degradation) {
- 		if (!index) {
--			tmp = readl(port_base + U3P_USBPHYACR2);
-+			tmp = readl(com + U3P_USBPHYACR2);
- 			tmp |= PA2_RG_SIF_U2PLL_FORCE_EN;
--			writel(tmp, port_base + U3P_USBPHYACR2);
-+			writel(tmp, com + U3P_USBPHYACR2);
- 
--			tmp = readl(port_base + U3D_U2PHYDCR0);
-+			tmp = readl(com + U3D_U2PHYDCR0);
- 			tmp &= ~P2C_RG_SIF_U2PLL_FORCE_ON;
--			writel(tmp, port_base + U3D_U2PHYDCR0);
-+			writel(tmp, com + U3D_U2PHYDCR0);
- 		} else {
--			tmp = readl(port_base + U3D_U2PHYDCR0);
-+			tmp = readl(com + U3D_U2PHYDCR0);
- 			tmp |= P2C_RG_SIF_U2PLL_FORCE_ON;
--			writel(tmp, port_base + U3D_U2PHYDCR0);
-+			writel(tmp, com + U3D_U2PHYDCR0);
- 
--			tmp = readl(port_base + U3P_U2PHYDTM0);
-+			tmp = readl(com + U3P_U2PHYDTM0);
- 			tmp |= P2C_RG_SUSPENDM | P2C_FORCE_SUSPENDM;
--			writel(tmp, port_base + U3P_U2PHYDTM0);
-+			writel(tmp, com + U3P_U2PHYDTM0);
- 		}
- 	}
- 
--	tmp = readl(port_base + U3P_USBPHYACR6);
-+	tmp = readl(com + U3P_USBPHYACR6);
- 	tmp &= ~PA6_RG_U2_BC11_SW_EN;	/* DP/DM BC1.1 path Disable */
- 	tmp &= ~PA6_RG_U2_SQTH;
- 	tmp |= PA6_RG_U2_SQTH_VAL(2);
--	writel(tmp, port_base + U3P_USBPHYACR6);
-+	writel(tmp, com + U3P_USBPHYACR6);
- 
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
- }
-@@ -342,41 +375,42 @@ static void phy_instance_init(struct mt65xx_u3phy *u3phy,
- static void phy_instance_power_on(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
--	void __iomem *port_base = instance->port_base;
-+	struct u2phy_banks *u2_banks = &instance->u2_banks;
-+	void __iomem *com = u2_banks->com;
- 	u32 index = instance->index;
- 	u32 tmp;
- 
- 	/* (force_suspendm=0) (let suspendm=1, enable usb 480MHz pll) */
--	tmp = readl(port_base + U3P_U2PHYDTM0);
-+	tmp = readl(com + U3P_U2PHYDTM0);
- 	tmp &= ~(P2C_FORCE_SUSPENDM | P2C_RG_XCVRSEL);
- 	tmp &= ~(P2C_RG_DATAIN | P2C_DTM0_PART_MASK);
--	writel(tmp, port_base + U3P_U2PHYDTM0);
-+	writel(tmp, com + U3P_U2PHYDTM0);
- 
- 	/* OTG Enable */
--	tmp = readl(port_base + U3P_USBPHYACR6);
-+	tmp = readl(com + U3P_USBPHYACR6);
- 	tmp |= PA6_RG_U2_OTG_VBUSCMP_EN;
--	writel(tmp, port_base + U3P_USBPHYACR6);
-+	writel(tmp, com + U3P_USBPHYACR6);
- 
- 	if (!index) {
- 		/* switch 100uA current to SSUSB */
--		tmp = readl(port_base + U3P_USBPHYACR5);
-+		tmp = readl(com + U3P_USBPHYACR5);
- 		tmp |= PA5_RG_U2_HS_100U_U3_EN;
--		writel(tmp, port_base + U3P_USBPHYACR5);
-+		writel(tmp, com + U3P_USBPHYACR5);
- 	}
- 
--	tmp = readl(port_base + U3P_U2PHYDTM1);
-+	tmp = readl(com + U3P_U2PHYDTM1);
- 	tmp |= P2C_RG_VBUSVALID | P2C_RG_AVALID;
- 	tmp &= ~P2C_RG_SESSEND;
--	writel(tmp, port_base + U3P_U2PHYDTM1);
-+	writel(tmp, com + U3P_U2PHYDTM1);
- 
- 	if (u3phy->pdata->avoid_rx_sen_degradation && index) {
--		tmp = readl(port_base + U3D_U2PHYDCR0);
-+		tmp = readl(com + U3D_U2PHYDCR0);
- 		tmp |= P2C_RG_SIF_U2PLL_FORCE_ON;
--		writel(tmp, port_base + U3D_U2PHYDCR0);
-+		writel(tmp, com + U3D_U2PHYDCR0);
- 
--		tmp = readl(port_base + U3P_U2PHYDTM0);
-+		tmp = readl(com + U3P_U2PHYDTM0);
- 		tmp |= P2C_RG_SUSPENDM | P2C_FORCE_SUSPENDM;
--		writel(tmp, port_base + U3P_U2PHYDTM0);
-+		writel(tmp, com + U3P_U2PHYDTM0);
- 	}
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
- }
-@@ -384,42 +418,43 @@ static void phy_instance_power_on(struct mt65xx_u3phy *u3phy,
- static void phy_instance_power_off(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
--	void __iomem *port_base = instance->port_base;
-+	struct u2phy_banks *u2_banks = &instance->u2_banks;
-+	void __iomem *com = u2_banks->com;
- 	u32 index = instance->index;
- 	u32 tmp;
- 
--	tmp = readl(port_base + U3P_U2PHYDTM0);
-+	tmp = readl(com + U3P_U2PHYDTM0);
- 	tmp &= ~(P2C_RG_XCVRSEL | P2C_RG_DATAIN);
- 	tmp |= P2C_FORCE_SUSPENDM;
--	writel(tmp, port_base + U3P_U2PHYDTM0);
-+	writel(tmp, com + U3P_U2PHYDTM0);
- 
- 	/* OTG Disable */
--	tmp = readl(port_base + U3P_USBPHYACR6);
-+	tmp = readl(com + U3P_USBPHYACR6);
- 	tmp &= ~PA6_RG_U2_OTG_VBUSCMP_EN;
--	writel(tmp, port_base + U3P_USBPHYACR6);
-+	writel(tmp, com + U3P_USBPHYACR6);
- 
- 	if (!index) {
- 		/* switch 100uA current back to USB2.0 */
--		tmp = readl(port_base + U3P_USBPHYACR5);
-+		tmp = readl(com + U3P_USBPHYACR5);
- 		tmp &= ~PA5_RG_U2_HS_100U_U3_EN;
--		writel(tmp, port_base + U3P_USBPHYACR5);
-+		writel(tmp, com + U3P_USBPHYACR5);
- 	}
- 
- 	/* let suspendm=0, set utmi into analog power down */
--	tmp = readl(port_base + U3P_U2PHYDTM0);
-+	tmp = readl(com + U3P_U2PHYDTM0);
- 	tmp &= ~P2C_RG_SUSPENDM;
--	writel(tmp, port_base + U3P_U2PHYDTM0);
-+	writel(tmp, com + U3P_U2PHYDTM0);
- 	udelay(1);
- 
--	tmp = readl(port_base + U3P_U2PHYDTM1);
-+	tmp = readl(com + U3P_U2PHYDTM1);
- 	tmp &= ~(P2C_RG_VBUSVALID | P2C_RG_AVALID);
- 	tmp |= P2C_RG_SESSEND;
--	writel(tmp, port_base + U3P_U2PHYDTM1);
-+	writel(tmp, com + U3P_U2PHYDTM1);
- 
- 	if (u3phy->pdata->avoid_rx_sen_degradation && index) {
--		tmp = readl(port_base + U3D_U2PHYDCR0);
-+		tmp = readl(com + U3D_U2PHYDCR0);
- 		tmp &= ~P2C_RG_SIF_U2PLL_FORCE_ON;
--		writel(tmp, port_base + U3D_U2PHYDCR0);
-+		writel(tmp, com + U3D_U2PHYDCR0);
- 	}
- 
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
-@@ -428,18 +463,55 @@ static void phy_instance_power_off(struct mt65xx_u3phy *u3phy,
- static void phy_instance_exit(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
--	void __iomem *port_base = instance->port_base;
-+	struct u2phy_banks *u2_banks = &instance->u2_banks;
-+	void __iomem *com = u2_banks->com;
- 	u32 index = instance->index;
- 	u32 tmp;
- 
- 	if (u3phy->pdata->avoid_rx_sen_degradation && index) {
--		tmp = readl(port_base + U3D_U2PHYDCR0);
-+		tmp = readl(com + U3D_U2PHYDCR0);
- 		tmp &= ~P2C_RG_SIF_U2PLL_FORCE_ON;
--		writel(tmp, port_base + U3D_U2PHYDCR0);
-+		writel(tmp, com + U3D_U2PHYDCR0);
- 
--		tmp = readl(port_base + U3P_U2PHYDTM0);
-+		tmp = readl(com + U3P_U2PHYDTM0);
- 		tmp &= ~P2C_FORCE_SUSPENDM;
--		writel(tmp, port_base + U3P_U2PHYDTM0);
-+		writel(tmp, com + U3P_U2PHYDTM0);
-+	}
-+}
-+
-+static void phy_v1_banks_init(struct mt65xx_u3phy *u3phy,
-+	struct mt65xx_phy_instance *instance)
-+{
-+	struct u2phy_banks *u2_banks = &instance->u2_banks;
-+	struct u3phy_banks *u3_banks = &instance->u3_banks;
-+
-+	if (instance->type == PHY_TYPE_USB2) {
-+		u2_banks->misc = NULL;
-+		u2_banks->fmreg = u3phy->sif_base + SSUSB_SIFSLV_V1_U2FREQ;
-+		u2_banks->com = instance->port_base + SSUSB_SIFSLV_V1_U2PHY_COM;
-+	} else if (instance->type == PHY_TYPE_USB3) {
-+		u3_banks->spllc = u3phy->sif_base + SSUSB_SIFSLV_V1_SPLLC;
-+		u3_banks->chip = NULL;
-+		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V1_U3PHYD;
-+		u3_banks->phya = instance->port_base + SSUSB_SIFSLV_V1_U3PHYA;
-+	}
-+}
-+
-+static void phy_v2_banks_init(struct mt65xx_u3phy *u3phy,
-+	struct mt65xx_phy_instance *instance)
-+{
-+	struct u2phy_banks *u2_banks = &instance->u2_banks;
-+	struct u3phy_banks *u3_banks = &instance->u3_banks;
-+
-+	if (instance->type == PHY_TYPE_USB2) {
-+		u2_banks->misc = instance->port_base + SSUSB_SIFSLV_V2_MISC;
-+		u2_banks->fmreg = instance->port_base + SSUSB_SIFSLV_V2_U2FREQ;
-+		u2_banks->com = instance->port_base + SSUSB_SIFSLV_V2_U2PHY_COM;
-+	} else if (instance->type == PHY_TYPE_USB3) {
-+		u3_banks->spllc = instance->port_base + SSUSB_SIFSLV_V2_SPLLC;
-+		u3_banks->chip = instance->port_base + SSUSB_SIFSLV_V2_CHIP;
-+		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V2_U3PHYD;
-+		u3_banks->phya = instance->port_base + SSUSB_SIFSLV_V2_U3PHYA;
- 	}
- }
- 
-@@ -506,7 +578,6 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 	struct device_node *phy_np = args->np;
- 	int index;
- 
--
- 	if (args->args_count != 1) {
- 		dev_err(dev, "invalid number of cells in 'phy' property\n");
- 		return ERR_PTR(-EINVAL);
-@@ -524,13 +595,21 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 	}
- 
- 	instance->type = args->args[0];
--
- 	if (!(instance->type == PHY_TYPE_USB2 ||
- 	      instance->type == PHY_TYPE_USB3)) {
- 		dev_err(dev, "unsupported device type: %d\n", instance->type);
- 		return ERR_PTR(-EINVAL);
- 	}
- 
-+	if (u3phy->pdata->version == MT_PHY_V1) {
-+		phy_v1_banks_init(u3phy, instance);
-+	} else if (u3phy->pdata->version == MT_PHY_V2) {
-+		phy_v2_banks_init(u3phy, instance);
-+	} else {
-+		dev_err(dev, "phy version is not supported\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
- 	return instance->phy;
- }
- 
-@@ -544,14 +623,22 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 
- static const struct mt65xx_phy_pdata mt2701_pdata = {
- 	.avoid_rx_sen_degradation = false,
-+	.version = MT_PHY_V1,
-+};
-+
-+static const struct mt65xx_phy_pdata mt2712_pdata = {
-+	.avoid_rx_sen_degradation = false,
-+	.version = MT_PHY_V2,
- };
- 
- static const struct mt65xx_phy_pdata mt8173_pdata = {
- 	.avoid_rx_sen_degradation = true,
-+	.version = MT_PHY_V1,
- };
- 
- static const struct of_device_id mt65xx_u3phy_id_table[] = {
- 	{ .compatible = "mediatek,mt2701-u3phy", .data = &mt2701_pdata },
-+	{ .compatible = "mediatek,mt2712-u3phy", .data = &mt2712_pdata },
- 	{ .compatible = "mediatek,mt8173-u3phy", .data = &mt8173_pdata },
- 	{ },
- };
-@@ -587,11 +674,14 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
- 	u3phy->dev = dev;
- 	platform_set_drvdata(pdev, u3phy);
- 
--	sif_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	u3phy->sif_base = devm_ioremap_resource(dev, sif_res);
--	if (IS_ERR(u3phy->sif_base)) {
--		dev_err(dev, "failed to remap sif regs\n");
--		return PTR_ERR(u3phy->sif_base);
-+	if (u3phy->pdata->version == MT_PHY_V1) {
-+		/* get banks shared by multiple phys */
-+		sif_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+		u3phy->sif_base = devm_ioremap_resource(dev, sif_res);
-+		if (IS_ERR(u3phy->sif_base)) {
-+			dev_err(dev, "failed to remap sif regs\n");
-+			return PTR_ERR(u3phy->sif_base);
-+		}
- 	}
- 
- 	port = 0;
--- 
-1.7.9.5
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: devicetree@vger.kernel.org
+> ---
+>  .../devicetree/bindings/media/s5p-mfc.txt          |    1 +
+>  drivers/media/platform/s5p-mfc/regs-mfc-v10.h      |   36 ++++++++++++++++
+>  drivers/media/platform/s5p-mfc/s5p_mfc.c           |   30 +++++++++++++
+>  drivers/media/platform/s5p-mfc/s5p_mfc_common.h    |    4 +-
+>  drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c      |    4 ++
+>  drivers/media/platform/s5p-mfc/s5p_mfc_dec.c       |   44 +++++++++++---------
+>  drivers/media/platform/s5p-mfc/s5p_mfc_enc.c       |   21 +++++----
+>  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c    |    9 +++-
+>  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h    |    2 +
+>  9 files changed, 118 insertions(+), 33 deletions(-)
+>  create mode 100644 drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+>
+> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> index 2c90128..b83727b 100644
+> --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> @@ -13,6 +13,7 @@ Required properties:
+>  	(c) "samsung,mfc-v7" for MFC v7 present in Exynos5420 SoC
+>  	(d) "samsung,mfc-v8" for MFC v8 present in Exynos5800 SoC
+>  	(e) "samsung,exynos5433-mfc" for MFC v8 present in Exynos5433 SoC
+> +	(f) "samsung,mfc-v10" for MFC v10 present in Exynos7880 SoC
+>  
+>    - reg : Physical base address of the IP registers and length of memory
+>  	  mapped region.
+> diff --git a/drivers/media/platform/s5p-mfc/regs-mfc-v10.h b/drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+> new file mode 100644
+> index 0000000..bd671a5
+> --- /dev/null
+> +++ b/drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+> @@ -0,0 +1,36 @@
+> +/*
+> + * Register definition file for Samsung MFC V10.x Interface (FIMV) driver
+> + *
+> + * Copyright (c) 2017 Samsung Electronics Co., Ltd.
+> + *     http://www.samsung.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _REGS_MFC_V10_H
+> +#define _REGS_MFC_V10_H
+> +
+> +#include <linux/sizes.h>
+> +#include "regs-mfc-v8.h"
+> +
+> +/* MFCv10 register definitions*/
+> +#define S5P_FIMV_MFC_CLOCK_OFF_V10			0x7120
+> +#define S5P_FIMV_MFC_STATE_V10				0x7124
+> +
+> +/* MFCv10 Context buffer sizes */
+> +#define MFC_CTX_BUF_SIZE_V10		(30 * SZ_1K)	/* 30KB */
+> +#define MFC_H264_DEC_CTX_BUF_SIZE_V10	(2 * SZ_1M)	/* 2MB */
+> +#define MFC_OTHER_DEC_CTX_BUF_SIZE_V10	(20 * SZ_1K)	/* 20KB */
+> +#define MFC_H264_ENC_CTX_BUF_SIZE_V10	(100 * SZ_1K)	/* 100KB */
+> +#define MFC_OTHER_ENC_CTX_BUF_SIZE_V10	(15 * SZ_1K)	/* 15KB */
+> +
+> +/* MFCv10 variant defines */
+> +#define MAX_FW_SIZE_V10		(SZ_1M)		/* 1MB */
+> +#define MAX_CPB_SIZE_V10	(3 * SZ_1M)	/* 3MB */
+
+These comments seems redundant, definition is clear enough, you could
+remove them if there will be next iteration.
+
+> +#define MFC_VERSION_V10		0xA0
+> +#define MFC_NUM_PORTS_V10	1
+> +
+> +#endif /*_REGS_MFC_V10_H*/
+> +
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc.c b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+> index bb0a588..a043cce 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc.c
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc.c
+> @@ -1542,6 +1542,33 @@ static int s5p_mfc_resume(struct device *dev)
+>  	.num_clocks	= 3,
+>  };
+>  
+> +static struct s5p_mfc_buf_size_v6 mfc_buf_size_v10 = {
+> +	.dev_ctx        = MFC_CTX_BUF_SIZE_V10,
+> +	.h264_dec_ctx   = MFC_H264_DEC_CTX_BUF_SIZE_V10,
+> +	.other_dec_ctx  = MFC_OTHER_DEC_CTX_BUF_SIZE_V10,
+> +	.h264_enc_ctx   = MFC_H264_ENC_CTX_BUF_SIZE_V10,
+> +	.other_enc_ctx  = MFC_OTHER_ENC_CTX_BUF_SIZE_V10,
+> +};
+> +
+> +static struct s5p_mfc_buf_size buf_size_v10 = {
+> +	.fw     = MAX_FW_SIZE_V10,
+> +	.cpb    = MAX_CPB_SIZE_V10,
+> +	.priv   = &mfc_buf_size_v10,
+> +};
+> +
+> +static struct s5p_mfc_buf_align mfc_buf_align_v10 = {
+> +	.base = 0,
+> +};
+> +
+> +static struct s5p_mfc_variant mfc_drvdata_v10 = {
+> +	.version        = MFC_VERSION_V10,
+> +	.version_bit    = MFC_V10_BIT,
+> +	.port_num       = MFC_NUM_PORTS_V10,
+> +	.buf_size       = &buf_size_v10,
+> +	.buf_align      = &mfc_buf_align_v10,
+> +	.fw_name[0]     = "s5p-mfc-v10.fw",
+> +};
+> +
+>  static const struct of_device_id exynos_mfc_match[] = {
+>  	{
+>  		.compatible = "samsung,mfc-v5",
+> @@ -1558,6 +1585,9 @@ static int s5p_mfc_resume(struct device *dev)
+>  	}, {
+>  		.compatible = "samsung,exynos5433-mfc",
+>  		.data = &mfc_drvdata_v8_5433,
+> +	}, {
+> +		.compatible = "samsung,mfc-v10",
+> +		.data = &mfc_drvdata_v10,
+>  	},
+>  	{},
+>  };
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_common.h b/drivers/media/platform/s5p-mfc/s5p_mfc_common.h
+> index b45d18c..1941c63 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_common.h
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_common.h
+> @@ -23,7 +23,7 @@
+>  #include <media/v4l2-ioctl.h>
+>  #include <media/videobuf2-v4l2.h>
+>  #include "regs-mfc.h"
+> -#include "regs-mfc-v8.h"
+> +#include "regs-mfc-v10.h"
+>  
+>  #define S5P_MFC_NAME		"s5p-mfc"
+>  
+> @@ -723,11 +723,13 @@ struct mfc_control {
+>  #define IS_MFCV6_PLUS(dev)	(dev->variant->version >= 0x60 ? 1 : 0)
+>  #define IS_MFCV7_PLUS(dev)	(dev->variant->version >= 0x70 ? 1 : 0)
+>  #define IS_MFCV8_PLUS(dev)	(dev->variant->version >= 0x80 ? 1 : 0)
+> +#define IS_MFCV10(dev)		(dev->variant->version >= 0xA0 ? 1 : 0)
+>  
+>  #define MFC_V5_BIT	BIT(0)
+>  #define MFC_V6_BIT	BIT(1)
+>  #define MFC_V7_BIT	BIT(2)
+>  #define MFC_V8_BIT	BIT(3)
+> +#define MFC_V10_BIT	BIT(5)
+>  
+>  
+>  #endif /* S5P_MFC_COMMON_H_ */
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c b/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c
+> index 484af6b..0ded23c 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c
+> @@ -267,6 +267,10 @@ int s5p_mfc_init_hw(struct s5p_mfc_dev *dev)
+>  	}
+>  	else
+>  		mfc_write(dev, 0x3ff, S5P_FIMV_SW_RESET);
+> +
+> +	if (IS_MFCV10(dev))
+> +		mfc_write(dev, 0x0, S5P_FIMV_MFC_CLOCK_OFF_V10);
+> +
+>  	mfc_debug(2, "Will now wait for completion of firmware transfer\n");
+>  	if (s5p_mfc_wait_for_done_dev(dev, S5P_MFC_R2H_CMD_FW_STATUS_RET)) {
+>  		mfc_err("Failed to load firmware\n");
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c b/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c
+> index 0ec2928..784b28e 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_dec.c
+> @@ -54,7 +54,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_NONE,
+>  		.type		= MFC_FMT_RAW,
+>  		.num_planes	= 2,
+> -		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
+> +		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT |
+> +								MFC_V10_BIT,
+
+I think these lengthy alternatives could be replaced by alias
+MFC_V6PLUS_BITS or MFC_V5PLUS_BITS.
+
+>  	},
+>  	{
+>  		.name		= "4:2:0 2 Planes Y/CrCb",
+> @@ -62,7 +63,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_NONE,
+>  		.type		= MFC_FMT_RAW,
+>  		.num_planes	= 2,
+> -		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
+> +		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT |
+> +								MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "H264 Encoded Stream",
+> @@ -70,8 +72,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_H264_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "H264/MVC Encoded Stream",
+> @@ -79,7 +81,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_H264_MVC_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
+> +		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT |
+> +								MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "H263 Encoded Stream",
+> @@ -87,8 +90,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_H263_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "MPEG1 Encoded Stream",
+> @@ -96,8 +99,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_MPEG2_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "MPEG2 Encoded Stream",
+> @@ -105,8 +108,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_MPEG2_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "MPEG4 Encoded Stream",
+> @@ -114,8 +117,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_MPEG4_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "XviD Encoded Stream",
+> @@ -123,8 +126,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_MPEG4_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "VC1 Encoded Stream",
+> @@ -132,8 +135,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_VC1_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "VC1 RCV Encoded Stream",
+> @@ -141,8 +144,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_VC1RCV_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "VP8 Encoded Stream",
+> @@ -150,7 +153,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_VP8_DEC,
+>  		.type		= MFC_FMT_DEC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
+> +		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT |
+> +								MFC_V10_BIT,
+>  	},
+>  };
+>  
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+> index e39d9e0..9042378 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_enc.c
+> @@ -57,8 +57,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_NONE,
+>  		.type		= MFC_FMT_RAW,
+>  		.num_planes	= 2,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "4:2:0 2 Planes Y/CrCb",
+> @@ -66,7 +66,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_NONE,
+>  		.type		= MFC_FMT_RAW,
+>  		.num_planes	= 2,
+> -		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT,
+> +		.versions	= MFC_V6_BIT | MFC_V7_BIT | MFC_V8_BIT |
+> +								MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "H264 Encoded Stream",
+> @@ -74,8 +75,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_H264_ENC,
+>  		.type		= MFC_FMT_ENC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "MPEG4 Encoded Stream",
+> @@ -83,8 +84,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_MPEG4_ENC,
+>  		.type		= MFC_FMT_ENC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "H263 Encoded Stream",
+> @@ -92,8 +93,8 @@
+>  		.codec_mode	= S5P_MFC_CODEC_H263_ENC,
+>  		.type		= MFC_FMT_ENC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V5_BIT | MFC_V6_BIT | MFC_V7_BIT |
+> -								MFC_V8_BIT,
+> +		.versions	= MFC_V5_BIT | MFC_V6_BIT |
+> +					MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  	{
+>  		.name		= "VP8 Encoded Stream",
+> @@ -101,7 +102,7 @@
+>  		.codec_mode	= S5P_MFC_CODEC_VP8_ENC,
+>  		.type		= MFC_FMT_ENC,
+>  		.num_planes	= 1,
+> -		.versions	= MFC_V7_BIT | MFC_V8_BIT,
+> +		.versions	= MFC_V7_BIT | MFC_V8_BIT | MFC_V10_BIT,
+>  	},
+>  };
+>  
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c
+> index 7682b0e..9dc106e 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c
+> @@ -358,6 +358,7 @@ static int calc_plane(int width, int height)
+>  
+>  static void s5p_mfc_dec_calc_dpb_size_v6(struct s5p_mfc_ctx *ctx)
+>  {
+> +	struct s5p_mfc_dev *dev = ctx->dev;
+>  	ctx->buf_width = ALIGN(ctx->img_width, S5P_FIMV_NV12MT_HALIGN_V6);
+>  	ctx->buf_height = ALIGN(ctx->img_height, S5P_FIMV_NV12MT_VALIGN_V6);
+>  	mfc_debug(2, "SEQ Done: Movie dimensions %dx%d,\n"
+> @@ -374,8 +375,12 @@ static void s5p_mfc_dec_calc_dpb_size_v6(struct s5p_mfc_ctx *ctx)
+>  
+>  	if (ctx->codec_mode == S5P_MFC_CODEC_H264_DEC ||
+>  			ctx->codec_mode == S5P_MFC_CODEC_H264_MVC_DEC) {
+> -		ctx->mv_size = S5P_MFC_DEC_MV_SIZE_V6(ctx->img_width,
+> -				ctx->img_height);
+> +		if (IS_MFCV10(dev))
+> +			ctx->mv_size = S5P_MFC_DEC_MV_SIZE_V10(ctx->img_width,
+> +					ctx->img_height);
+> +		else
+> +			ctx->mv_size = S5P_MFC_DEC_MV_SIZE_V6(ctx->img_width,
+> +					ctx->img_height);
+>  		ctx->mv_size = ALIGN(ctx->mv_size, 16);
+>  	} else {
+>  		ctx->mv_size = 0;
+> diff --git a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h
+> index 8055848..021b8db 100644
+> --- a/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h
+> +++ b/drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h
+> @@ -24,6 +24,8 @@
+>  #define MB_HEIGHT(y_size)		DIV_ROUND_UP(y_size, 16)
+>  #define S5P_MFC_DEC_MV_SIZE_V6(x, y)	(MB_WIDTH(x) * \
+>  					(((MB_HEIGHT(y)+1)/2)*2) * 64 + 128)
+> +#define S5P_MFC_DEC_MV_SIZE_V10(x, y)	(MB_WIDTH(x) * \
+> +					(((MB_HEIGHT(y)+1)/2)*2) * 64 + 512)
+>  
+>  /* Definition */
+>  #define ENC_MULTI_SLICE_MB_MAX		((1 << 30) - 1)
