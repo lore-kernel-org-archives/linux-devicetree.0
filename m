@@ -1,40 +1,77 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: NSP: Add crypto (SPU) to dtsi
-Date: Mon, 6 Mar 2017 11:22:54 -0800
-Message-ID: <fd877ab2-48db-a677-b539-ba5ed55e75c6@gmail.com>
-References: <1487798543-34229-1-git-send-email-steven.lin1@broadcom.com>
- <66ba937a-f1c3-1cae-ff2e-46a9d9c97344@gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+Date: Mon, 6 Mar 2017 20:59:54 +0100
+Message-ID: <41dac3a5-39fb-5740-106a-980b3107fac0@gmail.com>
+References: <20170228120452.10043-1-zajec5@gmail.com>
+ <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
+ <290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
+ <28982a47-20b5-f90b-c1d8-b470e4019a08@gmail.com>
+ <cd92c387-f484-4806-c5fd-9c55d0fc0aef@milecki.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <66ba937a-f1c3-1cae-ff2e-46a9d9c97344-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <cd92c387-f484-4806-c5fd-9c55d0fc0aef@milecki.pl>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2017 12:31 PM, Florian Fainelli wrote:
-> On 02/22/2017 01:22 PM, Steve Lin wrote:
->> Adds crypto hardware (SPU) to Northstar Plus device tree file.
+On 03/06/2017 07:16 AM, Rafał Miłecki wrote:
+> On 03/01/2017 10:04 PM, Jacek Anaszewski wrote:
+>> On 02/28/2017 10:51 PM, Rafał Miłecki wrote:
+>>> On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
+>>>> I think that it would be simpler if we could initially see
+>>>> a complete sample dts implementation containing all required DT
+>>>> nodes. The example could contain timer trigger as well as usb-port
+>>>> trigger specific bindings.
+>>>
+>>> Please take a look at attached patch. I used it on Tenda AC9 with:
+>>>
+>>> usb_trigger: usb-trigger {
+>>>     trigger-type = "usbport";
+>>>     ports = <&ohci_port1>, <&ehci_port1>;
+>>> };
+>>>
+>>> usb {
+>>>     label = "bcm53xx:blue:usb";
+>>>     gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
+>>>     triggers = <&usb_trigger>;
+>>> };
 >>
->> Signed-off-by: Steve Lin <steven.lin1-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> OK, I got it, thanks.
+>>
+>>>
+>>>> I suppose that we should see DT nodes containing #list-cells
+>>>> properties that define the quantity of phandle arguments.
+>>>>
+>>>> It seems that this approach allows for defining a list of elements
+>>>> with variable number of arguments, i.e. what you were initially
+>>>> asking for.
+>>>
+>>> Are you sure we need #list-cells? Can't we simply use
+>>> of_count_phandle_with_args(np, "triggers", NULL);
+>>> ?
+>>
+>> I'm not sure, I just read the function documentation :-)
+>> I haven't verified nor have I used this API.
 > 
-> Applied, thanks!
+> So we could use #list-cells to support something like:
+> 
+> usb {
+>     label = "bcm53xx:blue:usb";
+>     gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
+>     triggers = <&usb_trigger 1 2>, <&timer_trigger 3 4 5>;
+> };
+> 
+> but I don't see any need for this. Just specifying triggers like:
+> triggers = <&usb_trigger>, <&timer_trigger>, <&foo>;
+> should be always enough, especially with the new trigger nodes you
+> suggested.
 
-And dropped, since there is a dependency on "ARM: dts: NSP: Add mailbox
-(PDC) to NSP" to be applied first.
+Indeed, it seems to be not needed for this approach.
+I'm OK with this design.
 
-Let's wait for the mailbox maintainer to chime in before I apply the
-following patches (in that order):
-
-ARM: dts: NSP: Add mailbox (PDC) to NSP
-ARM: dts: NSP: Add crypto (SPU) to dtsi
-
-Thanks!
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jacek Anaszewski
