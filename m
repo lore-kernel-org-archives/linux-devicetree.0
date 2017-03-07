@@ -1,115 +1,183 @@
-From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
- SMP2P drivers
-Date: Tue, 7 Mar 2017 03:01:45 +0100
-Message-ID: <20170307020145.xfqz4wolc3tuqv6x@latitude>
-References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
- <20170215045157.11659-2-j.neuschaefer@gmx.net>
- <20170304012032.GA1694@minitux>
- <20170305050125.b6lzx2fiest4xmre@latitude>
- <20170305164930.GA49943@Bjorns-MacBook-Pro-2.local>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH] ARM: dts: at91: sama5d2: add m_can nodes
+Date: Tue, 7 Mar 2017 10:30:04 +0800
+Message-ID: <20170307023004.31424-1-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="vdynnxt74aickndc"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170305164930.GA49943@Bjorns-MacBook-Pro-2.local>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Jonathan Neusch?fer <j.neuschaefer@gmx.net>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas.Ferre@Microchip.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian
+ Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@microchip.com>, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
+Add nodes to support the Controller Area Network(M_CAN) on SAMA5D2.
 
---vdynnxt74aickndc
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As said in SAMA5D2 datasheet, the CAN clock is recommended to use
+frequencies of 20, 40 or 80 MHz. To achieve these frequencies,
+PMC GCLK3 must select the UPLLCK(480 MHz) as source clock and
+divide by 24, 12, or 6. So, the "assigned-clock-rates" property
+has three options: 20000000, 40000000, and 80000000.
+The "assigned-clock-parents" property should be referred to utmi
+fixedly.
 
-On Sun, Mar 05, 2017 at 04:49:30PM +0000, Bjorn Andersson wrote:
-> On Sun 05 Mar 05:01 GMT 2017, Jonathan Neusch?fer wrote:
-[...]
-> > FWIW, I enabled CONFIG_QCOM_SMSM on my test system (an Asus Padfone,
-> > based on MSM8974; I'm using the Sony Xperia Honami DT because it's close
-> > enough), and I think it failed to initialize:
-> >=20
->=20
-> Using Honami should work so far, but please do write a patch adding the
-> Padfone, so that we don't accidentally break your HW at some point.
+The MSBs [bits 31:16] of the CAN Message RAM for CAN0 and CAN1 are
+default configured in 0x00200000. To avoid conflict with SRAM map
+for pm, change them to 0x00210000 in the AT91Bootstrap via setting
+the CAN Memories Address-based Register(SFR_CAN) of SFR.
 
-I can try how far I get, but unfortunately I don't have hardware
-documentation or schematics, because I'm a hobbyist.
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
 
-> > [    0.647743] qcom-smsm smsm: no smsm size info, using defaults
-> > [    0.647775] qcom-smsm smsm: unable to allocate shared state entry
-> >=20
->=20
-> Could you please confirm where in qcom_smem_alloc_global() we're
-> failing? As far as I can tell we should fail with -EEXIST or if the
-> passed "size" parameter is bogus -ENOMEM (but the default number of
-> entries really should be less than the amount of free SMEM space).
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts | 24 +++++++++++++
+ arch/arm/boot/dts/sama5d2.dtsi              | 56 +++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
-* qcom_smem_get returns -EPROBE_DEFER:
-
-	void *ptr =3D ERR_PTR(-EPROBE_DEFER);
-	if (!__smem)
-		return ptr;
-
-* smsm_get_size_info prints "no smsm size info, using defaults\n"
-* qcom_smem_alloc also returns -EPROBE_DEFER early.
-
-
-BTW, I think smsm_get_size_info is using uninitialized memory here:
-
-        size_t size;    /* is uninitialized */
-        struct { ... } *info;
-
-        /* qcom_smem_get returns early without setting size */
-        info =3D qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_SMSM_SIZE_INFO, &si=
-ze);
-
-        /*
-	 * PTR_ERR(info) is not -ENOENT.
-         * size (still uninitialized) is compared with the size of the local
-         * struct defined above.
-	 */
-        if (PTR_ERR(info) =3D=3D -ENOENT || size !=3D sizeof(*info)) {
-                ...
-        }
-
-> > I think CONFIG_QCOM_WCNSS_CTRL may be needed too, but I'll leave that
-> > for a future patch because I don't understand WCNSS well enough.
-> >=20
->=20
-> Missed that one, when the WCNSS firmware boots the WCNSS_CTRL driver is
-> probed - it will upload the NV parameter file to the WCNSS "OS" and when
-> that is done it will probe the WiFi and BT drivers.
->=20
-> So, you need it as well.
-
-Ok, I'll add it to this patch.
-
-
-Jonathan Neusch=C3=A4fer
-
---vdynnxt74aickndc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAABAgAGBQJYvhSBAAoJEAgwRJqO81/btTEP/ReHOL63BiY/MSPS/t5ELExC
-75hEWPPql2Cqdnamzhvsak0T6sN05u2nI1EFe9GT+LxXsxTtBPbZ3CNm20YvbpGd
-Nn+8erctruGUJ/Jv7rQDvN/NpCjXN1gx1AyKW27JqTJKakW6fMg+X4tDtcK5s4RQ
-tfYd7pDM1Musc9TxjF3Ln9H3CRharEYXrQGwee75c5mSc3hNfi85j27HvE5t/wLp
-+86gxdBFbTnMFVgtF1Z7ojb+TOjLOYvtoJsbgA0Kap3K962sUyYPlfouzjFGQFgW
-U0qIXlqqh3tNisQQxP32EIvBNNx6TS5ePVxlrZzHb1PpU/qeSp5A4wZ5V2UlRjrn
-klI2tdDWfJoJCZOs8zfXrK90c/pvzl8uAZMioEb/fEzC9dmlCaocqhGafSYFhDxw
-dzw9RJvQ1BVMwFgxkUTshXGVzJw50Xj9k4JREZWwRCRvua6KFQV916PTMauiEB5r
-aV57W1GzgUZ4+iX6LdgSMO9eklD3aQK7roLeyiX7OmV0jPZ5ZFQv/CaaTFG9z/Tf
-6ZJNm1HYK+IQpwYSVyDsudPJOpl145gRu/yQDuSts20+cgbNTfbhzypTS8icamx/
-ezI/SUXmCijdSr1UFeJpqOFZA1XnZaj3Muxb5UfJuzbq7kIA7FRoKCUl4gvkKy2T
-SYJZds1BukyruCnJlAJc
-=7lnz
------END PGP SIGNATURE-----
-
---vdynnxt74aickndc--
+diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+index 9f7f8a7d8ff9..2f19b08dc226 100644
+--- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
+@@ -257,6 +257,12 @@
+ 				status = "okay";
+ 			};
+ 
++			can0: can@f8054000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_can0_default>;
++				status = "okay";
++			};
++
+ 			uart3: serial@fc008000 {
+ 				atmel,use-dma-rx;
+ 				atmel,use-dma-tx;
+@@ -321,6 +327,18 @@
+ 					bias-disable;
+ 				};
+ 
++				pinctrl_can0_default: can0_default {
++					pinmux = <PIN_PC10__CANTX0>,
++						 <PIN_PC11__CANRX0>;
++					bias-disable;
++				};
++
++				pinctrl_can1_default: can1_default {
++					pinmux = <PIN_PC26__CANTX1>,
++						 <PIN_PC27__CANRX1>;
++					bias-disable;
++				};
++
+ 				pinctrl_charger_chglev: charger_chglev {
+ 					pinmux = <PIN_PA12__GPIO>;
+ 					bias-disable;
+@@ -468,6 +486,12 @@
+ 				};
+ 
+ 			};
++
++			can1: can@fc050000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&pinctrl_can1_default>;
++				status = "okay";
++			};
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 22332be72140..d2febea79cfb 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -762,6 +762,18 @@
+ 						atmel,clk-output-range = <0 83000000>;
+ 					};
+ 
++					can0_clk: can0_clk {
++						#clock-cells = <0>;
++						reg = <56>;
++						atmel,clk-output-range = <0 83000000>;
++					};
++
++					can1_clk: can1_clk {
++						#clock-cells = <0>;
++						reg = <57>;
++						atmel,clk-output-range = <0 83000000>;
++					};
++
+ 					classd_clk: classd_clk {
+ 						#clock-cells = <0>;
+ 						reg = <59>;
+@@ -890,6 +902,18 @@
+ 						#clock-cells = <0>;
+ 						reg = <55>;
+ 					};
++
++					can0_gclk: can0_gclk {
++						#clock-cells = <0>;
++						reg = <56>;
++						atmel,clk-output-range = <0 80000000>;
++					};
++
++					can1_gclk: can1_gclk {
++						#clock-cells = <0>;
++						reg = <57>;
++						atmel,clk-output-range = <0 80000000>;
++					};
+ 				};
+ 			};
+ 
+@@ -1144,6 +1168,22 @@
+ 				clocks = <&clk32k>;
+ 			};
+ 
++			can0: can@f8054000 {
++				compatible = "bosch,m_can";
++				reg = <0xf8054000 0x4000>, <0x210000 0x4000>;
++				reg-names = "m_can", "message_ram";
++				interrupts = <56 IRQ_TYPE_LEVEL_HIGH 7>,
++					     <64 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupt-names = "int0", "int1";
++				clocks = <&can0_clk>, <&can0_gclk>;
++				clock-names = "hclk", "cclk";
++				assigned-clocks = <&can0_gclk>;
++				assigned-clock-parents = <&utmi>;
++				assigned-clock-rates = <40000000>;
++				bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
++				status = "disabled";
++			};
++
+ 			spi1: spi@fc000000 {
+ 				compatible = "atmel,at91rm9200-spi";
+ 				reg = <0xfc000000 0x100>;
+@@ -1305,6 +1345,22 @@
+ 				status = "okay";
+ 			};
+ 
++			can1: can@fc050000 {
++				compatible = "bosch,m_can";
++				reg = <0xfc050000 0x4000>, <0x210000 0x4000>;
++				reg-names = "m_can", "message_ram";
++				interrupts = <57 IRQ_TYPE_LEVEL_HIGH 7>,
++					     <65 IRQ_TYPE_LEVEL_HIGH 7>;
++				interrupt-names = "int0", "int1";
++				clocks = <&can1_clk>, <&can1_gclk>;
++				clock-names = "hclk", "cclk";
++				assigned-clocks = <&can1_gclk>;
++				assigned-clock-parents = <&utmi>;
++				assigned-clock-rates = <40000000>;
++				bosch,mram-cfg = <0x0 0 0 32 0 0 0 1>;
++				status = "disabled";
++			};
++
+ 			chipid@fc069000 {
+ 				compatible = "atmel,sama5d2-chipid";
+ 				reg = <0xfc069000 0x8>;
+-- 
+2.11.0
