@@ -1,86 +1,27 @@
-From: Yong Mao <yong.mao@mediatek.com>
-Subject: Re: [PATCH v4 1/3] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Tue, 7 Mar 2017 16:05:07 +0800
-Message-ID: <1488873907.10538.3.camel@mhfsdcap03>
-References: <1484988923-1543-1-git-send-email-yong.mao@mediatek.com>
- <1484988923-1543-2-git-send-email-yong.mao@mediatek.com>
- <CAPDyKFqo7fMTp3YPJwgoa4u3iAie2U884VUfTnMQ_js8neMqTQ@mail.gmail.com>
- <1487930376.22858.14.camel@mhfsdcap03>
- <CAL_Jsq+eo-Fy8Wf2yZpE3Ufp4V_7Gn+w9fTyjZDP6V7tY-=gdw@mail.gmail.com>
- <1488512995.21451.16.camel@mhfsdcap03>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] dmaengine: cppi41: Add dma support to da8xx
+Date: Tue, 7 Mar 2017 13:43:09 +0530
+Message-ID: <20170307081309.GE2843@localhost>
+References: <20170130174921.28231-1-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488512995.21451.16.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, srv_heupstream <srv_heupstream@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170130174921.28231-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-03-03 at 11:49 +0800, Yong Mao wrote:
-> On Fri, 2017-02-24 at 16:47 -0600, Rob Herring wrote:
-> > On Fri, Feb 24, 2017 at 3:59 AM, Yong Mao <yong.mao@mediatek.com> wrote:
-> > > Dear Rob,
-> > >
-> > > Could you please help to make comments for this patch?
-> > > Thanks.
-> > 
-> > I already did comment. It's still wrong as Ulf commented. So fix and
-> > send a new version. It has to go to the DT list if you want to be in
-> > my queue.
-> > 
-> > Rob
-> 
-> After reviewing the history, We guess your mentioned Ulf's comments is as below.
->   
-> "> +- mtk-hs200-cmd-int-delay: HS200 command internal delay setting.
-> > + The value is an integer from 0 to 31
-> 
-> Please change to:
-> 
-> mediatek,hs200-cmd-delay
-> 
-> ... and if there is a unit, like ns or us, please add that a suffix.
-> 
-> > +- mtk-hs400-cmd-int-delay: HS400 command internal delay setting
-> > + The value is an integer from 0 to 31
-> 
-> mediatek,hs400-cmd-delay and add unit if applicable.
-> 
-> > +- mtk-hs400-cmd-resp-sel: HS400 command response sample selection
-> > + The value is an integer from 0 to 1
-> 
-> mediatek,hs400-cmd-resp-sel
-> 
-> And make it a boolean value instead!"
-> 
-> ==> We already fix this comment in v4. 
-> We use "mediatek,hs200-cmd-int-delay" to replace "mtk-hs200-cmd-int-delay", 
-> but not use "mediatek,hs200-cmd-delay". This is because "-int-" here means internal.
-> We should not drop it.
-> 
-> And this field does not have unit, it only have total 32 stages.
-> We also change the description in v4.
-> 
-> For comment about "mtk-hs400-cmd-resp-sel", we also make it a boolean value in v4.
-> And re-name it as "mediatek,hs400-cmd-resp-rising".
-> 
-> Please help to point out where we need to modify.
-> Thanks.
-> 
-> 
+On Mon, Jan 30, 2017 at 06:49:18PM +0100, Alexandre Bailon wrote:
+> This series add support of DA8xx to CPPI 4.1 driver.
+> As the CPPI 4.1 is now generic, we only had to add the glue for DA8xx.
 
-Please help to point out a bright way for this patch.
-We are anxiously waiting for your response.
+Applied this one as well, thanks
 
-Best Regards,
-Yong Mao.
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
