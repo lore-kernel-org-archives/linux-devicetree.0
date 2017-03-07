@@ -1,74 +1,48 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 07/10] serdev: add serdev_device_wait_until_sent
-Date: Tue, 7 Mar 2017 09:34:49 -0600
-Message-ID: <CAL_Jsq+BCE1u6Ysz0FOdh--wHm-PZxqcmqTgQMyDcvQNkYp3gw@mail.gmail.com>
-References: <20170304115833.3538-1-sre@kernel.org> <20170304115833.3538-8-sre@kernel.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv3 net-next 04/22] net: mvpp2: remove unused register
+ definition MVPP2_TXQ_THRESH_REG
+Date: Tue,  7 Mar 2017 16:53:02 +0100
+Message-ID: <1488902000-2658-5-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1488902000-2658-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170304115833.3538-8-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488902000-2658-1-git-send-email-thomas.petazzoni@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 4, 2017 at 5:58 AM, Sebastian Reichel <sre@kernel.org> wrote:
-> Add method, which waits until the transmission buffer has been sent.
->
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> ---
->  drivers/tty/serdev/core.c           | 11 +++++++++++
->  drivers/tty/serdev/serdev-ttyport.c | 15 ++++++++++++++-
->  include/linux/serdev.h              |  3 +++
->  3 files changed, 28 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
-> index f4c6c90add78..a63b74031e22 100644
-> --- a/drivers/tty/serdev/core.c
-> +++ b/drivers/tty/serdev/core.c
-> @@ -173,6 +173,17 @@ void serdev_device_set_flow_control(struct serdev_device *serdev, bool enable)
->  }
->  EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
->
-> +void serdev_device_wait_until_sent(struct serdev_device *serdev, long timeout)
-> +{
-> +       struct serdev_controller *ctrl = serdev->ctrl;
-> +
-> +       if (!ctrl || !ctrl->ops->wait_until_sent)
-> +               return;
-> +
-> +       ctrl->ops->wait_until_sent(ctrl, timeout);
-> +}
-> +EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
-> +
->  static int serdev_drv_probe(struct device *dev)
->  {
->         const struct serdev_device_driver *sdrv = to_serdev_device_driver(dev->driver);
-> diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-> index d05393594f15..db2bc601e554 100644
-> --- a/drivers/tty/serdev/serdev-ttyport.c
-> +++ b/drivers/tty/serdev/serdev-ttyport.c
-> @@ -14,6 +14,7 @@
->  #include <linux/serdev.h>
->  #include <linux/tty.h>
->  #include <linux/tty_driver.h>
-> +#include <linux/poll.h>
->
->  #define SERPORT_ACTIVE         1
->
-> @@ -47,10 +48,13 @@ static void ttyport_write_wakeup(struct tty_port *port)
->         struct serport *serport = serdev_controller_get_drvdata(ctrl);
->
->         if (!test_and_clear_bit(TTY_DO_WRITE_WAKEUP, &port->tty->flags))
-> -               return;
-> +               goto out;
->
->         if (test_bit(SERPORT_ACTIVE, &serport->flags))
->                 serdev_controller_write_wakeup(ctrl);
-> +
-> +out:
-> +       wake_up_interruptible_poll(&port->tty->write_wait, POLLOUT);
+This register is no longer used since commit edc660fa09e2 ("net: mvpp2:
+replace TX coalescing interrupts with hrtimer").
 
-Shouldn't this be separate patch?
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+---
+ drivers/net/ethernet/marvell/mvpp2.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Rob
+diff --git a/drivers/net/ethernet/marvell/mvpp2.c b/drivers/net/ethernet/marvell/mvpp2.c
+index fb8b5e9..60cc020 100644
+--- a/drivers/net/ethernet/marvell/mvpp2.c
++++ b/drivers/net/ethernet/marvell/mvpp2.c
+@@ -117,9 +117,6 @@
+ #define MVPP2_TXQ_DESC_SIZE_REG			0x2088
+ #define     MVPP2_TXQ_DESC_SIZE_MASK		0x3ff0
+ #define MVPP2_AGGR_TXQ_UPDATE_REG		0x2090
+-#define MVPP2_TXQ_THRESH_REG			0x2094
+-#define     MVPP2_TRANSMITTED_THRESH_OFFSET	16
+-#define     MVPP2_TRANSMITTED_THRESH_MASK	0x3fff0000
+ #define MVPP2_TXQ_INDEX_REG			0x2098
+ #define MVPP2_TXQ_PREF_BUF_REG			0x209c
+ #define     MVPP2_PREF_BUF_PTR(desc)		((desc) & 0xfff)
+-- 
+2.7.4
