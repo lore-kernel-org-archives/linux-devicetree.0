@@ -1,152 +1,82 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: lm363x: Use generic property for hardware enable pins" to the regulator tree
-Date: Tue, 07 Mar 2017 15:21:54 +0100
-Message-ID: <E1clFzu-0006jD-1u@finisterre>
-References: <20170228075041.7568-1-milo.kim@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170228075041.7568-1-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglinux-kernel@vger.kernel.org
+From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4] Support for Synopsys DW CSI-2 Host
+Date: Tue,  7 Mar 2017 14:37:47 +0000
+Message-ID: <cover.1488885081.git.roliveir@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+This patchset adds support for the DW CSI-2 Host and also for a video
+device associated with it. 
 
-   regulator: lm363x: Use generic property for hardware enable pins
+The first 2 patches are only for the DW CSI-2 Host and the last 2 are for
+the video device.
 
-has been applied to the regulator tree at
+Although this patchset is named as v1 there were already two patchsets
+previous to this one, but with a different name: "Add support for the DW
+IP Prototyping Kits for MIPI CSI-2 Host".
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+v3:
+ - Correct description errors in Documentation
+ - Remove empty functions
+ - Change device caps and description setting
+ - Remove left-over code
+ - Add more VB2 io_modes
+ - Add support for dma_contig
+ - Correct spelling mistakes
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+v2: 
+ - Add more detailed descriptions in the DT documentation
+ - Add binding examples to DT documentation
+ - Remove unnecessary debug structures
+ - Remove unused fields in structures
+ - Change variable types
+ - Remove unused functions
+ - Declare functions as static
+ - Remove some prints
+ - Add missing newlines.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Ramiro Oliveira (4):
+  Documentation: dt: Add bindings documentation for DW MIPI CSI-2 Host
+  media: platform: dwc: Support for DW CSI-2 Host
+  Documentation: dt: Add bindings documentation for CSI-2 Host Video
+    Platform
+  media: platform: dwc: Support for CSI-2 Host video platform
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+ .../devicetree/bindings/media/snps,dw-mipi-csi.txt |  37 +
+ .../devicetree/bindings/media/snps,plat-csi2.txt   |  77 ++
+ MAINTAINERS                                        |   7 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/dwc/Kconfig                 |  45 ++
+ drivers/media/platform/dwc/Makefile                |   3 +
+ drivers/media/platform/dwc/csi_video_device.c      | 721 ++++++++++++++++++
+ drivers/media/platform/dwc/csi_video_device.h      |  83 +++
+ drivers/media/platform/dwc/csi_video_plat.c        | 818 +++++++++++++++++++++
+ drivers/media/platform/dwc/csi_video_plat.h        | 101 +++
+ drivers/media/platform/dwc/dw_mipi_csi.c           | 653 ++++++++++++++++
+ drivers/media/platform/dwc/dw_mipi_csi.h           | 181 +++++
+ include/media/dwc/csi_host_platform.h              |  97 +++
+ 14 files changed, 2826 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt
+ create mode 100644 Documentation/devicetree/bindings/media/snps,plat-csi2.txt
+ create mode 100644 drivers/media/platform/dwc/Kconfig
+ create mode 100644 drivers/media/platform/dwc/Makefile
+ create mode 100644 drivers/media/platform/dwc/csi_video_device.c
+ create mode 100644 drivers/media/platform/dwc/csi_video_device.h
+ create mode 100644 drivers/media/platform/dwc/csi_video_plat.c
+ create mode 100644 drivers/media/platform/dwc/csi_video_plat.h
+ create mode 100644 drivers/media/platform/dwc/dw_mipi_csi.c
+ create mode 100644 drivers/media/platform/dwc/dw_mipi_csi.h
+ create mode 100644 include/media/dwc/csi_host_platform.h
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 45493684f5953d83cb2621027ad0792d167bedab Mon Sep 17 00:00:00 2001
-From: Milo Kim <milo.kim@ti.com>
-Date: Tue, 28 Feb 2017 16:50:40 +0900
-Subject: [PATCH] regulator: lm363x: Use generic property for hardware enable
- pins
-
-With index usages, device specific properties can be replaced with generic
-one. Vpos is index 0 and Vneg is index 1.
-DT examples are added as well.
-
-Signed-off-by: Milo Kim <milo.kim@ti.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/regulator/lm363x-regulator.txt        | 78 +++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-index 8f14df9d1205..cc5a6151d85f 100644
---- a/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/lm363x-regulator.txt
-@@ -8,8 +8,8 @@ Required property:
- 
- Optional properties:
-   LM3632 has external enable pins for two LDOs.
--  - ti,lcm-en1-gpio: A GPIO specifier for Vpos control pin.
--  - ti,lcm-en2-gpio: A GPIO specifier for Vneg control pin.
-+  - enable-gpios: Two GPIO specifiers for Vpos and Vneg control pins.
-+                  The first entry is Vpos, the second is Vneg enable pin.
- 
- Child nodes:
-   LM3631
-@@ -30,5 +30,79 @@ Child nodes:
- 
- Examples: Please refer to ti-lmu dt-bindings [2].
- 
-+lm3631@29 {
-+	compatible = "ti,lm3631";
-+	reg = <0x29>;
-+
-+	regulators {
-+		compatible = "ti,lm363x-regulator";
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <6350000>;
-+			regulator-always-on;
-+		};
-+
-+		vcont {
-+			regulator-name = "lcd_vcont";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+
-+		voref {
-+			regulator-name = "lcd_voref";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+			regulator-boot-on;
-+		};
-+	};
-+};
-+
-+lm3632@11 {
-+	compatible = "ti,lm3632";
-+	reg = <0x11>;
-+
-+	regulators {
-+		compatible = "ti,lm363x-regulator";
-+
-+		/* GPIO1_16 for Vpos, GPIO1_28 is for Vneg */
-+		enable-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>,
-+				<&gpio1 28 GPIO_ACTIVE_HIGH>;
-+
-+		vboost {
-+			regulator-name = "lcd_boost";
-+			regulator-min-microvolt = <4500000>;
-+			regulator-max-microvolt = <6400000>;
-+			regulator-always-on;
-+		};
-+
-+		vpos {
-+			regulator-name = "lcd_vpos";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+
-+		vneg {
-+			regulator-name = "lcd_vneg";
-+			regulator-min-microvolt = <4000000>;
-+			regulator-max-microvolt = <6000000>;
-+		};
-+	};
-+};
-+
- [1] ../regulator/regulator.txt
- [2] ../mfd/ti-lmu.txt
 -- 
 2.11.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
