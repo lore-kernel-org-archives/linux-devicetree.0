@@ -1,88 +1,40 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
- SMP2P drivers
-Date: Tue, 7 Mar 2017 12:04:13 +0100
-Message-ID: <20170307110413.GD49978@Bjorns-MacBook-Pro-2.local>
-References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
- <20170215045157.11659-2-j.neuschaefer@gmx.net>
- <20170304012032.GA1694@minitux>
- <20170305050125.b6lzx2fiest4xmre@latitude>
- <20170305164930.GA49943@Bjorns-MacBook-Pro-2.local>
- <20170307020145.xfqz4wolc3tuqv6x@latitude>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 0/4] ARM: dts: da850-evm: vpif DT changes
+Date: Tue, 7 Mar 2017 16:48:52 +0530
+Message-ID: <c163c9f0-b237-c05a-67e3-275a2419ac3d@ti.com>
+References: <1488298516-14363-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170307020145.xfqz4wolc3tuqv6x@latitude>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jonathan Neusch?fer <j.neuschaefer@gmx.net>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488298516-14363-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 07 Mar 03:01 CET 2017, Jonathan Neusch?fer wrote:
+On Tuesday 28 February 2017 09:45 PM, Bartosz Golaszewski wrote:
+> This series adds necessary changes to make vpif work on the da850-evm
+> board.
+> 
+> The first patch only contains whitespace error fixes.
+> 
+> The second patch add a pinctrl node for vpif display pins.
+> 
+> The third adds the UI expander node that is needed to select the video
+> capture functionality.
+> 
+> The last patch extends the vpif node with an output port.
 
-> On Sun, Mar 05, 2017 at 04:49:30PM +0000, Bjorn Andersson wrote:
-> > On Sun 05 Mar 05:01 GMT 2017, Jonathan Neusch?fer wrote:
-> [...]
-> > > FWIW, I enabled CONFIG_QCOM_SMSM on my test system (an Asus Padfone,
-> > > based on MSM8974; I'm using the Sony Xperia Honami DT because it's close
-> > > enough), and I think it failed to initialize:
-> > > 
-> > 
-> > Using Honami should work so far, but please do write a patch adding the
-> > Padfone, so that we don't accidentally break your HW at some point.
-> 
-> I can try how far I get, but unfortunately I don't have hardware
-> documentation or schematics, because I'm a hobbyist.
-> 
+Series applied.
 
-If this is something that you will continue to hack on and you think
-anyone else will be interested in having then please do submit patches
-for it.
-
-> > > [    0.647743] qcom-smsm smsm: no smsm size info, using defaults
-> > > [    0.647775] qcom-smsm smsm: unable to allocate shared state entry
-> > > 
-> > 
-> > Could you please confirm where in qcom_smem_alloc_global() we're
-> > failing? As far as I can tell we should fail with -EEXIST or if the
-> > passed "size" parameter is bogus -ENOMEM (but the default number of
-> > entries really should be less than the amount of free SMEM space).
-> 
-> * qcom_smem_get returns -EPROBE_DEFER:
-> 
-> 	void *ptr = ERR_PTR(-EPROBE_DEFER);
-> 	if (!__smem)
-> 		return ptr;
-> 
-> * smsm_get_size_info prints "no smsm size info, using defaults\n"
-> * qcom_smem_alloc also returns -EPROBE_DEFER early.
-> 
-> 
-> BTW, I think smsm_get_size_info is using uninitialized memory here:
-> 
->         size_t size;    /* is uninitialized */
->         struct { ... } *info;
-> 
->         /* qcom_smem_get returns early without setting size */
->         info = qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_SMSM_SIZE_INFO, &size);
-> 
->         /*
-> 	 * PTR_ERR(info) is not -ENOENT.
->          * size (still uninitialized) is compared with the size of the local
->          * struct defined above.
-> 	 */
->         if (PTR_ERR(info) == -ENOENT || size != sizeof(*info)) {
->                 ...
->         }
-> 
-
-Thanks for your analysis!
-
-As you say the smsm driver is missing handling of probe deferral - which
-is wrong. Could you please propose a patch checking for EPROBE_DEFER and
-propagate this error as return value from probe()?  (Without an error
-message)
-
-Regards,
-Bjorn
+Thanks,
+Sekhar
