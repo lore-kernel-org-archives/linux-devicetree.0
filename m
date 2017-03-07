@@ -1,141 +1,102 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
- chips
-Date: Tue, 7 Mar 2017 14:56:39 +0530
-Message-ID: <08f2f5aa-af3c-79c1-2cbb-c4d5eb5dce93@codeaurora.org>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
- <587C880E.90803@ti.com> <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
- <20170118180347.GO10531@minitux>
- <CAFp+6iG3KxX=G64EyJFgGn9ZffzjCtEeR4HUPdOK-uhE8A=PwA@mail.gmail.com>
- <58871C39.50403@ti.com> <20170126181527.GB10531@minitux>
- <692975a4-e735-975f-7152-fdd81324c42b@codeaurora.org>
- <CAFp+6iHvgPVSbZ-uGRAHK3Wh+k7Apy+U7YcSVrgegx-AJ1=ZTA@mail.gmail.com>
- <CAFp+6iFdSaJYz+eQ0Vwqk0dtqmhAVTZLCNNYWW6gpcJwatgEfA@mail.gmail.com>
- <58BE77A1.6090502@ti.com>
+From: olivier moysan <olivier.moysan@st.com>
+Subject: [RESEND PATCH v2 0/2] Add STM32 SAI support
+Date: Tue, 7 Mar 2017 10:44:30 +0100
+Message-ID: <1488879872-7839-1-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58BE77A1.6090502-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, olivier.moysan@st.com
+Cc: arnaud.pouliquen@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch-set handles the Serial Audio Interface (SAI) IP on STM32 platforms.
 
+The SAI IP is composed of two Sub-block A and B. (see the figure below)
+Each sub-block makes use of individual and shared resources.
 
-On 03/07/2017 02:34 PM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Thursday 02 March 2017 10:10 PM, Vivek Gautam wrote:
->> Hi Kishon,
->>
->>
->> On Wed, Feb 22, 2017 at 9:29 AM, Vivek Gautam
->> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>> Hi Kishon,
->>>
->>>
->>> On Fri, Jan 27, 2017 at 11:54 AM, Vivek Gautam
->>> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>>
->>>> On 01/26/2017 11:45 PM, Bjorn Andersson wrote:
->>>>> On Tue 24 Jan 01:19 PST 2017, Kishon Vijay Abraham I wrote:
->>>>>> On Monday 23 January 2017 03:43 PM, Vivek Gautam wrote:
->>>>>>> On Wed, Jan 18, 2017 at 11:33 PM, Bjorn Andersson
->>>>> [..]
->>>>>>> Yes, that's correct. The QMP and QUSB2 phy init sequences are a bunch
->>>>>>> of static values for a particular IP version. These values hardly give a
->>>>>>> meaningful data to put few phy bindings that could be referenced
->>>>>>> to configure the phy further.
->>>>>> Not really. You can have clearly defined phy binding to give meaningful
->>>>>> data.
->>>>>> Every driver doing the same configuration bloats the driver and these
->>>>>> configuration values are just magic values which hardly can be reviewed
->>>>>> by anyone.
->>>>>>>> Further more moving this blob to devicetree will not allow us to treat
->>>>>>>> the various QMP configurations as one HW block, as there are other
->>>>>>>> differences as well.
->>>>>>>>
->>>>>>>> Like many other drivers it's possible to create a generic version that
->>>>>>>> has every bit of logic driven by configuration from devicetree, but
->>>>>>>> like
->>>>>>>> most of those cases this is not the way we split things.
->>>>>>>>
->>>>>>>> And this has the side effect of keeping the dts files human readable,
->>>>>>>> human understandable and human maintainable.
->>>>>> right. That's why I recommend having clearly defined bindings.
->>>>>>          phy,tx-<param1> = <val, offset, mask>
->>>>>>          phy,tx-<param2> = <val, offset, mask>
->>>>>>          phy,tx-<param3> = <val, offset, mask>
->>>>> There's no doubt that this table needs to be encoded somewhere, so the
->>>>> question is should we hard code this in a C file or in a DTSI file.
->>>>>
->>>>> Skimming through [1] I see examples of things that differs based on how
->>>>> the specific component is integrated in a SoC or on a particular board -
->>>>> properties that are relevant to a "system integrator".
->>>>>
->>>>> As far as I can tell this blob will, if ever, only be changed by a
->>>>> driver developer and as such it's not carry information about how this
->>>>> component relates to the rest of the system and should as such not be
->>>>> part of the device tree.
->>>>>
->>>>>
->>>>> If there are properties of the hardware that is affected by how the
->>>>> component is integrated in the system I really would like for those to
->>>>> be exposed as human-readable properties that I can understand and alter
->>>>> without deep knowledge about the register map of the hardware block.
->>>>
->>>> I am reaching out to our internal teams to get more information
->>>> on different possible phy configurations, based on which the registers
->>>> values are decided.
->>>> This is something that i tried to understand in the past as well, but
->>>> couldn't
->>>> grab much information that time.
->>>> Will come back with relevant information on this.
->>>>
->>> We have started looking into understanding the PHYs on msm and
->>> eventually create a set of generic phy bindings that can serve multiple
->>> platforms.
->>> But this task, I presume, will take its course and will involve multi-party
->>> discussions.
->>>
->>> For these QUSB2 and QMP phy drivers, a good amount of work has
->>> already gone in getting these drivers in upstream state.
->>> The common QMP phy driver supports a bunch of controllers on msm
->>> platforms - USB, PCIe and UFS and there are platforms such as DB820c
->>> and others that want to pull in these changes from upstream.
->>> The future phy controllers also depend on these drivers and we don't want
->>> to hold other developers to contribute to these drivers.
->>> So, we wish to not delay these drivers further because of the phy bindings.
->>> I see that there are phys that still program the registers-value pairs for
->>> phy initialization.
->>>
->>> We will keep working on the bindings while these patches
->>> make way to upstream.
->>>
->>> Can you consider pulling in these drivers?
->>> I can send the next version of these drivers with other comments addressed.
->>> Please let me know your comments.
->> Gentle ping. Any thoughts on this ?
-> sure, lets hold the phy configuration binding and complete the rest of the patch.
+Shared resources:
+	- Reset line. Reset common and sub-block registers.
+	- Bus interface clocks. This clock is not exposed in device
+	as it it managed by clock driver, according to kernel clocks gating.
+	- Common register. SAI IP exhibits a common configuration register
+	to manage synchronization modes. NB: These modes are not yet implemented
+	in this version of the SAI driver.
+	- Interrupt. Sub-blocks have their own interrupt status registers but they 
+	share the same interrupt line.
 
-Sure, thanks. Will post out the next version of patches soon.
+Individual resources:
+	- Register set
+	- DMA request line.
+	- Communication interface. 
+	Each sub-block has its own GPIOs and associated bus lines.
+	- Kernel clock. 
+	Each sub-block has its own dedicated clock for its communication interface.
 
-Regards
-Vivek
+To reflect this architecture Sub-block A and B are handled by 2 child devices.
+Sub-block A and B devices can be configured independently either as transmitter
+or receiver. A PCM device is associated to each sub-block.
 
->
-> Thanks
-> Kishon
+A sub-block has to select the appropriated parent clock at runtime, 
+depending on the audio stream sampling rate to be played or captured.
+Two parent clocks must be provided to support sampling rates multiples
+of 8 kHz or 11.025kHz.
+
+ Interface clock  +--------------------------------+
++---------------> | SAI IP                         |
+ Reset            |     +-----------------+        |
++---------------> |     |common registers |        |
+                  |     +-----------------+        |
+                  |                                |
+                  |    +----------------------+    |
+                  |    | Sub-block A          |    |
+ Kernel clock A   |    |                      |    | Bus A
++--------------------> | +----------------+   +---------------->
+                  |    | |A registers     |   |    |
+                  |    | +----------------+   |    |
+                  |    +----------------------+    |
+                  |                                |
+                  |    +----------------------+    |
+                  |    | Sub-block B          |    |
+ Kernel clock B   |    |                      |    | Bus B
++--------------------> | +----------------+   +----------------->
+                  |    | |B registers     |   |    |
+                  |    | +----------------+   |    |
+                  |    +----------------------+    |
+                  |                                |
+                  +--------------------------------+
+
+Changes in v2:
+	- Fix warnings
+
+olivier moysan (2):
+  ASoC: stm32: add bindings for SAI
+  ASoC: stm32: add SAI driver
+
+ .../devicetree/bindings/sound/st,stm32-sai.txt     |  79 ++
+ sound/soc/Kconfig                                  |   1 +
+ sound/soc/Makefile                                 |   1 +
+ sound/soc/stm/Kconfig                              |   8 +
+ sound/soc/stm/Makefile                             |   6 +
+ sound/soc/stm/stm32_sai.c                          | 123 +++
+ sound/soc/stm/stm32_sai.h                          | 202 +++++
+ sound/soc/stm/stm32_sai_sub.c                      | 899 +++++++++++++++++++++
+ 8 files changed, 1319 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-sai.txt
+ create mode 100644 sound/soc/stm/Kconfig
+ create mode 100644 sound/soc/stm/Makefile
+ create mode 100644 sound/soc/stm/stm32_sai.c
+ create mode 100644 sound/soc/stm/stm32_sai.h
+ create mode 100644 sound/soc/stm/stm32_sai_sub.c
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
