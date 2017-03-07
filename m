@@ -1,121 +1,86 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3] Input: pwm-beeper: support customized freq for
- SND_BELL
-Date: Tue, 7 Mar 2017 10:44:25 -0800
-Message-ID: <20170307184425.GF13740@dtor-ws>
-References: <1488346642-14351-1-git-send-email-hs@denx.de>
+From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v3] tpm: do not suspend/resume if power stays on
+Date: Tue, 7 Mar 2017 20:52:20 +0200
+Message-ID: <20170307185220.ag3hkthzeskg7le6@intel.com>
+References: <20170303160959.27422-1-enric.balletbo@collabora.com>
+ <20170306205925.ynkwmy7acsunpewd@intel.com>
+ <15829d71-ceff-d1f6-3112-5df8897a97dc@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1488346642-14351-1-git-send-email-hs@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: linux-input@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <15829d71-ceff-d1f6-3112-5df8897a97dc-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 01, 2017 at 06:37:22AM +0100, Heiko Schocher wrote:
-> From: Guan Ben <ben.guan@cn.bosch.com>
+On Tue, Mar 07, 2017 at 09:44:55AM +0100, Enric Balletbo i Serra wrote:
+> Hi Jarkko,
 > 
-> extend the pwm-beeper driver to support customized frequency
-> for SND_BELL from device tree.
+> On 06/03/17 21:59, Jarkko Sakkinen wrote:
+> > On Fri, Mar 03, 2017 at 05:09:59PM +0100, Enric Balletbo i Serra wrote:
+> >> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >>
+> >> The suspend/resume behavior of the TPM can be controlled by setting
+> >> "powered-while-suspended" in the DTS. This is useful for the cases
+> >> when hardware does not power-off the TPM.
+> >>
+> >> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> >> ---
+> >> Changes since v2:
+> >>  Jarkko Sakkinen
+> >>   - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
+> >>   - Remove a trailing newline.
+> >> Changes since v1:
+> >>  Jason Gunthorpe :
+> >>   - Move the code to handle suspend/resume in the common chip code.
+> >>
+> >>  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
+> >>  drivers/char/tpm/tpm-interface.c                           | 3 +++
+> >>  drivers/char/tpm/tpm.h                                     | 1 +
+> >>  drivers/char/tpm/tpm_of.c                                  | 3 +++
+> >>  4 files changed, 13 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> >> index 8cb638b..85c8216 100644
+> >> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> >> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> >> @@ -8,6 +8,12 @@ Required properties:
+> >>                     the firmware event log
+> >>  - linux,sml-size : size of the memory allocated for the firmware event log
+> >>  
+> >> +Optional properties:
+> >> +
+> >> +- powered-while-suspended: present when the TPM is left powered on between
+> >> +                           suspend and resume (makes the suspend/resume
+> >> +                           callbacks do nothing).
+> >> +
+> >>  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
+> >>  ----------------------------------------------------------
+> > 
+> > Hey, just noticed something. Shouldn't this be a separate commit?
 > 
-> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
-> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
-> [hs@denx.de: adapted to 4.10-rc7]
-> Signed-off-by: Heiko Schocher <hs@denx.de>
+> During my life submitting patches I saw the both options, sometimes
+> the maintainer asked me to join the DT patch and the driver and
+> sometimes he asked me to do in different patches, so I think this is
+> more a maintainer option. Maybe Rob Herring or Mark Rutland can share
+> their preferences?
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> I'll do what you want I do, TBH I don't have a strong opinion about this.
 
-Reconciled with the latest version and applied, thank you.
+I'll add this to my tree and put it to my next branch so that
+it will flow to linux-next since it only touch TPM specific
+file in bindings.
 
-> ---
-> 
-> Changes in v3:
-> - add comment from David Lechner:
->   - readd the switch statement, instead using if / then
->   - remove check IS_ENABLED(CONFIG_OF)
->   - remove not used node variable
->   - change warning string from "Failed to read beeper-hz" to
->     "'beeper-hz' not specified"
->   - remove function pwm_beeper_init_bell_frequency() as it is
->     to simple.
->   - checked that device_property_read_u32() does not modify the
->     bell_frequency, if the property "beeper_hz" is not defined.
-> - add comment from Rob Herring:
->   - add Acked-by from Rob Herring
->     Rob also mentioned to remove the IS_ENABLED(CONFIG_OF) check
->     and node variable is unused.
-> 
-> Changes in v2:
-> - add comment from Rob Herring:
->   rename property name "bell-frequency" to "beeper-hz"
-> - add comment from Dmitry Torokhov:
->   use device_property_read_u32() instead of of_property_read_u32()
-> - rebased against c470abd4fde40ea6a0846a2beab642a578c0b8cd
->   Linux 4.10
-> 
->  Documentation/devicetree/bindings/input/pwm-beeper.txt |  3 +++
->  drivers/input/misc/pwm-beeper.c                        | 11 ++++++++++-
->  2 files changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> index be332ae..4e4e128 100644
-> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-> @@ -5,3 +5,6 @@ Registers a PWM device as beeper.
->  Required properties:
->  - compatible: should be "pwm-beeper"
->  - pwms: phandle to the physical PWM device
-> +
-> +optional properties:
-> +- beeper-hz:  bell frequency in Hz
-> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
-> index 5f9655d..f2fcd50 100644
-> --- a/drivers/input/misc/pwm-beeper.c
-> +++ b/drivers/input/misc/pwm-beeper.c
-> @@ -27,6 +27,7 @@ struct pwm_beeper {
->  	struct pwm_device *pwm;
->  	struct work_struct work;
->  	unsigned long period;
-> +	unsigned int bell_frequency;
->  };
->  
->  #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
-> @@ -60,7 +61,7 @@ static int pwm_beeper_event(struct input_dev *input,
->  
->  	switch (code) {
->  	case SND_BELL:
-> -		value = value ? 1000 : 0;
-> +		value = value ? beeper->bell_frequency : 0;
->  		break;
->  	case SND_TONE:
->  		break;
-> @@ -97,6 +98,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
->  {
->  	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
->  	struct pwm_beeper *beeper;
-> +	unsigned int bell_frequency = 1000;
->  	int error;
->  
->  	beeper = kzalloc(sizeof(*beeper), GFP_KERNEL);
-> @@ -122,6 +124,13 @@ static int pwm_beeper_probe(struct platform_device *pdev)
->  	pwm_apply_args(beeper->pwm);
->  
->  	INIT_WORK(&beeper->work, pwm_beeper_work);
-> +	error = device_property_read_u32(&pdev->dev, "beeper-hz",
-> +				       &bell_frequency);
-> +	if (error < 0)
-> +		dev_dbg(&pdev->dev, "'beeper-hz' not specified, using default: %u Hz\n",
-> +			bell_frequency);
-> +
-> +	beeper->bell_frequency = bell_frequency;
->  
->  	beeper->input = input_allocate_device();
->  	if (!beeper->input) {
-> -- 
-> 2.7.4
-> 
+I do not have perfect answer for this so I'll use common sense
+(or try to).
 
--- 
-Dmitry
+Rob, is this OK?
+
+/Jarkko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
