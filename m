@@ -1,46 +1,103 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: dt-bindings: Use generic property for
- hardware enable pins
-Date: Tue, 7 Mar 2017 14:56:31 +0100
-Message-ID: <20170307135631.xysv2sg47dlwmo2h@sirena.org.uk>
-References: <20170228075041.7568-1-milo.kim@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] checks: Add bus checks for simple-bus buses
+Date: Tue, 7 Mar 2017 07:51:15 -0600
+Message-ID: <CAL_Jsq+U4SqL2EDR6hRrE_JcONkfkZqacBQGz4Kkq=CxNbaYAQ@mail.gmail.com>
+References: <20170228224310.14162-1-robh@kernel.org> <20170228224310.14162-3-robh@kernel.org>
+ <20170303021206.GD4067@umbus.fritz.box> <CAL_JsqJzWAiBUZeRMx0i5Y_NAFH6_jrASWcFp_U4MwVf2+=h0w@mail.gmail.com>
+ <20170307034110.GC19967@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rz27m4ht7dsuzu33"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170228075041.7568-1-milo.kim@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Milo Kim <milo.kim@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170307034110.GC19967-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 6, 2017 at 9:41 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Mon, Mar 06, 2017 at 04:48:18AM -0600, Rob Herring wrote:
+>> On Thu, Mar 2, 2017 at 8:12 PM, David Gibson
+>> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+>> > On Tue, Feb 28, 2017 at 04:43:09PM -0600, Rob Herring wrote:
+>> >> Add checks to identify simple-bus bus types and checks for child
+>> >> devices. Simple-bus type is generally identified by "simple-bus"
+>> >> compatible string. We also treat the root as a simple-bus, but only for
+>> >> child nodes with reg property.
+>> >>
+>> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> >> ---
+>> >> v2:
+>> >> - new patch
+>> >>
+>> >>  checks.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>> >>  1 file changed, 69 insertions(+)
+>> >>
+>> >> diff --git a/checks.c b/checks.c
+>> >> index 5ed91ac50a10..c4865b4c8da0 100644
+>> >> --- a/checks.c
+>> >> +++ b/checks.c
+>> >> @@ -817,6 +817,72 @@ static void check_pci_device_reg(struct check *c, struct dt_info *dti, struct no
+>> >>  }
+>> >>  WARNING(pci_device_reg, check_pci_device_reg, NULL, &reg_format);
+>> >>
+>> >> +static const struct bus_type simple_bus = {
+>> >> +     .name = "simple-bus",
+>> >> +};
+>> >> +
+>> >> +static bool node_is_compatible(struct node *node, const char *compat)
+>> >> +{
+>> >> +     struct property *prop;
+>> >> +     const char *str;
+>> >> +
+>> >> +     prop = get_property(node, "compatible");
+>> >> +     if (!prop)
+>> >> +             return false;
+>> >> +
+>> >> +     for (str = prop->val.val; str < prop->val.val + prop->val.len; str += strlen(str) + 1) {
+>> >
+>> > This isn't safe if the compatible property is filled with garbage (not
+>> > '\0' terminated) - the strlen() could access beyond the end of the
+>> > property value.
+>>
+>> Okay, I guess I can check that prop->val.val[prop->val.len - 1] == 0 up front.
+>
+> Sure.  Or use strnlen.
 
---rz27m4ht7dsuzu33
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Duh...
 
-On Tue, Feb 28, 2017 at 04:50:40PM +0900, Milo Kim wrote:
-> With index usages, device specific properties can be replaced with generic
-> one. Vpos is index 0 and Vneg is index 1.
-> DT examples are added as well.
+>> >> +             if (streq(str, compat))
+>> >> +                     return true;
+>> >> +     }
+>> >> +     return false;
+>> >> +}
+>> >> +
+>> >> +static void check_simple_bus_bridge(struct check *c, struct dt_info *dti, struct node *node)
+>> >> +{
+>> >> +     if (node_is_compatible(node, "simple-bus") || !node->parent)
+>> >> +             node->bus = &simple_bus;
+>> >
+>> > I don't think it's correct to assume the root bus is always a
+>> > simple-bus.  If it is, it really should be listed explicitly in the
+>> > root node's compatible property.
+>>
+>> It is in the sense that Linux treats the root the same and creates
+>> devices for top level children and then descends for nodes with
+>> "simple-bus".
+>
+> Hmm.. where in Linux is that?  I think that's a bug, technically
+> speaking, traversing the root node's children without regard to the
+> type of the root node.
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
+drivers/of/platform.c:of_platform_populate() which is called on the
+root node with "simple-bus" in the match table.
 
---rz27m4ht7dsuzu33
-Content-Type: application/pgp-signature; name="signature.asc"
+Plus I know we have some DT's like Tegra that didn't put all their
+devices under a bus (but should have). Maybe I should warn on that
+(i.e. warn on having unit-addresses without a bus type set on root).
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAli+vA4ACgkQJNaLcl1U
-h9BgIAf/Q0OzFGDeB5GwpHGa7IoEGYYTBI43UEnNQGqjx1eSQg72Alkp7Wov40wS
-nBl6b8eO0bqwAIDYCkAT7NCn9wunWzwl7OLi+kGvCke5S3f2fQlqTiqdIxTeXrzr
-Hsf7yi+GFr4RualgqiEXn9skfajK+0uIGi4XMRX44MV8bvn9d3Sy+npHpNopS5iD
-1jqiZ0vhGtVOml1KkXtx983cQ5LSzFkgag1MB/oO2BkxY4dfNQHynzs3sK0sm8Gn
-jpOSF5VazdFw/BvWjwtkEooy+PZ8GTpemtm7rrlaptSi1koHO3/58S2ZyEEp4UFD
-yStpRWa84h63hmdsLE3ObVhM7KCBKQ==
-=/ysr
------END PGP SIGNATURE-----
-
---rz27m4ht7dsuzu33--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
