@@ -1,93 +1,53 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH 1/2] leds: cpcap: new driver
-Date: Tue, 7 Mar 2017 12:55:49 +0100
-Message-ID: <20170307115549.GA914@amd>
-References: <20170305172234.24120-1-sre@kernel.org>
- <20170306221147.GA24272@amd>
- <20170306233859.GQ20572@atomide.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v2 3/3] mtd: nand: Remove unused chip->write_page() hook
+Date: Tue, 7 Mar 2017 21:04:50 +0900
+Message-ID: <CAK7LNASNFJ6_LJBS7jyyJ3-Uv_ExTYAj+tkJTCYrpDz8_BXa3Q@mail.gmail.com>
+References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1487593718-20752-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170306233859.GQ20572-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1487593718-20752-4-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Hans-Christian Egtvedt <egtvedt@samfundet.no>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2017-02-20 21:28 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
+> The last/only user of the chip->write_page() hook (the Atmel NAND
+> controller driver) has been reworked and is no longer specifying a custom
+> ->write_page() implementation.
+> Drop this hook before someone else start abusing it.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 
-Hi!
 
-> * Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> [170306 14:13]:
-> > > Motorola CPCAP is a PMIC found in multiple smartphones.
-> > > This driver adds support for the chip's LED controllers.
-> > > It has explicit support for all controllers used by the
-> > > Droid 4. Since no datasheets are available the other
-> > > available controllers are not supported until somebody
-> > > verified, that the register layout matches.
-> >=20
-> > This of course leads me to two questions:
-> >=20
-> > 1) Where can I get Droid 4?
->=20
-> There's plenty of them available used for a few tens of $/=E2=82=AC
-> on ebay as it was a popular phone on Verizon network in the
-> US. It works fine on 3G networks outside the U.S, 4G probably
-> only works in the US.
+Just a minor comment.
 
-Ok, and more importantly, 2G should work outside U.S., too, good.
 
-> > 2) How well is it supported?
->=20
-> Basic things like UART, MMC, eMMC, WLAN, I2C, SPI, HDMI,
-> clocks, PMIC and regulators work with lots of other dts
-> configured devices heading into tomorrow's Linux next in my
-> dts branch omap-for-v4.12/dt-droid4. LCD related patches have
-> been posted but are not yet in next.
->=20
-> Things that currently don't work are ADC, USB, charging,
-> audio and modems. The modems are on OHCI/EHCI, audio is on the
-> PMIC similar to the twl4030. I'm slowly working on a driver for
-> ADC/USB/charging with few more issues to sort out. I do have
-> ADC/USB/charging working with my current hacks though.
+/**
+ * nand_write_page - [REPLACEABLE] write one page
+ * @mtd: MTD device structure
 
-2 cores and more importantly 1GB of RAM. Nice. OTOH, I'm avoiding N950
-due to its crazy "security" system and this one is even worse. RAM and
-CPUs are nice, but phone calls are what is important for me. And
-battery charging, I guess. Serial port on the USB connector _is_ nice,
-OTOH.=20
 
-Anyway, good luck, and thanks for the pointers. I will get Droid 4 if
-it is easy. But I guess I'll stick to N900 for now. I want something
-that can do voice calls.
+Can you update the comment block for nand_write_page(), too?
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+  [REPLACEABLE]  ->  [INTERNAL]
 
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAli+n8UACgkQMOfwapXb+vJq4gCdGpQqY2GuDCuWynKx1fboYIhL
-dt8AoKp3QQAOXNyXskHhGP2IJgAbmTse
-=MFIY
------END PGP SIGNATURE-----
 
---2oS5YaxWCcQjTEyO--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards
+Masahiro Yamada
