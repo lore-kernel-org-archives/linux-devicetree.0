@@ -1,63 +1,47 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2 0/6] Updates for Marvell Switch SoCs
-Date: Tue, 7 Mar 2017 19:38:32 +0000
-Message-ID: <b2dc1865150d46a4b64c0522480bdec6@svr-chch-ex1.atlnz.lc>
-References: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
- <87bmtdovwr.fsf@free-electrons.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] arm64: dts: exynos: Add stmfts touchscreen node
+ for TM2 and TM2E
+Date: Tue, 7 Mar 2017 21:55:33 +0200
+Message-ID: <20170307195533.biokjsffiri364vt@kozik-lap>
+References: <20170210021721.12218-1-andi.shyti@samsung.com>
+ <CGME20170210021729epcas5p4101902873e65e0a8faeb2f9cbea5843c@epcas5p4.samsung.com>
+ <20170210021721.12218-4-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170210021721.12218-4-andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
+On Fri, Feb 10, 2017 at 11:17:21AM +0900, Andi Shyti wrote:
+> TM2 and TM2E devices are provided with a ST-Microelectronics
+> Finger Tip S device with small differences:
+> 
+>  - screen size
+>  - TM2E uses the stmfts also as a touchkey for "back" and "menu"
+> 
+> In this commit the initial value of the interrupt line is set to
+> EXYNOS_PIN_PULL_UP as the interrupt is triggered when the line
+> goes down.
+> 
+> Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 15 ++++++++++++++-
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts         |  5 +++++
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts        |  7 +++++++
+>  3 files changed, 26 insertions(+), 1 deletion(-)
+> 
 
-On 08/03/17 06:10, Gregory CLEMENT wrote:
-> Hi Chris,
->
->  On jeu., f=E9vr. 16 2017, Chris Packham <chris.packham@alliedtelesis.co.=
-nz> wrote:
->
->> Shortly after I posted my last series I got access to a more recent
->> Marvell SDK which had some device tree support for the switch SoCs I'd
->> been wanting. It was still based on an older kernel but it was a huge
->> improvement over what came before.
->>
->> Patch 1/6 is a typo I noticed after my initial series was applied.
->>
->> Patch 2/6 is a bit of a cleanup. I did initially struggle with how to
->> access individual parts of the DFX block as well as retaining a handle on
->> the entire thing for the switch driver to use.
->>
->> Patch 3/6 is a re-jig of the dtsi files which is needed by 5/6. This is
->> required because I need to use the coreclk label on a different node. It
->> also means I don't have to disable nodes for blocks that only exist on
->> the Armada-XP.
->>
->> Patch 4/6, 5/6 are split from the previous versions.
->>
->> Patch 6/6 is the device tree portion of a change already in clk-next.
->
->
-> I applied patches 2, 3 and 6 on mvebu/dt with the acked-by from Rob when
-> he gave it.
->
-> Patch 1 is already part of 4.11-rc1.
->
-> For patch 4 and 5 I understand that either we don't need it or it should
-> be a updated version so I skipped them.
->
+Thanks, applied.
 
-That's correct, thanks.
+Best regards,
+Krzysztof
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
