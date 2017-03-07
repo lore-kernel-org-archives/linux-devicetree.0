@@ -1,47 +1,97 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4 00/16] ACPI graph support
-Date: Tue, 7 Mar 2017 14:23:33 +0100
-Message-ID: <CAJZ5v0iNqTb55xrq21Byn5q6XUeFYSa2mMLj+Jnu1_d0DyMvxQ@mail.gmail.com>
-References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com> <20170307074948.GE3220@valkosipuli.retiisi.org.uk>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 3/3] ARM64: dts: meson-gxl: Add missing pinctrl pins groups
+Date: Tue,  7 Mar 2017 14:31:02 +0100
+Message-ID: <1488893462-7016-4-git-send-email-narmstrong@baylibre.com>
+References: <1488893462-7016-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170307074948.GE3220@valkosipuli.retiisi.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488893462-7016-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: khilman@baylibre.com, carlo@caione.org, linus.walleij@linaro.org
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 7, 2017 at 8:49 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> Hi Rafael,
->
-> On Mon, Mar 06, 2017 at 04:19:14PM +0200, Sakari Ailus wrote:
->> This set contains patches written by Mika Westerberg and by myself. The
->> patchset brings support for graphs to ACPI. The functionality achieved by
->> these patches is very similar to what the Device tree provides: the port
->> and the endpoint concept are being employed. The patches make use of the
->> _DSD property and data extensions to achieve this. The fwnode interface is
->> extended by graph functionality; this way graph information originating
->> from both OF and ACPI may be accessed using the same interface, without
->> being aware of the underlying firmware interface.
->
-> I've tested the patches again on ARM (OF) and x86-64 (ACPI).
+Add pinctrl pins nodes following the additions of missing pins in the pinctrl
+driver.
 
-OK
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 32 ++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-> I have V4L2 patches depending on the ACPI graph patchset that I'd like to
-> have in during the same merge window. Would you either accept a pull
-> request, or could I have a branch on top of v4.11-rc1 containing these
-> patches only (for media tree)?
->
-> The patchset "Move firmware specific code to firmware specific locations"
-> depends on "Fwnode property API fixes for OF, pset". Would you prefer to
-> send the bugfixes as fixes to v4.11 or just put it all to v4.12?
-
-I'll put it all into v4.12 if that's not a problem.
-
-Also I don't really have the time to take care of that this week due
-to other work.  I'll get to it next week, most likely.
-
-Thanks,
-Rafael
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+index 583c7b8..17cd546 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+@@ -103,6 +103,13 @@
+ 			};
+ 		};
+ 
++		uart_ao_b_0_1_pins: uart_ao_b_0_1 {
++			mux {
++				groups = "uart_tx_ao_b_0", "uart_rx_ao_b_1";
++				function = "uart_ao_b";
++			};
++		};
++
+ 		uart_ao_b_cts_rts_pins: uart_ao_b_cts_rts {
+ 			mux {
+ 				groups = "uart_cts_ao_b",
+@@ -118,6 +125,14 @@
+ 			};
+ 		};
+ 
++		i2c_ao_pins: i2c_ao {
++			mux {
++				groups = "i2c_sck_ao",
++				       "i2c_sda_ao";
++				function = "i2c_ao";
++			};
++		};
++
+ 		pwm_ao_a_3_pins: pwm_ao_a_3 {
+ 			mux {
+ 				groups = "pwm_ao_a_3";
+@@ -138,6 +153,13 @@
+ 				function = "pwm_ao_b";
+ 			};
+ 		};
++
++		pwm_ao_b_6_pins: pwm_ao_b_6 {
++			mux {
++				groups = "pwm_ao_b_6";
++				function = "pwm_ao_b_6";
++			};
++		};
+ 	};
+ };
+ 
+@@ -168,6 +190,16 @@
+ 			};
+ 		};
+ 
++		nor_pins: nor {
++			mux {
++				groups = "nor_d",
++				       "nor_q",
++				       "nor_c",
++				       "nor_cs";
++				function = "nor";
++			};
++		};
++
+ 		sdcard_pins: sdcard {
+ 			mux {
+ 				groups = "sdcard_d0",
+-- 
+1.9.1
