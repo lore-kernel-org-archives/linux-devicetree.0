@@ -1,93 +1,75 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 09/10] serdev: add serdev_device_set_rts
-Date: Tue, 7 Mar 2017 22:18:38 +0100
-Message-ID: <20170307211838.f267lj4nhs5j644i@earth>
-References: <20170304115833.3538-1-sre@kernel.org>
- <20170304115833.3538-10-sre@kernel.org>
- <CAL_Jsq+N3GU2Dry2uMaF+zxE6+d2aGmfZui-J2MGOWAUJNoH5w@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Add power button for Odroid XU3/4
+Date: Tue, 7 Mar 2017 23:19:00 +0200
+Message-ID: <20170307211900.daxhri57npaigbvi@kozik-lap>
+References: <1488768729-9435-1-git-send-email-brian.kim@hardkernel.com>
+ <CAJKOXPcwzy_hAMLoUNcJxYHjHfUF+YmeqSLPy2spvyCwck=TaA@mail.gmail.com>
+ <ae78c84d-796b-609b-ba00-c253a1f63a84@hardkernel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zufhu4rewuqpo2bb"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+N3GU2Dry2uMaF+zxE6+d2aGmfZui-J2MGOWAUJNoH5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ae78c84d-796b-609b-ba00-c253a1f63a84@hardkernel.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Brian Kim <brian.kim@hardkernel.com>
+Cc: linux.amoon@gmail.com, =?utf-8?Q?=C5=81ukasz?= Majewski <l.majewski@samsung.com>, robh+dt@kernel.org, kgene@kernel.org, mark.rutland@arm.com, Javier Martinez Canillas <javier@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---zufhu4rewuqpo2bb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-On Tue, Mar 07, 2017 at 10:07:56AM -0600, Rob Herring wrote:
-> On Sat, Mar 4, 2017 at 5:58 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > Add function to enable/disable RTS line.
+On Mon, Mar 06, 2017 at 06:49:43PM +0900, Brian Kim wrote:
+> On 2017년 03월 06일 16:24, Krzysztof Kozlowski wrote:
+> > On Mon, Mar 6, 2017 at 4:52 AM, Brian Kim <brian.kim@hardkernel.com> wrote:
+> >> The power button on Odroid XU3/4 is connected with the PWRON pin of
+> >> s2mps11 PMIC. The s2mps11 sends low signal to GPIO input in exynos 5422
+> >> via ONOB pin.
+> >>
+> >> This patch adds devicetree bindings for the power button of Odroid
+> >> XU3/4.
+> >>
+> >> Signed-off-by: Brian Kim <brian.kim@hardkernel.com>
+> >> ---
+> >>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
+> >>  1 file changed, 22 insertions(+)
+> >>
+> > Hi,
 > >
-> > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
->=20
-> > +static void ttyport_set_rts(struct serdev_controller *ctrl, bool enabl=
-e)
-> > +{
-> > +       struct serport *serport =3D serdev_controller_get_drvdata(ctrl);
-> > +       struct tty_struct *tty =3D serport->tty;
-> > +       int status =3D tty->driver->ops->tiocmget(tty);
-> > +       unsigned int set =3D 0;
-> > +       unsigned int clear =3D 0;
-> > +
-> > +       if (enable) {
-> > +               set |=3D (TIOCM_OUT2 | TIOCM_RTS);
-> > +               clear =3D ~set;
-> > +               set &=3D TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
-> > +                      TIOCM_OUT2 | TIOCM_LOOP;
-> > +               clear &=3D TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
-> > +                        TIOCM_OUT2 | TIOCM_LOOP;
-> > +               status =3D tty->driver->ops->tiocmset(tty, set, clear);
-> > +       } else {
-> > +               set &=3D ~(TIOCM_OUT2 | TIOCM_RTS);
-> > +               clear =3D ~set;
-> > +               set &=3D TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
-> > +                      TIOCM_OUT2 | TIOCM_LOOP;
-> > +               clear &=3D TIOCM_DTR | TIOCM_RTS | TIOCM_OUT1 |
-> > +                        TIOCM_OUT2 | TIOCM_LOOP;
-> > +               status =3D tty->driver->ops->tiocmset(tty, set, clear);
->=20
-> The logic here can be greatly simplified. Here's a patch to the
-> original version that I came up with, but haven't tested:
+> > Thanks for the patch.
+> >
+> > You sent almost the same patch as Anand did some time ago (with few
+> > missing things) :
+> > https://patchwork.kernel.org/patch/8388491/
+> I'm sorry, Krzysztof. I haven't seen it before.
+> 
+> When I checked git log history in the kernel source, this patch was missed.
+> So, I submitted it.
+> 
+> >
+> > All previous comments apply, including that you added a key for gpx0-3
+> > which is not a PWRON and it does not match description at all.
+> Yes, gpx0-3 is not PWRON.
+> PWRON is the 5V power input signal generated by the SW2 push button on Odroid-Xu3/4 boards
+> 
+> (active high). PWRON notifies "power up event to start" to s2mps13 PMIC.
+> 
+> gpx0-3 in Exynos 5422 is connected to the ONOB pin of PMIC.
+> According to s2mps13 datasheet, ONOB operates as 'PWRON key active low signal'.
+> s2mps13 PMIC generates the opposite signal from the PWRON via ONOB (active low).
+> So, we can get the state of power button by gpx0-3.
 
-ah I totally forgot to clean that mess. I took that over from the
-bluetooth code, since that got the nokia bluetooth chips working.
-I will do this in the next revision.
+Yes, this matches my previous findings. All of this above should be put
+in commit message and as a short comment in DTS (like the gpx0-3 is
+actually interrupt for ONOB for inverted PWRON). This is unusual
+usage and what is more it is not describing the real hardware. In
+reality, the key toggles PWRON and you are adding a node for gpx0-3
+whose input is ONOB. Not PWRON.
 
--- Sebastian
+All of comments from previous mail apply, so:
+1. Why do you need both interrupts and gpios?
+2. proper macros (irq type, gpio active etc).
+3. Unneeded gpio prefix for pinctrl label, usage of - for node names.
+4. Missing pinctrl function
 
---zufhu4rewuqpo2bb
-Content-Type: application/pgp-signature; name="signature.asc"
+I think label "power key" might stay.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAli/I64ACgkQ2O7X88g7
-+poh0A/+Nmk5DUclOvGo+O6e1qUV8xl3uJynUtebxCK+bgejx/n2iMVCX4hl5IxH
-l2qWnYsjis8jFBgSRfvS3zx48gQchZKRgWFXxxCZeRPLE14KLEcksSjWws3f8Ndd
-d7MfsWieHSaSRPoIt+OHSoj3SD/xg3LwtihRQtMXFuHVQmPbREVUtXV74kp0A7Zd
-j8PhnG2xCn8Ih1MF8dEwKS7fL8ZBmG1G6MIe/7+aUIgeeyO7AgzWA1xLfzbJGLnQ
-aAdb5rmc+ZPU6kZ+Q7SjFuMrU8WSzhlqQpqh7l4tAugRc6w3cSrRbOUoNMcuDF2l
-ImVDAPNJXzlOsubTnMydBCQJhcNV8U8T1Dr4h+vzfpE3GMciPHhKI9Tu+v5ugOFJ
-kGo7bdGYkTO1UKqOk+SylgW9XuKxQ/HTAQpEIVdnO/i4/U0lnB+wHIF61GxXVgL5
-oeco6VhYIS2D8bhojzSUuCWsdMjgHZgDsFoy/MEvu/ZmJN+E8yaZYk7VFD1gqgly
-RBZpb58y5JZH0PJGWVBTlVcqFSgNjGKjwDfY485Bzkf/yRoMrX74CMvwBQkmHUge
-kFokQNL5NHxxXjoVsIMdpz146Z/QuB4hf9X9kNpNY+KvEX+GXiK1qLtdzMZSM5DD
-Jl+Nl3u10ME7IA9UoUX0K3rMgD/CVoT/ZnDBghF2v4Y7OgT4JBE=
-=NkqT
------END PGP SIGNATURE-----
-
---zufhu4rewuqpo2bb--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
