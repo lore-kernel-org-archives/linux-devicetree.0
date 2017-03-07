@@ -1,27 +1,59 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] dmaengine: cppi41: Add dma support to da8xx
-Date: Tue, 7 Mar 2017 13:43:09 +0530
-Message-ID: <20170307081309.GE2843@localhost>
-References: <20170130174921.28231-1-abailon@baylibre.com>
+From: Alban <albeu@free.fr>
+Subject: [PATCH v2 0/2] mtd: Add support for reading MTD devices via the nvmem
+ API
+Date: Tue,  7 Mar 2017 09:26:02 +0100
+Message-ID: <1488875164-30440-1-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170130174921.28231-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Alban <albeu@free.fr>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-mtd@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 06:49:18PM +0100, Alexandre Bailon wrote:
-> This series add support of DA8xx to CPPI 4.1 driver.
-> As the CPPI 4.1 is now generic, we only had to add the glue for DA8xx.
+Hi all,
 
-Applied this one as well, thanks
+First thanks to everybody for the feedback on the first series, I implemented
+most of the suggestions in this new version. The biggest change is to
+directly integrate in the MTD core instead of using notifiers which allow us
+to simplify the code quiet a bit.
+
+During the discussion 2 points showed up, reworking the NVMEM binding and
+improving the MTD notifiers. Both are good points but not relevant for
+this series, so I left that out for another time.
+
+The NVMEM device ID bug fix found in the first series has already been
+applied so I didn't include it again.
+
+Alban (2):
+  doc: bindings: Add bindings documentation for mtd nvmem
+  mtd: Add support for reading MTD devices via the nvmem API
+
+ .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 ++++++++++
+ drivers/mtd/Kconfig                                |  9 +++
+ drivers/mtd/Makefile                               |  1 +
+ drivers/mtd/mtdcore.c                              | 13 ++++
+ drivers/mtd/mtdnvmem.c                             | 72 ++++++++++++++++++++++
+ drivers/mtd/mtdnvmem.h                             | 25 ++++++++
+ include/linux/mtd/mtd.h                            |  4 ++
+ 7 files changed, 157 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+ create mode 100644 drivers/mtd/mtdnvmem.c
+ create mode 100644 drivers/mtd/mtdnvmem.h
 
 -- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
