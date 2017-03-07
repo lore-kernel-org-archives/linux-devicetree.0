@@ -1,74 +1,108 @@
-From: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/4] Documentation: dt: Add bindings documentation for DW MIPI CSI-2 Host
-Date: Tue,  7 Mar 2017 14:37:48 +0000
-Message-ID: <3478bf7c84fd8c8bdcff4f0170ee0344eca13f60.1488885081.git.roliveir@synopsys.com>
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: [PATCH 3/4] Documentation: dt: Add bindings documentation for CSI-2 Host Video Platform
+Date: Tue,  7 Mar 2017 14:37:50 +0000
+Message-ID: <95825021f5eae29a118ce0a2570c5c1886023110.1488885081.git.roliveir@synopsys.com>
 References: <cover.1488885081.git.roliveir@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1488885081.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-In-Reply-To: <cover.1488885081.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-References: <cover.1488885081.git.roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <cover.1488885081.git.roliveir@synopsys.com>
+In-Reply-To: <cover.1488885081.git.roliveir@synopsys.com>
+References: <cover.1488885081.git.roliveir@synopsys.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: CARLOS.PALMINHA@synopsys.com, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Benoit Parrot <bparrot@ti.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Hugues Fruchet <hugues.fruchet@st.com>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Create device tree bindings documentation for the Synopsys DW MIPI CSI-2
- Host.
+Create device tree bindings documentation for the CSI-2 Host Video
+ platform.
 
-Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
 ---
- .../devicetree/bindings/media/snps,dw-mipi-csi.txt | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt
+ .../devicetree/bindings/media/snps,plat-csi2.txt   | 77 ++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/snps,plat-csi2.txt
 
-diff --git a/Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt b/Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt
+diff --git a/Documentation/devicetree/bindings/media/snps,plat-csi2.txt b/Documentation/devicetree/bindings/media/snps,plat-csi2.txt
 new file mode 100644
-index 000000000000..5b24eb43d760
+index 000000000000..f559257a0a44
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/snps,dw-mipi-csi.txt
-@@ -0,0 +1,37 @@
-+Synopsys DesignWare CSI-2 Host controller
++++ b/Documentation/devicetree/bindings/media/snps,plat-csi2.txt
+@@ -0,0 +1,77 @@
++Synopsys DesignWare CSI-2 Host Video Platform
 +
-+Description
-+-----------
++The Synopsys DesignWare CSI-2 Host Video Device subsystem comprises of multiple
++sub-devices represented by separate device tree nodes. Currently this includes:
++plat-csi2, video-device, and dw-mipi-csi.
 +
-+This HW block is used to receive image coming from an MIPI CSI-2 compatible
-+camera.
++The sub-subdevices are defined as child nodes of the common 'camera'.
++
++Common 'camera' node
++--------------------
 +
 +Required properties:
-+- compatible: shall be "snps,dw-mipi-csi"
-+- reg		: physical base address and size of the device memory mapped
-+  registers;
-+- interrupts	: CSI-2 Host interrupt
-+- output-type   : Core output to be used (IPI-> 0 or IDI->1 or BOTH->2) These
-+  values choose which of the Core outputs will be used, it can be Image Data
-+  Interface or Image Pixel Interface.
-+- phys: List of one PHY specifier (as defined in
-+  Documentation/devicetree/bindings/phy/phy-bindings.txt). This PHY is a MIPI
-+  DPHY working in RX mode.
-+- resets: Reference to a reset controller (optional)
 +
-+Optional properties(if in IPI mode):
-+- ipi-mode 	: Mode to be used when in IPI(Camera -> 0 or Controller -> 1)
-+  This property defines if the controller will use the video timings available
-+  in the video stream or if it will use pre-defined ones.
-+- ipi-color-mode: Bus depth to be used in IPI (48 bits -> 0 or 16 bits -> 1)
-+  This property defines the width of the IPI bus.
-+- ipi-auto-flush: Data auto-flush (1 -> Yes or 0 -> No). This property defines
-+  if the data is automatically flushed in each vsync or if this process is done
-+  manually
-+- virtual-channel: Virtual channel where data is present when in IPI mode. This
-+  property chooses the virtual channel which IPI will use to retrieve the video
-+  stream.
++- compatible: must be "snps,plat-csi2", "simple-bus"
 +
-+The per-board settings:
-+ - port sub-node describing a single endpoint connected to the camera as
-+   described in video-interfaces.txt[1].
++The 'camera' node must include at least one 'video-device' and one 'dw-mipi-csi'
++child node.
++
++'video-device' device nodes
++-------------------
++
++Required properties:
++
++- compatible: "snps,video-device"
++- dmas, dma-names: List of one DMA specifier and identifier string (as defined
++  in Documentation/devicetree/bindings/dma/dma.txt) per port. Each port
++  requires a DMA channel with the identifier string set to "vdma" followed by
++  the port index.
++
++Image sensor nodes
++------------------
++
++The sensor device nodes should be added to their control bus controller (e.g.
++I2C0) nodes and linked to a port node in the dw-mipi-csi,using the common video
++interfaces bindings, defined in video-interfaces.txt.
++
++Example:
++
++
++	camera {
++		compatible = "snps,plat-csi2", "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++			video_device: video-device@0x10000 {
++				compatible = "snps,video-device";
++				dmas = <&axi_vdma_0 0>;
++				dma-names = "vdma0";
++			};
++
++			csi2:	csi2@0x03000 {
++				compatible = "snps,dw-mipi-csi";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = < 0x03000 0x7FF>;
++				interrupts = <2>;
++				phys = <&mipi_phy_ctrl1 0>;
++				resets = <&csi2_rst 1>;
++
++				output-type = <2>;
++				ipi-mode = <0>;
++				ipi-color-mode = <0>;
++				ipi-auto-flush = <1>;
++				virtual-channel = <0>;
++
++				port@1 {
++					reg = <1>;
++					csi1_ep1: endpoint {
++						remote-endpoint = <&camera>;
++						data-lanes = <1 2>;
++					};
++				};
++			};
++		};
++	};
++
++The dw-mipi-csi device binding is defined in snps,dw-mipi-csi.txt.
 -- 
 2.11.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
