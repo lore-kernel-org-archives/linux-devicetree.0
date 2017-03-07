@@ -1,108 +1,121 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] iommu/arm-smmu: Add global SMR masking property
-Date: Tue, 7 Mar 2017 18:35:55 +0000
-Message-ID: <20170307183555.GH3514@leverpostej>
-References: <f26137836bb8416e38390ba68973ae5cd19c2c53.1488910978.git.robin.murphy@arm.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v3] Input: pwm-beeper: support customized freq for
+ SND_BELL
+Date: Tue, 7 Mar 2017 10:44:25 -0800
+Message-ID: <20170307184425.GF13740@dtor-ws>
+References: <1488346642-14351-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f26137836bb8416e38390ba68973ae5cd19c2c53.1488910978.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1488346642-14351-1-git-send-email-hs@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: linux-input@vger.kernel.org, Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 07, 2017 at 06:26:28PM +0000, Robin Murphy wrote:
-> The current SMR masking support using a 2-cell iommu-specifier is
-> primarily intended to handle individual masters with large and/or
-> complex Stream ID assignments; it quickly gets a bit clunky in other SMR
-> use-cases where we just want to consistently mask out the same part of
-> every Stream ID (e.g. for MMU-500 configurations where the appended TBU
-> number gets in the way unnecessarily). Let's add a new property to allow
-> a single global mask value to better fit the latter situation.
+On Wed, Mar 01, 2017 at 06:37:22AM +0100, Heiko Schocher wrote:
+> From: Guan Ben <ben.guan@cn.bosch.com>
 > 
-> Tested-by: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> extend the pwm-beeper driver to support customized frequency
+> for SND_BELL from device tree.
+> 
+> Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+> Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+> [hs@denx.de: adapted to 4.10-rc7]
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+
+Reconciled with the latest version and applied, thank you.
+
 > ---
 > 
-> Time to rekindle the discussion about whether an architecture-level
-> concept with a rather specific name needs a vendor prefix ;)
+> Changes in v3:
+> - add comment from David Lechner:
+>   - readd the switch statement, instead using if / then
+>   - remove check IS_ENABLED(CONFIG_OF)
+>   - remove not used node variable
+>   - change warning string from "Failed to read beeper-hz" to
+>     "'beeper-hz' not specified"
+>   - remove function pwm_beeper_init_bell_frequency() as it is
+>     to simple.
+>   - checked that device_property_read_u32() does not modify the
+>     bell_frequency, if the property "beeper_hz" is not defined.
+> - add comment from Rob Herring:
+>   - add Acked-by from Rob Herring
+>     Rob also mentioned to remove the IS_ENABLED(CONFIG_OF) check
+>     and node variable is unused.
 > 
-> Robin.
+> Changes in v2:
+> - add comment from Rob Herring:
+>   rename property name "bell-frequency" to "beeper-hz"
+> - add comment from Dmitry Torokhov:
+>   use device_property_read_u32() instead of of_property_read_u32()
+> - rebased against c470abd4fde40ea6a0846a2beab642a578c0b8cd
+>   Linux 4.10
 > 
->  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 10 ++++++++++
->  drivers/iommu/arm-smmu.c                             |  4 +++-
+>  Documentation/devicetree/bindings/input/pwm-beeper.txt |  3 +++
+>  drivers/input/misc/pwm-beeper.c                        | 11 ++++++++++-
 >  2 files changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index 6cdf32d037fc..d66f355e174f 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -60,6 +60,16 @@ conditions.
->                    aliases of secure registers have to be used during
->                    SMMU configuration.
->  
-> +- stream-match-mask : Specifies a fixed SMR mask value to combine with
-> +                  the Stream ID value from every iommu-specifier. This
-> +                  may be used instead of an "#iommu-cells" value of 2
-> +                  when there is no need for per-master SMR masks, but
-> +                  it is still desired to mask some portion of every
-> +                  Stream ID (e.g. for certain MMU-500 configurations
-> +                  given globally unique external IDs). This property is
-> +                  not valid for SMMUs using stream indexing, and may be
-> +                  ignored if stream matching is not supported.
+> diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> index be332ae..4e4e128 100644
+> --- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> +++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+> @@ -5,3 +5,6 @@ Registers a PWM device as beeper.
+>  Required properties:
+>  - compatible: should be "pwm-beeper"
+>  - pwms: phandle to the physical PWM device
 > +
-
-Generally, this sounds fine.
-
-However, there is an ambiguity here (inherited from the existing
-#iommu-cells = <2> case), in that it's not clear what is meant by "to
-combine".
-
->From the example at the end of the file, this appears to be a mask of
-bits to not consider for matching purposes?
-
-Would you mind clarifying that in both cases?
-
-This could also do with an example.
-
-Thanks,
-Mark.
-
->  ** Deprecated properties:
+> +optional properties:
+> +- beeper-hz:  bell frequency in Hz
+> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+> index 5f9655d..f2fcd50 100644
+> --- a/drivers/input/misc/pwm-beeper.c
+> +++ b/drivers/input/misc/pwm-beeper.c
+> @@ -27,6 +27,7 @@ struct pwm_beeper {
+>  	struct pwm_device *pwm;
+>  	struct work_struct work;
+>  	unsigned long period;
+> +	unsigned int bell_frequency;
+>  };
 >  
->  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index abf6496843a6..e394d55146a6 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -1590,13 +1590,15 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+>  #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
+> @@ -60,7 +61,7 @@ static int pwm_beeper_event(struct input_dev *input,
 >  
->  static int arm_smmu_of_xlate(struct device *dev, struct of_phandle_args *args)
+>  	switch (code) {
+>  	case SND_BELL:
+> -		value = value ? 1000 : 0;
+> +		value = value ? beeper->bell_frequency : 0;
+>  		break;
+>  	case SND_TONE:
+>  		break;
+> @@ -97,6 +98,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
 >  {
-> -	u32 fwid = 0;
-> +	u32 mask, fwid = 0;
+>  	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
+>  	struct pwm_beeper *beeper;
+> +	unsigned int bell_frequency = 1000;
+>  	int error;
 >  
->  	if (args->args_count > 0)
->  		fwid |= (u16)args->args[0];
+>  	beeper = kzalloc(sizeof(*beeper), GFP_KERNEL);
+> @@ -122,6 +124,13 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+>  	pwm_apply_args(beeper->pwm);
 >  
->  	if (args->args_count > 1)
->  		fwid |= (u16)args->args[1] << SMR_MASK_SHIFT;
-> +	else if (!of_property_read_u32(args->np, "stream-match-mask", &mask))
-> +		fwid |= (u16)mask << SMR_MASK_SHIFT;
+>  	INIT_WORK(&beeper->work, pwm_beeper_work);
+> +	error = device_property_read_u32(&pdev->dev, "beeper-hz",
+> +				       &bell_frequency);
+> +	if (error < 0)
+> +		dev_dbg(&pdev->dev, "'beeper-hz' not specified, using default: %u Hz\n",
+> +			bell_frequency);
+> +
+> +	beeper->bell_frequency = bell_frequency;
 >  
->  	return iommu_fwspec_add_ids(dev, &fwid, 1);
->  }
+>  	beeper->input = input_allocate_device();
+>  	if (!beeper->input) {
 > -- 
-> 2.11.0.dirty
+> 2.7.4
 > 
+
+-- 
+Dmitry
