@@ -1,36 +1,36 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-bx50v3/imx6q-b450v3/imx6q-b650v3: change
- pca953x GPIO default settings
-Date: Tue, 7 Mar 2017 12:45:15 +0100
-Message-ID: <20170307114514.GA6585@x250>
-References: <20170203012114.20411-1-ken.lin@advantech.com>
+Subject: Re: [PATCH v2 1/6] of: documentation: add bindings documentation for
+ TS-4600
+Date: Tue, 7 Mar 2017 12:48:19 +0100
+Message-ID: <20170307114818.GB6585@x250>
+References: <20170203194729.20995-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20170203194729.20995-2-sebastien.bourdelin@savoirfairelinux.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170203012114.20411-1-ken.lin@advantech.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ken Lin <yungching0725@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, peter.chiang@advantech.com, ken.lin@advantech.com, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, akshay.bhat@timesys.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org, peter.stretz@advantech.com
+In-Reply-To: <20170203194729.20995-2-sebastien.bourdelin@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Cc: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@savoirfairelinux.com, robh@kernel.org, linux@roeck-us.net, linus.walleij@linaro.org, fabio.estevam@nxp.com, mark@embeddedarm.com, kris@embeddedarm.com, horms+renesas@verge.net.au, treding@nvidia.com, jonathanh@nvidia.com, f.fainelli@gmail.com, kernel@pengutronix.de, linux@armlinux.org.uk, wim@iguana.be, mark.rutland@arm.com, damien.riegel@savoirfairelinux.com, lucile.quirion@savoirfairelinux.com, olof@lixom.net, arnd@arndb.de, suzuki.poulose@arm.com, will.deacon@arm.com, yamada.masahiro@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 03, 2017 at 09:21:14AM +0800, Ken Lin wrote:
-> Leave pca953x P06,P07 pins on b850v3 platform and P06 pin on b450v3/b650v3 unconfigured
-> in the kernel space since they could be configured as DP1_RST and DP2_RST by the applications
-> for the DP FW update support
+On Fri, Feb 03, 2017 at 02:47:24PM -0500, Sebastien Bourdelin wrote:
+> This adds the documentation for the TS-4600 by Technologic Systems.
 > 
-> Signed-off-by: Ken Lin <ken.lin@advantech.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes v1 -> v2:
+>   - rebase on master
+>   - add ack by Rob Herring <robh@kernel.org>
+> 
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 
-I wrapped commit log and shorten the subject prefix a bit, and then
-applied the patch.
+Your SoB should be put before the first '---'.  Otherwise, it will get
+lost during patch applying.
 
 Shawn
+
+> ---
+>  Documentation/devicetree/bindings/arm/technologic.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
