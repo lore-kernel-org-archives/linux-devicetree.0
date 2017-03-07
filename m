@@ -1,75 +1,80 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Add power button for Odroid XU3/4
-Date: Tue, 7 Mar 2017 23:19:00 +0200
-Message-ID: <20170307211900.daxhri57npaigbvi@kozik-lap>
-References: <1488768729-9435-1-git-send-email-brian.kim@hardkernel.com>
- <CAJKOXPcwzy_hAMLoUNcJxYHjHfUF+YmeqSLPy2spvyCwck=TaA@mail.gmail.com>
- <ae78c84d-796b-609b-ba00-c253a1f63a84@hardkernel.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/10] serdev: add serdev_device_get_cts
+Date: Tue, 7 Mar 2017 22:12:43 +0100
+Message-ID: <20170307211243.zecbitmkbozd3s2j@earth>
+References: <20170304115833.3538-1-sre@kernel.org>
+ <20170304115833.3538-9-sre@kernel.org>
+ <CAL_Jsq+6NCC35zBMhvNhXug2sYmBqBoJ20pgdREhvRPGzePNkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="xgxp6za64zl6ol6z"
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <ae78c84d-796b-609b-ba00-c253a1f63a84@hardkernel.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Brian Kim <brian.kim@hardkernel.com>
-Cc: linux.amoon@gmail.com, =?utf-8?Q?=C5=81ukasz?= Majewski <l.majewski@samsung.com>, robh+dt@kernel.org, kgene@kernel.org, mark.rutland@arm.com, Javier Martinez Canillas <javier@osg.samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CAL_Jsq+6NCC35zBMhvNhXug2sYmBqBoJ20pgdREhvRPGzePNkw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 06, 2017 at 06:49:43PM +0900, Brian Kim wrote:
-> On 2017년 03월 06일 16:24, Krzysztof Kozlowski wrote:
-> > On Mon, Mar 6, 2017 at 4:52 AM, Brian Kim <brian.kim@hardkernel.com> wrote:
-> >> The power button on Odroid XU3/4 is connected with the PWRON pin of
-> >> s2mps11 PMIC. The s2mps11 sends low signal to GPIO input in exynos 5422
-> >> via ONOB pin.
-> >>
-> >> This patch adds devicetree bindings for the power button of Odroid
-> >> XU3/4.
-> >>
-> >> Signed-off-by: Brian Kim <brian.kim@hardkernel.com>
-> >> ---
-> >>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
-> >>  1 file changed, 22 insertions(+)
-> >>
-> > Hi,
+
+--xgxp6za64zl6ol6z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Rob,
+
+On Tue, Mar 07, 2017 at 10:03:37AM -0600, Rob Herring wrote:
+> On Sat, Mar 4, 2017 at 5:58 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > Add method to get current CTS line state.
 > >
-> > Thanks for the patch.
+> > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/tty/serdev/core.c           | 11 +++++++++++
+> >  drivers/tty/serdev/serdev-ttyport.c | 15 +++++++++++++++
+> >  include/linux/serdev.h              |  6 ++++++
+> >  3 files changed, 32 insertions(+)
 > >
-> > You sent almost the same patch as Anand did some time ago (with few
-> > missing things) :
-> > https://patchwork.kernel.org/patch/8388491/
-> I'm sorry, Krzysztof. I haven't seen it before.
-> 
-> When I checked git log history in the kernel source, this patch was missed.
-> So, I submitted it.
-> 
+> > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> > index a63b74031e22..36eb3dfb1477 100644
+> > --- a/drivers/tty/serdev/core.c
+> > +++ b/drivers/tty/serdev/core.c
+> > @@ -184,6 +184,17 @@ void serdev_device_wait_until_sent(struct serdev_d=
+evice *serdev, long timeout)
+> >  }
+> >  EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
 > >
-> > All previous comments apply, including that you added a key for gpx0-3
-> > which is not a PWRON and it does not match description at all.
-> Yes, gpx0-3 is not PWRON.
-> PWRON is the 5V power input signal generated by the SW2 push button on Odroid-Xu3/4 boards
-> 
-> (active high). PWRON notifies "power up event to start" to s2mps13 PMIC.
-> 
-> gpx0-3 in Exynos 5422 is connected to the ONOB pin of PMIC.
-> According to s2mps13 datasheet, ONOB operates as 'PWRON key active low signal'.
-> s2mps13 PMIC generates the opposite signal from the PWRON via ONOB (active low).
-> So, we can get the state of power button by gpx0-3.
+> > +bool serdev_device_get_cts(struct serdev_device *serdev)
+>=20
+> I wonder if this should just be the wait for cts in the core. I think
+> that would be the common use for reading the CTS state. IIRC, I saw
+> some other device needing the same thing.
 
-Yes, this matches my previous findings. All of this above should be put
-in commit message and as a short comment in DTS (like the gpx0-3 is
-actually interrupt for ONOB for inverted PWRON). This is unusual
-usage and what is more it is not describing the real hardware. In
-reality, the key toggles PWRON and you are adding a node for gpx0-3
-whose input is ONOB. Not PWRON.
+mh. I think it fits nicely to serdev_device_set_rts(). But I guess
+it makes sense to have the wait feature directly in serdev. So I
+suggest to add the function in addition to the simple get_cts
+function. Does that make sense to you?
 
-All of comments from previous mail apply, so:
-1. Why do you need both interrupts and gpios?
-2. proper macros (irq type, gpio active etc).
-3. Unneeded gpio prefix for pinctrl label, usage of - for node names.
-4. Missing pinctrl function
+-- Sebastian
 
-I think label "power key" might stay.
+--xgxp6za64zl6ol6z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
-Krzysztof
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAli/IksACgkQ2O7X88g7
++pqtkxAAl6AhKIaDXJkM/F0M6njSh9jVXfoqiVYKveFVaAFqQHOL0AdrLg9NAGec
+twzIhdzvFOU7bkvky0pU+amhHeQmqjvmjVA1F2XpHlQedO2UhseFeBE9OAnhvqIO
+04vckI3NVa/Zi30J7WylLOiRyBIW5tGjs5OOPdfbxeScSIoeeBFOBFNwpIYngy4i
+yCpbl5AVrVw/YDJ5rEU4x/dqco7vvaBorypO+nRFpC7krsHBEDeq2w5WEM64BaP1
+UvorgbcTaW3LnZjqAcYAVhOJZ+y3Gwqc6hNQNbI4dEmhi8SGAjnCNczchDcbDN4N
+b+IDOB9uSbsvznghWW1AkDUJ7wmG5CKiqyFV0+KAko3Po0F6a1R7ZjDGcGYRJpa+
+1yI5jqx4ACCF7NxeVkAmI+5+RmHCmcVZUiwPauq6k6+PE0rWpxeALw7Z50pyYO8t
+iUnhnp4Bc2tTPgDF1WCumCCnj3jqQSnkH2HxkJYckYpPilqjBCmo0sC8mEUKx1G5
+yEYgoo1UL/iKTau3HqLVNxa1RV3/yitfoIFR57iyx6lGeoymFX5PNxg3+gdE0t5a
+m2CivqtZky6NJZXN9rU9C9fBRQGTtD0GN8RhKIsUTMlWjbEoib/F6RZ/kcHX/YqW
+mruMSF4Mi5U7OmRO5UUfpu+J8zjDcj2mqrTRT43SXg41ZZ3Zqes=
+=jydG
+-----END PGP SIGNATURE-----
+
+--xgxp6za64zl6ol6z--
