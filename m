@@ -1,83 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dio2125: add dt-bindings" to the asoc
-	tree
-Date: Tue, 07 Mar 2017 13:57:29 +0100
-Message-ID: <E1clEgD-0004gQ-RC@finisterre>
-References: <20170306174451.24406-4-jbrunet@baylibre.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 00/16] ACPI graph support
+Date: Tue, 7 Mar 2017 14:23:33 +0100
+Message-ID: <CAJZ5v0iNqTb55xrq21Byn5q6XUeFYSa2mMLj+Jnu1_d0DyMvxQ@mail.gmail.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com> <20170307074948.GE3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170306174451.24406-4-jbrunet@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170307074948.GE3220@valkosipuli.retiisi.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Tue, Mar 7, 2017 at 8:49 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> Hi Rafael,
+>
+> On Mon, Mar 06, 2017 at 04:19:14PM +0200, Sakari Ailus wrote:
+>> This set contains patches written by Mika Westerberg and by myself. The
+>> patchset brings support for graphs to ACPI. The functionality achieved by
+>> these patches is very similar to what the Device tree provides: the port
+>> and the endpoint concept are being employed. The patches make use of the
+>> _DSD property and data extensions to achieve this. The fwnode interface is
+>> extended by graph functionality; this way graph information originating
+>> from both OF and ACPI may be accessed using the same interface, without
+>> being aware of the underlying firmware interface.
+>
+> I've tested the patches again on ARM (OF) and x86-64 (ACPI).
 
-   ASoC: dio2125: add dt-bindings
+OK
 
-has been applied to the asoc tree at
+> I have V4L2 patches depending on the ACPI graph patchset that I'd like to
+> have in during the same merge window. Would you either accept a pull
+> request, or could I have a branch on top of v4.11-rc1 containing these
+> patches only (for media tree)?
+>
+> The patchset "Move firmware specific code to firmware specific locations"
+> depends on "Fwnode property API fixes for OF, pset". Would you prefer to
+> send the bugfixes as fixes to v4.11 or just put it all to v4.12?
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+I'll put it all into v4.12 if that's not a problem.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Also I don't really have the time to take care of that this week due
+to other work.  I'll get to it next week, most likely.
 
 Thanks,
-Mark
-
->From 1e03580b3a7213292fae9a6677edfaa83843fa4e Mon Sep 17 00:00:00 2001
-From: Jerome Brunet <jbrunet@baylibre.com>
-Date: Mon, 6 Mar 2017 18:44:51 +0100
-Subject: [PATCH] ASoC: dio2125: add dt-bindings
-
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/dioo,dio2125.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/dioo,dio2125.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/dioo,dio2125.txt b/Documentation/devicetree/bindings/sound/dioo,dio2125.txt
-new file mode 100644
-index 000000000000..63dbfe0f11d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/dioo,dio2125.txt
-@@ -0,0 +1,12 @@
-+DIO2125 Audio Driver
-+
-+Required properties:
-+- compatible : "dioo,dio2125"
-+- enable-gpios : the gpio connected to the enable pin of the dio2125
-+
-+Example:
-+
-+amp: analog-amplifier {
-+	compatible = "dioo,dio2125";
-+	enable-gpios = <&gpio GPIOH_3 0>;
-+};
--- 
-2.11.0
+Rafael
