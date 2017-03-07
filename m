@@ -1,16 +1,16 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: Re: [PATCH v2] ARM: mvebu: add support for the Linksys WRT1900ACS
- (Shelby)
-Date: Tue, 7 Mar 2017 18:48:47 +0100
-Message-ID: <20170307184847.0c684b36@gmail.com>
-References: <20170214191744.9419-1-ralph.sennhauser@gmail.com>
- <87inobcwk3.fsf@free-electrons.com>
- <87zigxngjq.fsf@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv3 net-next 21/22] net: mvpp2: set dma mask and coherent
+ dma mask on PPv2.2
+Date: Tue, 7 Mar 2017 19:12:01 +0100
+Message-ID: <20170307191201.645d23b4@free-electrons.com>
+References: <1488902000-2658-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1488902000-2658-22-git-send-email-thomas.petazzoni@free-electrons.com>
+ <063D6719AE5E284EB5DD2968C1650D6DCFE79D2E@AcuExch.aculab.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87zigxngjq.fsf@free-electrons.com>
+In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6DCFE79D2E@AcuExch.aculab.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,28 +20,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED
- DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, "moderated
- list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: David Laight <David.Laight@ACULAB.COM>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yehuda Yitschak <yehuday@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 07 Mar 2017 18:27:21 +0100
-Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-> 
-> It is now in mvebu/dt and in the same time I fixed the title to:
-> "ARM: dts: armada-385: add support for the Linksys WRT1900ACS
-> (Shelby)"
-> 
-> Gregory
-> 
+Hello,
 
-Thanks
-Ralph
+On Tue, 7 Mar 2017 17:24:21 +0000, David Laight wrote:
 
-PS: The sort order got mixed with armada-385-synology-ds116.dtb while
-merging which got added minutes earlier in arch/arm/boot/dts/Makefile.
+> Are the coherent mappings just used for ring structures?
+> If it might be reasonable to allocate them as a single entity,
+> thus guaranteeing they all reside in a single 4G region.
 
-PPS: There was also the request of using SPDX tags to v1 after v2 got
-merged from Rob Herring and a no by Russell King. I took it as no
-action required, you might want to have a look though.
+Do we have the guarantee that a DMA coherent allocation will not span a
+4G boundary?
+
+Thanks,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
