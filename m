@@ -1,120 +1,88 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v2 08/22] PCI: dwc: designware: Add EP mode support
-Date: Tue, 7 Mar 2017 11:10:09 +0000
-Message-ID: <02461be2-268d-485a-2bc4-3b148726d37d@synopsys.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-9-git-send-email-kishon@ti.com>
- <45e5288e-d11f-c855-af9b-692a42d878c6@synopsys.com> <58BE42B2.20305@ti.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
+ SMP2P drivers
+Date: Tue, 7 Mar 2017 12:04:13 +0100
+Message-ID: <20170307110413.GD49978@Bjorns-MacBook-Pro-2.local>
+References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
+ <20170215045157.11659-2-j.neuschaefer@gmx.net>
+ <20170304012032.GA1694@minitux>
+ <20170305050125.b6lzx2fiest4xmre@latitude>
+ <20170305164930.GA49943@Bjorns-MacBook-Pro-2.local>
+ <20170307020145.xfqz4wolc3tuqv6x@latitude>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <58BE42B2.20305@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170307020145.xfqz4wolc3tuqv6x@latitude>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jonathan Neusch?fer <j.neuschaefer@gmx.net>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue 07 Mar 03:01 CET 2017, Jonathan Neusch?fer wrote:
 
-Hi Kishon,
+> On Sun, Mar 05, 2017 at 04:49:30PM +0000, Bjorn Andersson wrote:
+> > On Sun 05 Mar 05:01 GMT 2017, Jonathan Neusch?fer wrote:
+> [...]
+> > > FWIW, I enabled CONFIG_QCOM_SMSM on my test system (an Asus Padfone,
+> > > based on MSM8974; I'm using the Sony Xperia Honami DT because it's close
+> > > enough), and I think it failed to initialize:
+> > > 
+> > 
+> > Using Honami should work so far, but please do write a patch adding the
+> > Padfone, so that we don't accidentally break your HW at some point.
+> 
+> I can try how far I get, but unfortunately I don't have hardware
+> documentation or schematics, because I'm a hobbyist.
+> 
 
-=C0s 5:18 AM de 3/7/2017, Kishon Vijay Abraham I escreveu:
-> Hi Joao,
-> =
+If this is something that you will continue to hack on and you think
+anyone else will be interested in having then please do submit patches
+for it.
 
-> On Friday 17 February 2017 10:50 PM, Joao Pinto wrote:
->> =C0s 9:50 AM de 2/17/2017, Kishon Vijay Abraham I escreveu:
->>> Add endpoint mode support to designware driver. This uses the
->>> EP Core layer introduced recently to add endpoint mode support.
->>> *Any* function driver can now use this designware device
->>> in order to achieve the EP functionality.
->>>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> ---
->>>  drivers/pci/dwc/Kconfig              |    5 +
->>>  drivers/pci/dwc/Makefile             |    1 +
->>>  drivers/pci/dwc/pcie-designware-ep.c |  342 ++++++++++++++++++++++++++=
-++++++++
->>>  drivers/pci/dwc/pcie-designware.c    |   51 +++++
->>>  drivers/pci/dwc/pcie-designware.h    |   72 +++++++
->>>  5 files changed, 471 insertions(+)
->>>  create mode 100644 drivers/pci/dwc/pcie-designware-ep.c
->>>
-> =
+> > > [    0.647743] qcom-smsm smsm: no smsm size info, using defaults
+> > > [    0.647775] qcom-smsm smsm: unable to allocate shared state entry
+> > > 
+> > 
+> > Could you please confirm where in qcom_smem_alloc_global() we're
+> > failing? As far as I can tell we should fail with -EEXIST or if the
+> > passed "size" parameter is bogus -ENOMEM (but the default number of
+> > entries really should be less than the amount of free SMEM space).
+> 
+> * qcom_smem_get returns -EPROBE_DEFER:
+> 
+> 	void *ptr = ERR_PTR(-EPROBE_DEFER);
+> 	if (!__smem)
+> 		return ptr;
+> 
+> * smsm_get_size_info prints "no smsm size info, using defaults\n"
+> * qcom_smem_alloc also returns -EPROBE_DEFER early.
+> 
+> 
+> BTW, I think smsm_get_size_info is using uninitialized memory here:
+> 
+>         size_t size;    /* is uninitialized */
+>         struct { ... } *info;
+> 
+>         /* qcom_smem_get returns early without setting size */
+>         info = qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_SMSM_SIZE_INFO, &size);
+> 
+>         /*
+> 	 * PTR_ERR(info) is not -ENOENT.
+>          * size (still uninitialized) is compared with the size of the local
+>          * struct defined above.
+> 	 */
+>         if (PTR_ERR(info) == -ENOENT || size != sizeof(*info)) {
+>                 ...
+>         }
+> 
 
-> <snip>
-> =
+Thanks for your analysis!
 
->>> diff --git a/drivers/pci/dwc/pcie-designware.c b/drivers/pci/dwc/pcie-d=
-esignware.c
->>> index 686945d..49b28c8 100644
->>> --- a/drivers/pci/dwc/pcie-designware.c
->>> +++ b/drivers/pci/dwc/pcie-designware.c
->>> @@ -173,6 +173,57 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci=
-, int index, int type,
->>>  	dev_err(pci->dev, "iATU is not being enabled\n");
->>>  }
->>>  =
+As you say the smsm driver is missing handling of probe deferral - which
+is wrong. Could you please propose a patch checking for EPROBE_DEFER and
+propagate this error as return value from probe()?  (Without an error
+message)
 
->>> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
->>> +			     u64 cpu_addr, enum dw_pcie_as_type as_type)
->>> +{
->>> +	int type;
->>> +	void __iomem *base =3D pci->dbi_base;
->>> +
->>> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_VIEWPORT, 0x4,
->>> +			  PCIE_ATU_REGION_INBOUND | index);
->>> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_LOWER_TARGET, 0x4,
->>> +			  lower_32_bits(cpu_addr));
->>> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_UPPER_TARGET, 0x4,
->>> +			  upper_32_bits(cpu_addr));
->>> +
->>> +	switch (as_type) {
->>> +	case DW_PCIE_AS_MEM:
->>> +		type =3D PCIE_ATU_TYPE_MEM;
->>> +		break;
->>> +	case DW_PCIE_AS_IO:
->>> +		type =3D PCIE_ATU_TYPE_IO;
->>> +		break;
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_CR1, 0x4, type);
->>> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_CR2, 0x4, PCIE_ATU_ENABLE |
->>> +			  PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
->>> +	return 0;
->>> +}
->>> +
->>
->> This Atu programming is for PCI Cores <=3D 4.70. Please follow the same =
-approach as:
->> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kernel.org_cg=
-it_linux_kernel_git_helgaas_pci.git_tree_drivers_pci_dwc_pcie-2Ddesignware.=
-c-3Fh-3Dpci_host-2Ddesignware-23n95&d=3DDwID-g&c=3DDPL6_X_6JkXFx7AXWqB0tg&r=
-=3Ds2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=3DMqqHFJBR0jj9ZQILcUJEd-CQ=
-kTihuOSf69e-XxZJvRs&s=3DfY5N7Mt9iszsAI04DPm-cSC6cSE5P2axHUFQ9GOx-2A&e=3D =
-
-> =
-
-> Can you provide PCIE_GET_ATU_INB_UNR_REG_OFFSET (similar to
-> PCIE_GET_ATU_OUTB_UNR_REG_OFFSET)?
-
-Yes of course, I will send you the definition soon.
-
-Thanks,
-Joao
-
-> =
-
-> Thanks
-> Kishon
-> =
+Regards,
+Bjorn
