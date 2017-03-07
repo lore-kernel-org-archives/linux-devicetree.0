@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 Subject: Re: [PATCH v8 0/6] Allwinner H5 and Orange Pi PC2 support
-Date: Wed, 08 Mar 2017 01:33:38 +0800
-Message-ID: <5852741488908018@web33j.yandex.ru>
+Date: Wed, 08 Mar 2017 01:36:43 +0800
+Message-ID: <2704251488908203@web18o.yandex.ru>
 References: <20170306171750.7491-1-icenowy@aosc.xyz> <20170307170751.n6tvrztet724pxfl@lukather>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB5W57PCQKGQEXTRYILQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBLO77PCQKGQEP3RHLVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170307170751.n6tvrztet724pxfl@lukather>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -49,7 +49,9 @@ List-Id: devicetree@vger.kernel.org
 > and fixed, but please use the right one next time (and be consistent
 > in your ARM vs arm usage).
 
-My patch uses ARM, Andre's use arm.
+oh I added dts: to the prefix you told me, as they're device tree patches.
+
+Is the usage of "dts:" out-dated?
 
 >
 > Thanks for your work!
