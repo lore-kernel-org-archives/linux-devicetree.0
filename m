@@ -1,78 +1,87 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/15] clk: sunxi-ng: div: Switch to divider_round_rate
-Date: Tue,  7 Mar 2017 09:56:22 +0100
-Message-ID: <47f7cedf0c913045ccf248afdc7e772c80d8af08.1488876832.git-series.maxime.ripard@free-electrons.com>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 00/12] Add support for the audio codec on
+ Allwinner V3s
+Date: Tue, 7 Mar 2017 14:27:26 +0530
+Message-ID: <20170307085726.GJ2843@localhost>
+References: <20170305133709.6288-1-icenowy@aosc.xyz>
+Reply-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBT7L7HCQKGQEJ445ZEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDLNNTP63EBBBV7L7HCQKGQERTWPJXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170305133709.6288-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-divider_round_rate already evaluates changing the parent rate if
-CLK_SET_RATE_PARENT is set. Now that we can do that on muxes too, let's
-just use it.
+On Sun, Mar 05, 2017 at 09:36:57PM +0800, Icenowy Zheng wrote:
+> Allwinner V3s features a audio codec with dedicated digital and analog parts,
+> like the ones on A23/H3, but much simpler (lack of MIC2, LINE IN and MBIAS).
+> 
+> Add support for it.
+> 
+> In order to make the codec usable, DMA support is also added in this series;
+> the support of Lichee Pi Zero's dock board is also added here, as it's the
+> only board hackable that come with ports connected to the codec.
+> 
+> Patch 1~3 split out parts that is not available on V3s in the analog codec.
+> 
+> Patch 4/5 adds support for V3s in analog/digital codec.
+> 
+> Patch 6 add the gate bit as a common quirk of sun6i-dma driver, as V3s also
+> needs it.
+> 
+> Patch 7 really adds support for V3s in DMA engine.
+> 
+> Patch 8 restores the inclusion of CCU headers in the DTSI file of V3s, as
+> it's removed when merging.
+> 
+> Patch 9/10/11 adds three parts of V3s: DMA engine, codec support and pinmux
+> of mmc1 (used on Lichee Pi Zero dock).
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/clk/sunxi-ng/ccu_div.c | 25 ++-----------------------
- 1 file changed, 2 insertions(+), 23 deletions(-)
+And are these dependent upon rest, if not can you please send them
+separately!
 
-diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
-index 7f8b06e38636..0ccdd3dcc20c 100644
---- a/drivers/clk/sunxi-ng/ccu_div.c
-+++ b/drivers/clk/sunxi-ng/ccu_div.c
-@@ -20,18 +20,9 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
- 					void *data)
- {
- 	struct ccu_div *cd = data;
--	unsigned long val;
--
--	/*
--	 * We can't use divider_round_rate that assumes that there's
--	 * several parents, while we might be called to evaluate
--	 * several different parents.
--	 */
--	val = divider_get_val(rate, *parent_rate, cd->div.table, cd->div.width,
--			      cd->div.flags);
- 
--	return divider_recalc_rate(&cd->common.hw, *parent_rate, val,
--				   cd->div.table, cd->div.flags);
-+	return divider_round_rate(&cd->common.hw, parent, rate, parent_rate,
-+				  cd->div.table, cd->div.width, cd->div.flags);
- }
- 
- static void ccu_div_disable(struct clk_hw *hw)
-@@ -78,18 +69,6 @@ static int ccu_div_determine_rate(struct clk_hw *hw,
- {
- 	struct ccu_div *cd = hw_to_ccu_div(hw);
- 
--	if (clk_hw_get_num_parents(hw) == 1) {
--		req->rate = divider_round_rate(hw, clk_hw_get_parent(hw),
--					       req->rate,
--					       &req->best_parent_rate,
--					       cd->div.table, cd->div.width,
--					       cd->div.flags);
--
--		req->best_parent_hw = clk_hw_get_parent(hw);
--
--		return 0;
--	}
--
- 	return ccu_mux_helper_determine_rate(&cd->common, &cd->mux,
- 					     req, ccu_div_round_rate, cd);
- }
+> 
+> Patch 12 adds support for Lichee Pi Zero dock, with support of mmc1 and
+> codec.
+> 
+> Icenowy Zheng (12):
+>   ASoC: sun8i-codec-analog: split out mic2
+>   ASoC: sun8i-codec-analog: split out line in
+>   ASoC: sun8i-codec-analog: split out mbias
+>   ASoC: sun8i-codec-analog: add support for V3s SoC
+>   ASoC: sun4i-codec: Add support for V3s codec
+>   dmaengine: sun6i: make gate bit in sun8i's DMA engines a common quirk
+>   dmaengine: sun6i: support V3s SoC variant
+>   ARM: dts: sun8i: restore the inclusion of ccu headers in V3s DTSI
+>   ARM: dts: sun8i: add DMA engine in V3s DTSI
+>   ARM: dts: sun8i: add audio codec support into V3s DTSI
+>   ARM: dts: sun8i: add pinmux for V3s mmc1
+>   ARM: dts: sun8i: add device tree for Lichee Pi Zero with Dock
+> 
+>  .../devicetree/bindings/dma/sun6i-dma.txt          |   1 +
+>  .../devicetree/bindings/sound/sun4i-codec.txt      |  11 +-
+>  .../bindings/sound/sun8i-codec-analog.txt          |   1 +
+>  arch/arm/boot/dts/Makefile                         |   3 +-
+>  arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts |  67 +++++++
+>  arch/arm/boot/dts/sun8i-v3s.dtsi                   | 103 ++++++----
+>  drivers/dma/sun6i-dma.c                            |  22 ++-
+>  sound/soc/sunxi/sun4i-codec.c                      |  59 ++++++
+>  sound/soc/sunxi/sun8i-codec-analog.c               | 211 +++++++++++++++++----
+>  9 files changed, 405 insertions(+), 73 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/sun8i-v3s-licheepi-zero-dock.dts
+> 
+> -- 
+> 2.11.1
+> 
+
 -- 
-git-series 0.8.11
+~Vinod
