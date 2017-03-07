@@ -1,100 +1,60 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Tue, 7 Mar 2017 06:00:35 -0800
-Message-ID: <20170307140035.GA10239@codeaurora.org>
-References: <587C88FE.2040900@ti.com>
- <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
- <20170118182223.GP10531@minitux>
- <20170119004028.GA4857@codeaurora.org>
- <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org>
- <20170119214258.GD7829@codeaurora.org>
- <58871F6D.1090206@ti.com>
- <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
- <20170126234355.GF8801@codeaurora.org>
- <fa09ef66-9d0d-7817-b6f5-8f958344fbf3@codeaurora.org>
+Subject: Re: [PATCH 1/15] clk: divider: Make divider_round_rate take the
+ parent clock
+Date: Tue, 7 Mar 2017 06:11:57 -0800
+Message-ID: <20170307141157.GC10239@codeaurora.org>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <7ebd073b4941e4b7c619f15ff0a375ff7919d403.1488876832.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <fa09ef66-9d0d-7817-b6f5-8f958344fbf3@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+In-Reply-To: <7ebd073b4941e4b7c619f15ff0a375ff7919d403.1488876832.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, dri-devel@lists.freedesktop.org, David Brown <david.brown@linaro.org>, linux-sunxi@googlegroups.com, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Andy Gross <andy.gross@linaro.org>, devicetree@vger.kernel.org, rtc-linux@googlegroups.com, linux-arm-msm@vger.kernel.org, Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, linux-amlogic@lists.infradead.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alessandro Zummo <a.zummo@towertech.it>, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>
 List-Id: devicetree@vger.kernel.org
 
-(Not sure I replied so here it is)
-
-On 01/27, Vivek Gautam wrote:
-> 
-> 
-> On 01/27/2017 05:13 AM, Stephen Boyd wrote:
-> >On 01/24, Vivek Gautam wrote:
-> 
-> From "./Documentation/devicetree/bindings/graph.txt" -
-> "The device tree graph bindings described herein abstract more complex
-> devices that can have multiple specifiable ports, each of which can be
-> linked to one or more ports of other devices."
-> 
-> So, this means we use 'port', 'ports' and 'endpoint' for devices whose one
-> or more ports is connected to other device's one or more ports.
-> 
-> I can use 'lane' for the node name here.
-
-Ok.
-
-> 
-> >
-> >>                                 reg = <0x035000 0x130>,
-> >>                                         <0x035200 0x200>,
-> >>                                         <0x035400 0x1dc>;
-> >>                                 #phy-cells = <0>;
-> >>
-> >>                                 clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-> >>                                 clock-names = "pipe0";
-> >>                                 resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-> >>                                 reset-names = "lane0";
-> >>                         };
-> >>
-> >>                       pciephy_p1: port@1 {
-> >>                                 reg = <0x036000 0x130>,
-> >>                                         <0x036200 0x200>,
-> >>                                         <0x036400 0x1dc>;
-> >>                                 #phy-cells = <0>;
-> >>
-> >>                                 clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-> >>                                 clock-names = "pipe1";
-> >>                                 resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-> >>                                 reset-names = "lane1";
-> >>                         };
-> >>
-> >>                         pciephy_p2: port@2 {
-> >>                                 reg = <0x037000 0x130>,
-> >>                                         <0x037200 0x200>,
-> >>                                         <0x037400 0x1dc>;
-> >>                                 #phy-cells = <0>;
-> >>
-> >>                                 clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
-> >>                                 clock-names = "pipe2";
-> >>                                 resets = <&gcc GCC_PCIE_2_PHY_BCR>;
-> >>                                 reset-names = "lane2";
-> >>                         };
-> >>                 };
-> >>--------------------
-> >>
-> >>let me know if this looks okay.
-> >>
-> >>
-> >What's the plan for non-pcie qmp phy binding? In that case we
-> >don't have ports, so it gets folded into one node?
-> >
-> The non-pcie qmp phys still have one lane, that provides tx/rx.
-> 
-> I am of the opinion that we don't have two different ways to create
-> phys in the driver, and keep one port/lane for such phys in dt.
-> 
-
-Ok so we would still have a subnode in that case. Sounds ok.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+T24gMDMvMDcsIE1heGltZSBSaXBhcmQgd3JvdGU6Cj4gU28gZmFyLCBkaXZpZGVyX3JvdW5kX3Jh
+dGUgb25seSBjb25zaWRlcnMgdGhlIHBhcmVudCBjbG9jayByZXR1cm5lZCBieQo+IGNsa19od19n
+ZXRfcGFyZW50Lgo+IAo+IFRoaXMgd29ya3MgZmluZSBvbiBjbG9ja3MgdGhhdCBoYXZlIGEgc2lu
+Z2xlIHBhcmVudHMsIHRoaXMgZG9lc24ndCB3b3JrIG9uCj4gbXV4ZXMsIHNpbmNlIHdlIHdpbGwg
+b25seSBjb25zaWRlciB0aGUgZmlyc3QgcGFyZW50LCB3aGlsZSBvdGhlciBwYXJlbnRzCj4gbWF5
+IHRvdGFsbHkgYmUgYWJsZSB0byBwcm92aWRlIGEgYmV0dGVyIGNvbWJpbmF0aW9uLgo+IAo+IENs
+b2NrcyBpbiB0aGF0IGNhc2UgY2Fubm90IHVzZSBkaXZpZGVyX3JvdW5kX3JhdGUsIHNvIHdvdWxk
+IGhhdmUgdG8gY29tZSB1cAo+IHdpdGggYSB2ZXJ5IHNpbWlsYXIgbG9naWMgdG8gd29yayBhcm91
+bmQgaXQuIEluc3RlYWQgb2YgaGF2aW5nIHRvIGRvCj4gc29tZXRoaW5nIGxpa2UgdGhpcywgYW5k
+IGR1cGxpY2F0ZSB0aGF0IGxvZ2ljIGV2ZXJ5d2hlcmUsIGdpdmUgYW4KPiBhZGRpdGlvbmFsIHBh
+cmFtZXRlciBmb3IgdGhlIHBhcmVudCBjbG9jayB0byBjb25zaWRlci4KPiAKPiBDdXJyZW50IHVz
+ZXJzIGhhdmUgYmVlbiBjb252ZXJ0ZWQgdXNpbmcgdGhlIGZvbGxvd2luZyBjb2NjaW5lbGxlIHNj
+cmlwdAo+IAo+IEBACj4gaWRlbnRpZmllciBodywgcmF0ZSwgcHJhdGUsIHRhYmxlLCB3aWR0aCwg
+ZmxhZ3M7Cj4gQEAKPiAKPiAtbG9uZyBkaXZpZGVyX3JvdW5kX3JhdGUoc3RydWN0IGNsa19odyAq
+aHcsCj4gK2xvbmcgZGl2aWRlcl9yb3VuZF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCBzdHJ1Y3Qg
+Y2xrX2h3ICpwYXJlbnQsCj4gICAgICAgICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBy
+YXRlLAo+ICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgKnByYXRlLAo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBjbGtfZGl2X3RhYmxlICp0YWJsZSwK
+PiAgICAgICAgICAgICAgICAgICAgICAgICB1OCB3aWR0aCwKPiAgICAgICAgICAgICAgICAgICAg
+ICAgICB1bnNpZ25lZCBsb25nIGZsYWdzKSB7IC4uLiB9Cj4gCj4gQEAKPiBpZGVudGlmaWVyIGZu
+LCBodzsKPiBleHByZXNzaW9uIEUyLCBFMywgRTQsIEU1LCBFNjsKPiBAQAo+ICBmbiAoc3RydWN0
+IGNsa19odyAqaHcsIC4uLikgewo+ICA8Li4uCj4gLWRpdmlkZXJfcm91bmRfcmF0ZShodywgRTIs
+IEUzLCBFNCwgRTUsIEU2KQo+ICtkaXZpZGVyX3JvdW5kX3JhdGUoaHcsIGNsa19od19nZXRfcGFy
+ZW50KGh3KSwgRTIsIEUzLCBFNCwgRTUsIEU2KQo+ICAuLi4+Cj4gfQoKV2h5IG5vdCBpbnRyb2R1
+Y2UgYW5vdGhlciBmdW5jdGlvbiBsaWtlIAoKCWRpdmlkZXJfcm91bmRfcmF0ZV9wYXJlbnQoKQoJ
+ZGl2aWRlcl9yb3VuZF9yYXRlX211eCgpCgp0aGF0IHRha2VzIHRoZSBleHRyYSBwYXJlbnQgYXJn
+dW1lbnQ/IFRlY2huaWNhbGx5LCBhIGRpdmlkZXIgaXMKY29uc2lkZXJlZCB0byBvbmx5IGhhdmUg
+b25lIHBhcmVudCwgYW5kIGlmIGl0IGhhcyBtb3JlIHRoYW4gb25lCnBhcmVudCwgdGhlbiBpdCBp
+cyBhIG11eCBhbmQgYSBkaXZpZGVyLgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJ
+bmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24g
+Q29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
