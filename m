@@ -1,71 +1,85 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v8 6/6] arm64: dts: allwinner: h5: add
- support for the Orange Pi PC 2 board
-Date: Tue, 7 Mar 2017 18:09:09 +0100
-Message-ID: <20170307170909.qnjy36yxbz5eiwe4@lukather>
-References: <20170306171750.7491-1-icenowy@aosc.xyz>
- <20170306171750.7491-7-icenowy@aosc.xyz>
- <20170306214904.o2zpw3q3fvtrmsmd@localhost>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 0/6] Updates for Marvell Switch SoCs
+Date: Tue, 07 Mar 2017 18:10:12 +0100
+Message-ID: <87bmtdovwr.fsf@free-electrons.com>
+References: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4eyygzrkyc2iccds"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNWS7PCQKGQEDBIAZSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170306214904.o2zpw3q3fvtrmsmd@localhost>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz> (Chris
+ Packham's message of "Thu, 16 Feb 2017 21:50:34 +1300")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---4eyygzrkyc2iccds
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Mon, Mar 06, 2017 at 10:49:05PM +0100, Rask Ingemann Lambertsen wrote:
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-> > new file mode 100644
-> > index 000000000000..30639729920d
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
-> > @@ -0,0 +1,163 @@
-> > +/*
-> > + * Copyright (C) 2016 ARM Ltd.
-> > + *
-> > + * This file is dual-licensed: you can use it either under the terms
-> > + * of the GPL or the X11 license, at your option. Note that this dual
-> > + * licensing only applies to this file, and not this project as a
-> > + * whole.
-> 
-> I didn't catch any sort of announcement of it, but it seems as if we've
-> started using SPDX license identifiers in dts files. Thus you can simply
-> include the line
-> SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> after the copyright notice and omit the license notices themselves. Even
-> though the comment refers to "the X11 license", the license text matches that
-> associated with the MIT license identifier [1] rather than that of the X11
-> license [2]. The same goes for patch 5/6.
-> 
-> [1] https://spdx.org/licenses/MIT.html#licenseText
-> [2] https://spdx.org/licenses/X11.html#licenseText
-
-For my opinion on the matter, see this mail from RMK:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/490649.html
-
-If people want to use it, I'm okay with that, but I really don't want
-to actively enforce it during the reviews.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---4eyygzrkyc2iccds--
+SGkgQ2hyaXMsCiAKIE9uIGpldS4sIGbDqXZyLiAxNiAyMDE3LCBDaHJpcyBQYWNraGFtIDxjaHJp
+cy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOgoKPiBTaG9ydGx5IGFmdGVyIEkg
+cG9zdGVkIG15IGxhc3Qgc2VyaWVzIEkgZ290IGFjY2VzcyB0byBhIG1vcmUgcmVjZW50Cj4gTWFy
+dmVsbCBTREsgd2hpY2ggaGFkIHNvbWUgZGV2aWNlIHRyZWUgc3VwcG9ydCBmb3IgdGhlIHN3aXRj
+aCBTb0NzIEknZAo+IGJlZW4gd2FudGluZy4gSXQgd2FzIHN0aWxsIGJhc2VkIG9uIGFuIG9sZGVy
+IGtlcm5lbCBidXQgaXQgd2FzIGEgaHVnZQo+IGltcHJvdmVtZW50IG92ZXIgd2hhdCBjYW1lIGJl
+Zm9yZS4KPgo+IFBhdGNoIDEvNiBpcyBhIHR5cG8gSSBub3RpY2VkIGFmdGVyIG15IGluaXRpYWwg
+c2VyaWVzIHdhcyBhcHBsaWVkLgo+Cj4gUGF0Y2ggMi82IGlzIGEgYml0IG9mIGEgY2xlYW51cC4g
+SSBkaWQgaW5pdGlhbGx5IHN0cnVnZ2xlIHdpdGggaG93IHRvCj4gYWNjZXNzIGluZGl2aWR1YWwg
+cGFydHMgb2YgdGhlIERGWCBibG9jayBhcyB3ZWxsIGFzIHJldGFpbmluZyBhIGhhbmRsZSBvbgo+
+IHRoZSBlbnRpcmUgdGhpbmcgZm9yIHRoZSBzd2l0Y2ggZHJpdmVyIHRvIHVzZS4KPgo+IFBhdGNo
+IDMvNiBpcyBhIHJlLWppZyBvZiB0aGUgZHRzaSBmaWxlcyB3aGljaCBpcyBuZWVkZWQgYnkgNS82
+LiBUaGlzIGlzCj4gcmVxdWlyZWQgYmVjYXVzZSBJIG5lZWQgdG8gdXNlIHRoZSBjb3JlY2xrIGxh
+YmVsIG9uIGEgZGlmZmVyZW50IG5vZGUuIEl0Cj4gYWxzbyBtZWFucyBJIGRvbid0IGhhdmUgdG8g
+ZGlzYWJsZSBub2RlcyBmb3IgYmxvY2tzIHRoYXQgb25seSBleGlzdCBvbgo+IHRoZSBBcm1hZGEt
+WFAuCj4KPiBQYXRjaCA0LzYsIDUvNiBhcmUgc3BsaXQgZnJvbSB0aGUgcHJldmlvdXMgdmVyc2lv
+bnMuCj4KPiBQYXRjaCA2LzYgaXMgdGhlIGRldmljZSB0cmVlIHBvcnRpb24gb2YgYSBjaGFuZ2Ug
+YWxyZWFkeSBpbiBjbGstbmV4dC4KCgpJIGFwcGxpZWQgcGF0Y2hlcyAyLCAzIGFuZCA2IG9uIG12
+ZWJ1L2R0IHdpdGggdGhlIGFja2VkLWJ5IGZyb20gUm9iIHdoZW4KaGUgZ2F2ZSBpdC4KClBhdGNo
+IDEgaXMgYWxyZWFkeSBwYXJ0IG9mIDQuMTEtcmMxLgoKRm9yIHBhdGNoIDQgYW5kIDUgSSB1bmRl
+cnN0YW5kIHRoYXQgZWl0aGVyIHdlIGRvbid0IG5lZWQgaXQgb3IgaXQgc2hvdWxkCmJlIGEgdXBk
+YXRlZCB2ZXJzaW9uIHNvIEkgc2tpcHBlZCB0aGVtLgoKVGhhbmtzLAoKR3JlZ29yeQoKPgo+IENo
+cmlzIFBhY2toYW0gKDYpOgo+ICAgQVJNOiBkdHM6IEZpeCB0eXBvIGluIGFybWFkYS14cC05OGR4
+NDI1MQo+ICAgICBDaGFuZ2VzIGluIHYyCj4gICAgIC0gbmV3Cj4gICAgIENoYW5nZXMgaW4gdjM6
+Cj4gICAgIC0gbm9uZQo+ICAgQVJNOiBkdHM6IGFybWFkYS14cC05OGR4MzIzNjogY29tYmluZSBk
+Znggc2VydmVyIG5vZGVzCj4gICAgIENoYW5nZXMgaW4gdjI6Cj4gICAgIC0gbm9uZQo+ICAgICBD
+aGFuZ2VzIGluIHYzOgo+ICAgICAtIG5vbmUKPiAgIEFSTTogZHRzOiBVc2UgYXJtYWRhLTM3MC14
+cCBhcyBhIGJhc2UgZm9yIGFybWFkYS14cC05OGR4MzIzNgo+ICAgICBDaGFuZ2VzIGluIHYyOgo+
+ICAgICAtIFVwZGF0ZSByb290IGNvbXBhdGlibGUgc3RyaW5ncyBpbiBhcm1hZGEteHAtOThkeDMz
+MzYuZHRzaSwKPiAgICAgICBhcm1hZGEteHAtOThkeDQyNTEuZHRzaSwgYXJtYWRhLXhwLWRiLWR4
+YmMyLmR0cyBhbmQKPiAgICAgICBhcm1hZGEteHAtZGIteGMzLTI0ZzR4Zy5kdHMKPiAgICAgQ2hh
+bmdlcyBpbiB2MzoKPiAgICAgLSBub25lCj4gICBBUk06IGR0czogbXZlYnU6IEFkZCBiaW5kaW5n
+IGZvciBtdjk4ZHgzMjM2LXNvYy1pZAo+ICAgICBDaGFuZ2VzIGluIHYzOgo+ICAgICAtIG5ldywg
+c3BsaXQgZnJvbSBkcml2ZXIKPiAgIEFSTTogbXZlYnU6IEFkZCBkcml2ZXIgZm9yIG12OThkeDMy
+MzYtc29jLWlkCj4gICAgIENoYW5nZXMgaW4gdjI6Cj4gICAgIC0gbm9uZQo+ICAgICBDaGFuZ2Vz
+IGluIHYzOgo+ICAgICAtIHNwbGl0IGZyb20gZHRzIGNoYW5nZXMKPiAgIEFSTTogZHRzOiBtdmVi
+dTogTW92ZSBtdjk4ZHgzMjM2IGNsb2NrIGJpbmRpbmdzCj4gICAgIENoYW5nZXMgaW4gdjI6Cj4g
+ICAgIC0gTmV3LiBTcGxpdCBvdXQgZnJvbSAiY2xrOiBtdmVidTogRXhwYW5kIG12OThkeDMyMzYt
+Y29yZS1jbG9jayBzdXBwb3J0Igo+ICAgICBDaGFuZ2VzIGluIHYzOgo+ICAgICAtIENsYXJpZnkg
+d2h5IHRoZSBvbGQgbG9jYXRpb24gd2FzIHdyb25nIChidXQgd29ya2VkKS4KPgo+Cj4gIC4uLi9i
+aW5kaW5ncy9hcm0vbWFydmVsbC9tdjk4ZHgzMjM2LXNvYy1pZC50eHQgICAgIHwgIDE0ICsrCj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL212ZWJ1LWNvcmUtY2xvY2sudHh0IHwgICA3
+ICsKPiAgLi4uL2JpbmRpbmdzL2Nsb2NrL212ZWJ1LWdhdGVkLWNsb2NrLnR4dCAgICAgICAgICAg
+fCAgMTEgKysKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L21hcnZlbGwscHJlc3RlcmEu
+dHh0ICAgfCAgMTMgKy0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhwLTk4ZHgzMjM2LmR0
+c2kgICAgICAgICAgfCAyMTMgKysrKysrKysrKysrKysrKy0tLS0tCj4gIGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2FybWFkYS14cC05OGR4MzMzNi5kdHNpICAgICAgICAgIHwgICAyICstCj4gIGFyY2gvYXJt
+L2Jvb3QvZHRzL2FybWFkYS14cC05OGR4NDI1MS5kdHNpICAgICAgICAgIHwgICAyICstCj4gIGFy
+Y2gvYXJtL2Jvb3QvZHRzL2FybWFkYS14cC1kYi1keGJjMi5kdHMgICAgICAgICAgIHwgICAyICst
+Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS14cC1kYi14YzMtMjRnNHhnLmR0cyAgICAgIHwg
+ICAyICstCj4gIGFyY2gvYXJtL21hY2gtbXZlYnUvbXZlYnUtc29jLWlkLmMgICAgICAgICAgICAg
+ICAgIHwgIDQzICsrKystCj4gIDEwIGZpbGVzIGNoYW5nZWQsIDI0MiBpbnNlcnRpb25zKCspLCA2
+NyBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9hcm0vbWFydmVsbC9tdjk4ZHgzMjM2LXNvYy1pZC50eHQKPgo+IC0tIAo+
+IDIuMTEuMC4yNC5nZTY5MjBjZgoKLS0gCkdyZWdvcnkgQ2xlbWVudCwgRnJlZSBFbGVjdHJvbnMK
+S2VybmVsLCBkcml2ZXJzLCByZWFsLXRpbWUgYW5kIGVtYmVkZGVkIExpbnV4CmRldmVsb3BtZW50
+LCBjb25zdWx0aW5nLCB0cmFpbmluZyBhbmQgc3VwcG9ydC4KaHR0cDovL2ZyZWUtZWxlY3Ryb25z
+LmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
