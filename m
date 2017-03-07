@@ -1,217 +1,112 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v4 3/5] dt-bindings: Add TI SCI PM Domains
-Date: Tue, 7 Mar 2017 04:22:32 -0600
-Message-ID: <1488882154-21485-4-git-send-email-d-gerlach@ti.com>
-References: <1488882154-21485-1-git-send-email-d-gerlach@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and
+ GXL
+Date: Tue, 7 Mar 2017 11:36:39 +0100
+Message-ID: <074a13e8-5772-6fb4-fc45-cfbb57790e58@baylibre.com>
+References: <1488365164-22861-1-git-send-email-narmstrong@baylibre.com>
+ <1488365164-22861-4-git-send-email-narmstrong@baylibre.com>
+ <e26cf584-dab2-2702-f7e6-b28f750fa00c@suse.de>
+ <e80d9fb0-1d71-7cab-5e32-72316474fdfc@baylibre.com>
+ <m2tw7a17nb.fsf@baylibre.com> <9f3a17e8-63fa-6c14-4d17-0539ef7cd5a2@suse.de>
+ <1825920f-586f-7c84-8e0e-958046397b64@baylibre.com>
+ <m2efya1fjg.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488882154-21485-1-git-send-email-d-gerlach@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <m2efya1fjg.fsf@baylibre.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, devicetree@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add a generic power domain implementation, TI SCI PM Domains, that
-will hook into the genpd framework and allow the TI SCI protocol to
-control device power states.
+On 03/06/2017 06:27 PM, Kevin Hilman wrote:
+> Neil Armstrong <narmstrong@baylibre.com> writes:
+> 
+>> On 03/04/2017 01:38 PM, Andreas Färber wrote:
+>>> Am 03.03.2017 um 20:29 schrieb Kevin Hilman:
+>>>> Neil Armstrong <narmstrong@baylibre.com> writes:
+>>>>> On 03/02/2017 01:31 PM, Andreas Färber wrote:
+>>>>>> Am 01.03.2017 um 11:46 schrieb Neil Armstrong:
+>>>>>>> The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
+>>> [...]
+>>>>>>> The node is simply added in the meson-gxbb.dtsi file.
+>>> [...]
+>>>>>>> For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
+>>>>>>> patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
+>>>>>>> dtsi files.
+>>>>>>
+>>>>>> This part is slightly confusing though.
+>>>>>>
+>>>>>> What exactly is the GXL vs. GXM difference that this can't be handled by
+>>>>>> overriding node properties compatible/interrupts/clocks? I am missing a
+>>>>>> GXM patch in this series as rationale for doing it this way.
+>>>>>>
+>>>>>> In particular I am wondering whether the whole GXM-inherits-from-GXL
+>>>>>> concept is flawed and should be adjusted if this leads to secondary
+>>>>>> .dtsi files like this: My proposal would be to instead create a
+>>>>>> meson-gxl-gxm.dtsi, that meson-gxl.dtsi and meson-gxm.dtsi can inherit
+>>>>>> the current common parts from, then the Mali bits can simply go into
+>>>>>> meson-gxl.dtsi without extra #includes needed in S905X and S905D. While
+>>>>>> it's slightly more work to split once again, I think it would be cleaner.
+>>> [...]
+>>>>> The only changes are :
+>>> [...]
+>>>>>  - A different Mali core, but with the same interrupts (less but they share the same lower interrupts), clocks and memory space
+>>>>>
+>>>>> This is why it was decided to have a sub-dtsi, having a secondary dtsi will simply copy 99% of the GXL dtsi,
+>>>>> but surely we could also have an intermediate dtsi but for boards I'm ok with it, but less for a SoC dtsi,
+>>>>> since it could lead to some confusion.
+>>>>>
+>>>>> Finally, yes I could have added the mali node to the GXL dtsi, but the midgard Mali dt-bindings are not upstream
+>>>>> and the family is too big and recent enough to consider having stable bindings for now.
+>>>>>
+>>>>> Nevertheless, nothing is final, this gxl-mali.dtsi could be merged into the GXL dtsi in the future when we
+>>>>> have proper dt-bindings and a real support of the T820 Mali on the S912.
+>>>>>
+>>>>> Kevin, what's your thought about this ?
+>>>>
+>>>> I don't have a strong preference.  I'm OK with a separate Mali .dtsi due
+>>>> to the signficant overlap between GXL/GXM in terms of clocks, interrupts
+>>>> etc.
+>>>>
+>>>> However, if the plan is to #include this from GXM .dts files, whould a
+>>>> better name be meson-gx-mali.dtsi?
+>>>
+>>> I thought the purpose was specifically to not have GXM include it
+>>> because it uses a Midgard IP.
+>>>
+>>> If you want to share the fragment with GXBB too (gx), we should rather
+>>> use meson-gx-mali-utgard.dtsi, which would differentiate from GXM's
+>>> Midgard while still allowing for variation on the 4xx side (e.g., 470).
+>>>
+>>> Regards,
+>>> Andreas
+>>>
+>>
+>> Exact, there is no plan to include it from GXM.
+>>
+>> I'm not fan of having meson-gx-mali-utgard.dtsi, we should still need some attributes additions for
+>> the clocks to the mali node in the gxbb dtsi and each s905x and s905d dtsi files.
+>> I'm not sure this is even cleaner...
+> 
+> OK, I misunderstood the intent of having it separated from out from the
+> GXL .dsti then.  Could you please clarify?
+> 
+> Kevin
 
-Also, provide macros representing each device index as understood
-by TI SCI to be used in the device node power-domain references.
-These are identifiers for the K2G devices managed by the PMMC.
+Hi,
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
- .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 59 ++++++++++++++
- MAINTAINERS                                        |  2 +
- include/dt-bindings/genpd/k2g.h                    | 90 ++++++++++++++++++++++
- 3 files changed, 151 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
- create mode 100644 include/dt-bindings/genpd/k2g.h
+Indeed, my changelog was not really clear, here is the reworded one that will land in v2 :
+"
+This patch add nodes for the Mali-450 MP3 GPU present in the GXBB and GXL SoCs.
 
-diff --git a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-new file mode 100644
-index 000000000000..86a6a3d52ed6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-@@ -0,0 +1,59 @@
-+Texas Instruments TI-SCI Generic Power Domain
-+---------------------------------------------
-+
-+Some TI SoCs contain a system controller (like the PMMC, etc...) that is
-+responsible for controlling the state of the IPs that are present.
-+Communication between the host processor running an OS and the system
-+controller happens through a protocol known as TI-SCI [1]. This pm domain
-+implementation plugs into the generic pm domain framework and makes use of
-+the TI SCI protocol power on and off each device when needed.
-+
-+[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-+
-+PM Domain Node
-+==============
-+The PM domain node represents the global PM domain managed by the PMMC, which
-+in this case is the implementation as documented by the generic PM domain
-+bindings in Documentation/devicetree/bindings/power/power_domain.txt.  Because
-+this relies on the TI SCI protocol to communicate with the PMMC it must be a
-+child of the pmmc node.
-+
-+Required Properties:
-+--------------------
-+- compatible: should be "ti,sci-pm-domain"
-+- #power-domain-cells: Must be 1 so that an id can be provided in each
-+		       device node.
-+
-+Example (K2G):
-+-------------
-+	pmmc: pmmc {
-+		compatible = "ti,k2g-sci";
-+		...
-+
-+		k2g_pds: power-controller {
-+			compatible = "ti,sci-pm-domain";
-+			#power-domain-cells = <1>;
-+		};
-+	};
-+
-+PM Domain Consumers
-+===================
-+Hardware blocks belonging to a PM domain should contain a "power-domains"
-+property that is a phandle pointing to the corresponding PM domain node
-+along with an index representing the device id to be passed to the PMMC
-+for device control.
-+
-+Required Properties:
-+--------------------
-+- power-domains: phandle pointing to the corresponding PM domain node
-+		 and an ID representing the device.
-+
-+See dt-bindings/genpd/k2g.h for the list of valid identifiers for k2g.
-+
-+Example (K2G):
-+--------------------
-+	uart0: serial@02530c00 {
-+		compatible = "ns16550a";
-+		...
-+		power-domains = <&k2g_pds K2G_DEV_UART0>;
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c265a5fe4848..aaf96a9b4cd4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12383,6 +12383,8 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
- F:	drivers/firmware/ti_sci*
- F:	include/linux/soc/ti/ti_sci_protocol.h
-+F:	Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-+F:	include/dt-bindings/genpd/k2g.h
- 
- THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
- M:	Hans Verkuil <hverkuil@xs4all.nl>
-diff --git a/include/dt-bindings/genpd/k2g.h b/include/dt-bindings/genpd/k2g.h
-new file mode 100644
-index 000000000000..1f31f17e19eb
---- /dev/null
-+++ b/include/dt-bindings/genpd/k2g.h
-@@ -0,0 +1,90 @@
-+/*
-+ * TI K2G SoC Device definitions
-+ *
-+ * Copyright (C) 2015-2017 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DT_BINDINGS_GENPD_K2G_H
-+#define _DT_BINDINGS_GENPD_K2G_H
-+
-+/* Documented in http://processors.wiki.ti.com/index.php/TISCI */
-+
-+#define K2G_DEV_PMMC0			0x0000
-+#define K2G_DEV_MLB0			0x0001
-+#define K2G_DEV_DSS0			0x0002
-+#define K2G_DEV_MCBSP0			0x0003
-+#define K2G_DEV_MCASP0			0x0004
-+#define K2G_DEV_MCASP1			0x0005
-+#define K2G_DEV_MCASP2			0x0006
-+#define K2G_DEV_DCAN0			0x0008
-+#define K2G_DEV_DCAN1			0x0009
-+#define K2G_DEV_EMIF0			0x000a
-+#define K2G_DEV_MMCHS0			0x000b
-+#define K2G_DEV_MMCHS1			0x000c
-+#define K2G_DEV_GPMC0			0x000d
-+#define K2G_DEV_ELM0			0x000e
-+#define K2G_DEV_SPI0			0x0010
-+#define K2G_DEV_SPI1			0x0011
-+#define K2G_DEV_SPI2			0x0012
-+#define K2G_DEV_SPI3			0x0013
-+#define K2G_DEV_ICSS0			0x0014
-+#define K2G_DEV_ICSS1			0x0015
-+#define K2G_DEV_USB0			0x0016
-+#define K2G_DEV_USB1			0x0017
-+#define K2G_DEV_NSS0			0x0018
-+#define K2G_DEV_PCIE0			0x0019
-+#define K2G_DEV_GPIO0			0x001b
-+#define K2G_DEV_GPIO1			0x001c
-+#define K2G_DEV_TIMER64_0		0x001d
-+#define K2G_DEV_TIMER64_1		0x001e
-+#define K2G_DEV_TIMER64_2		0x001f
-+#define K2G_DEV_TIMER64_3		0x0020
-+#define K2G_DEV_TIMER64_4		0x0021
-+#define K2G_DEV_TIMER64_5		0x0022
-+#define K2G_DEV_TIMER64_6		0x0023
-+#define K2G_DEV_MSGMGR0			0x0025
-+#define K2G_DEV_BOOTCFG0		0x0026
-+#define K2G_DEV_ARM_BOOTROM0		0x0027
-+#define K2G_DEV_DSP_BOOTROM0		0x0029
-+#define K2G_DEV_DEBUGSS0		0x002b
-+#define K2G_DEV_UART0			0x002c
-+#define K2G_DEV_UART1			0x002d
-+#define K2G_DEV_UART2			0x002e
-+#define K2G_DEV_EHRPWM0			0x002f
-+#define K2G_DEV_EHRPWM1			0x0030
-+#define K2G_DEV_EHRPWM2			0x0031
-+#define K2G_DEV_EHRPWM3			0x0032
-+#define K2G_DEV_EHRPWM4			0x0033
-+#define K2G_DEV_EHRPWM5			0x0034
-+#define K2G_DEV_EQEP0			0x0035
-+#define K2G_DEV_EQEP1			0x0036
-+#define K2G_DEV_EQEP2			0x0037
-+#define K2G_DEV_ECAP0			0x0038
-+#define K2G_DEV_ECAP1			0x0039
-+#define K2G_DEV_I2C0			0x003a
-+#define K2G_DEV_I2C1			0x003b
-+#define K2G_DEV_I2C2			0x003c
-+#define K2G_DEV_EDMA0			0x003f
-+#define K2G_DEV_SEMAPHORE0		0x0040
-+#define K2G_DEV_INTC0			0x0041
-+#define K2G_DEV_GIC0			0x0042
-+#define K2G_DEV_QSPI0			0x0043
-+#define K2G_DEV_ARM_64B_COUNTER0	0x0044
-+#define K2G_DEV_TETRIS0			0x0045
-+#define K2G_DEV_CGEM0			0x0046
-+#define K2G_DEV_MSMC0			0x0047
-+#define K2G_DEV_CBASS0			0x0049
-+#define K2G_DEV_BOARD0			0x004c
-+#define K2G_DEV_EDMA1			0x004f
-+
-+#endif
--- 
-2.11.0
+For GXBB, the node is simply added in the meson-gxbb.dtsi file.
+
+Fox GXL, since the GXM dtsi is a superset of the GXL dtsi, the Mali node is added to
+the GXL SoC specific dtsi files via an intermediate "meson-gxl-mali.dtsi" file to avoid
+having an invalid Mali-450 node in the GXM device tree.
+"
+
+Thanks,
+Neil
