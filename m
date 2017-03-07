@@ -1,68 +1,68 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] ARM: dts: mvebu: remove unnecessary PCI range from
- 98dx3236
-Date: Tue, 07 Mar 2017 18:32:42 +0100
-Message-ID: <87varlngat.fsf@free-electrons.com>
-References: <20170302224239.10062-1-chris.packham@alliedtelesis.co.nz>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH v8 0/6] Allwinner H5 and Orange Pi PC2 support
+Date: Wed, 08 Mar 2017 01:33:38 +0800
+Message-ID: <5852741488908018@web33j.yandex.ru>
+References: <20170306171750.7491-1-icenowy@aosc.xyz> <20170307170751.n6tvrztet724pxfl@lukather>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170302224239.10062-1-chris.packham@alliedtelesis.co.nz> (Chris
- Packham's message of "Fri, 3 Mar 2017 11:42:39 +1300")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB5W57PCQKGQEXTRYILQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170307170751.n6tvrztet724pxfl@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On jeu., mars 02 2017, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
 
-> The Marvell 98dx3236 SoC only has a single PCIe x1 interface. The "Port
-> 0.1 MEM" range was errantly kept when creating a specific dts for the
-> SoC.
+
+08.03.2017, 01:07, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi,
 >
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-
-Applied on mvebu/dt
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> On Tue, Mar 07, 2017 at 01:17:44AM +0800, Icenowy Zheng wrote:
+>> =C2=A0Allwinner H5 is a 64-bit SoC with a design like the 32-bit
+>> =C2=A0H3, and it's pin-to-pin compatible with H3.
+>>
+>> =C2=A0This patchset adds support for it, along with the first available
+>> =C2=A0board -- Orange Pi PC2.
+>>
+>> =C2=A0Several H5 boards by Sinovoip Banana Pi and FriendlyARM Nano Pi
+>> =C2=A0are coming, so we should get ready for them.
+>>
+>> =C2=A0CCU changes are already said to be merged by Maxime Ripard, so
+>> =C2=A0this patchset now contains only device tree patches.
+>>
+>> =C2=A0Commit messages are changed by the suggestion of Maxime.
+>>
+>> =C2=A0This patchset depends on patchset [1] to finally take effect. At
+>> =C2=A0least the patch 1 of that patchset is needed if you want to test
+>> =C2=A0the kernel image -- without it the pinctrl driver won't be built
+>> =C2=A0and the kernel will become unusable without pinctrl.
 >
-> diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-> index f6a03dcee5ef..0e63f927c73d 100644
-> --- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-> @@ -95,8 +95,7 @@
->  			ranges =
->  			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000   /* Port 0.0 registers */
->  				0x82000000 0x1 0       MBUS_ID(0x04, 0xe8) 0 1 0 /* Port 0.0 MEM */
-> -				0x81000000 0x1 0       MBUS_ID(0x04, 0xe0) 0 1 0 /* Port 0.0 IO  */
-> -				0x82000000 0x2 0       MBUS_ID(0x04, 0xd8) 0 1 0 /* Port 0.1 MEM */>;
-> +				0x81000000 0x1 0       MBUS_ID(0x04, 0xe0) 0 1 0 /* Port 0.0 IO  */>;
->  
->  			pcie1: pcie@1,0 {
->  				device_type = "pci";
-> -- 
-> 2.11.0.24.ge6920cf
->
+> It's still not the prefixes I told you to use. I merged your patches
+> and fixed, but please use the right one next time (and be consistent
+> in your ARM vs arm usage).
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+My patch uses ARM, Andre's use arm.
+
+>
+> Thanks for your work!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
