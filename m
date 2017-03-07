@@ -1,15 +1,15 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 08/22] PCI: dwc: designware: Add EP mode support
-Date: Tue, 7 Mar 2017 10:48:42 +0530
-Message-ID: <58BE42B2.20305@ti.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-9-git-send-email-kishon@ti.com>
- <45e5288e-d11f-c855-af9b-692a42d878c6@synopsys.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/8] ARM: dts: renesas: Remove unit-addresses and regs
+ from integrated caches
+Date: Tue, 7 Mar 2017 07:46:04 +0100
+Message-ID: <20170307064603.GD14208@verge.net.au>
+References: <1488818443-25196-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <45e5288e-d11f-c855-af9b-692a42d878c6@synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <1488818443-25196-1-git-send-email-geert+renesas@glider.be>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,83 +19,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joao,
+On Mon, Mar 06, 2017 at 05:40:35PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
+> 
+> This patch series removes the bogus unit-addresses and reg properties
+> from the device nodes representing Cortex-A15/A7 cache controllers.
+> 
+> Note that the latter were added to remove warnings from dtc when using
+> W=1:
+> 
+>     Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit name, but no reg property
+> 
+> In hindsight, adding the reg properties turned out to be the wrong fix.
+> Indeed, the Cortex-A15/A7 cache controllers are integrated controllers,
+> and thus the device nodes representing them should not have
+> unit-addresses or reg properties.
+> 
+> This series does not have a runtime effect, as Linux doesn't rely much
+> on the properties of the cache-controller nodes.
+> 
+> This series is the arm32 counterpart of "[PATCH 0/2] arm64: dts: renesas:
+> Remove unit-addresses and regs from integrated caches", which you've just
+> applied.
+> 
+> Thanks for applying!
 
-On Friday 17 February 2017 10:50 PM, Joao Pinto wrote:
-> =C0s 9:50 AM de 2/17/2017, Kishon Vijay Abraham I escreveu:
->> Add endpoint mode support to designware driver. This uses the
->> EP Core layer introduced recently to add endpoint mode support.
->> *Any* function driver can now use this designware device
->> in order to achieve the EP functionality.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  drivers/pci/dwc/Kconfig              |    5 +
->>  drivers/pci/dwc/Makefile             |    1 +
->>  drivers/pci/dwc/pcie-designware-ep.c |  342 +++++++++++++++++++++++++++=
-+++++++
->>  drivers/pci/dwc/pcie-designware.c    |   51 +++++
->>  drivers/pci/dwc/pcie-designware.h    |   72 +++++++
->>  5 files changed, 471 insertions(+)
->>  create mode 100644 drivers/pci/dwc/pcie-designware-ep.c
->>
-
-<snip>
-
->> diff --git a/drivers/pci/dwc/pcie-designware.c b/drivers/pci/dwc/pcie-de=
-signware.c
->> index 686945d..49b28c8 100644
->> --- a/drivers/pci/dwc/pcie-designware.c
->> +++ b/drivers/pci/dwc/pcie-designware.c
->> @@ -173,6 +173,57 @@ void dw_pcie_prog_outbound_atu(struct dw_pcie *pci,=
- int index, int type,
->>  	dev_err(pci->dev, "iATU is not being enabled\n");
->>  }
->>  =
-
->> +int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int bar,
->> +			     u64 cpu_addr, enum dw_pcie_as_type as_type)
->> +{
->> +	int type;
->> +	void __iomem *base =3D pci->dbi_base;
->> +
->> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_VIEWPORT, 0x4,
->> +			  PCIE_ATU_REGION_INBOUND | index);
->> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_LOWER_TARGET, 0x4,
->> +			  lower_32_bits(cpu_addr));
->> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_UPPER_TARGET, 0x4,
->> +			  upper_32_bits(cpu_addr));
->> +
->> +	switch (as_type) {
->> +	case DW_PCIE_AS_MEM:
->> +		type =3D PCIE_ATU_TYPE_MEM;
->> +		break;
->> +	case DW_PCIE_AS_IO:
->> +		type =3D PCIE_ATU_TYPE_IO;
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
->> +
->> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_CR1, 0x4, type);
->> +	dw_pcie_write_dbi(pci, base, PCIE_ATU_CR2, 0x4, PCIE_ATU_ENABLE |
->> +			  PCIE_ATU_BAR_MODE_ENABLE | (bar << 8));
->> +	return 0;
->> +}
->> +
-> =
-
-> This Atu programming is for PCI Cores <=3D 4.70. Please follow the same a=
-pproach as:
-> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/tree/drivers=
-/pci/dwc/pcie-designware.c?h=3Dpci/host-designware#n95
-
-Can you provide PCIE_GET_ATU_INB_UNR_REG_OFFSET (similar to
-PCIE_GET_ATU_OUTB_UNR_REG_OFFSET)?
-
-Thanks
-Kishon
+Thanks, done.
