@@ -1,56 +1,40 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 0/3] ASoC: add dio2125 amplifier support
-Date: Tue, 07 Mar 2017 17:26:17 +0100
-Message-ID: <1488903977.28627.4.camel@baylibre.com>
-References: <20170306174451.24406-1-jbrunet@baylibre.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 02/10] ARM: dts: N900: Add bluetooth
+Date: Tue, 7 Mar 2017 08:37:43 -0800
+Message-ID: <20170307163743.GT20572@atomide.com>
+References: <20170304115833.3538-1-sre@kernel.org>
+ <20170304115833.3538-3-sre@kernel.org>
+ <20170306160841.GH20572@atomide.com>
+ <CAL_JsqKJO6aGwv-fWzvHrbc5n6rdjtZ9Zn9Jg7r1L8-yP2JbSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170306174451.24406-1-jbrunet@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKJO6aGwv-fWzvHrbc5n6rdjtZ9Zn9Jg7r1L8-yP2JbSQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCkluIHRoaXMgc2VyaWVzLCB5b3UgYXBwbGllZCBwYXRjaCAyIGFuZCAzIGJ1dCBu
-b3QgcGF0Y2ggMS4KKHNvIHRoZSBkaW9vIHByZWZpeCBpcyB1c2VkIGJ1dCBub3QgZG9jdW1lbnRl
-ZCkKCklzIGl0IG9uIHB1cnBvc2UgPwpUaGUgcGF0Y2ggZG9lcyBub3QgaGF2ZSB0aGUgIkFTb0Mi
-IHByZWZpeCwgdGhpcyBtYXliZSB3aHkgaXQgd2FzCm1pc3NlZC4gU2luY2UsIHRoZSBmaWxlIGRv
-ZXMgbm8gYmVsb25nIHRvIGFsc2EsIEkgd2Fzbid0IHN1cmUgd2hldGhlcgp0byBwdXQgdGhlIHBy
-ZWZpeCBvciBub3QuCgpSZWdhcmRzCgpKZXJvbWUKCk9uIE1vbiwgMjAxNy0wMy0wNiBhdCAxODo0
-NCArMDEwMCwgSmVyb21lIEJydW5ldCB3cm90ZToKPiBUaGlzIHBhdGNoc2V0IGFkZHMgdGhlIHN1
-cHBvcnQgZm9yIHRoZSBkaW8yMTI1IGZyb20gRGlvbwo+IG1pY3JvY2lyY3VpdHMuCj4gVGhlIGRp
-bzIxMjUgaXMgYXVkaW8gZHJpdmVyIHdpdGggYWRqdXN0YWJsZSBnYWluLiBUaGUgRU4gcGFkIGFs
-bG93cwo+IHRvCj4gZW5hYmxlIG9yIGRpc2FibGUgdGhlIG91dHB1dHMgb2YgdGhlIGRyaXZlci4K
-PiAKPiBUaGUgbGluayB0byB0aGUgZGF0YXNoZWV0IGlzIG5vdCBwcm92aWRlZCBhcyBwYXJ0IG9m
-IHRoZSBjb21taXQuIEl0Cj4gaXMgbm90Cj4gcHJvdmlkZWQgdGhlIG1hbnVmYWN0dXJlciBhbmQg
-aXQgaXMgZG91YnRmdWwgaXQgd2lsbCBzdGlsbCBiZQo+IGF2YWlsYWJsZSBhCj4gZmV3IHllYXJz
-IGZyb20gbm93LiBTdGlsbCBwcm92aWRlZCBoZXJlIGluIGNhc2UgYW55b25lIGlzIGludGVyZXN0
-ZWQKPiBbMF0uCj4gCj4gVGhpcyBwYXRjaHNldCBoYXMgYmVlbiB0ZXN0ZWQgb24gQW1sb2dpYydz
-IG1lc29uLWd4YmItcDIwMCBib2FyZC4KPiAKPiBbMF06IGh0dHA6Ly93d3cud2luaW5lLmNvbS9M
-aW5lJUU5JTlGJUIzL0RJTzIxMjVYTTEwJTIwVjEuMC5wZGYKPiAKPiBKZXJvbWUgQnJ1bmV0ICgz
-KToKPiDCoCBkdC1iaW5kaW5nczogYWRkIHZlbmRvciBwcmVmaXggZm9yIERpb28KPiDCoCBBU29D
-OiBkaW8yMTI1OiBhZGQgZGlvMjEyNSBhbXAgZHJpdmVyCj4gwqAgQVNvQzogZGlvMjEyNTogYWRk
-IGR0LWJpbmRpbmdzCj4gCj4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9kaW9vLGRp
-bzIxMjUudHh0wqDCoMKgwqDCoHzCoMKgMTIgKysrCj4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy92ZW5kb3ItcHJlZml4ZXMudHh0wqDCoMKgwqDCoMKgwqDCoHzCoMKgwqAxICsKPiDCoHNvdW5k
-L3NvYy9jb2RlY3MvS2NvbmZpZ8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoHzCoMKgwqA1ICsKPiDCoHNvdW5kL3NvYy9jb2RlY3MvTWFrZWZpbGXC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqDC
-oDIgKwo+IMKgc291bmQvc29jL2NvZGVjcy9kaW8yMTI1LmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHwgMTIwCj4gKysrKysrKysrKysrKysrKysrKysr
-Cj4gwqA1IGZpbGVzIGNoYW5nZWQsIDE0MCBpbnNlcnRpb25zKCspCj4gwqBjcmVhdGUgbW9kZSAx
-MDA2NDQKPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvZGlvbyxkaW8y
-MTI1LnR4dAo+IMKgY3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9jb2RlY3MvZGlvMjEyNS5j
-Cj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2Et
-ZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFp
-bG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+* Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170307 08:34]:
+> On Mon, Mar 6, 2017 at 10:08 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > * Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170304 04:00]:
+> >> Add bcm2048 node and its system clock to the N900 device tree file.
+> >> Apart from that a reference to the new clock has been added to
+> >> wl1251 (which uses it, too).
+> >>
+> >> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >
+> > Picking this patch into omap-for-v4.12/dt thanks.
+> 
+> The binding is not yet settled.
+
+Oh sorry I thought the binding was already done. Will revert.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
