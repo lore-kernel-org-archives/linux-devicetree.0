@@ -1,192 +1,92 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Add dual-role OTG support for
- Allwinner H3
-Date: Tue, 07 Mar 2017 16:41:34 +0800
-Message-ID: <20170307114159.fs2WcruU@smtp1m.mail.yandex.net>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3] tpm: do not suspend/resume if power
+	stays on
+Date: Tue, 7 Mar 2017 09:44:55 +0100
+Message-ID: <15829d71-ceff-d1f6-3112-5df8897a97dc@collabora.com>
+References: <20170303160959.27422-1-enric.balletbo@collabora.com>
+	<20170306205925.ynkwmy7acsunpewd@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBYXE7HCQKGQEGCDT45A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "
-	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20170306205925.ynkwmy7acsunpewd-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jarkko,
 
-2017=E5=B9=B43=E6=9C=887=E6=97=A5 10:47=E4=BA=8E Chen-Yu Tsai <wens-/F2/8XmEos0@public.gmane.org=
-g>=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Tue, Mar 7, 2017 at 8:24 AM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:=
-=20
-> >=20
-> >=20
-> > 07.03.2017, 07:48, "Ond=C5=99ej Jirman" <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>:=20
-> >> Hi Icenowy,=20
-> >>=20
-> >> when I was trying to add OTG support I found an issue with powercyclin=
-g.=20
-> >> When I have USB cable connecting PC and the OTG port on the SBC, when=
-=20
-> >> the board enables the vbus, it would become impossible to power cycle=
-=20
-> >> the board after poweroff. The reason being that when vbus is enabled,=
-=20
-> >> the board is powered from the OTG port even if you disconnect the barr=
-el=20
-> >> plug.=20
-> >>=20
-> >> Should kernel turn off the vbus before shutting down/restarting? What =
-do=20
-> >> you think?=20
-> >=20
-> > It's a good problem.=20
-> >=20
-> > I think this problem can be abstracted into:=20
-> > Some regulators are needed to be shut down before system=20
-> > shutdown.=20
->
-> Sounds like the board is getting back-powered from VBUS through the enabl=
-ed=20
-> current regulator. Given that you have it connected to the PC, which I as=
-sume=20
-> means peripheral mode, the bigger issue is why is VBUS enabled in periphe=
-ral=20
-> mode? It should never ever be so.=20
+On 06/03/17 21:59, Jarkko Sakkinen wrote:
+> On Fri, Mar 03, 2017 at 05:09:59PM +0100, Enric Balletbo i Serra wrote:
+>> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>
+>> The suspend/resume behavior of the TPM can be controlled by setting
+>> "powered-while-suspended" in the DTS. This is useful for the cases
+>> when hardware does not power-off the TPM.
+>>
+>> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>> Changes since v2:
+>>  Jarkko Sakkinen
+>>   - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
+>>   - Remove a trailing newline.
+>> Changes since v1:
+>>  Jason Gunthorpe :
+>>   - Move the code to handle suspend/resume in the common chip code.
+>>
+>>  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
+>>  drivers/char/tpm/tpm-interface.c                           | 3 +++
+>>  drivers/char/tpm/tpm.h                                     | 1 +
+>>  drivers/char/tpm/tpm_of.c                                  | 3 +++
+>>  4 files changed, 13 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+>> index 8cb638b..85c8216 100644
+>> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+>> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+>> @@ -8,6 +8,12 @@ Required properties:
+>>                     the firmware event log
+>>  - linux,sml-size : size of the memory allocated for the firmware event log
+>>  
+>> +Optional properties:
+>> +
+>> +- powered-while-suspended: present when the TPM is left powered on between
+>> +                           suspend and resume (makes the suspend/resume
+>> +                           callbacks do nothing).
+>> +
+>>  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
+>>  ----------------------------------------------------------
+> 
+> Hey, just noticed something. Shouldn't this be a separate commit?
 
-Oh thanks Chen-Yu, you reminded me.
+During my life submitting patches I saw the both options, sometimes the maintainer asked me to join the DT patch and the driver and sometimes he asked me to do in different patches, so I think this is more a maintainer option. Maybe Rob Herring or Mark Rutland can share their preferences?
 
-This problem have already been solved by unbind *HCI with <&usbphy 0>, as p=
-ower is now controller by MUSB. (Yes, when developing v1, I wonder why the =
-board gets powered via vbus... and in v2 this situation disappared)
+I'll do what you want I do, TBH I don't have a strong opinion about this.
 
-Ondrej seems to binded phy to both MUSB and *HCI...
+> I'm also wondering whether this can be submitted through my tree
+> upper maintainers.
+> 
+> Does not change my reviewed-by for the actual code change but you
+> would have to split this into a patch set if this is the case.
+> 
+> /Jarkko
+> 
 
->
->
-> Regards=20
-> ChenYu=20
->
-> > Is there any framework for it?=20
-> >=20
-> > Mark,=20
-> > I add you to recipients for the question above.=20
-> >=20
-> > Thanks,=20
-> > Icenowy=20
-> >=20
-> >>=20
-> >> regards,=20
-> >>=C2=A0=C2=A0 o.=20
-> >>=20
-> >> Dne 6.3.2017 v 23:34 Icenowy Zheng napsal(a):=20
-> >>>=C2=A0 Allwinner H3 have a its USB PHY0 routed to two USB controllers:=
- one is=20
-> >>>=C2=A0 a MUSB controller, which can work in peripheral mode, but works=
- badly in=20
-> >>>=C2=A0 host mode (several hardware will fail on the MUSB controller, e=
-ven connect=20
-> >>>=C2=A0 one MUSB controller in peripheral mode to another one in host m=
-ode cannot=20
-> >>>=C2=A0 work); the other is a pair of EHCI/OHCI controller, which can w=
-ork only=20
-> >>>=C2=A0 in host mode, but have better compatibillity. The route is cont=
-rolled in=20
-> >>>=C2=A0 a register, which we have set it to HCI only when we do not kno=
-w about=20
-> >>>=C2=A0 it well.=20
-> >>>=20
-> >>>=C2=A0 Add support to route to the best controller according to curren=
-t USB mode=20
-> >>>=C2=A0 (host/peripheral).=20
-> >>>=20
-> >>>=C2=A0 Note: Currently even if hardware only support hostmode, we shou=
-ld still=20
-> >>>=C2=A0 enable the MUSB controller, as it controls the USB mode. (Some =
-this kind=20
-> >>>=C2=A0 of hardware can also work in peripheral mode by settings in the=
- sysfs=20
-> >>>=C2=A0 node of MUSB, then connect it to another host via a USB Type-A =
-to Type-A=20
-> >>>=C2=A0 cable.)=20
-> >>>=20
-> >>>=C2=A0 Patch 1 changes the device tree binding to include the "pmu0" f=
-or HCI pair.=20
-> >>>=20
-> >>>=C2=A0 Patch 2 adds support for auto routing of PHY0. It's currently o=
-nly enabled=20
-> >>>=C2=A0 on H3, but it's easy to extend it to other SoCs which feature t=
-his=20
-> >>>=C2=A0 route control.=20
-> >>>=20
-> >>>=C2=A0 Patch 3 adds necessary device tree nodes to the H3 DTSI file. N=
-ote: The=20
-> >>>=C2=A0 phy is not bind for OHCI/EHCI0, as OHCI/EHCI drivers will keep =
-the VBUS=20
-> >>>=C2=A0 on. Only MUSB driver can properly handle a dual-role PHY.=20
-> >>>=20
-> >>>=C2=A0 Patch 4 enables USB OTG functionality on Orange Pi One board, w=
-hich is=20
-> >>>=C2=A0 the only H3 board I have that have proper OTG function. It's ea=
-sy to=20
-> >>>=C2=A0 enable OTG on other boards with their schematics.=20
-> >>>=20
-> >>>=C2=A0 Patch 5 enables USB OTG functionality on Orange Pi Zero board, =
-as the=20
-> >>>=C2=A0 board cannot output power on Vbus, I only enabled peripheral mo=
-de by=20
-> >>>=C2=A0 default.=20
-> >>>=20
-> >>>=C2=A0 The USB PHY on V3s/A64 SoCs also feature this capability, and i=
-t will=20
-> >>>=C2=A0 be soon enabled on these SoCs after this patchset is merged.=20
-> >>>=20
-> >>>=C2=A0 Icenowy Zheng (5):=20
-> >>>=C2=A0=C2=A0=C2=A0 dt: bindings: add pmu0 regs for USB PHYs on Allwinn=
-er H3/V3s/A64=20
-> >>>=C2=A0=C2=A0=C2=A0 phy: sun4i-usb: support automatically switch PHY0 r=
-oute to MUSB/HCI=20
-> >>>=C2=A0=C2=A0=C2=A0 ARM: dts: sun8i: h3: add usb_otg and OHCI/EHCI for =
-usbc0 on H3=20
-> >>>=C2=A0=C2=A0=C2=A0 ARM: dts: sun8i: h3: enable USB OTG on Orange Pi On=
-e=20
-> >>>=C2=A0=C2=A0=C2=A0 ARM: dts: sun8i: h2+: enable USB OTG for Orange Pi =
-Zero board=20
-> >>>=20
-> >>>=C2=A0=C2=A0 .../devicetree/bindings/phy/sun4i-usb-phy.txt | 1 +=20
-> >>>=C2=A0=C2=A0 arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts | 14 ++=
-++++=20
-> >>>=C2=A0=C2=A0 arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 22 ++++++++=
-+-=20
-> >>>=C2=A0=C2=A0 arch/arm/boot/dts/sun8i-h3.dtsi | 32 ++++++++++++++=20
-> >>>=C2=A0=C2=A0 drivers/phy/phy-sun4i-usb.c | 50 ++++++++++++++--------=
-=20
-> >>>=C2=A0=C2=A0 5 files changed, 101 insertions(+), 18 deletions(-)=20
-> >=20
-> > --=20
-> > You received this message because you are subscribed to the Google Grou=
-ps "linux-sunxi" group.=20
-> > To unsubscribe from this group and stop receiving emails from it, send =
-an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
-> > For more options, visit https://groups.google.com/d/optout.=20
->
-> --=20
-> You received this message because you are subscribed to the Google Groups=
- "linux-sunxi" group.=20
-> To unsubscribe from this group and stop receiving emails from it, send an=
- email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org=20
-> For more options, visit https://groups.google.com/d/optout.=20
+Cheers,
+ Enric
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+------------------------------------------------------------------------------
+Announcing the Oxford Dictionaries API! The API offers world-renowned
+dictionary content that is easy and intuitive to access. Sign up for an
+account today to start using our lexical data to power your apps and
+projects. Get started today and enter our developer competition.
+http://sdm.link/oxford
