@@ -1,69 +1,196 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 7/15] dt-bindings: display: sun4i: Add allwinner,
- tcon-channel property
-Date: Tue,  7 Mar 2017 09:56:26 +0100
-Message-ID: <46fdec2d680d539652f87d79c627973b3a568438.1488876832.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 2/15] clk: sunxi-ng: Pass the parent and a
+ pointer to the clocks round rate
+Date: Tue,  7 Mar 2017 09:56:21 +0100
+Message-ID: <263d27de0ef00f042443d10f6d92fb051ac80349.1488876832.git-series.maxime.ripard@free-electrons.com>
 References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWPL7HCQKGQEYKPXNCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFsbHdpbm5lciBUaW1pbmdzIENvbnRyb2xsZXIgaGFzIHR3bywgbXV0dWFsbHkgZXhjbHVz
-aXZlLCBjaGFubmVscy4KV2hlbiB0aGUgYmluZGluZyBoYXMgYmVlbiBpbnRyb2R1Y2VkLCBpdCB3
-YXMgYXNzdW1lZCB0aGF0IHRoZXJlIHdvdWxkIGJlCm9ubHkgYSBzaW5nbGUgdXNlciBwZXIgY2hh
-bm5lbCBpbiB0aGUgc3lzdGVtLgoKV2hpbGUgdGhpcyBpcyBsaWtlbHkgZm9yIHRoZSBjaGFubmVs
-IDAgd2hpY2ggb25seSBjb25uZWN0cyB0byBMQ0QgZGlzcGxheXMsCml0IHR1cm5zIG91dCB0aGF0
-IHRoZSBjaGFubmVsIDEgY2FuIGJlIGNvbm5lY3RlZCB0byBtdWx0aXBsZSBjb250cm9sbGVycyBp
-bgp0aGUgU29DIChIRE1JIGFuZCBUViBlbmNvZGVycyBmb3IgZXhhbXBsZSkuIEFuZCB3aGlsZSB0
-aGUgc2ltdWx0YW5lb3VzIHVzZQpvZiBIRE1JIGFuZCBUViBvdXRwdXRzIGNhbm5vdCBiZSBhY2hp
-ZXZlZCwgc3dpdGNoaW5nIGZyb20gb25lIHRvIHRoZSBvdGhlcgphdCBydW50aW1lIGRlZmluaXRl
-bHkgc291bmRzIHBsYXVzaWJsZS4KCkFkZCBhbiBleHRyYSBwcm9wZXJ0eSwgYWxsd2lubmVyLHRj
-b24tY2hhbm5lbCwgdG8gc3BlY2lmeSBmb3IgYSBnaXZlbgplbmRwb2ludCB3aGljaCBUQ09OIGNo
-YW5uZWwgaXQgaXMgY29ubmVjdGVkIHRvLCB3aGlsZSBmYWxsaW5nIGJhY2sgdG8gdGhlCnByZXZp
-b3VzIG1lY2hhbmlzbSBpZiB0aGF0IHByb3BlcnR5IGlzIG1pc3NpbmcuCgpTaWduZWQtb2ZmLWJ5
-OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0u
-dHh0IHwgMTEgKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
-dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dAppbmRleCA0YjI4MDY3MjY1OGUuLjE4
-ZDQ0NTcyM2MzZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0CkBAIC02OCwxMCArNjgsMTMg
-QEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGUKICAgZmlyc3QgcG9ydCBzaG91bGQg
-YmUgdGhlIGlucHV0IGVuZHBvaW50LCB0aGUgc2Vjb25kIG9uZSB0aGUgb3V0cHV0CiAKLSAgVGhl
-IG91dHB1dCBzaG91bGQgaGF2ZSB0d28gZW5kcG9pbnRzLiBUaGUgZmlyc3QgaXMgdGhlIGJsb2Nr
-Ci0gIGNvbm5lY3RlZCB0byB0aGUgVENPTiBjaGFubmVsIDAgKHVzdWFsbHkgYSBwYW5lbCBvciBh
-IGJyaWRnZSksIHRoZQotICBzZWNvbmQgdGhlIGJsb2NrIGNvbm5lY3RlZCB0byB0aGUgVENPTiBj
-aGFubmVsIDEgKHVzdWFsbHkgdGhlIFRWCi0gIGVuY29kZXIpCisgIFRoZSBvdXRwdXQgbWF5IGhh
-dmUgbXVsdGlwbGUgZW5kcG9pbnRzLiBUaGUgVENPTiBoYXMgdHdvIGNoYW5uZWxzLAorICB1c3Vh
-bGx5IHdpdGggdGhlIGZpcnN0IGNoYW5uZWwgYmVpbmcgdXNlZCBmb3IgdGhlIHBhbmVscyBpbnRl
-cmZhY2VzCisgIChSR0IsIExWRFMsIGV0Yy4pLCBhbmQgdGhlIHNlY29uZCBiZWluZyB1c2VkIGZv
-ciB0aGUgb3V0cHV0cyB0aGF0CisgIHJlcXVpcmUgYW5vdGhlciBjb250cm9sbGVyIChUViBFbmNv
-ZGVyLCBIRE1JLCBldGMuKS4gVGhlIGVuZHBvaW50cworICB3aWxsIHRha2UgYW4gZXh0cmEgcHJv
-cGVydHksIGFsbHdpbm5lcix0Y29uLWNoYW5uZWwsIHRvIHNwZWNpZnkgdGhlCisgIGNoYW5uZWwg
-dGhlIGVuZHBvaW50IGlzIGFzc29jaWF0ZWQgdG8uIElmIHRoYXQgcHJvcGVydHkgaXMgbm90Cisg
-IHByZXNlbnQsIHRoZSBlbmRwb2ludCBudW1iZXIgd2lsbCBiZSB1c2VkIGFzIHRoZSBjaGFubmVs
-IG51bWJlci4KIAogT24gU29DcyBvdGhlciB0aGFuIHRoZSBBMzMsIHRoZXJlIGlzIG9uZSBtb3Jl
-IGNsb2NrIHJlcXVpcmVkOgogICAgLSAndGNvbi1jaDEnOiBUaGUgY2xvY2sgZHJpdmluZyB0aGUg
-VENPTiBjaGFubmVsIDEKLS0gCmdpdC1zZXJpZXMgMC44LjExCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The clocks might need to modify their parent clocks. In order to make that
+possible, give them access to the parent clock being evaluated, and to a
+pointer to the parent rate so that they can modify it if needed.
+
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/clk/sunxi-ng/ccu_div.c  |  7 ++++---
+ drivers/clk/sunxi-ng/ccu_mp.c   |  7 ++++---
+ drivers/clk/sunxi-ng/ccu_mult.c | 11 ++++++-----
+ drivers/clk/sunxi-ng/ccu_mux.c  |  8 +++++---
+ drivers/clk/sunxi-ng/ccu_mux.h  |  3 ++-
+ drivers/clk/sunxi-ng/ccu_nkm.c  |  7 ++++---
+ 6 files changed, 25 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+index 92855c2b30bb..7f8b06e38636 100644
+--- a/drivers/clk/sunxi-ng/ccu_div.c
++++ b/drivers/clk/sunxi-ng/ccu_div.c
+@@ -14,7 +14,8 @@
+ #include "ccu_div.h"
+ 
+ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+-					unsigned long parent_rate,
++					struct clk_hw *parent,
++					unsigned long *parent_rate,
+ 					unsigned long rate,
+ 					void *data)
+ {
+@@ -26,10 +27,10 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+ 	 * several parents, while we might be called to evaluate
+ 	 * several different parents.
+ 	 */
+-	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
++	val = divider_get_val(rate, *parent_rate, cd->div.table, cd->div.width,
+ 			      cd->div.flags);
+ 
+-	return divider_recalc_rate(&cd->common.hw, parent_rate, val,
++	return divider_recalc_rate(&cd->common.hw, *parent_rate, val,
+ 				   cd->div.table, cd->div.flags);
+ }
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu_mp.c b/drivers/clk/sunxi-ng/ccu_mp.c
+index b583f186a804..de02e6c386d8 100644
+--- a/drivers/clk/sunxi-ng/ccu_mp.c
++++ b/drivers/clk/sunxi-ng/ccu_mp.c
+@@ -41,7 +41,8 @@ static void ccu_mp_find_best(unsigned long parent, unsigned long rate,
+ }
+ 
+ static unsigned long ccu_mp_round_rate(struct ccu_mux_internal *mux,
+-				       unsigned long parent_rate,
++				       struct clk_hw *hw,
++				       unsigned long *parent_rate,
+ 				       unsigned long rate,
+ 				       void *data)
+ {
+@@ -52,9 +53,9 @@ static unsigned long ccu_mp_round_rate(struct ccu_mux_internal *mux,
+ 	max_m = cmp->m.max ?: 1 << cmp->m.width;
+ 	max_p = cmp->p.max ?: 1 << ((1 << cmp->p.width) - 1);
+ 
+-	ccu_mp_find_best(parent_rate, rate, max_m, max_p, &m, &p);
++	ccu_mp_find_best(*parent_rate, rate, max_m, max_p, &m, &p);
+ 
+-	return parent_rate / p / m;
++	return *parent_rate / p / m;
+ }
+ 
+ static void ccu_mp_disable(struct clk_hw *hw)
+diff --git a/drivers/clk/sunxi-ng/ccu_mult.c b/drivers/clk/sunxi-ng/ccu_mult.c
+index 8724c01171b1..76d17162366f 100644
+--- a/drivers/clk/sunxi-ng/ccu_mult.c
++++ b/drivers/clk/sunxi-ng/ccu_mult.c
+@@ -33,9 +33,10 @@ static void ccu_mult_find_best(unsigned long parent, unsigned long rate,
+ }
+ 
+ static unsigned long ccu_mult_round_rate(struct ccu_mux_internal *mux,
+-					unsigned long parent_rate,
+-					unsigned long rate,
+-					void *data)
++					 struct clk_hw *parent,
++					 unsigned long *parent_rate,
++					 unsigned long rate,
++					 void *data)
+ {
+ 	struct ccu_mult *cm = data;
+ 	struct _ccu_mult _cm;
+@@ -47,9 +48,9 @@ static unsigned long ccu_mult_round_rate(struct ccu_mux_internal *mux,
+ 	else
+ 		_cm.max = (1 << cm->mult.width) + cm->mult.offset - 1;
+ 
+-	ccu_mult_find_best(parent_rate, rate, &_cm);
++	ccu_mult_find_best(*parent_rate, rate, &_cm);
+ 
+-	return parent_rate * _cm.mult;
++	return *parent_rate * _cm.mult;
+ }
+ 
+ static void ccu_mult_disable(struct clk_hw *hw)
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+index c6bb1f523232..bae735e252b6 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.c
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -61,7 +61,8 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 				  struct ccu_mux_internal *cm,
+ 				  struct clk_rate_request *req,
+ 				  unsigned long (*round)(struct ccu_mux_internal *,
+-							 unsigned long,
++							 struct clk_hw *,
++							 unsigned long *,
+ 							 unsigned long,
+ 							 void *),
+ 				  void *data)
+@@ -80,7 +81,8 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 		ccu_mux_helper_adjust_parent_for_prediv(common, cm, -1,
+ 							&adj_parent_rate);
+ 
+-		best_rate = round(cm, adj_parent_rate, req->rate, data);
++		best_rate = round(cm, best_parent, &adj_parent_rate,
++				  req->rate, data);
+ 
+ 		goto out;
+ 	}
+@@ -109,7 +111,7 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 		ccu_mux_helper_adjust_parent_for_prediv(common, cm, i,
+ 							&adj_parent_rate);
+ 
+-		tmp_rate = round(cm, adj_parent_rate, req->rate, data);
++		tmp_rate = round(cm, parent, &adj_parent_rate, req->rate, data);
+ 		if (tmp_rate == req->rate) {
+ 			best_parent = parent;
+ 			best_parent_rate = parent_rate;
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.h b/drivers/clk/sunxi-ng/ccu_mux.h
+index 47aba3a48245..4be56eee2bfd 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.h
++++ b/drivers/clk/sunxi-ng/ccu_mux.h
+@@ -86,7 +86,8 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 				  struct ccu_mux_internal *cm,
+ 				  struct clk_rate_request *req,
+ 				  unsigned long (*round)(struct ccu_mux_internal *,
+-							 unsigned long,
++							 struct clk_hw *,
++							 unsigned long *,
+ 							 unsigned long,
+ 							 void *),
+ 				  void *data);
+diff --git a/drivers/clk/sunxi-ng/ccu_nkm.c b/drivers/clk/sunxi-ng/ccu_nkm.c
+index 71f81e95a061..c5e010eb5991 100644
+--- a/drivers/clk/sunxi-ng/ccu_nkm.c
++++ b/drivers/clk/sunxi-ng/ccu_nkm.c
+@@ -102,7 +102,8 @@ static unsigned long ccu_nkm_recalc_rate(struct clk_hw *hw,
+ }
+ 
+ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+-					unsigned long parent_rate,
++					struct clk_hw *hw,
++					unsigned long *parent_rate,
+ 					unsigned long rate,
+ 					void *data)
+ {
+@@ -116,9 +117,9 @@ static unsigned long ccu_nkm_round_rate(struct ccu_mux_internal *mux,
+ 	_nkm.min_m = 1;
+ 	_nkm.max_m = nkm->m.max ?: 1 << nkm->m.width;
+ 
+-	ccu_nkm_find_best(parent_rate, rate, &_nkm);
++	ccu_nkm_find_best(*parent_rate, rate, &_nkm);
+ 
+-	return parent_rate * _nkm.n * _nkm.k / _nkm.m;
++	return *parent_rate * _nkm.n * _nkm.k / _nkm.m;
+ }
+ 
+ static int ccu_nkm_determine_rate(struct clk_hw *hw,
+-- 
+git-series 0.8.11
