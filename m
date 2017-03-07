@@ -1,34 +1,72 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] dt: emac: document device-tree based phy discovery
- and setup
-Date: Tue, 07 Mar 2017 12:15:28 -0800 (PST)
-Message-ID: <20170307.121528.441751689674246830.davem@davemloft.net>
-References: <cecba35f-0a94-67e8-543a-a1d340d62947@gmail.com>
-        <0149985a262cfc2feacd604a581cd5ae9134a525.1488228734.git.chunkeey@googlemail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH] ARM64: dts: meson-gxbb-odroidc2: enable USB Host Nodes
+Date: Wed,  8 Mar 2017 02:06:01 +0530
+Message-ID: <1488918961-4666-1-git-send-email-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <0149985a262cfc2feacd604a581cd5ae9134a525.1488228734.git.chunkeey@googlemail.com>
-Sender: netdev-owner@vger.kernel.org
-To: chunkeey@googlemail.com
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, ivan@de.ibm.com, f.fainelli@gmail.com, andrew@lunn.ch, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Brian Kim <brian.kim@hardkernel.com>
+Cc: Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Christian Lamparter <chunkeey@googlemail.com>
-Date: Mon, 27 Feb 2017 21:54:50 +0100
+From: Anand Moon <linux.amoon@gmail.com>
 
-> This patch adds documentation for a new "phy-handle" property,
-> "fixed-link" and "mdio" sub-node. These allows the enumeration
-> of PHYs which are supported by the phy library under drivers/net/phy.
-> 
-> The EMAC ethernet controller in IBM and AMCC 4xx chips is
-> currently stuck with a few privately defined phy
-> implementations. It has no support for PHYs which
-> are supported by the generic phylib.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+update the regulator supply nodes for usb host to
+enable usb host on odroid-c2
 
-Applied, thanks.
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+root@odroid64:/usr/src/odroidxu3-4.y-devel# lsusb -t
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+        |__ Port 1: Dev 3, If 0, Class=Human Interface Device, Driver=usbhid, 1.5M
+        |__ Port 1: Dev 3, If 1, Class=Human Interface Device, Driver=usbhid, 1.5M
+        |__ Port 2: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+        |__ Port 4: Dev 5, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index c59403a..304b676 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -64,6 +64,18 @@
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+ 
++	usb_host_pwr: regulator-usb-pwrs {
++		compatible = "regulator-fixed";
++
++		regulator-name = "USB_HOST_PWR";
++
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		gpio = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	usb_otg_pwr: regulator-usb-pwrs {
+ 		compatible = "regulator-fixed";
+ 
+@@ -184,6 +196,7 @@
+ 
+ &usb1_phy {
+ 	status = "okay";
++	phy-supply = <&usb_host_pwr>;
+ };
+ 
+ &usb0 {
+-- 
+2.7.4
