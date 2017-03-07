@@ -1,86 +1,317 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 10/10] Bluetooth: add nokia driver
-Date: Wed, 8 Mar 2017 00:06:09 +0100
-Message-ID: <20170307230609.kpw3y2pkfka6kgo5@earth>
-References: <20170304115833.3538-1-sre@kernel.org>
- <20170304115833.3538-11-sre@kernel.org>
- <CAL_Jsq+PvqS_tU6wRzpcsdESYxOOU_JJqsacEc9qLDs2PB2VLw@mail.gmail.com>
- <20170307210837.w5fdwc2sy3xmzci7@earth>
- <65D9766C-9BED-42D5-931C-65044530E215@holtmann.org>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH] ARM: dts: NSP: Add EHCI/OHCI USB nodes to device tree
+Date: Tue,  7 Mar 2017 18:34:04 -0500
+Message-ID: <1488929644-30321-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yjbcw4gvvbbzjx7v"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <65D9766C-9BED-42D5-931C-65044530E215-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Gustavo F. Padovan" <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Add the EHCI and OHCI entries to the Northstar Plus device tree files.
 
---yjbcw4gvvbbzjx7v
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi     | 14 ++++++++++++++
+ arch/arm/boot/dts/bcm958522er.dts  | 10 +++++++++-
+ arch/arm/boot/dts/bcm958525er.dts  | 10 +++++++++-
+ arch/arm/boot/dts/bcm958525xmc.dts |  8 ++++++++
+ arch/arm/boot/dts/bcm958622hr.dts  | 10 +++++++++-
+ arch/arm/boot/dts/bcm958623hr.dts  | 10 +++++++++-
+ arch/arm/boot/dts/bcm958625hr.dts  |  8 ++++++++
+ arch/arm/boot/dts/bcm958625k.dts   |  8 ++++++++
+ arch/arm/boot/dts/bcm988312hr.dts  | 10 +++++++++-
+ 9 files changed, 83 insertions(+), 5 deletions(-)
 
-Hi Marcel,
-
-On Tue, Mar 07, 2017 at 10:20:27PM +0100, Marcel Holtmann wrote:
->> [...]
->>
->> - compatible: should contain "nokia,h4p-bluetooth" as well as one of the=
- following:
->> * "brcm,bcm2048-nokia"
->> * "ti,wl1271-blueooth-nokia=E2=80=9D
->=20
-> I never liked the term =E2=80=9Ch4p=E2=80=9D. It is fundamentally just
-> =E2=80=9Cbluetooth=E2=80=9D.
-
-It's not me, that came up with the term, Nokia called their protocol
-H4+ (for DT people not familiar with bluetooth - the standard
-bluetooth UART protocol is named H4). I agree, that H4+ is
-ambiguous, but with the "nokia," prefix it should be clear what
-protocol is meant. I don't really mind, though. We can also just
-list the individual chips and add all compatible strings to the
-driver.
-
-FWIW I remove the term from the driver leaving only a single
-instance in the header ("AKA H4+").
-
-> What are our plans for Broadcom, Intel etc. Bluetooth UARTs?
-
-I think drivers, that need extra resources (like GPIOs) can switch to
-serdev exclusively. The kernel needs ACPI/DT/boardcode data for those
-devices anyways.
-
-Iirc Rob is working on serdev patches for Broadcom and TI BT, so he may
-provide more information.
-
--- Sebastian
-
---yjbcw4gvvbbzjx7v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAli/PN4ACgkQ2O7X88g7
-+pplCA//RECW46Q3/61zbH1prx80b7exC1YSCIfcaEvTnzmmwrFM4tTjVB/KdSXL
-IhV06OCdcOwr9c1viXO6L4KRevFEA8V46rH0XMpQFUPmgSB/HGYVb+12tlTjcXNO
-pU0qKLqGAjqGM9kY/xhzoELnnIhwcRvkonpyx8dRNJSobgodOJvatJLgYQkqs74u
-wO26/W8DhuRTYpYU4XZEmURlcNil1NYHIRSm7hEaDooAg1jsLj9yqXRImzhnXrGo
-A0dkpvlmybHrhKJHzJXTlj2MsbjqGlapaJa2Kbi8qc7O6jgm0F65qsD0Tzbggcaj
-5XB8FAIjWOYdD6qXh2vopZ0lJU5cHpWZvajdS3LbLIsW6BE/6rJPj+ej34XzGN0y
-enA27o2y/uPuI2q6YzhtI1sGbdk2NxsytZXSZsPfOnsB9p1cBefmcISEWoPfwuUj
-tKVofnkhfHpaq/j+VhkkvtsuVIM2knLzSNAKojBQ4VrRvKtlgInflq1EiU4Wc8GY
-qtSgCk3m6vXDa2ctiqvVGO6qMliniNkLx5I2K8pUghTBAYRxa4dTWoVG0Re6RWqp
-evj9gzigQvWV2pKPsIWWrZ/9LEB2OF3xPp6T4rBl6rbEJQMCH5dY+hg1zgo2FxKe
-m0C4PUyNMVFB28J6MZbF11Bu4IsTgnHhLuQsKoVwcAycr8boFWc=
-=Io95
------END PGP SIGNATURE-----
-
---yjbcw4gvvbbzjx7v--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 832795b..fbc1d1d 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -306,6 +306,20 @@
+ 			status = "disabled";
+ 		};
+ 
++		ehci0: usb@2a000 {
++			compatible = "generic-ehci";
++			reg = <0x2a000 0x100>;
++			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		ohci0: usb@2b000 {
++			compatible = "generic-ohci";
++			reg = <0x2b000 0x100>;
++			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
+ 		rng: rng@33000 {
+ 			compatible = "brcm,bcm-nsp-rng";
+ 			reg = <0x33000 0x14>;
+diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
+index df05e7f..f5c4296 100644
+--- a/arch/arm/boot/dts/bcm958522er.dts
++++ b/arch/arm/boot/dts/bcm958522er.dts
+@@ -60,7 +60,7 @@
+ 	};
+ };
+ 
+-/* USB 2/3 support needed to be complete */
++/* USB 3 support needed to be complete */
+ 
+ &amac0 {
+ 	status = "okay";
+@@ -70,6 +70,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &nand {
+ 	nandcs@0 {
+ 		compatible = "brcm,nandcs";
+@@ -108,6 +112,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
+index 4a3ab19..efcb1f6 100644
+--- a/arch/arm/boot/dts/bcm958525er.dts
++++ b/arch/arm/boot/dts/bcm958525er.dts
+@@ -60,7 +60,7 @@
+ 	};
+ };
+ 
+-/* USB 2/3 support needed to be complete */
++/* USB 3 support needed to be complete */
+ 
+ &amac0 {
+ 	status = "okay";
+@@ -70,6 +70,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &nand {
+ 	nandcs@0 {
+ 		compatible = "brcm,nandcs";
+@@ -108,6 +112,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
+index 81f7843..23f23bd 100644
+--- a/arch/arm/boot/dts/bcm958525xmc.dts
++++ b/arch/arm/boot/dts/bcm958525xmc.dts
+@@ -66,6 +66,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &i2c0 {
+ 	temperature-sensor@4c {
+ 		compatible = "adi,adt7461a";
+@@ -122,6 +126,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
+index c88b8fe..16ab2d8 100644
+--- a/arch/arm/boot/dts/bcm958622hr.dts
++++ b/arch/arm/boot/dts/bcm958622hr.dts
+@@ -60,7 +60,7 @@
+ 	};
+ };
+ 
+-/* USB 2/3 and SLIC support needed to be complete */
++/* USB 3 and SLIC support needed to be complete */
+ 
+ &amac0 {
+ 	status = "okay";
+@@ -74,6 +74,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &nand {
+ 	nandcs@0 {
+ 		compatible = "brcm,nandcs";
+@@ -112,6 +116,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
+index d503fa0..9b921c6 100644
+--- a/arch/arm/boot/dts/bcm958623hr.dts
++++ b/arch/arm/boot/dts/bcm958623hr.dts
+@@ -60,7 +60,7 @@
+ 	};
+ };
+ 
+-/* USB 2/3 and SLIC support needed to be complete */
++/* USB 3 and SLIC support needed to be complete */
+ 
+ &amac0 {
+ 	status = "okay";
+@@ -74,6 +74,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &nand {
+ 	nandcs@0 {
+ 		compatible = "brcm,nandcs";
+@@ -112,6 +116,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index cc0363b..006b08e 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -72,6 +72,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &nand {
+ 	nandcs@0 {
+ 		compatible = "brcm,nandcs";
+@@ -110,6 +114,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+index f8d47e5..64740f8 100644
+--- a/arch/arm/boot/dts/bcm958625k.dts
++++ b/arch/arm/boot/dts/bcm958625k.dts
+@@ -65,6 +65,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &nand {
+ 	nandcs@0 {
+ 		compatible = "brcm,nandcs";
+@@ -103,6 +107,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm988312hr.dts b/arch/arm/boot/dts/bcm988312hr.dts
+index 74e15a3..bce251a 100644
+--- a/arch/arm/boot/dts/bcm988312hr.dts
++++ b/arch/arm/boot/dts/bcm988312hr.dts
+@@ -60,7 +60,7 @@
+ 	};
+ };
+ 
+-/* USB 2/3 support needed to be complete */
++/* USB 3 support needed to be complete */
+ 
+ &amac0 {
+ 	status = "okay";
+@@ -74,6 +74,10 @@
+ 	status = "okay";
+ };
+ 
++&ehci0 {
++	status = "okay";
++};
++
+ &nand {
+ 	nandcs@0 {
+ 		compatible = "brcm,nandcs";
+@@ -112,6 +116,10 @@
+ 	};
+ };
+ 
++&ohci0 {
++	status = "okay";
++};
++
+ &pcie0 {
+ 	status = "okay";
+ };
+-- 
+2.7.4
