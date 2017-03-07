@@ -1,85 +1,266 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v3] tpm: do not suspend/resume if power stays on
-Date: Tue, 7 Mar 2017 20:52:20 +0200
-Message-ID: <20170307185220.ag3hkthzeskg7le6@intel.com>
-References: <20170303160959.27422-1-enric.balletbo@collabora.com>
- <20170306205925.ynkwmy7acsunpewd@intel.com>
- <15829d71-ceff-d1f6-3112-5df8897a97dc@collabora.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] mtd: Add support for reading MTD devices via the
+ nvmem API
+Date: Tue, 7 Mar 2017 19:52:57 +0100
+Message-ID: <20170307195257.10d1fd06@bbrezillon>
+References: <1488875164-30440-1-git-send-email-albeu@free.fr>
+        <1488875164-30440-3-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <15829d71-ceff-d1f6-3112-5df8897a97dc-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <1488875164-30440-3-git-send-email-albeu-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 07, 2017 at 09:44:55AM +0100, Enric Balletbo i Serra wrote:
-> Hi Jarkko,
+On Tue,  7 Mar 2017 09:26:04 +0100
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+
+> Allow drivers that use the nvmem API to read data stored on MTD devices.
+> Add an option to the MTD core that allow registering the MTD as
+> read-only NVMEM providers.
 > 
-> On 06/03/17 21:59, Jarkko Sakkinen wrote:
-> > On Fri, Mar 03, 2017 at 05:09:59PM +0100, Enric Balletbo i Serra wrote:
-> >> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >>
-> >> The suspend/resume behavior of the TPM can be controlled by setting
-> >> "powered-while-suspended" in the DTS. This is useful for the cases
-> >> when hardware does not power-off the TPM.
-> >>
-> >> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> >> ---
-> >> Changes since v2:
-> >>  Jarkko Sakkinen
-> >>   - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
-> >>   - Remove a trailing newline.
-> >> Changes since v1:
-> >>  Jason Gunthorpe :
-> >>   - Move the code to handle suspend/resume in the common chip code.
-> >>
-> >>  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
-> >>  drivers/char/tpm/tpm-interface.c                           | 3 +++
-> >>  drivers/char/tpm/tpm.h                                     | 1 +
-> >>  drivers/char/tpm/tpm_of.c                                  | 3 +++
-> >>  4 files changed, 13 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> >> index 8cb638b..85c8216 100644
-> >> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> >> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> >> @@ -8,6 +8,12 @@ Required properties:
-> >>                     the firmware event log
-> >>  - linux,sml-size : size of the memory allocated for the firmware event log
-> >>  
-> >> +Optional properties:
-> >> +
-> >> +- powered-while-suspended: present when the TPM is left powered on between
-> >> +                           suspend and resume (makes the suspend/resume
-> >> +                           callbacks do nothing).
-> >> +
-> >>  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
-> >>  ----------------------------------------------------------
-> > 
-> > Hey, just noticed something. Shouldn't this be a separate commit?
+> Signed-off-by: Alban <albeu-GANU6spQydw@public.gmane.org>
+> ---
+> Changelog:
+> v2: * Moved to the MTD core instead of using notifiers
+>     * Fixed the Kconfig description
+> ---
+>  drivers/mtd/Kconfig     |  9 +++++++
+>  drivers/mtd/Makefile    |  1 +
+>  drivers/mtd/mtdcore.c   | 13 +++++++++
+>  drivers/mtd/mtdnvmem.c  | 72 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/mtd/mtdnvmem.h  | 25 +++++++++++++++++
+>  include/linux/mtd/mtd.h |  4 +++
+>  6 files changed, 124 insertions(+)
+>  create mode 100644 drivers/mtd/mtdnvmem.c
+>  create mode 100644 drivers/mtd/mtdnvmem.h
 > 
-> During my life submitting patches I saw the both options, sometimes
-> the maintainer asked me to join the DT patch and the driver and
-> sometimes he asked me to do in different patches, so I think this is
-> more a maintainer option. Maybe Rob Herring or Mark Rutland can share
-> their preferences?
-> 
-> I'll do what you want I do, TBH I don't have a strong opinion about this.
+> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+> index e83a279..5a34c6a 100644
+> --- a/drivers/mtd/Kconfig
+> +++ b/drivers/mtd/Kconfig
+> @@ -322,6 +322,15 @@ config MTD_PARTITIONED_MASTER
+>  	  the parent of the partition device be the master device, rather than
+>  	  what lies behind the master.
+>  
+> +config MTD_NVMEM
+> +	bool "Register MTD devices as NVMEM providers"
+> +	default y
+> +	depends on NVMEM || COMPILE_TEST
+> +	help
+> +	  Provides support for reading config data from MTD devices. This can
+> +	  be used by drivers to read device specific data such as MAC addresses
+> +	  or calibration results.
+> +
+>  source "drivers/mtd/chips/Kconfig"
+>  
+>  source "drivers/mtd/maps/Kconfig"
+> diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+> index 99bb9a1..879a542 100644
+> --- a/drivers/mtd/Makefile
+> +++ b/drivers/mtd/Makefile
+> @@ -5,6 +5,7 @@
+>  # Core functionality.
+>  obj-$(CONFIG_MTD)		+= mtd.o
+>  mtd-y				:= mtdcore.o mtdsuper.o mtdconcat.o mtdpart.o mtdchar.o
+> +mtd-$(CONFIG_MTD_NVMEM)		+= mtdnvmem.o
+>  
+>  obj-$(CONFIG_MTD_OF_PARTS)	+= ofpart.o
+>  obj-$(CONFIG_MTD_REDBOOT_PARTS) += redboot.o
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 66a9ded..bb88997 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -45,6 +45,7 @@
+>  #include <linux/mtd/partitions.h>
+>  
+>  #include "mtdcore.h"
+> +#include "mtdnvmem.h"
+>  
+>  static struct backing_dev_info *mtd_bdi;
+>  
+> @@ -554,6 +555,11 @@ int add_mtd_device(struct mtd_info *mtd)
+>  	if (error)
+>  		goto fail_added;
+>  
+> +	/* Add the nvmem provider */
+> +	error = mtd_nvmem_add(mtd);
+> +	if (error)
+> +		goto fail_nvmem_add;
+> +
+>  	device_create(&mtd_class, mtd->dev.parent, MTD_DEVT(i) + 1, NULL,
+>  		      "mtd%dro", i);
+>  
+> @@ -571,6 +577,8 @@ int add_mtd_device(struct mtd_info *mtd)
+>  	__module_get(THIS_MODULE);
+>  	return 0;
+>  
+> +fail_nvmem_add:
+> +	device_unregister(&mtd->dev);
+>  fail_added:
+>  	of_node_put(mtd_get_of_node(mtd));
+>  	idr_remove(&mtd_idr, i);
+> @@ -611,6 +619,11 @@ int del_mtd_device(struct mtd_info *mtd)
+>  		       mtd->index, mtd->name, mtd->usecount);
+>  		ret = -EBUSY;
+>  	} else {
+> +		/* Try to remove the NVMEM provider */
+> +		ret = mtd_nvmem_remove(mtd);
+> +		if (ret)
+> +			goto out_error;
+> +
+>  		device_unregister(&mtd->dev);
+>  
+>  		idr_remove(&mtd_idr, mtd->index);
+> diff --git a/drivers/mtd/mtdnvmem.c b/drivers/mtd/mtdnvmem.c
+> new file mode 100644
+> index 0000000..d6bc402
+> --- /dev/null
+> +++ b/drivers/mtd/mtdnvmem.c
+> @@ -0,0 +1,72 @@
+> +/*
+> + * Copyright (C) 2017 Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/nvmem-provider.h>
+> +#include <linux/of.h>
+> +
+> +static int mtd_nvmem_reg_read(void *priv, unsigned int offset,
+> +			      void *val, size_t bytes)
+> +{
+> +	struct mtd_info *mtd = priv;
+> +	size_t retlen;
+> +	int err;
+> +
+> +	err = mtd_read(mtd, offset, bytes, &retlen, val);
+> +	if (err && err != -EUCLEAN)
+> +		return err;
+> +
+> +	return retlen == bytes ? 0 : -EIO;
+> +}
+> +
+> +int mtd_nvmem_add(struct mtd_info *mtd)
+> +{
+> +	struct device_node *np = dev_of_node(&mtd->dev);
+> +	struct nvmem_config config = {};
+> +
+> +	/* OF devices must have the nvmem-provider property */
+> +	if (np && !of_property_read_bool(np, "nvmem-provider"))
+> +		return 0;
+> +
+> +	config.dev = &mtd->dev;
+> +	config.owner = THIS_MODULE;
+> +	config.reg_read = mtd_nvmem_reg_read;
+> +	config.size = mtd->size;
+> +	config.word_size = 1;
+> +	config.stride = 1;
+> +	config.read_only = true;
+> +	config.priv = mtd;
+> +
+> +	mtd->nvmem = nvmem_register(&config);
+> +	if (IS_ERR(mtd->nvmem)) {
+> +		dev_err(&mtd->dev, "Failed to register NVMEM device\n");
+> +		return PTR_ERR(mtd->nvmem);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int mtd_nvmem_remove(struct mtd_info *mtd)
+> +{
+> +	int ret;
+> +
+> +	if (!mtd->nvmem)
+> +		return 0;
+> +
+> +	ret = nvmem_unregister(mtd->nvmem);
+> +	if (ret)
+> +		dev_err(&mtd->dev, "Failed to unregister NVMEM device\n");
+> +
+> +	return ret;
+> +}
 
-I'll add this to my tree and put it to my next branch so that
-it will flow to linux-next since it only touch TPM specific
-file in bindings.
+Given the amount of code I wonder if this shouldn't be integrated in
+mtdcore.c and unconditionally compiled in.
 
-I do not have perfect answer for this so I'll use common sense
-(or try to).
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Alban Bedel <albeu-GANU6spQydw@public.gmane.org>");
+> +MODULE_DESCRIPTION("Driver to read config data from MTD devices");
+> diff --git a/drivers/mtd/mtdnvmem.h b/drivers/mtd/mtdnvmem.h
+> new file mode 100644
+> index 0000000..a49d8bd
+> --- /dev/null
+> +++ b/drivers/mtd/mtdnvmem.h
+> @@ -0,0 +1,25 @@
+> +/*
+> + * Copyright (C) 2017 Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +#ifndef MTD_NVMEM_H
+> +#define MTD_NVMEM_H 1
+> +
+> +struct mtd_info;
+> +
+> +#ifdef CONFIG_MTD_NVMEM
+> +int mtd_nvmem_add(struct mtd_info *mtd);
+> +int mtd_nvmem_remove(struct mtd_info *mtd);
+> +#else
+> +static inline int mtd_nvmem_add(struct mtd_info *mtd)
+> +{ return 0; }
+> +
+> +static inline int mtd_nvmem_remove(struct mtd_info *mtd)
+> +{ return 0; }
+> +#endif
+> +
+> +#endif /* MTD_NVMEM_H */
+> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+> index eebdc63..e06c6e6 100644
+> --- a/include/linux/mtd/mtd.h
+> +++ b/include/linux/mtd/mtd.h
+> @@ -205,6 +205,7 @@ struct mtd_pairing_scheme {
+>  };
+>  
+>  struct module;	/* only needed for owner field in mtd_info */
+> +struct nvmem_device;
 
-Rob, is this OK?
+Include nvmem-provider.h instead of re-defining struct nvmem_device
+here.
 
-/Jarkko
+>  
+>  struct mtd_info {
+>  	u_char type;
+> @@ -351,6 +352,9 @@ struct mtd_info {
+>  	struct module *owner;
+>  	struct device dev;
+>  	int usecount;
+> +#if IS_ENABLED(CONFIG_MTD_NVMEM)
+> +	struct nvmem_device *nvmem;
+> +#endif
+
+Hm, I don't see any #if IS_ENABLED() or #ifdef CONFIG_ statements in
+this file. I know it adds an extra 32/64 bits field for nothing if the
+feature is disabled, but how about keeping the struct definition simple
+by unconditionally adding the nvmem field. 
+
+>  };
+>  
+>  int mtd_ooblayout_ecc(struct mtd_info *mtd, int section,
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
