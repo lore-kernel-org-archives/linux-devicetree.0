@@ -1,64 +1,88 @@
-From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH v2 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and related drivers
-Date: Tue,  7 Mar 2017 03:22:01 +0100
-Message-ID: <20170307022201.24563-2-j.neuschaefer@gmx.net>
-References: <20170307022201.24563-1-j.neuschaefer@gmx.net>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Extending /memreserve/ to allow defining descriptions
+Date: Tue, 7 Mar 2017 13:21:04 +1100
+Message-ID: <20170307022104.GA19967@umbus.fritz.box>
+References: <9c1cb5e8-2afd-e266-72b9-20ca6622956e@gmail.com>
+ <20170306035856.GF12030@umbus.fritz.box>
+ <87r32a6l43.fsf@linux.vnet.ibm.com>
+ <fba988e1-40a0-4a7e-e680-45c7360c5aa3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170307022201.24563-1-j.neuschaefer@gmx.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0F1p//8PRICkK4MW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <fba988e1-40a0-4a7e-e680-45c7360c5aa3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-An adsp-pil node is present in at least the MSM8974 SoC. Simply enable
-all Qualcomm remoteproc drivers to avoid more work in the future.
 
-The SMP2P driver is required for adsp-pil to initialize correctly.
+--0F1p//8PRICkK4MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Enable the SMSM driver at Bjorn Andersson's request: "We also need
-CONFIG_QCOM_SMSM=y here, its currently used to signal state of the ring
-buffers for WiFi."
+On Mon, Mar 06, 2017 at 04:12:59PM -0800, Florian Fainelli wrote:
+> On 03/06/2017 03:28 PM, Stewart Smith wrote:
+> > David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> writes:
+> >> What you could do is to add properties within the device tree further
+> >> annotating the reservations, with the extra structure essentially just
+> >> acting as an easy-to-parse summary of that.  In fact I know that POWER
+> >> systems firmware use 'reserved-ranges' and 'reserved-names' properties
+> >> for this.  I don't know if anyone else has adopted that though.
+> >=20
+> > We've also been toying with the idea of creating a binding for "named
+> > reserved memory range that should probably show up in debugfs"
+> >=20
+> > I'd also be happy with a standard binding to do it.
+>=20
+> Seems like
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> may be a good place to add descriptive properties about what these
+> reserved regions are? The code parsing this also seems to be easily
+> extensible with adding custom "name" properties.
+>=20
+> Using "reserved-names" sounds like a good thing, I will be looking into
+> submitting a binding update in the next few days, but if you beat me to
+> it, happy to review it.
+>=20
+> Tangential: is it me, or it's possible for /memreserve/'s address and
+> size cells to disagree with #address-cells and #size-cells defined by
+> the top-level node?
 
-CONFIG_QCOM_WCNSS_CTRL is required to load firmware/configuration data
-into the WCNSS core, which handles WiFi and Bluetooth.
+/memreserve/ has no address or size cells; they're simply 64-bit
+integers.
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
----
-v2:
-* Extend the commit message
-* Enable CONFIG_QCOM_SMSM and add Bjorn Andersson's A-b
-* Enable CONFIG_QCOM_WCNSS_CTRL as well
----
- arch/arm/configs/qcom_defconfig | 7 +++++++
- 1 file changed, 7 insertions(+)
+--0F1p//8PRICkK4MW
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm/configs/qcom_defconfig b/arch/arm/configs/qcom_defconfig
-index 4ffdd607205d..07666a7a9de5 100644
---- a/arch/arm/configs/qcom_defconfig
-+++ b/arch/arm/configs/qcom_defconfig
-@@ -190,11 +190,18 @@ CONFIG_MDM_LCC_9615=y
- CONFIG_MSM_MMCC_8960=y
- CONFIG_MSM_MMCC_8974=y
- CONFIG_HWSPINLOCK_QCOM=y
-+CONFIG_REMOTEPROC=y
-+CONFIG_QCOM_ADSP_PIL=y
-+CONFIG_QCOM_Q6V5_PIL=y
-+CONFIG_QCOM_WCNSS_PIL=y
- CONFIG_QCOM_GSBI=y
- CONFIG_QCOM_PM=y
- CONFIG_QCOM_SMEM=y
- CONFIG_QCOM_SMD=y
- CONFIG_QCOM_SMD_RPM=y
-+CONFIG_QCOM_SMP2P=y
-+CONFIG_QCOM_SMSM=y
-+CONFIG_QCOM_WCNSS_CTRL=y
- CONFIG_IIO=y
- CONFIG_IIO_BUFFER_CB=y
- CONFIG_IIO_SW_TRIGGER=y
--- 
-2.11.0
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYvhkOAAoJEGw4ysog2bOS+YsQALPe1t09u5UkjEl29lWCvems
+uu50ICa+2/uRUzDYN94xXSLEAJzb/2cAMyQRF0pGFI1IJzvtxkWi2VzxhHK+7ZNI
+REhKDnJiC66E0q8jeNkZhtWxhYrsACAoT6vfkJTyy5xIFcnqTyt1um7NyU2CC3Fe
+G0N7DxpNJDnZLj1cT/jDBVU8E1roM2g5WR3XzxHcVqA5kNeaKknUs+dNVuKYNOGG
+NskgGLdFpiIQJJJzTJPCZhEj58MVxPOVJ0zfADo+0vDGH2E6AIHvx1f5x+oXaCbl
+OrlkQBRU/SkQ3hKinkO+QpuhtfFShDKMvbhu7AtAZDoszlSETc/X6qHjMLu7lFGY
+tq7EdJmq6xitl2CYrWyHT8XQD9MeHbHIdnnABBkNZmylpLxdhAHhXrq82fX2zv/D
+90GgJk2T6BSRd500ahi5y0bw8OzHD6rh9fJZ0LWHVhww/EC86EU1HLXXFDK0OaGa
+4wrvfYT7MQ1M9OOHbOG5KLWMrO8TrPnXsx75t7NVmQdvY7RC9bNvxHS0UxIxs8XM
+qw4UEDg235kEkNkAXAaDImoFVPUDllxrFL2Vu3FjovsIn90Y/FKglTwVwW/cdw7E
+Maz/tuaRPwIhD9KCYFbwqRprImm4nindkbzvO/dc5RTZVAQqE/EIZkLNHxAtvmUW
+wOLZX3YtA2UvQkAdvwD1
+=JKF1
+-----END PGP SIGNATURE-----
+
+--0F1p//8PRICkK4MW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
