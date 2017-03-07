@@ -1,85 +1,121 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 0/6] Updates for Marvell Switch SoCs
-Date: Tue, 07 Mar 2017 18:10:12 +0100
-Message-ID: <87bmtdovwr.fsf@free-electrons.com>
-References: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 07/10] serdev: add serdev_device_wait_until_sent
+Date: Tue, 7 Mar 2017 16:55:08 +0100
+Message-ID: <20170307155508.olbiecapfs7ep6xm@earth>
+References: <20170304115833.3538-1-sre@kernel.org>
+ <20170304115833.3538-8-sre@kernel.org>
+ <CAL_Jsq+BCE1u6Ysz0FOdh--wHm-PZxqcmqTgQMyDcvQNkYp3gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170216085041.28337-1-chris.packham@alliedtelesis.co.nz> (Chris
- Packham's message of "Thu, 16 Feb 2017 21:50:34 +1300")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d5vnixjkpbvf6nj5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+BCE1u6Ysz0FOdh--wHm-PZxqcmqTgQMyDcvQNkYp3gw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Gustavo Padovan <gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hyaXMsCiAKIE9uIGpldS4sIGbDqXZyLiAxNiAyMDE3LCBDaHJpcyBQYWNraGFtIDxjaHJp
-cy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+IHdyb3RlOgoKPiBTaG9ydGx5IGFmdGVyIEkg
-cG9zdGVkIG15IGxhc3Qgc2VyaWVzIEkgZ290IGFjY2VzcyB0byBhIG1vcmUgcmVjZW50Cj4gTWFy
-dmVsbCBTREsgd2hpY2ggaGFkIHNvbWUgZGV2aWNlIHRyZWUgc3VwcG9ydCBmb3IgdGhlIHN3aXRj
-aCBTb0NzIEknZAo+IGJlZW4gd2FudGluZy4gSXQgd2FzIHN0aWxsIGJhc2VkIG9uIGFuIG9sZGVy
-IGtlcm5lbCBidXQgaXQgd2FzIGEgaHVnZQo+IGltcHJvdmVtZW50IG92ZXIgd2hhdCBjYW1lIGJl
-Zm9yZS4KPgo+IFBhdGNoIDEvNiBpcyBhIHR5cG8gSSBub3RpY2VkIGFmdGVyIG15IGluaXRpYWwg
-c2VyaWVzIHdhcyBhcHBsaWVkLgo+Cj4gUGF0Y2ggMi82IGlzIGEgYml0IG9mIGEgY2xlYW51cC4g
-SSBkaWQgaW5pdGlhbGx5IHN0cnVnZ2xlIHdpdGggaG93IHRvCj4gYWNjZXNzIGluZGl2aWR1YWwg
-cGFydHMgb2YgdGhlIERGWCBibG9jayBhcyB3ZWxsIGFzIHJldGFpbmluZyBhIGhhbmRsZSBvbgo+
-IHRoZSBlbnRpcmUgdGhpbmcgZm9yIHRoZSBzd2l0Y2ggZHJpdmVyIHRvIHVzZS4KPgo+IFBhdGNo
-IDMvNiBpcyBhIHJlLWppZyBvZiB0aGUgZHRzaSBmaWxlcyB3aGljaCBpcyBuZWVkZWQgYnkgNS82
-LiBUaGlzIGlzCj4gcmVxdWlyZWQgYmVjYXVzZSBJIG5lZWQgdG8gdXNlIHRoZSBjb3JlY2xrIGxh
-YmVsIG9uIGEgZGlmZmVyZW50IG5vZGUuIEl0Cj4gYWxzbyBtZWFucyBJIGRvbid0IGhhdmUgdG8g
-ZGlzYWJsZSBub2RlcyBmb3IgYmxvY2tzIHRoYXQgb25seSBleGlzdCBvbgo+IHRoZSBBcm1hZGEt
-WFAuCj4KPiBQYXRjaCA0LzYsIDUvNiBhcmUgc3BsaXQgZnJvbSB0aGUgcHJldmlvdXMgdmVyc2lv
-bnMuCj4KPiBQYXRjaCA2LzYgaXMgdGhlIGRldmljZSB0cmVlIHBvcnRpb24gb2YgYSBjaGFuZ2Ug
-YWxyZWFkeSBpbiBjbGstbmV4dC4KCgpJIGFwcGxpZWQgcGF0Y2hlcyAyLCAzIGFuZCA2IG9uIG12
-ZWJ1L2R0IHdpdGggdGhlIGFja2VkLWJ5IGZyb20gUm9iIHdoZW4KaGUgZ2F2ZSBpdC4KClBhdGNo
-IDEgaXMgYWxyZWFkeSBwYXJ0IG9mIDQuMTEtcmMxLgoKRm9yIHBhdGNoIDQgYW5kIDUgSSB1bmRl
-cnN0YW5kIHRoYXQgZWl0aGVyIHdlIGRvbid0IG5lZWQgaXQgb3IgaXQgc2hvdWxkCmJlIGEgdXBk
-YXRlZCB2ZXJzaW9uIHNvIEkgc2tpcHBlZCB0aGVtLgoKVGhhbmtzLAoKR3JlZ29yeQoKPgo+IENo
-cmlzIFBhY2toYW0gKDYpOgo+ICAgQVJNOiBkdHM6IEZpeCB0eXBvIGluIGFybWFkYS14cC05OGR4
-NDI1MQo+ICAgICBDaGFuZ2VzIGluIHYyCj4gICAgIC0gbmV3Cj4gICAgIENoYW5nZXMgaW4gdjM6
-Cj4gICAgIC0gbm9uZQo+ICAgQVJNOiBkdHM6IGFybWFkYS14cC05OGR4MzIzNjogY29tYmluZSBk
-Znggc2VydmVyIG5vZGVzCj4gICAgIENoYW5nZXMgaW4gdjI6Cj4gICAgIC0gbm9uZQo+ICAgICBD
-aGFuZ2VzIGluIHYzOgo+ICAgICAtIG5vbmUKPiAgIEFSTTogZHRzOiBVc2UgYXJtYWRhLTM3MC14
-cCBhcyBhIGJhc2UgZm9yIGFybWFkYS14cC05OGR4MzIzNgo+ICAgICBDaGFuZ2VzIGluIHYyOgo+
-ICAgICAtIFVwZGF0ZSByb290IGNvbXBhdGlibGUgc3RyaW5ncyBpbiBhcm1hZGEteHAtOThkeDMz
-MzYuZHRzaSwKPiAgICAgICBhcm1hZGEteHAtOThkeDQyNTEuZHRzaSwgYXJtYWRhLXhwLWRiLWR4
-YmMyLmR0cyBhbmQKPiAgICAgICBhcm1hZGEteHAtZGIteGMzLTI0ZzR4Zy5kdHMKPiAgICAgQ2hh
-bmdlcyBpbiB2MzoKPiAgICAgLSBub25lCj4gICBBUk06IGR0czogbXZlYnU6IEFkZCBiaW5kaW5n
-IGZvciBtdjk4ZHgzMjM2LXNvYy1pZAo+ICAgICBDaGFuZ2VzIGluIHYzOgo+ICAgICAtIG5ldywg
-c3BsaXQgZnJvbSBkcml2ZXIKPiAgIEFSTTogbXZlYnU6IEFkZCBkcml2ZXIgZm9yIG12OThkeDMy
-MzYtc29jLWlkCj4gICAgIENoYW5nZXMgaW4gdjI6Cj4gICAgIC0gbm9uZQo+ICAgICBDaGFuZ2Vz
-IGluIHYzOgo+ICAgICAtIHNwbGl0IGZyb20gZHRzIGNoYW5nZXMKPiAgIEFSTTogZHRzOiBtdmVi
-dTogTW92ZSBtdjk4ZHgzMjM2IGNsb2NrIGJpbmRpbmdzCj4gICAgIENoYW5nZXMgaW4gdjI6Cj4g
-ICAgIC0gTmV3LiBTcGxpdCBvdXQgZnJvbSAiY2xrOiBtdmVidTogRXhwYW5kIG12OThkeDMyMzYt
-Y29yZS1jbG9jayBzdXBwb3J0Igo+ICAgICBDaGFuZ2VzIGluIHYzOgo+ICAgICAtIENsYXJpZnkg
-d2h5IHRoZSBvbGQgbG9jYXRpb24gd2FzIHdyb25nIChidXQgd29ya2VkKS4KPgo+Cj4gIC4uLi9i
-aW5kaW5ncy9hcm0vbWFydmVsbC9tdjk4ZHgzMjM2LXNvYy1pZC50eHQgICAgIHwgIDE0ICsrCj4g
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL212ZWJ1LWNvcmUtY2xvY2sudHh0IHwgICA3
-ICsKPiAgLi4uL2JpbmRpbmdzL2Nsb2NrL212ZWJ1LWdhdGVkLWNsb2NrLnR4dCAgICAgICAgICAg
-fCAgMTEgKysKPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L21hcnZlbGwscHJlc3RlcmEu
-dHh0ICAgfCAgMTMgKy0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhwLTk4ZHgzMjM2LmR0
-c2kgICAgICAgICAgfCAyMTMgKysrKysrKysrKysrKysrKy0tLS0tCj4gIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL2FybWFkYS14cC05OGR4MzMzNi5kdHNpICAgICAgICAgIHwgICAyICstCj4gIGFyY2gvYXJt
-L2Jvb3QvZHRzL2FybWFkYS14cC05OGR4NDI1MS5kdHNpICAgICAgICAgIHwgICAyICstCj4gIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2FybWFkYS14cC1kYi1keGJjMi5kdHMgICAgICAgICAgIHwgICAyICst
-Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2FybWFkYS14cC1kYi14YzMtMjRnNHhnLmR0cyAgICAgIHwg
-ICAyICstCj4gIGFyY2gvYXJtL21hY2gtbXZlYnUvbXZlYnUtc29jLWlkLmMgICAgICAgICAgICAg
-ICAgIHwgIDQzICsrKystCj4gIDEwIGZpbGVzIGNoYW5nZWQsIDI0MiBpbnNlcnRpb25zKCspLCA2
-NyBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9hcm0vbWFydmVsbC9tdjk4ZHgzMjM2LXNvYy1pZC50eHQKPgo+IC0tIAo+
-IDIuMTEuMC4yNC5nZTY5MjBjZgoKLS0gCkdyZWdvcnkgQ2xlbWVudCwgRnJlZSBFbGVjdHJvbnMK
-S2VybmVsLCBkcml2ZXJzLCByZWFsLXRpbWUgYW5kIGVtYmVkZGVkIExpbnV4CmRldmVsb3BtZW50
-LCBjb25zdWx0aW5nLCB0cmFpbmluZyBhbmQgc3VwcG9ydC4KaHR0cDovL2ZyZWUtZWxlY3Ryb25z
-LmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+
+--d5vnixjkpbvf6nj5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Tue, Mar 07, 2017 at 09:34:49AM -0600, Rob Herring wrote:
+> On Sat, Mar 4, 2017 at 5:58 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > Add method, which waits until the transmission buffer has been sent.
+> >
+> > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/tty/serdev/core.c           | 11 +++++++++++
+> >  drivers/tty/serdev/serdev-ttyport.c | 15 ++++++++++++++-
+> >  include/linux/serdev.h              |  3 +++
+> >  3 files changed, 28 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/tty/serdev/core.c b/drivers/tty/serdev/core.c
+> > index f4c6c90add78..a63b74031e22 100644
+> > --- a/drivers/tty/serdev/core.c
+> > +++ b/drivers/tty/serdev/core.c
+> > @@ -173,6 +173,17 @@ void serdev_device_set_flow_control(struct serdev_=
+device *serdev, bool enable)
+> >  }
+> >  EXPORT_SYMBOL_GPL(serdev_device_set_flow_control);
+> >
+> > +void serdev_device_wait_until_sent(struct serdev_device *serdev, long =
+timeout)
+> > +{
+> > +       struct serdev_controller *ctrl =3D serdev->ctrl;
+> > +
+> > +       if (!ctrl || !ctrl->ops->wait_until_sent)
+> > +               return;
+> > +
+> > +       ctrl->ops->wait_until_sent(ctrl, timeout);
+> > +}
+> > +EXPORT_SYMBOL_GPL(serdev_device_wait_until_sent);
+> > +
+> >  static int serdev_drv_probe(struct device *dev)
+> >  {
+> >         const struct serdev_device_driver *sdrv =3D to_serdev_device_dr=
+iver(dev->driver);
+> > diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/s=
+erdev-ttyport.c
+> > index d05393594f15..db2bc601e554 100644
+> > --- a/drivers/tty/serdev/serdev-ttyport.c
+> > +++ b/drivers/tty/serdev/serdev-ttyport.c
+> > @@ -14,6 +14,7 @@
+> >  #include <linux/serdev.h>
+> >  #include <linux/tty.h>
+> >  #include <linux/tty_driver.h>
+> > +#include <linux/poll.h>
+> >
+> >  #define SERPORT_ACTIVE         1
+> >
+> > @@ -47,10 +48,13 @@ static void ttyport_write_wakeup(struct tty_port *p=
+ort)
+> >         struct serport *serport =3D serdev_controller_get_drvdata(ctrl);
+> >
+> >         if (!test_and_clear_bit(TTY_DO_WRITE_WAKEUP, &port->tty->flags))
+> > -               return;
+> > +               goto out;
+> >
+> >         if (test_bit(SERPORT_ACTIVE, &serport->flags))
+> >                 serdev_controller_write_wakeup(ctrl);
+> > +
+> > +out:
+> > +       wake_up_interruptible_poll(&port->tty->write_wait, POLLOUT);
+>=20
+> Shouldn't this be separate patch?
+
+That change is needed for tty_wait_until_sent to work correctly, which
+starts with a wait_event_interruptible_timeout() on write_wait.
+
+-- Sebastian
+
+--d5vnixjkpbvf6nj5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAli+19gACgkQ2O7X88g7
++po/Dg/+Lc+HV/AnuGNS86mcWDpTy4vnuO0kBGVV1HNIIQDbjF+iP55WNP3fznfE
+H5YSznVCzHe4YGpImqkRmiu+u6Ffdr+Y75gx0UrG0yIqWTWUT2u45KyzGtw23Km0
+3bMPk7kye6hYawhGwCeKqECd1l8uBcnQOitHBqCDmb6OoxQELn3Z0SkAesS9Ui6a
+KZrj8L16f6d/msSXoMbJqmFG9yblStavqAYbHI3m0699hlbGE7jUC85CVsqO4UYB
+pgekUZqzsNP8OZWMaSUlxomV2Axb/5MN1QYSfX/MPzwueZh+n4IaXHghDfgElG0Q
+AQ48UAn4cBm3NcVGzAOF5xN0YMzpvqBqhtXPqo5GbeqfDjOjgC+iPUzlXvVOcy2C
+JRHqQANmXgbY/Rqx+fTG7BdCTPo2xRjFZKGXkeC0fPTkmhlFym1iZiqaB4DzBp03
+KxUrfAZgiABeYxHO+umHg5g6GaNzlpZqLSPDiEuluXMT4nb3VbeeE6e0QM2VxT05
+4YcLRN+YSZMCpL0LlamkNlcDQEyk9DUZEnKhpLv3O/7YAU00E1waprNKXy0fMzBc
+897H0Ol99yY9atAgI2JIkBQvmGvnLg1rkdGmQErKJhhA2O5HaoY6mULyZw7XLXBb
+NUgFKvqVHGlS+LBguGA4CsahQxJyCqdm8oc9kxcsoBm/+2/sNMU=
+=N8fg
+-----END PGP SIGNATURE-----
+
+--d5vnixjkpbvf6nj5--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
