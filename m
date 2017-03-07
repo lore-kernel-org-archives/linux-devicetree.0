@@ -1,56 +1,69 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 11/15] drm/sun4i: tcon: Fix tcon channel 1
- backporch calculation
-Date: Tue,  7 Mar 2017 09:56:30 +0100
-Message-ID: <475aeed1da40d46d8e50420c281a74c32b78c730.1488876832.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 7/15] dt-bindings: display: sun4i: Add allwinner,
+ tcon-channel property
+Date: Tue,  7 Mar 2017 09:56:26 +0100
+Message-ID: <46fdec2d680d539652f87d79c627973b3a568438.1488876832.git-series.maxime.ripard@free-electrons.com>
 References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWPL7HCQKGQEYKPXNCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-It seems like what's called a backporch in the datasheet is actually the
-backporch plus the sync period. Fix that in our driver.
-
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 93249c5ab1e4..e44217fb4f6f 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -240,15 +240,14 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon, struct drm_encoder *encoder,
- 		     SUN4I_TCON1_BASIC2_Y(mode->crtc_vdisplay));
- 
- 	/* Set horizontal display timings */
--	bp = mode->crtc_htotal - mode->crtc_hsync_end;
-+	bp = mode->crtc_htotal - mode->crtc_hsync_start;
- 	DRM_DEBUG_DRIVER("Setting horizontal total %d, backporch %d\n",
- 			 mode->htotal, bp);
- 	regmap_write(tcon->regs, SUN4I_TCON1_BASIC3_REG,
- 		     SUN4I_TCON1_BASIC3_H_TOTAL(mode->crtc_htotal) |
- 		     SUN4I_TCON1_BASIC3_H_BACKPORCH(bp));
- 
--	/* Set vertical display timings */
--	bp = mode->crtc_vtotal - mode->crtc_vsync_end;
-+	bp = mode->crtc_vtotal - mode->crtc_vsync_start;
- 	DRM_DEBUG_DRIVER("Setting vertical total %d, backporch %d\n",
- 			 mode->vtotal, bp);
- 	regmap_write(tcon->regs, SUN4I_TCON1_BASIC4_REG,
--- 
-git-series 0.8.11
+VGhlIEFsbHdpbm5lciBUaW1pbmdzIENvbnRyb2xsZXIgaGFzIHR3bywgbXV0dWFsbHkgZXhjbHVz
+aXZlLCBjaGFubmVscy4KV2hlbiB0aGUgYmluZGluZyBoYXMgYmVlbiBpbnRyb2R1Y2VkLCBpdCB3
+YXMgYXNzdW1lZCB0aGF0IHRoZXJlIHdvdWxkIGJlCm9ubHkgYSBzaW5nbGUgdXNlciBwZXIgY2hh
+bm5lbCBpbiB0aGUgc3lzdGVtLgoKV2hpbGUgdGhpcyBpcyBsaWtlbHkgZm9yIHRoZSBjaGFubmVs
+IDAgd2hpY2ggb25seSBjb25uZWN0cyB0byBMQ0QgZGlzcGxheXMsCml0IHR1cm5zIG91dCB0aGF0
+IHRoZSBjaGFubmVsIDEgY2FuIGJlIGNvbm5lY3RlZCB0byBtdWx0aXBsZSBjb250cm9sbGVycyBp
+bgp0aGUgU29DIChIRE1JIGFuZCBUViBlbmNvZGVycyBmb3IgZXhhbXBsZSkuIEFuZCB3aGlsZSB0
+aGUgc2ltdWx0YW5lb3VzIHVzZQpvZiBIRE1JIGFuZCBUViBvdXRwdXRzIGNhbm5vdCBiZSBhY2hp
+ZXZlZCwgc3dpdGNoaW5nIGZyb20gb25lIHRvIHRoZSBvdGhlcgphdCBydW50aW1lIGRlZmluaXRl
+bHkgc291bmRzIHBsYXVzaWJsZS4KCkFkZCBhbiBleHRyYSBwcm9wZXJ0eSwgYWxsd2lubmVyLHRj
+b24tY2hhbm5lbCwgdG8gc3BlY2lmeSBmb3IgYSBnaXZlbgplbmRwb2ludCB3aGljaCBUQ09OIGNo
+YW5uZWwgaXQgaXMgY29ubmVjdGVkIHRvLCB3aGlsZSBmYWxsaW5nIGJhY2sgdG8gdGhlCnByZXZp
+b3VzIG1lY2hhbmlzbSBpZiB0aGF0IHByb3BlcnR5IGlzIG1pc3NpbmcuCgpTaWduZWQtb2ZmLWJ5
+OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0u
+dHh0IHwgMTEgKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKSwgNCBkZWxl
+dGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dAppbmRleCA0YjI4MDY3MjY1OGUuLjE4
+ZDQ0NTcyM2MzZSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9zdW54aS9zdW40aS1kcm0udHh0CkBAIC02OCwxMCArNjgsMTMg
+QEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0LiBUaGUKICAgZmlyc3QgcG9ydCBzaG91bGQg
+YmUgdGhlIGlucHV0IGVuZHBvaW50LCB0aGUgc2Vjb25kIG9uZSB0aGUgb3V0cHV0CiAKLSAgVGhl
+IG91dHB1dCBzaG91bGQgaGF2ZSB0d28gZW5kcG9pbnRzLiBUaGUgZmlyc3QgaXMgdGhlIGJsb2Nr
+Ci0gIGNvbm5lY3RlZCB0byB0aGUgVENPTiBjaGFubmVsIDAgKHVzdWFsbHkgYSBwYW5lbCBvciBh
+IGJyaWRnZSksIHRoZQotICBzZWNvbmQgdGhlIGJsb2NrIGNvbm5lY3RlZCB0byB0aGUgVENPTiBj
+aGFubmVsIDEgKHVzdWFsbHkgdGhlIFRWCi0gIGVuY29kZXIpCisgIFRoZSBvdXRwdXQgbWF5IGhh
+dmUgbXVsdGlwbGUgZW5kcG9pbnRzLiBUaGUgVENPTiBoYXMgdHdvIGNoYW5uZWxzLAorICB1c3Vh
+bGx5IHdpdGggdGhlIGZpcnN0IGNoYW5uZWwgYmVpbmcgdXNlZCBmb3IgdGhlIHBhbmVscyBpbnRl
+cmZhY2VzCisgIChSR0IsIExWRFMsIGV0Yy4pLCBhbmQgdGhlIHNlY29uZCBiZWluZyB1c2VkIGZv
+ciB0aGUgb3V0cHV0cyB0aGF0CisgIHJlcXVpcmUgYW5vdGhlciBjb250cm9sbGVyIChUViBFbmNv
+ZGVyLCBIRE1JLCBldGMuKS4gVGhlIGVuZHBvaW50cworICB3aWxsIHRha2UgYW4gZXh0cmEgcHJv
+cGVydHksIGFsbHdpbm5lcix0Y29uLWNoYW5uZWwsIHRvIHNwZWNpZnkgdGhlCisgIGNoYW5uZWwg
+dGhlIGVuZHBvaW50IGlzIGFzc29jaWF0ZWQgdG8uIElmIHRoYXQgcHJvcGVydHkgaXMgbm90Cisg
+IHByZXNlbnQsIHRoZSBlbmRwb2ludCBudW1iZXIgd2lsbCBiZSB1c2VkIGFzIHRoZSBjaGFubmVs
+IG51bWJlci4KIAogT24gU29DcyBvdGhlciB0aGFuIHRoZSBBMzMsIHRoZXJlIGlzIG9uZSBtb3Jl
+IGNsb2NrIHJlcXVpcmVkOgogICAgLSAndGNvbi1jaDEnOiBUaGUgY2xvY2sgZHJpdmluZyB0aGUg
+VENPTiBjaGFubmVsIDEKLS0gCmdpdC1zZXJpZXMgMC44LjExCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
