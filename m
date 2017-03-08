@@ -1,16 +1,13 @@
-From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: Re: [PATCH V3 4/4] dts/imx6q-b850v3: Use
- megachips-stdpxxxx-ge-b850v3-fw bridges (LVDS-DP++)
-Date: Wed, 8 Mar 2017 11:10:40 +0100
-Message-ID: <20170308101040.GB25268@collabora.com>
-References: <cover.1488555615.git.peter.senna@collabora.com>
- <d5c297680eb82fd7ef63f7f5dafffc22b98d2345.1488555615.git.peter.senna@collabora.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM53573: Don't use nonexistent
+ "default-off" LED trigger
+Date: Wed, 8 Mar 2017 11:20:59 +0100
+Message-ID: <20170308102058.GA7772@amd>
+References: <20170308064105.26619-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5249990969863276331=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <d5c297680eb82fd7ef63f7f5dafffc22b98d2345.1488555615.git.peter.senna@collabora.com>
+In-Reply-To: <20170308064105.26619-1-zajec5@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,119 +17,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: mark.rutland@arm.com, heiko@sntech.de, airlied@linux.ie, daniel.vetter@ffwll.ch, peter.senna@gmail.com, dri-devel@lists.freedesktop.org, tiwai@suse.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, jslaby@suse.cz, martyn.welch@collabora.co.uk, Rob Herring <robh@kernel.org>, architt@codeaurora.org, mchehab@osg.samsung.com, linux@armlinux.org.uk, javier@dowhile0.org, treding@nvidia.com, linux@roeck-us.net, martin.donnelly@ge.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, eballetbo@gmail.com, Fabio Estevam <fabio.estevam@nxp.com>, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, galak@codeaurora.org, enric.balletbo@collabora.com, akpm@linux-foundation.org, davem@davemloft.net, l.stac
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-leds@vger.kernel.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 04:57:10PM +0100, Peter Senna Tschudin wrote:
 
-Hi Shawn Guo,
+--===============5249990969863276331==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Disposition: inline
 
-Now that the driver and binding are in, can you pick this up?
 
-Thank you!
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Configures the megachips-stdpxxxx-ge-b850v3-fw bridges on the GE
-> B850v3 dts file.
-> 
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
-> Cc: Martin Donnelly <martin.donnelly@ge.com>
-> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
-> ---
-> Unchanged since V1.
-> 
->  arch/arm/boot/dts/imx6q-b850v3.dts | 68 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
-> index b237429..3ec54da 100644
-> --- a/arch/arm/boot/dts/imx6q-b850v3.dts
-> +++ b/arch/arm/boot/dts/imx6q-b850v3.dts
-> @@ -72,6 +72,13 @@
->  		fsl,data-mapping = "spwg";
->  		fsl,data-width = <24>;
->  		status = "okay";
-> +
-> +		port@4 {
-> +			reg = <4>;
-> +			lvds0_out: endpoint {
-> +				remote-endpoint = <&stdp4028_in>;
-> +			};
-> +		};
->  	};
->  };
->  
-> @@ -146,3 +153,64 @@
->  &usdhc2 {
->  	status = "disabled";
->  };
-> +
-> +&mux2_i2c2 {
-> +	status = "okay";
-> +	clock-frequency = <100000>;
-> +
-> +	stdp4028@73 {
-> +		compatible = "megachips,stdp4028-ge-b850v3-fw";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg = <0x73>;
-> +
-> +		interrupt-parent = <&gpio2>;
-> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				stdp4028_in: endpoint {
-> +					remote-endpoint = <&lvds0_out>;
-> +				};
-> +			};
-> +			port@1 {
-> +				reg = <1>;
-> +				stdp4028_out: endpoint {
-> +					remote-endpoint = <&stdp2690_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	stdp2690@72 {
-> +		compatible = "megachips,stdp2690-ge-b850v3-fw";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		reg = <0x72>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				stdp2690_in: endpoint {
-> +					remote-endpoint = <&stdp4028_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				stdp2690_out: endpoint {
-> +					/* Connector for external display */
-> +				};
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.9.3
-> 
+On Wed 2017-03-08 07:41:04, Rafa=C5=82 Mi=C5=82ecki wrote:
+> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>=20
+> Such a trigger doesn't exist in Linux and is not needed as LED is being
+> turned off by default. This could cause errors in LEDs core code when
+> trying to set default trigger.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+
+For both patches:
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAli/2woACgkQMOfwapXb+vIv1ACgu0FpUa8eDJBXRKK7uylnVA3q
+WiUAoK2wPHozxjSeHkzkKmzvC/qIr+J3
+=6pT2
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
+
+
+--===============5249990969863276331==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5249990969863276331==--
