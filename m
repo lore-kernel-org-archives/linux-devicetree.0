@@ -1,78 +1,138 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/3] ASoC: add dio2125 amplifier support
-Date: Wed, 8 Mar 2017 11:00:20 +0100
-Message-ID: <20170308100020.dop5pno3m2sj6fmv@sirena.org.uk>
-References: <20170306174451.24406-1-jbrunet@baylibre.com>
- <1488903977.28627.4.camel@baylibre.com>
+From: Peter Senna Tschudin <peter.senna@collabora.com>
+Subject: Re: [PATCH V3 4/4] dts/imx6q-b850v3: Use
+ megachips-stdpxxxx-ge-b850v3-fw bridges (LVDS-DP++)
+Date: Wed, 8 Mar 2017 11:10:40 +0100
+Message-ID: <20170308101040.GB25268@collabora.com>
+References: <cover.1488555615.git.peter.senna@collabora.com>
+ <d5c297680eb82fd7ef63f7f5dafffc22b98d2345.1488555615.git.peter.senna@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5824730129033249059=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1488903977.28627.4.camel@baylibre.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <d5c297680eb82fd7ef63f7f5dafffc22b98d2345.1488555615.git.peter.senna@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org
+Cc: mark.rutland@arm.com, heiko@sntech.de, airlied@linux.ie, daniel.vetter@ffwll.ch, peter.senna@gmail.com, dri-devel@lists.freedesktop.org, tiwai@suse.com, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, jslaby@suse.cz, martyn.welch@collabora.co.uk, Rob Herring <robh@kernel.org>, architt@codeaurora.org, mchehab@osg.samsung.com, linux@armlinux.org.uk, javier@dowhile0.org, treding@nvidia.com, linux@roeck-us.net, martin.donnelly@ge.com, devicetree@vger.kernel.org, p.zabel@pengutronix.de, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, eballetbo@gmail.com, Fabio Estevam <fabio.estevam@nxp.com>, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, galak@codeaurora.org, enric.balletbo@collabora.com, akpm@linux-foundation.org, davem@davemloft.net, l.stac
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 03, 2017 at 04:57:10PM +0100, Peter Senna Tschudin wrote:
 
---===============5824730129033249059==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7vk47e7bvsnganlx"
-Content-Disposition: inline
+Hi Shawn Guo,
 
+Now that the driver and binding are in, can you pick this up?
 
---7vk47e7bvsnganlx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thank you!
 
-On Tue, Mar 07, 2017 at 05:26:17PM +0100, Jerome Brunet wrote:
-> Hi Mark,
-
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
-
-> In this series, you applied patch 2 and 3 but not patch 1.
-> (so the dioo prefix is used but not documented)
-
-> Is it on purpose ?
-> The patch does not have the "ASoC" prefix, this maybe why it was
-> missed. Since, the file does no belong to alsa, I wasn't sure whether
-> to put the prefix or not.
-
-This is a generic DT patch, not part of the bindings, so I'd expect the
-DT maintainers to take it.
-
---7vk47e7bvsnganlx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAli/1jAACgkQJNaLcl1U
-h9ByKgf9Eit2EVynjCrirpq/lrV2Vf/9l9lZmwFwcpukLnyfSTEncqO2RPNKxR4h
-ndiUpM2vUyMSRnYKHiZFzx+ENvFScF013QbLuq5G1FlMCruqpB28hhnZMzcq8e+f
-aNBN9lvkqd/zQhq3kibC4Za3T8BWZVpQk9yzsNWScY1rT+3lluwpdqT2XqyYyqc7
-rPgQv54kIatRq94+cc7cZUGx+IJ6fXSxPrYDv1b5fkFqko2VY4Ja3Pi69D8t1bNb
-I1ZjN69ud9z7IBuvS50T1UoNsJ3nKj6a3FBE6Tzvtw5X9Cs5QOu+mLWVL4JK8i0O
-9eh6TlitMEDtBjvgmPS7gRSJg3ks8w==
-=Tpig
------END PGP SIGNATURE-----
-
---7vk47e7bvsnganlx--
-
---===============5824730129033249059==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5824730129033249059==--
+> Configures the megachips-stdpxxxx-ge-b850v3-fw bridges on the GE
+> B850v3 dts file.
+> 
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
+> Cc: Martin Donnelly <martin.donnelly@ge.com>
+> Cc: Javier Martinez Canillas <javier@dowhile0.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
+> ---
+> Unchanged since V1.
+> 
+>  arch/arm/boot/dts/imx6q-b850v3.dts | 68 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+> index b237429..3ec54da 100644
+> --- a/arch/arm/boot/dts/imx6q-b850v3.dts
+> +++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+> @@ -72,6 +72,13 @@
+>  		fsl,data-mapping = "spwg";
+>  		fsl,data-width = <24>;
+>  		status = "okay";
+> +
+> +		port@4 {
+> +			reg = <4>;
+> +			lvds0_out: endpoint {
+> +				remote-endpoint = <&stdp4028_in>;
+> +			};
+> +		};
+>  	};
+>  };
+>  
+> @@ -146,3 +153,64 @@
+>  &usdhc2 {
+>  	status = "disabled";
+>  };
+> +
+> +&mux2_i2c2 {
+> +	status = "okay";
+> +	clock-frequency = <100000>;
+> +
+> +	stdp4028@73 {
+> +		compatible = "megachips,stdp4028-ge-b850v3-fw";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		reg = <0x73>;
+> +
+> +		interrupt-parent = <&gpio2>;
+> +		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				stdp4028_in: endpoint {
+> +					remote-endpoint = <&lvds0_out>;
+> +				};
+> +			};
+> +			port@1 {
+> +				reg = <1>;
+> +				stdp4028_out: endpoint {
+> +					remote-endpoint = <&stdp2690_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	stdp2690@72 {
+> +		compatible = "megachips,stdp2690-ge-b850v3-fw";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		reg = <0x72>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				stdp2690_in: endpoint {
+> +					remote-endpoint = <&stdp4028_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				stdp2690_out: endpoint {
+> +					/* Connector for external display */
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.9.3
+> 
