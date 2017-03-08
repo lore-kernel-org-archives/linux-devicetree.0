@@ -1,58 +1,68 @@
-From: Artur Jedrysek <jartur@cadence.com>
-Subject: [v2, 4/4] dt-bindings: mtd: Add Octal SPI support to Cadence QSPI.
-Date: Wed, 8 Mar 2017 08:05:26 +0000
-Message-ID: <1488960326-13858-1-git-send-email-jartur@cadence.com>
-References: <1488959932-6657-1-git-send-email-jartur@cadence.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2] ARM: mvebu: add support for the Linksys WRT1900ACS
+ (Shelby)
+Date: Wed, 08 Mar 2017 09:54:16 +0100
+Message-ID: <8737eono7b.fsf@free-electrons.com>
+References: <20170214191744.9419-1-ralph.sennhauser@gmail.com>
+ <87inobcwk3.fsf@free-electrons.com>
+ <87zigxngjq.fsf@free-electrons.com>
+ <20170307184847.0c684b36@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1488959932-6657-1-git-send-email-jartur@cadence.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Artur Jedrysek <jartur@cadence.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170307184847.0c684b36@gmail.com> (Ralph Sennhauser's message
+ of "Tue, 7 Mar 2017 18:48:47 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates Cadence QSPI Device Tree documentation to include
-information about new compatible used to indicate, whether or not
-Octal SPI transfers are supported by the device.
-
-Signed-off-by: Artur Jedrysek <jartur@cadence.com>
----
-Changelog:
-v2: Use new compatible, instead of boolean property, to indicate
-Octal SPI support.
----
- Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-index f248056..41d1e98 100644
---- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-@@ -1,7 +1,9 @@
- * Cadence Quad SPI controller
+Hi Ralph,
  
- Required properties:
--- compatible : Should be "cdns,qspi-nor".
-+- compatible : Should be "cdns,{qspi|ospi}-nor".
-+  Use "cdns,qspi-nor" for Quad SPI controller.
-+  Use "cdns,ospi-nor" for Octal SPI controller.
- - reg : Contains two entries, each of which is a tuple consisting of a
- 	physical address and length. The first entry is the address and
- 	length of the controller register set. The second entry is the
+ On mar., mars 07 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com> wrote:
+
+> On Tue, 07 Mar 2017 18:27:21 +0100
+> Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+>> 
+>> It is now in mvebu/dt and in the same time I fixed the title to:
+>> "ARM: dts: armada-385: add support for the Linksys WRT1900ACS
+>> (Shelby)"
+>> 
+>> Gregory
+>> 
+>
+> Thanks
+> Ralph
+>
+> PS: The sort order got mixed with armada-385-synology-ds116.dtb while
+> merging which got added minutes earlier in arch/arm/boot/dts/Makefile.
+
+Thanks for info, I've fixed it now.
+
+>
+> PPS: There was also the request of using SPDX tags to v1 after v2 got
+> merged from Rob Herring and a no by Russell King. I took it as no
+> action required, you might want to have a look though.
+
+I saw this and it was the first time I see this kind of request about
+SPDX tags. Given the answer from Russell Kng I don't plan to do
+anything for now.
+
+Thanks,
+
+Gregory
+
 -- 
-2.2.2
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
