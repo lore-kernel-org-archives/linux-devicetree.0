@@ -1,78 +1,143 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v5 5/5] arm: dts: Remove the OF graph from DSI node
-Date: Wed, 08 Mar 2017 13:54:12 +0900
-Message-ID: <1488948852-5380-6-git-send-email-hoegeun.kwon@samsung.com>
-References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170308045503epcas1p2759ce089ec0e0d0a79c7d88e45efe9cc@epcas1p2.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, krzk@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: mvebu: linksys: enable buffer manager support
+Date: Wed,  8 Mar 2017 06:33:12 +0100
+Message-ID: <20170308053312.29243-1-ralph.sennhauser@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/Marvell
+        Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE9GIGdyYXBoIGlzIG5vdCBuZWVkZWQgYmVjYXVzZSB0aGUgcGFuZWwgaXMgYSBjaGlsZCBv
-ZiBkc2kuIFJlbW92ZQp0aGUgcG9ydHMgbm9kZSBpbiBEU0kgbm9kZSwgYW5kIHBvcnQgbm9kZSBp
-biBwYW5lbCBub2RlLgoKU2lnbmVkLW9mZi1ieTogSG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25A
-c2Ftc3VuZy5jb20+ClJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcu
-Y29tPgpSZXZpZXdlZC1ieTogQW5kaSBTaHl0aSA8YW5kaS5zaHl0aUBzYW1zdW5nLmNvbT4KLS0t
-CiBhcmNoL2FybS9ib290L2R0cy9leHlub3MzMjUwLXJpbmF0by5kdHMgfCAyMSAtLS0tLS0tLS0t
-LS0tLS0tLS0tLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQyMTAtdHJhdHMuZHRzICB8IDIx
-IC0tLS0tLS0tLS0tLS0tLS0tLS0tLQogYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxMi10cmF0
-czIuZHRzIHwgMjEgLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiAzIGZpbGVzIGNoYW5nZWQsIDYzIGRl
-bGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAtcmlu
-YXRvLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAtcmluYXRvLmR0cwppbmRleCBj
-OWYxOTFjLi44MmU2NzZhIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3MzMjUw
-LXJpbmF0by5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zMzI1MC1yaW5hdG8uZHRz
-CkBAIC0yMjAsMjEgKzIyMCw2IEBACiAJc2Ftc3VuZyxwbGwtY2xvY2stZnJlcXVlbmN5ID0gPDI0
-MDAwMDAwPjsKIAlzdGF0dXMgPSAib2theSI7CiAKLQlwb3J0cyB7Ci0JCSNhZGRyZXNzLWNlbGxz
-ID0gPDE+OwotCQkjc2l6ZS1jZWxscyA9IDwwPjsKLQotCQlwb3J0QDEgewotCQkJcmVnID0gPDE+
-OwotCi0JCQlkc2lfb3V0OiBlbmRwb2ludCB7Ci0JCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lf
-aW4+OwotCQkJCXNhbXN1bmcsYnVyc3QtY2xvY2stZnJlcXVlbmN5ID0gPDI1MDAwMDAwMD47Ci0J
-CQkJc2Ftc3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5ID0gPDIwMDAwMDAwPjsKLQkJCX07Ci0JCX07
-Ci0JfTsKLQogCXBhbmVsQDAgewogCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZlNjNqMHgwMyI7
-CiAJCXJlZyA9IDwwPjsKQEAgLTI2NCwxMiArMjQ5LDYgQEAKIAkJCQl2c3luYy1sZW4gPSA8Mj47
-CiAJCQl9OwogCQl9OwotCi0JCXBvcnQgewotCQkJZHNpX2luOiBlbmRwb2ludCB7Ci0JCQkJcmVt
-b3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0PjsKLQkJCX07Ci0JCX07CiAJfTsKIH07CiAKZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQyMTAtdHJhdHMuZHRzIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zNDIxMC10cmF0cy5kdHMKaW5kZXggMTc0M2NhOC4uOTQ1MmJlZCAxMDA2
-NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDIxMC10cmF0cy5kdHMKKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvZXh5bm9zNDIxMC10cmF0cy5kdHMKQEAgLTIwMiwyMSArMjAyLDYgQEAK
-IAlzYW1zdW5nLHBsbC1jbG9jay1mcmVxdWVuY3kgPSA8MjQwMDAwMDA+OwogCXN0YXR1cyA9ICJv
-a2F5IjsKIAotCXBvcnRzIHsKLQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Ci0JCSNzaXplLWNlbGxz
-ID0gPDA+OwotCi0JCXBvcnRAMSB7Ci0JCQlyZWcgPSA8MT47Ci0KLQkJCWRzaV9vdXQ6IGVuZHBv
-aW50IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9pbj47Ci0JCQkJc2Ftc3VuZyxidXJz
-dC1jbG9jay1mcmVxdWVuY3kgPSA8NTAwMDAwMDAwPjsKLQkJCQlzYW1zdW5nLGVzYy1jbG9jay1m
-cmVxdWVuY3kgPSA8MjAwMDAwMDA+OwotCQkJfTsKLQkJfTsKLQl9OwotCiAJcGFuZWxAMCB7CiAJ
-CXJlZyA9IDwwPjsKIAkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZThhYTAiOwpAQCAtMjQ0LDEy
-ICsyMjksNiBAQAogCQkJCXZzeW5jLWxlbiA9IDwyPjsKIAkJCX07CiAJCX07Ci0KLQkJcG9ydCB7
-Ci0JCQlkc2lfaW46IGVuZHBvaW50IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXQ+
-OwotCQkJfTsKLQkJfTsKIAl9OwogfTsKIApkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
-ZXh5bm9zNDQxMi10cmF0czIuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNDQxMi10cmF0
-czIuZHRzCmluZGV4IDgyMjIxYTAuLjg2Y2U1ZTUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2V4eW5vczQ0MTItdHJhdHMyLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M0
-NDEyLXRyYXRzMi5kdHMKQEAgLTM5MCwyMSArMzkwLDYgQEAKIAlzYW1zdW5nLHBsbC1jbG9jay1m
-cmVxdWVuY3kgPSA8MjQwMDAwMDA+OwogCXN0YXR1cyA9ICJva2F5IjsKIAotCXBvcnRzIHsKLQkJ
-I2FkZHJlc3MtY2VsbHMgPSA8MT47Ci0JCSNzaXplLWNlbGxzID0gPDA+OwotCi0JCXBvcnRAMSB7
-Ci0JCQlyZWcgPSA8MT47Ci0KLQkJCWRzaV9vdXQ6IGVuZHBvaW50IHsKLQkJCQlyZW1vdGUtZW5k
-cG9pbnQgPSA8JmRzaV9pbj47Ci0JCQkJc2Ftc3VuZyxidXJzdC1jbG9jay1mcmVxdWVuY3kgPSA8
-NTAwMDAwMDAwPjsKLQkJCQlzYW1zdW5nLGVzYy1jbG9jay1mcmVxdWVuY3kgPSA8MjAwMDAwMDA+
-OwotCQkJfTsKLQkJfTsKLQl9OwotCiAJcGFuZWxAMCB7CiAJCWNvbXBhdGlibGUgPSAic2Ftc3Vu
-ZyxzNmU4YWEwIjsKIAkJcmVnID0gPDA+OwpAQCAtNDMyLDEyICs0MTcsNiBAQAogCQkJCXZzeW5j
-LWxlbiA9IDwyPjsKIAkJCX07CiAJCX07Ci0KLQkJcG9ydCB7Ci0JCQlkc2lfaW46IGVuZHBvaW50
-IHsKLQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRzaV9vdXQ+OwotCQkJfTsKLQkJfTsKIAl9Owog
-fTsKIAotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+Add appropriate properties to devices in the Linksys WRT AC Series for the
+mvneta driver to use hardware buffer management.
+
+Also update "soc" ranges property and set the status of bm and bm-bppi
+to "okay" (SRAM).
+
+Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-385-linksys.dtsi     | 17 ++++++++++++++++-
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 17 ++++++++++++++++-
+ 2 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
+index df47bf1..4aac375 100644
+--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+@@ -59,7 +59,8 @@
+ 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
+ 			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
+ 			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
+-			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000>;
++			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000
++			  MBUS_ID(0x0c, 0x04) 0 0xf1200000 0x100000>;
+ 
+ 		internal-regs {
+ 			i2c@11000 {
+@@ -88,6 +89,9 @@
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				phy-mode = "rgmii-id";
++				buffer-manager = <&bm>;
++				bm,pool-long = <1>;
++				bm,pool-short = <3>;
+ 				fixed-link {
+ 					speed = <1000>;
+ 					full-duplex;
+@@ -97,6 +101,9 @@
+ 			ethernet@34000 {
+ 				status = "okay";
+ 				phy-mode = "sgmii";
++				buffer-manager = <&bm>;
++				bm,pool-long = <0>;
++				bm,pool-short = <3>;
+ 				fixed-link {
+ 					speed = <1000>;
+ 					full-duplex;
+@@ -159,6 +166,10 @@
+ 				status = "okay";
+ 			};
+ 
++			bm@c8000 {
++				status = "okay";
++			};
++
+ 			/* USB part of the eSATA/USB 2.0 port */
+ 			usb@58000 {
+ 				status = "okay";
+@@ -241,6 +252,10 @@
+ 			};
+ 		};
+ 
++		bm-bppi {
++			status = "okay";
++		};
++
+ 		pcie-controller {
+ 			status = "okay";
+ 
+diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+index 3744ba3..b188a4dc 100644
+--- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
++++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
+@@ -71,7 +71,8 @@
+ 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+ 			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+ 			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
+-			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
++			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000
++			  MBUS_ID(0x0c, 0x04) 0 0 0xf1200000 0x100000>;
+ 
+ 		internal-regs {
+ 
+@@ -95,6 +96,9 @@
+ 				pinctrl-names = "default";
+ 				status = "okay";
+ 				phy-mode = "rgmii-id";
++				buffer-manager = <&bm>;
++				bm,pool-long = <0>;
++				bm,pool-short = <3>;
+ 				fixed-link {
+ 					speed = <1000>;
+ 					full-duplex;
+@@ -106,6 +110,9 @@
+ 				pinctrl-names = "default";
+ 				status = "okay";
+ 				phy-mode = "rgmii-id";
++				buffer-manager = <&bm>;
++				bm,pool-long = <1>;
++				bm,pool-short = <3>;
+ 				fixed-link {
+ 					speed = <1000>;
+ 					full-duplex;
+@@ -186,6 +193,10 @@
+ 				};
+ 			};
+ 
++			bm@c8000 {
++				status = "okay";
++			};
++
+ 			nand@d0000 {
+ 				status = "okay";
+ 				num-cs = <1>;
+@@ -259,6 +270,10 @@
+ 				};
+ 			};
+ 		};
++
++		bm-bppi {
++			status = "okay";
++		};
+ 	};
+ 
+ 	gpio_keys {
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
