@@ -1,157 +1,123 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] checks: Add bus checks for simple-bus buses
-Date: Wed, 8 Mar 2017 12:55:45 +1100
-Message-ID: <20170308015545.GG19967@umbus.fritz.box>
-References: <20170228224310.14162-1-robh@kernel.org>
- <20170228224310.14162-3-robh@kernel.org>
- <20170303021206.GD4067@umbus.fritz.box>
- <CAL_JsqJzWAiBUZeRMx0i5Y_NAFH6_jrASWcFp_U4MwVf2+=h0w@mail.gmail.com>
- <20170307034110.GC19967@umbus.fritz.box>
- <CAL_Jsq+U4SqL2EDR6hRrE_JcONkfkZqacBQGz4Kkq=CxNbaYAQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: sunxi: Remove no longer used
+ pinctrl/sun4i-a10.h header
+Date: Wed,  8 Mar 2017 11:28:19 +0800
+Message-ID: <20170308032821.26854-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UTZ8bGhNySVQ9LYl"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+U4SqL2EDR6hRrE_JcONkfkZqacBQGz4Kkq=CxNbaYAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBWHU7XCQKGQE4GO7O4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Maxime,
 
---UTZ8bGhNySVQ9LYl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series gets rid of the last usage of the Allwinner specific pinconf
+bindings, and drops inclusion of dt-bindings/pinctrl/sun4i-a10.h across
+the tree.
 
-On Tue, Mar 07, 2017 at 07:51:15AM -0600, Rob Herring wrote:
-> On Mon, Mar 6, 2017 at 9:41 PM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Mon, Mar 06, 2017 at 04:48:18AM -0600, Rob Herring wrote:
-> >> On Thu, Mar 2, 2017 at 8:12 PM, David Gibson
-> >> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> >> > On Tue, Feb 28, 2017 at 04:43:09PM -0600, Rob Herring wrote:
-> >> >> Add checks to identify simple-bus bus types and checks for child
-> >> >> devices. Simple-bus type is generally identified by "simple-bus"
-> >> >> compatible string. We also treat the root as a simple-bus, but only=
- for
-> >> >> child nodes with reg property.
-> >> >>
-> >> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> >> ---
-> >> >> v2:
-> >> >> - new patch
-> >> >>
-> >> >>  checks.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++++++++=
-++++++++++++
-> >> >>  1 file changed, 69 insertions(+)
-> >> >>
-> >> >> diff --git a/checks.c b/checks.c
-> >> >> index 5ed91ac50a10..c4865b4c8da0 100644
-> >> >> --- a/checks.c
-> >> >> +++ b/checks.c
-> >> >> @@ -817,6 +817,72 @@ static void check_pci_device_reg(struct check =
-*c, struct dt_info *dti, struct no
-> >> >>  }
-> >> >>  WARNING(pci_device_reg, check_pci_device_reg, NULL, &reg_format);
-> >> >>
-> >> >> +static const struct bus_type simple_bus =3D {
-> >> >> +     .name =3D "simple-bus",
-> >> >> +};
-> >> >> +
-> >> >> +static bool node_is_compatible(struct node *node, const char *comp=
-at)
-> >> >> +{
-> >> >> +     struct property *prop;
-> >> >> +     const char *str;
-> >> >> +
-> >> >> +     prop =3D get_property(node, "compatible");
-> >> >> +     if (!prop)
-> >> >> +             return false;
-> >> >> +
-> >> >> +     for (str =3D prop->val.val; str < prop->val.val + prop->val.l=
-en; str +=3D strlen(str) + 1) {
-> >> >
-> >> > This isn't safe if the compatible property is filled with garbage (n=
-ot
-> >> > '\0' terminated) - the strlen() could access beyond the end of the
-> >> > property value.
-> >>
-> >> Okay, I guess I can check that prop->val.val[prop->val.len - 1] =3D=3D=
- 0 up front.
-> >
-> > Sure.  Or use strnlen.
->=20
-> Duh...
->=20
-> >> >> +             if (streq(str, compat))
-> >> >> +                     return true;
-> >> >> +     }
-> >> >> +     return false;
-> >> >> +}
-> >> >> +
-> >> >> +static void check_simple_bus_bridge(struct check *c, struct dt_inf=
-o *dti, struct node *node)
-> >> >> +{
-> >> >> +     if (node_is_compatible(node, "simple-bus") || !node->parent)
-> >> >> +             node->bus =3D &simple_bus;
-> >> >
-> >> > I don't think it's correct to assume the root bus is always a
-> >> > simple-bus.  If it is, it really should be listed explicitly in the
-> >> > root node's compatible property.
-> >>
-> >> It is in the sense that Linux treats the root the same and creates
-> >> devices for top level children and then descends for nodes with
-> >> "simple-bus".
-> >
-> > Hmm.. where in Linux is that?  I think that's a bug, technically
-> > speaking, traversing the root node's children without regard to the
-> > type of the root node.
->=20
-> drivers/of/platform.c:of_platform_populate() which is called on the
-> root node with "simple-bus" in the match table.
+Patch 1 gets rid of the last occurrence of Allwinner specific pinconf
+properties, which is actually a GPIO pinmux.
 
-It's called on the root node *by platform code*.  And the platform is
-selected on properties of the root node, so it already knows something
-about what format the root node should have on that particular
-platform.  dtc does not know that.
+Patch 2 drops the #include for dt-bindings/pinctrl/sun4i-a10.h with a
+scripted approach.
 
-> Plus I know we have some DT's like Tegra that didn't put all their
-> devices under a bus (but should have). Maybe I should warn on that
-> (i.e. warn on having unit-addresses without a bus type set on root).
+A patch to remove the actual header file should be sent after this
+series is in Linus' tree, to avoid any unwanted cross-tree dependencies.
+If we want that to happen faster, maybe we could merge these as fixes.
 
-There's nothing inherently wrong with having devices on the root bus.
-Really platforms that want this should be putting something like:
-	compatible =3D "vendor,myboard", "simple-bus";
+Regards
+ChenYu
 
-in their root node.=09
+Chen-Yu Tsai (2):
+  ARM: dts: sun8i-a23-q8-tablet: Drop pinmux setting for codec PA gpio
+  ARM: dts: sunxi: Remove no longer used pinctrl/sun4i-a10.h header
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+ arch/arm/boot/dts/sun4i-a10-a1000.dts                    |  1 -
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts               |  1 -
+ arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts         |  1 -
+ arch/arm/boot/dts/sun4i-a10-hackberry.dts                |  1 -
+ arch/arm/boot/dts/sun4i-a10-inet1.dts                    |  1 -
+ arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts             |  1 -
+ arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts               |  1 -
+ arch/arm/boot/dts/sun4i-a10-marsboard.dts                |  1 -
+ arch/arm/boot/dts/sun4i-a10-mini-xplus.dts               |  1 -
+ arch/arm/boot/dts/sun4i-a10-mk802.dts                    |  1 -
+ arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts           |  1 -
+ arch/arm/boot/dts/sun4i-a10-pcduino.dts                  |  1 -
+ arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts         |  1 -
+ arch/arm/boot/dts/sun4i-a10.dtsi                         |  1 -
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts             |  1 -
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts             |  1 -
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts         |  1 -
+ arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts            |  1 -
+ arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts                 |  1 -
+ arch/arm/boot/dts/sun5i-a10s.dtsi                        |  1 -
+ arch/arm/boot/dts/sun5i-a13-empire-electronix-d709.dts   |  1 -
+ arch/arm/boot/dts/sun5i-a13-hsg-h702.dts                 |  1 -
+ arch/arm/boot/dts/sun5i-a13-licheepi-one.dts             |  1 -
+ arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts          |  1 -
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts                |  1 -
+ arch/arm/boot/dts/sun5i-a13.dtsi                         |  1 -
+ arch/arm/boot/dts/sun5i-gr8.dtsi                         |  1 -
+ arch/arm/boot/dts/sun5i.dtsi                             |  1 -
+ arch/arm/boot/dts/sun6i-a31-app4-evb1.dts                |  1 -
+ arch/arm/boot/dts/sun6i-a31-colombus.dts                 |  1 -
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts              |  1 -
+ arch/arm/boot/dts/sun6i-a31-i7.dts                       |  1 -
+ arch/arm/boot/dts/sun6i-a31-m9.dts                       |  1 -
+ arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts         |  1 -
+ arch/arm/boot/dts/sun6i-a31.dtsi                         |  1 -
+ arch/arm/boot/dts/sun6i-a31s-cs908.dts                   |  2 --
+ arch/arm/boot/dts/sun6i-a31s-primo81.dts                 |  1 -
+ arch/arm/boot/dts/sun6i-a31s-sina31s-core.dtsi           |  1 -
+ arch/arm/boot/dts/sun6i-a31s-yones-toptech-bs1078-v2.dts |  1 -
+ arch/arm/boot/dts/sun6i-reference-design-tablet.dtsi     |  1 -
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts                 |  1 -
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts              |  1 -
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts               |  1 -
+ arch/arm/boot/dts/sun7i-a20-hummingbird.dts              |  1 -
+ arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts                |  1 -
+ arch/arm/boot/dts/sun7i-a20-icnova-swac.dts              |  1 -
+ arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts                |  1 -
+ arch/arm/boot/dts/sun7i-a20-m3.dts                       |  1 -
+ arch/arm/boot/dts/sun7i-a20-mk808c.dts                   |  1 -
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts           |  1 -
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts           |  1 -
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts          |  1 -
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts          |  1 -
+ arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts            |  1 -
+ arch/arm/boot/dts/sun7i-a20-orangepi.dts                 |  1 -
+ arch/arm/boot/dts/sun7i-a20-pcduino3.dts                 |  1 -
+ arch/arm/boot/dts/sun7i-a20.dtsi                         |  1 -
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi                     |  1 -
+ arch/arm/boot/dts/sun8i-a23-evb.dts                      |  1 -
+ arch/arm/boot/dts/sun8i-a23-q8-tablet.dts                | 10 ----------
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts           |  1 -
+ arch/arm/boot/dts/sun8i-a83t.dtsi                        |  2 --
+ arch/arm/boot/dts/sun8i-h2-plus-orangepi-zero.dts        |  1 -
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts          |  1 -
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts                |  1 -
+ arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts            |  1 -
+ arch/arm/boot/dts/sun8i-h3-nanopi.dtsi                   |  1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts                |  1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts             |  1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts              |  1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts               |  1 -
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts              |  1 -
+ arch/arm/boot/dts/sun9i-a80-optimus.dts                  |  1 -
+ arch/arm/boot/dts/sun9i-a80.dtsi                         |  2 --
+ arch/arm/boot/dts/sunxi-common-regulators.dtsi           |  1 -
+ arch/arm/boot/dts/sunxi-reference-design-tablet.dtsi     |  1 -
+ 76 files changed, 88 deletions(-)
 
---UTZ8bGhNySVQ9LYl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYv2ShAAoJEGw4ysog2bOSVO8P/1HCR5l3Mi5bpF1QngeOf0Vw
-Q7djk6YNBPi4lFJUC+YjQKXWfS/VMj1iD/UXRuGId8/y5mYlTcmykjayKUxplnd9
-NBo4dhN+BgNIjQy7dtvnUVGHOxJcbV/ZVAoXz4BrBi5yZkSg86ZLMRTNafeYMeoi
-acG/6ZTb+qK0ea/xBkCdYtqKj2qoLB0tvWhcApv8X1VWEqsDp1YkEgJWLQGwQACY
-8ws35ty5GRZU4ui1H/Sqk3MS24rBAVfQvqSMlQ4ruh0MkvwEKWgYPGgnKwWCtnq/
-k1DMPfBdDc/lxcBHzGVO4TcDFWvjv6OrJ5X6aoAWieVujbR/TkqX63LfEmb7FSVV
-QXo2PFIKlufmYv2Z/s39JeV5suF835bx3ni2ay6kpBaQdzxkJfIMQM+SPyNgDl2u
-+64yxpV7CXFvpF23H74rR/gaJYZsQVXm7NmaaSXhRyAmYLQz+b3fqNgEKFbKt2Uu
-j+Imtp+FcPC4pjo1kYFjZ+IKB755mRyyBpJ1sOXXoWUoHbwECgtcW82arV/9WY/N
-ipx3qVuhlQL8ugEqbpT7RBiOskG/nBjcrqw6w3SxT1GFVh70pOHjaqL83yL2s5R8
-vF0cZaSwEIiKpfCwFdeY4iNXznfLjTjDOtClDlUAZCXy6C6RfHEfZLHb5CmpKswj
-3Zfk+55v+xHD6+PmBVJ+
-=dFD/
------END PGP SIGNATURE-----
-
---UTZ8bGhNySVQ9LYl--
+-- 
+2.11.0
