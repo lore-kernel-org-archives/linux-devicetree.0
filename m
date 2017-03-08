@@ -1,114 +1,131 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sun8i-codec: Remove analog "HP" widget" to the asoc
- tree
-Date: Wed, 08 Mar 2017 14:22:49 +0100
-Message-ID: <E1clbYH-0000Eb-1z@finisterre>
-References: <20170210094133.11382-2-mylene.josserand@free-electrons.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 3/4] Documentation: dt: Add bindings documentation for
+ CSI-2 Host Video Platform
+Date: Wed, 8 Mar 2017 15:18:25 +0200
+Message-ID: <20170308131824.GK3220@valkosipuli.retiisi.org.uk>
+References: <cover.1488885081.git.roliveir@synopsys.com>
+ <95825021f5eae29a118ce0a2570c5c1886023110.1488885081.git.roliveir@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0186801177740658231=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170210094133.11382-2-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, perex@perex.cz, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <95825021f5eae29a118ce0a2570c5c1886023110.1488885081.git.roliveir@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Benoit Parrot <bparrot@ti.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Hugues Fruchet <hugues.fruchet@st.com>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Minghsiu
 List-Id: devicetree@vger.kernel.org
 
---===============0186801177740658231==
-Content-Type: text/plain
+Hi Ramiro,
 
-The patch
+On Tue, Mar 07, 2017 at 02:37:50PM +0000, Ramiro Oliveira wrote:
+> Create device tree bindings documentation for the CSI-2 Host Video
+>  platform.
 
-   ASoC: sun8i-codec: Remove analog "HP" widget
+Extra space here.
 
-has been applied to the asoc tree at
+> 
+> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
+> ---
+>  .../devicetree/bindings/media/snps,plat-csi2.txt   | 77 ++++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/snps,plat-csi2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/snps,plat-csi2.txt b/Documentation/devicetree/bindings/media/snps,plat-csi2.txt
+> new file mode 100644
+> index 000000000000..f559257a0a44
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,plat-csi2.txt
+> @@ -0,0 +1,77 @@
+> +Synopsys DesignWare CSI-2 Host Video Platform
+> +
+> +The Synopsys DesignWare CSI-2 Host Video Device subsystem comprises of multiple
+> +sub-devices represented by separate device tree nodes. Currently this includes:
+> +plat-csi2, video-device, and dw-mipi-csi.
+> +
+> +The sub-subdevices are defined as child nodes of the common 'camera'.
+> +
+> +Common 'camera' node
+> +--------------------
+> +
+> +Required properties:
+> +
+> +- compatible: must be "snps,plat-csi2", "simple-bus"
+> +
+> +The 'camera' node must include at least one 'video-device' and one 'dw-mipi-csi'
+> +child node.
+> +
+> +'video-device' device nodes
+> +-------------------
+> +
+> +Required properties:
+> +
+> +- compatible: "snps,video-device"
+> +- dmas, dma-names: List of one DMA specifier and identifier string (as defined
+> +  in Documentation/devicetree/bindings/dma/dma.txt) per port. Each port
+> +  requires a DMA channel with the identifier string set to "vdma" followed by
+> +  the port index.
+> +
+> +Image sensor nodes
+> +------------------
+> +
+> +The sensor device nodes should be added to their control bus controller (e.g.
+> +I2C0) nodes and linked to a port node in the dw-mipi-csi,using the common video
+> +interfaces bindings, defined in video-interfaces.txt.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+You should defined which properties you explicitly support on endpoints and
+elsewhere. There are some optional ones for CSI-2, for instance.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> +
+> +Example:
+> +
+> +
+> +	camera {
+> +		compatible = "snps,plat-csi2", "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Is there something missing here?
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+> +			video_device: video-device@0x10000 {
+> +				compatible = "snps,video-device";
+> +				dmas = <&axi_vdma_0 0>;
+> +				dma-names = "vdma0";
+> +			};
+> +
+> +			csi2:	csi2@0x03000 {
+> +				compatible = "snps,dw-mipi-csi";
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				reg = < 0x03000 0x7FF>;
+> +				interrupts = <2>;
+> +				phys = <&mipi_phy_ctrl1 0>;
+> +				resets = <&csi2_rst 1>;
+> +
+> +				output-type = <2>;
+> +				ipi-mode = <0>;
+> +				ipi-color-mode = <0>;
+> +				ipi-auto-flush = <1>;
+> +				virtual-channel = <0>;
+> +
+> +				port@1 {
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+What are the valid ports for this device?
 
-Thanks,
-Mark
+> +					reg = <1>;
+> +					csi1_ep1: endpoint {
+> +						remote-endpoint = <&camera>;
+> +						data-lanes = <1 2>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +The dw-mipi-csi device binding is defined in snps,dw-mipi-csi.txt.
 
->From 4aa8146c89f336230de7f449805bd0edfc878fd4 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
- <mylene.josserand@free-electrons.com>
-Date: Fri, 10 Feb 2017 10:41:30 +0100
-Subject: [PATCH] ASoC: sun8i-codec: Remove analog "HP" widget
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-The "HP" widget is already present and take part to
-the analog part (sun8i-codec-analog).
-
-Remove it from the digital part as it is unnecessary.
-
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sunxi/sun8i-codec.c | 6 ------
- 1 file changed, 6 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index b92bdc8361af..d60f6fbd36a2 100644
---- a/sound/soc/sunxi/sun8i-codec.c
-+++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -321,8 +321,6 @@ static const struct snd_soc_dapm_widget sun8i_codec_dapm_widgets[] = {
- 			    SUN8I_MOD_RST_CTL_AIF1, 0, NULL, 0),
- 	SND_SOC_DAPM_SUPPLY("RST DAC", SUN8I_MOD_RST_CTL,
- 			    SUN8I_MOD_RST_CTL_DAC, 0, NULL, 0),
--
--	SND_SOC_DAPM_OUTPUT("HP"),
- };
- 
- static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
-@@ -344,10 +342,6 @@ static const struct snd_soc_dapm_route sun8i_codec_dapm_routes[] = {
- 	/* DAC Mixer Routes */
- 	{ "Left DAC Mixer", "LSlot 0", "Digital Left DAC"},
- 	{ "Right DAC Mixer", "RSlot 0", "Digital Right DAC"},
--
--	/* End of route : HP out */
--	{ "HP", NULL, "Left DAC Mixer" },
--	{ "HP", NULL, "Right DAC Mixer" },
- };
- 
- static struct snd_soc_dai_ops sun8i_codec_dai_ops = {
 -- 
-2.11.0
+Kind regards,
 
-
-
---===============0186801177740658231==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0186801177740658231==--
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
