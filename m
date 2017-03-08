@@ -1,90 +1,160 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v2 08/22] PCI: dwc: designware: Add EP mode support
-Date: Wed, 8 Mar 2017 15:33:36 +0000
-Message-ID: <32adcffc-4d63-5953-9e61-3f48773a5e14@synopsys.com>
-References: <1487325042-28227-1-git-send-email-kishon@ti.com>
- <1487325042-28227-9-git-send-email-kishon@ti.com>
- <45e5288e-d11f-c855-af9b-692a42d878c6@synopsys.com> <58BE42B2.20305@ti.com>
- <02461be2-268d-485a-2bc4-3b148726d37d@synopsys.com>
- <aa9835a7-07f4-d042-d04a-b0d9cc0ea3de@synopsys.com> <58BFEC7D.3090608@ti.com>
- <35d539ba-956f-330e-c28d-b67c3d414578@synopsys.com> <58C00798.1030302@ti.com>
- <650c53fc-482c-feab-faa3-c30689d3d128@synopsys.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 1/2] doc: bindings: Add bindings documentation for
+ mtd nvmem
+Date: Wed, 8 Mar 2017 17:25:04 +0100
+Message-ID: <20170308172504.7e7e75a5@bbrezillon>
+References: <1488875164-30440-1-git-send-email-albeu@free.fr>
+ <1488875164-30440-2-git-send-email-albeu@free.fr>
+ <20170307220107.03436537@bbrezillon>
+ <20170308162001.2b7e2304@avionic-0020>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <650c53fc-482c-feab-faa3-c30689d3d128@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
-Cc: linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20170308162001.2b7e2304@avionic-0020>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Alban <albeu@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-mtd@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Às 3:32 PM de 3/8/2017, Joao Pinto escreveu:
-> Às 1:31 PM de 3/8/2017, Kishon Vijay Abraham I escreveu:
->> Hi,
->>
->> On Wednesday 08 March 2017 05:07 PM, Joao Pinto wrote:
->>> Às 11:35 AM de 3/8/2017, Kishon Vijay Abraham I escreveu:
->>>> Hi,
->>>>
->>>> On Wednesday 08 March 2017 05:02 PM, Joao Pinto wrote:
->>>>>
->>>>> Hi Kishon,
->>>>>
->>>>>>> Can you provide PCIE_GET_ATU_INB_UNR_REG_OFFSET (similar to
->>>>>>> PCIE_GET_ATU_OUTB_UNR_REG_OFFSET)?
->>>>>>
->>>>>> Yes of course, I will send you the definition soon.
->>>>>
->>>>> As promissed here is the definition for Inbound:
->>>>>
->>>>> +/* register address builder */
->>>>> +#define PCIE_GET_ATU_INB_UNR_REG_ADDR(region, register)		\
->>>>> +					((0x3 << 20) | (region << 9) |	\
->>>>> +					(0x1 << 8) | (register << 2))
->>>>
->>>> Cool, thanks!
->>>
->>> No problem! If you have doubts, please let me know.
->>
->> Okay, so this looks slightly different than the outbound macro since it takes
->> the register argument. In the case of outbound PCIE_GET_ATU_OUTB_UNR_REG_OFFSET
->> returns the offset which was used like
->> dw_pcie_write_dbi(pci, base, offset + reg, 0x4, val);
->>
->> How should the value from PCIE_GET_ATU_INB_UNR_REG_ADDR be used?
+Hi Alban,
+
+On Wed, 8 Mar 2017 16:20:01 +0100
+Alban <albeu@free.fr> wrote:
+
+> On Tue, 7 Mar 2017 22:01:07 +0100
+> Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
 > 
-> My original way was this one:
+> > On Tue,  7 Mar 2017 09:26:03 +0100
+> > Alban <albeu@free.fr> wrote:
+> >   
+> > > Config data for drivers, like MAC addresses, is often stored in MTD.
+> > > Add a binding that define how such data storage can be represented in
+> > > device tree.
+> > > 
+> > > Signed-off-by: Alban <albeu@free.fr>
+> > > ---
+> > > Changelog:
+> > > v2: * Added a "Required properties" section with the nvmem-provider
+> > >       property
+> > > ---
+> > >  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 ++++++++++++++++++++++
+> > >  1 file changed, 33 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> > > new file mode 100644
+> > > index 0000000..8ed25e6
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> > > @@ -0,0 +1,33 @@
+> > > += NVMEM in MTD =
+> > > +
+> > > +Config data for drivers, like MAC addresses, is often stored in MTD.
+> > > +This binding define how such data storage can be represented in device tree.
+> > > +
+> > > +An MTD can be defined as an NVMEM provider by adding the `nvmem-provider`
+> > > +property to their node.    
+> > 
+> > If everyone agrees that this is actually needed, then it should
+> > definitely go in the nvmem binding doc, and we should patch all nvmem
+> > providers to define this property (even if we keep supporting nodes
+> > that are not defining it). I'm not fully convinced yet, but I might be
+> > wrong.  
 > 
-> +/* Register address builder */
-> +#define PCIE_GET_ATU_OUTB_UNR_REG_ADDR(region, register)		\
-> +					((0x3 << 20) | (region << 9) |	\
-> +					(register << 2))
+> I really like to hear what the DT people think about this.
+
+That was the plan.
+
 > 
-> Bjorn then converted to offset:
+> > I also think we should take the "nvmem under flash node without partitions"
+> > into account now, or at least have a clear plan on how we want to represent
+> > it.
+> > 
+> > Something like that?  
 > 
-> #define PCIE_GET_ATU_OUTB_UNR_REG_OFFSET(region)  ((0x3 << 20) | (region << 9))
+> Yes, but with the following extras:
 > 
-> and applied the <<2 shift to the ATU registers.
+> > 	flash {  
+>                 nvmem-provider;
+> > 		partitions {
+> > 			part@X {
+> > 				nvmem {  
+>   					compatible = "nvmem-cells";
+> > 					#address-cells = <1>;
+> > 					#size-cells = <1>;
+> > 
+> > 					cell@Y {
+> > 					};
+> > 				};
+> > 			};
+> > 		};
+> > 
+> > 		nvmem {  
+>   			compatible = "nvmem-cells";
+> > 			#address-cells = <1>;
+> > 			#size-cells = <1>;
+> > 
+> > 			cell@X {
+> > 			};
+> > 		};
+> > 	};
+> >
+> > Note that patching nvmem core to support the subnode case should be
+> > pretty easy (see below).  
 > 
-> So you can use:
+> This shouldn't be needed as nothing would change for the NVMEM devices,
+> what could be added is a check for the "nvmem-provider" property.
+> To support the proposed binding we would only need a minor change to
+> of_nvmem_cell_get():
 > 
-> #define PCIE_GET_ATU_INB_UNR_REG_ADDR(region, register)		\
-> 					((0x3 << 20) | (region << 9) |	\
-> 					(0x1 << 8)
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 408b521ee520..6231ea27c9f4 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -444,6 +444,10 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>         if (!config->dev)
+>                 return ERR_PTR(-EINVAL);
+> 
+> +       if (config->dev->of_node &&
+> +           !of_property_read_bool(config->dev->of_node, "nvmem-provider"))
+> +               return ERR_PTR(-ENODEV);
+> +
+>         nvmem = kzalloc(sizeof(*nvmem), GFP_KERNEL);
+>         if (!nvmem)
+>                 return ERR_PTR(-ENOMEM);
+> @@ -777,6 +781,15 @@ struct nvmem_cell *of_nvmem_cell_get(struct device_node *np,
+>         if (!nvmem_np)
+>                 return ERR_PTR(-EINVAL);
+> 
+> +       /* handle the new cell binding */
+> +       if (of_device_is_compatible(nvmem_np, "nvmem-cells")) {
+> +               nvmem_np = of_get_next_parent(cell_np);
+> +               if (!nvmem_np)
+> +                       return ERR_PTR(-EINVAL);
+> +               if (!of_property_read_bool(nvmem_np, "nvmem-provider"))
+> +                       return ERR_PTR(-ENODEV);
+> +       }
+> +
+>         nvmem = __nvmem_device_get(nvmem_np, NULL, NULL);
+>         if (IS_ERR(nvmem))
+>                 return ERR_CAST(nvmem);
 > 
 
-This one has the right name :)
+Yep, works too. Let's wait for a DT review, before taking a decision.
 
-#define PCIE_GET_ATU_INB_UNR_REG_OFFSET(region, register)		\
-					((0x3 << 20) | (region << 9) |	\
-					(0x1 << 8)
+Thanks,
 
+Boris
 
-> Thanks.
-> 
->>
->> Thanks
->> Kishon
->>
-> 
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
