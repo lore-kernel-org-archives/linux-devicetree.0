@@ -1,39 +1,52 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/3] usb: orion-echi: Add support for the Armada 3700
-Date: Wed, 8 Mar 2017 21:07:22 +0100
-Message-ID: <20170308210722.0054ccf5@free-electrons.com>
-References: <20170308162423.25553-1-gregory.clement@free-electrons.com>
- <20170308162423.25553-2-gregory.clement@free-electrons.com>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: [PATCH v2] ARM: zynq: Add #io-channel-cells to (x)adc node for iio-hwmon
+Date: Wed,  8 Mar 2017 12:11:24 -0800
+Message-ID: <1489003884-2489-1-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170308162423.25553-2-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, jinghua <jinghua@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Moritz Fischer <mdf@kernel.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, Julia Cartwright <julia@ni.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Fix
 
-On Wed,  8 Mar 2017 17:24:21 +0100, Gregory CLEMENT wrote:
+OF: /iio_hwmon: could not get #io-channel-cells for
+/amba/adc@f8007100
+OF: /iio_hwmon: could not get #io-channel-cells for
+/amba/adc@f8007100
+OF: /iio_hwmon: could not get #io-channel-cells for
+/amba/adc@f8007100
 
-> Signed-off-by: jinghua <jinghua@marvell.com>
+by adding the #io-channel-cells property.
 
-I think you need a full first name + last name for this Signed-off-by.
+Signed-off-by: Moritz Fischer <mdf@kernel.org>
+Cc: Michal Simek <michal.simek@xilinx.com>
+Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Julia Cartwright <julia@ni.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+---
 
-Best regards,
+Changes from v1:
+- fix messed up commit message
+---
+ arch/arm/boot/dts/zynq-7000.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thomas
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index f3ac9bf..98233a8 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -72,6 +72,7 @@
+ 			interrupts = <0 7 4>;
+ 			interrupt-parent = <&intc>;
+ 			clocks = <&clkc 12>;
++			#io-channel-cells = <1>;
+ 		};
+ 
+ 		can0: can@e0008000 {
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.7.4
