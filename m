@@ -1,54 +1,53 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 5/9] gpu: ipu-v3: document valid IPUv3 compatibles and
- extend for i.MX6 QuadPlus
-Date: Wed,  8 Mar 2017 12:13:17 +0100
-Message-ID: <20170308111321.3035-5-l.stach@pengutronix.de>
-References: <20170308111321.3035-1-l.stach@pengutronix.de>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v2 08/22] PCI: dwc: designware: Add EP mode support
+Date: Wed, 8 Mar 2017 11:32:58 +0000
+Message-ID: <aa9835a7-07f4-d042-d04a-b0d9cc0ea3de@synopsys.com>
+References: <1487325042-28227-1-git-send-email-kishon@ti.com>
+ <1487325042-28227-9-git-send-email-kishon@ti.com>
+ <45e5288e-d11f-c855-af9b-692a42d878c6@synopsys.com> <58BE42B2.20305@ti.com>
+ <02461be2-268d-485a-2bc4-3b148726d37d@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170308111321.3035-1-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <02461be2-268d-485a-2bc4-3b148726d37d@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RG9jdW1lbnQgdGhlIHZhbGlkIGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgdGhlIElQVXYzLgoKT24g
-aS5NWDYgUXVhZFBsdXMgdGhlIElQVSBuZWVkcyB0byBrbm93IHdoaWNoIFBSRyBoYXMgdG8gYmUK
-dXNlZCBmb3IgdGhpcyBJUFUgaW5zdGFuY2UuIEFkZCBhICJmc2wscHJnIiBwcm9wZXJ0eSBjb250
-YWluaW5nCmEgcGhhbmRsZSBwb2ludGluZyB0byB0aGUgY29ycmVjdCBQUkcgZGV2aWNlLgoKU2ln
-bmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQogRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4
-dCB8IDggKysrKysrKy0KIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9pbXgvZnNsLWlteC1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4dAppbmRleCA2MmViNjM3NjMwYjUuLmZhMDFk
-YjdlYjY2YyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlteC1kcm0udHh0CkBAIC0yMSwxMyArMjEsMTkgQEAg
-RnJlZXNjYWxlIGkuTVggSVBVdjMKID09PT09PT09PT09PT09PT09PT09CiAKIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6Ci0tIGNvbXBhdGlibGU6IFNob3VsZCBiZSAiZnNsLDxjaGlwPi1pcHUiCistIGNv
-bXBhdGlibGU6IFNob3VsZCBiZSAiZnNsLDxjaGlwPi1pcHUiIHdoZXJlIDxjaGlwPiBpcyBvbmUg
-b2YKKyAgLSBpbXg1MQorICAtIGlteDUzCisgIC0gaW14NnEKKyAgLSBpbXg2cXAKIC0gcmVnOiBz
-aG91bGQgYmUgcmVnaXN0ZXIgYmFzZSBhbmQgbGVuZ3RoIGFzIGRvY3VtZW50ZWQgaW4gdGhlCiAg
-IGRhdGFzaGVldAogLSBpbnRlcnJ1cHRzOiBTaG91bGQgY29udGFpbiBzeW5jIGludGVycnVwdCBh
-bmQgZXJyb3IgaW50ZXJydXB0LAogICBpbiB0aGlzIG9yZGVyLgogLSByZXNldHM6IHBoYW5kbGUg
-cG9pbnRpbmcgdG8gdGhlIHN5c3RlbSByZXNldCBjb250cm9sbGVyIGFuZAogICAgICAgICAgIHJl
-c2V0IGxpbmUgaW5kZXgsIHNlZSByZXNldC9mc2wsaW14LXNyYy50eHQgZm9yIGRldGFpbHMKK0Fk
-ZGl0aW9uYWwgcmVxdWlyZWQgcHJvcGVydGllcyBmb3IgZnNsLGlteDZxcC1pcHU6CistIGZzbCxw
-cmc6IHBoYW5kbGUgdG8gcHJnIG5vZGUgYXNzb2NpYXRlZCB3aXRoIHRoaXMgSVBVIGluc3RhbmNl
-CiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBwb3J0QFswLTNdOiBQb3J0IG5vZGVzIHdpdGggZW5k
-cG9pbnQgZGVmaW5pdGlvbnMgYXMgZGVmaW5lZCBpbgogICBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuCi0tIAoyLjExLjAKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+Hi Kishon,
+
+>> Can you provide PCIE_GET_ATU_INB_UNR_REG_OFFSET (similar to
+>> PCIE_GET_ATU_OUTB_UNR_REG_OFFSET)?
+> 
+> Yes of course, I will send you the definition soon.
+
+As promissed here is the definition for Inbound:
+
++/* register address builder */
++#define PCIE_GET_ATU_INB_UNR_REG_ADDR(region, register)		\
++					((0x3 << 20) | (region << 9) |	\
++					(0x1 << 8) | (register << 2))
+
+Thanks,
+Joao
+
+> 
+> Thanks,
+> Joao
+> 
+>>
+>> Thanks
+>> Kishon
+>>
+> 
