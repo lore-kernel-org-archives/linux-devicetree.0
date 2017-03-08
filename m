@@ -1,101 +1,73 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Wed, 8 Mar 2017 12:15:03 +0530
-Message-ID: <88ee6e44-7a4a-deba-879f-9fbd89b9cac4@codeaurora.org>
-References: <587C88FE.2040900@ti.com>
- <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
- <20170118182223.GP10531@minitux> <20170119004028.GA4857@codeaurora.org>
- <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org>
- <20170119214258.GD7829@codeaurora.org> <58871F6D.1090206@ti.com>
- <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
- <20170126234355.GF8801@codeaurora.org>
- <fa09ef66-9d0d-7817-b6f5-8f958344fbf3@codeaurora.org>
- <20170307140035.GA10239@codeaurora.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 1/5] arm64: dts: exynos: Add the burst and esc clock
+ frequency properties to DSI node
+Date: Wed, 8 Mar 2017 09:12:02 +0200
+Message-ID: <20170308071202.6fswc5v4bfwrckzz@kozik-lap>
+References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170308045502epcas1p2b16df118e0ad91dbd2446687dc5ee843@epcas1p2.samsung.com>
+ <1488948852-5380-2-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170307140035.GA10239@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1488948852-5380-2-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, jy0922.shim@samsung.com, andi.shyti@samsung.com, a.hajda@samsung.com, airlied@linux.ie, catalin.marinas@arm.com, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, inki.dae@samsung.com, javier@osg.samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 08, 2017 at 01:54:08PM +0900, Hoegeun Kwon wrote:
+> Add the burst and esc clock frequency properties to the parent (DSI node).
+> Currently the clock is parsed from the port node, while it should be
+> taken from the dsi node.
+> 
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+
+If anyone needs this, then:
 
 
-On 03/07/2017 07:30 PM, Stephen Boyd wrote:
-> (Not sure I replied so here it is)
->
-> On 01/27, Vivek Gautam wrote:
->>
->> On 01/27/2017 05:13 AM, Stephen Boyd wrote:
->>> On 01/24, Vivek Gautam wrote:
->>  From "./Documentation/devicetree/bindings/graph.txt" -
->> "The device tree graph bindings described herein abstract more complex
->> devices that can have multiple specifiable ports, each of which can be
->> linked to one or more ports of other devices."
->>
->> So, this means we use 'port', 'ports' and 'endpoint' for devices whose one
->> or more ports is connected to other device's one or more ports.
->>
->> I can use 'lane' for the node name here.
-> Ok.
->
->>>>                                  reg = <0x035000 0x130>,
->>>>                                          <0x035200 0x200>,
->>>>                                          <0x035400 0x1dc>;
->>>>                                  #phy-cells = <0>;
->>>>
->>>>                                  clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
->>>>                                  clock-names = "pipe0";
->>>>                                  resets = <&gcc GCC_PCIE_0_PHY_BCR>;
->>>>                                  reset-names = "lane0";
->>>>                          };
->>>>
->>>>                        pciephy_p1: port@1 {
->>>>                                  reg = <0x036000 0x130>,
->>>>                                          <0x036200 0x200>,
->>>>                                          <0x036400 0x1dc>;
->>>>                                  #phy-cells = <0>;
->>>>
->>>>                                  clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
->>>>                                  clock-names = "pipe1";
->>>>                                  resets = <&gcc GCC_PCIE_1_PHY_BCR>;
->>>>                                  reset-names = "lane1";
->>>>                          };
->>>>
->>>>                          pciephy_p2: port@2 {
->>>>                                  reg = <0x037000 0x130>,
->>>>                                          <0x037200 0x200>,
->>>>                                          <0x037400 0x1dc>;
->>>>                                  #phy-cells = <0>;
->>>>
->>>>                                  clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
->>>>                                  clock-names = "pipe2";
->>>>                                  resets = <&gcc GCC_PCIE_2_PHY_BCR>;
->>>>                                  reset-names = "lane2";
->>>>                          };
->>>>                  };
->>>> --------------------
->>>>
->>>> let me know if this looks okay.
->>>>
->>>>
->>> What's the plan for non-pcie qmp phy binding? In that case we
->>> don't have ports, so it gets folded into one node?
->>>
->> The non-pcie qmp phys still have one lane, that provides tx/rx.
->>
->> I am of the opinion that we don't have two different ways to create
->> phys in the driver, and keep one port/lane for such phys in dt.
->>
-> Ok so we would still have a subnode in that case. Sounds ok.
+The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
 
-Cool.
+  Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
 
-Thanks
-Vivek
+are available in the git repository at:
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+  git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt64-clock-dsi-property-4.12
+
+for you to fetch changes up to e3c07546747cdec07ff15c984bc6cebc9c9f788c:
+
+  arm64: dts: exynos: Add the burst and esc clock frequency properties to DSI node (2017-03-08 08:55:39 +0200)
+
+----------------------------------------------------------------
+Add the burst and esc clock frequency properties to DSI node in Exynos ARM64
+DeviceTree, before the OF graph could be parsed.
+
+----------------------------------------------------------------
+Andi Shyti (2):
+      arm64: dts: exynos: Enable ir-spi in the TM2 and TM2E boards
+      arm64: dts: exynos: Add stmfts touchscreen node for TM2 and TM2E
+
+Hoegeun Kwon (1):
+      arm64: dts: exynos: Add the burst and esc clock frequency properties to DSI node
+
+Hyungwon Hwang (1):
+      arm64: dts: exynos: Add support for S6E3HA2 panel device on TM2 board
+
+ .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 43 +++++++++++++++++++++-
+ arch/arm64/boot/dts/exynos/exynos5433-tm2.dts      | 17 +++++++++
+ arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     |  7 ++++
+ 3 files changed, 65 insertions(+), 2 deletions(-)
