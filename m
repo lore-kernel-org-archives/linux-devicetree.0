@@ -1,131 +1,49 @@
-From: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Subject: [PATCH 2/2] [kernel] ARM: lpc32xx: drop CLCD configuration
-Date: Wed,  8 Mar 2017 12:46:38 -0500
-Message-ID: <20170308174638.25578-3-slemieux.tyco@gmail.com>
-References: <20170308174638.25578-1-slemieux.tyco@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170308174638.25578-1-slemieux.tyco@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: vz@mleia.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Subject: [PATCH 2/2 v3] dt-bindings: display: imx: entry for AUS mode
+Date: Wed,  8 Mar 2017 19:22:56 +0100
+Message-ID: <1488997376-1564-2-git-send-email-martin@kaiser.cx>
+References: <1488193030-13064-1-git-send-email-martin@kaiser.cx>
+ <1488997376-1564-1-git-send-email-martin@kaiser.cx>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488997376-1564-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Liam Beguin <lbeguin@tycoint.com>
+Allow setting the AUS mode for a display from the device tree.
+Use an optional boolean property. AUS mode can be set only on imx21
+and compatible chipsets.
 
-Drop the CLCD configurations and custom functions
-since it's now done using the devicetree.
-
-Signed-off-by: Liam Beguin <lbeguin@tycoint.com>
-Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
+Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 ---
- arch/arm/mach-lpc32xx/phy3250.c | 70 -----------------------------------------
- 1 file changed, 70 deletions(-)
+v3:
+   use a boolean DT property instead of the register value
+   separate patches for DT binding and code changes
 
-diff --git a/arch/arm/mach-lpc32xx/phy3250.c b/arch/arm/mach-lpc32xx/phy3250.c
-index 6c52bd32610e..97bffd9324f3 100644
---- a/arch/arm/mach-lpc32xx/phy3250.c
-+++ b/arch/arm/mach-lpc32xx/phy3250.c
-@@ -24,8 +24,6 @@
- #include <linux/irq.h>
- #include <linux/dma-mapping.h>
- #include <linux/gpio.h>
--#include <linux/amba/bus.h>
--#include <linux/amba/clcd.h>
- #include <linux/amba/pl08x.h>
- #include <linux/amba/mmci.h>
- #include <linux/of.h>
-@@ -45,73 +43,6 @@
- #include <mach/board.h>
- #include "common.h"
+v2:
+   re-sending DT bindings and code changes as one patch
+
+ Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+index 7a5c0e2..cacae0e 100644
+--- a/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
++++ b/Documentation/devicetree/bindings/display/imx/fsl,imx-fb.txt
+@@ -13,6 +13,8 @@ Required nodes:
+ 	Additional, the display node has to define properties:
+ 	- bits-per-pixel: Bits per pixel
+ 	- fsl,pcr: LCDC PCR value
++	A display node may optionally define
++	- fsl,aus_mode: boolean to enable AUS mode (only for imx21)
  
--/*
-- * AMBA LCD controller
-- */
--static struct clcd_panel conn_lcd_panel = {
--	.mode		= {
--		.name		= "QVGA portrait",
--		.refresh	= 60,
--		.xres		= 240,
--		.yres		= 320,
--		.pixclock	= 191828,
--		.left_margin	= 22,
--		.right_margin	= 11,
--		.upper_margin	= 2,
--		.lower_margin	= 1,
--		.hsync_len	= 5,
--		.vsync_len	= 2,
--		.sync		= 0,
--		.vmode		= FB_VMODE_NONINTERLACED,
--	},
--	.width		= -1,
--	.height		= -1,
--	.tim2		= (TIM2_IVS | TIM2_IHS),
--	.cntl		= (CNTL_BGR | CNTL_LCDTFT | CNTL_LCDVCOMP(1) |
--				CNTL_LCDBPP16_565),
--	.bpp		= 16,
--};
--#define PANEL_SIZE (3 * SZ_64K)
--
--static int lpc32xx_clcd_setup(struct clcd_fb *fb)
--{
--	dma_addr_t dma;
--
--	fb->fb.screen_base = dma_alloc_wc(&fb->dev->dev, PANEL_SIZE, &dma,
--					  GFP_KERNEL);
--	if (!fb->fb.screen_base) {
--		printk(KERN_ERR "CLCD: unable to map framebuffer\n");
--		return -ENOMEM;
--	}
--
--	fb->fb.fix.smem_start = dma;
--	fb->fb.fix.smem_len = PANEL_SIZE;
--	fb->panel = &conn_lcd_panel;
--
--	return 0;
--}
--
--static int lpc32xx_clcd_mmap(struct clcd_fb *fb, struct vm_area_struct *vma)
--{
--	return dma_mmap_wc(&fb->dev->dev, vma, fb->fb.screen_base,
--			   fb->fb.fix.smem_start, fb->fb.fix.smem_len);
--}
--
--static void lpc32xx_clcd_remove(struct clcd_fb *fb)
--{
--	dma_free_wc(&fb->dev->dev, fb->fb.fix.smem_len, fb->fb.screen_base,
--		    fb->fb.fix.smem_start);
--}
--
--static struct clcd_board lpc32xx_clcd_data = {
--	.name		= "Phytec LCD",
--	.check		= clcdfb_check,
--	.decode		= clcdfb_decode,
--	.setup		= lpc32xx_clcd_setup,
--	.mmap		= lpc32xx_clcd_mmap,
--	.remove		= lpc32xx_clcd_remove,
--};
--
- static struct pl08x_channel_data pl08x_slave_channels[] = {
- 	{
- 		.bus_id = "nand-slc",
-@@ -161,7 +92,6 @@ static struct lpc32xx_mlc_platform_data lpc32xx_mlc_data = {
- static const struct of_dev_auxdata lpc32xx_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl022", 0x20084000, "dev:ssp0", NULL),
- 	OF_DEV_AUXDATA("arm,pl022", 0x2008C000, "dev:ssp1", NULL),
--	OF_DEV_AUXDATA("arm,pl110", 0x31040000, "dev:clcd", &lpc32xx_clcd_data),
- 	OF_DEV_AUXDATA("arm,pl080", 0x31000000, "pl08xdmac", &pl08x_pd),
- 	OF_DEV_AUXDATA("arm,pl18x", 0x20098000, "20098000.sd",
- 		       &lpc32xx_mmci_data),
+ Optional properties:
+ - lcd-supply: Regulator for LCD supply voltage.
 -- 
-2.11.0
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
