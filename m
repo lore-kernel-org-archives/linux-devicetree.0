@@ -1,68 +1,72 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: mvebu: add support for the Linksys WRT1900ACS
- (Shelby)
-Date: Wed, 08 Mar 2017 09:54:16 +0100
-Message-ID: <8737eono7b.fsf@free-electrons.com>
-References: <20170214191744.9419-1-ralph.sennhauser@gmail.com>
- <87inobcwk3.fsf@free-electrons.com>
- <87zigxngjq.fsf@free-electrons.com>
- <20170307184847.0c684b36@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 11/15] drm/sun4i: tcon: Fix tcon channel 1
+ backporch calculation
+Date: Wed, 8 Mar 2017 09:55:41 +0100
+Message-ID: <20170308085541.p75lt7hmjzbzzpem@lukather>
+References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <475aeed1da40d46d8e50420c281a74c32b78c730.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v64gJ13DB3UxfG7DnJCzE+CZ02repkX8=iOQASsHw2cG5A@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170307184847.0c684b36@gmail.com> (Ralph Sennhauser's message
- of "Tue, 7 Mar 2017 18:48:47 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3ekb4dmocyjhfaca"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDUO77CQKGQEVOIC5LY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64gJ13DB3UxfG7DnJCzE+CZ02repkX8=iOQASsHw2cG5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ralph,
- 
- On mar., mars 07 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com> wrote:
 
-> On Tue, 07 Mar 2017 18:27:21 +0100
-> Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
->> 
->> It is now in mvebu/dt and in the same time I fixed the title to:
->> "ARM: dts: armada-385: add support for the Linksys WRT1900ACS
->> (Shelby)"
->> 
->> Gregory
->> 
->
-> Thanks
-> Ralph
->
-> PS: The sort order got mixed with armada-385-synology-ds116.dtb while
-> merging which got added minutes earlier in arch/arm/boot/dts/Makefile.
+--3ekb4dmocyjhfaca
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Thanks for info, I've fixed it now.
+On Wed, Mar 08, 2017 at 12:25:59PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Mar 7, 2017 at 4:56 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > It seems like what's called a backporch in the datasheet is actually the
+> > backporch plus the sync period. Fix that in our driver.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun4i_tcon.c | 5 ++---
+> >  1 file changed, 2 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > index 93249c5ab1e4..e44217fb4f6f 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > @@ -240,15 +240,14 @@ void sun4i_tcon1_mode_set(struct sun4i_tcon *tcon, struct drm_encoder *encoder,
+> >                      SUN4I_TCON1_BASIC2_Y(mode->crtc_vdisplay));
+> >
+> >         /* Set horizontal display timings */
+> > -       bp = mode->crtc_htotal - mode->crtc_hsync_end;
+> > +       bp = mode->crtc_htotal - mode->crtc_hsync_start;
+> >         DRM_DEBUG_DRIVER("Setting horizontal total %d, backporch %d\n",
+> >                          mode->htotal, bp);
+> >         regmap_write(tcon->regs, SUN4I_TCON1_BASIC3_REG,
+> >                      SUN4I_TCON1_BASIC3_H_TOTAL(mode->crtc_htotal) |
+> >                      SUN4I_TCON1_BASIC3_H_BACKPORCH(bp));
+> >
+> > -       /* Set vertical display timings */
+> 
+> Why remove the comment?
 
->
-> PPS: There was also the request of using SPDX tags to v1 after v2 got
-> merged from Rob Herring and a no by Russell King. I took it as no
-> action required, you might want to have a look though.
+I have no idea :)
 
-I saw this and it was the first time I see this kind of request about
-SPDX tags. Given the answer from Russell Kng I don't plan to do
-anything for now.
-
-Thanks,
-
-Gregory
+This will be fixed. Thanks!
+Maxime
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
 http://free-electrons.com
+--3ekb4dmocyjhfaca--
