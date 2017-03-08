@@ -1,34 +1,32 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: added ecc register address to sata node
- on ls1043a
-Date: Wed, 8 Mar 2017 15:06:14 +0100
-Message-ID: <20170308140613.GD19934@x250>
-References: <1486621755-6567-1-git-send-email-yuantian.tang@nxp.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/9] ARM: dts: support I2SE Duckbill devices
+Date: Wed, 8 Mar 2017 15:21:17 +0100
+Message-ID: <20170308142115.GE19934@x250>
+References: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486621755-6567-1-git-send-email-yuantian.tang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: yuantian.tang@nxp.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1486626169-20022-1-git-send-email-michael.heimpold-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Heimpold <michael.heimpold-eS4NqCHxEME@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 02:29:14PM +0800, yuantian.tang@nxp.com wrote:
-> From: Tang Yuantian <Yuantian.Tang@nxp.com>
-> 
-> For ls1043 sata, ecc should be disabled due to a erratum.
-> Provide the ecc register address for driver to use.
-> 
-> Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
+On Thu, Feb 09, 2017 at 08:42:40AM +0100, Michael Heimpold wrote:
+> Michael Heimpold (9):
+>   ARM: dts: imx28: add alternative pinmuxing for mmc2
+>   ARM: dts: imx28: rename mmc2_sck_cfg
+>   ARM: dts: imx28: add alternative muxing for mmc2_sck_cfg
+>   ARM: dts: imx28-duckbill: update to match vendor distributed DT
+>   dt-bindings: arm: add entries for I2SE boards
+>   ARM: dts: add support for I2SE Duckbill 2 boards
+>   ARM: dts: add support for I2SE Duckbill 2 485
+>   ARM: dts: add support for I2SE Duckbill 2 EnOcean
+>   ARM: dts: add support for I2SE Duckbill 2 SPI
 
-Applied both, thanks.
+Applied all, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
