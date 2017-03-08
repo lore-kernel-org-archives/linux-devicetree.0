@@ -1,49 +1,101 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: [PATCH 5/5] ASoC: cs35l35: Add IRQF_SHARED to IRQ flags
-Date: Wed, 8 Mar 2017 16:42:51 +0000
-Message-ID: <1488991371-22513-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1488991371-22513-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 1/3] usb: orion-echi: Add support for the Armada 3700
+Date: Wed, 8 Mar 2017 17:56:35 +0100
+Message-ID: <20170308165635.GB32355@lunn.ch>
+References: <20170308162423.25553-1-gregory.clement@free-electrons.com>
+ <20170308162423.25553-2-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1488991371-22513-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, lgirdwood@gmail.com, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170308162423.25553-2-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, jinghua <jinghua@marvell.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-As it is quite common to use a stereo pair of amps but share the IRQ
-line between them both add the IRQF_SHARED flag whilst requesting
-cs35l35's IRQ.
+Hi Gregory
 
-Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
----
- sound/soc/codecs/cs35l35.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> - Add a new compatoble string for the Armada 3700 SoCs
 
-diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
-index 99bcdb9..7c4d74e 100644
---- a/sound/soc/codecs/cs35l35.c
-+++ b/sound/soc/codecs/cs35l35.c
-@@ -1427,8 +1427,8 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
- 	init_completion(&cs35l35->pdn_done);
- 
- 	ret = devm_request_threaded_irq(dev, i2c_client->irq, NULL, cs35l35_irq,
--					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
--					"cs35l35", cs35l35);
-+					IRQF_ONESHOT | IRQF_TRIGGER_LOW |
-+					IRQF_SHARED, "cs35l35", cs35l35);
- 	if (ret != 0) {
- 		dev_err(dev, "Failed to request IRQ: %d\n", ret);
- 		goto err;
--- 
-2.1.4
+compatible
+
+> 
+> - add sbuscfg support for orion usb controller driver. For the SoCs
+>   without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
+>   register to guarantee the AHB master's burst would not overrun or
+>   underrun the FIFO.
+> 
+> - the sbuscfg register has to be set after the usb controller reset,
+>   otherwise the value would be overridden to 0. In order to do this, the
+>   reset callback is registered.
+> 
+> [gregory.clement@free-electrons.com: - reword commit and comments
+> 				     - fix checkpatch warning]
+> Signed-off-by: jinghua <jinghua@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
+>  drivers/usb/host/ehci-orion.c                      | 39 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> index 17c3bc858b86..9dfffc9dffec 100644
+> --- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> +++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> @@ -1,7 +1,9 @@
+>  * EHCI controller, Orion Marvell variants
+>  
+>  Required properties:
+> -- compatible: must be "marvell,orion-ehci"
+> +- compatible: could be one of the following
+
+must, not could.
+
+> +	"marvell,orion-ehci"
+> +	"marvell,armada-3700-ehci"
+>  - reg: physical base address of the controller and length of memory mapped
+>    region.
+>  - interrupts: The EHCI interrupt
+> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+> index ee8d5faa0194..cf778e166b90 100644
+> --- a/drivers/usb/host/ehci-orion.c
+> +++ b/drivers/usb/host/ehci-orion.c
+> @@ -47,6 +47,21 @@
+>  #define USB_PHY_IVREF_CTRL	0x440
+>  #define USB_PHY_TST_GRP_CTRL	0x450
+>  
+> +#define USB_SBUSCFG		0x90
+> +#define	    USB_SBUSCFG_BAWR	    0x6
+> +#define	    USB_SBUSCFG_BARD	    0x3
+> +#define	    USB_SBUSCFG_AHBBRST	    0x0
+
+These three are all shifts. So i would suggest adding _SHIFT to the
+end.
+
+> +
+> +/* BAWR = BARD = 3 : Align read/write bursts packets larger than 128 bytes */
+> +#define USB_SBUSCFG_BAWR_ALIGN_128B	0x3
+> +#define USB_SBUSCFG_BARD_ALIGN_128B	0x3
+> +/* AHBBRST = 3	   : Align AHB Burst to INCR16 (64 bytes) */
+> +#define USB_SBUSCFG_AHBBRST_INCR16	0x3
+
+You can then apply the shift here.
+
+> +
+> +#define USB_SBUSCFG_DEF_VAL ((USB_SBUSCFG_BAWR_ALIGN_128B << USB_SBUSCFG_BAWR) \
+> +		     | (USB_SBUSCFG_BARD_ALIGN_128B << USB_SBUSCFG_BARD) \
+> +		     | (USB_SBUSCFG_AHBBRST_INCR16 << USB_SBUSCFG_AHBBRST))
+
+and this is then shorted.
+
+    Andrew
