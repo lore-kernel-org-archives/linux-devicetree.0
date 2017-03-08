@@ -1,131 +1,66 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 3/4] Documentation: dt: Add bindings documentation for
- CSI-2 Host Video Platform
-Date: Wed, 8 Mar 2017 15:18:25 +0200
-Message-ID: <20170308131824.GK3220@valkosipuli.retiisi.org.uk>
-References: <cover.1488885081.git.roliveir@synopsys.com>
- <95825021f5eae29a118ce0a2570c5c1886023110.1488885081.git.roliveir@synopsys.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 08/22] PCI: dwc: designware: Add EP mode support
+Date: Wed, 8 Mar 2017 19:01:04 +0530
+Message-ID: <58C00798.1030302@ti.com>
+References: <1487325042-28227-1-git-send-email-kishon@ti.com>
+ <1487325042-28227-9-git-send-email-kishon@ti.com>
+ <45e5288e-d11f-c855-af9b-692a42d878c6@synopsys.com> <58BE42B2.20305@ti.com>
+ <02461be2-268d-485a-2bc4-3b148726d37d@synopsys.com>
+ <aa9835a7-07f4-d042-d04a-b0d9cc0ea3de@synopsys.com> <58BFEC7D.3090608@ti.com>
+ <35d539ba-956f-330e-c28d-b67c3d414578@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <95825021f5eae29a118ce0a2570c5c1886023110.1488885081.git.roliveir@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Benoit Parrot <bparrot@ti.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Hugues Fruchet <hugues.fruchet@st.com>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Kamil Debski <k.debski@samsung.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Minghsiu
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <35d539ba-956f-330e-c28d-b67c3d414578@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
+Hi,
 
-On Tue, Mar 07, 2017 at 02:37:50PM +0000, Ramiro Oliveira wrote:
-> Create device tree bindings documentation for the CSI-2 Host Video
->  platform.
+On Wednesday 08 March 2017 05:07 PM, Joao Pinto wrote:
+> =C0s 11:35 AM de 3/8/2017, Kishon Vijay Abraham I escreveu:
+>> Hi,
+>>
+>> On Wednesday 08 March 2017 05:02 PM, Joao Pinto wrote:
+>>>
+>>> Hi Kishon,
+>>>
+>>>>> Can you provide PCIE_GET_ATU_INB_UNR_REG_OFFSET (similar to
+>>>>> PCIE_GET_ATU_OUTB_UNR_REG_OFFSET)?
+>>>>
+>>>> Yes of course, I will send you the definition soon.
+>>>
+>>> As promissed here is the definition for Inbound:
+>>>
+>>> +/* register address builder */
+>>> +#define PCIE_GET_ATU_INB_UNR_REG_ADDR(region, register)		\
+>>> +					((0x3 << 20) | (region << 9) |	\
+>>> +					(0x1 << 8) | (register << 2))
+>>
+>> Cool, thanks!
+> =
 
-Extra space here.
+> No problem! If you have doubts, please let me know.
 
-> 
-> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-> ---
->  .../devicetree/bindings/media/snps,plat-csi2.txt   | 77 ++++++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/snps,plat-csi2.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/snps,plat-csi2.txt b/Documentation/devicetree/bindings/media/snps,plat-csi2.txt
-> new file mode 100644
-> index 000000000000..f559257a0a44
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/snps,plat-csi2.txt
-> @@ -0,0 +1,77 @@
-> +Synopsys DesignWare CSI-2 Host Video Platform
-> +
-> +The Synopsys DesignWare CSI-2 Host Video Device subsystem comprises of multiple
-> +sub-devices represented by separate device tree nodes. Currently this includes:
-> +plat-csi2, video-device, and dw-mipi-csi.
-> +
-> +The sub-subdevices are defined as child nodes of the common 'camera'.
-> +
-> +Common 'camera' node
-> +--------------------
-> +
-> +Required properties:
-> +
-> +- compatible: must be "snps,plat-csi2", "simple-bus"
-> +
-> +The 'camera' node must include at least one 'video-device' and one 'dw-mipi-csi'
-> +child node.
-> +
-> +'video-device' device nodes
-> +-------------------
-> +
-> +Required properties:
-> +
-> +- compatible: "snps,video-device"
-> +- dmas, dma-names: List of one DMA specifier and identifier string (as defined
-> +  in Documentation/devicetree/bindings/dma/dma.txt) per port. Each port
-> +  requires a DMA channel with the identifier string set to "vdma" followed by
-> +  the port index.
-> +
-> +Image sensor nodes
-> +------------------
-> +
-> +The sensor device nodes should be added to their control bus controller (e.g.
-> +I2C0) nodes and linked to a port node in the dw-mipi-csi,using the common video
-> +interfaces bindings, defined in video-interfaces.txt.
+Okay, so this looks slightly different than the outbound macro since it tak=
+es
+the register argument. In the case of outbound PCIE_GET_ATU_OUTB_UNR_REG_OF=
+FSET
+returns the offset which was used like
+dw_pcie_write_dbi(pci, base, offset + reg, 0x4, val);
 
-You should defined which properties you explicitly support on endpoints and
-elsewhere. There are some optional ones for CSI-2, for instance.
+How should the value from PCIE_GET_ATU_INB_UNR_REG_ADDR be used?
 
-> +
-> +Example:
-> +
-> +
-> +	camera {
-> +		compatible = "snps,plat-csi2", "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-
-Is there something missing here?
-
-> +			video_device: video-device@0x10000 {
-> +				compatible = "snps,video-device";
-> +				dmas = <&axi_vdma_0 0>;
-> +				dma-names = "vdma0";
-> +			};
-> +
-> +			csi2:	csi2@0x03000 {
-> +				compatible = "snps,dw-mipi-csi";
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +				reg = < 0x03000 0x7FF>;
-> +				interrupts = <2>;
-> +				phys = <&mipi_phy_ctrl1 0>;
-> +				resets = <&csi2_rst 1>;
-> +
-> +				output-type = <2>;
-> +				ipi-mode = <0>;
-> +				ipi-color-mode = <0>;
-> +				ipi-auto-flush = <1>;
-> +				virtual-channel = <0>;
-> +
-> +				port@1 {
-
-What are the valid ports for this device?
-
-> +					reg = <1>;
-> +					csi1_ep1: endpoint {
-> +						remote-endpoint = <&camera>;
-> +						data-lanes = <1 2>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +The dw-mipi-csi device binding is defined in snps,dw-mipi-csi.txt.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Thanks
+Kishon
