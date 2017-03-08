@@ -1,14 +1,13 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [linux-sunxi] [PATCH 5/15] clk: sunxi-ng: sun5i: Export video PLLs
-Date: Wed, 8 Mar 2017 09:58:13 +0100
-Message-ID: <20170308085813.ijwsdiip5wdrwnb4@lukather>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
- <4bb77a9793d4ba25bf633eff6abe41910bb7fc3c.1488876832.git-series.maxime.ripard@free-electrons.com>
- <CAGRGNgUvNgQonORN0iTV-e2NJzUJpzQUnn13w+C7MwzvR8uZUQ@mail.gmail.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 1/4] qxl: drop mode_info.modes & related code.
+Date: Wed,  8 Mar 2017 10:19:02 +0100
+Message-ID: <1488964751-22763-3-git-send-email-kraxel@redhat.com>
+References: <1488964751-22763-1-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2132963379=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGRGNgUvNgQonORN0iTV-e2NJzUJpzQUnn13w+C7MwzvR8uZUQ@mail.gmail.com>
+In-Reply-To: <1488964751-22763-1-git-send-email-kraxel@redhat.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,102 +17,61 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Julian Calaby <julian.calaby@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "Mailing List,
- Arm" <linux-arm-kernel@lists.infradead.org>
+To: linux-rpi-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, ulf.hansson@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>, "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <virtualization@lists.linux-foundation.org>, Gerd Hoffmann <kraxel@redhat.com>, stefan.wahren@i2se.com, f.fainelli@gmail.com, lee@kernel.org, linux@armlinux.org.uk, bcm-kernel-feedback-list@broadcom.com, Dave Airlie <airlied@redhat.com>, devicetree@vger.kernel.org, rjui@broadcom.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, sbranden@broadcom.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============2132963379==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="koor6xchwoiplnj2"
-Content-Disposition: inline
-
-
---koor6xchwoiplnj2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Julian,
-
-On Tue, Mar 07, 2017 at 09:21:19PM +1100, Julian Calaby wrote:
-> Hi Maxime,
->=20
-> On Tue, Mar 7, 2017 at 7:56 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > The video PLLs are used directly by the HDMI controller. Export them so
-> > that we can use them in our DT node.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> >  drivers/clk/sunxi-ng/ccu-sun5i.h      | 6 ++++--
-> >  include/dt-bindings/clock/sun5i-ccu.h | 3 +++
-> >  2 files changed, 7 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/clk/sunxi-ng/ccu-sun5i.h b/drivers/clk/sunxi-ng/cc=
-u-sun5i.h
-> > index 8144487eb7ca..16f7aa92957e 100644
-> > --- a/drivers/clk/sunxi-ng/ccu-sun5i.h
-> > +++ b/drivers/clk/sunxi-ng/ccu-sun5i.h
-> > @@ -28,15 +28,17 @@
-> >  #define CLK_PLL_AUDIO_4X       6
-> >  #define CLK_PLL_AUDIO_8X       7
-> >  #define CLK_PLL_VIDEO0         8
-> > -#define CLK_PLL_VIDEO0_2X      9
-> > +
-> > +/* The PLL_VIDEO0_2X is exported for HDMI */
-> > +
-> >  #define CLK_PLL_VE             10
-> >  #define CLK_PLL_DDR_BASE       11
-> >  #define CLK_PLL_DDR            12
-> >  #define CLK_PLL_DDR_OTHER      13
-> >  #define CLK_PLL_PERIPH         14
-> >  #define CLK_PLL_VIDEO1         15
-> > -#define CLK_PLL_VIDEO1_2X      16
-> >
-> > +/* The PLL_VIDEO0_2X is exported for HDMI */
->=20
-> PLL_VIDEO*1*_2X, right?
-
-Good catch, I'll fix it. Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---koor6xchwoiplnj2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYv8elAAoJEBx+YmzsjxAgHb8QAIkagbWudUksxLDQjOC3Q/VG
-oWkTzSIPbyt5Hg7hrimpvPr1Sgsn22xdk/lZYv2rYnlN6kIVKm/7GlBDRSx18jcV
-SEaA4ImOMF0GZ6EKxrr7Ehoi+spHJiwIgtTxNQK2N3PCE5MOjmoSIIWk3Yd9ajLq
-QBfgAhsTc+A7hv8Evop5oayUSlhRdcoYK440dh0hcHNSULhHmXXmPMvUkdjq/uwJ
-osaB29OtD+f1dItlo+10Gxypc1fGKnejADrscyFst6h+MaIARxCB11AT4BGROxMR
-WefiZvI3x9ixgafVlRZ+0PFRLwS6obglYqo76B/AHTx6isxtiY7VOmTj/1p6qiOX
-Q53F73ricbgt5+ayfPd8T9UzSJk7XxFwSEUO2Q5ZlQPn/cs0y7lbGPS+aeuklG66
-k5I8qg8V2Pnw7pBFE5MfyWn3qQC4KKcqgdYCZoqcWVAus1Dn5f3RkJKZp0L9wsT9
-KJhZW/fMnijvw9mqCjSkA4Qg6eeanWZTa2OvTG7qu7amS6FcO/h4Gzi47qgU83Yi
-9vB1MH5Ct7nlEq7waLSBL5s6mFWRbyhbnLOuLOiUnBVDXYiix1kEqw0DDfGo7B9k
-coRZIVkPl1b1ATyCA4WVUNP8x9zXWmUqCi4xjlRKlXG3HJ0r0UpY4qPA05unrEh9
-hZndP7p4AehRQY+2OeWo
-=M/2G
------END PGP SIGNATURE-----
-
---koor6xchwoiplnj2--
-
---===============2132963379==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============2132963379==--
+dmVyeSBvbGQgcXhsIGhhcmR3YXJlIHJldmlzaW9ucyAocHJlZGF0aW5nIHF4bCBrc20gc3VwcG9y
+dCBieSBhIGZldwp5ZWFycykgc3VwcG9ydGVkIGEgZml4ZWQgbGlzdCBvZiB2aWRlbyBtb2RlcyBv
+bmx5LiAgVGhlIGxpc3QgaXMgc3RpbGwKcHJvdmlkZWQgYnkgdGhlIHZpcnR1YWwgaGFyZHdhcmUs
+IGZvciBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IHJlYXNvbnMuCgpUaGUgcXhsIGttcyBkcml2ZXIg
+bmV2ZXIgZXZlciBsb29rcyBhdCBpdCwgZXhjZXB0IGZvciBkdW1waW5nIGl0IHRvCnRoZSBrZXJu
+ZWwgbG9nIGF0IGxvYWQgdGltZSBpbiBjYXNlIGRlYnVnIGxvZ2dpbmcgaXMgZW5hYmxlZC4gIERy
+b3AKdGhhdCBwb2ludGxlc3MgY29kZS4KClNpZ25lZC1vZmYtYnk6IEdlcmQgSG9mZm1hbm4gPGty
+YXhlbEByZWRoYXQuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9xeGwvcXhsX2Rydi5oIHwgIDIg
+LS0KIGRyaXZlcnMvZ3B1L2RybS9xeGwvcXhsX2ttcy5jIHwgMjIgLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLQogMiBmaWxlcyBjaGFuZ2VkLCAyNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vcXhsL3F4bF9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS9xeGwvcXhsX2Rydi5o
+CmluZGV4IDBjMzEzZTUuLmZlOTBiMzYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9xeGwv
+cXhsX2Rydi5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9xeGwvcXhsX2Rydi5oCkBAIC0xNjAsOCAr
+MTYwLDYgQEAgc3RydWN0IHF4bF9tbWFuIHsKIH07CiAKIHN0cnVjdCBxeGxfbW9kZV9pbmZvIHsK
+LQlpbnQgbnVtX21vZGVzOwotCXN0cnVjdCBxeGxfbW9kZSAqbW9kZXM7CiAJYm9vbCBtb2RlX2Nv
+bmZpZ19pbml0aWFsaXplZDsKIAogCS8qIHBvaW50ZXIgdG8gZmJkZXYgaW5mbyBzdHJ1Y3R1cmUg
+Ki8KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9xeGwvcXhsX2ttcy5jIGIvZHJpdmVycy9n
+cHUvZHJtL3F4bC9xeGxfa21zLmMKaW5kZXggMmIxZTFmMy4uYTlhNzQxYyAxMDA2NDQKLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL3F4bC9xeGxfa21zLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3F4bC9x
+eGxfa21zLmMKQEAgLTMxLDE5ICszMSw5IEBACiAKIGludCBxeGxfbG9nX2xldmVsOwogCi1zdGF0
+aWMgdm9pZCBxeGxfZHVtcF9tb2RlKHN0cnVjdCBxeGxfZGV2aWNlICpxZGV2LCB2b2lkICpwKQot
+ewotCXN0cnVjdCBxeGxfbW9kZSAqbSA9IHA7Ci0JRFJNX0RFQlVHX0tNUygiJWQ6ICVkeCVkICVk
+IGJpdHMsIHN0cmlkZSAlZCwgJWRtbSB4ICVkbW0sIG9yaWVudGF0aW9uICVkXG4iLAotCQkgICAg
+ICBtLT5pZCwgbS0+eF9yZXMsIG0tPnlfcmVzLCBtLT5iaXRzLCBtLT5zdHJpZGUsIG0tPnhfbWls
+aSwKLQkJICAgICAgbS0+eV9taWxpLCBtLT5vcmllbnRhdGlvbik7Ci19Ci0KIHN0YXRpYyBib29s
+IHF4bF9jaGVja19kZXZpY2Uoc3RydWN0IHF4bF9kZXZpY2UgKnFkZXYpCiB7CiAJc3RydWN0IHF4
+bF9yb20gKnJvbSA9IHFkZXYtPnJvbTsKLQlpbnQgbW9kZV9vZmZzZXQ7Ci0JaW50IGk7CiAKIAlp
+ZiAocm9tLT5tYWdpYyAhPSAweDRmNTI1ODUxKSB7CiAJCURSTV9FUlJPUigiYmFkIHJvbSBzaWdu
+YXR1cmUgJXhcbiIsIHJvbS0+bWFnaWMpOwpAQCAtNTMsOCArNDMsNiBAQCBzdGF0aWMgYm9vbCBx
+eGxfY2hlY2tfZGV2aWNlKHN0cnVjdCBxeGxfZGV2aWNlICpxZGV2KQogCURSTV9JTkZPKCJEZXZp
+Y2UgVmVyc2lvbiAlZC4lZFxuIiwgcm9tLT5pZCwgcm9tLT51cGRhdGVfaWQpOwogCURSTV9JTkZP
+KCJDb21wcmVzc2lvbiBsZXZlbCAlZCBsb2cgbGV2ZWwgJWRcbiIsIHJvbS0+Y29tcHJlc3Npb25f
+bGV2ZWwsCiAJCSByb20tPmxvZ19sZXZlbCk7Ci0JRFJNX0lORk8oIkN1cnJlbnRseSB1c2luZyBt
+b2RlICMlZCwgbGlzdCBhdCAweCV4XG4iLAotCQkgcm9tLT5tb2RlLCByb20tPm1vZGVzX29mZnNl
+dCk7CiAJRFJNX0lORk8oIiVkIGlvIHBhZ2VzIGF0IG9mZnNldCAweCV4XG4iLAogCQkgcm9tLT5u
+dW1faW9fcGFnZXMsIHJvbS0+cGFnZXNfb2Zmc2V0KTsKIAlEUk1fSU5GTygiJWQgYnl0ZSBkcmF3
+IGFyZWEgYXQgb2Zmc2V0IDB4JXhcbiIsCkBAIC02MiwxNCArNTAsNiBAQCBzdGF0aWMgYm9vbCBx
+eGxfY2hlY2tfZGV2aWNlKHN0cnVjdCBxeGxfZGV2aWNlICpxZGV2KQogCiAJcWRldi0+dnJhbV9z
+aXplID0gcm9tLT5zdXJmYWNlMF9hcmVhX3NpemU7CiAJRFJNX0lORk8oIlJBTSBoZWFkZXIgb2Zm
+c2V0OiAweCV4XG4iLCByb20tPnJhbV9oZWFkZXJfb2Zmc2V0KTsKLQotCW1vZGVfb2Zmc2V0ID0g
+cm9tLT5tb2Rlc19vZmZzZXQgLyA0OwotCXFkZXYtPm1vZGVfaW5mby5udW1fbW9kZXMgPSAoKHUz
+MiAqKXJvbSlbbW9kZV9vZmZzZXRdOwotCURSTV9JTkZPKCJyb20gbW9kZXMgb2Zmc2V0IDB4JXgg
+Zm9yICVkIG1vZGVzXG4iLCByb20tPm1vZGVzX29mZnNldCwKLQkJIHFkZXYtPm1vZGVfaW5mby5u
+dW1fbW9kZXMpOwotCXFkZXYtPm1vZGVfaW5mby5tb2RlcyA9ICh2b2lkICopKCh1aW50MzJfdCAq
+KXJvbSArIG1vZGVfb2Zmc2V0ICsgMSk7Ci0JZm9yIChpID0gMDsgaSA8IHFkZXYtPm1vZGVfaW5m
+by5udW1fbW9kZXM7IGkrKykKLQkJcXhsX2R1bXBfbW9kZShxZGV2LCBxZGV2LT5tb2RlX2luZm8u
+bW9kZXMgKyBpKTsKIAlyZXR1cm4gdHJ1ZTsKIH0KIApAQCAtMjgyLDcgKzI2Miw1IEBAIHZvaWQg
+cXhsX2RldmljZV9maW5pKHN0cnVjdCBxeGxfZGV2aWNlICpxZGV2KQogCWlvdW5tYXAocWRldi0+
+cmFtX2hlYWRlcik7CiAJaW91bm1hcChxZGV2LT5yb20pOwogCXFkZXYtPnJvbSA9IE5VTEw7Ci0J
+cWRldi0+bW9kZV9pbmZvLm1vZGVzID0gTlVMTDsKLQlxZGV2LT5tb2RlX2luZm8ubnVtX21vZGVz
+ID0gMDsKIAlxeGxfZGVidWdmc19yZW1vdmVfZmlsZXMocWRldik7CiB9Ci0tIAoxLjguMy4xCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
