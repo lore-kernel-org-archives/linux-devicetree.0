@@ -1,117 +1,47 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 1/3] usb: orion-echi: Add support for the Armada 3700
-Date: Wed,  8 Mar 2017 17:24:21 +0100
-Message-ID: <20170308162423.25553-2-gregory.clement@free-electrons.com>
+Subject: [PATCH 2/3] usb: host: Allow to build ehci orion with mvebu SoCs
+Date: Wed,  8 Mar 2017 17:24:22 +0100
+Message-ID: <20170308162423.25553-3-gregory.clement@free-electrons.com>
 References: <20170308162423.25553-1-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170308162423.25553-1-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, jinghua <jinghua@marvell.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: jinghua <jinghua@marvell.com>
+The mvebu ARM64 SoCs no more select PLAT_ORION but some of them as the
+Armada 37xx use the EHCI orion controller. This patch allow to build
+the driver when ARCH_MVEBU is selected.
 
-- Add a new compatoble string for the Armada 3700 SoCs
-
-- add sbuscfg support for orion usb controller driver. For the SoCs
-  without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
-  register to guarantee the AHB master's burst would not overrun or
-  underrun the FIFO.
-
-- the sbuscfg register has to be set after the usb controller reset,
-  otherwise the value would be overridden to 0. In order to do this, the
-  reset callback is registered.
-
-[gregory.clement@free-electrons.com: - reword commit and comments
-				     - fix checkpatch warning]
-Signed-off-by: jinghua <jinghua@marvell.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
- drivers/usb/host/ehci-orion.c                      | 39 ++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 1 deletion(-)
+ drivers/usb/host/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
-index 17c3bc858b86..9dfffc9dffec 100644
---- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
-+++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
-@@ -1,7 +1,9 @@
- * EHCI controller, Orion Marvell variants
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 407d947b34ea..870c42d89298 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -188,7 +188,7 @@ config USB_EHCI_HCD_OMAP
  
- Required properties:
--- compatible: must be "marvell,orion-ehci"
-+- compatible: could be one of the following
-+	"marvell,orion-ehci"
-+	"marvell,armada-3700-ehci"
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: The EHCI interrupt
-diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index ee8d5faa0194..cf778e166b90 100644
---- a/drivers/usb/host/ehci-orion.c
-+++ b/drivers/usb/host/ehci-orion.c
-@@ -47,6 +47,21 @@
- #define USB_PHY_IVREF_CTRL	0x440
- #define USB_PHY_TST_GRP_CTRL	0x450
- 
-+#define USB_SBUSCFG		0x90
-+#define	    USB_SBUSCFG_BAWR	    0x6
-+#define	    USB_SBUSCFG_BARD	    0x3
-+#define	    USB_SBUSCFG_AHBBRST	    0x0
-+
-+/* BAWR = BARD = 3 : Align read/write bursts packets larger than 128 bytes */
-+#define USB_SBUSCFG_BAWR_ALIGN_128B	0x3
-+#define USB_SBUSCFG_BARD_ALIGN_128B	0x3
-+/* AHBBRST = 3	   : Align AHB Burst to INCR16 (64 bytes) */
-+#define USB_SBUSCFG_AHBBRST_INCR16	0x3
-+
-+#define USB_SBUSCFG_DEF_VAL ((USB_SBUSCFG_BAWR_ALIGN_128B << USB_SBUSCFG_BAWR) \
-+		     | (USB_SBUSCFG_BARD_ALIGN_128B << USB_SBUSCFG_BARD) \
-+		     | (USB_SBUSCFG_AHBBRST_INCR16 << USB_SBUSCFG_AHBBRST))
-+
- #define DRIVER_DESC "EHCI orion driver"
- 
- #define hcd_to_orion_priv(h) ((struct orion_ehci_hcd *)hcd_to_ehci(h)->priv)
-@@ -151,8 +166,31 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
- 	}
- }
- 
-+static int ehci_orion_drv_reset(struct usb_hcd *hcd)
-+{
-+	struct device *dev = hcd->self.controller;
-+	int retval;
-+
-+	retval = ehci_setup(hcd);
-+	if (retval)
-+		dev_err(dev, "ehci_setup failed %d\n", retval);
-+
-+	/*
-+	 * For SoC without hlock, need to program sbuscfg value to guarantee
-+	 * AHB master's burst would not overrun or underrun FIFO.
-+	 *
-+	 * sbuscfg reg has to be set after usb controller reset, otherwise
-+	 * the value would be override to 0.
-+	 */
-+	if (of_device_is_compatible(dev->of_node, "marvell,armada-3700-ehci"))
-+		wrl(USB_SBUSCFG, USB_SBUSCFG_DEF_VAL);
-+
-+	return retval;
-+}
-+
- static const struct ehci_driver_overrides orion_overrides __initconst = {
- 	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
-+	.reset = ehci_orion_drv_reset,
- };
- 
- static int ehci_orion_drv_probe(struct platform_device *pdev)
-@@ -310,6 +348,7 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
- 
- static const struct of_device_id ehci_orion_dt_ids[] = {
- 	{ .compatible = "marvell,orion-ehci", },
-+	{ .compatible = "marvell,armada-3700-ehci", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
+ config USB_EHCI_HCD_ORION
+ 	tristate  "Support for Marvell EBU on-chip EHCI USB controller"
+-	depends on USB_EHCI_HCD && PLAT_ORION
++	depends on USB_EHCI_HCD && PLAT_ORION || ARCH_MVEBU
+ 	default y
+ 	---help---
+ 	  Enables support for the on-chip EHCI controller on Marvell's
 -- 
 2.11.0
