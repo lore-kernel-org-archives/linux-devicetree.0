@@ -1,56 +1,57 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v4 7/7] arm: imx_v6_v7_defconfig: Select hid-multitouchdriver
-Date: Wed,  8 Mar 2017 12:47:57 +0530
-Message-ID: <1488957477-5621-7-git-send-email-jagan@openedev.com>
-References: <1488957477-5621-1-git-send-email-jagan@openedev.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: dts: sunxi: Remove no longer used
+ pinctrl/sun4i-a10.h header
+Date: Wed, 8 Mar 2017 08:36:18 +0100
+Message-ID: <20170308073618.kslqz3c2wdctexvi@lukather>
+References: <20170308032821.26854-1-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488957477-5621-1-git-send-email-jagan@openedev.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4yjbqybes4bwqu4y"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4XI73CQKGQEGBDLTOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170308032821.26854-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
 
-Select CONFIG_HID_MULTITOUCH so that we can have multi touchscreen
-funtionality via USB by default on Engicam i.CoreM6 Quad with
-OpenFrame Cap 10.1 display boards.
+--4yjbqybes4bwqu4y
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v4:
-- Newly added patch.
+On Wed, Mar 08, 2017 at 11:28:19AM +0800, Chen-Yu Tsai wrote:
+> Hi Maxime,
+> 
+> This series gets rid of the last usage of the Allwinner specific pinconf
+> bindings, and drops inclusion of dt-bindings/pinctrl/sun4i-a10.h across
+> the tree.
+> 
+> Patch 1 gets rid of the last occurrence of Allwinner specific pinconf
+> properties, which is actually a GPIO pinmux.
+> 
+> Patch 2 drops the #include for dt-bindings/pinctrl/sun4i-a10.h with a
+> scripted approach.
+> 
+> A patch to remove the actual header file should be sent after this
+> series is in Linus' tree, to avoid any unwanted cross-tree dependencies.
+> If we want that to happen faster, maybe we could merge these as fixes.
+> 
+> Regards
+> ChenYu
 
- arch/arm/boot/dts/imx6q-icore.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Applied both, thanks!
+Maxime
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 842168f..914e8cb 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -174,6 +174,7 @@ CONFIG_TOUCHSCREEN_SX8654=y
- CONFIG_TOUCHSCREEN_COLIBRI_VF50=y
- CONFIG_INPUT_MISC=y
- CONFIG_INPUT_MMA8450=y
-+CONFIG_HID_MULTITOUCH=y
- CONFIG_SERIO_SERPORT=m
- # CONFIG_LEGACY_PTYS is not set
- CONFIG_SERIAL_IMX=y
 -- 
-1.9.1
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--4yjbqybes4bwqu4y--
