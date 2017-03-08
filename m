@@ -1,76 +1,71 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] usb: host: Allow to build ehci orion with mvebu SoCs
-Date: Wed, 08 Mar 2017 18:24:15 +0100
-Message-ID: <87o9xblm0w.fsf@free-electrons.com>
-References: <20170308162423.25553-1-gregory.clement@free-electrons.com>
-        <20170308162423.25553-3-gregory.clement@free-electrons.com>
-        <20170308170136.GC32355@lunn.ch>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM53573: Don't use nonexistent
+ "default-off" LED trigger
+Date: Wed, 8 Mar 2017 09:31:44 -0800
+Message-ID: <42bce8ea-f1dc-2018-33f1-d296ccd7b677@gmail.com>
+References: <20170308064105.26619-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170308170136.GC32355-g2DYL2Zd6BY@public.gmane.org> (Andrew Lunn's message of "Wed,
-        8 Mar 2017 18:01:36 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170308064105.26619-1-zajec5@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
- 
- On mer., mars 08 2017, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+On 03/07/2017 10:41 PM, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> Such a trigger doesn't exist in Linux and is not needed as LED is being
+> turned off by default. This could cause errors in LEDs core code when
+> trying to set default trigger.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
 
-> On Wed, Mar 08, 2017 at 05:24:22PM +0100, Gregory CLEMENT wrote:
->> The mvebu ARM64 SoCs no more select PLAT_ORION but some of them as the
->> Armada 37xx use the EHCI orion controller. This patch allow to build
->> the driver when ARCH_MVEBU is selected.
->
-> The mvebu ARM64 SoCs no longer selects PLAT_ORION.  However Armada
-> 37xx use the Orion EHCI controller. This patch allows the Orion EHCI
-> driver to be built when ARCH_MVEBU is selected.
+Since you are fixing something, what's the proper Fixes: tag for this
+commit? Likewise for the second patch.
 
-Thanks for this enhancement!
+Thanks
 
->
->> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  drivers/usb/host/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
->> index 407d947b34ea..870c42d89298 100644
->> --- a/drivers/usb/host/Kconfig
->> +++ b/drivers/usb/host/Kconfig
->> @@ -188,7 +188,7 @@ config USB_EHCI_HCD_OMAP
->>  
->>  config USB_EHCI_HCD_ORION
->>  	tristate  "Support for Marvell EBU on-chip EHCI USB controller"
->> -	depends on USB_EHCI_HCD && PLAT_ORION
->> +	depends on USB_EHCI_HCD && PLAT_ORION || ARCH_MVEBU
->
-> I don't know the Kconfig language too well. Should this be:
->
->> +	depends on USB_EHCI_HCD && (PLAT_ORION || ARCH_MVEBU)
+> ---
+>  arch/arm/boot/dts/bcm47189-tenda-ac9.dts | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+> index 6bdd79567cbd..34417dac1cd0 100644
+> --- a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+> +++ b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
+> @@ -26,19 +26,16 @@
+>  		usb {
+>  			label = "bcm53xx:blue:usb";
+>  			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
+> -			linux,default-trigger = "default-off";
+>  		};
+>  
+>  		wps {
+>  			label = "bcm53xx:blue:wps";
+>  			gpios = <&chipcommon 10 GPIO_ACTIVE_HIGH>;
+> -			linux,default-trigger = "default-off";
+>  		};
+>  
+>  		5ghz {
+>  			label = "bcm53xx:blue:5ghz";
+>  			gpios = <&chipcommon 11 GPIO_ACTIVE_HIGH>;
+> -			linux,default-trigger = "default-off";
+>  		};
+>  
+>  		system {
+> @@ -54,7 +51,6 @@
+>  		2ghz {
+>  			label = "bcm53xx:blue:2ghz";
+>  			gpios = <&pcie0_chipcommon 3 GPIO_ACTIVE_HIGH>;
+> -			linux,default-trigger = "default-off";
+>  		};
+>  	};
+>  
+> 
 
-Your version seems better.
-
-Thanks,
-
-Gregory
-
->
->   Andrew
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
