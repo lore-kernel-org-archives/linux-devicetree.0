@@ -1,67 +1,59 @@
 From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH v4 0/7] mmc: bcm2835: Add new driver for the sdhost controller
-Date: Wed,  8 Mar 2017 10:19:00 +0100
-Message-ID: <1488964751-22763-1-git-send-email-kraxel@redhat.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
+Subject: [PATCH v4 7/7] arm64: dts: bcm2837: add &sdhci and &sdhost
+Date: Wed,  8 Mar 2017 10:19:11 +0100
+Message-ID: <1488964751-22763-12-git-send-email-kraxel@redhat.com>
+References: <1488964751-22763-1-git-send-email-kraxel@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488964751-22763-1-git-send-email-kraxel@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-rpi-kernel@lists.infradead.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lee@kernel.org, eric@anholt.net, stefan.wahren@i2se.com, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>
+Cc: mark.rutland@arm.com, stefan.wahren@i2se.com, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, devicetree@vger.kernel.org, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, eric@anholt.net, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-  Hi,
+For the raspberry pi 3 we'll need both sdhci (handles sdio wifi) and
+sdhost (handles sdcard).
 
-Next version if the bcm2835 sdhost patch series.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Eric Anholt <eric@anholt.net>
+---
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-New in v4:
- * squashed in more cleanups by Stefan.
- * removed the long cleanup patch list
-   from commit message (patch 2).
- * rebased to (and tested with) 4.11-rc1.
- * minor fixes pointed out in review.
-
-New in v3:
- * squashed in cleanups by Stefan.
- * use one dma channel only.
- * improve commit messages.
-
-New in v2:
- * DMA fixed.
- * updated docs (kconfig, file comment, commit message) clarifying
-   the two sd controller situation.
- * some code cleanups, as pointed out by Stefan.
- * dt bindings use mmc@... now.
- * added patches to update defconfigs.
- * added patch for rpi3 device tree, so wifi is actually enabled.
-
-please review & test,
-  Gerd
-
-Eric Anholt (2):
-  dt-bindings: Add binding for brcm,bcm2835-sdhost.
-  mmc: bcm2835: Add new driver for the sdhost controller.
-
-Gerd Hoffmann (5):
-  mmc: bcm2835: add sdhost controller to devicetree
-  arm: set CONFIG_MMC_BCM2835=y in bcm2835_defconfig and
-    multi_v7_defconfig
-  arm64: set CONFIG_MMC_BCM2835=y in defconfig
-  arm: dts: bcm283x: switch from &sdhci to &sdhost
-  arm64: dts: bcm2837: add &sdhci and &sdhost
-
- .../bindings/mmc/brcm,bcm2835-sdhost.txt           |   23 +
- arch/arm/boot/dts/bcm2835-rpi.dtsi                 |    6 +
- arch/arm/boot/dts/bcm283x.dtsi                     |   10 +
- arch/arm/configs/bcm2835_defconfig                 |    1 +
- arch/arm/configs/multi_v7_defconfig                |    1 +
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   |   17 +
- arch/arm64/configs/defconfig                       |    1 +
- drivers/mmc/host/Kconfig                           |   14 +
- drivers/mmc/host/Makefile                          |    1 +
- drivers/mmc/host/bcm2835.c                         | 1465 ++++++++++++++++++++
- 10 files changed, 1539 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/brcm,bcm2835-sdhost.txt
- create mode 100644 drivers/mmc/host/bcm2835.c
-
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index c309633..972f14d 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -22,3 +22,20 @@
+ &uart1 {
+ 	status = "okay";
+ };
++
++/* SDHCI is used to control the SDIO for wireless */
++&sdhci {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_gpio34>;
++	status = "okay";
++	bus-width = <4>;
++	non-removable;
++};
++
++/* SDHOST is used to drive the SD card */
++&sdhost {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdhost_gpio48>;
++	status = "okay";
++	bus-width = <4>;
++};
 -- 
 1.8.3.1
-
