@@ -1,70 +1,50 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v5 2/5] arm: dts: Add the burst and esc clock frequency
- properties to DSI node
-Date: Wed, 8 Mar 2017 09:14:24 +0200
-Message-ID: <20170308071424.a2bdotmsrr7lfmrx@kozik-lap>
-References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170308045502epcas1p26f050caaf6eeb79bc88afcb0e2eaeac2@epcas1p2.samsung.com>
- <1488948852-5380-3-git-send-email-hoegeun.kwon@samsung.com>
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v4 0/7] arm: dts: imx6q-icore: Add LVDS display nodes
+Date: Wed,  8 Mar 2017 12:45:13 +0530
+Message-ID: <1488957320-5552-1-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1488948852-5380-3-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, javier@osg.samsung.com, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, a.hajda@samsung.com, andi.shyti@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Matteo Lisi <matteo.lisi@engicam.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 08, 2017 at 01:54:09PM +0900, Hoegeun Kwon wrote:
-> Add the burst and esc clock frequency properties to the parent (DSI node).
-> Currently the clock is parsed from the port node, while it should be
-> taken from the dsi node.
-> 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos3250-rinato.dts | 2 ++
->  arch/arm/boot/dts/exynos4210-trats.dts  | 2 ++
->  arch/arm/boot/dts/exynos4412-trats2.dts | 2 ++
->  3 files changed, 6 insertions(+)
->
+From: root <root@b1eb17b01b40.(none)>
 
-If anyone needs this, then:
+This series adds support for lvds display, touchscreen nodes on dts for
+Engicam i.CoreM6 Quad boards along with selecting few touchscreen driver
+configs to imx_v6_v7_defconfig so-that select by default.
 
+Jagan Teki (7):
+  arm: dts: imx6qdl-icore: Add backlight support for lvds
+  arm: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 10.1
+    initial support
+  arm: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual OpenFrame Cap 12.3
+    initial support
+  arm: dts: imx6q-icore: Add LVDS support
+  arm: dts: imx6q-icore: Add touchscreen node
+  arm: imx_v6_v7_defconfig: Select max11801_ts touchscreen driver
+  arm: imx_v6_v7_defconfig: Select hid-multitouchdriver
 
-The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
+ arch/arm/boot/dts/Makefile                |  2 +
+ arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 76 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-icore-ofcap12.dts | 76 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-icore.dts         | 34 ++++++++++++++
+ arch/arm/boot/dts/imx6qdl-icore.dtsi      | 20 ++++++++
+ arch/arm/configs/imx_v6_v7_defconfig      |  2 +
+ 6 files changed, 210 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap10.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap12.dts
 
-  Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-clock-dsi-property-4.12
-
-for you to fetch changes up to 4c74ea4e20b582bf90a2cf509d88aa7c2dbffb12:
-
-  ARM: dts: exynos: Add the burst and esc clock frequency properties to DSI node (2017-03-08 09:09:05 +0200)
-
-----------------------------------------------------------------
-Add the burst and esc clock frequency properties to DSI node in Exynos ARM
-DeviceTree, before the OF graph could be parsed.
-
-----------------------------------------------------------------
-Hoegeun Kwon (1):
-      ARM: dts: exynos: Add the burst and esc clock frequency properties to DSI node
-
-Jaehoon Chung (1):
-      ARM: dts: exynos: Add phy-pcie node for pcie to Exynos5440
-
-Krzysztof Kozlowski (1):
-      ARM: dts: exynos: Do not ignore real-world fuse values for thermal zone 0 on Exynos5420
-
- arch/arm/boot/dts/exynos3250-rinato.dts           |  2 ++
- arch/arm/boot/dts/exynos4210-trats.dts            |  2 ++
- arch/arm/boot/dts/exynos4412-trats2.dts           |  2 ++
- arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi | 25 +++++++++++++++++++
- arch/arm/boot/dts/exynos5420.dtsi                 | 10 ++++----
- arch/arm/boot/dts/exynos5440.dtsi                 | 30 +++++++++++++++--------
- 6 files changed, 56 insertions(+), 15 deletions(-)
- create mode 100644 arch/arm/boot/dts/exynos5420-tmu-sensor-conf.dtsi
+-- 
+1.9.1
