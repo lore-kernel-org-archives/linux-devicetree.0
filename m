@@ -1,143 +1,69 @@
-From: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: mvebu: linksys: enable buffer manager support
-Date: Wed,  8 Mar 2017 06:33:12 +0100
-Message-ID: <20170308053312.29243-1-ralph.sennhauser@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/Marvell
-        Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v1.1 2/3] device property: Fix reading pset strings using array access functions
+Date: Wed,  8 Mar 2017 07:41:47 +0200
+Message-ID: <1488951707-22598-1-git-send-email-sakari.ailus@linux.intel.com>
+References: <1488806791-25488-3-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1488806791-25488-3-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Add appropriate properties to devices in the Linksys WRT AC Series for the
-mvneta driver to use hardware buffer management.
+The length field value of non-array string properties is the length of the
+string itself. Non-array string properties thus require specific handling.
+Fix this.
 
-Also update "soc" ranges property and set the status of bm and bm-bppi
-to "okay" (SRAM).
-
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- arch/arm/boot/dts/armada-385-linksys.dtsi     | 17 ++++++++++++++++-
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 17 ++++++++++++++++-
- 2 files changed, 32 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
-index df47bf1..4aac375 100644
---- a/arch/arm/boot/dts/armada-385-linksys.dtsi
-+++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-@@ -59,7 +59,8 @@
- 		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
- 			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000
- 			  MBUS_ID(0x09, 0x19) 0 0xf1100000 0x10000
--			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000>;
-+			  MBUS_ID(0x09, 0x15) 0 0xf1110000 0x10000
-+			  MBUS_ID(0x0c, 0x04) 0 0xf1200000 0x100000>;
- 
- 		internal-regs {
- 			i2c@11000 {
-@@ -88,6 +89,9 @@
- 			ethernet@70000 {
- 				status = "okay";
- 				phy-mode = "rgmii-id";
-+				buffer-manager = <&bm>;
-+				bm,pool-long = <1>;
-+				bm,pool-short = <3>;
- 				fixed-link {
- 					speed = <1000>;
- 					full-duplex;
-@@ -97,6 +101,9 @@
- 			ethernet@34000 {
- 				status = "okay";
- 				phy-mode = "sgmii";
-+				buffer-manager = <&bm>;
-+				bm,pool-long = <0>;
-+				bm,pool-short = <3>;
- 				fixed-link {
- 					speed = <1000>;
- 					full-duplex;
-@@ -159,6 +166,10 @@
- 				status = "okay";
- 			};
- 
-+			bm@c8000 {
-+				status = "okay";
-+			};
+since v1:
+
+- Make prop const. pset_prop_get() returns const struct property_entry *
+  now.
+
+ drivers/base/property.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 19a3dc5..8c98390 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -552,13 +552,27 @@ static int __fwnode_property_read_string_array(struct fwnode_handle *fwnode,
+ 	else if (is_acpi_node(fwnode))
+ 		return acpi_node_prop_read(fwnode, propname, DEV_PROP_STRING,
+ 					   val, nval);
+-	else if (is_pset_node(fwnode))
+-		return val ?
+-			pset_prop_read_string_array(to_pset_node(fwnode),
+-						    propname, val, nval) :
+-			pset_prop_count_elems_of_size(to_pset_node(fwnode),
+-						      propname,
+-						      sizeof(const char *));
++	else if (is_pset_node(fwnode)) {
++		struct property_set *node = to_pset_node(fwnode);
++		const struct property_entry *prop;
 +
- 			/* USB part of the eSATA/USB 2.0 port */
- 			usb@58000 {
- 				status = "okay";
-@@ -241,6 +252,10 @@
- 			};
- 		};
- 
-+		bm-bppi {
-+			status = "okay";
-+		};
++		/* Read properties if val is non-NULL */
++		if (val)
++			return pset_prop_read_string_array(node, propname,
++							   val, nval);
 +
- 		pcie-controller {
- 			status = "okay";
- 
-diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-index 3744ba3..b188a4dc 100644
---- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-+++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-@@ -71,7 +71,8 @@
- 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
- 			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
- 			  MBUS_ID(0x09, 0x09) 0 0 0xf1100000 0x10000
--			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000>;
-+			  MBUS_ID(0x09, 0x05) 0 0 0xf1110000 0x10000
-+			  MBUS_ID(0x0c, 0x04) 0 0 0xf1200000 0x100000>;
- 
- 		internal-regs {
- 
-@@ -95,6 +96,9 @@
- 				pinctrl-names = "default";
- 				status = "okay";
- 				phy-mode = "rgmii-id";
-+				buffer-manager = <&bm>;
-+				bm,pool-long = <0>;
-+				bm,pool-short = <3>;
- 				fixed-link {
- 					speed = <1000>;
- 					full-duplex;
-@@ -106,6 +110,9 @@
- 				pinctrl-names = "default";
- 				status = "okay";
- 				phy-mode = "rgmii-id";
-+				buffer-manager = <&bm>;
-+				bm,pool-long = <1>;
-+				bm,pool-short = <3>;
- 				fixed-link {
- 					speed = <1000>;
- 					full-duplex;
-@@ -186,6 +193,10 @@
- 				};
- 			};
- 
-+			bm@c8000 {
-+				status = "okay";
-+			};
++		prop = pset_prop_get(node, propname);
++		if (!prop)
++			return -EINVAL;
 +
- 			nand@d0000 {
- 				status = "okay";
- 				num-cs = <1>;
-@@ -259,6 +270,10 @@
- 				};
- 			};
- 		};
++		/* The array length for a non-array string property is 1. */
++		if (!prop->is_array)
++			return 1;
 +
-+		bm-bppi {
-+			status = "okay";
-+		};
- 	};
++		/* Return the length of an array. */
++		return pset_prop_count_elems_of_size(node, propname,
++						     sizeof(const char *));
++	}
+ 	return -ENXIO;
+ }
  
- 	gpio_keys {
 -- 
-2.10.2
+2.7.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
