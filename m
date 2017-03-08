@@ -1,15 +1,18 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 3/4] soc/imx: add new GPC driver
-Date: Wed, 8 Mar 2017 11:57:58 +0100
-Message-ID: <20170308105756.GA17029@x250>
-References: <20170217190246.14881-1-l.stach@pengutronix.de>
- <20170217190246.14881-3-l.stach@pengutronix.de>
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCHv3 net-next 21/22] net: mvpp2: set dma mask and coherent
+ dma mask on PPv2.2
+Date: Wed, 8 Mar 2017 11:00:10 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6DCFE7A585@AcuExch.aculab.com>
+References: <1488902000-2658-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1488902000-2658-22-git-send-email-thomas.petazzoni@free-electrons.com>
+ <063D6719AE5E284EB5DD2968C1650D6DCFE79D2E@AcuExch.aculab.com>
+ <20170307191201.645d23b4@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170217190246.14881-3-l.stach@pengutronix.de>
+In-Reply-To: <20170307191201.645d23b4@free-electrons.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,19 +22,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+To: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yehuda Yitschak <yehuday@marvell.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 17, 2017 at 08:02:45PM +0100, Lucas Stach wrote:
-> This is an almost complete re-write of the previous GPC power gating control
-> code found in the IMX architecture code. It supports both the old and the new
-> DT binding, allowing more domains to be added later and generally makes the
-> driver easier to extend, while keeping compatibility with existing DTBs.
+From: Thomas Petazzoni
+> Sent: 07 March 2017 18:12
+> Hello,
 > 
-> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> On Tue, 7 Mar 2017 17:24:21 +0000, David Laight wrote:
+> 
+> > Are the coherent mappings just used for ring structures?
+> > If it might be reasonable to allocate them as a single entity,
+> > thus guaranteeing they all reside in a single 4G region.
+> 
+> Do we have the guarantee that a DMA coherent allocation will not span a
+> 4G boundary?
 
-I applied #1 ~ #3, with #2 and #3 merged into one to avoid possible
-git bisect issue.
+I'm pretty sure they are guaranteed not to cross any boundary they don't have to.
+So a 16k buffer won't cross a 16k boundary.
 
-Shawn
+	David
