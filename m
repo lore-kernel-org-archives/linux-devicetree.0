@@ -1,71 +1,45 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: BCM53573: Don't use nonexistent
- "default-off" LED trigger
-Date: Wed, 8 Mar 2017 09:31:44 -0800
-Message-ID: <42bce8ea-f1dc-2018-33f1-d296ccd7b677@gmail.com>
-References: <20170308064105.26619-1-zajec5@gmail.com>
+From: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Subject: [PATCH 0/2] [kernel] ARM: lpc32xx: migrate CLCD config to device tree
+Date: Wed,  8 Mar 2017 12:46:36 -0500
+Message-ID: <20170308174638.25578-1-slemieux.tyco@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170308064105.26619-1-zajec5@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: vz@mleia.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2017 10:41 PM, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> Such a trigger doesn't exist in Linux and is not needed as LED is being
-> turned off by default. This could cause errors in LEDs core code when
-> trying to set default trigger.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+From: Sylvain Lemieux <slemieux@tycoint.com>
 
-Since you are fixing something, what's the proper Fixes: tag for this
-commit? Likewise for the second patch.
+Migrate the CLCD configurations to the device tree and
+remove custom functions from board files.
 
-Thanks
+This change depends on the following change:
+"video: ARM CLCD: fix dma allocation size"
+https://www.spinics.net/lists/arm-kernel/msg567178.html
 
-> ---
->  arch/arm/boot/dts/bcm47189-tenda-ac9.dts | 4 ----
->  1 file changed, 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-> index 6bdd79567cbd..34417dac1cd0 100644
-> --- a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-> +++ b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-> @@ -26,19 +26,16 @@
->  		usb {
->  			label = "bcm53xx:blue:usb";
->  			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
-> -			linux,default-trigger = "default-off";
->  		};
->  
->  		wps {
->  			label = "bcm53xx:blue:wps";
->  			gpios = <&chipcommon 10 GPIO_ACTIVE_HIGH>;
-> -			linux,default-trigger = "default-off";
->  		};
->  
->  		5ghz {
->  			label = "bcm53xx:blue:5ghz";
->  			gpios = <&chipcommon 11 GPIO_ACTIVE_HIGH>;
-> -			linux,default-trigger = "default-off";
->  		};
->  
->  		system {
-> @@ -54,7 +51,6 @@
->  		2ghz {
->  			label = "bcm53xx:blue:2ghz";
->  			gpios = <&pcie0_chipcommon 3 GPIO_ACTIVE_HIGH>;
-> -			linux,default-trigger = "default-off";
->  		};
->  	};
->  
-> 
+Note:
+* We tested a similar change on a custom LPC32xx board with a 480x272 LCD.
+* We did not test this change on hardware;
+  we do not have access to a PHY3250 board with the 240x320 LCD.
 
+Liam Beguin (2):
+  ARM: dts: lpc32xx: phy3250: add clcd configuration
+  ARM: lpc32xx: drop CLCD configuration
+
+ arch/arm/boot/dts/lpc3250-phy3250.dts | 35 ++++++++++++++++++
+ arch/arm/mach-lpc32xx/phy3250.c       | 70 -----------------------------------
+ 2 files changed, 35 insertions(+), 70 deletions(-)
 
 -- 
-Florian
+2.11.0
