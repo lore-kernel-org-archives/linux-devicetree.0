@@ -1,15 +1,16 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 8/15] drm/sun4i: tcon: Add channel debug
-Date: Wed, 8 Mar 2017 11:37:23 +0800
-Message-ID: <CAGb2v66h35Rm-bnWi-XUjxCWdPzBoZLDT5SHasYFK7UaCdoJdQ@mail.gmail.com>
+Subject: Re: [PATCH 7/15] dt-bindings: display: sun4i: Add
+ allwinner,tcon-channel property
+Date: Wed, 8 Mar 2017 11:38:48 +0800
+Message-ID: <CAGb2v66o79wX9x4+ByNryoSOGrcixsbKKyDmfzeQcMAGLV_SBQ@mail.gmail.com>
 References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
- <71ebb24fd6b0efc1af7de732aa4aac9d5a2ee4f1.1488876832.git-series.maxime.ripard@free-electrons.com>
+ <46fdec2d680d539652f87d79c627973b3a568438.1488876832.git-series.maxime.ripard@free-electrons.com>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBDHZ7XCQKGQEULEUHSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBYPZ7XCQKGQEJXYHLKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <71ebb24fd6b0efc1af7de732aa4aac9d5a2ee4f1.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <46fdec2d680d539652f87d79c627973b3a568438.1488876832.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,8 +23,19 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, Mar 7, 2017 at 4:56 PM, Maxime Ripard
 <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> While all functions have debug logs, the channel enable and disable are not
-> logged. Make sure this is the case.
+> The Allwinner Timings Controller has two, mutually exclusive, channels.
+> When the binding has been introduced, it was assumed that there would be
+> only a single user per channel in the system.
+>
+> While this is likely for the channel 0 which only connects to LCD displays,
+> it turns out that the channel 1 can be connected to multiple controllers in
+> the SoC (HDMI and TV encoders for example). And while the simultaneous use
+> of HDMI and TV outputs cannot be achieved, switching from one to the other
+> at runtime definitely sounds plausible.
+>
+> Add an extra property, allwinner,tcon-channel, to specify for a given
+> endpoint which TCON channel it is connected to, while falling back to the
+> previous mechanism if that property is missing.
 >
 > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
