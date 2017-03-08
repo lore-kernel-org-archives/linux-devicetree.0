@@ -1,65 +1,91 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 3/3] mtd: nand: Remove unused chip->write_page() hook
-Date: Wed, 8 Mar 2017 10:31:25 +0900
-Message-ID: <CAK7LNAQP56_XUPhGfMX7EGb29SyNCBKkxt43sRXbU6C27mOUQA@mail.gmail.com>
-References: <1487593718-20752-1-git-send-email-boris.brezillon@free-electrons.com>
- <1487593718-20752-4-git-send-email-boris.brezillon@free-electrons.com>
- <CAK7LNASNFJ6_LJBS7jyyJ3-Uv_ExTYAj+tkJTCYrpDz8_BXa3Q@mail.gmail.com>
- <20170307193441.0c6fd555@bbrezillon>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v11 0/3] Add support for the S6E3HA2 panel on TM2 board
+Date: Wed, 08 Mar 2017 10:42:34 +0900
+Message-ID: <1488937357-5623-1-git-send-email-hoegeun.kwon@samsung.com>
+References: <CGME20170308014258epcas5p35b908c56e003eb5d2ded8b503aa511be@epcas5p3.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170307193441.0c6fd555@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wenyou Yang <wenyou.yang@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Josh Wu <rainyfeeling@outlook.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Hans-Christian Egtvedt <egtvedt@samfundet.no>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2017-03-08 3:34 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
-> On Tue, 7 Mar 2017 21:04:50 +0900
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
->> Hi Boris,
->>
->> 2017-02-20 21:28 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
->> > The last/only user of the chip->write_page() hook (the Atmel NAND
->> > controller driver) has been reworked and is no longer specifying a custom
->> > ->write_page() implementation.
->> > Drop this hook before someone else start abusing it.
->> >
->> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
->>
->>
->> Just a minor comment.
->>
->>
->> /**
->>  * nand_write_page - [REPLACEABLE] write one page
->>  * @mtd: MTD device structure
->>
->>
->> Can you update the comment block for nand_write_page(), too?
->>
->>   [REPLACEABLE]  ->  [INTERNAL]
->
-> I think I'll just drop it, it does not mean anything to flag a static
-> function as replaceable (the ->write_page() method could be overloaded,
-> but not the nand_write_page() implementation itself).
->
-
-Sounds good to me.   Thank you!
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+RGVhciBUaGllcnJ5LAoKSSB1bmRlcnN0YW5kIHRoYXQgeW91ciBvcGluaW9uIGlzOgpJdCBpcyBi
+ZXR0ZXIgdG8gaGFuZGxlIHRoZSBlcnJvciBldmVyeSB0aW1lIGl0IGlzIGlucHV0IHRvIHRoZQpy
+ZWdpc3RlciwgcmF0aGVyIHRoYW4gZXJyb3IgaGFuZGxpbmcgYXQgb25jZSBpbiB0aGUgc3RydWN0
+IHVzaW5nCmVycm9yLiBUaGlzIG5vdCBvbmx5IG1ha2VzIHRoZSBjb2RlIGVhc2llciB0byBtYWlu
+dGFpbiwgYnV0IGFsc28KcmVkdWNlcyB1bm5lY2Vzc2FyeSBjb21wdXRhdGlvbi4KClNvIEkgbW9k
+aWZpZWQgdGhlIHBhbmVsIGRyaXZlciB0byBjb2RlLWJ5LWNvZGUgZXJyb3IgaGFuZGxpbmcuCklm
+IHRoaXMgaXMgbm90IHlvdXIgb3BpbmlvbiwgY291bGQgeW91IHRlbGwgbWUgd2hhdCB5b3VyIG9w
+aW5pb24/CgpCZXN0IFJlZ2FyZHMsCkhvZWdldW4KCkNoYW5nZXMgZm9yIFYxMToKLSBBZGRlZCB0
+aGUgUmV2aWV3ZWQtYnk6IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQG9zZy5zYW1z
+dW5nLmNvbT4KICAoMS8zLCAzLzMgcGF0Y2hlcykKLSBDaGVja2VkIGZvciByZWJhc2UgNC4xMSBy
+YzEuCgpDaGFuZ2VzIGZvciBWMTA6Ci0gRml4ZWQgY29kZS1ieS1jb2RlIGVycm9yIGhhbmRsaW5n
+LgoKQ2hhbmdlcyBmb3IgVjk6Ci0gRml4ZWQgdGhlIHRlLWdwaW8gdG8gb3B0aW9uYWwgaW4gYmlu
+ZGluZ3MKCkNoYW5nZXMgZm9yIFY4OgotIEFwcGxpZWQgYmVsb3cgdHdvIHBhdGNoZXM6IChkcm0v
+ZXh5bm9zKQogIDogZHJtL2V4eW5vczogbWljOiBBZGQgbW9kZV9zZXQgY2FsbGJhY2sgZnVuY3Rp
+b24KICA6IGRybS9leHlub3M6IG1pYzogRml4IHBhcnNlX2R0IGZ1bmN0aW9uCi0gVGhlIGR0LWJp
+bmRpbmcgcGF0Y2ggYW5kIGRyaXZlciBwYXRjaCB3ZXJlIGRpdmlkZWQuCi0gUmViYXNlIHRoZXNl
+IHBhdGNoZXMgb24gc2Ftc3VuZyBTb0MgdHJlZVsxXSBhbmQgdG0yIHRvdWNrZXkgcGF0Y2hbMl0u
+CgpDaGFuZ2UgZm9yIFY3OgotIEZpeGVkIHRoZSBtb2RlX3NldCBjYWxsYmFjayBmdW5jdGlvbiBv
+ZiBtaWMgZGV2aWNlIGRyaXZlci4KICBiZWNhdXNlIHRoZSBtaWMgcmVnaXN0ZXIgaXMgaW5pdGlh
+bGl6ZWQgd2hlbiBlbnRlcmluZyBzdXNwZW5kCiAgbW9kZSwgc28gc2hvdWxkIHNldCB0aGUgcmVn
+IHZhbHVlIHdoZW5ldmVyIHByZV9lbmFibGUgaXMKICBjYWxsZWQuCgpDaGFuZ2VzIGZvciBWNjoK
+LSBGaXhlZCB0aGUgcGFyc2VfZHQgZnVuY3Rpb24gb2YgZHNpIGRldmljZSBkcml2ZXIuCi0gUmVt
+b3ZlZCBPRiBncmFwaCBvZiBwYW5lbCBpbiBEVCBhbmQgRFQgYmluZGluZyBkb2N1bWVudC4KLSBG
+aXhlZCB0aGUgczZlM2hhMiBwYW5lbCBkZXZpY2UgZHJpdmVyLgogIC0gRml4ZWQgZnJvbSBudW1i
+ZXIgc2l6ZSB0byBBUlJBWV9TSVpFKCkuCiAgLSBGaXhlZCBlcnJvciBoYW5kbGluZyBpbiBtaXBp
+X2RzaV9kY3NfKiBmdW5jdGlvbnMuCiAgLSBGaXhlZCB0aGUgY2xvY2sgb2YgZGlzcGxheV9tb2Rl
+LgogIC0gUmVtb3ZlZCB1bm5lY2Vzc2FyeSBjYXN0aW5nIGFuZCBlcnJvciBsb2cuCgpDaGFuZ2Ug
+Zm9yIFY1OgotIFRoZSBWNSBoYXMgb25seSBvbmUgZml4IGluIFY0IGJlbG93LgotIFJlbW92ZWQg
+dGhlIGVuYWJsZSBjaGVjayBvZiB0aGUgbWljIGRyaXZlciBpbiBtb2RlX3NldAogIGNhbGxiYWNr
+LCBiZWNhdXNlIG1vZGVfc2V0IHNob3VsZCBiZSBwZXJmb3JtZWQgZXZlcnkgdGltZS4KCkNoYW5n
+ZXMgZm9yIFY0OgotIFJlbW92ZWQgZGlzcGxheS10aW1pbmdzIGluIGRldmljZXRyZWUsIHRoZSBk
+aXNwbGF5LXRpbWluZ3MgaGFzCiAgYmVlbiBmaXhlZCB0byBiZSBwcm92aWRlZCBieSB0aGUgZGV2
+aWNlIGRyaXZlci4KLSBBZGRlZCB0aGUgbW9kZV9zZXQgY2FsbGJhY2sgZnVuY3Rpb24gaW50byBl
+eHlub3NfZHJtX21pYywKICBiZWNhdXNlIHRoZSBleHlub3NfZHJtX21pYyBkcml2ZXIgY2FuIG5v
+dCBwYXJzZSBhIHZpZGVvbW9kZQogIHN0cnVjdCBieSByZW1vdmluZyB0aGUgZGlzcGxheS10aW1p
+bmdzIGZyb20gdGhlIGRldmljZXRyZWUuCgpDaGFuZ2VzIGZvciBWMzoKLSBJbiB0aGUgRFQgYmlu
+ZGluZyBkb2N1bWVudCwgbWFkZSBpdCBjbGVhcmx5IHRoYXQgdGhlIHBhbmVsIGlzIGEKICBjaGls
+ZCBub2RlIG9mIGRzaS4KLSBGaXggcmVzZXQtZ3BpbyBhY3RpdmUgZnJvbSBoaWdoIHRvIGxvdy4K
+LSBJcyB0aGUgT0YgZ3JhcGggc2F5aW5nIHJlbGF0ZWQgdG8gcGF0Y2gyPwogIEFsdGhvZ2ggdGhl
+IHBhbmVsIGlzIGEgY2hpbGQgb2YgZHNpLCBJIHRoaW5rIE9GIGdyYXBoIG5lY2Vzc2FyeS4KICBi
+ZWNhdXNlIGlmIGEgcmVtb3RlLWVuZHBvaW50IGlzIG5vdCBzcGVjaWZpZWQsIHRoZSBkc2kgYWxz
+bwogIHBhbmVsIGlzIG5vdCBwcm9iZWQuCi0gVGhlIGRpc3BsYXktdGltaW5ncyBoYXMgYmVlbiBm
+aXhlZCB0byBiZSBwcm92aWRlZCBieSB0aGUgZGV2aWNlCiAgZHJpdmVyLiBob3dldmVyLCBJIHRo
+aW5rIGRpc3BsYXktdGltaW5ncyBpcyBuZWNlc3NhcnkgaW4gZHRzLgogIGJlY2F1c2UgaWYgZHRz
+IGRvZXMgbm90IGhhdmUgZGlzcGxheS10aW1pbmdzLCBkc2kgd2lsbCBub3QgbG9hZC4KCkNoYW5n
+ZXMgZm9yIFYyOgotIEZpeGVkIHRoZSBzYW1zdW5nLHM2ZTNoYTIudHh0IERUIGRvY3VtZW50Lgog
+IC0gQWRkZWQgYWN0aXZlIGhpZ2ggb3IgbG93IGFmdGVyIHRoZSBkZXNjcmlwdGlvbiBvZiB0aGUg
+R1BJT3MuCiAgLSBSZW1vdmVkIHRoZSByZWcgYW5kIGFkZGVkIGEgZGVzY3JpcHRpb24gb2YgdGhl
+IHZpcnR1YWwKICAgIGNoYW5uZWwgbnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwuCgpEZXBlbmRz
+IG9uOgpbMV0gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQva3J6
+ay9saW51eC5naXQvIChmb3ItbmV4dCBicmFuY2gpClsyXSBodHRwczovL3BhdGNod29yay5rZXJu
+ZWwub3JnL3BhdGNoLzk1MDQxMzEvCiAgICAtICgiYXJtNjQ6IGR0czogZXh5bm9zOiBBZGQgdG0y
+IHRvdWNoa2V5IG5vZGUiKQoKSG9lZ2V1biBLd29uICgyKToKICBkdC1iaW5kaW5nczogQWRkIHN1
+cHBvcnQgZm9yIHNhbXN1bmcgczZlM2hhMiBwYW5lbCBiaW5kaW5nCiAgZHJtL3BhbmVsOiBBZGQg
+c3VwcG9ydCBmb3IgUzZFM0hBMiBwYW5lbCBkcml2ZXIgb24gVE0yIGJvYXJkCgpIeXVuZ3dvbiBI
+d2FuZyAoMSk6CiAgYXJtNjQ6IGR0czogZXh5bm9zOiBBZGQgc3VwcG9ydCBmb3IgUzZFM0hBMiBw
+YW5lbCBkZXZpY2Ugb24gVE0yIGJvYXJkCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ft
+c3VuZyxzNmUzaGEyLnR4dCAgICAgfCAgMjggKwogYXJjaC9hcm02NC9ib290L2R0cy9leHlub3Mv
+ZXh5bm9zNTQzMy10bTIuZHRzICAgICAgfCAgMTIgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKwogZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLXNhbXN1bmctczZlM2hhMi5jICAgICAgfCA3MzkgKysrKysrKysrKysrKysrKysr
+KysrCiA1IGZpbGVzIGNoYW5nZWQsIDc4NiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3Vu
+ZyxzNmUzaGEyLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC1zYW1zdW5nLXM2ZTNoYTIuYwoKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
