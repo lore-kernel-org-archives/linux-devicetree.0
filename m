@@ -1,62 +1,61 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] regulator: core: add
- regulator_has_continuous_voltage_range()
-Date: Thu, 9 Mar 2017 11:28:19 +0100
-Message-ID: <20170309102819.bx5paxtffvmvmuov@sirena.org.uk>
-References: <20170308200246.126331-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4h6g4xmperbydgvt"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170308200246.126331-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dmitry Torokhov <dtor-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 8/9] docs-rst: media: Switch documentation to V4L2 fwnode API
+Date: Thu,  9 Mar 2017 13:25:28 +0200
+Message-ID: <1489058728-15475-1-git-send-email-sakari.ailus@linux.intel.com>
+References: <1486992496-21078-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1486992496-21078-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Instead of including the V4L2 OF header in ReST documentation, use the
+V4L2 fwnode header instead.
 
---4h6g4xmperbydgvt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
 
-On Wed, Mar 08, 2017 at 12:02:45PM -0800, Matthias Kaehlcke wrote:
+This goes before patch "[PATCH 8/8] v4l: Remove V4L2 OF framework in
+favour of V4L2 fwnode framework".
 
-> The new function allows consumers to determine if a regulator is
-> continuous or discrete, and whether the results of
+ Documentation/media/kapi/v4l2-core.rst   | 2 +-
+ Documentation/media/kapi/v4l2-fwnode.rst | 3 +++
+ Documentation/media/kapi/v4l2-of.rst     | 3 ---
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/media/kapi/v4l2-fwnode.rst
+ delete mode 100644 Documentation/media/kapi/v4l2-of.rst
 
-Why?  As we discussed at ELC this is an implementation detail of the
-regulator and it's to an extent a taste decision if the regulator is
-represented as a linear range or a continuous range (in fact given
-improvements in the core we could probably just update all continuous
-range regulators to linear ones).
-
-> regulator_count_voltages() and regulator_list_voltage() correspond
-> to the regulator itself or its supply.
-
-Why?
-
-> Change-Id: I1198cee9fff60dc747a02860e9652034f4d5da33
-
-Don't include noise like this upstream.
-
---4h6g4xmperbydgvt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljBLkAACgkQJNaLcl1U
-h9D8kQf+NquhYo8Hxav4fTFiT+bIpiWuOwoPicrBYUuuk3Q4wbemzaYDbAMr8iY7
-L2k47bOyZzJMxlb7GNbvocR8vdkUJ4V0OfSYxErlg/GSrvJ714VjBgfCW49jAMXc
-5bBC9xZRXlflzTAE04YAlybiasZQ/HBRf1JEv0rXJHJurz8GcJ78heZR4pZ1lYS2
-zKTPc67JhTsZOwuWv8nZ2o2+iYKct6dF2hH+qeVXCYJGFaMpxgUnlzA855lhFwtu
-nxWV5qQGe7LDKNA5OXzyMlrSnYN8RdFTrfXu491XEAWvLMVYWLHdUb/SFklPD0kD
-EvAvp3WxJ+EiVk6b2wWZPEze+VGi6Q==
-=xXj5
------END PGP SIGNATURE-----
-
---4h6g4xmperbydgvt--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/media/kapi/v4l2-core.rst b/Documentation/media/kapi/v4l2-core.rst
+index e967715..1bc8a14 100644
+--- a/Documentation/media/kapi/v4l2-core.rst
++++ b/Documentation/media/kapi/v4l2-core.rst
+@@ -19,7 +19,7 @@ Video2Linux devices
+     v4l2-mc
+     v4l2-mediabus
+     v4l2-mem2mem
+-    v4l2-of
++    v4l2-fwnode
+     v4l2-rect
+     v4l2-tuner
+     v4l2-common
+diff --git a/Documentation/media/kapi/v4l2-fwnode.rst b/Documentation/media/kapi/v4l2-fwnode.rst
+new file mode 100644
+index 0000000..4128c12
+--- /dev/null
++++ b/Documentation/media/kapi/v4l2-fwnode.rst
+@@ -0,0 +1,3 @@
++V4L2 fwnode kAPI
++^^^^^^^^^^^^^^^^^^^^^^^
++.. kernel-doc:: include/media/v4l2-fwnode.h
+diff --git a/Documentation/media/kapi/v4l2-of.rst b/Documentation/media/kapi/v4l2-of.rst
+deleted file mode 100644
+index 1ddf76b..0000000
+--- a/Documentation/media/kapi/v4l2-of.rst
++++ /dev/null
+@@ -1,3 +0,0 @@
+-V4L2 Open Firmware kAPI
+-^^^^^^^^^^^^^^^^^^^^^^^
+-.. kernel-doc:: include/media/v4l2-of.h
+-- 
+2.7.4
