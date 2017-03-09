@@ -1,126 +1,51 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 14/15] ARM: sun5i: a10s: Add the HDMI
- controller node
-Date: Thu, 9 Mar 2017 11:59:34 +0100
-Message-ID: <20170309105934.ahsussan6p36lrzn@lukather>
-References: <cover.bc06ffa88f847ddd9ddd7c259415d5f61b55307b.1488876832.git-series.maxime.ripard@free-electrons.com>
- <61406c0ba992f2fa5b5180b790a1ef3fa38d9567.1488876832.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v64KKp0cYB3u0=bSVcq0gB41LkurCeiTJ3OEzn7UjdSPpQ@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 00/10] ARM: davinci: add vpif display support
+Date: Thu, 9 Mar 2017 12:00:01 +0100
+Message-ID: <CAMpxmJUZ3KCV2zjpPWD02rVpok_XV-fGdk8PNpN7FGt3RDbMEw@mail.gmail.com>
+References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
+ <77ced65d-e350-02ba-6dae-b20dcb3faa32@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ikoiozqmyzngxi4v"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFXLQTDAKGQE5X2JWZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64KKp0cYB3u0=bSVcq0gB41LkurCeiTJ3OEzn7UjdSPpQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <77ced65d-e350-02ba-6dae-b20dcb3faa32@xs4all.nl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Lad Prabhakar <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media <linux-media@vger.kernel.org>, Alexandre Bailon <abailon@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
+2017-03-09 11:53 GMT+01:00 Hans Verkuil <hverkuil@xs4all.nl>:
+> On 07/02/17 17:41, Bartosz Golaszewski wrote:
+>> The following series adds support for v4l2 display on da850-evm with
+>> a UI board in device tree boot mode.
+>
+> As far as I could tell from the comments this patch series will see a
+> second version, so I am marking it as 'Changes Requested' in patchwork.
+>
+> If I'm wrong, then please let me know.
+>
+> Regards,
+>
+>         Hans
+>
 
---ikoiozqmyzngxi4v
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Hans,
 
-1;4601;0c
-On Wed, Mar 08, 2017 at 11:35:39AM +0800, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> On Tue, Mar 7, 2017 at 4:56 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > The A10s has an HDMI controller connected to the second TCON channel. Add
-> > it to our DT.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/sun5i-a10s.dtsi | 34 ++++++++++++++++++++++++++++++++-
-> >  arch/arm/boot/dts/sun5i.dtsi      |  1 +-
-> >  2 files changed, 35 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-> > index 074485782a4a..3482c9d2b120 100644
-> > --- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-> > +++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-> > @@ -72,7 +72,33 @@
-> >                 };
-> >         };
-> >
-> > +       display-engine {
-> > +               compatible = "allwinner,sun5i-a10s-display-engine",
-> > +                            "allwinner,sun5i-a13-display-engine";
-> > +               allwinner,pipelines = <&fe0>;
-> > +       };
-> > +
-> >         soc@01c00000 {
-> > +               hdmi0: hdmi@01c16000 {
-> 
-> Nit: is the 0 suffix needed? I don't see any indication that there is
-> a second controller.
-> 
-> > +                       compatible = "allwinner,sun5i-a10s-hdmi";
-> > +                       reg = <0x01c16000 0x1000>;
-> > +                       clocks = <&ccu CLK_AHB_HDMI>, <&ccu CLK_HDMI>,
-> > +                                <&ccu CLK_PLL_VIDEO0_2X>,
-> > +                                <&ccu CLK_PLL_VIDEO1_2X>;
-> > +                       clock-names = "ahb", "mod", "pll-0", "pll-1";
-> > +                       status = "disabled";
-> > +
-> > +                       port {
-> > +                               #address-cells = <1>;
-> > +                               #size-cells = <0>;
-> > +
-> > +                               hdmi0_in_tcon0: endpoint@0 {
-> > +                                       reg = <0>;
-> > +                                       remote-endpoint = <&tcon0_out_hdmi0>;
-> > +                               };
-> > +                       };
-> > +               };
-> > +
-> >                 pwm: pwm@01c20e00 {
-> >                         compatible = "allwinner,sun5i-a10s-pwm";
-> >                         reg = <0x01c20e00 0xc>;
-> > @@ -129,3 +155,11 @@
-> >
-> >  &sram_a {
-> >  };
-> > +
-> > +&tcon0_out {
-> > +       tcon0_out_hdmi0: endpoint@2 {
-> > +               reg = <2>;
-> > +               remote-endpoint = <&hdmi0_in_tcon0>;
-> > +               allwinner,tcon-channel = <1>;
-> > +       };
-> > +};
-> > diff --git a/arch/arm/boot/dts/sun5i.dtsi b/arch/arm/boot/dts/sun5i.dtsi
-> > index f3b6e19244f9..3d009b2aa42a 100644
-> > --- a/arch/arm/boot/dts/sun5i.dtsi
-> > +++ b/arch/arm/boot/dts/sun5i.dtsi
-> > @@ -273,6 +273,7 @@
-> >                                         tcon0_out_tve0: endpoint@1 {
-> >                                                 reg = <1>;
-> >                                                 remote-endpoint = <&tve0_in_tcon0>;
-> > +                                               allwinner,tcon-channel = <1>;
-> 
-> This looks like a separate patch, probably following the binding
-> change?
+this series has since been split into several smaller ones and most of
+the code is already merged into Sekhar Nori's DaVinci tree.
 
-I don't know, the binding says that without anything specified, reg
-would be used. I was assuming that we only needed it once we had the
-new endpoint to make it consistent, therefore it didn't need an extra
-patch.
+There are two series that still need merging with the media tree[1][2].
 
-But I can definitely create one if you want.
-Maxime
+Thanks,
+Bartosz Golaszewski
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---ikoiozqmyzngxi4v--
+[1] https://lkml.org/lkml/2017/2/28/426
+[2] https://patchwork.kernel.org/patch/9577965/
