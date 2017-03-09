@@ -1,70 +1,121 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v4 3/3] ARM64: dts: marvell: armada-37xx: Add USB2 node
-Date: Thu,  9 Mar 2017 18:52:58 +0100
-Message-ID: <20170309175258.20076-4-gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 1/3] usb: orion-echi: Add support for the Armada 3700
+Date: Thu,  9 Mar 2017 18:52:56 +0100
+Message-ID: <20170309175258.20076-2-gregory.clement@free-electrons.com>
 References: <20170309175258.20076-1-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170309175258.20076-1-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Hua Jing <jinghua@marvell.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170309175258.20076-1-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Armada 37xx SoC embedded an EHCI controller. This patch adds the device
-tree node enabling its support.
+From: Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+- Add a new compatible string for the Armada 3700 SoCs
+
+- add sbuscfg support for orion usb controller driver. For the SoCs
+  without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
+  register to guarantee the AHB master's burst would not overrun or
+  underrun the FIFO.
+
+- the sbuscfg register has to be set after the usb controller reset,
+  otherwise the value would be overridden to 0. In order to do this, the
+  reset callback is registered.
+
+[gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org: - reword commit and comments
+				     - fix error path in ehci_orion_drv_reset()
+				     - fix checkpatch warning]
+Signed-off-by: Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-db.dts | 6 ++++++
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 7 +++++++
- 2 files changed, 13 insertions(+)
+ .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
+ drivers/usb/host/ehci-orion.c                      | 36 ++++++++++++++++++++++
+ 2 files changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-index 864936acc316..aa39339b6582 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-@@ -134,6 +134,12 @@
- 	status = "okay";
+diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+index 17c3bc858b86..2855bae79fda 100644
+--- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
++++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+@@ -1,7 +1,9 @@
+ * EHCI controller, Orion Marvell variants
+ 
+ Required properties:
+-- compatible: must be "marvell,orion-ehci"
++- compatible: must be one of the following
++	"marvell,orion-ehci"
++	"marvell,armada-3700-ehci"
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - interrupts: The EHCI interrupt
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index ee8d5faa0194..1aec87ec68df 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -47,6 +47,18 @@
+ #define USB_PHY_IVREF_CTRL	0x440
+ #define USB_PHY_TST_GRP_CTRL	0x450
+ 
++#define USB_SBUSCFG		0x90
++
++/* BAWR = BARD = 3 : Align read/write bursts packets larger than 128 bytes */
++#define USB_SBUSCFG_BAWR_ALIGN_128B	(0x3 << 6)
++#define USB_SBUSCFG_BARD_ALIGN_128B	(0x3 << 3)
++/* AHBBRST = 3	   : Align AHB Burst to INCR16 (64 bytes) */
++#define USB_SBUSCFG_AHBBRST_INCR16	(0x3 << 0)
++
++#define USB_SBUSCFG_DEF_VAL (USB_SBUSCFG_BAWR_ALIGN_128B	\
++			     | USB_SBUSCFG_BARD_ALIGN_128B	\
++			     | USB_SBUSCFG_AHBBRST_INCR16)
++
+ #define DRIVER_DESC "EHCI orion driver"
+ 
+ #define hcd_to_orion_priv(h) ((struct orion_ehci_hcd *)hcd_to_ehci(h)->priv)
+@@ -151,8 +163,31 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
+ 	}
+ }
+ 
++static int ehci_orion_drv_reset(struct usb_hcd *hcd)
++{
++	struct device *dev = hcd->self.controller;
++	int ret;
++
++	ret = ehci_setup(hcd);
++	if (ret)
++		return ret;
++
++	/*
++	 * For SoC without hlock, need to program sbuscfg value to guarantee
++	 * AHB master's burst would not overrun or underrun FIFO.
++	 *
++	 * sbuscfg reg has to be set after usb controller reset, otherwise
++	 * the value would be override to 0.
++	 */
++	if (of_device_is_compatible(dev->of_node, "marvell,armada-3700-ehci"))
++		wrl(USB_SBUSCFG, USB_SBUSCFG_DEF_VAL);
++
++	return ret;
++}
++
+ static const struct ehci_driver_overrides orion_overrides __initconst = {
+ 	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
++	.reset = ehci_orion_drv_reset,
  };
  
-+/* CON27 */
-+&usb2 {
-+	status = "okay";
-+};
-+
-+
- &mdio {
- 	status = "okay";
- 	phy0: ethernet-phy@0 {
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index cf0c2f9ebd7d..7639518d8ee1 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -204,6 +204,13 @@
- 				status = "disabled";
- 			};
+ static int ehci_orion_drv_probe(struct platform_device *pdev)
+@@ -310,6 +345,7 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
  
-+			usb2: usb@5e000 {
-+				compatible = "marvell,armada-3700-ehci";
-+				reg = <0x5e000 0x2000>;
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
- 			xor@60900 {
- 				compatible = "marvell,armada-3700-xor";
- 				reg = <0x60900 0x100
+ static const struct of_device_id ehci_orion_dt_ids[] = {
+ 	{ .compatible = "marvell,orion-ehci", },
++	{ .compatible = "marvell,armada-3700-ehci", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
