@@ -1,68 +1,331 @@
-From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCHv2 4/5] mfd: altr_a10sr: Add Arria10 DevKit Reset
- Controller
-Date: Thu, 9 Mar 2017 10:03:24 -0600
-Message-ID: <31abf03e-a3e6-70ef-58f9-dc2950da5ee7@linux.intel.com>
-References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
- <1487783419-10912-5-git-send-email-thor.thayer@linux.intel.com>
- <1488292941.2288.55.camel@pengutronix.de>
-Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [v3 3/5] coresight: add support for debug module
+Date: Thu, 9 Mar 2017 16:53:05 +0000
+Message-ID: <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
+References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488292941.2288.55.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-On 02/28/2017 08:42 AM, Philipp Zabel wrote:
-> On Wed, 2017-02-22 at 11:10 -0600, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>
->> Add Peripheral PHY Reset Controller to the Arria10
->> Development Kit System Resource Chip's MFD.
->>
->> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> ---
->> v2  Changes to commit header & body for clarification.
->> ---
->>  drivers/mfd/altera-a10sr.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
->> index 06e1f7f..96e7d2c 100644
->> --- a/drivers/mfd/altera-a10sr.c
->> +++ b/drivers/mfd/altera-a10sr.c
->> @@ -33,6 +33,10 @@
->>  		.name = "altr_a10sr_gpio",
->>  		.of_compatible = "altr,a10sr-gpio",
->>  	},
->> +	{
->> +		.name = "altr_a10sr_reset",
->> +		.of_compatible = "altr,a10sr-reset",
->> +	},
->>  };
->>
->>  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
+On 03/03/17 06:00, Leo Yan wrote:
+> Coresight includes debug module and usually the module connects with CPU
+> debug logic. ARMv8 architecture reference manual (ARM DDI 0487A.k) has
+> description for related info in "Part H: External Debug".
 >
-> Lee, should this be merged through the reset tree? Otherwise I'll just
-> pick up patches 1-3.
+> Chapter H7 "The Sample-based Profiling Extension" introduces several
+> sampling registers, e.g. we can check program counter value with
+> combined CPU exception level, secure state, etc. So this is helpful for
+> analysis CPU lockup scenarios, e.g. if one CPU has run into infinite
+> loop with IRQ disabled. In this case the CPU cannot switch context and
+> handle any interrupt (including IPIs), as the result it cannot handle
+> SMP call for stack dump.
 >
-> regards
-> Philipp
+> This patch is to enable coresight debug module, so firstly this driver
+> is to bind apb clock for debug module and this is to ensure the debug
+> module can be accessed from program or external debugger. And the driver
+> uses sample-based registers for debug purpose, e.g. when system detects
+> the CPU lockup and trigger panic, the driver will dump program counter
+> and combined context registers (EDCIDSR, EDVIDSR); by parsing context
+> registers so can quickly get to know CPU secure state, exception level,
+> etc.
+
+The problem is, it is not guaranteed that the EDPCSR_Hi, EDCIDSR & EDVIDSR are
+updated as a side effect of a memory mapped access (which is what we do here) to the
+EDPCSR_Lo.
+
+Section H.7.1.2 : Reads of EDPCSRs (in ARM DDI 0487A.k) :
+
+"The indirect writes to EDCIDSR, EDVIDSR, and EDPCSRhi might not occur for a memory-mapped access
+to the external debug interface. For more information, see Memory-mapped accesses to the external debug
+interface on page H8-4968."
+
+So we cannot really rely on the values in EDVIDSR which we use to make further decisions. So I
+am wondering if this is really guranteed to be useful.
+
 >
+> Some of the debug module registers are located in CPU power domain, so
+> in the driver it has checked the power state for CPU before accessing
+> registers within CPU power domain. For most safe way to use this driver,
+> it's suggested to disable CPU low power states, this can simply set
+> "nohlt" in kernel command line.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  drivers/hwtracing/coresight/Kconfig           |  10 +
+>  drivers/hwtracing/coresight/Makefile          |   1 +
+>  drivers/hwtracing/coresight/coresight-debug.c | 377 ++++++++++++++++++++++++++
+>  3 files changed, 388 insertions(+)
+>  create mode 100644 drivers/hwtracing/coresight/coresight-debug.c
+>
+> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> index 130cb21..3ed651e 100644
+> --- a/drivers/hwtracing/coresight/Kconfig
+> +++ b/drivers/hwtracing/coresight/Kconfig
+> @@ -89,4 +89,14 @@ config CORESIGHT_STM
+>  	  logging useful software events or data coming from various entities
+>  	  in the system, possibly running different OSs
+>
+> +config CORESIGHT_DEBUG
 
-Any comments on this patch and the patch series?
+To make it more specific, may be CORESIGHT_CPU_DEBUG ?
 
-Thanks,
+> +	bool "CoreSight debug driver"
 
-Thor
+"Coresight CPU Debug driver"
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	depends on ARM || ARM64
+> +	help
+> +	  This driver provides support for coresight debugging module. This
+> +	  is primarily used to dump sample-based profiling registers for
+> +	  panic. To avoid lockups when accessing debug module registers,
+> +	  it is safer to disable CPU low power states (like "nohlt" on the
+> +	  kernel command line) when using this feature.
+> +
+
+> +#define EDPCSR_THUMB			BIT(0)
+> +#define EDPCSR_ARM_INST_MASK		GENMASK(31, 2)
+> +#define EDPCSR_THUMB_INST_MASK		GENMASK(31, 1)
+
+We don't need two different masks. {ED/DBG}PCSR has only bit 0 reserved
+for instruction set indication.
+
+> +#endif
+> +
+> +/* bits definition for EDPRSR */
+> +#define EDPRSR_DLK			BIT(6)
+> +#define EDPRSR_PU			BIT(0)
+> +
+> +
+> +static void debug_read_regs(struct debug_drvdata *drvdata)
+> +{
+> +	drvdata->edprsr = readl_relaxed(drvdata->base + EDPRSR);
+> +
+> +	if (!debug_access_permitted(drvdata))
+> +		return;
+> +
+> +	if (!drvdata->edpcsr_present)
+> +		return;
+> +
+> +	CS_UNLOCK(drvdata->base);
+> +
+> +	debug_os_unlock(drvdata);
+> +
+> +	drvdata->edpcsr = readl_relaxed(drvdata->base + EDPCSR);
+> +
+> +	/*
+> +	 * As described in ARM DDI 0487A.k, if the processing
+> +	 * element (PE) is in debug state, or sample-based
+> +	 * profiling is prohibited, EDPCSR reads as 0xFFFFFFFF;
+> +	 * EDCIDSR, EDVIDSR and EDPCSR_HI registers also become
+> +	 * UNKNOWN state. So directly bail out for this case.
+> +	 */
+> +	if (drvdata->edpcsr == EDPCSR_PROHIBITED) {
+> +		CS_LOCK(drvdata->base);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * A read of the EDPCSR normally has the side-effect of
+> +	 * indirectly writing to EDCIDSR, EDVIDSR and EDPCSR_HI;
+> +	 * at this point it's safe to read value from them.
+> +	 */
+
+See my comment above about the side effects of memory mapped access.
+
+> +	drvdata->edcidsr = readl_relaxed(drvdata->base + EDCIDSR);
+> +#ifdef CONFIG_64BIT
+> +	drvdata->edpcsr_hi = readl_relaxed(drvdata->base + EDPCSR_HI);
+> +#endif
+
+> +
+> +	if (drvdata->edvidsr_present)
+> +		drvdata->edvidsr = readl_relaxed(drvdata->base + EDVIDSR);
+> +
+> +	CS_LOCK(drvdata->base);
+> +}
+> +
+
+> +#ifndef CONFIG_64BIT
+
+I guess this doesn't help for an ARMv8 32bit only core (e.g, Cortex-A32). And
+unfortunately, there are conflicting definitions for the values for PCSROffset w.r.t
+ARMv8 and ARMv7.
+
+DBGDEVID1[3:0] For ARMv7 :
+
+0000 - Sample offset applies based on the instruction state.
+0001 - No offset applies.
+
+EDDEVID1[3:0] For ARMv8 :
+0000 - EDPCSR not implemented
+0010 - EDPCSR implemented without offsets, but do not use in AArch32 state!
+
+So there is no easy way to make sense of the value, unless you know which version
+of the architecture is in use. Or may be we could co-relate it with the value from
+DEVID.
+
+i.e, EDPCSR is not implemented do not register this device, see comments on debug_probe().
+( And we should also include the following test for 32bit code to see if edpcsr is implemented.
+See comments on debug_init_arch_data() )
+
+
+That way, we could use the following inference from the PCSROffset value :
+
+0000 - Sample offset applies based on the instruction state (indicated by PCSR[0])
+0001 - No offset applies.
+0010 - No offset applies, but do not use in AArch32 mode
+
+
+> +static bool debug_pc_has_offset(struct debug_drvdata *drvdata)
+> +{
+> +	u32 pcsr_offset;
+> +
+> +	pcsr_offset = drvdata->eddevid1 & EDDEVID1_PCSR_OFFSET_MASK;
+> +
+> +	return (pcsr_offset == EDDEVID1_PCSR_OFFSET_INS_SET);
+> +}
+> +
+> +static unsigned long debug_adjust_pc(struct debug_drvdata *drvdata,
+> +				     unsigned long pc)
+> +{
+> +	unsigned long arm_inst_offset = 0, thumb_inst_offset = 0;
+> +
+> +	if (debug_pc_has_offset(drvdata)) {
+> +		arm_inst_offset = 8;
+> +		thumb_inst_offset = 4;
+> +	}
+> +
+> +	/* Handle thumb instruction */
+> +	if (pc & EDPCSR_THUMB) {
+> +		pc = (pc & EDPCSR_THUMB_INST_MASK) - thumb_inst_offset;
+> +		return pc;
+> +	}
+> +
+> +	/*
+> +	 * Handle arm instruction offset, if the arm instruction
+> +	 * is not 4 byte alignment then it's possible the case
+> +	 * for implementation defined; keep original value for this
+> +	 * case and print info for notice.
+> +	 */
+> +	if (pc & BIT(1))
+> +		pr_emerg("Instruction offset is implementation defined\n");
+
+I am struggling to find the any mention about this in the ARM ARM. Please could
+you point me to it.
+
+> +static void debug_init_arch_data(void *info)
+> +{
+> +	struct debug_drvdata *drvdata = info;
+> +	u32 mode;
+> +
+> +	CS_UNLOCK(drvdata->base);
+> +
+> +	debug_os_unlock(drvdata);
+> +
+> +	/* Read device info */
+> +	drvdata->eddevid  = readl_relaxed(drvdata->base + EDDEVID);
+> +	drvdata->eddevid1 = readl_relaxed(drvdata->base + EDDEVID1);
+> +
+> +	/* Parse implementation feature */
+> +	mode = drvdata->eddevid & EDDEVID_PCSAMPLE_MODE;
+> +	if (mode == EDDEVID_IMPL_FULL) {
+> +		drvdata->edpcsr_present  = true;
+> +		drvdata->edvidsr_present = true;
+> +	} else if (mode == EDDEVID_IMPL_EDPCSR_EDCIDSR) {
+> +		drvdata->edpcsr_present  = true;
+> +		drvdata->edvidsr_present = false;
+
+As discussed above, we need to consult the DEVID1:PCSROffset for AArch32 to decide
+if we have the edpcsr implemented on ARMv8.
+
+> +	} else {
+> +		drvdata->edpcsr_present  = false;
+> +		drvdata->edvidsr_present = false;
+> +	}
+> +
+> +	CS_LOCK(drvdata->base);
+> +}
+> +
+> +static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+> +{
+> +	void __iomem *base;
+> +	struct device *dev = &adev->dev;
+> +	struct debug_drvdata *drvdata;
+> +	struct resource *res = &adev->res;
+> +	struct device_node *np = adev->dev.of_node;
+> +	char buf[32];
+> +	static int debug_count;
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +
+> +	drvdata->cpu = np ? of_coresight_get_cpu(np) : 0;
+> +	drvdata->dev = &adev->dev;
+> +
+> +	dev_set_drvdata(dev, drvdata);
+> +
+> +	/* Validity for the resource is already checked by the AMBA core */
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	drvdata->base = base;
+> +
+> +	get_online_cpus();
+> +	per_cpu(debug_drvdata, drvdata->cpu) = drvdata;
+> +
+> +	if (smp_call_function_single(drvdata->cpu,
+> +				debug_init_arch_data, drvdata, 1))
+> +		dev_err(dev, "Debug arch init failed\n");
+
+If this fails (say the CPU was offline), should we still return success ?
+And may be we should check if the drvdata->edpcsr_present to detect if the CPU
+implements the PC Sampling and return failure here if it doesn't.
+
+> +
+> +	put_online_cpus();
+> +
+> +	if (!debug_count++)
+> +		atomic_notifier_chain_register(&panic_notifier_list,
+> +					       &debug_notifier);
+> +
+
+> +	sprintf(buf, (char *)id->data, drvdata->cpu);
+> +	dev_info(dev, "%s initialized\n", buf);
+
+This could simply be :
+	dev_info(dev, "Coresight debug-CPU%d initialized\n", drvdata->cpu);
+
+and get rid of the static string and the buffer, see below.
+
+> +	return 0;
+> +}
+> +
+> +static struct amba_id debug_ids[] = {
+> +	{       /* Debug for Cortex-A53 */
+> +		.id	= 0x000bbd03,
+> +		.mask	= 0x000fffff,
+
+...
+
+> +		.data   = "Coresight debug-CPU%d",
+
+I think this is pointless, as the debug area we are interested in is always associated
+with a CPU, we could as well figure out what to print from the drvdata->cpu above.
+
+Suzuki
