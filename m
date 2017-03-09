@@ -1,61 +1,95 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 00/10] ARM: davinci: add vpif display support
-Date: Thu, 9 Mar 2017 13:05:14 +0100
-Message-ID: <4b8381d2-25b5-2d46-9575-2e1182cd276c@xs4all.nl>
-References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
- <77ced65d-e350-02ba-6dae-b20dcb3faa32@xs4all.nl>
- <CAMpxmJUZ3KCV2zjpPWD02rVpok_XV-fGdk8PNpN7FGt3RDbMEw@mail.gmail.com>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Thu, 9 Mar 2017 07:34:43 -0500
+Message-ID: <1447da4a-6a36-38fb-4298-fd7488697d11@timesys.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <2197294b-e6cf-6c56-1419-3a4f95c29db7@timesys.com>
+ <6df4a9ae-eaba-6f3f-9c23-ae269548b005@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMpxmJUZ3KCV2zjpPWD02rVpok_XV-fGdk8PNpN7FGt3RDbMEw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Lad Prabhakar <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media <linux-media@vger.kernel.org>, Alexandre Bailon <abailon@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6df4a9ae-eaba-6f3f-9c23-ae269548b005-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/17 12:00, Bartosz Golaszewski wrote:
-> 2017-03-09 11:53 GMT+01:00 Hans Verkuil <hverkuil@xs4all.nl>:
->> On 07/02/17 17:41, Bartosz Golaszewski wrote:
->>> The following series adds support for v4l2 display on da850-evm with
->>> a UI board in device tree boot mode.
->>
->> As far as I could tell from the comments this patch series will see a
->> second version, so I am marking it as 'Changes Requested' in patchwork.
->>
->> If I'm wrong, then please let me know.
->>
->> Regards,
->>
->>         Hans
->>
-> 
-> Hi Hans,
-> 
-> this series has since been split into several smaller ones and most of
-> the code is already merged into Sekhar Nori's DaVinci tree.
-> 
-> There are two series that still need merging with the media tree[1][2].
 
-Merged, thanks!
 
-Regards,
+On 03/09/2017 04:59 AM, Wolfgang Grandegger wrote:
+> Hello Akshay,
+> 
+> unfortunately there are not many CAN controllers for the SPI bus. I just
+> know the MPC251x, which behaves badly (message losses) under Linux,
+> especially at hight bit-rates due to insufficient RX buffering. What is
+> your experience with that driver for the HI-311x?
+> 
 
-	Hans
+Hi Wolfgang,
+
+Good question. I have not worked with MPC251x but the HI-311x performs
+much better because HI-3110 features:
+8 message FIFO (as opposed to 2 buffers on MPC2510)
+20 MHz SPI interface (as opposed to 2.5 MHz on MPC2510)
+
+As for the real world test results:
+
+With RT patch applied to the kernel running on a i.MX6 Dual processor
+(worst case interrupt latency of 50us as reported by cyclictest), there
+are ZERO packet drops.
+Tested with Kvaser Leaf sending 100 burst messages (back to back) every
+40ms at a 1M CAN bit rate. 10 million messages were sent by the Kvaser
+leaf and received successfully by the HI-311x driver.
+
+Even without the RT patch, I was able to get the packet drop to zero but
+this was by moving the CAN/SPI IRQ threads to CPU1 instead of CPU0.
+
+Hence I feel the driver is a good candidate to be included in the Linux
+kernel.
+
+Below are detailed test results if you like:
+https://goo.gl/VWgzp7
+
+Ones of particular interest:
+10M-msgs-1M-bitrate-100burst-40ms-interval-leaf.png
+10M-msgs-1M-bitrate-100burst-40ms-interval-pwc.txt
+
+Thanks,
+Akshay
 
 > 
-> Thanks,
-> Bartosz Golaszewski
-> 
-> [1] https://lkml.org/lkml/2017/2/28/426
-> [2] https://patchwork.kernel.org/patch/9577965/
-> 
+> Am 07.03.2017 um 16:31 schrieb Akshay Bhat:
+>>
+>>
+>> On 01/17/2017 02:22 PM, Akshay Bhat wrote:
+>>> This patch adds support for the Holt HI-311x CAN controller. The HI311x
+>>> CAN controller is capable of transmitting and receiving standard data
+>>> frames, extended data frames and remote frames. The HI311x interfaces
+>>> with the host over SPI.
+>>>
+>>> Datasheet: www.holtic.com/documents/371-hi-3110_v-rev-jpdf.do
+>>>
+>>> Signed-off-by: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>
+>>
+>>
+>> Hi Marc,
+>>
+>> Wanted to check if this patch can be included in the next kernel release
+>> (4.12).
+>>
+>> Thanks,
+>> Akshay
+>> -- 
+>> To unsubscribe from this list: send the line "unsubscribe linux-can" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
