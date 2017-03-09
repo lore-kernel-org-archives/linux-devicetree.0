@@ -1,34 +1,61 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] dt: bindings: add pmu0 regs for USB
- PHYs on Allwinner H3/V3s/A64
-Date: Thu, 9 Mar 2017 18:10:47 +0800
-Message-ID: <CAGb2v65cxJqkAzQ-s08qf1J_i8OAZFYc6kqrt3WHV_ACEABtSA@mail.gmail.com>
-References: <20170306223449.21404-1-icenowy@aosc.xyz> <20170306223449.21404-2-icenowy@aosc.xyz>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Carlo Caione <carlo@caione.org>
+Subject: [PATCH v3 0/2] scpi-sensors: Fix SCP sensor readings scale
+Date: Thu,  9 Mar 2017 11:17:57 +0100
+Message-ID: <20170309101759.18081-1-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBQGUQTDAKGQE7HYCK2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170306223449.21404-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux@endlessm.com, punit.agrawal@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 7, 2017 at 6:34 AM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> Allwinner H3/V3s/A64 SoCs have a special USB PHY0 that can route to two
-> controllers: one is MUSB and the other is a EHCI/OHCI pair.
->
-> When it's routed to EHCI/OHCI pair, it will needs a "pmu0" regs to
-> tweak, like other EHCI/OHCI pairs in Allwinner SoCs.
->
-> Add this to the binding of USB PHYs on Allwinner H3/V3s/A64.
->
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+From: Carlo Caione <carlo@endlessm.com>
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+The implementation details for SCPI seems to suggest that the sensor
+readings must be reported by SCP using a well defined scale
+(millidegree Celsius for temperature, millivolts for voltage,
+milliamperes for current, microwatts for power and microjoules for
+energy).
+
+This is also important for the interaction with other subsystems: for
+example both the thermal sub-system and the hwmon sysfs interface expect
+the temperature expressed in millidegree Celsius.
+
+Unfortunately since this behaviour is dependent on the firmware
+implementation there are cases where the sensor readings are reported
+using a different scale. For example in the Amlogic SoCs the
+temperature is reported in degree and not millidegree Celsius.
+
+In this patchset we introduce a new DT property `scpi,sensors-scale` that is
+used by the scpi-hwmon driver to convert the sensor readings to the expected
+scale.
+
+v2:
+ - Added data validation (scale != 0)
+ - s/unsigned int/u32/ for the array
+ - Switched to array initialiser notation
+ - Introduced scpi_scale_reading()
+
+v3:
+ - scpi_scale_reading marked as static
+
+Carlo Caione (2):
+  Documentation: bindings: Introduce scpi,sensors-scale
+  hwmon: (scpi) Fix the scale of SCP sensor readings
+
+ Documentation/devicetree/bindings/arm/arm,scpi.txt | 18 ++++++++++++
+ drivers/hwmon/scpi-hwmon.c                         | 34 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+
+-- 
+2.9.3
