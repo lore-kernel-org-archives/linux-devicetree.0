@@ -1,148 +1,101 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
- Broadcom NSP SoC"
-Date: Thu, 9 Mar 2017 13:41:24 +0530
-Message-ID: <58C10E2C.8080107@ti.com>
-References: <20170208233023.31922-1-zajec5@gmail.com>
- <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
- <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
- <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
- <b715c193196fb2de2b95cc3d15102e1b@milecki.pl>
- <b2bdc1a7-4e5c-a13e-0cda-c90759d7308c@gmail.com>
- <CAC3K-4o+ARP=_hg2XQszQh6v+ySpubyKRspCF38SLUUx4mXQDA@mail.gmail.com>
- <CACna6rwN2JpvDX3Lk9G3vP=YrWygUNkjsC_VRcQf+o38ZjXAfA@mail.gmail.com>
- <58BFF88F.8080008@ti.com>
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH 4/4] ASoC: sun8i-codec: Convert to use
+	SND_SOC_DAPM_AIF_IN
+Date: Thu, 9 Mar 2017 09:20:54 +0100
+Message-ID: <21d377a3-8e9d-34fa-b5c7-da6456bf31e8@free-electrons.com>
+References: <20170210094133.11382-1-mylene.josserand@free-electrons.com>
+ <20170210094133.11382-5-mylene.josserand@free-electrons.com>
+ <CAGb2v64Q0LysCPq2SpoNSqpyWDzNQ_CDhNipOGjW43dfnDABpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58BFF88F.8080008-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <CAGb2v64Q0LysCPq2SpoNSqpyWDzNQ_CDhNipOGjW43dfnDABpw@mail.gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Wednesday 08 March 2017 05:56 PM, Kishon Vijay Abraham I wrote:
-> Hi Rafal,
-> 
-> On Wednesday 08 March 2017 05:43 PM, Rafał Miłecki wrote:
->> On 10 February 2017 at 01:27, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>> On Thu, Feb 9, 2017 at 2:18 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> wrote:
->>>>
->>>> On 02/08/2017 11:21 PM, Rafał Miłecki wrote:
->>>>> On 2017-02-09 00:44, Florian Fainelli wrote:
->>>>>> On 02/08/2017 03:39 PM, Rafał Miłecki wrote:
->>>>>>> On 2017-02-09 00:32, Florian Fainelli wrote:
->>>>>>>> On 02/08/2017 03:30 PM, Rafał Miłecki wrote:
->>>>>>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>>>>>>
->>>>>>>>> This reverts commit d7bc1a7d41bf ("phy: Add USB3 PHY support for
->>>>>>>>> Broadcom NSP SoC") as we already have driver for this PHY (shared
->>>>>>>>> by NS
->>>>>>>>> and NSP). It was added in commit e5666281d9ea ("phy: bcm-ns-usb3:
->>>>>>>>> new
->>>>>>>>> driver for USB 3.0 PHY on Northstar").
->>>>>>>>>
->>>>>>>>> Instead of adding separated driver & duplicating code we should
->>>>>>>>> work on
->>>>>>>>> improving existing (old) one. Thanks to work done by Broadcom we
->>>>>>>>> know
->>>>>>>>> there is MDIO bus we weren't aware of & we know register names which
->>>>>>>>> makes initialization more clear. This is very valuable info and we
->>>>>>>>> should work on using it in existing driver afterwards.
->>>>>>>>
->>>>>>>> Should not we first extend the old driver to support NSP and then
->>>>>>>> revert
->>>>>>>> d7bc1a7d41bf ("phy: Add USB3 PHY support for Broadcom NSP SoC")?
->>>>>>>
->>>>>>> Sounds like a weird / dirty development method to me: adding
->>>>>>> duplicated
->>>>>>> code
->>>>>>> first then working on cleaning it. Unless you mean drivers/staging/.
->>>>>>
->>>>>> There was clearly a mistake in submitting this NSP USB PHY driver, and
->>>>>> it should have been a patch against the existing NS USB PHY driver, but
->>>>>> it was not, okay fair enough.
->>>>>>
->>>>>> It's one thing to address that in the future, and it's another thing to
->>>>>> flat out revert the driver just because you don't like the duplication.
->>>>>>
->>>>>> I don't like that either, and we can discuss on how to improve things
->>>>>> (like have the maintainer review that too), but duplication is a lesser
->>>>>> evil than not having the hardware supported at all, and even more so,
->>>>>> purposely reverting in the name of removing that duplication, that's
->>>>>> intentionally breaking working hardware!
->>>>>
->>>>> Hardware support is not excuse and I don't think it ever was in the
->>>>> Linux.
->>>>>
->>>>> We don't accept badly designed drivers just because they provide new hw
->>>>> support.
->>>>> We have various standards (for quality, style, design, code) at kernel
->>>>> and we
->>>>> stick to them unless it's drivers/staging/. As you said this driver
->>>>> shouldn't be
->>>>> pushed in the first place.
->>>>>
->>>>> Dropping hardware support in kernel happens. Sometimes it's about
->>>>> ancient
->>>>> devices, sometimes about code quality (some forgotten staging drivers
->>>>> used to be
->>>>> dropped AFAIK).
->>>>>
->>>>> Additionally you're talking about support that was *just* added and
->>>>> isn't used
->>>>> by anyone in the wild world yet.
->>>>
->>>> Except people working on it at Broadcom, but fair enough.
->>>>
->>>>>
->>>>> This hardware was missing upstream support for 4 years so 2 extra months
->>>>> won't
->>>>> really hurt anyone.
->>>>>
->>>>> I really don't see excusee or need for keeping this driver.
->>>>>
->>>>> If you want to (and you feel it's well designed), we can keep
->>>>> brcm,nsp-usb3-phy.txt
->>>>
->>>> No it's fine, let's drop it all and replace it with whatever you and Jon
->>>> come up with next.
->>>>
->>>>>
->>>>> I vote for focusing on existing driver improvements instead of looking
->>>>> for
->>>>> excuses for keeping driver that shouldn't be added in the first place.
->>>>> Jon seems to be already working on this, I'm willing to help him, I'm
->>>>> sure we
->>>>> can get you a proper support for the next merge window.
->>>>
->>>> Fair enough, I dropped Dhanajay's changes ("ARM: dts: NSP: Add USB nodes
->>>> for Northstar Plus") from devicetree/next so you and Jon can figure out
->>>> what is the best thing to move forward and we minimize the amount of
->>>> incompatible DT stuff to be sorted out later on. So as far as I am
->>>> concerned, there are no board/SoC DTS changes to be patched later on, we
->>>> could re-apply this patch as-is, or we could have to define a new binding.
->>>
->>> Per the discussion with Rafal, this is acceptable
->>>
->>> Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> Hi Kishon, what's the status of this?
-> 
-> Will be merging this in a day or so.
-
-merged, thanks.
-
--Kishon
-> 
-> Thanks
-> Kishon
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQ2hlbi1ZdSwKClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldy4KCk9uIDA2LzAzLzIwMTcgMTA6
+NTYsIENoZW4tWXUgVHNhaSB3cm90ZToKPiBPbiBGcmksIEZlYiAxMCwgMjAxNyBhdCA1OjQxIFBN
+LCBNeWzDqG5lIEpvc3NlcmFuZAo+IDxteWxlbmUuam9zc2VyYW5kQGZyZWUtZWxlY3Ryb25zLmNv
+bT4gd3JvdGU6Cj4+IFVwZGF0ZSB0aGUgZHJpdmVyIHRvIHVzZSBTTkRfU09DX0RBUE1fQUlGX0lO
+IGluc3RlYWQgb2YKPj4gU05EX1NPQ19EQVBNX0RBQy4KPj4KPj4gU2V0IHRoZSByb3V0ZSBuYW1l
+cyBzbyBpdCBtdXN0IGJlIHVwZGF0ZWQgb24gdGhlIGRldmljZSB0cmVlIHRvby4KPj4KPj4gU2ln
+bmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVj
+dHJvbnMuY29tPgo+PiAtLS0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpIHwg
+IDQgKystLQo+Cj4gVGhpcyBwYXRjaCBsb29rcyBPSywgYnV0IGhhdmluZyB0aGUgRFRTIGNoYW5n
+ZXMgaW4gdGhlIHNhbWUgcGF0Y2gKPiBwcm9iYWJseSBpc24ndCBhIGdvb2QgaWRlYS4gSSB3b3Vs
+ZCByZWFsbHkgbGlrZSB0byBzZWUgdGhpcyBzZXJpZXMKPiBtZXJnZWQgZm9yIDQuMTEsIHNvIHdl
+IGNhbiBleHBvc2UgYSBnb29kIG1peGVyIGludGVyZmFjZSB0byB1c2Vyc3BhY2UKPiBkdXJpbmcg
+dGhlIGZpcnN0IGtlcm5lbCByZWxlYXNlIHN1cHBvcnRpbmcgdGhlIEEzMyBjb2RlYy4gVGhhdCBs
+aWtlbHkKPiBtZWFucyBzb21lIGJyZWFrYWdlIGJldHdlZW4gd2hlbiB0aGUgYXNvYyBiaXRzIGFu
+ZCB0aGUgZHRzIGJpdHMgbGFuZAo+IHRob3VnaC4KClllcywgYXMgaXQgbWVhbnMgc29tZSBicmVh
+a2FnZSwgSSBkaWQgbm90IGtub3cgaWYgMiBwYXRjaGVzIHdpbGwgYmUgZmluZSAKb3Igbm90LgoK
+Pgo+IE1heGltZSwgYW55IGlkZWFzPwo+CgpJIGFza2VkIGhpbSBkaXJlY3RseSBhbmQgaGUgYWdy
+ZWVzLgoKSXQgaXMgZmluZSBmb3IgbWUgc28gSSB3aWxsIHNlbmQgYSB2MiB3aXRoIHRoaXMgcGF0
+Y2ggc3BsaXQuCgpCZXN0IHJlZ2FyZHMsCgotLSAKTXlsw6huZSBKb3NzZXJhbmQsIEZyZWUgRWxl
+Y3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
+ZWxlY3Ryb25zLmNvbQoKPgo+IFJlZ2FyZHMKPiBDaGVuWXUKPgo+PiAgc291bmQvc29jL3N1bnhp
+L3N1bjhpLWNvZGVjLmMgICAgfCAyMCArKysrKysrKysrKy0tLS0tLS0tLQo+PiAgMiBmaWxlcyBj
+aGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+c3VuOGktYTMzLmR0c2kKPj4gaW5kZXggNGUzNGVjNjYxM2EwLi5lOWUyZTczMTI0NjAgMTAwNjQ0
+Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCj4+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCj4+IEBAIC03OCw4ICs3OCw4IEBACj4+ICAgICAg
+ICAgICAgICAgICBzaW1wbGUtYXVkaW8tY2FyZCxtY2xrLWZzID0gPDUxMj47Cj4+ICAgICAgICAg
+ICAgICAgICBzaW1wbGUtYXVkaW8tY2FyZCxhdXgtZGV2cyA9IDwmY29kZWNfYW5hbG9nPjsKPj4g
+ICAgICAgICAgICAgICAgIHNpbXBsZS1hdWRpby1jYXJkLHJvdXRpbmcgPQo+PiAtICAgICAgICAg
+ICAgICAgICAgICAgICAiTGVmdCBEQUMiLCAiRGlnaXRhbCBMZWZ0IERBQyIsCj4+IC0gICAgICAg
+ICAgICAgICAgICAgICAgICJSaWdodCBEQUMiLCAiRGlnaXRhbCBSaWdodCBEQUMiOwo+PiArICAg
+ICAgICAgICAgICAgICAgICAgICAiTGVmdCBEQUMiLCAiQUlGMSBTbG90IDAgTGVmdCIsCj4+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICJSaWdodCBEQUMiLCAiQUlGMSBTbG90IDAgUmlnaHQiOwo+
+PiAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4KPj4gICAgICAgICAgICAg
+ICAgIHNpbXBsZS1hdWRpby1jYXJkLGNwdSB7Cj4+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2Mvc3Vu
+eGkvc3VuOGktY29kZWMuYyBiL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jCj4+IGluZGV4
+IGE3NWE5ODM5NzRkOS4uOWIxNWE1ZWUyMzVmIDEwMDY0NAo+PiAtLS0gYS9zb3VuZC9zb2Mvc3Vu
+eGkvc3VuOGktY29kZWMuYwo+PiArKysgYi9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYwo+
+PiBAQCAtMjgxLDExICsyODEsMTMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1f
+d2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lkZ2V0c1tdID0gewo+PiAgICAgICAgIFNORF9TT0Nf
+REFQTV9TVVBQTFkoIkRBQyIsIFNVTjhJX0RBQ19ESUdfQ1RSTCwgU1VOOElfREFDX0RJR19DVFJM
+X0VOREEsCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLCBOVUxMLCAwKSwKPj4KPj4g
+LSAgICAgICAvKiBBbmFsb2cgREFDICovCj4+IC0gICAgICAgU05EX1NPQ19EQVBNX0RBQygiRGln
+aXRhbCBMZWZ0IERBQyIsICJQbGF5YmFjayIsIFNVTjhJX0FJRjFfREFDREFUX0NUUkwsCj4+IC0g
+ICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwTF9F
+TkEsIDApLAo+PiAtICAgICAgIFNORF9TT0NfREFQTV9EQUMoIkRpZ2l0YWwgUmlnaHQgREFDIiwg
+IlBsYXliYWNrIiwgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTCwKPj4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlGMV9EQTBSX0VOQSwgMCksCj4+ICsgICAg
+ICAgLyogQW5hbG9nIERBQyBBSUYgKi8KPj4gKyAgICAgICBTTkRfU09DX0RBUE1fQUlGX0lOKCJB
+SUYxIFNsb3QgMCBMZWZ0IiwgIlBsYXliYWNrIiwgMCwKPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkwsCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwTF9FTkEsIDApLAo+PiArICAgICAg
+IFNORF9TT0NfREFQTV9BSUZfSU4oIkFJRjEgU2xvdCAwIFJpZ2h0IiwgIlBsYXliYWNrIiwgMCwK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkwsCj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFf
+REEwUl9FTkEsIDApLAo+Pgo+PiAgICAgICAgIC8qIERBQyBNaXhlcnMgKi8KPj4gICAgICAgICBT
+T0NfTUlYRVJfQVJSQVkoIkxlZnQgRGlnaXRhbCBEQUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAs
+IDAsCj4+IEBAIC0zMjksMTQgKzMzMSwxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2Nf
+ZGFwbV9yb3V0ZSBzdW44aV9jb2RlY19kYXBtX3JvdXRlc1tdID0gewo+PiAgICAgICAgIHsgIkRB
+QyIsIE5VTEwsICJNT0RDTEsgREFDIiB9LAo+Pgo+PiAgICAgICAgIC8qIERBQyBSb3V0ZXMgKi8K
+Pj4gLSAgICAgICB7ICJEaWdpdGFsIExlZnQgREFDIiwgTlVMTCwgIkRBQyIgfSwKPj4gLSAgICAg
+ICB7ICJEaWdpdGFsIFJpZ2h0IERBQyIsIE5VTEwsICJEQUMiIH0sCj4+ICsgICAgICAgeyAiQUlG
+MSBTbG90IDAgUmlnaHQiLCBOVUxMLCAiREFDIiB9LAo+PiArICAgICAgIHsgIkFJRjEgU2xvdCAw
+IExlZnQiLCBOVUxMLCAiREFDIiB9LAo+Pgo+PiAgICAgICAgIC8qIERBQyBNaXhlciBSb3V0ZXMg
+Ki8KPj4gICAgICAgICB7ICJMZWZ0IERpZ2l0YWwgREFDIE1peGVyIiwgIkFJRjEgU2xvdCAwIERp
+Z2l0YWwgREFDIFBsYXliYWNrIFN3aXRjaCIsCj4+IC0gICAgICAgICAiRGlnaXRhbCBMZWZ0IERB
+QyJ9LAo+PiArICAgICAgICAgIkFJRjEgU2xvdCAwIExlZnQifSwKPj4gICAgICAgICB7ICJSaWdo
+dCBEaWdpdGFsIERBQyBNaXhlciIsICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBT
+d2l0Y2ggIiwKPj4gLSAgICAgICAgICJEaWdpdGFsIFJpZ2h0IERBQyJ9LAo+PiArICAgICAgICAg
+IkFJRjEgU2xvdCAwIFJpZ2h0In0sCj4+ICB9Owo+Pgo+PiAgc3RhdGljIHN0cnVjdCBzbmRfc29j
+X2RhaV9vcHMgc3VuOGlfY29kZWNfZGFpX29wcyA9IHsKPj4gLS0KPj4gMi4xMS4wCj4+Cl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFp
+bGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNh
+LXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
