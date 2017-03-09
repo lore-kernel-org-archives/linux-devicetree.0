@@ -1,89 +1,120 @@
-From: "Y.B. Lu" <yangbo.lu@nxp.com>
-Subject: RE: [v2, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
-Date: Thu, 9 Mar 2017 02:22:36 +0000
-Message-ID: <DB6PR0401MB253672A97F3E14C2BEFF946EF8210@DB6PR0401MB2536.eurprd04.prod.outlook.com>
-References: <1488529129-23560-1-git-send-email-yangbo.lu@nxp.com>
+From: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Subject: Re: [PATCH 2/2] ARM: qcom_defconfig: Enable Qualcomm remoteproc and
+ SMP2P drivers
+Date: Thu, 9 Mar 2017 04:01:54 +0100
+Message-ID: <20170309030154.y4pa5mtyuc3jk5ng@latitude>
+References: <20170215045157.11659-1-j.neuschaefer@gmx.net>
+ <20170215045157.11659-2-j.neuschaefer@gmx.net>
+ <20170304012032.GA1694@minitux>
+ <20170305050125.b6lzx2fiest4xmre@latitude>
+ <20170305164930.GA49943@Bjorns-MacBook-Pro-2.local>
+ <20170307020145.xfqz4wolc3tuqv6x@latitude>
+ <20170307110413.GD49978@Bjorns-MacBook-Pro-2.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1488529129-23560-1-git-send-email-yangbo.lu@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will.deacon@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="fabviqzovxyfdyod"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170307110413.GD49978@Bjorns-MacBook-Pro-2.local>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jonathan Neusch?fer <j.neuschaefer@gmx.net>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Any comments on this patchset ?
-Thanks :)
+
+--fabviqzovxyfdyod
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 07, 2017 at 12:04:13PM +0100, Bjorn Andersson wrote:
+> On Tue 07 Mar 03:01 CET 2017, Jonathan Neusch?fer wrote:
+[...]
+> If this is something that you will continue to hack on and you think
+> anyone else will be interested in having then please do submit patches
+> for it.
+
+Ok, I'll give it a try.
+
+> > > > [    0.647743] qcom-smsm smsm: no smsm size info, using defaults
+> > > > [    0.647775] qcom-smsm smsm: unable to allocate shared state entry
+> > > >=20
+> > >=20
+> > > Could you please confirm where in qcom_smem_alloc_global() we're
+> > > failing? As far as I can tell we should fail with -EEXIST or if the
+> > > passed "size" parameter is bogus -ENOMEM (but the default number of
+> > > entries really should be less than the amount of free SMEM space).
+> >=20
+> > * qcom_smem_get returns -EPROBE_DEFER:
+> >=20
+> > 	void *ptr =3D ERR_PTR(-EPROBE_DEFER);
+> > 	if (!__smem)
+> > 		return ptr;
+> >=20
+> > * smsm_get_size_info prints "no smsm size info, using defaults\n"
+> > * qcom_smem_alloc also returns -EPROBE_DEFER early.
+> >=20
+> >=20
+> > BTW, I think smsm_get_size_info is using uninitialized memory here:
+> >=20
+> >         size_t size;    /* is uninitialized */
+> >         struct { ... } *info;
+> >=20
+> >         /* qcom_smem_get returns early without setting size */
+> >         info =3D qcom_smem_get(QCOM_SMEM_HOST_ANY, SMEM_SMSM_SIZE_INFO,=
+ &size);
+> >=20
+> >         /*
+> > 	 * PTR_ERR(info) is not -ENOENT.
+> >          * size (still uninitialized) is compared with the size of the =
+local
+> >          * struct defined above.
+> > 	 */
+> >         if (PTR_ERR(info) =3D=3D -ENOENT || size !=3D sizeof(*info)) {
+> >                 ...
+> >         }
+> >=20
+>=20
+> Thanks for your analysis!
+>=20
+> As you say the smsm driver is missing handling of probe deferral - which
+> is wrong. Could you please propose a patch checking for EPROBE_DEFER and
+> propagate this error as return value from probe()?  (Without an error
+> message)
+
+I'm working on it.
+
+Regarding the uninitialized memory read in "size !=3D sizeof(*info)":
+Is qcom_smem_get supposed to store a valid size value in any
+non-probe-deferral case, or only in non-error cases?
+
+Assuming the latter, I think "size !=3D sizeof(*info)" should be changed
+to "!IS_ERR(info) && size !=3D sizeof(*info)", i.e. only check size if
+qcom_smem_get returned success. Does that seem reasonable?
 
 
-Best regards,
-Yangbo Lu
 
-> -----Original Message-----
-> From: Yangbo Lu [mailto:yangbo.lu@nxp.com]
-> Sent: Friday, March 03, 2017 4:19 PM
-> To: linux-mmc@vger.kernel.org; ulf.hansson@linaro.org; Adrian Hunter; Rob
-> Herring; Mark Rutland; Catalin Marinas; Will Deacon
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> Xiaobo Xie; Y.B. Lu
-> Subject: [v2, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
-> 
-> It's complicated to support SD UHS-I and eMMC HS200 for eSDHC because
-> there're many differences between eSDHC and SD/eMMC spec. Several
-> differences as below must be considered:
-> 1. Peripheral clock must be used instead of platform clock.
->     - eSDHC could select peripheral clock or platform clock as its clock
->       source. According to RM, UHS-I/HS200 must use peripheral clock
-> since
->       it supports higher frequency than platform clock.
->     - Patch 1 and patch 6 is to support this.
-> 2. Signal voltage switching requires a control circuit out of eSDHC.
->     - eSDHC supports signal voltage switch from 3.3v to 1.8v by
->       eSDHC_PROCTL[VOLT_SEL] bit. This bit changes the value of output
->       signal SDHC_VS, and there must be a control circuit out of eSDHC
->       to change the signal voltage according to SDHC_VS output signal.
->     - Patch 2 is to support this.
-> 3. eSDHC uses tuning block for tuning procedure.
->     - Tuning clock control register must be configured before tuning.
->     - Patch 3 is to support this.
-> 4. Delay is needed between tuning cycles for HS200 tuning.
->     - Once a patch removed mdelay between tuning cycles.
->       But eSDHC needs it.
->     - Patch 4 and patch 5 is to support this.
-> 5. UHS-I/HS200 modes could be enabled in dts node.
->     - Patch 7 is to support this.
-> 
-> Please review and merge these patches on mmc git tree if no changes are
-> required.
-> 
-> Yangbo Lu (7):
->   mmc: sdhci-of-esdhc: add peripheral clock support
->   mmc: sdhci-of-esdhc: add support for signal voltage switch
->   mmc: sdhci-of-esdhc: add tuning support
->   mmc: sdhci: add a quirk to restore delay in tuning
->   mmc: sdhci-of-esdhc: add delay between tuning cycles
->   arm64: dts: ls1046a: add clocks property and compatible for eSDHC node
->   arm64: dts: ls1046ardb: add MMC HS200/UHS-1 modes support
-> 
->  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts |   8 ++
->  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi    |   3 +-
->  drivers/mmc/host/sdhci-esdhc.h                    |   7 +
->  drivers/mmc/host/sdhci-of-esdhc.c                 | 167
-> +++++++++++++++++++++-
->  drivers/mmc/host/sdhci.c                          |   3 +-
->  drivers/mmc/host/sdhci.h                          |   2 +
->  6 files changed, 186 insertions(+), 4 deletions(-)
-> 
-> --
-> 2.1.0.27.g96db324
+Jonathan Neusch=C3=A4fer
+
+--fabviqzovxyfdyod
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAABAgAGBQJYwMWNAAoJEAgwRJqO81/bEn4P/AyV3ji86Cz6+aFLSjhRUurz
+yZFKrY3roWN+P0Ybo4LJAQMTtnJrq529l5mz+CQv9NmdJ5AsnweNNWQD5lZrZ+Ax
+dPmyw7baEAfpltmwBKozoKpJDuhV1fQPZJ8dcwef6GWSgfz8hbxAh0ILqb/bLr9H
+VaGjjy7Q1FVuqH9kvzCo48w7NzoaviTjKgPX2rBuCxJq1YcOLj+/02V/DwFNTAhO
+oQAkOIpOz0a++JCQj5ZFtdfPlnT20RH1jQyAmbeXkl9hGCucws9otQLbSKWasOQ2
+YVeurUSrXC/tU9Q4jVKhCeFhNH61rWJsSPtAPwyXVT9WHdg7A9FfgHThQMsVtPbU
+56Y9RFv6za1KuVfgCUz+eNR7rqCYwtih5LbRdlpDs8MGu4Kq51m+uDkqBgrubA6H
+Hr0mfKRjsSWg7htyDxZBZecCBv33E+db0JlASYBaSYihPdHwOQ3DokYJwu5XzwZz
+0EQ5EgYTOA9iEQ0rXKQVu+aLS301ajQkUmpnk13U5ZzeRvNB8oabu8ZT14cmseiG
+CZv9cYgSNNxKCznzVR6JqHSqprAdiaMzz1axnT517awAuYf7Pbi2+NceZiDN4Ycn
+/UgLKI0kVKCc//+nVmrU6izZYsHcLcM/ajjH7IK/nZh3PrI8ULXndwSy4Mlz4HJK
+UuDB+G3xhUBFiOM9o4Kr
+=RMS8
+-----END PGP SIGNATURE-----
+
+--fabviqzovxyfdyod--
