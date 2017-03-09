@@ -1,95 +1,152 @@
-From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Thu, 9 Mar 2017 07:34:43 -0500
-Message-ID: <1447da4a-6a36-38fb-4298-fd7488697d11@timesys.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <2197294b-e6cf-6c56-1419-3a4f95c29db7@timesys.com>
- <6df4a9ae-eaba-6f3f-9c23-ae269548b005@grandegger.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6df4a9ae-eaba-6f3f-9c23-ae269548b005-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfgang Grandegger <wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org>, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 3/3] ARM64: dts: meson-gx: Add MALI nodes for GXBB and GXL
+Date: Thu,  9 Mar 2017 13:53:47 +0100
+Message-ID: <1489064027-18004-4-git-send-email-narmstrong@baylibre.com>
+References: <1489064027-18004-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489064027-18004-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sboyd@codeaurora.org, khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The same MALI-450 MP3 GPU is present in the GXBB and GXL SoCs.
 
+The node is simply added in the meson-gxbb.dtsi file.
 
-On 03/09/2017 04:59 AM, Wolfgang Grandegger wrote:
-> Hello Akshay,
-> 
-> unfortunately there are not many CAN controllers for the SPI bus. I just
-> know the MPC251x, which behaves badly (message losses) under Linux,
-> especially at hight bit-rates due to insufficient RX buffering. What is
-> your experience with that driver for the HI-311x?
-> 
+For GXL, since a lot is shared with the GXM that has a MALI-T820 IP, this
+patch adds a new meson-gxl-mali.dtsi and is included in the SoC specific
+dtsi files.
 
-Hi Wolfgang,
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi      | 37 ++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi  | 43 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi |  1 +
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi |  1 +
+ 4 files changed, 82 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
 
-Good question. I have not worked with MPC251x but the HI-311x performs
-much better because HI-3110 features:
-8 message FIFO (as opposed to 2 buffers on MPC2510)
-20 MHz SPI interface (as opposed to 2.5 MHz on MPC2510)
-
-As for the real world test results:
-
-With RT patch applied to the kernel running on a i.MX6 Dual processor
-(worst case interrupt latency of 50us as reported by cyclictest), there
-are ZERO packet drops.
-Tested with Kvaser Leaf sending 100 burst messages (back to back) every
-40ms at a 1M CAN bit rate. 10 million messages were sent by the Kvaser
-leaf and received successfully by the HI-311x driver.
-
-Even without the RT patch, I was able to get the packet drop to zero but
-this was by moving the CAN/SPI IRQ threads to CPU1 instead of CPU0.
-
-Hence I feel the driver is a good candidate to be included in the Linux
-kernel.
-
-Below are detailed test results if you like:
-https://goo.gl/VWgzp7
-
-Ones of particular interest:
-10M-msgs-1M-bitrate-100burst-40ms-interval-leaf.png
-10M-msgs-1M-bitrate-100burst-40ms-interval-pwc.txt
-
-Thanks,
-Akshay
-
-> 
-> Am 07.03.2017 um 16:31 schrieb Akshay Bhat:
->>
->>
->> On 01/17/2017 02:22 PM, Akshay Bhat wrote:
->>> This patch adds support for the Holt HI-311x CAN controller. The HI311x
->>> CAN controller is capable of transmitting and receiving standard data
->>> frames, extended data frames and remote frames. The HI311x interfaces
->>> with the host over SPI.
->>>
->>> Datasheet: www.holtic.com/documents/371-hi-3110_v-rev-jpdf.do
->>>
->>> Signed-off-by: Akshay Bhat <nodeax-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>
->>
->>
->> Hi Marc,
->>
->> Wanted to check if this patch can be included in the next kernel release
->> (4.12).
->>
->> Thanks,
->> Akshay
->> -- 
->> To unsubscribe from this list: send the line "unsubscribe linux-can" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 04b3324..0617a3d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -478,6 +478,43 @@
+ 	};
+ };
+ 
++&apb {
++	mali: gpu@c0000 {
++		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
++		reg = <0x0 0xc0000 0x0 0x40000>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "gp", "gpmmu", "pp", "pmu",
++			"pp0", "ppmmu0", "pp1", "ppmmu1",
++			"pp2", "ppmmu2";
++		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
++		clock-names = "bus", "core";
++
++		/*
++		 * Mali clocking is provided by two identical clock paths
++		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
++		 * free mux to safely change frequency while running.
++		 */
++		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
++				  <&clkc CLKID_MALI_0>,
++				  <&clkc CLKID_MALI>; /* Glitch free mux */
++		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
++					 <0>, /* Do Nothing */
++					 <&clkc CLKID_MALI_0>;
++		assigned-clock-rates = <0>, /* Do Nothing */
++				       <666666666>,
++				       <0>; /* Do Nothing */
++	};
++};
++
+ &i2c_A {
+ 	clocks = <&clkc CLKID_I2C>;
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+new file mode 100644
+index 0000000..f06cc234
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-mali.dtsi
+@@ -0,0 +1,43 @@
++/*
++ * Copyright (c) 2017 BayLibre SAS
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++&apb {
++	mali: gpu@c0000 {
++		compatible = "amlogic,meson-gxbb-mali", "arm,mali-450";
++		reg = <0x0 0xc0000 0x0 0x40000>;
++		interrupts = <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "gp", "gpmmu", "pp", "pmu",
++			"pp0", "ppmmu0", "pp1", "ppmmu1",
++			"pp2", "ppmmu2";
++		clocks = <&clkc CLKID_CLK81>, <&clkc CLKID_MALI>;
++		clock-names = "bus", "core";
++
++		/*
++		 * Mali clocking is provided by two identical clock paths
++		 * MALI_0 and MALI_1 muxed to a single clock by a glitch
++		 * free mux to safely change frequency while running.
++		 */
++		assigned-clocks = <&clkc CLKID_MALI_0_SEL>,
++				  <&clkc CLKID_MALI_0>,
++				  <&clkc CLKID_MALI>; /* Glitch free mux */
++		assigned-clock-parents = <&clkc CLKID_FCLK_DIV3>,
++					 <0>, /* Do Nothing */
++					 <&clkc CLKID_MALI_0>;
++		assigned-clock-rates = <0>, /* Do Nothing */
++				       <666666666>,
++				       <0>; /* Do Nothing */
++	};
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+index 615308e..5a90e30 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d.dtsi
+@@ -42,6 +42,7 @@
+  */
+ 
+ #include "meson-gxl.dtsi"
++#include "meson-gxl-mali.dtsi"
+ 
+ / {
+ 	compatible = "amlogic,s905d", "amlogic,meson-gxl";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+index 08237ee..0f78d83 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi
+@@ -42,6 +42,7 @@
+  */
+ 
+ #include "meson-gxl.dtsi"
++#include "meson-gxl-mali.dtsi"
+ 
+ / {
+ 	compatible = "amlogic,s905x", "amlogic,meson-gxl";
+-- 
+1.9.1
