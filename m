@@ -1,78 +1,120 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v4 0/3] Add EHCI support for Armada 37xx
-Date: Thu,  9 Mar 2017 18:52:55 +0100
-Message-ID: <20170309175258.20076-1-gregory.clement@free-electrons.com>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: enable USB Host Nodes
+Date: Thu, 9 Mar 2017 23:28:05 +0530
+Message-ID: <CANAwSgTuP_OGp+0sdR9sVuq-SOkBfQxYKONZPB7Vo=+GFdrHfw@mail.gmail.com>
+References: <1488918961-4666-1-git-send-email-linux.amoon@gmail.com>
+ <CANAwSgTUPpYvFWcZOf+j6K+1rDZJNUeu9K1fGAB8TC6TgzRXCg@mail.gmail.com> <0204bbde-c437-e11b-cb3b-d9f4b55a5810@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Hua Jing <jinghua@marvell.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0204bbde-c437-e11b-cb3b-d9f4b55a5810-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Neil,
 
-The EHCI controller in the Armada 37xx SoCs is the one used on many
-other mvebu SoCs such as the orion5x, the kirkwood, or the
-armada. However, for Armada 37xx an extra initialization step is
-needed: this is the purpose of the first patch.
+On 9 March 2017 at 18:43, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> On 03/08/2017 06:22 PM, Anand Moon wrote:
+>> Hi All,
+>>
+>> On 8 March 2017 at 02:06, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> update the regulator supply nodes for usb host to
+>>> enable usb host on odroid-c2
+>>>
+>>> Signed-off-by: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>> root@odroid64:/usr/src/odroidxu3-4.y-devel# lsusb -t
+>>> /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+>>>     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+>>>         |__ Port 1: Dev 3, If 0, Class=Human Interface Device, Driver=usbhid, 1.5M
+>>>         |__ Port 1: Dev 3, If 1, Class=Human Interface Device, Driver=usbhid, 1.5M
+>>>         |__ Port 2: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+>>>         |__ Port 4: Dev 5, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+>>> ---
+>>>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 13 +++++++++++++
+>>>  1 file changed, 13 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+>>> index c59403a..304b676 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+>>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+>>> @@ -64,6 +64,18 @@
+>>>                 reg = <0x0 0x0 0x0 0x80000000>;
+>>>         };
+>>>
+>>> +       usb_host_pwr: regulator-usb-pwrs {
+>>> +               compatible = "regulator-fixed";
+>>> +
+>>> +               regulator-name = "USB_HOST_PWR";
+>>> +
+>>> +               regulator-min-microvolt = <5000000>;
+>>> +               regulator-max-microvolt = <5000000>;
+>>> +
+>>> +               gpio = <&gpio_ao GPIOAO_4 GPIO_ACTIVE_HIGH>;
+>>> +               enable-active-high;
+>>> +       };
+>>> +
+>>>         usb_otg_pwr: regulator-usb-pwrs {
+>>>                 compatible = "regulator-fixed";
+>>>
+>>> @@ -184,6 +196,7 @@
+>>>
+>>>  &usb1_phy {
+>>>         status = "okay";
+>>> +       phy-supply = <&usb_host_pwr>;
+>>>  };
+>>>
+>>>  &usb0 {
+>>> --
+>>> 2.7.4
+>>>
+>>
+>> Please ignore this patch, It not working.
+>> I will try to submit a new patch.
+>>
+>> Best Regards
+>> -Anand Moon
+>>
+>
+> Hi Anand,
+>
+> For this specific use case, the only way to manage this is to use the Work-In-Progress
+> Power Sequence Library proposer by Peter Chen at :
+> https://lkml.org/lkml/2016/11/13/315
+>
+> Since this is the USB Hub reset link and has no direct link with either the USB controller
+> or the USB PHY, and the USB Hus cannot be modeled (yet ?) in the DT.
+>
+> One intermediate, but crappy, solution would be to add a GPIO hog until the power
+> sequence code has been merged, with a proper big fat warning in the dts file.
+>
+> You can find doc about the gpio-hog in :
+> Documentation/devicetree/bindings/gpio/gpio.txt
+>
+> It should look like :
+>
+> usb-hub {
+>         gpio-hog;
+>         gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
+>         output-high;
+>         line-name = "usb-hub-reset";
+> };
+>
+> in the gpio_ao controller node.
+>
+> Neil
 
-The second patch allows to build the driver for the ARM64 Armada SoCs.
+Thanks for this input.
 
-The last one enables the EHCI in the device tree.
+I will check this series of patches, and work on this new approach.
 
-This forth version really takes into account the review from Alan Stern.
-Again sorry for the noise.
-
-Thanks,
-
-Gregory
-
-Changelog:
-v3-> v4:
-- Remove the _SHIFT define and use their value directly, suggested by
-  Alan Stern
-- Remove unnecessary error message in ehci_orion_drv_reset() ,
-  suggested by Alan Stern
-- Exit ehci_orion_drv_reset() if ehci_setup() failed, suggested by
-  Alan Stern
-
-v2-> v3:
-- Add Reviewed-by flag from  Andrew Lunn
-
-v1 -> v2:
-- Fix typo in commit log of the patch 1, suggested by Andrew Lunn
-- Fix wording in the device tree binding documenation, suggested by
-  Andrew Lunn
-- Make new define symbol name more clear by adding _SHIFT to the end,
-  suggested by Andrew Lunn
-- Use a full first name + last name for the Signed-off-by and the
-  Authorship i oatch 1, suggested by Thomas Petazzoni.
-- Improve the commit log of the patch 2, suggested by Andrew Lunn
-- Fix Kconfig logic, suggested by Andrew Lunn
-
-Gregory CLEMENT (2):
-  usb: host: Allow to build ehci orion with mvebu SoCs
-  ARM64: dts: marvell: armada-37xx: Add USB2 node
-
-Hua Jing (1):
-  usb: orion-echi: Add support for the Armada 3700
-
- .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
- arch/arm64/boot/dts/marvell/armada-3720-db.dts     |  6 ++++
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |  7 +++++
- drivers/usb/host/Kconfig                           |  2 +-
- drivers/usb/host/ehci-orion.c                      | 36 ++++++++++++++++++++++
- 5 files changed, 53 insertions(+), 2 deletions(-)
-
--- 
-2.11.0
+-Best Regards
+Anand Moon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
