@@ -1,13 +1,16 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [v3 2/5] coresight: refactor with function of_coresight_get_cpu
-Date: Thu, 9 Mar 2017 15:28:31 +0000
-Message-ID: <75112177-e5c1-0532-04b1-842a985b077d@arm.com>
-References: <1489057304-1851-1-git-send-email-suzuki.poulose@arm.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 2/3] thermal: add support for the thermal sensor on
+ Allwinner new SoCs
+Date: Thu, 09 Mar 2017 23:31:54 +0800
+Message-ID: <21361489073514@web39j.yandex.ru>
+References: <20170301190220.2EgSha6N@smtp3o.mail.yandex.net>
+ <20170302141105.5fr3ru72rtdyv4pd@lukather>
+ <8250311489019784@web18g.yandex.ru> <20170309142712.tfmfrbbhagskrtaf@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489057304-1851-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <20170309142712.tfmfrbbhagskrtaf@lukather>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,103 +20,89 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: leo.yan@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, mathieu.poirier@linaro.org, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, John Stultz <john.stultz@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Ondrej Jirman <megous@megous.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/17 11:01, Suzuki K Poulose wrote:
-> On 03/03/17 06:00, Leo Yan wrote:
->> This is refactor to add function of_coresight_get_cpu(), so it's used to
->> retrieve CPU id for coresight component. Finally can use it as a common
->> function for multiple places.
->>
->> Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Leo Yan <leo.yan@linaro.org>
->> ---
->>  drivers/hwtracing/coresight/of_coresight.c | 37 ++++++++++++++++++++----------
->>  include/linux/coresight.h                  |  2 ++
->>  2 files changed, 27 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
->> index 629e031..d9a12fb 100644
->> --- a/drivers/hwtracing/coresight/of_coresight.c
->> +++ b/drivers/hwtracing/coresight/of_coresight.c
->> @@ -101,14 +101,36 @@ static int of_coresight_alloc_memory(struct device *dev,
->>  	return 0;
->>  }
->>
->> +int of_coresight_get_cpu(struct device_node *node)
->> +{
->> +	int cpu;
->> +	struct device_node *dn;
->> +
->> +	dn = of_parse_phandle(node, "cpu", 0);
->> +
->> +	/* Affinity defaults to CPU0 */
->> +	if (!dn)
->> +		return 0;
->> +
->> +	for_each_possible_cpu(cpu) {
->> +		if (dn == of_get_cpu_node(cpu, NULL)) {
->
-> We should do of_node_put() on the node returned by of_get_cpu_node,
-> and I accept that this was there before the refactoring. We could do
-> something like :
->
->
-> ----8>------
->
->
->
-> [PATCH] coresight: of_coresight_get_cpu: Add missing of_node_put
->
-> The of_coresight_get_cpu iterates over the possible CPU nodes
-> to find a given cpu phandle. However it does not drop the reference
-> to the node pointer returned by the of_get_cpu_node.
->
-> Cc: Leo Yan <leo.yan@linaro.org>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  drivers/hwtracing/coresight/of_coresight.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-> index d9a12fb..8c6f4a0 100644
-> --- a/drivers/hwtracing/coresight/of_coresight.c
-> +++ b/drivers/hwtracing/coresight/of_coresight.c
-> @@ -104,7 +104,8 @@ static int of_coresight_alloc_memory(struct device *dev,
->  int of_coresight_get_cpu(struct device_node *node)
->  {
->  	int cpu;
-> -	struct device_node *dn;
-> +	bool found;
-> +	struct device_node *dn, *np;
->
->  	dn = of_parse_phandle(node, "cpu", 0);
->
-> @@ -113,15 +114,16 @@ int of_coresight_get_cpu(struct device_node *node)
->  		return 0;
->
->  	for_each_possible_cpu(cpu) {
-> -		if (dn == of_get_cpu_node(cpu, NULL)) {
-> -			of_node_put(dn);
-> -			return cpu;
-> -		}
-> +		np = of_get_cpu_node(cpu, NULL);
-> +		found = (dn == np);
-> +		of_node_put(np);
-> +		if (found)
-> +			break;
->  	}
->
-> -	/* Affinity to CPU0 if no cpu nodes are found */
->  	of_node_put(dn);
-> -	return 0;
-> +	/* Affinity to CPU0 if no cpu nodes are found */
-> +	return cpu_possible(cpu) ? cpu : 0;
-
-This could be even :
-	return found ? cpu : 0;
-
-Suzuki
+CgowOS4wMy4yMDE3LCAyMjoyNywgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gT24gVGh1LCBNYXIgMDksIDIwMTcgYXQgMDg6MzY6MjRBTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAwMi4wMy4yMDE3LCAyMjoxMSwgIk1heGltZSBS
+aXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT46Cj4+IMKgPiBPbiBUaHUs
+IE1hciAwMiwgMjAxNyBhdCAxMjowMjoxM0FNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+
+PiDCoD4+IMKgMjAxN+W5tDPmnIgx5pelIDIzOjU25LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5y
+aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPuWGmemBk++8mgo+PiDCoD4+IMKgPgo+PiDCoD4+IMKg
+PiBPbiBXZWQsIE1hciAwMSwgMjAxNyBhdCAwNjoyMDo1MVBNICswODAwLCBJY2Vub3d5IFpoZW5n
+IHdyb3RlOgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4gMjAxN+W5tDPmnIgx5pelIDE4OjE0
+5LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPuWGmemB
+k++8mgo+PiDCoD4+IMKgPiA+ID4KPj4gwqA+PiDCoD4gPiA+IE9uIFR1ZSwgRmViIDI4LCAyMDE3
+IGF0IDAzOjE4OjEzUE0gKzA4MDAsIEljZW5vd3kgWmhlbmcgd3JvdGU6Cj4+IMKgPj4gwqA+ID4g
+PiA+Cj4+IMKgPj4gwqA+ID4gPiA+IDIwMTflubQy5pyIMjjml6UgMTQ6NDTkuo4gTWF4aW1lIFJp
+cGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+5YaZ6YGT77yaCj4+IMKgPj4g
+wqA+ID4gPiA+ID4KPj4gwqA+PiDCoD4gPiA+ID4gPiBPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAw
+Mzo0MDo1M0FNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoD4+IMKgPiA+ID4gPiA+
+ID4gRnJvbTogT25kcmVqIEppcm1hbiA8bWVnb3VzQG1lZ291cy5jb20+Cj4+IMKgPj4gwqA+ID4g
+PiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gQWxsd2lubmVyIFNvQ3MgZnJvbSBIMyAoaW5j
+bHVkaW5nIEg1LCBBNjQsIGV0YykgaGF2ZSBhIG5ldyB2ZXJzaW9uIG9mCj4+IMKgPj4gwqA+ID4g
+PiA+ID4gPiB0aGVybWFsIHNlbnNvciwgYW5kIG5lZWRzIGEgbmV3IGRyaXZlciBmb3IgaXQuCj4+
+IMKgPj4gwqA+ID4gPiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gQWRkIHN1Y2ggYSBkcml2
+ZXIuCj4+IMKgPj4gwqA+ID4gPiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gQ3VycmVudGx5
+IG9ubHkgSDMgaXMgc3VwcG9ydGVkLCBidXQgb3RoZXIgU29DcyBhcmUgZWFzaWx5IHRvIGJlCj4+
+IMKgPj4gwqA+ID4gPiA+ID4gPiBzdXBwb3J0ZWQgYnkgYWRkaW5nIG5ldyBmb3JtdWxhIGFuZCBz
+ZXQgdGhlIHNlbnNvciBudW1iZXIuCj4+IMKgPj4gwqA+ID4gPiA+ID4gPgo+PiDCoD4+IMKgPiA+
+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogT25kxZllaiBKaXJtYW4gPG1lZ291c0BtZWdvdXMuY29t
+Pgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gW0ljZW5vd3k6IGV4dGVuZCB0byBzdXBwb3J0IGZ1cnRo
+ZXIgbXVsdGlwbGUtc2Vuc29yIFNvQ3MsIGNoYW5nZSBjb21taXQKPj4gwqA+PiDCoD4gPiA+ID4g
+PiA+wqAgbWVzc2FnZV0KPj4gwqA+PiDCoD4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEljZW5v
+d3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4+IMKgPj4gwqA+ID4gPiA+ID4KPj4gwqA+PiDC
+oD4gPiA+ID4gPiBUaGVyZSdzIG5vIG5lZWQgdG8gY3JlYXRlIGEgbmV3IGRyaXZlciBmb3IgdGhh
+dC4gVGhpcyBjYW4gYmUgaGFuZGxlZAo+PiDCoD4+IMKgPiA+ID4gPiA+IGJ5IHRoZSBHUEFEQyBk
+cml2ZXIgd2UgYWxyZWFkeSBoYXZlLgo+PiDCoD4+IMKgPiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4g
+PiBzdW44aS10aHMgaXMgbm90IEdQQURDIGF0IGFsbC4KPj4gwqA+PiDCoD4gPiA+ID4KPj4gwqA+
+PiDCoD4gPiA+ID4gVGhlIGxhdGVzdCBTb0MgSSBrbm93IHRoYXQgdXNlIEdQQURDIGFzIHRoZXJt
+YWwgc2Vuc29yIGlzIEEzMy4KPj4gwqA+PiDCoD4gPiA+Cj4+IMKgPj4gwqA+ID4gPiBJdCdzIG5v
+dCBjYWxsZWQgdGhlIHNhbWUgd2F5LCBidXQgaXQgZGVmaW5pdGVseSBpcyBhbiBldm9sdXRpb24g
+b2YgdGhlCj4+IMKgPj4gwqA+ID4gPiBzYW1lIGNvbnRyb2xsZXIuIFRoZXJlJ3Mgbm8gbmVlZCBm
+b3IgYSBuZXcgZHJpdmVyLCBvbmx5IHJld29ya2luZyB3aGF0Cj4+IMKgPj4gwqA+ID4gPiBpcyBh
+bHJlYWR5IHRoZXJlLgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4gSSBkb24ndCB0aGluayBz
+byAtLSBoZXJlJ3Mgc29tZSBldmlkZW5jZToKPj4gwqA+Pgo+PiDCoD4+IMKgQnV0IHRoZSBIMyBU
+SFMgaGF2ZSBtYW55IG5ldyBJUlFzLCBmdW5jdGlvbnMsIGRpZmZlcmVudCBzYW1wbGluZwo+PiDC
+oD4+IMKgcmF0ZSBzZXQgbWV0aG9kIGFuZCBhIHF1aXRlIGRpZmZlcmVudCByZWdpc3RlciBsYXlv
+dXQuCj4+IMKgPj4KPj4gwqA+PiDCoERvaW5nIHRoaXMgaW4gR1BBREMgZHJpdmVyIGlzIHBvc3Np
+YmxlIGJ1dCBtZWFuaW5nbGVzcy4KPj4gwqA+Pgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4g
+MS4gVGhlIG9sZCBHUEFEQyBkbyBub3QgaGF2ZSBtb2R1bGUgY2xvY2suCj4+IMKgPj4gwqA+Cj4+
+IMKgPj4gwqA+IFRoZSBBMzMgY291bGQgdXNlIGEgUExMLgo+PiDCoD4+Cj4+IMKgPj4gwqBCdXQg
+aXQncyBhIGRlZGljYXRlZCBtb2QgY2xrIG9uIG5ldyBnZW5lcmF0aW9uIFRIUy4KPj4gwqA+Cj4+
+IMKgPiBBbmQgYWxsIG9mIHRoaXMgcmVhbGx5IGFyZSBldm9sdXRpb25zLiBUaGUgYmxvY2sgaXMg
+c3RpbGwgZHJpdmVuIGluCj4+IMKgPiB0aGUgZXhhY3Qgc2FtZSB3YXkuIEFuZCB0aGlzIGlzIHdo
+ZXJlIHRoZXJlIGlzIHZhbHVlIGluIGhhdmluZyB0aGUKPj4gwqA+IHNhbWUgZHJpdmVyOiB5b3Ug
+c2hhcmUgdGhlIGxvZ2ljLCB3aGljaCBpcyBtb3N0bHkgY29tbW9uLCBpbnN0ZWFkIG9mCj4+IMKg
+PiBkdXBsaWNhdGluZyBpdC4KPj4KPj4gwqBBZnRlciBzb21lIHRoaW5raW5nLCBJIGNhbiBhY2Nl
+cHQgYSBjb21tb24gZHJpdmVyIGZvciBBMjMvQTMzIHRoZXJtYWwKPj4gwqBzZW5zb3IgYW5kIEgz
+L0E2NC9INSBvbmVzLCBidXQgSSBjYW5ub3QgYWNjZXB0IHVzZSBpaW8tc3VuNGktZ3BhZGMKPj4g
+wqBkcml2ZXIgZm9yIGl0LCBhcyBub3cgSDMvQTY0L0g1IHRoZXJtYWwgc2Vuc29ycyBhcmUgbm90
+IGp1c3QgYW4gQURDIC0tCj4+IMKgdGhleSBmZWF0dXJlcyBoYXJkd2FyZSBhbGFybSBsZXZlbHMs
+IGFuZCBpbiBzb21lIFNvQyBpdCBiZWNvbWUgYQo+PiDCoG11bHRpcGxlIGNoYW5uZWwgdGhlcm1h
+bCBzZW5zb3IuCj4KPiBUaGUgQTIzIGFuZCBBMzMgaXMgdHJpdmlhbCB0byBzdXBwb3J0IG9uIHRo
+ZSBhbHJlYWR5IGV4aXN0aW5nIEdQQURDCj4gZHJpdmVyLiBJZiB5b3UgaGF2ZSBpdCBhbHJlYWR5
+IHdvcmtpbmcgb24gdGhlIEEzMywgdGhlbiB0aGUgYW1vdW50IG9mCj4gd29yayBmb3IgeW91ciBk
+cml2ZXIgdG8gc3VwcG9ydCB0aGUgQTMzLCBvciBmb3IgdGhlIEdQQURDIHRvIHN1cHBvcnQKPiB0
+aGUgbmV3ZXIgU29DIGlzIHN0cmljdGx5IHRoZSBzYW1lLgo+Cj4gRXhjZXB0IGluIG9uZSBjYXNl
+LCB3ZSBoYXZlIGEgY29tbW9uLCBkZWJ1Z2dlZCwgYWxyZWFkeSByZXZpZXdlZCBhbmQKPiBhbHJl
+YWR5IG1lcmdlZCBkcml2ZXIuIEluIHRoZSBvdGhlciBjYXNlLCB3ZSBoYXZlIG5vIHN1Y2ggdGhp
+bmdzLgoKSSBkaWRuJ3Qgc2VlIHN1bjRpLWdwYWRjIGlpbyBkcml2ZXIgaW4gbGludXgtbmV4dCBu
+b3csIG9ubHkgdGhlIEdQQURDIE1GRC4KCkFuZCBhYnN0cmFjdCBhIHRoZXJtYWwtb25seSBBREMg
+YXMgYSBHUEFEQyBpcyBub3QgcHJvcGVyLCBlc3BlY2lhbGx5IHdoZW4KaXQgY29tZXMgd2l0aCBz
+b21lIHRoZXJtYWwtc3BlY2lmaWMgZnVuY3Rpb25zIChoYXJkd2FyZSB0cmlwIHBvaW50cykuCgpT
+byBJIGRvIG5vdCBhY2NlcHQgaXQgdG8gYmUgaW1wbGVtZW50ZWQgYXMgSUlPIEFEQyBkcml2ZXIu
+Cgo+Cj4+IMKgSSB3aWxsIGluc2lzdCBvbiBkb2luZyBhIGRlZGljYXRlZCBkcml2ZXIgZm9yIGl0
+LCBvciBpZiB5b3UgbGlrZSwgSSBjYW4gYWRkCj4+IMKgQTIzL0EzMyBzdXBwb3J0IHRvIHRoaXMg
+ZHJpdmVyLiAoQ29uc2lkZXJpbmcgbm8gb25lIGhhdmUgYWxyZWFkeSBwb3N0ZWQKPj4gwqBhbnkg
+cGF0Y2hlcyBmb3IgQTIzL0EzMyB0aGVybWFsIHNlbnNvciwgZXhjZXB0IG15IG9sZCBvbmVzLCBz
+byBteQo+PiDCoHdvcmsgYXQgbGVhc3Qgd29uJ3QgY29uZmxpY3Qgd2l0aCBhbnl0aGluZyBtZXJn
+ZWQpCj4KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtl
+cm5lbC8yMDE2LURlY2VtYmVyLzQ3NDgyMS5odG1sCj4KPiBNYXhpbWUKPgo+IC0tCj4gTWF4aW1l
+IFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2lu
+ZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
