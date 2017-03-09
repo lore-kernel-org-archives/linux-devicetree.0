@@ -1,101 +1,109 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH 4/4] ASoC: sun8i-codec: Convert to use
-	SND_SOC_DAPM_AIF_IN
-Date: Thu, 9 Mar 2017 09:20:54 +0100
-Message-ID: <21d377a3-8e9d-34fa-b5c7-da6456bf31e8@free-electrons.com>
-References: <20170210094133.11382-1-mylene.josserand@free-electrons.com>
- <20170210094133.11382-5-mylene.josserand@free-electrons.com>
- <CAGb2v64Q0LysCPq2SpoNSqpyWDzNQ_CDhNipOGjW43dfnDABpw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RESEND PATCH v3 4/8] phy: phy-mt65xx-usb3: move clock from phy
+ node into port nodes
+Date: Thu, 9 Mar 2017 13:51:09 +0530
+Message-ID: <58C11075.8000409@ti.com>
+References: <1488808169-6031-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1488808169-6031-4-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CAGb2v64Q0LysCPq2SpoNSqpyWDzNQ_CDhNipOGjW43dfnDABpw@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, linux-kernel <linux-kernel@vger.kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488808169-6031-4-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQ2hlbi1ZdSwKClRoYW5rIHlvdSBmb3IgdGhlIHJldmlldy4KCk9uIDA2LzAzLzIwMTcgMTA6
-NTYsIENoZW4tWXUgVHNhaSB3cm90ZToKPiBPbiBGcmksIEZlYiAxMCwgMjAxNyBhdCA1OjQxIFBN
-LCBNeWzDqG5lIEpvc3NlcmFuZAo+IDxteWxlbmUuam9zc2VyYW5kQGZyZWUtZWxlY3Ryb25zLmNv
-bT4gd3JvdGU6Cj4+IFVwZGF0ZSB0aGUgZHJpdmVyIHRvIHVzZSBTTkRfU09DX0RBUE1fQUlGX0lO
-IGluc3RlYWQgb2YKPj4gU05EX1NPQ19EQVBNX0RBQy4KPj4KPj4gU2V0IHRoZSByb3V0ZSBuYW1l
-cyBzbyBpdCBtdXN0IGJlIHVwZGF0ZWQgb24gdGhlIGRldmljZSB0cmVlIHRvby4KPj4KPj4gU2ln
-bmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRAZnJlZS1lbGVj
-dHJvbnMuY29tPgo+PiAtLS0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpIHwg
-IDQgKystLQo+Cj4gVGhpcyBwYXRjaCBsb29rcyBPSywgYnV0IGhhdmluZyB0aGUgRFRTIGNoYW5n
-ZXMgaW4gdGhlIHNhbWUgcGF0Y2gKPiBwcm9iYWJseSBpc24ndCBhIGdvb2QgaWRlYS4gSSB3b3Vs
-ZCByZWFsbHkgbGlrZSB0byBzZWUgdGhpcyBzZXJpZXMKPiBtZXJnZWQgZm9yIDQuMTEsIHNvIHdl
-IGNhbiBleHBvc2UgYSBnb29kIG1peGVyIGludGVyZmFjZSB0byB1c2Vyc3BhY2UKPiBkdXJpbmcg
-dGhlIGZpcnN0IGtlcm5lbCByZWxlYXNlIHN1cHBvcnRpbmcgdGhlIEEzMyBjb2RlYy4gVGhhdCBs
-aWtlbHkKPiBtZWFucyBzb21lIGJyZWFrYWdlIGJldHdlZW4gd2hlbiB0aGUgYXNvYyBiaXRzIGFu
-ZCB0aGUgZHRzIGJpdHMgbGFuZAo+IHRob3VnaC4KClllcywgYXMgaXQgbWVhbnMgc29tZSBicmVh
-a2FnZSwgSSBkaWQgbm90IGtub3cgaWYgMiBwYXRjaGVzIHdpbGwgYmUgZmluZSAKb3Igbm90LgoK
-Pgo+IE1heGltZSwgYW55IGlkZWFzPwo+CgpJIGFza2VkIGhpbSBkaXJlY3RseSBhbmQgaGUgYWdy
-ZWVzLgoKSXQgaXMgZmluZSBmb3IgbWUgc28gSSB3aWxsIHNlbmQgYSB2MiB3aXRoIHRoaXMgcGF0
-Y2ggc3BsaXQuCgpCZXN0IHJlZ2FyZHMsCgotLSAKTXlsw6huZSBKb3NzZXJhbmQsIEZyZWUgRWxl
-Y3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
-ZWxlY3Ryb25zLmNvbQoKPgo+IFJlZ2FyZHMKPiBDaGVuWXUKPgo+PiAgc291bmQvc29jL3N1bnhp
-L3N1bjhpLWNvZGVjLmMgICAgfCAyMCArKysrKysrKysrKy0tLS0tLS0tLQo+PiAgMiBmaWxlcyBj
-aGFuZ2VkLCAxMyBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuOGktYTMzLmR0c2kKPj4gaW5kZXggNGUzNGVjNjYxM2EwLi5lOWUyZTczMTI0NjAgMTAwNjQ0
-Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCj4+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCj4+IEBAIC03OCw4ICs3OCw4IEBACj4+ICAgICAg
-ICAgICAgICAgICBzaW1wbGUtYXVkaW8tY2FyZCxtY2xrLWZzID0gPDUxMj47Cj4+ICAgICAgICAg
-ICAgICAgICBzaW1wbGUtYXVkaW8tY2FyZCxhdXgtZGV2cyA9IDwmY29kZWNfYW5hbG9nPjsKPj4g
-ICAgICAgICAgICAgICAgIHNpbXBsZS1hdWRpby1jYXJkLHJvdXRpbmcgPQo+PiAtICAgICAgICAg
-ICAgICAgICAgICAgICAiTGVmdCBEQUMiLCAiRGlnaXRhbCBMZWZ0IERBQyIsCj4+IC0gICAgICAg
-ICAgICAgICAgICAgICAgICJSaWdodCBEQUMiLCAiRGlnaXRhbCBSaWdodCBEQUMiOwo+PiArICAg
-ICAgICAgICAgICAgICAgICAgICAiTGVmdCBEQUMiLCAiQUlGMSBTbG90IDAgTGVmdCIsCj4+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICJSaWdodCBEQUMiLCAiQUlGMSBTbG90IDAgUmlnaHQiOwo+
-PiAgICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKPj4KPj4gICAgICAgICAgICAg
-ICAgIHNpbXBsZS1hdWRpby1jYXJkLGNwdSB7Cj4+IGRpZmYgLS1naXQgYS9zb3VuZC9zb2Mvc3Vu
-eGkvc3VuOGktY29kZWMuYyBiL3NvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy5jCj4+IGluZGV4
-IGE3NWE5ODM5NzRkOS4uOWIxNWE1ZWUyMzVmIDEwMDY0NAo+PiAtLS0gYS9zb3VuZC9zb2Mvc3Vu
-eGkvc3VuOGktY29kZWMuYwo+PiArKysgYi9zb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYwo+
-PiBAQCAtMjgxLDExICsyODEsMTMgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBzbmRfc29jX2RhcG1f
-d2lkZ2V0IHN1bjhpX2NvZGVjX2RhcG1fd2lkZ2V0c1tdID0gewo+PiAgICAgICAgIFNORF9TT0Nf
-REFQTV9TVVBQTFkoIkRBQyIsIFNVTjhJX0RBQ19ESUdfQ1RSTCwgU1VOOElfREFDX0RJR19DVFJM
-X0VOREEsCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAwLCBOVUxMLCAwKSwKPj4KPj4g
-LSAgICAgICAvKiBBbmFsb2cgREFDICovCj4+IC0gICAgICAgU05EX1NPQ19EQVBNX0RBQygiRGln
-aXRhbCBMZWZ0IERBQyIsICJQbGF5YmFjayIsIFNVTjhJX0FJRjFfREFDREFUX0NUUkwsCj4+IC0g
-ICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwTF9F
-TkEsIDApLAo+PiAtICAgICAgIFNORF9TT0NfREFQTV9EQUMoIkRpZ2l0YWwgUmlnaHQgREFDIiwg
-IlBsYXliYWNrIiwgU1VOOElfQUlGMV9EQUNEQVRfQ1RSTCwKPj4gLSAgICAgICAgICAgICAgICAg
-ICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlGMV9EQTBSX0VOQSwgMCksCj4+ICsgICAg
-ICAgLyogQW5hbG9nIERBQyBBSUYgKi8KPj4gKyAgICAgICBTTkRfU09DX0RBUE1fQUlGX0lOKCJB
-SUYxIFNsb3QgMCBMZWZ0IiwgIlBsYXliYWNrIiwgMCwKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkwsCj4+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFfREEwTF9FTkEsIDApLAo+PiArICAgICAg
-IFNORF9TT0NfREFQTV9BSUZfSU4oIkFJRjEgU2xvdCAwIFJpZ2h0IiwgIlBsYXliYWNrIiwgMCwK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkwsCj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMX0FJRjFf
-REEwUl9FTkEsIDApLAo+Pgo+PiAgICAgICAgIC8qIERBQyBNaXhlcnMgKi8KPj4gICAgICAgICBT
-T0NfTUlYRVJfQVJSQVkoIkxlZnQgRGlnaXRhbCBEQUMgTWl4ZXIiLCBTTkRfU09DX05PUE0sIDAs
-IDAsCj4+IEBAIC0zMjksMTQgKzMzMSwxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9zb2Nf
-ZGFwbV9yb3V0ZSBzdW44aV9jb2RlY19kYXBtX3JvdXRlc1tdID0gewo+PiAgICAgICAgIHsgIkRB
-QyIsIE5VTEwsICJNT0RDTEsgREFDIiB9LAo+Pgo+PiAgICAgICAgIC8qIERBQyBSb3V0ZXMgKi8K
-Pj4gLSAgICAgICB7ICJEaWdpdGFsIExlZnQgREFDIiwgTlVMTCwgIkRBQyIgfSwKPj4gLSAgICAg
-ICB7ICJEaWdpdGFsIFJpZ2h0IERBQyIsIE5VTEwsICJEQUMiIH0sCj4+ICsgICAgICAgeyAiQUlG
-MSBTbG90IDAgUmlnaHQiLCBOVUxMLCAiREFDIiB9LAo+PiArICAgICAgIHsgIkFJRjEgU2xvdCAw
-IExlZnQiLCBOVUxMLCAiREFDIiB9LAo+Pgo+PiAgICAgICAgIC8qIERBQyBNaXhlciBSb3V0ZXMg
-Ki8KPj4gICAgICAgICB7ICJMZWZ0IERpZ2l0YWwgREFDIE1peGVyIiwgIkFJRjEgU2xvdCAwIERp
-Z2l0YWwgREFDIFBsYXliYWNrIFN3aXRjaCIsCj4+IC0gICAgICAgICAiRGlnaXRhbCBMZWZ0IERB
-QyJ9LAo+PiArICAgICAgICAgIkFJRjEgU2xvdCAwIExlZnQifSwKPj4gICAgICAgICB7ICJSaWdo
-dCBEaWdpdGFsIERBQyBNaXhlciIsICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5YmFjayBT
-d2l0Y2ggIiwKPj4gLSAgICAgICAgICJEaWdpdGFsIFJpZ2h0IERBQyJ9LAo+PiArICAgICAgICAg
-IkFJRjEgU2xvdCAwIFJpZ2h0In0sCj4+ICB9Owo+Pgo+PiAgc3RhdGljIHN0cnVjdCBzbmRfc29j
-X2RhaV9vcHMgc3VuOGlfY29kZWNfZGFpX29wcyA9IHsKPj4gLS0KPj4gMi4xMS4wCj4+Cl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFp
-bGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNh
-LXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi,
+
+On Monday 06 March 2017 07:19 PM, Chunfeng Yun wrote:
+> the reference clock of HighSpeed port is 48M which comes from PLL;
+> the reference clock of SuperSpeed port is 26M which usually comes
+> from 26M oscillator directly, but some SoCs are not, add it for
+> compatibility, and put them into port node for flexibility.
+
+Won't this break the old dt compatiblity? Making change in dt is fine as long
+as older dtb's are still supported.
+
+Thanks
+Kishon
+> 
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/phy/phy-mt65xx-usb3.c |   21 +++++++++++----------
+>  1 file changed, 11 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
+> index 7fff482..f4a3505 100644
+> --- a/drivers/phy/phy-mt65xx-usb3.c
+> +++ b/drivers/phy/phy-mt65xx-usb3.c
+> @@ -153,6 +153,7 @@ struct mt65xx_phy_pdata {
+>  struct mt65xx_phy_instance {
+>  	struct phy *phy;
+>  	void __iomem *port_base;
+> +	struct clk *ref_clk;	/* reference clock of anolog phy */
+>  	u32 index;
+>  	u8 type;
+>  };
+> @@ -160,7 +161,6 @@ struct mt65xx_phy_instance {
+>  struct mt65xx_u3phy {
+>  	struct device *dev;
+>  	void __iomem *sif_base;	/* only shared sif */
+> -	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
+>  	const struct mt65xx_phy_pdata *pdata;
+>  	struct mt65xx_phy_instance **phys;
+>  	int nphys;
+> @@ -449,9 +449,9 @@ static int mt65xx_phy_init(struct phy *phy)
+>  	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
+>  	int ret;
+>  
+> -	ret = clk_prepare_enable(u3phy->u3phya_ref);
+> +	ret = clk_prepare_enable(instance->ref_clk);
+>  	if (ret) {
+> -		dev_err(u3phy->dev, "failed to enable u3phya_ref\n");
+> +		dev_err(u3phy->dev, "failed to enable ref_clk\n");
+>  		return ret;
+>  	}
+>  
+> @@ -494,7 +494,7 @@ static int mt65xx_phy_exit(struct phy *phy)
+>  	if (instance->type == PHY_TYPE_USB2)
+>  		phy_instance_exit(u3phy, instance);
+>  
+> -	clk_disable_unprepare(u3phy->u3phya_ref);
+> +	clk_disable_unprepare(instance->ref_clk);
+>  	return 0;
+>  }
+>  
+> @@ -594,12 +594,6 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
+>  		return PTR_ERR(u3phy->sif_base);
+>  	}
+>  
+> -	u3phy->u3phya_ref = devm_clk_get(dev, "u3phya_ref");
+> -	if (IS_ERR(u3phy->u3phya_ref)) {
+> -		dev_err(dev, "error to get u3phya_ref\n");
+> -		return PTR_ERR(u3phy->u3phya_ref);
+> -	}
+> -
+>  	port = 0;
+>  	for_each_child_of_node(np, child_np) {
+>  		struct mt65xx_phy_instance *instance;
+> @@ -634,6 +628,13 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
+>  			goto put_child;
+>  		}
+>  
+> +		instance->ref_clk = devm_clk_get(&phy->dev, "ref");
+> +		if (IS_ERR(instance->ref_clk)) {
+> +			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
+> +			retval = PTR_ERR(instance->ref_clk);
+> +			goto put_child;
+> +		}
+> +
+>  		instance->phy = phy;
+>  		instance->index = port;
+>  		phy_set_drvdata(phy, instance);
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
