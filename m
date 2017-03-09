@@ -1,88 +1,59 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 0/3] Add EHCI support for Armada 37xx
-Date: Thu, 09 Mar 2017 18:42:46 +0100
-Message-ID: <87shmmjqi1.fsf@free-electrons.com>
+Subject: [PATCH v3 3/3] ARM64: dts: marvell: armada-37xx: Add USB2 node
+Date: Thu,  9 Mar 2017 18:28:27 +0100
+Message-ID: <20170309172827.17874-4-gregory.clement@free-electrons.com>
 References: <20170309172827.17874-1-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170309172827.17874-1-gregory.clement@free-electrons.com>
-        (Gregory CLEMENT's message of "Thu, 9 Mar 2017 18:28:24 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Armada 37xx SoC embedded an EHCI controller. This patch adds the device
+tree node enabling its support.
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ arch/arm64/boot/dts/marvell/armada-3720-db.dts | 6 ++++++
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 7 +++++++
+ 2 files changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+index 864936acc316..aa39339b6582 100644
+--- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
+@@ -134,6 +134,12 @@
+ 	status = "okay";
+ };
  
- On jeu., mars 09 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-
-> Hi,
->
-> The EHCI controller in the Armada 37xx SoCs is the one used on many
-> other mvebu SoCs such as the orion5x, the kirkwood, or the
-> armada. However, for Armada 37xx an extra initialization step is
-> needed: this is the purpose of the first patch.
->
-> The second patch allows to build the driver for the ARM64 Armada SoCs.
->
-> The last one enables the EHCI in the device tree.
->
-> This third version takes into account the review from Alan Stern.
->
-> Thanks,
->
-> Gregory
->
-> Changelog:
-> v2-> v3:
-> - Remove the _SHIFT define and use their value directly, suggested by
->   Alan Stern
-> - Remove unnecessary error message in ehci_orion_drv_reset() ,
->   suggested by Alan Stern
-> - Exit ehci_orion_drv_reset() if ehci_setup() failed, suggested by
->   Alan Stern
-
-All the above changes are not in the series I've just sent. I will send
-the correct series in a few minutes
-
-sorry for the noise!
-
-Gregory
-
-> - Add Reviewed-by flag from  Andrew Lunn
->
-> v1 -> v2:
-> - Fix typo in commit log of the patch 1, suggested by Andrew Lunn
-> - Fix wording in the device tree binding documenation, suggested by
->   Andrew Lunn
-> - Make new define symbol name more clear by adding _SHIFT to the end,
->   suggested by Andrew Lunn
-> - Use a full first name + last name for the Signed-off-by and the
->   Authorship i oatch 1, suggested by Thomas Petazzoni.
-> - Improve the commit log of the patch 2, suggested by Andrew Lunn
-> - Fix Kconfig logic, suggested by Andrew Lunn
->
-> Gregory CLEMENT (2):
->   usb: host: Allow to build ehci orion with mvebu SoCs
->   ARM64: dts: marvell: armada-37xx: Add USB2 node
->
-> Hua Jing (1):
->   usb: orion-echi: Add support for the Armada 3700
->
->  .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
->  arch/arm64/boot/dts/marvell/armada-3720-db.dts     |  6 ++++
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi       |  7 ++++
->  drivers/usb/host/Kconfig                           |  2 +-
->  drivers/usb/host/ehci-orion.c                      | 39 ++++++++++++++++++++++
->  5 files changed, 56 insertions(+), 2 deletions(-)
->
-> -- 
-> 2.11.0
->
-
++/* CON27 */
++&usb2 {
++	status = "okay";
++};
++
++
+ &mdio {
+ 	status = "okay";
+ 	phy0: ethernet-phy@0 {
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index cf0c2f9ebd7d..7639518d8ee1 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -204,6 +204,13 @@
+ 				status = "disabled";
+ 			};
+ 
++			usb2: usb@5e000 {
++				compatible = "marvell,armada-3700-ehci";
++				reg = <0x5e000 0x2000>;
++				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				status = "disabled";
++			};
++
+ 			xor@60900 {
+ 				compatible = "marvell,armada-3700-xor";
+ 				reg = <0x60900 0x100
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.11.0
