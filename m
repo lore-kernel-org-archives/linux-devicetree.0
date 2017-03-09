@@ -1,91 +1,63 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: Re: [PATCH] dma: xilinx: Make Xilinx VDMA support ARC
-Date: Thu, 9 Mar 2017 09:55:59 +0000
-Message-ID: <c1285d07-f925-2c3a-c90c-1ef9ee948b80@synopsys.com>
-References: <ec057c7b16c414a1cf9a9eba87c33f8bcf9f01f9.1488803103.git.roliveir@synopsys.com>
- <1ff465a7-69ed-6cd1-0e02-4b9ff752b3cd@topic.nl>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
+Subject: [PATCH v2 2/3] ASoC: sun8i-codec: Convert to use
+	SND_SOC_DAPM_AIF_IN
+Date: Thu,  9 Mar 2017 10:56:01 +0100
+Message-ID: <20170309095602.13809-3-mylene.josserand@free-electrons.com>
+References: <20170309095602.13809-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1ff465a7-69ed-6cd1-0e02-4b9ff752b3cd@topic.nl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Looijmans <mike.looijmans@topic.nl>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170309095602.13809-1-mylene.josserand@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike
-
-On 3/9/2017 7:37 AM, Mike Looijmans wrote:
-> On 06-03-17 13:27, Ramiro Oliveira wrote:
->> Add option in Kconfig to use Xilinx VDMA in ARC processors.
->>
->> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
->> ---
->>  drivers/dma/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->> index 263495d0adbd..b6b6c0581ad7 100644
->> --- a/drivers/dma/Kconfig
->> +++ b/drivers/dma/Kconfig
->> @@ -546,7 +546,7 @@ config XGENE_DMA
->>
->>  config XILINX_DMA
->>      tristate "Xilinx AXI DMAS Engine"
->> -    depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
->> +    depends on (ARCH_ZYNQ || MICROBLAZE || ARM64|| ARC)
-> 
-> One can put a Xilinx FPGA on a PCIe card, instantiate a PCIe-AXI bridge and then
-> use it on any platform that supports PCIe.
-> 
-> I've had to remove this line in order to be able to use the engine on an x86
-> desktop.
-> 
-> How about plainly removing this "depends on" line and be done with it, instead
-> of adding platforms one by one?
-> 
-> 
-
-I agree with you. From my point of view it would be better to remove this line
-entirely. I'm just not sure if everyone agrees.
-
->>      select DMA_ENGINE
->>      help
->>        Enable support for Xilinx AXI VDMA Soft IP.
->>
-> 
-> 
-> 
-> Kind regards,
-> 
-> Mike Looijmans
-> System Expert
-> 
-> TOPIC Products
-> Materiaalweg 4, NL-5681 RJ Best
-> Postbus 440, NL-5680 AK Best
-> Telefoon: +31 (0) 499 33 69 79
-> E-mail: mike.looijmans@topicproducts.com
-> Website: www.topicproducts.com
-> 
-> Please consider the environment before printing this e-mail
-> 
-> 
-> 
-> 
-> 
-
--- 
-Best Regards
-
-Ramiro Oliveira
-Ramiro.Oliveira@synopsys.com
+VXBkYXRlIHRoZSBkcml2ZXIgdG8gdXNlIFNORF9TT0NfREFQTV9BSUZfSU4gaW5zdGVhZCBvZgpT
+TkRfU09DX0RBUE1fREFDLgpSZW5hbWUgdGhlIGludGVyZmFjZSdzIHdpZGdldHMgdG8gYmUgbW9y
+ZSBwcmVjaXNlIG9uIHdoaWNoIHNsb3QKdGhlIGludGVyZmFjZSBpcyBjb25uZWN0ZWQuCgpTaWdu
+ZWQtb2ZmLWJ5OiBNeWzDqG5lIEpvc3NlcmFuZCA8bXlsZW5lLmpvc3NlcmFuZEBmcmVlLWVsZWN0
+cm9ucy5jb20+Ci0tLQogc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMgfCAyMCArKysrKysr
+KysrKy0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDkgZGVsZXRp
+b25zKC0pCgpkaWZmIC0tZ2l0IGEvc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMgYi9zb3Vu
+ZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYwppbmRleCA5MGNkYTk1Njk1MDMuLjU3MjNjMzQwNGY2
+YiAxMDA2NDQKLS0tIGEvc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMKKysrIGIvc291bmQv
+c29jL3N1bnhpL3N1bjhpLWNvZGVjLmMKQEAgLTI4MSwxMSArMjgxLDEzIEBAIHN0YXRpYyBjb25z
+dCBzdHJ1Y3Qgc25kX3NvY19kYXBtX3dpZGdldCBzdW44aV9jb2RlY19kYXBtX3dpZGdldHNbXSA9
+IHsKIAlTTkRfU09DX0RBUE1fU1VQUExZKCJEQUMiLCBTVU44SV9EQUNfRElHX0NUUkwsIFNVTjhJ
+X0RBQ19ESUdfQ1RSTF9FTkRBLAogCQkJICAgIDAsIE5VTEwsIDApLAogCi0JLyogQW5hbG9nIERB
+QyAqLwotCVNORF9TT0NfREFQTV9EQUMoIkRpZ2l0YWwgTGVmdCBEQUMiLCAiUGxheWJhY2siLCBT
+VU44SV9BSUYxX0RBQ0RBVF9DVFJMLAotCQkJIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlGMV9E
+QTBMX0VOQSwgMCksCi0JU05EX1NPQ19EQVBNX0RBQygiRGlnaXRhbCBSaWdodCBEQUMiLCAiUGxh
+eWJhY2siLCBTVU44SV9BSUYxX0RBQ0RBVF9DVFJMLAotCQkJIFNVTjhJX0FJRjFfREFDREFUX0NU
+UkxfQUlGMV9EQTBSX0VOQSwgMCksCisJLyogQW5hbG9nIERBQyBBSUYgKi8KKwlTTkRfU09DX0RB
+UE1fQUlGX0lOKCJBSUYxIFNsb3QgMCBMZWZ0IiwgIlBsYXliYWNrIiwgMCwKKwkJCSAgICBTVU44
+SV9BSUYxX0RBQ0RBVF9DVFJMLAorCQkJICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkxfQUlGMV9E
+QTBMX0VOQSwgMCksCisJU05EX1NPQ19EQVBNX0FJRl9JTigiQUlGMSBTbG90IDAgUmlnaHQiLCAi
+UGxheWJhY2siLCAwLAorCQkJICAgIFNVTjhJX0FJRjFfREFDREFUX0NUUkwsCisJCQkgICAgU1VO
+OElfQUlGMV9EQUNEQVRfQ1RSTF9BSUYxX0RBMFJfRU5BLCAwKSwKIAogCS8qIERBQyBNaXhlcnMg
+Ki8KIAlTT0NfTUlYRVJfQVJSQVkoIkxlZnQgRGlnaXRhbCBEQUMgTWl4ZXIiLCBTTkRfU09DX05P
+UE0sIDAsIDAsCkBAIC0zMjksMTQgKzMzMSwxNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNuZF9z
+b2NfZGFwbV9yb3V0ZSBzdW44aV9jb2RlY19kYXBtX3JvdXRlc1tdID0gewogCXsgIkRBQyIsIE5V
+TEwsICJNT0RDTEsgREFDIiB9LAogCiAJLyogREFDIFJvdXRlcyAqLwotCXsgIkRpZ2l0YWwgTGVm
+dCBEQUMiLCBOVUxMLCAiREFDIiB9LAotCXsgIkRpZ2l0YWwgUmlnaHQgREFDIiwgTlVMTCwgIkRB
+QyIgfSwKKwl7ICJBSUYxIFNsb3QgMCBSaWdodCIsIE5VTEwsICJEQUMiIH0sCisJeyAiQUlGMSBT
+bG90IDAgTGVmdCIsIE5VTEwsICJEQUMiIH0sCiAKIAkvKiBEQUMgTWl4ZXIgUm91dGVzICovCiAJ
+eyAiTGVmdCBEaWdpdGFsIERBQyBNaXhlciIsICJBSUYxIFNsb3QgMCBEaWdpdGFsIERBQyBQbGF5
+YmFjayBTd2l0Y2giLAotCSAgIkRpZ2l0YWwgTGVmdCBEQUMifSwKKwkgICJBSUYxIFNsb3QgMCBM
+ZWZ0In0sCiAJeyAiUmlnaHQgRGlnaXRhbCBEQUMgTWl4ZXIiLCAiQUlGMSBTbG90IDAgRGlnaXRh
+bCBEQUMgUGxheWJhY2sgU3dpdGNoIiwKLQkgICJEaWdpdGFsIFJpZ2h0IERBQyJ9LAorCSAgIkFJ
+RjEgU2xvdCAwIFJpZ2h0In0sCiB9OwogCiBzdGF0aWMgc3RydWN0IHNuZF9zb2NfZGFpX29wcyBz
+dW44aV9jb2RlY19kYWlfb3BzID0gewotLSAKMi4xMS4wCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRl
+dmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
