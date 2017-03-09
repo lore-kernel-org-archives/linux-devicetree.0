@@ -1,59 +1,48 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 3/3] ARM64: dts: marvell: armada-37xx: Add USB2 node
-Date: Thu,  9 Mar 2017 18:28:27 +0100
-Message-ID: <20170309172827.17874-4-gregory.clement@free-electrons.com>
-References: <20170309172827.17874-1-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170309172827.17874-1-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 2/3] usb: host: Allow to build ehci orion with mvebu SoCs
+Date: Thu,  9 Mar 2017 18:52:57 +0100
+Message-ID: <20170309175258.20076-3-gregory.clement@free-electrons.com>
+References: <20170309175258.20076-1-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170309175258.20076-1-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Hua Jing <jinghua@marvell.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Armada 37xx SoC embedded an EHCI controller. This patch adds the device
-tree node enabling its support.
+The mvebu ARM64 SoCs no longer select PLAT_ORION. However Armada 37xx use
+the Orion EHCI controller. This patch allows the Orion EHCI driver to be
+built when ARCH_MVEBU is selected.
 
 Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-db.dts | 6 ++++++
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi   | 7 +++++++
- 2 files changed, 13 insertions(+)
+ drivers/usb/host/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-index 864936acc316..aa39339b6582 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-@@ -134,6 +134,12 @@
- 	status = "okay";
- };
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 407d947b34ea..54bdd76c7f03 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -188,7 +188,7 @@ config USB_EHCI_HCD_OMAP
  
-+/* CON27 */
-+&usb2 {
-+	status = "okay";
-+};
-+
-+
- &mdio {
- 	status = "okay";
- 	phy0: ethernet-phy@0 {
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index cf0c2f9ebd7d..7639518d8ee1 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -204,6 +204,13 @@
- 				status = "disabled";
- 			};
- 
-+			usb2: usb@5e000 {
-+				compatible = "marvell,armada-3700-ehci";
-+				reg = <0x5e000 0x2000>;
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				status = "disabled";
-+			};
-+
- 			xor@60900 {
- 				compatible = "marvell,armada-3700-xor";
- 				reg = <0x60900 0x100
+ config USB_EHCI_HCD_ORION
+ 	tristate  "Support for Marvell EBU on-chip EHCI USB controller"
+-	depends on USB_EHCI_HCD && PLAT_ORION
++	depends on USB_EHCI_HCD && (PLAT_ORION || ARCH_MVEBU)
+ 	default y
+ 	---help---
+ 	  Enables support for the on-chip EHCI controller on Marvell's
 -- 
 2.11.0
