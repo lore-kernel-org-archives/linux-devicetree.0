@@ -1,108 +1,69 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 2/3] thermal: add support for the thermal sensor on
- Allwinner new SoCs
-Date: Thu, 09 Mar 2017 23:31:54 +0800
-Message-ID: <21361489073514@web39j.yandex.ru>
-References: <20170301190220.2EgSha6N@smtp3o.mail.yandex.net>
- <20170302141105.5fr3ru72rtdyv4pd@lukather>
- <8250311489019784@web18g.yandex.ru> <20170309142712.tfmfrbbhagskrtaf@lukather>
+From: Akshay Bhat <akshay.bhat@timesys.com>
+Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
+Date: Thu, 9 Mar 2017 10:28:36 -0500
+Message-ID: <fe8efa99-e5ce-7549-17fc-85f1ee964e5d@timesys.com>
+References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
+ <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
+ <2197294b-e6cf-6c56-1419-3a4f95c29db7@timesys.com>
+ <6df4a9ae-eaba-6f3f-9c23-ae269548b005@grandegger.com>
+ <1447da4a-6a36-38fb-4298-fd7488697d11@timesys.com>
+ <a9cb37d9-a71e-ce59-c379-d9bde5d8afb9@grandegger.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170309142712.tfmfrbbhagskrtaf@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Ondrej Jirman <megous@megous.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a9cb37d9-a71e-ce59-c379-d9bde5d8afb9@grandegger.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfgang Grandegger <wg@grandegger.com>, mkl@pengutronix.de
+Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Akshay Bhat <nodeax@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-CgowOS4wMy4yMDE3LCAyMjoyNywgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gVGh1LCBNYXIgMDksIDIwMTcgYXQgMDg6MzY6MjRBTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAwMi4wMy4yMDE3LCAyMjoxMSwgIk1heGltZSBS
-aXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT46Cj4+IMKgPiBPbiBUaHUs
-IE1hciAwMiwgMjAxNyBhdCAxMjowMjoxM0FNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+
-PiDCoD4+IMKgMjAxN+W5tDPmnIgx5pelIDIzOjU25LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5y
-aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPuWGmemBk++8mgo+PiDCoD4+IMKgPgo+PiDCoD4+IMKg
-PiBPbiBXZWQsIE1hciAwMSwgMjAxNyBhdCAwNjoyMDo1MVBNICswODAwLCBJY2Vub3d5IFpoZW5n
-IHdyb3RlOgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4gMjAxN+W5tDPmnIgx5pelIDE4OjE0
-5LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPuWGmemB
-k++8mgo+PiDCoD4+IMKgPiA+ID4KPj4gwqA+PiDCoD4gPiA+IE9uIFR1ZSwgRmViIDI4LCAyMDE3
-IGF0IDAzOjE4OjEzUE0gKzA4MDAsIEljZW5vd3kgWmhlbmcgd3JvdGU6Cj4+IMKgPj4gwqA+ID4g
-PiA+Cj4+IMKgPj4gwqA+ID4gPiA+IDIwMTflubQy5pyIMjjml6UgMTQ6NDTkuo4gTWF4aW1lIFJp
-cGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+5YaZ6YGT77yaCj4+IMKgPj4g
-wqA+ID4gPiA+ID4KPj4gwqA+PiDCoD4gPiA+ID4gPiBPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAw
-Mzo0MDo1M0FNICswODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoD4+IMKgPiA+ID4gPiA+
-ID4gRnJvbTogT25kcmVqIEppcm1hbiA8bWVnb3VzQG1lZ291cy5jb20+Cj4+IMKgPj4gwqA+ID4g
-PiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gQWxsd2lubmVyIFNvQ3MgZnJvbSBIMyAoaW5j
-bHVkaW5nIEg1LCBBNjQsIGV0YykgaGF2ZSBhIG5ldyB2ZXJzaW9uIG9mCj4+IMKgPj4gwqA+ID4g
-PiA+ID4gPiB0aGVybWFsIHNlbnNvciwgYW5kIG5lZWRzIGEgbmV3IGRyaXZlciBmb3IgaXQuCj4+
-IMKgPj4gwqA+ID4gPiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gQWRkIHN1Y2ggYSBkcml2
-ZXIuCj4+IMKgPj4gwqA+ID4gPiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gQ3VycmVudGx5
-IG9ubHkgSDMgaXMgc3VwcG9ydGVkLCBidXQgb3RoZXIgU29DcyBhcmUgZWFzaWx5IHRvIGJlCj4+
-IMKgPj4gwqA+ID4gPiA+ID4gPiBzdXBwb3J0ZWQgYnkgYWRkaW5nIG5ldyBmb3JtdWxhIGFuZCBz
-ZXQgdGhlIHNlbnNvciBudW1iZXIuCj4+IMKgPj4gwqA+ID4gPiA+ID4gPgo+PiDCoD4+IMKgPiA+
-ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogT25kxZllaiBKaXJtYW4gPG1lZ291c0BtZWdvdXMuY29t
-Pgo+PiDCoD4+IMKgPiA+ID4gPiA+ID4gW0ljZW5vd3k6IGV4dGVuZCB0byBzdXBwb3J0IGZ1cnRo
-ZXIgbXVsdGlwbGUtc2Vuc29yIFNvQ3MsIGNoYW5nZSBjb21taXQKPj4gwqA+PiDCoD4gPiA+ID4g
-PiA+wqAgbWVzc2FnZV0KPj4gwqA+PiDCoD4gPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEljZW5v
-d3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4+IMKgPj4gwqA+ID4gPiA+ID4KPj4gwqA+PiDC
-oD4gPiA+ID4gPiBUaGVyZSdzIG5vIG5lZWQgdG8gY3JlYXRlIGEgbmV3IGRyaXZlciBmb3IgdGhh
-dC4gVGhpcyBjYW4gYmUgaGFuZGxlZAo+PiDCoD4+IMKgPiA+ID4gPiA+IGJ5IHRoZSBHUEFEQyBk
-cml2ZXIgd2UgYWxyZWFkeSBoYXZlLgo+PiDCoD4+IMKgPiA+ID4gPgo+PiDCoD4+IMKgPiA+ID4g
-PiBzdW44aS10aHMgaXMgbm90IEdQQURDIGF0IGFsbC4KPj4gwqA+PiDCoD4gPiA+ID4KPj4gwqA+
-PiDCoD4gPiA+ID4gVGhlIGxhdGVzdCBTb0MgSSBrbm93IHRoYXQgdXNlIEdQQURDIGFzIHRoZXJt
-YWwgc2Vuc29yIGlzIEEzMy4KPj4gwqA+PiDCoD4gPiA+Cj4+IMKgPj4gwqA+ID4gPiBJdCdzIG5v
-dCBjYWxsZWQgdGhlIHNhbWUgd2F5LCBidXQgaXQgZGVmaW5pdGVseSBpcyBhbiBldm9sdXRpb24g
-b2YgdGhlCj4+IMKgPj4gwqA+ID4gPiBzYW1lIGNvbnRyb2xsZXIuIFRoZXJlJ3Mgbm8gbmVlZCBm
-b3IgYSBuZXcgZHJpdmVyLCBvbmx5IHJld29ya2luZyB3aGF0Cj4+IMKgPj4gwqA+ID4gPiBpcyBh
-bHJlYWR5IHRoZXJlLgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4gSSBkb24ndCB0aGluayBz
-byAtLSBoZXJlJ3Mgc29tZSBldmlkZW5jZToKPj4gwqA+Pgo+PiDCoD4+IMKgQnV0IHRoZSBIMyBU
-SFMgaGF2ZSBtYW55IG5ldyBJUlFzLCBmdW5jdGlvbnMsIGRpZmZlcmVudCBzYW1wbGluZwo+PiDC
-oD4+IMKgcmF0ZSBzZXQgbWV0aG9kIGFuZCBhIHF1aXRlIGRpZmZlcmVudCByZWdpc3RlciBsYXlv
-dXQuCj4+IMKgPj4KPj4gwqA+PiDCoERvaW5nIHRoaXMgaW4gR1BBREMgZHJpdmVyIGlzIHBvc3Np
-YmxlIGJ1dCBtZWFuaW5nbGVzcy4KPj4gwqA+Pgo+PiDCoD4+IMKgPiA+Cj4+IMKgPj4gwqA+ID4g
-MS4gVGhlIG9sZCBHUEFEQyBkbyBub3QgaGF2ZSBtb2R1bGUgY2xvY2suCj4+IMKgPj4gwqA+Cj4+
-IMKgPj4gwqA+IFRoZSBBMzMgY291bGQgdXNlIGEgUExMLgo+PiDCoD4+Cj4+IMKgPj4gwqBCdXQg
-aXQncyBhIGRlZGljYXRlZCBtb2QgY2xrIG9uIG5ldyBnZW5lcmF0aW9uIFRIUy4KPj4gwqA+Cj4+
-IMKgPiBBbmQgYWxsIG9mIHRoaXMgcmVhbGx5IGFyZSBldm9sdXRpb25zLiBUaGUgYmxvY2sgaXMg
-c3RpbGwgZHJpdmVuIGluCj4+IMKgPiB0aGUgZXhhY3Qgc2FtZSB3YXkuIEFuZCB0aGlzIGlzIHdo
-ZXJlIHRoZXJlIGlzIHZhbHVlIGluIGhhdmluZyB0aGUKPj4gwqA+IHNhbWUgZHJpdmVyOiB5b3Ug
-c2hhcmUgdGhlIGxvZ2ljLCB3aGljaCBpcyBtb3N0bHkgY29tbW9uLCBpbnN0ZWFkIG9mCj4+IMKg
-PiBkdXBsaWNhdGluZyBpdC4KPj4KPj4gwqBBZnRlciBzb21lIHRoaW5raW5nLCBJIGNhbiBhY2Nl
-cHQgYSBjb21tb24gZHJpdmVyIGZvciBBMjMvQTMzIHRoZXJtYWwKPj4gwqBzZW5zb3IgYW5kIEgz
-L0E2NC9INSBvbmVzLCBidXQgSSBjYW5ub3QgYWNjZXB0IHVzZSBpaW8tc3VuNGktZ3BhZGMKPj4g
-wqBkcml2ZXIgZm9yIGl0LCBhcyBub3cgSDMvQTY0L0g1IHRoZXJtYWwgc2Vuc29ycyBhcmUgbm90
-IGp1c3QgYW4gQURDIC0tCj4+IMKgdGhleSBmZWF0dXJlcyBoYXJkd2FyZSBhbGFybSBsZXZlbHMs
-IGFuZCBpbiBzb21lIFNvQyBpdCBiZWNvbWUgYQo+PiDCoG11bHRpcGxlIGNoYW5uZWwgdGhlcm1h
-bCBzZW5zb3IuCj4KPiBUaGUgQTIzIGFuZCBBMzMgaXMgdHJpdmlhbCB0byBzdXBwb3J0IG9uIHRo
-ZSBhbHJlYWR5IGV4aXN0aW5nIEdQQURDCj4gZHJpdmVyLiBJZiB5b3UgaGF2ZSBpdCBhbHJlYWR5
-IHdvcmtpbmcgb24gdGhlIEEzMywgdGhlbiB0aGUgYW1vdW50IG9mCj4gd29yayBmb3IgeW91ciBk
-cml2ZXIgdG8gc3VwcG9ydCB0aGUgQTMzLCBvciBmb3IgdGhlIEdQQURDIHRvIHN1cHBvcnQKPiB0
-aGUgbmV3ZXIgU29DIGlzIHN0cmljdGx5IHRoZSBzYW1lLgo+Cj4gRXhjZXB0IGluIG9uZSBjYXNl
-LCB3ZSBoYXZlIGEgY29tbW9uLCBkZWJ1Z2dlZCwgYWxyZWFkeSByZXZpZXdlZCBhbmQKPiBhbHJl
-YWR5IG1lcmdlZCBkcml2ZXIuIEluIHRoZSBvdGhlciBjYXNlLCB3ZSBoYXZlIG5vIHN1Y2ggdGhp
-bmdzLgoKSSBkaWRuJ3Qgc2VlIHN1bjRpLWdwYWRjIGlpbyBkcml2ZXIgaW4gbGludXgtbmV4dCBu
-b3csIG9ubHkgdGhlIEdQQURDIE1GRC4KCkFuZCBhYnN0cmFjdCBhIHRoZXJtYWwtb25seSBBREMg
-YXMgYSBHUEFEQyBpcyBub3QgcHJvcGVyLCBlc3BlY2lhbGx5IHdoZW4KaXQgY29tZXMgd2l0aCBz
-b21lIHRoZXJtYWwtc3BlY2lmaWMgZnVuY3Rpb25zIChoYXJkd2FyZSB0cmlwIHBvaW50cykuCgpT
-byBJIGRvIG5vdCBhY2NlcHQgaXQgdG8gYmUgaW1wbGVtZW50ZWQgYXMgSUlPIEFEQyBkcml2ZXIu
-Cgo+Cj4+IMKgSSB3aWxsIGluc2lzdCBvbiBkb2luZyBhIGRlZGljYXRlZCBkcml2ZXIgZm9yIGl0
-LCBvciBpZiB5b3UgbGlrZSwgSSBjYW4gYWRkCj4+IMKgQTIzL0EzMyBzdXBwb3J0IHRvIHRoaXMg
-ZHJpdmVyLiAoQ29uc2lkZXJpbmcgbm8gb25lIGhhdmUgYWxyZWFkeSBwb3N0ZWQKPj4gwqBhbnkg
-cGF0Y2hlcyBmb3IgQTIzL0EzMyB0aGVybWFsIHNlbnNvciwgZXhjZXB0IG15IG9sZCBvbmVzLCBz
-byBteQo+PiDCoHdvcmsgYXQgbGVhc3Qgd29uJ3QgY29uZmxpY3Qgd2l0aCBhbnl0aGluZyBtZXJn
-ZWQpCj4KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtl
-cm5lbC8yMDE2LURlY2VtYmVyLzQ3NDgyMS5odG1sCj4KPiBNYXhpbWUKPgo+IC0tCj4gTWF4aW1l
-IFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2VybmVsIGVuZ2lu
-ZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Wolfgang,
+
+On 03/09/2017 09:45 AM, Wolfgang Grandegger wrote:
+> Hello Akshay,
+> 
+> Am 09.03.2017 um 13:34 schrieb Akshay Bhat:
+>>
+>> Hi Wolfgang,
+>>
+>> Good question. I have not worked with MPC251x but the HI-311x performs
+>> much better because HI-3110 features:
+>> 8 message FIFO (as opposed to 2 buffers on MPC2510)
+>> 20 MHz SPI interface (as opposed to 2.5 MHz on MPC2510)
+>>
+>> As for the real world test results:
+>>
+>> With RT patch applied to the kernel running on a i.MX6 Dual processor
+>> (worst case interrupt latency of 50us as reported by cyclictest), there
+>> are ZERO packet drops.
+>> Tested with Kvaser Leaf sending 100 burst messages (back to back) every
+>> 40ms at a 1M CAN bit rate. 10 million messages were sent by the Kvaser
+>> leaf and received successfully by the HI-311x driver.
+> 
+> This corresponds to a bus load of approx. 50%, I think?
+
+The usecase I tested above was more like ~30% (data payload length was
+randomized) but I did test with 50% bus load as well without any dropped
+messages.
+
+> 
+>> Even without the RT patch, I was able to get the packet drop to zero but
+>> this was by moving the CAN/SPI IRQ threads to CPU1 instead of CPU0.
+> 
+> Vanilla Linux is more critical here due to higher latencies. With 2500
+> Messages per sec the RX FIFO (8 Messages) fills up within 3.2 ms... and
+> in a burst even quicker. That's already heavy load.
+> 
+
+I agree with Vanilla Linux is more critical due to higher latencies,
+however if the frequency governor is set to performance and CAN/SPI
+threads are moved to another CPU (if that is an option) with SCHED_FIFO
+setting, the driver is able to keep up even at high bit rates / bursts.
+
+I understand SPI based CAN controllers are not ideal choice but for
+users that do not have any other option, I feel this controller/driver
+meets their need :)
+
+Thanks,
+Akshay
