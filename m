@@ -1,110 +1,64 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCHv3 01/15] ov7670: document device tree bindings
-Date: Thu, 9 Mar 2017 20:01:42 +0200
-Message-ID: <20170309180142.GO3220@valkosipuli.retiisi.org.uk>
-References: <20170306145616.38485-1-hverkuil@xs4all.nl>
- <20170306145616.38485-2-hverkuil@xs4all.nl>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: enable USB Host Nodes
+Date: Thu, 9 Mar 2017 20:36:52 +0100
+Message-ID: <CAFBinCCGpA-RrJRgK5NJc6cm1qWhBVYF+hUvY1YrD3oFvmVYoA@mail.gmail.com>
+References: <1488918961-4666-1-git-send-email-linux.amoon@gmail.com>
+ <CANAwSgTUPpYvFWcZOf+j6K+1rDZJNUeu9K1fGAB8TC6TgzRXCg@mail.gmail.com>
+ <0204bbde-c437-e11b-cb3b-d9f4b55a5810@baylibre.com> <CANAwSgTuP_OGp+0sdR9sVuq-SOkBfQxYKONZPB7Vo=+GFdrHfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170306145616.38485-2-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <CANAwSgTuP_OGp+0sdR9sVuq-SOkBfQxYKONZPB7Vo=+GFdrHfw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+To: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Kim <brian.kim-vC+yAUbXFBlQ0OI7PeSoCw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Anand,
 
-On Mon, Mar 06, 2017 at 03:56:02PM +0100, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> 
-> Add binding documentation and add that file to the MAINTAINERS entry.
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov7670.txt       | 44 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> new file mode 100644
-> index 000000000000..6d9c90dff7a7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> @@ -0,0 +1,44 @@
-> +* Omnivision OV7670 CMOS sensor
-> +
-> +The Omnivision OV7670 sensor supports multiple resolutions output, such as
-> +CIF, SVGA, UXGA. It also can support the YUV422/420, RGB565/555 or raw RGB
-> +output formats.
-> +
-> +Required Properties:
-> +- compatible: should be "ovti,ov7670"
-> +- clocks: reference to the xclk input clock.
-> +- clock-names: should be "xclk".
-> +
-> +Optional Properties:
-> +- reset-gpios: reference to the GPIO connected to the resetb pin, if any.
-> +  Active is low.
-> +- powerdown-gpios: reference to the GPIO connected to the pwdn pin, if any.
-> +  Active is high.
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	i2c1: i2c@f0018000 {
-> +		ov7670: camera@21 {
-> +			compatible = "ovti,ov7670";
-> +			reg = <0x21>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-> +			reset-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-> +			powerdown-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-> +			clocks = <&pck0>;
-> +			clock-names = "xclk";
-> +			assigned-clocks = <&pck0>;
-> +			assigned-clock-rates = <25000000>;
-> +
-> +			port {
-> +				ov7670_0: endpoint {
-> +					remote-endpoint = <&isi_0>;
-> +					bus-width = <8>;
+On Thu, Mar 9, 2017 at 6:58 PM, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Anand,
+>>
+>> For this specific use case, the only way to manage this is to use the Work-In-Progress
+>> Power Sequence Library proposer by Peter Chen at :
+>> https://lkml.org/lkml/2016/11/13/315
+>>
+>> Since this is the USB Hub reset link and has no direct link with either the USB controller
+>> or the USB PHY, and the USB Hus cannot be modeled (yet ?) in the DT.
+>>
+>> One intermediate, but crappy, solution would be to add a GPIO hog until the power
+>> sequence code has been merged, with a proper big fat warning in the dts file.
+>>
+>> You can find doc about the gpio-hog in :
+>> Documentation/devicetree/bindings/gpio/gpio.txt
+>>
+>> It should look like :
+>>
+>> usb-hub {
+>>         gpio-hog;
+>>         gpios = <GPIOAO_4 GPIO_ACTIVE_HIGH>;
+>>         output-high;
+>>         line-name = "usb-hub-reset";
+>> };
+>>
+>> in the gpio_ao controller node.
+>>
+>> Neil
+>
+> Thanks for this input.
+>
+> I will check this series of patches, and work on this new approach.
+you might want to look at the following two patches as well: [0] and [1]
+I didn't test them as I don't have an Odroid-C2 but they should work
+with the series that Neil has mentioned. feel free to take my patches
+and fix them where needed
 
-Didn't I previously request to specify which of the standardised properties
-are relevant for the device (and which ones are required and which are
-optional)? If I didn't, I'm doing that now. :-)
 
-E.g. the omap3isp driver documentation looks like this:
+Regards,
+Martin
 
-Documentation/devicetree/bindings/media/ti,omap3isp.txt
-
-> +				};
-> +			};
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 83a42ef1d1a7..93500928ca4f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9273,6 +9273,7 @@ L:	linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
->  F:	drivers/media/i2c/ov7670.c
-> +F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
->  
->  ONENAND FLASH DRIVER
->  M:	Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+[0] https://github.com/xdarklight/linux/commit/f0bc8f826b465fbf24279ce78654b65282790dc6
+[1] https://github.com/xdarklight/linux/commit/7b5a69bf5bad992249aa39a96360fe90ccde9cd5
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
