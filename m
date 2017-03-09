@@ -1,58 +1,86 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv4 2/2] rtc: cpcap: new rtc driver
-Date: Thu, 9 Mar 2017 01:34:24 +0100
-Message-ID: <20170309003424.uj5t4b7wfsbqf2e2@piout.net>
-References: <20170220073535.27393-1-sre@kernel.org>
- <20170302002709.22276-1-sre@kernel.org>
- <20170302002709.22276-2-sre@kernel.org>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: Re: [PATCH 2/3] thermal: add support for the thermal sensor on
+ Allwinner new SoCs
+Date: Thu, 09 Mar 2017 08:36:24 +0800
+Message-ID: <8250311489019784@web18g.yandex.ru>
+References: <20170301190220.2EgSha6N@smtp3o.mail.yandex.net>
+ <20170302141105.5fr3ru72rtdyv4pd@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBEOGQLDAKGQEY77PQYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170302002709.22276-2-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170302141105.5fr3ru72rtdyv4pd@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Ondrej Jirman <megous@megous.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2017 at 01:27:09 +0100, Sebastian Reichel wrote:
-> This driver supports the Motorola CPCAP PMIC found on
-> some of Motorola's mobile phones, such as the Droid 4.
-> 
-> Tested-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> Changes since PATCHv3:
->  - Modified DT binding document to mention parent device
-> ---
->  .../devicetree/bindings/rtc/cpcap-rtc.txt          |  18 ++
->  drivers/rtc/Kconfig                                |   7 +
->  drivers/rtc/Makefile                               |   1 +
->  drivers/rtc/rtc-cpcap.c                            | 332 +++++++++++++++++++++
->  4 files changed, 358 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/cpcap-rtc.txt
->  create mode 100644 drivers/rtc/rtc-cpcap.c
-> 
-Applied, thanks.
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+CgowMi4wMy4yMDE3LCAyMjoxMSwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT46Cj4gT24gVGh1LCBNYXIgMDIsIDIwMTcgYXQgMTI6MDI6MTNBTSArMDgw
+MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAyMDE35bm0M+aciDHml6UgMjM6NTbkuo4gTWF4
+aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+5YaZ6YGT77yaCj4+
+IMKgPgo+PiDCoD4gT24gV2VkLCBNYXIgMDEsIDIwMTcgYXQgMDY6MjA6NTFQTSArMDgwMCwgSWNl
+bm93eSBaaGVuZyB3cm90ZToKPj4gwqA+ID4KPj4gwqA+ID4gMjAxN+W5tDPmnIgx5pelIDE4OjE0
+5LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPuWGmemB
+k++8mgo+PiDCoD4gPiA+Cj4+IMKgPiA+ID4gT24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgMDM6MTg6
+MTNQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqA+ID4gPiA+Cj4+IMKgPiA+ID4g
+PiAyMDE35bm0MuaciDI45pelIDE0OjQ05LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
+ZnJlZS1lbGVjdHJvbnMuY29tPuWGmemBk++8mgo+PiDCoD4gPiA+ID4gPgo+PiDCoD4gPiA+ID4g
+PiBPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAwMzo0MDo1M0FNICswODAwLCBJY2Vub3d5IFpoZW5n
+IHdyb3RlOgo+PiDCoD4gPiA+ID4gPiA+IEZyb206IE9uZHJlaiBKaXJtYW4gPG1lZ291c0BtZWdv
+dXMuY29tPgo+PiDCoD4gPiA+ID4gPiA+Cj4+IMKgPiA+ID4gPiA+ID4gQWxsd2lubmVyIFNvQ3Mg
+ZnJvbSBIMyAoaW5jbHVkaW5nIEg1LCBBNjQsIGV0YykgaGF2ZSBhIG5ldyB2ZXJzaW9uIG9mCj4+
+IMKgPiA+ID4gPiA+ID4gdGhlcm1hbCBzZW5zb3IsIGFuZCBuZWVkcyBhIG5ldyBkcml2ZXIgZm9y
+IGl0Lgo+PiDCoD4gPiA+ID4gPiA+Cj4+IMKgPiA+ID4gPiA+ID4gQWRkIHN1Y2ggYSBkcml2ZXIu
+Cj4+IMKgPiA+ID4gPiA+ID4KPj4gwqA+ID4gPiA+ID4gPiBDdXJyZW50bHkgb25seSBIMyBpcyBz
+dXBwb3J0ZWQsIGJ1dCBvdGhlciBTb0NzIGFyZSBlYXNpbHkgdG8gYmUKPj4gwqA+ID4gPiA+ID4g
+PiBzdXBwb3J0ZWQgYnkgYWRkaW5nIG5ldyBmb3JtdWxhIGFuZCBzZXQgdGhlIHNlbnNvciBudW1i
+ZXIuCj4+IMKgPiA+ID4gPiA+ID4KPj4gwqA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBPbmTF
+mWVqIEppcm1hbiA8bWVnb3VzQG1lZ291cy5jb20+Cj4+IMKgPiA+ID4gPiA+ID4gW0ljZW5vd3k6
+IGV4dGVuZCB0byBzdXBwb3J0IGZ1cnRoZXIgbXVsdGlwbGUtc2Vuc29yIFNvQ3MsIGNoYW5nZSBj
+b21taXQKPj4gwqA+ID4gPiA+ID4gPsKgIG1lc3NhZ2VdCj4+IMKgPiA+ID4gPiA+ID4gU2lnbmVk
+LW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPj4gwqA+ID4gPiA+ID4K
+Pj4gwqA+ID4gPiA+ID4gVGhlcmUncyBubyBuZWVkIHRvIGNyZWF0ZSBhIG5ldyBkcml2ZXIgZm9y
+IHRoYXQuIFRoaXMgY2FuIGJlIGhhbmRsZWQKPj4gwqA+ID4gPiA+ID4gYnkgdGhlIEdQQURDIGRy
+aXZlciB3ZSBhbHJlYWR5IGhhdmUuCj4+IMKgPiA+ID4gPgo+PiDCoD4gPiA+ID4gc3VuOGktdGhz
+IGlzIG5vdCBHUEFEQyBhdCBhbGwuCj4+IMKgPiA+ID4gPgo+PiDCoD4gPiA+ID4gVGhlIGxhdGVz
+dCBTb0MgSSBrbm93IHRoYXQgdXNlIEdQQURDIGFzIHRoZXJtYWwgc2Vuc29yIGlzIEEzMy4KPj4g
+wqA+ID4gPgo+PiDCoD4gPiA+IEl0J3Mgbm90IGNhbGxlZCB0aGUgc2FtZSB3YXksIGJ1dCBpdCBk
+ZWZpbml0ZWx5IGlzIGFuIGV2b2x1dGlvbiBvZiB0aGUKPj4gwqA+ID4gPiBzYW1lIGNvbnRyb2xs
+ZXIuIFRoZXJlJ3Mgbm8gbmVlZCBmb3IgYSBuZXcgZHJpdmVyLCBvbmx5IHJld29ya2luZyB3aGF0
+Cj4+IMKgPiA+ID4gaXMgYWxyZWFkeSB0aGVyZS4KPj4gwqA+ID4KPj4gwqA+ID4gSSBkb24ndCB0
+aGluayBzbyAtLSBoZXJlJ3Mgc29tZSBldmlkZW5jZToKPj4KPj4gwqBCdXQgdGhlIEgzIFRIUyBo
+YXZlIG1hbnkgbmV3IElSUXMsIGZ1bmN0aW9ucywgZGlmZmVyZW50IHNhbXBsaW5nCj4+IMKgcmF0
+ZSBzZXQgbWV0aG9kIGFuZCBhIHF1aXRlIGRpZmZlcmVudCByZWdpc3RlciBsYXlvdXQuCj4+Cj4+
+IMKgRG9pbmcgdGhpcyBpbiBHUEFEQyBkcml2ZXIgaXMgcG9zc2libGUgYnV0IG1lYW5pbmdsZXNz
+Lgo+Pgo+PiDCoD4gPgo+PiDCoD4gPiAxLiBUaGUgb2xkIEdQQURDIGRvIG5vdCBoYXZlIG1vZHVs
+ZSBjbG9jay4KPj4gwqA+Cj4+IMKgPiBUaGUgQTMzIGNvdWxkIHVzZSBhIFBMTC4KPj4KPj4gwqBC
+dXQgaXQncyBhIGRlZGljYXRlZCBtb2QgY2xrIG9uIG5ldyBnZW5lcmF0aW9uIFRIUy4KPgo+IEFu
+ZCBhbGwgb2YgdGhpcyByZWFsbHkgYXJlIGV2b2x1dGlvbnMuIFRoZSBibG9jayBpcyBzdGlsbCBk
+cml2ZW4gaW4KPiB0aGUgZXhhY3Qgc2FtZSB3YXkuIEFuZCB0aGlzIGlzIHdoZXJlIHRoZXJlIGlz
+IHZhbHVlIGluIGhhdmluZyB0aGUKPiBzYW1lIGRyaXZlcjogeW91IHNoYXJlIHRoZSBsb2dpYywg
+d2hpY2ggaXMgbW9zdGx5IGNvbW1vbiwgaW5zdGVhZCBvZgo+IGR1cGxpY2F0aW5nIGl0LgoKQWZ0
+ZXIgc29tZSB0aGlua2luZywgSSBjYW4gYWNjZXB0IGEgY29tbW9uIGRyaXZlciBmb3IgQTIzL0Ez
+MyB0aGVybWFsCnNlbnNvciBhbmQgSDMvQTY0L0g1IG9uZXMsIGJ1dCBJIGNhbm5vdCBhY2NlcHQg
+dXNlIGlpby1zdW40aS1ncGFkYwpkcml2ZXIgZm9yIGl0LCBhcyBub3cgSDMvQTY0L0g1IHRoZXJt
+YWwgc2Vuc29ycyBhcmUgbm90IGp1c3QgYW4gQURDIC0tCnRoZXkgZmVhdHVyZXMgaGFyZHdhcmUg
+YWxhcm0gbGV2ZWxzLCBhbmQgaW4gc29tZSBTb0MgaXQgYmVjb21lIGEKbXVsdGlwbGUgY2hhbm5l
+bCB0aGVybWFsIHNlbnNvci4KCkkgd2lsbCBpbnNpc3Qgb24gZG9pbmcgYSBkZWRpY2F0ZWQgZHJp
+dmVyIGZvciBpdCwgb3IgaWYgeW91IGxpa2UsIEkgY2FuIGFkZApBMjMvQTMzIHN1cHBvcnQgdG8g
+dGhpcyBkcml2ZXIuIChDb25zaWRlcmluZyBubyBvbmUgaGF2ZSBhbHJlYWR5IHBvc3RlZAphbnkg
+cGF0Y2hlcyBmb3IgQTIzL0EzMyB0aGVybWFsIHNlbnNvciwgZXhjZXB0IG15IG9sZCBvbmVzLCBz
+byBteQp3b3JrIGF0IGxlYXN0IHdvbid0IGNvbmZsaWN0IHdpdGggYW55dGhpbmcgbWVyZ2VkKQoK
+Pgo+IE1heGltZQo+Cj4gLS0KPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVk
+ZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMu
+Y29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
+eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
+cm0ta2VybmVsCg==
