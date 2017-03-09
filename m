@@ -1,190 +1,145 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 1/7] pinctrl: Renesas RZ/A1 pin and gpio controller
-Date: Thu, 9 Mar 2017 14:55:41 +0000
-Message-ID: <SG2PR06MB1165969D5D3072A3A19DEDCE8A210@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487610788-6939-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2 1/3] usb: orion-echi: Add support for the Armada 3700
+Date: Thu, 9 Mar 2017 10:13:19 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1703091006390.1912-100000@iolanthe.rowland.org>
+References: <20170309110424.2187-2-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1487610788-6939-2-git-send-email-jacopo+renesas@jmondi.org>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170309110424.2187-2-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacopo,
+On Thu, 9 Mar 2017, Gregory CLEMENT wrote:
 
-On Monday, February 20, 2017, Jacopo Mondi wrote:
->=20
-> Add combined gpio and pin controller driver for Renesas RZ/A1
-> r7s72100 SoC.
->=20
-> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> From: Hua Jing <jinghua@marvell.com>
+> 
+> - Add a new compatible string for the Armada 3700 SoCs
+> 
+> - add sbuscfg support for orion usb controller driver. For the SoCs
+>   without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
+>   register to guarantee the AHB master's burst would not overrun or
+>   underrun the FIFO.
+> 
+> - the sbuscfg register has to be set after the usb controller reset,
+>   otherwise the value would be overridden to 0. In order to do this, the
+>   reset callback is registered.
+> 
+> [gregory.clement@free-electrons.com: - reword commit and comments
+> 				     - fix checkpatch warning]
+> Signed-off-by: Hua Jing <jinghua@marvell.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 > ---
->  drivers/pinctrl/Kconfig        |   10 +
->  drivers/pinctrl/Makefile       |    1 +
->  drivers/pinctrl/pinctrl-rza1.c | 1026
-> ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 1037 insertions(+)
->  create mode 100644 drivers/pinctrl/pinctrl-rza1.c
->=20
-> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> index 8f8c2af..61310ac 100644
-> --- a/drivers/pinctrl/Kconfig
-> +++ b/drivers/pinctrl/Kconfig
-> @@ -163,6 +163,16 @@ config PINCTRL_ROCKCHIP
->  	select GENERIC_IRQ_CHIP
->  	select MFD_SYSCON
->=20
-> +config PINCTRL_RZA1
-> +	bool "Renesas r7s72100 RZ/A1 gpio and pinctrl driver"
+>  .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
+>  drivers/usb/host/ehci-orion.c                      | 39 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> index 17c3bc858b86..2855bae79fda 100644
+> --- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> +++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+> @@ -1,7 +1,9 @@
+>  * EHCI controller, Orion Marvell variants
+>  
+>  Required properties:
+> -- compatible: must be "marvell,orion-ehci"
+> +- compatible: must be one of the following
+> +	"marvell,orion-ehci"
+> +	"marvell,armada-3700-ehci"
+>  - reg: physical base address of the controller and length of memory mapped
+>    region.
+>  - interrupts: The EHCI interrupt
+> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+> index ee8d5faa0194..762bba41e06d 100644
+> --- a/drivers/usb/host/ehci-orion.c
+> +++ b/drivers/usb/host/ehci-orion.c
+> @@ -47,6 +47,21 @@
+>  #define USB_PHY_IVREF_CTRL	0x440
+>  #define USB_PHY_TST_GRP_CTRL	0x450
+>  
+> +#define USB_SBUSCFG		0x90
+> +#define	    USB_SBUSCFG_BAWR_SHIFT	    0x6
+> +#define	    USB_SBUSCFG_BARD_SHIFT	    0x3
+> +#define	    USB_SBUSCFG_AHBBRST_SHIFT	    0x0
 
-You can drop the "r7s72100" and just say RZ/A1.
+Shift amounts are just regular numbers.  Giving them in hex is 
+confusing because it leads people to think the bit pattern has some 
+particular significance, which it doesn't.  Which would you rather see: 
+(0x24 << 0x12) or (0x24 << 18)?
+
+> +
+> +/* BAWR = BARD = 3 : Align read/write bursts packets larger than 128 bytes */
+> +#define USB_SBUSCFG_BAWR_ALIGN_128B	(0x3 << USB_SBUSCFG_BAWR_SHIFT)
+> +#define USB_SBUSCFG_BARD_ALIGN_128B	(0x3 << USB_SBUSCFG_BARD_SHIFT)
+> +/* AHBBRST = 3	   : Align AHB Burst to INCR16 (64 bytes) */
+> +#define USB_SBUSCFG_AHBBRST_INCR16	(0x3 << USB_SBUSCFG_AHBBRST_SHIFT)
+
+Besides, since these shift amounts are each used only once, it would be
+simpler (and easier to read!) to do:
+
++#define USB_SBUSCFG_BAWR_ALIGN_128B  (0x3 << 6)
++#define USB_SBUSCFG_BARD_ALIGN_128B  (0x3 << 3)
++/* AHBBRST = 3          : Align AHB Burst to INCR16 (64 bytes) */
++#define USB_SBUSCFG_AHBBRST_INCR16   (0x3 << 0)
 
 
-
-> +/**
-> + * rza1_pin_set_direction() - set I/O direction on a pin in port mode
-> + *
-> + * When running in output port mode keep PBDC enabled to allow reading
-> the
-> + * pin value from PPR.
-> + * When in alternate mode disable that (if not explicitly required) not
-> to
-> + * interfere with the alternate function mode.
-> + *
-> + * @port: port where pin sits on
-> + * @offset: pin offset
-> + * @input: input enable/disable flag
-> + */
-> +static inline void rza1_pin_set_direction(struct rza1_port *port,
-> +					  unsigned int offset,
-> +					  bool input)
+> +
+> +#define USB_SBUSCFG_DEF_VAL (USB_SBUSCFG_BAWR_ALIGN_128B	\
+> +			     | USB_SBUSCFG_BARD_ALIGN_128B	\
+> +			     | USB_SBUSCFG_AHBBRST_INCR16)
+> +
+>  #define DRIVER_DESC "EHCI orion driver"
+>  
+>  #define hcd_to_orion_priv(h) ((struct orion_ehci_hcd *)hcd_to_ehci(h)->priv)
+> @@ -151,8 +166,31 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
+>  	}
+>  }
+>  
+> +static int ehci_orion_drv_reset(struct usb_hcd *hcd)
 > +{
-> +	spin_lock(&port->lock);
-> +	if (input)
-> +		rza1_set_bit(port, PIBC_REG, offset, 1);
-> +	else {
-> +		rza1_set_bit(port, PM_REG, offset, 0);
-> +		rza1_set_bit(port, PBDC_REG, offset, 1);
-> +	}
-> +	spin_unlock(&port->lock);
-
-When input=3D=3Dtrue, you only set PIBC_REG. Otherwise you only set PM_REG =
-and PBDC_REG. This would imply that this function will only ever get called=
- once for a pin and never get called a second time with a different directi=
-on...meaning it would not really change a pin from output to input. I would=
- assume that you would need to change this function to set those 3 register=
-s either one way or the other.
-
-I would suggest:
-   PIBC_REG =3D 1 /* always gets set for GPIO mode */
- input:
-   PM_REG =3D 1
-   PBDC_REG =3D 0
-output:
-   PM_REG =3D 0
-   PBDC_REG =3D 1
-
-
-
-> +/**
-> + * rza1_alternate_function_conf() - configure pin in alternate function
-> mode
-> + *
-> + * @pinctrl: RZ/A1 pin controller device
-> + * @pin_conf: single pin configuration descriptor
-> + */
-> +static int rza1_alternate_function_conf(struct rza1_pinctrl *rza1_pctl,
-> +					struct rza1_pin_conf *pin_conf)
-> +{
-> +	unsigned int offset =3D pin_conf->offset;
-> +	struct rza1_port *port =3D &rza1_pctl->ports[pin_conf->port];
-> +	u8 mux_mode =3D (pin_conf->mux_conf - 1) & MUX_FUNC_MASK;
-> +	u8 mux_conf =3D pin_conf->mux_conf >> MUX_FUNC_OFFS;
-> +	bool swio_en =3D !!(mux_conf & MUX_CONF_SWIO);
-> +	bool input_en =3D !!(mux_conf & MUX_CONF_INPUT_ENABLE);
+> +	struct device *dev = hcd->self.controller;
+> +	int retval;
 > +
-> +	rza1_pin_reset(port, offset);
-> +
-> +	/*
-> +	 * When configuring pin with Software Controlled IO mode in
-> alternate
-> +	 * mode, do not enable bi-directional control to avoid driving Pn
-> +	 * value to the pin input.
-> +	 * When working in direct IO mode (aka alternate function drives the
-> +	 * pin direction), enable bi-directional control for input pins in
-> +	 * order to enable the pin's input buffer as a consequence.
-> +	 */
-> +	if ((!swio_en && input_en) || (swio_en && !input_en))
-> +		rza1_set_bit(port, PBDC_REG, offset, 1);
+> +	retval = ehci_setup(hcd);
+> +	if (retval)
+> +		dev_err(dev, "ehci_setup failed %d\n", retval);
 
-
-Maybe just set PBDC_REG at the end of the function with everything else.
-See below...
-
-
+Was lack of this error message in the original driver a source of 
+problems?  If not, I submit that there's no good reason to add it.
 
 > +
 > +	/*
-> +	 * Enable alternate function mode and select it.
+> +	 * For SoC without hlock, need to program sbuscfg value to guarantee
+> +	 * AHB master's burst would not overrun or underrun FIFO.
 > +	 *
-> +	 * ----------------------------------------------------
-> +	 * Alternate mode selection table:
-> +	 *
-> +	 * PMC	PFC	PFCE	PFCAE	mux_mode
-> +	 * 1	0	0	0	0
-> +	 * 1	1	0	0	1
-> +	 * 1	0	1	0	2
-> +	 * 1	1	1	0	3
-> +	 * 1	0	0	1	4
-> +	 * 1	1	0	1	5
-> +	 * 1	0	1	1	6
-> +	 * 1	1	1	1	7
-> +	 * ----------------------------------------------------
+> +	 * sbuscfg reg has to be set after usb controller reset, otherwise
+> +	 * the value would be override to 0.
 > +	 */
-> +	rza1_set_bit(port, PFC_REG, offset, mux_mode & MUX_FUNC_PFC_MASK);
-> +	rza1_set_bit(port, PFCE_REG, offset, mux_mode & MUX_FUNC_PFCE_MASK);
-> +	rza1_set_bit(port, PFCEA_REG, offset, mux_mode &
-> MUX_FUNC_PFCEA_MASK);
-> +
-> +	/*
-> +	 * All alternate functions except a few (4) need PIPCn =3D 1.
-> +	 * If PIPCn has to stay disabled (SW IO mode), configure PMn
-> according
-> +	 * to I/O direction specified by pin configuration -after- PMC has
-> been
-> +	 * set to one.
-> +	 */
-> +	if (!swio_en)
-> +		rza1_set_bit(port, PIPC_REG, offset, 1);
-> +
-> +	rza1_set_bit(port, PMC_REG, offset, 1);
-> +
-> +	if (swio_en)
-> +		rza1_set_bit(port, PM_REG, offset, input_en);
+> +	if (of_device_is_compatible(dev->of_node, "marvell,armada-3700-ehci"))
+> +		wrl(USB_SBUSCFG, USB_SBUSCFG_DEF_VAL);
 
+Do you want to do this even when retval != 0?
 
-I would suggest something like this:
-
-	if (bidir)
-		rza1_set_bit(port, PBDC_REG, offset, 1);
-	else {
-		rza1_set_bit(port, PBDC_REG, offset, 0);
-		rza1_set_bit(port, PM_REG, offset, swio_in);
-	}
-
-	rza1_set_bit(port, PMC_REG, offset, 1);
-
+Alan Stern
 
 > +
-> +	return 0;
+> +	return retval;
 > +}
-
-
-
-
-Chris
+> +
+>  static const struct ehci_driver_overrides orion_overrides __initconst = {
+>  	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
+> +	.reset = ehci_orion_drv_reset,
+>  };
+>  
+>  static int ehci_orion_drv_probe(struct platform_device *pdev)
+> @@ -310,6 +348,7 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
+>  
+>  static const struct of_device_id ehci_orion_dt_ids[] = {
+>  	{ .compatible = "marvell,orion-ehci", },
+> +	{ .compatible = "marvell,armada-3700-ehci", },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
+> 
