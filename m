@@ -1,16 +1,16 @@
 From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 3/7] arm: dts: dt-bindings: Add Renesas RZ pinctrl header
-Date: Thu, 9 Mar 2017 14:54:37 +0000
-Message-ID: <SG2PR06MB1165A5A95A54365FF5E43FCF8A210@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Subject: RE: [PATCH 1/7] pinctrl: Renesas RZ/A1 pin and gpio controller
+Date: Thu, 9 Mar 2017 14:55:41 +0000
+Message-ID: <SG2PR06MB1165969D5D3072A3A19DEDCE8A210@SG2PR06MB1165.apcprd06.prod.outlook.com>
 References: <1487610788-6939-1-git-send-email-jacopo+renesas@jmondi.org>
- <1487610788-6939-4-git-send-email-jacopo+renesas@jmondi.org>
+ <1487610788-6939-2-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1487610788-6939-4-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1487610788-6939-2-git-send-email-jacopo+renesas@jmondi.org>
 Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Jacopo Mondi <jacopo+renesas@jmondi.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>
 Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
@@ -19,119 +19,172 @@ Hi Jacopo,
 
 On Monday, February 20, 2017, Jacopo Mondi wrote:
 >=20
-> Add dt-bindings for Renesas r7s72100 pin controller header file.
+> Add combined gpio and pin controller driver for Renesas RZ/A1
+> r7s72100 SoC.
 >=20
 > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > ---
->  include/dt-bindings/pinctrl/r7s72100-pinctrl.h | 30
-> ++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
+>  drivers/pinctrl/Kconfig        |   10 +
+>  drivers/pinctrl/Makefile       |    1 +
+>  drivers/pinctrl/pinctrl-rza1.c | 1026
+> ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1037 insertions(+)
+>  create mode 100644 drivers/pinctrl/pinctrl-rza1.c
 >=20
-> diff --git a/include/dt-bindings/pinctrl/r7s72100-pinctrl.h b/include/dt-
-> bindings/pinctrl/r7s72100-pinctrl.h
-> new file mode 100644
-> index 0000000..24759bf
-> --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/r7s72100-pinctrl.h
-> @@ -0,0 +1,30 @@
-> +/*
-> + * Defines macros and constants for Renesas RZ/A1 pin controller pin
-> + * muxing functions.
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 8f8c2af..61310ac 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -163,6 +163,16 @@ config PINCTRL_ROCKCHIP
+>  	select GENERIC_IRQ_CHIP
+>  	select MFD_SYSCON
+>=20
+> +config PINCTRL_RZA1
+> +	bool "Renesas r7s72100 RZ/A1 gpio and pinctrl driver"
+
+You can drop the "r7s72100" and just say RZ/A1.
+
+
+
+> +/**
+> + * rza1_pin_set_direction() - set I/O direction on a pin in port mode
+> + *
+> + * When running in output port mode keep PBDC enabled to allow reading
+> the
+> + * pin value from PPR.
+> + * When in alternate mode disable that (if not explicitly required) not
+> to
+> + * interfere with the alternate function mode.
+> + *
+> + * @port: port where pin sits on
+> + * @offset: pin offset
+> + * @input: input enable/disable flag
 > + */
-> +#ifndef __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
-> +#define __DT_BINDINGS_PINCTRL_RENESAS_RZA1_H
-> +
-> +#define RZA1_PINS_PER_PORT	16
-> +
-> +/* Create the pin index from it's bank and position numbers */
-> +#define PIN(b, p)		((b) * RZA1_PINS_PER_PORT + (p))
-> +
-> +/* Flags to apply to alternate function configuration */
-> +/*
-> + * Pin needs input buffer enabled.
-> + * This applies to pin which alternate function requires input
-> capabilities.
-> + * Eg: RX pin on a serial interface needs this flag to be set.
+> +static inline void rza1_pin_set_direction(struct rza1_port *port,
+> +					  unsigned int offset,
+> +					  bool input)
+> +{
+> +	spin_lock(&port->lock);
+> +	if (input)
+> +		rza1_set_bit(port, PIBC_REG, offset, 1);
+> +	else {
+> +		rza1_set_bit(port, PM_REG, offset, 0);
+> +		rza1_set_bit(port, PBDC_REG, offset, 1);
+> +	}
+> +	spin_unlock(&port->lock);
+
+When input=3D=3Dtrue, you only set PIBC_REG. Otherwise you only set PM_REG =
+and PBDC_REG. This would imply that this function will only ever get called=
+ once for a pin and never get called a second time with a different directi=
+on...meaning it would not really change a pin from output to input. I would=
+ assume that you would need to change this function to set those 3 register=
+s either one way or the other.
+
+I would suggest:
+   PIBC_REG =3D 1 /* always gets set for GPIO mode */
+ input:
+   PM_REG =3D 1
+   PBDC_REG =3D 0
+output:
+   PM_REG =3D 0
+   PBDC_REG =3D 1
+
+
+
+> +/**
+> + * rza1_alternate_function_conf() - configure pin in alternate function
+> mode
+> + *
+> + * @pinctrl: RZ/A1 pin controller device
+> + * @pin_conf: single pin configuration descriptor
 > + */
-> +#define INPUT_EN		(1 << 3)
+> +static int rza1_alternate_function_conf(struct rza1_pinctrl *rza1_pctl,
+> +					struct rza1_pin_conf *pin_conf)
+> +{
+> +	unsigned int offset =3D pin_conf->offset;
+> +	struct rza1_port *port =3D &rza1_pctl->ports[pin_conf->port];
+> +	u8 mux_mode =3D (pin_conf->mux_conf - 1) & MUX_FUNC_MASK;
+> +	u8 mux_conf =3D pin_conf->mux_conf >> MUX_FUNC_OFFS;
+> +	bool swio_en =3D !!(mux_conf & MUX_CONF_SWIO);
+> +	bool input_en =3D !!(mux_conf & MUX_CONF_INPUT_ENABLE);
+> +
+> +	rza1_pin_reset(port, offset);
+> +
+> +	/*
+> +	 * When configuring pin with Software Controlled IO mode in
+> alternate
+> +	 * mode, do not enable bi-directional control to avoid driving Pn
+> +	 * value to the pin input.
+> +	 * When working in direct IO mode (aka alternate function drives the
+> +	 * pin direction), enable bi-directional control for input pins in
+> +	 * order to enable the pin's input buffer as a consequence.
+> +	 */
+> +	if ((!swio_en && input_en) || (swio_en && !input_en))
+> +		rza1_set_bit(port, PBDC_REG, offset, 1);
 
-This is basically talking about the "Port Input Buffer Control Register"
-(PIBCn) which is actually not that important. But, you are also using it
-for the special cases where you have to manually define the pin to be eithe=
-r
-input or output....but I would just remove INPUT_EN.
 
-For the PIBCn register, just set it automatically if you are going to
-use the pin as a GPIO (in or out). I have not really found a case yet where
-I had to set this bit for another other than GPIO-input.
-
-I would prefer to see a different define that talks about the pin being bi-=
-directional
-which is required for things like I2C, SDHI, etc... and would be directly r=
-elated
-to the "Port Bidirection Control Register" (PBDCn) for each pin.
-
-#define BI_DIR		(1 << 3)
+Maybe just set PBDC_REG at the end of the function with everything else.
+See below...
 
 
-Additionally, according to the RZ/A1 hardware manual:
- "When the output buffer is enabled and the PBDCn.PBDCnm bit is 1, the
-  input buffer is enabled regardless of this register setting."
 
 > +
-> +/*
-> + * Let software drive the pin I/O direction overriding the alternate
-> function
-> + * configuration.
-> + * Some alternate function requires software to force I/O direction of a
-> pin,
-> + * ovverriding the designated one.
-> + * Reference to the HW manual to know when this flag shall be used.
-> + */
-> +#define SWIO			(1 << 4)
+> +	/*
+> +	 * Enable alternate function mode and select it.
+> +	 *
+> +	 * ----------------------------------------------------
+> +	 * Alternate mode selection table:
+> +	 *
+> +	 * PMC	PFC	PFCE	PFCAE	mux_mode
+> +	 * 1	0	0	0	0
+> +	 * 1	1	0	0	1
+> +	 * 1	0	1	0	2
+> +	 * 1	1	1	0	3
+> +	 * 1	0	0	1	4
+> +	 * 1	1	0	1	5
+> +	 * 1	0	1	1	6
+> +	 * 1	1	1	1	7
+> +	 * ----------------------------------------------------
+> +	 */
+> +	rza1_set_bit(port, PFC_REG, offset, mux_mode & MUX_FUNC_PFC_MASK);
+> +	rza1_set_bit(port, PFCE_REG, offset, mux_mode & MUX_FUNC_PFCE_MASK);
+> +	rza1_set_bit(port, PFCEA_REG, offset, mux_mode &
+> MUX_FUNC_PFCEA_MASK);
+> +
+> +	/*
+> +	 * All alternate functions except a few (4) need PIPCn =3D 1.
+> +	 * If PIPCn has to stay disabled (SW IO mode), configure PMn
+> according
+> +	 * to I/O direction specified by pin configuration -after- PMC has
+> been
+> +	 * set to one.
+> +	 */
+> +	if (!swio_en)
+> +		rza1_set_bit(port, PIPC_REG, offset, 1);
+> +
+> +	rza1_set_bit(port, PMC_REG, offset, 1);
+> +
+> +	if (swio_en)
+> +		rza1_set_bit(port, PM_REG, offset, input_en);
 
-For "software I/O" settings, you were using INPUT_EN to determine input or =
-output.
 
-To make things simple, I would just define:
-#define SWIO_IN			(1 << 4)
-#define SWIO_OUT			(1 << 5)
+I would suggest something like this:
 
+	if (bidir)
+		rza1_set_bit(port, PBDC_REG, offset, 1);
+	else {
+		rza1_set_bit(port, PBDC_REG, offset, 0);
+		rza1_set_bit(port, PM_REG, offset, swio_in);
+	}
 
-So in summary, this is how I think things should look in the DT:
-
-Example of a 'normal' pin (most of the pins).
-		/* P3_0 as TxD2; P3_2 as RxD2 */
-		renesas,pins =3D <PIN(3, 0) 6>,
-			       <PIN(3, 2) 4>;
-
-Example of pins that need bi-directional specified:
-		/* RIIC2: P1_4 as SCL, P1_5 as SDA */
-		renesas,pins =3D <PIN(1, 4) (1 | BI_DIR)>,
-			       <PIN(1, 5) (1 | BI_DIR)>;
+	rza1_set_bit(port, PMC_REG, offset, 1);
 
 
-Example of pins that need software I/O manually specified (because they are
-whacky pins) as defined by Table 54.7:
+> +
+> +	return 0;
+> +}
 
-		/* MTU2 TIOC0A as input capture */
-		renesas,pins =3D <PIN(4, 0) (2 | SWIO_IN)>;
-
-		/* MTU2 TIOC0A as output compare */
-		renesas,pins =3D <PIN(4, 0) (2 | SWIO_OUT)>;
-
-		/* LVDS */
-		renesas,pins =3D <PIN(5, 0) (1 | SWIO_IN)>; /* the spec says to put these=
- as inputs */
-
-		/* SSI Audio */
-		renesas,pins =3D <PIN(2, 11) (4 | SWIO_OUT)>;
-
-		/* Watchdog Overflow */
-		renesas,pins =3D <PIN(3, 7) (8 | SWIO_OUT)>;
 
 
 
 Chris
-
