@@ -1,13 +1,22 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/3] Add RTC support on STM32F746
-Date: Thu, 9 Mar 2017 10:14:07 +0100
-Message-ID: <92beeacd-5d2e-7c4c-7070-56885ebeeca4@st.com>
-References: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
+ Broadcom NSP SoC"
+Date: Thu, 9 Mar 2017 10:17:36 +0100
+Message-ID: <CACna6rxJ3tqV0FuETh29-AJ6=eR5kqkJixKZ0J=4fgXZuoYgyg@mail.gmail.com>
+References: <20170208233023.31922-1-zajec5@gmail.com>
+ <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
+ <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
+ <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
+ <b715c193196fb2de2b95cc3d15102e1b@milecki.pl>
+ <b2bdc1a7-4e5c-a13e-0cda-c90759d7308c@gmail.com>
+ <CAC3K-4o+ARP=_hg2XQszQh6v+ySpubyKRspCF38SLUUx4mXQDA@mail.gmail.com>
+ <CACna6rwN2JpvDX3Lk9G3vP=YrWygUNkjsC_VRcQf+o38ZjXAfA@mail.gmail.com>
+ <58BFF88F.8080008@ti.com> <58C10E2C.8080107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <58C10E2C.8080107@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,27 +26,96 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Am=E9lie,
-
-On 01/19/2017 02:45 PM, Amelie Delaunay wrote:
-> This patchset enables STM32 RTC on STM32F746 MCU.
->
-> Amelie Delaunay (3):
->   ARM: dts: stm32: set HSE_RTC clock frequency to 1 MHz on stm32f746
->   ARM: dts: stm32: Add RTC support for STM32F746 MCU
->   ARM: dts: stm32: enable RTC on stm32746g-eval
->
-
-Can you please rebase this series on 4.11-rc1 and resend ?
-
-Thanks in advance
-
-
->  arch/arm/boot/dts/stm32746g-eval.dts |  4 ++++
->  arch/arm/boot/dts/stm32f746.dtsi     | 16 ++++++++++++++++
->  2 files changed, 20 insertions(+)
->
+T24gOSBNYXJjaCAyMDE3IGF0IDA5OjExLCBLaXNob24gVmlqYXkgQWJyYWhhbSBJIDxraXNob25A
+dGkuY29tPiB3cm90ZToKPgo+Cj4gT24gV2VkbmVzZGF5IDA4IE1hcmNoIDIwMTcgMDU6NTYgUE0s
+IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgd3JvdGU6Cj4+IEhpIFJhZmFsLAo+Pgo+PiBPbiBXZWRu
+ZXNkYXkgMDggTWFyY2ggMjAxNyAwNTo0MyBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+Pj4g
+T24gMTAgRmVicnVhcnkgMjAxNyBhdCAwMToyNywgSm9uIE1hc29uIDxqb24ubWFzb25AYnJvYWRj
+b20uY29tPiB3cm90ZToKPj4+PiBPbiBUaHUsIEZlYiA5LCAyMDE3IGF0IDI6MTggUE0sIEZsb3Jp
+YW4gRmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgo+Pj4+IHdyb3RlOgo+Pj4+Pgo+Pj4+
+PiBPbiAwMi8wOC8yMDE3IDExOjIxIFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+Pj4+PiBP
+biAyMDE3LTAyLTA5IDAwOjQ0LCBGbG9yaWFuIEZhaW5lbGxpIHdyb3RlOgo+Pj4+Pj4+IE9uIDAy
+LzA4LzIwMTcgMDM6MzkgUE0sIFJhZmHFgiBNacWCZWNraSB3cm90ZToKPj4+Pj4+Pj4gT24gMjAx
+Ny0wMi0wOSAwMDozMiwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPj4+Pj4+Pj4+IE9uIDAyLzA4
+LzIwMTcgMDM6MzAgUE0sIFJhZmHFgiBNacWCZWNraSB3cm90ZToKPj4+Pj4+Pj4+PiBGcm9tOiBS
+YWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+PiBU
+aGlzIHJldmVydHMgY29tbWl0IGQ3YmMxYTdkNDFiZiAoInBoeTogQWRkIFVTQjMgUEhZIHN1cHBv
+cnQgZm9yCj4+Pj4+Pj4+Pj4gQnJvYWRjb20gTlNQIFNvQyIpIGFzIHdlIGFscmVhZHkgaGF2ZSBk
+cml2ZXIgZm9yIHRoaXMgUEhZIChzaGFyZWQKPj4+Pj4+Pj4+PiBieSBOUwo+Pj4+Pj4+Pj4+IGFu
+ZCBOU1ApLiBJdCB3YXMgYWRkZWQgaW4gY29tbWl0IGU1NjY2MjgxZDllYSAoInBoeTogYmNtLW5z
+LXVzYjM6Cj4+Pj4+Pj4+Pj4gbmV3Cj4+Pj4+Pj4+Pj4gZHJpdmVyIGZvciBVU0IgMy4wIFBIWSBv
+biBOb3J0aHN0YXIiKS4KPj4+Pj4+Pj4+Pgo+Pj4+Pj4+Pj4+IEluc3RlYWQgb2YgYWRkaW5nIHNl
+cGFyYXRlZCBkcml2ZXIgJiBkdXBsaWNhdGluZyBjb2RlIHdlIHNob3VsZAo+Pj4+Pj4+Pj4+IHdv
+cmsgb24KPj4+Pj4+Pj4+PiBpbXByb3ZpbmcgZXhpc3RpbmcgKG9sZCkgb25lLiBUaGFua3MgdG8g
+d29yayBkb25lIGJ5IEJyb2FkY29tIHdlCj4+Pj4+Pj4+Pj4ga25vdwo+Pj4+Pj4+Pj4+IHRoZXJl
+IGlzIE1ESU8gYnVzIHdlIHdlcmVuJ3QgYXdhcmUgb2YgJiB3ZSBrbm93IHJlZ2lzdGVyIG5hbWVz
+IHdoaWNoCj4+Pj4+Pj4+Pj4gbWFrZXMgaW5pdGlhbGl6YXRpb24gbW9yZSBjbGVhci4gVGhpcyBp
+cyB2ZXJ5IHZhbHVhYmxlIGluZm8gYW5kIHdlCj4+Pj4+Pj4+Pj4gc2hvdWxkIHdvcmsgb24gdXNp
+bmcgaXQgaW4gZXhpc3RpbmcgZHJpdmVyIGFmdGVyd2FyZHMuCj4+Pj4+Pj4+Pgo+Pj4+Pj4+Pj4g
+U2hvdWxkIG5vdCB3ZSBmaXJzdCBleHRlbmQgdGhlIG9sZCBkcml2ZXIgdG8gc3VwcG9ydCBOU1Ag
+YW5kIHRoZW4KPj4+Pj4+Pj4+IHJldmVydAo+Pj4+Pj4+Pj4gZDdiYzFhN2Q0MWJmICgicGh5OiBB
+ZGQgVVNCMyBQSFkgc3VwcG9ydCBmb3IgQnJvYWRjb20gTlNQIFNvQyIpPwo+Pj4+Pj4+Pgo+Pj4+
+Pj4+PiBTb3VuZHMgbGlrZSBhIHdlaXJkIC8gZGlydHkgZGV2ZWxvcG1lbnQgbWV0aG9kIHRvIG1l
+OiBhZGRpbmcKPj4+Pj4+Pj4gZHVwbGljYXRlZAo+Pj4+Pj4+PiBjb2RlCj4+Pj4+Pj4+IGZpcnN0
+IHRoZW4gd29ya2luZyBvbiBjbGVhbmluZyBpdC4gVW5sZXNzIHlvdSBtZWFuIGRyaXZlcnMvc3Rh
+Z2luZy8uCj4+Pj4+Pj4KPj4+Pj4+PiBUaGVyZSB3YXMgY2xlYXJseSBhIG1pc3Rha2UgaW4gc3Vi
+bWl0dGluZyB0aGlzIE5TUCBVU0IgUEhZIGRyaXZlciwgYW5kCj4+Pj4+Pj4gaXQgc2hvdWxkIGhh
+dmUgYmVlbiBhIHBhdGNoIGFnYWluc3QgdGhlIGV4aXN0aW5nIE5TIFVTQiBQSFkgZHJpdmVyLCBi
+dXQKPj4+Pj4+PiBpdCB3YXMgbm90LCBva2F5IGZhaXIgZW5vdWdoLgo+Pj4+Pj4+Cj4+Pj4+Pj4g
+SXQncyBvbmUgdGhpbmcgdG8gYWRkcmVzcyB0aGF0IGluIHRoZSBmdXR1cmUsIGFuZCBpdCdzIGFu
+b3RoZXIgdGhpbmcgdG8KPj4+Pj4+PiBmbGF0IG91dCByZXZlcnQgdGhlIGRyaXZlciBqdXN0IGJl
+Y2F1c2UgeW91IGRvbid0IGxpa2UgdGhlIGR1cGxpY2F0aW9uLgo+Pj4+Pj4+Cj4+Pj4+Pj4gSSBk
+b24ndCBsaWtlIHRoYXQgZWl0aGVyLCBhbmQgd2UgY2FuIGRpc2N1c3Mgb24gaG93IHRvIGltcHJv
+dmUgdGhpbmdzCj4+Pj4+Pj4gKGxpa2UgaGF2ZSB0aGUgbWFpbnRhaW5lciByZXZpZXcgdGhhdCB0
+b28pLCBidXQgZHVwbGljYXRpb24gaXMgYSBsZXNzZXIKPj4+Pj4+PiBldmlsIHRoYW4gbm90IGhh
+dmluZyB0aGUgaGFyZHdhcmUgc3VwcG9ydGVkIGF0IGFsbCwgYW5kIGV2ZW4gbW9yZSBzbywKPj4+
+Pj4+PiBwdXJwb3NlbHkgcmV2ZXJ0aW5nIGluIHRoZSBuYW1lIG9mIHJlbW92aW5nIHRoYXQgZHVw
+bGljYXRpb24sIHRoYXQncwo+Pj4+Pj4+IGludGVudGlvbmFsbHkgYnJlYWtpbmcgd29ya2luZyBo
+YXJkd2FyZSEKPj4+Pj4+Cj4+Pj4+PiBIYXJkd2FyZSBzdXBwb3J0IGlzIG5vdCBleGN1c2UgYW5k
+IEkgZG9uJ3QgdGhpbmsgaXQgZXZlciB3YXMgaW4gdGhlCj4+Pj4+PiBMaW51eC4KPj4+Pj4+Cj4+
+Pj4+PiBXZSBkb24ndCBhY2NlcHQgYmFkbHkgZGVzaWduZWQgZHJpdmVycyBqdXN0IGJlY2F1c2Ug
+dGhleSBwcm92aWRlIG5ldyBodwo+Pj4+Pj4gc3VwcG9ydC4KPj4+Pj4+IFdlIGhhdmUgdmFyaW91
+cyBzdGFuZGFyZHMgKGZvciBxdWFsaXR5LCBzdHlsZSwgZGVzaWduLCBjb2RlKSBhdCBrZXJuZWwK
+Pj4+Pj4+IGFuZCB3ZQo+Pj4+Pj4gc3RpY2sgdG8gdGhlbSB1bmxlc3MgaXQncyBkcml2ZXJzL3N0
+YWdpbmcvLiBBcyB5b3Ugc2FpZCB0aGlzIGRyaXZlcgo+Pj4+Pj4gc2hvdWxkbid0IGJlCj4+Pj4+
+PiBwdXNoZWQgaW4gdGhlIGZpcnN0IHBsYWNlLgo+Pj4+Pj4KPj4+Pj4+IERyb3BwaW5nIGhhcmR3
+YXJlIHN1cHBvcnQgaW4ga2VybmVsIGhhcHBlbnMuIFNvbWV0aW1lcyBpdCdzIGFib3V0Cj4+Pj4+
+PiBhbmNpZW50Cj4+Pj4+PiBkZXZpY2VzLCBzb21ldGltZXMgYWJvdXQgY29kZSBxdWFsaXR5IChz
+b21lIGZvcmdvdHRlbiBzdGFnaW5nIGRyaXZlcnMKPj4+Pj4+IHVzZWQgdG8gYmUKPj4+Pj4+IGRy
+b3BwZWQgQUZBSUspLgo+Pj4+Pj4KPj4+Pj4+IEFkZGl0aW9uYWxseSB5b3UncmUgdGFsa2luZyBh
+Ym91dCBzdXBwb3J0IHRoYXQgd2FzICpqdXN0KiBhZGRlZCBhbmQKPj4+Pj4+IGlzbid0IHVzZWQK
+Pj4+Pj4+IGJ5IGFueW9uZSBpbiB0aGUgd2lsZCB3b3JsZCB5ZXQuCj4+Pj4+Cj4+Pj4+IEV4Y2Vw
+dCBwZW9wbGUgd29ya2luZyBvbiBpdCBhdCBCcm9hZGNvbSwgYnV0IGZhaXIgZW5vdWdoLgo+Pj4+
+Pgo+Pj4+Pj4KPj4+Pj4+IFRoaXMgaGFyZHdhcmUgd2FzIG1pc3NpbmcgdXBzdHJlYW0gc3VwcG9y
+dCBmb3IgNCB5ZWFycyBzbyAyIGV4dHJhIG1vbnRocwo+Pj4+Pj4gd29uJ3QKPj4+Pj4+IHJlYWxs
+eSBodXJ0IGFueW9uZS4KPj4+Pj4+Cj4+Pj4+PiBJIHJlYWxseSBkb24ndCBzZWUgZXhjdXNlZSBv
+ciBuZWVkIGZvciBrZWVwaW5nIHRoaXMgZHJpdmVyLgo+Pj4+Pj4KPj4+Pj4+IElmIHlvdSB3YW50
+IHRvIChhbmQgeW91IGZlZWwgaXQncyB3ZWxsIGRlc2lnbmVkKSwgd2UgY2FuIGtlZXAKPj4+Pj4+
+IGJyY20sbnNwLXVzYjMtcGh5LnR4dAo+Pj4+Pgo+Pj4+PiBObyBpdCdzIGZpbmUsIGxldCdzIGRy
+b3AgaXQgYWxsIGFuZCByZXBsYWNlIGl0IHdpdGggd2hhdGV2ZXIgeW91IGFuZCBKb24KPj4+Pj4g
+Y29tZSB1cCB3aXRoIG5leHQuCj4+Pj4+Cj4+Pj4+Pgo+Pj4+Pj4gSSB2b3RlIGZvciBmb2N1c2lu
+ZyBvbiBleGlzdGluZyBkcml2ZXIgaW1wcm92ZW1lbnRzIGluc3RlYWQgb2YgbG9va2luZwo+Pj4+
+Pj4gZm9yCj4+Pj4+PiBleGN1c2VzIGZvciBrZWVwaW5nIGRyaXZlciB0aGF0IHNob3VsZG4ndCBi
+ZSBhZGRlZCBpbiB0aGUgZmlyc3QgcGxhY2UuCj4+Pj4+PiBKb24gc2VlbXMgdG8gYmUgYWxyZWFk
+eSB3b3JraW5nIG9uIHRoaXMsIEknbSB3aWxsaW5nIHRvIGhlbHAgaGltLCBJJ20KPj4+Pj4+IHN1
+cmUgd2UKPj4+Pj4+IGNhbiBnZXQgeW91IGEgcHJvcGVyIHN1cHBvcnQgZm9yIHRoZSBuZXh0IG1l
+cmdlIHdpbmRvdy4KPj4+Pj4KPj4+Pj4gRmFpciBlbm91Z2gsIEkgZHJvcHBlZCBEaGFuYWpheSdz
+IGNoYW5nZXMgKCJBUk06IGR0czogTlNQOiBBZGQgVVNCIG5vZGVzCj4+Pj4+IGZvciBOb3J0aHN0
+YXIgUGx1cyIpIGZyb20gZGV2aWNldHJlZS9uZXh0IHNvIHlvdSBhbmQgSm9uIGNhbiBmaWd1cmUg
+b3V0Cj4+Pj4+IHdoYXQgaXMgdGhlIGJlc3QgdGhpbmcgdG8gbW92ZSBmb3J3YXJkIGFuZCB3ZSBt
+aW5pbWl6ZSB0aGUgYW1vdW50IG9mCj4+Pj4+IGluY29tcGF0aWJsZSBEVCBzdHVmZiB0byBiZSBz
+b3J0ZWQgb3V0IGxhdGVyIG9uLiBTbyBhcyBmYXIgYXMgSSBhbQo+Pj4+PiBjb25jZXJuZWQsIHRo
+ZXJlIGFyZSBubyBib2FyZC9Tb0MgRFRTIGNoYW5nZXMgdG8gYmUgcGF0Y2hlZCBsYXRlciBvbiwg
+d2UKPj4+Pj4gY291bGQgcmUtYXBwbHkgdGhpcyBwYXRjaCBhcy1pcywgb3Igd2UgY291bGQgaGF2
+ZSB0byBkZWZpbmUgYSBuZXcgYmluZGluZy4KPj4+Pgo+Pj4+IFBlciB0aGUgZGlzY3Vzc2lvbiB3
+aXRoIFJhZmFsLCB0aGlzIGlzIGFjY2VwdGFibGUKPj4+Pgo+Pj4+IEFja2VkLWJ5OiBKb24gTWFz
+b24gPGpvbi5tYXNvbkBicm9hZGNvbS5jb20+Cj4+Pgo+Pj4gSGkgS2lzaG9uLCB3aGF0J3MgdGhl
+IHN0YXR1cyBvZiB0aGlzPwo+Pgo+PiBXaWxsIGJlIG1lcmdpbmcgdGhpcyBpbiBhIGRheSBvciBz
+by4KPgo+IG1lcmdlZCwgdGhhbmtzLgoKVGhhbmsgeW91IQoKLS0gClJhZmHFggoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
