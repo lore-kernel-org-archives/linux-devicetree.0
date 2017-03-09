@@ -1,171 +1,43 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH v5 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Thu,  9 Mar 2017 14:37:20 +0530
-Message-ID: <1489050441-3240-4-git-send-email-vivek.gautam@codeaurora.org>
-References: <1489050441-3240-1-git-send-email-vivek.gautam@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489050441-3240-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, kishon@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, Vivek Gautam <vivek.gautam@codeaurora.org>, Rob Herring <robh@kernel.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/3] Add RTC support on STM32F746
+Date: Thu, 9 Mar 2017 10:14:07 +0100
+Message-ID: <92beeacd-5d2e-7c4c-7070-56885ebeeca4@st.com>
+References: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Qualcomm chipsets have QMP phy controller that provides
-support to a number of controller, viz. PCIe, UFS, and USB.
-Adding dt binding information for the same.
+Hi Am=E9lie,
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>
----
+On 01/19/2017 02:45 PM, Amelie Delaunay wrote:
+> This patchset enables STM32 RTC on STM32F746 MCU.
+>
+> Amelie Delaunay (3):
+>   ARM: dts: stm32: set HSE_RTC clock frequency to 1 MHz on stm32f746
+>   ARM: dts: stm32: Add RTC support for STM32F746 MCU
+>   ARM: dts: stm32: enable RTC on stm32746g-eval
+>
 
-Hi Rob,
-I have removed your Acked-by tag because of the change in bindings.
-Please consider adding your Ack again if you are fine with these
-updated bindings.
+Can you please rebase this series on 4.11-rc1 and resend ?
 
-Changes since v4:
- - Added bindings for child nodes. Each phy lane is represented by child
-   node with its own register space (for tx, rx and pcs blocks), and clocks
-   and resets for power control facility.
- - Removed register space and lane offsets for tx, rx and pcs blocks from
-   qmp phy node.
- - #phy-cells is now part of each child node and thus must be 0.
- - Added information on list of mandatory clocks and resets for each phy.
+Thanks in advance
 
-Changes since v3:
- - Added #clock-cells = <1>, indicating that phy is a clock provider.
 
-Changes since v2:
- - Removed binding for "ref_clk_src" since we don't request this
-   clock in the driver.
- - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
- - Using 'phy' for the node name.
-
-Changes since v1:
- - New patch, forked out of the original driver patch:
-   "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
- - Added 'Acked-by' from Rob.
- - Updated bindings to include mem resource as a list of
-   offset - length pair for serdes block and for each lane.
- - Added a new binding for 'lane-offsets' that contains offsets
-   to tx, rx and pcs blocks from each lane base address.
-
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 106 +++++++++++++++++++++
- 1 file changed, 106 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-new file mode 100644
-index 000000000000..5595c3fabe0a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -0,0 +1,106 @@
-+Qualcomm QMP PHY controller
-+===========================
-+
-+QMP phy controller supports physical layer functionality for a number of
-+controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-+
-+Required properties:
-+ - compatible: compatible list, contains:
-+	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
-+	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
-+
-+ - reg: offset and length of register set for PHY's common serdes block.
-+
-+ - #clock-cells: must be 1
-+    - Phy pll outputs a bunch of clocks for Tx, Rx and Pipe
-+      interface (for pipe based PHYs). These clock are then gate-controlled
-+      by gcc.
-+ - #address-cells: must be 1
-+ - #size-cells: must be 1
-+ - ranges: must be present
-+
-+ - clocks: a list of phandles and clock-specifier pairs,
-+	   one for each entry in clock-names.
-+ - clock-names: "cfg_ahb" for phy config clock,
-+		"aux" for phy aux clock,
-+		"ref" for 19.2 MHz ref clk,
-+		For "qcom,msm8996-qmp-pcie-phy" must contain:
-+			"aux", "cfg_ahb", "ref".
-+		For "qcom,msm8996-qmp-usb3-phy" must contain:
-+			"aux", "cfg_ahb", "ref".
-+
-+ - resets: a list of phandles and reset controller specifier pairs,
-+	   one for each entry in reset-names.
-+ - reset-names: "phy" for reset of phy block,
-+		"common" for phy common block reset,
-+		"cfg" for phy's ahb cfg block reset (Optional).
-+		For "qcom,msm8996-qmp-pcie-phy" must contain:
-+		 "phy", "common", "cfg".
-+		For "qcom,msm8996-qmp-usb3-phy" must contain
-+		 "phy", "common".
-+
-+ - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-+ - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-+
-+Optional properties:
-+ - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
-+			pll block.
-+
-+Required nodes:
-+ - Each device node of QMP phy is required to have as many child nodes as
-+   the number of lanes the PHY has.
-+
-+Required properties for child node:
-+ - reg: list of offset and length pairs of register sets for PHY blocks -
-+	tx, rx and pcs.
-+
-+ - #phy-cells: must be 0
-+
-+ - clocks: a list of phandles and clock-specifier pairs,
-+	   one for each entry in clock-names.
-+ - clock-names: Must contain following for pcie and usb qmp phys:
-+		 "pipe<lane-number>" for pipe clock specific to each lane.
-+
-+ - resets: a list of phandles and reset controller specifier pairs,
-+	   one for each entry in reset-names.
-+ - reset-names: Must contain following for pcie qmp phys:
-+		 "lane<lane-number>" for reset specific to each lane.
-+
-+Example:
-+	phy@34000 {
-+		compatible = "qcom,msm8996-qmp-pcie-phy";
-+		reg = <0x034000 0x488>;
-+		#clock-cells = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-+			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
-+			<&gcc GCC_PCIE_CLKREF_CLK>;
-+		clock-names = "aux", "cfg_ahb", "ref";
-+
-+		vdda-phy-supply = <&pm8994_l28>;
-+		vdda-pll-supply = <&pm8994_l12>;
-+
-+		resets = <&gcc GCC_PCIE_PHY_BCR>,
-+			<&gcc GCC_PCIE_PHY_COM_BCR>,
-+			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
-+		reset-names = "phy", "common", "cfg";
-+
-+		pciephy_0: lane@0 {
-+			reg = <0x035000 0x130>,
-+				<0x035200 0x200>,
-+				<0x035400 0x1dc>;
-+			#phy-cells = <0>;
-+
-+			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-+			clock-names = "pipe0";
-+			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-+			reset-names = "lane0";
-+		};
-+
-+		pciephy_1: lane@1 {
-+		...
-+		...
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>  arch/arm/boot/dts/stm32746g-eval.dts |  4 ++++
+>  arch/arm/boot/dts/stm32f746.dtsi     | 16 ++++++++++++++++
+>  2 files changed, 20 insertions(+)
+>
