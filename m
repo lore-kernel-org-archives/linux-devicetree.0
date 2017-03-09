@@ -1,122 +1,69 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v4 1/3] usb: orion-echi: Add support for the Armada 3700
-Date: Thu, 9 Mar 2017 13:18:27 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1703091318010.1560-100000@iolanthe.rowland.org>
-References: <20170309175258.20076-2-gregory.clement@free-electrons.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv3 03/15] ov7670: fix g/s_parm
+Date: Thu, 9 Mar 2017 20:19:38 +0200
+Message-ID: <20170309181938.GP3220@valkosipuli.retiisi.org.uk>
+References: <20170306145616.38485-1-hverkuil@xs4all.nl>
+ <20170306145616.38485-4-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170309175258.20076-2-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170306145616.38485-4-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 9 Mar 2017, Gregory CLEMENT wrote:
+Hi Hans,
 
-> From: Hua Jing <jinghua@marvell.com>
+On Mon, Mar 06, 2017 at 03:56:04PM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> - Add a new compatible string for the Armada 3700 SoCs
+> Drop unnecesary memset. Drop the unnecessary extendedmode check and
+> set the V4L2_CAP_TIMEPERFRAME capability.
 > 
-> - add sbuscfg support for orion usb controller driver. For the SoCs
->   without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
->   register to guarantee the AHB master's burst would not overrun or
->   underrun the FIFO.
-> 
-> - the sbuscfg register has to be set after the usb controller reset,
->   otherwise the value would be overridden to 0. In order to do this, the
->   reset callback is registered.
-> 
-> [gregory.clement@free-electrons.com: - reword commit and comments
-> 				     - fix error path in ehci_orion_drv_reset()
-> 				     - fix checkpatch warning]
-> Signed-off-by: Hua Jing <jinghua@marvell.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
->  drivers/usb/host/ehci-orion.c                      | 36 ++++++++++++++++++++++
->  2 files changed, 39 insertions(+), 1 deletion(-)
+>  drivers/media/i2c/ov7670.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
-> index 17c3bc858b86..2855bae79fda 100644
-> --- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
-> +++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
-> @@ -1,7 +1,9 @@
->  * EHCI controller, Orion Marvell variants
+> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+> index 9af8d3b8f848..50e4466a2b37 100644
+> --- a/drivers/media/i2c/ov7670.c
+> +++ b/drivers/media/i2c/ov7670.c
+> @@ -1046,7 +1046,6 @@ static int ov7670_g_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
+>  	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>  		return -EINVAL;
 >  
->  Required properties:
-> -- compatible: must be "marvell,orion-ehci"
-> +- compatible: must be one of the following
-> +	"marvell,orion-ehci"
-> +	"marvell,armada-3700-ehci"
->  - reg: physical base address of the controller and length of memory mapped
->    region.
->  - interrupts: The EHCI interrupt
-> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-> index ee8d5faa0194..1aec87ec68df 100644
-> --- a/drivers/usb/host/ehci-orion.c
-> +++ b/drivers/usb/host/ehci-orion.c
-> @@ -47,6 +47,18 @@
->  #define USB_PHY_IVREF_CTRL	0x440
->  #define USB_PHY_TST_GRP_CTRL	0x450
+> -	memset(cp, 0, sizeof(struct v4l2_captureparm));
+>  	cp->capability = V4L2_CAP_TIMEPERFRAME;
+>  	info->devtype->get_framerate(sd, &cp->timeperframe);
 >  
-> +#define USB_SBUSCFG		0x90
-> +
-> +/* BAWR = BARD = 3 : Align read/write bursts packets larger than 128 bytes */
-> +#define USB_SBUSCFG_BAWR_ALIGN_128B	(0x3 << 6)
-> +#define USB_SBUSCFG_BARD_ALIGN_128B	(0x3 << 3)
-> +/* AHBBRST = 3	   : Align AHB Burst to INCR16 (64 bytes) */
-> +#define USB_SBUSCFG_AHBBRST_INCR16	(0x3 << 0)
-> +
-> +#define USB_SBUSCFG_DEF_VAL (USB_SBUSCFG_BAWR_ALIGN_128B	\
-> +			     | USB_SBUSCFG_BARD_ALIGN_128B	\
-> +			     | USB_SBUSCFG_AHBBRST_INCR16)
-> +
->  #define DRIVER_DESC "EHCI orion driver"
+> @@ -1061,9 +1060,8 @@ static int ov7670_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
 >  
->  #define hcd_to_orion_priv(h) ((struct orion_ehci_hcd *)hcd_to_ehci(h)->priv)
-> @@ -151,8 +163,31 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
->  	}
+>  	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>  		return -EINVAL;
+> -	if (cp->extendedmode != 0)
+> -		return -EINVAL;
+>  
+> +	cp->capability = V4L2_CAP_TIMEPERFRAME;
+>  	return info->devtype->set_framerate(sd, tpf);
 >  }
 >  
-> +static int ehci_orion_drv_reset(struct usb_hcd *hcd)
-> +{
-> +	struct device *dev = hcd->self.controller;
-> +	int ret;
-> +
-> +	ret = ehci_setup(hcd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * For SoC without hlock, need to program sbuscfg value to guarantee
-> +	 * AHB master's burst would not overrun or underrun FIFO.
-> +	 *
-> +	 * sbuscfg reg has to be set after usb controller reset, otherwise
-> +	 * the value would be override to 0.
-> +	 */
-> +	if (of_device_is_compatible(dev->of_node, "marvell,armada-3700-ehci"))
-> +		wrl(USB_SBUSCFG, USB_SBUSCFG_DEF_VAL);
-> +
-> +	return ret;
-> +}
-> +
->  static const struct ehci_driver_overrides orion_overrides __initconst = {
->  	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
-> +	.reset = ehci_orion_drv_reset,
->  };
->  
->  static int ehci_orion_drv_probe(struct platform_device *pdev)
-> @@ -310,6 +345,7 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id ehci_orion_dt_ids[] = {
->  	{ .compatible = "marvell,orion-ehci", },
-> +	{ .compatible = "marvell,armada-3700-ehci", },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
-> 
+
+We seem to have two ways to specify the frame interval for sub-devices,
+with roughly roughly similar number of users. s_parm() originates from
+drivers that typically work on plain V4L2 interfaces whereas
+s_frame_interval() is from native sub-device drivers.
+
+Anyway,
+
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
