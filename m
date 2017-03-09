@@ -1,112 +1,119 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] usb: orion-echi: Add support for the Armada 3700
-Date: Thu, 09 Mar 2017 16:22:37 +0100
-Message-ID: <878toelbk2.fsf@free-electrons.com>
-References: <Pine.LNX.4.44L0.1703091006390.1912-100000@iolanthe.rowland.org>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [v3 2/5] coresight: refactor with function of_coresight_get_cpu
+Date: Thu, 9 Mar 2017 15:28:31 +0000
+Message-ID: <75112177-e5c1-0532-04b1-842a985b077d@arm.com>
+References: <1489057304-1851-1-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1703091006390.1912-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-        (Alan Stern's message of "Thu, 9 Mar 2017 10:13:19 -0500 (EST)")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Victor Gu <xigu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hua Jing <jinghua-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1489057304-1851-1-git-send-email-suzuki.poulose@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: leo.yan@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, mathieu.poirier@linaro.org, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, John Stultz <john.stultz@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel@lists.infradead.org, mike.leach@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
- 
- On jeu., mars 09 2017, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
-
->> @@ -47,6 +47,21 @@
->>  #define USB_PHY_IVREF_CTRL	0x440
->>  #define USB_PHY_TST_GRP_CTRL	0x450
->>  
->> +#define USB_SBUSCFG		0x90
->> +#define	    USB_SBUSCFG_BAWR_SHIFT	    0x6
->> +#define	    USB_SBUSCFG_BARD_SHIFT	    0x3
->> +#define	    USB_SBUSCFG_AHBBRST_SHIFT	    0x0
->
-> Shift amounts are just regular numbers.  Giving them in hex is 
-> confusing because it leads people to think the bit pattern has some 
-> particular significance, which it doesn't.  Which would you rather see: 
-> (0x24 << 0x12) or (0x24 << 18)?
-
-Right
-
->
->> +
->> +/* BAWR = BARD = 3 : Align read/write bursts packets larger than 128 bytes */
->> +#define USB_SBUSCFG_BAWR_ALIGN_128B	(0x3 << USB_SBUSCFG_BAWR_SHIFT)
->> +#define USB_SBUSCFG_BARD_ALIGN_128B	(0x3 << USB_SBUSCFG_BARD_SHIFT)
->> +/* AHBBRST = 3	   : Align AHB Burst to INCR16 (64 bytes) */
->> +#define USB_SBUSCFG_AHBBRST_INCR16	(0x3 << USB_SBUSCFG_AHBBRST_SHIFT)
->
-> Besides, since these shift amounts are each used only once, it would be
-> simpler (and easier to read!) to do:
->
-> +#define USB_SBUSCFG_BAWR_ALIGN_128B  (0x3 << 6)
-> +#define USB_SBUSCFG_BARD_ALIGN_128B  (0x3 << 3)
-> +/* AHBBRST = 3          : Align AHB Burst to INCR16 (64 bytes) */
-> +#define USB_SBUSCFG_AHBBRST_INCR16   (0x3 << 0)
->
-
-I think the intent was to document the register layout. But I have no
-problem following your advice.
-
->
->> +
->> +#define USB_SBUSCFG_DEF_VAL (USB_SBUSCFG_BAWR_ALIGN_128B	\
->> +			     | USB_SBUSCFG_BARD_ALIGN_128B	\
->> +			     | USB_SBUSCFG_AHBBRST_INCR16)
->> +
->>  #define DRIVER_DESC "EHCI orion driver"
->>  
->>  #define hcd_to_orion_priv(h) ((struct orion_ehci_hcd *)hcd_to_ehci(h)->priv)
->> @@ -151,8 +166,31 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
->>  	}
+On 09/03/17 11:01, Suzuki K Poulose wrote:
+> On 03/03/17 06:00, Leo Yan wrote:
+>> This is refactor to add function of_coresight_get_cpu(), so it's used to
+>> retrieve CPU id for coresight component. Finally can use it as a common
+>> function for multiple places.
+>>
+>> Suggested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+>> ---
+>>  drivers/hwtracing/coresight/of_coresight.c | 37 ++++++++++++++++++++----------
+>>  include/linux/coresight.h                  |  2 ++
+>>  2 files changed, 27 insertions(+), 12 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+>> index 629e031..d9a12fb 100644
+>> --- a/drivers/hwtracing/coresight/of_coresight.c
+>> +++ b/drivers/hwtracing/coresight/of_coresight.c
+>> @@ -101,14 +101,36 @@ static int of_coresight_alloc_memory(struct device *dev,
+>>  	return 0;
 >>  }
->>  
->> +static int ehci_orion_drv_reset(struct usb_hcd *hcd)
+>>
+>> +int of_coresight_get_cpu(struct device_node *node)
 >> +{
->> +	struct device *dev = hcd->self.controller;
->> +	int retval;
+>> +	int cpu;
+>> +	struct device_node *dn;
 >> +
->> +	retval = ehci_setup(hcd);
->> +	if (retval)
->> +		dev_err(dev, "ehci_setup failed %d\n", retval);
->
-> Was lack of this error message in the original driver a source of 
-> problems?  If not, I submit that there's no good reason to add it.
->
-
-I will remove the message and replace it by "return retval;" as
-suggested below.
-
-Thanks,
-
-Gregory
-
+>> +	dn = of_parse_phandle(node, "cpu", 0);
 >> +
->> +	/*
->> +	 * For SoC without hlock, need to program sbuscfg value to guarantee
->> +	 * AHB master's burst would not overrun or underrun FIFO.
->> +	 *
->> +	 * sbuscfg reg has to be set after usb controller reset, otherwise
->> +	 * the value would be override to 0.
->> +	 */
->> +	if (of_device_is_compatible(dev->of_node, "marvell,armada-3700-ehci"))
->> +		wrl(USB_SBUSCFG, USB_SBUSCFG_DEF_VAL);
+>> +	/* Affinity defaults to CPU0 */
+>> +	if (!dn)
+>> +		return 0;
+>> +
+>> +	for_each_possible_cpu(cpu) {
+>> +		if (dn == of_get_cpu_node(cpu, NULL)) {
 >
-> Do you want to do this even when retval != 0?
+> We should do of_node_put() on the node returned by of_get_cpu_node,
+> and I accept that this was there before the refactoring. We could do
+> something like :
 >
-> Alan Stern
+>
+> ----8>------
+>
+>
+>
+> [PATCH] coresight: of_coresight_get_cpu: Add missing of_node_put
+>
+> The of_coresight_get_cpu iterates over the possible CPU nodes
+> to find a given cpu phandle. However it does not drop the reference
+> to the node pointer returned by the of_get_cpu_node.
+>
+> Cc: Leo Yan <leo.yan@linaro.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/of_coresight.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
+> index d9a12fb..8c6f4a0 100644
+> --- a/drivers/hwtracing/coresight/of_coresight.c
+> +++ b/drivers/hwtracing/coresight/of_coresight.c
+> @@ -104,7 +104,8 @@ static int of_coresight_alloc_memory(struct device *dev,
+>  int of_coresight_get_cpu(struct device_node *node)
+>  {
+>  	int cpu;
+> -	struct device_node *dn;
+> +	bool found;
+> +	struct device_node *dn, *np;
+>
+>  	dn = of_parse_phandle(node, "cpu", 0);
+>
+> @@ -113,15 +114,16 @@ int of_coresight_get_cpu(struct device_node *node)
+>  		return 0;
+>
+>  	for_each_possible_cpu(cpu) {
+> -		if (dn == of_get_cpu_node(cpu, NULL)) {
+> -			of_node_put(dn);
+> -			return cpu;
+> -		}
+> +		np = of_get_cpu_node(cpu, NULL);
+> +		found = (dn == np);
+> +		of_node_put(np);
+> +		if (found)
+> +			break;
+>  	}
+>
+> -	/* Affinity to CPU0 if no cpu nodes are found */
+>  	of_node_put(dn);
+> -	return 0;
+> +	/* Affinity to CPU0 if no cpu nodes are found */
+> +	return cpu_possible(cpu) ? cpu : 0;
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This could be even :
+	return found ? cpu : 0;
+
+Suzuki
