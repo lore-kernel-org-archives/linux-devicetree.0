@@ -1,131 +1,176 @@
-From: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] regulator: pfuze100-regulator: add coin support
-Date: Thu,  9 Mar 2017 08:14:43 -0600
-Message-ID: <20170309141443.20564-1-george.mccollister@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 2/3] thermal: add support for the thermal sensor on
+ Allwinner new SoCs
+Date: Thu, 9 Mar 2017 15:27:12 +0100
+Message-ID: <20170309142712.tfmfrbbhagskrtaf@lukather>
+References: <20170301190220.2EgSha6N@smtp3o.mail.yandex.net>
+ <20170302141105.5fr3ru72rtdyv4pd@lukather>
+ <8250311489019784@web18g.yandex.ru>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7681161870769237948=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8250311489019784@web18g.yandex.ru>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: Ondrej Jirman <megous@megous.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for PF0200 coin cell/super capacitor charger which works as
-a current limited voltage source via the LICELL pin. When VIN goes below
-a certain threshold LICELL is used to provide power for VSNVS which is
-usually used to hold up secure non-volatile storage and the real-time
-clock on the SoC.
 
-Signed-off-by: George McCollister <george.mccollister-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/regulator/pfuze100.txt     |  8 +++++++-
- drivers/regulator/pfuze100-regulator.c             | 24 ++++++++++++++++++++++
- include/linux/regulator/pfuze100.h                 |  1 +
- 3 files changed, 32 insertions(+), 1 deletion(-)
+--===============7681161870769237948==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mzgialstztho4mk3"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-index 9b40db88f637..444c47831a40 100644
---- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-+++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-@@ -13,7 +13,7 @@ Required child node:
-   --PFUZE100
-   sw1ab,sw1c,sw2,sw3a,sw3b,sw4,swbst,vsnvs,vrefddr,vgen1~vgen6
-   --PFUZE200
--  sw1ab,sw2,sw3a,sw3b,swbst,vsnvs,vrefddr,vgen1~vgen6
-+  sw1ab,sw2,sw3a,sw3b,swbst,vsnvs,vrefddr,vgen1~vgen6,coin
-   --PFUZE3000
-   sw1a,sw1b,sw2,sw3,swbst,vsnvs,vrefddr,vldo1,vldo2,vccsd,v33,vldo3,vldo4
- 
-@@ -205,6 +205,12 @@ Example 2: PFUZE200
- 				regulator-max-microvolt = <3300000>;
- 				regulator-always-on;
- 			};
-+
-+			coin_reg: coin {
-+				regulator-min-microvolt = <2500000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
- 		};
- 	};
- 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index e193bbbb8ffc..63922a2167e5 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -40,6 +40,7 @@
- #define PFUZE100_REVID		0x3
- #define PFUZE100_FABID		0x4
- 
-+#define PFUZE100_COINVOL	0x1a
- #define PFUZE100_SW1ABVOL	0x20
- #define PFUZE100_SW1CVOL	0x2e
- #define PFUZE100_SW2VOL		0x35
-@@ -81,6 +82,10 @@ static const int pfuze100_vsnvs[] = {
- 	1000000, 1100000, 1200000, 1300000, 1500000, 1800000, 3000000,
- };
- 
-+static const int pfuze100_coin[] = {
-+	2500000, 2700000, 2800000, 2900000, 3000000, 3100000, 3200000, 3300000,
-+};
-+
- static const int pfuze3000_sw2lo[] = {
- 	1500000, 1550000, 1600000, 1650000, 1700000, 1750000, 1800000, 1850000,
- };
-@@ -230,6 +235,23 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
- 		.stby_mask = 0x20,	\
- 	}
- 
-+#define PFUZE100_COIN_REG(_chip, _name, base, mask, voltages)	\
-+	[_chip ## _ ##  _name] = {	\
-+		.desc = {	\
-+			.name = #_name,	\
-+			.n_voltages = ARRAY_SIZE(voltages),	\
-+			.ops = &pfuze100_swb_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = _chip ## _ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.volt_table = voltages,	\
-+			.vsel_reg = (base),	\
-+			.vsel_mask = (mask),	\
-+			.enable_reg = (base),	\
-+			.enable_mask = 0x8,	\
-+		},	\
-+	}
-+
- #define PFUZE3000_VCC_REG(_chip, _name, base, min, max, step)	{	\
- 	.desc = {	\
- 		.name = #_name,	\
-@@ -317,6 +339,7 @@ static struct pfuze_regulator pfuze200_regulators[] = {
- 	PFUZE100_VGEN_REG(PFUZE200, VGEN4, PFUZE100_VGEN4VOL, 1800000, 3300000, 100000),
- 	PFUZE100_VGEN_REG(PFUZE200, VGEN5, PFUZE100_VGEN5VOL, 1800000, 3300000, 100000),
- 	PFUZE100_VGEN_REG(PFUZE200, VGEN6, PFUZE100_VGEN6VOL, 1800000, 3300000, 100000),
-+	PFUZE100_COIN_REG(PFUZE200, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
- };
- 
- static struct pfuze_regulator pfuze3000_regulators[] = {
-@@ -371,6 +394,7 @@ static struct of_regulator_match pfuze200_matches[] = {
- 	{ .name = "vgen4",	},
- 	{ .name = "vgen5",	},
- 	{ .name = "vgen6",	},
-+	{ .name = "coin",	},
- };
- 
- /* PFUZE3000 */
-diff --git a/include/linux/regulator/pfuze100.h b/include/linux/regulator/pfuze100.h
-index 70c6c66c5bcf..e0ccf46f66cf 100644
---- a/include/linux/regulator/pfuze100.h
-+++ b/include/linux/regulator/pfuze100.h
-@@ -48,6 +48,7 @@
- #define PFUZE200_VGEN4		10
- #define PFUZE200_VGEN5		11
- #define PFUZE200_VGEN6		12
-+#define PFUZE200_COIN		13
- 
- #define PFUZE3000_SW1A		0
- #define PFUZE3000_SW1B		1
--- 
-2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--mzgialstztho4mk3
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 09, 2017 at 08:36:24AM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> 02.03.2017, 22:11, "Maxime Ripard" <maxime.ripard@free-electrons.com>:
+> > On Thu, Mar 02, 2017 at 12:02:13AM +0800, Icenowy Zheng wrote:
+> >> =C2=A02017=E5=B9=B43=E6=9C=881=E6=97=A5 23:56=E4=BA=8E Maxime Ripard <=
+maxime.ripard@free-electrons.com>=E5=86=99=E9=81=93=EF=BC=9A
+> >> =C2=A0>
+> >> =C2=A0> On Wed, Mar 01, 2017 at 06:20:51PM +0800, Icenowy Zheng wrote:
+> >> =C2=A0> >
+> >> =C2=A0> > 2017=E5=B9=B43=E6=9C=881=E6=97=A5 18:14=E4=BA=8E Maxime Ripa=
+rd <maxime.ripard@free-electrons.com>=E5=86=99=E9=81=93=EF=BC=9A
+> >> =C2=A0> > >
+> >> =C2=A0> > > On Tue, Feb 28, 2017 at 03:18:13PM +0800, Icenowy Zheng wr=
+ote:
+> >> =C2=A0> > > >
+> >> =C2=A0> > > > 2017=E5=B9=B42=E6=9C=8828=E6=97=A5 14:44=E4=BA=8E Maxime=
+ Ripard <maxime.ripard@free-electrons.com>=E5=86=99=E9=81=93=EF=BC=9A
+> >> =C2=A0> > > > >
+> >> =C2=A0> > > > > On Tue, Feb 28, 2017 at 03:40:53AM +0800, Icenowy Zhen=
+g wrote:
+> >> =C2=A0> > > > > > From: Ondrej Jirman <megous@megous.com>
+> >> =C2=A0> > > > > >
+> >> =C2=A0> > > > > > Allwinner SoCs from H3 (including H5, A64, etc) have=
+ a new version of
+> >> =C2=A0> > > > > > thermal sensor, and needs a new driver for it.
+> >> =C2=A0> > > > > >
+> >> =C2=A0> > > > > > Add such a driver.
+> >> =C2=A0> > > > > >
+> >> =C2=A0> > > > > > Currently only H3 is supported, but other SoCs are e=
+asily to be
+> >> =C2=A0> > > > > > supported by adding new formula and set the sensor n=
+umber.
+> >> =C2=A0> > > > > >
+> >> =C2=A0> > > > > > Signed-off-by: Ond=C5=99ej Jirman <megous@megous.com>
+> >> =C2=A0> > > > > > [Icenowy: extend to support further multiple-sensor =
+SoCs, change commit
+> >> =C2=A0> > > > > >=C2=A0 message]
+> >> =C2=A0> > > > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> >> =C2=A0> > > > >
+> >> =C2=A0> > > > > There's no need to create a new driver for that. This =
+can be handled
+> >> =C2=A0> > > > > by the GPADC driver we already have.
+> >> =C2=A0> > > >
+> >> =C2=A0> > > > sun8i-ths is not GPADC at all.
+> >> =C2=A0> > > >
+> >> =C2=A0> > > > The latest SoC I know that use GPADC as thermal sensor i=
+s A33.
+> >> =C2=A0> > >
+> >> =C2=A0> > > It's not called the same way, but it definitely is an evol=
+ution of the
+> >> =C2=A0> > > same controller. There's no need for a new driver, only re=
+working what
+> >> =C2=A0> > > is already there.
+> >> =C2=A0> >
+> >> =C2=A0> > I don't think so -- here's some evidence:
+> >>
+> >> =C2=A0But the H3 THS have many new IRQs, functions, different sampling
+> >> =C2=A0rate set method and a quite different register layout.
+> >>
+> >> =C2=A0Doing this in GPADC driver is possible but meaningless.
+> >>
+> >> =C2=A0> >
+> >> =C2=A0> > 1. The old GPADC do not have module clock.
+> >> =C2=A0>
+> >> =C2=A0> The A33 could use a PLL.
+> >>
+> >> =C2=A0But it's a dedicated mod clk on new generation THS.
+> >
+> > And all of this really are evolutions. The block is still driven in
+> > the exact same way. And this is where there is value in having the
+> > same driver: you share the logic, which is mostly common, instead of
+> > duplicating it.
+>=20
+> After some thinking, I can accept a common driver for A23/A33 thermal
+> sensor and H3/A64/H5 ones, but I cannot accept use iio-sun4i-gpadc
+> driver for it, as now H3/A64/H5 thermal sensors are not just an ADC --
+> they features hardware alarm levels, and in some SoC it become a
+> multiple channel thermal sensor.
+
+The A23 and A33 is trivial to support on the already existing GPADC
+driver. If you have it already working on the A33, then the amount of
+work for your driver to support the A33, or for the GPADC to support
+the newer SoC is strictly the same.
+
+Except in one case, we have a common, debugged, already reviewed and
+already merged driver. In the other case, we have no such things.
+
+> I will insist on doing a dedicated driver for it, or if you like, I can a=
+dd
+> A23/A33 support to this driver. (Considering no one have already posted
+> any patches for A23/A33 thermal sensor, except my old ones, so my
+> work at least won't conflict with anything merged)
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-December/474821.=
+html
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--mzgialstztho4mk3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYwWY8AAoJEBx+YmzsjxAgoMYP/0N81x3wd/RApEmTKcpQG0fx
+M5MxuU+zNjDgXkl1jQWTnKAgcGi8VxhEKvhA5jHn4FPvAmpoDmc1KNYXYXxs15Le
+tdiVFpejcjp0UT+Wi8Jd29KEOGcey6fwLkiYSMsop5t/6KrNEySooffMD9LRvHoy
+B34EZ0xb7XZt4ZH4lZ4+hfCW7O6SDECr3/IUMEZrX8CVj2myfQdGQQRHnnOwgxTw
+if/CqxdSSepfEZcWTbwrrytbqPl1BcpIikUgBUOUvQbg9EPL3M+GloB+/bNvmCNc
+Xc/aOl35wg+grLeaFPLg3GqnqwwHxZ+bSwo/qlmdF1BSZehYtmfO0Ot7vVXHDqJA
+pbDxlByQDI9Pjl5AmKstLF/bsWn5NaYJ/hl8CGCpg1w880sgHXql7Cs3WpHXbLYw
+wJN41Yg5IUWvWgUCSiQYwjxgbwGPzU1IX90TH1I/R5ypZE/95OLwcn/FFyeA9aUG
+kCLQJYrt73XiCxlGo34wZqtb5Q2+zU3sqIGcn+2OasWORQS+Tev1FH0MHwGnZu00
+xz0V85r9AKCbnz/HTijpmBjw/VMspfsnXq1SpYVbVWXOuIEdvHRPJAHPcDfy7csq
+FVdR+wyrMCEqRdEe0a4igiggCYt5vA7IqghqkgdA/dP/106Z2173l9ou32p+eKnP
+lWlw9UBUXOxMhbuNGj3o
+=6Mot
+-----END PGP SIGNATURE-----
+
+--mzgialstztho4mk3--
+
+
+--===============7681161870769237948==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7681161870769237948==--
