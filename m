@@ -1,59 +1,85 @@
-From: Wolfgang Grandegger <wg@grandegger.com>
-Subject: Re: [PATCH v2 2/2] can: spi: hi311x: Add Holt HI-311x CAN driver
-Date: Thu, 9 Mar 2017 15:45:15 +0100
-Message-ID: <a9cb37d9-a71e-ce59-c379-d9bde5d8afb9@grandegger.com>
-References: <1484680922-25813-1-git-send-email-akshay.bhat@timesys.com>
- <1484680922-25813-2-git-send-email-akshay.bhat@timesys.com>
- <2197294b-e6cf-6c56-1419-3a4f95c29db7@timesys.com>
- <6df4a9ae-eaba-6f3f-9c23-ae269548b005@grandegger.com>
- <1447da4a-6a36-38fb-4298-fd7488697d11@timesys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1447da4a-6a36-38fb-4298-fd7488697d11@timesys.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Akshay Bhat <akshay.bhat@timesys.com>, mkl@pengutronix.de
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Akshay Bhat <nodeax@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 1/2] ARM64: dts: meson-gxbb-odroidc2: Add GPIO lines names
+Date: Thu,  9 Mar 2017 15:52:45 +0100
+Message-ID: <1489071166-11476-2-git-send-email-narmstrong@baylibre.com>
+References: <1489071166-11476-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489071166-11476-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: carlo@caione.org, khilman@baylibre.com, linus.walleij@linaro.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Akshay,
+This patch describes the GPIO lines usage on the Odroid-C2 board.
 
-Am 09.03.2017 um 13:34 schrieb Akshay Bhat:
->
->
-> On 03/09/2017 04:59 AM, Wolfgang Grandegger wrote:
->> Hello Akshay,
->>
->> unfortunately there are not many CAN controllers for the SPI bus. I just
->> know the MPC251x, which behaves badly (message losses) under Linux,
->> especially at hight bit-rates due to insufficient RX buffering. What is
->> your experience with that driver for the HI-311x?
->>
->
-> Hi Wolfgang,
->
-> Good question. I have not worked with MPC251x but the HI-311x performs
-> much better because HI-3110 features:
-> 8 message FIFO (as opposed to 2 buffers on MPC2510)
-> 20 MHz SPI interface (as opposed to 2.5 MHz on MPC2510)
->
-> As for the real world test results:
->
-> With RT patch applied to the kernel running on a i.MX6 Dual processor
-> (worst case interrupt latency of 50us as reported by cyclictest), there
-> are ZERO packet drops.
-> Tested with Kvaser Leaf sending 100 burst messages (back to back) every
-> 40ms at a 1M CAN bit rate. 10 million messages were sent by the Kvaser
-> leaf and received successfully by the HI-311x driver.
+This is useful in the debugfs gpio file and using the cdev gpio API.
 
-This corresponds to a bus load of approx. 50%, I think?
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-> Even without the RT patch, I was able to get the packet drop to zero but
-> this was by moving the CAN/SPI IRQ threads to CPU1 instead of CPU0.
-
-Vanilla Linux is more critical here due to higher latencies. With 2500 
-Messages per sec the RX FIFO (8 Messages) fills up within 3.2 ms... and 
-in a burst even quicker. That's already heavy load.
-
-Wolfgang.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index c59403a..def5aed 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -165,6 +165,57 @@
+ 	};
+ };
+ 
++&pinctrl_aobus {
++	gpio-line-names = "UART TX", "UART RX", "VCCK En", "TF 3V3/1V8 En",
++			  "USB HUB nRESET", "USB OTG Power En",
++			  "J7 Header Pin2", "IR In", "J7 Header Pin4",
++			  "J7 Header Pin6", "J7 Header Pin5", "J7 Header Pin7",
++			  "HDMI CEC", "SYS LED";
++};
++
++&pinctrl_periphs {
++	gpio-line-names = /* Bank GPIOZ */
++			  "Eth MDIO", "Eth MDC", "Eth RGMII RX Clk",
++			  "Eth RX DV", "Eth RX D0", "Eth RX D1", "Eth RX D2",
++			  "Eth RX D3", "Eth RGMII TX Clk", "Eth TX En",
++			  "Eth TX D0", "Eth TX D1", "Eth TX D2", "Eth TX D3",
++			  "Eth PHY nRESET", "Eth PHY Intc",
++			  /* Bank GPIOH */
++			  "HDMI HPD", "HDMI DDC SDA", "HDMI DDC SCL", "",
++			  /* Bank BOOT */
++			  "eMMC D0", "eMMC D1", "eMMC D2", "eMMC D3", "eMMC D4",
++			  "eMMC D5", "eMMC D6", "eMMC D7", "eMMC Clk",
++			  "eMMC Reset", "eMMC CMD",
++			  "", "", "", "", "", "", "",
++			  /* Bank CARD */
++			  "SDCard D1", "SDCard D0", "SDCard CLK", "SDCard CMD",
++			  "SDCard D3", "SDCard D2", "SDCard Det",
++			  /* Bank GPIODV */
++			  "", "", "", "", "", "", "", "", "", "", "", "", "",
++			  "", "", "", "", "", "", "", "", "", "", "",
++			  "I2C A SDA", "I2C A SCK", "I2C B SDA", "I2C B SCK",
++			  "PWM D", "PWM B",
++			  /* Bank GPIOY */
++			  "Revision Bit0", "Revision Bit1", "",
++			  "J2 Header Pin35", "", "", "", "J2 Header Pin36",
++			  "J2 Header Pin31", "", "", "", "TF VDD En",
++			  "J2 Header Pin32", "J2 Header Pin26", "", "",
++			  /* Bank GPIOX */
++			  "J2 Header Pin29", "J2 Header Pin24",
++			  "J2 Header Pin23", "J2 Header Pin22",
++			  "J2 Header Pin21", "J2 Header Pin18",
++			  "J2 Header Pin33", "J2 Header Pin19",
++			  "J2 Header Pin16", "J2 Header Pin15",
++			  "J2 Header Pin12", "J2 Header Pin13",
++			  "J2 Header Pin8", "J2 Header Pin10",
++			  "", "", "", "", "",
++			  "J2 Header Pin11", "", "J2 Header Pin7",
++			  /* Bank GPIOCLK */
++			  "", "", "", "",
++			  /* GPIO_TEST_N */
++			  "";
++};
++
+ &ir {
+ 	status = "okay";
+ 	pinctrl-0 = <&remote_input_ao_pins>;
+-- 
+1.9.1
