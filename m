@@ -1,182 +1,64 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] ARM64: dts: meson-gx: Finally move common nodes to GX dtsi
-Date: Thu,  9 Mar 2017 11:39:06 +0100
-Message-ID: <1489055948-10656-2-git-send-email-narmstrong@baylibre.com>
-References: <1489055948-10656-1-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489055948-10656-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: carlo@caione.org, khilman@baylibre.com
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/9] clk: meson: update clock controller for audio support
+Date: Thu,  9 Mar 2017 11:41:45 +0100
+Message-ID: <20170309104154.28295-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 24 ++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 43 ++++++-----------------------
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  8 ++++++
- 3 files changed, 40 insertions(+), 35 deletions(-)
+This patchset is a first round of update to the meson clock controllers
+to bring audio support. The patchset is based on clk-next. It could be
+rebased on amlogic tree later on, if you prefer the patches to go through
+Kevin's tree.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 5d995f7..2d8dc6f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -296,6 +296,14 @@
- 				status = "disabled";
- 			};
- 
-+			spifc: spi@8c80 {
-+				compatible = "amlogic,meson-gxbb-spifc";
-+				reg = <0x0 0x08c80 0x0 0x80>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
- 			watchdog@98d0 {
- 				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
- 				reg = <0x0 0x098d0 0x0 0x10>;
-@@ -342,6 +350,13 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xc8100000 0x0 0x100000>;
- 
-+			clkc_AO: clock-controller@040 {
-+				compatible = "amlogic,gx-aoclkc", "amlogic,gxbb-aoclkc";
-+				reg = <0x0 0x00040 0x0 0x4>;
-+				#clock-cells = <1>;
-+				#reset-cells = <1>;
-+			};
-+
- 			uart_AO: serial@4c0 {
- 				compatible = "amlogic,meson-uart";
- 				reg = <0x0 0x004c0 0x0 0x14>;
-@@ -358,6 +373,15 @@
- 				status = "disabled";
- 			};
- 
-+			i2c_AO: i2c@500 {
-+				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
-+				reg = <0x0 0x500 0x0 0x20>;
-+				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				status = "disabled";
-+			};
-+
- 			pwm_AO_ab: pwm@550 {
- 				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
- 				reg = <0x0 0x00550 0x0 0x10>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 04b3324..c2c41aa 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -97,17 +97,6 @@
- 	};
- };
- 
--&cbus {
--	spifc: spi@8c80 {
--		compatible = "amlogic,meson-gxbb-spifc";
--		reg = <0x0 0x08c80 0x0 0x80>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		clocks = <&clkc CLKID_SPI>;
--		status = "disabled";
--	};
--};
--
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>,
- 		 <&clkc CLKID_FCLK_DIV2>,
-@@ -204,30 +193,6 @@
- 			};
- 		};
- 	};
--
--	clkc_AO: clock-controller@040 {
--		compatible = "amlogic,gxbb-aoclkc";
--		reg = <0x0 0x00040 0x0 0x4>;
--		#clock-cells = <1>;
--		#reset-cells = <1>;
--	};
--
--	pwm_ab_AO: pwm@550 {
--		compatible = "amlogic,meson-gxbb-pwm";
--		reg = <0x0 0x0550 0x0 0x10>;
--		#pwm-cells = <3>;
--		status = "disabled";
--	};
--
--	i2c_AO: i2c@500 {
--		compatible = "amlogic,meson-gxbb-i2c";
--		reg = <0x0 0x500 0x0 0x20>;
--		interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
--		clocks = <&clkc CLKID_AO_I2C>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		status = "disabled";
--	};
- };
- 
- &periphs {
-@@ -482,6 +447,10 @@
- 	clocks = <&clkc CLKID_I2C>;
- };
- 
-+&i2c_AO {
-+	clocks = <&clkc CLKID_AO_I2C>;
-+};
-+
- &i2c_B {
- 	clocks = <&clkc CLKID_I2C>;
- };
-@@ -521,6 +490,10 @@
- 	clock-names = "core", "clkin0", "clkin1";
- };
- 
-+&spifc {
-+	clocks = <&clkc CLKID_SPI>;
-+};
-+
- &vpu {
- 	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 17cd546..37ed7a0 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -427,6 +427,10 @@
- 	clocks = <&clkc CLKID_I2C>;
- };
- 
-+&i2c_AO {
-+	clocks = <&clkc CLKID_AO_I2C>;
-+};
-+
- &i2c_B {
- 	clocks = <&clkc CLKID_I2C>;
- };
-@@ -466,6 +470,10 @@
- 	clock-names = "core", "clkin0", "clkin1";
- };
- 
-+&spifc {
-+	clocks = <&clkc CLKID_SPI>;
-+};
-+
- &vpu {
- 	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
- };
+First patch fix an issue found while writing patch 5 (Giving ternary
+operator to SET_PARM)
+
+Following Stephen comment on the v1, patch 2 adds the const qualifiers
+missing upstream.
+
+Patches 3 and 4 put the generic muxes and divisors declaration in tables so
+the register address fixup works in the same way as the clock gates. We are
+going to add more of these clock types for audio or gpu support, so we
+can't continue to fix addresses individually like it is currently done.
+
+Patches 5 to 8 improve the support of the mpll clocks, now allowing the
+rate to be set. Among other things, the mplls are the parent clocks of the
+i2s and spdif clocks.
+
+Patch 9 expose the clock gates required to power on the i2s output.
+
+These patches have been tested on the meson gxbb p200 board, as part of the
+ongoing work to bring audio support to meson SoC family.
+
+Changes since v1 [0]:
+ * Add SET_PARM fix to the series
+ * Add missing const qualifiers to the clock arrays
+ * No more additional patches required as SAR clocks have been merged
+
+[0]: http://lkml.kernel.org/r/20170228133002.17894-1-jbrunet@baylibre.com
+
+Jerome Brunet (9):
+  clk: meson: fix SET_PARM macro
+  clk: meson: add missing const qualifiers on gate arrays
+  clk: meson8b: put dividers and muxes in tables
+  clk: gxbb: put dividers and muxes in tables
+  clk: meson: mpll: add rw operation
+  clk: meson: gxbb: mpll: use rw operation
+  clk: meson8b: add the mplls clocks 0, 1 and 2
+  clk: meson: mpll: correct N2 maximum value
+  dt-bindings: clk: gxbb: expose i2s output clock gates
+
+ drivers/clk/meson/clk-mpll.c          | 152 ++++++++++++++++++++++++++++++++--
+ drivers/clk/meson/clkc.h              |   6 +-
+ drivers/clk/meson/gxbb.c              |  66 ++++++++++++---
+ drivers/clk/meson/gxbb.h              |  10 +--
+ drivers/clk/meson/meson8b.c           | 127 ++++++++++++++++++++++++++--
+ drivers/clk/meson/meson8b.h           |  20 ++++-
+ include/dt-bindings/clock/gxbb-clkc.h |   5 ++
+ 7 files changed, 356 insertions(+), 30 deletions(-)
+
 -- 
-1.9.1
+2.9.3
