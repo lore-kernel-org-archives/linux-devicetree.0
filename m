@@ -1,14 +1,15 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: BCM53573: Don't use nonexistent
+Subject: Re: [PATCH 2/2] ARM: dts: BCM5301X: Don't use nonexistent
  "default-off" LED trigger
-Date: Thu, 9 Mar 2017 12:33:28 -0800
-Message-ID: <80dbc17b-c250-5027-e2cf-9e0e372ae6e4@gmail.com>
+Date: Thu, 9 Mar 2017 12:33:46 -0800
+Message-ID: <b0dc618c-5fd3-e2a0-570d-bbd901a2d137@gmail.com>
 References: <20170308064105.26619-1-zajec5@gmail.com>
+ <20170308064105.26619-2-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170308064105.26619-1-zajec5@gmail.com>
+In-Reply-To: <20170308064105.26619-2-zajec5@gmail.com>
 Sender: linux-leds-owner@vger.kernel.org
 To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
