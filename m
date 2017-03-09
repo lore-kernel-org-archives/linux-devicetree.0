@@ -1,15 +1,14 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH 2/3] thermal: add support for the thermal sensor on
- Allwinner new SoCs
-Date: Thu, 09 Mar 2017 08:36:24 +0800
-Message-ID: <8250311489019784@web18g.yandex.ru>
-References: <20170301190220.2EgSha6N@smtp3o.mail.yandex.net>
- <20170302141105.5fr3ru72rtdyv4pd@lukather>
+From: "Y.B. Lu" <yangbo.lu@nxp.com>
+Subject: RE: [v2, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
+Date: Thu, 9 Mar 2017 02:22:36 +0000
+Message-ID: <DB6PR0401MB253672A97F3E14C2BEFF946EF8210@DB6PR0401MB2536.eurprd04.prod.outlook.com>
+References: <1488529129-23560-1-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170302141105.5fr3ru72rtdyv4pd@lukather>
+In-Reply-To: <1488529129-23560-1-git-send-email-yangbo.lu@nxp.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,68 +18,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Ondrej Jirman <megous@megous.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Adrian Hunter <adrian.hunter@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will.deacon@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-CgowMi4wMy4yMDE3LCAyMjoxMSwgIk1heGltZSBSaXBhcmQiIDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT46Cj4gT24gVGh1LCBNYXIgMDIsIDIwMTcgYXQgMTI6MDI6MTNBTSArMDgw
-MCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqAyMDE35bm0M+aciDHml6UgMjM6NTbkuo4gTWF4
-aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+5YaZ6YGT77yaCj4+
-IMKgPgo+PiDCoD4gT24gV2VkLCBNYXIgMDEsIDIwMTcgYXQgMDY6MjA6NTFQTSArMDgwMCwgSWNl
-bm93eSBaaGVuZyB3cm90ZToKPj4gwqA+ID4KPj4gwqA+ID4gMjAxN+W5tDPmnIgx5pelIDE4OjE0
-5LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPuWGmemB
-k++8mgo+PiDCoD4gPiA+Cj4+IMKgPiA+ID4gT24gVHVlLCBGZWIgMjgsIDIwMTcgYXQgMDM6MTg6
-MTNQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPj4gwqA+ID4gPiA+Cj4+IMKgPiA+ID4g
-PiAyMDE35bm0MuaciDI45pelIDE0OjQ05LqOIE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRA
-ZnJlZS1lbGVjdHJvbnMuY29tPuWGmemBk++8mgo+PiDCoD4gPiA+ID4gPgo+PiDCoD4gPiA+ID4g
-PiBPbiBUdWUsIEZlYiAyOCwgMjAxNyBhdCAwMzo0MDo1M0FNICswODAwLCBJY2Vub3d5IFpoZW5n
-IHdyb3RlOgo+PiDCoD4gPiA+ID4gPiA+IEZyb206IE9uZHJlaiBKaXJtYW4gPG1lZ291c0BtZWdv
-dXMuY29tPgo+PiDCoD4gPiA+ID4gPiA+Cj4+IMKgPiA+ID4gPiA+ID4gQWxsd2lubmVyIFNvQ3Mg
-ZnJvbSBIMyAoaW5jbHVkaW5nIEg1LCBBNjQsIGV0YykgaGF2ZSBhIG5ldyB2ZXJzaW9uIG9mCj4+
-IMKgPiA+ID4gPiA+ID4gdGhlcm1hbCBzZW5zb3IsIGFuZCBuZWVkcyBhIG5ldyBkcml2ZXIgZm9y
-IGl0Lgo+PiDCoD4gPiA+ID4gPiA+Cj4+IMKgPiA+ID4gPiA+ID4gQWRkIHN1Y2ggYSBkcml2ZXIu
-Cj4+IMKgPiA+ID4gPiA+ID4KPj4gwqA+ID4gPiA+ID4gPiBDdXJyZW50bHkgb25seSBIMyBpcyBz
-dXBwb3J0ZWQsIGJ1dCBvdGhlciBTb0NzIGFyZSBlYXNpbHkgdG8gYmUKPj4gwqA+ID4gPiA+ID4g
-PiBzdXBwb3J0ZWQgYnkgYWRkaW5nIG5ldyBmb3JtdWxhIGFuZCBzZXQgdGhlIHNlbnNvciBudW1i
-ZXIuCj4+IMKgPiA+ID4gPiA+ID4KPj4gwqA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBPbmTF
-mWVqIEppcm1hbiA8bWVnb3VzQG1lZ291cy5jb20+Cj4+IMKgPiA+ID4gPiA+ID4gW0ljZW5vd3k6
-IGV4dGVuZCB0byBzdXBwb3J0IGZ1cnRoZXIgbXVsdGlwbGUtc2Vuc29yIFNvQ3MsIGNoYW5nZSBj
-b21taXQKPj4gwqA+ID4gPiA+ID4gPsKgIG1lc3NhZ2VdCj4+IMKgPiA+ID4gPiA+ID4gU2lnbmVk
-LW9mZi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLnh5ej4KPj4gwqA+ID4gPiA+ID4K
-Pj4gwqA+ID4gPiA+ID4gVGhlcmUncyBubyBuZWVkIHRvIGNyZWF0ZSBhIG5ldyBkcml2ZXIgZm9y
-IHRoYXQuIFRoaXMgY2FuIGJlIGhhbmRsZWQKPj4gwqA+ID4gPiA+ID4gYnkgdGhlIEdQQURDIGRy
-aXZlciB3ZSBhbHJlYWR5IGhhdmUuCj4+IMKgPiA+ID4gPgo+PiDCoD4gPiA+ID4gc3VuOGktdGhz
-IGlzIG5vdCBHUEFEQyBhdCBhbGwuCj4+IMKgPiA+ID4gPgo+PiDCoD4gPiA+ID4gVGhlIGxhdGVz
-dCBTb0MgSSBrbm93IHRoYXQgdXNlIEdQQURDIGFzIHRoZXJtYWwgc2Vuc29yIGlzIEEzMy4KPj4g
-wqA+ID4gPgo+PiDCoD4gPiA+IEl0J3Mgbm90IGNhbGxlZCB0aGUgc2FtZSB3YXksIGJ1dCBpdCBk
-ZWZpbml0ZWx5IGlzIGFuIGV2b2x1dGlvbiBvZiB0aGUKPj4gwqA+ID4gPiBzYW1lIGNvbnRyb2xs
-ZXIuIFRoZXJlJ3Mgbm8gbmVlZCBmb3IgYSBuZXcgZHJpdmVyLCBvbmx5IHJld29ya2luZyB3aGF0
-Cj4+IMKgPiA+ID4gaXMgYWxyZWFkeSB0aGVyZS4KPj4gwqA+ID4KPj4gwqA+ID4gSSBkb24ndCB0
-aGluayBzbyAtLSBoZXJlJ3Mgc29tZSBldmlkZW5jZToKPj4KPj4gwqBCdXQgdGhlIEgzIFRIUyBo
-YXZlIG1hbnkgbmV3IElSUXMsIGZ1bmN0aW9ucywgZGlmZmVyZW50IHNhbXBsaW5nCj4+IMKgcmF0
-ZSBzZXQgbWV0aG9kIGFuZCBhIHF1aXRlIGRpZmZlcmVudCByZWdpc3RlciBsYXlvdXQuCj4+Cj4+
-IMKgRG9pbmcgdGhpcyBpbiBHUEFEQyBkcml2ZXIgaXMgcG9zc2libGUgYnV0IG1lYW5pbmdsZXNz
-Lgo+Pgo+PiDCoD4gPgo+PiDCoD4gPiAxLiBUaGUgb2xkIEdQQURDIGRvIG5vdCBoYXZlIG1vZHVs
-ZSBjbG9jay4KPj4gwqA+Cj4+IMKgPiBUaGUgQTMzIGNvdWxkIHVzZSBhIFBMTC4KPj4KPj4gwqBC
-dXQgaXQncyBhIGRlZGljYXRlZCBtb2QgY2xrIG9uIG5ldyBnZW5lcmF0aW9uIFRIUy4KPgo+IEFu
-ZCBhbGwgb2YgdGhpcyByZWFsbHkgYXJlIGV2b2x1dGlvbnMuIFRoZSBibG9jayBpcyBzdGlsbCBk
-cml2ZW4gaW4KPiB0aGUgZXhhY3Qgc2FtZSB3YXkuIEFuZCB0aGlzIGlzIHdoZXJlIHRoZXJlIGlz
-IHZhbHVlIGluIGhhdmluZyB0aGUKPiBzYW1lIGRyaXZlcjogeW91IHNoYXJlIHRoZSBsb2dpYywg
-d2hpY2ggaXMgbW9zdGx5IGNvbW1vbiwgaW5zdGVhZCBvZgo+IGR1cGxpY2F0aW5nIGl0LgoKQWZ0
-ZXIgc29tZSB0aGlua2luZywgSSBjYW4gYWNjZXB0IGEgY29tbW9uIGRyaXZlciBmb3IgQTIzL0Ez
-MyB0aGVybWFsCnNlbnNvciBhbmQgSDMvQTY0L0g1IG9uZXMsIGJ1dCBJIGNhbm5vdCBhY2NlcHQg
-dXNlIGlpby1zdW40aS1ncGFkYwpkcml2ZXIgZm9yIGl0LCBhcyBub3cgSDMvQTY0L0g1IHRoZXJt
-YWwgc2Vuc29ycyBhcmUgbm90IGp1c3QgYW4gQURDIC0tCnRoZXkgZmVhdHVyZXMgaGFyZHdhcmUg
-YWxhcm0gbGV2ZWxzLCBhbmQgaW4gc29tZSBTb0MgaXQgYmVjb21lIGEKbXVsdGlwbGUgY2hhbm5l
-bCB0aGVybWFsIHNlbnNvci4KCkkgd2lsbCBpbnNpc3Qgb24gZG9pbmcgYSBkZWRpY2F0ZWQgZHJp
-dmVyIGZvciBpdCwgb3IgaWYgeW91IGxpa2UsIEkgY2FuIGFkZApBMjMvQTMzIHN1cHBvcnQgdG8g
-dGhpcyBkcml2ZXIuIChDb25zaWRlcmluZyBubyBvbmUgaGF2ZSBhbHJlYWR5IHBvc3RlZAphbnkg
-cGF0Y2hlcyBmb3IgQTIzL0EzMyB0aGVybWFsIHNlbnNvciwgZXhjZXB0IG15IG9sZCBvbmVzLCBz
-byBteQp3b3JrIGF0IGxlYXN0IHdvbid0IGNvbmZsaWN0IHdpdGggYW55dGhpbmcgbWVyZ2VkKQoK
-Pgo+IE1heGltZQo+Cj4gLS0KPiBNYXhpbWUgUmlwYXJkLCBGcmVlIEVsZWN0cm9ucwo+IEVtYmVk
-ZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKPiBodHRwOi8vZnJlZS1lbGVjdHJvbnMu
-Y29tCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+Any comments on this patchset ?
+Thanks :)
+
+
+Best regards,
+Yangbo Lu
+
+> -----Original Message-----
+> From: Yangbo Lu [mailto:yangbo.lu@nxp.com]
+> Sent: Friday, March 03, 2017 4:19 PM
+> To: linux-mmc@vger.kernel.org; ulf.hansson@linaro.org; Adrian Hunter; Rob
+> Herring; Mark Rutland; Catalin Marinas; Will Deacon
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> Xiaobo Xie; Y.B. Lu
+> Subject: [v2, 0/7] Add SD UHS-I and eMMC HS200 support for eSDHC
+> 
+> It's complicated to support SD UHS-I and eMMC HS200 for eSDHC because
+> there're many differences between eSDHC and SD/eMMC spec. Several
+> differences as below must be considered:
+> 1. Peripheral clock must be used instead of platform clock.
+>     - eSDHC could select peripheral clock or platform clock as its clock
+>       source. According to RM, UHS-I/HS200 must use peripheral clock
+> since
+>       it supports higher frequency than platform clock.
+>     - Patch 1 and patch 6 is to support this.
+> 2. Signal voltage switching requires a control circuit out of eSDHC.
+>     - eSDHC supports signal voltage switch from 3.3v to 1.8v by
+>       eSDHC_PROCTL[VOLT_SEL] bit. This bit changes the value of output
+>       signal SDHC_VS, and there must be a control circuit out of eSDHC
+>       to change the signal voltage according to SDHC_VS output signal.
+>     - Patch 2 is to support this.
+> 3. eSDHC uses tuning block for tuning procedure.
+>     - Tuning clock control register must be configured before tuning.
+>     - Patch 3 is to support this.
+> 4. Delay is needed between tuning cycles for HS200 tuning.
+>     - Once a patch removed mdelay between tuning cycles.
+>       But eSDHC needs it.
+>     - Patch 4 and patch 5 is to support this.
+> 5. UHS-I/HS200 modes could be enabled in dts node.
+>     - Patch 7 is to support this.
+> 
+> Please review and merge these patches on mmc git tree if no changes are
+> required.
+> 
+> Yangbo Lu (7):
+>   mmc: sdhci-of-esdhc: add peripheral clock support
+>   mmc: sdhci-of-esdhc: add support for signal voltage switch
+>   mmc: sdhci-of-esdhc: add tuning support
+>   mmc: sdhci: add a quirk to restore delay in tuning
+>   mmc: sdhci-of-esdhc: add delay between tuning cycles
+>   arm64: dts: ls1046a: add clocks property and compatible for eSDHC node
+>   arm64: dts: ls1046ardb: add MMC HS200/UHS-1 modes support
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts |   8 ++
+>  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi    |   3 +-
+>  drivers/mmc/host/sdhci-esdhc.h                    |   7 +
+>  drivers/mmc/host/sdhci-of-esdhc.c                 | 167
+> +++++++++++++++++++++-
+>  drivers/mmc/host/sdhci.c                          |   3 +-
+>  drivers/mmc/host/sdhci.h                          |   2 +
+>  6 files changed, 186 insertions(+), 4 deletions(-)
+> 
+> --
+> 2.1.0.27.g96db324
