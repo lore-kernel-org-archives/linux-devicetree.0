@@ -1,70 +1,76 @@
-From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v2 5/5] mfd: dt-bindings: Add RK805 device tree bindings document
-Date: Fri, 10 Mar 2017 10:02:56 +0800
-Message-ID: <1489111376-22282-1-git-send-email-zhangqing@rock-chips.com>
-References: <1489111252-22175-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489111252-22175-1-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org
-Cc: huangtao@rock-chips.com, xxx@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, w.egorov@phytec.de, Elaine Zhang <zhangqing@rock-chips.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
+Date: Thu, 9 Mar 2017 18:38:18 -0800
+Message-ID: <b739319b-61d7-3d9d-a64f-7650ab5cd4b0@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
+ <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
+ <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
+ <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
+ <59663ea1-b277-1543-e770-6a102ac733a4@gmail.com>
+ <20170304105600.GS3220@valkosipuli.retiisi.org.uk>
+ <03c9b05c-d3ba-c890-f9fa-ad5e1a49430c@gmail.com>
+ <20170305224114.GV21222@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170305224114.GV21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, laurent.pinchart+renesas@ideasonboard.com, horms+renesas@verge.net.au, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mu
 List-Id: devicetree@vger.kernel.org
 
-Add device tree bindings documentation for Rockchip's RK805 PMIC.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- Documentation/devicetree/bindings/mfd/rk808.txt | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 9636ae8d8d41..05eb07134483 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -1,11 +1,12 @@
- RK8XX Power Management Integrated Circuit
- 
- The rk8xx family current members:
-+rk805
- rk808
- rk818
- 
- Required properties:
--- compatible: "rockchip,rk808", "rockchip,rk818"
-+- compatible: "rockchip,rk805", "rockchip,rk808", "rockchip,rk818"
- - reg: I2C slave address
- - interrupt-parent: The parent interrupt controller.
- - interrupts: the interrupt outputs of the controller.
-@@ -18,6 +19,14 @@ Optional properties:
- - rockchip,system-power-controller: Telling whether or not this pmic is controlling
-   the system power.
- 
-+Optional RK805 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- vcc5-supply:  The input supply for LDO_REG1 and LDO_REG2
-+- vcc6-supply:  The input supply for LDO_REG3
-+
- Optional RK808 properties:
- - vcc1-supply:  The input supply for DCDC_REG1
- - vcc2-supply:  The input supply for DCDC_REG2
-@@ -56,6 +65,15 @@ by a child node of the 'regulators' node.
- 		/* standard regulator bindings here */
- 	};
- 
-+Following regulators of the RK805 PMIC block are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK805 datasheet.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 4.
-+	- LDO_REGn
-+		- valid values for n are 1 to 3
-+
- Following regulators of the RK808 PMIC block are supported. Note that
- the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
- number as described in RK808 datasheet.
--- 
-1.9.1
+On 03/05/2017 02:41 PM, Russell King - ARM Linux wrote:
+> On Sat, Mar 04, 2017 at 04:37:43PM -0800, Steve Longerbeam wrote:
+>>
+>>
+>> On 03/04/2017 02:56 AM, Sakari Ailus wrote:
+>>> That's a bit of a special situation --- still there are alike conditions on
+>>> existing hardware. You should return the buffers to the user with the ERROR
+>>> flag set --- or return -EIO from VIDIOC_DQBUF, if the condition will
+>>> persist:
+>>
+>> On i.MX an EOF timeout is not recoverable without a stream restart, so
+>> I decided to call vb2_queue_error() when the timeout occurs (instead
+>> of sending an event). The user will then get -EIO when it attempts to
+>> queue or dequeue further buffers.
+>
+> I'm not sure that statement is entirely accurate.  With the IMX219
+> camera, I _could_ (with previous iterations of the iMX capture code)
+> stop it streaming, wait a while, and restart it, and everything
+> continues to work.
+
+Hi Russell, did you see the "EOF timeout" kernel error message when you
+stopped the IMX219 from streaming? Only a "EOF timeout" message
+indicates the unrecoverable case.
+
+
+>
+> Are you sure that the problem you have here is caused by the iMX6
+> rather than the ADV718x CVBS decoder (your initial description said
+> it was the decoder.)
+
+Actually yes I did say it was the adv718x, but in fact I doubt the
+adv718x has abruptly stopped data transmission on the bt.656 bus.
+I actually suspect the IPU, specifically the CSI. In our experience
+the CSI is rather sensitive to glitches and/or truncated frames on the
+bt.656 bus and can easily loose vertical sync, and/or lock-up.
+
+Steve
+
+>
+> If it _is_ the decoder that's going wrong, that doesn't justify
+> cripping the rest of the driver for one instance of broken hardware
+> that _might_ be attached to it.
+>
