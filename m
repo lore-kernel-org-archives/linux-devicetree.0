@@ -1,144 +1,99 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCHv3 07/15] atmel-isi: remove dependency of the soc-camera
- framework
-Date: Fri, 10 Mar 2017 12:25:54 +0100
-Message-ID: <e9f9a41c-c1bb-dfca-646c-c0c24e99d939@xs4all.nl>
-References: <20170306145616.38485-1-hverkuil@xs4all.nl>
- <20170306145616.38485-8-hverkuil@xs4all.nl>
- <20170310103920.GW3220@valkosipuli.retiisi.org.uk>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: RE: [PATCH v4 3/3] USB3/DWC3: Enable undefined length INCR burst type
+Date: Fri, 10 Mar 2017 13:26:48 +0200
+Message-ID: <87tw71xthj.fsf@linux.intel.com>
+References: <1484727138-3264-1-git-send-email-jerry.huang@nxp.com>
+ <1484727138-3264-3-git-send-email-jerry.huang@nxp.com>
+ <DB5PR0401MB1813965DDC8CC6CD0BD85980FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <87y3xeqvsl.fsf@linux.intel.com>
+ <DB5PR0401MB1813AAB5AA84B0B310ED1B10FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170310103920.GW3220-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============3726794455629985080=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <DB5PR0401MB1813AAB5AA84B0B310ED1B10FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerry Huang <jerry.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 11:39, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> Thanks! It's very nice to see one more driver converted to stand-alone one!
-> 
-> Speaking of which --- this seems to be the second last one. The only
-> remaining one is sh_mobile_ceu_camera.c!
-> 
-> On Mon, Mar 06, 2017 at 03:56:08PM +0100, Hans Verkuil wrote:
->> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->>
->> This patch converts the atmel-isi driver from a soc-camera driver to a driver
->> that is stand-alone.
->>
->> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/media/i2c/soc_camera/ov2640.c         |   23 +-
->>  drivers/media/platform/soc_camera/Kconfig     |    3 +-
->>  drivers/media/platform/soc_camera/atmel-isi.c | 1223 +++++++++++++++----------
->>  3 files changed, 735 insertions(+), 514 deletions(-)
->>
+--===============3726794455629985080==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha256; protocol="application/pgp-signature"
 
-<snip>
-
->> +static int isi_graph_parse(struct atmel_isi *isi,
->> +			    struct device_node *node)
-> 
-> Fits on a single line.
-> 
->> +{
->> +	struct device_node *remote;
->> +	struct device_node *ep = NULL;
->> +	struct device_node *next;
->> +	int ret = 0;
->> +
->> +	while (1) {
->> +		next = of_graph_get_next_endpoint(node, ep);
->> +		if (!next)
->> +			break;
-> 
-> You could make this a while loop condition.
-> 
->> +
->> +		of_node_put(ep);
-> 
-> ep is put by of_graph_get_next_endpoint(), no need to do it manually here.
-> 
->> +		ep = next;
->> +
->> +		remote = of_graph_get_remote_port_parent(ep);
->> +		if (!remote) {
-> 
-> of_node_put(ep);
-> 
->> +			ret = -EINVAL;
->> +			break;
->> +		}
->> +
->> +		/* Skip entities that we have already processed. */
->> +		if (remote == isi->dev->of_node) {
->> +			of_node_put(remote);
->> +			continue;
->> +		}
->> +
->> +		/* Remote node to connect */
->> +		if (!isi->entity.node) {
-> 
-> There would have to be something wrong about the DT graph for the two above
-> to happen. I guess one could just return an error if something is terribly
-> wrong.
-> 
-> I'm thinking this from the point of view of making this function generic,
-> and moving it to the framework as most drivers to something very similar,
-> but I'd prefer to get the fwnode patches in first.
-> 
->> +			isi->entity.node = remote;
-> 
-> You could use entity.asd.match.of.node instead, and drop the node field.
-
-Slight problem with this. If I make this change, then the of_node_put below
-changes as well:
-
-@@ -1193,7 +1176,7 @@ static int isi_graph_init(struct atmel_isi *isi)
- done:
-        if (ret < 0) {
-                v4l2_async_notifier_unregister(&isi->notifier);
--               of_node_put(isi->entity.node);
-+               of_node_put(isi->entity.asd.match.of.node);
-        }
-
-And I get this compiler warning:
-
-  CC [M]  drivers/media/platform/atmel/atmel-isi.o
-drivers/media/platform/atmel/atmel-isi.c: In function ‘isi_graph_init’:
-drivers/media/platform/atmel/atmel-isi.c:1179:15: warning: passing argument 1 of ‘of_node_put’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
-   of_node_put(isi->entity.asd.match.of.node);
-               ^~~
-In file included from drivers/media/platform/atmel/atmel-isi.c:25:0:
-./include/linux/of.h:130:20: note: expected ‘struct device_node *’ but argument is of type ‘const struct device_node *’
- static inline void of_node_put(struct device_node *node) { }
-                    ^~~~~~~~~~~
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-Any suggestions? Just keep the entity.node after all?
+Hi,
 
-Regards,
+Jerry Huang <jerry.huang@nxp.com> writes:
+>> >> --
+>> >> 1.7.9.5
+>> > Hi, Balbi and all guys,
+>> > Any comment for these patches? Can they be accepted?
+>>=20
+>> Rob had comments which you didn't reply yet. I cannot take this patchset
+>> yet ;-)
+>>=20
+> Balbi,
+>
+> I look into his mail again, which was based v3, and I replied it.
+>
+> He had different understanding for undefined length burst mode.
+>
+> It seems he think for this mode, just setting bit[0] (INCRBrstEna) and
+> don't need to set other field.
+>
+> However, according to the DWC USB3.0 controller databook, when it is
+> undefined length INCR burst mode, we still need to set one max burst
+> type, such as INCR8, which means controller will use any length less
+> than or equal to this INCR8.
 
-	Hans
+Rob, do you agree with the patch now?
 
-> 
->> +			isi->entity.asd.match_type = V4L2_ASYNC_MATCH_OF;
->> +			isi->entity.asd.match.of.node = remote;
->> +			ret++;
->> +		}
->> +	}
->> +
->> +	of_node_put(ep);
->> +
->> +	return ret;
->> +}
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAljCjXgACgkQzL64meEa
+mQY2gA/7BFDbV28zV9R97vP1N0SzmtmbBGuK65utrix6W6Nn6Q66czmQmU+j0a8/
+txHQuD3SledolgY8mAm6k8mIArwmRYfJaYIejfaNJLMGBkNxaTzHawvLDDgpZd7e
+rFhLASCoDCCtHlJMV8Rb/E8h6nnzw5xnwAgufyGRTrXvUbQilwLH5mcBeK9wTL7W
+Juha58MBzm3qQ6YG/lZb7KRucN9JJd68u8PfhyuAq94HxjFrD5pa6+Qrkv3fItRd
+Lwva4I2QwbugNrIEwpE8EZ+yHFU2S9CFBWd5pX1tTaK75ufIFmeJApMCwT3E3DM9
+oAudgFE5+YbnT5suaQfV/j27lQGWK3CezI3v2k+s0W7qlCUnfzE0Nw71Wii0IqVq
+q85MGaRABb/LYBc0GVvaIosWTvU/ehl/ulVgDBHJQLG0LpCJw3U6qpHCRcHQJsMO
+pHTarKFxZNm1s/J8xqa4ordetQPavJKNpkJI+k1oN+9eMgqv/Vr33VaaySCUhqwZ
+oGnrd2s7PhmB5HijEM33j+XH000/u2lmolJSfYp9QdkU4zxuDlf0YDGN1JzQUAxh
+ktCLM8qrSf3Z5FyMfuzgqbXHC2joVrWx0RKm985HleD1g8NMtfHJqu5+poRHcfuM
+gLzLhqRqGRDJUka4EWmlNt+HydsgCXb27w8cKFA0K21WPl7jwgs=
+=BSnO
+-----END PGP SIGNATURE-----
+--=-=-=--
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============3726794455629985080==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============3726794455629985080==--
