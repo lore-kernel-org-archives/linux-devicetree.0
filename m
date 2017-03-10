@@ -1,39 +1,37 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCHv4 10/15] ov2640: convert from soc-camera to a standard
- subdev sensor driver.
-Date: Fri, 10 Mar 2017 13:08:33 +0200
-Message-ID: <20170310110832.GC3220@valkosipuli.retiisi.org.uk>
-References: <20170310102614.20922-1-hverkuil@xs4all.nl>
- <20170310102614.20922-11-hverkuil@xs4all.nl>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v10 01/11] devres: trivial whitespace fix
+Date: Fri, 10 Mar 2017 12:09:55 +0100
+Message-ID: <1489144205-17427-2-git-send-email-peda@axentia.se>
+References: <1489144205-17427-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170310102614.20922-11-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489144205-17427-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Colin Ian King <colin.king-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Everything else is indented with two spaces, so fix the odd one out.
 
-On Fri, Mar 10, 2017 at 11:26:09AM +0100, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> Convert ov2640 to a standard subdev driver. The soc-camera driver no longer
-> uses this driver, so it can safely be converted.
-> 
-> Note: the s_power op has been dropped: this never worked. When the last open()
-> is closed, then the power is turned off, and when it is opened again the power
-> is turned on again, but the old state isn't restored.
-> 
-> Someone else can figure out in the future how to get this working correctly,
-> but I don't want to spend more time on this.
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ Documentation/driver-model/devres.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
+diff --git a/Documentation/driver-model/devres.txt b/Documentation/driver-model/devres.txt
+index bf34d5b3a733..efb8200819d6 100644
+--- a/Documentation/driver-model/devres.txt
++++ b/Documentation/driver-model/devres.txt
+@@ -335,7 +335,7 @@ MEM
+   devm_kzalloc()
+ 
+ MFD
+- devm_mfd_add_devices()
++  devm_mfd_add_devices()
+ 
+ PER-CPU MEM
+   devm_alloc_percpu()
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+2.1.4
