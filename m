@@ -1,97 +1,241 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Sat, 11 Mar 2017 00:37:14 +0200
-Message-ID: <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
-References: <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
- <20170310140124.GV21222@n2100.armlinux.org.uk>
- <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
+From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
+Date: Fri, 10 Mar 2017 14:42:01 -0800
+Message-ID: <CAAtXAHe-AMq9Ux2LZZEWLcg8Dk6jTiHhrot4RhEVrxTBhnLE0g@mail.gmail.com>
+References: <1489181435-3151-1-git-send-email-mdf@kernel.org> <1489181435-3151-2-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170310125342.7f047acf-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+In-Reply-To: <1489181435-3151-2-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree@v
+To: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro (and others),
+On Fri, Mar 10, 2017 at 1:30 PM, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> This adds support for the Xilinx LogiCORE PR Decoupler
+> soft-ip that does decoupling of PR regions in the FPGA
+> fabric during partial reconfiguration.
+>
+> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/fpga/Kconfig               |   9 +++
+>  drivers/fpga/Makefile              |   1 +
+>  drivers/fpga/xilinx-pr-decoupler.c | 156 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 166 insertions(+)
+>  create mode 100644 drivers/fpga/xilinx-pr-decoupler.c
+>
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index 967cda4..e42c7dc 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -69,6 +69,15 @@ config ALTERA_FREEZE_BRIDGE
+>           isolate one region of the FPGA from the busses while that
+>           region is being reprogrammed.
+>
+> +config XILINX_PR_DECOUPLER
+> +       tristate "Xilinx LogiCORE PR Decoupler"
+> +       depends on FPGA_BRIDGE
+> +       help
+> +         Say Y to enable drivers for Xilinx LogiCORE PR Decoupler.
+> +         The PR Decoupler exists in the FPGA fabric to isolate one
+> +         region of the FPGA from the busses while that region is
+> +         being reprogrammed during partial reconfig.
+> +
+>  endif # FPGA
+>
+>  endmenu
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index cc0d364..3f04bcf 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)      += zynq-fpga.o
+>  obj-$(CONFIG_FPGA_BRIDGE)              += fpga-bridge.o
+>  obj-$(CONFIG_SOCFPGA_FPGA_BRIDGE)      += altera-hps2fpga.o altera-fpga2sdram.o
+>  obj-$(CONFIG_ALTERA_FREEZE_BRIDGE)     += altera-freeze-bridge.o
+> +obj-$(CONFIG_XILINX_PR_DECOUPLER)      += xilinx-pr-decoupler.o
+>
+>  # High Level Interfaces
+>  obj-$(CONFIG_FPGA_REGION)              += fpga-region.o
+> diff --git a/drivers/fpga/xilinx-pr-decoupler.c b/drivers/fpga/xilinx-pr-decoupler.c
+> new file mode 100644
+> index 0000000..07afdd6
+> --- /dev/null
+> +++ b/drivers/fpga/xilinx-pr-decoupler.c
+> @@ -0,0 +1,156 @@
+> +/*
+> + * Copyright (c) 2017, National Instruments Corp.
+> + *
+> + * FPGA Bridge Driver for the Xilinx LogiCORE Partial Reconfiguration
+> + * Decoupler IP Core.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_device.h>
+> +#include <linux/module.h>
+> +#include <linux/fpga/fpga-bridge.h>
+> +
+> +#define CTRL_OFFSET 0x00
+> +#define STATUS_OFFSET 0x00
+> +
+> +#define CTRL_CMD_MASK          BIT(0)
+> +#define CTRL_CMD_DECOUPLE      BIT(0)
+> +#define CTRL_CMD_COUPLE                ~BIT(0)
+> +
+> +#define STATUS_STATE_MASK      BIT(0)
+> +#define STATUS_STATE_COUPLED   ~BIT(0)
+> +#define STATUS_STATE_DECOUPLED BIT(0)
+> +
+> +struct xlnx_pr_decoupler_data {
+> +       void __iomem *io_base;
+> +       struct clk *clk;
+> +       bool enable;
+> +};
+> +
+> +static inline void xlnx_pr_decoupler_write(struct xlnx_pr_decoupler_data *p,
+> +                                          u32 offset, u32 val)
+> +{
+> +       writel(val, p->io_base + offset);
+> +}
+> +
+> +static inline u32 xlnx_pr_decoupler_read(const struct xlnx_pr_decoupler_data *p,
+> +                                        u32 offset)
+> +{
+> +       return readl(p->io_base + offset);
+> +}
+> +
+> +static int xlnx_pr_decoupler_enable_set(struct fpga_bridge *bridge, bool enable)
+> +{
+> +       int err;
+> +       struct xlnx_pr_decoupler_data *priv = bridge->priv;
+> +
+> +       if (priv->enable != enable) {
+> +               err = clk_enable(priv->clk);
+> +               if (err)
+> +                       return err;
+> +
+> +               xlnx_pr_decoupler_write(priv, CTRL_OFFSET,
+> +                                       enable ? CTRL_CMD_COUPLE :
+> +                                       CTRL_CMD_DECOUPLE);
+Needs:
 
-On Fri, Mar 10, 2017 at 12:53:42PM -0300, Mauro Carvalho Chehab wrote:
-> Em Fri, 10 Mar 2017 15:20:48 +0100
-> Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> escreveu:
-> 
-> > 
-> > > As I've already mentioned, from talking about this with Mauro, it seems
-> > > Mauro is in agreement with permitting the control inheritence... I wish
-> > > Mauro would comment for himself, as I can't quote our private discussion
-> > > on the subject.  
-> > 
-> > I can't comment either, not having seen his mail and reasoning.
-> 
-> The rationale is that we should support the simplest use cases first.
-> 
-> In the case of the first MC-based driver (and several subsequent
-> ones), the simplest use case required MC, as it was meant to suport
-> a custom-made sophisticated application that required fine control
-> on each component of the pipeline and to allow their advanced
-> proprietary AAA userspace-based algorithms to work.
++ priv->enable = enable;
 
-The first MC based driver (omap3isp) supports what the hardware can do, it
-does not support applications as such.
+This is obviously garbage, priv->enable doesn't get set ...
 
-Adding support to drivers for different "operation modes" --- this is
-essentially what is being asked for --- is not an approach which could serve
-either purpose (some functionality with simple interface vs. fully support
-what the hardware can do, with interfaces allowing that) adequately in the
-short or the long run.
-
-If we are missing pieces in the puzzle --- in this case the missing pieces
-in the puzzle are a generic pipeline configuration library and another
-library that, with the help of pipeline autoconfiguration would implement
-"best effort" service for regular V4L2 on top of the MC + V4L2 subdev + V4L2
---- then these pieces need to be impelemented. The solution is
-*not* to attempt to support different types of applications in each driver
-separately. That will make writing drivers painful, error prone and is
-unlikely ever deliver what either purpose requires.
-
-So let's continue to implement the functionality that the hardware supports.
-Making a different choice here is bound to create a lasting conflict between
-having to change kernel interface behaviour and the requirement of
-supporting new functionality that hasn't been previously thought of, pushing
-away SoC vendors from V4L2 ecosystem. This is what we all do want to avoid.
-
-As far as i.MX6 driver goes, it is always possible to implement i.MX6 plugin
-for libv4l to perform this. This should be much easier than getting the
-automatic pipe configuration library and the rest working, and as it is
-custom for i.MX6, the resulting plugin may make informed technical choices
-for better functionality. Jacek has been working on such a plugin for
-Samsung Exynos hardware, but I don't think he has quite finished it yey.
-
-The original plan was and continues to be sound, it's just that there have
-always been too few hands to implement it. :-(
-
-> 
-> That's not true, for example, for the UVC driver. There, MC
-> is optional, as it should be.
-
-UVC is different. The device simply provides additional information through
-MC to the user but MC (or V4L2 sub-device interface) is not used for
-controlling the device.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+> +               clk_disable(priv->clk);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int xlnx_pr_decoupler_enable_show(struct fpga_bridge *bridge)
+> +{
+> +       const struct xlnx_pr_decoupler_data *p = bridge->priv;
+> +
+> +       return p->enable;
+> +}
+> +
+> +static struct fpga_bridge_ops xlnx_pr_decoupler_br_ops = {
+> +       .enable_set = xlnx_pr_decoupler_enable_set,
+> +       .enable_show = xlnx_pr_decoupler_enable_show,
+> +};
+> +
+> +static const struct of_device_id xlnx_pr_decoupler_of_match[] = {
+> +       { .compatible = "xlnx,pr-decoupler-1.00", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, xlnx_pr_decoupler_of_match);
+> +
+> +static int xlnx_pr_decoupler_probe(struct platform_device *pdev)
+> +{
+> +       struct xlnx_pr_decoupler_data *priv;
+> +       u32 status;
+> +       int err;
+> +       struct resource *res;
+> +
+> +       priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +       if (!priv)
+> +               return -ENOMEM;
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       priv->io_base = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(priv->io_base))
+> +               return PTR_ERR(priv->io_base);
+> +
+> +       priv->clk = devm_clk_get(&pdev->dev, "ref_clk");
+> +       if (IS_ERR(priv->clk)) {
+> +               dev_err(&pdev->dev, "input clock not found\n");
+> +               return PTR_ERR(priv->clk);
+> +       }
+> +
+> +       err = clk_prepare_enable(priv->clk);
+> +       if (err) {
+> +               dev_err(&pdev->dev, "unable to enable clock\n");
+> +               return err;
+> +       }
+> +
+> +       status = xlnx_pr_decoupler_read(priv, STATUS_OFFSET);
+> +       priv->enable = !!(status & STATUS_STATE_MASK);
+> +
+> +       clk_disable(priv->clk);
+> +
+> +       err = fpga_bridge_register(&pdev->dev, "Xilinx PR Decoupler",
+> +                                  &xlnx_pr_decoupler_br_ops, priv);
+> +
+> +       if (err) {
+> +               dev_err(&pdev->dev, "unable to register Xilinx PR Decoupler");
+> +               clk_unprepare(priv->clk);
+> +               return err;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int xlnx_pr_decoupler_remove(struct platform_device *pdev)
+> +{
+> +       fpga_bridge_unregister(&pdev->dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver xlnx_pr_decoupler_driver = {
+> +       .probe = xlnx_pr_decoupler_probe,
+> +       .remove = xlnx_pr_decoupler_remove,
+> +       .driver = {
+> +               .name = "xlnx_pr_decoupler",
+> +               .of_match_table = of_match_ptr(xlnx_pr_decoupler_of_match),
+> +       },
+> +};
+> +
+> +module_platform_driver(xlnx_pr_decoupler_driver);
+> +
+> +MODULE_DESCRIPTION("Xilinx Partial Reconfiguration Decoupler");
+> +MODULE_AUTHOR("Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fpga" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
