@@ -1,329 +1,254 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: [PATCH v5 2/4] fpga pr ip: Core driver support for Altera Partial Reconfiguration IP.
-Date: Fri, 10 Mar 2017 11:40:25 -0800
-Message-ID: <1489174827-6033-3-git-send-email-matthew.gerlach@linux.intel.com>
-References: <1489174827-6033-1-git-send-email-matthew.gerlach@linux.intel.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Fri, 10 Mar 2017 20:13:56 +0000
+Message-ID: <20170310201356.GA21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489174827-6033-1-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489121599-23206-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, agust-ynQEQJNshbs@public.gmane.org
-Cc: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgde
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Version 5 gives me no v4l2 controls exposed through the video device
+interface.
 
-Adding the core functions necessary for a fpga-mgr driver
-for the Altera Partial IP component.  It is intended for
-these functions to be used by the various bus implementations
-like the platform bus or the PCIe bus.
+Just like with version 4, version 5 is completely useless with IMX219:
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
-v5:
-    Fix comment as suggested by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-v4:
-    v3 patch set mistakenly sent out labeled as v4
-v3:
-    s/alt_pr_probe/alt_pr_register/
-    s/alt_pr_remove/alt_pr_unregister/
----
- drivers/fpga/Kconfig             |   5 +
- drivers/fpga/Makefile            |   1 +
- drivers/fpga/altera-pr-ip-core.c | 217 +++++++++++++++++++++++++++++++++++++++
- drivers/fpga/altera-pr-ip-core.h |  29 ++++++
- 4 files changed, 252 insertions(+)
- create mode 100644 drivers/fpga/altera-pr-ip-core.c
- create mode 100644 drivers/fpga/altera-pr-ip-core.h
+imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000200
+ipu1_csi0: pipeline start failed with -110
+imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000200
+ipu1_csi0: pipeline start failed with -110
+imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000200
+ipu1_csi0: pipeline start failed with -110
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index ce861a2..a46c173 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -63,6 +63,11 @@ config ALTERA_FREEZE_BRIDGE
- 	  isolate one region of the FPGA from the busses while that
- 	  region is being reprogrammed.
- 
-+config ALTERA_PR_IP_CORE
-+        tristate "Altera Partial Reconfiguration IP Core"
-+        help
-+          Core driver support for Altera Partial Reconfiguration IP component
-+
- endif # FPGA
- 
- endmenu
-diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-index 8df07bc..82693d2 100644
---- a/drivers/fpga/Makefile
-+++ b/drivers/fpga/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_FPGA)			+= fpga-mgr.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA)		+= socfpga.o
- obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)	+= socfpga-a10.o
- obj-$(CONFIG_FPGA_MGR_ZYNQ_FPGA)	+= zynq-fpga.o
-+obj-$(CONFIG_ALTERA_PR_IP_CORE)         += altera-pr-ip-core.o
- 
- # FPGA Bridge Drivers
- obj-$(CONFIG_FPGA_BRIDGE)		+= fpga-bridge.o
-diff --git a/drivers/fpga/altera-pr-ip-core.c b/drivers/fpga/altera-pr-ip-core.c
-new file mode 100644
-index 0000000..738d7d1
---- /dev/null
-+++ b/drivers/fpga/altera-pr-ip-core.c
-@@ -0,0 +1,217 @@
-+/*
-+ * Driver for Altera Partial Reconfiguration IP Core
-+ *
-+ * Copyright (C) 2016-2017 Intel Corporation
-+ *
-+ * Based on socfpga-a10.c Copyright (C) 2015-2016 Altera Corporation
-+ *  by Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include "altera-pr-ip-core.h"
-+#include <linux/delay.h>
-+#include <linux/fpga/fpga-mgr.h>
-+#include <linux/module.h>
-+
-+#define ALT_PR_DATA_OFST		0x00
-+#define ALT_PR_CSR_OFST			0x04
-+
-+#define ALT_PR_CSR_PR_START		BIT(0)
-+#define ALT_PR_CSR_STATUS_SFT		2
-+#define ALT_PR_CSR_STATUS_MSK		(7 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_NRESET	(0 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_PR_ERR	(1 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_CRC_ERR	(2 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_BAD_BITS	(3 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_PR_IN_PROG	(4 << ALT_PR_CSR_STATUS_SFT)
-+#define ALT_PR_CSR_STATUS_PR_SUCCESS	(5 << ALT_PR_CSR_STATUS_SFT)
-+
-+struct alt_pr_priv {
-+	void __iomem *reg_base;
-+};
-+
-+static enum fpga_mgr_states alt_pr_fpga_state(struct fpga_manager *mgr)
-+{
-+	struct alt_pr_priv *priv = mgr->priv;
-+	const char *err = "unknown";
-+	enum fpga_mgr_states ret = FPGA_MGR_STATE_UNKNOWN;
-+	u32 val;
-+
-+	val = readl(priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	val &= ALT_PR_CSR_STATUS_MSK;
-+
-+	switch (val) {
-+	case ALT_PR_CSR_STATUS_NRESET:
-+		return FPGA_MGR_STATE_RESET;
-+
-+	case ALT_PR_CSR_STATUS_PR_ERR:
-+		err = "pr error";
-+		ret = FPGA_MGR_STATE_WRITE_ERR;
-+		break;
-+
-+	case ALT_PR_CSR_STATUS_CRC_ERR:
-+		err = "crc error";
-+		ret = FPGA_MGR_STATE_WRITE_ERR;
-+		break;
-+
-+	case ALT_PR_CSR_STATUS_BAD_BITS:
-+		err = "bad bits";
-+		ret = FPGA_MGR_STATE_WRITE_ERR;
-+		break;
-+
-+	case ALT_PR_CSR_STATUS_PR_IN_PROG:
-+		return FPGA_MGR_STATE_WRITE;
-+
-+	case ALT_PR_CSR_STATUS_PR_SUCCESS:
-+		return FPGA_MGR_STATE_OPERATING;
-+
-+	default:
-+		break;
-+	}
-+
-+	dev_err(&mgr->dev, "encountered error code %d (%s) in %s()\n",
-+		val, err, __func__);
-+	return ret;
-+}
-+
-+static int alt_pr_fpga_write_init(struct fpga_manager *mgr,
-+				  struct fpga_image_info *info,
-+				  const char *buf, size_t count)
-+{
-+	struct alt_pr_priv *priv = mgr->priv;
-+	u32 val;
-+
-+	if (!(info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
-+		pr_err("%s Partial Reconfiguration flag not set\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	val = readl(priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	if (val & ALT_PR_CSR_PR_START) {
-+		pr_err("%s Partial Reconfiguration already started\n",
-+		       __func__);
-+		return -EINVAL;
-+	}
-+
-+	writel(val | ALT_PR_CSR_PR_START, priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	return 0;
-+}
-+
-+static int alt_pr_fpga_write(struct fpga_manager *mgr, const char *buf,
-+			     size_t count)
-+{
-+	struct alt_pr_priv *priv = mgr->priv;
-+	u32 *buffer_32 = (u32 *)buf;
-+	size_t i = 0;
-+
-+	if (count <= 0)
-+		return -EINVAL;
-+
-+	/* Write out the complete 32-bit chunks */
-+	while (count >= sizeof(u32)) {
-+		writel(buffer_32[i++], priv->reg_base);
-+		count -= sizeof(u32);
-+	}
-+
-+	/* Write out remaining non 32-bit chunks */
-+	switch (count) {
-+	case 3:
-+		writel(buffer_32[i++] & 0x00ffffff, priv->reg_base);
-+		break;
-+	case 2:
-+		writel(buffer_32[i++] & 0x0000ffff, priv->reg_base);
-+		break;
-+	case 1:
-+		writel(buffer_32[i++] & 0x000000ff, priv->reg_base);
-+		break;
-+	case 0:
-+		break;
-+	default:
-+		/* This will never happen */
-+		return -EFAULT;
-+	}
-+
-+	if (alt_pr_fpga_state(mgr) == FPGA_MGR_STATE_WRITE_ERR)
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int alt_pr_fpga_write_complete(struct fpga_manager *mgr,
-+				      struct fpga_image_info *info)
-+{
-+	u32 i;
-+
-+	for (i = 0; i < info->config_complete_timeout_us; i++) {
-+		switch (alt_pr_fpga_state(mgr)) {
-+		case FPGA_MGR_STATE_WRITE_ERR:
-+			return -EIO;
-+
-+		case FPGA_MGR_STATE_OPERATING:
-+			dev_info(&mgr->dev,
-+				 "successful partial reconfiguration\n");
-+			return 0;
-+
-+		default:
-+			break;
-+		}
-+		udelay(1);
-+	}
-+	dev_err(&mgr->dev, "timed out waiting for write to complete\n");
-+	return -ETIMEDOUT;
-+}
-+
-+static const struct fpga_manager_ops alt_pr_ops = {
-+	.state = alt_pr_fpga_state,
-+	.write_init = alt_pr_fpga_write_init,
-+	.write = alt_pr_fpga_write,
-+	.write_complete = alt_pr_fpga_write_complete,
-+};
-+
-+int alt_pr_register(struct device *dev, void __iomem *reg_base)
-+{
-+	struct alt_pr_priv *priv;
-+	u32 val;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->reg_base = reg_base;
-+
-+	val = readl(priv->reg_base + ALT_PR_CSR_OFST);
-+
-+	dev_dbg(dev, "%s status=%d start=%d\n", __func__,
-+		(val & ALT_PR_CSR_STATUS_MSK) >> ALT_PR_CSR_STATUS_SFT,
-+		(int)(val & ALT_PR_CSR_PR_START));
-+
-+	return fpga_mgr_register(dev, dev_name(dev), &alt_pr_ops, priv);
-+}
-+EXPORT_SYMBOL_GPL(alt_pr_register);
-+
-+int alt_pr_unregister(struct device *dev)
-+{
-+	dev_dbg(dev, "%s\n", __func__);
-+
-+	fpga_mgr_unregister(dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(alt_pr_unregister);
-+
-+MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
-+MODULE_DESCRIPTION("Altera Partial Reconfiguration IP Core");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/fpga/altera-pr-ip-core.h b/drivers/fpga/altera-pr-ip-core.h
-new file mode 100644
-index 0000000..3810a90
---- /dev/null
-+++ b/drivers/fpga/altera-pr-ip-core.h
-@@ -0,0 +1,29 @@
-+/*
-+ * Driver for Altera Partial Reconfiguration IP Core
-+ *
-+ * Copyright (C) 2016 Intel Corporation
-+ *
-+ * Based on socfpga-a10.c Copyright (C) 2015-2016 Altera Corporation
-+ *  by Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#ifndef _ALT_PR_IP_CORE_H
-+#define _ALT_PR_IP_CORE_H
-+#include <linux/io.h>
-+
-+int alt_pr_register(struct device *dev, void __iomem *reg_base);
-+int alt_pr_unregister(struct device *dev);
-+
-+#endif /* _ALT_PR_IP_CORE_H */
+So, like v4, I can't do any further testing.
+
+On Thu, Mar 09, 2017 at 08:52:40PM -0800, Steve Longerbeam wrote:
+> In version 5:
+> 
+> - ov5640: renamed "pwdn-gpios" to "powerdown-gpios"
+> 
+> - ov5640: add mutex lock around the subdev op entry points.
+> 
+> - ov5640: don't attempt to program the new mode in ov5640_set_fmt().
+>   Instead set a new flag, pending_mode_change, and program the new
+>   mode at s_stream() if flag is set.
+> 
+> - ov5640: implement [gs]_frame_interval. As part of that, create
+>   ov5640_try_frame_interval(), which is used by both [gs]_frame_interval
+>   and [gs]_parm.
+> 
+> - ov5640: don't attempt to set controls in ov5640_s_ctrl(), or at
+>   mode change, do it instead after first power-up.
+> 
+> - video-multiplexer: include link_validate in media_entity_operations.
+> 
+> - video-multiplexer: enforce that output pad frame interval must match
+>   input pad frame interval in vidsw_s_frame_interval().
+> 
+> - video-multiplexer: initialize frame interval to a default 30 fps.
+> 
+> - mipi csi-2: renamed "cfg" clock name property to "ref". This is the
+>   27 MHz mipi csi-2 PLL reference clock.
+> 
+> - mipi csi-2: create a hsfreq_map[] table based on
+>   https://community.nxp.com/docs/DOC-94312. Use it to select
+>   a hsfreqrange_sel value when programming the D-PHY, based on
+>   a max Mbps per lane. This is computed from the source subdev
+>   via V4L2_CID_LINK_FREQ control, and if the subdev doesn't implement
+>   that control, use a default hard-coded max Mbps per lane.
+> 
+> - added required ports property description to imx-media binding doc.
+> 
+> - removed event V4L2_EVENT_FRAME_TIMEOUT. On a frame timeout, which
+>   is always unrecoverable, call vb2_queue_error() instead.
+> 
+> - export the remaining custom events to V4L2_EVENT_FRAME_INTERVAL_ERROR
+>   and V4L2_EVENT_NEW_FRAME_BEFORE_EOF.
+> 
+> - vdic: use V4L2_CID_DEINTERLACING_MODE for motion compensation control
+>   instead of a custom control.
+> 
+> - add v4l2_subdev_link_validate_frame_interval(). Call this in the
+>   link_validate imx-media subdev callbacks and video-multiplexer.
+> 
+> - fix subdev event registration: implementation of subscribe_event()
+>   and unsubscribe_event() subdev ops were missing.
+> 
+> - all calls from the pipeline to the sensor subdev have been removed.
+>   Only the CSI subdev still refers to a sensor, and only to retrieve
+>   its media bus config, which is necessary to setup the CSI interface.
+> 
+> - add mutex locks around the imx-media subdev op entry points.
+> 
+> - completed the propagation of all pad format parameters from sink
+>   pads to source pads within every imx-media subdev.
+> 
+> - implement [gs]_frame_interval in all the imx-media subdevs.
+> 
+> - imx-ic-prpencvf: there isn't necessarily a CSI subdev in the pipeline
+>   in the future, so make sure this is optional when calling the CSI's
+>   FIM.
+> 
+> - the source pads that attach to capture device nodes now require the
+>   IPU internal pixel codes. The capture device translates these to
+>   v4l2 fourcc memory formats.
+> 
+> - fix control inheritance to the capture device. When the pipeline
+>   was modified, the inherited controls were not being refreshed.
+>   v4l2_pipeline_inherit_controls() is now called only in imx-media
+>   link_notify() callback when a pipelink link is disabled or modified.
+>   imx_media_find_pipeline_video_device() is created to locate the
+>   capture device in the pipeline.
+> 
+> - fix a possible race when propagating formats to the capture device.
+>   The subdevs and capture device use different mutex locks when setting
+>   formats. imx_media_capture_device_set_format() is created which acquires
+>   the capture device mutex when updating the capture device format.
+> 
+> - verify all subdevs were bound in the async completion callback.
+>  
+> 
+> Philipp Zabel (7):
+>   [media] dt-bindings: Add bindings for video-multiplexer device
+>   ARM: dts: imx6qdl: Add mipi_ipu1/2 multiplexers, mipi_csi, and their
+>     connections
+>   add mux and video interface bridge entity functions
+>   platform: add video-multiplexer subdevice driver
+>   media: imx: csi: fix crop rectangle changes in set_fmt
+>   media: imx: csi: add frame skipping support
+>   media: imx: csi: fix crop rectangle reset in sink set_fmt
+> 
+> Russell King (4):
+>   media: imx: add support for bayer formats
+>   media: imx: csi: add support for bayer formats
+>   media: imx: mipi-csi2: enable setting and getting of frame rates
+>   media: imx: csi/fim: add support for frame intervals
+> 
+> Steve Longerbeam (28):
+>   [media] dt-bindings: Add bindings for i.MX media driver
+>   [media] dt/bindings: Add bindings for OV5640
+>   ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
+>   ARM: dts: imx6qdl: add capture-subsystem device
+>   ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687 workaround
+>   ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
+>   ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
+>   ARM: dts: imx6-sabreauto: create i2cmux for i2c3
+>   ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
+>   ARM: dts: imx6-sabreauto: add pinctrl for gpt input capture
+>   ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+>   [media] v4l2: add a frame interval error event
+>   [media] v4l2: add a new-frame before end-of-frame event
+>   [media] v4l2-mc: add a function to inherit controls from a pipeline
+>   [media] v4l: subdev: Add function to validate frame interval
+>   [media] add Omnivision OV5640 sensor driver
+>   UAPI: Add media UAPI Kbuild file
+>   media: Add userspace header file for i.MX
+>   media: Add i.MX media core driver
+>   media: imx: Add Capture Device Interface
+>   media: imx: Add CSI subdev driver
+>   media: imx: Add VDIC subdev driver
+>   media: imx: Add IC subdev drivers
+>   media: imx: Add MIPI CSI-2 Receiver subdev driver
+>   ARM: imx_v6_v7_defconfig: Enable staging video4linux drivers
+>   media: imx: csi: add __csi_get_fmt
+>   media: imx: redo pixel format enumeration and negotiation
+>   media: imx: propagate sink pad formats to source pads
+> 
+>  .../devicetree/bindings/media/i2c/ov5640.txt       |   45 +
+>  Documentation/devicetree/bindings/media/imx.txt    |   74 +
+>  .../bindings/media/video-multiplexer.txt           |   59 +
+>  Documentation/media/uapi/mediactl/media-types.rst  |   22 +
+>  Documentation/media/uapi/v4l/vidioc-dqevent.rst    |   12 +
+>  Documentation/media/v4l-drivers/imx.rst            |  560 +++++
+>  Documentation/media/videodev2.h.rst.exceptions     |    2 +
+>  arch/arm/boot/dts/imx6dl-sabrelite.dts             |    5 +
+>  arch/arm/boot/dts/imx6dl-sabresd.dts               |    5 +
+>  arch/arm/boot/dts/imx6dl.dtsi                      |  185 ++
+>  arch/arm/boot/dts/imx6q-sabrelite.dts              |    5 +
+>  arch/arm/boot/dts/imx6q-sabresd.dts                |    5 +
+>  arch/arm/boot/dts/imx6q.dtsi                       |  121 ++
+>  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi           |  144 +-
+>  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi           |  152 +-
+>  arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |  114 +-
+>  arch/arm/boot/dts/imx6qdl.dtsi                     |   17 +-
+>  arch/arm/configs/imx_v6_v7_defconfig               |   11 +
+>  drivers/media/i2c/Kconfig                          |    7 +
+>  drivers/media/i2c/Makefile                         |    1 +
+>  drivers/media/i2c/ov5640.c                         | 2231 ++++++++++++++++++++
+>  drivers/media/platform/Kconfig                     |    8 +
+>  drivers/media/platform/Makefile                    |    2 +
+>  drivers/media/platform/video-multiplexer.c         |  498 +++++
+>  drivers/media/v4l2-core/v4l2-mc.c                  |   48 +
+>  drivers/media/v4l2-core/v4l2-subdev.c              |   50 +
+>  drivers/staging/media/Kconfig                      |    2 +
+>  drivers/staging/media/Makefile                     |    1 +
+>  drivers/staging/media/imx/Kconfig                  |   20 +
+>  drivers/staging/media/imx/Makefile                 |   12 +
+>  drivers/staging/media/imx/TODO                     |   17 +
+>  drivers/staging/media/imx/imx-ic-common.c          |  113 +
+>  drivers/staging/media/imx/imx-ic-prp.c             |  497 +++++
+>  drivers/staging/media/imx/imx-ic-prpencvf.c        | 1236 +++++++++++
+>  drivers/staging/media/imx/imx-ic.h                 |   38 +
+>  drivers/staging/media/imx/imx-media-capture.c      |  694 ++++++
+>  drivers/staging/media/imx/imx-media-csi.c          | 1595 ++++++++++++++
+>  drivers/staging/media/imx/imx-media-dev.c          |  522 +++++
+>  drivers/staging/media/imx/imx-media-fim.c          |  463 ++++
+>  drivers/staging/media/imx/imx-media-internal-sd.c  |  349 +++
+>  drivers/staging/media/imx/imx-media-of.c           |  267 +++
+>  drivers/staging/media/imx/imx-media-utils.c        | 1009 +++++++++
+>  drivers/staging/media/imx/imx-media-vdic.c         |  949 +++++++++
+>  drivers/staging/media/imx/imx-media.h              |  311 +++
+>  drivers/staging/media/imx/imx6-mipi-csi2.c         |  725 +++++++
+>  include/media/imx.h                                |   15 +
+>  include/media/v4l2-mc.h                            |   25 +
+>  include/media/v4l2-subdev.h                        |   10 +
+>  include/uapi/Kbuild                                |    1 +
+>  include/uapi/linux/media.h                         |    6 +
+>  include/uapi/linux/v4l2-controls.h                 |    4 +
+>  include/uapi/linux/videodev2.h                     |    2 +
+>  include/uapi/media/Kbuild                          |    2 +
+>  include/uapi/media/imx.h                           |   21 +
+>  54 files changed, 13262 insertions(+), 27 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+>  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
+>  create mode 100644 Documentation/media/v4l-drivers/imx.rst
+>  create mode 100644 drivers/media/i2c/ov5640.c
+>  create mode 100644 drivers/media/platform/video-multiplexer.c
+>  create mode 100644 drivers/staging/media/imx/Kconfig
+>  create mode 100644 drivers/staging/media/imx/Makefile
+>  create mode 100644 drivers/staging/media/imx/TODO
+>  create mode 100644 drivers/staging/media/imx/imx-ic-common.c
+>  create mode 100644 drivers/staging/media/imx/imx-ic-prp.c
+>  create mode 100644 drivers/staging/media/imx/imx-ic-prpencvf.c
+>  create mode 100644 drivers/staging/media/imx/imx-ic.h
+>  create mode 100644 drivers/staging/media/imx/imx-media-capture.c
+>  create mode 100644 drivers/staging/media/imx/imx-media-csi.c
+>  create mode 100644 drivers/staging/media/imx/imx-media-dev.c
+>  create mode 100644 drivers/staging/media/imx/imx-media-fim.c
+>  create mode 100644 drivers/staging/media/imx/imx-media-internal-sd.c
+>  create mode 100644 drivers/staging/media/imx/imx-media-of.c
+>  create mode 100644 drivers/staging/media/imx/imx-media-utils.c
+>  create mode 100644 drivers/staging/media/imx/imx-media-vdic.c
+>  create mode 100644 drivers/staging/media/imx/imx-media.h
+>  create mode 100644 drivers/staging/media/imx/imx6-mipi-csi2.c
+>  create mode 100644 include/media/imx.h
+>  create mode 100644 include/uapi/media/Kbuild
+>  create mode 100644 include/uapi/media/imx.h
+> 
+> -- 
+> 2.7.4
+> 
+
 -- 
-2.7.4
-
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
