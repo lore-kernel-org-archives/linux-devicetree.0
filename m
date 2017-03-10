@@ -1,104 +1,396 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 10 Mar 2017 14:01:24 +0000
-Message-ID: <20170310140124.GV21222@n2100.armlinux.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2 5/5] auxdisplay: Add HD44780 Character LCD support
+Date: Fri, 10 Mar 2017 15:15:21 +0100
+Message-ID: <1489155321-25666-6-git-send-email-geert@linux-m68k.org>
+References: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Willy Tarreau <willy@haproxy.com>, Ksenija Stanojevic <ksenija.stanojevic@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akira Tsukamoto <akira.tsukamoto@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 02:22:29PM +0100, Hans Verkuil wrote:
-> And nobody of the media core developers has the time to work on the docs,
-> utilities and libraries you need to make this all work cleanly and reliably.
+The Hitachi HD44780 Character LCD Controller is commonly used on
+character LCDs that can display one or more lines of text.
 
-Well, talking about docs, and in connection to control inheritence,
-this is already documented in at least three separate places:
+This driver supports character LCDs connected to GPIOs, using either a
+4-bit or 8-bit data bus, and provides access through the charlcd core
+and /dev/lcd.
 
-Documentation/media/uapi/v4l/dev-subdev.rst:
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+v2:
+  - Drop the dependency on OF by switching to the device property API,
+  - Depend on GPIOLIB || COMPILE_TEST.
+---
+ drivers/auxdisplay/Kconfig   |  11 ++
+ drivers/auxdisplay/Makefile  |   1 +
+ drivers/auxdisplay/hd44780.c | 325 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 337 insertions(+)
+ create mode 100644 drivers/auxdisplay/hd44780.c
 
-  Controls
-  ========
-  ...
-  Depending on the driver, those controls might also be exposed through
-  one (or several) V4L2 device nodes.
-
-Documentation/media/kapi/v4l2-subdev.rst:
-
-  ``VIDIOC_QUERYCTRL``,
-  ``VIDIOC_QUERYMENU``,
-  ``VIDIOC_G_CTRL``,
-  ``VIDIOC_S_CTRL``,
-  ``VIDIOC_G_EXT_CTRLS``,
-  ``VIDIOC_S_EXT_CTRLS`` and
-  ``VIDIOC_TRY_EXT_CTRLS``:
-  
-          The controls ioctls are identical to the ones defined in V4L2. They
-          behave identically, with the only exception that they deal only with
-          controls implemented in the sub-device. Depending on the driver, those
-          controls can be also be accessed through one (or several) V4L2 device
-          nodes.
-
-Then there's Documentation/media/kapi/v4l2-controls.rst, which gives a
-step by step approach to the main video device inheriting controls from
-its subdevices, and it says:
-
-  Inheriting Controls
-  -------------------
-  
-  When a sub-device is registered with a V4L2 driver by calling
-  v4l2_device_register_subdev() and the ctrl_handler fields of both v4l2_subdev
-  and v4l2_device are set, then the controls of the subdev will become
-  automatically available in the V4L2 driver as well. If the subdev driver
-  contains controls that already exist in the V4L2 driver, then those will be
-  skipped (so a V4L2 driver can always override a subdev control).
-  
-  What happens here is that v4l2_device_register_subdev() calls
-  v4l2_ctrl_add_handler() adding the controls of the subdev to the controls
-  of v4l2_device.
-
-So, either the docs are wrong, or the advice being mentioned in emails
-about subdev control inheritence is misleading.  Whatever, the two are
-currently inconsistent.
-
-As I've already mentioned, from talking about this with Mauro, it seems
-Mauro is in agreement with permitting the control inheritence... I wish
-Mauro would comment for himself, as I can't quote our private discussion
-on the subject.
-
-Right now, my view is that v4l2 is currently being screwed up by people
-with different opinions - there is no unified concensus on how any of
-this stuff is supposed to work, everyone is pulling in different
-directions.  That needs solving _really_ quickly, so I suggest that
-v4l2 people urgently talk to each other and thrash out some of the
-issues that Steve's patch set has brought up, and settle on a way
-forward, rather than what is seemingly happening today - which is
-everyone working in isolation of everyone else with their own bias on
-how things should be done.
-
+diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
+index b4686380d4e3cca9..c317dc515617bf8d 100644
+--- a/drivers/auxdisplay/Kconfig
++++ b/drivers/auxdisplay/Kconfig
+@@ -18,6 +18,17 @@ config CHARLCD
+ 
+ if AUXDISPLAY
+ 
++config HD44780
++	tristate "HD44780 Character LCD support"
++	depends on GPIOLIB || COMPILE_TEST
++	select CHARLCD
++	---help---
++	  Enable support for Character LCDs using a HD44780 controller.
++	  The LCD is accessible through the /dev/lcd char device (10, 156).
++	  This code can either be compiled as a module, or linked into the
++	  kernel and started at boot.
++	  If you don't understand what all this is about, say N.
++
+ config KS0108
+ 	tristate "KS0108 LCD Controller"
+ 	depends on PARPORT_PC
+diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
+index f56f45dcc78e332e..fcefa686be0fea9b 100644
+--- a/drivers/auxdisplay/Makefile
++++ b/drivers/auxdisplay/Makefile
+@@ -6,4 +6,5 @@ obj-$(CONFIG_CHARLCD)		+= charlcd.o
+ obj-$(CONFIG_KS0108)		+= ks0108.o
+ obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
+ obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
++obj-$(CONFIG_HD44780)		+= hd44780.o
+ obj-$(CONFIG_HT16K33)		+= ht16k33.o
+diff --git a/drivers/auxdisplay/hd44780.c b/drivers/auxdisplay/hd44780.c
+new file mode 100644
+index 0000000000000000..1665ac6ef9ffcb31
+--- /dev/null
++++ b/drivers/auxdisplay/hd44780.c
+@@ -0,0 +1,325 @@
++/*
++ * HD44780 Character LCD driver for Linux
++ *
++ * Copyright (C) 2000-2008, Willy Tarreau <w@1wt.eu>
++ * Copyright (C) 2016-2017 Glider bvba
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/property.h>
++#include <linux/slab.h>
++
++#include <misc/charlcd.h>
++
++
++enum hd44780_pin {
++	/* Order does matter due to writing to GPIO array subsets! */
++	PIN_DATA0,	/* Optional */
++	PIN_DATA1,	/* Optional */
++	PIN_DATA2,	/* Optional */
++	PIN_DATA3,	/* Optional */
++	PIN_DATA4,
++	PIN_DATA5,
++	PIN_DATA6,
++	PIN_DATA7,
++	PIN_CTRL_RS,
++	PIN_CTRL_RW,	/* Optional */
++	PIN_CTRL_E,
++	PIN_CTRL_BL,   /* Optional */
++	PIN_NUM
++};
++
++struct hd44780 {
++	struct gpio_desc *pins[PIN_NUM];
++};
++
++static void hd44780_backlight(struct charlcd *lcd, int on)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	if (hd->pins[PIN_CTRL_BL])
++		gpiod_set_value_cansleep(hd->pins[PIN_CTRL_BL], on);
++}
++
++static void hd44780_strobe_gpio(struct hd44780 *hd)
++{
++	/* Maintain the data during 20 us before the strobe */
++	udelay(20);
++
++	gpiod_set_value_cansleep(hd->pins[PIN_CTRL_E], 1);
++
++	/* Maintain the strobe during 40 us */
++	udelay(40);
++
++	gpiod_set_value_cansleep(hd->pins[PIN_CTRL_E], 0);
++}
++
++/* write to an LCD panel register in 8 bit GPIO mode */
++static void hd44780_write_gpio8(struct hd44780 *hd, u8 val, unsigned int rs)
++{
++	int values[10];	/* for DATA[0-7], RS, RW */
++	unsigned int i, n;
++
++	for (i = 0; i < 8; i++)
++		values[PIN_DATA0 + i] = !!(val & BIT(i));
++	values[PIN_CTRL_RS] = rs;
++	n = 9;
++	if (hd->pins[PIN_CTRL_RW]) {
++		values[PIN_CTRL_RW] = 0;
++		n++;
++	}
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA0], values);
++
++	hd44780_strobe_gpio(hd);
++}
++
++/* write to an LCD panel register in 4 bit GPIO mode */
++static void hd44780_write_gpio4(struct hd44780 *hd, u8 val, unsigned int rs)
++{
++	int values[10];	/* for DATA[0-7], RS, RW, but DATA[0-3] is unused */
++	unsigned int i, n;
++
++	/* High nibble + RS, RW */
++	for (i = 4; i < 8; i++)
++		values[PIN_DATA0 + i] = !!(val & BIT(i));
++	values[PIN_CTRL_RS] = rs;
++	n = 5;
++	if (hd->pins[PIN_CTRL_RW]) {
++		values[PIN_CTRL_RW] = 0;
++		n++;
++	}
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA4],
++				       &values[PIN_DATA4]);
++
++	hd44780_strobe_gpio(hd);
++
++	/* Low nibble */
++	for (i = 0; i < 4; i++)
++		values[PIN_DATA4 + i] = !!(val & BIT(i));
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA4],
++				       &values[PIN_DATA4]);
++
++	hd44780_strobe_gpio(hd);
++}
++
++/* Send a command to the LCD panel in 8 bit GPIO mode */
++static void hd44780_write_cmd_gpio8(struct charlcd *lcd, int cmd)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio8(hd, cmd, 0);
++
++	/* The shortest command takes at least 120 us */
++	udelay(120);
++}
++
++/* Send data to the LCD panel in 8 bit GPIO mode */
++static void hd44780_write_data_gpio8(struct charlcd *lcd, int data)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio8(hd, data, 1);
++
++	/* The shortest data takes at least 45 us */
++	udelay(45);
++}
++
++static const struct charlcd_ops hd44780_ops_gpio8 = {
++	.write_cmd	= hd44780_write_cmd_gpio8,
++	.write_data	= hd44780_write_data_gpio8,
++	.backlight	= hd44780_backlight,
++};
++
++/* Send a command to the LCD panel in 4 bit GPIO mode */
++static void hd44780_write_cmd_gpio4(struct charlcd *lcd, int cmd)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio4(hd, cmd, 0);
++
++	/* The shortest command takes at least 120 us */
++	udelay(120);
++}
++
++/* Send 4-bits of a command to the LCD panel in raw 4 bit GPIO mode */
++static void hd44780_write_cmd_raw_gpio4(struct charlcd *lcd, int cmd)
++{
++	int values[10];	/* for DATA[0-7], RS, RW, but DATA[0-3] is unused */
++	struct hd44780 *hd = lcd->drvdata;
++	unsigned int i, n;
++
++	/* Command nibble + RS, RW */
++	for (i = 0; i < 4; i++)
++		values[PIN_DATA4 + i] = !!(cmd & BIT(i));
++	values[PIN_CTRL_RS] = 0;
++	n = 5;
++	if (hd->pins[PIN_CTRL_RW]) {
++		values[PIN_CTRL_RW] = 0;
++		n++;
++	}
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA4],
++				       &values[PIN_DATA4]);
++
++	hd44780_strobe_gpio(hd);
++}
++
++/* Send data to the LCD panel in 4 bit GPIO mode */
++static void hd44780_write_data_gpio4(struct charlcd *lcd, int data)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio4(hd, data, 1);
++
++	/* The shortest data takes at least 45 us */
++	udelay(45);
++}
++
++static const struct charlcd_ops hd44780_ops_gpio4 = {
++	.write_cmd	= hd44780_write_cmd_gpio4,
++	.write_cmd_raw4	= hd44780_write_cmd_raw_gpio4,
++	.write_data	= hd44780_write_data_gpio4,
++	.backlight	= hd44780_backlight,
++};
++
++static int hd44780_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	unsigned int i, base;
++	struct charlcd *lcd;
++	struct hd44780 *hd;
++	int ifwidth, ret;
++
++	/* Required pins */
++	ifwidth = gpiod_count(dev, "data");
++	if (ifwidth < 0)
++		return ifwidth;
++
++	switch (ifwidth) {
++	case 4:
++		base = PIN_DATA4;
++		break;
++	case 8:
++		base = PIN_DATA0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	lcd = charlcd_alloc(sizeof(struct hd44780));
++	if (!lcd)
++		return -ENOMEM;
++
++	hd = lcd->drvdata;
++
++	for (i = 0; i < ifwidth; i++) {
++		hd->pins[base + i] = devm_gpiod_get_index(dev, "data", i,
++							  GPIOD_OUT_LOW);
++		if (IS_ERR(hd->pins[base + i])) {
++			ret = PTR_ERR(hd->pins[base + i]);
++			goto fail;
++		}
++	}
++
++	hd->pins[PIN_CTRL_E] = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
++	if (IS_ERR(hd->pins[PIN_CTRL_E])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_E]);
++		goto fail;
++	}
++
++	hd->pins[PIN_CTRL_RS] = devm_gpiod_get(dev, "rs", GPIOD_OUT_HIGH);
++	if (IS_ERR(hd->pins[PIN_CTRL_RS])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_RS]);
++		goto fail;
++	}
++
++	/* Optional pins */
++	hd->pins[PIN_CTRL_RW] = devm_gpiod_get_optional(dev, "rw",
++							GPIOD_OUT_LOW);
++	if (IS_ERR(hd->pins[PIN_CTRL_RW])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_RW]);
++		goto fail;
++	}
++
++	hd->pins[PIN_CTRL_BL] = devm_gpiod_get_optional(dev, "backlight",
++							GPIOD_OUT_LOW);
++	if (IS_ERR(hd->pins[PIN_CTRL_BL])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_BL]);
++		goto fail;
++	}
++
++	/* Required properties */
++	ret = device_property_read_u32(dev, "display-height", &lcd->height);
++	if (ret)
++		goto fail;
++	ret = device_property_read_u32(dev, "display-width", &lcd->width);
++	if (ret)
++		goto fail;
++
++	/*
++	 * On displays with more than two rows, the internal buffer width is
++	 * usually equal to the display width
++	 */
++	if (lcd->height > 2)
++		lcd->bwidth = lcd->width;
++
++	/* Optional properties */
++	device_property_read_u32(dev, "internal-buffer-width", &lcd->bwidth);
++
++	lcd->ifwidth = ifwidth;
++	lcd->ops = ifwidth == 8 ? &hd44780_ops_gpio8 : &hd44780_ops_gpio4;
++
++	ret = charlcd_register(lcd);
++	if (ret)
++		goto fail;
++
++	platform_set_drvdata(pdev, lcd);
++	return 0;
++
++fail:
++	kfree(lcd);
++	return ret;
++}
++
++static int hd44780_remove(struct platform_device *pdev)
++{
++	struct charlcd *lcd = platform_get_drvdata(pdev);
++
++	charlcd_unregister(lcd);
++	return 0;
++}
++
++static const struct of_device_id hd44780_of_match[] = {
++	{ .compatible = "hit,hd44780" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, hd44780_of_match);
++
++static struct platform_driver hd44780_driver = {
++	.probe = hd44780_probe,
++	.remove = hd44780_remove,
++	.driver		= {
++		.name	= "hd44780",
++		.of_match_table = hd44780_of_match,
++	},
++};
++
++module_platform_driver(hd44780_driver);
++MODULE_DESCRIPTION("HD44780 Character LCD driver");
++MODULE_AUTHOR("Geert Uytterhoeven <geert@linux-m68k.org>");
++MODULE_LICENSE("GPL");
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.7.4
