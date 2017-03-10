@@ -1,12 +1,12 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 03/11] ARM: dts: sun8i: sina33: add cpu-supply
-Date: Fri, 10 Mar 2017 11:39:13 +0100
-Message-ID: <20170310103921.19469-4-quentin.schulz@free-electrons.com>
+Subject: [PATCH v2 02/11] ARM: sun8i: a33: add all operating points
+Date: Fri, 10 Mar 2017 11:39:12 +0100
+Message-ID: <20170310103921.19469-3-quentin.schulz@free-electrons.com>
 References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
 Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBB34ERLDAKGQEMRJ2SDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBB3UERLDAKGQE4VD6F4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170310103921.19469-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,29 +19,106 @@ To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2yg
 Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the cpu-supply DT property to the cpu0 DT node needed by
-the board to adapt the regulator voltage depending on the currently used
-OPP.
+This adds all operating points allowed for the A33 as defined by fex
+files available at:
+https://github.com/linux-sunxi/sunxi-boards/tree/master/sys_config/a33
 
 Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
-index cde14b3..0c76aea 100644
---- a/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
-+++ b/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
-@@ -91,6 +91,10 @@
- 	status = "okay";
- };
+added in v2
+
+ arch/arm/boot/dts/sun8i-a33.dtsi | 60 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index b86f0e7..ba87a9e 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -49,24 +49,84 @@
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
  
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc3>;
-+};
++		opp@120000000 {
++			opp-hz = /bits/ 64 <120000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
 +
- &ehci0 {
- 	status = "okay";
- };
++		opp@240000000 {
++			opp-hz = /bits/ 64 <240000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@312000000 {
++			opp-hz = /bits/ 64 <312000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@408000000 {
++			opp-hz = /bits/ 64 <408000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@480000000 {
++			opp-hz = /bits/ 64 <480000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@504000000 {
++			opp-hz = /bits/ 64 <504000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
++		opp@600000000 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
+ 		opp@648000000 {
+ 			opp-hz = /bits/ 64 <648000000>;
+ 			opp-microvolt = <1040000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
++		opp@720000000 {
++			opp-hz = /bits/ 64 <720000000>;
++			opp-microvolt = <1100000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
+ 		opp@816000000 {
+ 			opp-hz = /bits/ 64 <816000000>;
+ 			opp-microvolt = <1100000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
++		opp@912000000 {
++			opp-hz = /bits/ 64 <912000000>;
++			opp-microvolt = <1200000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
+ 		opp@1008000000 {
+ 			opp-hz = /bits/ 64 <1008000000>;
+ 			opp-microvolt = <1200000>;
+ 			clock-latency-ns = <244144>; /* 8 32k periods */
+ 		};
+ 
++		opp@1104000000 {
++			opp-hz = /bits/ 64 <1104000000>;
++			opp-microvolt = <1320000>;
++			clock-latency-ns = <244144>; /* 8 32k periods */
++		};
++
+ 		opp@1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1320000>;
 -- 
 2.9.3
