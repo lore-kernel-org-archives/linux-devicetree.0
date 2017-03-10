@@ -1,153 +1,77 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 17/39] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 10 Mar 2017 12:45:18 +0100
-Message-ID: <5f999fec-5008-7092-1d7f-4c3d12120ace@xs4all.nl>
+Subject: Re: [PATCH v5 22/39] media: Add userspace header file for i.MX
+Date: Fri, 10 Mar 2017 12:49:23 +0100
+Message-ID: <11cd06ca-1ce1-3fd0-36d5-926b7c336649@xs4all.nl>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-18-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-23-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1489121599-23206-18-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1489121599-23206-23-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-media-owner@vger.kernel.org
 To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 05:52, Steve Longerbeam wrote:
-> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
-> all subdev entities in a pipeline to a given video device.
+On 10/03/17 05:53, Steve Longerbeam wrote:
+> This adds a header file for use by userspace programs wanting to interact
+> with the i.MX media driver. It defines custom v4l2 controls for the
+> i.MX v4l2 subdevices.
 > 
 > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> ---
->  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
->  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
->  2 files changed, 73 insertions(+)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
-> index 303980b..09d4d97 100644
-> --- a/drivers/media/v4l2-core/v4l2-mc.c
-> +++ b/drivers/media/v4l2-core/v4l2-mc.c
-> @@ -22,6 +22,7 @@
->  #include <linux/usb.h>
->  #include <media/media-device.h>
->  #include <media/media-entity.h>
-> +#include <media/v4l2-ctrls.h>
->  #include <media/v4l2-fh.h>
->  #include <media/v4l2-mc.h>
->  #include <media/v4l2-subdev.h>
-> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
->  }
->  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
->  
-> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				     struct media_entity *start_entity)
-> +{
-> +	struct media_device *mdev = start_entity->graph_obj.mdev;
-> +	struct media_entity *entity;
-> +	struct media_graph graph;
-> +	struct v4l2_subdev *sd;
-> +	int ret;
-> +
-> +	ret = media_graph_walk_init(&graph, mdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	media_graph_walk_start(&graph, start_entity);
-> +
-> +	while ((entity = media_graph_walk_next(&graph))) {
-> +		if (!is_media_entity_v4l2_subdev(entity))
-> +			continue;
-> +
-> +		sd = media_entity_to_v4l2_subdev(entity);
-> +
-> +		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
-> +					    sd->ctrl_handler,
-> +					    NULL);
-> +		if (ret)
-> +			break;
-> +	}
-> +
-> +	media_graph_walk_cleanup(&graph);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(__v4l2_pipeline_inherit_controls);
-> +
-> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				   struct media_entity *start_entity)
-> +{
-> +	struct media_device *mdev = start_entity->graph_obj.mdev;
-> +	int ret;
-> +
-> +	mutex_lock(&mdev->graph_mutex);
-> +	ret = __v4l2_pipeline_inherit_controls(vfd, start_entity);
-> +	mutex_unlock(&mdev->graph_mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(v4l2_pipeline_inherit_controls);
-> +
->  /* -----------------------------------------------------------------------------
->   * Pipeline power management
->   *
-> diff --git a/include/media/v4l2-mc.h b/include/media/v4l2-mc.h
-> index 2634d9d..9848e77 100644
-> --- a/include/media/v4l2-mc.h
-> +++ b/include/media/v4l2-mc.h
-> @@ -171,6 +171,17 @@ void v4l_disable_media_source(struct video_device *vdev);
->   */
->  int v4l_vb2q_enable_media_source(struct vb2_queue *q);
->  
-> +/**
-> + * v4l2_pipeline_inherit_controls - Add the v4l2 controls from all
-> + *				    subdev entities in a pipeline to
-> + *				    the given video device.
-> + * @vfd: the video device
-> + * @start_entity: Starting entity
-> + */
-> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				     struct media_entity *start_entity);
-> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
-> +				   struct media_entity *start_entity);
 
-Please document which is the unlocked variant and which lock the locked
-variant takes.
+I would not export this while the imx driver is in staging.
+
+Also, traditionally exported media headers are in linux, not media.
+
+I would like to have a discussion about that before deciding where to
+place this header.
+
+For the record: I am not opposed to placing this in media.
 
 Regards,
 
 	Hans
 
->  
->  /**
->   * v4l2_pipeline_pm_use - Update the use count of an entity
-> @@ -231,6 +242,20 @@ static inline int v4l_vb2q_enable_media_source(struct vb2_queue *q)
->  	return 0;
->  }
->  
-> +static inline int __v4l2_pipeline_inherit_controls(
-> +	struct video_device *vfd,
-> +	struct media_entity *start_entity)
-> +{
-> +	return 0;
-> +}
+> ---
+>  include/uapi/media/Kbuild |  1 +
+>  include/uapi/media/imx.h  | 21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
+>  create mode 100644 include/uapi/media/imx.h
+> 
+> diff --git a/include/uapi/media/Kbuild b/include/uapi/media/Kbuild
+> index aafaa5a..fa78958 100644
+> --- a/include/uapi/media/Kbuild
+> +++ b/include/uapi/media/Kbuild
+> @@ -1 +1,2 @@
+>  # UAPI Header export list
+> +header-y += imx.h
+> diff --git a/include/uapi/media/imx.h b/include/uapi/media/imx.h
+> new file mode 100644
+> index 0000000..f573de4
+> --- /dev/null
+> +++ b/include/uapi/media/imx.h
+> @@ -0,0 +1,21 @@
+> +/*
+> + * Copyright (c) 2014-2015 Mentor Graphics Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; either version 2 of the
+> + * License, or (at your option) any later version
+> + */
 > +
-> +static inline int v4l2_pipeline_inherit_controls(
-> +	struct video_device *vfd,
-> +	struct media_entity *start_entity)
-> +{
-> +	return 0;
-> +}
+> +#ifndef __UAPI_MEDIA_IMX_H__
+> +#define __UAPI_MEDIA_IMX_H__
 > +
->  static inline int v4l2_pipeline_pm_use(struct media_entity *entity, int use)
->  {
->  	return 0;
+> +enum imx_ctrl_id {
+> +	V4L2_CID_IMX_FIM_ENABLE = (V4L2_CID_USER_IMX_BASE + 0),
+> +	V4L2_CID_IMX_FIM_NUM,
+> +	V4L2_CID_IMX_FIM_TOLERANCE_MIN,
+> +	V4L2_CID_IMX_FIM_TOLERANCE_MAX,
+> +	V4L2_CID_IMX_FIM_NUM_SKIP,
+> +};
+> +
+> +#endif
 > 
