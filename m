@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv4 04/15] ov7670: get xclk
-Date: Fri, 10 Mar 2017 11:26:03 +0100
-Message-ID: <20170310102614.20922-5-hverkuil@xs4all.nl>
+Subject: [PATCHv4 02/15] ov7670: call v4l2_async_register_subdev
+Date: Fri, 10 Mar 2017 11:26:01 +0100
+Message-ID: <20170310102614.20922-3-hverkuil@xs4all.nl>
 References: <20170310102614.20922-1-hverkuil@xs4all.nl>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170310102614.20922-1-hverkuil@xs4all.nl>
@@ -12,75 +12,46 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Get the clock for this sensor.
+Add v4l2-async support for this driver.
 
 Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/ov7670.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+ drivers/media/i2c/ov7670.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 50e4466a2b37..912ff09c6100 100644
+index 56cfb5ca9c95..9af8d3b8f848 100644
 --- a/drivers/media/i2c/ov7670.c
 +++ b/drivers/media/i2c/ov7670.c
-@@ -10,6 +10,7 @@
-  * This file may be distributed under the terms of the GNU General
-  * Public License, version 2.
-  */
-+#include <linux/clk.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-@@ -227,6 +228,7 @@ struct ov7670_info {
- 		struct v4l2_ctrl *hue;
- 	};
- 	struct ov7670_format_struct *fmt;  /* Current format */
-+	struct clk *clk;
- 	int min_width;			/* Filter out smaller sizes */
- 	int min_height;			/* Filter out smaller sizes */
- 	int clock_speed;		/* External clock speed (MHz) */
-@@ -1587,13 +1589,24 @@ static int ov7670_probe(struct i2c_client *client,
- 			info->pclk_hb_disable = true;
+@@ -1636,10 +1636,9 @@ static int ov7670_probe(struct i2c_client *client,
+ 			V4L2_EXPOSURE_AUTO);
+ 	sd->ctrl_handler = &info->hdl;
+ 	if (info->hdl.error) {
+-		int err = info->hdl.error;
++		ret = info->hdl.error;
+ 
+-		v4l2_ctrl_handler_free(&info->hdl);
+-		return err;
++		goto hdl_free;
  	}
+ 	/*
+ 	 * We have checked empirically that hw allows to read back the gain
+@@ -1651,7 +1650,15 @@ static int ov7670_probe(struct i2c_client *client,
+ 	v4l2_ctrl_cluster(2, &info->saturation);
+ 	v4l2_ctrl_handler_setup(&info->hdl);
  
-+	info->clk = devm_clk_get(&client->dev, "xclk");
-+	if (IS_ERR(info->clk))
-+		return -EPROBE_DEFER;
-+	clk_prepare_enable(info->clk);
++	ret = v4l2_async_register_subdev(&info->sd);
++	if (ret < 0)
++		goto hdl_free;
 +
-+	info->clock_speed = clk_get_rate(info->clk) / 1000000;
-+	if (info->clock_speed < 10 || info->clock_speed > 48) {
-+		ret = -EINVAL;
-+		goto clk_disable;
-+	}
-+
- 	/* Make sure it's an ov7670 */
- 	ret = ov7670_detect(sd);
- 	if (ret) {
- 		v4l_dbg(1, debug, client,
- 			"chip found @ 0x%x (%s) is not an ov7670 chip.\n",
- 			client->addr << 1, client->adapter->name);
--		return ret;
-+		goto clk_disable;
- 	}
- 	v4l_info(client, "chip found @ 0x%02x (%s)\n",
- 			client->addr << 1, client->adapter->name);
-@@ -1656,6 +1669,8 @@ static int ov7670_probe(struct i2c_client *client,
- 
- hdl_free:
- 	v4l2_ctrl_handler_free(&info->hdl);
-+clk_disable:
-+	clk_disable_unprepare(info->clk);
- 	return ret;
- }
- 
-@@ -1667,6 +1682,7 @@ static int ov7670_remove(struct i2c_client *client)
- 
- 	v4l2_device_unregister_subdev(sd);
- 	v4l2_ctrl_handler_free(&info->hdl);
-+	clk_disable_unprepare(info->clk);
  	return 0;
++
++hdl_free:
++	v4l2_ctrl_handler_free(&info->hdl);
++	return ret;
  }
+ 
  
 -- 
 2.11.0
