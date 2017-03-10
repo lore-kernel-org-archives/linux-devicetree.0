@@ -1,8 +1,8 @@
 From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
  controls from a pipeline
-Date: Fri, 10 Mar 2017 12:26:34 -0300
-Message-ID: <20170310122634.0ffda7c6@vento.lan>
+Date: Fri, 10 Mar 2017 12:53:42 -0300
+Message-ID: <20170310125342.7f047acf@vento.lan>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
  <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
  <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
@@ -10,11 +10,14 @@ References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
  <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
  <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
  <20170310130733.GU21222@n2100.armlinux.org.uk>
+ <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+ <20170310140124.GV21222@n2100.armlinux.org.uk>
+ <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170310130733.GU21222@n2100.armlinux.org.uk>
+In-Reply-To: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -24,63 +27,48 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zab
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+Em Fri, 10 Mar 2017 15:20:48 +0100
+Hans Verkuil <hverkuil@xs4all.nl> escreveu:
 
-Em Fri, 10 Mar 2017 13:07:33 +0000
-Russell King - ARM Linux <linux@armlinux.org.uk> escreveu:
-
-> The idea that the v4l libraries should intercept the format negotiation
-> between the application and kernel is a particularly painful one - the
-> default gstreamer build detects the v4l libraries, and links against it.
-> That much is fine.
 > 
-> However, the problem comes when you're trying to use bayer formats. The
-> v4l libraries "helpfully" (or rather unhelpfully) intercept the format
-> negotiation, and decide that they'll invoke v4lconvert to convert the
-> bayer to RGB for you, whether you want them to do that or not.
+> > As I've already mentioned, from talking about this with Mauro, it seems
+> > Mauro is in agreement with permitting the control inheritence... I wish
+> > Mauro would comment for himself, as I can't quote our private discussion
+> > on the subject.  
 > 
-> v4lconvert may not be the most efficient way to convert, or even what
-> is desired (eg, you may want to receive the raw bayer image.)  However,
-> since the v4l libraries/v4lconvert gives you no option but to have its
-> conversion forced into the pipeline, other options (such as using the
-> gstreamer neon accelerated de-bayer plugin) isn't an option 
+> I can't comment either, not having seen his mail and reasoning.
 
-That's not true. There is an special flag, used only by libv4l2
-emulated formats, that indicates when a video format is handled
-via v4lconvert:
+The rationale is that we should support the simplest use cases first.
 
-    * - ``V4L2_FMT_FLAG_EMULATED``
-      - 0x0002
-      - This format is not native to the device but emulated through
-	software (usually libv4l2), where possible try to use a native
-	format instead for better performance.
+In the case of the first MC-based driver (and several subsequent
+ones), the simplest use case required MC, as it was meant to suport
+a custom-made sophisticated application that required fine control
+on each component of the pipeline and to allow their advanced
+proprietary AAA userspace-based algorithms to work.
 
-Using this flag, if the application supports a video format directly
-supported by the hardware, it can use their own video format decoder.
-If not, it is still possible to use the V4L2 hardware, by using
-v4lconvert.
+That's not true, for example, for the UVC driver. There, MC
+is optional, as it should be.
 
-Unfortunately, very few applications currently check it.
+> > Right now, my view is that v4l2 is currently being screwed up by people
+> > with different opinions - there is no unified concensus on how any of
+> > this stuff is supposed to work, everyone is pulling in different
+> > directions.  That needs solving _really_ quickly, so I suggest that
+> > v4l2 people urgently talk to each other and thrash out some of the
+> > issues that Steve's patch set has brought up, and settle on a way
+> > forward, rather than what is seemingly happening today - which is
+> > everyone working in isolation of everyone else with their own bias on
+> > how things should be done.  
+> 
+> The simple fact is that to my knowledge no other MC applications inherit
+> controls from subdevs. Suddenly doing something different here seems very
+> wrong to me and needs very good reasons.
 
-I wrote a patch for zbar (a multi-format barcode reader) in the past,
-adding a logic there that gives a high priority to hardware formats,
-and a low priority to emulated ones:
-	https://lists.fedoraproject.org/pipermail/scm-commits/2010-December/537428.html
-
-> without
-> rebuilding gstreamer _without_ linking against the v4l libraries.
-
-I guess it wouldn't be complex to add a logic similar to that at
-gstreamer.
-
-AFAIKT, there's another problem that would prevent to make
-libv4l the default on gstreamer: right now, libv4l doesn't support
-DMABUF. As gstreamer is being used on embedded hardware, I'd say
-that DMABUF support should be default there.
+That's because it was not needed before, as other subdev-based drivers
+are meant to be used only on complex scenarios with custom-made apps.
 
 Thanks,
 Mauro
