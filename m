@@ -1,75 +1,120 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH v2 3/5] auxdisplay: charlcd: Add support for displays with more than two lines
-Date: Fri, 10 Mar 2017 15:15:19 +0100
-Message-ID: <1489155321-25666-4-git-send-email-geert@linux-m68k.org>
-References: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489155321-25666-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Willy Tarreau <willy-W4YR9g1X7EZBDgjK7y7TUQ@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Akira Tsukamoto <akira.tsukamoto-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Fri, 10 Mar 2017 15:20:48 +0100
+Message-ID: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+ <20170303230645.GR21222@n2100.armlinux.org.uk>
+ <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+ <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+ <20170310130733.GU21222@n2100.armlinux.org.uk>
+ <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+ <20170310140124.GV21222@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170310140124.GV21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo
 List-Id: devicetree@vger.kernel.org
 
-On displays with more than two lines, the additional lines are stored in
-the buffers used for the first two lines, but beyond the visible parts.
-Adjust the DDRAM address calculation to cater for this.
+On 10/03/17 15:01, Russell King - ARM Linux wrote:
+> On Fri, Mar 10, 2017 at 02:22:29PM +0100, Hans Verkuil wrote:
+>> And nobody of the media core developers has the time to work on the docs,
+>> utilities and libraries you need to make this all work cleanly and reliably.
+> 
+> Well, talking about docs, and in connection to control inheritence,
+> this is already documented in at least three separate places:
+> 
+> Documentation/media/uapi/v4l/dev-subdev.rst:
+> 
+>   Controls
+>   ========
+>   ...
+>   Depending on the driver, those controls might also be exposed through
+>   one (or several) V4L2 device nodes.
+> 
+> Documentation/media/kapi/v4l2-subdev.rst:
+> 
+>   ``VIDIOC_QUERYCTRL``,
+>   ``VIDIOC_QUERYMENU``,
+>   ``VIDIOC_G_CTRL``,
+>   ``VIDIOC_S_CTRL``,
+>   ``VIDIOC_G_EXT_CTRLS``,
+>   ``VIDIOC_S_EXT_CTRLS`` and
+>   ``VIDIOC_TRY_EXT_CTRLS``:
+>   
+>           The controls ioctls are identical to the ones defined in V4L2. They
+>           behave identically, with the only exception that they deal only with
+>           controls implemented in the sub-device. Depending on the driver, those
+>           controls can be also be accessed through one (or several) V4L2 device
+>           nodes.
+> 
+> Then there's Documentation/media/kapi/v4l2-controls.rst, which gives a
+> step by step approach to the main video device inheriting controls from
+> its subdevices, and it says:
+> 
+>   Inheriting Controls
+>   -------------------
+>   
+>   When a sub-device is registered with a V4L2 driver by calling
+>   v4l2_device_register_subdev() and the ctrl_handler fields of both v4l2_subdev
+>   and v4l2_device are set, then the controls of the subdev will become
+>   automatically available in the V4L2 driver as well. If the subdev driver
+>   contains controls that already exist in the V4L2 driver, then those will be
+>   skipped (so a V4L2 driver can always override a subdev control).
+>   
+>   What happens here is that v4l2_device_register_subdev() calls
+>   v4l2_ctrl_add_handler() adding the controls of the subdev to the controls
+>   of v4l2_device.
+> 
+> So, either the docs are wrong, or the advice being mentioned in emails
+> about subdev control inheritence is misleading.  Whatever, the two are
+> currently inconsistent.
 
-When clearing the display, avoid writing more spaces than the actual
-size of the physical buffer.
+These docs were written for non-MC drivers, and for those the documentation
+is correct. Unfortunately, this was never updated for MC drivers.
 
-Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
----
-v2:
-  - No changes.
----
- drivers/auxdisplay/charlcd.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+> As I've already mentioned, from talking about this with Mauro, it seems
+> Mauro is in agreement with permitting the control inheritence... I wish
+> Mauro would comment for himself, as I can't quote our private discussion
+> on the subject.
 
-diff --git a/drivers/auxdisplay/charlcd.c b/drivers/auxdisplay/charlcd.c
-index b3a84e90a268478c..cfeb049a01ef8442 100644
---- a/drivers/auxdisplay/charlcd.c
-+++ b/drivers/auxdisplay/charlcd.c
-@@ -159,15 +159,19 @@ EXPORT_SYMBOL_GPL(charlcd_poke);
- static void charlcd_gotoxy(struct charlcd *lcd)
- {
- 	struct charlcd_priv *priv = to_priv(lcd);
-+	unsigned int addr;
- 
--	lcd->ops->write_cmd(lcd,
--		LCD_CMD_SET_DDRAM_ADDR | (priv->addr.y ? lcd->hwidth : 0) |
--		/*
--		 * we force the cursor to stay at the end of the
--		 * line if it wants to go farther
--		 */
--		((priv->addr.x < lcd->bwidth) ? priv->addr.x & (lcd->hwidth - 1)
--					      : lcd->bwidth - 1));
-+	/*
-+	 * we force the cursor to stay at the end of the
-+	 * line if it wants to go farther
-+	 */
-+	addr = priv->addr.x < lcd->bwidth ? priv->addr.x & (lcd->hwidth - 1)
-+					  : lcd->bwidth - 1;
-+	if (priv->addr.y & 1)
-+		addr += lcd->hwidth;
-+	if (priv->addr.y & 2)
-+		addr += lcd->bwidth;
-+	lcd->ops->write_cmd(lcd, LCD_CMD_SET_DDRAM_ADDR | addr);
- }
- 
- static void charlcd_home(struct charlcd *lcd)
-@@ -203,7 +207,7 @@ static void charlcd_clear_fast(struct charlcd *lcd)
- 	if (lcd->ops->clear_fast)
- 		lcd->ops->clear_fast(lcd);
- 	else
--		for (pos = 0; pos < lcd->height * lcd->hwidth; pos++)
-+		for (pos = 0; pos < min(2, lcd->height) * lcd->hwidth; pos++)
- 			lcd->ops->write_data(lcd, ' ');
- 
- 	charlcd_home(lcd);
--- 
-2.7.4
+I can't comment either, not having seen his mail and reasoning.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Right now, my view is that v4l2 is currently being screwed up by people
+> with different opinions - there is no unified concensus on how any of
+> this stuff is supposed to work, everyone is pulling in different
+> directions.  That needs solving _really_ quickly, so I suggest that
+> v4l2 people urgently talk to each other and thrash out some of the
+> issues that Steve's patch set has brought up, and settle on a way
+> forward, rather than what is seemingly happening today - which is
+> everyone working in isolation of everyone else with their own bias on
+> how things should be done.
+
+The simple fact is that to my knowledge no other MC applications inherit
+controls from subdevs. Suddenly doing something different here seems very
+wrong to me and needs very good reasons.
+
+But yes, the current situation sucks. Yelling doesn't help though if nobody
+has time and there are several other high-prio projects that need our
+attention as well.
+
+If you know a good kernel developer who has a few months to spare, please
+point him/her in our direction!
+
+Regards,
+
+	Hans
