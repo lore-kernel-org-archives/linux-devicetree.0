@@ -1,254 +1,744 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Fri, 10 Mar 2017 20:13:56 +0000
-Message-ID: <20170310201356.GA21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx: add Gateworks Ventana GW5904 support
+Date: Fri, 10 Mar 2017 12:40:11 -0800
+Message-ID: <1489178411-6559-1-git-send-email-tharvey@gateworks.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489121599-23206-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgde
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Version 5 gives me no v4l2 controls exposed through the video device
-interface.
+The Gateworks Ventana GW5904 is a single-board computer based on the NXP
+IMX6 SoC with the following features:
+ * IMX6 DualLite Soc (supports IMX6S,IMX6DL,IMX6Q)
+ * 2048MB DDR3 DRAM (4x64bit) (options up to 4GiB)
+ * 8GB eMMC
+ * Gateworks System Controller:
+  - hardware watchdog
+  - hardware monitor
+  - pushbutton controller
+  - EEPROM storage
+  - power control
+ * JTAG programmable
+ * 1x miniPCIe socket (with PCIe, USB)
+ * 1x miniPCIe socket (USB)
+ * 1x M.2 socket (USB, 2x SIM)
+ * Inertial Module (LSM9DS1 9DOF: 3x acc, 3x rate, 3x mag)
+ * GPS (optional uBlox EVA-M8M)
+ * Application headers:
+  - 2x RS232 UART (TX/RX/CTS/RTS)
+  - 8x TTL GPIO (3x configurable as PWM)
+  - 1x LVDS display 3D+C with i2c touch and PWM backlight
+ * MV88E6176 GbE Switch (uplink to IMX FEC)
+ * Front panel connectors:
+  - 1x user programmable LED
+  - 1x configurable user pushbutton
+  - 1x USB OTG
+  - 4x GbE LAN
 
-Just like with version 4, version 5 is completely useless with IMX219:
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile            |   2 +
+ arch/arm/boot/dts/imx6dl-gw5904.dts   |  19 ++
+ arch/arm/boot/dts/imx6q-gw5904.dts    |  23 ++
+ arch/arm/boot/dts/imx6qdl-gw5904.dtsi | 609 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 653 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6dl-gw5904.dts
+ create mode 100644 arch/arm/boot/dts/imx6q-gw5904.dts
+ create mode 100644 arch/arm/boot/dts/imx6qdl-gw5904.dtsi
 
-imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000200
-ipu1_csi0: pipeline start failed with -110
-imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000200
-ipu1_csi0: pipeline start failed with -110
-imx6-mipi-csi2: LP-11 timeout, phy_state = 0x00000200
-ipu1_csi0: pipeline start failed with -110
-
-So, like v4, I can't do any further testing.
-
-On Thu, Mar 09, 2017 at 08:52:40PM -0800, Steve Longerbeam wrote:
-> In version 5:
-> 
-> - ov5640: renamed "pwdn-gpios" to "powerdown-gpios"
-> 
-> - ov5640: add mutex lock around the subdev op entry points.
-> 
-> - ov5640: don't attempt to program the new mode in ov5640_set_fmt().
->   Instead set a new flag, pending_mode_change, and program the new
->   mode at s_stream() if flag is set.
-> 
-> - ov5640: implement [gs]_frame_interval. As part of that, create
->   ov5640_try_frame_interval(), which is used by both [gs]_frame_interval
->   and [gs]_parm.
-> 
-> - ov5640: don't attempt to set controls in ov5640_s_ctrl(), or at
->   mode change, do it instead after first power-up.
-> 
-> - video-multiplexer: include link_validate in media_entity_operations.
-> 
-> - video-multiplexer: enforce that output pad frame interval must match
->   input pad frame interval in vidsw_s_frame_interval().
-> 
-> - video-multiplexer: initialize frame interval to a default 30 fps.
-> 
-> - mipi csi-2: renamed "cfg" clock name property to "ref". This is the
->   27 MHz mipi csi-2 PLL reference clock.
-> 
-> - mipi csi-2: create a hsfreq_map[] table based on
->   https://community.nxp.com/docs/DOC-94312. Use it to select
->   a hsfreqrange_sel value when programming the D-PHY, based on
->   a max Mbps per lane. This is computed from the source subdev
->   via V4L2_CID_LINK_FREQ control, and if the subdev doesn't implement
->   that control, use a default hard-coded max Mbps per lane.
-> 
-> - added required ports property description to imx-media binding doc.
-> 
-> - removed event V4L2_EVENT_FRAME_TIMEOUT. On a frame timeout, which
->   is always unrecoverable, call vb2_queue_error() instead.
-> 
-> - export the remaining custom events to V4L2_EVENT_FRAME_INTERVAL_ERROR
->   and V4L2_EVENT_NEW_FRAME_BEFORE_EOF.
-> 
-> - vdic: use V4L2_CID_DEINTERLACING_MODE for motion compensation control
->   instead of a custom control.
-> 
-> - add v4l2_subdev_link_validate_frame_interval(). Call this in the
->   link_validate imx-media subdev callbacks and video-multiplexer.
-> 
-> - fix subdev event registration: implementation of subscribe_event()
->   and unsubscribe_event() subdev ops were missing.
-> 
-> - all calls from the pipeline to the sensor subdev have been removed.
->   Only the CSI subdev still refers to a sensor, and only to retrieve
->   its media bus config, which is necessary to setup the CSI interface.
-> 
-> - add mutex locks around the imx-media subdev op entry points.
-> 
-> - completed the propagation of all pad format parameters from sink
->   pads to source pads within every imx-media subdev.
-> 
-> - implement [gs]_frame_interval in all the imx-media subdevs.
-> 
-> - imx-ic-prpencvf: there isn't necessarily a CSI subdev in the pipeline
->   in the future, so make sure this is optional when calling the CSI's
->   FIM.
-> 
-> - the source pads that attach to capture device nodes now require the
->   IPU internal pixel codes. The capture device translates these to
->   v4l2 fourcc memory formats.
-> 
-> - fix control inheritance to the capture device. When the pipeline
->   was modified, the inherited controls were not being refreshed.
->   v4l2_pipeline_inherit_controls() is now called only in imx-media
->   link_notify() callback when a pipelink link is disabled or modified.
->   imx_media_find_pipeline_video_device() is created to locate the
->   capture device in the pipeline.
-> 
-> - fix a possible race when propagating formats to the capture device.
->   The subdevs and capture device use different mutex locks when setting
->   formats. imx_media_capture_device_set_format() is created which acquires
->   the capture device mutex when updating the capture device format.
-> 
-> - verify all subdevs were bound in the async completion callback.
->  
-> 
-> Philipp Zabel (7):
->   [media] dt-bindings: Add bindings for video-multiplexer device
->   ARM: dts: imx6qdl: Add mipi_ipu1/2 multiplexers, mipi_csi, and their
->     connections
->   add mux and video interface bridge entity functions
->   platform: add video-multiplexer subdevice driver
->   media: imx: csi: fix crop rectangle changes in set_fmt
->   media: imx: csi: add frame skipping support
->   media: imx: csi: fix crop rectangle reset in sink set_fmt
-> 
-> Russell King (4):
->   media: imx: add support for bayer formats
->   media: imx: csi: add support for bayer formats
->   media: imx: mipi-csi2: enable setting and getting of frame rates
->   media: imx: csi/fim: add support for frame intervals
-> 
-> Steve Longerbeam (28):
->   [media] dt-bindings: Add bindings for i.MX media driver
->   [media] dt/bindings: Add bindings for OV5640
->   ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
->   ARM: dts: imx6qdl: add capture-subsystem device
->   ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687 workaround
->   ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
->   ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
->   ARM: dts: imx6-sabreauto: create i2cmux for i2c3
->   ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
->   ARM: dts: imx6-sabreauto: add pinctrl for gpt input capture
->   ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
->   [media] v4l2: add a frame interval error event
->   [media] v4l2: add a new-frame before end-of-frame event
->   [media] v4l2-mc: add a function to inherit controls from a pipeline
->   [media] v4l: subdev: Add function to validate frame interval
->   [media] add Omnivision OV5640 sensor driver
->   UAPI: Add media UAPI Kbuild file
->   media: Add userspace header file for i.MX
->   media: Add i.MX media core driver
->   media: imx: Add Capture Device Interface
->   media: imx: Add CSI subdev driver
->   media: imx: Add VDIC subdev driver
->   media: imx: Add IC subdev drivers
->   media: imx: Add MIPI CSI-2 Receiver subdev driver
->   ARM: imx_v6_v7_defconfig: Enable staging video4linux drivers
->   media: imx: csi: add __csi_get_fmt
->   media: imx: redo pixel format enumeration and negotiation
->   media: imx: propagate sink pad formats to source pads
-> 
->  .../devicetree/bindings/media/i2c/ov5640.txt       |   45 +
->  Documentation/devicetree/bindings/media/imx.txt    |   74 +
->  .../bindings/media/video-multiplexer.txt           |   59 +
->  Documentation/media/uapi/mediactl/media-types.rst  |   22 +
->  Documentation/media/uapi/v4l/vidioc-dqevent.rst    |   12 +
->  Documentation/media/v4l-drivers/imx.rst            |  560 +++++
->  Documentation/media/videodev2.h.rst.exceptions     |    2 +
->  arch/arm/boot/dts/imx6dl-sabrelite.dts             |    5 +
->  arch/arm/boot/dts/imx6dl-sabresd.dts               |    5 +
->  arch/arm/boot/dts/imx6dl.dtsi                      |  185 ++
->  arch/arm/boot/dts/imx6q-sabrelite.dts              |    5 +
->  arch/arm/boot/dts/imx6q-sabresd.dts                |    5 +
->  arch/arm/boot/dts/imx6q.dtsi                       |  121 ++
->  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi           |  144 +-
->  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi           |  152 +-
->  arch/arm/boot/dts/imx6qdl-sabresd.dtsi             |  114 +-
->  arch/arm/boot/dts/imx6qdl.dtsi                     |   17 +-
->  arch/arm/configs/imx_v6_v7_defconfig               |   11 +
->  drivers/media/i2c/Kconfig                          |    7 +
->  drivers/media/i2c/Makefile                         |    1 +
->  drivers/media/i2c/ov5640.c                         | 2231 ++++++++++++++++++++
->  drivers/media/platform/Kconfig                     |    8 +
->  drivers/media/platform/Makefile                    |    2 +
->  drivers/media/platform/video-multiplexer.c         |  498 +++++
->  drivers/media/v4l2-core/v4l2-mc.c                  |   48 +
->  drivers/media/v4l2-core/v4l2-subdev.c              |   50 +
->  drivers/staging/media/Kconfig                      |    2 +
->  drivers/staging/media/Makefile                     |    1 +
->  drivers/staging/media/imx/Kconfig                  |   20 +
->  drivers/staging/media/imx/Makefile                 |   12 +
->  drivers/staging/media/imx/TODO                     |   17 +
->  drivers/staging/media/imx/imx-ic-common.c          |  113 +
->  drivers/staging/media/imx/imx-ic-prp.c             |  497 +++++
->  drivers/staging/media/imx/imx-ic-prpencvf.c        | 1236 +++++++++++
->  drivers/staging/media/imx/imx-ic.h                 |   38 +
->  drivers/staging/media/imx/imx-media-capture.c      |  694 ++++++
->  drivers/staging/media/imx/imx-media-csi.c          | 1595 ++++++++++++++
->  drivers/staging/media/imx/imx-media-dev.c          |  522 +++++
->  drivers/staging/media/imx/imx-media-fim.c          |  463 ++++
->  drivers/staging/media/imx/imx-media-internal-sd.c  |  349 +++
->  drivers/staging/media/imx/imx-media-of.c           |  267 +++
->  drivers/staging/media/imx/imx-media-utils.c        | 1009 +++++++++
->  drivers/staging/media/imx/imx-media-vdic.c         |  949 +++++++++
->  drivers/staging/media/imx/imx-media.h              |  311 +++
->  drivers/staging/media/imx/imx6-mipi-csi2.c         |  725 +++++++
->  include/media/imx.h                                |   15 +
->  include/media/v4l2-mc.h                            |   25 +
->  include/media/v4l2-subdev.h                        |   10 +
->  include/uapi/Kbuild                                |    1 +
->  include/uapi/linux/media.h                         |    6 +
->  include/uapi/linux/v4l2-controls.h                 |    4 +
->  include/uapi/linux/videodev2.h                     |    2 +
->  include/uapi/media/Kbuild                          |    2 +
->  include/uapi/media/imx.h                           |   21 +
->  54 files changed, 13262 insertions(+), 27 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
->  create mode 100644 Documentation/devicetree/bindings/media/imx.txt
->  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
->  create mode 100644 Documentation/media/v4l-drivers/imx.rst
->  create mode 100644 drivers/media/i2c/ov5640.c
->  create mode 100644 drivers/media/platform/video-multiplexer.c
->  create mode 100644 drivers/staging/media/imx/Kconfig
->  create mode 100644 drivers/staging/media/imx/Makefile
->  create mode 100644 drivers/staging/media/imx/TODO
->  create mode 100644 drivers/staging/media/imx/imx-ic-common.c
->  create mode 100644 drivers/staging/media/imx/imx-ic-prp.c
->  create mode 100644 drivers/staging/media/imx/imx-ic-prpencvf.c
->  create mode 100644 drivers/staging/media/imx/imx-ic.h
->  create mode 100644 drivers/staging/media/imx/imx-media-capture.c
->  create mode 100644 drivers/staging/media/imx/imx-media-csi.c
->  create mode 100644 drivers/staging/media/imx/imx-media-dev.c
->  create mode 100644 drivers/staging/media/imx/imx-media-fim.c
->  create mode 100644 drivers/staging/media/imx/imx-media-internal-sd.c
->  create mode 100644 drivers/staging/media/imx/imx-media-of.c
->  create mode 100644 drivers/staging/media/imx/imx-media-utils.c
->  create mode 100644 drivers/staging/media/imx/imx-media-vdic.c
->  create mode 100644 drivers/staging/media/imx/imx-media.h
->  create mode 100644 drivers/staging/media/imx/imx6-mipi-csi2.c
->  create mode 100644 include/media/imx.h
->  create mode 100644 include/uapi/media/Kbuild
->  create mode 100644 include/uapi/media/imx.h
-> 
-> -- 
-> 2.7.4
-> 
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ccecd79..7843b65 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -352,6 +352,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-gw551x.dtb \
+ 	imx6dl-gw552x.dtb \
+ 	imx6dl-gw553x.dtb \
++	imx6dl-gw5904.dtb \
+ 	imx6dl-hummingboard.dtb \
+ 	imx6dl-icore.dtb \
+ 	imx6dl-icore-rqs.dtb \
+@@ -395,6 +396,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6q-gw551x.dtb \
+ 	imx6q-gw552x.dtb \
+ 	imx6q-gw553x.dtb \
++	imx6q-gw5904.dtb \
+ 	imx6q-h100.dtb \
+ 	imx6q-hummingboard.dtb \
+ 	imx6q-icore.dtb \
+diff --git a/arch/arm/boot/dts/imx6dl-gw5904.dts b/arch/arm/boot/dts/imx6dl-gw5904.dts
+new file mode 100644
+index 0000000..2318a55
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6dl-gw5904.dts
+@@ -0,0 +1,19 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++#include "imx6dl.dtsi"
++#include "imx6qdl-gw5904.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 DualLite/Solo GW5904";
++	compatible = "gw,imx6dl-gw5904", "gw,ventana", "fsl,imx6dl";
++};
+diff --git a/arch/arm/boot/dts/imx6q-gw5904.dts b/arch/arm/boot/dts/imx6q-gw5904.dts
+new file mode 100644
+index 0000000..357dd7e
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-gw5904.dts
+@@ -0,0 +1,23 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++#include "imx6q.dtsi"
++#include "imx6qdl-gw5904.dtsi"
++
++/ {
++	model = "Gateworks Ventana i.MX6 Dual/Quad GW5904";
++	compatible = "gw,imx6q-gw5904", "gw,ventana", "fsl,imx6q";
++};
++
++&sata {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-gw5904.dtsi b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+new file mode 100644
+index 0000000..da674b94
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6qdl-gw5904.dtsi
+@@ -0,0 +1,609 @@
++/*
++ * Copyright 2017 Gateworks Corporation
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	/* these are used by bootloader for disabling nodes */
++	aliases {
++		led0 = &led0;
++		led1 = &led1;
++		led2 = &led2;
++		usb0 = &usbh1;
++		usb1 = &usbotg;
++	};
++
++	chosen {
++		bootargs = "console=ttymxc1,115200";
++	};
++
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm4 0 5000000>;
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <7>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		led0: user1 {
++			label = "user1";
++			gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDG */
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++
++		led1: user2 {
++			label = "user2";
++			gpios = <&gpio4 7 GPIO_ACTIVE_HIGH>; /* MX6_PANLEDR */
++			default-state = "off";
++		};
++
++		led2: user3 {
++			label = "user3";
++			gpios = <&gpio4 15 GPIO_ACTIVE_LOW>; /* MX6_LOCLED# */
++			default-state = "off";
++		};
++	};
++
++	memory {
++		reg = <0x10000000 0x40000000>;
++	};
++
++	pps {
++		compatible = "pps-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pps>;
++		gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
++		status = "okay";
++	};
++
++	reg_1p0v: regulator-1p0v {
++		compatible = "regulator-fixed";
++		regulator-name = "1P0V";
++		regulator-min-microvolt = <1000000>;
++		regulator-max-microvolt = <1000000>;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_usb_h1_vbus: regulator-usb-h1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_h1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-always-on;
++	};
++
++	reg_usb_otg_vbus: regulator-usb-otg-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	dsa {
++		compatible = "marvell,dsa";
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		dsa,ethernet = <&fec>;
++		dsa,mii-bus = <&mdio>;
++
++		switch@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0 0>; /* MDIO address 0, switch 0 in tree */
++
++			port@0 {
++				reg = <0>;
++				label = "lan4";
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "lan3";
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "lan2";
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "lan1";
++			};
++
++			port@5 {
++				reg = <5>;
++				label = "cpu";
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
++				};
++			};
++		};
++	};
++};
++
++&clks {
++	assigned-clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>,
++			  <&clks IMX6QDL_CLK_LDB_DI1_SEL>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL3_USB_OTG>,
++				 <&clks IMX6QDL_CLK_PLL3_USB_OTG>;
++};
++
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet>;
++	phy-mode = "rgmii-id";
++	status = "okay";
++
++	mdio: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++};
++
++&i2c1 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	eeprom1: eeprom@50 {
++		compatible = "atmel,24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++
++	eeprom2: eeprom@51 {
++		compatible = "atmel,24c02";
++		reg = <0x51>;
++		pagesize = <16>;
++	};
++
++	eeprom3: eeprom@52 {
++		compatible = "atmel,24c02";
++		reg = <0x52>;
++		pagesize = <16>;
++	};
++
++	eeprom4: eeprom@53 {
++		compatible = "atmel,24c02";
++		reg = <0x53>;
++		pagesize = <16>;
++	};
++
++	gpio: pca9555@23 {
++		compatible = "nxp,pca9555";
++		reg = <0x23>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++	rtc: ds1672@68 {
++		compatible = "dallas,ds1672";
++		reg = <0x68>;
++	};
++};
++
++&i2c2 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	ltc3676: pmic@3c {
++		compatible = "lltc,ltc3676";
++		reg = <0x3c>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
++
++		regulators {
++			/* VDD_SOC (1+R1/R2 = 1.635) */
++			reg_vdd_soc: sw1 {
++				regulator-name = "vddsoc";
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <1308000>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_1P8 (1+R1/R2 = 2.505): GbE switch */
++			reg_1p8v: sw2 {
++				regulator-name = "vdd1p8";
++				regulator-min-microvolt = <1033310>;
++				regulator-max-microvolt = <2004000>;
++				lltc,fb-voltage-divider = <301000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_ARM (1+R1/R2 = 1.635) */
++			reg_vdd_arm: sw3 {
++				regulator-name = "vddarm";
++				regulator-min-microvolt = <674400>;
++				regulator-max-microvolt = <1308000>;
++				lltc,fb-voltage-divider = <127000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_DDR (1+R1/R2 = 2.105) */
++			reg_vdd_ddr: sw4 {
++				regulator-name = "vddddr";
++				regulator-min-microvolt = <868310>;
++				regulator-max-microvolt = <1684000>;
++				lltc,fb-voltage-divider = <221000 200000>;
++				regulator-ramp-delay = <7000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_2P5 (1+R1/R2 = 3.435): PCIe/ENET-PHY */
++			reg_2p5v: ldo2 {
++				regulator-name = "vdd2p5";
++				regulator-min-microvolt = <2490375>;
++				regulator-max-microvolt = <2490375>;
++				lltc,fb-voltage-divider = <487000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			/* VDD_HIGH (1+R1/R2 = 4.17) */
++			reg_3p0v: ldo4 {
++				regulator-name = "vdd3p0";
++				regulator-min-microvolt = <3023250>;
++				regulator-max-microvolt = <3023250>;
++				lltc,fb-voltage-divider = <634000 200000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	touchscreen: egalax_ts@04 {
++		compatible = "eeti,egalax_ts";
++		reg = <0x04>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&ldb {
++	status = "okay";
++
++	lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <18>;
++		status = "okay";
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: hsd100pxn1 {
++				clock-frequency = <65000000>;
++				hactive = <1024>;
++				vactive = <768>;
++				hback-porch = <220>;
++				hfront-porch = <40>;
++				vback-porch = <21>;
++				vfront-porch = <7>;
++				hsync-len = <60>;
++				vsync-len = <10>;
++			};
++		};
++	};
++};
++
++&pcie {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pcie>;
++	reset-gpio = <&gpio1 0 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
++	status = "disabled";
++};
++
++&pwm3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
++	status = "disabled";
++};
++
++&pwm4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm4>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	fsl,uart-has-rtscts;
++	status = "okay";
++};
++
++&uart4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart4>;
++	fsl,uart-has-rtscts;
++	status = "okay";
++};
++
++&uart5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart5>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg>;
++	disable-over-current;
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
++	status = "okay";
++};
++
++&usdhc3 {
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	pinctrl-1 = <&pinctrl_usdhc3_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
++	non-removable;
++	vmmc-supply = <&reg_3p3v>;
++	keep-power-in-suspend;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++};
++
++&iomuxc {
++	imx6qdl-gw5904 {
++		pinctrl_enet: enetgrp {
++			fsl,pins = <
++				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
++				MX6QDL_PAD_RGMII_RD0__RGMII_RD0		0x1b030
++				MX6QDL_PAD_RGMII_RD1__RGMII_RD1		0x1b030
++				MX6QDL_PAD_RGMII_RD2__RGMII_RD2		0x1b030
++				MX6QDL_PAD_RGMII_RD3__RGMII_RD3		0x1b030
++				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
++				MX6QDL_PAD_RGMII_TXC__RGMII_TXC		0x1b030
++				MX6QDL_PAD_RGMII_TD0__RGMII_TD0		0x1b030
++				MX6QDL_PAD_RGMII_TD1__RGMII_TD1		0x1b030
++				MX6QDL_PAD_RGMII_TD2__RGMII_TD2		0x1b030
++				MX6QDL_PAD_RGMII_TD3__RGMII_TD3		0x1b030
++				MX6QDL_PAD_RGMII_TX_CTL__RGMII_TX_CTL	0x1b030
++				MX6QDL_PAD_ENET_REF_CLK__ENET_TX_CLK	0x1b0b0
++				MX6QDL_PAD_ENET_MDIO__ENET_MDIO		0x1b0b0
++				MX6QDL_PAD_ENET_MDC__ENET_MDC		0x1b0b0
++				MX6QDL_PAD_GPIO_16__ENET_REF_CLK	0x4001b0a8
++				MX6QDL_PAD_ENET_TXD0__GPIO1_IO30	0x4001b0b0 /* PHY_RST# */
++			>;
++		};
++
++		pinctrl_gpio_leds: gpioledsgrp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL0__GPIO4_IO06		0x1b0b0
++				MX6QDL_PAD_KEY_ROW0__GPIO4_IO07		0x1b0b0
++				MX6QDL_PAD_KEY_ROW4__GPIO4_IO15		0x1b0b0
++			>;
++		};
++
++		pinctrl_i2c1: i2c1grp {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_D21__I2C1_SCL		0x4001b8b1
++				MX6QDL_PAD_EIM_D28__I2C1_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL3__I2C2_SCL		0x4001b8b1
++				MX6QDL_PAD_KEY_ROW3__I2C2_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_i2c3: i2c3grp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_3__I2C3_SCL		0x4001b8b1
++				MX6QDL_PAD_GPIO_6__I2C3_SDA		0x4001b8b1
++			>;
++		};
++
++		pinctrl_pcie: pciegrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_0__GPIO1_IO00	0x1b0b0 /* PCIE RST */
++			>;
++		};
++
++		pinctrl_pmic: pmicgrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_8__GPIO1_IO08	0x1b0b0 /* PMIC_IRQ# */
++			>;
++		};
++
++		pinctrl_pps: ppsgrp {
++			fsl,pins = <
++				MX6QDL_PAD_ENET_RXD1__GPIO1_IO26	0x1b0b1
++			>;
++		};
++
++		pinctrl_pwm2: pwm2grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_DAT2__PWM2_OUT		0x1b0b1
++			>;
++		};
++
++		pinctrl_pwm3: pwm3grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_DAT1__PWM3_OUT		0x1b0b1
++			>;
++		};
++
++		pinctrl_pwm4: pwm4grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_CMD__PWM4_OUT		0x1b0b1
++			>;
++		};
++
++		pinctrl_uart1: uart1grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT10__UART1_TX_DATA	0x1b0b1
++				MX6QDL_PAD_CSI0_DAT11__UART1_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD4_DAT7__UART2_TX_DATA	0x1b0b1
++				MX6QDL_PAD_SD4_DAT4__UART2_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_uart3: uart3grp {
++			fsl,pins = <
++				MX6QDL_PAD_EIM_D23__UART3_CTS_B         0x1b0b1
++				MX6QDL_PAD_EIM_D24__UART3_TX_DATA       0x1b0b1
++				MX6QDL_PAD_EIM_D25__UART3_RX_DATA       0x1b0b1
++				MX6QDL_PAD_EIM_D31__UART3_RTS_B         0x1b0b1
++			>;
++		};
++
++		pinctrl_uart4: uart4grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT12__UART4_TX_DATA    0x1b0b1
++				MX6QDL_PAD_CSI0_DAT13__UART4_RX_DATA    0x1b0b1
++				MX6QDL_PAD_CSI0_DAT16__UART4_RTS_B      0x1b0b1
++				MX6QDL_PAD_CSI0_DAT17__UART4_CTS_B      0x1b0b1
++			>;
++		};
++
++		pinctrl_uart5: uart5grp {
++			fsl,pins = <
++				MX6QDL_PAD_KEY_COL1__UART5_TX_DATA	0x1b0b1
++				MX6QDL_PAD_KEY_ROW1__UART5_RX_DATA	0x1b0b1
++			>;
++		};
++
++		pinctrl_usbotg: usbotggrp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
++				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x1b0b0 /* PWR_EN */
++				MX6QDL_PAD_KEY_COL4__GPIO4_IO14		0x1b0b0 /* OC */
++			>;
++		};
++
++		pinctrl_usdhc3: usdhc3grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x17059
++				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x10059
++				MX6QDL_PAD_SD3_RST__SD3_RESET		0x10059
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x17059
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x17059
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x17059
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x17059
++				MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x17059
++				MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x17059
++				MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x17059
++				MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x17059
++			>;
++		};
++
++		pinctrl_usdhc3_100mhz: usdhc3grp100mhz {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170b9
++				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100b9
++				MX6QDL_PAD_SD3_RST__SD3_RESET		0x100b9
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170b9
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170b9
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170b9
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170b9
++				MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x170b9
++				MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x170b9
++				MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x170b9
++				MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x170b9
++			>;
++		};
++
++		pinctrl_usdhc3_200mhz: usdhc3grp200mhz {
++			fsl,pins = <
++				MX6QDL_PAD_SD3_CMD__SD3_CMD		0x170f9
++				MX6QDL_PAD_SD3_CLK__SD3_CLK		0x100f9
++				MX6QDL_PAD_SD3_RST__SD3_RESET		0x100f9
++				MX6QDL_PAD_SD3_DAT0__SD3_DATA0		0x170f9
++				MX6QDL_PAD_SD3_DAT1__SD3_DATA1		0x170f9
++				MX6QDL_PAD_SD3_DAT2__SD3_DATA2		0x170f9
++				MX6QDL_PAD_SD3_DAT3__SD3_DATA3		0x170f9
++				MX6QDL_PAD_SD3_DAT4__SD3_DATA4		0x170f9
++				MX6QDL_PAD_SD3_DAT5__SD3_DATA5		0x170f9
++				MX6QDL_PAD_SD3_DAT6__SD3_DATA6		0x170f9
++				MX6QDL_PAD_SD3_DAT7__SD3_DATA7		0x170f9
++			>;
++		};
++
++		pinctrl_wdog: wdoggrp {
++			fsl,pins = <
++				MX6QDL_PAD_DISP0_DAT8__WDOG1_B		0x1b0b0
++			>;
++		};
++	};
++};
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
