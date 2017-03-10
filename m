@@ -1,48 +1,33 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCHv3 05/15] ov7670: add devicetree support
-Date: Fri, 10 Mar 2017 12:41:51 +0200
-Message-ID: <20170310104151.GX3220@valkosipuli.retiisi.org.uk>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv3 08/15] atmel-isi: move out of soc_camera to atmel
+Date: Fri, 10 Mar 2017 12:43:09 +0200
+Message-ID: <20170310104308.GY3220@valkosipuli.retiisi.org.uk>
 References: <20170306145616.38485-1-hverkuil@xs4all.nl>
- <20170306145616.38485-6-hverkuil@xs4all.nl>
- <20170309204516.GR3220@valkosipuli.retiisi.org.uk>
- <90dee828-1f06-59f8-adb6-1b4442abaf2d@xs4all.nl>
+ <20170306145616.38485-9-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <90dee828-1f06-59f8-adb6-1b4442abaf2d@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+In-Reply-To: <20170306145616.38485-9-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 10:32:41AM +0100, Hans Verkuil wrote:
-> On 09/03/17 21:45, Sakari Ailus wrote:
-> > Hi Hans,
-> > 
-> > On Mon, Mar 06, 2017 at 03:56:06PM +0100, Hans Verkuil wrote:
-> >> From: Hans Verkuil <hans.verkuil@cisco.com>
-> >>
-> >> Add DT support. Use it to get the reset and pwdn pins (if there are any).
-> >> Tested with one sensor requiring reset/pwdn and one sensor that doesn't
-> >> have reset/pwdn pins.
-> > 
-> > If I read the datasheet right, lifting the reset signal up will reset the
-> > sensor but the patch doesn't make use of that, it only ensures the reset
-> > signal stays low. Should you lift it up for a while as well? The datasheet
-> > doesn't say for how long that should be done, but that it should be usable
-> > after 1 ms since pulling reset down.
+On Mon, Mar 06, 2017 at 03:56:09PM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> There does not seem to be any need for that. This sensor also comes in two
-> models: one with separate pwdn and reset pins, and one where it is just hardwired.
+> Move this out of the soc_camera directory into the atmel directory
+> where it belongs.
 > 
-> If the hardwired variant doesn't need a reset pulse, then neither does the
-> variant with pins. It works, and I am not really willing to experiment with this.
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Fine with me.
-
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
 -- 
 Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
