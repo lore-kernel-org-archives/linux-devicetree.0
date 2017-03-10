@@ -1,90 +1,103 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v10 05/11] dt-bindings: iio: io-channel-mux: document io-channel-mux bindings
-Date: Fri, 10 Mar 2017 12:09:59 +0100
-Message-ID: <1489144205-17427-6-git-send-email-peda@axentia.se>
-References: <1489144205-17427-1-git-send-email-peda@axentia.se>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCHv4 12/15] ov2640: add MC support
+Date: Fri, 10 Mar 2017 13:15:31 +0200
+Message-ID: <20170310111531.GE3220@valkosipuli.retiisi.org.uk>
+References: <20170310102614.20922-1-hverkuil@xs4all.nl>
+ <20170310102614.20922-13-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489144205-17427-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170310102614.20922-13-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Describe how a multiplexer can be used to select which signal is fed to
-an io-channel.
+Hi Hans,
 
-Acked-by: Jonathan Cameron <jic23@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- .../bindings/iio/multiplexer/io-channel-mux.txt    | 39 ++++++++++++++++++++++
- MAINTAINERS                                        |  6 ++++
- 2 files changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
+On Fri, Mar 10, 2017 at 11:26:11AM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil@cisco.com>
+> 
+> The MC support is needed by the em28xx driver.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> ---
+>  drivers/media/i2c/ov2640.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
+> index 0445963c5fae..00df042fd6f1 100644
+> --- a/drivers/media/i2c/ov2640.c
+> +++ b/drivers/media/i2c/ov2640.c
+> @@ -282,6 +282,9 @@ struct ov2640_win_size {
+>  
+>  struct ov2640_priv {
+>  	struct v4l2_subdev		subdev;
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +	struct media_pad pad;
+> +#endif
+>  	struct v4l2_ctrl_handler	hdl;
+>  	u32	cfmt_code;
+>  	struct clk			*clk;
+> @@ -1073,19 +1076,30 @@ static int ov2640_probe(struct i2c_client *client,
+>  		ret = priv->hdl.error;
+>  		goto err_hdl;
+>  	}
 
-diff --git a/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-new file mode 100644
-index 000000000000..c82794002595
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
-@@ -0,0 +1,39 @@
-+I/O channel multiplexer bindings
-+
-+If a multiplexer is used to select which hardware signal is fed to
-+e.g. an ADC channel, these bindings describe that situation.
-+
-+Required properties:
-+- compatible : "io-channel-mux"
-+- io-channels : Channel node of the parent channel that has multiplexed
-+		input.
-+- io-channel-names : Should be "parent".
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+- mux-controls : Mux controller node to use for operating the mux
-+- channels : List of strings, labeling the mux controller states.
-+
-+For each non-empty string in the channels property, an io-channel will
-+be created. The number of this io-channel is the same as the index into
-+the list of strings in the channels property, and also matches the mux
-+controller state. The mux controller state is described in
-+../mux/mux-controller.txt
-+
-+Example:
-+	mux: mux-controller {
-+		compatible = "mux-gpio";
-+		#mux-control-cells = <0>;
-+
-+		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
-+			    <&pioA 1 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	adc-mux {
-+		compatible = "io-channel-mux";
-+		io-channels = <&adc 0>;
-+		io-channel-names = "parent";
-+
-+		mux-controls = <&mux>;
-+
-+		channels = "sync", "in", "system-regulator";
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 591eba737678..4af912305d2c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6360,6 +6360,12 @@ F:	Documentation/ABI/testing/sysfs-bus-iio-adc-envelope-detector
- F:	Documentation/devicetree/bindings/iio/adc/envelope-detector.txt
- F:	drivers/iio/adc/envelope-detector.c
- 
-+IIO MULTIPLEXER
-+M:	Peter Rosin <peda@axentia.se>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-+
- IIO SUBSYSTEM AND DRIVERS
- M:	Jonathan Cameron <jic23@kernel.org>
- R:	Hartmut Knaack <knaack.h@gmx.de>
+As this is a sensor the format etc. should be accessible from the user
+space, shouldn't you have V4L2_SUBDEV_FL_HAS_DEVNODE flag for the
+sub-device as well?
+
+The device node isn't exposed unless v4l2_device_register_subdev_nodes() is
+called anyway.
+
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +	priv->pad.flags = MEDIA_PAD_FL_SOURCE;
+> +	priv->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> +	ret = media_entity_pads_init(&priv->subdev.entity, 1, &priv->pad);
+> +	if (ret < 0)
+> +		goto err_hdl;
+> +#endif
+>  
+>  	ret = ov2640_video_probe(client);
+>  	if (ret < 0)
+> -		goto err_hdl;
+> +		goto err_videoprobe;
+>  
+>  	ret = v4l2_async_register_subdev(&priv->subdev);
+>  	if (ret < 0)
+> -		goto err_hdl;
+> +		goto err_videoprobe;
+>  
+>  	dev_info(&adapter->dev, "OV2640 Probed\n");
+>  
+>  	return 0;
+>  
+> +err_videoprobe:
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +	media_entity_cleanup(&priv->subdev.entity);
+
+I believe you can call media_entity_cleanup() as the function does nothing
+right now. In general, we should provide nop variants if MC is disabled.
+
+> +#endif
+>  err_hdl:
+>  	v4l2_ctrl_handler_free(&priv->hdl);
+>  err_clk:
+> @@ -1099,6 +1113,9 @@ static int ov2640_remove(struct i2c_client *client)
+>  
+>  	v4l2_async_unregister_subdev(&priv->subdev);
+>  	v4l2_ctrl_handler_free(&priv->hdl);
+> +#if defined(CONFIG_MEDIA_CONTROLLER)
+> +	media_entity_cleanup(&priv->subdev.entity);
+> +#endif
+>  	v4l2_device_unregister_subdev(&priv->subdev);
+>  	clk_disable_unprepare(priv->clk);
+>  	return 0;
+
 -- 
-2.1.4
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
