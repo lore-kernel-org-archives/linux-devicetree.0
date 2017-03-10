@@ -1,60 +1,89 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCHv3 07/15] atmel-isi: remove dependency of the soc-camera
- framework
-Date: Fri, 10 Mar 2017 14:01:19 +0200
-Message-ID: <20170310120119.GG3220@valkosipuli.retiisi.org.uk>
-References: <20170306145616.38485-1-hverkuil@xs4all.nl>
- <20170306145616.38485-8-hverkuil@xs4all.nl>
- <20170310103920.GW3220@valkosipuli.retiisi.org.uk>
- <e9f9a41c-c1bb-dfca-646c-c0c24e99d939@xs4all.nl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
+Date: Fri, 10 Mar 2017 13:03:30 +0100
+Message-ID: <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e9f9a41c-c1bb-dfca-646c-c0c24e99d939-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On 10/03/17 05:52, Steve Longerbeam wrote:
+> Add a new FRAME_INTERVAL_ERROR event to signal that a video capture or
+> output device has measured an interval between the reception or transmit
+> completion of two consecutive frames of video that is outside the nominal
+> frame interval by some tolerance value.
 
-On Fri, Mar 10, 2017 at 12:25:54PM +0100, Hans Verkuil wrote:
-> Slight problem with this. If I make this change, then the of_node_put below
-> changes as well:
-> 
-> @@ -1193,7 +1176,7 @@ static int isi_graph_init(struct atmel_isi *isi)
->  done:
->         if (ret < 0) {
->                 v4l2_async_notifier_unregister(&isi->notifier);
-> -               of_node_put(isi->entity.node);
-> +               of_node_put(isi->entity.asd.match.of.node);
->         }
-> 
-> And I get this compiler warning:
-> 
->   CC [M]  drivers/media/platform/atmel/atmel-isi.o
-> drivers/media/platform/atmel/atmel-isi.c: In function ‘isi_graph_init’:
-> drivers/media/platform/atmel/atmel-isi.c:1179:15: warning: passing argument 1 of ‘of_node_put’ discards ‘const’ qualifier from pointer target type [-Wdiscarded-qualifiers]
->    of_node_put(isi->entity.asd.match.of.node);
->                ^~~
-> In file included from drivers/media/platform/atmel/atmel-isi.c:25:0:
-> ./include/linux/of.h:130:20: note: expected ‘struct device_node *’ but argument is of type ‘const struct device_node *’
->  static inline void of_node_put(struct device_node *node) { }
->                     ^~~~~~~~~~~
-> 
-> 
-> Any suggestions? Just keep the entity.node after all?
+Reading back what was said on this I agree with Sakari that this doesn't
+belong here.
 
-Yeah, makes sense, I didn't come to think of that.
+Userspace can detect this just as easily (if not easier) with a timeout.
 
--- 
 Regards,
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Hans
+
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 6 ++++++
+>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
+>  include/uapi/linux/videodev2.h                  | 1 +
+>  3 files changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> index 8d663a7..dc77363 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
+> @@ -197,6 +197,12 @@ call.
+>  	the regions changes. This event has a struct
+>  	:c:type:`v4l2_event_motion_det`
+>  	associated with it.
+> +    * - ``V4L2_EVENT_FRAME_INTERVAL_ERROR``
+> +      - 7
+> +      - This event is triggered when the video capture or output device
+> +	has measured an interval between the reception or transmit
+> +	completion of two consecutive frames of video that is outside
+> +	the nominal frame interval by some tolerance value.
+>      * - ``V4L2_EVENT_PRIVATE_START``
+>        - 0x08000000
+>        - Base event number for driver-private events.
+> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
+> index e11a0d0..c7d8fad 100644
+> --- a/Documentation/media/videodev2.h.rst.exceptions
+> +++ b/Documentation/media/videodev2.h.rst.exceptions
+> @@ -459,6 +459,7 @@ replace define V4L2_EVENT_CTRL event-type
+>  replace define V4L2_EVENT_FRAME_SYNC event-type
+>  replace define V4L2_EVENT_SOURCE_CHANGE event-type
+>  replace define V4L2_EVENT_MOTION_DET event-type
+> +replace define V4L2_EVENT_FRAME_INTERVAL_ERROR event-type
+>  replace define V4L2_EVENT_PRIVATE_START event-type
+>  
+>  replace define V4L2_EVENT_CTRL_CH_VALUE ctrl-changes-flags
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 45184a2..cf5a0d0 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -2131,6 +2131,7 @@ struct v4l2_streamparm {
+>  #define V4L2_EVENT_FRAME_SYNC			4
+>  #define V4L2_EVENT_SOURCE_CHANGE		5
+>  #define V4L2_EVENT_MOTION_DET			6
+> +#define V4L2_EVENT_FRAME_INTERVAL_ERROR		7
+>  #define V4L2_EVENT_PRIVATE_START		0x08000000
+>  
+>  /* Payload for V4L2_EVENT_VSYNC */
+> 
