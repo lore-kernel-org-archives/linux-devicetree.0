@@ -1,69 +1,153 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH v2 2/3] Input: add support for the STMicroelectronics
- FingerTip touchscreen
-Date: Fri, 10 Mar 2017 20:43:29 +0900
-Message-ID: <20170310114329.qpspk32hkrt2v5gq@gangnam.samsung>
-References: <20170210021721.12218-1-andi.shyti@samsung.com>
- <CGME20170210021729epcas1p3e11cade2daa21d2dd23839975e29acb6@epcas1p3.samsung.com>
- <20170210021721.12218-3-andi.shyti@samsung.com> <58BF450C.8070000@samsung.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v5 17/39] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Fri, 10 Mar 2017 12:45:18 +0100
+Message-ID: <5f999fec-5008-7092-1d7f-4c3d12120ace@xs4all.nl>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-18-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <58BF450C.8070000@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1489121599-23206-18-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
-
-> > +			input_mt_slot(sdata->input, t_id);
-> > +			input_report_abs(sdata->input, ABS_MT_POSITION_X, x);
-> > +			input_report_abs(sdata->input, ABS_MT_POSITION_Y, y);
-> > +			input_report_abs(sdata->input, ABS_MT_TOUCH_MAJOR, maj);
-> > +			input_report_abs(sdata->input, ABS_MT_TOUCH_MINOR, min);
-> > +			input_report_abs(sdata->input, ABS_MT_PRESSURE, area);
-> > +			input_report_abs(sdata->input, ABS_MT_ORIENTATION,
-> > +								orientation);
-> > +			input_sync(sdata->input);
-> > +
+On 10/03/17 05:52, Steve Longerbeam wrote:
+> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
+> all subdev entities in a pipeline to a given video device.
 > 
-> When I tested this patch on TM2 board, It looks like it is not well working.
-> So, I tried to check the input event by using the evtest tool.
-> But, the result don't show the proper ABS_MT_TRACKING_ID event.
-> [1] https://cgit.freedesktop.org/evtest/
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
+>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
+>  2 files changed, 73 insertions(+)
 > 
-> According to the mutlti-touch-protocol.txt[2], there are two multi-touch protocol.
-> As far as I knew, this driver supports the Protocol B which needs
-> the ABS_MT_TRACKING_ID according to the multi-touch-protocol.txt[2].
-> [2] Documentation/input/mutlti-touch-protocol.txt
+> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
+> index 303980b..09d4d97 100644
+> --- a/drivers/media/v4l2-core/v4l2-mc.c
+> +++ b/drivers/media/v4l2-core/v4l2-mc.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/usb.h>
+>  #include <media/media-device.h>
+>  #include <media/media-entity.h>
+> +#include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-fh.h>
+>  #include <media/v4l2-mc.h>
+>  #include <media/v4l2-subdev.h>
+> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+>  }
+>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
 >  
-> In our test, the ABS_MT_TRACKING_ID is showed only one time.
-> After pressing/releasing finger from touchscreen on first time,
-> there are no ABS_MT_TRACKING_ID information from second try with finger.
+> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				     struct media_entity *start_entity)
+> +{
+> +	struct media_device *mdev = start_entity->graph_obj.mdev;
+> +	struct media_entity *entity;
+> +	struct media_graph graph;
+> +	struct v4l2_subdev *sd;
+> +	int ret;
+> +
+> +	ret = media_graph_walk_init(&graph, mdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	media_graph_walk_start(&graph, start_entity);
+> +
+> +	while ((entity = media_graph_walk_next(&graph))) {
+> +		if (!is_media_entity_v4l2_subdev(entity))
+> +			continue;
+> +
+> +		sd = media_entity_to_v4l2_subdev(entity);
+> +
+> +		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
+> +					    sd->ctrl_handler,
+> +					    NULL);
+> +		if (ret)
+> +			break;
+> +	}
+> +
+> +	media_graph_walk_cleanup(&graph);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(__v4l2_pipeline_inherit_controls);
+> +
+> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				   struct media_entity *start_entity)
+> +{
+> +	struct media_device *mdev = start_entity->graph_obj.mdev;
+> +	int ret;
+> +
+> +	mutex_lock(&mdev->graph_mutex);
+> +	ret = __v4l2_pipeline_inherit_controls(vfd, start_entity);
+> +	mutex_unlock(&mdev->graph_mutex);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(v4l2_pipeline_inherit_controls);
+> +
+>  /* -----------------------------------------------------------------------------
+>   * Pipeline power management
+>   *
+> diff --git a/include/media/v4l2-mc.h b/include/media/v4l2-mc.h
+> index 2634d9d..9848e77 100644
+> --- a/include/media/v4l2-mc.h
+> +++ b/include/media/v4l2-mc.h
+> @@ -171,6 +171,17 @@ void v4l_disable_media_source(struct video_device *vdev);
+>   */
+>  int v4l_vb2q_enable_media_source(struct vb2_queue *q);
+>  
+> +/**
+> + * v4l2_pipeline_inherit_controls - Add the v4l2 controls from all
+> + *				    subdev entities in a pipeline to
+> + *				    the given video device.
+> + * @vfd: the video device
+> + * @start_entity: Starting entity
+> + */
+> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				     struct media_entity *start_entity);
+> +int v4l2_pipeline_inherit_controls(struct video_device *vfd,
+> +				   struct media_entity *start_entity);
+
+Please document which is the unlocked variant and which lock the locked
+variant takes.
+
+Regards,
+
+	Hans
+
+>  
+>  /**
+>   * v4l2_pipeline_pm_use - Update the use count of an entity
+> @@ -231,6 +242,20 @@ static inline int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+>  	return 0;
+>  }
+>  
+> +static inline int __v4l2_pipeline_inherit_controls(
+> +	struct video_device *vfd,
+> +	struct media_entity *start_entity)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline int v4l2_pipeline_inherit_controls(
+> +	struct video_device *vfd,
+> +	struct media_entity *start_entity)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int v4l2_pipeline_pm_use(struct media_entity *entity, int use)
+>  {
+>  	return 0;
 > 
-> I guess that input_mt_report_slot_state() is not calling properly.
-
-Thanks for testing it, with my own tests indeed I didn't check on
-that, there is a logical mistake here:
-
-> > +			if (id == STMFTS_EV_MULTI_TOUCH_ENTER) {
-> > +				if (!(sdata->in_touch++))
-> > +					input_mt_report_slot_state(
-> > +							sdata->input,
-> > +							MT_TOOL_FINGER, true);
-> > +			} else if (id == STMFTS_EV_MULTI_TOUCH_LEAVE) {
-> > +				if (!(--sdata->in_touch))
-> > +					input_mt_report_slot_state(
-> > +							sdata->input,
-> > +							MT_TOOL_FINGER, false);
-> > +			}
-
-the inner ifs should be removed, they prevent the
-ABS_MT_TRACKING_ID to be sent.
-
-I will fix it.
-
-Thanks a lot,
-Andi
