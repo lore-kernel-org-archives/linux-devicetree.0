@@ -1,92 +1,58 @@
-From: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] backlight arcxcnn devicetree bindings for
- ArcticSand
-Date: Fri, 10 Mar 2017 14:17:32 +0100
-Message-ID: <73fb917e-d71c-b094-7d33-8ccddd0ea1cf@linaro.org>
-References: <1488306035-16461-1-git-send-email-olimpiu@arcticsand.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM53573: Don't use nonexistent
+ "default-off" LED trigger
+Date: Fri, 10 Mar 2017 14:20:50 +0100
+Message-ID: <20170310132049.GC11875@amd>
+References: <20170308064105.26619-1-zajec5@gmail.com>
+ <42bce8ea-f1dc-2018-33f1-d296ccd7b677@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488306035-16461-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <42bce8ea-f1dc-2018-33f1-d296ccd7b677@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-leds@vger.kernel.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/17 19:20, Olimpiu Dejeu wrote:
-> backlight: Add devicetree bindings for the Arctic Sand backlight driver
-> This patch provides devicetree bindings for the Arctic Sand
->     driver submitted in the previous patch
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 
-Acked-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--XMCwj5IQnwKtuyBG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But...
+On Wed 2017-03-08 09:31:44, Florian Fainelli wrote:
+> On 03/07/2017 10:41 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
+> > From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+> >=20
+> > Such a trigger doesn't exist in Linux and is not needed as LED is being
+> > turned off by default. This could cause errors in LEDs core code when
+> > trying to set default trigger.
+> >=20
+> > Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
+>=20
+> Since you are fixing something, what's the proper Fixes: tag for this
+> commit? Likewise for the second patch.
 
-This binding documentation patch should precede the code in the patch 
-series (amoung other things this avoids transient checkpatch errors).
+Lets not make submitting patches any harder than it already is.
+									Pavel
+								=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
+--XMCwj5IQnwKtuyBG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> ---
-> v5 => v6:
-> - Version updated to match other patch in set. No other changes.
-> v4 => v5:
-> - Added spaces for increased readability per Lee Jones
-> v3 => v4:
-> - Added spaces for increased readability per Lee Jones
-> v2 => v3:
-> - Version updated to match other patch in set. No other changes.
-> v1 => v2:
-> - Version updated to match other patch in set. No other changes.
->
->  .../bindings/leds/backlight/arcxcnn_bl.txt         | 33 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> new file mode 100644
-> index 0000000..ecb7731
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-> @@ -0,0 +1,33 @@
-> +Binding for ArcticSand arc2c0608 LED driver
-> +
-> +Required properties:
-> +- compatible:		should be "arc,arc2c0608"
-> +- reg:			slave address
-> +
-> +Optional properties:
-> +- default-brightness:	brightness value on boot, value from: 0-4095
-> +- label:		The name of the backlight device
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +- led-sources:		List of enabled channels from 0 to 5.
-> +			See Documentation/devicetree/bindings/leds/common.txt
-> +
-> +- arc,led-config-0:	setting for register ILED_CONFIG_0
-> +- arc,led-config-1:	setting for register ILED_CONFIG_1
-> +- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
-> +- arc,comp-config:	setting for register CONFIG_COMP
-> +- arc,filter-config:	setting for register FILTER_CONFIG
-> +- arc,trim-config:	setting for register IMAXTUNE
-> +
-> +Note: Optional properties not specified will default to values in IC EPROM
-> +
-> +Example:
-> +
-> +arc2c0608@30 {
-> +	compatible = "arc,arc2c0608";
-> +	reg = <0x30>;
-> +	default-brightness = <500>;
-> +	label = "lcd-backlight";
-> +	linux,default-trigger = "backlight";
-> +	led-sources = <0 1 2 5>;
-> +};
-> +
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iEYEARECAAYFAljCqDEACgkQMOfwapXb+vJF4gCfeHp0TKeAAqoYQCkDuf9L1rA3
+EvQAoJz+k7aNgk/oPFrynI9HlUpU5H9M
+=Ohym
+-----END PGP SIGNATURE-----
+
+--XMCwj5IQnwKtuyBG--
