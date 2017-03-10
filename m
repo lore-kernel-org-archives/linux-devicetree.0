@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv4 08/15] atmel-isi: move out of soc_camera to atmel
-Date: Fri, 10 Mar 2017 11:26:07 +0100
-Message-ID: <20170310102614.20922-9-hverkuil@xs4all.nl>
+Subject: [PATCHv4 06/15] atmel-isi: document device tree bindings
+Date: Fri, 10 Mar 2017 11:26:05 +0100
+Message-ID: <20170310102614.20922-7-hverkuil@xs4all.nl>
 References: <20170310102614.20922-1-hverkuil@xs4all.nl>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170310102614.20922-1-hverkuil@xs4all.nl>
@@ -12,96 +12,128 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Move this out of the soc_camera directory into the atmel directory
-where it belongs.
+Document the device tree bindings for this hardware.
+
+Mostly copied from the atmel-isc bindings.
 
 Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/platform/Makefile                          |  1 +
- drivers/media/platform/atmel/Kconfig                     | 11 ++++++++++-
- drivers/media/platform/atmel/Makefile                    |  1 +
- drivers/media/platform/{soc_camera => atmel}/atmel-isi.c |  0
- drivers/media/platform/{soc_camera => atmel}/atmel-isi.h |  0
- drivers/media/platform/soc_camera/Kconfig                | 10 ----------
- drivers/media/platform/soc_camera/Makefile               |  1 -
- 7 files changed, 12 insertions(+), 12 deletions(-)
- rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.c (100%)
- rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.h (100%)
+ .../devicetree/bindings/media/atmel-isi.txt        | 96 +++++++++++++---------
+ 1 file changed, 58 insertions(+), 38 deletions(-)
 
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 8959f6e6692a..c491731f5909 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_VIDEO_XILINX)		+= xilinx/
- obj-$(CONFIG_VIDEO_RCAR_VIN)		+= rcar-vin/
- 
- obj-$(CONFIG_VIDEO_ATMEL_ISC)		+= atmel/
-+obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel/
- 
- ccflags-y += -I$(srctree)/drivers/media/i2c
- 
-diff --git a/drivers/media/platform/atmel/Kconfig b/drivers/media/platform/atmel/Kconfig
-index 867dca22a473..9bd0f19b127f 100644
---- a/drivers/media/platform/atmel/Kconfig
-+++ b/drivers/media/platform/atmel/Kconfig
-@@ -6,4 +6,13 @@ config VIDEO_ATMEL_ISC
- 	select REGMAP_MMIO
- 	help
- 	   This module makes the ATMEL Image Sensor Controller available
--	   as a v4l2 device.
-\ No newline at end of file
-+	   as a v4l2 device.
+diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+index 251f008f220c..65249bbd5c00 100644
+--- a/Documentation/devicetree/bindings/media/atmel-isi.txt
++++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+@@ -1,51 +1,71 @@
+-Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+-----------------------------------------------
+-
+-Required properties:
+-- compatible: must be "atmel,at91sam9g45-isi"
+-- reg: physical base address and length of the registers set for the device;
+-- interrupts: should contain IRQ line for the ISI;
+-- clocks: list of clock specifiers, corresponding to entries in
+-          the clock-names property;
+-- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+-
+-ISI supports a single port node with parallel bus. It should contain one
++Atmel Image Sensor Interface (ISI)
++----------------------------------
 +
-+config VIDEO_ATMEL_ISI
-+	tristate "ATMEL Image Sensor Interface (ISI) support"
-+	depends on VIDEO_V4L2 && OF && HAS_DMA
-+	depends on ARCH_AT91 || COMPILE_TEST
-+	select VIDEOBUF2_DMA_CONTIG
-+	---help---
-+	  This module makes the ATMEL Image Sensor Interface available
-+	  as a v4l2 device.
-diff --git a/drivers/media/platform/atmel/Makefile b/drivers/media/platform/atmel/Makefile
-index 9d7c999d434d..27000d099a5e 100644
---- a/drivers/media/platform/atmel/Makefile
-+++ b/drivers/media/platform/atmel/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc.o
-+obj-$(CONFIG_VIDEO_ATMEL_ISI) += atmel-isi.o
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/atmel/atmel-isi.c
-similarity index 100%
-rename from drivers/media/platform/soc_camera/atmel-isi.c
-rename to drivers/media/platform/atmel/atmel-isi.c
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.h b/drivers/media/platform/atmel/atmel-isi.h
-similarity index 100%
-rename from drivers/media/platform/soc_camera/atmel-isi.h
-rename to drivers/media/platform/atmel/atmel-isi.h
-diff --git a/drivers/media/platform/soc_camera/Kconfig b/drivers/media/platform/soc_camera/Kconfig
-index a37ec91b026e..0c581aa1b18a 100644
---- a/drivers/media/platform/soc_camera/Kconfig
-+++ b/drivers/media/platform/soc_camera/Kconfig
-@@ -26,13 +26,3 @@ config VIDEO_SH_MOBILE_CEU
- 	select SOC_CAMERA_SCALE_CROP
- 	---help---
- 	  This is a v4l2 driver for the SuperH Mobile CEU Interface
--
--config VIDEO_ATMEL_ISI
--	tristate "ATMEL Image Sensor Interface (ISI) support"
--	depends on VIDEO_V4L2 && OF && HAS_DMA
--	depends on ARCH_AT91 || COMPILE_TEST
--	select VIDEOBUF2_DMA_CONTIG
--	---help---
--	  This module makes the ATMEL Image Sensor Interface available
--	  as a v4l2 device.
--
-diff --git a/drivers/media/platform/soc_camera/Makefile b/drivers/media/platform/soc_camera/Makefile
-index 7633a0f2f66f..07a451e8b228 100644
---- a/drivers/media/platform/soc_camera/Makefile
-+++ b/drivers/media/platform/soc_camera/Makefile
-@@ -6,5 +6,4 @@ obj-$(CONFIG_SOC_CAMERA_SCALE_CROP)	+= soc_scale_crop.o
- obj-$(CONFIG_SOC_CAMERA_PLATFORM)	+= soc_camera_platform.o
++Required properties for ISI:
++- compatible: must be "atmel,at91sam9g45-isi".
++- reg: physical base address and length of the registers set for the device.
++- interrupts: should contain IRQ line for the ISI.
++- clocks: list of clock specifiers, corresponding to entries in the clock-names
++	property; please refer to clock-bindings.txt.
++- clock-names: required elements: "isi_clk".
++- pinctrl-names, pinctrl-0: please refer to pinctrl-bindings.txt.
++
++ISI supports a single port node with parallel bus. It shall contain one
+ 'port' child node with child 'endpoint' node. Please refer to the bindings
+ defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
  
- # soc-camera host drivers have to be linked after camera drivers
--obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel-isi.o
- obj-$(CONFIG_VIDEO_SH_MOBILE_CEU)	+= sh_mobile_ceu_camera.o
+-Example:
+-	isi: isi@f0034000 {
+-		compatible = "atmel,at91sam9g45-isi";
+-		reg = <0xf0034000 0x4000>;
+-		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
++Endpoint node properties
++------------------------
+ 
+-		clocks = <&isi_clk>;
+-		clock-names = "isi_clk";
++- bus-width: <8> or <10> (mandatory)
++- hsync-active (default: active high)
++- vsync-active (default: active high)
++- pclk-sample (default: sample on falling edge)
++- remote-endpoint: A phandle to the bus receiver's endpoint node (mandatory).
+ 
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_isi>;
+-
+-		port {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
++Example:
+ 
+-			isi_0: endpoint {
+-				remote-endpoint = <&ov2640_0>;
+-				bus-width = <8>;
+-			};
++isi: isi@f0034000 {
++	compatible = "atmel,at91sam9g45-isi";
++	reg = <0xf0034000 0x4000>;
++	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_isi_data_0_7>;
++	clocks = <&isi_clk>;
++	clock-names = "isi_clk";
++	status = "ok";
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		isi_0: endpoint {
++			remote-endpoint = <&ov2640_0>;
++			bus-width = <8>;
++			vsync-active = <1>;
++			hsync-active = <1>;
+ 		};
+ 	};
++};
++
++i2c1: i2c@f0018000 {
++	status = "okay";
+ 
+-	i2c1: i2c@f0018000 {
+-		ov2640: camera@0x30 {
+-			compatible = "ovti,ov2640";
+-			reg = <0x30>;
++	ov2640: camera@30 {
++		compatible = "ovti,ov2640";
++		reg = <0x30>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
++		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
++		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
++		clocks = <&pck0>;
++		clock-names = "xvclk";
++		assigned-clocks = <&pck0>;
++		assigned-clock-rates = <25000000>;
+ 
+-			port {
+-				ov2640_0: endpoint {
+-					remote-endpoint = <&isi_0>;
+-					bus-width = <8>;
+-				};
++		port {
++			ov2640_0: endpoint {
++				remote-endpoint = <&isi_0>;
++				bus-width = <8>;
+ 			};
+ 		};
+ 	};
++};
 -- 
 2.11.0
