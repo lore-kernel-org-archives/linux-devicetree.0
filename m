@@ -1,153 +1,60 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
  controls from a pipeline
-Date: Fri, 10 Mar 2017 13:54:28 +0100
-Message-ID: <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+Date: Fri, 10 Mar 2017 13:07:33 +0000
+Message-ID: <20170310130733.GU21222@n2100.armlinux.org.uk>
 References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
  <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
  <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
  <20170303230645.GR21222@n2100.armlinux.org.uk>
  <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+ <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orglin
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/17 14:13, Sakari Ailus wrote:
-> Hi Russell,
-> 
-> On Fri, Mar 03, 2017 at 11:06:45PM +0000, Russell King - ARM Linux wrote:
->> On Thu, Mar 02, 2017 at 06:02:57PM +0200, Sakari Ailus wrote:
->>> Hi Steve,
->>>
->>> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
->>>> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
->>>> all subdev entities in a pipeline to a given video device.
->>>>
->>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>>> ---
->>>>  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
->>>>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
->>>>  2 files changed, 73 insertions(+)
->>>>
->>>> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
->>>> index 303980b..09d4d97 100644
->>>> --- a/drivers/media/v4l2-core/v4l2-mc.c
->>>> +++ b/drivers/media/v4l2-core/v4l2-mc.c
->>>> @@ -22,6 +22,7 @@
->>>>  #include <linux/usb.h>
->>>>  #include <media/media-device.h>
->>>>  #include <media/media-entity.h>
->>>> +#include <media/v4l2-ctrls.h>
->>>>  #include <media/v4l2-fh.h>
->>>>  #include <media/v4l2-mc.h>
->>>>  #include <media/v4l2-subdev.h>
->>>> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
->>>>  }
->>>>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
->>>>  
->>>> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
->>>> +				     struct media_entity *start_entity)
->>>
->>> I have a few concerns / questions:
->>>
->>> - What's the purpose of this patch? Why not to access the sub-device node
->>>   directly?
->>
->> What tools are in existance _today_ to provide access to these controls
->> via the sub-device nodes?
-> 
-> yavta, for instance:
-> 
-> <URL:http://git.ideasonboard.org/yavta.git>
-> 
-> VIDIOC_QUERYCAP isn't supported on sub-devices and v4l2-ctl appears to be
-> checking for that. That check should be removed (with possible other
-> implications taken into account).
+On Fri, Mar 10, 2017 at 01:54:28PM +0100, Hans Verkuil wrote:
+> But there was always meant to be a layer (libv4l plugin) that could be
+> used to setup a 'default scenario' that existing applications could use,
+> but that was never enforced, sadly.
 
-No, the subdev API should get a similar QUERYCAP ioctl. There isn't a single
-ioctl that is guaranteed to be available for all subdev devices. I've made
-proposals for this in the past, and those have all been shot down.
+However, there's other painful issues lurking in userspace, particularly
+to do with the v4l libraries.
 
-Add that, and I'll add support for subdevs in v4l2-ctl.
+The idea that the v4l libraries should intercept the format negotiation
+between the application and kernel is a particularly painful one - the
+default gstreamer build detects the v4l libraries, and links against it.
+That much is fine.
 
-> 
->>
->> v4l-tools doesn't last time I looked - in fact, the only tool in v4l-tools
->> which is capable of accessing the subdevices is media-ctl, and that only
->> provides functionality for configuring the pipeline.
->>
->> So, pointing people at vapourware userspace is really quite rediculous.
-> 
-> Do bear in mind that there are other programs that can make use of these
-> interfaces. It's not just the test programs, or a test program you attempted
-> to use.
-> 
->>
->> The established way to control video capture is through the main video
->> capture device, not through the sub-devices.  Yes, the controls are
->> exposed through sub-devices too, but that does not mean that is the
->> correct way to access them.
-> 
-> It is. That's the very purpose of the sub-devices: to provide access to the
-> hardware independently of how the links are configured.
-> 
->>
->> The v4l2 documentation (Documentation/media/kapi/v4l2-controls.rst)
->> even disagrees with your statements.  That talks about control
->> inheritence from sub-devices to the main video device, and the core
->> v4l2 code provides _automatic_ support for this - see
->> v4l2_device_register_subdev():
->>
->>         /* This just returns 0 if either of the two args is NULL */
->>         err = v4l2_ctrl_add_handler(v4l2_dev->ctrl_handler, sd->ctrl_handler, NULL);
->>
->> which merges the subdev's controls into the main device's control
->> handler.
-> 
-> That's done on different kind of devices: those that provide plain V4L2 API
-> to control the entire device. V4L2 sub-device interface is used *in kernel*
-> as an interface to control sub-devices that do not need to be exposed to the
-> user space.
-> 
-> Devices that have complex pipeline that do essentially require using the
-> Media controller interface to configure them are out of that scope.
-> 
+However, the problem comes when you're trying to use bayer formats. The
+v4l libraries "helpfully" (or rather unhelpfully) intercept the format
+negotiation, and decide that they'll invoke v4lconvert to convert the
+bayer to RGB for you, whether you want them to do that or not.
 
-Way too much of how the MC devices should be used is in the minds of developers.
-There is a major lack for good detailed documentation, utilities, compliance
-test (really needed!) and libv4l plugins.
+v4lconvert may not be the most efficient way to convert, or even what
+is desired (eg, you may want to receive the raw bayer image.)  However,
+since the v4l libraries/v4lconvert gives you no option but to have its
+conversion forced into the pipeline, other options (such as using the
+gstreamer neon accelerated de-bayer plugin) isn't an option without
+rebuilding gstreamer _without_ linking against the v4l libraries.
 
-Russell's comments are spot on and it is a thorn in my side that this still
-hasn't been addressed.
+At that point, saying "this should be done in a libv4l plugin" becomes
+a total nonsense, because if you need to avoid libv4l due to its
+stupidities, you don't get the benefit of subdevs, and it yet again
+_forces_ people down the route of custom applications.
 
-I want to see if I can get time from my boss to work on this this summer, but
-there is no guarantee.
+So, I really don't agree with pushing this into a userspace library
+plugin - at least not with the current state there.
 
-The main reason this hasn't been a much bigger problem is that most end-users
-make custom applications for this hardware. It makes sense, if you need full
-control over everything you make the application yourself, that's the whole point.
+_At least_ the debayering in the v4l libraries needs to become optional.
 
-But there was always meant to be a layer (libv4l plugin) that could be used to
-setup a 'default scenario' that existing applications could use, but that was
-never enforced, sadly.
-
-Anyway, regarding this specific patch and for this MC-aware driver: no, you
-shouldn't inherit controls from subdevs. It defeats the purpose.
-
-Regards,
-
-	Hans
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
