@@ -1,88 +1,150 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCHv3 04/15] ov7670: get xclk
-Date: Fri, 10 Mar 2017 10:41:51 +0100
-Message-ID: <b5e0eeb7-2d2f-3f95-6ee3-363877642880@xs4all.nl>
-References: <20170306145616.38485-1-hverkuil@xs4all.nl>
- <20170306145616.38485-5-hverkuil@xs4all.nl>
- <20170309203816.GQ3220@valkosipuli.retiisi.org.uk>
- <4ecb5aa4-40b6-5d78-03ba-239efbd0137e@xs4all.nl>
- <20170310091117.GU3220@valkosipuli.retiisi.org.uk>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v4 1/3] usb: orion-echi: Add support for the Armada 3700
+Date: Fri, 10 Mar 2017 10:55:23 +0100
+Message-ID: <87o9x9jw1g.fsf@free-electrons.com>
+References: <Pine.LNX.4.44L0.1703091318010.1560-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170310091117.GU3220@valkosipuli.retiisi.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.44L0.1703091318010.1560-100000@iolanthe.rowland.org>
+        (Alan Stern's message of "Thu, 9 Mar 2017 13:18:27 -0500 (EST)")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 10:11, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> On Fri, Mar 10, 2017 at 09:55:53AM +0100, Hans Verkuil wrote:
->> On 09/03/17 21:38, Sakari Ailus wrote:
->>> Hi Hans,
->>>
->>> On Mon, Mar 06, 2017 at 03:56:05PM +0100, Hans Verkuil wrote:
->>>> From: Hans Verkuil <hans.verkuil@cisco.com>
->>>>
->>>> Get the clock for this sensor.
->>>>
->>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
->>>> ---
->>>>  drivers/media/i2c/ov7670.c | 12 ++++++++++++
->>>>  1 file changed, 12 insertions(+)
->>>>
->>>> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
->>>> index 50e4466a2b37..da0843617a49 100644
->>>> --- a/drivers/media/i2c/ov7670.c
->>>> +++ b/drivers/media/i2c/ov7670.c
->>>> @@ -10,6 +10,7 @@
->>>>   * This file may be distributed under the terms of the GNU General
->>>>   * Public License, version 2.
->>>>   */
->>>> +#include <linux/clk.h>
->>>>  #include <linux/init.h>
->>>>  #include <linux/module.h>
->>>>  #include <linux/slab.h>
->>>> @@ -227,6 +228,7 @@ struct ov7670_info {
->>>>  		struct v4l2_ctrl *hue;
->>>>  	};
->>>>  	struct ov7670_format_struct *fmt;  /* Current format */
->>>> +	struct clk *clk;
->>>>  	int min_width;			/* Filter out smaller sizes */
->>>>  	int min_height;			/* Filter out smaller sizes */
->>>>  	int clock_speed;		/* External clock speed (MHz) */
->>>> @@ -1587,6 +1589,15 @@ static int ov7670_probe(struct i2c_client *client,
->>>>  			info->pclk_hb_disable = true;
->>>>  	}
->>>>  
->>>> +	info->clk = devm_clk_get(&client->dev, "xclk");
->>>> +	if (IS_ERR(info->clk))
->>>> +		return -EPROBE_DEFER;
->>>> +	clk_prepare_enable(info->clk);
->>>> +
->>>> +	info->clock_speed = clk_get_rate(info->clk) / 1000000;
->>>> +	if (info->clock_speed < 10 || info->clock_speed > 48)
->>>> +		return -EINVAL;
->>>
->>> clk_disable_unprepare() before return?
->>
->> It is my understanding that devm_clk_get will call that for you.
->>
->> Correct me if I am wrong.
-> 
-> devm_clk_get() obtained clock is released using devm_clk_release() which is
-> just calling clk_put(). Which caller prepared or enabled the clock is not
-> tracked. It's the responsibility of the caller.
-> 
+Hi Alan,
+ 
+ On jeu., mars 09 2017, Alan Stern <stern@rowland.harvard.edu> wrote:
 
-You're right. Then I need to check for this.
+> On Thu, 9 Mar 2017, Gregory CLEMENT wrote:
+>
+>> From: Hua Jing <jinghua@marvell.com>
+>> 
+>> - Add a new compatible string for the Armada 3700 SoCs
+>> 
+>> - add sbuscfg support for orion usb controller driver. For the SoCs
+>>   without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
+>>   register to guarantee the AHB master's burst would not overrun or
+>>   underrun the FIFO.
+>> 
+>> - the sbuscfg register has to be set after the usb controller reset,
+>>   otherwise the value would be overridden to 0. In order to do this, the
+>>   reset callback is registered.
+>> 
+>> [gregory.clement@free-electrons.com: - reword commit and comments
+>> 				     - fix error path in ehci_orion_drv_reset()
+>> 				     - fix checkpatch warning]
+>> Signed-off-by: Hua Jing <jinghua@marvell.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+>> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-Hmm, I'm pretty sure I looked at what other drivers do. I think I'm not the
-only one who forgets to call clk_disable_unprepare.
+Thanks!
 
-Regards,
+And what about the second patch "usb: host: Allow to build ehci orion
+with mvebu SoCs " ?
 
-	Hans
+I don't remember what is the workflow for the usb subsystem. Will you do
+a pull request to GKH? Or maybe he collects himself the patch once you
+give your acked-by.
+
+I will take care of the third patch and apply on the mvebu/dt64 branch
+now that you agree the extension for the driver.
+
+Gregory
+
+
+>
+>> ---
+>>  .../devicetree/bindings/usb/ehci-orion.txt         |  4 ++-
+>>  drivers/usb/host/ehci-orion.c                      | 36 ++++++++++++++++++++++
+>>  2 files changed, 39 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+>> index 17c3bc858b86..2855bae79fda 100644
+>> --- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
+>> +++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+>> @@ -1,7 +1,9 @@
+>>  * EHCI controller, Orion Marvell variants
+>>  
+>>  Required properties:
+>> -- compatible: must be "marvell,orion-ehci"
+>> +- compatible: must be one of the following
+>> +	"marvell,orion-ehci"
+>> +	"marvell,armada-3700-ehci"
+>>  - reg: physical base address of the controller and length of memory mapped
+>>    region.
+>>  - interrupts: The EHCI interrupt
+>> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+>> index ee8d5faa0194..1aec87ec68df 100644
+>> --- a/drivers/usb/host/ehci-orion.c
+>> +++ b/drivers/usb/host/ehci-orion.c
+>> @@ -47,6 +47,18 @@
+>>  #define USB_PHY_IVREF_CTRL	0x440
+>>  #define USB_PHY_TST_GRP_CTRL	0x450
+>>  
+>> +#define USB_SBUSCFG		0x90
+>> +
+>> +/* BAWR = BARD = 3 : Align read/write bursts packets larger than 128 bytes */
+>> +#define USB_SBUSCFG_BAWR_ALIGN_128B	(0x3 << 6)
+>> +#define USB_SBUSCFG_BARD_ALIGN_128B	(0x3 << 3)
+>> +/* AHBBRST = 3	   : Align AHB Burst to INCR16 (64 bytes) */
+>> +#define USB_SBUSCFG_AHBBRST_INCR16	(0x3 << 0)
+>> +
+>> +#define USB_SBUSCFG_DEF_VAL (USB_SBUSCFG_BAWR_ALIGN_128B	\
+>> +			     | USB_SBUSCFG_BARD_ALIGN_128B	\
+>> +			     | USB_SBUSCFG_AHBBRST_INCR16)
+>> +
+>>  #define DRIVER_DESC "EHCI orion driver"
+>>  
+>>  #define hcd_to_orion_priv(h) ((struct orion_ehci_hcd *)hcd_to_ehci(h)->priv)
+>> @@ -151,8 +163,31 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
+>>  	}
+>>  }
+>>  
+>> +static int ehci_orion_drv_reset(struct usb_hcd *hcd)
+>> +{
+>> +	struct device *dev = hcd->self.controller;
+>> +	int ret;
+>> +
+>> +	ret = ehci_setup(hcd);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * For SoC without hlock, need to program sbuscfg value to guarantee
+>> +	 * AHB master's burst would not overrun or underrun FIFO.
+>> +	 *
+>> +	 * sbuscfg reg has to be set after usb controller reset, otherwise
+>> +	 * the value would be override to 0.
+>> +	 */
+>> +	if (of_device_is_compatible(dev->of_node, "marvell,armada-3700-ehci"))
+>> +		wrl(USB_SBUSCFG, USB_SBUSCFG_DEF_VAL);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  static const struct ehci_driver_overrides orion_overrides __initconst = {
+>>  	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
+>> +	.reset = ehci_orion_drv_reset,
+>>  };
+>>  
+>>  static int ehci_orion_drv_probe(struct platform_device *pdev)
+>> @@ -310,6 +345,7 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
+>>  
+>>  static const struct of_device_id ehci_orion_dt_ids[] = {
+>>  	{ .compatible = "marvell,orion-ehci", },
+>> +	{ .compatible = "marvell,armada-3700-ehci", },
+>>  	{},
+>>  };
+>>  MODULE_DEVICE_TABLE(of, ehci_orion_dt_ids);
+>> 
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
