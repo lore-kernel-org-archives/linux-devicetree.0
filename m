@@ -1,573 +1,651 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v10 06/11] iio: multiplexer: new iio category and iio-mux driver
-Date: Fri, 10 Mar 2017 12:10:00 +0100
-Message-ID: <1489144205-17427-7-git-send-email-peda@axentia.se>
-References: <1489144205-17427-1-git-send-email-peda@axentia.se>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCHv3 07/15] atmel-isi: remove dependency of the soc-camera
+ framework
+Date: Fri, 10 Mar 2017 12:11:21 +0100
+Message-ID: <75c70fb6-fe74-68fc-3250-b8151e21b759@xs4all.nl>
+References: <20170306145616.38485-1-hverkuil@xs4all.nl>
+ <20170306145616.38485-8-hverkuil@xs4all.nl>
+ <20170310103920.GW3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489144205-17427-1-git-send-email-peda@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170310103920.GW3220@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-When a multiplexer changes how an iio device behaves (for example
-by feeding different signals to an ADC), this driver can be used
-to create one virtual iio channel for each multiplexer state.
+On 10/03/17 11:39, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> Thanks! It's very nice to see one more driver converted to stand-alone one!
+> 
+> Speaking of which --- this seems to be the second last one. The only
+> remaining one is sh_mobile_ceu_camera.c!
+> 
+> On Mon, Mar 06, 2017 at 03:56:08PM +0100, Hans Verkuil wrote:
+>> From: Hans Verkuil <hans.verkuil@cisco.com>
+>>
+>> This patch converts the atmel-isi driver from a soc-camera driver to a driver
+>> that is stand-alone.
+>>
+>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+>> ---
+>>  drivers/media/i2c/soc_camera/ov2640.c         |   23 +-
+>>  drivers/media/platform/soc_camera/Kconfig     |    3 +-
+>>  drivers/media/platform/soc_camera/atmel-isi.c | 1223 +++++++++++++++----------
+>>  3 files changed, 735 insertions(+), 514 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
+>> index 56de18263359..b9a0069f5b33 100644
+>> --- a/drivers/media/i2c/soc_camera/ov2640.c
+>> +++ b/drivers/media/i2c/soc_camera/ov2640.c
+> 
+> Should this part go to a different patch?
 
-Depends on the generic multiplexer subsystem.
+Oops, yes. How did this end up here?
 
-Cache any ext_info values from the parent iio channel, creating a private
-copy of the ext_info attributes for each multiplexer state/channel.
+Split this off as a separate ov2640 patch.
 
-Reviewed-by: Jonathan Cameron <jic23@kernel.org>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- MAINTAINERS                       |   1 +
- drivers/iio/Kconfig               |   1 +
- drivers/iio/Makefile              |   1 +
- drivers/iio/multiplexer/Kconfig   |  18 ++
- drivers/iio/multiplexer/Makefile  |   6 +
- drivers/iio/multiplexer/iio-mux.c | 456 ++++++++++++++++++++++++++++++++++++++
- 6 files changed, 483 insertions(+)
- create mode 100644 drivers/iio/multiplexer/Kconfig
- create mode 100644 drivers/iio/multiplexer/Makefile
- create mode 100644 drivers/iio/multiplexer/iio-mux.c
+> 
+>> @@ -794,10 +794,11 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+>>  		dev_dbg(&client->dev, "%s: Selected cfmt YUYV (YUV422)", __func__);
+>>  		selected_cfmt_regs = ov2640_yuyv_regs;
+>>  		break;
+>> -	default:
+>>  	case MEDIA_BUS_FMT_UYVY8_2X8:
+>> +	default:
+>>  		dev_dbg(&client->dev, "%s: Selected cfmt UYVY", __func__);
+>>  		selected_cfmt_regs = ov2640_uyvy_regs;
+>> +		break;
+>>  	}
+>>  
+>>  	/* reset hardware */
+>> @@ -865,17 +866,7 @@ static int ov2640_get_fmt(struct v4l2_subdev *sd,
+>>  	mf->width	= priv->win->width;
+>>  	mf->height	= priv->win->height;
+>>  	mf->code	= priv->cfmt_code;
+>> -
+>> -	switch (mf->code) {
+>> -	case MEDIA_BUS_FMT_RGB565_2X8_BE:
+>> -	case MEDIA_BUS_FMT_RGB565_2X8_LE:
+>> -		mf->colorspace = V4L2_COLORSPACE_SRGB;
+>> -		break;
+>> -	default:
+>> -	case MEDIA_BUS_FMT_YUYV8_2X8:
+>> -	case MEDIA_BUS_FMT_UYVY8_2X8:
+>> -		mf->colorspace = V4L2_COLORSPACE_JPEG;
+>> -	}
+>> +	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+>>  	mf->field	= V4L2_FIELD_NONE;
+>>  
+>>  	return 0;
+>> @@ -897,17 +888,17 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
+>>  	ov2640_select_win(&mf->width, &mf->height);
+>>  
+>>  	mf->field	= V4L2_FIELD_NONE;
+>> +	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+>>  
+>>  	switch (mf->code) {
+>>  	case MEDIA_BUS_FMT_RGB565_2X8_BE:
+>>  	case MEDIA_BUS_FMT_RGB565_2X8_LE:
+>> -		mf->colorspace = V4L2_COLORSPACE_SRGB;
+>> +	case MEDIA_BUS_FMT_YUYV8_2X8:
+>> +	case MEDIA_BUS_FMT_UYVY8_2X8:
+>>  		break;
+>>  	default:
+>>  		mf->code = MEDIA_BUS_FMT_UYVY8_2X8;
+>> -	case MEDIA_BUS_FMT_YUYV8_2X8:
+>> -	case MEDIA_BUS_FMT_UYVY8_2X8:
+>> -		mf->colorspace = V4L2_COLORSPACE_JPEG;
+>> +		break;
+>>  	}
+>>  
+>>  	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+>> diff --git a/drivers/media/platform/soc_camera/Kconfig b/drivers/media/platform/soc_camera/Kconfig
+>> index 86d74788544f..a37ec91b026e 100644
+>> --- a/drivers/media/platform/soc_camera/Kconfig
+>> +++ b/drivers/media/platform/soc_camera/Kconfig
+>> @@ -29,9 +29,8 @@ config VIDEO_SH_MOBILE_CEU
+>>  
+>>  config VIDEO_ATMEL_ISI
+>>  	tristate "ATMEL Image Sensor Interface (ISI) support"
+>> -	depends on VIDEO_DEV && SOC_CAMERA
+>> +	depends on VIDEO_V4L2 && OF && HAS_DMA
+>>  	depends on ARCH_AT91 || COMPILE_TEST
+>> -	depends on HAS_DMA
+>>  	select VIDEOBUF2_DMA_CONTIG
+>>  	---help---
+>>  	  This module makes the ATMEL Image Sensor Interface available
+>> diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+>> index 46de657c3e6d..a837b94281ef 100644
+>> --- a/drivers/media/platform/soc_camera/atmel-isi.c
+>> +++ b/drivers/media/platform/soc_camera/atmel-isi.c
+> ...
+>> @@ -457,60 +431,83 @@ static void buffer_queue(struct vb2_buffer *vb)
+>>  		if (vb2_is_streaming(vb->vb2_queue))
+>>  			start_dma(isi, buf);
+>>  	}
+>> -	spin_unlock_irqrestore(&isi->lock, flags);
+>> +	spin_unlock_irqrestore(&isi->irqlock, flags);
+>>  }
+>>  
+>>  static int start_streaming(struct vb2_queue *vq, unsigned int count)
+>>  {
+>> -	struct soc_camera_device *icd = soc_camera_from_vb2q(vq);
+>> -	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
+>> -	struct atmel_isi *isi = ici->priv;
+>> +	struct atmel_isi *isi = vb2_get_drv_priv(vq);
+>> +	struct frame_buffer *buf, *node;
+>>  	int ret;
+>>  
+>> -	pm_runtime_get_sync(ici->v4l2_dev.dev);
+>> +	/* Enable stream on the sub device */
+>> +	ret = v4l2_subdev_call(isi->entity.subdev, video, s_stream, 1);
+>> +	if (ret && ret != -ENOIOCTLCMD) {
+>> +		v4l2_err(&isi->v4l2_dev, "stream on failed in subdev\n");
+> 
+> You mostly use dev_*() functions to print infromation in the driver. How
+> about using them consistently? There are few other cases of v4l2_err(), too.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4af912305d2c..23cfd5bc2158 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6365,6 +6365,7 @@ M:	Peter Rosin <peda@axentia.se>
- L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/iio/multiplexer/iio-mux.txt
-+F:	drivers/iio/multiplexer/iio-mux.c
- 
- IIO SUBSYSTEM AND DRIVERS
- M:	Jonathan Cameron <jic23@kernel.org>
-diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-index a918270d6f54..b3c8c6ef0dff 100644
---- a/drivers/iio/Kconfig
-+++ b/drivers/iio/Kconfig
-@@ -83,6 +83,7 @@ source "drivers/iio/humidity/Kconfig"
- source "drivers/iio/imu/Kconfig"
- source "drivers/iio/light/Kconfig"
- source "drivers/iio/magnetometer/Kconfig"
-+source "drivers/iio/multiplexer/Kconfig"
- source "drivers/iio/orientation/Kconfig"
- if IIO_TRIGGER
-    source "drivers/iio/trigger/Kconfig"
-diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
-index 33fa4026f92c..93c769cd99bf 100644
---- a/drivers/iio/Makefile
-+++ b/drivers/iio/Makefile
-@@ -28,6 +28,7 @@ obj-y += humidity/
- obj-y += imu/
- obj-y += light/
- obj-y += magnetometer/
-+obj-y += multiplexer/
- obj-y += orientation/
- obj-y += potentiometer/
- obj-y += potentiostat/
-diff --git a/drivers/iio/multiplexer/Kconfig b/drivers/iio/multiplexer/Kconfig
-new file mode 100644
-index 000000000000..70a044510686
---- /dev/null
-+++ b/drivers/iio/multiplexer/Kconfig
-@@ -0,0 +1,18 @@
-+#
-+# Multiplexer drivers
-+#
-+# When adding new entries keep the list in alphabetical order
-+
-+menu "Multiplexers"
-+
-+config IIO_MUX
-+	tristate "IIO multiplexer driver"
-+	select MULTIPLEXER
-+	depends on OF
-+	help
-+	  Say yes here to build support for the IIO multiplexer.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called iio-mux.
-+
-+endmenu
-diff --git a/drivers/iio/multiplexer/Makefile b/drivers/iio/multiplexer/Makefile
-new file mode 100644
-index 000000000000..68be3c4abd07
---- /dev/null
-+++ b/drivers/iio/multiplexer/Makefile
-@@ -0,0 +1,6 @@
-+#
-+# Makefile for industrial I/O multiplexer drivers
-+#
-+
-+# When adding new entries keep the list in alphabetical order
-+obj-$(CONFIG_IIO_MUX) += iio-mux.o
-diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
-new file mode 100644
-index 000000000000..94d40f9bef4c
---- /dev/null
-+++ b/drivers/iio/multiplexer/iio-mux.c
-@@ -0,0 +1,456 @@
-+/*
-+ * IIO multiplexer driver
-+ *
-+ * Copyright (C) 2017 Axentia Technologies AB
-+ *
-+ * Author: Peter Rosin <peda@axentia.se>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/mux.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+struct mux_ext_info_cache {
-+	char *data;
-+	size_t size;
-+};
-+
-+struct mux_child {
-+	struct mux_ext_info_cache *ext_info_cache;
-+};
-+
-+struct mux {
-+	int cached_state;
-+	struct mux_control *control;
-+	struct iio_channel *parent;
-+	struct iio_dev *indio_dev;
-+	struct iio_chan_spec *chan;
-+	struct iio_chan_spec_ext_info *ext_info;
-+	struct mux_child *child;
-+};
-+
-+static int iio_mux_select(struct mux *mux, int idx)
-+{
-+	struct mux_child *child = &mux->child[idx];
-+	struct iio_chan_spec const *chan = &mux->chan[idx];
-+	int ret;
-+	int i;
-+
-+	ret = mux_control_select(mux->control, chan->channel);
-+	if (ret < 0) {
-+		mux->cached_state = -1;
-+		return ret;
-+	}
-+
-+	if (mux->cached_state == chan->channel)
-+		return 0;
-+
-+	if (chan->ext_info) {
-+		for (i = 0; chan->ext_info[i].name; ++i) {
-+			const char *attr = chan->ext_info[i].name;
-+			struct mux_ext_info_cache *cache;
-+
-+			cache = &child->ext_info_cache[i];
-+
-+			if (cache->size < 0)
-+				continue;
-+
-+			ret = iio_write_channel_ext_info(mux->parent, attr,
-+							 cache->data,
-+							 cache->size);
-+
-+			if (ret < 0) {
-+				mux_control_deselect(mux->control);
-+				mux->cached_state = -1;
-+				return ret;
-+			}
-+		}
-+	}
-+	mux->cached_state = chan->channel;
-+
-+	return 0;
-+}
-+
-+static void iio_mux_deselect(struct mux *mux)
-+{
-+	mux_control_deselect(mux->control);
-+}
-+
-+static int mux_read_raw(struct iio_dev *indio_dev,
-+			struct iio_chan_spec const *chan,
-+			int *val, int *val2, long mask)
-+{
-+	struct mux *mux = iio_priv(indio_dev);
-+	int idx = chan - mux->chan;
-+	int ret;
-+
-+	ret = iio_mux_select(mux, idx);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = iio_read_channel_raw(mux->parent, val);
-+		break;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		ret = iio_read_channel_scale(mux->parent, val, val2);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	iio_mux_deselect(mux);
-+
-+	return ret;
-+}
-+
-+static int mux_read_avail(struct iio_dev *indio_dev,
-+			  struct iio_chan_spec const *chan,
-+			  const int **vals, int *type, int *length,
-+			  long mask)
-+{
-+	struct mux *mux = iio_priv(indio_dev);
-+	int idx = chan - mux->chan;
-+	int ret;
-+
-+	ret = iio_mux_select(mux, idx);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		*type = IIO_VAL_INT;
-+		ret = iio_read_avail_channel_raw(mux->parent, vals, length);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	iio_mux_deselect(mux);
-+
-+	return ret;
-+}
-+
-+static int mux_write_raw(struct iio_dev *indio_dev,
-+			 struct iio_chan_spec const *chan,
-+			 int val, int val2, long mask)
-+{
-+	struct mux *mux = iio_priv(indio_dev);
-+	int idx = chan - mux->chan;
-+	int ret;
-+
-+	ret = iio_mux_select(mux, idx);
-+	if (ret < 0)
-+		return ret;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = iio_write_channel_raw(mux->parent, val);
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	iio_mux_deselect(mux);
-+
-+	return ret;
-+}
-+
-+static const struct iio_info mux_info = {
-+	.read_raw = mux_read_raw,
-+	.read_avail = mux_read_avail,
-+	.write_raw = mux_write_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static ssize_t mux_read_ext_info(struct iio_dev *indio_dev, uintptr_t private,
-+				 struct iio_chan_spec const *chan, char *buf)
-+{
-+	struct mux *mux = iio_priv(indio_dev);
-+	int idx = chan - mux->chan;
-+	ssize_t ret;
-+
-+	ret = iio_mux_select(mux, idx);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = iio_read_channel_ext_info(mux->parent,
-+					mux->ext_info[private].name,
-+					buf);
-+
-+	iio_mux_deselect(mux);
-+
-+	return ret;
-+}
-+
-+static ssize_t mux_write_ext_info(struct iio_dev *indio_dev, uintptr_t private,
-+				  struct iio_chan_spec const *chan,
-+				  const char *buf, size_t len)
-+{
-+	struct device *dev = indio_dev->dev.parent;
-+	struct mux *mux = iio_priv(indio_dev);
-+	int idx = chan - mux->chan;
-+	char *new;
-+	ssize_t ret;
-+
-+	ret = iio_mux_select(mux, idx);
-+	if (ret < 0)
-+		return ret;
-+
-+	new = devm_kmemdup(dev, buf, len + 1, GFP_KERNEL);
-+	if (!new) {
-+		iio_mux_deselect(mux);
-+		return -ENOMEM;
-+	}
-+
-+	new[len] = 0;
-+
-+	ret = iio_write_channel_ext_info(mux->parent,
-+					 mux->ext_info[private].name,
-+					 buf, len);
-+	if (ret < 0) {
-+		iio_mux_deselect(mux);
-+		devm_kfree(dev, new);
-+		return ret;
-+	}
-+
-+	devm_kfree(dev, mux->child[idx].ext_info_cache[private].data);
-+	mux->child[idx].ext_info_cache[private].data = new;
-+	mux->child[idx].ext_info_cache[private].size = len;
-+
-+	iio_mux_deselect(mux);
-+
-+	return ret;
-+}
-+
-+static int mux_configure_channel(struct device *dev, struct mux *mux,
-+				 u32 state, const char *label, int idx)
-+{
-+	struct mux_child *child = &mux->child[idx];
-+	struct iio_chan_spec *chan = &mux->chan[idx];
-+	struct iio_chan_spec const *pchan = mux->parent->channel;
-+	char *page = NULL;
-+	int num_ext_info;
-+	int i;
-+	int ret;
-+
-+	chan->indexed = 1;
-+	chan->output = pchan->output;
-+	chan->datasheet_name = label;
-+	chan->ext_info = mux->ext_info;
-+
-+	ret = iio_get_channel_type(mux->parent, &chan->type);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to get parent channel type\n");
-+		return ret;
-+	}
-+
-+	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_RAW))
-+		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_RAW);
-+	if (iio_channel_has_info(pchan, IIO_CHAN_INFO_SCALE))
-+		chan->info_mask_separate |= BIT(IIO_CHAN_INFO_SCALE);
-+
-+	if (iio_channel_has_available(pchan, IIO_CHAN_INFO_RAW))
-+		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
-+
-+	if (state >= mux->control->states) {
-+		dev_err(dev, "too many channels\n");
-+		return -EINVAL;
-+	}
-+
-+	chan->channel = state;
-+
-+	num_ext_info = iio_get_channel_ext_info_count(mux->parent);
-+	if (num_ext_info) {
-+		page = devm_kzalloc(dev, PAGE_SIZE, GFP_KERNEL);
-+		if (!page)
-+			return -ENOMEM;
-+	}
-+	child->ext_info_cache = devm_kzalloc(dev,
-+					     sizeof(*child->ext_info_cache) *
-+					     num_ext_info, GFP_KERNEL);
-+	for (i = 0; i < num_ext_info; ++i) {
-+		child->ext_info_cache[i].size = -1;
-+
-+		if (!pchan->ext_info[i].write)
-+			continue;
-+		if (!pchan->ext_info[i].read)
-+			continue;
-+
-+		ret = iio_read_channel_ext_info(mux->parent,
-+						mux->ext_info[i].name,
-+						page);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to get ext_info '%s'\n",
-+				pchan->ext_info[i].name);
-+			return ret;
-+		}
-+		if (ret >= PAGE_SIZE) {
-+			dev_err(dev, "too large ext_info '%s'\n",
-+				pchan->ext_info[i].name);
-+			return -EINVAL;
-+		}
-+
-+		child->ext_info_cache[i].data = devm_kmemdup(dev, page, ret + 1,
-+							     GFP_KERNEL);
-+		child->ext_info_cache[i].data[ret] = 0;
-+		child->ext_info_cache[i].size = ret;
-+	}
-+
-+	if (page)
-+		devm_kfree(dev, page);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Same as of_property_for_each_string(), but also keeps track of the
-+ * index of each string.
-+ */
-+#define of_property_for_each_string_index(np, propname, prop, s, i)	\
-+	for (prop = of_find_property(np, propname, NULL),		\
-+	     s = of_prop_next_string(prop, NULL),			\
-+	     i = 0;							\
-+	     s;								\
-+	     s = of_prop_next_string(prop, s),				\
-+	     i++)
-+
-+static int mux_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct iio_dev *indio_dev;
-+	struct iio_channel *parent;
-+	struct mux *mux;
-+	struct property *prop;
-+	const char *label;
-+	u32 state;
-+	int sizeof_ext_info;
-+	int children;
-+	int sizeof_priv;
-+	int i;
-+	int ret;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	parent = devm_iio_channel_get(dev, "parent");
-+	if (IS_ERR(parent)) {
-+		if (PTR_ERR(parent) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get parent channel\n");
-+		return PTR_ERR(parent);
-+	}
-+
-+	sizeof_ext_info = iio_get_channel_ext_info_count(parent);
-+	if (sizeof_ext_info) {
-+		sizeof_ext_info += 1; /* one extra entry for the sentinel */
-+		sizeof_ext_info *= sizeof(*mux->ext_info);
-+	}
-+
-+	children = 0;
-+	of_property_for_each_string(np, "channels", prop, label) {
-+		if (*label)
-+			children++;
-+	}
-+	if (children <= 0) {
-+		dev_err(dev, "not even a single child\n");
-+		return -EINVAL;
-+	}
-+
-+	sizeof_priv = sizeof(*mux);
-+	sizeof_priv += sizeof(*mux->child) * children;
-+	sizeof_priv += sizeof(*mux->chan) * children;
-+	sizeof_priv += sizeof_ext_info;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof_priv);
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	mux = iio_priv(indio_dev);
-+	mux->child = (struct mux_child *)(mux + 1);
-+	mux->chan = (struct iio_chan_spec *)(mux->child + children);
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	mux->parent = parent;
-+	mux->cached_state = -1;
-+
-+	indio_dev->name = dev_name(dev);
-+	indio_dev->dev.parent = dev;
-+	indio_dev->info = &mux_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = mux->chan;
-+	indio_dev->num_channels = children;
-+	if (sizeof_ext_info) {
-+		mux->ext_info = devm_kmemdup(dev,
-+					     parent->channel->ext_info,
-+					     sizeof_ext_info, GFP_KERNEL);
-+		if (!mux->ext_info)
-+			return -ENOMEM;
-+
-+		for (i = 0; mux->ext_info[i].name; ++i) {
-+			if (parent->channel->ext_info[i].read)
-+				mux->ext_info[i].read = mux_read_ext_info;
-+			if (parent->channel->ext_info[i].write)
-+				mux->ext_info[i].write = mux_write_ext_info;
-+			mux->ext_info[i].private = i;
-+		}
-+	}
-+
-+	mux->control = devm_mux_control_get(dev, NULL);
-+	if (IS_ERR(mux->control)) {
-+		if (PTR_ERR(mux->control) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get control-mux\n");
-+		return PTR_ERR(mux->control);
-+	}
-+
-+	i = 0;
-+	of_property_for_each_string_index(np, "channels", prop, label, state) {
-+		if (!*label)
-+			continue;
-+
-+		ret = mux_configure_channel(dev, mux, state, label, i++);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	ret = devm_iio_device_register(dev, indio_dev);
-+	if (ret) {
-+		dev_err(dev, "failed to register iio device\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mux_match[] = {
-+	{ .compatible = "io-channel-mux" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, mux_match);
-+
-+static struct platform_driver mux_driver = {
-+	.probe = mux_probe,
-+	.driver = {
-+		.name = "iio-mux",
-+		.of_match_table = mux_match,
-+	},
-+};
-+module_platform_driver(mux_driver);
-+
-+MODULE_DESCRIPTION("IIO multiplexer driver");
-+MODULE_AUTHOR("Peter Rosin <peda@axentia.se>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.1.4
+Converted them all to dev_err.
+
+> 
+>> +		goto err_start_stream;
+>> +	}
+>> +
+>> +	pm_runtime_get_sync(isi->dev);
+>>  
+>>  	/* Reset ISI */
+>>  	ret = atmel_isi_wait_status(isi, WAIT_ISI_RESET);
+>>  	if (ret < 0) {
+>> -		dev_err(icd->parent, "Reset ISI timed out\n");
+>> -		pm_runtime_put(ici->v4l2_dev.dev);
+>> -		return ret;
+>> +		dev_err(isi->dev, "Reset ISI timed out\n");
+>> +		goto err_reset;
+>>  	}
+>>  	/* Disable all interrupts */
+>>  	isi_writel(isi, ISI_INTDIS, (u32)~0UL);
+>>  
+>> -	configure_geometry(isi, icd->user_width, icd->user_height,
+>> -				icd->current_fmt);
+>> +	isi->sequence = 0;
+>> +	configure_geometry(isi);
+>>  
+>> -	spin_lock_irq(&isi->lock);
+>> +	spin_lock_irq(&isi->irqlock);
+>>  	/* Clear any pending interrupt */
+>>  	isi_readl(isi, ISI_STATUS);
+>>  
+>> -	if (count)
+>> -		start_dma(isi, isi->active);
+>> -	spin_unlock_irq(&isi->lock);
+>> +	start_dma(isi, isi->active);
+>> +	spin_unlock_irq(&isi->irqlock);
+>>  
+>>  	return 0;
+>> +
+>> +err_reset:
+>> +	pm_runtime_put(isi->dev);
+>> +	v4l2_subdev_call(isi->entity.subdev, video, s_stream, 0);
+>> +
+>> +err_start_stream:
+>> +	spin_lock_irq(&isi->irqlock);
+>> +	isi->active = NULL;
+>> +	/* Release all active buffers */
+>> +	list_for_each_entry_safe(buf, node, &isi->video_buffer_list, list) {
+>> +		list_del_init(&buf->list);
+>> +		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
+>> +	}
+>> +	spin_unlock_irq(&isi->irqlock);
+>> +
+>> +	return ret;
+>>  }
+>>  
+>>  /* abort streaming and wait for last buffer */
+>>  static void stop_streaming(struct vb2_queue *vq)
+>>  {
+>> -	struct soc_camera_device *icd = soc_camera_from_vb2q(vq);
+>> -	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
+>> -	struct atmel_isi *isi = ici->priv;
+>> +	struct atmel_isi *isi = vb2_get_drv_priv(vq);
+>>  	struct frame_buffer *buf, *node;
+>>  	int ret = 0;
+>>  	unsigned long timeout;
+>>  
+>> -	spin_lock_irq(&isi->lock);
+>> +	/* Disable stream on the sub device */
+>> +	ret = v4l2_subdev_call(isi->entity.subdev, video, s_stream, 0);
+>> +	if (ret && ret != -ENOIOCTLCMD)
+>> +		v4l2_err(&isi->v4l2_dev, "stream off failed in subdev\n");
+>> +
+>> +	spin_lock_irq(&isi->irqlock);
+>>  	isi->active = NULL;
+>>  	/* Release all active buffers */
+>>  	list_for_each_entry_safe(buf, node, &isi->video_buffer_list, list) {
+>>  		list_del_init(&buf->list);
+>>  		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
+>>  	}
+>> -	spin_unlock_irq(&isi->lock);
+>> +	spin_unlock_irq(&isi->irqlock);
+>>  
+>>  	if (!isi->enable_preview_path) {
+>>  		timeout = jiffies + FRAME_INTERVAL_MILLI_SEC * HZ;
+> 
+> ...
+> 
+>> @@ -1021,13 +864,349 @@ static int atmel_isi_parse_dt(struct atmel_isi *isi,
+>>  	return 0;
+>>  }
+>>  
+>> +static int isi_open(struct file *file)
+>> +{
+>> +	struct atmel_isi *isi = video_drvdata(file);
+>> +	struct v4l2_subdev *sd = isi->entity.subdev;
+>> +	int ret;
+>> +
+>> +	if (mutex_lock_interruptible(&isi->lock))
+>> +		return -ERESTARTSYS;
+>> +
+>> +	ret = v4l2_fh_open(file);
+>> +	if (ret < 0)
+>> +		goto unlock;
+>> +
+>> +	if (!v4l2_fh_is_singular_file(file))
+>> +		goto fh_rel;
+>> +
+>> +	ret = v4l2_subdev_call(sd, core, s_power, 1);
+>> +	if (ret < 0 && ret != -ENOIOCTLCMD)
+>> +		goto fh_rel;
+>> +
+>> +	ret = isi_set_fmt(isi, &isi->fmt);
+>> +	if (ret)
+>> +		v4l2_subdev_call(sd, core, s_power, 0);
+>> +fh_rel:
+>> +	if (ret)
+>> +		v4l2_fh_release(file);
+>> +unlock:
+>> +	mutex_unlock(&isi->lock);
+>> +	return ret;
+>> +}
+>> +
+>> +static int isi_release(struct file *file)
+>> +{
+>> +	struct atmel_isi *isi = video_drvdata(file);
+>> +	struct v4l2_subdev *sd = isi->entity.subdev;
+>> +	bool fh_singular;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&isi->lock);
+>> +
+>> +	fh_singular = v4l2_fh_is_singular_file(file);
+>> +
+>> +	ret = _vb2_fop_release(file, NULL);
+>> +
+>> +	if (fh_singular)
+>> +		v4l2_subdev_call(sd, core, s_power, 0);
+>> +
+>> +	mutex_unlock(&isi->lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static const struct v4l2_ioctl_ops isi_ioctl_ops = {
+>> +	.vidioc_querycap		= isi_querycap,
+>> +
+>> +	.vidioc_try_fmt_vid_cap		= isi_try_fmt_vid_cap,
+>> +	.vidioc_g_fmt_vid_cap		= isi_g_fmt_vid_cap,
+>> +	.vidioc_s_fmt_vid_cap		= isi_s_fmt_vid_cap,
+>> +	.vidioc_enum_fmt_vid_cap	= isi_enum_fmt_vid_cap,
+>> +
+>> +	.vidioc_enum_input		= isi_enum_input,
+>> +	.vidioc_g_input			= isi_g_input,
+>> +	.vidioc_s_input			= isi_s_input,
+>> +
+>> +	.vidioc_g_parm			= isi_g_parm,
+>> +	.vidioc_s_parm			= isi_s_parm,
+>> +	.vidioc_enum_framesizes		= isi_enum_framesizes,
+>> +	.vidioc_enum_frameintervals	= isi_enum_frameintervals,
+>> +
+>> +	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
+>> +	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
+>> +	.vidioc_querybuf		= vb2_ioctl_querybuf,
+>> +	.vidioc_qbuf			= vb2_ioctl_qbuf,
+>> +	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
+>> +	.vidioc_expbuf			= vb2_ioctl_expbuf,
+>> +	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
+>> +	.vidioc_streamon		= vb2_ioctl_streamon,
+>> +	.vidioc_streamoff		= vb2_ioctl_streamoff,
+>> +
+>> +	.vidioc_log_status		= v4l2_ctrl_log_status,
+>> +	.vidioc_subscribe_event		= v4l2_ctrl_subscribe_event,
+>> +	.vidioc_unsubscribe_event	= v4l2_event_unsubscribe,
+>> +};
+>> +
+>> +static const struct v4l2_file_operations isi_fops = {
+>> +	.owner		= THIS_MODULE,
+>> +	.unlocked_ioctl	= video_ioctl2,
+>> +	.open		= isi_open,
+>> +	.release	= isi_release,
+>> +	.poll		= vb2_fop_poll,
+>> +	.mmap		= vb2_fop_mmap,
+>> +	.read		= vb2_fop_read,
+>> +};
+>> +
+>> +static int isi_set_default_fmt(struct atmel_isi *isi)
+>> +{
+>> +	struct v4l2_format f = {
+>> +		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
+>> +		.fmt.pix = {
+>> +			.width		= VGA_WIDTH,
+>> +			.height		= VGA_HEIGHT,
+>> +			.field		= V4L2_FIELD_NONE,
+>> +			.pixelformat	= isi->user_formats[0]->fourcc,
+>> +		},
+>> +	};
+>> +	int ret;
+>> +
+>> +	ret = isi_try_fmt(isi, &f, NULL);
+>> +	if (ret)
+>> +		return ret;
+>> +	isi->current_fmt = isi->user_formats[0];
+>> +	isi->fmt = f;
+>> +	return 0;
+>> +}
+>> +
+>> +static struct isi_format *find_format_by_code(unsigned int code, int *index)
+>> +{
+>> +	struct isi_format *fmt = &isi_formats[0];
+>> +	unsigned int i;
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(isi_formats); i++) {
+>> +		if (fmt->mbus_code == code && !fmt->support && !fmt->skip) {
+>> +			*index = i;
+>> +			return fmt;
+>> +		}
+>> +
+>> +		fmt++;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +
+>> +static int isi_formats_init(struct atmel_isi *isi)
+>> +{
+>> +	struct isi_format *fmt;
+>> +	struct v4l2_subdev *subdev = isi->entity.subdev;
+>> +	int num_fmts = 0, i, j;
+>> +	struct v4l2_subdev_mbus_code_enum mbus_code = {
+>> +		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
+>> +	};
+>> +
+>> +	fmt = &isi_formats[0];
+>> +
+>> +	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code,
+>> +	       NULL, &mbus_code)) {
+>> +		fmt = find_format_by_code(mbus_code.code, &i);
+>> +		if (!fmt) {
+>> +			mbus_code.index++;
+>> +			continue;
+>> +		}
+>> +
+>> +		fmt->support = true;
+>> +		for (i = 0; i < ARRAY_SIZE(isi_formats); i++)
+>> +			if (isi_formats[i].fourcc == fmt->fourcc &&
+>> +			    !isi_formats[i].support)
+>> +				isi_formats[i].skip = true;
+>> +		num_fmts++;
+>> +	}
+>> +
+>> +	if (!num_fmts)
+>> +		return -ENXIO;
+>> +
+>> +	isi->num_user_formats = num_fmts;
+>> +	isi->user_formats = devm_kcalloc(isi->dev,
+>> +					 num_fmts, sizeof(struct isi_format *),
+>> +					 GFP_KERNEL);
+>> +	if (!isi->user_formats) {
+>> +		v4l2_err(&isi->v4l2_dev, "could not allocate memory\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	fmt = &isi_formats[0];
+>> +	for (i = 0, j = 0; i < ARRAY_SIZE(isi_formats); i++) {
+>> +		if (fmt->support)
+>> +			isi->user_formats[j++] = fmt;
+>> +
+>> +		fmt++;
+>> +	}
+>> +	isi->current_fmt = isi->user_formats[0];
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int isi_graph_notify_complete(struct v4l2_async_notifier *notifier)
+>> +{
+>> +	struct atmel_isi *isi = notifier_to_isi(notifier);
+>> +	int ret;
+>> +
+>> +	isi->vdev->ctrl_handler	= isi->entity.subdev->ctrl_handler;
+>> +	ret = isi_formats_init(isi);
+>> +	if (ret) {
+>> +		dev_err(isi->dev, "No supported mediabus format found\n");
+>> +		return ret;
+>> +	}
+>> +	isi_camera_set_bus_param(isi);
+>> +
+>> +	ret = isi_set_default_fmt(isi);
+>> +	if (ret) {
+>> +		dev_err(isi->dev, "Could not set default format\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = video_register_device(isi->vdev, VFL_TYPE_GRABBER, -1);
+>> +	if (ret) {
+>> +		dev_err(isi->dev, "Failed to register video device\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	dev_info(isi->dev, "Device registered as %s\n",
+>> +		 video_device_node_name(isi->vdev));
+> 
+> dev_dbg()?
+> 
+>> +	return 0;
+>> +}
+>> +
+>> +static void isi_graph_notify_unbind(struct v4l2_async_notifier *notifier,
+>> +				     struct v4l2_subdev *sd,
+>> +				     struct v4l2_async_subdev *asd)
+>> +{
+>> +	struct atmel_isi *isi = notifier_to_isi(notifier);
+>> +
+>> +	dev_info(isi->dev, "Removing %s\n",
+>> +		 video_device_node_name(isi->vdev));
+> 
+> Fits on a single line. dev_dbg()=
+> 
+>> +
+>> +	/* Checks internaly if vdev have been init or not */
+>> +	video_unregister_device(isi->vdev);
+>> +}
+>> +
+>> +static int isi_graph_notify_bound(struct v4l2_async_notifier *notifier,
+>> +				   struct v4l2_subdev *subdev,
+>> +				   struct v4l2_async_subdev *asd)
+>> +{
+>> +	struct atmel_isi *isi = notifier_to_isi(notifier);
+>> +
+>> +	dev_dbg(isi->dev, "subdev %s bound\n", subdev->name);
+>> +
+>> +	isi->entity.subdev = subdev;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int isi_graph_parse(struct atmel_isi *isi,
+>> +			    struct device_node *node)
+> 
+> Fits on a single line.
+> 
+>> +{
+>> +	struct device_node *remote;
+>> +	struct device_node *ep = NULL;
+>> +	struct device_node *next;
+>> +	int ret = 0;
+>> +
+>> +	while (1) {
+>> +		next = of_graph_get_next_endpoint(node, ep);
+>> +		if (!next)
+>> +			break;
+> 
+> You could make this a while loop condition.
+
+You would need to do:
+
+	while (next = of_graph_get_next_endpoint(node, ep))
+
+but assignments in a condition are frowned upon.
+
+I'll keep this as is.
+
+> 
+>> +
+>> +		of_node_put(ep);
+> 
+> ep is put by of_graph_get_next_endpoint(), no need to do it manually here.
+> 
+>> +		ep = next;
+>> +
+>> +		remote = of_graph_get_remote_port_parent(ep);
+>> +		if (!remote) {
+> 
+> of_node_put(ep);
+> 
+>> +			ret = -EINVAL;
+>> +			break;
+>> +		}
+>> +
+>> +		/* Skip entities that we have already processed. */
+>> +		if (remote == isi->dev->of_node) {
+>> +			of_node_put(remote);
+>> +			continue;
+>> +		}
+>> +
+>> +		/* Remote node to connect */
+>> +		if (!isi->entity.node) {
+> 
+> There would have to be something wrong about the DT graph for the two above
+> to happen. I guess one could just return an error if something is terribly
+> wrong.
+> 
+> I'm thinking this from the point of view of making this function generic,
+> and moving it to the framework as most drivers to something very similar,
+> but I'd prefer to get the fwnode patches in first.
+
+I just dropped these tests. I agree that they don't make a lot of sense.
+
+> 
+>> +			isi->entity.node = remote;
+> 
+> You could use entity.asd.match.of.node instead, and drop the node field.
+
+Done.
+
+> 
+>> +			isi->entity.asd.match_type = V4L2_ASYNC_MATCH_OF;
+>> +			isi->entity.asd.match.of.node = remote;
+>> +			ret++;
+>> +		}
+>> +	}
+>> +
+>> +	of_node_put(ep);
+>> +
+>> +	return ret;
+>> +}
+
+Please check the upcoming new version of this code if you agree with it.
+
+>> +
+>> +static int isi_graph_init(struct atmel_isi *isi)
+>> +{
+>> +	struct v4l2_async_subdev **subdevs = NULL;
+>> +	int ret;
+>> +
+>> +	/* Parse the graph to extract a list of subdevice DT nodes. */
+>> +	ret = isi_graph_parse(isi, isi->dev->of_node);
+>> +	if (ret < 0) {
+>> +		dev_err(isi->dev, "Graph parsing failed\n");
+>> +		goto done;
+>> +	}
+>> +
+>> +	if (!ret) {
+>> +		dev_err(isi->dev, "No subdev found in graph\n");
+>> +		goto done;
+>> +	}
+>> +
+>> +	if (ret != 1) {
+>> +		dev_err(isi->dev, "More then one subdev found in graph\n");
+> 
+> Is this an error case? As there's no allocation of memory for subdevs, I
+> assume so. If multiple devices aren't supported (driver or hardware), how
+> about flagging this as an error in isi_graph_parse() instead? Putting the
+> related OF node could be done there, too.
+
+Done.
+
+> 
+>> +		goto done;
+>> +	}
+>> +
+>> +	/* Register the subdevices notifier. */
+>> +	subdevs = devm_kzalloc(isi->dev, sizeof(*subdevs), GFP_KERNEL);
+>> +	if (subdevs == NULL) {
+>> +		ret = -ENOMEM;
+>> +		goto done;
+>> +	}
+>> +
+>> +	subdevs[0] = &isi->entity.asd;
+>> +
+>> +	isi->notifier.subdevs = subdevs;
+>> +	isi->notifier.num_subdevs = 1;
+>> +	isi->notifier.bound = isi_graph_notify_bound;
+>> +	isi->notifier.unbind = isi_graph_notify_unbind;
+>> +	isi->notifier.complete = isi_graph_notify_complete;
+>> +
+>> +	ret = v4l2_async_notifier_register(&isi->v4l2_dev, &isi->notifier);
+>> +	if (ret < 0) {
+>> +		dev_err(isi->dev, "Notifier registration failed\n");
+>> +		goto done;
+>> +	}
+>> +
+>> +	ret = 0;
+>> +
+>> +done:
+>> +	if (ret < 0) {
+>> +		v4l2_async_notifier_unregister(&isi->notifier);
+>> +		of_node_put(isi->entity.node);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +
+>>  static int atmel_isi_probe(struct platform_device *pdev)
+>>  {
+>>  	int irq;
+>>  	struct atmel_isi *isi;
+>> +	struct vb2_queue *q;
+>>  	struct resource *regs;
+>>  	int ret, i;
+>> -	struct soc_camera_host *soc_host;
+>>  
+>>  	isi = devm_kzalloc(&pdev->dev, sizeof(struct atmel_isi), GFP_KERNEL);
+>>  	if (!isi) {
+> 
+
+Regards,
+
+	Hans
