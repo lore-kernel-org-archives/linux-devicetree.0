@@ -1,76 +1,84 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 13/36] [media] v4l2: add a frame timeout event
-Date: Thu, 9 Mar 2017 18:38:18 -0800
-Message-ID: <b739319b-61d7-3d9d-a64f-7650ab5cd4b0@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-14-git-send-email-steve_longerbeam@mentor.com>
- <20170302155342.GJ3220@valkosipuli.retiisi.org.uk>
- <4b2bcee1-8da0-776e-4455-8d8e7a7abf0a@gmail.com>
- <20170303114506.GM3220@valkosipuli.retiisi.org.uk>
- <59663ea1-b277-1543-e770-6a102ac733a4@gmail.com>
- <20170304105600.GS3220@valkosipuli.retiisi.org.uk>
- <03c9b05c-d3ba-c890-f9fa-ad5e1a49430c@gmail.com>
- <20170305224114.GV21222@n2100.armlinux.org.uk>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] doc: bindings: Add bindings documentation for mtd
+ nvmem
+Date: Fri, 10 Mar 2017 04:17:57 +0100
+Message-ID: <9f54978c-6d61-cf2c-fb2d-f5ef2af19e0f@gmail.com>
+References: <1488875164-30440-1-git-send-email-albeu@free.fr>
+ <1488875164-30440-2-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170305224114.GV21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, laurent.pinchart+renesas@ideasonboard.com, horms+renesas@verge.net.au, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mu
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488875164-30440-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 03/07/2017 09:26 AM, Alban wrote:
+> Config data for drivers, like MAC addresses, is often stored in MTD.
+> Add a binding that define how such data storage can be represented in
+> device tree.
+> 
+> Signed-off-by: Alban <albeu-GANU6spQydw@public.gmane.org>
+> ---
+> Changelog:
+> v2: * Added a "Required properties" section with the nvmem-provider
+>       property
+> ---
+>  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> new file mode 100644
+> index 0000000..8ed25e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+> @@ -0,0 +1,33 @@
+> += NVMEM in MTD =
+> +
+> +Config data for drivers, like MAC addresses, is often stored in MTD.
+> +This binding define how such data storage can be represented in device tree.
+> +
+> +An MTD can be defined as an NVMEM provider by adding the `nvmem-provider`
+> +property to their node. Data cells can then be defined as child nodes
+> +of the partition as defined in nvmem.txt.
+
+Why don't we just read the data from MTD and be done with it ? What's
+the benefit of complicating things by using nvmem ?
+
+> +Required properties:
+> +nvmem-provider:	Indicate that the device should be registered as
+> +		NVMEM provider
+> +
+> +Example:
+> +
+> +	flash@0 {
+> +		...
+> +
+> +		partition@2 {
+> +			label = "art";
+> +			reg = <0x7F0000 0x010000>;
+> +			read-only;
+> +
+> +			nvmem-provider;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			eeprom@1000 {
+> +				label = "wmac-eeprom";
+> +				reg = <0x1000 0x1000>;
+> +			};
+> +		};
+> +	};
+> 
 
 
-On 03/05/2017 02:41 PM, Russell King - ARM Linux wrote:
-> On Sat, Mar 04, 2017 at 04:37:43PM -0800, Steve Longerbeam wrote:
->>
->>
->> On 03/04/2017 02:56 AM, Sakari Ailus wrote:
->>> That's a bit of a special situation --- still there are alike conditions on
->>> existing hardware. You should return the buffers to the user with the ERROR
->>> flag set --- or return -EIO from VIDIOC_DQBUF, if the condition will
->>> persist:
->>
->> On i.MX an EOF timeout is not recoverable without a stream restart, so
->> I decided to call vb2_queue_error() when the timeout occurs (instead
->> of sending an event). The user will then get -EIO when it attempts to
->> queue or dequeue further buffers.
->
-> I'm not sure that statement is entirely accurate.  With the IMX219
-> camera, I _could_ (with previous iterations of the iMX capture code)
-> stop it streaming, wait a while, and restart it, and everything
-> continues to work.
-
-Hi Russell, did you see the "EOF timeout" kernel error message when you
-stopped the IMX219 from streaming? Only a "EOF timeout" message
-indicates the unrecoverable case.
-
-
->
-> Are you sure that the problem you have here is caused by the iMX6
-> rather than the ADV718x CVBS decoder (your initial description said
-> it was the decoder.)
-
-Actually yes I did say it was the adv718x, but in fact I doubt the
-adv718x has abruptly stopped data transmission on the bt.656 bus.
-I actually suspect the IPU, specifically the CSI. In our experience
-the CSI is rather sensitive to glitches and/or truncated frames on the
-bt.656 bus and can easily loose vertical sync, and/or lock-up.
-
-Steve
-
->
-> If it _is_ the decoder that's going wrong, that doesn't justify
-> cripping the rest of the driver for one instance of broken hardware
-> that _might_ be attached to it.
->
+-- 
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
