@@ -1,178 +1,63 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [v3 3/5] coresight: add support for debug module
-Date: Fri, 10 Mar 2017 14:29:53 +0000
-Message-ID: <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
-References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
- <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
- <20170309175915.GA964@leoy-linaro>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 1/3] usb: orion-echi: Add support for the Armada 3700
+Date: Fri, 10 Mar 2017 15:50:30 +0100
+Message-ID: <20170310145030.GA3731@kroah.com>
+References: <Pine.LNX.4.44L0.1703091318010.1560-100000@iolanthe.rowland.org>
+ <87o9x9jw1g.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170309175915.GA964@leoy-linaro>
+Content-Disposition: inline
+In-Reply-To: <87o9x9jw1g.fsf@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Sudeep Holla <Sudeep.Holla@arm.com>
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Wilson Ding <dingwei@marvell.com>, Hua Jing <jinghua@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/17 17:59, Leo Yan wrote:
-> Hi Suziku,
-  
->> The problem is, it is not guaranteed that the EDPCSR_Hi, EDCIDSR & EDVIDSR are
->> updated as a side effect of a memory mapped access (which is what we do here) to the
->> EDPCSR_Lo.
->>
->> Section H.7.1.2 : Reads of EDPCSRs (in ARM DDI 0487A.k) :
->>
->> "The indirect writes to EDCIDSR, EDVIDSR, and EDPCSRhi might not occur for a memory-mapped access
->> to the external debug interface. For more information, see Memory-mapped accesses to the external debug
->> interface on page H8-4968."
->>
->> So we cannot really rely on the values in EDVIDSR which we use to make further decisions. So I
->> am wondering if this is really guranteed to be useful.
->
-> So this is caused by Software lock is locked?
->
-> Section H8.4.1:
->
-> "Reads and writes have no side-effects. A side-effect is where a
-> direct read or a direct write of a register creates
-> an indirect write of the same or another register. When the Software
-> Lock is locked, the indirect write does
-> not occur."
+On Fri, Mar 10, 2017 at 10:55:23AM +0100, Gregory CLEMENT wrote:
+> Hi Alan,
+>  
+>  On jeu., mars 09 2017, Alan Stern <stern@rowland.harvard.edu> wrote:
+> 
+> > On Thu, 9 Mar 2017, Gregory CLEMENT wrote:
+> >
+> >> From: Hua Jing <jinghua@marvell.com>
+> >> 
+> >> - Add a new compatible string for the Armada 3700 SoCs
+> >> 
+> >> - add sbuscfg support for orion usb controller driver. For the SoCs
+> >>   without hlock, need to program BAWR/BARD/AHBBRST fields in the sbuscfg
+> >>   register to guarantee the AHB master's burst would not overrun or
+> >>   underrun the FIFO.
+> >> 
+> >> - the sbuscfg register has to be set after the usb controller reset,
+> >>   otherwise the value would be overridden to 0. In order to do this, the
+> >>   reset callback is registered.
+> >> 
+> >> [gregory.clement@free-electrons.com: - reword commit and comments
+> >> 				     - fix error path in ehci_orion_drv_reset()
+> >> 				     - fix checkpatch warning]
+> >> Signed-off-by: Hua Jing <jinghua@marvell.com>
+> >> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> >> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+> >
+> > Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> 
+> Thanks!
+> 
+> And what about the second patch "usb: host: Allow to build ehci orion
+> with mvebu SoCs " ?
+> 
+> I don't remember what is the workflow for the usb subsystem. Will you do
+> a pull request to GKH? Or maybe he collects himself the patch once you
+> give your acked-by.
+> 
+> I will take care of the third patch and apply on the mvebu/dt64 branch
+> now that you agree the extension for the driver.
 
-Yes, thats correct, further :
+I'll take all of these once they look "good enough".  Give me a week or
+so to get to all of the pending patches in my queue...
 
-Section H9.2.32: EDPCSR
+thanks,
 
-"For a read of EDPCSRlo from the memory-mapped interface, if EDLSR.SLK == 1, meaning
-the Software Lock is locked, then the access has no side-effects. That is, EDCIDSR,
-EDVIDSR, and EDPCSRhi are unchanged."
-
-And since we do a CS_UNLOCK, that should be fine. Please ignore my comment.
-
->>> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
->>> index 130cb21..3ed651e 100644
->>> --- a/drivers/hwtracing/coresight/Kconfig
->>> +++ b/drivers/hwtracing/coresight/Kconfig
->>> @@ -89,4 +89,14 @@ config CORESIGHT_STM
->>> 	  logging useful software events or data coming from various entities
->>> 	  in the system, possibly running different OSs
->>>
->>> +config CORESIGHT_DEBUG
->>
->> To make it more specific, may be CORESIGHT_CPU_DEBUG ?
->
-> Will fix.
->
->>> +	bool "CoreSight debug driver"
->>
->> "Coresight CPU Debug driver"
->
-> Will fix.
->
->>> +	depends on ARM || ARM64
->>> +	help
->>> +	  This driver provides support for coresight debugging module. This
->>> +	  is primarily used to dump sample-based profiling registers for
->>> +	  panic. To avoid lockups when accessing debug module registers,
->>> +	  it is safer to disable CPU low power states (like "nohlt" on the
->>> +	  kernel command line) when using this feature.
->>> +
->>
->>> +#define EDPCSR_THUMB			BIT(0)
->>> +#define EDPCSR_ARM_INST_MASK		GENMASK(31, 2)
->>> +#define EDPCSR_THUMB_INST_MASK		GENMASK(31, 1)
->>
->> We don't need two different masks. {ED/DBG}PCSR has only bit 0 reserved
->> for instruction set indication.
->
-> I think we need this two different masks. Please review below extra doc
-> for PC offset analysis in ARM ARM.
-
-You're correct. Thanks for the pointer. I got confused, as there was no bit
-dedicated in the DBGPCSR bit assignment figure.
-
->>> +	/*
->>> +	 * Handle arm instruction offset, if the arm instruction
->>> +	 * is not 4 byte alignment then it's possible the case
->>> +	 * for implementation defined; keep original value for this
->>> +	 * case and print info for notice.
->>> +	 */
->>> +	if (pc & BIT(1))
->>> +		pr_emerg("Instruction offset is implementation defined\n");
->>
->> I am struggling to find the any mention about this in the ARM ARM. Please could
->> you point me to it.
->
-> Sure, please see ARM DDI 0406C.b, chapter C11.11.34 "
-> DBGPCSR, Program Counter Sampling Register":
->
-> A profiling tool can use the value of the T bit to calculate the
-> instruction address as follows:
->
-> When an offset is applied to the sampled address
-> - if T is 0 and DBGPCSR[1] is 0, ((DBGPCSR[31:2] << 2) - 8) is the
-> address of the sampled ARM instruction
-> - if T is 0 and DBGPCSR[1] is 1, the instruction address is
-> IMPLEMENTATION DEFINED
-> - if T is 1, ((DBGPCSR[31:1] << 1) - 4) is the address of the sampled
-> Thumb or ThumbEE instruction.
->
-> When no offset is applied to the sampled address
-> -  if T is 0 and DBGPCSR[1] is 0, (DBGPCSR[31:2] << 2) is the address
-> of the sampled ARM instruction
-> -  if T is 0 and DBGPCSR[1] is 1, the instruction address is
-> IMPLEMENTATION DEFINED
-> - if T is 1, (DBGPCSR[31:1] << 1) is the address of the sampled Thumb
-> or ThumbEE instruction.
->
-
-Ok.
-
-
->>> +
->>> +	put_online_cpus();
->>> +
->>> +	if (!debug_count++)
->>> +		atomic_notifier_chain_register(&panic_notifier_list,
->>> +					       &debug_notifier);
->>> +
->>
->>> +	sprintf(buf, (char *)id->data, drvdata->cpu);
->>> +	dev_info(dev, "%s initialized\n", buf);
->>
->> This could simply be :
->> 	dev_info(dev, "Coresight debug-CPU%d initialized\n", drvdata->cpu);
->>
->> and get rid of the static string and the buffer, see below.
-
-Also we need pm_runtime_put() here to balance the pm_runtime_get_ from AMBA
-device probe. More on that below.
-
->>
->>> +	return 0;
->>> +}
->>> +
->>> +static struct amba_id debug_ids[] = {
->>> +	{       /* Debug for Cortex-A53 */
->>> +		.id	= 0x000bbd03,
->>> +		.mask	= 0x000fffff,
->>
->> ...
->>
->>> +		.data   = "Coresight debug-CPU%d",
->>
->> I think this is pointless, as the debug area we are interested in is always associated
->> with a CPU, we could as well figure out what to print from the drvdata->cpu above.
->
-> I prefer to follow your suggestion for upper two comments; but I'd like
-> check with Mathieu, due I followed up Mathieu's suggestion to write
-> current code.
-
-Btw, I don't see any PM calls to make sure the power domain (at least the debug domain)
-is up, which could cause problems with accesses to some of these registers (leave alone the
-ones in CPU power domain), especially the EDPRSR. We could also do pm_runtime_get on the
-CPU's power domain, if the CPU is online, before we access the pcsr.
-
-Suzuki
+greg k-h
