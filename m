@@ -1,101 +1,64 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 10 Mar 2017 15:57:09 +0000
-Message-ID: <20170310155708.GX21222@n2100.armlinux.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310130733.GU21222@n2100.armlinux.org.uk>
- <20170310122634.0ffda7c6@vento.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170310122634.0ffda7c6@vento.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@iki.fi>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/9] net: stmmac: Rename clk_ptp_ref clock to ptp_ref
+Date: Fri, 10 Mar 2017 17:34:53 +0100
+Message-ID: <20170310163501.31811-2-thierry.reding@gmail.com>
+References: <20170310163501.31811-1-thierry.reding@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170310163501.31811-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 12:26:34PM -0300, Mauro Carvalho Chehab wrote:
-> Hi Russell,
-> 
-> Em Fri, 10 Mar 2017 13:07:33 +0000
-> Russell King - ARM Linux <linux@armlinux.org.uk> escreveu:
-> 
-> > The idea that the v4l libraries should intercept the format negotiation
-> > between the application and kernel is a particularly painful one - the
-> > default gstreamer build detects the v4l libraries, and links against it.
-> > That much is fine.
-> > 
-> > However, the problem comes when you're trying to use bayer formats. The
-> > v4l libraries "helpfully" (or rather unhelpfully) intercept the format
-> > negotiation, and decide that they'll invoke v4lconvert to convert the
-> > bayer to RGB for you, whether you want them to do that or not.
-> > 
-> > v4lconvert may not be the most efficient way to convert, or even what
-> > is desired (eg, you may want to receive the raw bayer image.)  However,
-> > since the v4l libraries/v4lconvert gives you no option but to have its
-> > conversion forced into the pipeline, other options (such as using the
-> > gstreamer neon accelerated de-bayer plugin) isn't an option 
-> 
-> That's not true. There is an special flag, used only by libv4l2
-> emulated formats, that indicates when a video format is handled
-> via v4lconvert:
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-I'm afraid that my statement comes from trying to use gstreamer with
-libv4l2 and _not_ being able to use the 8-bit bayer formats there at
-all - they are simply not passed across to the application through
-libv4l2/v4lconvert.
+There aren't currently any users of the "clk_ptp_ref", but there are
+other references to "ptp_ref", so I'm leaning towards considering that a
+typo. Fix it.
 
-Instead, the formats that are passed across are the emulated formats.
-As I said above, that forces applications to use only the v4lconvert
-formats, the raw formats are not available.
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/stmmac.txt      | 6 +++---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-So, the presence or absence of the V4L2_FMT_FLAG_EMULATED is quite
-meaningless if you can't even enumerate the non-converted formats.
-
-The problem comes from the "always needs conversion" stuff in
-v4lconvert coupled with the way this subdev stuff works - since it
-requires manual configuration of all the pads within the kernel
-media pipeline, the kernel ends up only advertising _one_ format
-to userspace - in my case, that's RGGB8.
-
-When v4lconvert_create_with_dev_ops() enumerates the formats from
-the kernel, it gets only RGGB8.  That causes always_needs_conversion
-in there to remain true, so the special v4l control which enables/
-disables conversion gets created with a default value of "true".
-The RGGB8 bit is also set in data->supported_src_formats.
-
-This causes v4lconvert_supported_dst_fmt_only() to return true.
-
-What this all means is that v4lconvert_enum_fmt() will _not_ return
-any of the kernel formats, only the faked formats.
-
-Ergo, the RGGB8 format from the kernel is completely hidden from the
-application, and only the emulated format is made available.  As I
-said above, this forces v4lconvert's debayering on the application,
-whether you want it or not.
-
-In the gstreamer case, it knows nothing about this special control,
-which means that trying to use this gstreamer pipeline:
-
-$ gst-launch-1.0 v4l2src device=/dev/video6 ! bayer2rgbneon ! xvimagesink
-
-is completely impossible without first rebuilding gstreamer _without_
-libv4l support.  Build gstreamer without libv4l support, and the above
-works.
-
-Enabling debug output in gstreamer's v4l2src plugin confirms that
-the kernel's bayer format are totally hidden from gstreamer when
-linked with libv4l2, but are present when it isn't linked with
-libv4l2.
-
+diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+index d3bfc2b30fb5..11b27dfd1627 100644
+--- a/Documentation/devicetree/bindings/net/stmmac.txt
++++ b/Documentation/devicetree/bindings/net/stmmac.txt
+@@ -28,9 +28,9 @@ Optional properties:
+   clocks may be specified in derived bindings.
+ - clock-names: One name for each entry in the clocks property, the
+   first one should be "stmmaceth" and the second one should be "pclk".
+-- clk_ptp_ref: this is the PTP reference clock; in case of the PTP is
+-  available this clock is used for programming the Timestamp Addend Register.
+-  If not passed then the system clock will be used and this is fine on some
++- ptp_ref: this is the PTP reference clock; in case of the PTP is available
++  this clock is used for programming the Timestamp Addend Register. If not
++  passed then the system clock will be used and this is fine on some
+   platforms.
+ - tx-fifo-depth: See ethernet.txt file in the same directory
+ - rx-fifo-depth: See ethernet.txt file in the same directory
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+index 0ba1caf18619..f2d94eafeb0a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -359,7 +359,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
+ 	clk_prepare_enable(plat->pclk);
+ 
+ 	/* Fall-back to main clock in case of no PTP ref is passed */
+-	plat->clk_ptp_ref = devm_clk_get(&pdev->dev, "clk_ptp_ref");
++	plat->clk_ptp_ref = devm_clk_get(&pdev->dev, "ptp_ref");
+ 	if (IS_ERR(plat->clk_ptp_ref)) {
+ 		plat->clk_ptp_rate = clk_get_rate(plat->stmmac_clk);
+ 		plat->clk_ptp_ref = NULL;
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.12.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
