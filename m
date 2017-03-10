@@ -1,127 +1,202 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v5 18/39] [media] v4l: subdev: Add function to validate frame
- interval
-Date: Thu,  9 Mar 2017 20:52:58 -0800
-Message-ID: <1489121599-23206-19-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v5 35/39] media: imx: csi/fim: add support for frame intervals
+Date: Thu,  9 Mar 2017 20:53:15 -0800
+Message-ID: <1489121599-23206-36-git-send-email-steve_longerbeam@mentor.com>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Russell King <rmk+kernel@armlinux.org.uk>, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-If the pads on both sides of a link specify a frame interval, then
-those frame intervals should match. Create the exported function
-v4l2_subdev_link_validate_frame_interval() to verify this. This
-function can be called in a subdevice's media_entity_operations
-or v4l2_subdev_pad_ops link_validate callbacks.
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
+Add support to CSI for negotiation of frame intervals, and use this
+information to configure the frame interval monitor.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- drivers/media/v4l2-core/v4l2-subdev.c | 50 +++++++++++++++++++++++++++++++++++
- include/media/v4l2-subdev.h           | 10 +++++++
- 2 files changed, 60 insertions(+)
+ drivers/staging/media/imx/imx-media-csi.c | 46 +++++++++++++++++++++++++++++--
+ drivers/staging/media/imx/imx-media-fim.c | 28 +++++++------------
+ drivers/staging/media/imx/imx-media.h     |  2 +-
+ 3 files changed, 54 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-index da78497..7a0f387 100644
---- a/drivers/media/v4l2-core/v4l2-subdev.c
-+++ b/drivers/media/v4l2-core/v4l2-subdev.c
-@@ -521,6 +521,25 @@ int v4l2_subdev_link_validate_default(struct v4l2_subdev *sd,
- EXPORT_SYMBOL_GPL(v4l2_subdev_link_validate_default);
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 6640869..b556fa4 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -63,6 +63,7 @@ struct csi_priv {
  
- static int
-+v4l2_subdev_link_validate_get_fi(struct media_pad *pad,
-+				 struct v4l2_subdev_frame_interval *fi)
+ 	struct v4l2_mbus_framefmt format_mbus[CSI_NUM_PADS];
+ 	const struct imx_media_pixfmt *cc[CSI_NUM_PADS];
++	struct v4l2_fract frame_interval;
+ 	struct v4l2_rect crop;
+ 
+ 	/* active vb2 buffers to send to video dev sink */
+@@ -570,7 +571,8 @@ static int csi_start(struct csi_priv *priv)
+ 
+ 	/* start the frame interval monitor */
+ 	if (priv->fim) {
+-		ret = imx_media_fim_set_stream(priv->fim, priv->sensor, true);
++		ret = imx_media_fim_set_stream(priv->fim,
++					       &priv->frame_interval, true);
+ 		if (ret)
+ 			goto idmac_stop;
+ 	}
+@@ -585,7 +587,8 @@ static int csi_start(struct csi_priv *priv)
+ 
+ fim_off:
+ 	if (priv->fim)
+-		imx_media_fim_set_stream(priv->fim, priv->sensor, false);
++		imx_media_fim_set_stream(priv->fim,
++					 &priv->frame_interval, false);
+ idmac_stop:
+ 	if (priv->dest == IPU_CSI_DEST_IDMAC)
+ 		csi_idmac_stop(priv);
+@@ -599,7 +602,8 @@ static void csi_stop(struct csi_priv *priv)
+ 
+ 	/* stop the frame interval monitor */
+ 	if (priv->fim)
+-		imx_media_fim_set_stream(priv->fim, priv->sensor, false);
++		imx_media_fim_set_stream(priv->fim,
++					 &priv->frame_interval, false);
+ 
+ 	ipu_csi_disable(priv->csi);
+ }
+@@ -608,6 +612,36 @@ static void csi_stop(struct csi_priv *priv)
+  * V4L2 subdev operations.
+  */
+ 
++static int csi_g_frame_interval(struct v4l2_subdev *sd,
++				struct v4l2_subdev_frame_interval *fi)
 +{
-+	if (is_media_entity_v4l2_subdev(pad->entity)) {
-+		struct v4l2_subdev *sd =
-+			media_entity_to_v4l2_subdev(pad->entity);
++	struct csi_priv *priv = v4l2_get_subdevdata(sd);
 +
-+		fi->pad = pad->index;
-+		return v4l2_subdev_call(sd, video, g_frame_interval, fi);
-+	}
++	mutex_lock(&priv->lock);
++	fi->interval = priv->frame_interval;
++	mutex_unlock(&priv->lock);
 +
-+	WARN(pad->entity->function != MEDIA_ENT_F_IO_V4L,
-+	     "Driver bug! Wrong media entity type 0x%08x, entity %s\n",
-+	     pad->entity->function, pad->entity->name);
-+
-+	return -EINVAL;
++	return 0;
 +}
 +
-+static int
- v4l2_subdev_link_validate_get_format(struct media_pad *pad,
- 				     struct v4l2_subdev_format *fmt)
++static int csi_s_frame_interval(struct v4l2_subdev *sd,
++				struct v4l2_subdev_frame_interval *fi)
++{
++	struct csi_priv *priv = v4l2_get_subdevdata(sd);
++
++	mutex_lock(&priv->lock);
++
++	/* Output pads mirror active input pad, no limits on input pads */
++	if (fi->pad == CSI_SRC_PAD_IDMAC || fi->pad == CSI_SRC_PAD_DIRECT)
++		fi->interval = priv->frame_interval;
++
++	priv->frame_interval = fi->interval;
++
++	mutex_unlock(&priv->lock);
++
++	return 0;
++}
++
+ static int csi_s_stream(struct v4l2_subdev *sd, int enable)
  {
-@@ -540,6 +559,37 @@ v4l2_subdev_link_validate_get_format(struct media_pad *pad,
- 	return -EINVAL;
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+@@ -1204,6 +1238,10 @@ static int csi_registered(struct v4l2_subdev *sd)
+ 			goto put_csi;
+ 	}
+ 
++	/* init default frame interval */
++	priv->frame_interval.numerator = 1;
++	priv->frame_interval.denominator = 30;
++
+ 	priv->fim = imx_media_fim_init(&priv->sd);
+ 	if (IS_ERR(priv->fim)) {
+ 		ret = PTR_ERR(priv->fim);
+@@ -1254,6 +1292,8 @@ static struct v4l2_subdev_core_ops csi_core_ops = {
+ };
+ 
+ static struct v4l2_subdev_video_ops csi_video_ops = {
++	.g_frame_interval = csi_g_frame_interval,
++	.s_frame_interval = csi_s_frame_interval,
+ 	.s_stream = csi_s_stream,
+ };
+ 
+diff --git a/drivers/staging/media/imx/imx-media-fim.c b/drivers/staging/media/imx/imx-media-fim.c
+index 824d257..4fe5ffc 100644
+--- a/drivers/staging/media/imx/imx-media-fim.c
++++ b/drivers/staging/media/imx/imx-media-fim.c
+@@ -67,26 +67,18 @@ struct imx_media_fim {
+ };
+ 
+ static void update_fim_nominal(struct imx_media_fim *fim,
+-			       struct imx_media_subdev *sensor)
++			       const struct v4l2_fract *fi)
+ {
+-	struct v4l2_streamparm parm;
+-	struct v4l2_fract tpf;
+-	int ret;
+-
+-	parm.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+-	ret = v4l2_subdev_call(sensor->sd, video, g_parm, &parm);
+-	tpf = parm.parm.capture.timeperframe;
+-
+-	if (ret || tpf.denominator == 0) {
+-		dev_dbg(fim->sd->dev, "no tpf from sensor, FIM disabled\n");
++	if (fi->denominator == 0) {
++		dev_dbg(fim->sd->dev, "no frame interval, FIM disabled\n");
+ 		fim->enabled = false;
+ 		return;
+ 	}
+ 
+-	fim->nominal = DIV_ROUND_CLOSEST(1000 * 1000 * tpf.numerator,
+-					 tpf.denominator);
++	fim->nominal = DIV_ROUND_CLOSEST_ULL(1000000ULL * (u64)fi->numerator,
++					     fi->denominator);
+ 
+-	dev_dbg(fim->sd->dev, "sensor FI=%lu usec\n", fim->nominal);
++	dev_dbg(fim->sd->dev, "FI=%lu usec\n", fim->nominal);
  }
  
-+int v4l2_subdev_link_validate_frame_interval(struct media_link *link)
-+{
-+	struct v4l2_subdev_frame_interval src_fi, sink_fi;
-+	unsigned long src_usec, sink_usec;
-+	int rval;
-+
-+	rval = v4l2_subdev_link_validate_get_fi(link->source, &src_fi);
-+	if (rval < 0)
-+		return 0;
-+
-+	rval = v4l2_subdev_link_validate_get_fi(link->sink, &sink_fi);
-+	if (rval < 0)
-+		return 0;
-+
-+	if (src_fi.interval.numerator == 0   ||
-+	    src_fi.interval.denominator == 0 ||
-+	    sink_fi.interval.numerator == 0  ||
-+	    sink_fi.interval.denominator == 0)
-+		return -EPIPE;
-+
-+	src_usec = DIV_ROUND_CLOSEST_ULL(
-+		(u64)src_fi.interval.numerator * USEC_PER_SEC,
-+		src_fi.interval.denominator);
-+	sink_usec = DIV_ROUND_CLOSEST_ULL(
-+		(u64)sink_fi.interval.numerator * USEC_PER_SEC,
-+		sink_fi.interval.denominator);
-+
-+	return (src_usec != sink_usec) ? -EPIPE : 0;
-+}
-+EXPORT_SYMBOL_GPL(v4l2_subdev_link_validate_frame_interval);
-+
- int v4l2_subdev_link_validate(struct media_link *link)
- {
- 	struct v4l2_subdev *sink;
-diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-index 0ab1c5d..60c941d 100644
---- a/include/media/v4l2-subdev.h
-+++ b/include/media/v4l2-subdev.h
-@@ -929,6 +929,16 @@ int v4l2_subdev_link_validate_default(struct v4l2_subdev *sd,
- 				      struct v4l2_subdev_format *sink_fmt);
+ static void reset_fim(struct imx_media_fim *fim, bool curval)
+@@ -130,8 +122,8 @@ static void send_fim_event(struct imx_media_fim *fim, unsigned long error)
  
- /**
-+ * v4l2_subdev_link_validate_frame_interval - validates a media link
-+ *
-+ * @link: pointer to &struct media_link
-+ *
-+ * This function ensures that the frame intervals, if specified by
-+ * both the source and sink subdevs of the link, are equal.
-+ */
-+int v4l2_subdev_link_validate_frame_interval(struct media_link *link);
-+
-+/**
-  * v4l2_subdev_link_validate - validates a media link
-  *
-  * @link: pointer to &struct media_link
+ /*
+  * Monitor an averaged frame interval. If the average deviates too much
+- * from the sensor's nominal frame rate, send the frame interval error
+- * event. The frame intervals are averaged in order to quiet noise from
++ * from the nominal frame rate, send the frame interval error event. The
++ * frame intervals are averaged in order to quiet noise from
+  * (presumably random) interrupt latency.
+  */
+ static void frame_interval_monitor(struct imx_media_fim *fim,
+@@ -422,12 +414,12 @@ EXPORT_SYMBOL_GPL(imx_media_fim_set_power);
+ 
+ /* Called by the subdev in its s_stream callback */
+ int imx_media_fim_set_stream(struct imx_media_fim *fim,
+-			     struct imx_media_subdev *sensor,
++			     const struct v4l2_fract *fi,
+ 			     bool on)
+ {
+ 	if (on) {
+ 		reset_fim(fim, true);
+-		update_fim_nominal(fim, sensor);
++		update_fim_nominal(fim, fi);
+ 
+ 		if (fim->icap_channel >= 0)
+ 			fim_acquire_first_ts(fim);
+diff --git a/drivers/staging/media/imx/imx-media.h b/drivers/staging/media/imx/imx-media.h
+index 9e865fa..a67ee14 100644
+--- a/drivers/staging/media/imx/imx-media.h
++++ b/drivers/staging/media/imx/imx-media.h
+@@ -262,7 +262,7 @@ struct imx_media_fim;
+ void imx_media_fim_eof_monitor(struct imx_media_fim *fim, struct timespec *ts);
+ int imx_media_fim_set_power(struct imx_media_fim *fim, bool on);
+ int imx_media_fim_set_stream(struct imx_media_fim *fim,
+-			     struct imx_media_subdev *sensor,
++			     const struct v4l2_fract *frame_interval,
+ 			     bool on);
+ struct imx_media_fim *imx_media_fim_init(struct v4l2_subdev *sd);
+ void imx_media_fim_free(struct imx_media_fim *fim);
 -- 
 2.7.4
