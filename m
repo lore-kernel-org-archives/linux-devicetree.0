@@ -1,177 +1,246 @@
-From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v16 4/5] Documentation: tee subsystem and op-tee driver
-Date: Fri, 10 Mar 2017 16:11:42 +0100
-Message-ID: <1489158703-22241-5-git-send-email-jens.wiklander@linaro.org>
-References: <1489158703-22241-1-git-send-email-jens.wiklander@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489158703-22241-1-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Viro <viro-3bDd1+5oDREiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Etienne CARRIERE <etienne.carriere-qxv4g6HH51o@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Christophe PRIOUZEAU <christophe.priouzeau-qxv4g6HH51o@public.gmane.org>, Eric FINCO <eric.finco-qxv4g6HH51o@public.gmane.org>, Franc
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v16 0/5] generic TEE subsystem
+Date: Fri, 10 Mar 2017 16:11:38 +0100
+Message-ID: <1489158703-22241-1-git-send-email-jens.wiklander@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Will Deacon <will.deacon@arm.com>, Patrice CHOTARD <patrice.chotard@st.com>, Christophe PRIOUZEAU <christophe.priouzeau@st.com>, Franck ALBESA <franck.albesa@st.com>, javier@javigon.com, Loic PALLARDY <loic.pallardy@st.com>, Michal Simek <michal.simek@xilinx.com>, Wei Xu <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, scott.branden@broadcom.com, jean-michel.delorme@st.com, broonie@kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Etienne CARRIERE <etienne.carriere@st.com>, emmanuel.michel@st.com, Eric FINCO <eric.finco@st.com>, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/00-INDEX |   2 +
- Documentation/tee.txt  | 118 +++++++++++++++++++++++++++++++++++++++++++++++++
- MAINTAINERS            |   1 +
- 3 files changed, 121 insertions(+)
- create mode 100644 Documentation/tee.txt
-
-diff --git a/Documentation/00-INDEX b/Documentation/00-INDEX
-index 793acf999e9e..ed3e5e949fce 100644
---- a/Documentation/00-INDEX
-+++ b/Documentation/00-INDEX
-@@ -412,6 +412,8 @@ sysctl/
- 	- directory with info on the /proc/sys/* files.
- target/
- 	- directory with info on generating TCM v4 fabric .ko modules
-+tee.txt
-+	- info on the TEE subsystem and drivers
- this_cpu_ops.txt
- 	- List rationale behind and the way to use this_cpu operations.
- thermal/
-diff --git a/Documentation/tee.txt b/Documentation/tee.txt
-new file mode 100644
-index 000000000000..718599357596
---- /dev/null
-+++ b/Documentation/tee.txt
-@@ -0,0 +1,118 @@
-+TEE subsystem
-+This document describes the TEE subsystem in Linux.
-+
-+A TEE (Trusted Execution Environment) is a trusted OS running in some
-+secure environment, for example, TrustZone on ARM CPUs, or a separate
-+secure co-processor etc. A TEE driver handles the details needed to
-+communicate with the TEE.
-+
-+This subsystem deals with:
-+
-+- Registration of TEE drivers
-+
-+- Managing shared memory between Linux and the TEE
-+
-+- Providing a generic API to the TEE
-+
-+The TEE interface
-+=================
-+
-+include/uapi/linux/tee.h defines the generic interface to a TEE.
-+
-+User space (the client) connects to the driver by opening /dev/tee[0-9]* or
-+/dev/teepriv[0-9]*.
-+
-+- TEE_IOC_SHM_ALLOC allocates shared memory and returns a file descriptor
-+  which user space can mmap. When user space doesn't need the file
-+  descriptor any more, it should be closed. When shared memory isn't needed
-+  any longer it should be unmapped with munmap() to allow the reuse of
-+  memory.
-+
-+- TEE_IOC_VERSION lets user space know which TEE this driver handles and
-+  the its capabilities.
-+
-+- TEE_IOC_OPEN_SESSION opens a new session to a Trusted Application.
-+
-+- TEE_IOC_INVOKE invokes a function in a Trusted Application.
-+
-+- TEE_IOC_CANCEL may cancel an ongoing TEE_IOC_OPEN_SESSION or TEE_IOC_INVOKE.
-+
-+- TEE_IOC_CLOSE_SESSION closes a session to a Trusted Application.
-+
-+There are two classes of clients, normal clients and supplicants. The latter is
-+a helper process for the TEE to access resources in Linux, for example file
-+system access. A normal client opens /dev/tee[0-9]* and a supplicant opens
-+/dev/teepriv[0-9].
-+
-+Much of the communication between clients and the TEE is opaque to the
-+driver. The main job for the driver is to receive requests from the
-+clients, forward them to the TEE and send back the results. In the case of
-+supplicants the communication goes in the other direction, the TEE sends
-+requests to the supplicant which then sends back the result.
-+
-+OP-TEE driver
-+=============
-+
-+The OP-TEE driver handles OP-TEE [1] based TEEs. Currently it is only the ARM
-+TrustZone based OP-TEE solution that is supported.
-+
-+Lowest level of communication with OP-TEE builds on ARM SMC Calling
-+Convention (SMCCC) [2], which is the foundation for OP-TEE's SMC interface
-+[3] used internally by the driver. Stacked on top of that is OP-TEE Message
-+Protocol [4].
-+
-+OP-TEE SMC interface provides the basic functions required by SMCCC and some
-+additional functions specific for OP-TEE. The most interesting functions are:
-+
-+- OPTEE_SMC_FUNCID_CALLS_UID (part of SMCCC) returns the version information
-+  which is then returned by TEE_IOC_VERSION
-+
-+- OPTEE_SMC_CALL_GET_OS_UUID returns the particular OP-TEE implementation, used
-+  to tell, for instance, a TrustZone OP-TEE apart from an OP-TEE running on a
-+  separate secure co-processor.
-+
-+- OPTEE_SMC_CALL_WITH_ARG drives the OP-TEE message protocol
-+
-+- OPTEE_SMC_GET_SHM_CONFIG lets the driver and OP-TEE agree on which memory
-+  range to used for shared memory between Linux and OP-TEE.
-+
-+The GlobalPlatform TEE Client API [5] is implemented on top of the generic
-+TEE API.
-+
-+Picture of the relationship between the different components in the
-+OP-TEE architecture.
-+
-+    User space                  Kernel                   Secure world
-+    ~~~~~~~~~~                  ~~~~~~                   ~~~~~~~~~~~~
-+ +--------+                                             +-------------+
-+ | Client |                                             | Trusted     |
-+ +--------+                                             | Application |
-+    /\                                                  +-------------+
-+    || +----------+                                           /\
-+    || |tee-      |                                           ||
-+    || |supplicant|                                           \/
-+    || +----------+                                     +-------------+
-+    \/      /\                                          | TEE Internal|
-+ +-------+  ||                                          | API         |
-+ + TEE   |  ||            +--------+--------+           +-------------+
-+ | Client|  ||            | TEE    | OP-TEE |           | OP-TEE      |
-+ | API   |  \/            | subsys | driver |           | Trusted OS  |
-+ +-------+----------------+----+-------+----+-----------+-------------+
-+ |      Generic TEE API        |       |     OP-TEE MSG               |
-+ |      IOCTL (TEE_IOC_*)      |       |     SMCCC (OPTEE_SMC_CALL_*) |
-+ +-----------------------------+       +------------------------------+
-+
-+RPC (Remote Procedure Call) are requests from secure world to kernel driver
-+or tee-supplicant. An RPC is identified by a special range of SMCCC return
-+values from OPTEE_SMC_CALL_WITH_ARG. RPC messages which are intended for the
-+kernel are handled by the kernel driver. Other RPC messages will be forwarded to
-+tee-supplicant without further involvement of the driver, except switching
-+shared memory buffer representation.
-+
-+References:
-+[1] https://github.com/OP-TEE/optee_os
-+[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-+[3] drivers/tee/optee/optee_smc.h
-+[4] drivers/tee/optee/optee_msg.h
-+[5] http://www.globalplatform.org/specificationsdevice.asp look for
-+    "TEE Client API Specification v1.0" and click download.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ffcc4a841b64..eb94570e1765 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11097,6 +11097,7 @@ S:	Maintained
- F:	include/linux/tee_drv.h
- F:	include/uapi/linux/tee.h
- F:	drivers/tee/
-+F:	Documentation/tee.txt
- 
- THUNDERBOLT DRIVER
- M:	Andreas Noever <andreas.noever-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpUaGlzIHBhdGNoIHNldCBpbnRyb2R1Y2VzIGEgZ2VuZXJpYyBURUUgc3Vic3lzdGVtLiBU
+aGVzZSBwYXRjaGVzIGFyZSB1c2VkCm9uIEhpS2V5IGluIEFPU1AuIEl0J3MgY3VycmVudGx5IHN1
+cHBvcnRlZCBieSByb3VnaGx5IDIwIHBsYXRmb3JtcwooaHR0cHM6Ly9naXRodWIuY29tL09QLVRF
+RS9vcHRlZV9vcyMzLXBsYXRmb3Jtcy1zdXBwb3J0ZWQpLCB0byBuYW1lIGEgZmV3LApSZW5lc2Fz
+IFJDQVIgSDMsIFNlcXVpdHVyIExhYnMgQ29yZVRFRSwgV2luZCBSaXZlciBWeFdvcmtzIGV0Yy4K
+ClRoZSBURUUgc3Vic3lzdGVtIHdpbGwgY29udGFpbiBkcml2ZXJzIGZvciB2YXJpb3VzIFRFRSBp
+bXBsZW1lbnRhdGlvbnMuIEEKVEVFIChUcnVzdGVkIEV4ZWN1dGlvbiBFbnZpcm9ubWVudCkgaXMg
+YSB0cnVzdGVkIE9TIHJ1bm5pbmcgaW4gc29tZSBzZWN1cmUKZW52aXJvbm1lbnQsIGZvciBleGFt
+cGxlLCBUcnVzdFpvbmUgb24gQVJNIENQVXMsIG9yIGEgc2VwYXJhdGUgc2VjdXJlCmNvLXByb2Nl
+c3NvciBldGMuCgpSZWdhcmRpbmcgdXNlIGNhc2VzLCBUcnVzdFpvbmUgaGFzIHRyYWRpdGlvbmFs
+bHkgYmVlbiB1c2VkIGZvcgpvZmZsb2FkaW5nIHNlY3VyZSB0YXNrcyB0byB0aGUgc2VjdXJlIHdv
+cmxkLiBFeGFtcGxlcyBpbmNsdWRlOiAKLSBTZWN1cmUga2V5IGhhbmRsaW5nIHdoZXJlIHRoZSBP
+UyBtYXkgb3IgbWF5IG5vdCBoYXZlIGRpcmVjdCBhY2Nlc3MgdG8ga2V5CiAgbWF0ZXJpYWwuCi0g
+RS1jb21tZXJjZSBhbmQgcGF5bWVudCB0ZWNobm9sb2dpZXMuIENyZWRlbnRpYWxzLCBjcmVkaXQg
+Y2FyZCBudW1iZXJzIGV0YwogIGNvdWxkIGJlIHN0b3JlZCBpbiBhIG1vcmUgc2VjdXJlIGVudmly
+b25tZW50LgotIFRydXN0ZWQgVXNlciBJbnRlcmZhY2UgKFRVSSkgdG8gZW5zdXJlIHRoYXQgbm8t
+b25lIGNhbiBzbm9vcCBQSU4tY29kZXMKICBldGMuCi0gU2VjdXJlIGJvb3QgdG8gZW5zdXJlIHRo
+YXQgbG9hZGVkIGJpbmFyaWVzIGhhdmVu4oCZdCBiZWVuIHRhbXBlcmVkIHdpdGguCiAgSXTigJlz
+IG5vdCBzdHJpY3RseSBuZWVkZWQgZm9yIHNlY3VyZSBib290LCBidXQgeW91IGNvdWxkIGVuaGFu
+Y2Ugc2VjdXJpdHkKICBieSBsZXZlcmFnaW5nIGEgVEVFIGR1cmluZyBib290LgotIERpZ2l0YWwg
+UmlnaHRzIE1hbmFnZW1lbnQgKERSTSksIHRoZSBzdHVkaW9zIHByb3ZpZGVzIGNvbnRlbnQgd2l0
+aAogIGRpZmZlcmVudCByZXNvbHV0aW9uIGRlcGVuZGluZyBvbiB0aGUgc2VjdXJpdHkgb2YgdGhl
+IGRldmljZS4gSGlnaGVyCiAgc2VjdXJpdHkgbWVhbnMgaGlnaGVyIHJlc29sdXRpb24uCgpBIFRF
+RSBjb3VsZCBhbHNvIGJlIHVzZWQgaW4gZXhpc3RpbmcgYW5kIG5ldyB0ZWNobm9sb2dpZXMuIEZv
+ciBleGFtcGxlIElNQQooSW50ZWdyaXR5IE1lYXN1cmVtZW50IEFyY2hpdGVjdHVyZSkgd2hpY2gg
+aGFzIGJlZW4gaW4gdGhlIGtlcm5lbCBmb3IgcXVpdGUKYSB3aGlsZS4gVG9kYXkgeW91IGNhbiBl
+bmhhbmNlIHNlY3VyaXR5IGJ5IHVzaW5nIGEgVFBNLWNoaXAgdG8gc2lnbiB0aGUgSU1BCm1lYXN1
+cmVtZW50IGxpc3QuIFRoaXMgaXMgc29tZXRoaW5nIHRoYXQgYWxzbyBoYXMgYmVlbiBkb25lIGlu
+IHByYWN0aWNhbApzeXN0ZW1zIGJ5IGxldmVyYWdpbmcgYSBURUUuCgpBbm90aGVyIGV4YW1wbGUg
+Y291bGQgYmUgaW4gMi1mYWN0b3IgYXV0aGVudGljYXRpb24gd2hpY2ggaXMgYmVjb21pbmcKaW5j
+cmVhc2luZ2x5IG1vcmUgaW1wb3J0YW50LiBGSURPIChodHRwczovL2ZpZG9hbGxpYW5jZS5vcmcp
+IGZvciBleGFtcGxlCmFyZSB1c2luZyBwdWJsaWMga2V5IGNyeXB0b2dyYXBoeSBpbiB0aGVpciAy
+LWZhY3RvciBhdXRoZW50aWNhdGlvbiBzdGFuZGFyZAooVTJGKS4gV2l0aCBGSURPLCBhIHByaXZh
+dGUgYW5kIHB1YmxpYyBrZXkgcGFpciB3aWxsIGJlIGdlbmVyYXRlZCBmb3IgZXZlcnkKc2l0ZSB5
+b3UgdmlzaXQgYW5kIHRoZSBwcml2YXRlIGtleSBzaG91bGQgbmV2ZXIgbGVhdmUgdGhlIGxvY2Fs
+IGRldmljZS4KVGhpcyBpcyBhbiBleGFtcGxlIHdoZXJlIHlvdSBjb3VsZCB1c2Ugc2VjdXJlIHN0
+b3JhZ2UgaW4gYSBURUUgZm9yIHRoZQpwcml2YXRlIGtleS4KClRvZGF5IHlvdSB3aWxsIGZpbmQg
+YSBxdWl0ZSBhIGZldyBkaWZmZXJlbnQgb3V0IG9mIHRyZWUgaW1wbGVtZW50YXRpb25zIG9mClRF
+RSBkcml2ZXJzIHdoaWNoIHRlbmRzIHRvIGZyYWdtZW50IHRoZSBURUUgZWNvc3lzdGVtIGFuZCBk
+ZXZlbG9wbWVudC4gV2UKdGhpbmsgaXQgd291bGQgYmUgYSBnb29kIGlkZWEgdG8gaGF2ZSBhIGdl
+bmVyaWMgVEVFIGRyaXZlciBpbnRlZ3JhdGVkIGluCnRoZSBrZXJuZWwgd2hpY2ggd291bGQgc2Vy
+dmUgYXMgYSBiYXNlIGZvciBzZXZlcmFsIGRpZmZlcmVudCBURUUgc29sdXRpb25zLApubyBtYXR0
+ZXIgaWYgdGhleSBhcmUgb24tY2hpcCBsaWtlIFRydXN0Wm9uZSBvciBpZiB0aGV5IGFyZSBvbiBh
+IHNlcGFyYXRlCmNyeXB0byBjby1wcm9jZXNzb3IuCgpUbyBkZXZlbG9wIHRoaXMgVEVFIHN1YnN5
+c3RlbSB3ZSBoYXZlIGJlZW4gdXNpbmcgdGhlIG9wZW4gc291cmNlIFRFRSBjYWxsZWQKT1AtVEVF
+IChodHRwczovL3d3dy5vcC10ZWUub3JnLykgYW5kIHRoZXJlZm9yZSB0aGlzIHdvdWxkIGJlIHRo
+ZSBmaXJzdCBURUUKc29sdXRpb24gc3VwcG9ydGVkIGJ5IHRoaXMgbmV3IHN1YnN5c3RlbS4gT1At
+VEVFIGlzIGEgR2xvYmFsUGxhdGZvcm0KY29tcGxpYW50IFRFRSwgaG93ZXZlciB0aGlzIFRFRSBz
+dWJzeXN0ZW0gaXMgbm90IGxpbWl0ZWQgdG8gb25seQpHbG9iYWxQbGF0Zm9ybSBURUVzLCBpbnN0
+ZWFkIHdlIGhhdmUgdHJpZWQgdG8gZGVzaWduIGl0IHNvIHRoYXQgaXQgc2hvdWxkCndvcmsgd2l0
+aCBvdGhlciBURUUgc29sdXRpb25zIGFsc28uIFNpbmNlIHRoZSBmaXJzdCB2ZXJzaW9uICgyMDE1
+IEFwcmlsKSBvZgp0aGlzIHBhdGNoc2V0IHdl4oCZdmUgdGFsa2VkIGFib3V0IGl0IGF0IExpbmFy
+byBDb25uZWN0LCBHbG9iYWxQbGF0Zm9ybQphbm51YWwgVEVFIGNvbmZlcmVuY2UgYW5kIGxhc3Qg
+dGltZSBhdCBMaW51eCBQbHVtYmVycywgc28gd2UgdGhpbmsgdGhlcmUKaGFzIGJlZW4gYm90aCBl
+eHBvc3VyZSBhbmQgcGxlbnR5IG9mIHRpbWUgdG8gYmUgYWJsZSB0byBnZXQgaW52b2x2ZWQgaW4K
+dGhpcyB3b3JrLgoKInRlZTogZ2VuZXJpYyBURUUgc3Vic3lzdGVtIiBicmluZ3MgaW4gdGhlIGdl
+bmVyaWMgVEVFIHN1YnN5c3RlbSB3aGljaApoZWxwcyB3aGVuIHdyaXRpbmcgYSBkcml2ZXIgZm9y
+IGEgc3BlY2lmaWMgVEVFLCBmb3IgZXhhbXBsZSwgT1AtVEVFLgoKInRlZTogYWRkIE9QLVRFRSBk
+cml2ZXIiIGlzIGFuIE9QLVRFRSBkcml2ZXIgd2hpY2ggdXNlcyB0aGUgc3Vic3lzdGVtIHRvIGRv
+Cml0cyB3b3JrLgoKVGhpcyBwYXRjaCBzZXQgaGFzIGJlZW4gcHJlcGFyZWQgaW4gY29vcGVyYXRp
+b24gd2l0aCBKYXZpZXIgR29uesOhbGV6IHdobwpwcm9wb3NlZCAiR2VuZXJpYyBUcnVzdFpvbmUg
+RHJpdmVyIGluIExpbnV4IEtlcm5lbCIgcGF0Y2hlcyAyOCBOb3YgMjAxNCwKaHR0cHM6Ly9sd24u
+bmV0L0FydGljbGVzLzYyMzM4MC8gLiBXZSd2ZSBzaW5jZSB0aGVuIGNoYW5nZWQgdGhlIHNjb3Bl
+IHRvClRFRSBpbnN0ZWFkIG9mIFRydXN0Wm9uZS4KCldlIGhhdmUgZGlzY3Vzc2VkIHRoZSBkZXNp
+Z24gb24gdGVlLWRldkBsaXN0cy5saW5hcm8ub3JnIChhcmNoaXZlIGF0Cmh0dHBzOi8vbGlzdHMu
+bGluYXJvLm9yZy9waXBlcm1haWwvdGVlLWRldi8pIHdpdGggcGVvcGxlIGZyb20gb3RoZXIKY29t
+cGFuaWVzLCBpbmNsdWRpbmcgVmFsZW50aW4gTWFuZWEgPHZhbGVudGluLm1hbmVhQGh1YXdlaS5j
+b20+LApFbW1hbnVlbCBNSUNIRUwgPGVtbWFudWVsLm1pY2hlbEBzdC5jb20+LApKZWFuLW1pY2hl
+bCBERUxPUk1FIDxqZWFuLW1pY2hlbC5kZWxvcm1lQHN0LmNvbT4sCmFuZCBKb2FraW0gQmVjaCA8
+am9ha2ltLmJlY2hAbGluYXJvLm9yZz4uIE91ciBtYWluIGNvbmNlcm4gaGFzIGJlZW4gdG8KYWdy
+ZWUgb24gc29tZXRoaW5nIHRoYXQgaXMgZ2VuZXJpYyBlbm91Z2ggdG8gc3VwcG9ydCBtYW55IGRp
+ZmZlcmVudApURUVzIHdoaWxlIHN0aWxsIGtlZXBpbmcgdGhlIGludGVyZmFjZSB0b2dldGhlci4K
+CnYxNjoKKiBSZWJhc2VkIG9uIHY0LjExLXJjMQoqIEZpeGVkIHRoZSBpcyBTTVAgaXNzdWUgd2l0
+aCBoZWxwIGZyb20gQXJuZCBCZXJnbWFuCiogRml4ZWQgYSBtaXNzdWUgb2YgSURSCiogRml4ZWQg
+c29tZSB0eXBvcyByZXBvcnRlZCBieSBTdHVhcnQgWW9kZXIgYW5kIEJlbmphbWluIEdhaWduYXJk
+CiogQWRkaW5nIHdyYXBwZXJzIGZvciBhcm1fc21jY2Nfc21jKCkgYW5kIGFybV9zbWNjY19odmMo
+KSBkdWUgdG8gcmVjZW50CiAgY2hhbmdlcwoKdjE1OgoqIFJlYmFzZWQgb24gdjQuMTAtcmM1Ciog
+QWRkcmVzc2VkIHJldmlldyBjb21tZW50cyBmcm9tIEFybmQgQmVyZ21hbm4sIHdpdGggdGhlc2Ug
+aGlnaHRsaWd0czoKICAtIFJlbW92ZSB0aGUgcGxhdGZvcm0gZGV2aWNlIGluIE9QLVRFRSBkcml2
+ZXIKICAtIENvbW1lbnQgb24gb3B0ZWUgY2FsbCBxdWV1ZSB3YWl0IGZ1bmN0aW9ucyB0byBtYWtl
+IGl0IGVhc2llciB0byBzZWUKICAgIHRoZSBwdXJwb3NlCiAgLSBSZXBsYWNlIGNhbGxzIHRvIGlv
+cmVtYXBfY2FjaGUoKSB3aXRoIGNhbGxzIHRvIG1lbXJlbWFwKCkKICAtIFJlbW92ZSBPUFRFRV9N
+U0dfT1NfT1BURUVfUkVWSVNJT05fKiwgdGhhdCBhcmVuJ3QgdXNlZCBvciBrZXB0IHVwIHRvIGRh
+dGUKICAtIEV4dGVuZCBkZXNjcmlwdGlvbiBvZiBPUFRFRV9NU0dfUlBDX0NNRF9XQUlUX1FVRVVF
+CiAgLSBSZW1vdmUgT1BURUVfTVNHX0dFVF9QQVJBTVMgaW5zdGVhZCBoYXZlIGEgc3RydWN0IG9w
+dGVlX21zZ19wYXJhbSBwYXJhbXNbXQogICAgYXQgdGhlIGVuZCBvZiBzdHJ1Y3Qgb3B0ZWVfbXNn
+X2FyZwogIC0gZ2V0IHJpZCBvZiB1bmlvbiBpbiBzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtCiAgLSBh
+ZGQgcGFyYW1zW10gdG8gc3RydWN0IHRlZV9pb2N0bF9vcGVuX3Nlc3Npb25fYXJnLCBzdHJ1Y3QK
+ICAgIHRlZV9pb2NsX3N1cHBfcmVjdl9hcmcgYW5kIHN0cnVjdCB0ZWVfaW9jbF9zdXBwX3NlbmRf
+YXJnCiogImFybTY0OiBkdDogaGlrZXk6IEFkZCBvcHRlZSBub2RlIgogIEFja2VkLWJ5OiBXZWkg
+WHUgPHh1d2VpNUBoaXNpbGljb24uY29tPgoqIFRlc3RlZC1ieTogU2NvdHQgQnJhbmRlbiA8c2Nv
+dHQuYnJhbmRlbkBicm9hZGNvbS5jb20+Cgp2MTQ6CiogUmViYXNlZCBvbiB2NC4xMC1yYzQKKiBG
+aXhlZCBjaGVja3BhdGNoIHdhcm5pbmcgaW4gT1BURUVfU01DX1JFVFVSTl9JU19SUEMoKSBtYWNy
+bwoKdjEzOgoqIFJlYmFzZWQgb24gdjQuOS1yYzUKKiBBZGRlZCBIaWtleSBEVCBwYXRjaAoqIFRl
+c3RlZC1ieTogSmVyb21lIEZvcmlzc2llciA8amVyb21lLmZvcmlzc2llckBsaW5hcm8ub3JnPiAo
+SGlLZXkpCiogVGVzdGVkLWJ5OiBWb2xvZHlteXIgQmFiY2h1ayA8dmxhZC5iYWJjaHVrQGdtYWls
+LmNvbT4gKFJDQVIgSDMpCiogVGVzdGVkLWJ5OiBBbmRyZXcgRi4gRGF2aXMgPGFmZEB0aS5jb20+
+IAoKdjEyLXJlc2VuZDoKKiBSZWJhc2VkIG9uIHY0LjktcmMyCgp2MTI6CiogUmViYXNlZCBvbiB2
+NC44LXJjNQoqIEFkZHJlc3NlZCByZXZpZXcgY29tbWVudHMgZnJvbSBBbmRyZXcgRi4gRGF2aXMK
+KiBSZW1vdmVkIEFja2VkLWJ5OiBBbmRyZWFzIERhbm5lbmJlcmcgPGRhbm5lbmJlcmdAdGkuY29t
+PiBhcyB0aGUKICBtYWlsIGJvdW5jZXMKKiBCdWdmaXggcG9zc2libGUgbnVsbCBkZXJlZmVyZW5j
+ZSBpbiBlcnJvciBjbGVhbnVwIHBhdGggb2YKICBvcHRlZV9wcm9iZSgpLgoqIEJ1Z2ZpeCBvcHRl
+ZV9mcm9tX21zZ19wYXJhbSgpIHdoZW4gY2FsY3VsYXRpbmcgb2Zmc2V0IG9mIG1lbXJlZgogIGlu
+dG8gYSBzaGFyZWQgbWVtb3J5IG9iamVjdAoKdjExOgoqIFJlYmFzZWQgb24gdjQuOC1yYzMKKiBB
+ZGRyZXNzZWQgcmV2aWV3IGNvbW1lbnRzIGZyb20gTmlzaGFudGggTWVub24KKiBNYWRlIHRoZSBU
+RUUgZnJhbWV3b3JrIGF2YWlsYWJsZSBhcyBhIGxvYWRhYmxlIG1vZHVsZS4KKiBSZXZpZXdlZC1i
+eTogSmF2aWVyIEdvbnrDoWxleiA8amF2aWVyQGphdmlnb24uY29tPgoqIFplcm9lcyBzaGFyZWQg
+bWVtb3J5IG9uIGFsbG9jYXRpb24gdG8gYXZvaWQgaW5mb3JtYXRpb24gbGVha2FnZQoqIExpbmtz
+IHNoYXJlZCBtZW1vcnkgb2JqZWN0cyB0byBjb250ZXh0IHRvIGF2b2lkIHN0ZWFsaW5nIG9mIHNo
+YXJlZCBtZW1vcnkKICBvYmplY3QgZnJvbSBhbiB1bnJlbGF0ZWQgcHJvY2VzcwoqIEFsbG93IFJQ
+QyBpbnRlcnJ1cHRpb24gaWYgc3VwcGxpY2FudCBpcyB1bmF2YWlsYWJsZQoKdjEwOgoqIFJlYmFz
+ZWQgb24gdjQuNy1yYzEKKiBBZGRyZXNzZWQgcHJpdmF0ZSByZXZpZXcgY29tbWVudHMgZnJvbSBO
+aXNoYW50aCBNZW5vbgoqIE9wdGVlIGRyaXZlciBvbmx5IGFjY2VwdHMgb25lIHN1cHBsaWNhbnQg
+cHJvY2VzcyBvbiB0aGUgcHJpdmlsZWdlZCBkZXZpY2UKKiBPcHRlZSBkcml2ZXIgYXZvaWRzIGxv
+bmcgZGVsYXllZCByZWxlYXNlcyBvZiBzaG0gb2JqZWN0cwoqIEFkZGVkIG1vcmUgY29tbWVudHMg
+b24gZnVuY3Rpb25zIGFuZCBzdHJ1Y3RzCgp2OToKKiBSZWJhc2VkIG9uIHY0LjYtcmMxCiogQWNr
+ZWQtYnk6IEFuZHJlYXMgRGFubmVuYmVyZyA8ZGFubmVuYmVyZ0B0aS5jb20+CiogQWRkcmVzc2Vk
+IGNvbW1lbnRzIGZyb20gQWwgVmlybyBob3cgZmlsZSBkZXNjcmlwdG9ycyBhcmUgcGFzc2VkIHRv
+CiAgdXNlciBzcGFjZQoqIEFkZHJlc3NlZCBjb21tZW50cyBmcm9tIFJhbmR5IER1bmxhcCBvbiBk
+b2N1bWVudGF0aW9uCiogQ2hhbmdlZCBsaWNlbnNlIGZvciBpbmNsdWRlL3VhcGkvbGludXgvdGVl
+LmgKCnY4OgoqIFJlYmFzZWQgb24gdjQuNS1yYzMKKiBkdC9iaW5kaW5nczogYWRkIGJpbmRpbmdz
+IGZvciBvcHRlZQogIEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgoqIEZp
+eGVzIGJ1aWxkIGVycm9yIGZvciBYODYKKiBGaXhlcyBzcGVsbCBlcnJvciBpbiAiZHQvYmluZGlu
+Z3M6IGFkZCBiaW5kaW5ncyBmb3Igb3B0ZWUiCgp2NzoKKiBSZWJhc2VkIG9uIHY0LjUtcmMyCiog
+TW92ZWQgdGhlIEFSTSBTTUMgQ2FsbGluZyBDb252ZW50aW9uIHN1cHBvcnQgaW50byBhIHNlcGFy
+YXRlIHBhdGNoCiAgc2V0LCB3aGljaCBpcyBub3cgbWVyZ2VkCgp2NjoKKiBSZWJhc2VkIG9uIHY0
+LjMtcmM3CiogQ2hhbmdlZCBzbWNjYyBpbnRlcmZhY2UgdG8gbGV0IHRoZSBjb21waWxlciBtYXJz
+aGFsIG1vc3Qgb2YgdGhlCiAgcGFyYW1ldGVycwoqIEFkZGVkIEFSQ0g2NCBjYXBhYmlsaXR5IGZv
+ciBzbWNjYyBpbnRlcmZhY2UKKiBDaGFuZ2VkIHRoZSBQU0NJIGZpcm13YXJlIGNhbGxzIChib3Ro
+IGFybSBhbmQgYXJtNjQpIHRvIHVzZSB0aGUgbmV3CiAgZ2VuZXJpYyBzbWNjYyBpbnRlcmZhY2Ug
+aW5zdGVhZCBpbnN0ZWFkIG9mIG93biBhc3NlbWJseSBmdW5jdGlvbnMuCiogTW92ZSBvcHRlZSBE
+VCBiaW5kaW5ncyB0byBiZWxvdyBhcm0vZmlybXdhcmUKKiBEZWZpbmVzIG1ldGhvZCBmb3IgT1At
+VEVFIGRyaXZlciB0byBjYWxsIHNlY3VyZSB3b3JsZCBpbiBEVCwgc21jIG9yIGh2YwoqIEV4cG9z
+ZXMgaW1wbGVtZW50YXRpb24gaWQgb2YgYSBURUUgZHJpdmVyIGluIHN5c2ZzCiAgdG8gZWFzaWx5
+IHNwYXduIGNvcnJlc3BvbmRpbmcgdGVlLXN1cHBsaWNhbnQgd2hlbiBkZXZpY2UgaXMgcmVhZHkK
+KiBVcGRhdGUgT1AtVEVFIE1lc3NhZ2UgUHJvdG9jb2wgdG8gYmV0dGVyIGNvcGUgd2l0aCBmcmFn
+bWVudGVkIHBoeXNpY2FsCiAgbWVtb3J5CiogUmVhZCB0aW1lIGRpcmVjdGx5IGZyb20gT1AtVEVF
+IGRyaXZlciBpbnN0ZWFkIG9mIGZvcndhcmRpbmcgdGhlIFJQQwogIHJlcXVlc3QgdG8gdGVlLXN1
+cHBsaWNhbnQKCnY1OgoqIFJlcGxhY2VkIGtyZWYgcmVmZXJlbmNlIGNvdW50aW5nIGZvciB0aGUg
+ZGV2aWNlIHdpdGggYSBzaXplX3QgaW5zdGVhZCBhcwogIHRoZSBjb3VudGVyIGlzIGFsd2F5cyBw
+cm90ZWN0ZWQgYnkgYSBtdXRleAoKdjQ6CiogUmViYXNlZCBvbiA0LjEKKiBSZWRlc2lnbmVkIHRo
+ZSBzeW5jaHJvbml6YXRpb24gYXJvdW5kIGVudHJ5IGV4aXQgb2Ygbm9ybWFsIFNNQwoqIFJlcGxh
+Y2VkIHJ3c2VtIG9uIHRoZSBkcml2ZXIgaW5zdGFuY2Ugd2l0aCBrcmVmIGFuZCBjb21wbGV0aW9u
+IHNpbmNlCiAgcndzZW0gd2Fzbid0IGludGVuZGVkIHRvIGJlIHVzZWQgaW4gdGhpcyB3YXkKKiBF
+eHBhbmRlZCB0aGUgVEVFX0lPQ1RMX1BBUkFNX0FUVFJfVFlQRV9NQVNLIHRvIG1ha2Ugcm9vbSBm
+b3IKICBmdXR1cmUgYWRkaXRpb25hbCBwYXJhbWV0ZXIgdHlwZXMKKiBEb2N1bWVudHMgVEVFIHN1
+YnN5c3RlbSBhbmQgT1AtVEVFIGRyaXZlcgoqIFJlcGxhY2VkIFRFRV9JT0NfQ01EIHdpdGggVEVF
+X0lPQ19PUEVOX1NFU1NJT04sIFRFRV9JT0NfSU5WT0tFLAogIFRFRV9JT0NfQ0FOQ0VMIGFuZCBU
+RUVfSU9DX0NMT1NFX1NFU1NJT04KKiBEVCBiaW5kaW5ncyBpbiBhIHNlcGFyYXRlIHBhdGNoCiog
+QXNzZW1ibHkgcGFydHMgbW92ZWQgdG8gYXJjaC9hcm0gYW5kIGFyY2gvYXJtNjQgcmVzcGVjdGl2
+ZWx5LCBpbiBhCiAgc2VwYXJhdGUgcGF0Y2gKKiBSZWRlZmluZWQvY2xhcmlmaWVkIHRoZSBtZWFu
+aW5nIG9mIE9QVEVFX1NNQ19TSE1fQ0FDSEVECiogUmVtb3ZlZCBDTUEgdXNhZ2UgdG8gbGltaXQg
+dGhlIHNjb3BlIG9mIHRoZSBwYXRjaCBzZXQKCnYzOgoqIFJlYmFzZWQgb24gNC4xLXJjMyAoZG1h
+X2J1Zl9leHBvcnQoKSBBUEkgY2hhbmdlKQoqIEEgY291cGxlIG9mIHNtYWxsIHNwYXJzZSBmaXhl
+cwoqIERvY3VtZW50cyBiaW5kaW5ncyBmb3IgT1AtVEVFIGRyaXZlcgoqIFVwZGF0ZWQgTUFJTlRB
+SU5FUlMKCnYyOgoqIFJlcGxhY2VkIHRoZSBzdHViYmVkIE9QLVRFRSBkcml2ZXIgd2l0aCBhIHJl
+YWwgT1AtVEVFIGRyaXZlcgoqIFJlbW92ZWQgbW9zdCBBUElzIG5vdCBuZWVkZWQgYnkgT1AtVEVF
+IGluIGN1cnJlbnQgc3RhdGUKKiBVcGRhdGUgRG9jdW1lbnRhdGlvbi9pb2N0bC9pb2N0bC1udW1i
+ZXIudHh0IHdpdGggY29ycmVjdCBwYXRoIHRvIHRlZS5oCiogUmVuYW1lIHRlZV9zaG1fcG9vbF9h
+bGxvY19jbWEoKSB0byB0ZWVfc2htX3Bvb2xfYWxsb2MoKQoqIE1vdmVkIHRlZS5oIGludG8gaW5j
+bHVkZS91YXBpL2xpbnV4LwoqIFJlZGVmaW5lZCB0ZWUuaCBJT0NUTCBtYWNyb3MgdG8gYmUgZGly
+ZWN0bHkgYmFzZWQgb24gX0lPUiBhbmQgZnJpZW5kcwoqIFJlbW92ZWQgdmVyc2lvbiBpbmZvIG9u
+IHRoZSBBUEkgdG8gdXNlciBzcGFjZSwgYSBkYXRhIGJsb2Igd2hpY2gKICBjYW4gY29udGFpbiBh
+biBVVUlEIGlzIGxlZnQgZm9yIHVzZXIgc3BhY2UgdG8gYmUgYWJsZSB0byB0ZWxsIHdoaWNoCiAg
+cHJvdG9jb2wgdG8gdXNlIGluIFRFRV9JT0NfQ01ECiogQ2hhbmdlZCB1c2VyIHNwYWNlIGV4cG9z
+ZWQgc3RydWN0dXJlcyB0byBvbmx5IGhhdmUgdHlwZXMgd2l0aCBfXyBwcmVmaXgKKiBEcm9wcGVk
+IFRISVNfTU9EVUxFIGZyb20gdGVlX2ZvcHMKKiBSZXdvcmtlZCBob3cgdGhlIGRyaXZlciBpcyBy
+ZWdpc3RlcmVkIGFuZCByZWYgY291bnRlZDoKICAtIG1vdmVkIGZyb20gdXNpbmcgYW4gZW1iZWRk
+ZWQgc3RydWN0IG1pc2NkZXZpY2UgdG8gYW4gZW1iZWRkZWQgc3RydWN0CiAgICBkZXZpY2UuCiAg
+LSB1c2VzIGFuIHN0cnVjdCByd19zZW1hcGhvcmUgYXMgc3luY2hyb25pemF0aW9uIGZvciBkcml2
+ZXIgZGV0YWNobWVudAogIC0gdXNlcyBhbGxvYy9yZWdpc3RlciBwYXR0ZXJuIGZyb20gVFBNCgpU
+aGFua3MsCkplbnMKCkplbnMgV2lrbGFuZGVyICg0KToKICBkdC9iaW5kaW5nczogYWRkIGJpbmRp
+bmdzIGZvciBvcHRlZQogIHRlZTogZ2VuZXJpYyBURUUgc3Vic3lzdGVtCiAgdGVlOiBhZGQgT1At
+VEVFIGRyaXZlcgogIERvY3VtZW50YXRpb246IHRlZSBzdWJzeXN0ZW0gYW5kIG9wLXRlZSBkcml2
+ZXIKCkplcm9tZSBGb3Jpc3NpZXIgKDEpOgogIGFybTY0OiBkdDogaGlrZXk6IEFkZCBvcHRlZSBu
+b2RlCgogRG9jdW1lbnRhdGlvbi8wMC1JTkRFWCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+fCAgIDIgKwogLi4uL2JpbmRpbmdzL2FybS9maXJtd2FyZS9saW5hcm8sb3B0ZWUtdHoudHh0ICAg
+ICAgfCAgMzEgKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAg
+ICAgICAgfCAgIDEgKwogRG9jdW1lbnRhdGlvbi9pb2N0bC9pb2N0bC1udW1iZXIudHh0ICAgICAg
+ICAgICAgICAgfCAgIDEgKwogRG9jdW1lbnRhdGlvbi90ZWUudHh0ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAxMTggKysrCiBNQUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAxMyArCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2hpc2lsaWNvbi9o
+aTYyMjAtaGlrZXkuZHRzICAgICB8ICAgNyArCiBkcml2ZXJzL0tjb25maWcgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL01ha2VmaWxlICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL3RlZS9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxOCArCiBkcml2ZXJzL3RlZS9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArCiBkcml2ZXJzL3RlZS9vcHRl
+ZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNyArCiBkcml2ZXJzL3RlZS9v
+cHRlZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNSArCiBkcml2ZXJzL3Rl
+ZS9vcHRlZS9jYWxsLmMgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDQ0NCArKysrKysrKysr
+CiBkcml2ZXJzL3RlZS9vcHRlZS9jb3JlLmMgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYy
+MiArKysrKysrKysrKysrKwogZHJpdmVycy90ZWUvb3B0ZWUvb3B0ZWVfbXNnLmggICAgICAgICAg
+ICAgICAgICAgICAgfCA0MTggKysrKysrKysrKwogZHJpdmVycy90ZWUvb3B0ZWUvb3B0ZWVfcHJp
+dmF0ZS5oICAgICAgICAgICAgICAgICAgfCAxODMgKysrKysKIGRyaXZlcnMvdGVlL29wdGVlL29w
+dGVlX3NtYy5oICAgICAgICAgICAgICAgICAgICAgIHwgNDUwICsrKysrKysrKysrCiBkcml2ZXJz
+L3RlZS9vcHRlZS9ycGMuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDM5NiArKysrKysr
+KysKIGRyaXZlcnMvdGVlL29wdGVlL3N1cHAuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwg
+MjczICsrKysrKysKIGRyaXZlcnMvdGVlL3RlZV9jb3JlLmMgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgODkzICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy90ZWUvdGVlX3ByaXZh
+dGUuaCAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMjkgKysrCiBkcml2ZXJzL3RlZS90ZWVf
+c2htLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDM1OCArKysrKysrKysKIGRyaXZl
+cnMvdGVlL3RlZV9zaG1fcG9vbC5jICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTU2ICsrKysK
+IGluY2x1ZGUvbGludXgvdGVlX2Rydi5oICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjc3
+ICsrKysrKysKIGluY2x1ZGUvdWFwaS9saW51eC90ZWUuaCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgMzQ2ICsrKysrKysrCiAyNiBmaWxlcyBjaGFuZ2VkLCA1MTU2IGluc2VydGlvbnMoKykK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
+L2Zpcm13YXJlL2xpbmFybyxvcHRlZS10ei50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL3RlZS50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9LY29uZmlnCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy90ZWUvTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL3RlZS9vcHRlZS9LY29uZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy90
+ZWUvb3B0ZWUvTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9vcHRlZS9j
+YWxsLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9vcHRlZS9jb3JlLmMKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9vcHRlZS9vcHRlZV9tc2cuaAogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvdGVlL29wdGVlL29wdGVlX3ByaXZhdGUuaAogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvdGVlL29wdGVlL29wdGVlX3NtYy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJp
+dmVycy90ZWUvb3B0ZWUvcnBjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9vcHRl
+ZS9zdXBwLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS90ZWVfY29yZS5jCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy90ZWUvdGVlX3ByaXZhdGUuaAogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvdGVlL3RlZV9zaG0uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdGVl
+L3RlZV9zaG1fcG9vbC5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC90ZWVfZHJ2
+LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL3VhcGkvbGludXgvdGVlLmgKCi0tIAoyLjcu
+NAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
