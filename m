@@ -1,89 +1,92 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Fri, 10 Mar 2017 13:03:30 +0100
-Message-ID: <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
+From: Artur Jedrysek <jartur@cadence.com>
+Subject: RE: [v2, 4/4] dt-bindings: mtd: Add Octal SPI support to Cadence QSPI.
+Date: Fri, 10 Mar 2017 12:03:12 +0000
+Message-ID: <DM5PR07MB2780A784F8973310542FDBE3D4200@DM5PR07MB2780.namprd07.prod.outlook.com>
+References: <1488959932-6657-1-git-send-email-jartur@cadence.com>
+ <1488960326-13858-1-git-send-email-jartur@cadence.com>
+ <132a4818-11d1-263f-aae4-bac4e76c14c8@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <132a4818-11d1-263f-aae4-bac4e76c14c8@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 05:52, Steve Longerbeam wrote:
-> Add a new FRAME_INTERVAL_ERROR event to signal that a video capture or
-> output device has measured an interval between the reception or transmit
-> completion of two consecutive frames of video that is outside the nominal
-> frame interval by some tolerance value.
 
-Reading back what was said on this I agree with Sakari that this doesn't
-belong here.
-
-Userspace can detect this just as easily (if not easier) with a timeout.
-
-Regards,
-
-	Hans
-
+> From: Marek Vasut [mailto:marek.vasut@gmail.com]
+> Sent: 10 March 2017 04:39
+> On 03/08/2017 09:05 AM, Artur Jedrysek wrote:
+> > This patch updates Cadence QSPI Device Tree documentation to include
+> > information about new compatible used to indicate, whether or not
+> > Octal SPI transfers are supported by the device.
+> >
+> > Signed-off-by: Artur Jedrysek <jartur@cadence.com>
+> > ---
+> > Changelog:
+> > v2: Use new compatible, instead of boolean property, to indicate
+> > Octal SPI support.
+> > ---
+> >  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> > index f248056..41d1e98 100644
+> > --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> > @@ -1,7 +1,9 @@
+> >  * Cadence Quad SPI controller
+> >
+> >  Required properties:
+> > -- compatible : Should be "cdns,qspi-nor".
+> > +- compatible : Should be "cdns,{qspi|ospi}-nor".
 > 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> ---
->  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 6 ++++++
->  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->  include/uapi/linux/videodev2.h                  | 1 +
->  3 files changed, 8 insertions(+)
+> Please explicitly list all compatibles , ie.
+> Should be "cdns,qspi-nor" or "cdns,ospi-nor".
 > 
-> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-> index 8d663a7..dc77363 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
-> @@ -197,6 +197,12 @@ call.
->  	the regions changes. This event has a struct
->  	:c:type:`v4l2_event_motion_det`
->  	associated with it.
-> +    * - ``V4L2_EVENT_FRAME_INTERVAL_ERROR``
-> +      - 7
-> +      - This event is triggered when the video capture or output device
-> +	has measured an interval between the reception or transmit
-> +	completion of two consecutive frames of video that is outside
-> +	the nominal frame interval by some tolerance value.
->      * - ``V4L2_EVENT_PRIVATE_START``
->        - 0x08000000
->        - Base event number for driver-private events.
-> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-> index e11a0d0..c7d8fad 100644
-> --- a/Documentation/media/videodev2.h.rst.exceptions
-> +++ b/Documentation/media/videodev2.h.rst.exceptions
-> @@ -459,6 +459,7 @@ replace define V4L2_EVENT_CTRL event-type
->  replace define V4L2_EVENT_FRAME_SYNC event-type
->  replace define V4L2_EVENT_SOURCE_CHANGE event-type
->  replace define V4L2_EVENT_MOTION_DET event-type
-> +replace define V4L2_EVENT_FRAME_INTERVAL_ERROR event-type
->  replace define V4L2_EVENT_PRIVATE_START event-type
->  
->  replace define V4L2_EVENT_CTRL_CH_VALUE ctrl-changes-flags
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index 45184a2..cf5a0d0 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -2131,6 +2131,7 @@ struct v4l2_streamparm {
->  #define V4L2_EVENT_FRAME_SYNC			4
->  #define V4L2_EVENT_SOURCE_CHANGE		5
->  #define V4L2_EVENT_MOTION_DET			6
-> +#define V4L2_EVENT_FRAME_INTERVAL_ERROR		7
->  #define V4L2_EVENT_PRIVATE_START		0x08000000
->  
->  /* Payload for V4L2_EVENT_VSYNC */
+
+Two possible options are also explicitly listed right below. I did that
+in the way it was done in other driver for Cadence IP:
+/Documentation/devicetree/bindings/net/macb.txt
+Should I remove all of that and replace it with both options, separated
+by an "or" word?
+
+> But I think the ospi is backward compatible with qspi, right ? So the
+> binding for ospi should list both, ie.
+> compatible = "cdns,ospi-nor", "cdns,qspi-nor";
 > 
+
+Yes, the ospi is backwards compatible with qspi. However, the sole point
+of introducing new compatible was to differentiate between them (which
+was previously done using a boolean flag, but that was criticized).
+Listing both bindings for ospi would only help for kernels not
+containing driver update being subject of this patch series, as both
+ospi and qspi are handled by the same driver - just with a slight
+difference. I apologize if I got something wrong here.
+
+> > +  Use "cdns,qspi-nor" for Quad SPI controller.
+> > +  Use "cdns,ospi-nor" for Octal SPI controller.
+> >  - reg : Contains two entries, each of which is a tuple consisting of a
+> >  	physical address and length. The first entry is the address and
+> >  	length of the controller register set. The second entry is the
+> >
+> 
+> 
+> --
+> Best regards,
+> Marek Vasut
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
