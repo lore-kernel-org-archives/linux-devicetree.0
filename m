@@ -1,16 +1,15 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v2 05/11] Documentation: DT: bindings: mfd:
- add A33 GPADC binding
-Date: Sat, 11 Mar 2017 03:25:02 +0800
-Message-ID: <5798131489173902@web12o.yandex.ru>
-References: <20170310103921.19469-1-quentin.schulz@free-electrons.com> <20170310103921.19469-6-quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH v2 09/11] ARM: dtsi: sun8i: a33: add thermal sensor
+Date: Sat, 11 Mar 2017 03:28:34 +0800
+Message-ID: <3181631489174114@web31g.yandex.ru>
+References: <20170310103921.19469-1-quentin.schulz@free-electrons.com> <20170310103921.19469-10-quentin.schulz@free-electrons.com>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBEP3RPDAKGQEXSLJ2MY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBZH4RPDAKGQEMQSGGPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170310103921.19469-6-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170310103921.19469-10-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,97 +22,60 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-10.03.2017, 18:56, "Quentin Schulz" <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> This patch adds documentation for the A33 GPADC binding.
+10.03.2017, 18:42, "Quentin Schulz" <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> This adds the DT node for the thermal sensor present in the Allwinner
+> A33 GPADC.
 >
 > Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
+> =C2=A0arch/arm/boot/dts/sun8i-a33.dtsi | 12 ++++++++++++
+> =C2=A01 file changed, 12 insertions(+)
 >
-> added in v2
+> diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a=
+33.dtsi
+> index ba87a9e..704f2b0 100644
+> --- a/arch/arm/boot/dts/sun8i-a33.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+> @@ -278,6 +278,13 @@
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0status =3D "disabled";
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
 >
-> =C2=A0.../devicetree/bindings/mfd/sun4i-gpadc.txt | 59 ++++++++++++++++++=
-++++
-> =C2=A01 file changed, 59 insertions(+)
-> =C2=A0create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpad=
-c.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Docu=
-mentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> new file mode 100644
-> index 0000000..17242c8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-> @@ -0,0 +1,59 @@
-> +Allwinner SoCs' GPADC Device Tree bindings
-> +------------------------------------------
-> +The Allwinner SoCs all have an ADC that can also act as a thermal sensor
-> +and sometimes as a touchscreen controller.
-> +
-> +Required properties:
-> + - compatible: "sun8i-a33-gpadc-iio",
-> + - reg: mmio address range of the chip,
-> + - #thermal-sensor-cells: shall be 0,
-> + - #io-channel-cells: shall be 0,
-> +
-> +Example:
 > + rtp: rtp@01c25000 {
-
-I think we'd better call it ths.
-
-And can you make thermal-sensor-cells become 1?
-
-Maxime Ripard wants to base H3/H5/A64 thermal driver on this patchset, and
-for H5/A64 there's 2/3 thermal sensors.
-
-Thus for A33/H3 we will have thermal-sensor-cells to 1, but only have
-<&ths 0>.
-
 > + compatible =3D "allwinner,sun8i-a33-gpadc-iio";
 > + reg =3D <0x01c25000 0x100>;
 > + #thermal-sensor-cells =3D <0>;
 > + #io-channel-cells =3D <0>;
 > + };
+
+As I said, it's not a "rtp" (Resistive touch panel).
+
 > +
-> +sun4i, sun5i and sun6i SoCs are also supported via the older binding:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0fe0: display-frontend@01e00000 {
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0compatible =3D "allwinner,sun8i-a33-display-frontend";
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0reg =3D <0x01e00000 0x20000>;
+> @@ -388,6 +395,11 @@
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0};
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
 > +
-> +sun4i resistive touchscreen controller
-> +--------------------------------------
-> +
-> +Required properties:
-> + - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
-> + "allwinner,sun6i-a31-ts"
-> + - reg: mmio address range of the chip
-> + - interrupts: interrupt to which the chip is connected
-> + - #thermal-sensor-cells: shall be 0
-> +
-> +Optional properties:
-> + - allwinner,ts-attached : boolean indicating that an actual touchscreen
-> + is attached to the controller
-> + - allwinner,tp-sensitive-adjust : integer (4 bits)
-> + adjust sensitivity of pen down detection
-> + between 0 (least sensitive) and 15
-> + (defaults to 15)
-> + - allwinner,filter-type : integer (2 bits)
-> + select median and averaging filter
-> + samples used for median / averaging filter
-> + 0: 4/2
-> + 1: 5/3
-> + 2: 8/4
-> + 3: 16/8
-> + (defaults to 1)
-> +
-> +Example:
-> +
-> + rtp: rtp@01c25000 {
-> + compatible =3D "allwinner,sun4i-a10-ts";
-> + reg =3D <0x01c25000 0x100>;
-> + interrupts =3D <29>;
-> + allwinner,ts-attached;
-> + #thermal-sensor-cells =3D <0>;
-> + /* sensitive/noisy touch panel */
-> + allwinner,tp-sensitive-adjust =3D <0>;
-> + allwinner,filter-type =3D <3>;
+> + iio-hwmon {
+> + compatible =3D "iio-hwmon";
+> + io-channels =3D <&rtp>;
 > + };
+> =C2=A0};
+>
+> =C2=A0&ccu {
 > --
 > 2.9.3
 >
