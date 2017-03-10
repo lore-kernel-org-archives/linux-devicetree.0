@@ -1,90 +1,64 @@
-From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] doc: bindings: Add bindings documentation for mtd nvmem
-Date: Thu, 9 Mar 2017 20:06:09 -0800
-Message-ID: <CAAtXAHc34fG_TZbHrRp=oB_e=-o18zDesT73YSEx1Tr5ZE0oSw@mail.gmail.com>
-References: <1488875164-30440-1-git-send-email-albeu@free.fr>
- <1488875164-30440-2-git-send-email-albeu@free.fr> <9f54978c-6d61-cf2c-fb2d-f5ef2af19e0f@gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] dma: xilinx: Make Xilinx VDMA support ARC
+Date: Fri, 10 Mar 2017 10:03:11 +0530
+Message-ID: <20170310043311.GV2843@localhost>
+References: <ec057c7b16c414a1cf9a9eba87c33f8bcf9f01f9.1488803103.git.roliveir@synopsys.com>
+ <1ff465a7-69ed-6cd1-0e02-4b9ff752b3cd@topic.nl>
+ <c1285d07-f925-2c3a-c90c-1ef9ee948b80@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9f54978c-6d61-cf2c-fb2d-f5ef2af19e0f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <c1285d07-f925-2c3a-c90c-1ef9ee948b80-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alban <albeu-GANU6spQydw@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 9, 2017 at 7:17 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 03/07/2017 09:26 AM, Alban wrote:
->> Config data for drivers, like MAC addresses, is often stored in MTD.
->> Add a binding that define how such data storage can be represented in
->> device tree.
->>
->> Signed-off-by: Alban <albeu-GANU6spQydw@public.gmane.org>
->> ---
->> Changelog:
->> v2: * Added a "Required properties" section with the nvmem-provider
->>       property
->> ---
->>  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 ++++++++++++++++++++++
->>  1 file changed, 33 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
->>
->> diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
->> new file mode 100644
->> index 0000000..8ed25e6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
->> @@ -0,0 +1,33 @@
->> += NVMEM in MTD =
->> +
->> +Config data for drivers, like MAC addresses, is often stored in MTD.
->> +This binding define how such data storage can be represented in device tree.
->> +
->> +An MTD can be defined as an NVMEM provider by adding the `nvmem-provider`
->> +property to their node. Data cells can then be defined as child nodes
->> +of the partition as defined in nvmem.txt.
->
-> Why don't we just read the data from MTD and be done with it ? What's
-> the benefit of complicating things by using nvmem ?
+On Thu, Mar 09, 2017 at 09:55:59AM +0000, Ramiro Oliveira wrote:
+> Hi Mike
+> 
+> On 3/9/2017 7:37 AM, Mike Looijmans wrote:
+> > On 06-03-17 13:27, Ramiro Oliveira wrote:
+> >> Add option in Kconfig to use Xilinx VDMA in ARC processors.
+> >>
+> >> Signed-off-by: Ramiro Oliveira <roliveir-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >>  drivers/dma/Kconfig | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> >> index 263495d0adbd..b6b6c0581ad7 100644
+> >> --- a/drivers/dma/Kconfig
+> >> +++ b/drivers/dma/Kconfig
+> >> @@ -546,7 +546,7 @@ config XGENE_DMA
+> >>
+> >>  config XILINX_DMA
+> >>      tristate "Xilinx AXI DMAS Engine"
+> >> -    depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
+> >> +    depends on (ARCH_ZYNQ || MICROBLAZE || ARM64|| ARC)
+> > 
+> > One can put a Xilinx FPGA on a PCIe card, instantiate a PCIe-AXI bridge and then
+> > use it on any platform that supports PCIe.
+> > 
+> > I've had to remove this line in order to be able to use the engine on an x86
+> > desktop.
+> > 
+> > How about plainly removing this "depends on" line and be done with it, instead
+> > of adding platforms one by one?
+> > 
+> > 
+> 
+> I agree with you. From my point of view it would be better to remove this line
+> entirely. I'm just not sure if everyone agrees.
 
-Well because usually stuff like MAC addresses etc are stored in eeproms.
-This gives a nice abstraction with making them both look like nvmem (that was my
-reasoning back then when I submitted a patch to support the OTP part in a
-SPI NOR part.
+if it works on others, compiles fine then there should not be an issue to
+remove.
 
->> +Required properties:
->> +nvmem-provider:      Indicate that the device should be registered as
->> +             NVMEM provider
->> +
->> +Example:
->> +
->> +     flash@0 {
->> +             ...
->> +
->> +             partition@2 {
->> +                     label = "art";
->> +                     reg = <0x7F0000 0x010000>;
->> +                     read-only;
->> +
->> +                     nvmem-provider;
->> +                     #address-cells = <1>;
->> +                     #size-cells = <1>;
->> +
->> +                     eeprom@1000 {
->> +                             label = "wmac-eeprom";
->> +                             reg = <0x1000 0x1000>;
->> +                     };
->> +             };
->> +     };
->>
->
->
-> --
-> Best regards,
-> Marek Vasut
+Feel free to send the patch.
 
-Cheers,
-Moritz
+-- 
+~Vinod
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
