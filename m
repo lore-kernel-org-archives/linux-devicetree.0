@@ -1,79 +1,41 @@
-From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v16 1/5] dt/bindings: add bindings for optee
-Date: Fri, 10 Mar 2017 16:11:39 +0100
-Message-ID: <1489158703-22241-2-git-send-email-jens.wiklander@linaro.org>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v16 5/5] arm64: dt: hikey: Add optee node
+Date: Fri, 10 Mar 2017 16:11:43 +0100
+Message-ID: <1489158703-22241-6-git-send-email-jens.wiklander@linaro.org>
 References: <1489158703-22241-1-git-send-email-jens.wiklander@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489158703-22241-1-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Viro <viro-3bDd1+5oDREiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Etienne CARRIERE <etienne.carriere-qxv4g6HH51o@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Christophe PRIOUZEAU <christophe.priouzeau-qxv4g6HH51o@public.gmane.org>, Eric FINCO <eric.finco-qxv4g6HH51o@public.gmane.org>, Franc
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489158703-22241-1-git-send-email-jens.wiklander@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F . Davis" <afd@ti.com>, broonie@kernel.org, scott.branden@broadcom.com, Loic PALLARDY <loic.pallardy@st.com>, Etienne CARRIERE <etienne.carriere@st.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, Christophe PRIOUZEAU <christophe.priouzeau@st.com>, Eric FINCO <eric.finco@st.com>, Franc
 List-Id: devicetree@vger.kernel.org
 
-Introduces linaro prefix and adds bindings for ARM TrustZone based OP-TEE
-implementation.
+From: Jerome Forissier <jerome.forissier@linaro.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Wei Xu <xuwei5@hisilicon.com>
+Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
+Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
 ---
- .../bindings/arm/firmware/linaro,optee-tz.txt      | 31 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-new file mode 100644
-index 000000000000..d38834c67dff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-@@ -0,0 +1,31 @@
-+OP-TEE Device Tree Bindings
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index dba3c131c62c..89c15399bec2 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -406,6 +406,13 @@
+ 			};
+ 		};
+ 	};
 +
-+OP-TEE is a piece of software using hardware features to provide a Trusted
-+Execution Environment. The security can be provided with ARM TrustZone, but
-+also by virtualization or a separate chip.
-+
-+We're using "linaro" as the first part of the compatible property for
-+the reference implementation maintained by Linaro.
-+
-+* OP-TEE based on ARM TrustZone required properties:
-+
-+- compatible     : should contain "linaro,optee-tz"
-+
-+- method         : The method of calling the OP-TEE Trusted OS. Permitted
-+                   values are:
-+
-+                   "smc" : SMC #0, with the register assignments specified
-+		           in drivers/tee/optee/optee_smc.h
-+
-+                   "hvc" : HVC #0, with the register assignments specified
-+		           in drivers/tee/optee/optee_smc.h
-+
-+
-+
-+Example:
 +	firmware {
 +		optee {
 +			compatible = "linaro,optee-tz";
 +			method = "smc";
 +		};
 +	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ec0bfb9bbebd..e18a96cf7c3a 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -168,6 +168,7 @@ lego	LEGO Systems A/S
- lenovo	Lenovo Group Ltd.
- lg	LG Corporation
- licheepi	Lichee Pi
-+linaro	Linaro Limited
- linux	Linux-specific binding
- lltc	Linear Technology Corporation
- lsi	LSI Corp. (LSI Logic)
+ };
+ 
+ &uart2 {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
