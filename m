@@ -1,113 +1,79 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 10 Mar 2017 12:09:02 -0300
-Message-ID: <20170310120902.1daebc7b@vento.lan>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
-        <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
-        <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
-        <20170303230645.GR21222@n2100.armlinux.org.uk>
-        <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
-        <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, Russell King - ARM Linux <linux@armlinux.org.uk>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@
+From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v16 1/5] dt/bindings: add bindings for optee
+Date: Fri, 10 Mar 2017 16:11:39 +0100
+Message-ID: <1489158703-22241-2-git-send-email-jens.wiklander@linaro.org>
+References: <1489158703-22241-1-git-send-email-jens.wiklander@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489158703-22241-1-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Viro <viro-3bDd1+5oDREiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Loic PALLARDY <loic.pallardy-qxv4g6HH51o@public.gmane.org>, Etienne CARRIERE <etienne.carriere-qxv4g6HH51o@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Patrice CHOTARD <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Christophe PRIOUZEAU <christophe.priouzeau-qxv4g6HH51o@public.gmane.org>, Eric FINCO <eric.finco-qxv4g6HH51o@public.gmane.org>, Franc
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 10 Mar 2017 13:54:28 +0100
-Hans Verkuil <hverkuil@xs4all.nl> escreveu:
+Introduces linaro prefix and adds bindings for ARM TrustZone based OP-TEE
+implementation.
 
-> > Devices that have complex pipeline that do essentially require using the
-> > Media controller interface to configure them are out of that scope.
-> >   
-> 
-> Way too much of how the MC devices should be used is in the minds of developers.
-> There is a major lack for good detailed documentation, utilities, compliance
-> test (really needed!) and libv4l plugins.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/arm/firmware/linaro,optee-tz.txt      | 31 ++++++++++++++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ 2 files changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
 
-Unfortunately, we merged an incomplete MC support at the Kernel. We knew
-all the problems with MC-based drivers and V4L2 applications by the time
-it was developed, and we requested Nokia developers (with was sponsoring MC
-develoment, on that time) to work on a solution to allow standard V4L2
-applications to work with MC based boards.
+diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+new file mode 100644
+index 000000000000..d38834c67dff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+@@ -0,0 +1,31 @@
++OP-TEE Device Tree Bindings
++
++OP-TEE is a piece of software using hardware features to provide a Trusted
++Execution Environment. The security can be provided with ARM TrustZone, but
++also by virtualization or a separate chip.
++
++We're using "linaro" as the first part of the compatible property for
++the reference implementation maintained by Linaro.
++
++* OP-TEE based on ARM TrustZone required properties:
++
++- compatible     : should contain "linaro,optee-tz"
++
++- method         : The method of calling the OP-TEE Trusted OS. Permitted
++                   values are:
++
++                   "smc" : SMC #0, with the register assignments specified
++		           in drivers/tee/optee/optee_smc.h
++
++                   "hvc" : HVC #0, with the register assignments specified
++		           in drivers/tee/optee/optee_smc.h
++
++
++
++Example:
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index ec0bfb9bbebd..e18a96cf7c3a 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -168,6 +168,7 @@ lego	LEGO Systems A/S
+ lenovo	Lenovo Group Ltd.
+ lg	LG Corporation
+ licheepi	Lichee Pi
++linaro	Linaro Limited
+ linux	Linux-specific binding
+ lltc	Linear Technology Corporation
+ lsi	LSI Corp. (LSI Logic)
+-- 
+2.7.4
 
-Unfortunately, we took the decision to merge MC without that, because 
-Nokia was giving up on Linux development, and we didn't want to lose the
-2 years of discussions and work around it, as Nokia employers were leaving
-the company. Also, on that time, there was already some patches floating
-around adding backward support via libv4l. Unfortunately, those patches
-were never finished.
-
-The net result is that MC was merged with some huge gaps, including
-the lack of a proper solution for a generic V4L2 program to work
-with V4L2 devices that use the subdev API.
-
-That was not that bad by then, as MC was used only on cell phones
-that run custom-made applications. 
-
-The reallity changed, as now, we have lots of low cost SoC based
-boards, used for all sort of purposes. So, we need a quick solution
-for it.
-
-In other words, while that would be acceptable support special apps
-on really embedded systems, it is *not OK* for general purpose SoC
-harware[1].
-
-[1] I'm calling "general purpose SoC harware" those ARM boards
-like Raspberry Pi that are shipped to the mass and used by a wide
-range of hobbyists and other people that just wants to run Linux on
-ARM. It is possible to buy such boards for a very cheap price,
-making them to be used not only on special projects, where a custom
-made application could be interesting, but also for a lot of
-users that just want to run Linux on a low cost ARM board, while
-keeping using standard V4L2 apps, like "camorama".
-
-That's perhaps one of the reasons why it took a long time for us to
-start receiving drivers upstream for such hardware: it is quite 
-intimidating and not logical to require developers to implement
-on their drivers 2 complex APIs (MC, subdev) for those
-hardware that most users won't care. From user's perspective,
-being able to support generic applications like "camorama" and
-"zbar" is all they want.
-
-In summary, I'm pretty sure we need to support standard V4L2 
-applications on boards like Raspberry Pi and those low-cost 
-SoC-based boards that are shipped to end users.
-
-> Anyway, regarding this specific patch and for this MC-aware driver: no, you
-> shouldn't inherit controls from subdevs. It defeats the purpose.
-
-Sorry, but I don't agree with that. The subdev API is an optional API
-(and even the MC API can be optional).
-
-I see the rationale for using MC and subdev APIs on cell phones,
-ISV and other embedded hardware, as it will allow fine-tuning
-the driver's support to allow providing the required quality for
-certain custom-made applications. but on general SoC hardware,
-supporting standard V4L2 applications is a need.
-
-Ok, perhaps supporting both subdev API and V4L2 API at the same
-time doesn't make much sense. We could disable one in favor of the
-other, either at compilation time or at runtime.
-
-This way, if the subdev API is disabled, the driver will be
-functional for V4L2-based applications that don't support neither
-MC or subdev APIs.
-
-> As mentioned, I will attempt to try and get some time to work on this
-> later this year. Fingers crossed.
-
-That will be good, and, once we have a solution that works, we can
-work on cleanup the code, but, until then, drivers for arm-based boards
-sold to end consumers should work out of the box with standard V4L2 apps.
-
-While we don't have that, I'm OK to merge patches adding such support
-upstream.
-
-Thanks,
-Mauro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
