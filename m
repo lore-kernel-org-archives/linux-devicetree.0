@@ -1,58 +1,38 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCHv4 00/15] atmel-isi/ov7670/ov2640: convert to standalone
- drivers
-Date: Fri, 10 Mar 2017 13:05:34 +0200
-Message-ID: <20170310110533.GB3220@valkosipuli.retiisi.org.uk>
+Subject: Re: [PATCHv4 10/15] ov2640: convert from soc-camera to a standard
+ subdev sensor driver.
+Date: Fri, 10 Mar 2017 13:08:33 +0200
+Message-ID: <20170310110832.GC3220@valkosipuli.retiisi.org.uk>
 References: <20170310102614.20922-1-hverkuil@xs4all.nl>
+ <20170310102614.20922-11-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170310102614.20922-1-hverkuil@xs4all.nl>
+In-Reply-To: <20170310102614.20922-11-hverkuil@xs4all.nl>
 Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org
+Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Hans,
 
-On Fri, Mar 10, 2017 at 11:25:59AM +0100, Hans Verkuil wrote:
+On Fri, Mar 10, 2017 at 11:26:09AM +0100, Hans Verkuil wrote:
 > From: Hans Verkuil <hans.verkuil@cisco.com>
 > 
-> This patch series converts the soc-camera atmel-isi to a standalone V4L2
-> driver.
+> Convert ov2640 to a standard subdev driver. The soc-camera driver no longer
+> uses this driver, so it can safely be converted.
 > 
-> The same is done for the ov7670 and ov2640 sensor drivers: the ov7670 was
-> used to test the atmel-isi driver. The ov2640 is needed because the em28xx
-> driver has a soc_camera include dependency. Both ov7670 and ov2640 sensors
-> have been tested with the atmel-isi driver.
+> Note: the s_power op has been dropped: this never worked. When the last open()
+> is closed, then the power is turned off, and when it is opened again the power
+> is turned on again, but the old state isn't restored.
 > 
-> The first 5 patches improve the ov7670 sensor driver, mostly adding modern
-> features such as DT support.
+> Someone else can figure out in the future how to get this working correctly,
+> but I don't want to spend more time on this.
 > 
-> The next three convert the atmel-isi and move it out of soc_camera.
-> 
-> The following 5 patches convert ov2640 and drop the soc_camera dependency
-> in em28xx. I have tested that this works with my 'SpeedLink Vicious And
-> Divine Laplace webcam'.
-> 
-> The last two patches add isi support to the DT: the first for the ov7670
-> sensor, the second modifies it for the ov2640 sensor.
-> 
-> These two final patches are for demonstration purposes only, I do not plan
-> on merging them.
-> 
-> Tested with my sama5d3-Xplained board, the ov2640 sensor and two ov7670
-> sensors: one with and one without reset/pwdn pins. Also tested with my
-> em28xx-based webcam.
-> 
-> I'd like to get this in for 4.12. Fingers crossed.
-
-Patches 1, 4, 5, 6 and 8: 
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 
 Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-
-I'll try to check the rest pretty soon.
 
 -- 
 Sakari Ailus
