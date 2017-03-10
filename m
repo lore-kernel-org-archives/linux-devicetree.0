@@ -1,46 +1,42 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Bad DT binding (hisi-pcie-almost-ecam)
-Date: Fri, 10 Mar 2017 17:40:45 +0000
-Message-ID: <20170310174045.GB24571@leverpostej>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM53573: Don't use nonexistent
+ "default-off" LED trigger
+Date: Fri, 10 Mar 2017 09:44:42 -0800
+Message-ID: <3414f628-6b78-dc5a-4abf-ec5f40e7a4ee@gmail.com>
+References: <20170308064105.26619-1-zajec5@gmail.com>
+ <42bce8ea-f1dc-2018-33f1-d296ccd7b677@gmail.com> <20170310132049.GC11875@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
+In-Reply-To: <20170310132049.GC11875@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dongdong Liu <liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I've just spotted commit:
+On 03/10/2017 05:20 AM, Pavel Machek wrote:
+> On Wed 2017-03-08 09:31:44, Florian Fainelli wrote:
+>> On 03/07/2017 10:41 PM, Rafał Miłecki wrote:
+>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>
+>>> Such a trigger doesn't exist in Linux and is not needed as LED is being
+>>> turned off by default. This could cause errors in LEDs core code when
+>>> trying to set default trigger.
+>>>
+>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>
+>> Since you are fixing something, what's the proper Fixes: tag for this
+>> commit? Likewise for the second patch.
+> 
+> Lets not make submitting patches any harder than it already is.
 
-  a2ec1996098c7da0 ("PCI: hisi: Add DT almost-ECAM support for Hip06/Hip07 host controllers")
-
-... which went in for v4.11-rc1.
-
-I hadn't seen this until now, and as far as I can tell this never went
-to the devicetree list.
-
-The commit adds the "hisilicon,pcie-almost-ecam", which goes against the
-usual DT conventions, and is non-sensical in that it describes the IP
-based on what it isn't.
-
-This binding shouldn't have gone in as-is, and we should fix it before
-v4.11.
-
-The binding states that this IP is found in Hip06 and Hip07. For these
-cases we'd usually take the name of the first implementation, e.g.
-something like "hisilicon,hip06-pcie", which can be used as a fallback
-in the compatible list if reused in subsequent SoC generations.
-
-I also see that "hisilicon,hip06-pcie" already exists, so I'm even more
-suspicious.
-
-What exactly is the "hisilicon,pcie-almost-ecam" binding trying to
-describe? Is it a different IP also found on Hip06, or is it a new
-binding for the same IP?
-
-Thanks,
-Mark.
+If it was fixing something that was already in Linus' tree, it's
+important to know so I can queue the patch for the appropriate pull
+request targeting e.g: v4.11-rcX, this is not needed here as Rafal later
+indicated.
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
