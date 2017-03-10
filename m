@@ -1,85 +1,35 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCHv3 04/15] ov7670: get xclk
-Date: Fri, 10 Mar 2017 11:11:17 +0200
-Message-ID: <20170310091117.GU3220@valkosipuli.retiisi.org.uk>
-References: <20170306145616.38485-1-hverkuil@xs4all.nl>
- <20170306145616.38485-5-hverkuil@xs4all.nl>
- <20170309203816.GQ3220@valkosipuli.retiisi.org.uk>
- <4ecb5aa4-40b6-5d78-03ba-239efbd0137e@xs4all.nl>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] ARM: dts: r7s72100: Add watchdog timer
+Date: Fri, 10 Mar 2017 10:19:05 +0100
+Message-ID: <20170310091905.GD21820@verge.net.au>
+References: <20170304223737.20419-1-chris.brandt@renesas.com>
+ <20170304223737.20419-4-chris.brandt@renesas.com>
+ <ef7f631f-efa9-9d8b-658d-aeaa5bce5bc7@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <4ecb5aa4-40b6-5d78-03ba-239efbd0137e-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <ef7f631f-efa9-9d8b-658d-aeaa5bce5bc7-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Fri, Mar 10, 2017 at 09:55:53AM +0100, Hans Verkuil wrote:
-> On 09/03/17 21:38, Sakari Ailus wrote:
-> > Hi Hans,
-> > 
-> > On Mon, Mar 06, 2017 at 03:56:05PM +0100, Hans Verkuil wrote:
-> >> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> >>
-> >> Get the clock for this sensor.
-> >>
-> >> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>  drivers/media/i2c/ov7670.c | 12 ++++++++++++
-> >>  1 file changed, 12 insertions(+)
-> >>
-> >> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-> >> index 50e4466a2b37..da0843617a49 100644
-> >> --- a/drivers/media/i2c/ov7670.c
-> >> +++ b/drivers/media/i2c/ov7670.c
-> >> @@ -10,6 +10,7 @@
-> >>   * This file may be distributed under the terms of the GNU General
-> >>   * Public License, version 2.
-> >>   */
-> >> +#include <linux/clk.h>
-> >>  #include <linux/init.h>
-> >>  #include <linux/module.h>
-> >>  #include <linux/slab.h>
-> >> @@ -227,6 +228,7 @@ struct ov7670_info {
-> >>  		struct v4l2_ctrl *hue;
-> >>  	};
-> >>  	struct ov7670_format_struct *fmt;  /* Current format */
-> >> +	struct clk *clk;
-> >>  	int min_width;			/* Filter out smaller sizes */
-> >>  	int min_height;			/* Filter out smaller sizes */
-> >>  	int clock_speed;		/* External clock speed (MHz) */
-> >> @@ -1587,6 +1589,15 @@ static int ov7670_probe(struct i2c_client *client,
-> >>  			info->pclk_hb_disable = true;
-> >>  	}
-> >>  
-> >> +	info->clk = devm_clk_get(&client->dev, "xclk");
-> >> +	if (IS_ERR(info->clk))
-> >> +		return -EPROBE_DEFER;
-> >> +	clk_prepare_enable(info->clk);
-> >> +
-> >> +	info->clock_speed = clk_get_rate(info->clk) / 1000000;
-> >> +	if (info->clock_speed < 10 || info->clock_speed > 48)
-> >> +		return -EINVAL;
-> > 
-> > clk_disable_unprepare() before return?
+On Sun, Mar 05, 2017 at 08:04:57AM -0800, Guenter Roeck wrote:
+> On 03/04/2017 02:37 PM, Chris Brandt wrote:
+> >Add watchdog timer support for RZ/A1.
+> >For the RZ/A1, the only way to do a reset is to overflow the WDT, so this
+> >is useful even if you don't need the watchdog functionality.
+> >
+> >Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> >Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 > 
-> It is my understanding that devm_clk_get will call that for you.
-> 
-> Correct me if I am wrong.
+> Acked-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
-devm_clk_get() obtained clock is released using devm_clk_release() which is
-just calling clk_put(). Which caller prepared or enabled the clock is not
-tracked. It's the responsibility of the caller.
+Thanks,
 
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+as the driver bindings have also been Acked I have queued up this
+change for v4.12.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
