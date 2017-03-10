@@ -1,22 +1,16 @@
 From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 10 Mar 2017 22:55:16 +0100
-Message-ID: <20170310215515.GA6540@amd>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310130733.GU21222@n2100.armlinux.org.uk>
- <20170310122634.0ffda7c6@vento.lan>
- <20170310155708.GX21222@n2100.armlinux.org.uk>
- <20170310174228.3fe39100@vento.lan>
+Subject: Re: [PATCH v5 07/39] ARM: dts: imx6qdl-sabrelite: remove erratum
+ ERR006687 workaround
+Date: Fri, 10 Mar 2017 22:57:32 +0100
+Message-ID: <20170310215731.GB6540@amd>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-8-git-send-email-steve_longerbeam@mentor.com>
+ <9f5d0ac4-0602-c729-5c00-1d9ef49247c1@boundarydevices.com>
+ <CAOMZO5BNrSEyrbWbCBCbsy4yTrh4AHfk2Too0qHuffxqUCgADg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8842825092535360544=="
+Content-Type: multipart/mixed; boundary="===============1022279382234541401=="
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170310174228.3fe39100@vento.lan>
+In-Reply-To: <CAOMZO5BNrSEyrbWbCBCbsy4yTrh4AHfk2Too0qHuffxqUCgADg@mail.gmail.com>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -26,93 +20,90 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, Nick Dyer <nick@shmanahar.org>, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, mchehab@kernel.org, Troy Kisky <troy.kisky@boundarydevices.com>, bparrot@ti.com, "robh+dt@kernel.org" <robh+dt@kernel.org>, horms+ren
 List-Id: devicetree@vger.kernel.org
 
 
---===============8842825092535360544==
+--===============1022279382234541401==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+	protocol="application/pgp-signature"; boundary="MW5yreqqjyrRcusr"
 Content-Disposition: inline
 
 
---3V7upXqbjpZ4EhLz
+--MW5yreqqjyrRcusr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Fri 2017-03-10 16:17:28, Fabio Estevam wrote:
+> On Fri, Mar 10, 2017 at 3:59 PM, Troy Kisky
+> <troy.kisky@boundarydevices.com> wrote:
+> > On 3/9/2017 8:52 PM, Steve Longerbeam wrote:
+> >> There is a pin conflict with GPIO_6. This pin functions as a power
+> >> input pin to the OV5642 camera sensor, but ENET uses it as the h/w
+> >> workaround for erratum ERR006687, to wake-up the ARM cores on normal
+> >> RX and TX packet done events. So we need to remove the h/w workaround
+> >> to support the OV5642. The result is that the CPUidle driver will no
+> >> longer allow entering the deep idle states on the sabrelite.
+> >>
+> >> This is a partial revert of
+> >>
+> >> commit 6261c4c8f13e ("ARM: dts: imx6qdl-sabrelite: use GPIO_6 for FEC
+> >>                       interrupt.")
+> >> commit a28eeb43ee57 ("ARM: dts: imx6: tag boards that have the HW work=
+around
+> >>                       for ERR006687")
+> >>
+> >> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> >> ---
+> >>  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 4 ----
+> >>  1 file changed, 4 deletions(-)
+> >>
+> >> diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/=
+dts/imx6qdl-sabrelite.dtsi
+> >> index 8413179..89dce27 100644
+> >> --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> >> +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> >> @@ -270,9 +270,6 @@
+> >>       txd1-skew-ps =3D <0>;
+> >>       txd2-skew-ps =3D <0>;
+> >>       txd3-skew-ps =3D <0>;
+> >
+> > How about
+> >
+> > +#if !IS_ENABLED(CONFIG_VIDEO_OV5642)
 
-> Argh! that is indeed a bug at libv4l (and maybe at gstreamer).
->=20
-> I guess that the always_needs_conversion logic was meant to be used to
-> really odd proprietary formats, e. g:
-> =09
-> /*  Vendor-specific formats   */
-> #define V4L2_PIX_FMT_CPIA1    v4l2_fourcc('C', 'P', 'I', 'A') /* cpia1 YU=
-V */
-> #define V4L2_PIX_FMT_WNVA     v4l2_fourcc('W', 'N', 'V', 'A') /* Winnov h=
-w compress */
-> #define V4L2_PIX_FMT_SN9C10X  v4l2_fourcc('S', '9', '1', '0') /* SN9C10x =
-compression */
-> ...
->=20
-> I suspect that nobody uses libv4l2 with MC-based V4L2 devices. That's
-> likely why nobody reported this bug before (that I know of).
->=20
-> In any case, for non-proprietary formats, the default should be to
-> always offer both the emulated format and the original one.
->=20
-> I suspect that the enclosed patch should fix the issue with bayer formats.
+dts is supposed to be hardware description.
 
-=2E..
-> @@ -178,7 +178,7 @@ struct v4lconvert_data *v4lconvert_create_with_dev_op=
-s(int fd, void *dev_ops_pri
->  	/* This keeps tracks of devices which have only formats for which apps
->  	   most likely will need conversion and we can thus safely add software
->  	   processing controls without a performance impact. */
-> -	int always_needs_conversion =3D 1;
-> +	int always_needs_conversion =3D 0;
-> =20
->  	if (!data) {
->  		fprintf(stderr, "libv4lconvert: error: out of memory!\n");
-> @@ -208,8 +208,8 @@ struct v4lconvert_data *v4lconvert_create_with_dev_op=
-s(int fd, void *dev_ops_pri
->  		if (j < ARRAY_SIZE(supported_src_pixfmts)) {
->  			data->supported_src_formats |=3D 1ULL << j;
->  			v4lconvert_get_framesizes(data, fmt.pixelformat, j);
-> -			if (!supported_src_pixfmts[j].needs_conversion)
-> -				always_needs_conversion =3D 0;
-> +			if (supported_src_pixfmts[j].needs_conversion)
-> +				always_needs_conversion =3D 1;
->  		} else
->  			always_needs_conversion =3D 0;
->  	}
+> Or maybe just create a new device tree for using the camera, like
+> imx6q-sabrelite-camera.dts.
 
-Is the else still needed? You changed default to 0...
+And it should not depend on configuration. Hardware vendor should be
+able to ship board with working device tree...
 
-										Pavel
+									Pavel
+
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---3V7upXqbjpZ4EhLz
+--MW5yreqqjyrRcusr
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAljDIMIACgkQMOfwapXb+vLHPgCaA/hVPU+c5+BD+uhS8twLktUB
-1yQAnRjOmbNw8KPZCQyVxELpIxhyOhGX
-=CboU
+iEYEARECAAYFAljDIUsACgkQMOfwapXb+vK6eQCfalP+qOUXROn/DqpnUJ1m+F+K
+gesAnjzHVrD23JJklCM2vSrD4uDreyPU
+=Ttsd
 -----END PGP SIGNATURE-----
 
---3V7upXqbjpZ4EhLz--
+--MW5yreqqjyrRcusr--
 
---===============8842825092535360544==
+--===============1022279382234541401==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -123,4 +114,4 @@ devel mailing list
 devel@linuxdriverproject.org
 http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
 
---===============8842825092535360544==--
+--===============1022279382234541401==--
