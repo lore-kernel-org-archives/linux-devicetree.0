@@ -1,139 +1,95 @@
-From: Sven Eckelmann <sven.eckelmann@openmesh.com>
-Subject: [PATCH 2/2] ath10k: search DT for qcom,ath10k-calibration-variant
-Date: Fri, 10 Mar 2017 09:06:15 +0100
-Message-ID: <20170310080615.22958-2-sven.eckelmann@openmesh.com>
-References: <20170310080615.22958-1-sven.eckelmann@openmesh.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 00/16] ACPI graph support
+Date: Fri, 10 Mar 2017 10:19:32 +0200
+Message-ID: <20170310081932.GT3220@valkosipuli.retiisi.org.uk>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <CAJZ5v0iNqTb55xrq21Byn5q6XUeFYSa2mMLj+Jnu1_d0DyMvxQ@mail.gmail.com>
+ <20170307134936.GJ3220@valkosipuli.retiisi.org.uk>
+ <1810272.34jmmMEX8i@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170310080615.22958-1-sven.eckelmann@openmesh.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
-List-Post: <mailto:ath10k@lists.infradead.org>
-List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
- <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
-Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
-Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
-To: ath10k@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, Sven Eckelmann <sven.eckelmann@openmesh.com>, ext.waldemar.rymarkiewicz@tieto.com, kvalo@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1810272.34jmmMEX8i@aspire.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Board Data File (BDF) is loaded upon driver boot-up procedure. The right
-board data file is identified on QCA4019 using bus, bmi-chip-id and
-bmi-board-id.
+Hi Rafael,
 
-The problem, however, can occur when the (default) board data file cannot
-fulfill with the vendor requirements and it is necessary to use a different
-board data file.
+On Fri, Mar 10, 2017 at 12:05:04AM +0100, Rafael J. Wysocki wrote:
+> On Tuesday, March 07, 2017 03:49:36 PM Sakari Ailus wrote:
+> > Hi Rafael,
+> 
+> Hi,
+> 
+> > On Tue, Mar 07, 2017 at 02:23:33PM +0100, Rafael J. Wysocki wrote:
+> > > On Tue, Mar 7, 2017 at 8:49 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > > > Hi Rafael,
+> > > >
+> > > > On Mon, Mar 06, 2017 at 04:19:14PM +0200, Sakari Ailus wrote:
+> > > >> This set contains patches written by Mika Westerberg and by myself. The
+> > > >> patchset brings support for graphs to ACPI. The functionality achieved by
+> > > >> these patches is very similar to what the Device tree provides: the port
+> > > >> and the endpoint concept are being employed. The patches make use of the
+> > > >> _DSD property and data extensions to achieve this. The fwnode interface is
+> > > >> extended by graph functionality; this way graph information originating
+> > > >> from both OF and ACPI may be accessed using the same interface, without
+> > > >> being aware of the underlying firmware interface.
+> > > >
+> > > > I've tested the patches again on ARM (OF) and x86-64 (ACPI).
+> > > 
+> > > OK
+> > > 
+> > > > I have V4L2 patches depending on the ACPI graph patchset that I'd like to
+> > > > have in during the same merge window. Would you either accept a pull
+> > > > request, or could I have a branch on top of v4.11-rc1 containing these
+> > > > patches only (for media tree)?
+> > > >
+> > > > The patchset "Move firmware specific code to firmware specific locations"
+> > > > depends on "Fwnode property API fixes for OF, pset". Would you prefer to
+> > > > send the bugfixes as fixes to v4.11 or just put it all to v4.12?
+> > > 
+> > > I'll put it all into v4.12 if that's not a problem.
+> > 
+> > That's fine for me but see below...
+> > 
+> > > 
+> > > Also I don't really have the time to take care of that this week due
+> > > to other work.  I'll get to it next week, most likely.
+> > 
+> > Ack.
+> > 
+> > Would you prefer me to send a pull request, or pick up the patches --- in
+> > the latter case I'd like to request an immutable branch with these patches
+> > only on v4.11-rc1 which I could use for basing my dependent V4L2 patches
+> > that go to the media tree.
+> 
+> So from this series I can queue up patches [1-7/16] no problem.
+> 
+> Patch [8/16] requires an ACK from Rob for me to take it.
+> 
+> Patch [9/16] is not even related to this series technically, so please send it
+> separately to Greg.
 
-This problem was solved for SMBIOS by adding a special SMBIOS type 0xF8.
-Something similar has to be provided for systems without SMBIOS but with
-device trees. No solution was specified by QCA and therefore a new one has
-to be found for ath10k.
+I'll drop that patch from the set in this case and submit another patch
+later on --- for me it was a question of where do you add a header file when
+you see a randomly ordered list with some entries there twice. ;-)
 
-The device tree requires addition strings to define the variant name
+> 
+> Patch [10/16] needs to be folded into the one that depends on it IMO.
 
-    wifi@a000000 {
-    	status = "okay";
-    	qcom,ath10k-calibration-variant = "RT-AC58U";
-    };
+Will do.
 
-    wifi@a800000 {
-    	status = "okay";
-    	qcom,ath10k-calibration-variant = "RT-AC58U";
-    };
+> 
+> I also have questions to patches [11-16/16], but I'll respond to those
+> separately later.
 
-This would create the boarddata identifiers for the board-2.bin search
+Ack.
 
- *  bus=ahb,bmi-chip-id=0,bmi-board-id=16,variant=RT-AC58U
- *  bus=ahb,bmi-chip-id=0,bmi-board-id=17,variant=RT-AC58U
-
-Signed-off-by: Sven Eckelmann <sven.eckelmann@openmesh.com>
----
-Since RFC:
-
- - initialize variant pointer to have it initialized to NULL when
-   of_property_read_string fails (thanks Christian Lamparter)
- - Only print warning that DT doesn't contain string ones (thanks Christian
-   Lamparter)
- - Split patch in DT doc and ath10k part (thanks Christian Lamparter)
- - Allow to overwrite the variant string via DT and ignore that SMBIOS had
-   written anything to it
----
- drivers/net/wireless/ath/ath10k/core.c | 37 +++++++++++++++++++++++++++-------
- 1 file changed, 30 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-index 0a8e29e9a0eb..e459e84afe9f 100644
---- a/drivers/net/wireless/ath/ath10k/core.c
-+++ b/drivers/net/wireless/ath/ath10k/core.c
-@@ -779,6 +779,25 @@ static int ath10k_core_check_smbios(struct ath10k *ar)
- 	return 0;
- }
- 
-+static int ath10k_core_check_dt(struct ath10k *ar)
-+{
-+	struct device_node *node;
-+	const char *variant = NULL;
-+
-+	node = ar->dev->of_node;
-+	if (!node)
-+		return -ENOENT;
-+
-+	of_property_read_string(node, "qcom,ath10k-calibration-variant",
-+				&variant);
-+	if (!variant)
-+		return -ENODATA;
-+
-+	strscpy(ar->id.bdf_ext, variant, sizeof(ar->id.bdf_ext));
-+
-+	return 0;
-+}
-+
- static int ath10k_download_and_run_otp(struct ath10k *ar)
- {
- 	u32 result, address = ar->hw_params.patch_load_addr;
-@@ -1145,19 +1164,19 @@ static int ath10k_core_create_board_name(struct ath10k *ar, char *name,
- 	/* strlen(',variant=') + strlen(ar->id.bdf_ext) */
- 	char variant[9 + ATH10K_SMBIOS_BDF_EXT_STR_LENGTH] = { 0 };
- 
-+	if (ar->id.bdf_ext[0] != '\0')
-+		scnprintf(variant, sizeof(variant), ",variant=%s",
-+			  ar->id.bdf_ext);
-+
- 	if (ar->id.bmi_ids_valid) {
- 		scnprintf(name, name_len,
--			  "bus=%s,bmi-chip-id=%d,bmi-board-id=%d",
-+			  "bus=%s,bmi-chip-id=%d,bmi-board-id=%d%s",
- 			  ath10k_bus_str(ar->hif.bus),
- 			  ar->id.bmi_chip_id,
--			  ar->id.bmi_board_id);
-+			  ar->id.bmi_board_id, variant);
- 		goto out;
- 	}
- 
--	if (ar->id.bdf_ext[0] != '\0')
--		scnprintf(variant, sizeof(variant), ",variant=%s",
--			  ar->id.bdf_ext);
--
- 	scnprintf(name, name_len,
- 		  "bus=%s,vendor=%04x,device=%04x,subsystem-vendor=%04x,subsystem-device=%04x%s",
- 		  ath10k_bus_str(ar->hif.bus),
-@@ -2221,7 +2240,11 @@ static int ath10k_core_probe_fw(struct ath10k *ar)
- 
- 	ret = ath10k_core_check_smbios(ar);
- 	if (ret)
--		ath10k_dbg(ar, ATH10K_DBG_BOOT, "bdf variant name not set.\n");
-+		ath10k_dbg(ar, ATH10K_DBG_BOOT, "SMBIOS bdf variant name not set.\n");
-+
-+	ret = ath10k_core_check_dt(ar);
-+	if (ret)
-+		ath10k_dbg(ar, ATH10K_DBG_BOOT, "DT bdf variant name not set.\n");
- 
- 	ret = ath10k_core_fetch_board_file(ar);
- 	if (ret) {
 -- 
-2.11.0
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
