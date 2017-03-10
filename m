@@ -1,13 +1,15 @@
 From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 00/11] add thermal throttling to Allwinner
- A33 SoC
-Date: Fri, 10 Mar 2017 11:39:10 +0100
-Message-ID: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
+Subject: [PATCH v2 05/11] Documentation: DT: bindings: mfd: add
+ A33 GPADC binding
+Date: Fri, 10 Mar 2017 11:39:15 +0100
+Message-ID: <20170310103921.19469-6-quentin.schulz@free-electrons.com>
+References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
 Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBB3UERLDAKGQE4VD6F4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBB6EERLDAKGQEYR5DXPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170310103921.19469-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,69 +20,81 @@ To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2yg
 Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner SoCs all have an ADC that can also act as a touchscreen
-controller and a thermal sensor. The first four channels can be used
-either for the ADC or the touchscreen and the fifth channel is used for
-the thermal sensor. We currently have a driver for the two latter
-functions in drivers/input/touchscreen/sun4i-ts.c but we don't have
-access to the ADC feature at all. It is meant to replace the current
-driver by using MFD and subdrivers for existing bindings.
+This patch adds documentation for the A33 GPADC binding.
 
-The Allwinner A33 only has a thermal sensor present in the GPADC. In
-addition, there is not an existing DT binding for the GPADC. Thus, we do
-not need the sun4i-gpadc MFD driver which was made to keep DT compatibility
-and probe subdrivers without the need to add DT subnodes.
+Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
 
-This series of patch adds the thermal sensor for the A33 and GPU/CPU
-thermal throttling. It also adds the cpu-supply property to the CPU node
-needed by the Sinlinx SinA33 and Olinuxino A33 to adapt their CPU regulator
-voltage depending on the currently used OPP. The other A33 boards all have
-their cpu-supply property set.
+added in v2
 
-This series also fixes the missing operating-points-v2 property in cpu DT
-nodes. Finally, it also adds all remaining OPPs which can be found in
-Allwinner 3.4 linux and fex files of all A33 boards.
+ .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
 
-This patch *HAS NOT* been tested on the Olinuxino A33.
- @Stefan (or anyone owning an Olinuxino A33), could you test this patch
- series on your board, test CPUfreq and tell us if it works in a stable
- manner? Thanks!
-
-This series of patch is based on this[1] series of patch.
-
-[1] https://lkml.org/lkml/2016/12/13/298 : "[PATCH v9] add support for Allwinner
-SoCs ADC"
-
-Thanks,
-Quentin
-
-Maxime Ripard (1):
-  ARM: sun8i: a33: Add devfreq-based GPU cooling
-
-Quentin Schulz (10):
-  ARM: sun8i: a33: add operating-points-v2 property to all nodes
-  ARM: sun8i: a33: add all operating points
-  ARM: dts: sun8i: sina33: add cpu-supply
-  ARM: dts: sun8i: olinuxino: add cpu-supply
-  Documentation: DT: bindings: mfd: add A33 GPADC binding
-  Documentation: DT: bindings: input: touschcreen: remove sun4i
-    documentation
-  iio: adc: sun4i-gpadc-iio: move code used in MFD probing to new
-    function
-  iio: adc: sun4i-gpadc-iio: add support for A33 thermal sensor
-  ARM: dtsi: sun8i: a33: add thermal sensor
-  ARM: dtsi: sun8i: a33: add CPU thermal throttling
-
- .../touchscreen/sun4i.txt => mfd/sun4i-gpadc.txt}  |  21 +++
- arch/arm/boot/dts/sun8i-a23-a33.dtsi               |   3 +
- arch/arm/boot/dts/sun8i-a33-olinuxino.dts          |   4 +
- arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   4 +
- arch/arm/boot/dts/sun8i-a33.dtsi                   | 149 ++++++++++++++++++
- drivers/iio/adc/Kconfig                            |   2 +-
- drivers/iio/adc/sun4i-gpadc-iio.c                  | 170 +++++++++++++++++----
- include/linux/mfd/sun4i-gpadc.h                    |   4 +
- 8 files changed, 324 insertions(+), 33 deletions(-)
- rename Documentation/devicetree/bindings/{input/touchscreen/sun4i.txt => mfd/sun4i-gpadc.txt} (64%)
-
+diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+new file mode 100644
+index 0000000..17242c8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
+@@ -0,0 +1,59 @@
++Allwinner SoCs' GPADC Device Tree bindings
++------------------------------------------
++The Allwinner SoCs all have an ADC that can also act as a thermal sensor
++and sometimes as a touchscreen controller.
++
++Required properties:
++  - compatible: "sun8i-a33-gpadc-iio",
++  - reg: mmio address range of the chip,
++  - #thermal-sensor-cells: shall be 0,
++  - #io-channel-cells: shall be 0,
++
++Example:
++	rtp: rtp@01c25000 {
++		compatible = "allwinner,sun8i-a33-gpadc-iio";
++		reg = <0x01c25000 0x100>;
++		#thermal-sensor-cells = <0>;
++		#io-channel-cells = <0>;
++	};
++
++sun4i, sun5i and sun6i SoCs are also supported via the older binding:
++
++sun4i resistive touchscreen controller
++--------------------------------------
++
++Required properties:
++ - compatible: "allwinner,sun4i-a10-ts", "allwinner,sun5i-a13-ts" or
++   "allwinner,sun6i-a31-ts"
++ - reg: mmio address range of the chip
++ - interrupts: interrupt to which the chip is connected
++ - #thermal-sensor-cells: shall be 0
++
++Optional properties:
++ - allwinner,ts-attached	 : boolean indicating that an actual touchscreen
++				   is attached to the controller
++ - allwinner,tp-sensitive-adjust : integer (4 bits)
++				   adjust sensitivity of pen down detection
++				   between 0 (least sensitive) and 15
++				   (defaults to 15)
++ - allwinner,filter-type	 : integer (2 bits)
++				   select median and averaging filter
++				   samples used for median / averaging filter
++				   0: 4/2
++				   1: 5/3
++				   2: 8/4
++				   3: 16/8
++				   (defaults to 1)
++
++Example:
++
++	rtp: rtp@01c25000 {
++		compatible = "allwinner,sun4i-a10-ts";
++		reg = <0x01c25000 0x100>;
++		interrupts = <29>;
++		allwinner,ts-attached;
++		#thermal-sensor-cells = <0>;
++		/* sensitive/noisy touch panel */
++		allwinner,tp-sensitive-adjust = <0>;
++		allwinner,filter-type = <3>;
++	};
 -- 
 2.9.3
