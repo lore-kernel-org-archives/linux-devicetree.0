@@ -1,95 +1,132 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 00/16] ACPI graph support
-Date: Fri, 10 Mar 2017 10:19:32 +0200
-Message-ID: <20170310081932.GT3220@valkosipuli.retiisi.org.uk>
-References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
- <CAJZ5v0iNqTb55xrq21Byn5q6XUeFYSa2mMLj+Jnu1_d0DyMvxQ@mail.gmail.com>
- <20170307134936.GJ3220@valkosipuli.retiisi.org.uk>
- <1810272.34jmmMEX8i@aspire.rjw.lan>
+From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] arm64: dts: updated sata node on ls1012a dts
+Date: Fri, 10 Mar 2017 16:12:13 +0800
+Message-ID: <1489133533-39352-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1810272.34jmmMEX8i@aspire.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+On ls1012a soc, sata ecc should be disabled. So added sata ecc
+register address so that driver can get this information.
 
-On Fri, Mar 10, 2017 at 12:05:04AM +0100, Rafael J. Wysocki wrote:
-> On Tuesday, March 07, 2017 03:49:36 PM Sakari Ailus wrote:
-> > Hi Rafael,
-> 
-> Hi,
-> 
-> > On Tue, Mar 07, 2017 at 02:23:33PM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Mar 7, 2017 at 8:49 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > > > Hi Rafael,
-> > > >
-> > > > On Mon, Mar 06, 2017 at 04:19:14PM +0200, Sakari Ailus wrote:
-> > > >> This set contains patches written by Mika Westerberg and by myself. The
-> > > >> patchset brings support for graphs to ACPI. The functionality achieved by
-> > > >> these patches is very similar to what the Device tree provides: the port
-> > > >> and the endpoint concept are being employed. The patches make use of the
-> > > >> _DSD property and data extensions to achieve this. The fwnode interface is
-> > > >> extended by graph functionality; this way graph information originating
-> > > >> from both OF and ACPI may be accessed using the same interface, without
-> > > >> being aware of the underlying firmware interface.
-> > > >
-> > > > I've tested the patches again on ARM (OF) and x86-64 (ACPI).
-> > > 
-> > > OK
-> > > 
-> > > > I have V4L2 patches depending on the ACPI graph patchset that I'd like to
-> > > > have in during the same merge window. Would you either accept a pull
-> > > > request, or could I have a branch on top of v4.11-rc1 containing these
-> > > > patches only (for media tree)?
-> > > >
-> > > > The patchset "Move firmware specific code to firmware specific locations"
-> > > > depends on "Fwnode property API fixes for OF, pset". Would you prefer to
-> > > > send the bugfixes as fixes to v4.11 or just put it all to v4.12?
-> > > 
-> > > I'll put it all into v4.12 if that's not a problem.
-> > 
-> > That's fine for me but see below...
-> > 
-> > > 
-> > > Also I don't really have the time to take care of that this week due
-> > > to other work.  I'll get to it next week, most likely.
-> > 
-> > Ack.
-> > 
-> > Would you prefer me to send a pull request, or pick up the patches --- in
-> > the latter case I'd like to request an immutable branch with these patches
-> > only on v4.11-rc1 which I could use for basing my dependent V4L2 patches
-> > that go to the media tree.
-> 
-> So from this series I can queue up patches [1-7/16] no problem.
-> 
-> Patch [8/16] requires an ACK from Rob for me to take it.
-> 
-> Patch [9/16] is not even related to this series technically, so please send it
-> separately to Greg.
+Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 80 +++++++++++++++++++++++++-
+ 1 file changed, 79 insertions(+), 1 deletion(-)
 
-I'll drop that patch from the set in this case and submit another patch
-later on --- for me it was a question of where do you add a header file when
-you see a randomly ordered list with some entries there twice. ;-)
-
-> 
-> Patch [10/16] needs to be folded into the one that depends on it IMO.
-
-Will do.
-
-> 
-> I also have questions to patches [11-16/16], but I'll respond to those
-> separately later.
-
-Ack.
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index cffebb4..1870dde 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -43,6 +43,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	compatible = "fsl,ls1012a";
+@@ -126,6 +127,81 @@
+ 			#clock-cells = <2>;
+ 			clocks = <&sysclk>;
+ 		};
++		tmu: tmu@1f00000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f00000 0x0 0x10000>;
++			interrupts = <0 33 0x4>;
++			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
++			fsl,tmu-calibration = <0x00000000 0x00000026
++					       0x00000001 0x0000002d
++					       0x00000002 0x00000032
++					       0x00000003 0x00000039
++					       0x00000004 0x0000003f
++					       0x00000005 0x00000046
++					       0x00000006 0x0000004d
++					       0x00000007 0x00000054
++					       0x00000008 0x0000005a
++					       0x00000009 0x00000061
++					       0x0000000a 0x0000006a
++					       0x0000000b 0x00000071
++
++					       0x00010000 0x00000025
++					       0x00010001 0x0000002c
++					       0x00010002 0x00000035
++					       0x00010003 0x0000003d
++					       0x00010004 0x00000045
++					       0x00010005 0x0000004e
++					       0x00010006 0x00000057
++					       0x00010007 0x00000061
++					       0x00010008 0x0000006b
++					       0x00010009 0x00000076
++
++					       0x00020000 0x00000029
++					       0x00020001 0x00000033
++					       0x00020002 0x0000003d
++					       0x00020003 0x00000049
++					       0x00020004 0x00000056
++					       0x00020005 0x00000061
++					       0x00020006 0x0000006d
++
++					       0x00030000 0x00000021
++					       0x00030001 0x0000002a
++					       0x00030002 0x0000003c
++					       0x00030003 0x0000004e>;
++			big-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay-passive = <1000>;
++				polling-delay = <5000>;
++
++				thermal-sensors = <&tmu 0>;
++
++				trips {
++					cpu_alert: cpu-alert {
++						temperature = <85000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
++					cpu_crit: cpu-crit {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "critical";
++					};
++				};
++
++				cooling-maps {
++					map0 {
++						trip = <&cpu_alert>;
++						cooling-device =
++							<&cpu0 THERMAL_NO_LIMIT
++							THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
+ 
+ 		i2c0: i2c@2180000 {
+ 			compatible = "fsl,vf610-i2c";
+@@ -238,7 +314,9 @@
+ 
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1012a-ahci", "fsl,ls1043a-ahci";
+-			reg = <0x0 0x3200000 0x0 0x10000>;
++			reg = <0x0 0x3200000 0x0 0x10000>,
++				<0x0 0x20140520 0x0 0x4>;
++			reg-names = "ahci", "sata-ecc";
+ 			interrupts = <0 69 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clockgen 4 0>;
+ 			status = "disabled";
 -- 
-Kind regards,
+2.1.0.27.g96db324
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
