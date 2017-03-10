@@ -1,97 +1,94 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 10 Mar 2017 14:22:29 +0100
-Message-ID: <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310130733.GU21222@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170310130733.GU21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo
+From: Jan Glauber <jglauber@cavium.com>
+Subject: [PATCH v12 1/9] dt-bindings: mmc: Add Cavium SOCs MMC bindings
+Date: Fri, 10 Mar 2017 14:24:59 +0100
+Message-ID: <20170310132507.32025-2-jglauber@cavium.com>
+References: <20170310132507.32025-1-jglauber@cavium.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170310132507.32025-1-jglauber@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <ddaney@caviumnetworks.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, Jan Glauber <jglauber@cavium.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, "Steven J . Hill" <steven.hill@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 14:07, Russell King - ARM Linux wrote:
-> On Fri, Mar 10, 2017 at 01:54:28PM +0100, Hans Verkuil wrote:
->> But there was always meant to be a layer (libv4l plugin) that could be
->> used to setup a 'default scenario' that existing applications could use,
->> but that was never enforced, sadly.
-> 
-> However, there's other painful issues lurking in userspace, particularly
-> to do with the v4l libraries.
-> 
-> The idea that the v4l libraries should intercept the format negotiation
-> between the application and kernel is a particularly painful one - the
-> default gstreamer build detects the v4l libraries, and links against it.
-> That much is fine.
-> 
-> However, the problem comes when you're trying to use bayer formats. The
-> v4l libraries "helpfully" (or rather unhelpfully) intercept the format
-> negotiation, and decide that they'll invoke v4lconvert to convert the
-> bayer to RGB for you, whether you want them to do that or not.
-> 
-> v4lconvert may not be the most efficient way to convert, or even what
-> is desired (eg, you may want to receive the raw bayer image.)  However,
-> since the v4l libraries/v4lconvert gives you no option but to have its
-> conversion forced into the pipeline, other options (such as using the
-> gstreamer neon accelerated de-bayer plugin) isn't an option without
-> rebuilding gstreamer _without_ linking against the v4l libraries.
-> 
-> At that point, saying "this should be done in a libv4l plugin" becomes
-> a total nonsense, because if you need to avoid libv4l due to its
-> stupidities, you don't get the benefit of subdevs, and it yet again
-> _forces_ people down the route of custom applications.
-> 
-> So, I really don't agree with pushing this into a userspace library
-> plugin - at least not with the current state there.
-> 
-> _At least_ the debayering in the v4l libraries needs to become optional.
-> 
+Add description of Cavium Octeon and ThunderX SOC device tree bindings.
 
-I *thought* that when a plugin is used the format conversion code was disabled.
-But I'm not sure.
+CC: Ulf Hansson <ulf.hansson@linaro.org>
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: devicetree@vger.kernel.org
 
-The whole problem is that we still don't have a decent plugin for an MC driver.
-There is one for the exynos4 floating around, but it's still not accepted.
+Signed-off-by: Jan Glauber <jglauber@cavium.com>
+Signed-off-by: David Daney <david.daney@cavium.com>
+Signed-off-by: Steven J. Hill <steven.hill@cavium.com>
+Acked-by: Rob Herring <robh+dt@kernel.org>
+---
+ .../devicetree/bindings/mmc/cavium-mmc.txt         | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/cavium-mmc.txt
 
-Companies write the driver, but the plugin isn't really needed since their
-customers won't use it anyway since they make their own embedded driver.
-
-And nobody of the media core developers has the time to work on the docs,
-utilities and libraries you need to make this all work cleanly and reliably.
-
-As mentioned, I will attempt to try and get some time to work on this
-later this year. Fingers crossed.
-
-We also have a virtual MC driver floating around. I've pinged the author if
-she can fix the last round of review comments and post a new version. Having
-a virtual driver makes life much easier when writing docs, utilities, etc.
-since you don't need real hardware which can be hard to obtain and run.
-
-Again, I agree completely with you. But we don't have many core developers
-who can do something like this, and it's even harder for them to find the time.
-
-Solutions on a postcard...
-
-BTW, Steve: this has nothing to do with your work, it's a problem in our subsystem.
-
-Regards,
-
-	Hans
+diff --git a/Documentation/devicetree/bindings/mmc/cavium-mmc.txt b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+new file mode 100644
+index 0000000..225c2be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+@@ -0,0 +1,58 @@
++* Cavium Octeon & ThunderX MMC controller
++
++The highspeed MMC host controller on Caviums SoCs provides an interface
++for MMC and SD types of memory cards.
++
++Supported maximum speeds are the ones of the eMMC standard 4.41 as well
++as the speed of SD standard 4.0. Only 3.3 Volt is supported.
++
++Required properties:
++ - compatible : should be one of:
++   cavium,octeon-6130-mmc
++   cavium,octeon-6130-mmc-slot
++   cavium,octeon-7890-mmc
++   cavium,octeon-7890-mmc-slot
++   cavium,thunder-8190-mmc
++   cavium,thunder-8190-mmc-slot
++   cavium,thunder-8390-mmc
++   cavium,thunder-8390-mmc-slot
++ - reg : mmc controller base registers
++ - clocks : phandle
++
++Optional properties:
++ - for cd, bus-width and additional generic mmc parameters
++   please refer to mmc.txt within this directory
++ - cavium,cmd-clk-skew : number of coprocessor clocks before sampling command
++ - cavium,dat-clk-skew : number of coprocessor clocks before sampling data
++
++Deprecated properties:
++- spi-max-frequency : use max-frequency instead
++- cavium,bus-max-width : use bus-width instead
++
++Examples:
++	mmc_1_4: mmc@1,4 {
++		compatible = "cavium,thunder-8390-mmc";
++		reg = <0x0c00 0 0 0 0>;	/* DEVFN = 0x0c (1:4) */
++		#address-cells = <1>;
++		#size-cells = <0>;
++		clocks = <&sclk>;
++
++		mmc-slot@0 {
++			compatible = "cavium,thunder-8390-mmc-slot";
++			reg = <0>;
++			vmmc-supply = <&mmc_supply_3v3>;
++			max-frequency = <42000000>;
++			bus-width = <4>;
++			cap-sd-highspeed;
++		};
++
++		mmc-slot@1 {
++			compatible = "cavium,thunder-8390-mmc-slot";
++			reg = <1>;
++			vmmc-supply = <&mmc_supply_3v3>;
++			max-frequency = <42000000>;
++			bus-width = <8>;
++			cap-mmc-highspeed;
++			non-removable;
++		};
++	};
+-- 
+2.9.0.rc0.21.g7777322
