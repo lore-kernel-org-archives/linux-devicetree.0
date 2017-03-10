@@ -1,120 +1,107 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv4 11/15] ov2640: use standard clk and enable it.
-Date: Fri, 10 Mar 2017 11:26:10 +0100
-Message-ID: <20170310102614.20922-12-hverkuil@xs4all.nl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv4 08/15] atmel-isi: move out of soc_camera to atmel
+Date: Fri, 10 Mar 2017 11:26:07 +0100
+Message-ID: <20170310102614.20922-9-hverkuil@xs4all.nl>
 References: <20170310102614.20922-1-hverkuil@xs4all.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170310102614.20922-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170310102614.20922-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Convert v4l2_clk to normal clk and enable the clock.
+Move this out of the soc_camera directory into the atmel directory
+where it belongs.
 
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 ---
- drivers/media/i2c/ov2640.c | 31 ++++++++++++++-----------------
- 1 file changed, 14 insertions(+), 17 deletions(-)
+ drivers/media/platform/Makefile                          |  1 +
+ drivers/media/platform/atmel/Kconfig                     | 11 ++++++++++-
+ drivers/media/platform/atmel/Makefile                    |  1 +
+ drivers/media/platform/{soc_camera => atmel}/atmel-isi.c |  0
+ drivers/media/platform/{soc_camera => atmel}/atmel-isi.h |  0
+ drivers/media/platform/soc_camera/Kconfig                | 10 ----------
+ drivers/media/platform/soc_camera/Makefile               |  1 -
+ 7 files changed, 12 insertions(+), 12 deletions(-)
+ rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.c (100%)
+ rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.h (100%)
 
-diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
-index 83f88efbce69..0445963c5fae 100644
---- a/drivers/media/i2c/ov2640.c
-+++ b/drivers/media/i2c/ov2640.c
-@@ -16,6 +16,7 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/i2c.h>
-+#include <linux/clk.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
- #include <linux/gpio.h>
-@@ -24,7 +25,6 @@
- #include <linux/v4l2-mediabus.h>
- #include <linux/videodev2.h>
+diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+index 8959f6e6692a..c491731f5909 100644
+--- a/drivers/media/platform/Makefile
++++ b/drivers/media/platform/Makefile
+@@ -63,6 +63,7 @@ obj-$(CONFIG_VIDEO_XILINX)		+= xilinx/
+ obj-$(CONFIG_VIDEO_RCAR_VIN)		+= rcar-vin/
  
--#include <media/v4l2-clk.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-subdev.h>
- #include <media/v4l2-ctrls.h>
-@@ -284,7 +284,7 @@ struct ov2640_priv {
- 	struct v4l2_subdev		subdev;
- 	struct v4l2_ctrl_handler	hdl;
- 	u32	cfmt_code;
--	struct v4l2_clk			*clk;
-+	struct clk			*clk;
- 	const struct ov2640_win_size	*win;
+ obj-$(CONFIG_VIDEO_ATMEL_ISC)		+= atmel/
++obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel/
  
- 	struct gpio_desc *resetb_gpio;
-@@ -1051,14 +1051,11 @@ static int ov2640_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
+ ccflags-y += -I$(srctree)/drivers/media/i2c
  
--	priv->clk = v4l2_clk_get(&client->dev, "xvclk");
--	if (IS_ERR(priv->clk))
--		return -EPROBE_DEFER;
+diff --git a/drivers/media/platform/atmel/Kconfig b/drivers/media/platform/atmel/Kconfig
+index 867dca22a473..9bd0f19b127f 100644
+--- a/drivers/media/platform/atmel/Kconfig
++++ b/drivers/media/platform/atmel/Kconfig
+@@ -6,4 +6,13 @@ config VIDEO_ATMEL_ISC
+ 	select REGMAP_MMIO
+ 	help
+ 	   This module makes the ATMEL Image Sensor Controller available
+-	   as a v4l2 device.
+\ No newline at end of file
++	   as a v4l2 device.
++
++config VIDEO_ATMEL_ISI
++	tristate "ATMEL Image Sensor Interface (ISI) support"
++	depends on VIDEO_V4L2 && OF && HAS_DMA
++	depends on ARCH_AT91 || COMPILE_TEST
++	select VIDEOBUF2_DMA_CONTIG
++	---help---
++	  This module makes the ATMEL Image Sensor Interface available
++	  as a v4l2 device.
+diff --git a/drivers/media/platform/atmel/Makefile b/drivers/media/platform/atmel/Makefile
+index 9d7c999d434d..27000d099a5e 100644
+--- a/drivers/media/platform/atmel/Makefile
++++ b/drivers/media/platform/atmel/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc.o
++obj-$(CONFIG_VIDEO_ATMEL_ISI) += atmel-isi.o
+diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/atmel/atmel-isi.c
+similarity index 100%
+rename from drivers/media/platform/soc_camera/atmel-isi.c
+rename to drivers/media/platform/atmel/atmel-isi.c
+diff --git a/drivers/media/platform/soc_camera/atmel-isi.h b/drivers/media/platform/atmel/atmel-isi.h
+similarity index 100%
+rename from drivers/media/platform/soc_camera/atmel-isi.h
+rename to drivers/media/platform/atmel/atmel-isi.h
+diff --git a/drivers/media/platform/soc_camera/Kconfig b/drivers/media/platform/soc_camera/Kconfig
+index a37ec91b026e..0c581aa1b18a 100644
+--- a/drivers/media/platform/soc_camera/Kconfig
++++ b/drivers/media/platform/soc_camera/Kconfig
+@@ -26,13 +26,3 @@ config VIDEO_SH_MOBILE_CEU
+ 	select SOC_CAMERA_SCALE_CROP
+ 	---help---
+ 	  This is a v4l2 driver for the SuperH Mobile CEU Interface
 -
--	if (!client->dev.of_node) {
--		dev_err(&client->dev, "Missing platform_data for driver\n");
--		ret = -EINVAL;
--		goto err_clk;
-+	if (client->dev.of_node) {
-+		priv->clk = devm_clk_get(&client->dev, "xvclk");
-+		if (IS_ERR(priv->clk))
-+			return -EPROBE_DEFER;
-+		clk_prepare_enable(priv->clk);
- 	}
+-config VIDEO_ATMEL_ISI
+-	tristate "ATMEL Image Sensor Interface (ISI) support"
+-	depends on VIDEO_V4L2 && OF && HAS_DMA
+-	depends on ARCH_AT91 || COMPILE_TEST
+-	select VIDEOBUF2_DMA_CONTIG
+-	---help---
+-	  This module makes the ATMEL Image Sensor Interface available
+-	  as a v4l2 device.
+-
+diff --git a/drivers/media/platform/soc_camera/Makefile b/drivers/media/platform/soc_camera/Makefile
+index 7633a0f2f66f..07a451e8b228 100644
+--- a/drivers/media/platform/soc_camera/Makefile
++++ b/drivers/media/platform/soc_camera/Makefile
+@@ -6,5 +6,4 @@ obj-$(CONFIG_SOC_CAMERA_SCALE_CROP)	+= soc_scale_crop.o
+ obj-$(CONFIG_SOC_CAMERA_PLATFORM)	+= soc_camera_platform.o
  
- 	ret = ov2640_probe_dt(client, priv);
-@@ -1074,25 +1071,25 @@ static int ov2640_probe(struct i2c_client *client,
- 	priv->subdev.ctrl_handler = &priv->hdl;
- 	if (priv->hdl.error) {
- 		ret = priv->hdl.error;
--		goto err_clk;
-+		goto err_hdl;
- 	}
- 
- 	ret = ov2640_video_probe(client);
- 	if (ret < 0)
--		goto err_videoprobe;
-+		goto err_hdl;
- 
- 	ret = v4l2_async_register_subdev(&priv->subdev);
- 	if (ret < 0)
--		goto err_videoprobe;
-+		goto err_hdl;
- 
- 	dev_info(&adapter->dev, "OV2640 Probed\n");
- 
- 	return 0;
- 
--err_videoprobe:
-+err_hdl:
- 	v4l2_ctrl_handler_free(&priv->hdl);
- err_clk:
--	v4l2_clk_put(priv->clk);
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
-@@ -1101,9 +1098,9 @@ static int ov2640_remove(struct i2c_client *client)
- 	struct ov2640_priv       *priv = to_ov2640(client);
- 
- 	v4l2_async_unregister_subdev(&priv->subdev);
--	v4l2_clk_put(priv->clk);
--	v4l2_device_unregister_subdev(&priv->subdev);
- 	v4l2_ctrl_handler_free(&priv->hdl);
-+	v4l2_device_unregister_subdev(&priv->subdev);
-+	clk_disable_unprepare(priv->clk);
- 	return 0;
- }
- 
+ # soc-camera host drivers have to be linked after camera drivers
+-obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel-isi.o
+ obj-$(CONFIG_VIDEO_SH_MOBILE_CEU)	+= sh_mobile_ceu_camera.o
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
