@@ -1,77 +1,57 @@
 From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] doc: bindings: Add bindings documentation for mtd
- nvmem
-Date: Fri, 10 Mar 2017 04:17:57 +0100
-Message-ID: <9f54978c-6d61-cf2c-fb2d-f5ef2af19e0f@gmail.com>
-References: <1488875164-30440-1-git-send-email-albeu@free.fr>
- <1488875164-30440-2-git-send-email-albeu@free.fr>
+Subject: Re: [v2, 4/4] dt-bindings: mtd: Add Octal SPI support to Cadence
+ QSPI.
+Date: Fri, 10 Mar 2017 04:39:27 +0100
+Message-ID: <132a4818-11d1-263f-aae4-bac4e76c14c8@gmail.com>
+References: <1488959932-6657-1-git-send-email-jartur@cadence.com>
+ <1488960326-13858-1-git-send-email-jartur@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488875164-30440-2-git-send-email-albeu-GANU6spQydw@public.gmane.org>
+In-Reply-To: <1488960326-13858-1-git-send-email-jartur-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+To: Artur Jedrysek <jartur-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2017 09:26 AM, Alban wrote:
-> Config data for drivers, like MAC addresses, is often stored in MTD.
-> Add a binding that define how such data storage can be represented in
-> device tree.
+On 03/08/2017 09:05 AM, Artur Jedrysek wrote:
+> This patch updates Cadence QSPI Device Tree documentation to include
+> information about new compatible used to indicate, whether or not
+> Octal SPI transfers are supported by the device.
 > 
-> Signed-off-by: Alban <albeu-GANU6spQydw@public.gmane.org>
+> Signed-off-by: Artur Jedrysek <jartur-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 > ---
 > Changelog:
-> v2: * Added a "Required properties" section with the nvmem-provider
->       property
+> v2: Use new compatible, instead of boolean property, to indicate
+> Octal SPI support.
 > ---
->  .../devicetree/bindings/nvmem/mtd-nvmem.txt        | 33 ++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
+>  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> new file mode 100644
-> index 0000000..8ed25e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/mtd-nvmem.txt
-> @@ -0,0 +1,33 @@
-> += NVMEM in MTD =
-> +
-> +Config data for drivers, like MAC addresses, is often stored in MTD.
-> +This binding define how such data storage can be represented in device tree.
-> +
-> +An MTD can be defined as an NVMEM provider by adding the `nvmem-provider`
-> +property to their node. Data cells can then be defined as child nodes
-> +of the partition as defined in nvmem.txt.
+> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> index f248056..41d1e98 100644
+> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
+> @@ -1,7 +1,9 @@
+>  * Cadence Quad SPI controller
+>  
+>  Required properties:
+> -- compatible : Should be "cdns,qspi-nor".
+> +- compatible : Should be "cdns,{qspi|ospi}-nor".
 
-Why don't we just read the data from MTD and be done with it ? What's
-the benefit of complicating things by using nvmem ?
+Please explicitly list all compatibles , ie.
+Should be "cdns,qspi-nor" or "cdns,ospi-nor".
 
-> +Required properties:
-> +nvmem-provider:	Indicate that the device should be registered as
-> +		NVMEM provider
-> +
-> +Example:
-> +
-> +	flash@0 {
-> +		...
-> +
-> +		partition@2 {
-> +			label = "art";
-> +			reg = <0x7F0000 0x010000>;
-> +			read-only;
-> +
-> +			nvmem-provider;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			eeprom@1000 {
-> +				label = "wmac-eeprom";
-> +				reg = <0x1000 0x1000>;
-> +			};
-> +		};
-> +	};
+But I think the ospi is backward compatible with qspi, right ? So the
+binding for ospi should list both, ie.
+compatible = "cdns,ospi-nor", "cdns,qspi-nor";
+
+> +  Use "cdns,qspi-nor" for Quad SPI controller.
+> +  Use "cdns,ospi-nor" for Octal SPI controller.
+>  - reg : Contains two entries, each of which is a tuple consisting of a
+>  	physical address and length. The first entry is the address and
+>  	length of the controller register set. The second entry is the
 > 
 
 
