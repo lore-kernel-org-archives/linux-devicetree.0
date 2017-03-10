@@ -1,84 +1,138 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v2 05/11] Documentation: DT: bindings: mfd:
- add A33 GPADC binding
-Date: Sat, 11 Mar 2017 03:33:51 +0800
-Message-ID: <5847351489174431@web4o.yandex.ru>
-References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
-	 <20170310103921.19469-6-quentin.schulz@free-electrons.com> <20170310122544.wkbqnzq2twfciyaw@lukather>
+Subject: Re: [PATCH v2 07/11] iio: adc: sun4i-gpadc-iio: move
+ code used in MFD probing to new function
+Date: Sat, 11 Mar 2017 03:36:32 +0800
+Message-ID: <5850691489174592@web4o.yandex.ru>
+References: <20170310103921.19469-1-quentin.schulz@free-electrons.com> <20170310103921.19469-8-quentin.schulz@free-electrons.com>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBIP7RPDAKGQETGCDXAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: base64
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBQUARTDAKGQECBCXJKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170310122544.wkbqnzq2twfciyaw@lukather>
+In-Reply-To: <20170310103921.19469-8-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23@kernel>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-10.03.2017, 20:26, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Fri, Mar 10, 2017 at 11:39:15AM +0100, Quentin Schulz wrote:
->> =C2=A0This patch adds documentation for the A33 GPADC binding.
->>
->> =C2=A0Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> =C2=A0---
->>
->> =C2=A0added in v2
->>
->> =C2=A0=C2=A0.../devicetree/bindings/mfd/sun4i-gpadc.txt | 59 +++++++++++=
-+++++++++++
->> =C2=A0=C2=A01 file changed, 59 insertions(+)
->> =C2=A0=C2=A0create mode 100644 Documentation/devicetree/bindings/mfd/sun=
-4i-gpadc.txt
->>
->> =C2=A0diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt=
- b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
->> =C2=A0new file mode 100644
->> =C2=A0index 0000000..17242c8
->> =C2=A0--- /dev/null
->> =C2=A0+++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
->> =C2=A0@@ -0,0 +1,59 @@
->> =C2=A0+Allwinner SoCs' GPADC Device Tree bindings
->> =C2=A0+------------------------------------------
->> =C2=A0+The Allwinner SoCs all have an ADC that can also act as a thermal=
- sensor
->> =C2=A0+and sometimes as a touchscreen controller.
->> =C2=A0+
->> =C2=A0+Required properties:
->> =C2=A0+ - compatible: "sun8i-a33-gpadc-iio",
->
-> This doesn't match your example, and you shouldn't have IIO in
-> there. Compatibles shouldn't be tied to a given framework, since that
-> is Linux specific (and might even change in the future).
-
->From this aspect, I think we shouldn't even call it gpadc in compatible --
-as it's not GP at all on A33.
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-> ,
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+DQoNCjEwLjAzLjIwMTcsIDE4OjU2LCAiUXVlbnRpbiBTY2h1bHoiIDxxdWVudGluLnNjaHVsekBm
+cmVlLWVsZWN0cm9ucy5jb20+Og0KPiBUaGlzIG1vdmVzIGNvZGUgdXNlZCBpbiBNRkQgcHJvYmlu
+ZyB0byBhIG5ldyBzdW40aV9ncGFkY19wcm9iZV9tZmQNCj4gZnVuY3Rpb24uDQo+DQo+IFNpZ25l
+ZC1vZmYtYnk6IFF1ZW50aW4gU2NodWx6IDxxdWVudGluLnNjaHVsekBmcmVlLWVsZWN0cm9ucy5j
+b20+DQo+IC0tLQ0KPg0KPiBhZGRlZCBpbiB2Mg0KPg0KPiDCoGRyaXZlcnMvaWlvL2FkYy9zdW40
+aS1ncGFkYy1paW8uYyB8IDc4ICsrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0t
+LQ0KDQpJIGNhbm5vdCBmaW5kIHRoaXMgc291cmNlIGZpbGUgZXZlbiBpbiBsaW51eC1uZXh0Lg0K
+DQo+IMKgMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDMzIGRlbGV0aW9ucygtKQ0K
+Pg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL3N1bjRpLWdwYWRjLWlpby5jIGIvZHJp
+dmVycy9paW8vYWRjL3N1bjRpLWdwYWRjLWlpby5jDQo+IGluZGV4IGE4ZTEzNGYuLjdjYjk5N2Eg
+MTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaWlvL2FkYy9zdW40aS1ncGFkYy1paW8uYw0KPiArKysg
+Yi9kcml2ZXJzL2lpby9hZGMvc3VuNGktZ3BhZGMtaWlvLmMNCj4gQEAgLTQ1NCwzMSArNDU0LDE2
+IEBAIHN0YXRpYyBpbnQgc3VuNGlfaXJxX2luaXQoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+diwgY29uc3QgY2hhciAqbmFtZSwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIDA7DQo+IMKg
+fQ0KPg0KPiAtc3RhdGljIGludCBzdW40aV9ncGFkY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQ0KPiArc3RhdGljIGludCBzdW40aV9ncGFkY19wcm9iZV9tZmQoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldiwNCj4gKyBzdHJ1Y3QgaWlvX2RldiAqaW5kaW9fZGV2KQ0KPiDC
+oHsNCj4gLSBzdHJ1Y3Qgc3VuNGlfZ3BhZGNfaWlvICppbmZvOw0KPiAtIHN0cnVjdCBpaW9fZGV2
+ICppbmRpb19kZXY7DQo+ICsgc3RydWN0IHN1bjRpX2dwYWRjX2lpbyAqaW5mbyA9IGlpb19wcml2
+KGluZGlvX2Rldik7DQo+ICsgc3RydWN0IHN1bjRpX2dwYWRjX2RldiAqc3VuNGlfZ3BhZGNfZGV2
+ID0NCj4gKyBkZXZfZ2V0X2RydmRhdGEocGRldi0+ZGV2LnBhcmVudCk7DQo+IMKgwqDCoMKgwqDC
+oMKgwqDCoGludCByZXQ7DQo+IC0gc3RydWN0IHN1bjRpX2dwYWRjX2RldiAqc3VuNGlfZ3BhZGNf
+ZGV2Ow0KPiAtDQo+IC0gc3VuNGlfZ3BhZGNfZGV2ID0gZGV2X2dldF9kcnZkYXRhKHBkZXYtPmRl
+di5wYXJlbnQpOw0KPiAtDQo+IC0gaW5kaW9fZGV2ID0gZGV2bV9paW9fZGV2aWNlX2FsbG9jKCZw
+ZGV2LT5kZXYsIHNpemVvZigqaW5mbykpOw0KPiAtIGlmICghaW5kaW9fZGV2KQ0KPiAtIHJldHVy
+biAtRU5PTUVNOw0KPg0KPiAtIGluZm8gPSBpaW9fcHJpdihpbmRpb19kZXYpOw0KPiAtIHBsYXRm
+b3JtX3NldF9kcnZkYXRhKHBkZXYsIGluZGlvX2Rldik7DQo+IC0NCj4gLSBtdXRleF9pbml0KCZp
+bmZvLT5tdXRleCk7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoGluZm8tPnJlZ21hcCA9IHN1bjRpX2dw
+YWRjX2Rldi0+cmVnbWFwOw0KPiAtIGluZm8tPmluZGlvX2RldiA9IGluZGlvX2RldjsNCj4gLSBp
+bml0X2NvbXBsZXRpb24oJmluZm8tPmNvbXBsZXRpb24pOw0KPiAtIGluZGlvX2Rldi0+bmFtZSA9
+IGRldl9uYW1lKCZwZGV2LT5kZXYpOw0KPiAtIGluZGlvX2Rldi0+ZGV2LnBhcmVudCA9ICZwZGV2
+LT5kZXY7DQo+IC0gaW5kaW9fZGV2LT5kZXYub2Zfbm9kZSA9IHBkZXYtPmRldi5vZl9ub2RlOw0K
+PiAtIGluZGlvX2Rldi0+aW5mbyA9ICZzdW40aV9ncGFkY19paW9faW5mbzsNCj4gLSBpbmRpb19k
+ZXYtPm1vZGVzID0gSU5ESU9fRElSRUNUX01PREU7DQo+ICsNCj4gwqDCoMKgwqDCoMKgwqDCoMKg
+aW5kaW9fZGV2LT5udW1fY2hhbm5lbHMgPSBBUlJBWV9TSVpFKHN1bjRpX2dwYWRjX2NoYW5uZWxz
+KTsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgaW5kaW9fZGV2LT5jaGFubmVscyA9IHN1bjRpX2dwYWRj
+X2NoYW5uZWxzOw0KPg0KPiBAQCAtNTE5LDggKzUwNCw3IEBAIHN0YXRpYyBpbnQgc3VuNGlfZ3Bh
+ZGNfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBkZXZfZXJyKCZwZGV2LT5kZXYsDQo+
+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoCJjb3VsZCBub3QgcmVnaXN0ZXIgdGhlcm1hbCBzZW5zb3I6ICVsZFxuIiwNCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgUFRSX0VSUih0emQpKTsNCj4gLSByZXQgPSBQVFJfRVJSKHR6ZCk7DQo+IC0gZ290
+byBlcnI7DQo+ICsgcmV0dXJuIFBUUl9FUlIodHpkKTsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoH0NCj4gwqDCoMKgwqDCoMKgwqDCoMKgfSBlbHNlIHsNCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGluZGlvX2Rldi0+bnVtX2NoYW5uZWxzID0NCj4gQEAg
+LTUyOCwzNiArNTEyLDY1IEBAIHN0YXRpYyBpbnQgc3VuNGlfZ3BhZGNfcHJvYmUoc3RydWN0IHBs
+YXRmb3JtX2RldmljZSAqcGRldikNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGluZGlvX2Rldi0+Y2hhbm5lbHMgPSBzdW40aV9ncGFkY19jaGFubmVsc19ub190ZW1wOw0KPiDC
+oMKgwqDCoMKgwqDCoMKgwqB9DQo+DQo+IC0gcG1fcnVudGltZV9zZXRfYXV0b3N1c3BlbmRfZGVs
+YXkoJnBkZXYtPmRldiwNCj4gLSBTVU40SV9HUEFEQ19BVVRPU1VTUEVORF9ERUxBWSk7DQo+IC0g
+cG1fcnVudGltZV91c2VfYXV0b3N1c3BlbmQoJnBkZXYtPmRldik7DQo+IC0gcG1fcnVudGltZV9z
+ZXRfc3VzcGVuZGVkKCZwZGV2LT5kZXYpOw0KPiAtIHBtX3J1bnRpbWVfZW5hYmxlKCZwZGV2LT5k
+ZXYpOw0KPiAtDQo+IMKgwqDCoMKgwqDCoMKgwqDCoGlmIChJU19FTkFCTEVEKENPTkZJR19USEVS
+TUFMX09GKSkgew0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gc3Vu
+NGlfaXJxX2luaXQocGRldiwgIlRFTVBfREFUQV9QRU5ESU5HIiwNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHN1bjRpX2dwYWRjX3RlbXBfZGF0YV9pcnFfaGFuZGxlciwNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCJ0ZW1wX2RhdGEiLCAmaW5mby0+dGVtcF9kYXRhX2lycSwNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCZpbmZvLT5pZ25vcmVfdGVtcF9kYXRhX2lycSk7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqBpZiAocmV0IDwgMCkNCj4gLSBnb3RvIGVycjsNCj4gKyByZXR1cm4gcmV0
+Ow0KPiDCoMKgwqDCoMKgwqDCoMKgwqB9DQo+DQo+IMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IHN1
+bjRpX2lycV9pbml0KHBkZXYsICJGSUZPX0RBVEFfUEVORElORyIsDQo+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN1bjRpX2dwYWRj
+X2ZpZm9fZGF0YV9pcnFfaGFuZGxlciwgImZpZm9fZGF0YSIsDQo+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCZpbmZvLT5maWZvX2Rh
+dGFfaXJxLCAmaW5mby0+aWdub3JlX2ZpZm9fZGF0YV9pcnEpOw0KPiDCoMKgwqDCoMKgwqDCoMKg
+wqBpZiAocmV0IDwgMCkNCj4gLSBnb3RvIGVycjsNCj4gKyByZXR1cm4gcmV0Ow0KPg0KPiDCoMKg
+wqDCoMKgwqDCoMKgwqBpZiAoSVNfRU5BQkxFRChDT05GSUdfVEhFUk1BTF9PRikpIHsNCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IGlpb19tYXBfYXJyYXlfcmVnaXN0
+ZXIoaW5kaW9fZGV2LCBzdW40aV9ncGFkY19od21vbl9tYXBzKTsNCj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGlmIChyZXQgPCAwKSB7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2X2VycigmcGRldi0+ZGV2LA0KPiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAiZmFpbGVkIHRvIHJlZ2lzdGVyIGlpbyBtYXAgYXJyYXlcbiIpOw0KPiAtIGdvdG8gZXJy
+Ow0KPiArIHJldHVybiByZXQ7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9
+DQo+IMKgwqDCoMKgwqDCoMKgwqDCoH0NCj4NCj4gKyByZXR1cm4gMDsNCj4gK30NCj4gKw0KPiAr
+c3RhdGljIGludCBzdW40aV9ncGFkY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+KQ0KPiArew0KPiArIHN0cnVjdCBzdW40aV9ncGFkY19paW8gKmluZm87DQo+ICsgc3RydWN0IGlp
+b19kZXYgKmluZGlvX2RldjsNCj4gKyBpbnQgcmV0Ow0KPiArDQo+ICsgaW5kaW9fZGV2ID0gZGV2
+bV9paW9fZGV2aWNlX2FsbG9jKCZwZGV2LT5kZXYsIHNpemVvZigqaW5mbykpOw0KPiArIGlmICgh
+aW5kaW9fZGV2KQ0KPiArIHJldHVybiAtRU5PTUVNOw0KPiArDQo+ICsgaW5mbyA9IGlpb19wcml2
+KGluZGlvX2Rldik7DQo+ICsgcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgaW5kaW9fZGV2KTsN
+Cj4gKw0KPiArIG11dGV4X2luaXQoJmluZm8tPm11dGV4KTsNCj4gKyBpbmZvLT5pbmRpb19kZXYg
+PSBpbmRpb19kZXY7DQo+ICsgaW5pdF9jb21wbGV0aW9uKCZpbmZvLT5jb21wbGV0aW9uKTsNCj4g
+KyBpbmRpb19kZXYtPm5hbWUgPSBkZXZfbmFtZSgmcGRldi0+ZGV2KTsNCj4gKyBpbmRpb19kZXYt
+PmRldi5wYXJlbnQgPSAmcGRldi0+ZGV2Ow0KPiArIGluZGlvX2Rldi0+ZGV2Lm9mX25vZGUgPSBw
+ZGV2LT5kZXYub2Zfbm9kZTsNCj4gKyBpbmRpb19kZXYtPmluZm8gPSAmc3VuNGlfZ3BhZGNfaWlv
+X2luZm87DQo+ICsgaW5kaW9fZGV2LT5tb2RlcyA9IElORElPX0RJUkVDVF9NT0RFOw0KPiArDQo+
+ICsgcmV0ID0gc3VuNGlfZ3BhZGNfcHJvYmVfbWZkKHBkZXYsIGluZGlvX2Rldik7DQo+ICsgaWYg
+KHJldCkNCj4gKyByZXR1cm4gcmV0Ow0KPiArDQo+ICsgcG1fcnVudGltZV9zZXRfYXV0b3N1c3Bl
+bmRfZGVsYXkoJnBkZXYtPmRldiwNCj4gKyBTVU40SV9HUEFEQ19BVVRPU1VTUEVORF9ERUxBWSk7
+DQo+ICsgcG1fcnVudGltZV91c2VfYXV0b3N1c3BlbmQoJnBkZXYtPmRldik7DQo+ICsgcG1fcnVu
+dGltZV9zZXRfc3VzcGVuZGVkKCZwZGV2LT5kZXYpOw0KPiArIHBtX3J1bnRpbWVfZW5hYmxlKCZw
+ZGV2LT5kZXYpOw0KPiArDQo+IMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IGRldm1faWlvX2Rldmlj
+ZV9yZWdpc3RlcigmcGRldi0+ZGV2LCBpbmRpb19kZXYpOw0KPiDCoMKgwqDCoMKgwqDCoMKgwqBp
+ZiAocmV0IDwgMCkgew0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGV2X2Vy
+cigmcGRldi0+ZGV2LCAiY291bGQgbm90IHJlZ2lzdGVyIHRoZSBkZXZpY2VcbiIpOw0KPiBAQCAt
+NTcwLDcgKzU4Myw2IEBAIHN0YXRpYyBpbnQgc3VuNGlfZ3BhZGNfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gwqDCoMKgwqDCoMKgwqDCoMKgaWYgKElTX0VOQUJMRUQoQ09O
+RklHX1RIRVJNQUxfT0YpKQ0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWlv
+X21hcF9hcnJheV91bnJlZ2lzdGVyKGluZGlvX2Rldik7DQo+DQo+IC1lcnI6DQo+IMKgwqDCoMKg
+wqDCoMKgwqDCoHBtX3J1bnRpbWVfcHV0KCZwZGV2LT5kZXYpOw0KPiDCoMKgwqDCoMKgwqDCoMKg
+wqBwbV9ydW50aW1lX2Rpc2FibGUoJnBkZXYtPmRldik7DQo+DQo+IC0tDQo+IDIuOS4zDQo+DQo+
+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+IGxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZw0KPiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwNCg0KLS0gCllvdSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5
+b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91
+cC4KVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGdyb3VwIGFuZCBzdG9wIHJlY2VpdmluZyBlbWFp
+bHMgZnJvbSBpdCwgc2VuZCBhbiBlbWFpbCB0byBsaW51eC1zdW54aSt1bnN1YnNjcmliZUBnb29n
+bGVncm91cHMuY29tLgpGb3IgbW9yZSBvcHRpb25zLCB2aXNpdCBodHRwczovL2dyb3Vwcy5nb29n
+bGUuY29tL2Qvb3B0b3V0Lgo=
