@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 2/5] auxdisplay: charlcd: Add support for 4-bit interfaces
-Date: Fri, 10 Mar 2017 15:15:18 +0100
-Message-ID: <1489155321-25666-3-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH v2 4/5] dt-bindings: auxdisplay: Add bindings for Hitachi HD44780
+Date: Fri, 10 Mar 2017 15:15:20 +0100
+Message-ID: <1489155321-25666-5-git-send-email-geert@linux-m68k.org>
 References: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1489155321-25666-1-git-send-email-geert@linux-m68k.org>
@@ -10,116 +10,78 @@ To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Greg Kroah-Hartman 
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Akira Tsukamoto <akira.tsukamoto@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-In 4-bit mode, 8-bit commands and data are written using two raw writes
-to the data interface: high nibble first, low nibble last.  This must be
-handled by the low-level driver.
+Add DT bindings for an Hitachi HD44780 Character LCD Controller where
+its M6800 bus interface is connected to GPIOs.
 
-However, as we don't know in which mode (4-bit or 8-bit) nor 4-bit phase
-the LCD was left, initialization must always be handled using raw
-writes, and needs to configure the LCD for 8-bit mode first.
+Memory-mapped configurations are not yet supported.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
-v2:
-  - No changes.
----
- drivers/auxdisplay/charlcd.c | 36 ++++++++++++++++++++++++++++++------
- include/misc/charlcd.h       |  2 ++
- 2 files changed, 32 insertions(+), 6 deletions(-)
+Memory-mapped configurations can be supported by amending the binding to
+make mandatory either the {data,enable,rs}-gpios properties, or a "reg"
+(and optional "reg-names") property.
 
-diff --git a/drivers/auxdisplay/charlcd.c b/drivers/auxdisplay/charlcd.c
-index 930ffb2fb31787c5..b3a84e90a268478c 100644
---- a/drivers/auxdisplay/charlcd.c
-+++ b/drivers/auxdisplay/charlcd.c
-@@ -223,24 +223,46 @@ static void charlcd_clear_display(struct charlcd *lcd)
- 
- static int charlcd_init_display(struct charlcd *lcd)
- {
-+	void (*write_cmd_raw)(struct charlcd *lcd, int cmd);
- 	struct charlcd_priv *priv = to_priv(lcd);
-+	u8 init;
+As the driver doesn't support this yet, and there are different ways to
+organize the register map (some wirings use different addresses for
+reading and writing, to simplify bus glue logic), this is left for a
+future improvement.
+
+v2:
+  - Added rationale below "---".
+---
+ .../devicetree/bindings/auxdisplay/hit,hd44780.txt | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+
+diff --git a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+new file mode 100644
+index 0000000000000000..ee4054da458d412f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+@@ -0,0 +1,44 @@
++DT bindings for the Hitachi HD44780 Character LCD Controller
 +
-+	if (lcd->ifwidth != 4 && lcd->ifwidth != 8)
-+		return -EINVAL;
- 
- 	priv->flags = ((lcd->height > 1) ? LCD_FLAG_N : 0) | LCD_FLAG_D |
- 		      LCD_FLAG_C | LCD_FLAG_B;
- 
- 	long_sleep(20);		/* wait 20 ms after power-up for the paranoid */
- 
--	/* 8bits, 1 line, small fonts; let's do it 3 times */
--	lcd->ops->write_cmd(lcd, LCD_CMD_FUNCTION_SET | LCD_CMD_DATA_LEN_8BITS);
-+	/*
-+	 * 8-bit mode, 1 line, small fonts; let's do it 3 times, to make sure
-+	 * the LCD is in 8-bit mode afterwards
-+	 */
-+	init = LCD_CMD_FUNCTION_SET | LCD_CMD_DATA_LEN_8BITS;
-+	if (lcd->ifwidth == 4) {
-+		init >>= 4;
-+		write_cmd_raw = lcd->ops->write_cmd_raw4;
-+	} else {
-+		write_cmd_raw = lcd->ops->write_cmd;
-+	}
-+	write_cmd_raw(lcd, init);
- 	long_sleep(10);
--	lcd->ops->write_cmd(lcd, LCD_CMD_FUNCTION_SET | LCD_CMD_DATA_LEN_8BITS);
-+	write_cmd_raw(lcd, init);
- 	long_sleep(10);
--	lcd->ops->write_cmd(lcd, LCD_CMD_FUNCTION_SET | LCD_CMD_DATA_LEN_8BITS);
-+	write_cmd_raw(lcd, init);
- 	long_sleep(10);
- 
-+	if (lcd->ifwidth == 4) {
-+		/* Switch to 4-bit mode, 1 line, small fonts */
-+		lcd->ops->write_cmd_raw4(lcd, LCD_CMD_FUNCTION_SET >> 4);
-+		long_sleep(10);
-+	}
++The Hitachi HD44780 Character LCD Controller is commonly used on character LCDs
++that can display one or more lines of text. It exposes an M6800 bus interface,
++which can be used in either 4-bit or 8-bit mode.
 +
- 	/* set font height and lines number */
- 	lcd->ops->write_cmd(lcd,
--		LCD_CMD_FUNCTION_SET | LCD_CMD_DATA_LEN_8BITS |
-+		LCD_CMD_FUNCTION_SET |
-+		((lcd->ifwidth == 8) ? LCD_CMD_DATA_LEN_8BITS : 0) |
- 		((priv->flags & LCD_FLAG_F) ? LCD_CMD_FONT_5X10_DOTS : 0) |
- 		((priv->flags & LCD_FLAG_N) ? LCD_CMD_TWO_LINES : 0));
- 	long_sleep(10);
-@@ -482,7 +504,8 @@ static inline int handle_lcd_special_code(struct charlcd *lcd)
- 	/* check whether one of F,N flags was changed */
- 	else if ((oldflags ^ priv->flags) & (LCD_FLAG_F | LCD_FLAG_N))
- 		lcd->ops->write_cmd(lcd,
--			LCD_CMD_FUNCTION_SET | LCD_CMD_DATA_LEN_8BITS |
-+			LCD_CMD_FUNCTION_SET |
-+			((lcd->ifwidth == 8) ? LCD_CMD_DATA_LEN_8BITS : 0) |
- 			((priv->flags & LCD_FLAG_F) ? LCD_CMD_FONT_5X10_DOTS : 0) |
- 			((priv->flags & LCD_FLAG_N) ? LCD_CMD_TWO_LINES : 0));
- 	/* check whether L flag was changed */
-@@ -716,6 +739,7 @@ struct charlcd *charlcd_alloc(unsigned int drvdata_size)
- 	priv->esc_seq.len = -1;
- 
- 	lcd = &priv->lcd;
-+	lcd->ifwidth = 8;
- 	lcd->bwidth = DEFAULT_LCD_BWIDTH;
- 	lcd->hwidth = DEFAULT_LCD_HWIDTH;
- 	lcd->drvdata = priv->drvdata;
-diff --git a/include/misc/charlcd.h b/include/misc/charlcd.h
-index c40047b673c9ea09..23f61850f3639ae1 100644
---- a/include/misc/charlcd.h
-+++ b/include/misc/charlcd.h
-@@ -14,6 +14,7 @@ struct charlcd {
- 	const struct charlcd_ops *ops;
- 	const unsigned char *char_conv;	/* Optional */
- 
-+	int ifwidth;			/* 4-bit or 8-bit (default) */
- 	int height;
- 	int width;
- 	int bwidth;			/* Default set by charlcd_alloc() */
-@@ -28,6 +29,7 @@ struct charlcd_ops {
- 	void (*write_data)(struct charlcd *lcd, int data);
- 
- 	/* Optional */
-+	void (*write_cmd_raw4)(struct charlcd *lcd, int cmd);	/* 4-bit only */
- 	void (*clear_fast)(struct charlcd *lcd);
- 	void (*backlight)(struct charlcd *lcd, int on);
- };
++Required properties:
++  - compatible: Must contain "hit,hd44780",
++  - data-gpios: Must contain an array of either 4 or 8 GPIO specifiers,
++    referring to the GPIO pins connected to the data signal lines DB0-DB7
++    (8-bit mode) or DB4-DB7 (4-bit mode) of the LCD Controller's bus interface,
++  - enable-gpios: Must contain a GPIO specifier, referring to the GPIO pin
++    connected to the "E" (Enable) signal line of the LCD Controller's bus
++    interface,
++  - rs-gpios: Must contain a GPIO specifier, referring to the GPIO pin
++    connected to the "RS" (Register Select) signal line of the LCD Controller's
++    bus interface,
++  - display-height: Height of the display, in character cells,
++  - display-width: Width of the display, in character cells.
++
++Optional properties:
++  - rw-gpios: Must contain a GPIO specifier, referring to the GPIO pin
++    connected to the "RW" (Read/Write) signal line of the LCD Controller's bus
++    interface,
++  - backlight-gpios: Must contain a GPIO specifier, referring to the GPIO pin
++    used for enabling the LCD's backlight,
++  - internal-buffer-width: Internal buffer width (default is 40 for displays
++    with 1 or 2 lines, and display-width for displays with more than 2 lines).
++
++Example:
++
++	auxdisplay {
++		compatible = "hit,hd44780";
++
++		data-gpios = <&hc595 0 GPIO_ACTIVE_HIGH>,
++			     <&hc595 1 GPIO_ACTIVE_HIGH>,
++			     <&hc595 2 GPIO_ACTIVE_HIGH>,
++			     <&hc595 3 GPIO_ACTIVE_HIGH>;
++		enable-gpios = <&hc595 4 GPIO_ACTIVE_HIGH>;
++		rs-gpios = <&hc595 5 GPIO_ACTIVE_HIGH>;
++
++		display-height = <2>;
++		display-width = <16>;
++	};
 -- 
 2.7.4
