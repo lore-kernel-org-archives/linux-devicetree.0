@@ -1,109 +1,86 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [PATCH 1/2] gpio: mmio: add support for NI 169445 NAND GPIO
-Date: Fri, 10 Mar 2017 11:21:14 +0100
-Message-ID: <4019620.oLiLCkQLlD@debian64>
-References: <1489001744-26545-1-git-send-email-nathan.sullivan@ni.com> <1489001744-26545-2-git-send-email-nathan.sullivan@ni.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1489001744-26545-2-git-send-email-nathan.sullivan@ni.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Nathan Sullivan <nathan.sullivan@ni.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, ralf@linux-mips.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mips@linux-mips.org
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv4 04/15] ov7670: get xclk
+Date: Fri, 10 Mar 2017 11:26:03 +0100
+Message-ID: <20170310102614.20922-5-hverkuil@xs4all.nl>
+References: <20170310102614.20922-1-hverkuil@xs4all.nl>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170310102614.20922-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, March 8, 2017 1:35:43 PM CET Nathan Sullivan wrote:
-> The GPIO-based NAND controller on National Instruments 169445 hardware
-> exposes a set of simple lines for the control signals.
-> 
-> Signed-off-by: Nathan Sullivan <nathan.sullivan@ni.com>
-> ---
->  .../bindings/gpio/ni,169445-nand-gpio.txt          | 36 ++++++++++++++++++++++
->  drivers/gpio/gpio-mmio.c                           |  1 +
->  2 files changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt b/Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
-> new file mode 100644
-> index 0000000..ca2c14f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/ni,169445-nand-gpio.txt
-> @@ -0,0 +1,36 @@
-> +Bindings for the National Instruments 169445 GPIO NAND controller
-> +
-> +The 169445 GPIO NAND controller has two memory mapped GPIO registers, one
-> +for input (the ready signal) and one for output (control signals).  It is
-> +intended to be used with the GPIO NAND driver.
-> +
-> +Required properties:
-> +	- compatible: should be "ni,169445-nand-gpio"
-> +	- reg-names: must contain
-> +		"dat" - data register
-> +	- reg: address + size pairs describing the GPIO register sets;
-> +		order must correspond with the order of entries in reg-names
-> +	- #gpio-cells: must be set to 2. The first cell is the pin number and
-> +			the second cell is used to specify the gpio polarity:
-> +			0 = active high
-> +			1 = active low
-> +	- gpio-controller: Marks the device node as a gpio controller.
-> +
-> +Examples:
-> +	gpio1: nand-gpio-out@1f300010 {
-> +		compatible = "ni,169445-nand-gpio";
-> +		reg = <0x1f300010 0x4>;
-> +		reg-names = "dat";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		ngpios = <5>;
-ngpios? Where is this parameter parsed? Is there a description for it
-in the Documentation?
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-> +	};
-> +
-> +	gpio2: nand-gpio-in@1f300014 {
-^^ I assume this GPIO only has input? Is this right?
-If so you can specify the following dt property:
+Get the clock for this sensor.
 
-	no-output;
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+---
+ drivers/media/i2c/ov7670.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-So, all gpios can only be inputs.
-
-> +		compatible = "ni,169445-nand-gpio";
-> +		reg = <0x1f300014 0x4>;
-> +		reg-names = "dat";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		ngpios = <1>;
-Same as above.
-
-I think you should could either add a parser for the ngpios property.
-by adding of_property_read_u16(&pdev->dev, "ngpios", &gc->ngpio);
-in the right place. or remove the property.
-
-> +	};
-> diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
-> index d7d03ad..f7da40e 100644
-> --- a/drivers/gpio/gpio-mmio.c
-> +++ b/drivers/gpio/gpio-mmio.c
-> @@ -575,6 +575,7 @@ static void __iomem *bgpio_map(struct platform_device *pdev,
->  static const struct of_device_id bgpio_of_match[] = {
->  	{ .compatible = "brcm,bcm6345-gpio" },
->  	{ .compatible = "wd,mbl-gpio" },
-> +	{ .compatible = "ni,169445-nand-gpio" },
-Maybe you could add this entry above the wd,mbl-gpio. 
-So it's in alphabetical order. That's said, it's fine
-the way it is.
-
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, bgpio_of_match);
-> 
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index 50e4466a2b37..912ff09c6100 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -10,6 +10,7 @@
+  * This file may be distributed under the terms of the GNU General
+  * Public License, version 2.
+  */
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -227,6 +228,7 @@ struct ov7670_info {
+ 		struct v4l2_ctrl *hue;
+ 	};
+ 	struct ov7670_format_struct *fmt;  /* Current format */
++	struct clk *clk;
+ 	int min_width;			/* Filter out smaller sizes */
+ 	int min_height;			/* Filter out smaller sizes */
+ 	int clock_speed;		/* External clock speed (MHz) */
+@@ -1587,13 +1589,24 @@ static int ov7670_probe(struct i2c_client *client,
+ 			info->pclk_hb_disable = true;
+ 	}
+ 
++	info->clk = devm_clk_get(&client->dev, "xclk");
++	if (IS_ERR(info->clk))
++		return -EPROBE_DEFER;
++	clk_prepare_enable(info->clk);
++
++	info->clock_speed = clk_get_rate(info->clk) / 1000000;
++	if (info->clock_speed < 10 || info->clock_speed > 48) {
++		ret = -EINVAL;
++		goto clk_disable;
++	}
++
+ 	/* Make sure it's an ov7670 */
+ 	ret = ov7670_detect(sd);
+ 	if (ret) {
+ 		v4l_dbg(1, debug, client,
+ 			"chip found @ 0x%x (%s) is not an ov7670 chip.\n",
+ 			client->addr << 1, client->adapter->name);
+-		return ret;
++		goto clk_disable;
+ 	}
+ 	v4l_info(client, "chip found @ 0x%02x (%s)\n",
+ 			client->addr << 1, client->adapter->name);
+@@ -1656,6 +1669,8 @@ static int ov7670_probe(struct i2c_client *client,
+ 
+ hdl_free:
+ 	v4l2_ctrl_handler_free(&info->hdl);
++clk_disable:
++	clk_disable_unprepare(info->clk);
+ 	return ret;
+ }
+ 
+@@ -1667,6 +1682,7 @@ static int ov7670_remove(struct i2c_client *client)
+ 
+ 	v4l2_device_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&info->hdl);
++	clk_disable_unprepare(info->clk);
+ 	return 0;
+ }
+ 
+-- 
+2.11.0
