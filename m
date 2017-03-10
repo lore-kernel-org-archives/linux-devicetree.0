@@ -1,7 +1,7 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v5 05/39] ARM: dts: imx6qdl: Add mipi_ipu1/2 multiplexers, mipi_csi, and their connections
-Date: Thu,  9 Mar 2017 20:52:45 -0800
-Message-ID: <1489121599-23206-6-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v5 08/39] ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
+Date: Thu,  9 Mar 2017 20:52:48 -0800
+Message-ID: <1489121599-23206-9-git-send-email-steve_longerbeam@mentor.com>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
@@ -10,406 +10,248 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengut
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+Adds the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
+Both hang off the same i2c2 bus, so they require different (and non-
+default) i2c slave addresses.
 
-This patch adds the device tree graph connecting the input multiplexers
-to the IPU CSIs and the MIPI-CSI2 gasket on i.MX6. The MIPI_IPU
-multiplexers are added as children of the iomuxc-gpr syscon device node.
-On i.MX6Q/D two two-input multiplexers in front of IPU1 CSI0 and IPU2
-CSI1 allow to select between CSI0/1 parallel input pads and the MIPI
-CSI-2 virtual channels 0/3.
-On i.MX6DL/S two five-input multiplexers in front of IPU1 CSI0 and IPU1
-CSI1 allow to select between CSI0/1 parallel input pads and any of the
-four MIPI CSI-2 virtual channels.
+The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+The OV5640 connects to the input port on the MIPI CSI-2 receiver on
+mipi_csi.
 
---
-
-- Removed some dangling/unused endpoints (ipu2_csi0_from_csi2ipu)
-- Renamed the mipi virtual channel endpoint labels, from "mipi_csiX_..."
-  to "mipi_vcX...".
-- Added input endpoint anchors to the video muxes for the connections
-  from parallel sensors.
+The OV5642 node is disabled temporarily while the subdev driver is
+cleaned up and submitted later.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- arch/arm/boot/dts/imx6dl.dtsi  | 180 +++++++++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q.dtsi   | 116 ++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl.dtsi |  10 ++-
- 3 files changed, 305 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6dl-sabrelite.dts   |   5 ++
+ arch/arm/boot/dts/imx6q-sabrelite.dts    |   5 ++
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 148 +++++++++++++++++++++++++++++++
+ 3 files changed, 158 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
-index 7aa120f..8958c4a 100644
---- a/arch/arm/boot/dts/imx6dl.dtsi
-+++ b/arch/arm/boot/dts/imx6dl.dtsi
-@@ -181,6 +181,186 @@
- 		      "di0", "di1";
+diff --git a/arch/arm/boot/dts/imx6dl-sabrelite.dts b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+index 2f90452..3304076 100644
+--- a/arch/arm/boot/dts/imx6dl-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+@@ -48,3 +48,8 @@
+ 	model = "Freescale i.MX6 DualLite SABRE Lite Board";
+ 	compatible = "fsl,imx6dl-sabrelite", "fsl,imx6dl";
  };
- 
-+&gpr {
-+	ipu1_csi0_mux: ipu1_csi0_mux@34 {
-+		compatible = "video-multiplexer";
-+		reg = <0x34>;
-+		bit-mask = <0x7>;
-+		bit-shift = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
 +
-+		port@0 {
-+			reg = <0>;
-+
-+			ipu1_csi0_mux_from_mipi_vc0: endpoint {
-+				remote-endpoint = <&mipi_vc0_to_ipu1_csi0_mux>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			ipu1_csi0_mux_from_mipi_vc1: endpoint {
-+				remote-endpoint = <&mipi_vc1_to_ipu1_csi0_mux>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			ipu1_csi0_mux_from_mipi_vc2: endpoint {
-+				remote-endpoint = <&mipi_vc2_to_ipu1_csi0_mux>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			ipu1_csi0_mux_from_mipi_vc3: endpoint {
-+				remote-endpoint = <&mipi_vc3_to_ipu1_csi0_mux>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			ipu1_csi0_mux_from_parallel_sensor: endpoint {
-+			};
-+		};
-+
-+		port@5 {
-+			reg = <5>;
-+
-+			ipu1_csi0_mux_to_ipu1_csi0: endpoint {
-+				remote-endpoint = <&ipu1_csi0_from_ipu1_csi0_mux>;
-+			};
-+		};
-+	};
-+
-+	ipu1_csi1_mux: ipu1_csi1_mux@34 {
-+		compatible = "video-multiplexer";
-+		reg = <0x34>;
-+		bit-mask = <0x7>;
-+		bit-shift = <3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			ipu1_csi1_mux_from_mipi_vc0: endpoint {
-+				remote-endpoint = <&mipi_vc0_to_ipu1_csi1_mux>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			ipu1_csi1_mux_from_mipi_vc1: endpoint {
-+				remote-endpoint = <&mipi_vc1_to_ipu1_csi1_mux>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			ipu1_csi1_mux_from_mipi_vc2: endpoint {
-+				remote-endpoint = <&mipi_vc2_to_ipu1_csi1_mux>;
-+			};
-+		};
-+
-+		port@3 {
-+			reg = <3>;
-+
-+			ipu1_csi1_mux_from_mipi_vc3: endpoint {
-+				remote-endpoint = <&mipi_vc3_to_ipu1_csi1_mux>;
-+			};
-+		};
-+
-+		port@4 {
-+			reg = <4>;
-+
-+			ipu1_csi1_mux_from_parallel_sensor: endpoint {
-+			};
-+		};
-+
-+		port@5 {
-+			reg = <5>;
-+
-+			ipu1_csi1_mux_to_ipu1_csi1: endpoint {
-+				remote-endpoint = <&ipu1_csi1_from_ipu1_csi1_mux>;
-+			};
-+		};
-+	};
++&ipu1_csi1_from_ipu1_csi1_mux {
++	clock-lanes = <0>;
++	data-lanes = <1 2>;
 +};
-+
-+&ipu1_csi1 {
-+	ipu1_csi1_from_ipu1_csi1_mux: endpoint {
-+		remote-endpoint = <&ipu1_csi1_mux_to_ipu1_csi1>;
-+	};
-+};
-+
-+&mipi_csi {
-+	port@1 {
-+		reg = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mipi_vc0_to_ipu1_csi0_mux: endpoint@0 {
-+			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc0>;
-+		};
-+
-+		mipi_vc0_to_ipu1_csi1_mux: endpoint@1 {
-+			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc0>;
-+		};
-+	};
-+
-+	port@2 {
-+		reg = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mipi_vc1_to_ipu1_csi0_mux: endpoint@0 {
-+			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc1>;
-+		};
-+
-+		mipi_vc1_to_ipu1_csi1_mux: endpoint@1 {
-+			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc1>;
-+		};
-+	};
-+
-+	port@3 {
-+		reg = <3>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mipi_vc2_to_ipu1_csi0_mux: endpoint@0 {
-+			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc2>;
-+		};
-+
-+		mipi_vc2_to_ipu1_csi1_mux: endpoint@1 {
-+			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc2>;
-+		};
-+	};
-+
-+	port@4 {
-+		reg = <4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		mipi_vc3_to_ipu1_csi0_mux: endpoint@0 {
-+			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc3>;
-+		};
-+
-+		mipi_vc3_to_ipu1_csi1_mux: endpoint@1 {
-+			remote-endpoint = <&ipu1_csi1_mux_from_mipi_vc3>;
-+		};
-+	};
-+};
-+
- &vpu {
- 	compatible = "fsl,imx6dl-vpu", "cnm,coda960";
+diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+index 02a7cdf..dc51262e 100644
+--- a/arch/arm/boot/dts/imx6q-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+@@ -52,3 +52,8 @@
+ &sata {
+ 	status = "okay";
  };
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index e9a5d0b..b833b0d 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -143,10 +143,18 @@
- 
- 			ipu2_csi0: port@0 {
- 				reg = <0>;
 +
-+				ipu2_csi0_from_mipi_vc2: endpoint {
-+					remote-endpoint = <&mipi_vc2_to_ipu2_csi0>;
-+				};
- 			};
- 
- 			ipu2_csi1: port@1 {
- 				reg = <1>;
++&ipu1_csi1_from_mipi_vc1 {
++	clock-lanes = <0>;
++	data-lanes = <1 2>;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 89dce27..afe7449 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -39,6 +39,8 @@
+  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
 +
-+				ipu2_csi1_from_ipu2_csi1_mux: endpoint {
-+					remote-endpoint = <&ipu2_csi1_mux_to_ipu2_csi1>;
-+				};
- 			};
++#include <dt-bindings/clock/imx6qdl-clock.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
  
- 			ipu2_di0: port@2 {
-@@ -266,6 +274,80 @@
+@@ -94,6 +96,42 @@
+ 			pinctrl-0 = <&pinctrl_can_xcvr>;
+ 			gpio = <&gpio1 2 GPIO_ACTIVE_LOW>;
+ 		};
++
++		reg_1p5v: regulator@4 {
++			compatible = "regulator-fixed";
++			reg = <4>;
++			regulator-name = "1P5V";
++			regulator-min-microvolt = <1500000>;
++			regulator-max-microvolt = <1500000>;
++			regulator-always-on;
++		};
++
++		reg_1p8v: regulator@5 {
++			compatible = "regulator-fixed";
++			reg = <5>;
++			regulator-name = "1P8V";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		reg_2p8v: regulator@6 {
++			compatible = "regulator-fixed";
++			reg = <6>;
++			regulator-name = "2P8V";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++			regulator-always-on;
++		};
++	};
++
++	mipi_xclk: mipi_xclk {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <22000000>;
++		clock-output-names = "mipi_pwm3";
++		pwms = <&pwm3 0 45>; /* 1 / 45 ns = 22 MHz */
++		status = "okay";
+ 	};
+ 
+ 	gpio-keys {
+@@ -220,6 +258,22 @@
  	};
  };
  
-+&gpr {
-+	ipu1_csi0_mux: ipu1_csi0_mux@4 {
-+		compatible = "video-multiplexer";
-+		reg = <0x04>;
-+		bit-mask = <1>;
-+		bit-shift = <19>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			ipu1_csi0_mux_from_mipi_vc0: endpoint {
-+				remote-endpoint = <&mipi_vc0_to_ipu1_csi0_mux>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			ipu1_csi0_mux_from_parallel_sensor: endpoint {
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			ipu1_csi0_mux_to_ipu1_csi0: endpoint {
-+				remote-endpoint = <&ipu1_csi0_from_ipu1_csi0_mux>;
-+			};
-+		};
-+	};
-+
-+	ipu2_csi1_mux: ipu2_csi1_mux@4 {
-+		compatible = "video-multiplexer";
-+		reg = <0x04>;
-+		bit-mask = <1>;
-+		bit-shift = <20>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			ipu2_csi1_mux_from_mipi_vc3: endpoint {
-+				remote-endpoint = <&mipi_vc3_to_ipu2_csi1_mux>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			ipu2_csi1_mux_from_parallel_sensor: endpoint {
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			ipu2_csi1_mux_to_ipu2_csi1: endpoint {
-+				remote-endpoint = <&ipu2_csi1_from_ipu2_csi1_mux>;
-+			};
-+		};
-+	};
++&ipu1_csi0_from_ipu1_csi0_mux {
++	bus-width = <8>;
++	data-shift = <12>; /* Lines 19:12 used */
++	hsync-active = <1>;
++	vync-active = <1>;
 +};
 +
-+&ipu1_csi1 {
-+	ipu1_csi1_from_mipi_vc1: endpoint {
-+		remote-endpoint = <&mipi_vc1_to_ipu1_csi1>;
-+	};
++&ipu1_csi0_mux_from_parallel_sensor {
++	remote-endpoint = <&ov5642_to_ipu1_csi0_mux>;
 +};
 +
- &ldb {
- 	clocks = <&clks IMX6QDL_CLK_LDB_DI0_SEL>, <&clks IMX6QDL_CLK_LDB_DI1_SEL>,
- 		 <&clks IMX6QDL_CLK_IPU1_DI0_SEL>, <&clks IMX6QDL_CLK_IPU1_DI1_SEL>,
-@@ -312,6 +394,40 @@
- 	};
++&ipu1_csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi0>;
++};
++
+ &audmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_audmux>;
+@@ -298,6 +352,53 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
++
++	ov5640: camera@40 {
++		compatible = "ovti,ov5640";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5640>;
++		reg = <0x40>;
++		clocks = <&mipi_xclk>;
++		clock-names = "xclk";
++		DOVDD-supply = <&reg_1p8v>;
++		AVDD-supply = <&reg_2p8v>;
++		DVDD-supply = <&reg_1p5v>;
++		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* NANDF_D5 */
++		powerdown-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* NANDF_WP_B */
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ov5640_to_mipi_csi2: endpoint {
++				remote-endpoint = <&mipi_csi2_in>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++
++	ov5642: camera@42 {
++		compatible = "ovti,ov5642";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5642>;
++		clocks = <&clks IMX6QDL_CLK_CKO2>;
++		clock-names = "xclk";
++		reg = <0x42>;
++		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++		powerdown-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++		gp-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
++		status = "disabled";
++
++		port {
++			ov5642_to_ipu1_csi0_mux: endpoint {
++				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
++				bus-width = <8>;
++				hsync-active = <1>;
++				vsync-active = <1>;
++			};
++		};
++	};
  };
  
+ &i2c3 {
+@@ -411,6 +512,23 @@
+ 			>;
+ 		};
+ 
++		pinctrl_ipu1_csi0: ipu1csi0grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19    0x1b0b0
++				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x1b0b0
++				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x1b0b0
++				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x1b0b0
++				MX6QDL_PAD_CSI0_DATA_EN__IPU1_CSI0_DATA_EN 0x1b0b0
++			>;
++		};
++
+ 		pinctrl_j15: j15grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
+@@ -444,6 +562,22 @@
+ 			>;
+ 		};
+ 
++		pinctrl_ov5640: ov5640grp {
++			fsl,pins = <
++				MX6QDL_PAD_NANDF_D5__GPIO2_IO05   0x000b0
++				MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09 0x0b0b0
++			>;
++		};
++
++		pinctrl_ov5642: ov5642grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_DAT0__GPIO1_IO16 0x1b0b0
++				MX6QDL_PAD_GPIO_6__GPIO1_IO06   0x1b0b0
++				MX6QDL_PAD_GPIO_8__GPIO1_IO08   0x130b0
++				MX6QDL_PAD_GPIO_3__CCM_CLKO2    0x000b0
++			>;
++		};
++
+ 		pinctrl_pwm1: pwm1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
+@@ -598,3 +732,17 @@
+ 	vmmc-supply = <&reg_3p3v>;
+ 	status = "okay";
+ };
++
 +&mipi_csi {
-+	port@1 {
-+		reg = <1>;
++	status = "okay";
 +
-+		mipi_vc0_to_ipu1_csi0_mux: endpoint {
-+			remote-endpoint = <&ipu1_csi0_mux_from_mipi_vc0>;
-+		};
-+	};
++	port@0 {
++		reg = <0>;
 +
-+	port@2 {
-+		reg = <2>;
-+
-+		mipi_vc1_to_ipu1_csi1: endpoint {
-+			remote-endpoint = <&ipu1_csi1_from_mipi_vc1>;
-+		};
-+	};
-+
-+	port@3 {
-+		reg = <3>;
-+
-+		mipi_vc2_to_ipu2_csi0: endpoint {
-+			remote-endpoint = <&ipu2_csi0_from_mipi_vc2>;
-+		};
-+	};
-+
-+	port@4 {
-+		reg = <4>;
-+
-+		mipi_vc3_to_ipu2_csi1_mux: endpoint {
-+			remote-endpoint = <&ipu2_csi1_mux_from_mipi_vc3>;
++		mipi_csi2_in: endpoint {
++			remote-endpoint = <&ov5640_to_mipi_csi2>;
++			clock-lanes = <0>;
++			data-lanes = <1 2>;
 +		};
 +	};
 +};
-+
- &mipi_dsi {
- 	ports {
- 		port@2 {
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index d28a413..194badd 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -807,8 +807,10 @@
- 			};
- 
- 			gpr: iomuxc-gpr@020e0000 {
--				compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
-+				compatible = "fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
- 				reg = <0x020e0000 0x38>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 			};
- 
- 			iomuxc: iomuxc@020e0000 {
-@@ -1136,6 +1138,8 @@
- 			mipi_csi: mipi@021dc000 {
- 				compatible = "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
- 				reg = <0x021dc000 0x4000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				interrupts = <0 100 0x04>, <0 101 0x04>;
- 				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
- 					 <&clks IMX6QDL_CLK_VIDEO_27M>,
-@@ -1243,6 +1247,10 @@
- 
- 			ipu1_csi0: port@0 {
- 				reg = <0>;
-+
-+				ipu1_csi0_from_ipu1_csi0_mux: endpoint {
-+					remote-endpoint = <&ipu1_csi0_mux_to_ipu1_csi0>;
-+				};
- 			};
- 
- 			ipu1_csi1: port@1 {
 -- 
 2.7.4
