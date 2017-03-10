@@ -1,117 +1,71 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Fri, 10 Mar 2017 10:37:21 -0800
-Message-ID: <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
+From: Troy Kisky <troy.kisky@boundarydevices.com>
+Subject: Re: [PATCH v5 07/39] ARM: dts: imx6qdl-sabrelite: remove erratum
+ ERR006687 workaround
+Date: Fri, 10 Mar 2017 10:59:11 -0800
+Message-ID: <9f5d0ac4-0602-c729-5c00-1d9ef49247c1@boundarydevices.com>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
- <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
+ <1489121599-23206-8-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
+In-Reply-To: <1489121599-23206-8-git-send-email-steve_longerbeam@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On 3/9/2017 8:52 PM, Steve Longerbeam wrote:
+> There is a pin conflict with GPIO_6. This pin functions as a power
+> input pin to the OV5642 camera sensor, but ENET uses it as the h/w
+> workaround for erratum ERR006687, to wake-up the ARM cores on normal
+> RX and TX packet done events. So we need to remove the h/w workaround
+> to support the OV5642. The result is that the CPUidle driver will no
+> longer allow entering the deep idle states on the sabrelite.
+> 
+> This is a partial revert of
+> 
+> commit 6261c4c8f13e ("ARM: dts: imx6qdl-sabrelite: use GPIO_6 for FEC
+> 			interrupt.")
+> commit a28eeb43ee57 ("ARM: dts: imx6: tag boards that have the HW workaround
+> 			for ERR006687")
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> index 8413179..89dce27 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> @@ -270,9 +270,6 @@
+>  	txd1-skew-ps = <0>;
+>  	txd2-skew-ps = <0>;
+>  	txd3-skew-ps = <0>;
 
-On 03/10/2017 04:03 AM, Hans Verkuil wrote:
-> On 10/03/17 05:52, Steve Longerbeam wrote:
->> Add a new FRAME_INTERVAL_ERROR event to signal that a video capture or
->> output device has measured an interval between the reception or transmit
->> completion of two consecutive frames of video that is outside the nominal
->> frame interval by some tolerance value.
->
-> Reading back what was said on this I agree with Sakari that this doesn't
-> belong here.
->
-> Userspace can detect this just as easily (if not easier) with a timeout.
->
+How about
 
++#if !IS_ENABLED(CONFIG_VIDEO_OV5642)
 
-Unfortunately measuring frame intervals from userland is not accurate
-enough for i.MX6.
+> -	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
+> -			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
+> -	fsl,err006687-workaround-present;
 
-The issue here is that the IPUv3, specifically the CSI unit, can
-permanently lose vertical sync if there are truncated frames sent
-on the bt.656 bus. We have seen a single missing line of video cause
-loss of vertical sync. The only way to correct this is to shutdown
-the IPU capture hardware and restart, which can be accomplished
-simply by restarting streaming from userland.
++#endif
 
-There are no other indicators from the sensor about these short
-frame events (believe me, we've exhausted all avenues with the ADV718x).
-And the IPUv3 DMA engine has no status indicators for short frames
-either. So the only way to detect them is by measuring frame intervals.
-
-The intervals have to be able to resolve a single line of missing video.
-With a PAL video source that requires better than 58 usec accuracy.
-
-There is too much uncertainty to resolve this at user level. The
-driver is able to resolve this by measuring intervals between hardware
-interrupts as long as interrupt latency is reasonably low, and we
-have another method using the i.MX6 hardware input capture support
-that can measure these intervals very accurately with no errors
-introduced by interrupt latency.
-
-I made this event a private event to imx-media driver in a previous
-iteration, so I can return it to a private event, but this can't be
-done at user level.
-
-Steve
+Is that allowed ?
 
 
->
->>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->> ---
->>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 6 ++++++
->>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>  include/uapi/linux/videodev2.h                  | 1 +
->>  3 files changed, 8 insertions(+)
->>
->> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> index 8d663a7..dc77363 100644
->> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->> @@ -197,6 +197,12 @@ call.
->>  	the regions changes. This event has a struct
->>  	:c:type:`v4l2_event_motion_det`
->>  	associated with it.
->> +    * - ``V4L2_EVENT_FRAME_INTERVAL_ERROR``
->> +      - 7
->> +      - This event is triggered when the video capture or output device
->> +	has measured an interval between the reception or transmit
->> +	completion of two consecutive frames of video that is outside
->> +	the nominal frame interval by some tolerance value.
->>      * - ``V4L2_EVENT_PRIVATE_START``
->>        - 0x08000000
->>        - Base event number for driver-private events.
->> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
->> index e11a0d0..c7d8fad 100644
->> --- a/Documentation/media/videodev2.h.rst.exceptions
->> +++ b/Documentation/media/videodev2.h.rst.exceptions
->> @@ -459,6 +459,7 @@ replace define V4L2_EVENT_CTRL event-type
->>  replace define V4L2_EVENT_FRAME_SYNC event-type
->>  replace define V4L2_EVENT_SOURCE_CHANGE event-type
->>  replace define V4L2_EVENT_MOTION_DET event-type
->> +replace define V4L2_EVENT_FRAME_INTERVAL_ERROR event-type
->>  replace define V4L2_EVENT_PRIVATE_START event-type
->>
->>  replace define V4L2_EVENT_CTRL_CH_VALUE ctrl-changes-flags
->> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->> index 45184a2..cf5a0d0 100644
->> --- a/include/uapi/linux/videodev2.h
->> +++ b/include/uapi/linux/videodev2.h
->> @@ -2131,6 +2131,7 @@ struct v4l2_streamparm {
->>  #define V4L2_EVENT_FRAME_SYNC			4
->>  #define V4L2_EVENT_SOURCE_CHANGE		5
->>  #define V4L2_EVENT_MOTION_DET			6
->> +#define V4L2_EVENT_FRAME_INTERVAL_ERROR		7
->>  #define V4L2_EVENT_PRIVATE_START		0x08000000
->>
->>  /* Payload for V4L2_EVENT_VSYNC */
->>
->
+>  	status = "okay";
+>  };
+>  
+> @@ -373,7 +370,6 @@
+>  				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
+>  				/* Phy reset */
+>  				MX6QDL_PAD_EIM_D23__GPIO3_IO23		0x000b0
+> -				MX6QDL_PAD_GPIO_6__ENET_IRQ		0x000b1
+>  			>;
+>  		};
+>  
+> 
