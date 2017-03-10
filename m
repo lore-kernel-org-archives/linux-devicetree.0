@@ -1,92 +1,153 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [v2, 4/4] dt-bindings: mtd: Add Octal SPI support to Cadence
- QSPI.
-Date: Fri, 10 Mar 2017 13:52:31 +0100
-Message-ID: <7d303436-77cf-fb11-30b6-c59014950ae6@gmail.com>
-References: <1488959932-6657-1-git-send-email-jartur@cadence.com>
- <1488960326-13858-1-git-send-email-jartur@cadence.com>
- <132a4818-11d1-263f-aae4-bac4e76c14c8@gmail.com>
- <DM5PR07MB2780A784F8973310542FDBE3D4200@DM5PR07MB2780.namprd07.prod.outlook.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Fri, 10 Mar 2017 13:54:28 +0100
+Message-ID: <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+ <20170303230645.GR21222@n2100.armlinux.org.uk>
+ <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DM5PR07MB2780A784F8973310542FDBE3D4200@DM5PR07MB2780.namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Artur Jedrysek <jartur@cadence.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2017 01:03 PM, Artur Jedrysek wrote:
+On 04/03/17 14:13, Sakari Ailus wrote:
+> Hi Russell,
 > 
->> From: Marek Vasut [mailto:marek.vasut@gmail.com]
->> Sent: 10 March 2017 04:39
->> On 03/08/2017 09:05 AM, Artur Jedrysek wrote:
->>> This patch updates Cadence QSPI Device Tree documentation to include
->>> information about new compatible used to indicate, whether or not
->>> Octal SPI transfers are supported by the device.
+> On Fri, Mar 03, 2017 at 11:06:45PM +0000, Russell King - ARM Linux wrote:
+>> On Thu, Mar 02, 2017 at 06:02:57PM +0200, Sakari Ailus wrote:
+>>> Hi Steve,
 >>>
->>> Signed-off-by: Artur Jedrysek <jartur@cadence.com>
->>> ---
->>> Changelog:
->>> v2: Use new compatible, instead of boolean property, to indicate
->>> Octal SPI support.
->>> ---
->>>  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>> On Wed, Feb 15, 2017 at 06:19:16PM -0800, Steve Longerbeam wrote:
+>>>> v4l2_pipeline_inherit_controls() will add the v4l2 controls from
+>>>> all subdev entities in a pipeline to a given video device.
+>>>>
+>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>>>> ---
+>>>>  drivers/media/v4l2-core/v4l2-mc.c | 48 +++++++++++++++++++++++++++++++++++++++
+>>>>  include/media/v4l2-mc.h           | 25 ++++++++++++++++++++
+>>>>  2 files changed, 73 insertions(+)
+>>>>
+>>>> diff --git a/drivers/media/v4l2-core/v4l2-mc.c b/drivers/media/v4l2-core/v4l2-mc.c
+>>>> index 303980b..09d4d97 100644
+>>>> --- a/drivers/media/v4l2-core/v4l2-mc.c
+>>>> +++ b/drivers/media/v4l2-core/v4l2-mc.c
+>>>> @@ -22,6 +22,7 @@
+>>>>  #include <linux/usb.h>
+>>>>  #include <media/media-device.h>
+>>>>  #include <media/media-entity.h>
+>>>> +#include <media/v4l2-ctrls.h>
+>>>>  #include <media/v4l2-fh.h>
+>>>>  #include <media/v4l2-mc.h>
+>>>>  #include <media/v4l2-subdev.h>
+>>>> @@ -238,6 +239,53 @@ int v4l_vb2q_enable_media_source(struct vb2_queue *q)
+>>>>  }
+>>>>  EXPORT_SYMBOL_GPL(v4l_vb2q_enable_media_source);
+>>>>  
+>>>> +int __v4l2_pipeline_inherit_controls(struct video_device *vfd,
+>>>> +				     struct media_entity *start_entity)
 >>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->> b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>> index f248056..41d1e98 100644
->>> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->>> @@ -1,7 +1,9 @@
->>>  * Cadence Quad SPI controller
+>>> I have a few concerns / questions:
 >>>
->>>  Required properties:
->>> -- compatible : Should be "cdns,qspi-nor".
->>> +- compatible : Should be "cdns,{qspi|ospi}-nor".
+>>> - What's the purpose of this patch? Why not to access the sub-device node
+>>>   directly?
 >>
->> Please explicitly list all compatibles , ie.
->> Should be "cdns,qspi-nor" or "cdns,ospi-nor".
->>
+>> What tools are in existance _today_ to provide access to these controls
+>> via the sub-device nodes?
 > 
-> Two possible options are also explicitly listed right below. I did that
-> in the way it was done in other driver for Cadence IP:
-> /Documentation/devicetree/bindings/net/macb.txt
-> Should I remove all of that and replace it with both options, separated
-> by an "or" word?
-
-Wait for Rob to confirm.
-
->> But I think the ospi is backward compatible with qspi, right ? So the
->> binding for ospi should list both, ie.
->> compatible = "cdns,ospi-nor", "cdns,qspi-nor";
->>
+> yavta, for instance:
 > 
-> Yes, the ospi is backwards compatible with qspi. However, the sole point
-> of introducing new compatible was to differentiate between them (which
-> was previously done using a boolean flag, but that was criticized).
-> Listing both bindings for ospi would only help for kernels not
-> containing driver update being subject of this patch series, as both
-> ospi and qspi are handled by the same driver - just with a slight
-> difference. I apologize if I got something wrong here.
+> <URL:http://git.ideasonboard.org/yavta.git>
+> 
+> VIDIOC_QUERYCAP isn't supported on sub-devices and v4l2-ctl appears to be
+> checking for that. That check should be removed (with possible other
+> implications taken into account).
 
-You got it right, I was just curious about the compatibility.
+No, the subdev API should get a similar QUERYCAP ioctl. There isn't a single
+ioctl that is guaranteed to be available for all subdev devices. I've made
+proposals for this in the past, and those have all been shot down.
 
->>> +  Use "cdns,qspi-nor" for Quad SPI controller.
->>> +  Use "cdns,ospi-nor" for Octal SPI controller.
->>>  - reg : Contains two entries, each of which is a tuple consisting of a
->>>  	physical address and length. The first entry is the address and
->>>  	length of the controller register set. The second entry is the
->>>
+Add that, and I'll add support for subdevs in v4l2-ctl.
+
+> 
 >>
+>> v4l-tools doesn't last time I looked - in fact, the only tool in v4l-tools
+>> which is capable of accessing the subdevices is media-ctl, and that only
+>> provides functionality for configuring the pipeline.
 >>
->> --
->> Best regards,
->> Marek Vasut
+>> So, pointing people at vapourware userspace is really quite rediculous.
+> 
+> Do bear in mind that there are other programs that can make use of these
+> interfaces. It's not just the test programs, or a test program you attempted
+> to use.
+> 
+>>
+>> The established way to control video capture is through the main video
+>> capture device, not through the sub-devices.  Yes, the controls are
+>> exposed through sub-devices too, but that does not mean that is the
+>> correct way to access them.
+> 
+> It is. That's the very purpose of the sub-devices: to provide access to the
+> hardware independently of how the links are configured.
+> 
+>>
+>> The v4l2 documentation (Documentation/media/kapi/v4l2-controls.rst)
+>> even disagrees with your statements.  That talks about control
+>> inheritence from sub-devices to the main video device, and the core
+>> v4l2 code provides _automatic_ support for this - see
+>> v4l2_device_register_subdev():
+>>
+>>         /* This just returns 0 if either of the two args is NULL */
+>>         err = v4l2_ctrl_add_handler(v4l2_dev->ctrl_handler, sd->ctrl_handler, NULL);
+>>
+>> which merges the subdev's controls into the main device's control
+>> handler.
+> 
+> That's done on different kind of devices: those that provide plain V4L2 API
+> to control the entire device. V4L2 sub-device interface is used *in kernel*
+> as an interface to control sub-devices that do not need to be exposed to the
+> user space.
+> 
+> Devices that have complex pipeline that do essentially require using the
+> Media controller interface to configure them are out of that scope.
+> 
 
+Way too much of how the MC devices should be used is in the minds of developers.
+There is a major lack for good detailed documentation, utilities, compliance
+test (really needed!) and libv4l plugins.
 
--- 
-Best regards,
-Marek Vasut
+Russell's comments are spot on and it is a thorn in my side that this still
+hasn't been addressed.
+
+I want to see if I can get time from my boss to work on this this summer, but
+there is no guarantee.
+
+The main reason this hasn't been a much bigger problem is that most end-users
+make custom applications for this hardware. It makes sense, if you need full
+control over everything you make the application yourself, that's the whole point.
+
+But there was always meant to be a layer (libv4l plugin) that could be used to
+setup a 'default scenario' that existing applications could use, but that was
+never enforced, sadly.
+
+Anyway, regarding this specific patch and for this MC-aware driver: no, you
+shouldn't inherit controls from subdevs. It defeats the purpose.
+
+Regards,
+
+	Hans
