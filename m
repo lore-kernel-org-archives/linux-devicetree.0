@@ -1,120 +1,178 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Fri, 10 Mar 2017 15:20:48 +0100
-Message-ID: <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
- <20170310140124.GV21222@n2100.armlinux.org.uk>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [v3 3/5] coresight: add support for debug module
+Date: Fri, 10 Mar 2017 14:29:53 +0000
+Message-ID: <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
+References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+ <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
+ <20170309175915.GA964@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170310140124.GV21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170309175915.GA964@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, John Stultz <john.stultz@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, mike.leach@linaro.org, Sudeep Holla <Sudeep.Holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 15:01, Russell King - ARM Linux wrote:
-> On Fri, Mar 10, 2017 at 02:22:29PM +0100, Hans Verkuil wrote:
->> And nobody of the media core developers has the time to work on the docs,
->> utilities and libraries you need to make this all work cleanly and reliably.
-> 
-> Well, talking about docs, and in connection to control inheritence,
-> this is already documented in at least three separate places:
-> 
-> Documentation/media/uapi/v4l/dev-subdev.rst:
-> 
->   Controls
->   ========
->   ...
->   Depending on the driver, those controls might also be exposed through
->   one (or several) V4L2 device nodes.
-> 
-> Documentation/media/kapi/v4l2-subdev.rst:
-> 
->   ``VIDIOC_QUERYCTRL``,
->   ``VIDIOC_QUERYMENU``,
->   ``VIDIOC_G_CTRL``,
->   ``VIDIOC_S_CTRL``,
->   ``VIDIOC_G_EXT_CTRLS``,
->   ``VIDIOC_S_EXT_CTRLS`` and
->   ``VIDIOC_TRY_EXT_CTRLS``:
->   
->           The controls ioctls are identical to the ones defined in V4L2. They
->           behave identically, with the only exception that they deal only with
->           controls implemented in the sub-device. Depending on the driver, those
->           controls can be also be accessed through one (or several) V4L2 device
->           nodes.
-> 
-> Then there's Documentation/media/kapi/v4l2-controls.rst, which gives a
-> step by step approach to the main video device inheriting controls from
-> its subdevices, and it says:
-> 
->   Inheriting Controls
->   -------------------
->   
->   When a sub-device is registered with a V4L2 driver by calling
->   v4l2_device_register_subdev() and the ctrl_handler fields of both v4l2_subdev
->   and v4l2_device are set, then the controls of the subdev will become
->   automatically available in the V4L2 driver as well. If the subdev driver
->   contains controls that already exist in the V4L2 driver, then those will be
->   skipped (so a V4L2 driver can always override a subdev control).
->   
->   What happens here is that v4l2_device_register_subdev() calls
->   v4l2_ctrl_add_handler() adding the controls of the subdev to the controls
->   of v4l2_device.
-> 
-> So, either the docs are wrong, or the advice being mentioned in emails
-> about subdev control inheritence is misleading.  Whatever, the two are
-> currently inconsistent.
+On 09/03/17 17:59, Leo Yan wrote:
+> Hi Suziku,
+  
+>> The problem is, it is not guaranteed that the EDPCSR_Hi, EDCIDSR & EDVIDSR are
+>> updated as a side effect of a memory mapped access (which is what we do here) to the
+>> EDPCSR_Lo.
+>>
+>> Section H.7.1.2 : Reads of EDPCSRs (in ARM DDI 0487A.k) :
+>>
+>> "The indirect writes to EDCIDSR, EDVIDSR, and EDPCSRhi might not occur for a memory-mapped access
+>> to the external debug interface. For more information, see Memory-mapped accesses to the external debug
+>> interface on page H8-4968."
+>>
+>> So we cannot really rely on the values in EDVIDSR which we use to make further decisions. So I
+>> am wondering if this is really guranteed to be useful.
+>
+> So this is caused by Software lock is locked?
+>
+> Section H8.4.1:
+>
+> "Reads and writes have no side-effects. A side-effect is where a
+> direct read or a direct write of a register creates
+> an indirect write of the same or another register. When the Software
+> Lock is locked, the indirect write does
+> not occur."
 
-These docs were written for non-MC drivers, and for those the documentation
-is correct. Unfortunately, this was never updated for MC drivers.
+Yes, thats correct, further :
 
-> As I've already mentioned, from talking about this with Mauro, it seems
-> Mauro is in agreement with permitting the control inheritence... I wish
-> Mauro would comment for himself, as I can't quote our private discussion
-> on the subject.
+Section H9.2.32: EDPCSR
 
-I can't comment either, not having seen his mail and reasoning.
+"For a read of EDPCSRlo from the memory-mapped interface, if EDLSR.SLK == 1, meaning
+the Software Lock is locked, then the access has no side-effects. That is, EDCIDSR,
+EDVIDSR, and EDPCSRhi are unchanged."
 
-> Right now, my view is that v4l2 is currently being screwed up by people
-> with different opinions - there is no unified concensus on how any of
-> this stuff is supposed to work, everyone is pulling in different
-> directions.  That needs solving _really_ quickly, so I suggest that
-> v4l2 people urgently talk to each other and thrash out some of the
-> issues that Steve's patch set has brought up, and settle on a way
-> forward, rather than what is seemingly happening today - which is
-> everyone working in isolation of everyone else with their own bias on
-> how things should be done.
+And since we do a CS_UNLOCK, that should be fine. Please ignore my comment.
 
-The simple fact is that to my knowledge no other MC applications inherit
-controls from subdevs. Suddenly doing something different here seems very
-wrong to me and needs very good reasons.
+>>> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+>>> index 130cb21..3ed651e 100644
+>>> --- a/drivers/hwtracing/coresight/Kconfig
+>>> +++ b/drivers/hwtracing/coresight/Kconfig
+>>> @@ -89,4 +89,14 @@ config CORESIGHT_STM
+>>> 	  logging useful software events or data coming from various entities
+>>> 	  in the system, possibly running different OSs
+>>>
+>>> +config CORESIGHT_DEBUG
+>>
+>> To make it more specific, may be CORESIGHT_CPU_DEBUG ?
+>
+> Will fix.
+>
+>>> +	bool "CoreSight debug driver"
+>>
+>> "Coresight CPU Debug driver"
+>
+> Will fix.
+>
+>>> +	depends on ARM || ARM64
+>>> +	help
+>>> +	  This driver provides support for coresight debugging module. This
+>>> +	  is primarily used to dump sample-based profiling registers for
+>>> +	  panic. To avoid lockups when accessing debug module registers,
+>>> +	  it is safer to disable CPU low power states (like "nohlt" on the
+>>> +	  kernel command line) when using this feature.
+>>> +
+>>
+>>> +#define EDPCSR_THUMB			BIT(0)
+>>> +#define EDPCSR_ARM_INST_MASK		GENMASK(31, 2)
+>>> +#define EDPCSR_THUMB_INST_MASK		GENMASK(31, 1)
+>>
+>> We don't need two different masks. {ED/DBG}PCSR has only bit 0 reserved
+>> for instruction set indication.
+>
+> I think we need this two different masks. Please review below extra doc
+> for PC offset analysis in ARM ARM.
 
-But yes, the current situation sucks. Yelling doesn't help though if nobody
-has time and there are several other high-prio projects that need our
-attention as well.
+You're correct. Thanks for the pointer. I got confused, as there was no bit
+dedicated in the DBGPCSR bit assignment figure.
 
-If you know a good kernel developer who has a few months to spare, please
-point him/her in our direction!
+>>> +	/*
+>>> +	 * Handle arm instruction offset, if the arm instruction
+>>> +	 * is not 4 byte alignment then it's possible the case
+>>> +	 * for implementation defined; keep original value for this
+>>> +	 * case and print info for notice.
+>>> +	 */
+>>> +	if (pc & BIT(1))
+>>> +		pr_emerg("Instruction offset is implementation defined\n");
+>>
+>> I am struggling to find the any mention about this in the ARM ARM. Please could
+>> you point me to it.
+>
+> Sure, please see ARM DDI 0406C.b, chapter C11.11.34 "
+> DBGPCSR, Program Counter Sampling Register":
+>
+> A profiling tool can use the value of the T bit to calculate the
+> instruction address as follows:
+>
+> When an offset is applied to the sampled address
+> - if T is 0 and DBGPCSR[1] is 0, ((DBGPCSR[31:2] << 2) - 8) is the
+> address of the sampled ARM instruction
+> - if T is 0 and DBGPCSR[1] is 1, the instruction address is
+> IMPLEMENTATION DEFINED
+> - if T is 1, ((DBGPCSR[31:1] << 1) - 4) is the address of the sampled
+> Thumb or ThumbEE instruction.
+>
+> When no offset is applied to the sampled address
+> -  if T is 0 and DBGPCSR[1] is 0, (DBGPCSR[31:2] << 2) is the address
+> of the sampled ARM instruction
+> -  if T is 0 and DBGPCSR[1] is 1, the instruction address is
+> IMPLEMENTATION DEFINED
+> - if T is 1, (DBGPCSR[31:1] << 1) is the address of the sampled Thumb
+> or ThumbEE instruction.
+>
 
-Regards,
+Ok.
 
-	Hans
+
+>>> +
+>>> +	put_online_cpus();
+>>> +
+>>> +	if (!debug_count++)
+>>> +		atomic_notifier_chain_register(&panic_notifier_list,
+>>> +					       &debug_notifier);
+>>> +
+>>
+>>> +	sprintf(buf, (char *)id->data, drvdata->cpu);
+>>> +	dev_info(dev, "%s initialized\n", buf);
+>>
+>> This could simply be :
+>> 	dev_info(dev, "Coresight debug-CPU%d initialized\n", drvdata->cpu);
+>>
+>> and get rid of the static string and the buffer, see below.
+
+Also we need pm_runtime_put() here to balance the pm_runtime_get_ from AMBA
+device probe. More on that below.
+
+>>
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static struct amba_id debug_ids[] = {
+>>> +	{       /* Debug for Cortex-A53 */
+>>> +		.id	= 0x000bbd03,
+>>> +		.mask	= 0x000fffff,
+>>
+>> ...
+>>
+>>> +		.data   = "Coresight debug-CPU%d",
+>>
+>> I think this is pointless, as the debug area we are interested in is always associated
+>> with a CPU, we could as well figure out what to print from the drvdata->cpu above.
+>
+> I prefer to follow your suggestion for upper two comments; but I'd like
+> check with Mathieu, due I followed up Mathieu's suggestion to write
+> current code.
+
+Btw, I don't see any PM calls to make sure the power domain (at least the debug domain)
+is up, which could cause problems with accesses to some of these registers (leave alone the
+ones in CPU power domain), especially the EDPRSR. We could also do pm_runtime_get on the
+CPU's power domain, if the CPU is online, before we access the pcsr.
+
+Suzuki
