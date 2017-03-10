@@ -1,28 +1,53 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCHv4 11/15] ov2640: use standard clk and enable it.
-Date: Fri, 10 Mar 2017 13:10:02 +0200
-Message-ID: <20170310111002.GD3220@valkosipuli.retiisi.org.uk>
-References: <20170310102614.20922-1-hverkuil@xs4all.nl>
- <20170310102614.20922-12-hverkuil@xs4all.nl>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v10 11/11] iio: multiplexer: fix unsigned check with less than zero
+Date: Fri, 10 Mar 2017 12:10:05 +0100
+Message-ID: <1489144205-17427-12-git-send-email-peda@axentia.se>
+References: <1489144205-17427-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170310102614.20922-12-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489144205-17427-1-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 11:26:10AM +0100, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> Convert v4l2_clk to normal clk and enable the clock.
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Comparing a size_t with less than zero is always false as size_t
+is unsigned. So, change the type of the variable to ssize_t and
+replicate the size check from mux_configure_channel() into
+mux_write_ext_info() thus ensuring that the size will fit in the
+ssize_t variable.
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Detected by CoverityScan, CID#1415278 ("Unsigned compared against 0")
 
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/iio/multiplexer/iio-mux.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/multiplexer/iio-mux.c b/drivers/iio/multiplexer/iio-mux.c
+index 94d40f9bef4c..bab9e6902090 100644
+--- a/drivers/iio/multiplexer/iio-mux.c
++++ b/drivers/iio/multiplexer/iio-mux.c
+@@ -21,7 +21,7 @@
+ 
+ struct mux_ext_info_cache {
+ 	char *data;
+-	size_t size;
++	ssize_t size;
+ };
+ 
+ struct mux_child {
+@@ -206,6 +206,9 @@ static ssize_t mux_write_ext_info(struct iio_dev *indio_dev, uintptr_t private,
+ 	char *new;
+ 	ssize_t ret;
+ 
++	if (len >= PAGE_SIZE)
++		return -EINVAL;
++
+ 	ret = iio_mux_select(mux, idx);
+ 	if (ret < 0)
+ 		return ret;
 -- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+2.1.4
