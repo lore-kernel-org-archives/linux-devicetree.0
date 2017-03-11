@@ -1,35 +1,61 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
-Date: Sat, 11 Mar 2017 18:23:09 +0100
-Message-ID: <20170311172309.GC15842@lunn.ch>
-References: <20170311121453.18534-1-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170311121453.18534-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/8] watchdog: s3c2410: Fixes and improvements
+Date: Sat, 11 Mar 2017 19:25:19 +0200
+Message-ID: <20170311172527.16368-1-krzk@kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 11, 2017 at 01:14:53PM +0100, Rafa?? Mi??ecki wrote:
-> From: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> This is BCM47081A0 based home router with BCM43217 and BCM4352 wireless
-> chipsets.
- 
-Hi Rafal
+Hi,
 
-Have you made any progress with the Ethernet switch? Does anybody know
-if it is compatible with the SF2/B53 DSA driver?
+Minor cleanup and some fixes for the watchdog used on all
+Samsung SoCs.
 
-I have a DIR 860l v1 router, using the same chipset. I'm interested in
-the switch, given my DSA maintainer role.
+The DTS patches should through samsung-soc tree but they depend
+on introducing new compatible. The patches waiting for new compatible will be
+deferred to next release.
 
-Thanks
-	Andrew
+
+Changes since v1:
+=================
+1. Add Guenter's review and Rob's ack.
+2. Change compatible in patch 6/8 instead 3/8.
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (8):
+  watchdog: s3c2410: Remove confusing CONFIG prefix from local defines
+  watchdog: s3c2410: Fix infinite interrupt in soft mode
+  ARM: dts: exynos: Fix watchdog reset on Exynos4412
+  ARM: dts: s3c64xx: Enable watchdog on all S3C64xx boards
+  ARM: dts: exynos: Enable watchdog on all Exynos4 boards
+  ARM: dts: exynos: Fix infinite interrupt in soft mode on Exynos4210
+    and Exynos5440
+  ARM: dts: s3c64xx: Fix infinite interrupt in soft mode
+  ARM: dts: s5pv210: Fix infinite interrupt in soft mode
+
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |  9 +++---
+ arch/arm/boot/dts/exynos4.dtsi                     |  9 ------
+ arch/arm/boot/dts/exynos4210-origen.dts            |  4 ---
+ arch/arm/boot/dts/exynos4210.dtsi                  |  8 +++++
+ arch/arm/boot/dts/exynos4412-itop-scp-core.dtsi    |  4 ---
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |  4 ---
+ arch/arm/boot/dts/exynos4412-origen.dts            |  4 ---
+ arch/arm/boot/dts/exynos4412.dtsi                  |  9 ++++++
+ arch/arm/boot/dts/exynos5440.dtsi                  |  2 +-
+ arch/arm/boot/dts/s3c64xx.dtsi                     |  3 +-
+ arch/arm/boot/dts/s5pv210.dtsi                     |  2 +-
+ drivers/watchdog/s3c2410_wdt.c                     | 37 +++++++++++++++-------
+ 12 files changed, 51 insertions(+), 44 deletions(-)
+
+-- 
+2.9.3
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
