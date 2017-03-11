@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv5 09/16] ov2640: fix colorspace handling
-Date: Sat, 11 Mar 2017 12:23:21 +0100
-Message-ID: <20170311112328.11802-10-hverkuil@xs4all.nl>
+Subject: [PATCHv5 14/16] em28xx: drop last soc_camera link
+Date: Sat, 11 Mar 2017 12:23:26 +0100
+Message-ID: <20170311112328.11802-15-hverkuil@xs4all.nl>
 References: <20170311112328.11802-1-hverkuil@xs4all.nl>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <20170311112328.11802-1-hverkuil@xs4all.nl>
@@ -12,71 +12,49 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil@cisco.com>
 
-The colorspace is independent of whether YUV or RGB is sent to the SoC.
-Fix this.
+The em28xx driver still used the soc_camera.h header for the ov2640
+driver. Since this driver no longer uses soc_camera, that include can
+be removed.
 
 Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/soc_camera/ov2640.c | 23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ drivers/media/usb/em28xx/em28xx-camera.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
-index 56de18263359..b9a0069f5b33 100644
---- a/drivers/media/i2c/soc_camera/ov2640.c
-+++ b/drivers/media/i2c/soc_camera/ov2640.c
-@@ -794,10 +794,11 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
- 		dev_dbg(&client->dev, "%s: Selected cfmt YUYV (YUV422)", __func__);
- 		selected_cfmt_regs = ov2640_yuyv_regs;
- 		break;
--	default:
- 	case MEDIA_BUS_FMT_UYVY8_2X8:
-+	default:
- 		dev_dbg(&client->dev, "%s: Selected cfmt UYVY", __func__);
- 		selected_cfmt_regs = ov2640_uyvy_regs;
-+		break;
- 	}
+diff --git a/drivers/media/usb/em28xx/em28xx-camera.c b/drivers/media/usb/em28xx/em28xx-camera.c
+index 89c890ba7dd6..63aaa577a742 100644
+--- a/drivers/media/usb/em28xx/em28xx-camera.c
++++ b/drivers/media/usb/em28xx/em28xx-camera.c
+@@ -23,7 +23,6 @@
  
- 	/* reset hardware */
-@@ -865,17 +866,7 @@ static int ov2640_get_fmt(struct v4l2_subdev *sd,
- 	mf->width	= priv->win->width;
- 	mf->height	= priv->win->height;
- 	mf->code	= priv->cfmt_code;
+ #include <linux/i2c.h>
+ #include <linux/usb.h>
+-#include <media/soc_camera.h>
+ #include <media/i2c/mt9v011.h>
+ #include <media/v4l2-clk.h>
+ #include <media/v4l2-common.h>
+@@ -43,13 +42,6 @@ static unsigned short omnivision_sensor_addrs[] = {
+ 	I2C_CLIENT_END
+ };
+ 
+-static struct soc_camera_link camlink = {
+-	.bus_id = 0,
+-	.flags = 0,
+-	.module_name = "em28xx",
+-	.unbalanced_power = true,
+-};
 -
--	switch (mf->code) {
--	case MEDIA_BUS_FMT_RGB565_2X8_BE:
--	case MEDIA_BUS_FMT_RGB565_2X8_LE:
--		mf->colorspace = V4L2_COLORSPACE_SRGB;
--		break;
--	default:
--	case MEDIA_BUS_FMT_YUYV8_2X8:
--	case MEDIA_BUS_FMT_UYVY8_2X8:
--		mf->colorspace = V4L2_COLORSPACE_JPEG;
--	}
-+	mf->colorspace	= V4L2_COLORSPACE_SRGB;
- 	mf->field	= V4L2_FIELD_NONE;
- 
- 	return 0;
-@@ -897,17 +888,17 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
- 	ov2640_select_win(&mf->width, &mf->height);
- 
- 	mf->field	= V4L2_FIELD_NONE;
-+	mf->colorspace	= V4L2_COLORSPACE_SRGB;
- 
- 	switch (mf->code) {
- 	case MEDIA_BUS_FMT_RGB565_2X8_BE:
- 	case MEDIA_BUS_FMT_RGB565_2X8_LE:
--		mf->colorspace = V4L2_COLORSPACE_SRGB;
-+	case MEDIA_BUS_FMT_YUYV8_2X8:
-+	case MEDIA_BUS_FMT_UYVY8_2X8:
- 		break;
- 	default:
- 		mf->code = MEDIA_BUS_FMT_UYVY8_2X8;
--	case MEDIA_BUS_FMT_YUYV8_2X8:
--	case MEDIA_BUS_FMT_UYVY8_2X8:
--		mf->colorspace = V4L2_COLORSPACE_JPEG;
-+		break;
- 	}
- 
- 	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+ /* FIXME: Should be replaced by a proper mt9m111 driver */
+ static int em28xx_initialize_mt9m111(struct em28xx *dev)
+ {
+@@ -421,7 +413,6 @@ int em28xx_init_camera(struct em28xx *dev)
+ 			.type = "ov2640",
+ 			.flags = I2C_CLIENT_SCCB,
+ 			.addr = client->addr,
+-			.platform_data = &camlink,
+ 		};
+ 		struct v4l2_subdev_format format = {
+ 			.which = V4L2_SUBDEV_FORMAT_ACTIVE,
 -- 
 2.11.0
