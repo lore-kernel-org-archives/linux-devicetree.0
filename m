@@ -1,141 +1,148 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Sat, 11 Mar 2017 12:39:51 +0100
-Message-ID: <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
- <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
- <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
+Date: Sat, 11 Mar 2017 13:14:53 +0100
+Message-ID: <20170311121453.18534-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 19:37, Steve Longerbeam wrote:
-> Hi Hans,
-> 
-> On 03/10/2017 04:03 AM, Hans Verkuil wrote:
->> On 10/03/17 05:52, Steve Longerbeam wrote:
->>> Add a new FRAME_INTERVAL_ERROR event to signal that a video capture or
->>> output device has measured an interval between the reception or transmit
->>> completion of two consecutive frames of video that is outside the nominal
->>> frame interval by some tolerance value.
->>
->> Reading back what was said on this I agree with Sakari that this doesn't
->> belong here.
->>
->> Userspace can detect this just as easily (if not easier) with a timeout.
->>
-> 
-> 
-> Unfortunately measuring frame intervals from userland is not accurate
-> enough for i.MX6.
-> 
-> The issue here is that the IPUv3, specifically the CSI unit, can
-> permanently lose vertical sync if there are truncated frames sent
-> on the bt.656 bus. We have seen a single missing line of video cause
-> loss of vertical sync. The only way to correct this is to shutdown
-> the IPU capture hardware and restart, which can be accomplished
-> simply by restarting streaming from userland.
-> 
-> There are no other indicators from the sensor about these short
-> frame events (believe me, we've exhausted all avenues with the ADV718x).
-> And the IPUv3 DMA engine has no status indicators for short frames
-> either. So the only way to detect them is by measuring frame intervals.
-> 
-> The intervals have to be able to resolve a single line of missing video.
-> With a PAL video source that requires better than 58 usec accuracy.
-> 
-> There is too much uncertainty to resolve this at user level. The
-> driver is able to resolve this by measuring intervals between hardware
-> interrupts as long as interrupt latency is reasonably low, and we
-> have another method using the i.MX6 hardware input capture support
-> that can measure these intervals very accurately with no errors
-> introduced by interrupt latency.
-> 
-> I made this event a private event to imx-media driver in a previous
-> iteration, so I can return it to a private event, but this can't be
-> done at user level.
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-It's fine to use an internal event as long as the end-user doesn't
-see it. But if you lose vsyncs, then you never capture another frame,
-right? So userspace can detect that (i.e. no new frames arrive) and
-it can timeout on that. Or you detect it in the driver and restart there,
-or call vb2_queue_error().
+This is BCM47081A0 based home router with BCM43217 and BCM4352 wireless
+chipsets.
 
-Anything really as long as this event isn't user-visible :-)
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts | 98 ++++++++++++++++++++++
+ 2 files changed, 99 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts
 
-Regards,
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 595c74a35a7b..1e24f5db4835 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -88,6 +88,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm47081-buffalo-wzr-900dhp.dtb \
+ 	bcm47081-luxul-xap-1410.dtb \
+ 	bcm47081-luxul-xwr-1200.dtb \
++	bcm47081-tplink-archer-c5-v2.dtb \
+ 	bcm4709-asus-rt-ac87u.dtb \
+ 	bcm4709-buffalo-wxr-1900dhp.dtb \
+ 	bcm4709-linksys-ea9200.dtb \
+diff --git a/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts b/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts
+new file mode 100644
+index 000000000000..dc2af20fba9f
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts
+@@ -0,0 +1,98 @@
++/*
++ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
++ *
++ * Licensed under the ISC license.
++ */
++
++/dts-v1/;
++
++#include "bcm47081.dtsi"
++
++/ {
++	compatible = "tplink,archer-c5-v2", "brcm,bcm47081", "brcm,bcm4708";
++	model = "TP-LINK Archer C5 V2";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlycon";
++	};
++
++	memory {
++		reg = <0x00000000 0x08000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		2ghz {
++			label = "bcm53xx:green:2ghz";
++			gpios = <&chipcommon 0 GPIO_ACTIVE_HIGH>;
++		};
++
++		lan {
++			label = "bcm53xx:green:lan";
++			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
++		};
++
++		usb2-port1 {
++			label = "bcm53xx:green:usb2-port1";
++			gpios = <&chipcommon 2 GPIO_ACTIVE_HIGH>;
++		};
++
++		power {
++			label = "bcm53xx:green:power";
++			gpios = <&chipcommon 4 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "default-on";
++		};
++
++		wan-green {
++			label = "bcm53xx:green:wan";
++			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
++		};
++
++		wps {
++			label = "bcm53xx:green:wps";
++			gpios = <&chipcommon 6 GPIO_ACTIVE_HIGH>;
++		};
++
++		wan-amber {
++			label = "bcm53xx:amber:wan";
++			gpios = <&chipcommon 8 GPIO_ACTIVE_HIGH>;
++		};
++
++		5ghz {
++			label = "bcm53xx:green:5ghz";
++			gpios = <&chipcommon 12 GPIO_ACTIVE_HIGH>;
++		};
++
++		usb2-port2 {
++			label = "bcm53xx:green:usb2-port2";
++			gpios = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		rfkill {
++			label = "WiFi";
++			linux,code = <KEY_RFKILL>;
++			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
++		};
++
++		restart {
++			label = "Reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&chipcommon 7 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&spi_nor {
++	status = "okay";
++};
++
++&usb2 {
++	vcc-gpio = <&chipcommon 9 GPIO_ACTIVE_HIGH>;
++};
+-- 
+2.11.0
 
-	Hans
-
-> 
-> Steve
-> 
-> 
->>
->>>
->>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
->>> ---
->>>  Documentation/media/uapi/v4l/vidioc-dqevent.rst | 6 ++++++
->>>  Documentation/media/videodev2.h.rst.exceptions  | 1 +
->>>  include/uapi/linux/videodev2.h                  | 1 +
->>>  3 files changed, 8 insertions(+)
->>>
->>> diff --git a/Documentation/media/uapi/v4l/vidioc-dqevent.rst b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>> index 8d663a7..dc77363 100644
->>> --- a/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>> +++ b/Documentation/media/uapi/v4l/vidioc-dqevent.rst
->>> @@ -197,6 +197,12 @@ call.
->>>      the regions changes. This event has a struct
->>>      :c:type:`v4l2_event_motion_det`
->>>      associated with it.
->>> +    * - ``V4L2_EVENT_FRAME_INTERVAL_ERROR``
->>> +      - 7
->>> +      - This event is triggered when the video capture or output device
->>> +    has measured an interval between the reception or transmit
->>> +    completion of two consecutive frames of video that is outside
->>> +    the nominal frame interval by some tolerance value.
->>>      * - ``V4L2_EVENT_PRIVATE_START``
->>>        - 0x08000000
->>>        - Base event number for driver-private events.
->>> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
->>> index e11a0d0..c7d8fad 100644
->>> --- a/Documentation/media/videodev2.h.rst.exceptions
->>> +++ b/Documentation/media/videodev2.h.rst.exceptions
->>> @@ -459,6 +459,7 @@ replace define V4L2_EVENT_CTRL event-type
->>>  replace define V4L2_EVENT_FRAME_SYNC event-type
->>>  replace define V4L2_EVENT_SOURCE_CHANGE event-type
->>>  replace define V4L2_EVENT_MOTION_DET event-type
->>> +replace define V4L2_EVENT_FRAME_INTERVAL_ERROR event-type
->>>  replace define V4L2_EVENT_PRIVATE_START event-type
->>>
->>>  replace define V4L2_EVENT_CTRL_CH_VALUE ctrl-changes-flags
->>> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->>> index 45184a2..cf5a0d0 100644
->>> --- a/include/uapi/linux/videodev2.h
->>> +++ b/include/uapi/linux/videodev2.h
->>> @@ -2131,6 +2131,7 @@ struct v4l2_streamparm {
->>>  #define V4L2_EVENT_FRAME_SYNC            4
->>>  #define V4L2_EVENT_SOURCE_CHANGE        5
->>>  #define V4L2_EVENT_MOTION_DET            6
->>> +#define V4L2_EVENT_FRAME_INTERVAL_ERROR        7
->>>  #define V4L2_EVENT_PRIVATE_START        0x08000000
->>>
->>>  /* Payload for V4L2_EVENT_VSYNC */
->>>
->>
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
