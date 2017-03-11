@@ -1,17 +1,15 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Sat, 11 Mar 2017 10:14:49 -0800
-Message-ID: <5d5cf4a4-a4d3-586e-cd16-54f543dfcce9@gmail.com>
+Subject: Re: [PATCH v5 21/39] UAPI: Add media UAPI Kbuild file
+Date: Sat, 11 Mar 2017 10:20:39 -0800
+Message-ID: <184c02bf-782d-6dbe-e603-a82ac8dcc8b6@gmail.com>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
- <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
- <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
- <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
+ <1489121599-23206-22-git-send-email-steve_longerbeam@mentor.com>
+ <20170311134931.GP3220@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
+In-Reply-To: <20170311134931.GP3220@valkosipuli.retiisi.org.uk>
 List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
 List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
@@ -21,81 +19,29 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
  <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 03/11/2017 03:39 AM, Hans Verkuil wrote:
-> On 10/03/17 19:37, Steve Longerbeam wrote:
->> Hi Hans,
->>
->> On 03/10/2017 04:03 AM, Hans Verkuil wrote:
->>> On 10/03/17 05:52, Steve Longerbeam wrote:
->>>> Add a new FRAME_INTERVAL_ERROR event to signal that a video capture or
->>>> output device has measured an interval between the reception or transmit
->>>> completion of two consecutive frames of video that is outside the nominal
->>>> frame interval by some tolerance value.
->>>
->>> Reading back what was said on this I agree with Sakari that this doesn't
->>> belong here.
->>>
->>> Userspace can detect this just as easily (if not easier) with a timeout.
->>>
->>
->>
->> Unfortunately measuring frame intervals from userland is not accurate
->> enough for i.MX6.
->>
->> The issue here is that the IPUv3, specifically the CSI unit, can
->> permanently lose vertical sync if there are truncated frames sent
->> on the bt.656 bus. We have seen a single missing line of video cause
->> loss of vertical sync. The only way to correct this is to shutdown
->> the IPU capture hardware and restart, which can be accomplished
->> simply by restarting streaming from userland.
->>
->> There are no other indicators from the sensor about these short
->> frame events (believe me, we've exhausted all avenues with the ADV718x).
->> And the IPUv3 DMA engine has no status indicators for short frames
->> either. So the only way to detect them is by measuring frame intervals.
->>
->> The intervals have to be able to resolve a single line of missing video.
->> With a PAL video source that requires better than 58 usec accuracy.
->>
->> There is too much uncertainty to resolve this at user level. The
->> driver is able to resolve this by measuring intervals between hardware
->> interrupts as long as interrupt latency is reasonably low, and we
->> have another method using the i.MX6 hardware input capture support
->> that can measure these intervals very accurately with no errors
->> introduced by interrupt latency.
->>
->> I made this event a private event to imx-media driver in a previous
->> iteration, so I can return it to a private event, but this can't be
->> done at user level.
+On 03/11/2017 05:49 AM, Sakari Ailus wrote:
+> Hi Steve,
 >
-> It's fine to use an internal event as long as the end-user doesn't
-> see it. But if you lose vsyncs, then you never capture another frame,
-> right?
-
-No, that's not correct. By loss of vertical sync, I mean the IPU
-captures portions of two different frames, resulting in a permanent
-"split image", with one frame containing portions of two consecutive
-images. Or, the video rolls continuously, if you remember the old CRT
-television sets of yore, it's the same rolling effect.
-
-
-> So userspace can detect that (i.e. no new frames arrive) and
-> it can timeout on that. Or you detect it in the driver and restart there,
-> or call vb2_queue_error().
+> On Thu, Mar 09, 2017 at 08:53:01PM -0800, Steve Longerbeam wrote:
+>> Add an empty UAPI Kbuild file for media UAPI headers.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>
+> The existing V4L2 UAPI headers are under include/uapi/linux. Could you use
+> that directory instead?
+>
+> I actually wouldn't really object doing this but it should have been done in
+> 2002 or so when the first V4L2 header was added. Now the benefit is
+> questionable.
 >
 
-There is no timeout, the frames keep coming, but they are split images
-or rolling.
-
-> Anything really as long as this event isn't user-visible :-)
-
-The event must be user visible, otherwise the user has no indication
-the error, and can't correct it by stream restart.
+Agreed, I think the current headers should be moved to uapi/media
+eventually, but for now I'll go ahead and put under uapi/linux.
 
 Steve
