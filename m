@@ -1,7 +1,7 @@
 From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 7/8] arm64: dts: mt8173: move clock from phy node into port nodes
-Date: Sat, 11 Mar 2017 14:22:52 +0800
-Message-ID: <1489213373-2544-7-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH v4 6/8] arm64: dts: mt8173: split usb SuperSpeed port into two ports
+Date: Sat, 11 Mar 2017 14:22:51 +0800
+Message-ID: <1489213373-2544-6-git-send-email-chunfeng.yun@mediatek.com>
 References: <1489213373-2544-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,52 @@ To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-there is a reference clock for each port, HighSpeed port is 48M,
-and SuperSpeed port is usually 26M. it is flexible to move it
-into port node, then unused clock can be disabled.
+split the old SuperSpeed port node into a HighSpeed one and a new
+SuperSpeed one.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 1dc4629..1c9e0d5 100644
+index 6922252..1dc4629 100644
 --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
 +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -764,8 +764,6 @@
- 		u3phy: usb-phy@11290000 {
- 			compatible = "mediatek,mt8173-u3phy";
- 			reg = <0 0x11290000 0 0x800>;
--			clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
--			clock-names = "u3phya_ref";
- 			#address-cells = <2>;
- 			#size-cells = <2>;
+@@ -731,8 +731,9 @@
+ 			      <0 0x11280700 0 0x0100>;
+ 			reg-names = "mac", "ippc";
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>;
+-			phys = <&phy_port0 PHY_TYPE_USB3>,
+-			       <&phy_port1 PHY_TYPE_USB2>;
++			phys = <&u2port0 PHY_TYPE_USB2>,
++			       <&u3port0 PHY_TYPE_USB3>,
++			       <&u2port1 PHY_TYPE_USB2>;
+ 			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+ 			clocks = <&topckgen CLK_TOP_USB30_SEL>,
+ 				 <&clk26m>,
+@@ -770,14 +771,20 @@
  			ranges;
-@@ -773,18 +771,24 @@
+ 			status = "okay";
  
- 			u2port0: usb-phy@11290800 {
- 				reg = <0 0x11290800 0 0x100>;
-+				clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-+				clock-names = "ref";
+-			phy_port0: port@11290800 {
+-				reg = <0 0x11290800 0 0x800>;
++			u2port0: usb-phy@11290800 {
++				reg = <0 0x11290800 0 0x100>;
  				#phy-cells = <1>;
  				status = "okay";
  			};
  
- 			u3port0: usb-phy@11290900 {
- 				reg = <0 0x11290900 0 0x700>;
-+				clocks = <&clk26m>;
-+				clock-names = "ref";
- 				#phy-cells = <1>;
- 				status = "okay";
- 			};
- 
- 			u2port1: usb-phy@11291000 {
- 				reg = <0 0x11291000 0 0x100>;
-+				clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-+				clock-names = "ref";
+-			phy_port1: port@11291000 {
+-				reg = <0 0x11291000 0 0x800>;
++			u3port0: usb-phy@11290900 {
++				reg = <0 0x11290900 0 0x700>;
++				#phy-cells = <1>;
++				status = "okay";
++			};
++
++			u2port1: usb-phy@11291000 {
++				reg = <0 0x11291000 0 0x100>;
  				#phy-cells = <1>;
  				status = "okay";
  			};
