@@ -1,136 +1,460 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND] drm/exynos: Remove support for Exynos4415 (SoC not supported anymore)
-Date: Sat, 11 Mar 2017 20:04:16 +0200
-Message-ID: <20170311180416.7071-1-krzk@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sat, 11 Mar 2017 10:08:23 -0800
+Message-ID: <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+ <20170303230645.GR21222@n2100.armlinux.org.uk>
+ <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+ <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+ <20170310120902.1daebc7b@vento.lan>
+ <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+ <20170311101408.272a9187@vento.lan>
+ <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="------------D3D8DB550A7856A23DA581FD"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170311153229.yrdjmggb3p2suhdw-5TBSa+ebGXJ82hYKe6nXyg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Support for Exynos4415 is going away because there are no internal nor
-external users.
+This is a multi-part message in MIME format.
+--------------D3D8DB550A7856A23DA581FD
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Since commit 46dcf0ff0de3 ("ARM: dts: exynos: Remove exynos4415.dtsi"),
-the platform cannot be instantiated so remove also the drivers.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Kukjin Kim <kgene@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/display/exynos/exynos_dsim.txt |  1 -
- .../bindings/display/exynos/samsung-fimd.txt           |  1 -
- drivers/gpu/drm/exynos/exynos_drm_dsi.c                | 15 +--------------
- drivers/gpu/drm/exynos/exynos_drm_fimd.c               | 18 ++----------------
- 4 files changed, 3 insertions(+), 32 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt b/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
-index a78265993665..ca5204b3bc21 100644
---- a/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
-+++ b/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
-@@ -4,7 +4,6 @@ Required properties:
-   - compatible: value should be one of the following
- 		"samsung,exynos3250-mipi-dsi" /* for Exynos3250/3472 SoCs */
- 		"samsung,exynos4210-mipi-dsi" /* for Exynos4 SoCs */
--		"samsung,exynos4415-mipi-dsi" /* for Exynos4415 SoC */
- 		"samsung,exynos5410-mipi-dsi" /* for Exynos5410/5420/5440 SoCs */
- 		"samsung,exynos5422-mipi-dsi" /* for Exynos5422/5800 SoCs */
- 		"samsung,exynos5433-mipi-dsi" /* for Exynos5433 SoCs */
-diff --git a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
-index 18645e0228b0..5837402c3ade 100644
---- a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
-+++ b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
-@@ -11,7 +11,6 @@ Required properties:
- 		"samsung,s5pv210-fimd"; /* for S5PV210 SoC */
- 		"samsung,exynos3250-fimd"; /* for Exynos3250/3472 SoCs */
- 		"samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
--		"samsung,exynos4415-fimd"; /* for Exynos4415 SoC */
- 		"samsung,exynos5250-fimd"; /* for Exynos5250 SoCs */
- 		"samsung,exynos5420-fimd"; /* for Exynos5420/5422/5800 SoCs */
- 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index 812e2ec0761d..ef6f9c6de098 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -86,7 +86,7 @@
- #define DSIM_SYNC_INFORM		(1 << 27)
- #define DSIM_EOT_DISABLE		(1 << 28)
- #define DSIM_MFLUSH_VS			(1 << 29)
--/* This flag is valid only for exynos3250/3472/4415/5260/5430 */
-+/* This flag is valid only for exynos3250/3472/5260/5430 */
- #define DSIM_CLKLANE_STOP		(1 << 30)
- 
- /* DSIM_ESCMODE */
-@@ -473,17 +473,6 @@ static const struct exynos_dsi_driver_data exynos4_dsi_driver_data = {
- 	.reg_values = reg_values,
- };
- 
--static const struct exynos_dsi_driver_data exynos4415_dsi_driver_data = {
--	.reg_ofs = exynos_reg_ofs,
--	.plltmr_reg = 0x58,
--	.has_clklane_stop = 1,
--	.num_clks = 2,
--	.max_freq = 1000,
--	.wait_for_reset = 1,
--	.num_bits_resol = 11,
--	.reg_values = reg_values,
--};
--
- static const struct exynos_dsi_driver_data exynos5_dsi_driver_data = {
- 	.reg_ofs = exynos_reg_ofs,
- 	.plltmr_reg = 0x58,
-@@ -521,8 +510,6 @@ static const struct of_device_id exynos_dsi_of_match[] = {
- 	  .data = &exynos3_dsi_driver_data },
- 	{ .compatible = "samsung,exynos4210-mipi-dsi",
- 	  .data = &exynos4_dsi_driver_data },
--	{ .compatible = "samsung,exynos4415-mipi-dsi",
--	  .data = &exynos4415_dsi_driver_data },
- 	{ .compatible = "samsung,exynos5410-mipi-dsi",
- 	  .data = &exynos5_dsi_driver_data },
- 	{ .compatible = "samsung,exynos5422-mipi-dsi",
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-index a9fa444c6053..661b9fe049e2 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-@@ -71,10 +71,10 @@
- #define TRIGCON				0x1A4
- #define TRGMODE_ENABLE			(1 << 0)
- #define SWTRGCMD_ENABLE			(1 << 1)
--/* Exynos3250, 3472, 4415, 5260 5410, 5420 and 5422 only supported. */
-+/* Exynos3250, 3472, 5260 5410, 5420 and 5422 only supported. */
- #define HWTRGEN_ENABLE			(1 << 3)
- #define HWTRGMASK_ENABLE		(1 << 4)
--/* Exynos3250, 3472, 4415, 5260, 5420 and 5422 only supported. */
-+/* Exynos3250, 3472, 5260, 5420 and 5422 only supported. */
- #define HWTRIGEN_PER_ENABLE		(1 << 31)
- 
- /* display mode change control register except exynos4 */
-@@ -138,18 +138,6 @@ static struct fimd_driver_data exynos4_fimd_driver_data = {
- 	.has_vtsel = 1,
- };
- 
--static struct fimd_driver_data exynos4415_fimd_driver_data = {
--	.timing_base = 0x20000,
--	.lcdblk_offset = 0x210,
--	.lcdblk_vt_shift = 10,
--	.lcdblk_bypass_shift = 1,
--	.trg_type = I80_HW_TRG,
--	.has_shadowcon = 1,
--	.has_vidoutcon = 1,
--	.has_vtsel = 1,
--	.has_trigger_per_te = 1,
--};
--
- static struct fimd_driver_data exynos5_fimd_driver_data = {
- 	.timing_base = 0x20000,
- 	.lcdblk_offset = 0x214,
-@@ -210,8 +198,6 @@ static const struct of_device_id fimd_driver_dt_match[] = {
- 	  .data = &exynos3_fimd_driver_data },
- 	{ .compatible = "samsung,exynos4210-fimd",
- 	  .data = &exynos4_fimd_driver_data },
--	{ .compatible = "samsung,exynos4415-fimd",
--	  .data = &exynos4415_fimd_driver_data },
- 	{ .compatible = "samsung,exynos5250-fimd",
- 	  .data = &exynos5_fimd_driver_data },
- 	{ .compatible = "samsung,exynos5420-fimd",
--- 
-2.9.3
+On 03/11/2017 07:32 AM, Sakari Ailus wrote:
+> Hi Mauro and Hans,
+>
+> On Sat, Mar 11, 2017 at 10:14:08AM -0300, Mauro Carvalho Chehab wrote:
+>> Em Sat, 11 Mar 2017 12:32:43 +0100
+>> Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> escreveu:
+>>
+>>> On 10/03/17 16:09, Mauro Carvalho Chehab wrote:
+>>>> Em Fri, 10 Mar 2017 13:54:28 +0100
+>>>> Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> escreveu:
+>>>>
+>>>>>> Devices that have complex pipeline that do essentially require using the
+>>>>>> Media controller interface to configure them are out of that scope.
+>>>>>>
+>>>>>
+>>>>> Way too much of how the MC devices should be used is in the minds of developers.
+>>>>> There is a major lack for good detailed documentation, utilities, compliance
+>>>>> test (really needed!) and libv4l plugins.
+>>>>
+>>>> Unfortunately, we merged an incomplete MC support at the Kernel. We knew
+>>>> all the problems with MC-based drivers and V4L2 applications by the time
+>>>> it was developed, and we requested Nokia developers (with was sponsoring MC
+>>>> develoment, on that time) to work on a solution to allow standard V4L2
+>>>> applications to work with MC based boards.
+>>>>
+>>>> Unfortunately, we took the decision to merge MC without that, because
+>>>> Nokia was giving up on Linux development, and we didn't want to lose the
+>>>> 2 years of discussions and work around it, as Nokia employers were leaving
+>>>> the company. Also, on that time, there was already some patches floating
+>>>> around adding backward support via libv4l. Unfortunately, those patches
+>>>> were never finished.
+>>>>
+>>>> The net result is that MC was merged with some huge gaps, including
+>>>> the lack of a proper solution for a generic V4L2 program to work
+>>>> with V4L2 devices that use the subdev API.
+>>>>
+>>>> That was not that bad by then, as MC was used only on cell phones
+>>>> that run custom-made applications.
+>>>>
+>>>> The reallity changed, as now, we have lots of low cost SoC based
+>>>> boards, used for all sort of purposes. So, we need a quick solution
+>>>> for it.
+>>>>
+>>>> In other words, while that would be acceptable support special apps
+>>>> on really embedded systems, it is *not OK* for general purpose SoC
+>>>> harware[1].
+>>>>
+>>>> [1] I'm calling "general purpose SoC harware" those ARM boards
+>>>> like Raspberry Pi that are shipped to the mass and used by a wide
+>>>> range of hobbyists and other people that just wants to run Linux on
+>>>> ARM. It is possible to buy such boards for a very cheap price,
+>>>> making them to be used not only on special projects, where a custom
+>>>> made application could be interesting, but also for a lot of
+>>>> users that just want to run Linux on a low cost ARM board, while
+>>>> keeping using standard V4L2 apps, like "camorama".
+>>>>
+>>>> That's perhaps one of the reasons why it took a long time for us to
+>>>> start receiving drivers upstream for such hardware: it is quite
+>>>> intimidating and not logical to require developers to implement
+>>>> on their drivers 2 complex APIs (MC, subdev) for those
+>>>> hardware that most users won't care. From user's perspective,
+>>>> being able to support generic applications like "camorama" and
+>>>> "zbar" is all they want.
+>>>>
+>>>> In summary, I'm pretty sure we need to support standard V4L2
+>>>> applications on boards like Raspberry Pi and those low-cost
+>>>> SoC-based boards that are shipped to end users.
+>>>>
+>>>>> Anyway, regarding this specific patch and for this MC-aware driver: no, you
+>>>>> shouldn't inherit controls from subdevs. It defeats the purpose.
+>>>>
+>>>> Sorry, but I don't agree with that. The subdev API is an optional API
+>>>> (and even the MC API can be optional).
+>>>>
+>>>> I see the rationale for using MC and subdev APIs on cell phones,
+>>>> ISV and other embedded hardware, as it will allow fine-tuning
+>>>> the driver's support to allow providing the required quality for
+>>>> certain custom-made applications. but on general SoC hardware,
+>>>> supporting standard V4L2 applications is a need.
+>>>>
+>>>> Ok, perhaps supporting both subdev API and V4L2 API at the same
+>>>> time doesn't make much sense. We could disable one in favor of the
+>>>> other, either at compilation time or at runtime.
+>>>
+>>> Right. If the subdev API is disabled, then you have to inherit the subdev
+>>> controls in the bridge driver (how else would you be able to access them?).
+>>> And that's the usual case.
+>>>
+>>> If you do have the subdev API enabled, AND you use the MC, then the
+>>> intention clearly is to give userspace full control and inheriting controls
+>>> no longer makes any sense (and is highly confusing IMHO).
+>>
+>> I tend to agree with that.
+>
+> I agree as well.
+>
+> This is in line with how existing drivers behave, too.
+
+
+Well, sounds like there is consensus on this topic. I guess I'll
+go ahead and remove the control inheritance support. I suppose
+having a control appear in two places (subdev and video nodes) can
+be confusing.
+
+As for the configurability vs. ease-of-use debate, I added the
+control inheritance to make it a little easier on the user, but,
+as the dot graphs below will show, the user already needs quite
+a lot of knowledge of the architecture already, in order to setup
+the different pipelines. So perhaps the control inheritance is
+rather pointless anyway.
+
+
+
+>
+>>
+>>>>
+>>>> This way, if the subdev API is disabled, the driver will be
+>>>> functional for V4L2-based applications that don't support neither
+>>>> MC or subdev APIs.
+>>>
+>>> I'm not sure if it makes sense for the i.MX driver to behave differently
+>>> depending on whether the subdev API is enabled or disabled. I don't know
+>>> enough of the hardware to tell if it would ever make sense to disable the
+>>> subdev API.
+>>
+>> Yeah, I don't know enough about it either. The point is: this is
+>> something that the driver maintainer and driver users should
+>> decide if it either makes sense or not, based on the expected use cases.
+>
+> My understanding of the i.MX6 case is the hardware is configurable enough
+> to warrant the use of the Media controller API. Some patches indicate
+> there are choices to be made in data routing.
+>
+> Steve: could you enlighten us on the topic, by e.g. doing media-ctl
+> --print-dot and sending the results to the list? What kind of different IP
+> blocks are there and what do they do? A pointer to hardware documentation
+> wouldn't hurt either (if it's available).
+
+Wow, I didn't realize there was so little knowledge of the imx6
+IPU capture architecture.
+
+Yes, the imx6 definitely warrants the need for MC, as the dot graphs
+will attest.
+
+The graphs follows very closely the actual hardware architecture of
+the IPU capture blocks. I.e., all the subdevs and links shown correspond 
+to actual hardware connections and sub-blocks.
+
+Russell just provided a link to the imx6 reference manual, and dot
+graph for the imx219 based platform.
+
+Also I've added quite a lot of detail to the media doc at
+Documentation/media/v4l-drivers/imx.rst.
+
+The dot graphs for SabreSD, SabreLite, and SabreAuto reference platforms 
+are attached. This is generated from the most recent
+(version 5) imx-media driver.
+
+Steve
+
+--------------D3D8DB550A7856A23DA581FD
+Content-Type: application/msword-template;
+ name="sabresd.dot"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="sabresd.dot"
+
+ZGlncmFwaCBib2FyZCB7CglyYW5rZGlyPVRCCgluMDAwMDAwMDEgW2xhYmVsPSJ7ezxwb3J0
+MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUyX2NzaTFfbXV4XG4vZGV2L3Y0bC1zdWJkZXYwIHwg
+ezxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9
+Z3JlZW5dCgluMDAwMDAwMDE6cG9ydDIgLT4gbjAwMDAwMDViOnBvcnQwIFtzdHlsZT1kYXNo
+ZWRdCgluMDAwMDAwMDUgW2xhYmVsPSJ7ezxwb3J0MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUx
+X2NzaTBfbXV4XG4vZGV2L3Y0bC1zdWJkZXYxIHwgezxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJl
+Y29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwMDU6cG9ydDIg
+LT4gbjAwMDAwMDNkOnBvcnQwIFtzdHlsZT1kYXNoZWRdCgluMDAwMDAwMDkgW2xhYmVsPSJ7
+ezxwb3J0MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUxX3ZkaWNcbi9kZXYvdjRsLXN1YmRldjIg
+fCB7PHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xv
+cj1ncmVlbl0KCW4wMDAwMDAwOTpwb3J0MiAtPiBuMDAwMDAwMTE6cG9ydDAgW3N0eWxlPWRh
+c2hlZF0KCW4wMDAwMDAwZCBbbGFiZWw9Int7PHBvcnQwPiAwIHwgPHBvcnQxPiAxfSB8IGlw
+dTJfdmRpY1xuL2Rldi92NGwtc3ViZGV2MyB8IHs8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNv
+cmQsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDBkOnBvcnQyIC0+
+IG4wMDAwMDAyNzpwb3J0MCBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDExIFtsYWJlbD0ie3s8
+cG9ydDA+IDB9IHwgaXB1MV9pY19wcnBcbi9kZXYvdjRsLXN1YmRldjQgfCB7PHBvcnQxPiAx
+IHwgPHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xv
+cj1ncmVlbl0KCW4wMDAwMDAxMTpwb3J0MSAtPiBuMDAwMDAwMTU6cG9ydDAgW3N0eWxlPWRh
+c2hlZF0KCW4wMDAwMDAxMTpwb3J0MiAtPiBuMDAwMDAwMWU6cG9ydDAgW3N0eWxlPWRhc2hl
+ZF0KCW4wMDAwMDAxNSBbbGFiZWw9Int7PHBvcnQwPiAwfSB8IGlwdTFfaWNfcHJwZW5jXG4v
+ZGV2L3Y0bC1zdWJkZXY1IHwgezxwb3J0MT4gMX19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9
+ZmlsbGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwMTU6cG9ydDEgLT4gbjAwMDAwMDE4
+IFtzdHlsZT1kYXNoZWRdCgluMDAwMDAwMTggW2xhYmVsPSJpcHUxX2ljX3BycGVuYyBjYXB0
+dXJlXG4vZGV2L3ZpZGVvMCIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9
+eWVsbG93XQoJbjAwMDAwMDFlIFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1MV9pY19wcnB2
+ZlxuL2Rldi92NGwtc3ViZGV2NiB8IHs8cG9ydDE+IDF9fSIsIHNoYXBlPU1yZWNvcmQsIHN0
+eWxlPWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDFlOnBvcnQxIC0+IG4wMDAw
+MDAyMSBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDIxIFtsYWJlbD0iaXB1MV9pY19wcnB2ZiBj
+YXB0dXJlXG4vZGV2L3ZpZGVvMSIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29s
+b3I9eWVsbG93XQoJbjAwMDAwMDI3IFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9pY19w
+cnBcbi9kZXYvdjRsLXN1YmRldjcgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyfX0iLCBzaGFw
+ZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj1ncmVlbl0KCW4wMDAwMDAyNzpw
+b3J0MSAtPiBuMDAwMDAwMmI6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDAyNzpwb3J0
+MiAtPiBuMDAwMDAwMzQ6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDAyYiBbbGFiZWw9
+Int7PHBvcnQwPiAwfSB8IGlwdTJfaWNfcHJwZW5jXG4vZGV2L3Y0bC1zdWJkZXY4IHwgezxw
+b3J0MT4gMX19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3Jl
+ZW5dCgluMDAwMDAwMmI6cG9ydDEgLT4gbjAwMDAwMDJlIFtzdHlsZT1kYXNoZWRdCgluMDAw
+MDAwMmUgW2xhYmVsPSJpcHUyX2ljX3BycGVuYyBjYXB0dXJlXG4vZGV2L3ZpZGVvMiIsIHNo
+YXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAwMDAwMDM0IFts
+YWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9pY19wcnB2ZlxuL2Rldi92NGwtc3ViZGV2OSB8
+IHs8cG9ydDE+IDF9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9y
+PWdyZWVuXQoJbjAwMDAwMDM0OnBvcnQxIC0+IG4wMDAwMDAzNyBbc3R5bGU9ZGFzaGVkXQoJ
+bjAwMDAwMDM3IFtsYWJlbD0iaXB1Ml9pY19wcnB2ZiBjYXB0dXJlXG4vZGV2L3ZpZGVvMyIs
+IHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAwMDAwMDNk
+IFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1MV9jc2kwXG4vZGV2L3Y0bC1zdWJkZXYxMCB8
+IHs8cG9ydDE+IDEgfCA8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxlPWZpbGxl
+ZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDNkOnBvcnQyIC0+IG4wMDAwMDA0MSBbc3R5
+bGU9ZGFzaGVkXQoJbjAwMDAwMDNkOnBvcnQxIC0+IG4wMDAwMDAxMTpwb3J0MCBbc3R5bGU9
+ZGFzaGVkXQoJbjAwMDAwMDNkOnBvcnQxIC0+IG4wMDAwMDAwOTpwb3J0MCBbc3R5bGU9ZGFz
+aGVkXQoJbjAwMDAwMDQxIFtsYWJlbD0iaXB1MV9jc2kwIGNhcHR1cmVcbi9kZXYvdmlkZW80
+Iiwgc2hhcGU9Ym94LCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj15ZWxsb3ddCgluMDAwMDAw
+NDcgW2xhYmVsPSJ7ezxwb3J0MD4gMH0gfCBpcHUxX2NzaTFcbi9kZXYvdjRsLXN1YmRldjEx
+IHwgezxwb3J0MT4gMSB8IDxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9Zmls
+bGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwNDc6cG9ydDIgLT4gbjAwMDAwMDRiIFtz
+dHlsZT1kYXNoZWRdCgluMDAwMDAwNDc6cG9ydDEgLT4gbjAwMDAwMDExOnBvcnQwIFtzdHls
+ZT1kYXNoZWRdCgluMDAwMDAwNDc6cG9ydDEgLT4gbjAwMDAwMDA5OnBvcnQwIFtzdHlsZT1k
+YXNoZWRdCgluMDAwMDAwNGIgW2xhYmVsPSJpcHUxX2NzaTEgY2FwdHVyZVxuL2Rldi92aWRl
+bzUiLCBzaGFwZT1ib3gsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9yPXllbGxvd10KCW4wMDAw
+MDA1MSBbbGFiZWw9Int7PHBvcnQwPiAwfSB8IGlwdTJfY3NpMFxuL2Rldi92NGwtc3ViZGV2
+MTIgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1m
+aWxsZWQsIGZpbGxjb2xvcj1ncmVlbl0KCW4wMDAwMDA1MTpwb3J0MiAtPiBuMDAwMDAwNTUg
+W3N0eWxlPWRhc2hlZF0KCW4wMDAwMDA1MTpwb3J0MSAtPiBuMDAwMDAwMjc6cG9ydDAgW3N0
+eWxlPWRhc2hlZF0KCW4wMDAwMDA1MTpwb3J0MSAtPiBuMDAwMDAwMGQ6cG9ydDAgW3N0eWxl
+PWRhc2hlZF0KCW4wMDAwMDA1NSBbbGFiZWw9ImlwdTJfY3NpMCBjYXB0dXJlXG4vZGV2L3Zp
+ZGVvNiIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAw
+MDAwMDViIFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9jc2kxXG4vZGV2L3Y0bC1zdWJk
+ZXYxMyB8IHs8cG9ydDE+IDEgfCA8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxl
+PWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDViOnBvcnQyIC0+IG4wMDAwMDA1
+ZiBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDViOnBvcnQxIC0+IG4wMDAwMDAyNzpwb3J0MCBb
+c3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDViOnBvcnQxIC0+IG4wMDAwMDAwZDpwb3J0MCBbc3R5
+bGU9ZGFzaGVkXQoJbjAwMDAwMDVmIFtsYWJlbD0iaXB1Ml9jc2kxIGNhcHR1cmVcbi9kZXYv
+dmlkZW83Iiwgc2hhcGU9Ym94LCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj15ZWxsb3ddCglu
+MDAwMDAwNjUgW2xhYmVsPSJ7ezxwb3J0MD4gMH0gfCBpbXg2LW1pcGktY3NpMlxuL2Rldi92
+NGwtc3ViZGV2MTQgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyIHwgPHBvcnQzPiAzIHwgPHBv
+cnQ0PiA0fX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj1ncmVl
+bl0KCW4wMDAwMDA2NTpwb3J0MSAtPiBuMDAwMDAwMDU6cG9ydDAgW3N0eWxlPWRhc2hlZF0K
+CW4wMDAwMDA2NTpwb3J0MiAtPiBuMDAwMDAwNDc6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4w
+MDAwMDA2NTpwb3J0MyAtPiBuMDAwMDAwNTE6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAw
+MDA2NTpwb3J0NCAtPiBuMDAwMDAwMDE6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDA2
+YiBbbGFiZWw9Int7fSB8IG92NTY0MCAxLTAwM2Ncbi9kZXYvdjRsLXN1YmRldjE1IHwgezxw
+b3J0MD4gMH19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3Jl
+ZW5dCgluMDAwMDAwNmI6cG9ydDAgLT4gbjAwMDAwMDY1OnBvcnQwIFtzdHlsZT1kYXNoZWRd
+Cn0KCg==
+--------------D3D8DB550A7856A23DA581FD
+Content-Type: application/msword-template;
+ name="sabrelite.dot"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="sabrelite.dot"
+
+ZGlncmFwaCBib2FyZCB7CglyYW5rZGlyPVRCCgluMDAwMDAwMDEgW2xhYmVsPSJ7ezxwb3J0
+MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUyX2NzaTFfbXV4XG4vZGV2L3Y0bC1zdWJkZXYwIHwg
+ezxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9
+Z3JlZW5dCgluMDAwMDAwMDE6cG9ydDIgLT4gbjAwMDAwMDViOnBvcnQwIFtzdHlsZT1kYXNo
+ZWRdCgluMDAwMDAwMDUgW2xhYmVsPSJ7ezxwb3J0MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUx
+X2NzaTBfbXV4XG4vZGV2L3Y0bC1zdWJkZXYxIHwgezxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJl
+Y29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwMDU6cG9ydDIg
+LT4gbjAwMDAwMDNkOnBvcnQwIFtzdHlsZT1kYXNoZWRdCgluMDAwMDAwMDkgW2xhYmVsPSJ7
+ezxwb3J0MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUxX3ZkaWNcbi9kZXYvdjRsLXN1YmRldjIg
+fCB7PHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xv
+cj1ncmVlbl0KCW4wMDAwMDAwOTpwb3J0MiAtPiBuMDAwMDAwMTE6cG9ydDAgW3N0eWxlPWRh
+c2hlZF0KCW4wMDAwMDAwZCBbbGFiZWw9Int7PHBvcnQwPiAwIHwgPHBvcnQxPiAxfSB8IGlw
+dTJfdmRpY1xuL2Rldi92NGwtc3ViZGV2MyB8IHs8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNv
+cmQsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDBkOnBvcnQyIC0+
+IG4wMDAwMDAyNzpwb3J0MCBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDExIFtsYWJlbD0ie3s8
+cG9ydDA+IDB9IHwgaXB1MV9pY19wcnBcbi9kZXYvdjRsLXN1YmRldjQgfCB7PHBvcnQxPiAx
+IHwgPHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xv
+cj1ncmVlbl0KCW4wMDAwMDAxMTpwb3J0MSAtPiBuMDAwMDAwMTU6cG9ydDAgW3N0eWxlPWRh
+c2hlZF0KCW4wMDAwMDAxMTpwb3J0MiAtPiBuMDAwMDAwMWU6cG9ydDAgW3N0eWxlPWRhc2hl
+ZF0KCW4wMDAwMDAxNSBbbGFiZWw9Int7PHBvcnQwPiAwfSB8IGlwdTFfaWNfcHJwZW5jXG4v
+ZGV2L3Y0bC1zdWJkZXY1IHwgezxwb3J0MT4gMX19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9
+ZmlsbGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwMTU6cG9ydDEgLT4gbjAwMDAwMDE4
+IFtzdHlsZT1kYXNoZWRdCgluMDAwMDAwMTggW2xhYmVsPSJpcHUxX2ljX3BycGVuYyBjYXB0
+dXJlXG4vZGV2L3ZpZGVvMCIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9
+eWVsbG93XQoJbjAwMDAwMDFlIFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1MV9pY19wcnB2
+ZlxuL2Rldi92NGwtc3ViZGV2NiB8IHs8cG9ydDE+IDF9fSIsIHNoYXBlPU1yZWNvcmQsIHN0
+eWxlPWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDFlOnBvcnQxIC0+IG4wMDAw
+MDAyMSBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDIxIFtsYWJlbD0iaXB1MV9pY19wcnB2ZiBj
+YXB0dXJlXG4vZGV2L3ZpZGVvMSIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29s
+b3I9eWVsbG93XQoJbjAwMDAwMDI3IFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9pY19w
+cnBcbi9kZXYvdjRsLXN1YmRldjcgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyfX0iLCBzaGFw
+ZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj1ncmVlbl0KCW4wMDAwMDAyNzpw
+b3J0MSAtPiBuMDAwMDAwMmI6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDAyNzpwb3J0
+MiAtPiBuMDAwMDAwMzQ6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDAyYiBbbGFiZWw9
+Int7PHBvcnQwPiAwfSB8IGlwdTJfaWNfcHJwZW5jXG4vZGV2L3Y0bC1zdWJkZXY4IHwgezxw
+b3J0MT4gMX19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3Jl
+ZW5dCgluMDAwMDAwMmI6cG9ydDEgLT4gbjAwMDAwMDJlIFtzdHlsZT1kYXNoZWRdCgluMDAw
+MDAwMmUgW2xhYmVsPSJpcHUyX2ljX3BycGVuYyBjYXB0dXJlXG4vZGV2L3ZpZGVvMiIsIHNo
+YXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAwMDAwMDM0IFts
+YWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9pY19wcnB2ZlxuL2Rldi92NGwtc3ViZGV2OSB8
+IHs8cG9ydDE+IDF9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9y
+PWdyZWVuXQoJbjAwMDAwMDM0OnBvcnQxIC0+IG4wMDAwMDAzNyBbc3R5bGU9ZGFzaGVkXQoJ
+bjAwMDAwMDM3IFtsYWJlbD0iaXB1Ml9pY19wcnB2ZiBjYXB0dXJlXG4vZGV2L3ZpZGVvMyIs
+IHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAwMDAwMDNk
+IFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1MV9jc2kwXG4vZGV2L3Y0bC1zdWJkZXYxMCB8
+IHs8cG9ydDE+IDEgfCA8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxlPWZpbGxl
+ZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDNkOnBvcnQyIC0+IG4wMDAwMDA0MSBbc3R5
+bGU9ZGFzaGVkXQoJbjAwMDAwMDNkOnBvcnQxIC0+IG4wMDAwMDAxMTpwb3J0MCBbc3R5bGU9
+ZGFzaGVkXQoJbjAwMDAwMDNkOnBvcnQxIC0+IG4wMDAwMDAwOTpwb3J0MCBbc3R5bGU9ZGFz
+aGVkXQoJbjAwMDAwMDQxIFtsYWJlbD0iaXB1MV9jc2kwIGNhcHR1cmVcbi9kZXYvdmlkZW80
+Iiwgc2hhcGU9Ym94LCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj15ZWxsb3ddCgluMDAwMDAw
+NDcgW2xhYmVsPSJ7ezxwb3J0MD4gMH0gfCBpcHUxX2NzaTFcbi9kZXYvdjRsLXN1YmRldjEx
+IHwgezxwb3J0MT4gMSB8IDxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9Zmls
+bGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwNDc6cG9ydDIgLT4gbjAwMDAwMDRiIFtz
+dHlsZT1kYXNoZWRdCgluMDAwMDAwNDc6cG9ydDEgLT4gbjAwMDAwMDExOnBvcnQwIFtzdHls
+ZT1kYXNoZWRdCgluMDAwMDAwNDc6cG9ydDEgLT4gbjAwMDAwMDA5OnBvcnQwIFtzdHlsZT1k
+YXNoZWRdCgluMDAwMDAwNGIgW2xhYmVsPSJpcHUxX2NzaTEgY2FwdHVyZVxuL2Rldi92aWRl
+bzUiLCBzaGFwZT1ib3gsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9yPXllbGxvd10KCW4wMDAw
+MDA1MSBbbGFiZWw9Int7PHBvcnQwPiAwfSB8IGlwdTJfY3NpMFxuL2Rldi92NGwtc3ViZGV2
+MTIgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1m
+aWxsZWQsIGZpbGxjb2xvcj1ncmVlbl0KCW4wMDAwMDA1MTpwb3J0MiAtPiBuMDAwMDAwNTUg
+W3N0eWxlPWRhc2hlZF0KCW4wMDAwMDA1MTpwb3J0MSAtPiBuMDAwMDAwMjc6cG9ydDAgW3N0
+eWxlPWRhc2hlZF0KCW4wMDAwMDA1MTpwb3J0MSAtPiBuMDAwMDAwMGQ6cG9ydDAgW3N0eWxl
+PWRhc2hlZF0KCW4wMDAwMDA1NSBbbGFiZWw9ImlwdTJfY3NpMCBjYXB0dXJlXG4vZGV2L3Zp
+ZGVvNiIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAw
+MDAwMDViIFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9jc2kxXG4vZGV2L3Y0bC1zdWJk
+ZXYxMyB8IHs8cG9ydDE+IDEgfCA8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxl
+PWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDViOnBvcnQyIC0+IG4wMDAwMDA1
+ZiBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDViOnBvcnQxIC0+IG4wMDAwMDAyNzpwb3J0MCBb
+c3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDViOnBvcnQxIC0+IG4wMDAwMDAwZDpwb3J0MCBbc3R5
+bGU9ZGFzaGVkXQoJbjAwMDAwMDVmIFtsYWJlbD0iaXB1Ml9jc2kxIGNhcHR1cmVcbi9kZXYv
+dmlkZW83Iiwgc2hhcGU9Ym94LCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj15ZWxsb3ddCglu
+MDAwMDAwNjUgW2xhYmVsPSJ7ezxwb3J0MD4gMH0gfCBpbXg2LW1pcGktY3NpMlxuL2Rldi92
+NGwtc3ViZGV2MTQgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyIHwgPHBvcnQzPiAzIHwgPHBv
+cnQ0PiA0fX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj1ncmVl
+bl0KCW4wMDAwMDA2NTpwb3J0MSAtPiBuMDAwMDAwMDU6cG9ydDAgW3N0eWxlPWRhc2hlZF0K
+CW4wMDAwMDA2NTpwb3J0MiAtPiBuMDAwMDAwNDc6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4w
+MDAwMDA2NTpwb3J0MyAtPiBuMDAwMDAwNTE6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAw
+MDA2NTpwb3J0NCAtPiBuMDAwMDAwMDE6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDA2
+YiBbbGFiZWw9Int7fSB8IG92NTY0MCAxLTAwNDBcbi9kZXYvdjRsLXN1YmRldjE1IHwgezxw
+b3J0MD4gMH19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3Jl
+ZW5dCgluMDAwMDAwNmI6cG9ydDAgLT4gbjAwMDAwMDY1OnBvcnQwIFtzdHlsZT1kYXNoZWRd
+Cn0KCg==
+--------------D3D8DB550A7856A23DA581FD
+Content-Type: application/msword-template;
+ name="sabreauto.dot"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename="sabreauto.dot"
+
+ZGlncmFwaCBib2FyZCB7CglyYW5rZGlyPVRCCgluMDAwMDAwMDEgW2xhYmVsPSJ7ezxwb3J0
+MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUyX2NzaTFfbXV4XG4vZGV2L3Y0bC1zdWJkZXYwIHwg
+ezxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9
+Z3JlZW5dCgluMDAwMDAwMDE6cG9ydDIgLT4gbjAwMDAwMDViOnBvcnQwIFtzdHlsZT1kYXNo
+ZWRdCgluMDAwMDAwMDUgW2xhYmVsPSJ7ezxwb3J0MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUx
+X2NzaTBfbXV4XG4vZGV2L3Y0bC1zdWJkZXYxIHwgezxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJl
+Y29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwMDU6cG9ydDIg
+LT4gbjAwMDAwMDNkOnBvcnQwIFtzdHlsZT1kYXNoZWRdCgluMDAwMDAwMDkgW2xhYmVsPSJ7
+ezxwb3J0MD4gMCB8IDxwb3J0MT4gMX0gfCBpcHUxX3ZkaWNcbi9kZXYvdjRsLXN1YmRldjIg
+fCB7PHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xv
+cj1ncmVlbl0KCW4wMDAwMDAwOTpwb3J0MiAtPiBuMDAwMDAwMTE6cG9ydDAgW3N0eWxlPWRh
+c2hlZF0KCW4wMDAwMDAwZCBbbGFiZWw9Int7PHBvcnQwPiAwIHwgPHBvcnQxPiAxfSB8IGlw
+dTJfdmRpY1xuL2Rldi92NGwtc3ViZGV2MyB8IHs8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNv
+cmQsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDBkOnBvcnQyIC0+
+IG4wMDAwMDAyNzpwb3J0MCBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDExIFtsYWJlbD0ie3s8
+cG9ydDA+IDB9IHwgaXB1MV9pY19wcnBcbi9kZXYvdjRsLXN1YmRldjQgfCB7PHBvcnQxPiAx
+IHwgPHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xv
+cj1ncmVlbl0KCW4wMDAwMDAxMTpwb3J0MSAtPiBuMDAwMDAwMTU6cG9ydDAgW3N0eWxlPWRh
+c2hlZF0KCW4wMDAwMDAxMTpwb3J0MiAtPiBuMDAwMDAwMWU6cG9ydDAgW3N0eWxlPWRhc2hl
+ZF0KCW4wMDAwMDAxNSBbbGFiZWw9Int7PHBvcnQwPiAwfSB8IGlwdTFfaWNfcHJwZW5jXG4v
+ZGV2L3Y0bC1zdWJkZXY1IHwgezxwb3J0MT4gMX19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9
+ZmlsbGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwMTU6cG9ydDEgLT4gbjAwMDAwMDE4
+IFtzdHlsZT1kYXNoZWRdCgluMDAwMDAwMTggW2xhYmVsPSJpcHUxX2ljX3BycGVuYyBjYXB0
+dXJlXG4vZGV2L3ZpZGVvMCIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9
+eWVsbG93XQoJbjAwMDAwMDFlIFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1MV9pY19wcnB2
+ZlxuL2Rldi92NGwtc3ViZGV2NiB8IHs8cG9ydDE+IDF9fSIsIHNoYXBlPU1yZWNvcmQsIHN0
+eWxlPWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDFlOnBvcnQxIC0+IG4wMDAw
+MDAyMSBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDIxIFtsYWJlbD0iaXB1MV9pY19wcnB2ZiBj
+YXB0dXJlXG4vZGV2L3ZpZGVvMSIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29s
+b3I9eWVsbG93XQoJbjAwMDAwMDI3IFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9pY19w
+cnBcbi9kZXYvdjRsLXN1YmRldjcgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyfX0iLCBzaGFw
+ZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj1ncmVlbl0KCW4wMDAwMDAyNzpw
+b3J0MSAtPiBuMDAwMDAwMmI6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDAyNzpwb3J0
+MiAtPiBuMDAwMDAwMzQ6cG9ydDAgW3N0eWxlPWRhc2hlZF0KCW4wMDAwMDAyYiBbbGFiZWw9
+Int7PHBvcnQwPiAwfSB8IGlwdTJfaWNfcHJwZW5jXG4vZGV2L3Y0bC1zdWJkZXY4IHwgezxw
+b3J0MT4gMX19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9Z3Jl
+ZW5dCgluMDAwMDAwMmI6cG9ydDEgLT4gbjAwMDAwMDJlIFtzdHlsZT1kYXNoZWRdCgluMDAw
+MDAwMmUgW2xhYmVsPSJpcHUyX2ljX3BycGVuYyBjYXB0dXJlXG4vZGV2L3ZpZGVvMiIsIHNo
+YXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAwMDAwMDM0IFts
+YWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9pY19wcnB2ZlxuL2Rldi92NGwtc3ViZGV2OSB8
+IHs8cG9ydDE+IDF9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9y
+PWdyZWVuXQoJbjAwMDAwMDM0OnBvcnQxIC0+IG4wMDAwMDAzNyBbc3R5bGU9ZGFzaGVkXQoJ
+bjAwMDAwMDM3IFtsYWJlbD0iaXB1Ml9pY19wcnB2ZiBjYXB0dXJlXG4vZGV2L3ZpZGVvMyIs
+IHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAwMDAwMDNk
+IFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1MV9jc2kwXG4vZGV2L3Y0bC1zdWJkZXYxMCB8
+IHs8cG9ydDE+IDEgfCA8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxlPWZpbGxl
+ZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDNkOnBvcnQyIC0+IG4wMDAwMDA0MSBbc3R5
+bGU9ZGFzaGVkXQoJbjAwMDAwMDNkOnBvcnQxIC0+IG4wMDAwMDAxMTpwb3J0MCBbc3R5bGU9
+ZGFzaGVkXQoJbjAwMDAwMDNkOnBvcnQxIC0+IG4wMDAwMDAwOTpwb3J0MCBbc3R5bGU9ZGFz
+aGVkXQoJbjAwMDAwMDQxIFtsYWJlbD0iaXB1MV9jc2kwIGNhcHR1cmVcbi9kZXYvdmlkZW80
+Iiwgc2hhcGU9Ym94LCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj15ZWxsb3ddCgluMDAwMDAw
+NDcgW2xhYmVsPSJ7ezxwb3J0MD4gMH0gfCBpcHUxX2NzaTFcbi9kZXYvdjRsLXN1YmRldjEx
+IHwgezxwb3J0MT4gMSB8IDxwb3J0Mj4gMn19Iiwgc2hhcGU9TXJlY29yZCwgc3R5bGU9Zmls
+bGVkLCBmaWxsY29sb3I9Z3JlZW5dCgluMDAwMDAwNDc6cG9ydDIgLT4gbjAwMDAwMDRiIFtz
+dHlsZT1kYXNoZWRdCgluMDAwMDAwNDc6cG9ydDEgLT4gbjAwMDAwMDExOnBvcnQwIFtzdHls
+ZT1kYXNoZWRdCgluMDAwMDAwNDc6cG9ydDEgLT4gbjAwMDAwMDA5OnBvcnQwIFtzdHlsZT1k
+YXNoZWRdCgluMDAwMDAwNGIgW2xhYmVsPSJpcHUxX2NzaTEgY2FwdHVyZVxuL2Rldi92aWRl
+bzUiLCBzaGFwZT1ib3gsIHN0eWxlPWZpbGxlZCwgZmlsbGNvbG9yPXllbGxvd10KCW4wMDAw
+MDA1MSBbbGFiZWw9Int7PHBvcnQwPiAwfSB8IGlwdTJfY3NpMFxuL2Rldi92NGwtc3ViZGV2
+MTIgfCB7PHBvcnQxPiAxIHwgPHBvcnQyPiAyfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1m
+aWxsZWQsIGZpbGxjb2xvcj1ncmVlbl0KCW4wMDAwMDA1MTpwb3J0MiAtPiBuMDAwMDAwNTUg
+W3N0eWxlPWRhc2hlZF0KCW4wMDAwMDA1MTpwb3J0MSAtPiBuMDAwMDAwMjc6cG9ydDAgW3N0
+eWxlPWRhc2hlZF0KCW4wMDAwMDA1MTpwb3J0MSAtPiBuMDAwMDAwMGQ6cG9ydDAgW3N0eWxl
+PWRhc2hlZF0KCW4wMDAwMDA1NSBbbGFiZWw9ImlwdTJfY3NpMCBjYXB0dXJlXG4vZGV2L3Zp
+ZGVvNiIsIHNoYXBlPWJveCwgc3R5bGU9ZmlsbGVkLCBmaWxsY29sb3I9eWVsbG93XQoJbjAw
+MDAwMDViIFtsYWJlbD0ie3s8cG9ydDA+IDB9IHwgaXB1Ml9jc2kxXG4vZGV2L3Y0bC1zdWJk
+ZXYxMyB8IHs8cG9ydDE+IDEgfCA8cG9ydDI+IDJ9fSIsIHNoYXBlPU1yZWNvcmQsIHN0eWxl
+PWZpbGxlZCwgZmlsbGNvbG9yPWdyZWVuXQoJbjAwMDAwMDViOnBvcnQyIC0+IG4wMDAwMDA1
+ZiBbc3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDViOnBvcnQxIC0+IG4wMDAwMDAyNzpwb3J0MCBb
+c3R5bGU9ZGFzaGVkXQoJbjAwMDAwMDViOnBvcnQxIC0+IG4wMDAwMDAwZDpwb3J0MCBbc3R5
+bGU9ZGFzaGVkXQoJbjAwMDAwMDVmIFtsYWJlbD0iaXB1Ml9jc2kxIGNhcHR1cmVcbi9kZXYv
+dmlkZW83Iiwgc2hhcGU9Ym94LCBzdHlsZT1maWxsZWQsIGZpbGxjb2xvcj15ZWxsb3ddCglu
+MDAwMDAwNjUgW2xhYmVsPSJ7e30gfCBhZHY3MTgwIDQtMDAyMVxuL2Rldi92NGwtc3ViZGV2
+MTQgfCB7PHBvcnQwPiAwfX0iLCBzaGFwZT1NcmVjb3JkLCBzdHlsZT1maWxsZWQsIGZpbGxj
+b2xvcj1ncmVlbl0KCW4wMDAwMDA2NTpwb3J0MCAtPiBuMDAwMDAwMDU6cG9ydDEgW3N0eWxl
+PWRhc2hlZF0KfQoK
+--------------D3D8DB550A7856A23DA581FD--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
