@@ -1,108 +1,120 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv5 08/16] atmel-isi: move out of soc_camera to atmel
-Date: Sat, 11 Mar 2017 12:23:20 +0100
-Message-ID: <20170311112328.11802-9-hverkuil@xs4all.nl>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv5 05/16] ov7670: add devicetree support
+Date: Sat, 11 Mar 2017 12:23:17 +0100
+Message-ID: <20170311112328.11802-6-hverkuil@xs4all.nl>
 References: <20170311112328.11802-1-hverkuil@xs4all.nl>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170311112328.11802-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170311112328.11802-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Move this out of the soc_camera directory into the atmel directory
-where it belongs.
+Add DT support. Use it to get the reset and pwdn pins (if there are any).
+Tested with one sensor requiring reset/pwdn and one sensor that doesn't
+have reset/pwdn pins.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 ---
- drivers/media/platform/Makefile                          |  1 +
- drivers/media/platform/atmel/Kconfig                     | 11 ++++++++++-
- drivers/media/platform/atmel/Makefile                    |  1 +
- drivers/media/platform/{soc_camera => atmel}/atmel-isi.c |  0
- drivers/media/platform/{soc_camera => atmel}/atmel-isi.h |  0
- drivers/media/platform/soc_camera/Kconfig                | 10 ----------
- drivers/media/platform/soc_camera/Makefile               |  1 -
- 7 files changed, 12 insertions(+), 12 deletions(-)
- rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.c (100%)
- rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.h (100%)
+ drivers/media/i2c/ov7670.c | 40 ++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 8959f6e6692a..c491731f5909 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -63,6 +63,7 @@ obj-$(CONFIG_VIDEO_XILINX)		+= xilinx/
- obj-$(CONFIG_VIDEO_RCAR_VIN)		+= rcar-vin/
+diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+index 912ff09c6100..7270c68ed18a 100644
+--- a/drivers/media/i2c/ov7670.c
++++ b/drivers/media/i2c/ov7670.c
+@@ -17,6 +17,8 @@
+ #include <linux/i2c.h>
+ #include <linux/delay.h>
+ #include <linux/videodev2.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-mediabus.h>
+@@ -229,6 +231,8 @@ struct ov7670_info {
+ 	};
+ 	struct ov7670_format_struct *fmt;  /* Current format */
+ 	struct clk *clk;
++	struct gpio_desc *resetb_gpio;
++	struct gpio_desc *pwdn_gpio;
+ 	int min_width;			/* Filter out smaller sizes */
+ 	int min_height;			/* Filter out smaller sizes */
+ 	int clock_speed;		/* External clock speed (MHz) */
+@@ -591,8 +595,6 @@ static int ov7670_init(struct v4l2_subdev *sd, u32 val)
+ 	return ov7670_write_array(sd, ov7670_default_regs);
+ }
  
- obj-$(CONFIG_VIDEO_ATMEL_ISC)		+= atmel/
-+obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel/
+-
+-
+ static int ov7670_detect(struct v4l2_subdev *sd)
+ {
+ 	unsigned char v;
+@@ -1549,6 +1551,27 @@ static const struct ov7670_devtype ov7670_devdata[] = {
+ 	},
+ };
  
- ccflags-y += -I$(srctree)/drivers/media/i2c
- 
-diff --git a/drivers/media/platform/atmel/Kconfig b/drivers/media/platform/atmel/Kconfig
-index 867dca22a473..9bd0f19b127f 100644
---- a/drivers/media/platform/atmel/Kconfig
-+++ b/drivers/media/platform/atmel/Kconfig
-@@ -6,4 +6,13 @@ config VIDEO_ATMEL_ISC
- 	select REGMAP_MMIO
- 	help
- 	   This module makes the ATMEL Image Sensor Controller available
--	   as a v4l2 device.
-\ No newline at end of file
-+	   as a v4l2 device.
++static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
++{
++	info->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
++			GPIOD_OUT_LOW);
++	if (IS_ERR(info->pwdn_gpio)) {
++		dev_info(&client->dev, "can't get %s GPIO\n", "powerdown");
++		return PTR_ERR(info->pwdn_gpio);
++	}
 +
-+config VIDEO_ATMEL_ISI
-+	tristate "ATMEL Image Sensor Interface (ISI) support"
-+	depends on VIDEO_V4L2 && OF && HAS_DMA
-+	depends on ARCH_AT91 || COMPILE_TEST
-+	select VIDEOBUF2_DMA_CONTIG
-+	---help---
-+	  This module makes the ATMEL Image Sensor Interface available
-+	  as a v4l2 device.
-diff --git a/drivers/media/platform/atmel/Makefile b/drivers/media/platform/atmel/Makefile
-index 9d7c999d434d..27000d099a5e 100644
---- a/drivers/media/platform/atmel/Makefile
-+++ b/drivers/media/platform/atmel/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc.o
-+obj-$(CONFIG_VIDEO_ATMEL_ISI) += atmel-isi.o
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/atmel/atmel-isi.c
-similarity index 100%
-rename from drivers/media/platform/soc_camera/atmel-isi.c
-rename to drivers/media/platform/atmel/atmel-isi.c
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.h b/drivers/media/platform/atmel/atmel-isi.h
-similarity index 100%
-rename from drivers/media/platform/soc_camera/atmel-isi.h
-rename to drivers/media/platform/atmel/atmel-isi.h
-diff --git a/drivers/media/platform/soc_camera/Kconfig b/drivers/media/platform/soc_camera/Kconfig
-index a37ec91b026e..0c581aa1b18a 100644
---- a/drivers/media/platform/soc_camera/Kconfig
-+++ b/drivers/media/platform/soc_camera/Kconfig
-@@ -26,13 +26,3 @@ config VIDEO_SH_MOBILE_CEU
- 	select SOC_CAMERA_SCALE_CROP
- 	---help---
- 	  This is a v4l2 driver for the SuperH Mobile CEU Interface
--
--config VIDEO_ATMEL_ISI
--	tristate "ATMEL Image Sensor Interface (ISI) support"
--	depends on VIDEO_V4L2 && OF && HAS_DMA
--	depends on ARCH_AT91 || COMPILE_TEST
--	select VIDEOBUF2_DMA_CONTIG
--	---help---
--	  This module makes the ATMEL Image Sensor Interface available
--	  as a v4l2 device.
--
-diff --git a/drivers/media/platform/soc_camera/Makefile b/drivers/media/platform/soc_camera/Makefile
-index 7633a0f2f66f..07a451e8b228 100644
---- a/drivers/media/platform/soc_camera/Makefile
-+++ b/drivers/media/platform/soc_camera/Makefile
-@@ -6,5 +6,4 @@ obj-$(CONFIG_SOC_CAMERA_SCALE_CROP)	+= soc_scale_crop.o
- obj-$(CONFIG_SOC_CAMERA_PLATFORM)	+= soc_camera_platform.o
++	info->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
++			GPIOD_OUT_LOW);
++	if (IS_ERR(info->resetb_gpio)) {
++		dev_info(&client->dev, "can't get %s GPIO\n", "reset");
++		return PTR_ERR(info->resetb_gpio);
++	}
++
++	usleep_range(3000, 5000);
++
++	return 0;
++}
++
+ static int ov7670_probe(struct i2c_client *client,
+ 			const struct i2c_device_id *id)
+ {
+@@ -1594,6 +1617,10 @@ static int ov7670_probe(struct i2c_client *client,
+ 		return -EPROBE_DEFER;
+ 	clk_prepare_enable(info->clk);
  
- # soc-camera host drivers have to be linked after camera drivers
--obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel-isi.o
- obj-$(CONFIG_VIDEO_SH_MOBILE_CEU)	+= sh_mobile_ceu_camera.o
++	ret = ov7670_init_gpio(client, info);
++	if (ret)
++		goto clk_disable;
++
+ 	info->clock_speed = clk_get_rate(info->clk) / 1000000;
+ 	if (info->clock_speed < 10 || info->clock_speed > 48) {
+ 		ret = -EINVAL;
+@@ -1693,9 +1720,18 @@ static const struct i2c_device_id ov7670_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, ov7670_id);
+ 
++#if IS_ENABLED(CONFIG_OF)
++static const struct of_device_id ov7670_of_match[] = {
++	{ .compatible = "ovti,ov7670", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ov7670_of_match);
++#endif
++
+ static struct i2c_driver ov7670_driver = {
+ 	.driver = {
+ 		.name	= "ov7670",
++		.of_match_table = of_match_ptr(ov7670_of_match),
+ 	},
+ 	.probe		= ov7670_probe,
+ 	.remove		= ov7670_remove,
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
