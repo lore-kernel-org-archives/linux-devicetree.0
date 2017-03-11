@@ -1,67 +1,134 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/4] irqchip: augment Gemini bindings to
-	reflect Faraday origin
-Date: Sun, 12 Mar 2017 00:13:50 +0100
-Message-ID: <20170311231350.15857-1-linus.walleij@linaro.org>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sat, 11 Mar 2017 23:14:56 +0000
+Message-ID: <20170311231456.GH21222@n2100.armlinux.org.uk>
+References: <20170303230645.GR21222@n2100.armlinux.org.uk>
+ <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+ <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+ <20170310130733.GU21222@n2100.armlinux.org.uk>
+ <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+ <20170310140124.GV21222@n2100.armlinux.org.uk>
+ <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+ <20170310125342.7f047acf@vento.lan>
+ <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+ <20170311082549.576531d0@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
-Cc: openwrt-devel@openwrt.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170311082549.576531d0-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-V2hlbiB3ZSBtZXJnZWQgdGhlIEdlbWluaSBpbnRlcnJ1cHQgY29udHJvbGxlciBpdCB3YXMgbm90
-IHlldApkaXNjb3ZlcmVkIHRoYXQgdGhpcyBJUCBibG9jayBpcyBhY3R1YWxseSBhIHN0YW5kYXJk
-IEZhcmFkYXkKVGVjaG5vbG9neSBpbnRlcnJ1cHQgY29udHJvbGxlci4KCkFzIHRoZSBJUCBibG9j
-ayB3aWxsIHByb2JhYmx5IGFwcGVhciBpbiBvdGhlciBkZXNpZ25zIGFzIHdlbGwsCmxldCdzIGF1
-Z21lbnQgdGhlIERUIGJpbmRpbmdzIHRvIHJlZmxlY3QgdGhhdCBpdCBpcyBmaXJzdCBhbmQKZm9y
-ZW1vc3QgYSBzdGFuZGFyZCBGYXJhZGF5IHBhcnQgd2l0aCBhIGZ1bmN0aW9uIG5hbWUgKEZUSU5U
-QzAxMCkKc28gdGhhdCBwZW9wbGUgcmV1c2luZyB0aGUgSVAgZWFzaWx5IGZpbmQgdGhlIGRyaXZl
-ciB0aGV5IG5lZWQuCgpTb3JyeSBmb3IgdGhlIG1pc3Rha2VzIGR1ZSB0byBsYWNrIG9mIGluZm9y
-bWF0aW9uLgoKR3JlZW50aW1lIEh1IDxncmVlbi5odUBnbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6
-IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KLS0tCiAuLi4sZ2VtaW5p
-LWludGVycnVwdC1jb250cm9sbGVyLnR4dCA9PiBmYXJhZGF5LGZ0aW50YzAxMC50eHR9IHwgMTEg
-KysrKysrKy0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25z
-KC0pCiByZW5hbWUgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1j
-b250cm9sbGVyL3tjb3J0aW5hLGdlbWluaS1pbnRlcnJ1cHQtY29udHJvbGxlci50eHQgPT4gZmFy
-YWRheSxmdGludGMwMTAudHh0fSAoNjMlKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9jb3J0aW5hLGdlbWluaS1pbnRl
-cnJ1cHQtY29udHJvbGxlci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-aW50ZXJydXB0LWNvbnRyb2xsZXIvZmFyYWRheSxmdGludGMwMTAudHh0CnNpbWlsYXJpdHkgaW5k
-ZXggNjMlCnJlbmFtZSBmcm9tIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRl
-cnJ1cHQtY29udHJvbGxlci9jb3J0aW5hLGdlbWluaS1pbnRlcnJ1cHQtY29udHJvbGxlci50eHQK
-cmVuYW1lIHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29u
-dHJvbGxlci9mYXJhZGF5LGZ0aW50YzAxMC50eHQKaW5kZXggOTdjMTE2N2ZhNTMzLi4yNDQyOGQ0
-N2Y0ODcgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRl
-cnJ1cHQtY29udHJvbGxlci9jb3J0aW5hLGdlbWluaS1pbnRlcnJ1cHQtY29udHJvbGxlci50eHQK
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9s
-bGVyL2ZhcmFkYXksZnRpbnRjMDEwLnR4dApAQCAtMSw5ICsxLDEyIEBACi0qIENvcnRpbmEgU3lz
-dGVtcyBHZW1pbmkgaW50ZXJydXB0IGNvbnRyb2xsZXIKKyogRmFyYWRheSBUZWNobm9sb2d0IEZU
-SU5UQzAxMCBpbnRlcnJ1cHQgY29udHJvbGxlcgogCi1UaGlzIGludGVycnVwdCBjb250cm9sbGVy
-IGlzIGZvdW5kIG9uIHRoZSBHZW1pbmkgU29Dcy4KK1RoaXMgaW50ZXJydXB0IGNvbnRyb2xsZXIg
-aXMgYSBzdG9jayBJUCBibG9jayBmcm9tIEZhcmFkYXkgVGVjaG5vbG9neSBmb3VuZAoraW4gdGhl
-IEdlbWluaSBTb0NzIGFuZCBvdGhlciBkZXNpZ25zLgogCiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgot
-LSBjb21wYXRpYmxlOiBtdXN0IGJlICJjb3J0aW5hLGdlbWluaS1pbnRlcnJ1cHQtY29udHJvbGxl
-ciIKKy0gY29tcGF0aWJsZTogbXVzdCBiZSBvbmUgb2YKKyAgImZhcmFkYXksZnRpbnRjMDEwIgor
-ICAiY29ydGluYSxnZW1pbmktaW50ZXJydXB0LWNvbnRyb2xsZXIiIChkZXByZWNhdGVkKQogLSBy
-ZWc6IFRoZSByZWdpc3RlciBiYW5rIGZvciB0aGUgaW50ZXJydXB0IGNvbnRyb2xsZXIuCiAtIGlu
-dGVycnVwdC1jb250cm9sbGVyOiBJZGVudGlmaWVzIHRoZSBub2RlIGFzIGFuIGludGVycnVwdCBj
-b250cm9sbGVyCiAtICNpbnRlcnJ1cHQtY2VsbHM6IFRoZSBudW1iZXIgb2YgY2VsbHMgdG8gZGVm
-aW5lIHRoZSBpbnRlcnJ1cHRzLgpAQCAtMTUsNyArMTgsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
-OgogRXhhbXBsZToKIAogaW50ZXJydXB0LWNvbnRyb2xsZXJANDgwMDAwMDAgewotCWNvbXBhdGli
-bGUgPSAiY29ydGluYSxnZW1pbmktaW50ZXJydXB0LWNvbnRyb2xsZXIiOworCWNvbXBhdGlibGUg
-PSAiZmFyYWRheSxmdGludGMwMTAiCiAJcmVnID0gPDB4NDgwMDAwMDAgMHgxMDAwPjsKIAlpbnRl
-cnJ1cHQtY29udHJvbGxlcjsKIAkjaW50ZXJydXB0LWNlbGxzID0gPDI+OwotLSAKMi45LjMKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kb3BlbndydC1kZXZl
-bCBtYWlsaW5nIGxpc3QKb3BlbndydC1kZXZlbEBsaXN0cy5vcGVud3J0Lm9yZwpodHRwczovL2xp
-c3RzLm9wZW53cnQub3JnL2NnaS1iaW4vbWFpbG1hbi9saXN0aW5mby9vcGVud3J0LWRldmVsCg==
+On Sat, Mar 11, 2017 at 08:25:49AM -0300, Mauro Carvalho Chehab wrote:
+> This situation is there since 2009. If I remember well, you tried to write
+> such generic plugin in the past, but never finished it, apparently because
+> it is too complex. Others tried too over the years. 
+> 
+> The last trial was done by Jacek, trying to cover just the exynos4 driver. 
+> Yet, even such limited scope plugin was not good enough, as it was never
+> merged upstream. Currently, there's no such plugins upstream.
+> 
+> If we can't even merge a plugin that solves it for just *one* driver,
+> I have no hope that we'll be able to do it for the generic case.
+
+This is what really worries me right now about the current proposal for
+iMX6.  What's being proposed is to make the driver exclusively MC-based.
+
+What that means is that existing applications are _not_ going to work
+until we have some answer for libv4l2, and from what you've said above,
+it seems that this has been attempted multiple times over the last _8_
+years, and each time it's failed.
+
+When thinking about it, it's quite obvious why merely trying to push
+the problem into userspace fails:
+
+  If we assert that the kernel does not have sufficient information to
+  make decisions about how to route and control the hardware, then under
+  what scenario does a userspace library have sufficient information to
+  make those decisions?
+
+So, merely moving the problem into userspace doesn't solve anything.
+
+Loading the problem onto the user in the hope that the user knows
+enough to properly configure it also doesn't work - who is going to
+educate the user about the various quirks of the hardware they're
+dealing with?
+
+I don't think pushing it into platform specific libv4l2 plugins works
+either - as you say above, even just trying to develop a plugin for
+exynos4 seems to have failed, so what makes us think that developing
+a plugin for iMX6 is going to succeed?  Actually, that's exactly where
+the problem lies.
+
+Is "iMX6 plugin" even right?  That only deals with the complexity of
+one part of the system - what about the source device, which as we
+have already seen can be a tuner or a camera with its own multiple
+sub-devices.  What if there's a video improvement chip in the chain
+as well - how is a "generic" iMX6 plugin supposed to know how to deal
+with that?
+
+It seems to me that what's required is not an "iMX6 plugin" but a
+separate plugin for each platform - or worse.  Consider boards like
+the Raspberry Pi, where users can attach a variety of cameras.  I
+don't think this approach scales.  (This is relevant: the iMX6 board
+I have here has a RPi compatible connector for a MIPI CSI2 camera.
+In fact, the IMX219 module I'm using _is_ a RPi camera, it's the RPi
+NoIR Camera V2.)
+
+The iMX6 problem is way larger than just "which subdev do I need to
+configure for control X" - if you look at the dot graphs both Steve
+and myself have supplied, you'll notice that there are eight (yes,
+8) video capture devices.  Let's say that we can solve the subdev
+problem in libv4l2.  There's another problem lurking here - libv4l2
+is /dev/video* based.  How does it know which /dev/video* device to
+open?
+
+We don't open by sensor, we open by /dev/video*.  In my case, there
+is only one correct /dev/video* node for the attached sensor, the
+other seven are totally irrelevant.  For other situations, there may
+be the choice of three functional /dev/video* nodes.
+
+Right now, for my case, there isn't the information exported from the
+kernel to know which is the correct one, since that requires knowing
+which virtual channel the data is going to be sent over the CSI2
+interface.  That information is not present in DT, or anywhere.  It
+only comes from system knowledge - in my case, I know that the IMX219
+is currently being configured to use virtual channel 0.  SMIA cameras
+are also configurable.  Then there's CSI2 cameras that can produce
+different formats via different virtual channels (eg, JPEG compressed
+image on one channel while streaming a RGB image via the other channel.)
+
+Whether you can use one or three in _this_ scenario depends on the
+source format - again, another bit of implementation specific
+information that userspace would need to know.  Kernel space should
+know that, and it's discoverable by testing which paths accept the
+source format - but that doesn't tell you ahead of time which
+/dev/video* node to open.
+
+So, the problem space we have here is absolutely huge, and merely
+having a plugin that activates when you open a /dev/video* node
+really doesn't solve it.
+
+All in all, I really don't think "lets hope someone writes a v4l2
+plugin to solve it" is ever going to be successful.  I don't even
+see that there will ever be a userspace application that is anything
+more than a representation of the dot graphs that users can use to
+manually configure the capture system with system knowledge.
+
+I think everyone needs to take a step back and think long and hard
+about this from the system usability perspective - I seriously
+doubt that we will ever see any kind of solution to this if we
+continue to progress with "we'll sort it in userspace some day."
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
