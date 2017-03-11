@@ -1,170 +1,50 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Sat, 11 Mar 2017 18:45:51 +0000
-Message-ID: <20170311184551.GD21222@n2100.armlinux.org.uk>
-References: <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310120902.1daebc7b@vento.lan>
- <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
- <20170311101408.272a9187@vento.lan>
- <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
- <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
+Date: Sat, 11 Mar 2017 18:51:37 +0000
+Message-ID: <20170311185137.GE21222@n2100.armlinux.org.uk>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
+ <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
+ <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
+ <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
+ <5d5cf4a4-a4d3-586e-cd16-54f543dfcce9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, pavel@ucw.cz, shuah@kernel.org, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, robert.jarzmik@free.fr, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, p.zabel@pengutronix.de, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, tiffany.lin@mediatek.com, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, sakari.ailus@linux.intel.com, fabio.estevam@nxp.com, shawnguo@kern
+In-Reply-To: <5d5cf4a4-a4d3-586e-cd16-54f543dfcce9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWMP3drIcvDWNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 11, 2017 at 10:08:23AM -0800, Steve Longerbeam wrote:
-> On 03/11/2017 07:32 AM, Sakari Ailus wrote:
-> >Hi Mauro and Hans,
-> >
-> >On Sat, Mar 11, 2017 at 10:14:08AM -0300, Mauro Carvalho Chehab wrote:
-> >>Em Sat, 11 Mar 2017 12:32:43 +0100
-> >>Hans Verkuil <hverkuil@xs4all.nl> escreveu:
-> >>
-> >>>On 10/03/17 16:09, Mauro Carvalho Chehab wrote:
-> >>>>Em Fri, 10 Mar 2017 13:54:28 +0100
-> >>>>Hans Verkuil <hverkuil@xs4all.nl> escreveu:
-> >>>>
-> >>>>>>Devices that have complex pipeline that do essentially require using the
-> >>>>>>Media controller interface to configure them are out of that scope.
-> >>>>>>
-> >>>>>
-> >>>>>Way too much of how the MC devices should be used is in the minds of developers.
-> >>>>>There is a major lack for good detailed documentation, utilities, compliance
-> >>>>>test (really needed!) and libv4l plugins.
-> >>>>
-> >>>>Unfortunately, we merged an incomplete MC support at the Kernel. We knew
-> >>>>all the problems with MC-based drivers and V4L2 applications by the time
-> >>>>it was developed, and we requested Nokia developers (with was sponsoring MC
-> >>>>develoment, on that time) to work on a solution to allow standard V4L2
-> >>>>applications to work with MC based boards.
-> >>>>
-> >>>>Unfortunately, we took the decision to merge MC without that, because
-> >>>>Nokia was giving up on Linux development, and we didn't want to lose the
-> >>>>2 years of discussions and work around it, as Nokia employers were leaving
-> >>>>the company. Also, on that time, there was already some patches floating
-> >>>>around adding backward support via libv4l. Unfortunately, those patches
-> >>>>were never finished.
-> >>>>
-> >>>>The net result is that MC was merged with some huge gaps, including
-> >>>>the lack of a proper solution for a generic V4L2 program to work
-> >>>>with V4L2 devices that use the subdev API.
-> >>>>
-> >>>>That was not that bad by then, as MC was used only on cell phones
-> >>>>that run custom-made applications.
-> >>>>
-> >>>>The reallity changed, as now, we have lots of low cost SoC based
-> >>>>boards, used for all sort of purposes. So, we need a quick solution
-> >>>>for it.
-> >>>>
-> >>>>In other words, while that would be acceptable support special apps
-> >>>>on really embedded systems, it is *not OK* for general purpose SoC
-> >>>>harware[1].
-> >>>>
-> >>>>[1] I'm calling "general purpose SoC harware" those ARM boards
-> >>>>like Raspberry Pi that are shipped to the mass and used by a wide
-> >>>>range of hobbyists and other people that just wants to run Linux on
-> >>>>ARM. It is possible to buy such boards for a very cheap price,
-> >>>>making them to be used not only on special projects, where a custom
-> >>>>made application could be interesting, but also for a lot of
-> >>>>users that just want to run Linux on a low cost ARM board, while
-> >>>>keeping using standard V4L2 apps, like "camorama".
-> >>>>
-> >>>>That's perhaps one of the reasons why it took a long time for us to
-> >>>>start receiving drivers upstream for such hardware: it is quite
-> >>>>intimidating and not logical to require developers to implement
-> >>>>on their drivers 2 complex APIs (MC, subdev) for those
-> >>>>hardware that most users won't care. From user's perspective,
-> >>>>being able to support generic applications like "camorama" and
-> >>>>"zbar" is all they want.
-> >>>>
-> >>>>In summary, I'm pretty sure we need to support standard V4L2
-> >>>>applications on boards like Raspberry Pi and those low-cost
-> >>>>SoC-based boards that are shipped to end users.
-> >>>>
-> >>>>>Anyway, regarding this specific patch and for this MC-aware driver: no, you
-> >>>>>shouldn't inherit controls from subdevs. It defeats the purpose.
-> >>>>
-> >>>>Sorry, but I don't agree with that. The subdev API is an optional API
-> >>>>(and even the MC API can be optional).
-> >>>>
-> >>>>I see the rationale for using MC and subdev APIs on cell phones,
-> >>>>ISV and other embedded hardware, as it will allow fine-tuning
-> >>>>the driver's support to allow providing the required quality for
-> >>>>certain custom-made applications. but on general SoC hardware,
-> >>>>supporting standard V4L2 applications is a need.
-> >>>>
-> >>>>Ok, perhaps supporting both subdev API and V4L2 API at the same
-> >>>>time doesn't make much sense. We could disable one in favor of the
-> >>>>other, either at compilation time or at runtime.
-> >>>
-> >>>Right. If the subdev API is disabled, then you have to inherit the subdev
-> >>>controls in the bridge driver (how else would you be able to access them?).
-> >>>And that's the usual case.
-> >>>
-> >>>If you do have the subdev API enabled, AND you use the MC, then the
-> >>>intention clearly is to give userspace full control and inheriting controls
-> >>>no longer makes any sense (and is highly confusing IMHO).
-> >>
-> >>I tend to agree with that.
-> >
-> >I agree as well.
-> >
-> >This is in line with how existing drivers behave, too.
+On Sat, Mar 11, 2017 at 10:14:49AM -0800, Steve Longerbeam wrote:
+> On 03/11/2017 03:39 AM, Hans Verkuil wrote:
+> >It's fine to use an internal event as long as the end-user doesn't
+> >see it. But if you lose vsyncs, then you never capture another frame,
+> >right?
 > 
-> Well, sounds like there is consensus on this topic. I guess I'll
-> go ahead and remove the control inheritance support. I suppose
-> having a control appear in two places (subdev and video nodes) can
-> be confusing.
+> No, that's not correct. By loss of vertical sync, I mean the IPU
+> captures portions of two different frames, resulting in a permanent
+> "split image", with one frame containing portions of two consecutive
+> images. Or, the video rolls continuously, if you remember the old CRT
+> television sets of yore, it's the same rolling effect.
 
-I would say _don't_ do that until there are tools/libraries in place
-that are able to support controlling subdevs, otherwise it's just
-going to be another reason for me to walk away from this stuff, and
-stick with a version that does work sensibly.
+I have seen that rolling effect, but the iMX6 regains correct sync
+within one complete "roll" just fine here with IMX219.  However, it
+has always recovered.
 
-> As for the configurability vs. ease-of-use debate, I added the
-> control inheritance to make it a little easier on the user, but,
-> as the dot graphs below will show, the user already needs quite
-> a lot of knowledge of the architecture already, in order to setup
-> the different pipelines. So perhaps the control inheritance is
-> rather pointless anyway.
+So, I don't think there's a problem with the iMX6 part of the
+processing, and so I don't think we should cripple the iMX6 capture
+drivers for this problem.
 
-I really don't think expecting the user to understand and configure
-the pipeline is a sane way forward.  Think about it - should the
-user need to know that, because they have a bayer-only CSI data
-source, that there is only one path possible, and if they try to
-configure a different path, then things will just error out?
-
-For the case of imx219 connected to iMX6, it really is as simple as
-"there is only one possible path" and all the complexity of the media
-interfaces/subdevs is completely unnecessary.  Every other block in
-the graph is just noise.
-
-The fact is that these dot graphs show a complex picture, but reality
-is somewhat different - there's only relatively few paths available
-depending on the connected source and the rest of the paths are
-completely useless.
+It seems to me that the problem is with the source.
 
 -- 
 RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
 FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
 according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
