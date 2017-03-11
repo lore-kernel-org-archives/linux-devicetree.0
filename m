@@ -1,117 +1,29 @@
 From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCHv5 07/16] atmel-isi: remove dependency of the soc-camera
- framework
-Date: Sat, 11 Mar 2017 15:16:07 +0200
-Message-ID: <20170311131607.GM3220@valkosipuli.retiisi.org.uk>
+Subject: Re: [PATCHv5 00/16] atmel-isi/ov7670/ov2640: convert to standalone
+ drivers
+Date: Sat, 11 Mar 2017 15:17:33 +0200
+Message-ID: <20170311131733.GN3220@valkosipuli.retiisi.org.uk>
 References: <20170311112328.11802-1-hverkuil@xs4all.nl>
- <20170311112328.11802-8-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170311112328.11802-8-hverkuil@xs4all.nl>
+In-Reply-To: <20170311112328.11802-1-hverkuil@xs4all.nl>
 Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
-
-On Sat, Mar 11, 2017 at 12:23:19PM +0100, Hans Verkuil wrote:
+On Sat, Mar 11, 2017 at 12:23:12PM +0100, Hans Verkuil wrote:
 > From: Hans Verkuil <hans.verkuil@cisco.com>
 > 
-> This patch converts the atmel-isi driver from a soc-camera driver to a driver
-> that is stand-alone.
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->  drivers/media/platform/soc_camera/Kconfig     |    3 +-
->  drivers/media/platform/soc_camera/atmel-isi.c | 1209 +++++++++++++++----------
->  2 files changed, 714 insertions(+), 498 deletions(-)
-> 
-> diff --git a/drivers/media/platform/soc_camera/Kconfig b/drivers/media/platform/soc_camera/Kconfig
-> index 86d74788544f..a37ec91b026e 100644
-> --- a/drivers/media/platform/soc_camera/Kconfig
-> +++ b/drivers/media/platform/soc_camera/Kconfig
-> @@ -29,9 +29,8 @@ config VIDEO_SH_MOBILE_CEU
->  
->  config VIDEO_ATMEL_ISI
->  	tristate "ATMEL Image Sensor Interface (ISI) support"
-> -	depends on VIDEO_DEV && SOC_CAMERA
-> +	depends on VIDEO_V4L2 && OF && HAS_DMA
->  	depends on ARCH_AT91 || COMPILE_TEST
-> -	depends on HAS_DMA
->  	select VIDEOBUF2_DMA_CONTIG
->  	---help---
->  	  This module makes the ATMEL Image Sensor Interface available
-> diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
-> index 46de657c3e6d..a6d60c2e207d 100644
-> --- a/drivers/media/platform/soc_camera/atmel-isi.c
-> +++ b/drivers/media/platform/soc_camera/atmel-isi.c
+> This patch series converts the soc-camera atmel-isi to a standalone V4L2
+> driver.
 
-...
-
-> +static int isi_graph_init(struct atmel_isi *isi)
-> +{
-> +	struct v4l2_async_subdev **subdevs = NULL;
-> +	int ret;
-> +
-> +	/* Parse the graph to extract a list of subdevice DT nodes. */
-> +	ret = isi_graph_parse(isi, isi->dev->of_node);
-> +	if (ret < 0) {
-> +		dev_err(isi->dev, "Graph parsing failed\n");
-> +		goto done;
-> +	}
-> +
-> +	if (!ret) {
-> +		dev_err(isi->dev, "No subdev found in graph\n");
-> +		goto done;
-> +	}
-> +
-> +	/* Register the subdevices notifier. */
-> +	subdevs = devm_kzalloc(isi->dev, sizeof(*subdevs), GFP_KERNEL);
-> +	if (subdevs == NULL) {
-> +		ret = -ENOMEM;
-> +		goto done;
-> +	}
-> +
-> +	subdevs[0] = &isi->entity.asd;
-> +
-> +	isi->notifier.subdevs = subdevs;
-> +	isi->notifier.num_subdevs = 1;
-> +	isi->notifier.bound = isi_graph_notify_bound;
-> +	isi->notifier.unbind = isi_graph_notify_unbind;
-> +	isi->notifier.complete = isi_graph_notify_complete;
-> +
-> +	ret = v4l2_async_notifier_register(&isi->v4l2_dev, &isi->notifier);
-> +	if (ret < 0) {
-> +		dev_err(isi->dev, "Notifier registration failed\n");
-> +		goto done;
-> +	}
-> +
-> +	ret = 0;
-
-You can replace this by
-
-	return 0;
-
-And remove the if () below.
-
-> +
-> +done:
-> +	if (ret < 0) {
-> +		v4l2_async_notifier_unregister(&isi->notifier);
-> +		of_node_put(isi->entity.node);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
+Patches 5 and 13:
 
 Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
 -- 
-Regards,
-
 Sakari Ailus
 e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
