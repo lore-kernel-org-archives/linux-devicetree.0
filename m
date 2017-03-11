@@ -1,102 +1,73 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 3/3] ARM64: dts: meson-gx: Prepend GX generic compatible like other nodes
-Date: Fri, 10 Mar 2017 16:24:21 -0800
-Message-ID: <m2zigsbqyy.fsf@baylibre.com>
-References: <1489055948-10656-1-git-send-email-narmstrong@baylibre.com>
-        <1489055948-10656-4-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 0/9] clk: meson: update clock controller for audio support
+Date: Fri, 10 Mar 2017 16:39:27 -0800
+Message-ID: <m2r324bq9s.fsf@baylibre.com>
+References: <20170309104154.28295-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489055948-10656-4-git-send-email-narmstrong@baylibre.com> (Neil
-        Armstrong's message of "Thu, 9 Mar 2017 11:39:08 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170309104154.28295-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Thu, 9 Mar 2017 11:41:45 +0100")
+Sender: linux-clk-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> This patchset is a first round of update to the meson clock controllers
+> to bring audio support. The patchset is based on clk-next. It could be
+> rebased on amlogic tree later on, if you prefer the patches to go through
+> Kevin's tree.
 
-Could use a bit more changelog here  (in order to support generic
-drivers that work for all GX family, blah, blah...)
+I'd prefer these go through the clk tree, and get an immutable branch
+that I can use for my stuff that goes through the arm-soc tree.
 
 Kevin
 
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+> First patch fix an issue found while writing patch 5 (Giving ternary
+> operator to SET_PARM)
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index 06d70bf..a010ab9 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -233,7 +233,7 @@
->  			};
->  
->  			i2c_A: i2c@8500 {
-> -				compatible = "amlogic,meson-gxbb-i2c";
-> +				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
->  				reg = <0x0 0x08500 0x0 0x20>;
->  				interrupts = <GIC_SPI 21 IRQ_TYPE_EDGE_RISING>;
->  				#address-cells = <1>;
-> @@ -279,7 +279,7 @@
->  			};
->  
->  			i2c_B: i2c@87c0 {
-> -				compatible = "amlogic,meson-gxbb-i2c";
-> +				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
->  				reg = <0x0 0x087c0 0x0 0x20>;
->  				interrupts = <GIC_SPI 214 IRQ_TYPE_EDGE_RISING>;
->  				#address-cells = <1>;
-> @@ -288,7 +288,7 @@
->  			};
->  
->  			i2c_C: i2c@87e0 {
-> -				compatible = "amlogic,meson-gxbb-i2c";
-> +				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
->  				reg = <0x0 0x087e0 0x0 0x20>;
->  				interrupts = <GIC_SPI 215 IRQ_TYPE_EDGE_RISING>;
->  				#address-cells = <1>;
-> @@ -297,7 +297,7 @@
->  			};
->  
->  			spifc: spi@8c80 {
-> -				compatible = "amlogic,meson-gxbb-spifc";
-> +				compatible = "amlogic,meson-gx-spifc", "amlogic,meson-gxbb-spifc";
->  				reg = <0x0 0x08c80 0x0 0x80>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> @@ -325,7 +325,7 @@
->  		};
->  
->  		sram: sram@c8000000 {
-> -			compatible = "amlogic,meson-gxbb-sram", "mmio-sram";
-> +			compatible = "amlogic,meson-gx-sram", "amlogic,meson-gxbb-sram", "mmio-sram";
->  			reg = <0x0 0xc8000000 0x0 0x14000>;
->  
->  			#address-cells = <1>;
-> @@ -333,12 +333,12 @@
->  			ranges = <0 0x0 0xc8000000 0x14000>;
->  
->  			cpu_scp_lpri: scp-shmem@0 {
-> -				compatible = "amlogic,meson-gxbb-scp-shmem";
-> +				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
->  				reg = <0x13000 0x400>;
->  			};
->  
->  			cpu_scp_hpri: scp-shmem@200 {
-> -				compatible = "amlogic,meson-gxbb-scp-shmem";
-> +				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
->  				reg = <0x13400 0x400>;
->  			};
->  		};
-> @@ -390,7 +390,7 @@
->  			};
->  
->  			ir: ir@580 {
-> -				compatible = "amlogic,meson-gxbb-ir";
-> +				compatible = "amlogic,meson-gx-ir", "amlogic,meson-gxbb-ir";
->  				reg = <0x0 0x00580 0x0 0x40>;
->  				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
->  				status = "disabled";
+> Following Stephen comment on the v1, patch 2 adds the const qualifiers
+> missing upstream.
+>
+> Patches 3 and 4 put the generic muxes and divisors declaration in tables so
+> the register address fixup works in the same way as the clock gates. We are
+> going to add more of these clock types for audio or gpu support, so we
+> can't continue to fix addresses individually like it is currently done.
+>
+> Patches 5 to 8 improve the support of the mpll clocks, now allowing the
+> rate to be set. Among other things, the mplls are the parent clocks of the
+> i2s and spdif clocks.
+>
+> Patch 9 expose the clock gates required to power on the i2s output.
+>
+> These patches have been tested on the meson gxbb p200 board, as part of the
+> ongoing work to bring audio support to meson SoC family.
+>
+> Changes since v1 [0]:
+>  * Add SET_PARM fix to the series
+>  * Add missing const qualifiers to the clock arrays
+>  * No more additional patches required as SAR clocks have been merged
+>
+> [0]: http://lkml.kernel.org/r/20170228133002.17894-1-jbrunet@baylibre.com
+>
+> Jerome Brunet (9):
+>   clk: meson: fix SET_PARM macro
+>   clk: meson: add missing const qualifiers on gate arrays
+>   clk: meson8b: put dividers and muxes in tables
+>   clk: gxbb: put dividers and muxes in tables
+>   clk: meson: mpll: add rw operation
+>   clk: meson: gxbb: mpll: use rw operation
+>   clk: meson8b: add the mplls clocks 0, 1 and 2
+>   clk: meson: mpll: correct N2 maximum value
+>   dt-bindings: clk: gxbb: expose i2s output clock gates
+>
+>  drivers/clk/meson/clk-mpll.c          | 152 ++++++++++++++++++++++++++++++++--
+>  drivers/clk/meson/clkc.h              |   6 +-
+>  drivers/clk/meson/gxbb.c              |  66 ++++++++++++---
+>  drivers/clk/meson/gxbb.h              |  10 +--
+>  drivers/clk/meson/meson8b.c           | 127 ++++++++++++++++++++++++++--
+>  drivers/clk/meson/meson8b.h           |  20 ++++-
+>  include/dt-bindings/clock/gxbb-clkc.h |   5 ++
+>  7 files changed, 356 insertions(+), 30 deletions(-)
