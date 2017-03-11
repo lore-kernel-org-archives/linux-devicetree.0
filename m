@@ -1,137 +1,117 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Sat, 11 Mar 2017 10:14:08 -0300
-Message-ID: <20170311101408.272a9187@vento.lan>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310120902.1daebc7b@vento.lan>
- <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCHv5 07/16] atmel-isi: remove dependency of the soc-camera
+ framework
+Date: Sat, 11 Mar 2017 15:16:07 +0200
+Message-ID: <20170311131607.GM3220@valkosipuli.retiisi.org.uk>
+References: <20170311112328.11802-1-hverkuil@xs4all.nl>
+ <20170311112328.11802-8-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170311112328.11802-8-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zab
+Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Em Sat, 11 Mar 2017 12:32:43 +0100
-Hans Verkuil <hverkuil@xs4all.nl> escreveu:
+Hi Hans,
 
-> On 10/03/17 16:09, Mauro Carvalho Chehab wrote:
-> > Em Fri, 10 Mar 2017 13:54:28 +0100
-> > Hans Verkuil <hverkuil@xs4all.nl> escreveu:
-> >   
-> >>> Devices that have complex pipeline that do essentially require using the
-> >>> Media controller interface to configure them are out of that scope.
-> >>>     
-> >>
-> >> Way too much of how the MC devices should be used is in the minds of developers.
-> >> There is a major lack for good detailed documentation, utilities, compliance
-> >> test (really needed!) and libv4l plugins.  
-> > 
-> > Unfortunately, we merged an incomplete MC support at the Kernel. We knew
-> > all the problems with MC-based drivers and V4L2 applications by the time
-> > it was developed, and we requested Nokia developers (with was sponsoring MC
-> > develoment, on that time) to work on a solution to allow standard V4L2
-> > applications to work with MC based boards.
-> > 
-> > Unfortunately, we took the decision to merge MC without that, because 
-> > Nokia was giving up on Linux development, and we didn't want to lose the
-> > 2 years of discussions and work around it, as Nokia employers were leaving
-> > the company. Also, on that time, there was already some patches floating
-> > around adding backward support via libv4l. Unfortunately, those patches
-> > were never finished.
-> > 
-> > The net result is that MC was merged with some huge gaps, including
-> > the lack of a proper solution for a generic V4L2 program to work
-> > with V4L2 devices that use the subdev API.
-> > 
-> > That was not that bad by then, as MC was used only on cell phones
-> > that run custom-made applications. 
-> > 
-> > The reallity changed, as now, we have lots of low cost SoC based
-> > boards, used for all sort of purposes. So, we need a quick solution
-> > for it.
-> > 
-> > In other words, while that would be acceptable support special apps
-> > on really embedded systems, it is *not OK* for general purpose SoC
-> > harware[1].
-> > 
-> > [1] I'm calling "general purpose SoC harware" those ARM boards
-> > like Raspberry Pi that are shipped to the mass and used by a wide
-> > range of hobbyists and other people that just wants to run Linux on
-> > ARM. It is possible to buy such boards for a very cheap price,
-> > making them to be used not only on special projects, where a custom
-> > made application could be interesting, but also for a lot of
-> > users that just want to run Linux on a low cost ARM board, while
-> > keeping using standard V4L2 apps, like "camorama".
-> > 
-> > That's perhaps one of the reasons why it took a long time for us to
-> > start receiving drivers upstream for such hardware: it is quite 
-> > intimidating and not logical to require developers to implement
-> > on their drivers 2 complex APIs (MC, subdev) for those
-> > hardware that most users won't care. From user's perspective,
-> > being able to support generic applications like "camorama" and
-> > "zbar" is all they want.
-> > 
-> > In summary, I'm pretty sure we need to support standard V4L2 
-> > applications on boards like Raspberry Pi and those low-cost 
-> > SoC-based boards that are shipped to end users.
-> >   
-> >> Anyway, regarding this specific patch and for this MC-aware driver: no, you
-> >> shouldn't inherit controls from subdevs. It defeats the purpose.  
-> > 
-> > Sorry, but I don't agree with that. The subdev API is an optional API
-> > (and even the MC API can be optional).
-> > 
-> > I see the rationale for using MC and subdev APIs on cell phones,
-> > ISV and other embedded hardware, as it will allow fine-tuning
-> > the driver's support to allow providing the required quality for
-> > certain custom-made applications. but on general SoC hardware,
-> > supporting standard V4L2 applications is a need.
-> > 
-> > Ok, perhaps supporting both subdev API and V4L2 API at the same
-> > time doesn't make much sense. We could disable one in favor of the
-> > other, either at compilation time or at runtime.  
+On Sat, Mar 11, 2017 at 12:23:19PM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil@cisco.com>
 > 
-> Right. If the subdev API is disabled, then you have to inherit the subdev
-> controls in the bridge driver (how else would you be able to access them?).
-> And that's the usual case.
+> This patch converts the atmel-isi driver from a soc-camera driver to a driver
+> that is stand-alone.
 > 
-> If you do have the subdev API enabled, AND you use the MC, then the
-> intention clearly is to give userspace full control and inheriting controls
-> no longer makes any sense (and is highly confusing IMHO).
-
-I tend to agree with that.
-
-> > 
-> > This way, if the subdev API is disabled, the driver will be
-> > functional for V4L2-based applications that don't support neither
-> > MC or subdev APIs.  
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+> ---
+>  drivers/media/platform/soc_camera/Kconfig     |    3 +-
+>  drivers/media/platform/soc_camera/atmel-isi.c | 1209 +++++++++++++++----------
+>  2 files changed, 714 insertions(+), 498 deletions(-)
 > 
-> I'm not sure if it makes sense for the i.MX driver to behave differently
-> depending on whether the subdev API is enabled or disabled. I don't know
-> enough of the hardware to tell if it would ever make sense to disable the
-> subdev API.
+> diff --git a/drivers/media/platform/soc_camera/Kconfig b/drivers/media/platform/soc_camera/Kconfig
+> index 86d74788544f..a37ec91b026e 100644
+> --- a/drivers/media/platform/soc_camera/Kconfig
+> +++ b/drivers/media/platform/soc_camera/Kconfig
+> @@ -29,9 +29,8 @@ config VIDEO_SH_MOBILE_CEU
+>  
+>  config VIDEO_ATMEL_ISI
+>  	tristate "ATMEL Image Sensor Interface (ISI) support"
+> -	depends on VIDEO_DEV && SOC_CAMERA
+> +	depends on VIDEO_V4L2 && OF && HAS_DMA
+>  	depends on ARCH_AT91 || COMPILE_TEST
+> -	depends on HAS_DMA
+>  	select VIDEOBUF2_DMA_CONTIG
+>  	---help---
+>  	  This module makes the ATMEL Image Sensor Interface available
+> diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+> index 46de657c3e6d..a6d60c2e207d 100644
+> --- a/drivers/media/platform/soc_camera/atmel-isi.c
+> +++ b/drivers/media/platform/soc_camera/atmel-isi.c
 
-Yeah, I don't know enough about it either. The point is: this is
-something that the driver maintainer and driver users should
-decide if it either makes sense or not, based on the expected use cases.
+...
 
-Thanks,
-Mauro
+> +static int isi_graph_init(struct atmel_isi *isi)
+> +{
+> +	struct v4l2_async_subdev **subdevs = NULL;
+> +	int ret;
+> +
+> +	/* Parse the graph to extract a list of subdevice DT nodes. */
+> +	ret = isi_graph_parse(isi, isi->dev->of_node);
+> +	if (ret < 0) {
+> +		dev_err(isi->dev, "Graph parsing failed\n");
+> +		goto done;
+> +	}
+> +
+> +	if (!ret) {
+> +		dev_err(isi->dev, "No subdev found in graph\n");
+> +		goto done;
+> +	}
+> +
+> +	/* Register the subdevices notifier. */
+> +	subdevs = devm_kzalloc(isi->dev, sizeof(*subdevs), GFP_KERNEL);
+> +	if (subdevs == NULL) {
+> +		ret = -ENOMEM;
+> +		goto done;
+> +	}
+> +
+> +	subdevs[0] = &isi->entity.asd;
+> +
+> +	isi->notifier.subdevs = subdevs;
+> +	isi->notifier.num_subdevs = 1;
+> +	isi->notifier.bound = isi_graph_notify_bound;
+> +	isi->notifier.unbind = isi_graph_notify_unbind;
+> +	isi->notifier.complete = isi_graph_notify_complete;
+> +
+> +	ret = v4l2_async_notifier_register(&isi->v4l2_dev, &isi->notifier);
+> +	if (ret < 0) {
+> +		dev_err(isi->dev, "Notifier registration failed\n");
+> +		goto done;
+> +	}
+> +
+> +	ret = 0;
+
+You can replace this by
+
+	return 0;
+
+And remove the if () below.
+
+> +
+> +done:
+> +	if (ret < 0) {
+> +		v4l2_async_notifier_unregister(&isi->notifier);
+> +		of_node_put(isi->entity.node);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
