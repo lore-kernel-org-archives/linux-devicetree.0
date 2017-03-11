@@ -1,48 +1,77 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
-Date: Sat, 11 Mar 2017 13:05:11 -0800
-Message-ID: <855bc957-8a04-47d6-3355-b641c8f393ad@gmail.com>
-References: <20170311121453.18534-1-zajec5@gmail.com>
- <20170311172309.GC15842@lunn.ch>
- <CACna6rzxaqnLShMQRovv4Cr5s6XKSG0NQ2RRrQ+TeePt59bG7A@mail.gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sat, 11 Mar 2017 22:30:54 +0100
+Message-ID: <20170311213054.GA7319@amd>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+ <20170303230645.GR21222@n2100.armlinux.org.uk>
+ <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+ <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+ <20170310120902.1daebc7b@vento.lan>
+ <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+ <20170311101408.272a9187@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACna6rzxaqnLShMQRovv4Cr5s6XKSG0NQ2RRrQ+TeePt59bG7A@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, John Crispin <john@phrozen.org>, Rafa?? Mi??ecki <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170311101408.272a9187-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMy8xMS8yMDE3IDA5OjI3IEFNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4gSGkgQW5k
-cmV3LAo+IAo+IE9uIDExIE1hcmNoIDIwMTcgYXQgMTg6MjMsIEFuZHJldyBMdW5uIDxhbmRyZXdA
-bHVubi5jaD4gd3JvdGU6Cj4+IE9uIFNhdCwgTWFyIDExLCAyMDE3IGF0IDAxOjE0OjUzUE0gKzAx
-MDAsIFJhZmE/PyBNaT8/ZWNraSB3cm90ZToKPj4+IEZyb206IFJhZmE/PyBNaT8/ZWNraSA8cmFm
-YWxAbWlsZWNraS5wbD4KPj4+Cj4+PiBUaGlzIGlzIEJDTTQ3MDgxQTAgYmFzZWQgaG9tZSByb3V0
-ZXIgd2l0aCBCQ000MzIxNyBhbmQgQkNNNDM1MiB3aXJlbGVzcwo+Pj4gY2hpcHNldHMuCj4+Cj4+
-IEhhdmUgeW91IG1hZGUgYW55IHByb2dyZXNzIHdpdGggdGhlIEV0aGVybmV0IHN3aXRjaD8gRG9l
-cyBhbnlib2R5IGtub3cKPj4gaWYgaXQgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBTRjIvQjUzIERT
-QSBkcml2ZXI/Cj4+Cj4+IEkgaGF2ZSBhIERJUiA4NjBsIHYxIHJvdXRlciwgdXNpbmcgdGhlIHNh
-bWUgY2hpcHNldC4gSSdtIGludGVyZXN0ZWQgaW4KPj4gdGhlIHN3aXRjaCwgZ2l2ZW4gbXkgRFNB
-IG1haW50YWluZXIgcm9sZS4KPiAKPiBJIG1vc3RseSB3b3JrIHdpdGggTEVERS4gSnVzdCBmZXcg
-ZGF5cyBhZ28gSSBtYW5hZ2VkIGdldCBrZXJuZWwgNC45Cj4gcnVubmluZyBzdGFibGUgKHRoZXJl
-IHdhcyBhIG1lbW9yeSBjb3JydXB0aW9uIGNhdXNlZCBieSBpcHJvYyBQQ0llCj4gY29udHJvbGxl
-ciBkcml2ZXIpLiBXaXRoIGtlcm5lbCA0LjkgSSBjYW4gZmluYWxseSBzdGFydCB0ZXN0aW5nIGI1
-My4gSQo+IHNob3VsZCBoYXZlIHNvbWUgbmV3cyB3aXRoaW5nIG5ldyB3ZWVrcy4KCkZZSSwgdGhl
-IGluaXRpYWwgYjUzIHdvcmsgd2FzIGRvbmUgYnkgdGVzdGluZyBvbjoKLSBCQ001MzAxMCAoU1I0
-MDBBQykgYW5kIEJDTTUzMDEyIChCQ005NTMwMTJFUikKLSBCQ001ODI2NSAoTm9ydGhzdGFyIFBs
-dXMpCi0gZXh0ZXJuYWxseSBhdHRhY2hlZCBCQ001MzEyNSB0byBhIEJDTTc0NDUKClNvIGxldCBt
-ZSBrbm93IGlmIHlvdSBuZWVkIGd1aWRhbmNlL2hlbHAgd2l0aCBnZXR0aW5nIHRoZSA0NzA4LzUz
-MDFYCmRldmljZXMgdG8gd29yay4KLS0gCkZsb3JpYW4KCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
-bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+--7JfCtLOvnd9MIVvH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> > > Ok, perhaps supporting both subdev API and V4L2 API at the same
+> > > time doesn't make much sense. We could disable one in favor of the
+> > > other, either at compilation time or at runtime. =20
+> >=20
+> > Right. If the subdev API is disabled, then you have to inherit the subd=
+ev
+> > controls in the bridge driver (how else would you be able to access the=
+m?).
+> > And that's the usual case.
+> >=20
+> > If you do have the subdev API enabled, AND you use the MC, then the
+> > intention clearly is to give userspace full control and inheriting cont=
+rols
+> > no longer makes any sense (and is highly confusing IMHO).
+>=20
+> I tend to agree with that.
+
+Well, having different userspace interface according to config options
+is strange. I believe the right solution is to make complex drivers
+depend on CONFIG_VIDEO_V4L2_SUBDEV_API...
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--7JfCtLOvnd9MIVvH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljEbI4ACgkQMOfwapXb+vKY7wCgmkZ4Kq3LhwIAxMXv8u8TyBSI
+/WQAnipq8Jn9ApopF2wXueH2/qjvHsEj
+=egDP
+-----END PGP SIGNATURE-----
+
+--7JfCtLOvnd9MIVvH--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
