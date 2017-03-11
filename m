@@ -1,133 +1,136 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Sat, 11 Mar 2017 17:32:54 +0000
-Message-ID: <20170311173254.GC21222@n2100.armlinux.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
- <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
- <20170303230645.GR21222@n2100.armlinux.org.uk>
- <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310120902.1daebc7b@vento.lan>
- <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
- <20170311101408.272a9187@vento.lan>
- <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="FCuugMFkClbJLl1L"
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@v
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RESEND] drm/exynos: Remove support for Exynos4415 (SoC not supported anymore)
+Date: Sat, 11 Mar 2017 20:04:16 +0200
+Message-ID: <20170311180416.7071-1-krzk@kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Support for Exynos4415 is going away because there are no internal nor
+external users.
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Since commit 46dcf0ff0de3 ("ARM: dts: exynos: Remove exynos4415.dtsi"),
+the platform cannot be instantiated so remove also the drivers.
 
-On Sat, Mar 11, 2017 at 05:32:29PM +0200, Sakari Ailus wrote:
-> My understanding of the i.MX6 case is the hardware is configurable enough
-> to warrant the use of the Media controller API. Some patches indicate
-> there are choices to be made in data routing.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Acked-by: Kukjin Kim <kgene@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/display/exynos/exynos_dsim.txt |  1 -
+ .../bindings/display/exynos/samsung-fimd.txt           |  1 -
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c                | 15 +--------------
+ drivers/gpu/drm/exynos/exynos_drm_fimd.c               | 18 ++----------------
+ 4 files changed, 3 insertions(+), 32 deletions(-)
 
-The iMX6 does have configurable data routing, but in some scenarios
-(eg, when receiving bayer data) there's only one possible routing.
-
-> Steve: could you enlighten us on the topic, by e.g. doing media-ctl
-> --print-dot and sending the results to the list? What kind of different IP
-> blocks are there and what do they do? A pointer to hardware documentation
-> wouldn't hurt either (if it's available).
-
-Attached for the imx219 camera.  Note that although the CSI2 block has
-four outputs, each output is dedicated to a CSI virtual channel, so
-they can not be arbitarily assigned without configuring the sensor.
-
-Since the imx219 only produces bayer, the graph is also showing the
-_only_ possible routing for the imx219 configured for CSI virtual
-channel 0.
-
-The iMX6 manuals are available on the 'net.
-
-	https://community.nxp.com/docs/DOC-101840
-
-There are several chapters that cover the capture side:
-
-* MIPI CSI2
-* IPU CSI2 gasket
-* IPU
-
-The IPU not only performs capture, but also display as well.
-
+diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt b/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
+index a78265993665..ca5204b3bc21 100644
+--- a/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
++++ b/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
+@@ -4,7 +4,6 @@ Required properties:
+   - compatible: value should be one of the following
+ 		"samsung,exynos3250-mipi-dsi" /* for Exynos3250/3472 SoCs */
+ 		"samsung,exynos4210-mipi-dsi" /* for Exynos4 SoCs */
+-		"samsung,exynos4415-mipi-dsi" /* for Exynos4415 SoC */
+ 		"samsung,exynos5410-mipi-dsi" /* for Exynos5410/5420/5440 SoCs */
+ 		"samsung,exynos5422-mipi-dsi" /* for Exynos5422/5800 SoCs */
+ 		"samsung,exynos5433-mipi-dsi" /* for Exynos5433 SoCs */
+diff --git a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
+index 18645e0228b0..5837402c3ade 100644
+--- a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
++++ b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
+@@ -11,7 +11,6 @@ Required properties:
+ 		"samsung,s5pv210-fimd"; /* for S5PV210 SoC */
+ 		"samsung,exynos3250-fimd"; /* for Exynos3250/3472 SoCs */
+ 		"samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
+-		"samsung,exynos4415-fimd"; /* for Exynos4415 SoC */
+ 		"samsung,exynos5250-fimd"; /* for Exynos5250 SoCs */
+ 		"samsung,exynos5420-fimd"; /* for Exynos5420/5422/5800 SoCs */
+ 
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 812e2ec0761d..ef6f9c6de098 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -86,7 +86,7 @@
+ #define DSIM_SYNC_INFORM		(1 << 27)
+ #define DSIM_EOT_DISABLE		(1 << 28)
+ #define DSIM_MFLUSH_VS			(1 << 29)
+-/* This flag is valid only for exynos3250/3472/4415/5260/5430 */
++/* This flag is valid only for exynos3250/3472/5260/5430 */
+ #define DSIM_CLKLANE_STOP		(1 << 30)
+ 
+ /* DSIM_ESCMODE */
+@@ -473,17 +473,6 @@ static const struct exynos_dsi_driver_data exynos4_dsi_driver_data = {
+ 	.reg_values = reg_values,
+ };
+ 
+-static const struct exynos_dsi_driver_data exynos4415_dsi_driver_data = {
+-	.reg_ofs = exynos_reg_ofs,
+-	.plltmr_reg = 0x58,
+-	.has_clklane_stop = 1,
+-	.num_clks = 2,
+-	.max_freq = 1000,
+-	.wait_for_reset = 1,
+-	.num_bits_resol = 11,
+-	.reg_values = reg_values,
+-};
+-
+ static const struct exynos_dsi_driver_data exynos5_dsi_driver_data = {
+ 	.reg_ofs = exynos_reg_ofs,
+ 	.plltmr_reg = 0x58,
+@@ -521,8 +510,6 @@ static const struct of_device_id exynos_dsi_of_match[] = {
+ 	  .data = &exynos3_dsi_driver_data },
+ 	{ .compatible = "samsung,exynos4210-mipi-dsi",
+ 	  .data = &exynos4_dsi_driver_data },
+-	{ .compatible = "samsung,exynos4415-mipi-dsi",
+-	  .data = &exynos4415_dsi_driver_data },
+ 	{ .compatible = "samsung,exynos5410-mipi-dsi",
+ 	  .data = &exynos5_dsi_driver_data },
+ 	{ .compatible = "samsung,exynos5422-mipi-dsi",
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+index a9fa444c6053..661b9fe049e2 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+@@ -71,10 +71,10 @@
+ #define TRIGCON				0x1A4
+ #define TRGMODE_ENABLE			(1 << 0)
+ #define SWTRGCMD_ENABLE			(1 << 1)
+-/* Exynos3250, 3472, 4415, 5260 5410, 5420 and 5422 only supported. */
++/* Exynos3250, 3472, 5260 5410, 5420 and 5422 only supported. */
+ #define HWTRGEN_ENABLE			(1 << 3)
+ #define HWTRGMASK_ENABLE		(1 << 4)
+-/* Exynos3250, 3472, 4415, 5260, 5420 and 5422 only supported. */
++/* Exynos3250, 3472, 5260, 5420 and 5422 only supported. */
+ #define HWTRIGEN_PER_ENABLE		(1 << 31)
+ 
+ /* display mode change control register except exynos4 */
+@@ -138,18 +138,6 @@ static struct fimd_driver_data exynos4_fimd_driver_data = {
+ 	.has_vtsel = 1,
+ };
+ 
+-static struct fimd_driver_data exynos4415_fimd_driver_data = {
+-	.timing_base = 0x20000,
+-	.lcdblk_offset = 0x210,
+-	.lcdblk_vt_shift = 10,
+-	.lcdblk_bypass_shift = 1,
+-	.trg_type = I80_HW_TRG,
+-	.has_shadowcon = 1,
+-	.has_vidoutcon = 1,
+-	.has_vtsel = 1,
+-	.has_trigger_per_te = 1,
+-};
+-
+ static struct fimd_driver_data exynos5_fimd_driver_data = {
+ 	.timing_base = 0x20000,
+ 	.lcdblk_offset = 0x214,
+@@ -210,8 +198,6 @@ static const struct of_device_id fimd_driver_dt_match[] = {
+ 	  .data = &exynos3_fimd_driver_data },
+ 	{ .compatible = "samsung,exynos4210-fimd",
+ 	  .data = &exynos4_fimd_driver_data },
+-	{ .compatible = "samsung,exynos4415-fimd",
+-	  .data = &exynos4415_fimd_driver_data },
+ 	{ .compatible = "samsung,exynos5250-fimd",
+ 	  .data = &exynos5_fimd_driver_data },
+ 	{ .compatible = "samsung,exynos5420-fimd",
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
-
---FCuugMFkClbJLl1L
-Content-Type: text/vnd.graphviz; charset=us-ascii
-Content-Disposition: attachment; filename="imx219.dot"
-
-digraph board {
-	rankdir=TB
-	n00000001 [label="{{<port0> 0 | <port1> 1} | ipu1_csi0_mux\n/dev/v4l-subdev0 | {<port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000001:port2 -> n00000044:port0
-	n00000005 [label="{{<port0> 0 | <port1> 1} | ipu2_csi1_mux\n/dev/v4l-subdev1 | {<port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000005:port2 -> n00000068:port0 [style=dashed]
-	n00000009 [label="{{<port0> 0 | <port1> 1} | ipu1_vdic\n/dev/v4l-subdev2 | {<port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000009:port2 -> n00000011:port0 [style=dashed]
-	n0000000d [label="{{<port0> 0 | <port1> 1} | ipu2_vdic\n/dev/v4l-subdev3 | {<port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n0000000d:port2 -> n00000027:port0 [style=dashed]
-	n00000011 [label="{{<port0> 0} | ipu1_ic_prp\n/dev/v4l-subdev4 | {<port1> 1 | <port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000011:port1 -> n00000015:port0 [style=dashed]
-	n00000011:port2 -> n0000001e:port0 [style=dashed]
-	n00000015 [label="{{<port0> 0} | ipu1_ic_prpenc\n/dev/v4l-subdev5 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000015:port1 -> n00000018 [style=dashed]
-	n00000018 [label="ipu1_ic_prpenc capture\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
-	n0000001e [label="{{<port0> 0} | ipu1_ic_prpvf\n/dev/v4l-subdev6 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-	n0000001e:port1 -> n00000021 [style=dashed]
-	n00000021 [label="ipu1_ic_prpvf capture\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
-	n00000027 [label="{{<port0> 0} | ipu2_ic_prp\n/dev/v4l-subdev7 | {<port1> 1 | <port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000027:port1 -> n0000002b:port0 [style=dashed]
-	n00000027:port2 -> n00000034:port0 [style=dashed]
-	n0000002b [label="{{<port0> 0} | ipu2_ic_prpenc\n/dev/v4l-subdev8 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-	n0000002b:port1 -> n0000002e [style=dashed]
-	n0000002e [label="ipu2_ic_prpenc capture\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
-	n00000034 [label="{{<port0> 0} | ipu2_ic_prpvf\n/dev/v4l-subdev9 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000034:port1 -> n00000037 [style=dashed]
-	n00000037 [label="ipu2_ic_prpvf capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
-	n0000003d [label="{{<port1> 1} | imx219 0-0010\n/dev/v4l-subdev11 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-	n0000003d:port0 -> n00000058:port0
-	n00000040 [label="{{} | imx219 pixel 0-0010\n/dev/v4l-subdev10 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000040:port0 -> n0000003d:port1 [style=bold]
-	n00000044 [label="{{<port0> 0} | ipu1_csi0\n/dev/v4l-subdev12 | {<port1> 1 | <port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000044:port2 -> n00000048
-	n00000044:port1 -> n00000011:port0 [style=dashed]
-	n00000044:port1 -> n00000009:port0 [style=dashed]
-	n00000048 [label="ipu1_csi0 capture\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
-	n0000004e [label="{{<port0> 0} | ipu1_csi1\n/dev/v4l-subdev13 | {<port1> 1 | <port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n0000004e:port2 -> n00000052 [style=dashed]
-	n0000004e:port1 -> n00000011:port0 [style=dashed]
-	n0000004e:port1 -> n00000009:port0 [style=dashed]
-	n00000052 [label="ipu1_csi1 capture\n/dev/video5", shape=box, style=filled, fillcolor=yellow]
-	n00000058 [label="{{<port0> 0} | imx6-mipi-csi2\n/dev/v4l-subdev14 | {<port1> 1 | <port2> 2 | <port3> 3 | <port4> 4}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000058:port1 -> n00000001:port0
-	n00000058:port2 -> n0000004e:port0 [style=dashed]
-	n00000058:port3 -> n0000005e:port0 [style=dashed]
-	n00000058:port4 -> n00000005:port0 [style=dashed]
-	n0000005e [label="{{<port0> 0} | ipu2_csi0\n/dev/v4l-subdev15 | {<port1> 1 | <port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n0000005e:port2 -> n00000062 [style=dashed]
-	n0000005e:port1 -> n00000027:port0 [style=dashed]
-	n0000005e:port1 -> n0000000d:port0 [style=dashed]
-	n00000062 [label="ipu2_csi0 capture\n/dev/video6", shape=box, style=filled, fillcolor=yellow]
-	n00000068 [label="{{<port0> 0} | ipu2_csi1\n/dev/v4l-subdev16 | {<port1> 1 | <port2> 2}}", shape=Mrecord, style=filled, fillcolor=green]
-	n00000068:port2 -> n0000006c [style=dashed]
-	n00000068:port1 -> n00000027:port0 [style=dashed]
-	n00000068:port1 -> n0000000d:port0 [style=dashed]
-	n0000006c [label="ipu2_csi1 capture\n/dev/video7", shape=box, style=filled, fillcolor=yellow]
-}
-
-
---FCuugMFkClbJLl1L--
+2.9.3
