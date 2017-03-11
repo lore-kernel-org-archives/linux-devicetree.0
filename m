@@ -1,120 +1,87 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv5 05/16] ov7670: add devicetree support
-Date: Sat, 11 Mar 2017 12:23:17 +0100
-Message-ID: <20170311112328.11802-6-hverkuil@xs4all.nl>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv5 04/16] ov7670: get xclk
+Date: Sat, 11 Mar 2017 12:23:16 +0100
+Message-ID: <20170311112328.11802-5-hverkuil@xs4all.nl>
 References: <20170311112328.11802-1-hverkuil@xs4all.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170311112328.11802-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170311112328.11802-1-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Hans Verkuil <hans.verkuil@cisco.com>
 
-Add DT support. Use it to get the reset and pwdn pins (if there are any).
-Tested with one sensor requiring reset/pwdn and one sensor that doesn't
-have reset/pwdn pins.
+Get the clock for this sensor.
 
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- drivers/media/i2c/ov7670.c | 40 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+ drivers/media/i2c/ov7670.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 912ff09c6100..7270c68ed18a 100644
+index 50e4466a2b37..912ff09c6100 100644
 --- a/drivers/media/i2c/ov7670.c
 +++ b/drivers/media/i2c/ov7670.c
-@@ -17,6 +17,8 @@
- #include <linux/i2c.h>
- #include <linux/delay.h>
- #include <linux/videodev2.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-mediabus.h>
-@@ -229,6 +231,8 @@ struct ov7670_info {
+@@ -10,6 +10,7 @@
+  * This file may be distributed under the terms of the GNU General
+  * Public License, version 2.
+  */
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -227,6 +228,7 @@ struct ov7670_info {
+ 		struct v4l2_ctrl *hue;
  	};
  	struct ov7670_format_struct *fmt;  /* Current format */
- 	struct clk *clk;
-+	struct gpio_desc *resetb_gpio;
-+	struct gpio_desc *pwdn_gpio;
++	struct clk *clk;
  	int min_width;			/* Filter out smaller sizes */
  	int min_height;			/* Filter out smaller sizes */
  	int clock_speed;		/* External clock speed (MHz) */
-@@ -591,8 +595,6 @@ static int ov7670_init(struct v4l2_subdev *sd, u32 val)
- 	return ov7670_write_array(sd, ov7670_default_regs);
+@@ -1587,13 +1589,24 @@ static int ov7670_probe(struct i2c_client *client,
+ 			info->pclk_hb_disable = true;
+ 	}
+ 
++	info->clk = devm_clk_get(&client->dev, "xclk");
++	if (IS_ERR(info->clk))
++		return -EPROBE_DEFER;
++	clk_prepare_enable(info->clk);
++
++	info->clock_speed = clk_get_rate(info->clk) / 1000000;
++	if (info->clock_speed < 10 || info->clock_speed > 48) {
++		ret = -EINVAL;
++		goto clk_disable;
++	}
++
+ 	/* Make sure it's an ov7670 */
+ 	ret = ov7670_detect(sd);
+ 	if (ret) {
+ 		v4l_dbg(1, debug, client,
+ 			"chip found @ 0x%x (%s) is not an ov7670 chip.\n",
+ 			client->addr << 1, client->adapter->name);
+-		return ret;
++		goto clk_disable;
+ 	}
+ 	v4l_info(client, "chip found @ 0x%02x (%s)\n",
+ 			client->addr << 1, client->adapter->name);
+@@ -1656,6 +1669,8 @@ static int ov7670_probe(struct i2c_client *client,
+ 
+ hdl_free:
+ 	v4l2_ctrl_handler_free(&info->hdl);
++clk_disable:
++	clk_disable_unprepare(info->clk);
+ 	return ret;
  }
  
--
--
- static int ov7670_detect(struct v4l2_subdev *sd)
- {
- 	unsigned char v;
-@@ -1549,6 +1551,27 @@ static const struct ov7670_devtype ov7670_devdata[] = {
- 	},
- };
+@@ -1667,6 +1682,7 @@ static int ov7670_remove(struct i2c_client *client)
  
-+static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
-+{
-+	info->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "powerdown",
-+			GPIOD_OUT_LOW);
-+	if (IS_ERR(info->pwdn_gpio)) {
-+		dev_info(&client->dev, "can't get %s GPIO\n", "powerdown");
-+		return PTR_ERR(info->pwdn_gpio);
-+	}
-+
-+	info->resetb_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+			GPIOD_OUT_LOW);
-+	if (IS_ERR(info->resetb_gpio)) {
-+		dev_info(&client->dev, "can't get %s GPIO\n", "reset");
-+		return PTR_ERR(info->resetb_gpio);
-+	}
-+
-+	usleep_range(3000, 5000);
-+
-+	return 0;
-+}
-+
- static int ov7670_probe(struct i2c_client *client,
- 			const struct i2c_device_id *id)
- {
-@@ -1594,6 +1617,10 @@ static int ov7670_probe(struct i2c_client *client,
- 		return -EPROBE_DEFER;
- 	clk_prepare_enable(info->clk);
+ 	v4l2_device_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&info->hdl);
++	clk_disable_unprepare(info->clk);
+ 	return 0;
+ }
  
-+	ret = ov7670_init_gpio(client, info);
-+	if (ret)
-+		goto clk_disable;
-+
- 	info->clock_speed = clk_get_rate(info->clk) / 1000000;
- 	if (info->clock_speed < 10 || info->clock_speed > 48) {
- 		ret = -EINVAL;
-@@ -1693,9 +1720,18 @@ static const struct i2c_device_id ov7670_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, ov7670_id);
- 
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id ov7670_of_match[] = {
-+	{ .compatible = "ovti,ov7670", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ov7670_of_match);
-+#endif
-+
- static struct i2c_driver ov7670_driver = {
- 	.driver = {
- 		.name	= "ov7670",
-+		.of_match_table = of_match_ptr(ov7670_of_match),
- 	},
- 	.probe		= ov7670_probe,
- 	.remove		= ov7670_remove,
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
