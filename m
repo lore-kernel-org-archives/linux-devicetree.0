@@ -1,201 +1,154 @@
-From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 07/11] iio: adc: sun4i-gpadc-iio: move
- code used in MFD probing to new function
-Date: Sat, 11 Mar 2017 15:09:07 +0100
-Message-ID: <92d5c8a7-6998-7fd0-6e42-0cea517e75ec@free-electrons.com>
-References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
- <20170310103921.19469-8-quentin.schulz@free-electrons.com>
- <5850691489174592@web4o.yandex.ru>
-Reply-To: quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sat, 11 Mar 2017 17:32:29 +0200
+Message-ID: <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-15-git-send-email-steve_longerbeam@mentor.com>
+ <20170302160257.GK3220@valkosipuli.retiisi.org.uk>
+ <20170303230645.GR21222@n2100.armlinux.org.uk>
+ <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+ <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+ <20170310120902.1daebc7b@vento.lan>
+ <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+ <20170311101408.272a9187@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBBMKSDDAKGQERAPG43Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <5850691489174592-RqUecCnkpthuio3avFS2gg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-ymACFijhrKM@public.gmane.org, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170311101408.272a9187-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree@v
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+Hi Mauro and Hans,
 
-On 10/03/2017 20:36, Icenowy Zheng wrote:
+On Sat, Mar 11, 2017 at 10:14:08AM -0300, Mauro Carvalho Chehab wrote:
+> Em Sat, 11 Mar 2017 12:32:43 +0100
+> Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> escreveu:
 > 
+> > On 10/03/17 16:09, Mauro Carvalho Chehab wrote:
+> > > Em Fri, 10 Mar 2017 13:54:28 +0100
+> > > Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> escreveu:
+> > >   
+> > >>> Devices that have complex pipeline that do essentially require using the
+> > >>> Media controller interface to configure them are out of that scope.
+> > >>>     
+> > >>
+> > >> Way too much of how the MC devices should be used is in the minds of developers.
+> > >> There is a major lack for good detailed documentation, utilities, compliance
+> > >> test (really needed!) and libv4l plugins.  
+> > > 
+> > > Unfortunately, we merged an incomplete MC support at the Kernel. We knew
+> > > all the problems with MC-based drivers and V4L2 applications by the time
+> > > it was developed, and we requested Nokia developers (with was sponsoring MC
+> > > develoment, on that time) to work on a solution to allow standard V4L2
+> > > applications to work with MC based boards.
+> > > 
+> > > Unfortunately, we took the decision to merge MC without that, because 
+> > > Nokia was giving up on Linux development, and we didn't want to lose the
+> > > 2 years of discussions and work around it, as Nokia employers were leaving
+> > > the company. Also, on that time, there was already some patches floating
+> > > around adding backward support via libv4l. Unfortunately, those patches
+> > > were never finished.
+> > > 
+> > > The net result is that MC was merged with some huge gaps, including
+> > > the lack of a proper solution for a generic V4L2 program to work
+> > > with V4L2 devices that use the subdev API.
+> > > 
+> > > That was not that bad by then, as MC was used only on cell phones
+> > > that run custom-made applications. 
+> > > 
+> > > The reallity changed, as now, we have lots of low cost SoC based
+> > > boards, used for all sort of purposes. So, we need a quick solution
+> > > for it.
+> > > 
+> > > In other words, while that would be acceptable support special apps
+> > > on really embedded systems, it is *not OK* for general purpose SoC
+> > > harware[1].
+> > > 
+> > > [1] I'm calling "general purpose SoC harware" those ARM boards
+> > > like Raspberry Pi that are shipped to the mass and used by a wide
+> > > range of hobbyists and other people that just wants to run Linux on
+> > > ARM. It is possible to buy such boards for a very cheap price,
+> > > making them to be used not only on special projects, where a custom
+> > > made application could be interesting, but also for a lot of
+> > > users that just want to run Linux on a low cost ARM board, while
+> > > keeping using standard V4L2 apps, like "camorama".
+> > > 
+> > > That's perhaps one of the reasons why it took a long time for us to
+> > > start receiving drivers upstream for such hardware: it is quite 
+> > > intimidating and not logical to require developers to implement
+> > > on their drivers 2 complex APIs (MC, subdev) for those
+> > > hardware that most users won't care. From user's perspective,
+> > > being able to support generic applications like "camorama" and
+> > > "zbar" is all they want.
+> > > 
+> > > In summary, I'm pretty sure we need to support standard V4L2 
+> > > applications on boards like Raspberry Pi and those low-cost 
+> > > SoC-based boards that are shipped to end users.
+> > >   
+> > >> Anyway, regarding this specific patch and for this MC-aware driver: no, you
+> > >> shouldn't inherit controls from subdevs. It defeats the purpose.  
+> > > 
+> > > Sorry, but I don't agree with that. The subdev API is an optional API
+> > > (and even the MC API can be optional).
+> > > 
+> > > I see the rationale for using MC and subdev APIs on cell phones,
+> > > ISV and other embedded hardware, as it will allow fine-tuning
+> > > the driver's support to allow providing the required quality for
+> > > certain custom-made applications. but on general SoC hardware,
+> > > supporting standard V4L2 applications is a need.
+> > > 
+> > > Ok, perhaps supporting both subdev API and V4L2 API at the same
+> > > time doesn't make much sense. We could disable one in favor of the
+> > > other, either at compilation time or at runtime.  
+> > 
+> > Right. If the subdev API is disabled, then you have to inherit the subdev
+> > controls in the bridge driver (how else would you be able to access them?).
+> > And that's the usual case.
+> > 
+> > If you do have the subdev API enabled, AND you use the MC, then the
+> > intention clearly is to give userspace full control and inheriting controls
+> > no longer makes any sense (and is highly confusing IMHO).
 > 
-> 10.03.2017, 18:56, "Quentin Schulz" <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->> This moves code used in MFD probing to a new sun4i_gpadc_probe_mfd
->> function.
->>
->> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>
->> added in v2
->>
->>  drivers/iio/adc/sun4i-gpadc-iio.c | 78 ++++++++++++++++++++++-----------------
-> 
-> I cannot find this source file even in linux-next.
-> 
+> I tend to agree with that.
 
->From the cover letter:
+I agree as well.
 
-This series of patch is based on this[1] series of patch.
+This is in line with how existing drivers behave, too.
 
-[1] https://lkml.org/lkml/2016/12/13/298 : "[PATCH v9] add support for
-Allwinner SoCs ADC"
-
-Quentin
->>  1 file changed, 45 insertions(+), 33 deletions(-)
->>
->> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
->> index a8e134f..7cb997a 100644
->> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
->> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
->> @@ -454,31 +454,16 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
->>          return 0;
->>  }
->>
->> -static int sun4i_gpadc_probe(struct platform_device *pdev)
->> +static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
->> + struct iio_dev *indio_dev)
->>  {
->> - struct sun4i_gpadc_iio *info;
->> - struct iio_dev *indio_dev;
->> + struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
->> + struct sun4i_gpadc_dev *sun4i_gpadc_dev =
->> + dev_get_drvdata(pdev->dev.parent);
->>          int ret;
->> - struct sun4i_gpadc_dev *sun4i_gpadc_dev;
->> -
->> - sun4i_gpadc_dev = dev_get_drvdata(pdev->dev.parent);
->> -
->> - indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
->> - if (!indio_dev)
->> - return -ENOMEM;
->>
->> - info = iio_priv(indio_dev);
->> - platform_set_drvdata(pdev, indio_dev);
->> -
->> - mutex_init(&info->mutex);
->>          info->regmap = sun4i_gpadc_dev->regmap;
->> - info->indio_dev = indio_dev;
->> - init_completion(&info->completion);
->> - indio_dev->name = dev_name(&pdev->dev);
->> - indio_dev->dev.parent = &pdev->dev;
->> - indio_dev->dev.of_node = pdev->dev.of_node;
->> - indio_dev->info = &sun4i_gpadc_iio_info;
->> - indio_dev->modes = INDIO_DIRECT_MODE;
->> +
->>          indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
->>          indio_dev->channels = sun4i_gpadc_channels;
->>
->> @@ -519,8 +504,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->>                          dev_err(&pdev->dev,
->>                                  "could not register thermal sensor: %ld\n",
->>                                  PTR_ERR(tzd));
->> - ret = PTR_ERR(tzd);
->> - goto err;
->> + return PTR_ERR(tzd);
->>                  }
->>          } else {
->>                  indio_dev->num_channels =
->> @@ -528,36 +512,65 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->>                  indio_dev->channels = sun4i_gpadc_channels_no_temp;
->>          }
->>
->> - pm_runtime_set_autosuspend_delay(&pdev->dev,
->> - SUN4I_GPADC_AUTOSUSPEND_DELAY);
->> - pm_runtime_use_autosuspend(&pdev->dev);
->> - pm_runtime_set_suspended(&pdev->dev);
->> - pm_runtime_enable(&pdev->dev);
->> -
->>          if (IS_ENABLED(CONFIG_THERMAL_OF)) {
->>                  ret = sun4i_irq_init(pdev, "TEMP_DATA_PENDING",
->>                                       sun4i_gpadc_temp_data_irq_handler,
->>                                       "temp_data", &info->temp_data_irq,
->>                                       &info->ignore_temp_data_irq);
->>                  if (ret < 0)
->> - goto err;
->> + return ret;
->>          }
->>
->>          ret = sun4i_irq_init(pdev, "FIFO_DATA_PENDING",
->>                               sun4i_gpadc_fifo_data_irq_handler, "fifo_data",
->>                               &info->fifo_data_irq, &info->ignore_fifo_data_irq);
->>          if (ret < 0)
->> - goto err;
->> + return ret;
->>
->>          if (IS_ENABLED(CONFIG_THERMAL_OF)) {
->>                  ret = iio_map_array_register(indio_dev, sun4i_gpadc_hwmon_maps);
->>                  if (ret < 0) {
->>                          dev_err(&pdev->dev,
->>                                  "failed to register iio map array\n");
->> - goto err;
->> + return ret;
->>                  }
->>          }
->>
->> + return 0;
->> +}
->> +
->> +static int sun4i_gpadc_probe(struct platform_device *pdev)
->> +{
->> + struct sun4i_gpadc_iio *info;
->> + struct iio_dev *indio_dev;
->> + int ret;
->> +
->> + indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
->> + if (!indio_dev)
->> + return -ENOMEM;
->> +
->> + info = iio_priv(indio_dev);
->> + platform_set_drvdata(pdev, indio_dev);
->> +
->> + mutex_init(&info->mutex);
->> + info->indio_dev = indio_dev;
->> + init_completion(&info->completion);
->> + indio_dev->name = dev_name(&pdev->dev);
->> + indio_dev->dev.parent = &pdev->dev;
->> + indio_dev->dev.of_node = pdev->dev.of_node;
->> + indio_dev->info = &sun4i_gpadc_iio_info;
->> + indio_dev->modes = INDIO_DIRECT_MODE;
->> +
->> + ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
->> + if (ret)
->> + return ret;
->> +
->> + pm_runtime_set_autosuspend_delay(&pdev->dev,
->> + SUN4I_GPADC_AUTOSUSPEND_DELAY);
->> + pm_runtime_use_autosuspend(&pdev->dev);
->> + pm_runtime_set_suspended(&pdev->dev);
->> + pm_runtime_enable(&pdev->dev);
->> +
->>          ret = devm_iio_device_register(&pdev->dev, indio_dev);
->>          if (ret < 0) {
->>                  dev_err(&pdev->dev, "could not register the device\n");
->> @@ -570,7 +583,6 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->>          if (IS_ENABLED(CONFIG_THERMAL_OF))
->>                  iio_map_array_unregister(indio_dev);
->>
->> -err:
->>          pm_runtime_put(&pdev->dev);
->>          pm_runtime_disable(&pdev->dev);
->>
->> --
->> 2.9.3
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
+> > > 
+> > > This way, if the subdev API is disabled, the driver will be
+> > > functional for V4L2-based applications that don't support neither
+> > > MC or subdev APIs.  
+> > 
+> > I'm not sure if it makes sense for the i.MX driver to behave differently
+> > depending on whether the subdev API is enabled or disabled. I don't know
+> > enough of the hardware to tell if it would ever make sense to disable the
+> > subdev API.
+> 
+> Yeah, I don't know enough about it either. The point is: this is
+> something that the driver maintainer and driver users should
+> decide if it either makes sense or not, based on the expected use cases.
+
+My understanding of the i.MX6 case is the hardware is configurable enough
+to warrant the use of the Media controller API. Some patches indicate
+there are choices to be made in data routing.
+
+Steve: could you enlighten us on the topic, by e.g. doing media-ctl
+--print-dot and sending the results to the list? What kind of different IP
+blocks are there and what do they do? A pointer to hardware documentation
+wouldn't hurt either (if it's available).
 
 -- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
