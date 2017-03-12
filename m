@@ -1,98 +1,46 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
-Date: Sun, 12 Mar 2017 06:44:42 -0500
-Message-ID: <20170312114442.qtzwwjd6qrviam6v@rob-hp-laptop>
-References: <20170228120452.10043-1-zajec5@gmail.com>
- <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
- <290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
- <CAL_JsqL-N4HfsG=py+w1NsBOJZzS1kbRM5J6dC-EE-rg9r9C2g@mail.gmail.com>
- <386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
- <b80fe65c-2fc9-94ac-9de2-29aee6b62033@milecki.pl>
+Subject: Re: [PATCH] dt-bindings: display: rk3288-mipi-dsi: add reset property
+Date: Sun, 12 Mar 2017 07:06:59 -0500
+Message-ID: <20170312120659.hpiwnsto6hkxs5yh@rob-hp-laptop>
+References: <20170224125506.21533-1-john@metanate.com>
+ <20170224125506.21533-24-john@metanate.com>
+ <20170302215643.GA49163@google.com>
+ <20170303113945.3bd2cbd9.john@metanate.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <b80fe65c-2fc9-94ac-9de2-29aee6b62033@milecki.pl>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20170303113945.3bd2cbd9.john@metanate.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: John Keeping <john@metanate.com>
+Cc: devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 06, 2017 at 07:06:32AM +0100, Rafał Miłecki wrote:
-> On 03/01/2017 10:04 PM, Jacek Anaszewski wrote:
-> > On 02/28/2017 11:12 PM, Rob Herring wrote:
-> > > On Tue, Feb 28, 2017 at 3:51 PM, Rafał Miłecki <zajec5@gmail.com> wrote:
-> > > > On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
-> > > > > 
-> > > > > I think that it would be simpler if we could initially see
-> > > > > a complete sample dts implementation containing all required DT
-> > > > > nodes. The example could contain timer trigger as well as usb-port
-> > > > > trigger specific bindings.
-> > > > 
-> > > > 
-> > > > Please take a look at attached patch. I used it on Tenda AC9 with:
-> > > 
-> > > I'm not sure about this extra level of indirection. I don't see the need.
-> > > 
-> > > > usb_trigger: usb-trigger {
-> > > >         trigger-type = "usbport";
-> > > 
-> > > Why do we need to know the type? The trigger device knows what type it
-> > > is. All we should need to know here is what device(s) controls an LED.
-> > > The rest the kernel can figure out.
-> > 
-> > The thing is that in the proposed approach the trigger is not necessary
-> > a device. The trigger node is here only a container with initialization
-> > data.
-> > 
-> > We could have e,g, two such nodes with different set of ports
-> > (say usb1-trigger and usb2-trigger). Then if we had two LED nodes usb1
-> > and usb2, the former could have its triggers property initialized
-> > to &usb1-trigger and the latter to &usb2-trigger. Thanks to that both
-> > LEDs after executing "echo usbport > triggers" would listen to events
-> > from different set of usb ports.
-> > 
-> > Also, e.g. for the timer trigger we could define two separate DT nodes
-> > with different delay intervals.
-> 
-> Hi Rob, what do you think about this?
-> 
-> Jacek is correct, we could have e.g.
-> timer-trigger-1 {
-> 	trigger-type = "timer";
-> 	delay-on = <200>;
-> 	delay-off = <500>;
-> };
-> timer-trigger-2 {
-> 	trigger-type = "timer";
-> 	delay-on = <500>;
-> 	delay-off = <1000>;
-> };
-
-This is just letting the Linux driver structure define/influence the 
-binding. This could all be described with a single LED property like 
-"led-blink-pattern". The fact that it gets implemented by the timer 
-trigger is irrelevant to the binding.
-
-Plus timer based triggering seems more like user controlled than 
-platform or hardware defined. So trying to create a binding for all 
-Linux triggers is a mistake. The only thing we need here is a way to 
-associate an LED with a h/w device. 
-
-> 
-> or something like:
-> usbport-2-0-trigger {
-> 	trigger-type = "usbport";
-> 	ports = <&ohci_port1>, <&ehci_port1>;
-> };
-> usbport-3-0-trigger {
-> 	trigger-type = "usbport";
-> 	ports = <&xhci_port1>;
-> };
-> 
-> Does it make more sense?
-
-No, for the reasons above.
-
-Rob
+T24gRnJpLCBNYXIgMDMsIDIwMTcgYXQgMTE6Mzk6NDVBTSArMDAwMCwgSm9obiBLZWVwaW5nIHdy
+b3RlOgo+IFRoaXMgcmVzZXQgaXMgcmVxdWlyZWQgaW4gb3JkZXIgdG8gZnVsbHkgcmVzZXQgdGhl
+IGludGVybmFsIHN0YXRlIG9mIHRoZQo+IE1JUEkgY29udHJvbGxlci4KPiAKPiBTaWduZWQtb2Zm
+LWJ5OiBKb2huIEtlZXBpbmcgPGpvaG5AbWV0YW5hdGUuY29tPgo+IC0tLQo+IE9uIFRodSwgMiBN
+YXIgMjAxNyAxMzo1Njo0NiAtMDgwMCwgQnJpYW4gTm9ycmlzIHdyb3RlOgo+ID4gT24gRnJpLCBG
+ZWIgMjQsIDIwMTcgYXQgMTI6NTU6MDZQTSArMDAwMCwgSm9obiBLZWVwaW5nIHdyb3RlOgo+ID4g
+PiArCS8qCj4gPiA+ICsJICogTm90ZSB0aGF0IHRoZSByZXNldCB3YXMgbm90IGRlZmluZWQgaW4g
+dGhlIGluaXRpYWwgZGV2aWNlIHRyZWUsIHNvCj4gPiA+ICsJICogd2UgaGF2ZSB0byBiZSBwcmVw
+YXJlZCBmb3IgaXQgbm90IGJlaW5nIGZvdW5kLgo+ID4gPiArCSAqLwo+ID4gPiArCWFwYl9yc3Qg
+PSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0KGRldiwgImFwYiIpOyAgCj4gPiAKPiA+IERpZCB0aGlz
+IHJlc2V0IGV2ZXIgZ2V0IGRvY3VtZW50ZWQgaW4gdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzPyBJ
+Cj4gPiBjb3VsZG4ndCBmaW5kIGl0LiBQZXJoYXBzIGEgZm9sbG93LXVwIHBhdGNoIGlzIGluIG9y
+ZGVyPwo+IAo+IEhlcmUncyBhIHBhdGNoIHRvIGRvIHRoYXQuCj4gCj4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0ICB8IDcg
+KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCgpBY2tlZC1ieTogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
