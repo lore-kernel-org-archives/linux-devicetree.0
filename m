@@ -1,59 +1,111 @@
-From: Patrick Menschel <menschel.p@posteo.de>
-Subject: [PATCH 2/2] ARM: dts: sun7i: Add CAN node and can0_pins_a pinctrl settings
-Date: Sun, 12 Mar 2017 14:28:11 +0100
-Message-ID: <1489325291-6298-3-git-send-email-menschel.p@posteo.de>
-References: <1489325291-6298-1-git-send-email-menschel.p@posteo.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489325291-6298-1-git-send-email-menschel.p@posteo.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org
-Cc: Patrick Menschel <menschel.p@posteo.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/4] dt-bindings: leds: Add document bindings for
+ leds-mt6323
+Date: Sun, 12 Mar 2017 09:04:48 -0500
+Message-ID: <20170312140448.v2jenx6olstscq3e@rob-hp-laptop>
+References: <1488549385-19899-1-git-send-email-sean.wang@mediatek.com>
+ <1488549385-19899-2-git-send-email-sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1488549385-19899-2-git-send-email-sean.wang@mediatek.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: rpurdie@rpsys.net, jacek.anaszewski@gmail.com, lee.jones@linaro.org, matthias.bgg@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The A20 SoC has an on-board CAN controller. This patch adds the device node
-and the corresponding pinctrl settings for pins PH20 and PH21.
+On Fri, Mar 03, 2017 at 09:56:22PM +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> This patch adds documentation for devicetree bindings
+> for LED support on MT6323 PMIC
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  .../devicetree/bindings/leds/leds-mt6323.txt       | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-mt6323.txt b/Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> new file mode 100644
+> index 0000000..135c441
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> @@ -0,0 +1,63 @@
+> +Device Tree Bindings for LED support on MT6323 PMIC
+> +
+> +MT6323 LED controller is subfunction provided by
+> +MT6323 PMIC, so the LED controllers are defined as
+> +the subnode of the function node provided by MT6323
+> +PMIC controller that is being defined as one kind of
+> +Muti-Function Device (MFD) using shared bus called
+> +PMIC wrapper for each subfunction to access remote
+> +MT6323 PMIC hardware.
 
-The CAN controller is inherited from the A10 SoC and uses the same driver.
+Your line wrap is kind of short. Fix you line wrap to 72-80 char.
 
-This patch is adapted from the description in
-Documentation/devicetree/bindings/net/can/sun4i_can.txt
+> +
+> +For MT6323 MFD bindings see:
+> +Documentation/devicetree/bindings/mfd/mt6397.txt
+> +For MediaTek PMIC wrapper bindings see:
+> +Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
+> +
+> +There's sub-node for the LED controller that describes
+> +the initial behavior for each LED physically and currently
+> +only four LED sub-nodes can be supported.
+> +
+> +Required properties:
+> +- compatible : Must be "mediatek,mt6323-led"
+> +- address-cells : Must be 1
+> +- size-cells : Must be 0
+> +
+> +LED sub-node properties:
+> +- reg : LED channel number (0..3)
+> +- label : (optional)
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger : (optional)
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +- default-state: (optional) The initial state of the LED
+> +  see Documentation/devicetree/bindings/leds/common.txt
 
-Signed-off-by: Patrick Menschel <menschel.p@posteo.de>
----
- arch/arm/boot/dts/sun7i-a20.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Group these by required and optional. You can drop "The initial state of 
+the LED".
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index f7db067..a0417c0 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1390,6 +1390,13 @@
- 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
- 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 			};
-+
-+			can0_pins_a: can0@0 {
-+				allwinner,pins = "PH20","PH21";
-+				allwinner,function = "can";
-+				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+			};
- 		};
- 
- 		timer@01c20c00 {
-@@ -1711,5 +1718,13 @@
- 			clocks = <&apb1_gates 7>;
- 			status = "disabled";
- 		};
-+
-+		can0: can@01c2bc00 {
-+			compatible = "allwinner,sun4i-a10-can";
-+			reg = <0x01c2bc00 0x400>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&apb1_gates 4>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-1.9.1
+> +
+> +Example:
+> +
+> +	pmic: mt6323 {
+
+mt6323: pmic {
+
+> +		compatible = "mediatek,mt6323";
+> +
+> +		...
+> +
+> +		mt6323led: leds {
+> +			compatible = "mediatek,mt6323-led";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			led@0 {
+> +				reg = <0>;
+> +				label = "LED0";
+> +				linux,default-trigger = "timer";
+> +				default-state = "on";
+> +			};
+> +			led@1 {
+> +				reg = <1>;
+> +				label = "LED1";
+> +				default-state = "off";
+> +			};
+> +			led@2 {
+> +				reg = <2>;
+> +				label = "LED2";
+> +				default-state = "on";
+> +			};
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
