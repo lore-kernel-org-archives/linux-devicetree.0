@@ -1,45 +1,71 @@
-From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Subject: Re: [PATCH v4 3/7] drm/tinydrm: Add MIPI DBI support
-Date: Sun, 12 Mar 2017 20:02:15 +0100
-Message-ID: <CAKMK7uFtthS7jv+2COx661sam9eMtRnupZiK499m1OSi=4m2SA@mail.gmail.com>
-References: <20170211184858.26421-1-noralf@tronnes.org> <20170211184858.26421-4-noralf@tronnes.org>
- <20170312184245.ad2nd2siq3y44amp@phenom.ffwll.local>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH RFC 1/3] thermal: allow hwmon devices to be created for of-thermal
+ zones
+Date: Sun, 12 Mar 2017 19:07:40 +0000
+Message-ID: <E1cn8qC-0002uz-PB@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170312184245.ad2nd2siq3y44amp-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 12, 2017 at 7:42 PM, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org> wrote:
->
-> The upshot of all this is two-fold:
->
-> - You get rid of a tiny bit of book-keeping in each tinydrm driver (the
->   merge_clips above, plus the "is this the current fb on our hw" check).
->
-> - There's lots more manual upload devices than just tinydrm, or
->   drm_simple_pipe, this would benefit any atomic driver.
->
-> - Long-term we want to expose the dirty_clip as properties to userspace,
->   since the compositor already computes this anyway for each atomic update
->   (at least good compositors do this). Test-driving these new properties
->   within the kernel would help in catching issues.
+Allow hwmon devices to be optionally created for of-thermal zones,
+rather than permanently denying them "in case" there is a hwmon
+driver duplicating the thermal driver.
 
-- Correct locking: taking the ->dirty_lock only protects against
-concurrent other ->dirty or simple_pipe->update operations, it doesn't
-protect against concurrent modeset changes (i.e. someone could disable
-the panel while you try to upload stuff). Moving the locking out of
-panel drivers into this one single core helper removes the need for
-any locking in drivers. And no need for locking == no way to screw it
-up :-)
--Daniel
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+Without this, "sensors" is unable to report the temperature of the
+Dove SoC when it supports thermal zones.
+
+ Documentation/devicetree/bindings/thermal/thermal.txt | 3 +++
+ arch/arm/boot/dts/dove.dtsi                           | 1 +
+ drivers/thermal/of-thermal.c                          | 3 ++-
+ 3 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
+index 88b6ea1ad290..1478735fff85 100644
+--- a/Documentation/devicetree/bindings/thermal/thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/thermal.txt
+@@ -175,6 +175,9 @@ containing trip nodes and one sub-node containing all the zone cooling maps.
+ 			2000mW, while on a 10'' tablet is around
+ 			4500mW.
+ 
++- linux,hwmon:		Allow Linux to create hwmon devices for the thermal
++  Type: bool		zone.
++
+ Note: The delay properties are bound to the maximum dT/dt (temperature
+ derivative over time) in two situations for a thermal zone:
+ (i)  - when passive cooling is activated (polling-delay-passive); and
+diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
+index 40fb98687230..00f5971cd039 100644
+--- a/arch/arm/boot/dts/dove.dtsi
++++ b/arch/arm/boot/dts/dove.dtsi
+@@ -804,6 +804,7 @@
+ 
+ 	thermal-zones {
+ 		soc-thermal {
++			linux,hwmon;
+ 			polling-delay-passive = <250>; /* ms */
+ 			polling-delay = <1000>; /* ms */
+ 			thermal-sensors = <&thermal>;
+diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+index d04ec3b9e5ff..5cd1838405f0 100644
+--- a/drivers/thermal/of-thermal.c
++++ b/drivers/thermal/of-thermal.c
+@@ -995,7 +995,8 @@ int __init of_parse_thermal_zones(void)
+ 		}
+ 
+ 		/* No hwmon because there might be hwmon drivers registering */
+-		tzp->no_hwmon = true;
++		if (!of_property_read_bool(child, "linux,hwmon"))
++			tzp->no_hwmon = true;
+ 
+ 		if (!of_property_read_u32(child, "sustainable-power", &prop))
+ 			tzp->sustainable_power = prop;
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
