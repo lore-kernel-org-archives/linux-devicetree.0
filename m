@@ -1,143 +1,768 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/4 v5] PCI: add DT bindings for Faraday
-	Technology PCI Host Bridge
-Date: Sun, 12 Mar 2017 23:23:52 +0100
-Message-ID: <20170312222352.2413-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+Subject: [PATCH 2/4 v5] PCI: add driver for Faraday Technology Host Bridge
+Date: Sun, 12 Mar 2017 23:24:03 +0100
+Message-ID: <20170312222403.2473-1-linus.walleij@linaro.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
 To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: openwrt-devel@openwrt.org, Feng-Hsin Chiang <john453@faraday-tech.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, openwrt-devel@openwrt.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Feng-Hsin Chiang <john453@faraday-tech.com>, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgRmFyYWRheSB0ZWNobm9sb2d5
-IFBDSQpIb3N0IEJyaWRnZS4gVGhpcyBJUCBpcyBmb3VuZCBpbiB0aGUgU3RvcmxpbmsvU3Rvcm0v
-Q29ydGluYQpHZW1pbmkgU29DIHBsYXRmb3JtLgoKQ2M6IEphbm9zIExhdWJlIDxqYW5vcy5kZXZA
-Z21haWwuY29tPgpDYzogUGF1bGl1cyBaYWxlY2thcyA8cGF1bGl1cy56YWxlY2thc0BnbWFpbC5j
-b20+CkNjOiBIYW5zIFVsbGkgS3JvbGwgPHVsbGkua3JvbGxAZ29vZ2xlbWFpbC5jb20+CkNjOiBG
-bG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4KQ2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnCkNjOiBGZW5nLUhzaW4gQ2hpYW5nIDxqb2huNDUzQGZhcmFkYXktdGVjaC5j
-b20+CkNjOiBHcmVlbnRpbWUgSHUgPGdyZWVuLmh1QGdtYWlsLmNvbT4KQWNrZWQtYnk6IFJvYiBI
-ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxp
-bnVzLndhbGxlaWpAbGluYXJvLm9yZz4KLS0tCkNoYW5nZUxvZyB2NC0+djU6Ci0gTm8gY2hhbmdl
-cywganVzdCByZXNlbmQgYXMgZXZlcnl0aGluZyBlbHNlIGlzIHJlYmFzZWQgb250bwogIHY0LjEx
-LXJjMS4KQ2hhbmdlTG9nIHYzLT52NDoKLSBBZGQgUm9iJ3MgQUNLCkNoYW5nZUxvZyB2Mi0+djM6
-Ci0gUmVpbnN0YXRlIHRoZSBzcGVjaWZpYy10by1nZW5lcmljIGJpbmRpbmdzIGFsc28gc3BlY2lm
-eWluZyB0aGUKICAiY29ydGluYSxnZW1pbmktcGNpIiBmaXh0dXJlIGZvciB0aGUgRmFyYWRheSBi
-bG9jay4KLSBTZXQgY29tcGF0aWJsZSB0byAiZmFyYWRheSxmdHBjaTEwMCIgYW5kICJmYXJhZGF5
-LGZ0cGNpMTAwLWR1YWwiCiAgdGhpcyBpcyBjbGVhcmx5IGNsb3NlciB0byBvciBlcXVhbCB0byB3
-aGF0IHRoZSBJUCBibG9ja3MgZnJvbQogIEZhcmFkYXkgYXJlIGFjdHVhbGx5IG5hbWVkLgotIEFk
-ZCAiZG1hLXJhbmdlcyIgcHJvcGVydHksIGFmdGVyIGRlY2lwaGVyaW5nIHRoYXQgc29tZSBoYXJk
-Y29kZWQKICBjb25zdGFudHMgaW4gdGhlIGRyaXZlciBpcyByZWFsbHkgYWJvdXQgdGhpcy4KQ2hh
-bmdlTG9nIHYxLT52MjoKLSBSZW5hbWUgZnJvbSBDb3J0aW5hIHByZWZpeGVzIHRvIEZhcmFkYXku
-IFRoaXMgaXMgY2xlYXJseQogIGEgRmFyYWRheSBJUCBibG9jay4KLSBTdXBwb3J0IGJvdGggdGhl
-IHZlcnNpb24gd2l0aCBjYXNjYWRlZCBpbnRlcnJ1cHRzIGFuZCB0aGUKICAiZHVhbCIgdmVyc2lv
-biB3aXRoIDEtdG8tMSBtYXBwZWQgaW50ZXJydXB0cy4KLSBDaGFuZ2UgYnVzLXJhbmdlIHRvIDww
-eDAwIDB4ZmY+Ci0gRml4IHNwZWxsaW5nIG1pc3Rha2UKLSBXcml0ZSBhIGJpdCBhYm91dCBzd2l6
-emxpbmcgaW50ZXJydXB0cyBvbiB0aGUgaW50ZXJydXB0CiAgY29udHJvbGxlciBzaWRlCi0gUmVh
-c29uYWJsZSBzd2l6emxpbmcgaW4gdGhlIGludGVycnVwdCBtYXBwaW5nIGV4YW1wbGUKClRoaXMg
-Y2FuIGJlIG1lcmdlZCB0byB0aGUgUENJIHRyZWUgd2hlbmV2ZXIgaXQgaXMgY29uc2lkZXJlZApm
-aW5lIGZvciBpbmNsdXNpb24uCi0tLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2ZhcmFk
-YXksZnRwY2kxMDAudHh0ICAgfCAxMjkgKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hh
-bmdlZCwgMTI5IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvcGNpL2ZhcmFkYXksZnRwY2kxMDAudHh0CgpkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9mYXJhZGF5LGZ0cGNpMTAw
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvZmFyYWRheSxmdHBj
-aTEwMC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4zNWQ0YTk3
-OWJiN2IKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcGNpL2ZhcmFkYXksZnRwY2kxMDAudHh0CkBAIC0wLDAgKzEsMTI5IEBACitGYXJhZGF5IFRl
-Y2hub2xvZ3kgRlRQQ0kxMDAgUENJIEhvc3QgQnJpZGdlCisKK1RoaXMgUENJIGJyaWRnZSBpcyBm
-b3VuZCBpbnNpZGUgdGhhdCBDb3J0aW5hIFN5c3RlbXMgR2VtaW5pIFNvQyBwbGF0Zm9ybSBhbmQK
-K2lzIGEgZ2VuZXJpYyBJUCBibG9jayBmcm9tIEZhcmFkYXkgVGVjaG5vbG9neS4gSXQgZXhpc3Rz
-IGluIHR3byB2YXJpYW50czoKK3BsYWluIGFuZCBkdWFsIFBDSS4gVGhlIHBsYWluIHZlcnNpb24g
-ZW1iZWRzIGEgY2FzY2FkaW5nIGludGVycnVwdCBjb250cm9sbGVyCitpbnRvIHRoZSBob3N0IGJy
-aWRnZS4gVGhlIGR1YWwgdmVyc2lvbiByb3V0ZXMgdGhlIGludGVycnVwdHMgdG8gdGhlIGhvc3QK
-K2NoaXBzIGludGVycnVwdCBjb250cm9sbGVyLgorCitUaGUgaG9zdCBjb250cm9sbGVyIGFwcGVh
-ciBvbiB0aGUgUENJIGJ1cyB3aXRoIHZlbmRvciBJRCAweDE1OWIgKEZhcmFkYXkKK1RlY2hub2xv
-Z3kpIGFuZCBwcm9kdWN0IElEIDB4NDMyMS4KKworTWFuZGF0b3J5IHByb3BlcnRpZXM6CisKKy0g
-Y29tcGF0aWJsZTogcmFuZ2luZyBmcm9tIHNwZWNpZmljIHRvIGdlbmVyaWMsIHNob3VsZCBiZSBv
-bmUgb2YKKyAgImNvcnRpbmEsZ2VtaW5pLXBjaSIsICJmYXJhZGF5LGZ0cGNpMTAwIgorICAiY29y
-dGluYSxnZW1pbmktcGNpLWR1YWwiLCAiZmFyYWRheSxmdHBjaTEwMC1kdWFsIgorICAiZmFyYWRh
-eSxmdHBjaTEwMCIKKyAgImZhcmFkYXksZnRwY2kxMDAtZHVhbCIKKy0gcmVnOiBtZW1vcnkgYmFz
-ZSBhbmQgc2l6ZSBmb3IgdGhlIGhvc3QgYnJpZGdlCistICNhZGRyZXNzLWNlbGxzOiBzZXQgdG8g
-PDM+CistICNzaXplLWNlbGxzOiBzZXQgdG8gPDI+CistICNpbnRlcnJ1cHQtY2VsbHM6IHNldCB0
-byA8MT4KKy0gYnVzLXJhbmdlOiBzZXQgdG8gPDB4MDAgMHhmZj4KKy0gZGV2aWNlX3R5cGUsIHNl
-dCB0byAicGNpIgorLSByYW5nZXM6IHNlZSBwY2kudHh0CistIGludGVycnVwdC1tYXAtbWFzazog
-c2VlIHBjaS50eHQKKy0gaW50ZXJydXB0LW1hcDogc2VlIHBjaS50eHQKKy0gZG1hLXJhbmdlczog
-dGhyZWUgcmFuZ2VzIGZvciB0aGUgaW5ib3VuZCBtZW1vcnkgcmVnaW9uLiBUaGUgcmFuZ2VzIG11
-c3QKKyAgYmUgYWxpZ25lZCB0byBhIDFNQiBib3VuZGFyeSwgYW5kIG1heSBiZSAxTUIsIDJNQiwg
-NE1CLCA4TUIsIDE2TUIsIDMyTUIsIDY0TUIsCisgIDEyOE1CLCAyNTZNQiwgNTEyTUIsIDFHQiBv
-ciAyR0IgaW4gc2l6ZS4gVGhlIG1lbW9yeSBzaG91bGQgYmUgbWFya2VkIGFzCisgIHByZS1mZXRj
-aGFibGUuCisKK01hbmRhdG9yeSBzdWJub2RlczoKKy0gRm9yICJmYXJhZGF5LGZ0cGNpMTAwIiBh
-IG5vZGUgcmVwcmVzZW50aW5nIHRoZSBpbnRlcnJ1cHQtY29udHJvbGxlciBpbnNpZGUgdGhlCisg
-IGhvc3QgYnJpZGdlIGlzIG1hbmRhdG9yeS4gSXQgaGFzIHRoZSBmb2xsb3dpbmcgbWFuZGF0b3J5
-IHByb3BlcnRpZXM6CisgIC0gaW50ZXJydXB0OiBzZWUgaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50
-ZXJydXB0cy50eHQKKyAgLSBpbnRlcnJ1cHQtcGFyZW50OiBzZWUgaW50ZXJydXB0LWNvbnRyb2xs
-ZXIvaW50ZXJydXB0cy50eHQKKyAgLSBpbnRlcnJ1cHQtY29udHJvbGxlcjogc2VlIGludGVycnVw
-dC1jb250cm9sbGVyL2ludGVycnVwdHMudHh0CisgIC0gI2FkZHJlc3MtY2VsbHM6IHNldCB0byA8
-MD4KKyAgLSAjaW50ZXJydXB0LWNlbGxzOiBzZXQgdG8gPDE+CisKK0kvTyBzcGFjZSBjb25zaWRl
-cmF0aW9uczoKKworVGhlIHBsYWluIHZhcmlhbnQgaGFzIDEyOE1pQiBvZiBub24tcHJlZmV0Y2hh
-YmxlIG1lbW9yeSBzcGFjZSwgd2hlcmVhcyB0aGUKKyJkdWFsIiB2YXJpYW50IGhhcyA2NE1pQi4g
-VGFrZSB0aGlzIGludG8gYWNjb3VudCB3aGVuIGRlc2NyaWJpbmcgdGhlIHJhbmdlcy4KKworSW50
-ZXJydXB0IG1hcCBjb25zaWRlcmF0aW9uczoKKworVGhlICJkdWFsIiB2YXJpYW50IHdpbGwgZ2V0
-IElOVCBBLCBCLCBDLCBEIGZyb20gdGhlIHN5c3RlbSBpbnRlcnJ1cHQgY29udHJvbGxlcgorYW5k
-IHNob3VsZCBwb2ludCB0byByZXNwZWN0aXZlIGludGVycnVwdCBpbiB0aGF0IGNvbnRyb2xsZXIg
-aW4gaXRzCitpbnRlcnJ1cHQtbWFwLgorCitUaGUgY29kZSB3aGljaCBpcyB0aGUgb25seSBkb2N1
-bWVudGF0aW9uIG9mIGhvdyB0aGUgRmFyYWRheSBQQ0kgKHRoZSBub24tZHVhbAordmFyaWFudCkg
-aW50ZXJydXB0cyBhc3NpZ25zIHRoZSBkZWZhdWx0IGludGVycnVwdCBtYXBwaW5nL3N3aXp6bGlu
-ZyBoYXMKK3R5cGljYWxseSBiZWVuIGxpa2UgdGhpcywgZG9pbmcgdGhlIHN3aXp6bGluZyBvbiB0
-aGUgaW50ZXJydXB0IGNvbnRyb2xsZXIgc2lkZQorcmF0aGVyIHRoYW4gaW4gdGhlIGludGVyY29u
-bmVjdDoKKworaW50ZXJydXB0LW1hcC1tYXNrID0gPDB4ZjgwMCAwIDAgNz47CitpbnRlcnJ1cHQt
-bWFwID0KKwk8MHg0ODAwIDAgMCAxICZwY2lfaW50YyAwPiwgLyogU2xvdCA5ICovCisJPDB4NDgw
-MCAwIDAgMiAmcGNpX2ludGMgMT4sCisJPDB4NDgwMCAwIDAgMyAmcGNpX2ludGMgMj4sCisJPDB4
-NDgwMCAwIDAgNCAmcGNpX2ludGMgMz4sCisJPDB4NTAwMCAwIDAgMSAmcGNpX2ludGMgMT4sIC8q
-IFNsb3QgMTAgKi8KKwk8MHg1MDAwIDAgMCAyICZwY2lfaW50YyAyPiwKKwk8MHg1MDAwIDAgMCAz
-ICZwY2lfaW50YyAzPiwKKwk8MHg1MDAwIDAgMCA0ICZwY2lfaW50YyAwPiwKKwk8MHg1ODAwIDAg
-MCAxICZwY2lfaW50YyAyPiwgLyogU2xvdCAxMSAqLworCTwweDU4MDAgMCAwIDIgJnBjaV9pbnRj
-IDM+LAorCTwweDU4MDAgMCAwIDMgJnBjaV9pbnRjIDA+LAorCTwweDU4MDAgMCAwIDQgJnBjaV9p
-bnRjIDE+LAorCTwweDYwMDAgMCAwIDEgJnBjaV9pbnRjIDM+LCAvKiBTbG90IDEyICovCisJPDB4
-NjAwMCAwIDAgMiAmcGNpX2ludGMgMD4sCisJPDB4NjAwMCAwIDAgMyAmcGNpX2ludGMgMT4sCisJ
-PDB4NjAwMCAwIDAgNCAmcGNpX2ludGMgMj47CisKK0V4YW1wbGU6CisKK3BjaUA1MDAwMDAwMCB7
-CisJY29tcGF0aWJsZSA9ICJjb3J0aW5hLGdlbWluaS1wY2kiLCAiZmFyYWRheSxmdHBjaTEwMCI7
-CisJcmVnID0gPDB4NTAwMDAwMDAgMHgxMDA+OworCWludGVycnVwdHMgPSA8OCBJUlFfVFlQRV9M
-RVZFTF9ISUdIPiwgLyogUENJIEEgKi8KKwkJCTwyNiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyog
-UENJIEIgKi8KKwkJCTwyNyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUENJIEMgKi8KKwkJCTwy
-OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogUENJIEQgKi8KKwkjYWRkcmVzcy1jZWxscyA9IDwz
-PjsKKwkjc2l6ZS1jZWxscyA9IDwyPjsKKwkjaW50ZXJydXB0LWNlbGxzID0gPDE+OworCisJYnVz
-LXJhbmdlID0gPDB4MDAgMHhmZj47CisJcmFuZ2VzID0gLyogMU1pQiBJL08gc3BhY2UgMHg1MDAw
-MDAwMC0weDUwMGZmZmZmICovCisJCSA8MHgwMTAwMDAwMCAwIDAgICAgICAgICAgMHg1MDAwMDAw
-MCAwIDB4MDAxMDAwMDA+LAorCQkgLyogMTI4TWlCIG5vbi1wcmVmZXRjaGFibGUgbWVtb3J5IDB4
-NTgwMDAwMDAtMHg1ZmZmZmZmZiAqLworCQkgPDB4MDIwMDAwMDAgMCAweDU4MDAwMDAwIDB4NTgw
-MDAwMDAgMCAweDA4MDAwMDAwPjsKKworCS8qIERNQSByYW5nZXMgKi8KKwlkbWEtcmFuZ2VzID0K
-KwkvKiAxMjhNaUIgYXQgMHgwMDAwMDAwMC0weDA3ZmZmZmZmICovCisJPDB4MDIwMDAwMDAgMCAw
-eDAwMDAwMDAwIDB4MDAwMDAwMDAgMCAweDA4MDAwMDAwPiwKKwkvKiA2NE1pQiBhdCAweDAwMDAw
-MDAwLTB4MDNmZmZmZmYgKi8KKwk8MHgwMjAwMDAwMCAwIDB4MDAwMDAwMDAgMHgwMDAwMDAwMCAw
-IDB4MDQwMDAwMDA+LAorCS8qIDY0TWlCIGF0IDB4MDAwMDAwMDAtMHgwM2ZmZmZmZiAqLworCTww
-eDAyMDAwMDAwIDAgMHgwMDAwMDAwMCAweDAwMDAwMDAwIDAgMHgwNDAwMDAwMD47CisKKwlpbnRl
-cnJ1cHQtbWFwLW1hc2sgPSA8MHhmODAwIDAgMCA3PjsKKwlpbnRlcnJ1cHQtbWFwID0KKwkJPDB4
-NDgwMCAwIDAgMSAmcGNpX2ludGMgMD4sIC8qIFNsb3QgOSAqLworCQk8MHg0ODAwIDAgMCAyICZw
-Y2lfaW50YyAxPiwKKwkJPDB4NDgwMCAwIDAgMyAmcGNpX2ludGMgMj4sCisJCTwweDQ4MDAgMCAw
-IDQgJnBjaV9pbnRjIDM+LAorCQk8MHg1MDAwIDAgMCAxICZwY2lfaW50YyAxPiwgLyogU2xvdCAx
-MCAqLworCQk8MHg1MDAwIDAgMCAyICZwY2lfaW50YyAyPiwKKwkJPDB4NTAwMCAwIDAgMyAmcGNp
-X2ludGMgMz4sCisJCTwweDUwMDAgMCAwIDQgJnBjaV9pbnRjIDA+LAorCQk8MHg1ODAwIDAgMCAx
-ICZwY2lfaW50YyAyPiwgLyogU2xvdCAxMSAqLworCQk8MHg1ODAwIDAgMCAyICZwY2lfaW50YyAz
-PiwKKwkJPDB4NTgwMCAwIDAgMyAmcGNpX2ludGMgMD4sCisJCTwweDU4MDAgMCAwIDQgJnBjaV9p
-bnRjIDE+LAorCQk8MHg2MDAwIDAgMCAxICZwY2lfaW50YyAzPiwgLyogU2xvdCAxMiAqLworCQk8
-MHg2MDAwIDAgMCAyICZwY2lfaW50YyAwPiwKKwkJPDB4NjAwMCAwIDAgMyAmcGNpX2ludGMgMD4s
-CisJCTwweDYwMDAgMCAwIDQgJnBjaV9pbnRjIDA+OworCXBjaV9pbnRjOiBpbnRlcnJ1cHQtY29u
-dHJvbGxlciB7CisJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGNvbj47CisJCWludGVycnVwdC1j
-b250cm9sbGVyOworCQkjYWRkcmVzcy1jZWxscyA9IDwwPjsKKwkJI2ludGVycnVwdC1jZWxscyA9
-IDwxPjsKKwl9OworfTsKLS0gCjIuOS4zCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCm9wZW53cnQtZGV2ZWwgbWFpbGluZyBsaXN0Cm9wZW53cnQtZGV2ZWxA
-bGlzdHMub3BlbndydC5vcmcKaHR0cHM6Ly9saXN0cy5vcGVud3J0Lm9yZy9jZ2ktYmluL21haWxt
-YW4vbGlzdGluZm8vb3BlbndydC1kZXZlbAo=
+This adds a host bridge driver for the Faraday Technology
+FPPCI100 host bridge, used for Cortina Systems Gemini SoC
+(SL3516) PCI Host Bridge.
+
+This code is inspired by the out-of-tree OpenWRT patch and
+then extensively rewritten for device tree and using the modern
+helpers to cut down and modernize the code to all new PCI
+frameworks. A driver exists in U-Boot as well.
+
+Tested on the ITian Square One SQ201 NAS with the following
+result in the boot log (trimmed to relevant parts):
+
+OF: PCI: host bridge /soc/pci@50000000 ranges:
+OF: PCI:    IO 0x50000000..0x500fffff -> 0x00000000
+OF: PCI:   MEM 0x58000000..0x5fffffff -> 0x58000000
+ftpci100 50000000.pci: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci_bus 0000:00: root bus resource [io  0x0000-0xfffff]
+pci_bus 0000:00: root bus resource [mem 0x58000000-0x5fffffff]
+ftpci100 50000000.pci:
+  DMA MEM1 BASE: 0x0000000000000000 -> 0x0000000007ffffff config 00070000
+ftpci100 50000000.pci:
+  DMA MEM2 BASE: 0x0000000000000000 -> 0x0000000003ffffff config 00060000
+ftpci100 50000000.pci:
+  DMA MEM3 BASE: 0x0000000000000000 -> 0x0000000003ffffff config 00060000
+PCI: bus0: Fast back to back transfers disabled
+pci 0000:00:00.0: of_irq_parse_pci() failed with rc=-22
+pci 0000:00:0c.0: BAR 0: assigned [mem 0x58000000-0x58007fff]
+pci 0000:00:09.2: BAR 0: assigned [mem 0x58008000-0x580080ff]
+pci 0000:00:09.0: BAR 4: assigned [io  0x1000-0x101f]
+pci 0000:00:09.1: BAR 4: assigned [io  0x1020-0x103f]
+pci 0000:00:09.0: enabling device (0140 -> 0141)
+pci 0000:00:09.0: HCRESET not completed yet!
+pci 0000:00:09.1: enabling device (0140 -> 0141)
+pci 0000:00:09.1: HCRESET not completed yet!
+pci 0000:00:09.2: enabling device (0140 -> 0142)
+rt61pci 0000:00:0c.0: enabling device (0140 -> 0142)
+ieee80211 phy0: rt2x00_set_chip: Info - Chipset detected -
+   rt: 2561, rf: 0003, rev: 000c
+ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+ehci-pci: EHCI PCI platform driver
+ehci-pci 0000:00:09.2: EHCI Host Controller
+ehci-pci 0000:00:09.2: new USB bus registered, assigned bus number 1
+ehci-pci 0000:00:09.2: irq 125, io mem 0x58008000
+ehci-pci 0000:00:09.2: USB 2.0 started, EHCI 1.00
+hub 1-0:1.0: USB hub found
+hub 1-0:1.0: 4 ports detected
+uhci_hcd: USB Universal Host Controller Interface driver
+uhci_hcd 0000:00:09.0: UHCI Host Controller
+uhci_hcd 0000:00:09.0: new USB bus registered, assigned bus number 2
+uhci_hcd 0000:00:09.0: HCRESET not completed yet!
+uhci_hcd 0000:00:09.0: irq 123, io base 0x00001000
+hub 2-0:1.0: USB hub found
+hub 2-0:1.0: config failed, hub doesn't have any ports! (err -19)
+uhci_hcd 0000:00:09.1: UHCI Host Controller
+uhci_hcd 0000:00:09.1: new USB bus registered, assigned bus number 3
+uhci_hcd 0000:00:09.1: HCRESET not completed yet!
+uhci_hcd 0000:00:09.1: irq 124, io base 0x00001020
+hub 3-0:1.0: USB hub found
+hub 3-0:1.0: config failed, hub doesn't have any ports! (err -19)
+scsi 0:0:0:0: Direct-Access     USB      Flash Disk       1.00 PQ: 0 ANSI: 2
+sd 0:0:0:0: [sda] 7900336 512-byte logical blocks: (4.04 GB/3.77 GiB)
+sd 0:0:0:0: [sda] Write Protect is off
+sd 0:0:0:0: [sda] No Caching mode page found
+sd 0:0:0:0: [sda] Assuming drive cache: write through
+ sda: sda1 sda2 sda3
+sd 0:0:0:0: [sda] Attached SCSI removable disk
+ieee80211 phy0: rt2x00lib_request_firmware: Info -
+   Loading firmware file 'rt2561s.bin'
+ieee80211 phy0: rt2x00lib_request_firmware: Info -
+   Firmware detected - version: 0.8
+IPv6: ADDRCONF(NETDEV_UP): wlan0: link is not ready
+
+$ lspci
+00:00.0 Class 0600: 159b:4321
+00:09.2 Class 0c03: 1106:3104
+00:09.0 Class 0c03: 1106:3038
+00:09.1 Class 0c03: 1106:3038
+00:0c.0 Class 0280: 1814:0301
+
+cat /proc/interrupts
+           CPU0
+123:          0       PCI   0 Edge      uhci_hcd:usb2
+124:          0       PCI   1 Edge      uhci_hcd:usb3
+125:        159       PCI   2 Edge      ehci_hcd:usb1
+126:       1082       PCI   3 Edge      rt61pci
+
+cat /proc/iomem
+50000000-500000ff : /soc/pci@50000000
+58000000-5fffffff : Gemini PCI MEM
+  58000000-58007fff : 0000:00:0c.0
+    58000000-58007fff : 0000:00:0c.0
+  58008000-580080ff : 0000:00:09.2
+    58008000-580080ff : ehci_hcd
+
+The EHCI USB hub works fine, I can mount and manage
+files and the IRQs just keep ticking up. I can issue
+iwlist wlan0 scanning and see all the WLANs here, I don't have
+wpa_supplicant so have not tried connecting to them.
+
+Cc: Janos Laube <janos.dev@gmail.com>
+Cc: Paulius Zaleckas <paulius.zaleckas@gmail.com>
+Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Feng-Hsin Chiang <john453@faraday-tech.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v4->v5:
+- Rebase to v4.11-rc1
+ChangeLog v3->v4:
+- Change pr_dbg() to pr_debug(). The former does not exist and
+  for some reason I first changed pr_info() to pr_dbg() and didn't
+  test-compile it before submitting, mea culpa.
+ChangeLog v2->v3:
+- Rewrite to use pci_alloc_host_bridge() and
+  pci_register_host_bridge()
+- Change compatible strings to "faraday,ftpci100" and
+  "faraday,ftpci100-dual"
+- Rename driver file to pci-ftpci100.c to reflect the name
+  of the actual Faraday IP core.
+- Make the driver depend on ARM again as not all archs use
+  setup-irq.c which contains pci_fixup_irqs() that the driver
+  is using.
+- Add "dma-ranges" property, after deciphering that some hardcoded
+  constants in the driver is really about this.
+ChangeLog v1->v2:
+- Rename the bridge and symbols to reflect Faraday technology
+  as this IP block is clearly a Faraday block and not from
+  Storlink/Storm/Cortina at all.
+- Support both the regular and "dual" versions of the bridge,
+  where the regular has a cascaded IRQ controller and the dual
+  does not.
+- Encode per-variant characteristics in a variant struct in
+  the .data field of the OF match.
+- Drop the pointless spinlock in the config space accessors.
+- Drop manipulation of pcibios_min_io and pcibios_min_mem
+- Get the IO range size from the device tree, and set up the
+  bridge properly according to this. Currently we only support
+  a 1MiB size IO range, but hey, it's at least dynamic and
+  logical.
+
+This can be merged to the PCI tree whenever it is considered
+fine for inclusion.
+
+Andestech and Faraday guys: you are more likely than me to
+actually have documentation for this bridge. Please share with
+me if you can, especially the register defintions, because I
+want to set up IO and MEM windows properly from the device tree,
+not just rely on defaults. There are defines for these registers
+but no use or documentation.
+---
+ drivers/pci/host/Kconfig        |   6 +
+ drivers/pci/host/Makefile       |   1 +
+ drivers/pci/host/pci-ftpci100.c | 566 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 573 insertions(+)
+ create mode 100644 drivers/pci/host/pci-ftpci100.c
+
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index f7c1d4d5c665..aa23b70d61eb 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -27,6 +27,12 @@ config PCIE_XILINX_NWL
+ 	 or End Point. The current option selection will only
+ 	 support root port enabling.
+ 
++config PCI_FTPCI100
++	bool "Faraday Technology FTPCI100 PCI controller"
++	depends on OF
++	depends on ARM
++	default ARCH_GEMINI
++
+ config PCI_TEGRA
+ 	bool "NVIDIA Tegra PCIe controller"
+ 	depends on ARCH_TEGRA
+diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+index 4d3686676cc3..cab879578003 100644
+--- a/drivers/pci/host/Makefile
++++ b/drivers/pci/host/Makefile
+@@ -1,3 +1,4 @@
++obj-$(CONFIG_PCI_FTPCI100) += pci-ftpci100.o
+ obj-$(CONFIG_PCI_HYPERV) += pci-hyperv.o
+ obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+ obj-$(CONFIG_PCI_AARDVARK) += pci-aardvark.o
+diff --git a/drivers/pci/host/pci-ftpci100.c b/drivers/pci/host/pci-ftpci100.c
+new file mode 100644
+index 000000000000..438a1e95ee1b
+--- /dev/null
++++ b/drivers/pci/host/pci-ftpci100.c
+@@ -0,0 +1,566 @@
++/*
++ * Support for Faraday Technology FTPC100 PCI Controller
++ *
++ * Copyright (C) 2017 Linus Walleij <linus.walleij@linaro.org>
++ *
++ * Based on the out-of-tree OpenWRT patch for Cortina Gemini:
++ * Copyright (C) 2009 Janos Laube <janos.dev@gmail.com>
++ * Copyright (C) 2009 Paulius Zaleckas <paulius.zaleckas@teltonika.lt>
++ * Based on SL2312 PCI controller code
++ * Storlink (C) 2003
++ */
++
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/of_irq.h>
++#include <linux/of_pci.h>
++#include <linux/pci.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/irqdomain.h>
++#include <linux/irqchip/chained_irq.h>
++#include <linux/bitops.h>
++#include <linux/irq.h>
++
++/*
++ * Special configuration registers directly in the first few words
++ * in he I/O space.
++ */
++#define PCI_IOSIZE	0x00
++#define PCI_PROT	0x04 /* AHB protection */
++#define PCI_CTRL	0x08 /* PCI control signal */
++#define PCI_SOFTRST	0x10 /* Soft reset counter and response error enable */
++#define PCI_CONFIG	0x28 /* PCI configuration command register */
++#define PCI_DATA	0x2C
++
++#define FARADAY_PCI_PMC			0x40 /* Power management control */
++#define FARADAY_PCI_PMCSR		0x44 /* Power management status */
++#define FARADAY_PCI_CTRL1		0x48 /* Control register 1 */
++#define FARADAY_PCI_CTRL2		0x4C /* Control register 2 */
++#define FARADAY_PCI_MEM1_BASE_SIZE	0x50 /* Memory base and size #1 */
++#define FARADAY_PCI_MEM2_BASE_SIZE	0x54 /* Memory base and size #2 */
++#define FARADAY_PCI_MEM3_BASE_SIZE	0x58 /* Memory base and size #3 */
++
++/* Bits 31..28 gives INTD..INTA status */
++#define PCI_CTRL2_INTSTS_SHIFT		28
++#define PCI_CTRL2_INTMASK_CMDERR	BIT(27)
++#define PCI_CTRL2_INTMASK_PARERR	BIT(26)
++/* Bits 25..22 masks INTD..INTA */
++#define PCI_CTRL2_INTMASK_SHIFT		22
++#define PCI_CTRL2_INTMASK_MABRT_RX	BIT(21)
++#define PCI_CTRL2_INTMASK_TABRT_RX	BIT(20)
++#define PCI_CTRL2_INTMASK_TABRT_TX	BIT(19)
++#define PCI_CTRL2_INTMASK_RETRY4	BIT(18)
++#define PCI_CTRL2_INTMASK_SERR_RX	BIT(17)
++#define PCI_CTRL2_INTMASK_PERR_RX	BIT(16)
++/* Bit 15 reserved */
++#define PCI_CTRL2_MSTPRI_REQ6		BIT(14)
++#define PCI_CTRL2_MSTPRI_REQ5		BIT(13)
++#define PCI_CTRL2_MSTPRI_REQ4		BIT(12)
++#define PCI_CTRL2_MSTPRI_REQ3		BIT(11)
++#define PCI_CTRL2_MSTPRI_REQ2		BIT(10)
++#define PCI_CTRL2_MSTPRI_REQ1		BIT(9)
++#define PCI_CTRL2_MSTPRI_REQ0		BIT(8)
++/* Bits 7..4 reserved */
++/* Bits 3..0 TRDYW */
++
++/*
++ * Memory configs:
++ * Bit 31..20 defines the PCI side memory base
++ * Bit 19..16 (4 bits) defines the size per below
++ */
++#define FARADAY_PCI_MEMBASE_MASK	0xfff00000
++#define FARADAY_PCI_MEMSIZE_1MB		0x0
++#define FARADAY_PCI_MEMSIZE_2MB		0x1
++#define FARADAY_PCI_MEMSIZE_4MB		0x2
++#define FARADAY_PCI_MEMSIZE_8MB		0x3
++#define FARADAY_PCI_MEMSIZE_16MB	0x4
++#define FARADAY_PCI_MEMSIZE_32MB	0x5
++#define FARADAY_PCI_MEMSIZE_64MB	0x6
++#define FARADAY_PCI_MEMSIZE_128MB	0x7
++#define FARADAY_PCI_MEMSIZE_256MB	0x8
++#define FARADAY_PCI_MEMSIZE_512MB	0x9
++#define FARADAY_PCI_MEMSIZE_1GB		0xa
++#define FARADAY_PCI_MEMSIZE_2GB		0xb
++#define FARADAY_PCI_MEMSIZE_SHIFT	16
++
++/*
++ * The DMA base is set to 0x0 for all memory segments, it reflects the
++ * fact that the memory of the host system starts at 0x0.
++ */
++#define FARADAY_PCI_DMA_MEM1_BASE	0x00000000
++#define FARADAY_PCI_DMA_MEM2_BASE	0x00000000
++#define FARADAY_PCI_DMA_MEM3_BASE	0x00000000
++
++/* Defines for PCI configuration command register */
++#define PCI_CONF_ENABLE		BIT(31)
++#define PCI_CONF_WHERE(r)	((r) & 0xFC)
++#define PCI_CONF_BUS(b)		(((b) & 0xFF) << 16)
++#define PCI_CONF_DEVICE(d)	(((d) & 0x1F) << 11)
++#define PCI_CONF_FUNCTION(f)	(((f) & 0x07) << 8)
++
++/**
++ * struct faraday_pci_variant - encodes IP block differences
++ * @cascaded_irq: this host has cascaded IRQs from an interrupt controller
++ *	embedded in the host bridge.
++ */
++struct faraday_pci_variant {
++	bool cascaded_irq;
++};
++
++struct faraday_pci {
++	struct device *dev;
++	void __iomem *base;
++	struct irq_domain *irqdomain;
++	struct pci_bus *bus;
++};
++
++static int faraday_res_to_memcfg(resource_size_t mem_base,
++				 resource_size_t mem_size,
++				 u32 *val)
++{
++	u32 outval;
++
++	switch (mem_size) {
++	case SZ_1M:
++		outval = FARADAY_PCI_MEMSIZE_1MB;
++		break;
++	case SZ_2M:
++		outval = FARADAY_PCI_MEMSIZE_2MB;
++		break;
++	case SZ_4M:
++		outval = FARADAY_PCI_MEMSIZE_4MB;
++		break;
++	case SZ_8M:
++		outval = FARADAY_PCI_MEMSIZE_8MB;
++		break;
++	case SZ_16M:
++		outval = FARADAY_PCI_MEMSIZE_16MB;
++		break;
++	case SZ_32M:
++		outval = FARADAY_PCI_MEMSIZE_32MB;
++		break;
++	case SZ_64M:
++		outval = FARADAY_PCI_MEMSIZE_64MB;
++		break;
++	case SZ_128M:
++		outval = FARADAY_PCI_MEMSIZE_128MB;
++		break;
++	case SZ_256M:
++		outval = FARADAY_PCI_MEMSIZE_256MB;
++		break;
++	case SZ_512M:
++		outval = FARADAY_PCI_MEMSIZE_512MB;
++		break;
++	case SZ_1G:
++		outval = FARADAY_PCI_MEMSIZE_1GB;
++		break;
++	case SZ_2G:
++		outval = FARADAY_PCI_MEMSIZE_2GB;
++		break;
++	default:
++		return -EINVAL;
++	}
++	outval <<= FARADAY_PCI_MEMSIZE_SHIFT;
++
++	/* This is probably not good */
++	if (mem_base & ~(FARADAY_PCI_MEMBASE_MASK))
++		pr_warn("truncated PCI memory base\n");
++	/* Translate to bridge side address space */
++	outval |= (mem_base & FARADAY_PCI_MEMBASE_MASK);
++	pr_debug("Translated pci base @%08x, size %08x to config %08x\n",
++		 mem_base, mem_size, outval);
++
++	*val = outval;
++	return 0;
++}
++
++static int faraday_pci_read_config(struct pci_bus *bus, unsigned int fn,
++				  int config, int size, u32 *value)
++{
++	struct faraday_pci *p = bus->sysdata;
++
++	writel(PCI_CONF_BUS(bus->number) |
++			PCI_CONF_DEVICE(PCI_SLOT(fn)) |
++			PCI_CONF_FUNCTION(PCI_FUNC(fn)) |
++			PCI_CONF_WHERE(config) |
++			PCI_CONF_ENABLE,
++			p->base + PCI_CONFIG);
++
++	*value = readl(p->base + PCI_DATA);
++
++	if (size == 1)
++		*value = (*value >> (8 * (config & 3))) & 0xFF;
++	else if (size == 2)
++		*value = (*value >> (8 * (config & 3))) & 0xFFFF;
++
++	dev_dbg(&bus->dev,
++		"[read]  slt: %.2d, fnc: %d, cnf: 0x%.2X, val (%d bytes): 0x%.8X\n",
++		PCI_SLOT(fn), PCI_FUNC(fn), config, size, *value);
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int faraday_pci_write_config(struct pci_bus *bus, unsigned int fn,
++				   int config, int size, u32 value)
++{
++	struct faraday_pci *p = bus->sysdata;
++	int ret = PCIBIOS_SUCCESSFUL;
++
++	dev_dbg(&bus->dev,
++		"[write] slt: %.2d, fnc: %d, cnf: 0x%.2X, val (%d bytes): 0x%.8X\n",
++		PCI_SLOT(fn), PCI_FUNC(fn), config, size, value);
++
++	writel(PCI_CONF_BUS(bus->number) |
++			PCI_CONF_DEVICE(PCI_SLOT(fn)) |
++			PCI_CONF_FUNCTION(PCI_FUNC(fn)) |
++			PCI_CONF_WHERE(config) |
++			PCI_CONF_ENABLE,
++			p->base + PCI_CONFIG);
++
++	switch (size) {
++	case 4:
++		writel(value, p->base + PCI_DATA);
++		break;
++	case 2:
++		writew(value, p->base + PCI_DATA + (config & 3));
++		break;
++	case 1:
++		writeb(value, p->base + PCI_DATA + (config & 3));
++		break;
++	default:
++		ret = PCIBIOS_BAD_REGISTER_NUMBER;
++	}
++
++	return ret;
++}
++
++static struct pci_ops faraday_pci_ops = {
++	.read	= faraday_pci_read_config,
++	.write	= faraday_pci_write_config,
++};
++
++static void faraday_pci_ack_irq(struct irq_data *d)
++{
++	struct faraday_pci *p = irq_data_get_irq_chip_data(d);
++	unsigned int reg;
++
++	faraday_pci_read_config(p->bus, 0, FARADAY_PCI_CTRL2, 4, &reg);
++	reg &= ~(0xF << PCI_CTRL2_INTSTS_SHIFT);
++	reg |= BIT(irqd_to_hwirq(d) + PCI_CTRL2_INTSTS_SHIFT);
++	faraday_pci_write_config(p->bus, 0, FARADAY_PCI_CTRL2, 4, reg);
++}
++
++static void faraday_pci_mask_irq(struct irq_data *d)
++{
++	struct faraday_pci *p = irq_data_get_irq_chip_data(d);
++	unsigned int reg;
++
++	faraday_pci_read_config(p->bus, 0, FARADAY_PCI_CTRL2, 4, &reg);
++	reg &= ~((0xF << PCI_CTRL2_INTSTS_SHIFT)
++		 | BIT(irqd_to_hwirq(d) + PCI_CTRL2_INTMASK_SHIFT));
++	faraday_pci_write_config(p->bus, 0, FARADAY_PCI_CTRL2, 4, reg);
++}
++
++static void faraday_pci_unmask_irq(struct irq_data *d)
++{
++	struct faraday_pci *p = irq_data_get_irq_chip_data(d);
++	unsigned int reg;
++
++	faraday_pci_read_config(p->bus, 0, FARADAY_PCI_CTRL2, 4, &reg);
++	reg &= ~(0xF << PCI_CTRL2_INTSTS_SHIFT);
++	reg |= BIT(irqd_to_hwirq(d) + PCI_CTRL2_INTMASK_SHIFT);
++	faraday_pci_write_config(p->bus, 0, FARADAY_PCI_CTRL2, 4, reg);
++}
++
++static void faraday_pci_irq_handler(struct irq_desc *desc)
++{
++	struct faraday_pci *p = irq_desc_get_handler_data(desc);
++	struct irq_chip *irqchip = irq_desc_get_chip(desc);
++	unsigned int irq_stat, reg, i;
++
++	faraday_pci_read_config(p->bus, 0, FARADAY_PCI_CTRL2, 4, &reg);
++	irq_stat = reg >> PCI_CTRL2_INTSTS_SHIFT;
++
++	chained_irq_enter(irqchip, desc);
++
++	for (i = 0; i < 4; i++) {
++		if ((irq_stat & BIT(i)) == 0)
++			continue;
++		generic_handle_irq(irq_find_mapping(p->irqdomain, i));
++	}
++
++	chained_irq_exit(irqchip, desc);
++}
++
++static struct irq_chip faraday_pci_irq_chip = {
++	.name = "PCI",
++	.irq_ack = faraday_pci_ack_irq,
++	.irq_mask = faraday_pci_mask_irq,
++	.irq_unmask = faraday_pci_unmask_irq,
++};
++
++static int faraday_pci_irq_map(struct irq_domain *domain, unsigned int irq,
++			      irq_hw_number_t hwirq)
++{
++	irq_set_chip_and_handler(irq, &faraday_pci_irq_chip, handle_level_irq);
++	irq_set_chip_data(irq, domain->host_data);
++
++	return 0;
++}
++
++static const struct irq_domain_ops faraday_pci_irqdomain_ops = {
++	.map = faraday_pci_irq_map,
++};
++
++static int faraday_pci_setup_cascaded_irq(struct faraday_pci *p)
++{
++	struct device_node *intc = of_get_next_child(p->dev->of_node, NULL);
++	int irq;
++	int i;
++
++	if (!intc) {
++		dev_err(p->dev, "missing child interrupt-controller node\n");
++		return -EINVAL;
++	}
++
++	/* All PCI IRQs cascade off this one */
++	irq = of_irq_get(intc, 0);
++	if (!irq) {
++		dev_err(p->dev, "failed to get parent IRQ\n");
++		return -EINVAL;
++	}
++
++	p->irqdomain = irq_domain_add_linear(intc, 4,
++					     &faraday_pci_irqdomain_ops,
++					     p);
++	if (!p->irqdomain) {
++		dev_err(p->dev, "failed to create Gemini PCI IRQ domain\n");
++		return -EINVAL;
++	}
++
++	irq_set_chained_handler_and_data(irq, faraday_pci_irq_handler, p);
++
++	for (i = 0; i < 4; i++)
++		irq_create_mapping(p->irqdomain, i);
++
++	return 0;
++}
++
++static int pci_dma_range_parser_init(struct of_pci_range_parser *parser,
++				     struct device_node *node)
++{
++	const int na = 3, ns = 2;
++	int rlen;
++
++	parser->node = node;
++	parser->pna = of_n_addr_cells(node);
++	parser->np = parser->pna + na + ns;
++
++	parser->range = of_get_property(node, "dma-ranges", &rlen);
++	if (!parser->range)
++		return -ENOENT;
++	parser->end = parser->range + rlen / sizeof(__be32);
++
++	return 0;
++}
++
++static int faraday_pci_parse_map_dma_ranges(struct faraday_pci *p,
++					    struct device_node *np)
++{
++	struct of_pci_range range;
++	struct of_pci_range_parser parser;
++	struct device *dev = p->dev;
++	u32 confreg[3] = {
++		FARADAY_PCI_MEM1_BASE_SIZE,
++		FARADAY_PCI_MEM2_BASE_SIZE,
++		FARADAY_PCI_MEM3_BASE_SIZE,
++	};
++	int i = 0;
++	u32 val;
++
++	if (pci_dma_range_parser_init(&parser, np)) {
++		dev_err(dev, "missing dma-ranges property\n");
++		return -EINVAL;
++	}
++
++	/*
++	 * Get the dma-ranges from the device tree
++	 */
++	for_each_of_pci_range(&parser, &range) {
++		u64 end = range.pci_addr + range.size - 1;
++		int ret;
++
++		ret = faraday_res_to_memcfg(range.pci_addr, range.size, &val);
++		if (ret) {
++			dev_err(dev,
++				"DMA range %d: illegal MEM resource size\n", i);
++			return -EINVAL;
++		}
++
++		dev_info(dev, "DMA MEM%d BASE: 0x%016llx -> 0x%016llx config %08x\n",
++			 i + 1, range.pci_addr, end, val);
++		if (i <= 2) {
++			faraday_pci_write_config(p->bus, 0, confreg[i],
++						 4, val);
++		} else {
++			dev_err(dev, "ignore extraneous dma-range %d\n", i);
++			break;
++		}
++
++		i++;
++	}
++
++	return 0;
++}
++
++static int faraday_pci_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct faraday_pci_variant *variant =
++		of_device_get_match_data(dev);
++	struct resource *regs;
++	resource_size_t io_base;
++	struct resource_entry *win;
++	struct faraday_pci *p;
++	struct resource *mem;
++	struct resource *io;
++	struct pci_host_bridge *host;
++	int ret;
++	u32 val;
++	LIST_HEAD(res);
++
++	host = pci_alloc_host_bridge(sizeof(*p));
++	if (!host)
++		return -ENOMEM;
++
++	host->dev.parent = dev;
++	host->ops = &faraday_pci_ops;
++	host->busnr = 0;
++	host->msi = NULL;
++	p = pci_host_bridge_priv(host);
++	host->sysdata = p;
++	p->dev = dev;
++
++	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	p->base = devm_ioremap_resource(dev, regs);
++	if (IS_ERR(p->base))
++		return PTR_ERR(p->base);
++
++	ret = of_pci_get_host_bridge_resources(dev->of_node, 0, 0xff,
++					       &res, &io_base);
++	if (ret)
++		return ret;
++
++	ret = devm_request_pci_bus_resources(dev, &res);
++	if (ret)
++		return ret;
++
++	/* Get the I/O and memory ranges from DT */
++	resource_list_for_each_entry(win, &res) {
++		switch (resource_type(win->res)) {
++		case IORESOURCE_IO:
++			io = win->res;
++			io->name = "Gemini PCI I/O";
++			if (!faraday_res_to_memcfg(io->start - win->offset,
++						   resource_size(io),
++						   &val)) {
++				/* setup I/O space size */
++				writel(val, p->base + PCI_IOSIZE);
++			} else {
++				dev_err(dev,
++					"illegal IO mem size\n");
++				return -EINVAL;
++			}
++			ret = pci_remap_iospace(io, io_base);
++			if (ret) {
++				dev_warn(dev, "error %d: failed to map resource %pR\n",
++					 ret, io);
++				continue;
++			}
++			break;
++		case IORESOURCE_MEM:
++			mem = win->res;
++			mem->name = "Gemini PCI MEM";
++			break;
++		case IORESOURCE_BUS:
++			break;
++		default:
++			break;
++		}
++	}
++
++	/* Setup hostbridge */
++	val = readl(p->base + PCI_CTRL);
++	val |= PCI_COMMAND_IO;
++	val |= PCI_COMMAND_MEMORY;
++	val |= PCI_COMMAND_MASTER;
++	writel(val, p->base + PCI_CTRL);
++
++	list_splice_init(&res, &host->windows);
++	ret = pci_register_host_bridge(host);
++	if (ret) {
++		dev_err(dev, "failed to register host: %d\n", ret);
++		return ret;
++	}
++	p->bus = host->bus;
++
++	/* Mask and clear all interrupts */
++	faraday_pci_write_config(p->bus, 0, FARADAY_PCI_CTRL2 + 2, 2, 0xF000);
++	if (variant->cascaded_irq) {
++		ret = faraday_pci_setup_cascaded_irq(p);
++		if (ret) {
++			dev_err(dev, "failed to setup cascaded IRQ\n");
++			return ret;
++		}
++	}
++
++	ret = faraday_pci_parse_map_dma_ranges(p, dev->of_node);
++	if (ret)
++		return ret;
++
++	pci_scan_child_bus(p->bus);
++	pci_fixup_irqs(pci_common_swizzle, of_irq_parse_and_map_pci);
++	pci_bus_assign_resources(p->bus);
++	pci_bus_add_devices(p->bus);
++	pci_free_resource_list(&res);
++
++	return 0;
++}
++
++/*
++ * We encode bridge variants here, we have at least two so it doesn't
++ * hurt to have infrastructure to encompass future variants as well.
++ */
++const struct faraday_pci_variant faraday_regular = {
++	.cascaded_irq = true,
++};
++
++const struct faraday_pci_variant faraday_dual = {
++	.cascaded_irq = false,
++};
++
++static const struct of_device_id faraday_pci_of_match[] = {
++	{
++		.compatible = "faraday,ftpci100",
++		.data = &faraday_regular,
++	},
++	{
++		.compatible = "faraday,ftpci100-dual",
++		.data = &faraday_dual,
++	},
++	{},
++};
++
++static struct platform_driver faraday_pci_driver = {
++	.driver = {
++		.name = "ftpci100",
++		.of_match_table = of_match_ptr(faraday_pci_of_match),
++	},
++	.probe  = faraday_pci_probe,
++};
++builtin_platform_driver(faraday_pci_driver);
+-- 
+2.9.3
