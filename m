@@ -1,117 +1,63 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 12 Mar 2017 17:59:28 -0300
-Message-ID: <20170312175923.6ad86dff@vento.lan>
+Date: Sun, 12 Mar 2017 21:09:53 +0000
+Message-ID: <20170312210952.GV21222@n2100.armlinux.org.uk>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
-        <20170312194700.GR21222@n2100.armlinux.org.uk>
+ <20170312175118.GP21222@n2100.armlinux.org.uk>
+ <191ef88d-2925-2264-6c77-46647394fc72@gmail.com>
+ <20170312192932.GQ21222@n2100.armlinux.org.uk>
+ <58b30bca-20ca-d4bd-7b86-04a4b8e71935@gmail.com>
+ <c6eda3b3-52b8-8560-8f46-a6e2d6303bbd@gmail.com>
+ <fa07c8d2-0943-b7d1-8d37-76e03bd527c0@gmail.com>
+ <20170312204037.GU21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170312194700.GR21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170312204037.GU21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWNGWvitb5QawA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, robert.jarzmik-GANU6spQydw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, sakari.ailus
 List-Id: devicetree@vger.kernel.org
 
-Em Sun, 12 Mar 2017 19:47:00 +0000
-Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> escreveu:
-
-> Another issue.
+On Sun, Mar 12, 2017 at 08:40:37PM +0000, Russell King - ARM Linux wrote:
+> On Sun, Mar 12, 2017 at 01:36:32PM -0700, Steve Longerbeam wrote:
+> > But hold on, if my logic is correct, then why did the CSI power-off
+> > get reached in your case, multiple times? Yes I think there is a bug,
+> > link_notify() is not checking if the link has already been disabled.
+> > I will fix this. But I'm surprised media core's link_notify handling
+> > doesn't do this.
 > 
-> The "reboot and the /dev/video* devices come up in a completely
-> different order" problem seems to exist with this version.
+> Well, I think there's something incredibly fishy going on here.  I
+> turned that dev_dbg() at the top of the function into a dev_info(),
+> and I get:
 > 
-> The dot graph I supplied previously had "ipu1_csi0 capture" on
-> /dev/video4.  I've just rebooted, and now I find it's on
-> /dev/video2 instead.
+> root@hbi2ex:~# dmesg |grep -A2 imx-ipuv3-csi
+> [   53.370949] imx-ipuv3-csi imx-ipuv3-csi.0: power OFF
+> [   53.371015] ------------[ cut here ]------------
+> [   53.371075] WARNING: CPU: 0 PID: 1515 at drivers/staging/media/imx/imx-media-csi.c:806 csi_s_power+0xb8/0xd0 [imx_media_csi]
+> --
+> [   53.372624] imx-ipuv3-csi imx-ipuv3-csi.0: power OFF
+> [   53.372637] ------------[ cut here ]------------
+> [   53.372663] WARNING: CPU: 0 PID: 1515 at drivers/staging/media/imx/imx-media-csi.c:806 csi_s_power+0xb8/0xd0 [imx_media_csi]
 > 
-> Here's the extract from the .dot file of the old listing:
-> 
->         n00000018 [label="ipu1_ic_prpenc capture\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
->         n00000021 [label="ipu1_ic_prpvf capture\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
->         n0000002e [label="ipu2_ic_prpenc capture\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
->         n00000037 [label="ipu2_ic_prpvf capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
->         n00000048 [label="ipu1_csi0 capture\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
->         n00000052 [label="ipu1_csi1 capture\n/dev/video5", shape=box, style=filled, fillcolor=yellow]
->         n00000062 [label="ipu2_csi0 capture\n/dev/video6", shape=box, style=filled, fillcolor=yellow]
->         n0000006c [label="ipu2_csi1 capture\n/dev/video7", shape=box, style=filled, fillcolor=yellow]
-> 
-> and here's the same after reboot:
-> 
->         n00000014 [label="ipu1_csi0 capture\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
->         n0000001e [label="ipu1_csi1 capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
->         n00000028 [label="ipu2_csi0 capture\n/dev/video4", shape=box, style=filled, fillcolor=yellow]
->         n00000035 [label="ipu1_ic_prpenc capture\n/dev/video5", shape=box, style=filled, fillcolor=yellow]
->         n0000003e [label="ipu1_ic_prpvf capture\n/dev/video6", shape=box, style=filled, fillcolor=yellow]
->         n0000004c [label="ipu2_csi1 capture\n/dev/video7", shape=box, style=filled, fillcolor=yellow]
->         n00000059 [label="ipu2_ic_prpenc capture\n/dev/video8", shape=box, style=filled, fillcolor=yellow]
->         n00000062 [label="ipu2_ic_prpvf capture\n/dev/video9", shape=box, style=filled, fillcolor=yellow]
-> 
-> (/dev/video0 and /dev/video1 are taken up by CODA, since I updated the
-> names of the firmware files, and now CODA initialises... seems the
-> back-compat filenames don't work, but that's not a problem with imx6
-> capture.)
-> 
+> There isn't a power on event being generated before these two power
+> off events.  I don't see a power on event even when I attempt to
+> start streaming either (which fails due to the lack of bayer
+> support.)
 
-Didn't have time yet to read/comment the other e-mails in this thread.
+Found it - my imx219 driver returns '1' from its s_power function when
+powering up, which triggers a bug in your code - when imx_media_set_power()
+fails to power up, you call imx_media_set_power() telling it to power
+everything off - including devices that are already powered off.
 
-Yet, as this is a simple issue, let me answer it first.
+This is really bad news - s_power() may be called via other paths,
+such as when the subdev is opened.
 
-With regards to /dev/video?, the device number depends on the probing 
-order, with can be random on SoC drivers, due to the way OF works. 
-
-Yet, udev/systemd has some rules that provide an unique name for V4L
-devices at /lib/udev/rules.d/60-persistent-v4l.rules. Basically, it
-runs a small application (v4l_id) with creates a persistent symling
-using rules like this:
-
-	KERNEL=="video*", ENV{ID_SERIAL}=="?*", SYMLINK+="v4l/by-id/$env{ID_BUS}-$env{ID_SERIAL}-video-index$attr{index}"
-
-Those names are stored at /dev/v4l/by-path.
-
-For example, on Exynos, we have:
-
-$ ls -lctra /dev/v4l/by-path/
-total 0
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-13e10000.video-scaler-video-index0 -> ../../video7
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-13e00000.video-scaler-video-index0 -> ../../video6
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-11f60000.jpeg-video-index0 -> ../../video4
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-11f50000.jpeg-video-index1 -> ../../video3
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-11f50000.jpeg-video-index0 -> ../../video2
-drwxr-xr-x 3 root root  60 Mar 11 07:19 ..
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-11f60000.jpeg-video-index1 -> ../../video5
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-11000000.codec-video-index1 -> ../../video1
-lrwxrwxrwx 1 root root  12 Mar 11 07:19 platform-11000000.codec-video-index0 -> ../../video0
-
-No matter what driver gets probed first, the above names should not
-change.
-
-So, if you want to write a script, the best is to use the /dev/v4l/by-path.
-
-Unfortunately, gstreamer has some issues with that, as some of their plugins
-don't seem to allow passing the name of the devnode, but just the number of
-/dev/video?.
-
-So, you need some script to convert from /dev/v4l/by-path/foo to
-/dev/video?.
-
-What I'm using on Exynos scripts is this logic:
-
-	NEEDED1=platform-13e00000.video-scaler-video-index0
-	DEV1=$(ls -l /dev/v4l/by-path/$NEEDED1|perl -ne ' print $1 if (m,/video(\d+),)')
-
-Then, if I need to talk with this mem2mem driver using the v4l2video
-convert plugin, I can launch gst with something like:
-
-	gst-launch-1.0 videotestsrc ! v4l2video${DEV1}convert ! fakesink
-
-Thanks,
-Mauro
-
-
-Thanks,
-Mauro
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
