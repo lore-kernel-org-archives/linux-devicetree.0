@@ -1,21 +1,23 @@
 From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: [PATCH v2 08/23] MAINTAINERS: Add file patterns for h8300 device tree bindings
-Date: Sun, 12 Mar 2017 14:16:52 +0100
-Message-ID: <1489324627-19126-9-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH v2 11/23] MAINTAINERS: Add file patterns for mailbox device tree bindings
+Date: Sun, 12 Mar 2017 14:16:55 +0100
+Message-ID: <1489324627-19126-12-git-send-email-geert@linux-m68k.org>
 References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1489324627-19126-1-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Submitters of device tree binding documentation may forget to CC
 the subsystem maintainer if this is missing.
 
 Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>
-Cc: uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
 Please apply this patch directly if you want to be involved in device
 tree binding documentation for your subsystem.
@@ -25,28 +27,36 @@ v2:
 
 Impact on next-20170310:
 
-+Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org> (maintainer:H8/300 ARCHITECTURE)
- Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+-Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:5/5=100%)
++Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (maintainer:MAILBOX API)
++Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
  Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-+uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org (moderated list:H8/300 ARCHITECTURE)
+-Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (commit_signer:3/5=60%)
+-"Andreas Färber" <afaerber-l3A5Bk7waGM@public.gmane.org> (commit_signer:1/5=20%)
+-Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> (commit_signer:1/5=20%,authored:1/5=20%)
+-Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> (commit_signer:1/5=20%,authored:1/5=20%)
+-Rob Rice <rrice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> (authored:1/5=20%)
+-Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (authored:1/5=20%)
+-Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> (authored:1/5=20%)
++linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:MAILBOX API)
  devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
- linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+-linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
 ---
  MAINTAINERS | 1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index fc0d3d709db0687f..fa42535181d48e27 100644
+index bbed579cfccc092c..2692055d221e2bb2 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -5743,6 +5743,7 @@ L:	uclinux-h8-devel-5NWGOfrQmneRv+LV9MX5uooqe+aC9MnS@public.gmane.org (moderated for non-subscribers)
- W:	http://uclinux-h8.sourceforge.jp
- T:	git git://git.sourceforge.jp/gitroot/uclinux-h8/linux.git
+@@ -7795,6 +7795,7 @@ MAILBOX API
+ M:	Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ L:	linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
  S:	Maintained
-+F:	Documentation/devicetree/bindings/h8300/
- F:	arch/h8300/
- F:	drivers/clocksource/h8300_*.c
- F:	drivers/clk/h8300/
++F:	Documentation/devicetree/bindings/mailbox/
+ F:	drivers/mailbox/
+ F:	include/linux/mailbox_client.h
+ F:	include/linux/mailbox_controller.h
 -- 
 2.7.4
 
