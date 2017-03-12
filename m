@@ -1,47 +1,35 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10] ALSA SoC MAX98927 driver - Initial release
-Date: Sun, 12 Mar 2017 09:11:02 -0500
-Message-ID: <20170312141102.fxigzia2nvfuli2d@rob-hp-laptop>
-References: <1488552768-14901-1-git-send-email-ryans.lee@maximintegrated.com>
- <1488552768-14901-2-git-send-email-ryans.lee@maximintegrated.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] devicetree: add vendor prefix for Winstar Display
+ Corp.
+Date: Sun, 12 Mar 2017 09:12:25 -0500
+Message-ID: <20170312141225.4tyep7xodty46a2h@rob-hp-laptop>
+References: <20170303152156.31370-1-richard.genoud@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1488552768-14901-2-git-send-email-ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, yesanishhere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org, Damien.Horsley-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, nh6z-fFIq/eER6g8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-janitors-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170303152156.31370-1-richard.genoud@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 11:52:39PM +0900, Ryan Lee wrote:
-> From: Ryan Lee <RyanS.Lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-> 
-> Signed-off-by: Ryan Lee <ryans.lee-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
-> ---
-> 
-> Initial release of ALSA SoC MAX98927 driver.
-> 
->  .../devicetree/bindings/sound/max98927.txt         |   32 +
-
-In addition to what Mark said, please split bindings to a separate 
-patch.
-
->  sound/soc/codecs/Kconfig                           |    5 +
->  sound/soc/codecs/Makefile                          |    2 +
->  sound/soc/codecs/max98927.c                        |  954 +++++++++++++++
->  sound/soc/codecs/max98927.h                        | 1253 ++++++++++++++++++++
->  5 files changed, 2246 insertions(+)
->  create mode 100755 Documentation/devicetree/bindings/sound/max98927.txt
->  mode change 100644 => 100755 sound/soc/codecs/Kconfig
->  mode change 100644 => 100755 sound/soc/codecs/Makefile
->  create mode 100755 sound/soc/codecs/max98927.c
->  create mode 100755 sound/soc/codecs/max98927.h
-
-These files should not be executable.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBNYXIgMDMsIDIwMTcgYXQgMDQ6MjE6NTVQTSArMDEwMCwgUmljaGFyZCBHZW5vdWQg
+d3JvdGU6Cj4gV2luc3RhciBEaXNwbGF5IENvcnAuIGlzIHNwZWNpYWxpemVkIGluIExDRCBkaXNw
+bGF5cyBmb3IgZW1iZWRkZWQKPiBwcm9kdWN0cy4KPiBjZjogaHR0cDovL3d3dy53aW5zdGFyLmNv
+bS50dwo+IAo+IFNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgR2Vub3VkIDxyaWNoYXJkLmdlbm91ZEBn
+bWFpbC5jb20+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5k
+b3ItcHJlZml4ZXMudHh0IHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoK
+QWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
