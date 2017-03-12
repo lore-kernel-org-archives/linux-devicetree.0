@@ -1,48 +1,79 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm/panel: simple: Add support for Winstar WF35LTIACD
-Date: Sun, 12 Mar 2017 09:17:58 -0500
-Message-ID: <20170312141758.rbwixoq2hykdo34f@rob-hp-laptop>
-References: <20170303152156.31370-1-richard.genoud@gmail.com>
- <20170303152156.31370-2-richard.genoud@gmail.com>
+Subject: Re: [PATCH v3] tpm: do not suspend/resume if power stays on
+Date: Sun, 12 Mar 2017 09:28:38 -0500
+Message-ID: <20170312142838.ecsm4uig67qpp24n@rob-hp-laptop>
+References: <20170303160959.27422-1-enric.balletbo@collabora.com>
+ <20170306205925.ynkwmy7acsunpewd@intel.com>
+ <15829d71-ceff-d1f6-3112-5df8897a97dc@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170303152156.31370-2-richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <15829d71-ceff-d1f6-3112-5df8897a97dc-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 04:21:56PM +0100, Richard Genoud wrote:
-> This adds support for the Winstar Display Co. WF35LTIACD 3.5" QVGA TFT
-> LCD panel, which can be supported by the simple panel driver.
+On Tue, Mar 07, 2017 at 09:44:55AM +0100, Enric Balletbo i Serra wrote:
+> Hi Jarkko,
 > 
-> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../bindings/display/panel/winstar,wf35ltiacd      |  7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++++++++++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
+> On 06/03/17 21:59, Jarkko Sakkinen wrote:
+> > On Fri, Mar 03, 2017 at 05:09:59PM +0100, Enric Balletbo i Serra wrote:
+> >> From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >>
+> >> The suspend/resume behavior of the TPM can be controlled by setting
+> >> "powered-while-suspended" in the DTS. This is useful for the cases
+> >> when hardware does not power-off the TPM.
+> >>
+> >> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> >> ---
+> >> Changes since v2:
+> >>  Jarkko Sakkinen
+> >>   - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
+> >>   - Remove a trailing newline.
+> >> Changes since v1:
+> >>  Jason Gunthorpe :
+> >>   - Move the code to handle suspend/resume in the common chip code.
+> >>
+> >>  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
+> >>  drivers/char/tpm/tpm-interface.c                           | 3 +++
+> >>  drivers/char/tpm/tpm.h                                     | 1 +
+> >>  drivers/char/tpm/tpm_of.c                                  | 3 +++
+> >>  4 files changed, 13 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> >> index 8cb638b..85c8216 100644
+> >> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> >> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+> >> @@ -8,6 +8,12 @@ Required properties:
+> >>                     the firmware event log
+> >>  - linux,sml-size : size of the memory allocated for the firmware event log
+> >>  
+> >> +Optional properties:
+> >> +
+> >> +- powered-while-suspended: present when the TPM is left powered on between
+> >> +                           suspend and resume (makes the suspend/resume
+> >> +                           callbacks do nothing).
+> >> +
+> >>  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
+> >>  ----------------------------------------------------------
+> > 
+> > Hey, just noticed something. Shouldn't this be a separate commit?
 > 
-> diff --git a/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
-> new file mode 100644
-> index 000000000000..68408adf239f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/winstar,wf35ltiacd
-> @@ -0,0 +1,7 @@
-> +Winstar Display Corporation 3.5" QVGA (320x240) TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "winstar,wf35ltiacd"
-> +
-> +This binding is compatible with the simple-panel binding, which is specified
-> +in simple-panel.txt in this directory.
+> During my life submitting patches I saw the both options, sometimes the maintainer asked me to join the DT patch and the driver and sometimes he asked me to do in different patches, so I think this is more a maintainer option. Maybe Rob Herring or Mark Rutland can share their preferences?
+> 
 
-Please specify the power supply(ies). I know a lot of bindings haven't, 
-but many panels have more than 1 supply and just relying on simple panel 
-doesn't distinguish whether the panel has 1 supply or you didn't check 
-and it has more than 1.
+Need to fix your mailer to wrap lines...
+
+We prefer DT bindings to be separate commits, but don't enforce it. I 
+don't ask for on small changes or if there's no other reason to respin 
+the patch.
+
+It makes the history for the DT only tree generated from git 
+filter-branch cleaner. Any other maintainers tell you to combine them, 
+they need to talk to me.
 
 Rob
 --
