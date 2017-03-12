@@ -1,64 +1,60 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 12 Mar 2017 21:09:53 +0000
-Message-ID: <20170312210952.GV21222@n2100.armlinux.org.uk>
+Date: Sun, 12 Mar 2017 21:13:24 +0000
+Message-ID: <20170312211324.GW21222@n2100.armlinux.org.uk>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170312175118.GP21222@n2100.armlinux.org.uk>
- <191ef88d-2925-2264-6c77-46647394fc72@gmail.com>
- <20170312192932.GQ21222@n2100.armlinux.org.uk>
- <58b30bca-20ca-d4bd-7b86-04a4b8e71935@gmail.com>
- <c6eda3b3-52b8-8560-8f46-a6e2d6303bbd@gmail.com>
- <fa07c8d2-0943-b7d1-8d37-76e03bd527c0@gmail.com>
- <20170312204037.GU21222@n2100.armlinux.org.uk>
+ <20170312194700.GR21222@n2100.armlinux.org.uk>
+ <20170312175923.6ad86dff@vento.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170312204037.GU21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, robert.jarzmik-GANU6spQydw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, sakari.ailus
+In-Reply-To: <20170312175923.6ad86dff@vento.lan>
+Sender: linux-media-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infr
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 12, 2017 at 08:40:37PM +0000, Russell King - ARM Linux wrote:
-> On Sun, Mar 12, 2017 at 01:36:32PM -0700, Steve Longerbeam wrote:
-> > But hold on, if my logic is correct, then why did the CSI power-off
-> > get reached in your case, multiple times? Yes I think there is a bug,
-> > link_notify() is not checking if the link has already been disabled.
-> > I will fix this. But I'm surprised media core's link_notify handling
-> > doesn't do this.
+On Sun, Mar 12, 2017 at 05:59:28PM -0300, Mauro Carvalho Chehab wrote:
+> Yet, udev/systemd has some rules that provide an unique name for V4L
+> devices at /lib/udev/rules.d/60-persistent-v4l.rules. Basically, it
+> runs a small application (v4l_id) with creates a persistent symling
+> using rules like this:
 > 
-> Well, I think there's something incredibly fishy going on here.  I
-> turned that dev_dbg() at the top of the function into a dev_info(),
-> and I get:
+> 	KERNEL=="video*", ENV{ID_SERIAL}=="?*", SYMLINK+="v4l/by-id/$env{ID_BUS}-$env{ID_SERIAL}-video-index$attr{index}"
 > 
-> root@hbi2ex:~# dmesg |grep -A2 imx-ipuv3-csi
-> [   53.370949] imx-ipuv3-csi imx-ipuv3-csi.0: power OFF
-> [   53.371015] ------------[ cut here ]------------
-> [   53.371075] WARNING: CPU: 0 PID: 1515 at drivers/staging/media/imx/imx-media-csi.c:806 csi_s_power+0xb8/0xd0 [imx_media_csi]
-> --
-> [   53.372624] imx-ipuv3-csi imx-ipuv3-csi.0: power OFF
-> [   53.372637] ------------[ cut here ]------------
-> [   53.372663] WARNING: CPU: 0 PID: 1515 at drivers/staging/media/imx/imx-media-csi.c:806 csi_s_power+0xb8/0xd0 [imx_media_csi]
-> 
-> There isn't a power on event being generated before these two power
-> off events.  I don't see a power on event even when I attempt to
-> start streaming either (which fails due to the lack of bayer
-> support.)
+> Those names are stored at /dev/v4l/by-path.
 
-Found it - my imx219 driver returns '1' from its s_power function when
-powering up, which triggers a bug in your code - when imx_media_set_power()
-fails to power up, you call imx_media_set_power() telling it to power
-everything off - including devices that are already powered off.
+This doesn't help:
 
-This is really bad news - s_power() may be called via other paths,
-such as when the subdev is opened.
+$ ls -Al /dev/v4l/by-id/
+total 0
+lrwxrwxrwx 1 root root 13 Mar 12 19:54 usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera-video-index0 -> ../../video10
+$ ls -Al /dev/v4l/by-path/
+total 0
+lrwxrwxrwx 1 root root 12 Mar 12 19:54 platform-2040000.vpu-video-index0 -> ../../video0
+lrwxrwxrwx 1 root root 12 Mar 12 19:54 platform-2040000.vpu-video-index1 -> ../../video1
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index0 -> ../../video2
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index1 -> ../../video3
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index2 -> ../../video4
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index3 -> ../../video5
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index4 -> ../../video6
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index5 -> ../../video7
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index6 -> ../../video8
+lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index7 -> ../../video9
+lrwxrwxrwx 1 root root 13 Mar 12 19:54 platform-ci_hdrc.0-usb-0:1:1.0-video-index0 -> ../../video10
+
+The problem is the "platform-capture-subsystem-video-index" entries.
+These themselves change order.  For instance, I now have:
+
+- entity 72: ipu1_csi0 capture (1 pad, 1 link)
+             type Node subtype V4L flags 0
+             device node name /dev/video6
+
+which means it's platform-capture-subsystem-video-index4.  Before, it
+was platform-capture-subsystem-video-index2.
 
 -- 
 RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
 FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
 according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
