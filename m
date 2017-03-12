@@ -1,46 +1,102 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: display: rk3288-mipi-dsi: add reset property
-Date: Sun, 12 Mar 2017 07:06:59 -0500
-Message-ID: <20170312120659.hpiwnsto6hkxs5yh@rob-hp-laptop>
-References: <20170224125506.21533-1-john@metanate.com>
- <20170224125506.21533-24-john@metanate.com>
- <20170302215643.GA49163@google.com>
- <20170303113945.3bd2cbd9.john@metanate.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCHv5 09/16] ov2640: fix colorspace handling
+Date: Sun, 12 Mar 2017 13:15:08 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1703121313390.22698@axis700.grange>
+References: <20170311112328.11802-1-hverkuil@xs4all.nl>
+ <20170311112328.11802-10-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170303113945.3bd2cbd9.john@metanate.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: John Keeping <john@metanate.com>
-Cc: devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170311112328.11802-10-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgMDMsIDIwMTcgYXQgMTE6Mzk6NDVBTSArMDAwMCwgSm9obiBLZWVwaW5nIHdy
-b3RlOgo+IFRoaXMgcmVzZXQgaXMgcmVxdWlyZWQgaW4gb3JkZXIgdG8gZnVsbHkgcmVzZXQgdGhl
-IGludGVybmFsIHN0YXRlIG9mIHRoZQo+IE1JUEkgY29udHJvbGxlci4KPiAKPiBTaWduZWQtb2Zm
-LWJ5OiBKb2huIEtlZXBpbmcgPGpvaG5AbWV0YW5hdGUuY29tPgo+IC0tLQo+IE9uIFRodSwgMiBN
-YXIgMjAxNyAxMzo1Njo0NiAtMDgwMCwgQnJpYW4gTm9ycmlzIHdyb3RlOgo+ID4gT24gRnJpLCBG
-ZWIgMjQsIDIwMTcgYXQgMTI6NTU6MDZQTSArMDAwMCwgSm9obiBLZWVwaW5nIHdyb3RlOgo+ID4g
-PiArCS8qCj4gPiA+ICsJICogTm90ZSB0aGF0IHRoZSByZXNldCB3YXMgbm90IGRlZmluZWQgaW4g
-dGhlIGluaXRpYWwgZGV2aWNlIHRyZWUsIHNvCj4gPiA+ICsJICogd2UgaGF2ZSB0byBiZSBwcmVw
-YXJlZCBmb3IgaXQgbm90IGJlaW5nIGZvdW5kLgo+ID4gPiArCSAqLwo+ID4gPiArCWFwYl9yc3Qg
-PSBkZXZtX3Jlc2V0X2NvbnRyb2xfZ2V0KGRldiwgImFwYiIpOyAgCj4gPiAKPiA+IERpZCB0aGlz
-IHJlc2V0IGV2ZXIgZ2V0IGRvY3VtZW50ZWQgaW4gdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzPyBJ
-Cj4gPiBjb3VsZG4ndCBmaW5kIGl0LiBQZXJoYXBzIGEgZm9sbG93LXVwIHBhdGNoIGlzIGluIG9y
-ZGVyPwo+IAo+IEhlcmUncyBhIHBhdGNoIHRvIGRvIHRoYXQuCj4gCj4gIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0ICB8IDcg
-KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspCgpBY2tlZC1ieTogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+On Sat, 11 Mar 2017, Hans Verkuil wrote:
+
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> 
+> The colorspace is independent of whether YUV or RGB is sent to the SoC.
+> Fix this.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+
+I'm not sure why the first hunk is needed and how it is related :-) But it 
+doesn't break anything. I understand, this patch should better go in as a 
+part of a series, so
+
+Acked-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+
+Thanks
+Guennadi
+
+> ---
+>  drivers/media/i2c/soc_camera/ov2640.c | 23 +++++++----------------
+>  1 file changed, 7 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/soc_camera/ov2640.c b/drivers/media/i2c/soc_camera/ov2640.c
+> index 56de18263359..b9a0069f5b33 100644
+> --- a/drivers/media/i2c/soc_camera/ov2640.c
+> +++ b/drivers/media/i2c/soc_camera/ov2640.c
+> @@ -794,10 +794,11 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+>  		dev_dbg(&client->dev, "%s: Selected cfmt YUYV (YUV422)", __func__);
+>  		selected_cfmt_regs = ov2640_yuyv_regs;
+>  		break;
+> -	default:
+>  	case MEDIA_BUS_FMT_UYVY8_2X8:
+> +	default:
+>  		dev_dbg(&client->dev, "%s: Selected cfmt UYVY", __func__);
+>  		selected_cfmt_regs = ov2640_uyvy_regs;
+> +		break;
+>  	}
+>  
+>  	/* reset hardware */
+> @@ -865,17 +866,7 @@ static int ov2640_get_fmt(struct v4l2_subdev *sd,
+>  	mf->width	= priv->win->width;
+>  	mf->height	= priv->win->height;
+>  	mf->code	= priv->cfmt_code;
+> -
+> -	switch (mf->code) {
+> -	case MEDIA_BUS_FMT_RGB565_2X8_BE:
+> -	case MEDIA_BUS_FMT_RGB565_2X8_LE:
+> -		mf->colorspace = V4L2_COLORSPACE_SRGB;
+> -		break;
+> -	default:
+> -	case MEDIA_BUS_FMT_YUYV8_2X8:
+> -	case MEDIA_BUS_FMT_UYVY8_2X8:
+> -		mf->colorspace = V4L2_COLORSPACE_JPEG;
+> -	}
+> +	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+>  	mf->field	= V4L2_FIELD_NONE;
+>  
+>  	return 0;
+> @@ -897,17 +888,17 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
+>  	ov2640_select_win(&mf->width, &mf->height);
+>  
+>  	mf->field	= V4L2_FIELD_NONE;
+> +	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+>  
+>  	switch (mf->code) {
+>  	case MEDIA_BUS_FMT_RGB565_2X8_BE:
+>  	case MEDIA_BUS_FMT_RGB565_2X8_LE:
+> -		mf->colorspace = V4L2_COLORSPACE_SRGB;
+> +	case MEDIA_BUS_FMT_YUYV8_2X8:
+> +	case MEDIA_BUS_FMT_UYVY8_2X8:
+>  		break;
+>  	default:
+>  		mf->code = MEDIA_BUS_FMT_UYVY8_2X8;
+> -	case MEDIA_BUS_FMT_YUYV8_2X8:
+> -	case MEDIA_BUS_FMT_UYVY8_2X8:
+> -		mf->colorspace = V4L2_COLORSPACE_JPEG;
+> +		break;
+>  	}
+>  
+>  	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
