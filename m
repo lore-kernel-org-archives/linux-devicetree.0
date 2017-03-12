@@ -1,53 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2 RESEND] power: reset: Add Gemini
-	poweroff DT bindings
-Date: Sun, 12 Mar 2017 23:36:01 +0100
-Message-ID: <20170312223601.2952-1-linus.walleij@linaro.org>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sun, 12 Mar 2017 19:37:56 -0300
+Message-ID: <20170312193745.636df0bf@vento.lan>
+References: <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
+        <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+        <20170310130733.GU21222@n2100.armlinux.org.uk>
+        <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+        <20170310140124.GV21222@n2100.armlinux.org.uk>
+        <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+        <20170310125342.7f047acf@vento.lan>
+        <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+        <20170311082549.576531d0@vento.lan>
+        <20170311231456.GH21222@n2100.armlinux.org.uk>
+        <20170312212904.GA7995@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Sebastian Reichel <sre@kernel.org>
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, inux-pm@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170312212904.GA7995@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIHRvIHRoZSBwb3dlciBtYW5hZ2VtZW50IGNv
-bnRyb2xsZXIKaW4gdGhlIEdlbWluaSBTb0MuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmcKQ2M6IEphbm9zIExhdWJlIDxqYW5vcy5kZXZAZ21haWwuY29tPgpDYzogUGF1bGl1cyBaYWxl
-Y2thcyA8cGF1bGl1cy56YWxlY2thc0BnbWFpbC5jb20+CkNjOiBIYW5zIFVsbGkgS3JvbGwgPHVs
-bGkua3JvbGxAZ29vZ2xlbWFpbC5jb20+CkNjOiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxp
-QGdtYWlsLmNvbT4KQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25l
-ZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KLS0tClNl
-YmFzdGlhbjogcGxlYXNlIGp1c3QgbWVyZ2UgdGhpcyB3aGVuIHlvdXIgYXJlIHBsZWFzZWQKd2l0
-aCBpdC4gSSB3aWxsIGZ1bm5lbCB0aGUgQVJNIHBhcnRzIHRocm91Z2ggdGhlIEFSTSBTb0MgdHJl
-ZS4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9yZXNldC9nZW1pbmktcG93ZXJv
-ZmYudHh0IHwgMTcgKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRp
-b25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Bvd2VyL3Jlc2V0L2dlbWluaS1wb3dlcm9mZi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvcmVzZXQvZ2VtaW5pLXBvd2Vyb2ZmLnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9yZXNldC9nZW1pbmkt
-cG93ZXJvZmYudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uN2Zl
-YzNlMTAwMjE0Ci0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL3Bvd2VyL3Jlc2V0L2dlbWluaS1wb3dlcm9mZi50eHQKQEAgLTAsMCArMSwxNyBAQAor
-KiBEZXZpY2UtVHJlZSBiaW5kaW5ncyBmb3IgQ29ydGluYSBTeXN0ZW1zIEdlbWluaSBQb3dlcm9m
-ZgorCitUaGlzIGlzIGEgc3BlY2lhbCBJUCBibG9jayBpbiB0aGUgQ29ydGluYSBHZW1pbmkgU29D
-IHRoYXQgb25seQorZGVhbHMgd2l0aCBkaWZmZXJlbnQgd2F5cyB0byBwb3dlciB0aGUgc3lzdGVt
-IGRvd24uCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6IHNob3VsZCBiZSAi
-Y29ydGluYSxnZW1pbmktcG93ZXItY29udHJvbGxlciIKKy0gcmVnOiBzaG91bGQgY29udGFpbiB0
-aGUgcGh5c2ljYWwgbWVtb3J5IGJhc2UgYW5kIHNpemUKKy0gaW50ZXJydXB0czogc2hvdWxkIGNv
-bnRhaW4gdGhlIHBvd2VyIG1hbmFnZW1lbnQgaW50ZXJydXB0CisKK0V4YW1wbGU6CisKK3Bvd2Vy
-LWNvbnRyb2xsZXJANGIwMDAwMDAgeworCWNvbXBhdGlibGUgPSAiY29ydGluYSxnZW1pbmktcG93
-ZXItY29udHJvbGxlciI7CisJcmVnID0gPDB4NGIwMDAwMDAgMHgxMDA+OworCWludGVycnVwdHMg
-PSA8MjYgSVJRX1RZUEVfRURHRV9GQUxMSU5HPjsKK307Ci0tIAoyLjkuMwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpvcGVud3J0LWRldmVsIG1haWxpbmcg
-bGlzdApvcGVud3J0LWRldmVsQGxpc3RzLm9wZW53cnQub3JnCmh0dHBzOi8vbGlzdHMub3Blbndy
-dC5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3RpbmZvL29wZW53cnQtZGV2ZWwK
+Em Sun, 12 Mar 2017 22:29:04 +0100
+Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> escreveu:
+
+> Mid-layer is difficult... there are _hundreds_ of possible
+> pipeline setups. If it should live in kernel or in userspace is a
+> question... but I don't think having it in kernel helps in any way.
+
+Mid-layer is difficult, because we either need to feed some
+library with knowledge for all kernel drivers or we need to improve
+the MC API to provide more details.
+
+For example, several drivers used to expose entities via the
+generic MEDIA_ENT_T_DEVNODE to represent entities of different
+types. See, for example, entities 1, 5 and 7 (and others) at:
+	https://mchehab.fedorapeople.org/mc-next-gen/igepv2_omap3isp.png
+
+A device-specific code could either be hardcoding the entity number
+or checking for the entity strings to add some logic to setup
+controls on those "unknown" entities, a generic app won't be able 
+to do anything with them, as it doesn't know what function(s) such
+entity provide.
+
+Also, on some devices, like the analog TV decoder at:
+	https://mchehab.fedorapeople.org/mc-next-gen/au0828_test/mc_nextgen_test-output.png
+
+May have pads with different signals on their output. In such
+case, pads 1 and 2 provide video, while pad 3 provides audio using a
+different type of output.
+
+The application needs to know such kind of things in order to be able
+to properly setup the pipeline [1].
+
+[1] this specific device has a fixed pipeline, but I'm aware of SoC with
+flexible pipelines that have this kind of issue (nobody upstreamed the
+V4L part of those devices yet).
+
+Thanks,
+Mauro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
