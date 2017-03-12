@@ -1,142 +1,1056 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Sun, 12 Mar 2017 19:14:10 +0100
-Message-ID: <20170312181410.GA3124@amd>
-References: <20170310120902.1daebc7b@vento.lan>
- <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
- <20170311101408.272a9187@vento.lan>
- <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
- <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
- <20170311184551.GD21222@n2100.armlinux.org.uk>
- <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
- <20170311185959.GF21222@n2100.armlinux.org.uk>
- <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
- <20170312073745.GI21222@n2100.armlinux.org.uk>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH v4 3/7] drm/tinydrm: Add MIPI DBI support
+Date: Sun, 12 Mar 2017 19:42:45 +0100
+Message-ID: <20170312184245.ad2nd2siq3y44amp@phenom.ffwll.local>
+References: <20170211184858.26421-1-noralf@tronnes.org>
+ <20170211184858.26421-4-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6623052374459166356=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170312073745.GI21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.es
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170211184858.26421-4-noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Feb 11, 2017 at 07:48:54PM +0100, Noralf Trønnes wrote:
+> +static int mipi_dbi_buf_copy(void *dst, struct drm_framebuffer *fb,
+> +				struct drm_clip_rect *clip, bool swap)
+> +{
+> +	struct drm_gem_cma_object *cma_obj = drm_fb_cma_get_gem_obj(fb, 0);
+> +	struct dma_buf_attachment *import_attach = cma_obj->base.import_attach;
+> +	struct drm_format_name_buf format_name;
+> +	void *src = cma_obj->vaddr;
+> +	int ret = 0;
+> +
+> +	if (import_attach) {
+> +		ret = dma_buf_begin_cpu_access(import_attach->dmabuf,
+> +					       DMA_FROM_DEVICE);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	switch (fb->format->format) {
+> +	case DRM_FORMAT_RGB565:
+> +		if (swap)
+> +			tinydrm_swab16(dst, src, fb, clip);
+> +		else
+> +			tinydrm_memcpy(dst, src, fb, clip);
+> +		break;
+> +	case DRM_FORMAT_XRGB8888:
+> +		tinydrm_xrgb8888_to_rgb565(dst, src, fb, clip, swap);
+> +		break;
 
---===============6623052374459166356==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-Content-Disposition: inline
+Already mentioned in my other mail that this here is kinda not cool. At
+least I think we'll digg ourselves into a big hole if we start to convert
+xrgb8888 into whatever the device actually supports in drm drivers. This
+works for devices behind a slow upload link (because the cpu is likely
+much faster), but for anything else userspace really must support the
+native pixel format. And rgb565 is a rather common format, there should be
+no reason to duct-tape around it.
 
+> +	default:
+> +		dev_err_once(fb->dev->dev, "Format is not supported: %s\n",
+> +			     drm_get_format_name(fb->format->format,
+> +						 &format_name));
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (import_attach)
+> +		ret = dma_buf_end_cpu_access(import_attach->dmabuf,
+> +					     DMA_FROM_DEVICE);
+> +	return ret;
+> +}
+> +
+> +static int mipi_dbi_fb_dirty(struct drm_framebuffer *fb,
+> +			     struct drm_file *file_priv,
+> +			     unsigned int flags, unsigned int color,
+> +			     struct drm_clip_rect *clips,
+> +			     unsigned int num_clips)
+> +{
+> +	struct drm_gem_cma_object *cma_obj = drm_fb_cma_get_gem_obj(fb, 0);
+> +	struct tinydrm_device *tdev = fb->dev->dev_private;
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +	bool swap = mipi->swap_bytes;
+> +	struct drm_clip_rect clip;
+> +	int ret = 0;
+> +	bool full;
+> +	void *tr;
+> +
+> +	mutex_lock(&tdev->dirty_lock);
+> +
+> +	if (!mipi->enabled)
+> +		goto out_unlock;
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here's the real reason I replied: I think long term-ish we need to rework
+what you use as the main upload function in tinydrm. I realize just using
+fb->dirty is convenient, because simple_pipe->upload doesn't take a dirty
+rectangle. But long term I think we need to fix that, because otherwise
+we'll reinvent the same few lines of boilerplate (like here and in the
+other tinydrm drivers you have queued).
 
-On Sun 2017-03-12 07:37:45, Russell King - ARM Linux wrote:
-> On Sat, Mar 11, 2017 at 07:31:18PM -0800, Steve Longerbeam wrote:
-> >=20
-> >=20
-> > On 03/11/2017 10:59 AM, Russell King - ARM Linux wrote:
-> > >On Sat, Mar 11, 2017 at 10:54:55AM -0800, Steve Longerbeam wrote:
-> > >>
-> > >>
-> > >>On 03/11/2017 10:45 AM, Russell King - ARM Linux wrote:
-> > >>>I really don't think expecting the user to understand and configure
-> > >>>the pipeline is a sane way forward.  Think about it - should the
-> > >>>user need to know that, because they have a bayer-only CSI data
-> > >>>source, that there is only one path possible, and if they try to
-> > >>>configure a different path, then things will just error out?
-> > >>>
-> > >>>For the case of imx219 connected to iMX6, it really is as simple as
-> > >>>"there is only one possible path" and all the complexity of the media
-> > >>>interfaces/subdevs is completely unnecessary.  Every other block in
-> > >>>the graph is just noise.
-> > >>>
-> > >>>The fact is that these dot graphs show a complex picture, but reality
-> > >>>is somewhat different - there's only relatively few paths available
-> > >>>depending on the connected source and the rest of the paths are
-> > >>>completely useless.
-> > >>>
-> > >>
-> > >>I totally disagree there. Raw bayer requires passthrough yes, but for
-> > >>all other media bus formats on a mipi csi-2 bus, and all other media
-> > >>bus formats on 8-bit parallel buses, the conersion pipelines can be
-> > >>used for scaling, CSC, rotation, and motion-compensated de-interlacin=
-g.
-> > >
-> > >... which only makes sense _if_ your source can produce those formats.
-> > >We don't actually disagree on that.
-> >=20
-> > ...and there are lots of those sources! You should try getting out of
-> > your imx219 shell some time, and have a look around! :)
->=20
-> If you think that, you are insulting me.  I've been thinking about this
-> from the "big picture" point of view.  If you think I'm only thinking
-> about this from only the bayer point of view, you're wrong.
+Rough sketch of a plan:
 
-Can you stop that insults nonsense?
+- Add a struct drm_rect dirty_clip to drm_crtc_state. When duplicating the
+  crtc state, clear that to the max values, x/y = 0 and w/h = MAX_INT, in
+  __drm_atomic_helper_crtc_duplicate_state().
 
-> Given what Mauro has said, I'm convinced that the media controller stuff
-> is a complete failure for usability, and adding further drivers using it
-> is a mistake.
+> +
+> +	/* fbdev can flush even when we're not interested */
+> +	if (tdev->pipe.plane.fb != fb)
+> +		goto out_unlock;
+> +
+> +	full = tinydrm_merge_clips(&clip, clips, num_clips, flags,
+> +				   fb->width, fb->height);
 
-Hmm. But you did not present any alternative. Seems some hardware is
-simply complex. So either we don't add complex drivers (_that_ would
-be a mistake), or some userspace solution will need to be
-done. Shell-script running media-ctl does not seem that hard.
+- Move tinydrm_merge_clips into drm_framebuffer.c, dropping the tinydrm_
+  prefix ofc and using drm_fb_. drm_framebuffer.c makes sense since this
+  is a function useful to implement the fb->dirty function.
 
-> So, tell me how the user can possibly use iMX6 video capture without
-> resorting to opening up a terminal and using media-ctl to manually
-> configure the pipeline.  How is the user going to control the source
-> device without using media-ctl to find the subdev node, and then using
-> v4l2-ctl on it.  How is the user supposed to know which /dev/video*
-> node they should be opening with their capture application?
+- Create a new drm_fb_dirty function which does essentially what you do
+  here, but generic. You can use e.g. drm_atomic_helper_update_plane as
+  the template. But instead of doing a simple full-screen plane update,
+  this new helper also sets crtc_state->dirty_clip to the right
+  coordinates. And of course it needs to check whether the fb is actually
+  active (and maybe where), so there's some book-keeping involved. There's
+  also some good fun involved in scaling things appropriately. For that
+  case we might simply give up and declare the entire area covered by the
+  plane as dirty.
 
-Complex hardware sometimes requires userspace configuration. Running a
-shell script on startup does not seem that hard.
+Tinydrm drivers (and really, anything using drm_simple_pipe) then just
+implement the ->update hook, obeying the dirty_clip rectangle, and you can
+remove tinydrm_display_pipe_update().
 
-And maybe we could do some kind of default setup in kernel, but that
-does not really solve the problem.
+The upshot of all this is two-fold:
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+- You get rid of a tiny bit of book-keeping in each tinydrm driver (the
+  merge_clips above, plus the "is this the current fb on our hw" check).
 
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+- There's lots more manual upload devices than just tinydrm, or
+  drm_simple_pipe, this would benefit any atomic driver.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+- Long-term we want to expose the dirty_clip as properties to userspace,
+  since the compositor already computes this anyway for each atomic update
+  (at least good compositors do this). Test-driving these new properties
+  within the kernel would help in catching issues.
 
-iEYEARECAAYFAljFj/IACgkQMOfwapXb+vK0qQCgt0pDtFBEZJ0gKHL0QjVyv72R
-rOQAnjiBH+6uNfIC5dUXkyfT5tRi0t91
-=Hoir
------END PGP SIGNATURE-----
+The only downside is that we won't have a clip rect list anymore, but no
+one (except for vmwgfx) seems to use that anyway.
+-Daniel
 
---ew6BAiZeqk4r7MaW--
+> +
+> +	DRM_DEBUG("Flushing [FB:%d] x1=%u, x2=%u, y1=%u, y2=%u\n", fb->base.id,
+> +		  clip.x1, clip.x2, clip.y1, clip.y2);
+> +
+> +	if (!mipi->dc || !full || swap ||
+> +	    fb->format->format == DRM_FORMAT_XRGB8888) {
+> +		tr = mipi->tx_buf;
+> +		ret = mipi_dbi_buf_copy(mipi->tx_buf, fb, &clip, swap);
+> +		if (ret)
+> +			goto out_unlock;
+> +	} else {
+> +		tr = cma_obj->vaddr;
+> +	}
+> +
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_COLUMN_ADDRESS,
+> +			 (clip.x1 >> 8) & 0xFF, clip.x1 & 0xFF,
+> +			 (clip.x2 >> 8) & 0xFF, (clip.x2 - 1) & 0xFF);
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_PAGE_ADDRESS,
+> +			 (clip.y1 >> 8) & 0xFF, clip.y1 & 0xFF,
+> +			 (clip.y2 >> 8) & 0xFF, (clip.y2 - 1) & 0xFF);
+> +
+> +	ret = mipi_dbi_command_buf(mipi, MIPI_DCS_WRITE_MEMORY_START, tr,
+> +				(clip.x2 - clip.x1) * (clip.y2 - clip.y1) * 2);
+> +
+> +out_unlock:
+> +	mutex_unlock(&tdev->dirty_lock);
+> +
+> +	if (ret)
+> +		dev_err_once(fb->dev->dev, "Failed to update display %d\n",
+> +			     ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct drm_framebuffer_funcs mipi_dbi_fb_funcs = {
+> +	.destroy	= drm_fb_cma_destroy,
+> +	.create_handle	= drm_fb_cma_create_handle,
+> +	.dirty		= mipi_dbi_fb_dirty,
+> +};
+> +
+> +/**
+> + * mipi_dbi_pipe_enable - MIPI DBI pipe enable helper
+> + * @pipe: Display pipe
+> + * @crtc_state: CRTC state
+> + *
+> + * This function enables backlight. Drivers can use this as their
+> + * &drm_simple_display_pipe_funcs->enable callback.
+> + */
+> +void mipi_dbi_pipe_enable(struct drm_simple_display_pipe *pipe,
+> +			  struct drm_crtc_state *crtc_state)
+> +{
+> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +	struct drm_framebuffer *fb = pipe->plane.fb;
+> +
+> +	DRM_DEBUG_KMS("\n");
+> +
+> +	mipi->enabled = true;
+> +	if (fb)
+> +		fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
+> +
+> +	tinydrm_enable_backlight(mipi->backlight);
+> +}
+> +EXPORT_SYMBOL(mipi_dbi_pipe_enable);
+> +
+> +static void mipi_dbi_blank(struct mipi_dbi *mipi)
+> +{
+> +	struct drm_device *drm = mipi->tinydrm.drm;
+> +	u16 height = drm->mode_config.min_height;
+> +	u16 width = drm->mode_config.min_width;
+> +	size_t len = width * height * 2;
+> +
+> +	memset(mipi->tx_buf, 0, len);
+> +
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_COLUMN_ADDRESS, 0, 0,
+> +			 (width >> 8) & 0xFF, (width - 1) & 0xFF);
+> +	mipi_dbi_command(mipi, MIPI_DCS_SET_PAGE_ADDRESS, 0, 0,
+> +			 (height >> 8) & 0xFF, (height - 1) & 0xFF);
+> +	mipi_dbi_command_buf(mipi, MIPI_DCS_WRITE_MEMORY_START,
+> +			     (u8 *)mipi->tx_buf, len);
+> +}
+> +
+> +/**
+> + * mipi_dbi_pipe_disable - MIPI DBI pipe disable helper
+> + * @pipe: Display pipe
+> + *
+> + * This function disables backlight if present or if not the
+> + * display memory is blanked. Drivers can use this as their
+> + * &drm_simple_display_pipe_funcs->disable callback.
+> + */
+> +void mipi_dbi_pipe_disable(struct drm_simple_display_pipe *pipe)
+> +{
+> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +
+> +	DRM_DEBUG_KMS("\n");
+> +
+> +	mipi->enabled = false;
+> +
+> +	if (mipi->backlight)
+> +		tinydrm_disable_backlight(mipi->backlight);
+> +	else
+> +		mipi_dbi_blank(mipi);
+> +}
+> +EXPORT_SYMBOL(mipi_dbi_pipe_disable);
+> +
+> +static const uint32_t mipi_dbi_formats[] = {
+> +	DRM_FORMAT_RGB565,
+> +	DRM_FORMAT_XRGB8888,
+> +};
+> +
+> +/**
+> + * mipi_dbi_init - MIPI DBI initialization
+> + * @dev: Parent device
+> + * @mipi: &mipi_dbi structure to initialize
+> + * @pipe_funcs: Display pipe functions
+> + * @driver: DRM driver
+> + * @mode: Display mode
+> + * @rotation: Initial rotation in degrees Counter Clock Wise
+> + *
+> + * This function initializes a &mipi_dbi structure and it's underlying
+> + * @tinydrm_device. It also sets up the display pipeline.
+> + *
+> + * Supported formats: Native RGB565 and emulated XRGB8888.
+> + *
+> + * Objects created by this function will be automatically freed on driver
+> + * detach (devres).
+> + *
+> + * Returns:
+> + * Zero on success, negative error code on failure.
+> + */
+> +int mipi_dbi_init(struct device *dev, struct mipi_dbi *mipi,
+> +		  const struct drm_simple_display_pipe_funcs *pipe_funcs,
+> +		  struct drm_driver *driver,
+> +		  const struct drm_display_mode *mode, unsigned int rotation)
+> +{
+> +	size_t bufsize = mode->vdisplay * mode->hdisplay * sizeof(u16);
+> +	struct tinydrm_device *tdev = &mipi->tinydrm;
+> +	int ret;
+> +
+> +	if (!mipi->command)
+> +		return -EINVAL;
+> +
+> +	mutex_init(&mipi->cmdlock);
+> +
+> +	mipi->tx_buf = devm_kmalloc(dev, bufsize, GFP_KERNEL);
+> +	if (!mipi->tx_buf)
+> +		return -ENOMEM;
+> +
+> +	ret = devm_tinydrm_init(dev, tdev, &mipi_dbi_fb_funcs, driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* TODO: Maybe add DRM_MODE_CONNECTOR_SPI */
+> +	ret = tinydrm_display_pipe_init(tdev, pipe_funcs,
+> +					DRM_MODE_CONNECTOR_VIRTUAL,
+> +					mipi_dbi_formats,
+> +					ARRAY_SIZE(mipi_dbi_formats), mode,
+> +					rotation);
+> +	if (ret)
+> +		return ret;
+> +
+> +	tdev->drm->mode_config.preferred_depth = 16;
+> +	mipi->rotation = rotation;
+> +
+> +	drm_mode_config_reset(tdev->drm);
+> +
+> +	DRM_DEBUG_KMS("preferred_depth=%u, rotation = %u\n",
+> +		      tdev->drm->mode_config.preferred_depth, rotation);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(mipi_dbi_init);
+> +
+> +/**
+> + * mipi_dbi_hw_reset - Hardware reset of controller
+> + * @mipi: MIPI DBI structure
+> + *
+> + * Reset controller if the &mipi_dbi->reset gpio is set.
+> + */
+> +void mipi_dbi_hw_reset(struct mipi_dbi *mipi)
+> +{
+> +	if (!mipi->reset)
+> +		return;
+> +
+> +	gpiod_set_value_cansleep(mipi->reset, 0);
+> +	msleep(20);
+> +	gpiod_set_value_cansleep(mipi->reset, 1);
+> +	msleep(120);
+> +}
+> +EXPORT_SYMBOL(mipi_dbi_hw_reset);
+> +
+> +/**
+> + * mipi_dbi_display_is_on - Check if display is on
+> + * @mipi: MIPI DBI structure
+> + *
+> + * This function checks the Power Mode register (if readable) to see if
+> + * display output is turned on. This can be used to see if the bootloader
+> + * has already turned on the display avoiding flicker when the pipeline is
+> + * enabled.
+> + *
+> + * Returns:
+> + * true if the display can be verified to be on, false otherwise.
+> + */
+> +bool mipi_dbi_display_is_on(struct mipi_dbi *mipi)
+> +{
+> +	u8 val;
+> +
+> +	if (mipi_dbi_command_read(mipi, MIPI_DCS_GET_POWER_MODE, &val))
+> +		return false;
+> +
+> +	val &= ~DCS_POWER_MODE_RESERVED_MASK;
+> +
+> +	if (val != (DCS_POWER_MODE_DISPLAY |
+> +	    DCS_POWER_MODE_DISPLAY_NORMAL_MODE | DCS_POWER_MODE_SLEEP_MODE))
+> +		return false;
+> +
+> +	DRM_DEBUG_DRIVER("Display is ON\n");
+> +
+> +	return true;
+> +}
+> +EXPORT_SYMBOL(mipi_dbi_display_is_on);
+> +
+> +#if IS_ENABLED(CONFIG_SPI)
+> +
+> +/*
+> + * Many controllers have a max speed of 10MHz, but can be pushed way beyond
+> + * that. Increase reliability by running pixel data at max speed and the rest
+> + * at 10MHz, preventing transfer glitches from messing up the init settings.
+> + */
+> +static u32 mipi_dbi_spi_cmd_max_speed(struct spi_device *spi, size_t len)
+> +{
+> +	if (len > 64)
+> +		return 0; /* use default */
+> +
+> +	return min_t(u32, 10000000, spi->max_speed_hz);
+> +}
+> +
+> +/*
+> + * MIPI DBI Type C Option 1
+> + *
+> + * If the SPI controller doesn't have 9 bits per word support,
+> + * use blocks of 9 bytes to send 8x 9-bit words using a 8-bit SPI transfer.
+> + * Pad partial blocks with MIPI_DCS_NOP (zero).
+> + * This is how the D/C bit (x) is added:
+> + *     x7654321
+> + *     0x765432
+> + *     10x76543
+> + *     210x7654
+> + *     3210x765
+> + *     43210x76
+> + *     543210x7
+> + *     6543210x
+> + *     76543210
+> + */
+> +
+> +static int mipi_dbi_spi1e_transfer(struct mipi_dbi *mipi, int dc,
+> +				   const void *buf, size_t len,
+> +				   unsigned int bpw)
+> +{
+> +	bool swap_bytes = (bpw == 16 && tinydrm_machine_little_endian());
+> +	size_t chunk, max_chunk = mipi->tx_buf9_len;
+> +	struct spi_device *spi = mipi->spi;
+> +	struct spi_transfer tr = {
+> +		.tx_buf = mipi->tx_buf9,
+> +		.bits_per_word = 8,
+> +	};
+> +	struct spi_message m;
+> +	const u8 *src = buf;
+> +	int i, ret;
+> +	u8 *dst;
+> +
+> +	if (drm_debug & DRM_UT_DRIVER)
+> +		pr_debug("[drm:%s] dc=%d, max_chunk=%zu, transfers:\n",
+> +			 __func__, dc, max_chunk);
+> +
+> +	tr.speed_hz = mipi_dbi_spi_cmd_max_speed(spi, len);
+> +	spi_message_init_with_transfers(&m, &tr, 1);
+> +
+> +	if (!dc) {
+> +		if (WARN_ON_ONCE(len != 1))
+> +			return -EINVAL;
+> +
+> +		/* Command: pad no-op's (zeroes) at beginning of block */
+> +		dst = mipi->tx_buf9;
+> +		memset(dst, 0, 9);
+> +		dst[8] = *src;
+> +		tr.len = 9;
+> +
+> +		tinydrm_dbg_spi_message(spi, &m);
+> +
+> +		return spi_sync(spi, &m);
+> +	}
+> +
+> +	/* max with room for adding one bit per byte */
+> +	max_chunk = max_chunk / 9 * 8;
+> +	/* but no bigger than len */
+> +	max_chunk = min(max_chunk, len);
+> +	/* 8 byte blocks */
+> +	max_chunk = max_t(size_t, 8, max_chunk & ~0x7);
+> +
+> +	while (len) {
+> +		size_t added = 0;
+> +
+> +		chunk = min(len, max_chunk);
+> +		len -= chunk;
+> +		dst = mipi->tx_buf9;
+> +
+> +		if (chunk < 8) {
+> +			u8 val, carry = 0;
+> +
+> +			/* Data: pad no-op's (zeroes) at end of block */
+> +			memset(dst, 0, 9);
+> +
+> +			if (swap_bytes) {
+> +				for (i = 1; i < (chunk + 1); i++) {
+> +					val = src[1];
+> +					*dst++ = carry | BIT(8 - i) | (val >> i);
+> +					carry = val << (8 - i);
+> +					i++;
+> +					val = src[0];
+> +					*dst++ = carry | BIT(8 - i) | (val >> i);
+> +					carry = val << (8 - i);
+> +					src += 2;
+> +				}
+> +				*dst++ = carry;
+> +			} else {
+> +				for (i = 1; i < (chunk + 1); i++) {
+> +					val = *src++;
+> +					*dst++ = carry | BIT(8 - i) | (val >> i);
+> +					carry = val << (8 - i);
+> +				}
+> +				*dst++ = carry;
+> +			}
+> +
+> +			chunk = 8;
+> +			added = 1;
+> +		} else {
+> +			for (i = 0; i < chunk; i += 8) {
+> +				if (swap_bytes) {
+> +					*dst++ =                 BIT(7) | (src[1] >> 1);
+> +					*dst++ = (src[1] << 7) | BIT(6) | (src[0] >> 2);
+> +					*dst++ = (src[0] << 6) | BIT(5) | (src[3] >> 3);
+> +					*dst++ = (src[3] << 5) | BIT(4) | (src[2] >> 4);
+> +					*dst++ = (src[2] << 4) | BIT(3) | (src[5] >> 5);
+> +					*dst++ = (src[5] << 3) | BIT(2) | (src[4] >> 6);
+> +					*dst++ = (src[4] << 2) | BIT(1) | (src[7] >> 7);
+> +					*dst++ = (src[7] << 1) | BIT(0);
+> +					*dst++ = src[6];
+> +				} else {
+> +					*dst++ =                 BIT(7) | (src[0] >> 1);
+> +					*dst++ = (src[0] << 7) | BIT(6) | (src[1] >> 2);
+> +					*dst++ = (src[1] << 6) | BIT(5) | (src[2] >> 3);
+> +					*dst++ = (src[2] << 5) | BIT(4) | (src[3] >> 4);
+> +					*dst++ = (src[3] << 4) | BIT(3) | (src[4] >> 5);
+> +					*dst++ = (src[4] << 3) | BIT(2) | (src[5] >> 6);
+> +					*dst++ = (src[5] << 2) | BIT(1) | (src[6] >> 7);
+> +					*dst++ = (src[6] << 1) | BIT(0);
+> +					*dst++ = src[7];
+> +				}
+> +
+> +				src += 8;
+> +				added++;
+> +			}
+> +		}
+> +
+> +		tr.len = chunk + added;
+> +
+> +		tinydrm_dbg_spi_message(spi, &m);
+> +		ret = spi_sync(spi, &m);
+> +		if (ret)
+> +			return ret;
+> +	};
+> +
+> +	return 0;
+> +}
+> +
+> +static int mipi_dbi_spi1_transfer(struct mipi_dbi *mipi, int dc,
+> +				  const void *buf, size_t len,
+> +				  unsigned int bpw)
+> +{
+> +	struct spi_device *spi = mipi->spi;
+> +	struct spi_transfer tr = {
+> +		.bits_per_word = 9,
+> +	};
+> +	const u16 *src16 = buf;
+> +	const u8 *src8 = buf;
+> +	struct spi_message m;
+> +	size_t max_chunk;
+> +	u16 *dst16;
+> +	int ret;
+> +
+> +	if (!tinydrm_spi_bpw_supported(spi, 9))
+> +		return mipi_dbi_spi1e_transfer(mipi, dc, buf, len, bpw);
+> +
+> +	tr.speed_hz = mipi_dbi_spi_cmd_max_speed(spi, len);
+> +	max_chunk = mipi->tx_buf9_len;
+> +	dst16 = mipi->tx_buf9;
+> +
+> +	if (drm_debug & DRM_UT_DRIVER)
+> +		pr_debug("[drm:%s] dc=%d, max_chunk=%zu, transfers:\n",
+> +			 __func__, dc, max_chunk);
+> +
+> +	max_chunk = min(max_chunk / 2, len);
+> +
+> +	spi_message_init_with_transfers(&m, &tr, 1);
+> +	tr.tx_buf = dst16;
+> +
+> +	while (len) {
+> +		size_t chunk = min(len, max_chunk);
+> +		unsigned int i;
+> +
+> +		if (bpw == 16 && tinydrm_machine_little_endian()) {
+> +			for (i = 0; i < (chunk * 2); i += 2) {
+> +				dst16[i]     = *src16 >> 8;
+> +				dst16[i + 1] = *src16++ & 0xFF;
+> +				if (dc) {
+> +					dst16[i]     |= 0x0100;
+> +					dst16[i + 1] |= 0x0100;
+> +				}
+> +			}
+> +		} else {
+> +			for (i = 0; i < chunk; i++) {
+> +				dst16[i] = *src8++;
+> +				if (dc)
+> +					dst16[i] |= 0x0100;
+> +			}
+> +		}
+> +
+> +		tr.len = chunk;
+> +		len -= chunk;
+> +
+> +		tinydrm_dbg_spi_message(spi, &m);
+> +		ret = spi_sync(spi, &m);
+> +		if (ret)
+> +			return ret;
+> +	};
+> +
+> +	return 0;
+> +}
+> +
+> +static int mipi_dbi_typec1_command(struct mipi_dbi *mipi, u8 cmd,
+> +				   u8 *parameters, size_t num)
+> +{
+> +	unsigned int bpw = (cmd == MIPI_DCS_WRITE_MEMORY_START) ? 16 : 8;
+> +	int ret;
+> +
+> +	if (mipi_dbi_command_is_read(mipi, cmd))
+> +		return -ENOTSUPP;
+> +
+> +	MIPI_DBI_DEBUG_COMMAND(cmd, parameters, num);
+> +
+> +	ret = mipi_dbi_spi1_transfer(mipi, 0, &cmd, 1, 8);
+> +	if (ret || !num)
+> +		return ret;
+> +
+> +	return mipi_dbi_spi1_transfer(mipi, 1, parameters, num, bpw);
+> +}
+> +
+> +/* MIPI DBI Type C Option 3 */
+> +
+> +static int mipi_dbi_typec3_command_read(struct mipi_dbi *mipi, u8 cmd,
+> +					u8 *data, size_t len)
+> +{
+> +	struct spi_device *spi = mipi->spi;
+> +	u32 speed_hz = min_t(u32, MIPI_DBI_MAX_SPI_READ_SPEED,
+> +			     spi->max_speed_hz / 2);
+> +	struct spi_transfer tr[2] = {
+> +		{
+> +			.speed_hz = speed_hz,
+> +			.tx_buf = &cmd,
+> +			.len = 1,
+> +		}, {
+> +			.speed_hz = speed_hz,
+> +			.len = len,
+> +		},
+> +	};
+> +	struct spi_message m;
+> +	u8 *buf;
+> +	int ret;
+> +
+> +	if (!len)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Support non-standard 24-bit and 32-bit Nokia read commands which
+> +	 * start with a dummy clock, so we need to read an extra byte.
+> +	 */
+> +	if (cmd == MIPI_DCS_GET_DISPLAY_ID ||
+> +	    cmd == MIPI_DCS_GET_DISPLAY_STATUS) {
+> +		if (!(len == 3 || len == 4))
+> +			return -EINVAL;
+> +
+> +		tr[1].len = len + 1;
+> +	}
+> +
+> +	buf = kmalloc(tr[1].len, GFP_KERNEL);
+> +	if (!buf)
+> +		return -ENOMEM;
+> +
+> +	tr[1].rx_buf = buf;
+> +	gpiod_set_value_cansleep(mipi->dc, 0);
+> +
+> +	spi_message_init_with_transfers(&m, tr, ARRAY_SIZE(tr));
+> +	ret = spi_sync(spi, &m);
+> +	if (ret)
+> +		goto err_free;
+> +
+> +	tinydrm_dbg_spi_message(spi, &m);
+> +
+> +	if (tr[1].len == len) {
+> +		memcpy(data, buf, len);
+> +	} else {
+> +		unsigned int i;
+> +
+> +		for (i = 0; i < len; i++)
+> +			data[i] = (buf[i] << 1) | !!(buf[i + 1] & BIT(7));
+> +	}
+> +
+> +	MIPI_DBI_DEBUG_COMMAND(cmd, data, len);
+> +
+> +err_free:
+> +	kfree(buf);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mipi_dbi_typec3_command(struct mipi_dbi *mipi, u8 cmd,
+> +				   u8 *par, size_t num)
+> +{
+> +	struct spi_device *spi = mipi->spi;
+> +	unsigned int bpw = 8;
+> +	u32 speed_hz;
+> +	int ret;
+> +
+> +	if (mipi_dbi_command_is_read(mipi, cmd))
+> +		return mipi_dbi_typec3_command_read(mipi, cmd, par, num);
+> +
+> +	MIPI_DBI_DEBUG_COMMAND(cmd, par, num);
+> +
+> +	gpiod_set_value_cansleep(mipi->dc, 0);
+> +	speed_hz = mipi_dbi_spi_cmd_max_speed(spi, 1);
+> +	ret = tinydrm_spi_transfer(spi, speed_hz, NULL, 8, &cmd, 1);
+> +	if (ret || !num)
+> +		return ret;
+> +
+> +	if (cmd == MIPI_DCS_WRITE_MEMORY_START && !mipi->swap_bytes)
+> +		bpw = 16;
+> +
+> +	gpiod_set_value_cansleep(mipi->dc, 1);
+> +	speed_hz = mipi_dbi_spi_cmd_max_speed(spi, num);
+> +
+> +	return tinydrm_spi_transfer(spi, speed_hz, NULL, bpw, par, num);
+> +}
+> +
+> +/**
+> + * mipi_dbi_spi_init - Initialize MIPI DBI SPI interfaced controller
+> + * @spi: SPI device
+> + * @dc: D/C gpio (optional)
+> + * @mipi: &mipi_dbi structure to initialize
+> + * @pipe_funcs: Display pipe functions
+> + * @driver: DRM driver
+> + * @mode: Display mode
+> + * @rotation: Initial rotation in degrees Counter Clock Wise
+> + *
+> + * This function sets &mipi_dbi->command, enables &mipi->read_commands for the
+> + * usual read commands and initializes @mipi using mipi_dbi_init().
+> + *
+> + * If @dc is set, a Type C Option 3 interface is assumed, if not
+> + * Type C Option 1.
+> + *
+> + * If the SPI master driver doesn't support the necessary bits per word,
+> + * the following transformation is used:
+> + *
+> + * - 9-bit: reorder buffer as 9x 8-bit words, padded with no-op command.
+> + * - 16-bit: if big endian send as 8-bit, if little endian swap bytes
+> + *
+> + * Returns:
+> + * Zero on success, negative error code on failure.
+> + */
+> +int mipi_dbi_spi_init(struct spi_device *spi, struct mipi_dbi *mipi,
+> +		      struct gpio_desc *dc,
+> +		      const struct drm_simple_display_pipe_funcs *pipe_funcs,
+> +		      struct drm_driver *driver,
+> +		      const struct drm_display_mode *mode,
+> +		      unsigned int rotation)
+> +{
+> +	size_t tx_size = tinydrm_spi_max_transfer_size(spi, 0);
+> +	struct device *dev = &spi->dev;
+> +	int ret;
+> +
+> +	if (tx_size < 16) {
+> +		DRM_ERROR("SPI transmit buffer too small: %zu\n", tx_size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Even though it's not the SPI device that does DMA (the master does),
+> +	 * the dma mask is necessary for the dma_alloc_wc() in
+> +	 * drm_gem_cma_create(). The dma_addr returned will be a physical
+> +	 * adddress which might be different from the bus address, but this is
+> +	 * not a problem since the address will not be used.
+> +	 * The virtual address is used in the transfer and the SPI core
+> +	 * re-maps it on the SPI master device using the DMA streaming API
+> +	 * (spi_map_buf()).
+> +	 */
+> +	if (!dev->coherent_dma_mask) {
+> +		ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(32));
+> +		if (ret) {
+> +			dev_warn(dev, "Failed to set dma mask %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	mipi->spi = spi;
+> +	mipi->read_commands = mipi_dbi_dcs_read_commands;
+> +
+> +	if (dc) {
+> +		mipi->command = mipi_dbi_typec3_command;
+> +		mipi->dc = dc;
+> +		if (tinydrm_machine_little_endian() &&
+> +		    !tinydrm_spi_bpw_supported(spi, 16))
+> +			mipi->swap_bytes = true;
+> +	} else {
+> +		mipi->command = mipi_dbi_typec1_command;
+> +		mipi->tx_buf9_len = tx_size;
+> +		mipi->tx_buf9 = devm_kmalloc(dev, tx_size, GFP_KERNEL);
+> +		if (!mipi->tx_buf9)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	return mipi_dbi_init(dev, mipi, pipe_funcs, driver, mode, rotation);
+> +}
+> +EXPORT_SYMBOL(mipi_dbi_spi_init);
+> +
+> +#endif /* CONFIG_SPI */
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +
+> +static ssize_t mipi_dbi_debugfs_command_write(struct file *file,
+> +					      const char __user *ubuf,
+> +					      size_t count, loff_t *ppos)
+> +{
+> +	struct seq_file *m = file->private_data;
+> +	struct mipi_dbi *mipi = m->private;
+> +	u8 val, cmd, parameters[64];
+> +	char *buf, *pos, *token;
+> +	unsigned int i;
+> +	int ret;
+> +
+> +	buf = memdup_user_nul(ubuf, count);
+> +	if (IS_ERR(buf))
+> +		return PTR_ERR(buf);
+> +
+> +	/* strip trailing whitespace */
+> +	for (i = count - 1; i > 0; i--)
+> +		if (isspace(buf[i]))
+> +			buf[i] = '\0';
+> +		else
+> +			break;
+> +	i = 0;
+> +	pos = buf;
+> +	while (pos) {
+> +		token = strsep(&pos, " ");
+> +		if (!token) {
+> +			ret = -EINVAL;
+> +			goto err_free;
+> +		}
+> +
+> +		ret = kstrtou8(token, 16, &val);
+> +		if (ret < 0)
+> +			goto err_free;
+> +
+> +		if (token == buf)
+> +			cmd = val;
+> +		else
+> +			parameters[i++] = val;
+> +
+> +		if (i == 64) {
+> +			ret = -E2BIG;
+> +			goto err_free;
+> +		}
+> +	}
+> +
+> +	ret = mipi_dbi_command_buf(mipi, cmd, parameters, i);
+> +
+> +err_free:
+> +	kfree(buf);
+> +
+> +	return ret < 0 ? ret : count;
+> +}
+> +
+> +static int mipi_dbi_debugfs_command_show(struct seq_file *m, void *unused)
+> +{
+> +	struct mipi_dbi *mipi = m->private;
+> +	u8 cmd, val[4];
+> +	size_t len, i;
+> +	int ret;
+> +
+> +	for (cmd = 0; cmd < 255; cmd++) {
+> +		if (!mipi_dbi_command_is_read(mipi, cmd))
+> +			continue;
+> +
+> +		switch (cmd) {
+> +		case MIPI_DCS_READ_MEMORY_START:
+> +		case MIPI_DCS_READ_MEMORY_CONTINUE:
+> +			len = 2;
+> +			break;
+> +		case MIPI_DCS_GET_DISPLAY_ID:
+> +			len = 3;
+> +			break;
+> +		case MIPI_DCS_GET_DISPLAY_STATUS:
+> +			len = 4;
+> +			break;
+> +		default:
+> +			len = 1;
+> +			break;
+> +		}
+> +
+> +		seq_printf(m, "%02x: ", cmd);
+> +		ret = mipi_dbi_command_buf(mipi, cmd, val, len);
+> +		if (ret) {
+> +			seq_puts(m, "XX\n");
+> +			continue;
+> +		}
+> +
+> +		for (i = 0; i < len; i++)
+> +			seq_printf(m, "%02x", val[i]);
+> +		seq_puts(m, "\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int mipi_dbi_debugfs_command_open(struct inode *inode,
+> +					 struct file *file)
+> +{
+> +	return single_open(file, mipi_dbi_debugfs_command_show,
+> +			   inode->i_private);
+> +}
+> +
+> +static const struct file_operations mipi_dbi_debugfs_command_fops = {
+> +	.owner = THIS_MODULE,
+> +	.open = mipi_dbi_debugfs_command_open,
+> +	.read = seq_read,
+> +	.llseek = seq_lseek,
+> +	.release = single_release,
+> +	.write = mipi_dbi_debugfs_command_write,
+> +};
+> +
+> +static const struct drm_info_list mipi_dbi_debugfs_list[] = {
+> +	{ "fb",   drm_fb_cma_debugfs_show, 0 },
+> +};
+> +
+> +/**
+> + * mipi_dbi_debugfs_init - Create debugfs entries
+> + * @minor: DRM minor
+> + *
+> + * This function creates a 'command' debugfs file for sending commands to the
+> + * controller or getting the read command values.
+> + * Drivers can use this as their &drm_driver->debugfs_init callback.
+> + *
+> + * Returns:
+> + * Zero on success, negative error code on failure.
+> + */
+> +int mipi_dbi_debugfs_init(struct drm_minor *minor)
+> +{
+> +	struct tinydrm_device *tdev = minor->dev->dev_private;
+> +	struct mipi_dbi *mipi = mipi_dbi_from_tinydrm(tdev);
+> +	umode_t mode = S_IFREG | S_IWUSR;
+> +
+> +	if (mipi->read_commands)
+> +		mode |= S_IRUGO;
+> +	debugfs_create_file("command", mode, minor->debugfs_root, mipi,
+> +			    &mipi_dbi_debugfs_command_fops);
+> +
+> +	return drm_debugfs_create_files(mipi_dbi_debugfs_list,
+> +					ARRAY_SIZE(mipi_dbi_debugfs_list),
+> +					minor->debugfs_root, minor);
+> +}
+> +EXPORT_SYMBOL(mipi_dbi_debugfs_init);
+> +
+> +#endif
+> +
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/drm/tinydrm/mipi-dbi.h b/include/drm/tinydrm/mipi-dbi.h
+> new file mode 100644
+> index 0000000..d137b16
+> --- /dev/null
+> +++ b/include/drm/tinydrm/mipi-dbi.h
+> @@ -0,0 +1,107 @@
+> +/*
+> + * MIPI Display Bus Interface (DBI) LCD controller support
+> + *
+> + * Copyright 2016 Noralf Trønnes
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#ifndef __LINUX_MIPI_DBI_H
+> +#define __LINUX_MIPI_DBI_H
+> +
+> +#include <drm/tinydrm/tinydrm.h>
+> +
+> +struct spi_device;
+> +struct gpio_desc;
+> +struct regulator;
+> +
+> +/**
+> + * struct mipi_dbi - MIPI DBI controller
+> + * @tinydrm: tinydrm base
+> + * @spi: SPI device
+> + * @enabled: Pipeline is enabled
+> + * @cmdlock: Command lock
+> + * @command: Bus specific callback executing commands.
+> + * @read_commands: Array of read commands terminated by a zero entry.
+> + *                 Reading is disabled if this is NULL.
+> + * @dc: Optional D/C gpio.
+> + * @tx_buf: Buffer used for transfer (copy clip rect area)
+> + * @tx_buf9: Buffer used for Option 1 9-bit conversion
+> + * @tx_buf9_len: Size of tx_buf9.
+> + * @swap_bytes: Swap bytes in buffer before transfer
+> + * @reset: Optional reset gpio
+> + * @rotation: initial rotation in degrees Counter Clock Wise
+> + * @backlight: backlight device (optional)
+> + * @regulator: power regulator (optional)
+> + */
+> +struct mipi_dbi {
+> +	struct tinydrm_device tinydrm;
+> +	struct spi_device *spi;
+> +	bool enabled;
+> +	struct mutex cmdlock;
+> +	int (*command)(struct mipi_dbi *mipi, u8 cmd, u8 *param, size_t num);
+> +	const u8 *read_commands;
+> +	struct gpio_desc *dc;
+> +	u16 *tx_buf;
+> +	void *tx_buf9;
+> +	size_t tx_buf9_len;
+> +	bool swap_bytes;
+> +	struct gpio_desc *reset;
+> +	unsigned int rotation;
+> +	struct backlight_device *backlight;
+> +	struct regulator *regulator;
+> +};
+> +
+> +static inline struct mipi_dbi *
+> +mipi_dbi_from_tinydrm(struct tinydrm_device *tdev)
+> +{
+> +	return container_of(tdev, struct mipi_dbi, tinydrm);
+> +}
+> +
+> +int mipi_dbi_spi_init(struct spi_device *spi, struct mipi_dbi *mipi,
+> +		      struct gpio_desc *dc,
+> +		      const struct drm_simple_display_pipe_funcs *pipe_funcs,
+> +		      struct drm_driver *driver,
+> +		      const struct drm_display_mode *mode,
+> +		      unsigned int rotation);
+> +int mipi_dbi_init(struct device *dev, struct mipi_dbi *mipi,
+> +		  const struct drm_simple_display_pipe_funcs *pipe_funcs,
+> +		  struct drm_driver *driver,
+> +		  const struct drm_display_mode *mode, unsigned int rotation);
+> +void mipi_dbi_pipe_enable(struct drm_simple_display_pipe *pipe,
+> +			  struct drm_crtc_state *crtc_state);
+> +void mipi_dbi_pipe_disable(struct drm_simple_display_pipe *pipe);
+> +void mipi_dbi_hw_reset(struct mipi_dbi *mipi);
+> +bool mipi_dbi_display_is_on(struct mipi_dbi *mipi);
+> +
+> +int mipi_dbi_command_read(struct mipi_dbi *mipi, u8 cmd, u8 *val);
+> +int mipi_dbi_command_buf(struct mipi_dbi *mipi, u8 cmd, u8 *data, size_t len);
+> +
+> +/**
+> + * mipi_dbi_command - MIPI DCS command with optional parameter(s)
+> + * @mipi: MIPI structure
+> + * @cmd: Command
+> + * @seq...: Optional parameter(s)
+> + *
+> + * Send MIPI DCS command to the controller. Use mipi_dbi_command_read() for
+> + * get/read.
+> + *
+> + * Returns:
+> + * Zero on success, negative error code on failure.
+> + */
+> +#define mipi_dbi_command(mipi, cmd, seq...) \
+> +({ \
+> +	u8 d[] = { seq }; \
+> +	mipi_dbi_command_buf(mipi, cmd, d, ARRAY_SIZE(d)); \
+> +})
+> +
+> +#ifdef CONFIG_DEBUG_FS
+> +int mipi_dbi_debugfs_init(struct drm_minor *minor);
+> +#else
+> +#define mipi_dbi_debugfs_init		NULL
+> +#endif
+> +
+> +#endif /* __LINUX_MIPI_DBI_H */
+> --
+> 2.10.2
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
---===============6623052374459166356==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============6623052374459166356==--
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
