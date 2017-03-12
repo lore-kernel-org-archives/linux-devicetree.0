@@ -1,454 +1,189 @@
-From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 2/2] arm64: dts: move from ARCH_VULCAN to ARCH_THUNDER2
-Date: Sun, 12 Mar 2017 10:03:35 +0000
-Message-ID: <1489313015-4783-3-git-send-email-jnair@caviumnetworks.com>
-References: <1489313015-4783-1-git-send-email-jnair@caviumnetworks.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/7] ASoC: add audio-graph-card document
+Date: Sun, 12 Mar 2017 06:43:55 -0500
+Message-ID: <20170312114355.q2sftbljlvkvgc7j@rob-hp-laptop>
+References: <87fuiwmeya.wl%kuninori.morimoto.gx@renesas.com>
+ <8760jsmers.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489313015-4783-1-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8760jsmers.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move and update device tree files as part of transition from Broadcom
-Vulcan to Cavium ThunderX2.
+On Thu, Mar 02, 2017 at 05:28:24AM +0000, Kuninori Morimoto wrote:
+> 
+> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> 
+> "Audio Graph Card" = "Simple Card" + "OF-graph"
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v2 -> v3
+> 
+>  - simple-graph-card -> audio-graph-card
+>  - cleanup unnecessary comments
+> 
+>  .../devicetree/bindings/sound/audio-graph-card.txt | 126 +++++++++++++++++++++
+>  1 file changed, 126 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/audio-graph-card.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/audio-graph-card.txt b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+> new file mode 100644
+> index 0000000..81213ac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
+> @@ -0,0 +1,126 @@
+> +Audio Graph Card:
+> +
+> +Audio Graph Card specifies audio DAI connections of SoC <-> codec.
+> +It is based on common bindings for device graphs.
+> +see ${LINUX}/Documentation/devicetree/bindings/graph.txt
+> +
+> +Basically, Audio Graph Card property is same as Simple Card.
+> +see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
+> +
+> +Below are same as Simple-Card.
+> +
+> +- audio-graph-card,name
+> +- audio-graph-card,format
+> +- audio-graph-card,frame-master
+> +- audio-graph-card,bitclock-master
+> +- audio-graph-card,bitclock-inversion
+> +- audio-graph-card,frame-inversion
+> +- audio-graph-card,dai-tdm-slot-num
+> +- audio-graph-card,dai-tdm-slot-width
 
-The changes are to:
- * rename dts/broadcom/vulcan.dtsi to cavium/thunder2-99xx.dtsi,
-   update cpu cores to be "cavium,thunder2", and update SoC to be
-   "cavium,thunderx2-cn9900"
- * move SoC dts/broadcom/vulcan-eval.dtsi to cavium/thunder2-99xx.dtsi
-   and update board name string
- * Update dts/broadcom/Makefile not to build vulcan dtbs
- * Update dts/cavium/Makefile to build thunder2 dtbs
+Sorry, I meant we should drop prefix ("audio-graph-card,") as these are 
+common properties and don't need a vendor prefix. We generally only do 
+prefixes when properties are vendor specifc and these are common. The 
+"simple-audio-card,*" prefix was a bit of an odd pattern.
 
-No changes to the dts contents except the updated "compatible" and
-"model" properties.
+Though if we do drop the prefix, just 'name' and 'format' are a bit 
+vague. Maybe dai-format instead of format. For name, I'm not sure how 
+that gets used. Does it really need to be per port? For user visible 
+names for things like identifying connectors on boards we use 'label', 
+so maybe that is appropriate here.
 
-Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/broadcom/Makefile         |   1 -
- arch/arm64/boot/dts/broadcom/vulcan-eval.dts  |  33 ------
- arch/arm64/boot/dts/broadcom/vulcan.dtsi      | 147 --------------------------
- arch/arm64/boot/dts/cavium/Makefile           |   1 +
- arch/arm64/boot/dts/cavium/thunder2-99xx.dts  |  33 ++++++
- arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi | 147 ++++++++++++++++++++++++++
- 6 files changed, 181 insertions(+), 181 deletions(-)
- delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan-eval.dts
- delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan.dtsi
- create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dts
- create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> +- clocks / system-clock-frequency
+> +
+> +Required properties:
+> +
+> +- compatible				: "asoc-audio-graph-card";
 
-diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-index f1caece..bfa8f8e 100644
---- a/arch/arm64/boot/dts/broadcom/Makefile
-+++ b/arch/arm64/boot/dts/broadcom/Makefile
-@@ -1,6 +1,5 @@
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb
- dtb-$(CONFIG_ARCH_BCM_IPROC) += ns2-svk.dtb ns2-xmc.dtb
--dtb-$(CONFIG_ARCH_VULCAN) += vulcan-eval.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/broadcom/vulcan-eval.dts b/arch/arm64/boot/dts/broadcom/vulcan-eval.dts
-deleted file mode 100644
-index 9ee8d3d..0000000
---- a/arch/arm64/boot/dts/broadcom/vulcan-eval.dts
-+++ /dev/null
-@@ -1,33 +0,0 @@
--/*
-- * dts file for Broadcom (BRCM) Vulcan Evaluation Platform
-- *
-- * Copyright (c) 2013-2016 Broadcom
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-- */
--
--/dts-v1/;
--
--#include "vulcan.dtsi"
--
--/ {
--	model = "Broadcom Vulcan Eval Platform";
--	compatible = "brcm,vulcan-eval", "brcm,vulcan-soc";
--
--	memory {
--		device_type = "memory";
--		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
--		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
--	};
--
--	aliases {
--		serial0 = &uart0;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--};
-diff --git a/arch/arm64/boot/dts/broadcom/vulcan.dtsi b/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-deleted file mode 100644
-index 34e11a9..0000000
---- a/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-+++ /dev/null
-@@ -1,147 +0,0 @@
--/*
-- * dtsi file for Broadcom (BRCM) Vulcan processor
-- *
-- * Copyright (c) 2013-2016 Broadcom
-- * Author: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-- */
--
--#include <dt-bindings/interrupt-controller/arm-gic.h>
--
--/ {
--	model = "Broadcom Vulcan";
--	compatible = "brcm,vulcan-soc";
--	interrupt-parent = <&gic>;
--	#address-cells = <2>;
--	#size-cells = <2>;
--
--	/* just 4 cpus now, 128 needed in full config */
--	cpus {
--		#address-cells = <0x2>;
--		#size-cells = <0x0>;
--
--		cpu@0 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x0>;
--			enable-method = "psci";
--		};
--
--		cpu@1 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x1>;
--			enable-method = "psci";
--		};
--
--		cpu@2 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x2>;
--			enable-method = "psci";
--		};
--
--		cpu@3 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x3>;
--			enable-method = "psci";
--		};
--	};
--
--	psci {
--		compatible = "arm,psci-0.2";
--		method = "smc";
--	};
--
--	gic: interrupt-controller@400080000 {
--		compatible = "arm,gic-v3";
--		#interrupt-cells = <3>;
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
--		interrupt-controller;
--		#redistributor-regions = <1>;
--		reg = <0x04 0x00080000 0x0 0x20000>,	/* GICD */
--		      <0x04 0x01000000 0x0 0x1000000>;	/* GICR */
--		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
--
--		gicits: gic-its@40010000 {
--			compatible = "arm,gic-v3-its";
--			msi-controller;
--			reg = <0x04 0x00100000 0x0 0x20000>;	/* GIC ITS */
--		};
--	};
--
--	timer {
--		compatible = "arm,armv8-timer";
--		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
--	};
--
--	pmu {
--		compatible = "brcm,vulcan-pmu", "arm,armv8-pmuv3";
--		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>; /* PMU overflow */
--	};
--
--	clk125mhz: uart_clk125mhz {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <125000000>;
--		clock-output-names = "clk125mhz";
--	};
--
--	pci {
--		compatible = "pci-host-ecam-generic";
--		device_type = "pci";
--		#interrupt-cells = <1>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--
--		/* ECAM at 0x3000_0000 - 0x4000_0000 */
--		reg = <0x0 0x30000000  0x0 0x10000000>;
--		reg-names = "PCI ECAM";
--
--		/*
--		 * PCI ranges:
--		 *   IO		no supported
--		 *   MEM        0x4000_0000 - 0x6000_0000
--		 *   MEM64 pref 0x40_0000_0000 - 0x60_0000_0000
--		 */
--		ranges =
--		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
--		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map =
--		      /* addr  pin  ic   icaddr  icintr */
--			<0 0 0  1  &gic   0 0    GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
--			 0 0 0  2  &gic   0 0    GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
--			 0 0 0  3  &gic   0 0    GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
--			 0 0 0  4  &gic   0 0    GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
--		msi-parent = <&gicits>;
--		dma-coherent;
--	};
--
--	soc {
--		compatible = "simple-bus";
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
--
--		uart0: serial@402020000 {
--			compatible = "arm,pl011", "arm,primecell";
--			reg = <0x04 0x02020000 0x0 0x1000>;
--			interrupt-parent = <&gic>;
--			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clk125mhz>;
--			clock-names = "apb_pclk";
--		};
--	};
--
--};
-diff --git a/arch/arm64/boot/dts/cavium/Makefile b/arch/arm64/boot/dts/cavium/Makefile
-index e34f89d..581b2c1 100644
---- a/arch/arm64/boot/dts/cavium/Makefile
-+++ b/arch/arm64/boot/dts/cavium/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
-+dtb-$(CONFIG_ARCH_THUNDER2) += thunder2-99xx.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dts b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
-new file mode 100644
-index 0000000..57a6f75
---- /dev/null
-+++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
-@@ -0,0 +1,33 @@
-+/*
-+ * dts file for Broadcom (BRCM) Vulcan Evaluation Platform
-+ *
-+ * Copyright (c) 2013-2016 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+
-+#include "thunder2-99xx.dtsi"
-+
-+/ {
-+	model = "Cavium ThunderX2 CN99XX";
-+	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
-+		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-new file mode 100644
-index 0000000..46afe3a
---- /dev/null
-+++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-@@ -0,0 +1,147 @@
-+/*
-+ * dtsi file for Broadcom (BRCM) Vulcan processor
-+ *
-+ * Copyright (c) 2013-2016 Broadcom
-+ * Author: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "Cavium ThunderX2 CN99XX";
-+	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	/* just 4 cpus now, 128 needed in full config */
-+	cpus {
-+		#address-cells = <0x2>;
-+		#size-cells = <0x0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	gic: interrupt-controller@400080000 {
-+		compatible = "arm,gic-v3";
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		interrupt-controller;
-+		#redistributor-regions = <1>;
-+		reg = <0x04 0x00080000 0x0 0x20000>,	/* GICD */
-+		      <0x04 0x01000000 0x0 0x1000000>;	/* GICR */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		gicits: gic-its@40010000 {
-+			compatible = "arm,gic-v3-its";
-+			msi-controller;
-+			reg = <0x04 0x00100000 0x0 0x20000>;	/* GIC ITS */
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmu {
-+		compatible = "brcm,vulcan-pmu", "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>; /* PMU overflow */
-+	};
-+
-+	clk125mhz: uart_clk125mhz {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clk125mhz";
-+	};
-+
-+	pci {
-+		compatible = "pci-host-ecam-generic";
-+		device_type = "pci";
-+		#interrupt-cells = <1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+
-+		/* ECAM at 0x3000_0000 - 0x4000_0000 */
-+		reg = <0x0 0x30000000  0x0 0x10000000>;
-+		reg-names = "PCI ECAM";
-+
-+		/*
-+		 * PCI ranges:
-+		 *   IO		no supported
-+		 *   MEM        0x4000_0000 - 0x6000_0000
-+		 *   MEM64 pref 0x40_0000_0000 - 0x60_0000_0000
-+		 */
-+		ranges =
-+		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
-+		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map =
-+		      /* addr  pin  ic   icaddr  icintr */
-+			<0 0 0  1  &gic   0 0    GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
-+			 0 0 0  2  &gic   0 0    GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
-+			 0 0 0  3  &gic   0 0    GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
-+			 0 0 0  4  &gic   0 0    GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+		msi-parent = <&gicits>;
-+		dma-coherent;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		uart0: serial@402020000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x04 0x02020000 0x0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk125mhz>;
-+			clock-names = "apb_pclk";
-+		};
-+	};
-+
-+};
--- 
-2.7.4
+Just audio-graph-card. asoc is a Linux term.
 
+> +- dais					: list of CPU DAI port{s}
+> +
+> +Example: Single DAI case
+> +
+> +	sound_card {
+> +		compatible = "asoc-audio-graph-card";
+> +
+> +		dais = <&cpu_port>;
+> +	};
+> +
+> +	dai-controller@0 {
+> +		...
+> +		cpu_port: port {
+> +			cpu_endpoint: endpoint {
+> +				remote-endpoint = <&codec_endpoint>;
+> +
+> +				audio-graph-card,format = "left_j";
+> +				audio-graph-card,xxx = ...
+> +				...
+> +			};
+> +		};
+> +	};
+> +
+> +	dai-controller@1 {
+> +		...
+> +		port {
+> +			codec_endpoint: endpoint {
+> +				remote-endpoint = <&cpu_endpoint>;
+> +			};
+> +		};
+> +	};
+> +
+> +Example: Multi DAI case
+> +
+> +	sound_card {
+> +		compatible = "asoc-audio-graph-card";
+> +
+> +		dais = <&cpu_port0
+> +			&cpu_port1
+> +			&cpu_port2>;
+> +	};
+> +
+> +	dai-controller@0 {
+
+These should be audio-codec@...
+
+> +		...
+> +		port {
+> +			codec0_endpoint: endpoint {
+> +				remote-endpoint = <&cpu_endpoint0>;
+> +			};
+> +		};
+> +	};
+> +
+> +	dai-controller@1 {
+> +		...
+> +		port {
+> +			codec1_endpoint: endpoint {
+> +				remote-endpoint = <&cpu_endpoint1>;
+> +			};
+> +		};
+> +	};
+> +
+> +	dai-controller@2 {
+> +		...
+> +		port {
+> +			codec2_endpoint: endpoint {
+> +				remote-endpoint = <&cpu_endpoint2>;
+> +			};
+> +		};
+> +	};
+> +
+> +	dai-controller@3 {
+> +		...
+> +		ports {
+> +			cpu_port0: port@0 {
+> +				cpu_endpoint0: endpoint {
+> +					remote-endpoint = <&codec0_endpoint>;
+> +
+> +					audio-graph-card,format = "left_j";
+> +					audio-graph-card,xxx = ...
+> +					...
+> +				};
+> +			};
+> +			cpu_port1: port@1 {
+> +				cpu_endpoint1: endpoint {
+> +					remote-endpoint = <&codec1_endpoint>;
+> +
+> +					audio-graph-card,format = "i2s";
+> +					audio-graph-card,xxx = ...
+> +					...
+> +				};
+> +			};
+> +			cpu_port2: port@2 {
+> +				cpu_endpoint2: endpoint {
+> +					remote-endpoint = <&codec2_endpoint>;
+> +
+> +					audio-graph-card,format = "i2s";
+> +					audio-graph-card,xxx = ...
+> +					...
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
