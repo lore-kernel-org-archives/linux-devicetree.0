@@ -1,110 +1,150 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
  controls from a pipeline
-Date: Sun, 12 Mar 2017 22:29:04 +0100
-Message-ID: <20170312212904.GA7995@amd>
-References: <20170304131329.GV3220@valkosipuli.retiisi.org.uk>
- <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
- <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
- <20170310140124.GV21222@n2100.armlinux.org.uk>
- <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170311231456.GH21222@n2100.armlinux.org.uk>
+Date: Sun, 12 Mar 2017 18:58:45 -0300
+Message-ID: <20170312185845.5c18ffd0@vento.lan>
+References: <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+        <20170310120902.1daebc7b@vento.lan>
+        <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+        <20170311101408.272a9187@vento.lan>
+        <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+        <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+        <20170311184551.GD21222@n2100.armlinux.org.uk>
+        <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
+        <20170311185959.GF21222@n2100.armlinux.org.uk>
+        <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
+        <20170312073745.GI21222@n2100.armlinux.org.uk>
+        <fba73c10-4b95-f0d2-e681-0b14ef1fbc1c@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7JfCtLOvnd9MIVvH"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170311231456.GH21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+In-Reply-To: <fba73c10-4b95-f0d2-e681-0b14ef1fbc1c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, pavel-+ZI9xUNit7I@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Em Sun, 12 Mar 2017 10:56:53 -0700
+Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> escreveu:
 
---7JfCtLOvnd9MIVvH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 03/11/2017 11:37 PM, Russell King - ARM Linux wrote:
+> > On Sat, Mar 11, 2017 at 07:31:18PM -0800, Steve Longerbeam wrote:  
 
-On Sat 2017-03-11 23:14:56, Russell King - ARM Linux wrote:
-> On Sat, Mar 11, 2017 at 08:25:49AM -0300, Mauro Carvalho Chehab wrote:
-> > This situation is there since 2009. If I remember well, you tried to wr=
-ite
-> > such generic plugin in the past, but never finished it, apparently beca=
-use
-> > it is too complex. Others tried too over the years.=20
-> >=20
-> > The last trial was done by Jacek, trying to cover just the exynos4 driv=
-er.=20
-> > Yet, even such limited scope plugin was not good enough, as it was never
-> > merged upstream. Currently, there's no such plugins upstream.
-> >=20
-> > If we can't even merge a plugin that solves it for just *one* driver,
-> > I have no hope that we'll be able to do it for the generic case.
->=20
-> This is what really worries me right now about the current proposal for
-> iMX6.  What's being proposed is to make the driver exclusively MC-based.
->=20
-> What that means is that existing applications are _not_ going to work
-> until we have some answer for libv4l2, and from what you've said above,
-> it seems that this has been attempted multiple times over the last _8_
-> years, and each time it's failed.
+> > Given what Mauro has said, I'm convinced that the media controller stuff
+> > is a complete failure for usability, and adding further drivers using it
+> > is a mistake.
 
-Yeah. We need a mid-layer between legacy applications and MC
-devices. Such layer does not exist in userspace or in kernel.
+I never said that. The thing is that the V4L2 API was designed in
+1999, when the video hardware were a way simpler: just one DMA engine
+on a PCI device, one video/audio input switch and a few video entries.
 
-> Loading the problem onto the user in the hope that the user knows
-> enough to properly configure it also doesn't work - who is going to
-> educate the user about the various quirks of the hardware they're
-> dealing with?
+On those days, setting up a pipeline on such devices is simple, and can be
+done via VIDIOC_*_INPUT ioctls.
 
-We have docs. Users can write shell scripts. Still, mid-layer would be
-nice.
+Nowadays hardware used on SoC devices are a way more complex.
 
-> So, the problem space we have here is absolutely huge, and merely
-> having a plugin that activates when you open a /dev/video* node
-> really doesn't solve it.
->=20
-> All in all, I really don't think "lets hope someone writes a v4l2
-> plugin to solve it" is ever going to be successful.  I don't even
-> see that there will ever be a userspace application that is anything
-> more than a representation of the dot graphs that users can use to
-> manually configure the capture system with system knowledge.
->=20
-> I think everyone needs to take a step back and think long and hard
-> about this from the system usability perspective - I seriously
-> doubt that we will ever see any kind of solution to this if we
-> continue to progress with "we'll sort it in userspace some day."
+SoC devices comes with several DMA engines for buffer transfers, plus
+video transform blocks whose pipeline can be set dynamically.
 
-Mid-layer is difficult... there are _hundreds_ of possible
-pipeline setups. If it should live in kernel or in userspace is a
-question... but I don't think having it in kernel helps in any way.
+The MC API is a need to allow setting a complex pipeline, as
+VIDIOC_*_INPUT cannot work with such complexity.
 
-Best regards,
-									Pavel
+The subdev API solves a different issue. On a "traditional" device,
+we usually have a pipeline like:
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+<video input> ==> <processing> ==> /dev/video0
 
---7JfCtLOvnd9MIVvH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Where <processing> controls something at the device (like
+bright and/or resolution) if you change something at the /dev/video0 
+node, it is clear that the <processing> block should handle it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+On complex devices, with a pipeline like:
+<camera> ==> <processing0> ==> <CSI bus> ==> <processing1> ==> /dev/video0
 
-iEYEARECAAYFAljFvaAACgkQMOfwapXb+vKR8gCcD5FQHJG8ZM1Y4tq2U1TLGrNL
-oO4AnRfJMH3U5KWa7FUscWzOUqeOqHuw
-=Ls/3
------END PGP SIGNATURE-----
+If you send a command to adjust the something at /dev/video0, it is
+not clear for the device driver to do it at processing0 or at
+processing1. Ok, the driver can decide it, but this can be sub-optimal.
 
---7JfCtLOvnd9MIVvH--
+Yet, several drivers do that. For example, with em28xx-based drivers
+several parameters can be adjusted either at the em28xx driver or at
+the video decoder driver (saa711x). There's a logic inside the driver
+that decides it. The pipeline there is fixed, though, so it is
+easy to hardcode a logic for that.
+
+So, I've no doubt that both MC and subdev APIs are needed when full
+hardware control is required.
+
+I don't know about how much flexibility the i.MX6 hardware gives,
+nor if all such flexibility is needed for most use case applications.
+
+If I were to code a driver for such hardware, though, I would try to
+provide a subset of the functionality that would work without the
+subdev API, allowing it to work with standard V4L applications.
+
+That doesn't sound hard to do, as the driver may limit the pipelines
+to a subset that would make sense, in order to make easier for the
+driver to take the right decision about to where send a control
+to setup some parameter.
+
+> I do agree with you that MC places a lot of burden on the user to
+> attain a lot of knowledge of the system's architecture.
+
+Setting up the pipeline is not the hard part. One could write a
+script to do that. 
+
+> That's really  why I included that control inheritance patch, to 
+> ease the burden somewhat.
+
+IMHO, that makes sense, as, once some script sets the pipeline, any
+V4L2 application can work, if you forward the controls to the right
+I2C devices.
+
+> On the other hand, I also think this just requires that MC drivers have
+> very good user documentation.
+
+No, it is not a matter of just documentation. It is a matter of having
+to rewrite applications for each device, as the information exposed by
+MC are not enough for an application to do what's needed.
+
+For a generic application to work properly with MC, we need to have to
+add more stuff to MC, in order to allow applications to know more about
+the features of each subdevice and to things like discovering what kind
+of signal is present on each PAD. We're calling it as "properties API"[1].
+
+[1] we discussed about that at the ML and at the MC workshop:
+	https://linuxtv.org/news.php?entry=2015-08-17.mchehab
+
+Unfortunately, nobody sent any patches implementing it so far :-(
+
+> And my other point is, I think most people who have a need to work with
+> the media framework on a particular platform will likely already be
+> quite familiar with that platform.
+
+I disagree. The most popular platform device currently is Raspberry PI.
+
+I doubt that almost all owners of RPi + camera module know anything
+about MC. They just use Raspberry's official driver with just provides
+the V4L2 interface.
+
+I have a strong opinion that, for hardware like RPi, just the V4L2
+API is enough for more than 90% of the cases.
+
+> The media graph for imx6 is fairly self-explanatory in my opinion.
+> Yes that graph has to be generated, but just with a simple 'media-ctl
+> --print-dot', I don't see how that is difficult for the user.
+
+Again, IMHO, the problem is not how to setup the pipeline, but, instead,
+the need to forward controls to the subdevices.
+
+To use a camera, the user needs to set up a set of controls for the
+image to make sense (bright, contrast, focus, etc). If the driver
+doesn't forward those controls to the subdevs, an application like
+"camorama" won't actually work for real, as the user won't be able
+to adjust those parameters via GUI.
+
+Thanks,
+Mauro
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
