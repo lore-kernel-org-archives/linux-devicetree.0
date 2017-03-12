@@ -1,62 +1,96 @@
-From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-Subject: [PATCH 4/4] dts: bcm283x.dtsi: Add analog audio/headphone jack for bcm2835
-Date: Sat, 11 Mar 2017 22:38:20 -0800
-Message-ID: <20170312063820.19313-4-mzoran@crowfest.net>
-References: <20170312063820.19313-1-mzoran@crowfest.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170312063820.19313-1-mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-AbSShOkvfpQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sun, 12 Mar 2017 07:37:45 +0000
+Message-ID: <20170312073745.GI21222@n2100.armlinux.org.uk>
+References: <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+ <20170310120902.1daebc7b@vento.lan>
+ <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+ <20170311101408.272a9187@vento.lan>
+ <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+ <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+ <20170311184551.GD21222@n2100.armlinux.org.uk>
+ <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
+ <20170311185959.GF21222@n2100.armlinux.org.uk>
+ <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kerne
 List-Id: devicetree@vger.kernel.org
 
-Add the DT nodes for the analog audio/headphone jack for the BCM2835
+On Sat, Mar 11, 2017 at 07:31:18PM -0800, Steve Longerbeam wrote:
+> 
+> 
+> On 03/11/2017 10:59 AM, Russell King - ARM Linux wrote:
+> >On Sat, Mar 11, 2017 at 10:54:55AM -0800, Steve Longerbeam wrote:
+> >>
+> >>
+> >>On 03/11/2017 10:45 AM, Russell King - ARM Linux wrote:
+> >>>I really don't think expecting the user to understand and configure
+> >>>the pipeline is a sane way forward.  Think about it - should the
+> >>>user need to know that, because they have a bayer-only CSI data
+> >>>source, that there is only one path possible, and if they try to
+> >>>configure a different path, then things will just error out?
+> >>>
+> >>>For the case of imx219 connected to iMX6, it really is as simple as
+> >>>"there is only one possible path" and all the complexity of the media
+> >>>interfaces/subdevs is completely unnecessary.  Every other block in
+> >>>the graph is just noise.
+> >>>
+> >>>The fact is that these dot graphs show a complex picture, but reality
+> >>>is somewhat different - there's only relatively few paths available
+> >>>depending on the connected source and the rest of the paths are
+> >>>completely useless.
+> >>>
+> >>
+> >>I totally disagree there. Raw bayer requires passthrough yes, but for
+> >>all other media bus formats on a mipi csi-2 bus, and all other media
+> >>bus formats on 8-bit parallel buses, the conersion pipelines can be
+> >>used for scaling, CSC, rotation, and motion-compensated de-interlacing.
+> >
+> >... which only makes sense _if_ your source can produce those formats.
+> >We don't actually disagree on that.
+> 
+> ...and there are lots of those sources! You should try getting out of
+> your imx219 shell some time, and have a look around! :)
 
-Signed-off-by: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
----
- arch/arm/boot/dts/bcm283x.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+If you think that, you are insulting me.  I've been thinking about this
+from the "big picture" point of view.  If you think I'm only thinking
+about this from only the bayer point of view, you're wrong.
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 9798bc9293d8..bf2cd463a6e6 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -338,7 +338,12 @@
- 				brcm,pins = <42 43>;
- 				brcm,function = <BCM2835_FSEL_ALT5>;
- 			};
--		};
-+
-+                        analog_audio_pins: analog_audio_pins {
-+                                brcm,pins = <40 45>;
-+                                brcm,function = <4 4>; /* Alt0 */
-+                        };
-+                };
- 
- 		uart0: serial@7e201000 {
- 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
-@@ -464,6 +469,17 @@
- 			status = "disabled";
- 		};
- 
-+                analogaudio: analogaudio@7e20c000 {
-+                        compatible = "brcm,bcm2835-analog-audio";
-+                        reg = <0x7e20c000 0x28>;
-+                        clocks = <&clocks BCM2835_CLOCK_PWM>;
-+                        assigned-clocks = <&clocks BCM2835_CLOCK_PWM>;
-+                        pinctrl-names = "default";
-+                        pinctrl-0 = <&analog_audio_pins>;
-+                        dmas = <&dma 5>;
-+                        dma-names = "tx";
-+                };
-+
- 		sdhci: sdhci@7e300000 {
- 			compatible = "brcm,bcm2835-sdhci";
- 			reg = <0x7e300000 0x100>;
+Given what Mauro has said, I'm convinced that the media controller stuff
+is a complete failure for usability, and adding further drivers using it
+is a mistake.
+
+I counter your accusation by saying that you are actually so focused on
+the media controller way of doing things that you can't see the bigger
+picture here.
+
+So, tell me how the user can possibly use iMX6 video capture without
+resorting to opening up a terminal and using media-ctl to manually
+configure the pipeline.  How is the user going to control the source
+device without using media-ctl to find the subdev node, and then using
+v4l2-ctl on it.  How is the user supposed to know which /dev/video*
+node they should be opening with their capture application?
+
+If you can actually respond to the points that I've been raising about
+end user usability, then we can have a discussion.
+
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
