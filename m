@@ -1,190 +1,98 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] ASoC: add audio-graph-card document
-Date: Sun, 12 Mar 2017 06:43:55 -0500
-Message-ID: <20170312114355.q2sftbljlvkvgc7j@rob-hp-laptop>
-References: <87fuiwmeya.wl%kuninori.morimoto.gx@renesas.com>
- <8760jsmers.wl%kuninori.morimoto.gx@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+Date: Sun, 12 Mar 2017 06:44:42 -0500
+Message-ID: <20170312114442.qtzwwjd6qrviam6v@rob-hp-laptop>
+References: <20170228120452.10043-1-zajec5@gmail.com>
+ <a6d25fb5-db5e-5643-b150-23588944674a@gmail.com>
+ <290ed068-2518-50ef-4d02-394bef8b7ee9@gmail.com>
+ <CAL_JsqL-N4HfsG=py+w1NsBOJZzS1kbRM5J6dC-EE-rg9r9C2g@mail.gmail.com>
+ <386c5b7b-0bc0-d286-6cbb-745a5adbc1e9@gmail.com>
+ <b80fe65c-2fc9-94ac-9de2-29aee6b62033@milecki.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8760jsmers.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b80fe65c-2fc9-94ac-9de2-29aee6b62033@milecki.pl>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 02, 2017 at 05:28:24AM +0000, Kuninori Morimoto wrote:
+On Mon, Mar 06, 2017 at 07:06:32AM +0100, Rafał Miłecki wrote:
+> On 03/01/2017 10:04 PM, Jacek Anaszewski wrote:
+> > On 02/28/2017 11:12 PM, Rob Herring wrote:
+> > > On Tue, Feb 28, 2017 at 3:51 PM, Rafał Miłecki <zajec5@gmail.com> wrote:
+> > > > On 02/28/2017 10:38 PM, Jacek Anaszewski wrote:
+> > > > > 
+> > > > > I think that it would be simpler if we could initially see
+> > > > > a complete sample dts implementation containing all required DT
+> > > > > nodes. The example could contain timer trigger as well as usb-port
+> > > > > trigger specific bindings.
+> > > > 
+> > > > 
+> > > > Please take a look at attached patch. I used it on Tenda AC9 with:
+> > > 
+> > > I'm not sure about this extra level of indirection. I don't see the need.
+> > > 
+> > > > usb_trigger: usb-trigger {
+> > > >         trigger-type = "usbport";
+> > > 
+> > > Why do we need to know the type? The trigger device knows what type it
+> > > is. All we should need to know here is what device(s) controls an LED.
+> > > The rest the kernel can figure out.
+> > 
+> > The thing is that in the proposed approach the trigger is not necessary
+> > a device. The trigger node is here only a container with initialization
+> > data.
+> > 
+> > We could have e,g, two such nodes with different set of ports
+> > (say usb1-trigger and usb2-trigger). Then if we had two LED nodes usb1
+> > and usb2, the former could have its triggers property initialized
+> > to &usb1-trigger and the latter to &usb2-trigger. Thanks to that both
+> > LEDs after executing "echo usbport > triggers" would listen to events
+> > from different set of usb ports.
+> > 
+> > Also, e.g. for the timer trigger we could define two separate DT nodes
+> > with different delay intervals.
 > 
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Hi Rob, what do you think about this?
 > 
-> "Audio Graph Card" = "Simple Card" + "OF-graph"
+> Jacek is correct, we could have e.g.
+> timer-trigger-1 {
+> 	trigger-type = "timer";
+> 	delay-on = <200>;
+> 	delay-off = <500>;
+> };
+> timer-trigger-2 {
+> 	trigger-type = "timer";
+> 	delay-on = <500>;
+> 	delay-off = <1000>;
+> };
+
+This is just letting the Linux driver structure define/influence the 
+binding. This could all be described with a single LED property like 
+"led-blink-pattern". The fact that it gets implemented by the timer 
+trigger is irrelevant to the binding.
+
+Plus timer based triggering seems more like user controlled than 
+platform or hardware defined. So trying to create a binding for all 
+Linux triggers is a mistake. The only thing we need here is a way to 
+associate an LED with a h/w device. 
+
 > 
-> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
-> v2 -> v3
+> or something like:
+> usbport-2-0-trigger {
+> 	trigger-type = "usbport";
+> 	ports = <&ohci_port1>, <&ehci_port1>;
+> };
+> usbport-3-0-trigger {
+> 	trigger-type = "usbport";
+> 	ports = <&xhci_port1>;
+> };
 > 
->  - simple-graph-card -> audio-graph-card
->  - cleanup unnecessary comments
-> 
->  .../devicetree/bindings/sound/audio-graph-card.txt | 126 +++++++++++++++++++++
->  1 file changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/audio-graph-card.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/audio-graph-card.txt b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
-> new file mode 100644
-> index 0000000..81213ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/audio-graph-card.txt
-> @@ -0,0 +1,126 @@
-> +Audio Graph Card:
-> +
-> +Audio Graph Card specifies audio DAI connections of SoC <-> codec.
-> +It is based on common bindings for device graphs.
-> +see ${LINUX}/Documentation/devicetree/bindings/graph.txt
-> +
-> +Basically, Audio Graph Card property is same as Simple Card.
-> +see ${LINUX}/Documentation/devicetree/bindings/sound/simple-card.txt
-> +
-> +Below are same as Simple-Card.
-> +
-> +- audio-graph-card,name
-> +- audio-graph-card,format
-> +- audio-graph-card,frame-master
-> +- audio-graph-card,bitclock-master
-> +- audio-graph-card,bitclock-inversion
-> +- audio-graph-card,frame-inversion
-> +- audio-graph-card,dai-tdm-slot-num
-> +- audio-graph-card,dai-tdm-slot-width
+> Does it make more sense?
 
-Sorry, I meant we should drop prefix ("audio-graph-card,") as these are 
-common properties and don't need a vendor prefix. We generally only do 
-prefixes when properties are vendor specifc and these are common. The 
-"simple-audio-card,*" prefix was a bit of an odd pattern.
+No, for the reasons above.
 
-Though if we do drop the prefix, just 'name' and 'format' are a bit 
-vague. Maybe dai-format instead of format. For name, I'm not sure how 
-that gets used. Does it really need to be per port? For user visible 
-names for things like identifying connectors on boards we use 'label', 
-so maybe that is appropriate here.
-
-> +- clocks / system-clock-frequency
-> +
-> +Required properties:
-> +
-> +- compatible				: "asoc-audio-graph-card";
-
-Just audio-graph-card. asoc is a Linux term.
-
-> +- dais					: list of CPU DAI port{s}
-> +
-> +Example: Single DAI case
-> +
-> +	sound_card {
-> +		compatible = "asoc-audio-graph-card";
-> +
-> +		dais = <&cpu_port>;
-> +	};
-> +
-> +	dai-controller@0 {
-> +		...
-> +		cpu_port: port {
-> +			cpu_endpoint: endpoint {
-> +				remote-endpoint = <&codec_endpoint>;
-> +
-> +				audio-graph-card,format = "left_j";
-> +				audio-graph-card,xxx = ...
-> +				...
-> +			};
-> +		};
-> +	};
-> +
-> +	dai-controller@1 {
-> +		...
-> +		port {
-> +			codec_endpoint: endpoint {
-> +				remote-endpoint = <&cpu_endpoint>;
-> +			};
-> +		};
-> +	};
-> +
-> +Example: Multi DAI case
-> +
-> +	sound_card {
-> +		compatible = "asoc-audio-graph-card";
-> +
-> +		dais = <&cpu_port0
-> +			&cpu_port1
-> +			&cpu_port2>;
-> +	};
-> +
-> +	dai-controller@0 {
-
-These should be audio-codec@...
-
-> +		...
-> +		port {
-> +			codec0_endpoint: endpoint {
-> +				remote-endpoint = <&cpu_endpoint0>;
-> +			};
-> +		};
-> +	};
-> +
-> +	dai-controller@1 {
-> +		...
-> +		port {
-> +			codec1_endpoint: endpoint {
-> +				remote-endpoint = <&cpu_endpoint1>;
-> +			};
-> +		};
-> +	};
-> +
-> +	dai-controller@2 {
-> +		...
-> +		port {
-> +			codec2_endpoint: endpoint {
-> +				remote-endpoint = <&cpu_endpoint2>;
-> +			};
-> +		};
-> +	};
-> +
-> +	dai-controller@3 {
-> +		...
-> +		ports {
-> +			cpu_port0: port@0 {
-> +				cpu_endpoint0: endpoint {
-> +					remote-endpoint = <&codec0_endpoint>;
-> +
-> +					audio-graph-card,format = "left_j";
-> +					audio-graph-card,xxx = ...
-> +					...
-> +				};
-> +			};
-> +			cpu_port1: port@1 {
-> +				cpu_endpoint1: endpoint {
-> +					remote-endpoint = <&codec1_endpoint>;
-> +
-> +					audio-graph-card,format = "i2s";
-> +					audio-graph-card,xxx = ...
-> +					...
-> +				};
-> +			};
-> +			cpu_port2: port@2 {
-> +				cpu_endpoint2: endpoint {
-> +					remote-endpoint = <&codec2_endpoint>;
-> +
-> +					audio-graph-card,format = "i2s";
-> +					audio-graph-card,xxx = ...
-> +					...
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
