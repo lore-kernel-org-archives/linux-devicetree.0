@@ -1,126 +1,142 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3] hwmon: ads7828 optional parameters from the device
- tree
-Date: Sun, 12 Mar 2017 10:57:43 -0700
-Message-ID: <14108694-9690-15fc-3087-5dbd1ffd5694@roeck-us.net>
-References: <20170312144739.13276-1-kernel.development@povil.us>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sun, 12 Mar 2017 19:14:10 +0100
+Message-ID: <20170312181410.GA3124@amd>
+References: <20170310120902.1daebc7b@vento.lan>
+ <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+ <20170311101408.272a9187@vento.lan>
+ <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+ <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+ <20170311184551.GD21222@n2100.armlinux.org.uk>
+ <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
+ <20170311185959.GF21222@n2100.armlinux.org.uk>
+ <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
+ <20170312073745.GI21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170312144739.13276-1-kernel.development@povil.us>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Sam Povilus <kernel.development@povil.us>, wsa@the-dreams.de, jdelvare@suse.com, linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Content-Type: multipart/mixed; boundary="===============6623052374459166356=="
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170312073745.GI21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.es
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2017 07:47 AM, Sam Povilus wrote:
-> Adding the ability for the ads7828 and ads7830 to use the device tree to
-> get their optional parameters, instead of using platform devices. This
-> allows people using custom boards to also use the ads7828 in a non-default
-> manner.
->
-> Also adding a note to the user if they misconfigure the device's external
-> reference.
->
-> v2: conforming to coding style
-> v3: changing from "_" to "-" for device tree entries
-> Signed-off-by: Sam Povilus <kernel.development@povil.us>
-> ---
->  Documentation/devicetree/bindings/hwmon/ads7828.txt    | 18 ++++++++++++++++++
->  .../devicetree/bindings/i2c/trivial-devices.txt        |  2 --
->  drivers/hwmon/ads7828.c                                | 15 +++++++++++++++
->  3 files changed, 33 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/ads7828.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/ads7828.txt b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-> new file mode 100644
-> index 000000000000..0d37cd3fd31b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/ads7828.txt
-> @@ -0,0 +1,18 @@
-> +ads7828 properties
-> +
-> +Required properties:
-> +- compatible:
-> +	Should be one of
-> +	       ti,ads7828
-> +	       ti,ads7830
-> +- reg: I2C address
-> +
-> +Optional properties:
-> +
-> +- diff-input
-> +  Set to use the device in differential mode.
 
-I'll wait for Rob to comment, but "differential-input" sounds better to me,
-Also, it would have to have a "ti," prefix.
+--===============6623052374459166356==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
 
-> +- ext-vref
-> +  Set to enable the external voltage reference on the device.
-> +- vref-mv
-> +  The external reference on the device is set to this as an unsigned integer in
-> +  milivolts. Must use "ext_vref" for this to have any meaning.
 
-ext_vref, though as suggested below I think it would be better to use a standard
-property. Also, it seems to me that ext-vref is really unnecessary; the presence
-of "vref" can imply that the reference voltage is external.
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index cdd7b48826c3..87648909f6ce 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -163,8 +163,6 @@ st,m41t00		Serial real-time clock (RTC)
->  st,m41t62		Serial real-time clock (RTC) with alarm
->  st,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
->  taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interface
-> -ti,ads7828		8-Channels, 12-bit ADC
-> -ti,ads7830		8-Channels, 8-bit ADC
->  ti,tsc2003		I2C Touch-Screen Controller
->  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
->  ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
-> diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
-> index ee396ff167d9..d1f7ba5d7a2b 100644
-> --- a/drivers/hwmon/ads7828.c
-> +++ b/drivers/hwmon/ads7828.c
-> @@ -118,6 +118,7 @@ static int ads7828_probe(struct i2c_client *client,
->  	struct ads7828_data *data;
->  	struct device *hwmon_dev;
->  	unsigned int vref_mv = ADS7828_INT_VREF_MV;
-> +	unsigned int vref_mv_tmp;
->  	bool diff_input = false;
->  	bool ext_vref = false;
->  	unsigned int regval;
-> @@ -131,11 +132,25 @@ static int ads7828_probe(struct i2c_client *client,
->  		ext_vref = pdata->ext_vref;
->  		if (ext_vref && pdata->vref_mv)
->  			vref_mv = pdata->vref_mv;
-> +	} else if (dev->of_node) {
-> +		if (of_get_property(dev->of_node, "diff-input", NULL))
-> +			diff_input = true;
-> +		if (of_get_property(dev->of_node, "ext-vref", NULL))
-> +			ext_vref = true;
-> +		if (!of_property_read_u32(dev->of_node, "vref-mv", &vref_mv_tmp)
-> +		   && ext_vref)
-> +			vref_mv = vref_mv_tmp;
+On Sun 2017-03-12 07:37:45, Russell King - ARM Linux wrote:
+> On Sat, Mar 11, 2017 at 07:31:18PM -0800, Steve Longerbeam wrote:
+> >=20
+> >=20
+> > On 03/11/2017 10:59 AM, Russell King - ARM Linux wrote:
+> > >On Sat, Mar 11, 2017 at 10:54:55AM -0800, Steve Longerbeam wrote:
+> > >>
+> > >>
+> > >>On 03/11/2017 10:45 AM, Russell King - ARM Linux wrote:
+> > >>>I really don't think expecting the user to understand and configure
+> > >>>the pipeline is a sane way forward.  Think about it - should the
+> > >>>user need to know that, because they have a bayer-only CSI data
+> > >>>source, that there is only one path possible, and if they try to
+> > >>>configure a different path, then things will just error out?
+> > >>>
+> > >>>For the case of imx219 connected to iMX6, it really is as simple as
+> > >>>"there is only one possible path" and all the complexity of the media
+> > >>>interfaces/subdevs is completely unnecessary.  Every other block in
+> > >>>the graph is just noise.
+> > >>>
+> > >>>The fact is that these dot graphs show a complex picture, but reality
+> > >>>is somewhat different - there's only relatively few paths available
+> > >>>depending on the connected source and the rest of the paths are
+> > >>>completely useless.
+> > >>>
+> > >>
+> > >>I totally disagree there. Raw bayer requires passthrough yes, but for
+> > >>all other media bus formats on a mipi csi-2 bus, and all other media
+> > >>bus formats on 8-bit parallel buses, the conersion pipelines can be
+> > >>used for scaling, CSC, rotation, and motion-compensated de-interlacin=
+g.
+> > >
+> > >... which only makes sense _if_ your source can produce those formats.
+> > >We don't actually disagree on that.
+> >=20
+> > ...and there are lots of those sources! You should try getting out of
+> > your imx219 shell some time, and have a look around! :)
+>=20
+> If you think that, you are insulting me.  I've been thinking about this
+> from the "big picture" point of view.  If you think I'm only thinking
+> about this from only the bayer point of view, you're wrong.
 
-Please consider using devm_regulator_get_optional() and thus standard properties.
+Can you stop that insults nonsense?
 
->  	}
->
->  	/* Bound Vref with min/max values */
-> +	vref_mv_tmp = vref_mv;
->  	vref_mv = clamp_val(vref_mv, ADS7828_EXT_VREF_MV_MIN,
->  			    ADS7828_EXT_VREF_MV_MAX);
-> +	if (vref_mv_tmp != vref_mv) {
-> +		pr_info("You used and invalid external vref,"
-> +			" it has been clamped to %u",
-> +			vref_mv);
-> +	}
+> Given what Mauro has said, I'm convinced that the media controller stuff
+> is a complete failure for usability, and adding further drivers using it
+> is a mistake.
 
-This is an unrelated change.
+Hmm. But you did not present any alternative. Seems some hardware is
+simply complex. So either we don't add complex drivers (_that_ would
+be a mistake), or some userspace solution will need to be
+done. Shell-script running media-ctl does not seem that hard.
 
->
->  	/* ADS7828 uses 12-bit samples, while ADS7830 is 8-bit */
->  	if (id->driver_data == ads7828) {
->
+> So, tell me how the user can possibly use iMX6 video capture without
+> resorting to opening up a terminal and using media-ctl to manually
+> configure the pipeline.  How is the user going to control the source
+> device without using media-ctl to find the subdev node, and then using
+> v4l2-ctl on it.  How is the user supposed to know which /dev/video*
+> node they should be opening with their capture application?
 
+Complex hardware sometimes requires userspace configuration. Running a
+shell script on startup does not seem that hard.
+
+And maybe we could do some kind of default setup in kernel, but that
+does not really solve the problem.
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljFj/IACgkQMOfwapXb+vK0qQCgt0pDtFBEZJ0gKHL0QjVyv72R
+rOQAnjiBH+6uNfIC5dUXkyfT5tRi0t91
+=Hoir
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
+
+--===============6623052374459166356==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devel mailing list
+devel@linuxdriverproject.org
+http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
+
+--===============6623052374459166356==--
