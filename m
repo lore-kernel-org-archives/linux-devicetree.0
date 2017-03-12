@@ -1,29 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Add LED subnode binding for
- MT6323 PMIC
-Date: Sun, 12 Mar 2017 09:05:44 -0500
-Message-ID: <20170312140544.37h6sklywmqhfa5w@rob-hp-laptop>
-References: <1488549385-19899-1-git-send-email-sean.wang@mediatek.com>
- <1488549385-19899-3-git-send-email-sean.wang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: Fix path to atmel/hlcdc-dc.txt
+Date: Sun, 12 Mar 2017 09:07:53 -0500
+Message-ID: <20170312140753.vjx34ue5ueuabeyu@rob-hp-laptop>
+References: <20170303144147.22246-1-richard.genoud@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1488549385-19899-3-git-send-email-sean.wang@mediatek.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: rpurdie@rpsys.net, jacek.anaszewski@gmail.com, lee.jones@linaro.org, matthias.bgg@gmail.com, pavel@ucw.cz, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
+In-Reply-To: <20170303144147.22246-1-richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 03, 2017 at 09:56:23PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Fri, Mar 03, 2017 at 03:41:46PM +0100, Richard Genoud wrote:
+> Atmel hlcdc-dc documentation is actually in
+> Documentation/devicetree/bindings/display/atmel/hlcdc-dc.txt
 > 
-> This patch adds documentation for devicetree bindings
-> for LED support as the subnode of MT6323 PMIC
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+As these are just binding fixes, I've applied both.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
