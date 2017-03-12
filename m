@@ -1,111 +1,145 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Sun, 12 Mar 2017 17:51:18 +0000
-Message-ID: <20170312175118.GP21222@n2100.armlinux.org.uk>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Sun, 12 Mar 2017 10:56:53 -0700
+Message-ID: <fba73c10-4b95-f0d2-e681-0b14ef1fbc1c@gmail.com>
+References: <a7b8e095-a95c-24bd-b1e9-e983f18061c4@xs4all.nl>
+ <20170310120902.1daebc7b@vento.lan>
+ <5e1183f4-774f-413a-628a-96e0df321faf@xs4all.nl>
+ <20170311101408.272a9187@vento.lan>
+ <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+ <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+ <20170311184551.GD21222@n2100.armlinux.org.uk>
+ <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
+ <20170311185959.GF21222@n2100.armlinux.org.uk>
+ <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
+ <20170312073745.GI21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489121599-23206-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170312073745.GI21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgde
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, pavel-+ZI9xUNit7I@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I've just looked at my test system's dmesg, and spotted this in the log.
-It's been a while since these popped out of the kernel, so I don't know
-what caused them (other than the obvious, a media-ctl command.)
 
-My script which sets this up only enables links, and then configures the
-formats etc, and doesn't disable them, so I don't see why the power
-count should be going negative.
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 1889 at drivers/staging/media/imx/imx-media-csi.c:806 csi_s_power+0x9c/0xa8 [imx_media_csi]
-Modules linked in: caam_jr uvcvideo snd_soc_imx_sgtl5000 snd_soc_fsl_asoc_card snd_soc_imx_spdif imx_media_csi(C) imx6_mipi_csi2(C) snd_soc_imx_audmux snd_soc_sgtl5000 imx219 imx_media_ic(C) imx_media_capture(C) imx_media_vdic(C) caam video_multiplexer imx_sdma coda v4l2_mem2mem videobuf2_v4l2 imx2_wdt imx_vdoa videobuf2_dma_contig videobuf2_core videobuf2_vmalloc videobuf2_memops snd_soc_fsl_ssi
-imx_thermal snd_soc_fsl_spdif imx_pcm_dma imx_media(C) imx_media_common(C) nfsd
-rc_pinnacle_pctv_hd dw_hdmi_ahb_audio dw_hdmi_cec etnaviv
-CPU: 1 PID: 1889 Comm: media-ctl Tainted: G         C      4.11.0-rc1+ #2125
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Backtrace:
-[<c0013ba4>] (dump_backtrace) from [<c0013de4>] (show_stack+0x18/0x1c)
- r6:600e0013 r5:ffffffff r4:00000000 r3:00000000
-[<c0013dcc>] (show_stack) from [<c033f728>] (dump_stack+0xa4/0xdc)
-[<c033f684>] (dump_stack) from [<c00326cc>] (__warn+0xdc/0x108)
- r6:bf124014 r5:00000000 r4:00000000 r3:c09ea4a8
-[<c00325f0>] (__warn) from [<c0032720>] (warn_slowpath_null+0x28/0x30)
- r10:ede00010 r8:ede4a348 r7:d039501c r6:d0395140 r5:00000000 r4:d0395010
-[<c00326f8>] (warn_slowpath_null) from [<bf1229e0>] (csi_s_power+0x9c/0xa8 [imx_media_csi])
-[<bf122944>] (csi_s_power [imx_media_csi]) from [<bf04a930>] (imx_media_set_power+0x3c/0x108 [imx_media_common])
- r7:d039501c r6:00000000 r5:00000000 r4:0000000c
-[<bf04a8f4>] (imx_media_set_power [imx_media_common]) from [<bf04aa34>] (imx_media_pipeline_set_power+0x38/0x40 [imx_media_common])
- r10:00000001 r9:00000001 r8:ede4a348 r7:ede00010 r6:ede4a348 r5:d039501c
- r4:00000001
-[<bf04a9fc>] (imx_media_pipeline_set_power [imx_media_common]) from [<bf052148>] (imx_media_link_notify+0xf0/0x144 [imx_media])
- r7:ede00010 r6:ed59f900 r5:00000000 r4:d039501c
-[<bf052058>] (imx_media_link_notify [imx_media]) from [<c04fa858>] (__media_entity_setup_link+0x110/0x1d8)
- r10:c0347c03 r9:d7eb3dc8 r8:befe92b0 r7:ede00010 r6:00000000 r5:00000001
- r4:ed59f900 r3:bf052058
-[<c04fa748>] (__media_entity_setup_link) from [<c04f9bb0>] (media_device_setup_link+0x84/0x90)
- r7:ede00010 r6:ede00010 r5:ef3fd810 r4:d7eb3dc8
-[<c04f9b2c>] (media_device_setup_link) from [<c04f9e94>] (media_device_ioctl+0xa4/0x148)
- r6:00000000 r5:d7eb3dc8 r4:c077b014 r3:c04f9b2c
-[<c04f9df0>] (media_device_ioctl) from [<c04fa3a0>] (media_ioctl+0x38/0x4c)
- r10:ed5eca68 r9:d7eb2000 r8:befe92b0 r7:00000003 r6:00000003 r5:e82ca280
- r4:c0190304
-[<c04fa368>] (media_ioctl) from [<c018f9c0>] (do_vfs_ioctl+0x98/0x9a0)
-[<c018f928>] (do_vfs_ioctl) from [<c0190304>] (SyS_ioctl+0x3c/0x60)
- r10:00000000 r9:d7eb2000 r8:befe92b0 r7:00000003 r6:c0347c03 r5:e82ca280
- r4:e82ca280
-[<c01902c8>] (SyS_ioctl) from [<c000fd60>] (ret_fast_syscall+0x0/0x1c)
- r8:c000ff04 r7:00000036 r6:000261d0 r5:00000001 r4:009162e8 r3:00000001
----[ end trace 4fdd40e5adfc4485 ]---
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 1889 at drivers/staging/media/imx/imx-media-csi.c:806 csi_s_power+0x9c/0xa8 [imx_media_csi]
-Modules linked in: caam_jr uvcvideo snd_soc_imx_sgtl5000 snd_soc_fsl_asoc_card snd_soc_imx_spdif imx_media_csi(C) imx6_mipi_csi2(C) snd_soc_imx_audmux snd_soc_sgtl5000 imx219 imx_media_ic(C) imx_media_capture(C) imx_media_vdic(C) caam video_multiplexer imx_sdma coda v4l2_mem2mem videobuf2_v4l2 imx2_wdt imx_vdoa videobuf2_dma_contig videobuf2_core videobuf2_vmalloc videobuf2_memops snd_soc_fsl_ssi
-imx_thermal snd_soc_fsl_spdif imx_pcm_dma imx_media(C) imx_media_common(C) nfsd
-rc_pinnacle_pctv_hd dw_hdmi_ahb_audio dw_hdmi_cec etnaviv
-CPU: 1 PID: 1889 Comm: media-ctl Tainted: G        WC      4.11.0-rc1+ #2125
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Backtrace:
-[<c0013ba4>] (dump_backtrace) from [<c0013de4>] (show_stack+0x18/0x1c)
- r6:600e0013 r5:ffffffff r4:00000000 r3:00000000
-[<c0013dcc>] (show_stack) from [<c033f728>] (dump_stack+0xa4/0xdc)
-[<c033f684>] (dump_stack) from [<c00326cc>] (__warn+0xdc/0x108)
- r6:bf124014 r5:00000000 r4:00000000 r3:c09ea4a8
-[<c00325f0>] (__warn) from [<c0032720>] (warn_slowpath_null+0x28/0x30)
- r10:ede00010 r8:ede4a348 r7:ee000800 r6:d0395140 r5:00000000 r4:d0395010
-[<c00326f8>] (warn_slowpath_null) from [<bf1229e0>] (csi_s_power+0x9c/0xa8 [imx_media_csi])
-[<bf122944>] (csi_s_power [imx_media_csi]) from [<bf04a930>] (imx_media_set_power+0x3c/0x108 [imx_media_common])
- r7:ee000800 r6:00000000 r5:00000000 r4:0000000c
-[<bf04a8f4>] (imx_media_set_power [imx_media_common]) from [<bf04aa34>] (imx_media_pipeline_set_power+0x38/0x40 [imx_media_common])
- r10:00000001 r9:00000001 r8:ede4a348 r7:ede00010 r6:ede4a348 r5:ee000800
- r4:00000001
-[<bf04a9fc>] (imx_media_pipeline_set_power [imx_media_common]) from [<bf052148>] (imx_media_link_notify+0xf0/0x144 [imx_media])
- r7:ede00010 r6:d0320480 r5:ee000800 r4:ee000800
-[<bf052058>] (imx_media_link_notify [imx_media]) from [<c04fa858>] (__media_entity_setup_link+0x110/0x1d8)
- r10:c0347c03 r9:d7eb3dc8 r8:befe92b0 r7:ede00010 r6:00000000 r5:00000001
- r4:d0320480 r3:bf052058
-[<c04fa748>] (__media_entity_setup_link) from [<c04f9bb0>] (media_device_setup_link+0x84/0x90)
- r7:ede00010 r6:ede00010 r5:d039501c r4:d7eb3dc8
-[<c04f9b2c>] (media_device_setup_link) from [<c04f9e94>] (media_device_ioctl+0xa4/0x148)
- r6:00000000 r5:d7eb3dc8 r4:c077b014 r3:c04f9b2c
-[<c04f9df0>] (media_device_ioctl) from [<c04fa3a0>] (media_ioctl+0x38/0x4c)
- r10:ed5eca68 r9:d7eb2000 r8:befe92b0 r7:00000003 r6:00000003 r5:e82ca500
- r4:c0190304
-[<c04fa368>] (media_ioctl) from [<c018f9c0>] (do_vfs_ioctl+0x98/0x9a0)
-[<c018f928>] (do_vfs_ioctl) from [<c0190304>] (SyS_ioctl+0x3c/0x60)
- r10:00000000 r9:d7eb2000 r8:befe92b0 r7:00000003 r6:c0347c03 r5:e82ca500
- r4:e82ca500
-[<c01902c8>] (SyS_ioctl) from [<c000fd60>] (ret_fast_syscall+0x0/0x1c)
- r8:c000ff04 r7:00000036 r6:000261d0 r5:00000001 r4:0091737c r3:00000001
----[ end trace 4fdd40e5adfc4486 ]---
+On 03/11/2017 11:37 PM, Russell King - ARM Linux wrote:
+> On Sat, Mar 11, 2017 at 07:31:18PM -0800, Steve Longerbeam wrote:
+>>
+>>
+>> On 03/11/2017 10:59 AM, Russell King - ARM Linux wrote:
+>>> On Sat, Mar 11, 2017 at 10:54:55AM -0800, Steve Longerbeam wrote:
+>>>>
+>>>>
+>>>> On 03/11/2017 10:45 AM, Russell King - ARM Linux wrote:
+>>>>> I really don't think expecting the user to understand and configure
+>>>>> the pipeline is a sane way forward.  Think about it - should the
+>>>>> user need to know that, because they have a bayer-only CSI data
+>>>>> source, that there is only one path possible, and if they try to
+>>>>> configure a different path, then things will just error out?
+>>>>>
+>>>>> For the case of imx219 connected to iMX6, it really is as simple as
+>>>>> "there is only one possible path" and all the complexity of the media
+>>>>> interfaces/subdevs is completely unnecessary.  Every other block in
+>>>>> the graph is just noise.
+>>>>>
+>>>>> The fact is that these dot graphs show a complex picture, but reality
+>>>>> is somewhat different - there's only relatively few paths available
+>>>>> depending on the connected source and the rest of the paths are
+>>>>> completely useless.
+>>>>>
+>>>>
+>>>> I totally disagree there. Raw bayer requires passthrough yes, but for
+>>>> all other media bus formats on a mipi csi-2 bus, and all other media
+>>>> bus formats on 8-bit parallel buses, the conersion pipelines can be
+>>>> used for scaling, CSC, rotation, and motion-compensated de-interlacing.
+>>>
+>>> ... which only makes sense _if_ your source can produce those formats.
+>>> We don't actually disagree on that.
+>>
+>> ...and there are lots of those sources! You should try getting out of
+>> your imx219 shell some time, and have a look around! :)
+>
+> If you think that, you are insulting me.  I've been thinking about this
+> from the "big picture" point of view.  If you think I'm only thinking
+> about this from only the bayer point of view, you're wrong.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+No insult there, you have my utmost respect Russel. Me gives you the
+Ali-G "respec!" :)
+
+It was just a light-hearted attempt at suggesting you might be too
+entangled with the imx219 (or short on hardware access, which I can
+certainly understand).
+
+
+>
+> Given what Mauro has said, I'm convinced that the media controller stuff
+> is a complete failure for usability, and adding further drivers using it
+> is a mistake.
+>
+
+I do agree with you that MC places a lot of burden on the user to
+attain a lot of knowledge of the system's architecture. That's really
+why I included that control inheritance patch, to ease the burden
+somewhat.
+
+On the other hand, I also think this just requires that MC drivers have
+very good user documentation.
+
+And my other point is, I think most people who have a need to work with
+the media framework on a particular platform will likely already be
+quite familiar with that platform.
+
+> I counter your accusation by saying that you are actually so focused on
+> the media controller way of doing things that you can't see the bigger
+> picture here.
+>
+
+Yeah I've been too mired in the details of this driver.
+
+
+> So, tell me how the user can possibly use iMX6 video capture without
+> resorting to opening up a terminal and using media-ctl to manually
+> configure the pipeline.  How is the user going to control the source
+> device without using media-ctl to find the subdev node, and then using
+> v4l2-ctl on it.  How is the user supposed to know which /dev/video*
+> node they should be opening with their capture application?
+
+The media graph for imx6 is fairly self-explanatory in my opinion.
+Yes that graph has to be generated, but just with a simple 'media-ctl
+--print-dot', I don't see how that is difficult for the user.
+
+The graph makes it quite clear which subdev node belongs to which
+entity.
+
+As for which /dev/videoX node to use, I hope I made it fairly clear
+in the user doc what functions each node performs. But I will review
+the doc again and make sure it's been made explicitly clear.
+
+
+>
+> If you can actually respond to the points that I've been raising about
+> end user usability, then we can have a discussion.
+
+Right, I haven't added my input to the middle-ware discussions (libv4l,
+v4lconvert, and the auto-pipeline-configuration library work). I can
+only say at this point that v4lconvert does indeed sound broken w.r.t
+bayer formats from your description. But it also sounds like an isolated
+problem and it just needs a patch to allow passing bayer through without
+software conversion.
+
+I wish I had the IMX219 to help you debug these bayer issues. I don't
+have any bayer sources.
+
+In summary, I do like the media framework, it's a good abstraction of
+hardware pipelines. It does require a lot of system level knowledge to
+configure, but as I said that is a matter of good documentation.
+
+Steve
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
