@@ -1,71 +1,104 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
-Date: Mon, 13 Mar 2017 22:37:11 +0100
-Message-ID: <ef756112-d8a0-b7c0-1e13-29ea49ceb4c9@milecki.pl>
+Date: Mon, 13 Mar 2017 22:46:00 +0100
+Message-ID: <361a3978-d762-b252-43b9-9739ceedc128@milecki.pl>
 References: <20170311121453.18534-1-zajec5@gmail.com>
  <20170312171032.GK15842@lunn.ch>
  <437d898d-b0f4-a4b5-cb51-8ea88ba7a35a@milecki.pl>
  <20170313191416.GB10397@lunn.ch>
  <89081716-c0e3-236f-4291-e700dbedbd34@milecki.pl>
- <CAC3K-4oVhvZbeUFnBWRjc8rLHyipS1KDHX+r_2-AkkY0qZETvA@mail.gmail.com>
+ <20170313193517.GC10397@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAC3K-4oVhvZbeUFnBWRjc8rLHyipS1KDHX+r_2-AkkY0qZETvA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Rafa?? Mi??ecki <zajec5@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, John Crispin <john@phrozen.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170313193517.GC10397-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMTMvMjAxNyAwODoyNyBQTSwgSm9uIE1hc29uIHdyb3RlOgo+IE9uIE1vbiwgTWFyIDEz
-LCAyMDE3IGF0IDM6MTUgUE0sIFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4gd3Jv
-dGU6Cj4+IE9uIDAzLzEzLzIwMTcgMDg6MTQgUE0sIEFuZHJldyBMdW5uIHdyb3RlOgo+Pj4KPj4+
-IE9uIE1vbiwgTWFyIDEzLCAyMDE3IGF0IDA3OjQ4OjI2UE0gKzAxMDAsIFJhZmE/PyBNaT8/ZWNr
-aSB3cm90ZToKPj4+Pgo+Pj4+IE9uIDAzLzEyLzIwMTcgMDY6MTAgUE0sIEFuZHJldyBMdW5uIHdy
-b3RlOgo+Pj4+Pj4KPj4+Pj4+ICsgICAgICAgY2hvc2VuIHsKPj4+Pj4+ICsgICAgICAgICAgICAg
-ICBib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCBlYXJseWNvbiI7Cj4+Pj4+Cj4+Pj4+
-Cj4+Pj4+IFVzaW5nIGJvb3RhcmdzIHRvIHBhc3MgdGhlIHNlcmlhbCBzZXR0aW5ncyBoYXMgYmVl
-biBkZXByZWNhdGVkIGZvciBhCj4+Pj4+IHdoaWxlLiBQbGVhc2UgdXNlIHN0ZG91dC1wYXRoIGlu
-c3RlYWQuCj4+Pj4KPj4+Pgo+Pj4+IEkgdHJpZWQgZm9sbG93aW5nIHBhdGNoIHdpdGggbXkgU1I0
-MDBhYyAoSSBwdXQgQXJjaGVyIEM1IGFzaWRlIGZvciBub3cpLgo+Pj4KPj4+Cj4+PiBIaSBSYWZh
-ZWwKPj4+Cj4+PiBUYWtlIGEgbG9vayBhdCBmb3IgZXhhbXBsZSB0aGUgYmNtOTExMzYway5kdHMK
-Pj4+Cj4+PiAgICAgICAgIGFsaWFzZXMgewo+Pj4gICAgICAgICAgICAgICAgIHNlcmlhbDAgPSAm
-dWFydDM7Cj4+PiAgICAgICAgIH07Cj4+Pgo+Pj4gICAgICAgICBjaG9zZW4gewo+Pj4gICAgICAg
-ICAgICAgICAgIHN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOwo+Pj4gICAgICAgICB9
-Owo+Pj4KPj4+IFlvdSBuZWVkIGFuIGFsaWFzIHRvIHRoZSBzZXJpYWwgZGV2aWNlIHlvdSB3YW50
-IHRvIHVzLCBhbmQgeW91IHNob3VsZAo+Pj4gbGlzdCB0aGUgc3BlZWQsIHBhcml0eSwgYml0cyBl
-dGMuCj4+Cj4+Cj4+IFRoYXQgd2FzIGFjdHVhbGx5IG15IGZpcnN0IHRyeSAoanVzdCB3aXRoIHMv
-dWFydDMvdWFydDApIGFuZCBJIGdvdCB0aGUgc2FtZQo+PiBwcm9ibGVtLgo+Cj4gSSBoYXZlIGEg
-c2ltaWxhciBsaW5lIGluIHRoZSBiY205NTMwMTJrLmR0cywgYW5kIHRoZSBzZXJpYWwgdGhlcmUg
-d29ya3MgZm9yIG1lLgoKV2VsbCwgdGhlIHNlcmlhbCBzZWVtcyB0byB3b3JrIE9LIChJJ20gZ2V0
-dGluZyBib290IGxvZyAmIEkgY2FuIHNlZSBteSBjaGFycwpiZWluZyBlY2hvZWQgYmFjaykuIEkg
-anVzdCBjYW4ndCBsb2cgaW4uIENhbiB0aGlzIGtlcm5lbCBjaGFuZ2Ugc29tZWhvdyBhZmZlY3QK
-dXNlciBzcGFjZT8gSSBhbHNvIHRyaWVkIG1ldGhvZCB3aXRoIGFsaWFzLCBldGMuIChzZWUgYmVs
-b3cpLCBpdCBkb2Vzbid0IGhlbHAsCgpBbHNvIHNpbmNlIHNlcmlhbCBjb25zb2xlIHdvcmtzLCBJ
-J20gbm90IHN1cmUgaWYgZGVjb21waWxpbmcgZHRiIHdpbGwgc2hvdwphbnl0aGluZy4KCgpkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOC1zbWFydHJnLXNyNDAwYWMuZHRzIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOC1zbWFydHJnLXNyNDAwYWMuZHRzCmluZGV4IDM2YjYy
-OGIuLmE1NDQyYTkgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgtc21hcnRy
-Zy1zcjQwMGFjLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA4LXNtYXJ0cmctc3I0
-MDBhYy5kdHMKQEAgLTE3LDcgKzE3LDcgQEAKICAJbW9kZWwgPSAiU21hcnRSRyBTUjQwMGFjIjsK
-CiAgCWNob3NlbiB7Ci0JCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAsMTE1MjAwIGVhcmx5Y29u
-IjsKKwkJYm9vdGFyZ3MgPSAiZWFybHljb24iOwogIAl9OwoKICAJbWVtb3J5IHsKZGlmZiAtLWdp
-dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTUzMDF4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9i
-Y201MzAxeC5kdHNpCmluZGV4IDRmYmIwODkuLjVhOWZhM2UgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
-L2Jvb3QvZHRzL2JjbTUzMDF4LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNTMwMXgu
-ZHRzaQpAQCAtMTgsOCArMTgsMTIgQEAKICAvIHsKICAJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2lj
-PjsKCisJYWxpYXNlcyB7CisJCXNlcmlhbDAgPSAmdWFydDA7CisJfTsKKwogIAljaG9zZW4gewot
-CQlzdGRvdXQtcGF0aCA9ICZ1YXJ0MDsKKwkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBu
-OCI7CiAgCX07CgogIAljaGlwY29tbW9uQSB7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On 03/13/2017 08:35 PM, Andrew Lunn wrote:
+> On Mon, Mar 13, 2017 at 08:15:27PM +0100, Rafa?? Mi??ecki wrote:
+>> On 03/13/2017 08:14 PM, Andrew Lunn wrote:
+>>> On Mon, Mar 13, 2017 at 07:48:26PM +0100, Rafa?? Mi??ecki wrote:
+>>>> On 03/12/2017 06:10 PM, Andrew Lunn wrote:
+>>>>>> +	chosen {
+>>>>>> +		bootargs = "console=ttyS0,115200 earlycon";
+>>>>>
+>>>>> Using bootargs to pass the serial settings has been deprecated for a
+>>>>> while. Please use stdout-path instead.
+>>>>
+>>>> I tried following patch with my SR400ac (I put Archer C5 aside for now).
+>>>
+>>> Hi Rafael
+>>>
+>>> Take a look at for example the bcm911360k.dts
+>>>
+>>>        aliases {
+>>>                serial0 = &uart3;
+>>>        };
+>>>
+>>>        chosen {
+>>>                stdout-path = "serial0:115200n8";
+>>>        };
+>>>
+>>> You need an alias to the serial device you want to us, and you should
+>>> list the speed, parity, bits etc.
+>>
+>> That was actually my first try (just with s/uart3/uart0) and I got the same problem.
+>
+> Hi Rafael
+>
+> Try decompiling the generate .dtb file back to a dts and see if it
+> looks correct.
+
+I decompiled dtb, it looks OK to me, let me paste relevant part:
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+		bootargs = "earlycon";
+	};
+
+	aliases {
+		serial0 = "/chipcommonA/serial@0300";
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0x0 0x8000000 0x88000000 0x8000000>;
+	};
+
+	chipcommonA {
+		compatible = "simple-bus";
+		ranges = <0x0 0x18000000 0x1000>;
+		#address-cells = <0x1>;
+		#size-cells = <0x1>;
+
+		serial@0300 {
+			compatible = "ns16550";
+			reg = <0x300 0x100>;
+			interrupts = <0x0 0x55 0x4>;
+			clocks = <0x2>;
+			status = "okay";
+		};
+
+		serial@0400 {
+			compatible = "ns16550";
+			reg = <0x400 0x100>;
+			interrupts = <0x0 0x55 0x4>;
+			clocks = <0x2>;
+			status = "disabled";
+		};
+	};
+
+I got some warnings, but I don't think they are critical:
+Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /chipcommonA has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /mpcore has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /usb2-phy has a reg or ranges property, but no unit name
+Warning (unit_address_vs_reg): Node /usb3-phy has a reg or ranges property, but no unit name
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
