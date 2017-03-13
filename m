@@ -1,220 +1,127 @@
-From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/4] iio: accel: adxl345_core: Introduce set_mode, drdy & get_triple functions
-Date: Mon, 13 Mar 2017 19:11:35 +0800
-Message-ID: <1489403497-27849-3-git-send-email-eraretuya@gmail.com>
-References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 00/39] mtd: nand: denali: 2nd round of Denali NAND IP
+ patch bomb
+Date: Mon, 13 Mar 2017 12:33:22 +0100
+Message-ID: <20170313123322.06475e5c@bbrezillon>
+References: <1480183585-592-1-git-send-email-yamada.masahiro@socionext.com>
+        <20161127160459.5894be93@bbrezillon>
+        <CAK7LNAQPm7w0_iSDLJihFaxSdMp5UMnpDZH5nBTyVnoLL9KYjg@mail.gmail.com>
+        <20161130091722.2e35f32a@bbrezillon>
+        <CAK7LNAQxTSJT3szu46pQfBXGmenAexMWo8GyjmHsnXVmht4mOA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489403497-27849-1-git-send-email-eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAK7LNAQxTSJT3szu46pQfBXGmenAexMWo8GyjmHsnXVmht4mOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move code that enables measurement/standby mode into its own function
-and call that function when appropriate. Previously, we set the sensor
-to measurement in probe and back to standby during remove. Change it
-here to only enter measurement mode when request for data is initiated.
+Hi Masahiro,
 
-The DATA_READY bit is always set if the corresponding event occurs.
-Introduce the drdy function that monitors the INT_SOURCE register of
-this bit. This is done to ensure consistent readings.
+On Fri, 10 Mar 2017 20:00:03 +0900
+Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
 
-Make use of drdy in read_raw and also refactor the read to perform an
-all-axes read instead through get_triple. This function will come in
-handy when buffered reading is introduced.
+> Hi Boris,
+> 
+> I am almost getting v2 done,
+> and now I am testing it.
+> 
+> I am having one problem.  Please teach me.
+> 
+> 
+> 2016-11-30 17:17 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> >> [2]
+> >> Remove driver-internal bounce buffer.
+> >> The current Denali driver allocate DMA_BIDIRECTIONAL buffer
+> >> to use it as a driver-internal bounce buffer.
+> >>
+> >> The hardware transfer page data into the bounce buffer,
+> >> then CPU copies from the bounce buffer to a given buf (and oob_poi).
+> >> This is not efficient.
+> >>
+> >> So, I want to set NAND_USE_BOUNCE_BUFFER flag
+> >> and do dma_map_single directly for a given buffer.  
+> >
+> > Sounds good. Be careful though, when you use the generic bounce buffer
+> > interface you might have to clear the page cache info (->pagebuf = -1).  
+> 
+> 
+> Instead of memcpy() of the whole page,
+> I am trying to use dma_map_single()  in ecc->read_page() / ecc->write_page().
+> This will allow direct transfer between the buffer and the device by DMA.
+> 
+> But, this does not work for Denali if use_bufpoi is set in nand_do_read_ops().
+> 
+> 
+> In the following code in nand_scan_tail(),
+> 
+>         if (!(chip->options & NAND_OWN_BUFFERS)) {
+>                 nbuf = kzalloc(sizeof(*nbuf) + mtd->writesize
+>                                 + mtd->oobsize * 3, GFP_KERNEL);
+>                 if (!nbuf)
+>                         return -ENOMEM;
+>                 nbuf->ecccalc = (uint8_t *)(nbuf + 1);
+>                 nbuf->ecccode = nbuf->ecccalc + mtd->oobsize;
+>                 nbuf->databuf = nbuf->ecccode + mtd->oobsize;
+> 
+>                 chip->buffers = nbuf;
+> 
+> 
+> chip->buffers->databuf has no guarantee for DMA'able alignment.
+> (actually it has unwanted offset 0xc because sizeof(*nbuf) == 0xc on
+> 32bit systems)
 
-Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/iio/accel/adxl345_core.c | 116 +++++++++++++++++++++++++++++----------
- 1 file changed, 88 insertions(+), 28 deletions(-)
+Well, I think the DMA alignment requirement is a platform/controller
+specific (some controllers are fine with this 32bits alignment), but I
+get your point.
 
-diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-index 9ccb582..7eee31d 100644
---- a/drivers/iio/accel/adxl345_core.c
-+++ b/drivers/iio/accel/adxl345_core.c
-@@ -8,6 +8,7 @@
-  * directory of this archive for more details.
-  */
- 
-+#include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/regmap.h>
- 
-@@ -17,6 +18,7 @@
- 
- #define ADXL345_REG_DEVID		0x00
- #define ADXL345_REG_POWER_CTL		0x2D
-+#define ADXL345_REG_INT_SOURCE		0x30
- #define ADXL345_REG_DATA_FORMAT		0x31
- #define ADXL345_REG_DATAX0		0x32
- #define ADXL345_REG_DATAY0		0x34
-@@ -25,6 +27,10 @@
- #define ADXL345_POWER_CTL_MEASURE	BIT(3)
- #define ADXL345_POWER_CTL_STANDBY	0x00
- 
-+/* INT_ENABLE/INT_MAP/INT_SOURCE bits */
-+#define ADXL345_INT_DATA_READY		BIT(7)
-+#define ADXL345_INT_OVERRUN		0
-+
- #define ADXL345_DATA_FORMAT_FULL_RES	BIT(3) /* Up to 13-bits resolution */
- #define ADXL345_DATA_FORMAT_2G		0
- #define ADXL345_DATA_FORMAT_4G		1
-@@ -47,6 +53,58 @@ struct adxl345_data {
- 	u8 data_range;
- };
- 
-+static int adxl345_set_mode(struct adxl345_data *data, u8 mode)
-+{
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
-+
-+	ret = regmap_write(data->regmap, ADXL345_REG_POWER_CTL, mode);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to set power mode, %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adxl345_get_triple(struct adxl345_data *data, void *buf)
-+{
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int ret;
-+
-+	ret = regmap_bulk_read(data->regmap, ADXL345_REG_DATAX0, buf,
-+			       sizeof(__le16) * 3);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to read the data registers, %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adxl345_drdy(struct adxl345_data *data)
-+{
-+	struct device *dev = regmap_get_device(data->regmap);
-+	int tries = 5;
-+	u32 regval;
-+	int ret;
-+
-+	while (tries--) {
-+		ret = regmap_read(data->regmap, ADXL345_REG_INT_SOURCE,
-+				  &regval);
-+		if (ret < 0)
-+			return ret;
-+		if ((regval & ADXL345_INT_DATA_READY) ==
-+		    ADXL345_INT_DATA_READY)
-+			return 0;
-+
-+		msleep(20);
-+	}
-+	dev_err(dev, "Data is not yet ready\n");
-+
-+	return -EIO;
-+}
-+
- #define ADXL345_CHANNEL(reg, axis) {					\
- 	.type = IIO_ACCEL,						\
- 	.modified = 1,							\
-@@ -67,22 +125,37 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
- 			    int *val, int *val2, long mask)
- {
- 	struct adxl345_data *data = iio_priv(indio_dev);
--	__le16 regval;
-+	s16 regval[3];
- 	int ret;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
--		/*
--		 * Data is stored in adjacent registers:
--		 * ADXL345_REG_DATA(X0/Y0/Z0) contain the least significant byte
--		 * and ADXL345_REG_DATA(X0/Y0/Z0) + 1 the most significant byte
--		 */
--		ret = regmap_bulk_read(data->regmap, chan->address, &regval,
--				       sizeof(regval));
-+		ret = adxl345_set_mode(data, ADXL345_POWER_CTL_MEASURE);
-+		if (ret < 0)
-+			return ret;
-+		ret = adxl345_drdy(data);
-+		if (ret < 0)
-+			return ret;
-+
-+		ret = adxl345_get_triple(data, &regval);
- 		if (ret < 0)
- 			return ret;
- 
--		*val = sign_extend32(le16_to_cpu(regval), 12);
-+		switch (chan->address) {
-+		case ADXL345_REG_DATAX0:
-+			*val = regval[0];
-+			break;
-+		case ADXL345_REG_DATAY0:
-+			*val = regval[1];
-+			break;
-+		case ADXL345_REG_DATAZ0:
-+			*val = regval[2];
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
-+
- 		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = 0;
-@@ -126,9 +199,12 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
- 	data = iio_priv(indio_dev);
- 	dev_set_drvdata(dev, indio_dev);
- 	data->regmap = regmap;
-+	/* Make sure sensor is in standby mode before configuring registers */
-+	ret = adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
-+	if (ret < 0)
-+		return ret;
- 	/* Enable full-resolution mode */
- 	data->data_range = ADXL345_DATA_FORMAT_FULL_RES;
--
- 	ret = regmap_write(data->regmap, ADXL345_REG_DATA_FORMAT,
- 			   data->data_range);
- 	if (ret < 0) {
-@@ -143,22 +219,7 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
- 	indio_dev->channels = adxl345_channels;
- 	indio_dev->num_channels = ARRAY_SIZE(adxl345_channels);
- 
--	/* Enable measurement mode */
--	ret = regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
--			   ADXL345_POWER_CTL_MEASURE);
--	if (ret < 0) {
--		dev_err(dev, "Failed to enable measurement mode: %d\n", ret);
--		return ret;
--	}
--
--	ret = iio_device_register(indio_dev);
--	if (ret < 0) {
--		dev_err(dev, "iio_device_register failed: %d\n", ret);
--		regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
--			     ADXL345_POWER_CTL_STANDBY);
--	}
--
--	return ret;
-+	return iio_device_register(indio_dev);
- }
- EXPORT_SYMBOL_GPL(adxl345_core_probe);
- 
-@@ -169,8 +230,7 @@ int adxl345_core_remove(struct device *dev)
- 
- 	iio_device_unregister(indio_dev);
- 
--	return regmap_write(data->regmap, ADXL345_REG_POWER_CTL,
--			    ADXL345_POWER_CTL_STANDBY);
-+	return adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
- }
- EXPORT_SYMBOL_GPL(adxl345_core_remove);
- 
--- 
-2.7.4
+> 
+> If we could change the code as follows,
+> 
+>                 nbuf->ecccalc = kmalloc(mtd->oobsize, GFP_KERNEL);
+>                 nbuf->ecccode = kmalloc(mtd->oobsize, GFP_KERNEL);
+>                 nbuf->databuf = kmalloc(mtd->writesize + mtd->oobsize,
+> GFP_KERNEL);
+> 
+> chip->buffers->databuf would have DMA'able alignment in most cases
+> without NAND_OWN_BUFFERS.  (but, I am not sure if this is a good idea)
+
+I'm fine with this change. I don't know what are the guarantees in term
+of alignment when you use kmalloc, but I guess the size you're
+allocating (writesize + oobsize) kind of guarantees that the alignment
+is rather big (because the SLAB caches are organized by power-of-2
+chunk sizes, and for allocations >PAGE_SIZE the page allocator will be
+used).
+
+> 
+> 
+> So, the idea of NAND_OWN_BUFFERS is that
+> drivers should allocate own buffers if they need to perform DMA-mapping
+> in read_page(), write_page(), right?
+
+Right.
+
+> 
+> 
+> However, "git grep NAND_OWN_BUFFERS" shows
+> cafe_nand.c is the only driver that does so.
+> 
+> On the other hand, "git grep dma_map_single" has more hits,
+> i.e. some drivers perform dma_map_single() for read/write without
+> NAND_OWN_BUFFERS.
+> 
+> I have no idea how they are working.
+
+Probably because the controllers and/or DMA engines have no alignment
+constraints.
+
+Anyway, the change you're proposing is rather simple, so go ahead.
+
+Regards,
+
+Boris
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
