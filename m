@@ -1,43 +1,138 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: dsa: add Mediatek MT7530
- binding
-Date: Mon, 13 Mar 2017 17:36:24 +0100
-Message-ID: <20170313163624.GD3953@lunn.ch>
-References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
- <1489421488-300-2-git-send-email-sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489421488-300-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v7 2/9] doc: DT: venus: binding document for Qualcomm video driver
+Date: Mon, 13 Mar 2017 18:37:31 +0200
+Message-ID: <1489423058-12492-3-git-send-email-stanimir.varbanov@linaro.org>
+References: <1489423058-12492-1-git-send-email-stanimir.varbanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1489423058-12492-1-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +- mediatek,reset-pin: Phandle to the pinctrl node used for the reset. Which
-> +	must be required if the property mediatek,mcm of specified as
-> +	"disabled". See
-> +	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt for
-> +	the mediatek pintcrl setting for the details.
+Add binding document for Venus video encoder/decoder driver
 
-Hi Sean
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ .../devicetree/bindings/media/qcom,venus.txt       | 107 +++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
 
-This appears to be a plan GPIO line. Marvell has the same. It would be
-nice to be consistent with the naming. From
-Documentation/devicetree/bindings/net/dsa/marvell.txt
-
-Optional properties:
-
-- reset-gpios           : Should be a gpio specifier for a reset line
-
-  Andrew
+diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+new file mode 100644
+index 000000000000..2693449daf73
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+@@ -0,0 +1,107 @@
++* Qualcomm Venus video encoder/decoder accelerators
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain one of:
++		- "qcom,msm8916-venus"
++		- "qcom,msm8996-venus"
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Register base address and length of the register map.
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Should contain interrupt line number.
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A List of phandle and clock specifier pairs as listed
++		    in clock-names property.
++- clock-names:
++	Usage: required for msm8916
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Core video accelerator clock
++		- "iface"	Video accelerator AHB clock
++		- "bus"		Video accelerator AXI clock
++- clock-names:
++	Usage: required for msm8996
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Core video accelerator clock
++		- "iface"	Video accelerator AHB clock
++		- "bus"		Video accelerator AXI clock
++		- "mbus"	Video MAXI clock
++- power-domains:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A phandle and power domain specifier pairs to the
++		    power domain which is responsible for collapsing
++		    and restoring power to the peripheral.
++- iommus:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A list of phandle and IOMMU specifier pairs.
++- memory-region:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reserved-memory for the firmware
++		    memory region.
++
++* Subnodes
++The Venus video-codec node must contain two subnodes representing
++video-decoder and video-encoder.
++
++Every of video-encoder or video-decoder subnode should have:
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain "venus-decoder" or "venus-encoder"
++- clocks:
++	Usage: required for msm8996
++	Value type: <prop-encoded-array>
++	Definition: A List of phandle and clock specifier pairs as listed
++		    in clock-names property.
++- clock-names:
++	Usage: required for msm8996
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Subcore video accelerator clock
++
++- power-domains:
++	Usage: required for msm8996
++	Value type: <prop-encoded-array>
++	Definition: A phandle and power domain specifier pairs to the
++		    power domain which is responsible for collapsing
++		    and restoring power to the subcore.
++
++* An Example
++	video-codec@1d00000 {
++		compatible = "qcom,msm8916-venus";
++		reg = <0x01d00000 0xff000>;
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
++			 <&gcc GCC_VENUS0_AHB_CLK>,
++			 <&gcc GCC_VENUS0_AXI_CLK>;
++		clock-names = "core", "iface", "bus";
++		power-domains = <&gcc VENUS_GDSC>;
++		iommus = <&apps_iommu 5>;
++		memory-region = <&venus_mem>;
++
++		video-decoder {
++			compatible = "venus-decoder";
++			clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
++			clock-names = "core";
++			power-domains = <&mmcc VENUS_CORE0_GDSC>;
++		};
++
++		video-encoder {
++			compatible = "venus-encoder";
++			clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
++			clock-names = "core";
++			power-domains = <&mmcc VENUS_CORE1_GDSC>;
++		};
++	};
+-- 
+2.7.4
