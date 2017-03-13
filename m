@@ -1,188 +1,152 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and endpoints
-Date: Mon, 13 Mar 2017 23:08:29 +0100
-Message-ID: <1629581.fh46rNHz4U@aspire.rjw.lan>
-References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com> <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
+From: Yang Li <pku.leo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] arm: dts: imx: Add iMX6Q-based Kontron SMARC-sAMX6i module
+Date: Mon, 13 Mar 2017 17:23:23 -0500
+Message-ID: <CADRPPNT6dAPAAKU6bxc0AA=ipFcbbVdcbrUgzd9hW2Nh4Leeyg@mail.gmail.com>
+References: <20170219202801.2082-1-plaes@plaes.org> <20170219202801.2082-4-plaes@plaes.org>
+ <CAL_JsqJzP5e0fcM==cqkAe=x9Yf+H7i+k1H0udaknY_h6cbOSQ@mail.gmail.com>
+ <20170228231010.GD21222@n2100.armlinux.org.uk> <CAL_Jsq+9EA72_Om4h3q3dGpDVAdkjDKsSkNU_S+3a81zaU73pA@mail.gmail.com>
+ <20170301002048.GG21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170301002048.GG21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, March 06, 2017 04:19:30 PM Sakari Ailus wrote:
-> Document the use of references into the hierarchical data extension
-> structure, as well as the use of port and endpoint concepts that are very
-> similar to those in Devicetree.
-> 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> ---
->  Documentation/acpi/dsd/graph.txt | 164 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 164 insertions(+)
->  create mode 100644 Documentation/acpi/dsd/graph.txt
-> 
-> diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/acpi/dsd/graph.txt
-> new file mode 100644
-> index 0000000..6195936
-> --- /dev/null
-> +++ b/Documentation/acpi/dsd/graph.txt
-> @@ -0,0 +1,164 @@
-> +Graphs
-> +
-> +
-> +_DSD
-> +----
-> +
-> +_DSD (Device Specific Data) [7] is a predefined ACPI device
-> +configuration object that can be used to convey information on
-> +hardware features which are not specifically covered by the ACPI
-> +specification [1][6]. There are two _DSD extensions that are relevant
-> +for graphs: property [4] and hierarchical data extensions [5]. The
-> +property extension provides generic key-value pairs whereas the
-> +hierarchical data extension supports nodes with references to other
-> +nodes, forming a tree. The nodes in the tree may contain properties as
-> +defined by the property extension. The two extensions together provide
-> +a tree-like structure with zero or more properties (key-value pairs)
-> +in each node of the tree.
-> +
-> +The data structure may be accessed at runtime by using the device_*
-> +and fwnode_* functions defined in include/linux/fwnode.h .
-> +
-> +Fwnode represents a generic firmware node object. It is independent on
-> +the firmware type. In ACPI, fwnodes are _DSD hierarchical data
-> +extensions objects. A device's _DSD object is represented by an
-> +fwnode.
-> +
-> +The data structure may be referenced to elsewhere in the ACPI tables
-> +by using a hard reference to the device itself and an index to the
-> +hierarchical data extension array on each depth.
-> +
-> +
-> +Ports and endpoints
-> +-------------------
-> +
-> +The port and endpoint concepts are very similar to those in Devicetree
-> +[3]. The port represent represent interface in a device, and an
+On Tue, Feb 28, 2017 at 6:20 PM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> On Tue, Feb 28, 2017 at 05:49:57PM -0600, Rob Herring wrote:
+>> On Tue, Feb 28, 2017 at 5:10 PM, Russell King - ARM Linux
+>> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+>> > On Tue, Feb 28, 2017 at 05:06:02PM -0600, Rob Herring wrote:
+>> >> On Sun, Feb 19, 2017 at 2:28 PM, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
+>> >> > SMARC-sAMX6i is a SMARC (Smart Mobility Architecture) compliant
+>> >> > module.
+>> >> >
+>> >> > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+>> >> > ---
+>> >> >  arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi | 434 ++++++++++++++++++++++++++++++
+>> >> >  1 file changed, 434 insertions(+)
+>> >> >  create mode 100644 arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
+>> >> >
+>> >> > diff --git a/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
+>> >> > new file mode 100644
+>> >> > index 0000000..e3d7a35
+>> >> > --- /dev/null
+>> >> > +++ b/arch/arm/boot/dts/imx6q-smarc-sam6xi.dtsi
+>> >> > @@ -0,0 +1,434 @@
+>> >> > +/*
+>> >> > + * Copyright 2017 Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+>> >> > + *
+>> >> > + * Based on initial work by Nikita Yushchenko <nyushchenko at dev.rtsoft.ru>
+>> >> > + *
+>> >> > + * This file is dual-licensed: you can use it either under the terms
+>> >> > + * of the GPL or the X11 license, at your option. Note that this dual
+>> >> > + * licensing only applies to this file, and not this project as a
+>> >> > + * whole.
+>> >> > + *
+>> >> > + *  a) This file is free software; you can redistribute it and/or
+>> >> > + *     modify it under the terms of the GNU General Public License as
+>> >> > + *     published by the Free Software Foundation; either version 2 of
+>> >> > + *     the License, or (at your option) any later version.
+>> >> > + *
+>> >> > + *     This file is distributed in the hope that it will be useful,
+>> >> > + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> >> > + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> >> > + *     GNU General Public License for more details.
+>> >> > + *
+>> >> > + * Or, alternatively,
+>> >> > + *
+>> >> > + *  b) Permission is hereby granted, free of charge, to any person
+>> >> > + *     obtaining a copy of this software and associated documentation
+>> >> > + *     files (the "Software"), to deal in the Software without
+>> >> > + *     restriction, including without limitation the rights to use,
+>> >> > + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>> >> > + *     sell copies of the Software, and to permit persons to whom the
+>> >> > + *     Software is furnished to do so, subject to the following
+>> >> > + *     conditions:
+>> >> > + *
+>> >> > + *     The above copyright notice and this permission notice shall be
+>> >> > + *     included in all copies or substantial portions of the Software.
+>> >> > + *
+>> >> > + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>> >> > + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>> >> > + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>> >> > + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>> >> > + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>> >> > + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>> >> > + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>> >> > + *     OTHER DEALINGS IN THE SOFTWARE.
+>> >>
+>> >> Use SPDX tags here:
+>> >>
+>> >> SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> >>
+>> >> While it says X11, this is really MIT license text.
+>> >
+>> > No.  Read the FSF's page on licenses:
+>> >
+>> >    X11 License (#X11License)
+>> > ...
+>> >            This license is sometimes called the MIT license, but that term is
+>> >            misleading, since MIT has used many licenses for software.
+>> >
+>> > Never use the term "MIT license", it's ambiguous, and I doubt that such
+>> > a term (given the above) would stand up in a court of law as identifying
+>> > any particular license.
+>>
+>> The SPDX tags have a very exact, documented meaning. That's the point.
+>> X11 means this[1]. MIT means this[2].
+>
+> Meanwhile, the FSF appears to disagree, so this creates work for
+> solicitors (or lawyers if you're in the US) to have a field day.
+>
+> Also, if it was _this_ easy, we would have included a web URL to
+> point at the license text since 1992 - but we haven't because it's
+> a level of indirection that brings with it uncertainty.
+>
+> Now, you could say "oh we worship the LF, we trust them, they're
+> never going to do anything stupid, let's trust SPDX to always
+> stay the same and exist" but IMHO that's letting emotional
+> judgement cloud the legal issue.
+>
+> There's also very little discussion on spdx.org about the legal
+> side of this stuff.
+>
+> So, to me, this spdx stuff looks like a programmers solution to a
+> legal problem, looks completely untested legally, and goes against
+> recommended practices (which are to include the copyright plus the
+> actual notice of intent - not copyright plus a level of indirection.)
+>
+> As I said above, if it was this easy, we'd have been linking to
+> (eg) fsf.org's copies of license texts for years or similar.
+>
+> Now, with the FSF.org's different stance on X11 vs MIT compared
+> to spdx.org identifying "MIT" differently, I suspect that there
+> is ample room here for solicitors/lawyers to make a great deal
+> of cash.
+>
+> Another point here is... if LF and/or SPDX.org goes belly-up, or
+> becomes unaccessible, eg, spdx.org's name registration expires and
+> gets taken over by a rogue party - at that point, this SPDX stuff
+> can mean _anything_.
+>
+> I do hope those who you've been recommending to use SPDX tags stop
+> and think about it, and don't blindly follow what you're suggesting.
 
-s/represent represent/represents/
+So do we have a consensus on this topic?  Right now SPDX id is rarely
+used in Linux kernel.  A grep of SPDX in the source code only shows
+around 10 appearances.  Whether or not changing to promote the usage
+of SPDX id in the future seems to be a good topic for broader
+discussion.  And it would be good to have a kernel wide guideline as a
+result.  I'm adding Linus Torvalds to the recipient, and hope he can
+provide some of his insight to the issue.
 
-Plus I would say "a port" and "an interface".
-
-> +endpoint represents a connection to that interface.
-> +
-> +All port nodes are located under the device's "_DSD" node in
-> +hierarchical data extension tree. The first package list entry of the
-> +hierarchical data extension related to each port node must begin with
-> +"port" string and must be followed by the number of the port.
-
-So "port" should be the key, right?
-
-> +
-> +Further on, endpoints are located under the individual port nodes. The
-> +first hierarchical data extension package list entry of the endpoint
-> +nodes must begin with "endpoint" and must be followed by the number
-> +of the endpoint.
-> +
-> +Each port node contains a property extension key "port", the value of
-> +which is the number of the port node. The number of the endpoint node is
-> +the index of the endpoint node in the endpoint node array under the port
-> +node, starting from 0.
-> +
-> +The endpoint reference uses property extension with "remote-endpoint"
-> +property name followed by a reference in the same package. Such references
-> +consist of the name of the device, index of the port node and finally the
-> +index of the endpoint node. The port index is indeed index to the referred
-> +port array, not the number of the port that is related to numbering of
-> +actual hardware interfaces in the respective hardware. The endpoint nodes
-> +are always referred to using an index to the endpoint node array.
-> +Individual references thus appear as:
-> +
-> +    Package() { device, port_node_index, endpoint_node_index }
-> +
-> +The references to endpoints must be always done both ways, to the
-> +remote endpoint and back from the referred remote endpoint node.
-> +
-> +A simple example of this is show below:
-> +
-> +    Scope (\_SB.PCI0.I2C2)
-> +    {
-> +	Device (CAM0)
-> +	{
-> +	    Name (_DSD, Package () {
-> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +		Package () {
-> +		    Package () { "compatible", Package () { "nokia,smia" } },
-> +		},
-> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> +		Package () {
-> +		    Package () { "port0", "PRT0" },
-> +		}
-> +	    })
-> +	    Name (PRT0, Package() {
-> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +		Package () {
-> +		    Package () { "port", 0 },
-> +		},
-> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> +		Package () {
-> +		    Package () { "endpoint0", "EP0" },
-> +		}
-> +	    })
-> +	    Name (EP0, Package() {
-> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +		Package () {
-> +		    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, 0, 0 } },
-> +		}
-> +	    })
-> +	}
-> +    }
-> +
-> +    Scope (\_SB.PCI0)
-> +    {
-> +	Device (ISP)
-> +	{
-> +	    Name (_DSD, Package () {
-> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> +		Package () {
-> +		    Package () { "port4", "PRT4" },
-> +		}
-> +	    })
-> +
-> +	    Name (PRT4, Package() {
-> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +		Package () {
-> +		    Package () { "port", 4 }, /* CSI-2 port number */
-> +		},
-> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
-> +		Package () {
-> +		    Package () { "endpoint0", "EP0" },
-> +		}
-> +	    })
-> +
-> +	    Name (EP0, Package() {
-> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
-> +		Package () {
-> +		    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, 0, 0 } },
-
-Why indices and not the keys?  Something like
-
-	Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, "port0", "endpoint0" } },
-
-should work too and would be more flexible I suppose and less prone to errors.
-
-> +		}
-> +	    })
-> +	}
-> +    }
-> +
-> +Here, the port 0 of the "CAM0" device is connected to the port 4 of
-> +the "ISP" device. Note that the port index in the reference is still
-> +0, as it refers to an entry in the table and not the port node number
-> +itself.
-
-Thanks,
-Rafael
-
+Regards,
+Leo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
