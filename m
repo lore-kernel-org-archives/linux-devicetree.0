@@ -1,138 +1,81 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v7 2/9] doc: DT: venus: binding document for Qualcomm video driver
-Date: Mon, 13 Mar 2017 18:37:31 +0200
-Message-ID: <1489423058-12492-3-git-send-email-stanimir.varbanov@linaro.org>
-References: <1489423058-12492-1-git-send-email-stanimir.varbanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1489423058-12492-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next 3/4] net-next: ethernet: mediatek: add CDM able
+ to recognize the tag for DSA
+Date: Mon, 13 Mar 2017 09:39:22 -0700
+Message-ID: <6f85f6ee-6ded-9bda-a4aa-4bbf9c892848@gmail.com>
+References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
+ <1489421488-300-4-git-send-email-sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1489421488-300-4-git-send-email-sean.wang@mediatek.com>
+Sender: netdev-owner@vger.kernel.org
+To: sean.wang@mediatek.com, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, matthias.bgg@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, davem@davemloft.net, Landen.Chao@mediatek.com, keyhaede@gmail.com, objelf@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for Venus video encoder/decoder driver
+On 03/13/2017 09:11 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Allowing CDM can recognize these packets with carrying port-distinguishing
+> tag when CONFIG_NET_DSA_TAG_MTK is enabled. Otherwise, these packets will
+> be dropped by CDM ingress.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Landen Chao <Landen.Chao@mediatek.com>
+> ---
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c | 8 ++++++++
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.h | 5 +++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> index 3dd8788..19944e0 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -1848,6 +1848,14 @@ static int mtk_hw_init(struct mtk_eth *eth)
+>  	/* GE2, Force 1000M/FD, FC ON */
+>  	mtk_w32(eth, MAC_MCR_FIXED_LINK, MTK_MAC_MCR(1));
+>  
+> +#if defined(CONFIG_NET_DSA_TAG_MTK)
+> +	/* Tell CDMQ to parse the MTK special tag from CPU  */
+> +	/* QDMA Tx Use CDMQ */
+> +	u32 val2 = mtk_r32(eth, MTK_CDMQ_IG_CTRL);
+> +
+> +	mtk_w32(eth, val2 | MTK_CDMQ_STAG_EN, MTK_CDMQ_IG_CTRL);
+> +#endif
+> +
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- .../devicetree/bindings/media/qcom,venus.txt       | 107 +++++++++++++++++++++
- 1 file changed, 107 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+Depending on how early you call this function, can you use
+netdev_uses_dsa() instead of this? You may want to consider using #if
+IS_ENABLED() to cover the modular case as well.
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-new file mode 100644
-index 000000000000..2693449daf73
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-@@ -0,0 +1,107 @@
-+* Qualcomm Venus video encoder/decoder accelerators
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain one of:
-+		- "qcom,msm8916-venus"
-+		- "qcom,msm8996-venus"
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register base address and length of the register map.
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Should contain interrupt line number.
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A List of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required for msm8916
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Core video accelerator clock
-+		- "iface"	Video accelerator AHB clock
-+		- "bus"		Video accelerator AXI clock
-+- clock-names:
-+	Usage: required for msm8996
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Core video accelerator clock
-+		- "iface"	Video accelerator AHB clock
-+		- "bus"		Video accelerator AXI clock
-+		- "mbus"	Video MAXI clock
-+- power-domains:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral.
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+- memory-region:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the reserved-memory for the firmware
-+		    memory region.
-+
-+* Subnodes
-+The Venus video-codec node must contain two subnodes representing
-+video-decoder and video-encoder.
-+
-+Every of video-encoder or video-decoder subnode should have:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain "venus-decoder" or "venus-encoder"
-+- clocks:
-+	Usage: required for msm8996
-+	Value type: <prop-encoded-array>
-+	Definition: A List of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required for msm8996
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Subcore video accelerator clock
-+
-+- power-domains:
-+	Usage: required for msm8996
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the subcore.
-+
-+* An Example
-+	video-codec@1d00000 {
-+		compatible = "qcom,msm8916-venus";
-+		reg = <0x01d00000 0xff000>;
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-+			 <&gcc GCC_VENUS0_AHB_CLK>,
-+			 <&gcc GCC_VENUS0_AXI_CLK>;
-+		clock-names = "core", "iface", "bus";
-+		power-domains = <&gcc VENUS_GDSC>;
-+		iommus = <&apps_iommu 5>;
-+		memory-region = <&venus_mem>;
-+
-+		video-decoder {
-+			compatible = "venus-decoder";
-+			clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
-+			clock-names = "core";
-+			power-domains = <&mmcc VENUS_CORE0_GDSC>;
-+		};
-+
-+		video-encoder {
-+			compatible = "venus-encoder";
-+			clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
-+			clock-names = "core";
-+			power-domains = <&mmcc VENUS_CORE1_GDSC>;
-+		};
-+	};
+>  	/* Enable RX VLan Offloading */
+>  	mtk_w32(eth, 1, MTK_CDMP_EG_CTRL);
+>  
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.h b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> index 99b1c8e..79606db 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.h
+> @@ -70,11 +70,16 @@
+>  /* Frame Engine Interrupt Grouping Register */
+>  #define MTK_FE_INT_GRP		0x20
+>  
+> +/* CDMP Ingress Control Register */
+> +#define MTK_CDMQ_IG_CTRL	0x1400
+> +#define MTK_CDMQ_STAG_EN	BIT(0)
+> +
+>  /* CDMP Exgress Control Register */
+>  #define MTK_CDMP_EG_CTRL	0x404
+>  
+>  /* GDM Exgress Control Register */
+>  #define MTK_GDMA_FWD_CFG(x)	(0x500 + (x * 0x1000))
+> +#define MTK_GDMA_STAG_EN	BIT(24)
+>  #define MTK_GDMA_ICS_EN		BIT(22)
+>  #define MTK_GDMA_TCS_EN		BIT(21)
+>  #define MTK_GDMA_UCS_EN		BIT(20)
+> 
+
+
 -- 
-2.7.4
+Florian
