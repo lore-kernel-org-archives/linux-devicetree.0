@@ -1,22 +1,22 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "spi/bcm63xx-hsspi: allow for probing through devicetree" to the spi tree
-Date: Mon, 13 Mar 2017 16:57:15 +0000
-Message-ID: <E1cnTHX-0004sp-NP@debutante>
-References: <20170301090814.7097-3-jonas.gorski@gmail.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170301090814.7097-3-jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgMark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: Applied "ASoC: cs35l35: Add local variable for dev in probe" to the asoc tree
+Date: Mon, 13 Mar 2017 16:58:35 +0000
+Message-ID: <E1cnTIp-0005AI-2o@debutante>
+References: <1488991371-22513-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488991371-22513-4-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   spi/bcm63xx-hsspi: allow for probing through devicetree
+   ASoC: cs35l35: Add local variable for dev in probe
 
-has been applied to the spi tree at
+has been applied to the asoc tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,90 +37,184 @@ to this mail.
 Thanks,
 Mark
 
->From 7ab2463550e2a3a5b97dfa82e5bf8038b986f007 Mon Sep 17 00:00:00 2001
-From: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Wed, 1 Mar 2017 10:08:14 +0100
-Subject: [PATCH] spi/bcm63xx-hsspi: allow for probing through devicetree
+>From 1f758cd9da61a1ae2202405746d259ba640d1e8a Mon Sep 17 00:00:00 2001
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Date: Wed, 8 Mar 2017 16:42:50 +0000
+Subject: [PATCH] ASoC: cs35l35: Add local variable for dev in probe
 
-Add required binding support to probe through device tree.
+Tidy up the code a little by adding a local variable for i2c_client->dev
+rather than referring to it explicitly everytime.
 
-Signed-off-by: Jonas Gorski <jonas.gorski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Acked-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/spi/spi-bcm63xx-hsspi.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ sound/soc/codecs/cs35l35.c | 66 ++++++++++++++++++----------------------------
+ 1 file changed, 26 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm63xx-hsspi.c b/drivers/spi/spi-bcm63xx-hsspi.c
-index 79096d17ebde..5514cd02e93a 100644
---- a/drivers/spi/spi-bcm63xx-hsspi.c
-+++ b/drivers/spi/spi-bcm63xx-hsspi.c
-@@ -19,6 +19,7 @@
- #include <linux/interrupt.h>
- #include <linux/spi/spi.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
+diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
+index 5a9fe5addb86..99bcdb962359 100644
+--- a/sound/soc/codecs/cs35l35.c
++++ b/sound/soc/codecs/cs35l35.c
+@@ -1354,16 +1354,14 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 			      const struct i2c_device_id *id)
+ {
+ 	struct cs35l35_private *cs35l35;
+-	struct cs35l35_platform_data *pdata =
+-		dev_get_platdata(&i2c_client->dev);
++	struct device *dev = &i2c_client->dev;
++	struct cs35l35_platform_data *pdata = dev_get_platdata(dev);
+ 	int i;
+ 	int ret;
+ 	unsigned int devid = 0;
+ 	unsigned int reg;
  
- #define HSSPI_GLOBAL_CTRL_REG			0x0
- #define GLOBAL_CTRL_CS_POLARITY_SHIFT		0
-@@ -91,6 +92,7 @@
+-	cs35l35 = devm_kzalloc(&i2c_client->dev,
+-			       sizeof(struct cs35l35_private),
+-			       GFP_KERNEL);
++	cs35l35 = devm_kzalloc(dev, sizeof(struct cs35l35_private), GFP_KERNEL);
+ 	if (!cs35l35)
+ 		return -ENOMEM;
  
- #define HSSPI_MAX_SYNC_CLOCK			30000000
+@@ -1371,7 +1369,7 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 	cs35l35->regmap = devm_regmap_init_i2c(i2c_client, &cs35l35_regmap);
+ 	if (IS_ERR(cs35l35->regmap)) {
+ 		ret = PTR_ERR(cs35l35->regmap);
+-		dev_err(&i2c_client->dev, "regmap_init() failed: %d\n", ret);
++		dev_err(dev, "regmap_init() failed: %d\n", ret);
+ 		goto err;
+ 	}
  
-+#define HSSPI_SPI_MAX_CS			8
- #define HSSPI_BUS_NUM				1 /* 0 is legacy SPI */
+@@ -1379,22 +1377,18 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 		cs35l35->supplies[i].supply = cs35l35_supplies[i];
+ 		cs35l35->num_supplies = ARRAY_SIZE(cs35l35_supplies);
  
- struct bcm63xx_hsspi {
-@@ -332,7 +334,7 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct clk *clk;
- 	int irq, ret;
--	u32 reg, rate;
-+	u32 reg, rate, num_cs = HSSPI_SPI_MAX_CS;
+-	ret = devm_regulator_bulk_get(&i2c_client->dev,
+-			cs35l35->num_supplies,
+-			cs35l35->supplies);
++	ret = devm_regulator_bulk_get(dev, cs35l35->num_supplies,
++				      cs35l35->supplies);
+ 	if (ret != 0) {
+-		dev_err(&i2c_client->dev,
+-			"Failed to request core supplies: %d\n",
+-			ret);
++		dev_err(dev, "Failed to request core supplies: %d\n", ret);
+ 		return ret;
+ 	}
  
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0) {
-@@ -382,8 +384,17 @@ static int bcm63xx_hsspi_probe(struct platform_device *pdev)
- 	mutex_init(&bs->bus_mutex);
- 	init_completion(&bs->done);
+ 	if (pdata) {
+ 		cs35l35->pdata = *pdata;
+ 	} else {
+-		pdata = devm_kzalloc(&i2c_client->dev,
+-				     sizeof(struct cs35l35_platform_data),
+-				GFP_KERNEL);
++		pdata = devm_kzalloc(dev, sizeof(struct cs35l35_platform_data),
++				     GFP_KERNEL);
+ 		if (!pdata)
+ 			return -ENOMEM;
+ 		if (i2c_client->dev.of_node) {
+@@ -1409,24 +1403,21 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 	ret = regulator_bulk_enable(cs35l35->num_supplies,
+ 					cs35l35->supplies);
+ 	if (ret != 0) {
+-		dev_err(&i2c_client->dev,
+-			"Failed to enable core supplies: %d\n",
+-			ret);
++		dev_err(dev, "Failed to enable core supplies: %d\n", ret);
+ 		return ret;
+ 	}
  
--	master->bus_num = HSSPI_BUS_NUM;
--	master->num_chipselect = 8;
-+	master->dev.of_node = dev->of_node;
-+	if (!dev->of_node)
-+		master->bus_num = HSSPI_BUS_NUM;
-+
-+	of_property_read_u32(dev->of_node, "num-cs", &num_cs);
-+	if (num_cs > 8) {
-+		dev_warn(dev, "unsupported number of cs (%i), reducing to 8\n",
-+			 num_cs);
-+		num_cs = HSSPI_SPI_MAX_CS;
-+	}
-+	master->num_chipselect = num_cs;
- 	master->setup = bcm63xx_hsspi_setup;
- 	master->transfer_one_message = bcm63xx_hsspi_transfer_one;
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH |
-@@ -469,10 +480,16 @@ static int bcm63xx_hsspi_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(bcm63xx_hsspi_pm_ops, bcm63xx_hsspi_suspend,
- 			 bcm63xx_hsspi_resume);
+ 	/* returning NULL can be valid if in stereo mode */
+-	cs35l35->reset_gpio = devm_gpiod_get_optional(&i2c_client->dev,
+-		"reset", GPIOD_OUT_LOW);
++	cs35l35->reset_gpio = devm_gpiod_get_optional(dev, "reset",
++						      GPIOD_OUT_LOW);
+ 	if (IS_ERR(cs35l35->reset_gpio)) {
+ 		ret = PTR_ERR(cs35l35->reset_gpio);
+ 		if (ret == -EBUSY) {
+-			dev_info(&i2c_client->dev,
++			dev_info(dev,
+ 				 "Reset line busy, assuming shared reset\n");
+ 			cs35l35->reset_gpio = NULL;
+ 		} else {
+-			dev_err(&i2c_client->dev,
+-				"Failed to get reset GPIO: %d\n", ret);
++			dev_err(dev, "Failed to get reset GPIO: %d\n", ret);
+ 			goto err;
+ 		}
+ 	}
+@@ -1435,11 +1426,11 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
  
-+static const struct of_device_id bcm63xx_hsspi_of_match[] = {
-+	{ .compatible = "brcm,bcm6328-hsspi", },
-+	{ },
-+};
-+
- static struct platform_driver bcm63xx_hsspi_driver = {
- 	.driver = {
- 		.name	= "bcm63xx-hsspi",
- 		.pm	= &bcm63xx_hsspi_pm_ops,
-+		.of_match_table = bcm63xx_hsspi_of_match,
- 	},
- 	.probe		= bcm63xx_hsspi_probe,
- 	.remove		= bcm63xx_hsspi_remove,
+ 	init_completion(&cs35l35->pdn_done);
+ 
+-	ret = devm_request_threaded_irq(&i2c_client->dev, i2c_client->irq, NULL,
+-			cs35l35_irq, IRQF_ONESHOT | IRQF_TRIGGER_LOW,
+-			"cs35l35", cs35l35);
++	ret = devm_request_threaded_irq(dev, i2c_client->irq, NULL, cs35l35_irq,
++					IRQF_ONESHOT | IRQF_TRIGGER_LOW,
++					"cs35l35", cs35l35);
+ 	if (ret != 0) {
+-		dev_err(&i2c_client->dev, "Failed to request IRQ: %d\n", ret);
++		dev_err(dev, "Failed to request IRQ: %d\n", ret);
+ 		goto err;
+ 	}
+ 	/* initialize codec */
+@@ -1452,8 +1443,7 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 	devid |= (reg & 0xF0) >> 4;
+ 
+ 	if (devid != CS35L35_CHIP_ID) {
+-		dev_err(&i2c_client->dev,
+-			"CS35L35 Device ID (%X). Expected ID %X\n",
++		dev_err(dev, "CS35L35 Device ID (%X). Expected ID %X\n",
+ 			devid, CS35L35_CHIP_ID);
+ 		ret = -ENODEV;
+ 		goto err;
+@@ -1461,21 +1451,19 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 
+ 	ret = regmap_read(cs35l35->regmap, CS35L35_REV_ID, &reg);
+ 	if (ret < 0) {
+-		dev_err(&i2c_client->dev, "Get Revision ID failed: %d\n", ret);
++		dev_err(dev, "Get Revision ID failed: %d\n", ret);
+ 		goto err;
+ 	}
+ 
+ 	ret = regmap_register_patch(cs35l35->regmap, cs35l35_errata_patch,
+ 				    ARRAY_SIZE(cs35l35_errata_patch));
+ 	if (ret < 0) {
+-		dev_err(&i2c_client->dev, "Failed to apply errata patch: %d\n",
+-			ret);
++		dev_err(dev, "Failed to apply errata patch: %d\n", ret);
+ 		goto err;
+ 	}
+ 
+-	dev_info(&i2c_client->dev,
+-		 "Cirrus Logic CS35L35 (%x), Revision: %02X\n", devid,
+-		ret & 0xFF);
++	dev_info(dev, "Cirrus Logic CS35L35 (%x), Revision: %02X\n",
++		 devid, ret & 0xFF);
+ 
+ 	/* Set the INT Masks for critical errors */
+ 	regmap_write(cs35l35->regmap, CS35L35_INT_MASK_1,
+@@ -1507,12 +1495,10 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 	regmap_update_bits(cs35l35->regmap, CS35L35_PROTECT_CTL,
+ 		CS35L35_AMP_MUTE_MASK, 1 << CS35L35_AMP_MUTE_SHIFT);
+ 
+-	ret =  snd_soc_register_codec(&i2c_client->dev,
+-			&soc_codec_dev_cs35l35, cs35l35_dai,
+-			ARRAY_SIZE(cs35l35_dai));
++	ret =  snd_soc_register_codec(dev, &soc_codec_dev_cs35l35, cs35l35_dai,
++				      ARRAY_SIZE(cs35l35_dai));
+ 	if (ret < 0) {
+-		dev_err(&i2c_client->dev,
+-			"Failed to register codec: %d\n", ret);
++		dev_err(dev, "Failed to register codec: %d\n", ret);
+ 		goto err;
+ 	}
+ 
 -- 
 2.11.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
