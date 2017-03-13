@@ -1,124 +1,81 @@
-From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: Document the STM32 MDMA bindings
-Date: Mon, 13 Mar 2017 16:06:38 +0100
-Message-ID: <1489417599-31308-2-git-send-email-cedric.madianga@gmail.com>
-References: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, dan.j.williams@intel.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2] ARM: at91: Document new TCB bindings
+Date: Mon, 13 Mar 2017 16:18:12 +0100
+Message-ID: <fd4a2797-d8eb-ac80-36fc-01240fb0e944@atmel.com>
+References: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <20160701012743.GA16698@rob-hp-laptop> <20160704151058.44b679bf@bbrezillon>
+ <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
+ <20170125161129.41acaa9a@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20170125161129.41acaa9a@bbrezillon>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of device tree bindings for the STM32 MDMA
-controller.
+Le 25/01/2017 à 16:11, Boris Brezillon a écrit :
+> Hi Rob,
+> 
+> Sorry to revive this old discussion, but there's still one aspect I'm
+> not sure about.
+> 
+> On Tue, 5 Jul 2016 10:40:22 -0500
+> Rob Herring <robh@kernel.org> wrote:
+> 
+>>>>> +   - compatible: Should be "atmel,tcb-free-running-timer"
+>>>>> +   - reg: Should contain the TCB channels to be used. If the
+>>>>> +     counter width is 16 bits (at91rm9200-tcb), two consecutive
+>>>>> +     channels are needed. Else, only one channel will be used.
+>>>>> +
+>>>>> + * a clockevent device
+>>>>> +   - compatible: Should be "atmel,tcb-programmable-timer"  
+>>>>
+>>>> This still looks like assigning usage in DT. As I'm willing to accept
+>>>> that for PWM, either timer channels should be whatever channels are not
+>>>> assigned to PWM (i.e. not in DT) or they should just be "timer" and let
+>>>> the kernel decide their usage.  
+>>>
+>>> I just reviewed Alexandre's new binding, and it makes the whole thing
+>>> a lot more obscure: on older SoCs, we have to chain 2 channels to
+>>> create an acceptable wraparound time (16 bits at 5MHz is generating too
+>>> much interrupts to be acceptable).
+>>>
+>>> If we don't assign the mode from the DT, how should we know which
+>>> channels should be chained to create the free-running timer? Note that
+>>> not all channels can be chained together: they have to be part of the
+>>> same timer counter block and have to be consecutive (0+1, 1+2 or 3+0).  
+>>
+>> The driver can have this knowledge if it is just picking 2 consecutive
+>> timers. It should already know it has 16-bit timers based on the
+>> compatible string. If it gets more complicated then the features or
+>> limitations of the channels should be listed so the driver can make a
+>> choice. OMAP is a good example of lots of timers with differing
+>> features.
+> 
+> Yes it's possible to do that, but what about DT overlays then? Say you
+> have some TCB channels you'd like to reserve because they are connected
+> to pins that are exposed on your board. Those pins are not connected to
+> any device yet, but extension boards can be added, and in this case you
+> might want to expose new PWM devices by dynamically loading DT overlays.
+> 
+> If your clksource/clkevent driver parsed the initial DT and picked X
+> free channels randomly, it may conflicts with the one requested by the
+> DT overlay.
+> 
+> What's your solution for this case?
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
----
- .../devicetree/bindings/dma/stm32-mdma.txt         | 94 ++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
+It seems that we don't have any progress on this topic for more than 6
+months which is a pity as we now experience an issue that would have
+been addressed completely by the TC rework [1].
 
-diff --git a/Documentation/devicetree/bindings/dma/stm32-mdma.txt b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
-new file mode 100644
-index 0000000..26a930c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/stm32-mdma.txt
-@@ -0,0 +1,94 @@
-+* STMicroelectronics STM32 MDMA controller
-+
-+The STM32 MDMA is a general-purpose direct memory access controller capable of
-+supporting 64 independent DMA channels with 256 HW requests.
-+
-+Required properties:
-+- compatible: Should be "st,stm32-mdma"
-+- reg: Should contain MDMA registers location and length. This should include
-+  all of the per-channel registers.
-+- interrupts: Should contain the MDMA interrupt.
-+- clocks: Should contain the input clock of the DMA instance.
-+- resets: Reference to a reset controller asserting the DMA controller.
-+- #dma-cells : Must be <5>. See DMA client paragraph for more details.
-+
-+Optional properties:
-+- dma-channels: Number of DMA channels supported by the controller.
-+- dma-requests: Number of DMA request signals supported by the controller.
-+- st,ahb-addr-masks: Array of u32 mask to list memory devices addressed via
-+  AHB bus.
-+
-+Example:
-+
-+	mdma1: dma@52000000 {
-+		compatible = "st,stm32-mdma";
-+		reg = <0x52000000 0x1000>;
-+		interrupts = <122>;
-+		clocks = <&clk_dummy>;
-+		resets = <&rcc 992>;
-+		#dma-cells = <5>;
-+		dma-channels = <16>;
-+		dma-requests = <32>;
-+		st,ahb-addr-masks = <0x20000000>, <0x00000000>;
-+	};
-+
-+* DMA client
-+
-+DMA clients connected to the STM32 MDMA controller must use the format
-+described in the dma.txt file, using a six-cell specifier for each channel:
-+a phandle to the MDMA controller plus the following five integer cells:
-+
-+1. The request line number
-+2. The priority level
-+	0x00: Low
-+	0x01: Medium
-+	0x10: High
-+	0x11: Very high
-+3. A 32bit mask specifying the DMA channel configuration
-+ -bit 0-1: Source increment mode
-+	0x00: Source address pointer is fixed
-+	0x10: Source address pointer is incremented after each data transfer
-+	0x11: Source address pointer is decremented after each data transfer
-+ -bit 2-3: Destination increment mode
-+	0x00: Destination address pointer is fixed
-+	0x10: Destination address pointer is incremented after each data
-+	transfer
-+	0x11: Destination address pointer is decremented after each data
-+	transfer
-+ -bit 8-9: Source increment offset size
-+	0x00: byte (8bit)
-+	0x01: half-word (16bit)
-+	0x10: word (32bit)
-+	0x11: double-word (64bit)
-+ -bit 10-11: Destination increment offset size
-+	0x00: byte (8bit)
-+	0x01: half-word (16bit)
-+	0x10: word (32bit)
-+	0x11: double-word (64bit)
-+-bit 25-18: The number of bytes to be transferred in a single transfer
-+	(min = 1 byte, max = 128 bytes)
-+-bit 29:28: Trigger Mode
-+	0x00: Each MDMA request triggers a buffer transfer (max 128 bytes)
-+	0x01: Each MDMA request triggers a block transfer (max 64K bytes)
-+	0x10: Each MDMA request triggers a repeated block transfer
-+	0x11: Each MDMA request triggers a linked list transfer
-+4. A 32bit value specifying the register to be used to acknowledge the request
-+   if no HW ack signal is used by the MDMA client
-+5. A 32bit mask specifying the value to be written to acknowledge the request
-+   if no HW ack signal is used by the MDMA client
-+
-+Example:
-+
-+	i2c4: i2c@5c002000 {
-+		compatible = "st,stm32f7-i2c";
-+		reg = <0x5c002000 0x400>;
-+		interrupts = <GIC_SPI 95 IRQ_TYPE_NONE>,
-+			     <GIC_SPI 96 IRQ_TYPE_NONE>;
-+		clocks = <&clk_hsi>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		dmas = <&mdma1 36 0x0 0x40008 0x0 0x0>,
-+		       <&mdma1 37 0x0 0x40002 0x0 0x0>;
-+		dma-names = "rx", "tx";
-+		status = "disabled";
-+	};
+aka "ping"... ;-)
+
+Best regards,
+
+[1]
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-March/492080.html
 -- 
-1.9.1
+Nicolas Ferre
