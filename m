@@ -1,59 +1,47 @@
-From: Evgeniy Polyakov <zbr@ioremap.net>
-Subject: Re: [PATCH v2 21/23] MAINTAINERS: Add file patterns for w1 device tree bindings
-Date: Mon, 13 Mar 2017 22:08:53 +0300
-Message-ID: <427591489432133@web24o.yandex.ru>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org> <1489324627-19126-22-git-send-email-geert@linux-m68k.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
+Date: Mon, 13 Mar 2017 20:14:16 +0100
+Message-ID: <20170313191416.GB10397@lunn.ch>
+References: <20170311121453.18534-1-zajec5@gmail.com>
+ <20170312171032.GK15842@lunn.ch>
+ <437d898d-b0f4-a4b5-cb51-8ea88ba7a35a@milecki.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489324627-19126-22-git-send-email-geert@linux-m68k.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <437d898d-b0f4-a4b5-cb51-8ea88ba7a35a-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Cc: Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Mon, Mar 13, 2017 at 07:48:26PM +0100, Rafa?? Mi??ecki wrote:
+> On 03/12/2017 06:10 PM, Andrew Lunn wrote:
+> >>+	chosen {
+> >>+		bootargs = "console=ttyS0,115200 earlycon";
+> >
+> >Using bootargs to pass the serial settings has been deprecated for a
+> >while. Please use stdout-path instead.
+> 
+> I tried following patch with my SR400ac (I put Archer C5 aside for now).
 
-12.03.2017, 16:17, "Geert Uytterhoeven" <geert@linux-m68k.org>:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
+Hi Rafael
 
-I have no objection on this patch, but I do not really know who is responsible for this and which tree should it come into.
-If it is ok, Greg, please pull it into your one, or I see devicetree@ mail in copy... Stumbled
+Take a look at for example the bcm911360k.dts
 
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Evgeniy Polyakov <zbr@ioremap.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
->
-> v2:
->   - No changes.
->
-> Impact on next-20170310:
->
-> +Evgeniy Polyakov <zbr@ioremap.net> (maintainer:W1 DALLAS'S 1-WIRE BUS)
->  Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->  Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->  linux-kernel@vger.kernel.org (open list)
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 000342ab65971a8c..e80f00a3368587c7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -13518,6 +13518,7 @@ F: drivers/mmc/host/vub300.c
->  W1 DALLAS'S 1-WIRE BUS
->  M: Evgeniy Polyakov <zbr@ioremap.net>
->  S: Maintained
-> +F: Documentation/devicetree/bindings/w1/
->  F: Documentation/w1/
->  F: drivers/w1/
->
-> --
-> 2.7.4
+        aliases {
+                serial0 = &uart3;
+        };
+
+        chosen {
+                stdout-path = "serial0:115200n8";
+        };
+
+You need an alias to the serial device you want to us, and you should
+list the speed, parity, bits etc.
+
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
