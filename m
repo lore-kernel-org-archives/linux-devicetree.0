@@ -1,88 +1,71 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: OMAP2+: dm81xx: Add clkdm and hwmod for SATA
-Date: Mon, 13 Mar 2017 14:34:40 -0700
-Message-ID: <m27f3sc13j.fsf@baylibre.com>
-References: <1489423399-3824-1-git-send-email-bgolaszewski@baylibre.com>
-        <1489423399-3824-2-git-send-email-bgolaszewski@baylibre.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
+Date: Mon, 13 Mar 2017 22:37:11 +0100
+Message-ID: <ef756112-d8a0-b7c0-1e13-29ea49ceb4c9@milecki.pl>
+References: <20170311121453.18534-1-zajec5@gmail.com>
+ <20170312171032.GK15842@lunn.ch>
+ <437d898d-b0f4-a4b5-cb51-8ea88ba7a35a@milecki.pl>
+ <20170313191416.GB10397@lunn.ch>
+ <89081716-c0e3-236f-4291-e700dbedbd34@milecki.pl>
+ <CAC3K-4oVhvZbeUFnBWRjc8rLHyipS1KDHX+r_2-AkkY0qZETvA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489423399-3824-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-        (Bartosz Golaszewski's message of "Mon, 13 Mar 2017 17:43:16 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAC3K-4oVhvZbeUFnBWRjc8rLHyipS1KDHX+r_2-AkkY0qZETvA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jon Mason <jon.mason@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>, Rafa?? Mi??ecki <zajec5@gmail.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, John Crispin <john@phrozen.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
-
-> From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->
-> Add the SATA clockdomain (part of CM_DEFAULT) and a hwmod for the SATA
-> block on dm81xx.
->
-> Tested on DM8168 EVM.
->
-> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/mach-omap2/clockdomains81xx_data.c | 10 +++++++++
->  arch/arm/mach-omap2/cm81xx.h                |  2 ++
->  arch/arm/mach-omap2/omap_hwmod_81xx_data.c  | 34 +++++++++++++++++++++++++++++
->  3 files changed, 46 insertions(+)
->
-> diff --git a/arch/arm/mach-omap2/clockdomains81xx_data.c b/arch/arm/mach-omap2/clockdomains81xx_data.c
-> index 3b5fb05..65fbd13 100644
-> --- a/arch/arm/mach-omap2/clockdomains81xx_data.c
-> +++ b/arch/arm/mach-omap2/clockdomains81xx_data.c
-> @@ -91,6 +91,14 @@ static struct clockdomain default_l3_slow_81xx_clkdm = {
->  	.flags		= CLKDM_CAN_SWSUP,
->  };
->  
-> +static struct clockdomain default_sata_81xx_clkdm = {
-> +	.name		= "default_clkdm",
-> +	.pwrdm		= { .name = "default_pwrdm" },
-> +	.cm_inst	= TI81XX_CM_DEFAULT_MOD,
-> +	.clkdm_offs	= TI816X_CM_DEFAULT_SATA_CLKDM,
-> +	.flags		= CLKDM_CAN_SWSUP,
-> +};
-> +
->  /* 816x only */
->  
->  static struct clockdomain alwon_mpu_816x_clkdm = {
-> @@ -173,6 +181,7 @@ static struct clockdomain *clockdomains_ti814x[] __initdata = {
->  	&mmu_81xx_clkdm,
->  	&mmu_cfg_81xx_clkdm,
->  	&default_l3_slow_81xx_clkdm,
-> +	&default_sata_81xx_clkdm,
->  	NULL,
->  };
->  
-> @@ -200,6 +209,7 @@ static struct clockdomain *clockdomains_ti816x[] __initdata = {
->  	&default_ducati_816x_clkdm,
->  	&default_pci_816x_clkdm,
->  	&default_l3_slow_81xx_clkdm,
-> +	&default_sata_81xx_clkdm,
->  	NULL,
->  };
->  
-> diff --git a/arch/arm/mach-omap2/cm81xx.h b/arch/arm/mach-omap2/cm81xx.h
-> index 3a0ccf0..44ca275 100644
-> --- a/arch/arm/mach-omap2/cm81xx.h
-> +++ b/arch/arm/mach-omap2/cm81xx.h
-> @@ -35,6 +35,7 @@
->  #define TI81XX_CM_MMU_CLKDM			0x000C
->  #define TI81XX_CM_MMUCFG_CLKDM			0x0010
->  #define TI81XX_CM_ALWON_MPU_CLKDM		0x001C
-> +#define TI81XX_CM_ALWON_SYSCLK5_CLKDM		0x0024
-
-oops, this is a stray addition (by me) but is no not needed.
-
->  #define TI81XX_CM_ALWON_L3_FAST_CLKDM		0x0030
->  
-
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDMvMTMvMjAxNyAwODoyNyBQTSwgSm9uIE1hc29uIHdyb3RlOgo+IE9uIE1vbiwgTWFyIDEz
+LCAyMDE3IGF0IDM6MTUgUE0sIFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4gd3Jv
+dGU6Cj4+IE9uIDAzLzEzLzIwMTcgMDg6MTQgUE0sIEFuZHJldyBMdW5uIHdyb3RlOgo+Pj4KPj4+
+IE9uIE1vbiwgTWFyIDEzLCAyMDE3IGF0IDA3OjQ4OjI2UE0gKzAxMDAsIFJhZmE/PyBNaT8/ZWNr
+aSB3cm90ZToKPj4+Pgo+Pj4+IE9uIDAzLzEyLzIwMTcgMDY6MTAgUE0sIEFuZHJldyBMdW5uIHdy
+b3RlOgo+Pj4+Pj4KPj4+Pj4+ICsgICAgICAgY2hvc2VuIHsKPj4+Pj4+ICsgICAgICAgICAgICAg
+ICBib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCBlYXJseWNvbiI7Cj4+Pj4+Cj4+Pj4+
+Cj4+Pj4+IFVzaW5nIGJvb3RhcmdzIHRvIHBhc3MgdGhlIHNlcmlhbCBzZXR0aW5ncyBoYXMgYmVl
+biBkZXByZWNhdGVkIGZvciBhCj4+Pj4+IHdoaWxlLiBQbGVhc2UgdXNlIHN0ZG91dC1wYXRoIGlu
+c3RlYWQuCj4+Pj4KPj4+Pgo+Pj4+IEkgdHJpZWQgZm9sbG93aW5nIHBhdGNoIHdpdGggbXkgU1I0
+MDBhYyAoSSBwdXQgQXJjaGVyIEM1IGFzaWRlIGZvciBub3cpLgo+Pj4KPj4+Cj4+PiBIaSBSYWZh
+ZWwKPj4+Cj4+PiBUYWtlIGEgbG9vayBhdCBmb3IgZXhhbXBsZSB0aGUgYmNtOTExMzYway5kdHMK
+Pj4+Cj4+PiAgICAgICAgIGFsaWFzZXMgewo+Pj4gICAgICAgICAgICAgICAgIHNlcmlhbDAgPSAm
+dWFydDM7Cj4+PiAgICAgICAgIH07Cj4+Pgo+Pj4gICAgICAgICBjaG9zZW4gewo+Pj4gICAgICAg
+ICAgICAgICAgIHN0ZG91dC1wYXRoID0gInNlcmlhbDA6MTE1MjAwbjgiOwo+Pj4gICAgICAgICB9
+Owo+Pj4KPj4+IFlvdSBuZWVkIGFuIGFsaWFzIHRvIHRoZSBzZXJpYWwgZGV2aWNlIHlvdSB3YW50
+IHRvIHVzLCBhbmQgeW91IHNob3VsZAo+Pj4gbGlzdCB0aGUgc3BlZWQsIHBhcml0eSwgYml0cyBl
+dGMuCj4+Cj4+Cj4+IFRoYXQgd2FzIGFjdHVhbGx5IG15IGZpcnN0IHRyeSAoanVzdCB3aXRoIHMv
+dWFydDMvdWFydDApIGFuZCBJIGdvdCB0aGUgc2FtZQo+PiBwcm9ibGVtLgo+Cj4gSSBoYXZlIGEg
+c2ltaWxhciBsaW5lIGluIHRoZSBiY205NTMwMTJrLmR0cywgYW5kIHRoZSBzZXJpYWwgdGhlcmUg
+d29ya3MgZm9yIG1lLgoKV2VsbCwgdGhlIHNlcmlhbCBzZWVtcyB0byB3b3JrIE9LIChJJ20gZ2V0
+dGluZyBib290IGxvZyAmIEkgY2FuIHNlZSBteSBjaGFycwpiZWluZyBlY2hvZWQgYmFjaykuIEkg
+anVzdCBjYW4ndCBsb2cgaW4uIENhbiB0aGlzIGtlcm5lbCBjaGFuZ2Ugc29tZWhvdyBhZmZlY3QK
+dXNlciBzcGFjZT8gSSBhbHNvIHRyaWVkIG1ldGhvZCB3aXRoIGFsaWFzLCBldGMuIChzZWUgYmVs
+b3cpLCBpdCBkb2Vzbid0IGhlbHAsCgpBbHNvIHNpbmNlIHNlcmlhbCBjb25zb2xlIHdvcmtzLCBJ
+J20gbm90IHN1cmUgaWYgZGVjb21waWxpbmcgZHRiIHdpbGwgc2hvdwphbnl0aGluZy4KCgpkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOC1zbWFydHJnLXNyNDAwYWMuZHRzIGIv
+YXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOC1zbWFydHJnLXNyNDAwYWMuZHRzCmluZGV4IDM2YjYy
+OGIuLmE1NDQyYTkgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgtc21hcnRy
+Zy1zcjQwMGFjLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA4LXNtYXJ0cmctc3I0
+MDBhYy5kdHMKQEAgLTE3LDcgKzE3LDcgQEAKICAJbW9kZWwgPSAiU21hcnRSRyBTUjQwMGFjIjsK
+CiAgCWNob3NlbiB7Ci0JCWJvb3RhcmdzID0gImNvbnNvbGU9dHR5UzAsMTE1MjAwIGVhcmx5Y29u
+IjsKKwkJYm9vdGFyZ3MgPSAiZWFybHljb24iOwogIAl9OwoKICAJbWVtb3J5IHsKZGlmZiAtLWdp
+dCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTUzMDF4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9i
+Y201MzAxeC5kdHNpCmluZGV4IDRmYmIwODkuLjVhOWZhM2UgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
+L2Jvb3QvZHRzL2JjbTUzMDF4LmR0c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNTMwMXgu
+ZHRzaQpAQCAtMTgsOCArMTgsMTIgQEAKICAvIHsKICAJaW50ZXJydXB0LXBhcmVudCA9IDwmZ2lj
+PjsKCisJYWxpYXNlcyB7CisJCXNlcmlhbDAgPSAmdWFydDA7CisJfTsKKwogIAljaG9zZW4gewot
+CQlzdGRvdXQtcGF0aCA9ICZ1YXJ0MDsKKwkJc3Rkb3V0LXBhdGggPSAic2VyaWFsMDoxMTUyMDBu
+OCI7CiAgCX07CgogIAljaGlwY29tbW9uQSB7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
