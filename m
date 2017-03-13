@@ -1,64 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] iio: accel: adxl345: Add support for triggered buffer
-Date: Mon, 13 Mar 2017 14:16:45 +0200
-Message-ID: <CAHp75VefS18nAH3HkQgNdmo5oUWoaQ7ctj=eXHx9XjwrJtZzuQ@mail.gmail.com>
-References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com> <1489403497-27849-5-git-send-email-eraretuya@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v4 5/7] arm: dts: imx6q-icore: Add touchscreen node
+Date: Mon, 13 Mar 2017 20:22:53 +0800
+Message-ID: <20170313122252.GE3618@dragon>
+References: <1488957477-5621-1-git-send-email-jagan@openedev.com>
+ <1488957477-5621-5-git-send-email-jagan@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489403497-27849-5-git-send-email-eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1488957477-5621-5-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@openedev.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Domenico Acri <domenico.acri@engicam.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 1:11 PM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Provide an all-axes read for triggered buffering.
+On Wed, Mar 08, 2017 at 12:47:55PM +0530, Jagan Teki wrote:
+> From: Jagan Teki <jagan@amarulasolutions.com>
+> 
+> max11801 touchscreen on Engicam iCoreM6 Quad module is
+> connected via i2c1, so add tc: max11801@48 on i2c1.
+> 
+> Cc: Domenico Acri <domenico.acri@engicam.com>
+> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+> Cc: Michael Trimarchi <michael@amarulasolutions.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Changes for v4:
+> - Newly added patch.
+> 
+>  arch/arm/boot/dts/imx6q-icore.dts | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
+> index 73f34d1..8c1a572 100644
+> --- a/arch/arm/boot/dts/imx6q-icore.dts
+> +++ b/arch/arm/boot/dts/imx6q-icore.dts
+> @@ -58,6 +58,15 @@
+>  	status = "okay";
+>  };
+>  
+> +&i2c1 {
+> +	ts: max11801@48 {
+> +		compatible = "max11801";
 
-Better description is needed.
+Undocumented compatible?
 
-> -static int adxl345_get_triple(struct adxl345_data *data, void *buf)
-> +static int adxl345_get_triple(struct adxl345_data *data)
+Shawn
 
-Ping-ponging again. This should be essentially a change in the patch
-where you introduce a helper.
-
-> +err_buffer_cleanup:
-> +       iio_triggered_buffer_cleanup(indio_dev);
->  err_trigger_unregister:
->         if (data->drdy_trig)
->                 iio_trigger_unregister(data->drdy_trig);
-
-devm_iio_*() ?
-
-> @@ -334,6 +435,7 @@ int adxl345_core_remove(struct device *dev)
->         struct adxl345_data *data = iio_priv(indio_dev);
->
->         iio_device_unregister(indio_dev);
-> +       iio_triggered_buffer_cleanup(indio_dev);
->         if (data->drdy_trig)
->                 iio_trigger_unregister(data->drdy_trig);
-
-Ditto.
-
-> diff --git a/drivers/iio/accel/adxl345_i2c.c b/drivers/iio/accel/adxl345_i2c.c
-> index 8c791b8..1e0f071 100644
-> --- a/drivers/iio/accel/adxl345_i2c.c
-> +++ b/drivers/iio/accel/adxl345_i2c.c
-> @@ -30,6 +30,10 @@ static int adxl345_i2c_probe(struct i2c_client *client,
->         bool use_int2 = false;
->         int irq;
->
-> +       if (!i2c_check_functionality(client->adapter,
-> +                                    I2C_FUNC_SMBUS_READ_I2C_BLOCK))
-> +               return -EOPNOTSUPP;
-
-And if driver works before, you make a regression here.
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		reg = <0x48>;
+> +		interrupt-parent = <&gpio3>;
+> +		interrupts = <31 IRQ_TYPE_EDGE_FALLING>;
+> +	};
+> +};
+> +
+>  &ldb {
+>  	status = "okay";
+>  
+> -- 
+> 1.9.1
+> 
