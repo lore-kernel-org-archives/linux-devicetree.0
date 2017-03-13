@@ -1,57 +1,100 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
-Date: Mon, 13 Mar 2017 20:35:17 +0100
-Message-ID: <20170313193517.GC10397@lunn.ch>
-References: <20170311121453.18534-1-zajec5@gmail.com>
- <20170312171032.GK15842@lunn.ch>
- <437d898d-b0f4-a4b5-cb51-8ea88ba7a35a@milecki.pl>
- <20170313191416.GB10397@lunn.ch>
- <89081716-c0e3-236f-4291-e700dbedbd34@milecki.pl>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/1] media: platform: Renesas IMR driver
+Date: Mon, 13 Mar 2017 22:52:20 +0300
+Message-ID: <ba2b1127-0489-e299-f48e-9498aae2393f@cogentembedded.com>
+References: <20170211200207.273799464@cogentembedded.com>
+ <20170222142515.i54xtgyvxysd2qsr@rob-hp-laptop>
+ <cccaf6f7-0ff3-539c-5b60-e28858018b97@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <89081716-c0e3-236f-4291-e700dbedbd34-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+In-Reply-To: <cccaf6f7-0ff3-539c-5b60-e28858018b97-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-Cc: Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 08:15:27PM +0100, Rafa?? Mi??ecki wrote:
-> On 03/13/2017 08:14 PM, Andrew Lunn wrote:
-> >On Mon, Mar 13, 2017 at 07:48:26PM +0100, Rafa?? Mi??ecki wrote:
-> >>On 03/12/2017 06:10 PM, Andrew Lunn wrote:
-> >>>>+	chosen {
-> >>>>+		bootargs = "console=ttyS0,115200 earlycon";
-> >>>
-> >>>Using bootargs to pass the serial settings has been deprecated for a
-> >>>while. Please use stdout-path instead.
-> >>
-> >>I tried following patch with my SR400ac (I put Archer C5 aside for now).
-> >
-> >Hi Rafael
-> >
-> >Take a look at for example the bcm911360k.dts
-> >
-> >        aliases {
-> >                serial0 = &uart3;
-> >        };
-> >
-> >        chosen {
-> >                stdout-path = "serial0:115200n8";
-> >        };
-> >
-> >You need an alias to the serial device you want to us, and you should
-> >list the speed, parity, bits etc.
-> 
-> That was actually my first try (just with s/uart3/uart0) and I got the same problem.
+Hello!
 
-Hi Rafael
+On 02/22/2017 10:05 PM, Sergei Shtylyov wrote:
 
-Try decompiling the generate .dtb file back to a dts and see if it
-looks correct.
+>>> From: Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>>
+>>> The image renderer light extended 4 (IMR-LX4) or the distortion correction
+>>> engine is a drawing processor with a simple  instruction system capable of
+>>> referencing data on an external memory as 2D texture data and performing
+>>> texture mapping and drawing with respect to any shape that is split into
+>>> triangular objects.
+>>>
+>>> This V4L2 memory-to-memory device driver only supports image renderer found
+>>> in the R-Car gen3 SoCs; the R-Car gen2 support  can be added later...
+>>>
+>>> [Sergei: merged 2 original patches, added the patch description, removed
+>>> unrelated parts,  added the binding document, ported the driver to the
+>>> modern kernel, renamed the UAPI header file and the guard  macros to match
+>>> the driver name, extended the copyrights, fixed up Kconfig prompt/depends/
+>>> help, made use of the BIT()/GENMASK() macros, sorted #include's, removed
+>>> leading  dots and fixed grammar in the comments, fixed up indentation to
+>>> use tabs where possible, renamed IMR_DLSR to IMR_DLPR to match the manual,
+>>> separated the register offset/bit #define's, removed *inline* from .c file,
+>>> fixed lines over 80 columns, removed useless parens, operators, casts,
+>>> braces, variables, #include's, (commented out) statements, and even
+>>> function, inserted empty line after desclaration, removed extra empty
+>>> lines, reordered some local variable desclarations, removed calls to
+>>> 4l2_err() on kmalloc() failure, fixed the error returned by imr_default(),
+>>> avoided code duplication in the IRQ handler, used '__packed' for the UAPI
+>>> structures, enclosed the macro parameters in parens, exchanged the values
+>>> of IMR_MAP_AUTO[SD]G macros.]
+>>>
+>>> Signed-off-by: Konstantin Kozhevnikov
+>>> <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>>
+>>> ---
+>>> This patch is against the 'media_tree.git' repo's 'master' branch.
+>>>
+>>>  Documentation/devicetree/bindings/media/rcar_imr.txt |   23
+>>>  drivers/media/platform/Kconfig                       |   13
+>>>  drivers/media/platform/Makefile                      |    1
+>>>  drivers/media/platform/rcar_imr.c                    | 1923
+>>> +++++++++++++++++++
+>>>  include/uapi/linux/rcar_imr.h                        |   94
+>>>  5 files changed, 2054 insertions(+)
+>>>
+>>> Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
+>>> @@ -0,0 +1,23 @@
+>>> +Renesas R-Car Image Renderer (Distortion Correction Engine)
+>>> +-----------------------------------------------------------
+[...]
+>>> +
+>>> +Required properties:
+>>> +- compatible: must be "renesas,imr-lx4" for the image renderer light
+>>> extended 4
+>>> +  (IMR-LX4)  found in the R-Car gen3 SoCs;
+>>
+>> Needs an SoC specific compatible string too.
+>
+>    Strings, to be precise -- there are several SoCs but the IMR-LX4 core seems
+> the same among them. Well, if you say so...
+>
+>> The description is above, so you just need to list the compatible
+>> strings.
+>
+>    There's (most probably) gonna be other versions of the IMR core supported,
+> (this core can be forund in gen2 SoCs too)...
 
-      Andrew
+    Seriously, I strongly doubt that we need the SoC specific compatibles in 
+this case -- they don't add any value and seem to only clutter the bindings 
+(more so with adding support for the other variants of the IMR core). The 
+manuals don't seem to have any real differences between the SoCs for any given 
+variant of the IMR core...
+
+MBR, Sergei
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
