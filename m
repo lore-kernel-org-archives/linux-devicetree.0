@@ -1,91 +1,102 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [v3 3/5] coresight: add support for debug module
-Date: Mon, 13 Mar 2017 16:12:14 +0800
-Message-ID: <20170313081214.GC22706@leoy-linaro>
-References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
- <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
- <20170309175915.GA964@leoy-linaro>
- <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
+From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Subject: RE: Bad DT binding (hisi-pcie-almost-ecam)
+Date: Mon, 13 Mar 2017 08:14:19 +0000
+Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E2047A8C1@FRAEML521-MBX.china.huawei.com>
+References: <20170310174045.GB24571@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3f27efee-3b63-81fd-eb96-73fd7e6f5e92-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170310174045.GB24571@leverpostej>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, "liudongdong (C)" <liudongdong3@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: "Wangzhou (B)" <wangzhou1@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
+Hi Mark
 
-On Fri, Mar 10, 2017 at 02:29:53PM +0000, Suzuki K Poulose wrote:
-
-[...]
-
-> >>So we cannot really rely on the values in EDVIDSR which we use to make further decisions. So I
-> >>am wondering if this is really guranteed to be useful.
-> >
-> >So this is caused by Software lock is locked?
-> >
-> >Section H8.4.1:
-> >
-> >"Reads and writes have no side-effects. A side-effect is where a
-> >direct read or a direct write of a register creates
-> >an indirect write of the same or another register. When the Software
-> >Lock is locked, the indirect write does
-> >not occur."
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> Sent: 10 March 2017 17:41
+> To: liudongdong (C); Bjorn Helgaas
+> Cc: Gabriele Paoloni; Wangzhou (B); devicetree@vger.kernel.org; linux-
+> pci@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Bad DT binding (hisi-pcie-almost-ecam)
 > 
-> Yes, thats correct, further :
+> I've just spotted commit:
 > 
-> Section H9.2.32: EDPCSR
+>   a2ec1996098c7da0 ("PCI: hisi: Add DT almost-ECAM support for
+> Hip06/Hip07 host controllers")
 > 
-> "For a read of EDPCSRlo from the memory-mapped interface, if EDLSR.SLK == 1, meaning
-> the Software Lock is locked, then the access has no side-effects. That is, EDCIDSR,
-> EDVIDSR, and EDPCSRhi are unchanged."
+> ... which went in for v4.11-rc1.
 > 
-> And since we do a CS_UNLOCK, that should be fine. Please ignore my comment.
+> I hadn't seen this until now, and as far as I can tell this never went
+> to the devicetree list.
 
-Thanks a lot for confirmation.
+Sorry about this, we'll be more careful next time
 
-[...]
-
-> >>>+
-> >>>+	put_online_cpus();
-> >>>+
-> >>>+	if (!debug_count++)
-> >>>+		atomic_notifier_chain_register(&panic_notifier_list,
-> >>>+					       &debug_notifier);
-> >>>+
-> >>
-> >>>+	sprintf(buf, (char *)id->data, drvdata->cpu);
-> >>>+	dev_info(dev, "%s initialized\n", buf);
-> >>
-> >>This could simply be :
-> >>	dev_info(dev, "Coresight debug-CPU%d initialized\n", drvdata->cpu);
-> >>
-> >>and get rid of the static string and the buffer, see below.
 > 
-> Also we need pm_runtime_put() here to balance the pm_runtime_get_ from AMBA
-> device probe. More on that below.
+> The commit adds the "hisilicon,pcie-almost-ecam", which goes against
+> the
+> usual DT conventions, and is non-sensical in that it describes the IP
+> based on what it isn't.
+> 
+> This binding shouldn't have gone in as-is, and we should fix it before
+> v4.11.
+> 
+> The binding states that this IP is found in Hip06 and Hip07. For these
+> cases we'd usually take the name of the first implementation, e.g.
+> something like "hisilicon,hip06-pcie", which can be used as a fallback
+> in the compatible list if reused in subsequent SoC generations.
+> 
+> I also see that "hisilicon,hip06-pcie" already exists, so I'm even more
+> suspicious.
 
-[...]
+For Hip06 the IP is the same but in we have a different BIOS configuration
+that allows the controller be ECAM compliant for all the devices of the
+hierarchy except the RC.
 
-> Btw, I don't see any PM calls to make sure the power domain (at least the debug domain)
-> is up, which could cause problems with accesses to some of these registers (leave alone the
-> ones in CPU power domain), especially the EDPRSR. We could also do pm_runtime_get on the
-> CPU's power domain, if the CPU is online, before we access the pcsr.
+> 
+> What exactly is the "hisilicon,pcie-almost-ecam" binding trying to
+> describe? Is it a different IP also found on Hip06, or is it a new
+> binding for the same IP?
 
-I will add pm_runtime_get/pm_runtime_put for apb clock.
+The reason why we need this new BIOS is to support the recent PCIe quirks
+for the ACPI Root Port driver (commit 5b69b85ba1ddd36be01f5c57830b37a3c8256009
+"PCI/ACPI: Check for platform-specific MCFG quirks"). So using one BIOS we
+support both DT and ACPI.
+This is the reason why you see Hip-06 being already there...
 
-But for CPU power domain, AFAIK this part is managed by PSCI but is not
-controlled by pm_runtime_{put|get} pairs. So at beginning, we suggest
-to use "nohlt" to ensure CPU power domain is enabled.
+About the name to use here from what you suggest we should use
+"hisilicon,hip06-pcie-almost-ecam" and re-use it for hip07 SoC.
+To be honest I would prefer it either as it is now or to modify the
+driver as:
 
-Please let me know if I miss some thing for this?
+diff --git a/drivers/pci/dwc/pcie-hisi.c b/drivers/pci/dwc/pcie-hisi.c
+index 52f1e3f..7527b4c 100644
+--- a/drivers/pci/dwc/pcie-hisi.c
++++ b/drivers/pci/dwc/pcie-hisi.c
+@@ -381,7 +381,11 @@ struct pci_ecam_ops hisi_pcie_platform_ops = {
 
-Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
+         {
+-           .compatible = "hisilicon,pcie-almost-ecam",
++         .compatible = "hisilicon,pcie-almost-ecam-hip06",
++         .data           = (void *) &hisi_pcie_platform_ops,
++ },
++ {
++         .compatible = "hisilicon,pcie-almost-ecam-hip07",
+                 .data       = (void *) &hisi_pcie_platform_ops,
+         },
+         {},
+
+What do you think?
+
+Many Thanks
+Gab
+
+
+> 
+> Thanks,
+> Mark.
