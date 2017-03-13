@@ -1,59 +1,66 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 12/23] MAINTAINERS: Add file patterns for media device
- tree bindings
-Date: Mon, 13 Mar 2017 08:43:52 +0100
-Message-ID: <CAMuHMdXYkMWUYSoWRr87eq9t3dFjjM7R1cDwYxKOVBBLmX57mg@mail.gmail.com>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
- <1489324627-19126-13-git-send-email-geert@linux-m68k.org> <20170312220231.193801fd@vento.lan>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] Documentation: devicetree: move trivial-devices out of
+ I2C realm
+Date: Mon, 13 Mar 2017 08:54:57 +0100
+Message-ID: <20170313075457.GA1431@katana>
+References: <20170306143859.11881-1-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170312220231.193801fd-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170306143859.11881-1-wsa@the-dreams.de>
+Sender: linux-i2c-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Cc: linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mauro,
 
-On Mon, Mar 13, 2017 at 2:02 AM, Mauro Carvalho Chehab
-<mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
-> Em Sun, 12 Mar 2017 14:16:56 +0100
-> Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> escreveu:
->
->> Submitters of device tree binding documentation may forget to CC
->> the subsystem maintainer if this is missing.
->>
->> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
->> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->> Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->
-> As the To: is devicetree, I'm assuming that this patch will be
-> applied there, so:
->
-> Acked-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks!
+On Mon, Mar 06, 2017 at 03:38:59PM +0100, Wolfram Sang wrote:
+> The I2C directory is for I2C master controllers, not for clients. So,
+> move the file describing trivial devices one layer upwards where it
+> fits its generic nature way better.
+>=20
+> Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+> ---
+>  Documentation/devicetree/bindings/{i2c =3D> }/trivial-devices.txt | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{i2c =3D> }/trivial-devices.txt=
+ (100%)
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/=
+Documentation/devicetree/bindings/trivial-devices.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> rename to Documentation/devicetree/bindings/trivial-devices.txt
 
-> I may also merge via my tree, if that would be better. Just let me
-> know in such case.
+Rob, shall I take it or do you want?
 
-Please apply to your tree, cfr.
 
-| Please apply this patch directly if you want to be involved in device
-| tree binding documentation for your subsystem.
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Gr{oetje,eeting}s,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-                        Geert
+iQIcBAEBAgAGBQJYxlBRAAoJEBQN5MwUoCm2SeUQAJ2JuA8szz7YN948mpzwz/EX
+7fIs/WeKRR2x1iLKEr/k52ezA6jlK/B7R+vJpC8RwPqwqbaZcy7DHzoXCSrv8edK
+iimALnQGKWu0MicDxJlzCyWfESDf8oFrO/KZXvODhIysTRPzzqbaM7NOGkzgbJp3
+ANJQZ9yQt9gmt83kn3bIQRwwhDW9/Rk8C+z8EgXenYrIXS0/iHCLxQ6VHa+IgobO
+c/iP8Z2hps40toQTL+PcxH7VzLh46TrISEIWrTp3oQT+8TkL49y3Jc+IYXyKQBmh
+Eb6g1r7n3MjyXwgDlTvcVC2KaMw2q60m0jyD256bKk47Hf9RWv2xmaA1KqrbEEdr
++VvizwvU4OF6L4sjcAWb5dqHQ8uIkOSKVu0VMEL5p8LjcGQDdS5++AgF8dwIBjBY
+IltTLR8z4pMapl7wH5ccHVPt1Yzg2iD08E3kOeUn1wQgLCC5JIwNEDZr7PMCJhZO
+J+eyITJC5SkgjpLl1Se+dwtN42pDXgg08n8up+/oy2oocTc/xR1jLrz0m4EbzgRO
+xSGZun0ceiEDpauYoqs9KXbp8qIp6Tre/P6D0waRtuiHNOULLfiqkZPdaNGds91/
+qXBk0SVL6DYgM/5GToaG/uPNeURwhUkymXmUdITs1jNxi6YkBdMGDGF/0vwSJKLR
+95SkphPSdmH1nSp1pyTF
+=nm/I
+-----END PGP SIGNATURE-----
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--W/nzBZO5zC0uMSeA--
