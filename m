@@ -1,85 +1,177 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Mon, 13 Mar 2017 22:56:46 +0200
-Message-ID: <20170313205646.GC10701@valkosipuli.retiisi.org.uk>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
- <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
- <20170221001332.GS21222@n2100.armlinux.org.uk>
- <25596b21-70de-5e46-f149-f9ce3a86ecb7@gmail.com>
- <1487667023.2331.8.camel@pengutronix.de>
- <20170313131647.GB10701@valkosipuli.retiisi.org.uk>
- <20170313132701.GJ21222@n2100.armlinux.org.uk>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 07/11] iio: adc: sun4i-gpadc-iio: move code used in MFD
+ probing to new function
+Date: Mon, 13 Mar 2017 20:58:06 +0000
+Message-ID: <4d3b0b84-446a-721c-9767-5eb151a05d4d@kernel.org>
+References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
+ <20170310103921.19469-8-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <20170313132701.GJ21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, Philipp Zabel <p.zabel@pengutronix.de>, fabio.estevam@nxp.com, shawnguo
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170310103921.19469-8-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On Mon, Mar 13, 2017 at 01:27:02PM +0000, Russell King - ARM Linux wrote:
-> On Mon, Mar 13, 2017 at 03:16:48PM +0200, Sakari Ailus wrote:
-> > The vast majority of existing drivers do not implement them nor the user
-> > space expects having to set them. Making that mandatory would break existing
-> > user space.
-> > 
-> > In addition, that does not belong to link validation either: link validation
-> > should only include static properties of the link that are required for
-> > correct hardware operation. Frame rate is not such property: hardware that
-> > supports the MC interface generally does not recognise such concept (with
-> > the exception of some sensors). Additionally, it is dynamic: the frame rate
-> > can change during streaming, making its validation at streamon time useless.
+On 10/03/17 10:39, Quentin Schulz wrote:
+> This moves code used in MFD probing to a new sun4i_gpadc_probe_mfd
+> function.
 > 
-> So how do we configure the CSI, which can do frame skipping?
+> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Looks sane to me - though a hint on why in the explanation wouldn't go
+amiss!
+
+We'll have to figure out the path for this series at somepoint.
+In meantime
+
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
 > 
-> With what you're proposing, it means it's possible to configure the
-> camera sensor source pad to do 50fps.  Configure the CSI sink pad to
-> an arbitary value, such as 30fps, and configure the CSI source pad to
-> 15fps.
+> added in v2
 > 
-> What you actually get out of the CSI is 25fps, which bears very little
-> with the actual values used on the CSI source pad.
+>  drivers/iio/adc/sun4i-gpadc-iio.c | 78 ++++++++++++++++++++++-----------------
+>  1 file changed, 45 insertions(+), 33 deletions(-)
 > 
-> You could say "CSI should ask the camera sensor" - well, that's fine
-> if it's immediately downstream, but otherwise we'd need to go walking
-> down the graph to find something that resembles its source - there may
-> be mux and CSI2 interface subdev blocks in that path.  Or we just accept
-> that frame rates are completely arbitary and bear no useful meaning what
-> so ever.
+> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+> index a8e134f..7cb997a 100644
+> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
+> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+> @@ -454,31 +454,16 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
+>  	return 0;
+>  }
+>  
+> -static int sun4i_gpadc_probe(struct platform_device *pdev)
+> +static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
+> +				 struct iio_dev *indio_dev)
+>  {
+> -	struct sun4i_gpadc_iio *info;
+> -	struct iio_dev *indio_dev;
+> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
+> +	struct sun4i_gpadc_dev *sun4i_gpadc_dev =
+> +		dev_get_drvdata(pdev->dev.parent);
+>  	int ret;
+> -	struct sun4i_gpadc_dev *sun4i_gpadc_dev;
+> -
+> -	sun4i_gpadc_dev = dev_get_drvdata(pdev->dev.parent);
+> -
+> -	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+> -	if (!indio_dev)
+> -		return -ENOMEM;
+>  
+> -	info = iio_priv(indio_dev);
+> -	platform_set_drvdata(pdev, indio_dev);
+> -
+> -	mutex_init(&info->mutex);
+>  	info->regmap = sun4i_gpadc_dev->regmap;
+> -	info->indio_dev = indio_dev;
+> -	init_completion(&info->completion);
+> -	indio_dev->name = dev_name(&pdev->dev);
+> -	indio_dev->dev.parent = &pdev->dev;
+> -	indio_dev->dev.of_node = pdev->dev.of_node;
+> -	indio_dev->info = &sun4i_gpadc_iio_info;
+> -	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+>  	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
+>  	indio_dev->channels = sun4i_gpadc_channels;
+>  
+> @@ -519,8 +504,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
+>  			dev_err(&pdev->dev,
+>  				"could not register thermal sensor: %ld\n",
+>  				PTR_ERR(tzd));
+> -			ret = PTR_ERR(tzd);
+> -			goto err;
+> +			return PTR_ERR(tzd);
+>  		}
+>  	} else {
+>  		indio_dev->num_channels =
+> @@ -528,36 +512,65 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
+>  		indio_dev->channels = sun4i_gpadc_channels_no_temp;
+>  	}
+>  
+> -	pm_runtime_set_autosuspend_delay(&pdev->dev,
+> -					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
+> -	pm_runtime_use_autosuspend(&pdev->dev);
+> -	pm_runtime_set_suspended(&pdev->dev);
+> -	pm_runtime_enable(&pdev->dev);
+> -
+>  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
+>  		ret = sun4i_irq_init(pdev, "TEMP_DATA_PENDING",
+>  				     sun4i_gpadc_temp_data_irq_handler,
+>  				     "temp_data", &info->temp_data_irq,
+>  				     &info->ignore_temp_data_irq);
+>  		if (ret < 0)
+> -			goto err;
+> +			return ret;
+>  	}
+>  
+>  	ret = sun4i_irq_init(pdev, "FIFO_DATA_PENDING",
+>  			     sun4i_gpadc_fifo_data_irq_handler, "fifo_data",
+>  			     &info->fifo_data_irq, &info->ignore_fifo_data_irq);
+>  	if (ret < 0)
+> -		goto err;
+> +		return ret;
+>  
+>  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
+>  		ret = iio_map_array_register(indio_dev, sun4i_gpadc_hwmon_maps);
+>  		if (ret < 0) {
+>  			dev_err(&pdev->dev,
+>  				"failed to register iio map array\n");
+> -			goto err;
+> +			return ret;
+>  		}
+>  	}
+>  
+> +	return 0;
+> +}
+> +
+> +static int sun4i_gpadc_probe(struct platform_device *pdev)
+> +{
+> +	struct sun4i_gpadc_iio *info;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	info = iio_priv(indio_dev);
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	mutex_init(&info->mutex);
+> +	info->indio_dev = indio_dev;
+> +	init_completion(&info->completion);
+> +	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->dev.of_node = pdev->dev.of_node;
+> +	indio_dev->info = &sun4i_gpadc_iio_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pm_runtime_set_autosuspend_delay(&pdev->dev,
+> +					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
+> +	pm_runtime_use_autosuspend(&pdev->dev);
+> +	pm_runtime_set_suspended(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+> +
+>  	ret = devm_iio_device_register(&pdev->dev, indio_dev);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "could not register the device\n");
+> @@ -570,7 +583,6 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
+>  	if (IS_ENABLED(CONFIG_THERMAL_OF))
+>  		iio_map_array_unregister(indio_dev);
+>  
+> -err:
+>  	pm_runtime_put(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
+>  
+> 
 
-The user is responsible for configuring the pipeline. It is thus not
-unreasonable to as the user to configure the frame rate as well if there are
-device in the pipeline that can affect the frame rate. The way I proposed to
-implement it is compliant with the existing API and entirely deterministic,
-contrary to what you're saying.
-
-It's not the job of the CSI sub-device to figure it out.
-
-S_PARM and G_PARM function as interface on the V4L2 API to access the frame
-rate on plain V4L2 devices. The i.MX6 IPU is not a plain V4L2 device.
-Essentially the V4L2 device node you have there is an interface to a rather
-plain DMA engine, no more.
-
-There have been plans to add device profiles to the documentation but that
-work has not yet been done.
-
--- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
