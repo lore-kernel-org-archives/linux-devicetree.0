@@ -1,76 +1,121 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] doc: Add bindings document for Xilinx LogiCore PR
- Decoupler
-Date: Mon, 13 Mar 2017 11:29:06 +0100
-Message-ID: <91f745a9-5ab5-345c-3e46-cac7191012f9@xilinx.com>
-References: <1489181435-3151-1-git-send-email-mdf@kernel.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: Bad DT binding (hisi-pcie-almost-ecam)
+Date: Mon, 13 Mar 2017 10:44:28 +0000
+Message-ID: <20170313104356.GA23239@leverpostej>
+References: <20170310174045.GB24571@leverpostej>
+ <EE11001F9E5DDD47B7634E2F8A612F2E2047A8C1@FRAEML521-MBX.china.huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489181435-3151-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <EE11001F9E5DDD47B7634E2F8A612F2E2047A8C1@FRAEML521-MBX.china.huawei.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Cc: "liudongdong (C)" <liudongdong3@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>, "Wangzhou (B)" <wangzhou1@hisilicon.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10.3.2017 22:30, Moritz Fischer wrote:
-> This adds the binding documentation for the Xilinx LogiCORE PR
-> Decoupler soft core.
-> 
-> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  .../bindings/fpga/xilinx-pr-decoupler.txt          | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> new file mode 100644
-> index 0000000..b82b928
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-> @@ -0,0 +1,24 @@
-> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
-> +
-> +The Xilinx LogiCORE Partial Reconfig Decoupler  manages one or more
-> +decouplers / fpga bridges.
-> +The controller can decouple/disable the bridges which prevents signal
-> +changes from passing through the bridge.  The controller can also
-> +couple /enable the bridges which allows traffic to pass through the
-> +bridge normally.
-> +
-> +Required properties:
-> +- compatible		: Should contain "xlnx,pr-decoupler-1.00"
-> +- regs			: base address and size for decoupler module
-> +
-> +Optional properties:
-> +- bridge-enable		: 0 if driver should disable bridge at startup
-> +			  1 if driver should enable bridge at startup
-> +			  Default is to leave bridge in current state.
-> +
-> +Example:
-> +	fpga-bridge@100000450 {
-> +		compatible = "xlnx,pr-decoupler-1.00";
-> +		regs = <0x1000 0x10>;
-> +		bridge-enable = <0>;
-> +	};
-> 
+Hi,
 
-Look at.
-https://github.com/Xilinx/linux-xlnx/blob/master/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+On Mon, Mar 13, 2017 at 08:14:19AM +0000, Gabriele Paoloni wrote:
+> > -----Original Message-----
+> > From: Mark Rutland [mailto:mark.rutland@arm.com]
 
+> > The commit adds the "hisilicon,pcie-almost-ecam", which goes against
+> > the
+> > usual DT conventions, and is non-sensical in that it describes the IP
+> > based on what it isn't.
+> > 
+> > This binding shouldn't have gone in as-is, and we should fix it before
+> > v4.11.
+> > 
+> > The binding states that this IP is found in Hip06 and Hip07. For these
+> > cases we'd usually take the name of the first implementation, e.g.
+> > something like "hisilicon,hip06-pcie", which can be used as a fallback
+> > in the compatible list if reused in subsequent SoC generations.
+> > 
+> > I also see that "hisilicon,hip06-pcie" already exists, so I'm even more
+> > suspicious.
+> 
+> For Hip06 the IP is the same but in we have a different BIOS configuration
+> that allows the controller be ECAM compliant for all the devices of the
+> hierarchy except the RC.
+> 
+> > What exactly is the "hisilicon,pcie-almost-ecam" binding trying to
+> > describe? Is it a different IP also found on Hip06, or is it a new
+> > binding for the same IP?
+> 
+> The reason why we need this new BIOS is to support the recent PCIe quirks
+> for the ACPI Root Port driver (commit 5b69b85ba1ddd36be01f5c57830b37a3c8256009
+> "PCI/ACPI: Check for platform-specific MCFG quirks"). So using one BIOS we
+> support both DT and ACPI.
+> This is the reason why you see Hip-06 being already there...
 
-And you miss above required clk property. I do use aclk because this is
-what it is shown in vivado.
+Ok. Thanks for clarifying that.
+
+What I think we should do is:
+
+a) Update the binding document to clarify when these strings are used.
+
+b) Use an SoC prefix in the string. I'm happy to have both hip06 and hip07
+   strings.
+
+c) Drop the "almost", since we don't use that elsewhere. (e.g. for
+   cavium,pci-host-thunder-ecam"
+
+Would you be happy with the below?
 
 Thanks,
-Michal
+Mark.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---->8----
+diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+index b7fa3b9..535426d 100644
+--- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+@@ -44,13 +44,19 @@ Hip05 Example (note that Hip06 is the same except compatible):
+        };
+ 
+ HiSilicon Hip06/Hip07 PCIe host bridge DT (almost-ECAM) description.
++
++Some BIOSes place the host controller in a mode where it is ECAM compliant for
++all devices other than the root complex. In such cases, the host controller
++should be described as below.
++
+ The properties and their meanings are identical to those described in
+ host-generic-pci.txt except as listed below.
+ 
+ Properties of the host controller node that differ from
+ host-generic-pci.txt:
+ 
+-- compatible     : Must be "hisilicon,pcie-almost-ecam"
++- compatible     : Must be "hisilicon,hip06-pcie-ecam", or
++                   "hisilicon,hip07-pcie-ecam"
+ 
+ - reg            : Two entries: First the ECAM configuration space for any
+                   other bus underneath the root bus. Second, the base
+@@ -59,7 +65,7 @@ host-generic-pci.txt:
+ 
+ Example:
+        pcie0: pcie@a0090000 {
+-               compatible = "hisilicon,pcie-almost-ecam";
++               compatible = "hisilicon,hip06-pcie-ecam";
+                reg = <0 0xb0000000 0 0x2000000>,  /*  ECAM configuration space */
+                      <0 0xa0090000 0 0x10000>; /* host bridge registers */
+                bus-range = <0  31>;
+diff --git a/drivers/pci/dwc/pcie-hisi.c b/drivers/pci/dwc/pcie-hisi.c
+index fd66a31..bd5b1b4 100644
+--- a/drivers/pci/dwc/pcie-hisi.c
++++ b/drivers/pci/dwc/pcie-hisi.c
+@@ -380,7 +380,11 @@ struct pci_ecam_ops hisi_pcie_platform_ops = {
+ 
+ static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
+        {
+-               .compatible = "hisilicon,pcie-almost-ecam",
++               .compatible = "hisilicon,hip06-pcie-ecam",
++               .data       = (void *) &hisi_pcie_platform_ops,
++       },
++       {
++               .compatible = "hisilicon,hip07-pcie-ecam",
+                .data       = (void *) &hisi_pcie_platform_ops,
+        },
+        {},
