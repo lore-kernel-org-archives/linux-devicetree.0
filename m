@@ -1,464 +1,195 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] arm64: dts: move from ARCH_VULCAN to ARCH_THUNDER2
-Date: Mon, 13 Mar 2017 13:04:42 +0100
-Message-ID: <24cdda5a-beb8-4cfe-e1b8-5faa2474c063@gmail.com>
-References: <1489313015-4783-1-git-send-email-jnair@caviumnetworks.com>
- <1489313015-4783-3-git-send-email-jnair@caviumnetworks.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] iio: accel: adxl345: Setup DATA_READY trigger
+Date: Mon, 13 Mar 2017 14:12:54 +0200
+Message-ID: <CAHp75Vcz1RTdncG5L1S7q2LVHK6TEA813pjTpue4n3DDcCrMAg@mail.gmail.com>
+References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com> <1489403497-27849-4-git-send-email-eraretuya@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489313015-4783-3-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489403497-27849-4-git-send-email-eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Daniel Baluta <daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alison Schofield <amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Mar 13, 2017 at 1:11 PM, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+Missed commit message is no-no!
+
+> Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+> -int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+> -                      const char *name);
+> +int adxl345_core_probe(struct device *dev, struct regmap *regmap, int irq,
+> +                      const char *name, bool use_int2);
+
+Hmm... And tomorrow you will add another flag and another.
+
+No, consider to use something like
+
+struct adxl345_chip {
+ struct device *dev;
+ struct regmap *regmap;
+ const char *name;
+}
+
+Convert your probe to use it, and after extend for your needs.
+
+>  #define ADXL345_DEVID                  0xE5
+>
+> +#define ADXL345_IRQ_NAME               "adxl345_event"
 
 
-On 12/03/17 11:03, Jayachandran C wrote:
-> Move and update device tree files as part of transition from Broadcom
-> Vulcan to Cavium ThunderX2.
->
-> The changes are to:
->  * rename dts/broadcom/vulcan.dtsi to cavium/thunder2-99xx.dtsi,
->    update cpu cores to be "cavium,thunder2", and update SoC to be
->    "cavium,thunderx2-cn9900"
->  * move SoC dts/broadcom/vulcan-eval.dtsi to cavium/thunder2-99xx.dtsi
->    and update board name string
->  * Update dts/broadcom/Makefile not to build vulcan dtbs
->  * Update dts/cavium/Makefile to build thunder2 dtbs
->
-> No changes to the dts contents except the updated "compatible" and
-> "model" properties.
->
-> Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/broadcom/Makefile         |   1 -
->  arch/arm64/boot/dts/broadcom/vulcan-eval.dts  |  33 ------
->  arch/arm64/boot/dts/broadcom/vulcan.dtsi      | 147 --------------------------
->  arch/arm64/boot/dts/cavium/Makefile           |   1 +
->  arch/arm64/boot/dts/cavium/thunder2-99xx.dts  |  33 ++++++
->  arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi | 147 ++++++++++++++++++++++++++
->  6 files changed, 181 insertions(+), 181 deletions(-)
->  delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan-eval.dts
->  delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan.dtsi
->  create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dts
->  create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
->
-> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-> index f1caece..bfa8f8e 100644
-> --- a/arch/arm64/boot/dts/broadcom/Makefile
-> +++ b/arch/arm64/boot/dts/broadcom/Makefile
-> @@ -1,6 +1,5 @@
->  dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb
->  dtb-$(CONFIG_ARCH_BCM_IPROC) += ns2-svk.dtb ns2-xmc.dtb
-> -dtb-$(CONFIG_ARCH_VULCAN) += vulcan-eval.dtb
->
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/broadcom/vulcan-eval.dts b/arch/arm64/boot/dts/broadcom/vulcan-eval.dts
-> deleted file mode 100644
-> index 9ee8d3d..0000000
-> --- a/arch/arm64/boot/dts/broadcom/vulcan-eval.dts
-> +++ /dev/null
-> @@ -1,33 +0,0 @@
-> -/*
-> - * dts file for Broadcom (BRCM) Vulcan Evaluation Platform
-> - *
-> - * Copyright (c) 2013-2016 Broadcom
-> - *
-> - * This program is free software; you can redistribute it and/or
-> - * modify it under the terms of the GNU General Public License as
-> - * published by the Free Software Foundation; either version 2 of
-> - * the License, or (at your option) any later version.
-> - */
-> -
-> -/dts-v1/;
-> -
-> -#include "vulcan.dtsi"
-> -
-> -/ {
-> -	model = "Broadcom Vulcan Eval Platform";
-> -	compatible = "brcm,vulcan-eval", "brcm,vulcan-soc";
-> -
-> -	memory {
-> -		device_type = "memory";
-> -		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
-> -		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
-> -	};
-> -
-> -	aliases {
-> -		serial0 = &uart0;
-> -	};
-> -
-> -	chosen {
-> -		stdout-path = "serial0:115200n8";
-> -	};
-> -};
-> diff --git a/arch/arm64/boot/dts/broadcom/vulcan.dtsi b/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-> deleted file mode 100644
-> index 34e11a9..0000000
-> --- a/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-> +++ /dev/null
-> @@ -1,147 +0,0 @@
-> -/*
-> - * dtsi file for Broadcom (BRCM) Vulcan processor
-> - *
-> - * Copyright (c) 2013-2016 Broadcom
-> - * Author: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> - *
-> - * This program is free software; you can redistribute it and/or
-> - * modify it under the terms of the GNU General Public License as
-> - * published by the Free Software Foundation; either version 2 of
-> - * the License, or (at your option) any later version.
-> - */
-> -
-> -#include <dt-bindings/interrupt-controller/arm-gic.h>
-> -
-> -/ {
-> -	model = "Broadcom Vulcan";
-> -	compatible = "brcm,vulcan-soc";
-> -	interrupt-parent = <&gic>;
-> -	#address-cells = <2>;
-> -	#size-cells = <2>;
-> -
-> -	/* just 4 cpus now, 128 needed in full config */
-> -	cpus {
-> -		#address-cells = <0x2>;
-> -		#size-cells = <0x0>;
-> -
-> -		cpu@0 {
-> -			device_type = "cpu";
-> -			compatible = "brcm,vulcan", "arm,armv8";
-> -			reg = <0x0 0x0>;
-> -			enable-method = "psci";
-> -		};
-> -
-> -		cpu@1 {
-> -			device_type = "cpu";
-> -			compatible = "brcm,vulcan", "arm,armv8";
-> -			reg = <0x0 0x1>;
-> -			enable-method = "psci";
-> -		};
-> -
-> -		cpu@2 {
-> -			device_type = "cpu";
-> -			compatible = "brcm,vulcan", "arm,armv8";
-> -			reg = <0x0 0x2>;
-> -			enable-method = "psci";
-> -		};
-> -
-> -		cpu@3 {
-> -			device_type = "cpu";
-> -			compatible = "brcm,vulcan", "arm,armv8";
-> -			reg = <0x0 0x3>;
-> -			enable-method = "psci";
-> -		};
-> -	};
-> -
-> -	psci {
-> -		compatible = "arm,psci-0.2";
-> -		method = "smc";
-> -	};
-> -
-> -	gic: interrupt-controller@400080000 {
-> -		compatible = "arm,gic-v3";
-> -		#interrupt-cells = <3>;
-> -		#address-cells = <2>;
-> -		#size-cells = <2>;
-> -		ranges;
-> -		interrupt-controller;
-> -		#redistributor-regions = <1>;
-> -		reg = <0x04 0x00080000 0x0 0x20000>,	/* GICD */
-> -		      <0x04 0x01000000 0x0 0x1000000>;	/* GICR */
-> -		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> -
-> -		gicits: gic-its@40010000 {
-> -			compatible = "arm,gic-v3-its";
-> -			msi-controller;
-> -			reg = <0x04 0x00100000 0x0 0x20000>;	/* GIC ITS */
-> -		};
-> -	};
-> -
-> -	timer {
-> -		compatible = "arm,armv8-timer";
-> -		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> -			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> -	};
-> -
-> -	pmu {
-> -		compatible = "brcm,vulcan-pmu", "arm,armv8-pmuv3";
-> -		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>; /* PMU overflow */
-> -	};
-> -
-> -	clk125mhz: uart_clk125mhz {
-> -		compatible = "fixed-clock";
-> -		#clock-cells = <0>;
-> -		clock-frequency = <125000000>;
-> -		clock-output-names = "clk125mhz";
-> -	};
-> -
-> -	pci {
-> -		compatible = "pci-host-ecam-generic";
-> -		device_type = "pci";
-> -		#interrupt-cells = <1>;
-> -		#address-cells = <3>;
-> -		#size-cells = <2>;
-> -
-> -		/* ECAM at 0x3000_0000 - 0x4000_0000 */
-> -		reg = <0x0 0x30000000  0x0 0x10000000>;
-> -		reg-names = "PCI ECAM";
-> -
-> -		/*
-> -		 * PCI ranges:
-> -		 *   IO		no supported
-> -		 *   MEM        0x4000_0000 - 0x6000_0000
-> -		 *   MEM64 pref 0x40_0000_0000 - 0x60_0000_0000
-> -		 */
-> -		ranges =
-> -		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
-> -		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
-> -		interrupt-map-mask = <0 0 0 7>;
-> -		interrupt-map =
-> -		      /* addr  pin  ic   icaddr  icintr */
-> -			<0 0 0  1  &gic   0 0    GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
-> -			 0 0 0  2  &gic   0 0    GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
-> -			 0 0 0  3  &gic   0 0    GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
-> -			 0 0 0  4  &gic   0 0    GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> -		msi-parent = <&gicits>;
-> -		dma-coherent;
-> -	};
-> -
-> -	soc {
-> -		compatible = "simple-bus";
-> -		#address-cells = <2>;
-> -		#size-cells = <2>;
-> -		ranges;
-> -
-> -		uart0: serial@402020000 {
-> -			compatible = "arm,pl011", "arm,primecell";
-> -			reg = <0x04 0x02020000 0x0 0x1000>;
-> -			interrupt-parent = <&gic>;
-> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&clk125mhz>;
-> -			clock-names = "apb_pclk";
-> -		};
-> -	};
-> -
-> -};
-> diff --git a/arch/arm64/boot/dts/cavium/Makefile b/arch/arm64/boot/dts/cavium/Makefile
-> index e34f89d..581b2c1 100644
-> --- a/arch/arm64/boot/dts/cavium/Makefile
-> +++ b/arch/arm64/boot/dts/cavium/Makefile
-> @@ -1,4 +1,5 @@
->  dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
-> +dtb-$(CONFIG_ARCH_THUNDER2) += thunder2-99xx.dtb
->
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dts b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
-> new file mode 100644
-> index 0000000..57a6f75
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
-> @@ -0,0 +1,33 @@
-> +/*
-> + * dts file for Broadcom (BRCM) Vulcan Evaluation Platform
-> + *
-> + * Copyright (c) 2013-2016 Broadcom
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "thunder2-99xx.dtsi"
-> +
-> +/ {
-> +	model = "Cavium ThunderX2 CN99XX";
-> +	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
-> +		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-> new file mode 100644
-> index 0000000..46afe3a
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-> @@ -0,0 +1,147 @@
-> +/*
-> + * dtsi file for Broadcom (BRCM) Vulcan processor
+>  struct adxl345_data {
+> +       struct iio_trigger *drdy_trig;
+>         struct regmap *regmap;
+> +       bool drdy_trig_on;
+>         u8 data_range;
 
-You might want to add Cavium CN99 here.
+drdy -> data_ready
 
-Apart from that:
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> +static irqreturn_t adxl345_irq(int irq, void *p)
+> +{
+> +       struct iio_dev *indio_dev = p;
+> +       struct adxl345_data *data = iio_priv(indio_dev);
+> +       int ret = IRQ_NONE;
+> +       u32 int_stat;
+> +
 
-> + *
-> + * Copyright (c) 2013-2016 Broadcom
-> + * Author: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + */
+> +       ret = regmap_read(data->regmap, ADXL345_REG_INT_SOURCE, &int_stat);
+
+> +       if (ret < 0)
+> +               return ret;
+
+It makes little sense AFAIU.
+
 > +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +       if (int_stat & ADXL345_INT_DATA_READY) {
+> +               iio_trigger_poll(data->drdy_trig);
+> +               ret = IRQ_HANDLED;
+> +       }
 > +
-> +/ {
-> +	model = "Cavium ThunderX2 CN99XX";
-> +	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-> +	interrupt-parent = <&gic>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
+> +       return ret;
+
+Useless variable ret. You may return values directly.
+
+> +}
 > +
-> +	/* just 4 cpus now, 128 needed in full config */
-> +	cpus {
-> +		#address-cells = <0x2>;
-> +		#size-cells = <0x0>;
+> +static int adxl345_drdy_trigger_set_state(struct iio_trigger *trig, bool state)
+> +{
+> +       struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+> +       struct adxl345_data *data = iio_priv(indio_dev);
+> +       struct device *dev;
+> +       int ret;
 > +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +		};
+
+> +       dev = regmap_get_device(data->regmap);
+
+This may be moved to definition block.
+
+> +       ret = regmap_update_bits(data->regmap, ADXL345_REG_INT_ENABLE,
+
+> +                                ADXL345_INT_DATA_READY, (state ?
+> +                                ADXL345_INT_DATA_READY : 0));
+
+No way:
+ Don't split lines like this.
+ Remove extra parens.
+
+> +static const struct iio_trigger_ops adxl345_trigger_ops = {
+
+> +       .owner = THIS_MODULE,
+
+I dunno if we still need this.
+
+>  static const struct iio_info adxl345_info = {
+
+>         .driver_module  = THIS_MODULE,
+
+Ditto.
+
+>         .read_raw       = adxl345_read_raw,
+>  };
+
+> +       /*
+> +        * Any bits set to 0 send their respective interrupts to the INT1 pin,
+> +        * whereas bits set to 1 send their respective interrupts to the INT2
+> +        * pin. Map all interrupts to the specified pin.
+> +        */
+
+> +       if (!use_int2)
+> +               ret = regmap_write(data->regmap, ADXL345_REG_INT_MAP, 0x00);
+> +       else
+> +               ret = regmap_write(data->regmap, ADXL345_REG_INT_MAP, 0xFF);
+
+I would create a temporary variable to hold the value and call
+regmap_write() unconditionally.
+
+
+> -       return iio_device_register(indio_dev);
+
+You are not supposed to ping-pong changes in your series. Make clear
+your goal either you do like above or like below. If you choose
+latter, don't alter it in previous patch.
+
+> +       if (irq > 0) {
+
+> +               ret =
+> +               devm_request_threaded_irq(dev, irq, NULL, adxl345_irq,
+
+Don't split lines like this.
+
+> +                                         IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+
+Are you sure you have threaded IRQ handler?
+
+> +       ret = iio_device_register(indio_dev);
+> +       if (ret < 0) {
+> +               dev_err(dev, "iio_device_register failed: %d\n", ret);
+> +               goto err_trigger_unregister;
+> +       }
 > +
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +		};
+> +       return ret;
+
+> +err_trigger_unregister:
+> +       if (data->drdy_trig)
+> +               iio_trigger_unregister(data->drdy_trig);
 > +
-> +		cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-> +			reg = <0x0 0x2>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-> +			reg = <0x0 0x3>;
-> +			enable-method = "psci";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	gic: interrupt-controller@400080000 {
-> +		compatible = "arm,gic-v3";
-> +		#interrupt-cells = <3>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		interrupt-controller;
-> +		#redistributor-regions = <1>;
-> +		reg = <0x04 0x00080000 0x0 0x20000>,	/* GICD */
-> +		      <0x04 0x01000000 0x0 0x1000000>;	/* GICR */
-> +		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		gicits: gic-its@40010000 {
-> +			compatible = "arm,gic-v3-its";
-> +			msi-controller;
-> +			reg = <0x04 0x00100000 0x0 0x20000>;	/* GIC ITS */
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-> +	};
-> +
-> +	pmu {
-> +		compatible = "brcm,vulcan-pmu", "arm,armv8-pmuv3";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>; /* PMU overflow */
-> +	};
-> +
-> +	clk125mhz: uart_clk125mhz {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <125000000>;
-> +		clock-output-names = "clk125mhz";
-> +	};
-> +
-> +	pci {
-> +		compatible = "pci-host-ecam-generic";
-> +		device_type = "pci";
-> +		#interrupt-cells = <1>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
-> +
-> +		/* ECAM at 0x3000_0000 - 0x4000_0000 */
-> +		reg = <0x0 0x30000000  0x0 0x10000000>;
-> +		reg-names = "PCI ECAM";
-> +
-> +		/*
-> +		 * PCI ranges:
-> +		 *   IO		no supported
-> +		 *   MEM        0x4000_0000 - 0x6000_0000
-> +		 *   MEM64 pref 0x40_0000_0000 - 0x60_0000_0000
-> +		 */
-> +		ranges =
-> +		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
-> +		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
-> +		interrupt-map-mask = <0 0 0 7>;
-> +		interrupt-map =
-> +		      /* addr  pin  ic   icaddr  icintr */
-> +			<0 0 0  1  &gic   0 0    GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
-> +			 0 0 0  2  &gic   0 0    GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
-> +			 0 0 0  3  &gic   0 0    GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
-> +			 0 0 0  4  &gic   0 0    GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> +		msi-parent = <&gicits>;
-> +		dma-coherent;
-> +	};
-> +
-> +	soc {
-> +		compatible = "simple-bus";
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		uart0: serial@402020000 {
-> +			compatible = "arm,pl011", "arm,primecell";
-> +			reg = <0x04 0x02020000 0x0 0x1000>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clk125mhz>;
-> +			clock-names = "apb_pclk";
-> +		};
-> +	};
-> +
-> +};
+> +       return ret;
+
+So, doesn't devm_iio_*() provide a facility to avoid this?
+
+> @@ -229,6 +334,8 @@ int adxl345_core_remove(struct device *dev)
+>         struct adxl345_data *data = iio_priv(indio_dev);
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         iio_device_unregister(indio_dev);
+> +       if (data->drdy_trig)
+> +               iio_trigger_unregister(data->drdy_trig);
+
+Ditto.
+
+> --- a/drivers/iio/accel/adxl345_i2c.c
+> +++ b/drivers/iio/accel/adxl345_i2c.c
+
+> -       return adxl345_core_probe(&client->dev, regmap, id ? id->name : NULL);
+> +       irq = of_irq_get_byname(client->dev.of_node, "INT2");
+> +       if (irq == client->irq)
+> +               use_int2 = true;
+
+Can't you use platform_get_irq() instead?
+
+
+> -       return adxl345_core_probe(&spi->dev, regmap, id->name);
+> +       irq = of_irq_get_byname(spi->dev.of_node, "INT2");
+> +       if (irq == spi->irq)
+> +               use_int2 = true;
+
+Ditto.
+
+P.S. Are you doing this stuff on your own or you are working for some
+company? If the latter applies, please, consider to do *internal*
+review first.
+
+-- 
+With Best Regards,
+Andy Shevchenko
