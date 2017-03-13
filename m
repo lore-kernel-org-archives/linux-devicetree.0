@@ -1,170 +1,72 @@
-From: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: RE: Bad DT binding (hisi-pcie-almost-ecam)
-Date: Mon, 13 Mar 2017 13:09:52 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E2047C93F@FRAEML521-MBX.china.huawei.com>
-References: <20170310174045.GB24571@leverpostej>
- <EE11001F9E5DDD47B7634E2F8A612F2E2047A8C1@FRAEML521-MBX.china.huawei.com>
- <20170313104356.GA23239@leverpostej>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Mon, 13 Mar 2017 15:16:48 +0200
+Message-ID: <20170313131647.GB10701@valkosipuli.retiisi.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
+ <20170221001332.GS21222@n2100.armlinux.org.uk>
+ <25596b21-70de-5e46-f149-f9ce3a86ecb7@gmail.com>
+ <1487667023.2331.8.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170313104356.GA23239@leverpostej>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "liudongdong (C)" <liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "Wangzhou (B)" <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1487667023.2331.8.camel@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark
+Hi Philipp,
 
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> Sent: 13 March 2017 10:44
-> To: Gabriele Paoloni
-> Cc: liudongdong (C); Bjorn Helgaas; Wangzhou (B);
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: Bad DT binding (hisi-pcie-almost-ecam)
-> 
-> Hi,
-> 
-> On Mon, Mar 13, 2017 at 08:14:19AM +0000, Gabriele Paoloni wrote:
-> > > -----Original Message-----
-> > > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> 
-> > > The commit adds the "hisilicon,pcie-almost-ecam", which goes
-> against
-> > > the
-> > > usual DT conventions, and is non-sensical in that it describes the
-> IP
-> > > based on what it isn't.
+On Tue, Feb 21, 2017 at 09:50:23AM +0100, Philipp Zabel wrote:
+...
+> > > Then there's the issue where, if you have this setup:
 > > >
-> > > This binding shouldn't have gone in as-is, and we should fix it
-> before
-> > > v4.11.
+> > >  camera --> csi2 receiver --> csi --> capture
 > > >
-> > > The binding states that this IP is found in Hip06 and Hip07. For
-> these
-> > > cases we'd usually take the name of the first implementation, e.g.
-> > > something like "hisilicon,hip06-pcie", which can be used as a
-> fallback
-> > > in the compatible list if reused in subsequent SoC generations.
+> > > and the "csi" subdev can skip frames, you need to know (a) at the CSI
+> > > sink pad what the frame rate is of the source (b) what the desired
+> > > source pad frame rate is, so you can configure the frame skipping.
+> > > So, does the csi subdev have to walk back through the media graph
+> > > looking for the frame rate?  Does the capture device have to walk back
+> > > through the media graph looking for some subdev to tell it what the
+> > > frame rate is - the capture device certainly can't go straight to the
+> > > sensor to get an answer to that question, because that bypasses the
+> > > effect of the CSI frame skipping (which will lower the frame rate.)
 > > >
-> > > I also see that "hisilicon,hip06-pcie" already exists, so I'm even
-> more
-> > > suspicious.
-> >
-> > For Hip06 the IP is the same but in we have a different BIOS
-> configuration
-> > that allows the controller be ECAM compliant for all the devices of
-> the
-> > hierarchy except the RC.
-> >
-> > > What exactly is the "hisilicon,pcie-almost-ecam" binding trying to
-> > > describe? Is it a different IP also found on Hip06, or is it a new
-> > > binding for the same IP?
-> >
-> > The reason why we need this new BIOS is to support the recent PCIe
-> quirks
-> > for the ACPI Root Port driver (commit
-> 5b69b85ba1ddd36be01f5c57830b37a3c8256009
-> > "PCI/ACPI: Check for platform-specific MCFG quirks"). So using one
-> BIOS we
-> > support both DT and ACPI.
-> > This is the reason why you see Hip-06 being already there...
+> > > IMHO, frame rate is just another format property, just like the
+> > > resolution and data format itself, and v4l2 should be treating it no
+> > > differently.
+> > >
+> > 
+> > I agree, frame rate, if indicated/specified by both sides of a link,
+> > should match. So maybe this should be part of v4l2 link validation.
+> > 
+> > This might be a good time to propose the following patch.
 > 
-> Ok. Thanks for clarifying that.
-> 
-> What I think we should do is:
-> 
-> a) Update the binding document to clarify when these strings are used.
-> 
-> b) Use an SoC prefix in the string. I'm happy to have both hip06 and
-> hip07
->    strings.
-> 
-> c) Drop the "almost", since we don't use that elsewhere. (e.g. for
->    cavium,pci-host-thunder-ecam"
-> 
-> Would you be happy with the below?
+> I agree with Steve and Russell. I don't see why the (nominal) frame
+> interval should be handled differently than resolution, data format, and
+> colorspace information. I think it should just be propagated in the same
+> way, and there is no reason to have two connected pads set to a
+> different interval. That would make implementing the g/s_frame_interval
+> subdev calls mandatory.
 
-Yes indeed it would work for us.
+The vast majority of existing drivers do not implement them nor the user
+space expects having to set them. Making that mandatory would break existing
+user space.
 
-We could discuss about the appropriateness of ecam vs almost-ecam,
-but I don't think it is of much value as long as we make the meaning
-clear in the Documentation
+In addition, that does not belong to link validation either: link validation
+should only include static properties of the link that are required for
+correct hardware operation. Frame rate is not such property: hardware that
+supports the MC interface generally does not recognise such concept (with
+the exception of some sensors). Additionally, it is dynamic: the frame rate
+can change during streaming, making its validation at streamon time useless.
 
-We'll send the fix below to lists in a separate patch...
+-- 
+Regards,
 
-Many Thanks
-Gab
-
-> 
-> Thanks,
-> Mark.
-> 
-> ---->8----
-> diff --git a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> index b7fa3b9..535426d 100644
-> --- a/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
-> @@ -44,13 +44,19 @@ Hip05 Example (note that Hip06 is the same except
-> compatible):
->         };
-> 
->  HiSilicon Hip06/Hip07 PCIe host bridge DT (almost-ECAM) description.
-> +
-> +Some BIOSes place the host controller in a mode where it is ECAM
-> compliant for
-> +all devices other than the root complex. In such cases, the host
-> controller
-> +should be described as below.
-> +
->  The properties and their meanings are identical to those described in
->  host-generic-pci.txt except as listed below.
-> 
->  Properties of the host controller node that differ from
->  host-generic-pci.txt:
-> 
-> -- compatible     : Must be "hisilicon,pcie-almost-ecam"
-> +- compatible     : Must be "hisilicon,hip06-pcie-ecam", or
-> +                   "hisilicon,hip07-pcie-ecam"
-> 
->  - reg            : Two entries: First the ECAM configuration space for
-> any
->                    other bus underneath the root bus. Second, the base
-> @@ -59,7 +65,7 @@ host-generic-pci.txt:
-> 
->  Example:
->         pcie0: pcie@a0090000 {
-> -               compatible = "hisilicon,pcie-almost-ecam";
-> +               compatible = "hisilicon,hip06-pcie-ecam";
->                 reg = <0 0xb0000000 0 0x2000000>,  /*  ECAM
-> configuration space */
->                       <0 0xa0090000 0 0x10000>; /* host bridge
-> registers */
->                 bus-range = <0  31>;
-> diff --git a/drivers/pci/dwc/pcie-hisi.c b/drivers/pci/dwc/pcie-hisi.c
-> index fd66a31..bd5b1b4 100644
-> --- a/drivers/pci/dwc/pcie-hisi.c
-> +++ b/drivers/pci/dwc/pcie-hisi.c
-> @@ -380,7 +380,11 @@ struct pci_ecam_ops hisi_pcie_platform_ops = {
-> 
->  static const struct of_device_id hisi_pcie_almost_ecam_of_match[] = {
->         {
-> -               .compatible = "hisilicon,pcie-almost-ecam",
-> +               .compatible = "hisilicon,hip06-pcie-ecam",
-> +               .data       = (void *) &hisi_pcie_platform_ops,
-> +       },
-> +       {
-> +               .compatible = "hisilicon,hip07-pcie-ecam",
->                 .data       = (void *) &hisi_pcie_platform_ops,
->         },
->         {},
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
