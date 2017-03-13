@@ -1,78 +1,63 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v4 10/23] dt-bindings: PCI: Add dt bindings for pci designware EP mode
-Date: Mon, 13 Mar 2017 19:52:46 +0530
-Message-ID: <20170313142259.25397-11-kishon@ti.com>
-References: <20170313142259.25397-1-kishon@ti.com>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
+Date: Mon, 13 Mar 2017 10:31:30 -0400
+Message-ID: <CAC3K-4rdzsfrAXkQj27y5zqHXqJJFeRLFah78edV_y8McGxRDg@mail.gmail.com>
+References: <20170311121453.18534-1-zajec5@gmail.com> <20170311172309.GC15842@lunn.ch>
+ <CACna6rzxaqnLShMQRovv4Cr5s6XKSG0NQ2RRrQ+TeePt59bG7A@mail.gmail.com> <855bc957-8a04-47d6-3355-b641c8f393ad@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20170313142259.25397-1-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: hch@infradead.org, nsekhar@ti.com, kishon@ti.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <855bc957-8a04-47d6-3355-b641c8f393ad-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding documentation for pci designware EP mode.
+On Sat, Mar 11, 2017 at 4:05 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wr=
+ote:
+>
+>
+> On 03/11/2017 09:27 AM, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> Hi Andrew,
+>>
+>> On 11 March 2017 at 18:23, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+>>> On Sat, Mar 11, 2017 at 01:14:53PM +0100, Rafa?? Mi??ecki wrote:
+>>>> From: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>
+>>>> This is BCM47081A0 based home router with BCM43217 and BCM4352 wireles=
+s
+>>>> chipsets.
+>>>
+>>> Have you made any progress with the Ethernet switch? Does anybody know
+>>> if it is compatible with the SF2/B53 DSA driver?
+>>>
+>>> I have a DIR 860l v1 router, using the same chipset. I'm interested in
+>>> the switch, given my DSA maintainer role.
+>>
+>> I mostly work with LEDE. Just few days ago I managed get kernel 4.9
+>> running stable (there was a memory corruption caused by iproc PCIe
+>> controller driver). With kernel 4.9 I can finally start testing b53. I
+>> should have some news withing new weeks.
+>
+> FYI, the initial b53 work was done by testing on:
+> - BCM53010 (SR400AC) and BCM53012 (BCM953012ER)
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- .../devicetree/bindings/pci/designware-pcie.txt    | 26 +++++++++++++++-------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+We did some testing internally on BCM953012HR boards internally, and
+everything appears to be working.  I echo Florian's comment offering
+help if there are any issues.
 
-diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-index 1392c705ceca..b2480dd38c11 100644
---- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-@@ -6,30 +6,40 @@ Required properties:
- - reg-names: Must be "config" for the PCIe configuration space.
-     (The old way of getting the configuration address space from "ranges"
-     is deprecated and should be avoided.)
-+- num-lanes: number of lanes to use
-+RC mode:
- - #address-cells: set to <3>
- - #size-cells: set to <2>
- - device_type: set to "pci"
- - ranges: ranges for the PCI memory and I/O regions
- - #interrupt-cells: set to <1>
--- interrupt-map-mask and interrupt-map: standard PCI properties
--	to define the mapping of the PCIe interface to interrupt
-+- interrupt-map-mask and interrupt-map: standard PCI
-+	properties to define the mapping of the PCIe interface to interrupt
- 	numbers.
--- num-lanes: number of lanes to use
-+EP mode:
-+- num-ib-windows: number of inbound address translation
-+        windows
-+- num-ob-windows: number of outbound address translation
-+        windows
- 
- Optional properties:
--- num-viewport: number of view ports configured in hardware.  If a platform
--  does not specify it, the driver assumes 2.
- - num-lanes: number of lanes to use (this property should be specified unless
-   the link is brought already up in BIOS)
- - reset-gpio: gpio pin number of power good signal
--- bus-range: PCI bus numbers covered (it is recommended for new devicetrees to
--  specify this property, to keep backwards compatibility a range of 0x00-0xff
--  is assumed if not present)
- - clocks: Must contain an entry for each entry in clock-names.
- 	See ../clocks/clock-bindings.txt for details.
- - clock-names: Must include the following entries:
- 	- "pcie"
- 	- "pcie_bus"
-+RC mode:
-+- num-viewport: number of view ports configured in
-+  hardware. If a platform does not specify it, the driver assumes 2.
-+- bus-range: PCI bus numbers covered (it is recommended
-+  for new devicetrees to specify this property, to keep backwards
-+  compatibility a range of 0x00-0xff is assumed if not present)
-+EP mode:
-+- max-functions: maximum number of functions that can be
-+  configured
- 
- Example configuration:
- 
--- 
-2.11.0
+Thanks,
+Jon
 
+> - BCM58265 (Northstar Plus)
+> - externally attached BCM53125 to a BCM7445
+>
+> So let me know if you need guidance/help with getting the 4708/5301X
+> devices to work.
+> --
+> Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
