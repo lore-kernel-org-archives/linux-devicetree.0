@@ -1,99 +1,57 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] arm: dts: imx6qdl-icore: Add backlight support
- for lvds
-Date: Mon, 13 Mar 2017 19:59:46 +0800
-Message-ID: <20170313115944.GD3618@dragon>
-References: <1488957477-5621-1-git-send-email-jagan@openedev.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Add LED subnode binding for
+ MT6323 PMIC
+Date: Mon, 13 Mar 2017 13:00:31 +0100
+Message-ID: <c86eacdb-d5c8-2f0a-11f1-1a3bc623b4b0@gmail.com>
+References: <1488549385-19899-1-git-send-email-sean.wang@mediatek.com>
+ <1488549385-19899-3-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1488957477-5621-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1488549385-19899-3-git-send-email-sean.wang@mediatek.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: sean.wang@mediatek.com, rpurdie@rpsys.net, jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 08, 2017 at 12:47:51PM +0530, Jagan Teki wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> 
-> This patch add support for lvds backlight on i.CoreM6 QDL
-> variant boards.
-> 
-> Cc: Domenico Acri <domenico.acri-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
-> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-For sake of consistency, please use 'ARM: ...' than 'arm: ...' in
-subject prefix for i.MX patches.
 
+On 03/03/17 14:56, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+>
+> This patch adds documentation for devicetree bindings
+> for LED support as the subnode of MT6323 PMIC
+>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > ---
-> Changes for v4, v3, v2:
-> - none
-> 
->  arch/arm/boot/dts/imx6qdl-icore.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> index 55bebfc..7dda608 100644
-> --- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-> @@ -48,6 +48,14 @@
->  		reg = <0x10000000 0x80000000>;
->  	};
->  
-> +	backlight {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&pwm3 0 100000>;
-> +		brightness-levels = <0 4 8 16 32 64 128 255>;
-> +		default-brightness-level = <7>;
-> +		status = "okay";
+>  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> index 949c85f..522a3bb 100644
+> --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> @@ -6,6 +6,7 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+>  - Audio codec
+>  - GPIO
+>  - Clock
+> +- LED
+>
+>  It is interfaced to host controller using SPI interface by a proprietary hardware
+>  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+> @@ -34,6 +35,10 @@ Optional subnodes:
+>  - clk
+>  	Required properties:
+>  		- compatible: "mediatek,mt6397-clk"
+> +- led
+> +	Required properties:
+> +		- compatible: "mediatek,mt6323-led"
+> +	see Documentation/devicetree/bindings/leds/leds-mt6323.txt
 
-The okay status doesn't make a difference for such case, and can be
-saved.
+Part of this patch is already part of linux-next:
+05daab3 ("Documentation: devicetree: Add LED subnode binding for MT6323 
+PMIC")
 
-> +	};
-> +
->  	reg_3p3v: regulator-3p3v {
->  		compatible = "regulator-fixed";
->  		regulator-name = "3P3V";
-> @@ -136,6 +144,12 @@
->  	status = "okay";
->  };
->  
-> +&pwm3 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_pwm3>;
-> +	status = "okay";
-> +};
-> +
->  &uart4 {
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_uart4>;
-> @@ -246,6 +260,12 @@
->  		>;
->  	};
->  
-> +	pinctrl_pwm3: pwm3grp-1 {
-
-The '-1' suffix is meaningless.
-
-Shawn
-
-> +		fsl,pins = <
-> +			MX6QDL_PAD_SD4_DAT1__PWM3_OUT 0x1b0b1
-> +		>;
-> +	};
-> +
->  	pinctrl_usbotg: usbotggrp {
->  		fsl,pins = <
->  			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Matthias
