@@ -1,104 +1,81 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Mon, 13 Mar 2017 11:53:14 +0100
-Message-ID: <b36875e0-683a-fcc3-343d-9ddd1a39cac0@xs4all.nl>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
- <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
- <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
- <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
- <5d5cf4a4-a4d3-586e-cd16-54f543dfcce9@gmail.com>
- <aa6a5a1d-18fd-8bed-a349-2654d2d1abe0@xs4all.nl>
- <20170313104538.GF21222@n2100.armlinux.org.uk>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
+ controls from a pipeline
+Date: Mon, 13 Mar 2017 10:58:42 +0000
+Message-ID: <20170313105842.GG21222@n2100.armlinux.org.uk>
+References: <20170311101408.272a9187@vento.lan>
+ <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
+ <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
+ <20170311184551.GD21222@n2100.armlinux.org.uk>
+ <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
+ <20170311185959.GF21222@n2100.armlinux.org.uk>
+ <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
+ <20170312073745.GI21222@n2100.armlinux.org.uk>
+ <fba73c10-4b95-f0d2-e681-0b14ef1fbc1c@gmail.com>
+ <734a1731-3fb6-b8cd-6806-5405bd21bf83@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170313104538.GF21222-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-med
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <734a1731-3fb6-b8cd-6806-5405bd21bf83@xs4all.nl>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawng
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2017 11:45 AM, Russell King - ARM Linux wrote:
-> On Mon, Mar 13, 2017 at 11:02:34AM +0100, Hans Verkuil wrote:
->> On 03/11/2017 07:14 PM, Steve Longerbeam wrote:
->>> The event must be user visible, otherwise the user has no indication
->>> the error, and can't correct it by stream restart.
->>
->> In that case the driver can detect this and call vb2_queue_error. It's
->> what it is there for.
->>
->> The event doesn't help you since only this driver has this issue. So nobody
->> will watch this event, unless it is sw specifically written for this SoC.
->>
->> Much better to call vb2_queue_error to signal a fatal error (which this
->> apparently is) since there are more drivers that do this, and vivid supports
->> triggering this condition as well.
+On Mon, Mar 13, 2017 at 11:44:50AM +0100, Hans Verkuil wrote:
+> On 03/12/2017 06:56 PM, Steve Longerbeam wrote:
+> > In summary, I do like the media framework, it's a good abstraction of
+> > hardware pipelines. It does require a lot of system level knowledge to
+> > configure, but as I said that is a matter of good documentation.
 > 
-> So today, I can fiddle around with the IMX219 registers to help gain
-> an understanding of how this sensor works.  Several of the registers
-> (such as the PLL setup [*]) require me to disable streaming on the
-> sensor while changing them.
-> 
-> This is something I've done many times while testing various ideas,
-> and is my primary way of figuring out and testing such things.
-> 
-> Whenever I resume streaming (provided I've let the sensor stop
-> streaming at a frame boundary) it resumes as if nothing happened.  If I
-> stop the sensor mid-frame, then I get the rolling issue that Steve
-> reports, but once the top of the frame becomes aligned with the top of
-> the capture, everything then becomes stable again as if nothing happened.
-> 
-> The side effect of what you're proposing is that when I disable streaming
-> at the sensor by poking at its registers, rather than the capture just
-> stopping, an error is going to be delivered to gstreamer, and gstreamer
-> is going to exit, taking the entire capture process down.
-> 
-> This severely restricts the ability to be able to develop and test
-> sensor drivers.
-> 
-> So, I strongly disagree with you.
-> 
-> Loss of capture frames is not necessarily a fatal error - as I have been
-> saying repeatedly.  In Steve's case, there's some unknown interaction
-> between the source and iMX6 hardware that is causing the instability,
-> but that is simply not true of other sources, and I oppose any idea that
-> we should cripple the iMX6 side of the capture based upon just one
-> hardware combination where this is a problem.
-> 
-> Steve suggested that the problem could be in the iMX6 CSI block - and I
-> note comparing Steve's code with the code in FSL's repository that there
-> are some changes that are missing in Steve's code to do with the CCIR656
-> sync code setup, particularly for >8 bit.  The progressive CCIR656 8-bit
-> setup looks pretty similar though - but I think what needs to be asked
-> is whether the same problem is visible using the FSL/NXP vendor kernel.
-> 
-> 
-> * - the PLL setup is something that requires research at the moment.
-> Sony's official position (even to their customers) is that they do not
-> supply the necessary information, instead they expect customers to tell
-> them the capture settings they want, and Sony will throw the values into
-> a spreadsheet, and they'll supply the register settings back to the
-> customer.  Hence, the only way to proceed with a generic driver for
-> this sensor is to experiment, and experimenting requires the ability to
-> pause the stream at the sensor while making changes.  Take this away,
-> and we're stuck with the tables-of-register-settings-for-set-of-fixed-
-> capture-settings approach.  I've made a lot of progress away from this
-> which is all down to the flexibility afforded by _not_ killing the
-> capture process.
-> 
+> And the reason we went into this direction is that the end-users that use
+> these SoCs with complex pipelines actually *need* this functionality. Which
+> is also part of the reason why work on improved userspace support gets
+> little attention: they don't need to have a plugin that allows generic V4L2
+> applications to work (at least with simple scenarios).
 
-In other words: Steve should either find a proper fix for this, or only
-call vb2_queue_error in this specific case. Sending an event that nobody
-will know how to handle or what to do with is pretty pointless IMHO.
+If you stop inheriting controls from the capture sensor to the v4l2
+capture device, then this breaks - generic v4l2 applications are not
+going to be able to show the controls, because they're not visible at
+the v4l2 capture device anymore.  They're only visible through the
+subdev interfaces, which these generic applications know nothing about.
 
-Let's just give him time to try and figure out the real issue here.
+> If you want to blame anyone for this, blame Nokia who set fire to
+> their linux-based phones and thus to the funding for this work.
 
-Regards,
+No, I think that's completely unfair to Nokia.  If the MC approach is
+the way you want to go, you should be thanking Nokia for the amount of
+effort that they have put in to it, and recognising that it was rather
+unfortunate that the market had changed, which meant that they weren't
+able to continue.
 
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No one has any right to require any of us to finish what we start
+coding up in open source, unless there is a contractual obligation in
+place.  That goes for Nokia too.
+
+Nokia's decision had ramifications far and wide (resulting in knock on
+effects in TI and further afield), so don't think for a moment I wasn't
+affected by what happened in Nokia.  Even so, it was a decision for
+Nokia to make, they had the right to make it, and we have no right to
+attribute "blame" to Nokia for having made that decision.
+
+To even suggest that Nokia should be blamed is absurd.
+
+Open source gives rights to everyone.  It gives rights to contribute
+and use, but it also gives rights to walk away without notice (remember
+the "as is" and "no warranty" clauses?)
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
