@@ -1,73 +1,70 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH net-next 4/4] net-next: dsa: add dsa support for Mediatek
- MT7530 switch
-Date: Mon, 13 Mar 2017 17:41:18 +0100
-Message-ID: <20170313164118.GE3953@lunn.ch>
-References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
- <1489421488-300-5-git-send-email-sean.wang@mediatek.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] regulator: rk808: Add regulator driver for RK805
+Date: Mon, 13 Mar 2017 16:42:34 +0000
+Message-ID: <20170313164234.z3kir6vjbctatp3i@sirena.org.uk>
+References: <1489111252-22175-1-git-send-email-zhangqing@rock-chips.com>
+ <1489111252-22175-4-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1489421488-300-5-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6410045863454285455=="
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1489111252-22175-4-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean
 
-Just looking at the GPIO handling at the moment.
+--===============6410045863454285455==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ekjek2uvalbupyvn"
+Content-Disposition: inline
 
-> +	/* Reset whole chip through gpio pin or
-> +	 * memory-mapped registers for different
-> +	 * type of hardware
-> +	 */
-> +	if (priv->mcm) {
-> +		regmap_update_bits(priv->ethsys, SYSC_REG_RSTCTRL,
-> +				   RESET_MCM, RESET_MCM);
-> +		usleep_range(1000, 1100);
-> +		regmap_update_bits(priv->ethsys, SYSC_REG_RSTCTRL,
-> +				   RESET_MCM, ~RESET_MCM);
-> +	} else {
-> +		gpio_direction_output(priv->reset, 0);
-> +		usleep_range(1000, 1100);
-> +		gpio_set_value(priv->reset, 1);
-> +	}
 
-....
+--ekjek2uvalbupyvn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +	/* Not MCM that indicates switch works as the remote standalone
-> +	 * integrated circuit so the GPIO pin would be used to complete
-> +	 * the reset, otherwise memory-mapped register accessing used
-> +	 * through syscon provides in the case of MCM.
-> +	 */
-> +	if (!priv->mcm) {
-> +		priv->reset = of_get_named_gpio(dn, "mediatek,reset-pin", 0);
-> +		if (!gpio_is_valid(priv->reset))
-> +			return priv->reset;
-> +
-> +		ret = devm_gpio_request_one(&mdiodev->dev,
-> +					    priv->reset, GPIOF_OUT_INIT_LOW,
-> +					    "mediatek,reset-pin");
-> +		if (ret < 0) {
-> +			dev_err(&mdiodev->dev,
-> +				"fail to devm_gpio_request reset\n");
-> +			return ret;
-> +		}
-> +	}
+On Fri, Mar 10, 2017 at 10:00:50AM +0800, Elaine Zhang wrote:
+> Add support for the rk805 regulator. The regulator module consists
+> of 4 DCDCs, 3 LDOs.
 
-You are not handling the flags part of the GPIO binding. It is better
-to use devm_gpiod_ API calls, which will handle the active low flags
-for you.
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-    Andrew
+--ekjek2uvalbupyvn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljGy/kACgkQJNaLcl1U
+h9DCgAf+I9RQVPw1JZqCRR6Nqj+QJoHtjO/SimeosJYI4qXrRUbOSBWXKfQAF2N1
+57rNaKt+ayRkJu11Ovp3dxIwt0sFXRL0A5Yr4oPeWjViSqlO6+8+yD8SrZaYjwlP
+dZDu65H+EbPdNKmyuMipLZXJe3MRRN3YC8bepbC6d3ITvGveSNNLjPeUfDbMmIEi
+68ZsCax4evlwsgRMaZMO9aGvIyQlEGqWCYRM8RqXDldE9nTWkfmsY6K9jJgPm/Z9
+5R9gKUDXFY2mJZhinV95oM2XLCZeOLavrZqZXctPvkn5E8K/aNpEc1DF4GgxBWoa
+8MvGQIAd36/5JxKp4TP30iWNBUEKAw==
+=Jyr4
+-----END PGP SIGNATURE-----
+
+--ekjek2uvalbupyvn--
+
+
+--===============6410045863454285455==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+Linux-rockchip mailing list
+Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+--===============6410045863454285455==--
