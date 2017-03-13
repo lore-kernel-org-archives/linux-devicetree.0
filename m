@@ -1,10 +1,10 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: cs35l35: Add device tree binding for I2S drive configuration" to the asoc tree
-Date: Mon, 13 Mar 2017 16:58:51 +0000
-Message-ID: <E1cnTJ5-0005D3-7a@debutante>
-References: <1488991371-22513-2-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Subject: Applied "ASoC: cs35l35: Add missing return in probe" to the asoc tree
+Date: Mon, 13 Mar 2017 16:59:05 +0000
+Message-ID: <E1cnTJJ-0005E9-Ug@debutante>
+References: <1488991371-22513-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1488991371-22513-2-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <1488991371-22513-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Cc: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
@@ -12,7 +12,7 @@ List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: cs35l35: Add device tree binding for I2S drive configuration
+   ASoC: cs35l35: Add missing return in probe
 
 has been applied to the asoc tree at
 
@@ -37,39 +37,36 @@ to this mail.
 Thanks,
 Mark
 
->From 45114c364d476ba0bbc294d63955f49fbf378779 Mon Sep 17 00:00:00 2001
+>From 1bb06ada038548b4e2449159e80badf106bb779f Mon Sep 17 00:00:00 2001
 From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Date: Wed, 8 Mar 2017 16:42:48 +0000
-Subject: [PATCH] ASoC: cs35l35: Add device tree binding for I2S drive
- configuration
+Date: Wed, 8 Mar 2017 16:42:47 +0000
+Subject: [PATCH] ASoC: cs35l35: Add missing return in probe
 
-Add a binding for setting how the I2S pins are driven in unused slots,
-currently the chip will just use the default of drive 0, however
-this causes issues when multiple devices are attached to the same bus.
+A return statement is missing just before the error paths at the end of
+probe. This causes us to fall straight into the error path and disable
+the supplies and re-enable reset, as these are only controlled during
+probe this causes the part to no longer function.
 
 Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Acked-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/sound/cs35l35.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ sound/soc/codecs/cs35l35.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/cs35l35.txt b/Documentation/devicetree/bindings/sound/cs35l35.txt
-index 07d9c0f177fb..958f0eabfdfc 100644
---- a/Documentation/devicetree/bindings/sound/cs35l35.txt
-+++ b/Documentation/devicetree/bindings/sound/cs35l35.txt
-@@ -37,6 +37,11 @@ Optional properties:
-   Table 3-10 of the datasheet lists drive-strength specifications
-   0 = 1x (Default)
-   1 = .5x
-+  - cirrus,sp-drv-unused : Determines how unused slots should be driven on the
-+  Serial Port.
-+  0 - Hi-Z
-+  2 - Drive 0's (Default)
-+  3 - Drive 1's
+diff --git a/sound/soc/codecs/cs35l35.c b/sound/soc/codecs/cs35l35.c
+index 260ed42c71e9..48b45dc904ea 100644
+--- a/sound/soc/codecs/cs35l35.c
++++ b/sound/soc/codecs/cs35l35.c
+@@ -1509,6 +1509,8 @@ static int cs35l35_i2c_probe(struct i2c_client *i2c_client,
+ 		goto err;
+ 	}
  
-   - cirrus,bst-pdn-fet-on : Boolean to determine if the Boost PDN control
-   powers down with a rectification FET On or Off. If VSPK is supplied
++	return 0;
++
+ err:
+ 	regulator_bulk_disable(cs35l35->num_supplies,
+ 			       cs35l35->supplies);
 -- 
 2.11.0
 
