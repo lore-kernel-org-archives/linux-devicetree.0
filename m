@@ -1,57 +1,74 @@
 From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
-Date: Mon, 13 Mar 2017 11:27:36 +0100
-Message-ID: <2f21aeb3-dd4e-e170-729a-a785077b6f28@xilinx.com>
+Subject: Re: [PATCH 1/2] doc: Add bindings document for Xilinx LogiCore PR
+ Decoupler
+Date: Mon, 13 Mar 2017 11:29:06 +0100
+Message-ID: <91f745a9-5ab5-345c-3e46-cac7191012f9@xilinx.com>
 References: <1489181435-3151-1-git-send-email-mdf@kernel.org>
- <1489181435-3151-2-git-send-email-mdf@kernel.org>
- <CAAtXAHe-AMq9Ux2LZZEWLcg8Dk6jTiHhrot4RhEVrxTBhnLE0g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAtXAHe-AMq9Ux2LZZEWLcg8Dk6jTiHhrot4RhEVrxTBhnLE0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1489181435-3151-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Moritz,
+On 10.3.2017 22:30, Moritz Fischer wrote:
+> This adds the binding documentation for the Xilinx LogiCORE PR
+> Decoupler soft core.
+> 
+> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  .../bindings/fpga/xilinx-pr-decoupler.txt          | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> new file mode 100644
+> index 0000000..b82b928
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+> @@ -0,0 +1,24 @@
+> +Xilinx LogiCORE Partial Reconfig Decoupler Softcore
+> +
+> +The Xilinx LogiCORE Partial Reconfig Decoupler  manages one or more
+> +decouplers / fpga bridges.
+> +The controller can decouple/disable the bridges which prevents signal
+> +changes from passing through the bridge.  The controller can also
+> +couple /enable the bridges which allows traffic to pass through the
+> +bridge normally.
+> +
+> +Required properties:
+> +- compatible		: Should contain "xlnx,pr-decoupler-1.00"
+> +- regs			: base address and size for decoupler module
+> +
+> +Optional properties:
+> +- bridge-enable		: 0 if driver should disable bridge at startup
+> +			  1 if driver should enable bridge at startup
+> +			  Default is to leave bridge in current state.
+> +
+> +Example:
+> +	fpga-bridge@100000450 {
+> +		compatible = "xlnx,pr-decoupler-1.00";
+> +		regs = <0x1000 0x10>;
+> +		bridge-enable = <0>;
+> +	};
+> 
 
-On 10.3.2017 23:42, Moritz Fischer wrote:
-> On Fri, Mar 10, 2017 at 1:30 PM, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> This adds support for the Xilinx LogiCORE PR Decoupler
->> soft-ip that does decoupling of PR regions in the FPGA
->> fabric during partial reconfiguration.
->>
->> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Cc: Sören Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  drivers/fpga/Kconfig               |   9 +++
->>  drivers/fpga/Makefile              |   1 +
->>  drivers/fpga/xilinx-pr-decoupler.c | 156 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 166 insertions(+)
->>  create mode 100644 drivers/fpga/xilinx-pr-decoupler.c
+Look at.
+https://github.com/Xilinx/linux-xlnx/blob/master/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
 
-I have written very similar driver some week ago but didn't sent it out.
 
-Here it is.
-https://github.com/Xilinx/linux-xlnx/blob/master/drivers/fpga/xilinx-pr-decoupler.c
-
-Your clk handling is better and my enable_show is better.
-You shouldn't rely on setting status before. It is better to read that
-reg again. The reason is you can connect status signal from one PR
-decoupler to decouple input which can change status
-
-There is another topic I wanted to open in connection to this. There
-should be gpio based bridge because this pr decoupler can be without axi
-interface and for that gpio driver would be useful.
+And you miss above required clk property. I do use aclk because this is
+what it is shown in vivado.
 
 Thanks,
 Michal
-
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
