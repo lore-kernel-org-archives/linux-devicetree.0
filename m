@@ -1,56 +1,80 @@
-From: Adrian Fiergolski <Adrian.Fiergolski-vJEk5272eHo@public.gmane.org>
-Subject: Re: [PATCH] spi: Add spi-bits-per-word binding.
-Date: Mon, 13 Mar 2017 19:12:13 +0100
-Message-ID: <12c66ecf-8472-c108-d2b4-1d6c3a8e6e74@cern.ch>
-References: <20170217101151.hyzmz5a4lgdy7p5m>
- <20170220153512.6563-1-adrian.fiergolski@cern.ch>
- <20170221190830.xyubgimyc2w5p5v6@sirena.org.uk>
- <983e943b-30f2-7d80-294a-df29bca11738@cern.ch>
- <20170313175504.mpwjxqbhc4yxk434@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170313175504.mpwjxqbhc4yxk434-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Subject: [PATCH v7 1/2] backlight arcxcnn devicetree bindings for ArcticSand
+Date: Mon, 13 Mar 2017 14:21:50 -0400
+Message-ID: <1489429310-6055-1-git-send-email-olimpiu@arcticsand.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13.03.2017 at 18:55, Mark Brown wrote:
->
->> In my case, xilinx_spi_probe function (of spi-xilinx controller) sets
->> bits_per_word_mask of spi_master struct only to 16 bits support. Later=
-,
->> xilinx_spi_probe calls of_register_spi_devices, which calls
->> of_register_spi_devices. The last one allocates an empty spi_device
->> struct and configures different options of the spi_device according to=
- a
->> device tree. bits_per_word are not covered here (why?), thus it is lef=
-t
->> 0 (value after allocation), which, by convention, means 8 bits support=
-=2E
->> At the end, the same function (of_register_spi_device) calls
->> spi_add_device which finally calls spi_setup. The last call, according=
+backlight: Add devicetree bindings for the Arctic Sand backlight driver
+This patch provides devicetree bindings for the Arctic Sand
+    driver submitted in the previous patch
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+---
+v6 => v7:
+- Version updated to match other patch in set. No other changes.
+v5 => v6:
+- Version updated to match other patch in set. No other changes.
+v4 => v5:
+- Added spaces for increased readability per Lee Jones
+v3 => v4:
+- Added spaces for increased readability per Lee Jones
+v2 => v3:
+- Version updated to match other patch in set. No other changes.
+v1 => v2:
+- Version updated to match other patch in set. No other changes.
 
->> to convention, changes bits_per_word to 8 and calls
->> __spi_validate_bits_per_word which fails, as master doesn't support 8
->> bit transmission. This fails registration sequence of a device driver.=
+ .../bindings/leds/backlight/arcxcnn_bl.txt         | 33 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
 
->> As you see, the device driver doesn't have possibility to modify
->> bits_per_word during the registration process, thus it can't provide
->> support for such limited controllers.
-> I can't see any way in which it follows from the above that it's a good=
-
-> idea to try to override bits per word settings in the device tree, that=
-
-> just wastes user time and is an abstraction failure.  We need better
-> handling of defaults done purely in the kernel.
-If enforcing by device tree specific for a given device driver SPI_CPHA,
-SPIC_CPOL, SPI_CS_HIGH, max_speed_hz, etc. if fine form the abstraction
-point of view, why it doesn't apply to bits_per_word ?
+diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+new file mode 100644
+index 0000000..ecb7731
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+@@ -0,0 +1,33 @@
++Binding for ArcticSand arc2c0608 LED driver
++
++Required properties:
++- compatible:		should be "arc,arc2c0608"
++- reg:			slave address
++
++Optional properties:
++- default-brightness:	brightness value on boot, value from: 0-4095
++- label:		The name of the backlight device
++			See Documentation/devicetree/bindings/leds/common.txt
++- led-sources:		List of enabled channels from 0 to 5.
++			See Documentation/devicetree/bindings/leds/common.txt
++
++- arc,led-config-0:	setting for register ILED_CONFIG_0
++- arc,led-config-1:	setting for register ILED_CONFIG_1
++- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
++- arc,comp-config:	setting for register CONFIG_COMP
++- arc,filter-config:	setting for register FILTER_CONFIG
++- arc,trim-config:	setting for register IMAXTUNE
++
++Note: Optional properties not specified will default to values in IC EPROM
++
++Example:
++
++arc2c0608@30 {
++	compatible = "arc,arc2c0608";
++	reg = <0x30>;
++	default-brightness = <500>;
++	label = "lcd-backlight";
++	linux,default-trigger = "backlight";
++	led-sources = <0 1 2 5>;
++};
++
+-- 
+2.7.4
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
