@@ -1,33 +1,83 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 5/5] dt-bindings: clock: gxbb-clkc: Add GXL compatible variant
-Date: Mon, 13 Mar 2017 14:26:44 +0100
-Message-ID: <1489411604-18700-6-git-send-email-narmstrong@baylibre.com>
-References: <1489411604-18700-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489411604-18700-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, carlo@caione.org, khilman@baylibre.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx: add Gateworks Ventana GW5904 support
+Date: Mon, 13 Mar 2017 06:27:06 -0700
+Message-ID: <CAJ+vNU0JNQuQEmG_oCu86cbG_wisVFRETNtCO1bC2ytMM+N2Vg@mail.gmail.com>
+References: <1489178411-6559-1-git-send-email-tharvey@gateworks.com>
+ <04584d61-f1e2-3722-1f13-ff133edc0c22@gmail.com> <CAJ+vNU1NcW=y_c-jJBnAaOozrzYJAekd9BEiMdd2=Bpx=Ng79Q@mail.gmail.com>
+ <b105d1ea-7975-bd21-0aa0-762060ceb62a@gmail.com> <20170311030426.GB6677@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170311030426.GB6677-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On Fri, Mar 10, 2017 at 7:04 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> On Fri, Mar 10, 2017 at 05:20:11PM -0800, Florian Fainelli wrote:
+>> On 03/10/2017 05:07 PM, Tim Harvey wrote:
+>> > On Fri, Mar 10, 2017 at 12:43 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> >>
+>> >>> +     dsa {
+>> >>> +             compatible = "marvell,dsa";
+>> >>> +             #address-cells = <2>;
+>> >>> +             #size-cells = <0>;
+>> >>> +
+>> >>> +             dsa,ethernet = <&fec>;
+>> >>> +             dsa,mii-bus = <&mdio>;
+>> >>> +
+>> >>
+>> >> Please consider using the new binding for DSA switches, see:
+>> >>
+>> >> https://patchwork.kernel.org/patch/9493037/
+>> >>
+>> >
+>> > Hi Florian,
+>> >
+>> > I tried the new binding first, but haven't gotten it to work yet. Let
+>> > me make sure I understand what I should be doing.
+>> >
+>> > This is a MV88E6176 so I first need to add dt support for that to the
+>> > mv88e6xxx driver (which supports the device, just not via dt):
+>
+> Hi Tim
+>
+> Nope. The 6176 is compatible with the 6085.
+>
+>> > Then I remove the old binding and add the new binding as such:
+>> >
+>> > &fec {
+>> >         pinctrl-names = "default";
+>> >         pinctrl-0 = <&pinctrl_enet>;
+>> >         phy-mode = "rgmii-id";
+>> >         status = "okay";
+>>
+>> You most likely need to declare a fixed PHY for the FEC to be setting up
+>> the link, speed and duplex?
+>
+> Take a look at arch/arm/boot/dts/vf610-zii-dev* as an example. This
+> uses a vf610, so is somewhat similar to the imx6. Same fec driver, but
+> the mdio is more complex due to there being 3 switches.
+>
+>      Andrew
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-index ce06435..a09d627 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-clkc.txt
-@@ -5,7 +5,8 @@ controllers within the SoC.
- 
- Required Properties:
- 
--- compatible: should be "amlogic,gxbb-clkc"
-+- compatible: should be "amlogic,gxbb-clkc" for GXBB SoC,
-+	      or "amlogic,gxl-clkc" for GXL and GXM SoC.
- - reg: physical base address of the clock controller and length of memory
-        mapped region.
- 
--- 
-1.9.1
+Andrew,
+
+Thanks for the hint on the compatibility. I wonder if
+Documentation/devicetree/bindings/net/dsa/marvell.txt should have some
+notes added about switch device compatibility? It wasn't clear to me
+that these would be compatible.
+
+What is the convention, if any, of the naming of the 'lan' ports (0
+based vs 1 based, eth vs lan)? Is it strictly up to the board vendor?
+The board I'm supporting has a silkscreen that shows 'Port 1' through
+'Port 4' so I was leaning towards 1 based.
+
+Thanks,
+
+Tim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
