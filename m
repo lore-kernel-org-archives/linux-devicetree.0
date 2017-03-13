@@ -1,258 +1,89 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] iio: adc: sun4i-gpadc-iio: add support for A33
- thermal sensor
-Date: Mon, 13 Mar 2017 21:06:38 +0000
-Message-ID: <c70640c7-7dd9-dc7c-b751-430b2ad59245@kernel.org>
-References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
- <20170310103921.19469-9-quentin.schulz@free-electrons.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Mon, 13 Mar 2017 21:07:51 +0000
+Message-ID: <20170313210751.GN21222@n2100.armlinux.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
+ <20170221001332.GS21222@n2100.armlinux.org.uk>
+ <25596b21-70de-5e46-f149-f9ce3a86ecb7@gmail.com>
+ <1487667023.2331.8.camel@pengutronix.de>
+ <20170313131647.GB10701@valkosipuli.retiisi.org.uk>
+ <20170313132701.GJ21222@n2100.armlinux.org.uk>
+ <20170313205646.GC10701@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170310103921.19469-9-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <20170313205646.GC10701@valkosipuli.retiisi.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, Philipp Zabel <p.zabel@pengutronix.de>, fabio.estevam@nxp.com, shawnguo
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 10:39, Quentin Schulz wrote:
-> This adds support for the Allwinner A33 thermal sensor.
+On Mon, Mar 13, 2017 at 10:56:46PM +0200, Sakari Ailus wrote:
+> Hi Russell,
 > 
-> Unlike the A10, A13 and A31, the Allwinner A33 only has one channel
-> which is dedicated to the thermal sensor. Moreover, its thermal sensor
-> does not generate interruptions, thus we only need to directly read the
-> register storing the temperature value.
+> On Mon, Mar 13, 2017 at 01:27:02PM +0000, Russell King - ARM Linux wrote:
+> > On Mon, Mar 13, 2017 at 03:16:48PM +0200, Sakari Ailus wrote:
+> > > The vast majority of existing drivers do not implement them nor the user
+> > > space expects having to set them. Making that mandatory would break existing
+> > > user space.
+> > > 
+> > > In addition, that does not belong to link validation either: link validation
+> > > should only include static properties of the link that are required for
+> > > correct hardware operation. Frame rate is not such property: hardware that
+> > > supports the MC interface generally does not recognise such concept (with
+> > > the exception of some sensors). Additionally, it is dynamic: the frame rate
+> > > can change during streaming, making its validation at streamon time useless.
+> > 
+> > So how do we configure the CSI, which can do frame skipping?
+> > 
+> > With what you're proposing, it means it's possible to configure the
+> > camera sensor source pad to do 50fps.  Configure the CSI sink pad to
+> > an arbitary value, such as 30fps, and configure the CSI source pad to
+> > 15fps.
+> > 
+> > What you actually get out of the CSI is 25fps, which bears very little
+> > with the actual values used on the CSI source pad.
+> > 
+> > You could say "CSI should ask the camera sensor" - well, that's fine
+> > if it's immediately downstream, but otherwise we'd need to go walking
+> > down the graph to find something that resembles its source - there may
+> > be mux and CSI2 interface subdev blocks in that path.  Or we just accept
+> > that frame rates are completely arbitary and bear no useful meaning what
+> > so ever.
 > 
-> The MFD used by the A10, A13 and A31, was created to avoid breaking the
-> DT binding, but since the nodes for the ADC weren't there for the A33,
-> it is not needed.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> The user is responsible for configuring the pipeline. It is thus not
+> unreasonable to as the user to configure the frame rate as well if there are
+> device in the pipeline that can affect the frame rate. The way I proposed to
+> implement it is compliant with the existing API and entirely deterministic,
+> contrary to what you're saying.
 
-Talk me through why it makes sense to do this rather than simply spin out
-a really simple thermal driver for the A33?
+You haven't really addressed my point at all.
 
-I'm not against what you have here, but don't feel it has been fully argued.
+What you seem to be saying is that you're quite happy for the situation
+(which is a total misconfiguration) to exist.  Given the vapourware of
+userspace (which I don't see changing in any kind of reasonable timeline)
+I think this is completely absurd.
 
-Jonathan
-> ---
-> 
-> v2:
->   - removed added comments in Kconfig,
->   - simplified Kconfig depends on condition,
->   - removed THERMAL_OF requirement for sun8i,
->   - renamed sun8i_gpadc_channels to sun8i_a33_gpadc_channels,
->   - renamed use_dt boolean in no_irq as it reflects better why we need it,
->   - removed spurious/unneeded modifications done in v1,
-> 
->  drivers/iio/adc/Kconfig           |   2 +-
->  drivers/iio/adc/sun4i-gpadc-iio.c | 100 ++++++++++++++++++++++++++++++++++++--
->  include/linux/mfd/sun4i-gpadc.h   |   4 ++
->  3 files changed, 102 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-> index 9f8b4b1..8c8ead6 100644
-> --- a/drivers/iio/adc/Kconfig
-> +++ b/drivers/iio/adc/Kconfig
-> @@ -562,7 +562,7 @@ config STX104
->  config SUN4I_GPADC
->  	tristate "Support for the Allwinner SoCs GPADC"
->  	depends on IIO
-> -	depends on MFD_SUN4I_GPADC
-> +	depends on MFD_SUN4I_GPADC || MACH_SUN8I
->  	help
->  	  Say yes here to build support for Allwinner (A10, A13 and A31) SoCs
->  	  GPADC. This ADC provides 4 channels which can be used as an ADC or as
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index 7cb997a..70684cd 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -85,6 +85,12 @@ static const struct gpadc_data sun6i_gpadc_data = {
->  	.adc_chan_mask = SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
->  };
->  
-> +static const struct gpadc_data sun8i_a33_gpadc_data = {
-> +	.temp_offset = -1662,
-> +	.temp_scale = 162,
-> +	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
-> +};
-> +
->  struct sun4i_gpadc_iio {
->  	struct iio_dev			*indio_dev;
->  	struct completion		completion;
-> @@ -96,6 +102,7 @@ struct sun4i_gpadc_iio {
->  	unsigned int			temp_data_irq;
->  	atomic_t			ignore_temp_data_irq;
->  	const struct gpadc_data		*data;
-> +	bool				no_irq;
->  	/* prevents concurrent reads of temperature and ADC */
->  	struct mutex			mutex;
->  };
-> @@ -138,6 +145,23 @@ static const struct iio_chan_spec sun4i_gpadc_channels_no_temp[] = {
->  	SUN4I_GPADC_ADC_CHANNEL(3, "adc_chan3"),
->  };
->  
-> +static const struct iio_chan_spec sun8i_a33_gpadc_channels[] = {
-> +	{
-> +		.type = IIO_TEMP,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				      BIT(IIO_CHAN_INFO_SCALE) |
-> +				      BIT(IIO_CHAN_INFO_OFFSET),
-> +		.datasheet_name = "temp_adc",
-> +	},
-> +};
-> +
-> +static const struct regmap_config sun4i_gpadc_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.fast_io = true,
-> +};
-> +
->  static int sun4i_prepare_for_irq(struct iio_dev *indio_dev, int channel,
->  				 unsigned int irq)
->  {
-> @@ -247,6 +271,17 @@ static int sun4i_gpadc_temp_read(struct iio_dev *indio_dev, int *val)
->  {
->  	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
->  
-> +	if (info->no_irq) {
-> +		pm_runtime_get_sync(indio_dev->dev.parent);
-> +
-> +		regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
-> +
-> +		pm_runtime_mark_last_busy(indio_dev->dev.parent);
-> +		pm_runtime_put_autosuspend(indio_dev->dev.parent);
-> +
-> +		return 0;
-> +	}
-> +
->  	return sun4i_gpadc_read(indio_dev, 0, val, info->temp_data_irq);
->  }
->  
-> @@ -454,6 +489,58 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
->  	return 0;
->  }
->  
-> +static const struct of_device_id sun4i_gpadc_of_id[] = {
-> +	{
-> +		.compatible = "allwinner,sun8i-a33-gpadc-iio",
-> +		.data = &sun8i_a33_gpadc_data,
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
-> +				struct iio_dev *indio_dev)
-> +{
-> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-> +	const struct of_device_id *of_dev;
-> +	struct thermal_zone_device *tzd;
-> +	struct resource *mem;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	of_dev = of_match_device(sun4i_gpadc_of_id, &pdev->dev);
-> +	if (!of_dev)
-> +		return -ENODEV;
-> +
-> +	info->no_irq = true;
-> +	info->data = (struct gpadc_data *)of_dev->data;
-> +	indio_dev->num_channels = ARRAY_SIZE(sun8i_a33_gpadc_channels);
-> +	indio_dev->channels = sun8i_a33_gpadc_channels;
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	info->regmap = devm_regmap_init_mmio(&pdev->dev, base,
-> +					     &sun4i_gpadc_regmap_config);
-> +	if (IS_ERR(info->regmap)) {
-> +		ret = PTR_ERR(info->regmap);
-> +		dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!IS_ENABLED(THERMAL_OF))
-> +		return 0;
-> +
-> +	tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, 0, info,
-> +						   &sun4i_ts_tz_ops);
-> +	if (IS_ERR(tzd))
-> +		dev_err(&pdev->dev, "could not register thermal sensor: %ld\n",
-> +			PTR_ERR(tzd));
-> +
-> +	return PTR_ERR_OR_ZERO(tzd);
-> +}
-> +
->  static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
->  				 struct iio_dev *indio_dev)
->  {
-> @@ -462,6 +549,7 @@ static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
->  		dev_get_drvdata(pdev->dev.parent);
->  	int ret;
->  
-> +	info->no_irq = false;
->  	info->regmap = sun4i_gpadc_dev->regmap;
->  
->  	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
-> @@ -561,7 +649,11 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  	indio_dev->info = &sun4i_gpadc_iio_info;
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
-> -	ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-> +	if (pdev->dev.of_node)
-> +		ret = sun4i_gpadc_probe_dt(pdev, indio_dev);
-> +	else
-> +		ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-> +
->  	if (ret)
->  		return ret;
->  
-> @@ -580,7 +672,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  	return 0;
->  
->  err_map:
-> -	if (IS_ENABLED(CONFIG_THERMAL_OF))
-> +	if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
->  		iio_map_array_unregister(indio_dev);
->  
->  	pm_runtime_put(&pdev->dev);
-> @@ -592,10 +684,11 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  static int sun4i_gpadc_remove(struct platform_device *pdev)
->  {
->  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
->  
->  	pm_runtime_put(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (IS_ENABLED(CONFIG_THERMAL_OF))
-> +	if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
->  		iio_map_array_unregister(indio_dev);
->  
->  	return 0;
-> @@ -611,6 +704,7 @@ static const struct platform_device_id sun4i_gpadc_id[] = {
->  static struct platform_driver sun4i_gpadc_driver = {
->  	.driver = {
->  		.name = "sun4i-gpadc-iio",
-> +		.of_match_table = sun4i_gpadc_of_id,
->  		.pm = &sun4i_gpadc_pm_ops,
->  	},
->  	.id_table = sun4i_gpadc_id,
-> diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
-> index 509e736..139872c 100644
-> --- a/include/linux/mfd/sun4i-gpadc.h
-> +++ b/include/linux/mfd/sun4i-gpadc.h
-> @@ -38,6 +38,10 @@
->  #define SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(x)		(GENMASK(3, 0) & BIT(x))
->  #define SUN6I_GPADC_CTRL1_ADC_CHAN_MASK			GENMASK(3, 0)
->  
-> +/* TP_CTRL1 bits for sun8i SoCs */
-> +#define SUN8I_GPADC_CTRL1_CHOP_TEMP_EN			BIT(8)
-> +#define SUN8I_GPADC_CTRL1_GPADC_CALI_EN			BIT(7)
-> +
->  #define SUN4I_GPADC_CTRL2				0x08
->  
->  #define SUN4I_GPADC_CTRL2_TP_SENSITIVE_ADJUST(x)	((GENMASK(3, 0) & (x)) << 28)
-> 
+I'll state clearly now: everything that we've discussed so far, I'm
+finding very hard to take anything you've said seriously.  I think we
+have very different and incompatible point of views about what is
+acceptable from a user point of view, so much so that we're never going
+to agree on any point.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
