@@ -1,61 +1,72 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net-next 1/4] dt-bindings: net: dsa: add Mediatek MT7530
- binding
-Date: Mon, 13 Mar 2017 09:47:23 -0700
-Message-ID: <928d1178-e04a-3e78-4a7a-36127321a949@gmail.com>
-References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
- <1489421488-300-2-git-send-email-sean.wang@mediatek.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: ata: add DT bindings for ahci-dm816 SATA
+ controller
+Date: Mon, 13 Mar 2017 19:53:00 +0300
+Message-ID: <2d0ede95-86d6-4d52-6cf5-91de35a29145@cogentembedded.com>
+References: <1489422982-3461-1-git-send-email-bgolaszewski@baylibre.com>
+ <1489422982-3461-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1489421488-300-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489422982-3461-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2017 09:11 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add device-tree binding for Mediatek MT7530 switch.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Hello!
+
+On 03/13/2017 07:36 PM, Bartosz Golaszewski wrote:
+
+> Add DT bindings for the onboard SATA controller present on the DM816x
+> SoCs.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/dsa/mt7530.txt         | 94 ++++++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
+>  Documentation/devicetree/bindings/ata/ahci-dm816.txt | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-dm816.txt
+>
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-dm816.txt b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
 > new file mode 100644
-> index 0000000..0e50dbf
+> index 0000000..b87ed5a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-> @@ -0,0 +1,94 @@
-> +Mediatek MT7530 Ethernet switch
-> +================================
+> +++ b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
+> @@ -0,0 +1,20 @@
+> +Device tree binding for the TI DM816 AHCI SATA Controller
+> +---------------------------------------------------------
 > +
 > +Required properties:
-> +
-> +- compatible: Must be compatible = "mediatek,mt7530";
-> +- #address-cells: Must be 1
-> +- #size-cells: Must be 0
-> +- mediatek,ethsys: Phandle to the syscon node that handles the reset.
-> +- mediatek,ethernet: Phandle to the syscon node that Mediatek ethernet driver
-> +	provides that handles the TRGMII setup used by the switch.
-> +	See
-> +	Documentation/devicetree/bindings/net/mediatek-net.txt for the detailed
-> +	setup on mediatek ethernet.
+> +  - compatible: must be "ti,dm816-ahci"
+> +  - reg: physical base address and size of the register region used by
+> +         the controller (as defined by the AHCI 1.1 standard)
+> +  - interrupts: interrupt specifier (refer to the interrupt binding)
+> +  - clocks: clock specifiers (refer to the clock binding); two clocks
 
-This seems redundant with the CPU port's ethernet phandle here.
--- 
-Florian
+    There should be a phandle preceding the clock specifier, all new such 
+props are different to the old "interrupts" (which had phandle in a separate 
+"interrupt-parent" prop).
+
+> +            must be specified: the functional clock and an external
+> +            reference clock
+> +
+> +Example:
+> +
+> +	sata: sata@4a140000 {
+> +		compatible = "ti,dm816-ahci";
+> +		reg = <0x4a140000 0xffff>;
+
+   I think you meant 0x10000 ISO 0xffff -- this is a size, not limit.
+
+> +		interrupts = <16>;
+> +		clocks = <&sysclk5_ck>, <&sata_refclk>;
+> +	};
+>
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
