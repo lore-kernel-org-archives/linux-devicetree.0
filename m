@@ -1,70 +1,73 @@
-From: Moritz Fischer <moritz.fischer.private-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] fpga: Add support for Xilinx LogiCORE PR Decoupler
-Date: Mon, 13 Mar 2017 09:18:31 -0700
-Message-ID: <CAJYdmeM+OkvNHtXR7o7R7s418Q52KGDFH5B-oKWeMq-tkmwW2Q@mail.gmail.com>
-References: <1489181435-3151-1-git-send-email-mdf@kernel.org>
- <1489181435-3151-2-git-send-email-mdf@kernel.org> <CAAtXAHe-AMq9Ux2LZZEWLcg8Dk6jTiHhrot4RhEVrxTBhnLE0g@mail.gmail.com>
- <2f21aeb3-dd4e-e170-729a-a785077b6f28@xilinx.com>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH net-next 0/4] net-next: dsa: add Mediatek MT7530 support
+Date: Mon, 13 Mar 2017 17:25:30 +0100
+Message-ID: <09927247-dd22-d341-e58c-c8f36fba4755@phrozen.org>
+References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2f21aeb3-dd4e-e170-729a-a785077b6f28-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1489421488-300-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 3:27 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wro=
-te:
-> Hi Moritz,
+
+
+On 13/03/17 17:11, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 >
-> On 10.3.2017 23:42, Moritz Fischer wrote:
->> On Fri, Mar 10, 2017 at 1:30 PM, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> This adds support for the Xilinx LogiCORE PR Decoupler
->>> soft-ip that does decoupling of PR regions in the FPGA
->>> fabric during partial reconfiguration.
->>>
->>> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> Cc: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> ---
->>>  drivers/fpga/Kconfig               |   9 +++
->>>  drivers/fpga/Makefile              |   1 +
->>>  drivers/fpga/xilinx-pr-decoupler.c | 156 +++++++++++++++++++++++++++++=
-++++++++
->>>  3 files changed, 166 insertions(+)
->>>  create mode 100644 drivers/fpga/xilinx-pr-decoupler.c
+> MT7530 is a 7-ports Gigabit Ethernet Switch that could be found on
+> Mediatek router platforms such as MT7623A or MT7623N which includes 7-port
+> Gigabit Ethernet MAC and 5-port Gigabit Ethernet PHY. Among these ports,
+> The port from 0 to 4 are the user ports connecting with the remote devices
+> while the port 5 and 6 are the CPU ports connecting into Mediatek Ethernet
+> GMAC.
 >
-> I have written very similar driver some week ago but didn't sent it out.
+> The patch series integrated Mediatek MT7530 into DSA support which
+> includes the most of the essential callbacks such as tag insertion for
+> port distinguishing, port control, bridge offloading, STP setup and
+> ethtool operations to allow DSA to model each user port into independently
+> standalone netdevice as the other DSA driver had done.
+Hi Sean,
 
-Hah. I'll take a look.
+very cool, i'll give this a spin this week and if it works out will 
+import it into LEDE to get test coverage from our users.
 
-> Here it is.
-> https://github.com/Xilinx/linux-xlnx/blob/master/drivers/fpga/xilinx-pr-d=
-ecoupler.c
+     John
+
+> Sean Wang (4):
+>    dt-bindings: net: dsa: add mt7530 binding
+>    net-next: dsa: add Mediatek tag RX/TX handler
+>    net-next: ethernet: mediatek: add CMD ingress recognize the special
+>      tag
+>    net-next: dsa: add dsa support for Mediatek MT7530 switch
 >
-> Your clk handling is better and my enable_show is better.
-> You shouldn't rely on setting status before. It is better to read that
-> reg again. The reason is you can connect status signal from one PR
-> decoupler to decouple input which can change status
-
-I will just merge them together and add you to author's list if that's
-fine with you?
-
-> There is another topic I wanted to open in connection to this. There
-> should be gpio based bridge because this pr decoupler can be without axi
-> interface and for that gpio driver would be useful.
-
-That's a good idea. I can look at that. This can be pretty generic
-code I suppose.
-
-Cheers,
-
-Moritz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   .../devicetree/bindings/net/dsa/mt7530.txt         |   96 ++
+>   drivers/net/dsa/Kconfig                            |    8 +
+>   drivers/net/dsa/Makefile                           |    2 +-
+>   drivers/net/dsa/mt7530.c                           | 1195 ++++++++++++++++++++
+>   drivers/net/dsa/mt7530.h                           |  387 +++++++
+>   drivers/net/ethernet/mediatek/mtk_eth_soc.c        |    8 +
+>   drivers/net/ethernet/mediatek/mtk_eth_soc.h        |    5 +
+>   include/net/dsa.h                                  |    1 +
+>   net/dsa/Kconfig                                    |    2 +
+>   net/dsa/Makefile                                   |    1 +
+>   net/dsa/dsa.c                                      |    3 +
+>   net/dsa/dsa_priv.h                                 |    3 +
+>   net/dsa/tag_mtk.c                                  |  121 ++
+>   13 files changed, 1831 insertions(+), 1 deletion(-)
+>   create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
+>   create mode 100644 drivers/net/dsa/mt7530.c
+>   create mode 100644 drivers/net/dsa/mt7530.h
+>   create mode 100644 net/dsa/tag_mtk.c
+>
