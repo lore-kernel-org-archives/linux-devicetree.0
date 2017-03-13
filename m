@@ -1,79 +1,125 @@
-From: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 1/3] dt-bindings: imx-ocotp: add compatible string for
- i.MX7D/S
-Date: Mon, 13 Mar 2017 03:14:01 +0000
-Message-ID: <VI1PR04MB1166EA630AB6D829B1C8568888250@VI1PR04MB1166.eurprd04.prod.outlook.com>
-References: <1488350454-23860-1-git-send-email-peng.fan@nxp.com>
- <a3f9ebba-6dfe-c7a3-fabf-1f5ac69ecafc@linaro.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Sun, 12 Mar 2017 21:26:41 -0700
+Message-ID: <f1807742-012f-249e-1ad8-22d8434695cb@gmail.com>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170310201356.GA21222@n2100.armlinux.org.uk>
+ <47542ef8-3e91-b4cd-cc65-95000105f172@gmail.com>
+ <20170312195741.GS21222@n2100.armlinux.org.uk>
+ <ea3ccdb8-903f-93ab-6875-90da440fc52a@gmail.com>
+ <20170312202240.GT21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a3f9ebba-6dfe-c7a3-fabf-1f5ac69ecafc-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170312202240.GT21222@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Srinivas Kandagatla [mailto:srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
-> Sent: Friday, March 03, 2017 6:12 PM
-> To: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>; shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; van.freenix-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org; Rob Herring
-> <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Subject: Re: [PATCH 1/3] dt-bindings: imx-ocotp: add compatible string fo=
-r
-> i.MX7D/S
->=20
->=20
->=20
-> On 01/03/17 06:40, Peng Fan wrote:
-> > Add compatible string for i.MX7D/S
-> >
-> > Signed-off-by: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
-> > Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> Thanks for the patch, I will queue both nvmem driver changes and bindings
-> changes, via Greg's chars-misc tree.
-> But the DT changes have to go via arm-soc tree.
+On 03/12/2017 01:22 PM, Russell King - ARM Linux wrote:
+> On Sun, Mar 12, 2017 at 01:05:06PM -0700, Steve Longerbeam wrote:
+>>
+>>
+>> On 03/12/2017 12:57 PM, Russell King - ARM Linux wrote:
+>>> On Sat, Mar 11, 2017 at 04:30:53PM -0800, Steve Longerbeam wrote:
+>>>> If it's too difficult to get the imx219 csi-2 transmitter into the
+>>>> LP-11 state on power on, perhaps the csi-2 receiver can be a little
+>>>> more lenient on the transmitter and make the LP-11 timeout a warning
+>>>> instead of error-out.
+>>>>
+>>>> Can you try the attached change on top of the version 5 patchset?
+>>>>
+>>>> If that doesn't work then you're just going to have to fix the bug
+>>>> in imx219.
+>>>
+>>> That patch gets me past that hurdle, only to reveal that there's another
+>>> issue:
+>>
+>> Yeah, ipu_cpmem_set_image() failed because it doesn't recognize the
+>> bayer formats. Wait, didn't we fix this already? I've lost track.
+>> Ah, right, we were going to move this support into the IPUv3 driver,
+>> but in the meantime I think you had some patches to get around this.
+>
+> What I had was this patch for your v3.  I never got to testing your
+> v4 because of the LP-11 problem.
+>
+> In v5, you've changed to propagate the ipu_cpmem_set_image() error
+> code to avoid the resulting corruption, but that leaves the other bits
+> of this patch unaddressed, along my "media: imx: smfc: add support
+> for bayer formats" patch.
+>
+> Your driver basically has no support for bayer formats.
 
-Thanks, Srini.
+You added the patches to this driver that adds the bayer support,
+I don't think there is anything more required of the driver at this
+point to support bayer, the remaining work needs to happen in the IPUv3
+driver.
 
-Shawn may take the DT changes, if it is ok.
+I'll see if I have time to write that patch to IPUv3, but it's simple,
+in fact what you wrote below can be translate directly into
+ipu_cpmem_set_image(). There's a few other places bayer needs to be
+treated in IPUv3, but it should be obvious by grepping for the
+reference to pixel formats.
 
-Thanks,
-Peng.
->=20
-> Thanks,
-> srini
-> > diff --git a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> > b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> > index 966a72e..bbde2e4 100644
-> > --- a/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> > +++ b/Documentation/devicetree/bindings/nvmem/imx-ocotp.txt
-> > @@ -9,6 +9,7 @@ Required properties:
-> >  	"fsl,imx6sl-ocotp" (i.MX6SL), or
-> >  	"fsl,imx6sx-ocotp" (i.MX6SX),
-> >  	"fsl,imx6ul-ocotp" (i.MX6UL),
-> > +	"fsl,imx7d-ocotp" (i.MX7D/S),
-> >  	followed by "syscon".
-> >  - reg: Should contain the register base and length.
-> >  - clocks: Should contain a phandle pointing to the gated peripheral cl=
-ock.
-> >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Steve
+
+
+>
+> diff --git a/drivers/staging/media/imx/imx-smfc.c b/drivers/staging/media/imx/imx-smfc.c
+> index 313732201a52..4351c0365cf4 100644
+> --- a/drivers/staging/media/imx/imx-smfc.c
+> +++ b/drivers/staging/media/imx/imx-smfc.c
+> @@ -234,11 +234,6 @@ static void imx_smfc_setup_channel(struct imx_smfc_priv *priv)
+>  	buf1 = imx_media_dma_buf_get_next_queued(priv->out_ring);
+>  	priv->next = buf1;
+>
+> -	image.phys0 = buf0->phys;
+> -	image.phys1 = buf1->phys;
+> -	ipu_cpmem_set_image(priv->smfc_ch, &image);
+> -
+> -
+>  	switch (image.pix.pixelformat) {
+>  	case V4L2_PIX_FMT_SBGGR8:
+>  	case V4L2_PIX_FMT_SGBRG8:
+> @@ -247,6 +242,10 @@ static void imx_smfc_setup_channel(struct imx_smfc_priv *priv)
+>  		burst_size = 8;
+>  		passthrough = true;
+>  		passthrough_bits = 8;
+> +		ipu_cpmem_set_resolution(priv->smfc_ch, image.rect.width, image.rect.height);
+> +		ipu_cpmem_set_stride(priv->smfc_ch, image.pix.bytesperline);
+> +		ipu_cpmem_set_buffer(priv->smfc_ch, 0, buf0->phys);
+> +		ipu_cpmem_set_buffer(priv->smfc_ch, 1, buf1->phys);
+>  		break;
+>
+>  	case V4L2_PIX_FMT_SBGGR16:
+> @@ -256,9 +255,17 @@ static void imx_smfc_setup_channel(struct imx_smfc_priv *priv)
+>  		burst_size = 4;
+>  		passthrough = true;
+>  		passthrough_bits = 16;
+> +		ipu_cpmem_set_resolution(priv->smfc_ch, image.rect.width, image.rect.height);
+> +		ipu_cpmem_set_stride(priv->smfc_ch, image.pix.bytesperline);
+> +		ipu_cpmem_set_buffer(priv->smfc_ch, 0, buf0->phys);
+> +		ipu_cpmem_set_buffer(priv->smfc_ch, 1, buf1->phys);
+>  		break;
+>
+>  	default:
+> +		image.phys0 = buf0->phys;
+> +		image.phys1 = buf1->phys;
+> +		ipu_cpmem_set_image(priv->smfc_ch, &image);
+> +
+>  		burst_size = (outfmt->width & 0xf) ? 8 : 16;
+>
+>  		/*
+>
