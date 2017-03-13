@@ -1,101 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/1] media: platform: Renesas IMR driver
-Date: Mon, 13 Mar 2017 22:52:20 +0300
-Message-ID: <ba2b1127-0489-e299-f48e-9498aae2393f@cogentembedded.com>
-References: <20170211200207.273799464@cogentembedded.com>
- <20170222142515.i54xtgyvxysd2qsr@rob-hp-laptop>
- <cccaf6f7-0ff3-539c-5b60-e28858018b97@cogentembedded.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] spi: Add spi-bits-per-word binding.
+Date: Mon, 13 Mar 2017 20:57:36 +0100
+Message-ID: <CAMuHMdVLUrFnTY+swpxd0yUZ3iMR0_Wi1Dn05NQpYc_4=rA19Q@mail.gmail.com>
+References: <20170220153512.6563-1-adrian.fiergolski@cern.ch>
+ <20170221190830.xyubgimyc2w5p5v6@sirena.org.uk> <983e943b-30f2-7d80-294a-df29bca11738@cern.ch>
+ <20170313175504.mpwjxqbhc4yxk434@sirena.org.uk> <12c66ecf-8472-c108-d2b4-1d6c3a8e6e74@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cccaf6f7-0ff3-539c-5b60-e28858018b97-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <12c66ecf-8472-c108-d2b4-1d6c3a8e6e74-vJEk5272eHo@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adrian Fiergolski <Adrian.Fiergolski-vJEk5272eHo@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Hi Adrian,
 
-On 02/22/2017 10:05 PM, Sergei Shtylyov wrote:
+On Mon, Mar 13, 2017 at 7:12 PM, Adrian Fiergolski
+<Adrian.Fiergolski-vJEk5272eHo@public.gmane.org> wrote:
+> On 13.03.2017 at 18:55, Mark Brown wrote:
+>>> In my case, xilinx_spi_probe function (of spi-xilinx controller) sets
+>>> bits_per_word_mask of spi_master struct only to 16 bits support. Later,
+>>> xilinx_spi_probe calls of_register_spi_devices, which calls
+>>> of_register_spi_devices. The last one allocates an empty spi_device
+>>> struct and configures different options of the spi_device according to a
+>>> device tree. bits_per_word are not covered here (why?), thus it is left
+>>> 0 (value after allocation), which, by convention, means 8 bits support.
+>>> At the end, the same function (of_register_spi_device) calls
+>>> spi_add_device which finally calls spi_setup. The last call, according
+>>> to convention, changes bits_per_word to 8 and calls
+>>> __spi_validate_bits_per_word which fails, as master doesn't support 8
+>>> bit transmission. This fails registration sequence of a device driver.
+>>> As you see, the device driver doesn't have possibility to modify
+>>> bits_per_word during the registration process, thus it can't provide
+>>> support for such limited controllers.
+>> I can't see any way in which it follows from the above that it's a good
+>> idea to try to override bits per word settings in the device tree, that
+>> just wastes user time and is an abstraction failure.  We need better
+>> handling of defaults done purely in the kernel.
+> If enforcing by device tree specific for a given device driver SPI_CPHA,
+> SPIC_CPOL, SPI_CS_HIGH, max_speed_hz, etc. if fine form the abstraction
+> point of view, why it doesn't apply to bits_per_word ?
 
->>> From: Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>>
->>> The image renderer light extended 4 (IMR-LX4) or the distortion correction
->>> engine is a drawing processor with a simple  instruction system capable of
->>> referencing data on an external memory as 2D texture data and performing
->>> texture mapping and drawing with respect to any shape that is split into
->>> triangular objects.
->>>
->>> This V4L2 memory-to-memory device driver only supports image renderer found
->>> in the R-Car gen3 SoCs; the R-Car gen2 support  can be added later...
->>>
->>> [Sergei: merged 2 original patches, added the patch description, removed
->>> unrelated parts,  added the binding document, ported the driver to the
->>> modern kernel, renamed the UAPI header file and the guard  macros to match
->>> the driver name, extended the copyrights, fixed up Kconfig prompt/depends/
->>> help, made use of the BIT()/GENMASK() macros, sorted #include's, removed
->>> leading  dots and fixed grammar in the comments, fixed up indentation to
->>> use tabs where possible, renamed IMR_DLSR to IMR_DLPR to match the manual,
->>> separated the register offset/bit #define's, removed *inline* from .c file,
->>> fixed lines over 80 columns, removed useless parens, operators, casts,
->>> braces, variables, #include's, (commented out) statements, and even
->>> function, inserted empty line after desclaration, removed extra empty
->>> lines, reordered some local variable desclarations, removed calls to
->>> 4l2_err() on kmalloc() failure, fixed the error returned by imr_default(),
->>> avoided code duplication in the IRQ handler, used '__packed' for the UAPI
->>> structures, enclosed the macro parameters in parens, exchanged the values
->>> of IMR_MAP_AUTO[SD]G macros.]
->>>
->>> Signed-off-by: Konstantin Kozhevnikov
->>> <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>>
->>> ---
->>> This patch is against the 'media_tree.git' repo's 'master' branch.
->>>
->>>  Documentation/devicetree/bindings/media/rcar_imr.txt |   23
->>>  drivers/media/platform/Kconfig                       |   13
->>>  drivers/media/platform/Makefile                      |    1
->>>  drivers/media/platform/rcar_imr.c                    | 1923
->>> +++++++++++++++++++
->>>  include/uapi/linux/rcar_imr.h                        |   94
->>>  5 files changed, 2054 insertions(+)
->>>
->>> Index: media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
->>> ===================================================================
->>> --- /dev/null
->>> +++ media_tree/Documentation/devicetree/bindings/media/rcar_imr.txt
->>> @@ -0,0 +1,23 @@
->>> +Renesas R-Car Image Renderer (Distortion Correction Engine)
->>> +-----------------------------------------------------------
-[...]
->>> +
->>> +Required properties:
->>> +- compatible: must be "renesas,imr-lx4" for the image renderer light
->>> extended 4
->>> +  (IMR-LX4)  found in the R-Car gen3 SoCs;
->>
->> Needs an SoC specific compatible string too.
->
->    Strings, to be precise -- there are several SoCs but the IMR-LX4 core seems
-> the same among them. Well, if you say so...
->
->> The description is above, so you just need to list the compatible
->> strings.
->
->    There's (most probably) gonna be other versions of the IMR core supported,
-> (this core can be forund in gen2 SoCs too)...
+Because unlike polarity, phase, and speed, bits_per_word is a property
+of the communication protocol.
 
-    Seriously, I strongly doubt that we need the SoC specific compatibles in 
-this case -- they don't add any value and seem to only clutter the bindings 
-(more so with adding support for the other variants of the IMR core). The 
-manuals don't seem to have any real differences between the SoCs for any given 
-variant of the IMR core...
+E.g. you can talk to the same EEPROM using different polarities, phase, or
+speed, but bits_per_word is fixed.
 
-MBR, Sergei
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
