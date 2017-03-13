@@ -1,29 +1,76 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/3] arm: dts: imx7s: enable ocotp
-Date: Mon, 13 Mar 2017 20:47:24 +0800
-Message-ID: <20170313124721.GG3618@dragon>
-References: <1488350454-23860-1-git-send-email-peng.fan@nxp.com>
- <1488350454-23860-2-git-send-email-peng.fan@nxp.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v2 05/23] MAINTAINERS: Add file patterns for dove device
+ tree bindings
+Date: Mon, 13 Mar 2017 13:01:38 +0000
+Message-ID: <20170313130138.GV11350@io.lakedaemon.net>
+References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
+ <1489324627-19126-6-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1488350454-23860-2-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1489324627-19126-6-git-send-email-geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Fan <peng.fan@nxp.com>
-Cc: srinivas.kandagatla@linaro.org, maxime.ripard@free-electrons.com, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, van.freenix@gmail.com, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 01, 2017 at 02:40:53PM +0800, Peng Fan wrote:
-> Enable ocotp for i.mx7D/S.
-> Correct the clock entry and compatible string.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
+Hi Geert,
 
-Applied, thanks.
+On Sun, Mar 12, 2017 at 02:16:49PM +0100, Geert Uytterhoeven wrote:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+> 
+> v2:
+>   - No changes.
+> 
+> Impact on next-20170310:
+> 
+> +Jason Cooper <jason@lakedaemon.net> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+> +Andrew Lunn <andrew@lunn.ch> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+> +Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+> +Gregory Clement <gregory.clement@free-electrons.com> (maintainer:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>  Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+> +linux-arm-kernel@lists.infradead.org (moderated list:ARM/Marvell Dove/MV78xx0/Orion SOC support)
+>  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  linux-kernel@vger.kernel.org (open list)
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6428d3c82fce9670..ce461fefec6c9463 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1486,6 +1486,7 @@ M:	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>  M:	Gregory Clement <gregory.clement@free-electrons.com>
+>  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/soc/dove/
+
+I'm not opposed to the idea, but I'm not seeing how we can do this
+completely.  What you've added only covers dove soc bindings.  There's
+orion5x, kirkwood, and all the newer mvebu socs.  Not to mention a lot
+of IP blocks we care about that aren't SoC- or Marvell-specific.
+
+The dts files have a much more clear file pattern -> maintainer pairing.
+Perhaps we should make checkpatch smarter?  e.g. compatible strings
+found in changed binding docs are searched for in dts{i} files.  Hits
+are mapped to maintainers.
+
+thoughts?
+
+thx,
+
+Jason.
