@@ -1,85 +1,90 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Mon, 13 Mar 2017 12:08:14 +0100
-Message-ID: <cb64ae8e-2047-61fb-81bd-2373decbd45e@xs4all.nl>
-References: <20170311101408.272a9187@vento.lan>
- <20170311153229.yrdjmggb3p2suhdw@ihha.localdomain>
- <acfb5eca-ff00-6d57-339a-3322034cbdb3@gmail.com>
- <20170311184551.GD21222@n2100.armlinux.org.uk>
- <1f1b350a-5523-34bc-07b7-f3cd2d1fd4c1@gmail.com>
- <20170311185959.GF21222@n2100.armlinux.org.uk>
- <4917d7fb-2f48-17cd-aa2f-d54b0f19ed6e@gmail.com>
- <20170312073745.GI21222@n2100.armlinux.org.uk>
- <fba73c10-4b95-f0d2-e681-0b14ef1fbc1c@gmail.com>
- <734a1731-3fb6-b8cd-6806-5405bd21bf83@xs4all.nl>
- <20170313105842.GG21222@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170313105842.GG21222@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Mauro Carvalho Chehab <mchehab@s-opensource.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawng
+From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4] iio: accel: adxl345: Add support for buffered readings
+Date: Mon, 13 Mar 2017 19:11:33 +0800
+Message-ID: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2017 11:58 AM, Russell King - ARM Linux wrote:
-> On Mon, Mar 13, 2017 at 11:44:50AM +0100, Hans Verkuil wrote:
->> On 03/12/2017 06:56 PM, Steve Longerbeam wrote:
->>> In summary, I do like the media framework, it's a good abstraction of
->>> hardware pipelines. It does require a lot of system level knowledge to
->>> configure, but as I said that is a matter of good documentation.
->>
->> And the reason we went into this direction is that the end-users that use
->> these SoCs with complex pipelines actually *need* this functionality. Which
->> is also part of the reason why work on improved userspace support gets
->> little attention: they don't need to have a plugin that allows generic V4L2
->> applications to work (at least with simple scenarios).
-> 
-> If you stop inheriting controls from the capture sensor to the v4l2
-> capture device, then this breaks - generic v4l2 applications are not
-> going to be able to show the controls, because they're not visible at
-> the v4l2 capture device anymore.  They're only visible through the
-> subdev interfaces, which these generic applications know nothing about.
-> 
->> If you want to blame anyone for this, blame Nokia who set fire to
->> their linux-based phones and thus to the funding for this work.
-> 
-> No, I think that's completely unfair to Nokia.  If the MC approach is
-> the way you want to go, you should be thanking Nokia for the amount of
-> effort that they have put in to it, and recognising that it was rather
-> unfortunate that the market had changed, which meant that they weren't
-> able to continue.
-> 
-> No one has any right to require any of us to finish what we start
-> coding up in open source, unless there is a contractual obligation in
-> place.  That goes for Nokia too.
-> 
-> Nokia's decision had ramifications far and wide (resulting in knock on
-> effects in TI and further afield), so don't think for a moment I wasn't
-> affected by what happened in Nokia.  Even so, it was a decision for
-> Nokia to make, they had the right to make it, and we have no right to
-> attribute "blame" to Nokia for having made that decision.
-> 
-> To even suggest that Nokia should be blamed is absurd.
-> 
-> Open source gives rights to everyone.  It gives rights to contribute
-> and use, but it also gives rights to walk away without notice (remember
-> the "as is" and "no warranty" clauses?)
+Introduce the DATA_READY trigger and enable triggered buffering. Additional
+changes include introduction of functions set_mode, drdy and get_triple,
+allow either INT1/INT2 pin be used by specifying interrupt-names.
 
-Sorry, unfortunate choice of words. While it lasted they did great work.
-But the reason why MC development stopped for quite some time (esp. the
-work on userspace software) was because the funding from Nokia dried up.
+Triggered buffer was tested on both DATA_READY trigger and the hrtimer software
+trigger.
 
-Regards,
+~ # ls /sys/bus/iio/devices/
+iio:device0  trigger0     trigger1
+~ # ls /config/iio/triggers/hrtimer/
+t1
+~ # cat /sys/bus/iio/devices/trigger0/name
+t1
+~ # cat /sys/bus/iio/devices/trigger1/name
+adxl345-dev0
+~ # iio_generic_buffer -n adxl345 -t t1 -c 10 -l 20 -a
+iio device number being used is 0
+iio trigger number being used is 0
+Enabling all channels
+Enabling: in_accel_y_en
+Enabling: in_accel_x_en
+Enabling: in_timestamp_en
+Enabling: in_accel_z_en
+/sys/bus/iio/devices/iio:device0 t1
+0.421300 1.034100 9.613300 1489394979215985178 
+0.421300 0.995800 9.230300 1489394979226027141 
+0.421300 1.034100 9.575000 1489394979236031983 
+0.383000 1.072400 9.575000 1489394979245992337 
+0.421300 1.072400 9.575000 1489394979256031062 
+0.383000 1.110700 9.498400 1489394979266012473 
+0.421300 1.072400 9.460100 1489394979276021743 
+0.421300 1.034100 9.575000 1489394979286025189 
+0.383000 1.072400 9.536700 1489394979295988380 
+0.421300 1.072400 9.613300 1489394979306036861 
+Disabling: in_accel_y_en
+Disabling: in_accel_x_en
+Disabling: in_timestamp_en
+Disabling: in_accel_z_en
+~ # iio_generic_buffer -n adxl345 -t adxl345-dev0 -c 10 -l 20 -a
+iio device number being used is 0
+iio trigger number being used is 1
+Enabling all channels
+Enabling: in_accel_y_en
+Enabling: in_accel_x_en
+Enabling: in_timestamp_en
+Enabling: in_accel_z_en
+/sys/bus/iio/devices/iio:device0 adxl345-dev0
+0.383000 1.072400 9.575000 1489395043824672808 
+0.459600 1.072400 9.575000 1489395043864264458 
+0.421300 0.995800 9.575000 1489395043883851974 
+0.383000 1.072400 9.536700 1489395043905000622 
+0.459600 1.034100 9.575000 1489395043929645868 
+0.421300 1.072400 9.498400 1489395043946881648 
+0.459600 1.034100 9.613300 1489395043967234777 
+0.459600 1.034100 9.575000 1489395043987596905 
+0.383000 1.034100 9.613300 1489395044005969376 
+0.383000 1.110700 9.575000 1489395044026535007 
+Disabling: in_accel_y_en
+Disabling: in_accel_x_en
+Disabling: in_timestamp_en
+Disabling: in_accel_z_en
+~ # 
 
-	Hans
+Eva Rachel Retuya (4):
+  dt-bindings: iio: accel: adxl345: Add optional interrupt-names support
+  iio: accel: adxl345_core: Introduce set_mode, drdy & get_triple
+    functions
+  iio: accel: adxl345: Setup DATA_READY trigger
+  iio: accel: adxl345: Add support for triggered buffer
+
+ .../devicetree/bindings/iio/accel/adxl345.txt      |   4 +
+ drivers/iio/accel/Kconfig                          |   2 +
+ drivers/iio/accel/adxl345.h                        |   4 +-
+ drivers/iio/accel/adxl345_core.c                   | 313 +++++++++++++++++++--
+ drivers/iio/accel/adxl345_i2c.c                    |  14 +-
+ drivers/iio/accel/adxl345_spi.c                    |  10 +-
+ 6 files changed, 321 insertions(+), 26 deletions(-)
+
+-- 
+2.7.4
