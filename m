@@ -1,132 +1,107 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH net-next 1/4] dt-bindings: net: dsa: add mt7530 binding
-Date: Mon, 13 Mar 2017 23:46:45 +0800
-Message-ID: <1489420008-30795-2-git-send-email-sean.wang@mediatek.com>
-References: <1489420008-30795-1-git-send-email-sean.wang@mediatek.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V5 1/9] PM / Domains: Ignore domain-idle-states that are
+ not compatible
+Date: Mon, 13 Mar 2017 16:56:06 +0100
+Message-ID: <CAPDyKFqHzVJd0+rEPDmOp9BCtbVSRtvnobGemCnmTabmu6x=Sg@mail.gmail.com>
+References: <1488573695-106680-1-git-send-email-lina.iyer@linaro.org> <1488573695-106680-2-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489420008-30795-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1488573695-106680-2-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: Kevin Hilman <khilman@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Brendan Jackman <brendan.jackman@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Juri Lelli <Juri.Lelli@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 3 March 2017 at 21:41, Lina Iyer <lina.iyer@linaro.org> wrote:
+> domain-idle-states property may have phandles to idle state bindings
+> that may not be compatible with idle state definition defined in [1].
 
-Add device-tree binding for Mediatek MT7530 switch.
+I can't find the reference to [1] here, perhaps just point to the DT
+doc file path is better.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/net/dsa/mt7530.txt         | 94 ++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
+> Such phandles would just be ignored and not throw and error when read by
+> the domain core.
+>
+> Cc: <devicetree@vger.kernel.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-new file mode 100644
-index 0000000..0e50dbf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-@@ -0,0 +1,94 @@
-+Mediatek MT7530 Ethernet switch
-+================================
-+
-+Required properties:
-+
-+- compatible: Must be compatible = "mediatek,mt7530";
-+- #address-cells: Must be 1
-+- #size-cells: Must be 0
-+- mediatek,ethsys: Phandle to the syscon node that handles the reset.
-+- mediatek,ethernet: Phandle to the syscon node that Mediatek ethernet driver
-+	provides that handles the TRGMII setup used by the switch.
-+	See
-+	Documentation/devicetree/bindings/net/mediatek-net.txt for the detailed
-+	setup on mediatek ethernet.
-+- mediatek,mcm: String, should be "enabled" or "disabled" to indicate that
-+	either MT7530 is the part on multi-chip module belong to MT7623A has
-+	or the remotely standalone chip as the function MT7623N reference board
-+	provided for.
-+- core-supply: Phandle to the regulator node necessary for the core power.
-+- io-supply: Phandle to the regulator node necessary for the I/O power
-+	See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-+	for details for the regulator setup on these boards.
-+- mediatek,reset-pin: Phandle to the pinctrl node used for the reset. Which
-+	must be required if the property mediatek,mcm of specified as
-+	"disabled". See
-+	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt for
-+	the mediatek pintcrl setting for the details.
-+
-+Each port children node within ports container must have the following
-+mandatory properties:
-+- reg			: Port address described must be 6 for CPU port
-+			and from 0 to 5 for user ports.
-+
-+See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
-+required, optional properties and how the integrated switch subnodes must
-+be specified.
-+
-+Example:
-+
-+	&mdio0 {
-+		switch@0 {
-+			compatible = "mediatek,mt7530";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			mediatek,ethsys = <&ethsys>;
-+			mediatek,ethernet = <&eth>;
-+			mediatek,mcm = "enabled";
-+			core-supply = <&mt6323_vpa_reg>;
-+			io-supply = <&mt6323_vemc3v3_reg>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+				port@0 {
-+					reg = <0>;
-+					label = "lan0";
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "lan1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "lan2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "lan3";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "wan";
-+				};
-+
-+				port@6 {
-+					reg = <6>;
-+					label = "cpu";
-+					ethernet = <&eth>;
-+					phy-mode = "trgmii";
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+			};
-+		};
-+	};
--- 
-1.9.1
+With an updated change-log, you may add:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+
+Kind regards
+Uffe
+
+> ---
+>  Documentation/devicetree/bindings/power/power_domain.txt |  4 +++-
+>  drivers/base/power/domain.c                              | 16 +++++++++-------
+>  2 files changed, 12 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> index 723e1ad..940707d 100644
+> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> @@ -31,7 +31,9 @@ Optional properties:
+>
+>  - domain-idle-states : A phandle of an idle-state that shall be soaked into a
+>                  generic domain power state. The idle state definitions are
+> -                compatible with domain-idle-state specified in [1].
+> +                compatible with domain-idle-state specified in [1]. phandles
+> +                that are not compatible with domain-idle-state will be
+> +                ignored.
+>    The domain-idle-state property reflects the idle state of this PM domain and
+>    not the idle states of the devices or sub-domains in the PM domain. Devices
+>    and sub-domains have their own idle-states independent of the parent
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index e697dec..de3e489 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2079,11 +2079,6 @@ static int genpd_parse_state(struct genpd_power_state *genpd_state,
+>         int err;
+>         u32 residency;
+>         u32 entry_latency, exit_latency;
+> -       const struct of_device_id *match_id;
+> -
+> -       match_id = of_match_node(idle_state_match, state_node);
+> -       if (!match_id)
+> -               return -EINVAL;
+>
+>         err = of_property_read_u32(state_node, "entry-latency-us",
+>                                                 &entry_latency);
+> @@ -2132,6 +2127,7 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+>         int err, ret;
+>         int count;
+>         struct of_phandle_iterator it;
+> +       const struct of_device_id *match_id;
+>
+>         count = of_count_phandle_with_args(dn, "domain-idle-states", NULL);
+>         if (count <= 0)
+> @@ -2144,6 +2140,9 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+>         /* Loop over the phandles until all the requested entry is found */
+>         of_for_each_phandle(&it, err, dn, "domain-idle-states", NULL, 0) {
+>                 np = it.node;
+> +               match_id = of_match_node(idle_state_match, np);
+> +               if (!match_id)
+> +                       continue;
+>                 ret = genpd_parse_state(&st[i++], np);
+>                 if (ret) {
+>                         pr_err
+> @@ -2155,8 +2154,11 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+>                 }
+>         }
+>
+> -       *n = count;
+> -       *states = st;
+> +       *n = i;
+> +       if (!i)
+> +               kfree(st);
+> +       else
+> +               *states = st;
+>
+>         return 0;
+>  }
+> --
+> 2.7.4
+>
