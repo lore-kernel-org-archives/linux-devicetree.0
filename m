@@ -1,100 +1,32 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [RESEND PATCH 3/3] ARM64: dts: meson-gx: Prepend GX generic compatible like other nodes
-Date: Mon, 13 Mar 2017 10:10:52 +0100
-Message-ID: <1489396252-28696-4-git-send-email-narmstrong@baylibre.com>
-References: <1489396252-28696-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489396252-28696-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RESEND PATCH 0/3] ARM64: dts: meson-gx: Cleanup for common nodes
+Date: Mon, 13 Mar 2017 10:10:49 +0100
+Message-ID: <1489396252-28696-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: carlo@caione.org, khilman@baylibre.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Prepend the compatible strings with a GX generic name in nodes compatible with
-the GXBB HW and keep the same scheme as other nodes.
+Since we know the GXBB and GXL/GXM share more hardware, we can safely move
+the remaining peripheral nodes present in the GXBB dtsi to the common GX dtsi.
+The following patches are small cleanups and helps to uniform the GX common
+dtsi compatible scheme.
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Changes since original v1 at [1]:
+ - Add back missing changelog on patches 1 and 3
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 06d70bf..a010ab9 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -233,7 +233,7 @@
- 			};
- 
- 			i2c_A: i2c@8500 {
--				compatible = "amlogic,meson-gxbb-i2c";
-+				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
- 				reg = <0x0 0x08500 0x0 0x20>;
- 				interrupts = <GIC_SPI 21 IRQ_TYPE_EDGE_RISING>;
- 				#address-cells = <1>;
-@@ -279,7 +279,7 @@
- 			};
- 
- 			i2c_B: i2c@87c0 {
--				compatible = "amlogic,meson-gxbb-i2c";
-+				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
- 				reg = <0x0 0x087c0 0x0 0x20>;
- 				interrupts = <GIC_SPI 214 IRQ_TYPE_EDGE_RISING>;
- 				#address-cells = <1>;
-@@ -288,7 +288,7 @@
- 			};
- 
- 			i2c_C: i2c@87e0 {
--				compatible = "amlogic,meson-gxbb-i2c";
-+				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
- 				reg = <0x0 0x087e0 0x0 0x20>;
- 				interrupts = <GIC_SPI 215 IRQ_TYPE_EDGE_RISING>;
- 				#address-cells = <1>;
-@@ -297,7 +297,7 @@
- 			};
- 
- 			spifc: spi@8c80 {
--				compatible = "amlogic,meson-gxbb-spifc";
-+				compatible = "amlogic,meson-gx-spifc", "amlogic,meson-gxbb-spifc";
- 				reg = <0x0 0x08c80 0x0 0x80>;
- 				#address-cells = <1>;
- 				#size-cells = <0>;
-@@ -325,7 +325,7 @@
- 		};
- 
- 		sram: sram@c8000000 {
--			compatible = "amlogic,meson-gxbb-sram", "mmio-sram";
-+			compatible = "amlogic,meson-gx-sram", "amlogic,meson-gxbb-sram", "mmio-sram";
- 			reg = <0x0 0xc8000000 0x0 0x14000>;
- 
- 			#address-cells = <1>;
-@@ -333,12 +333,12 @@
- 			ranges = <0 0x0 0xc8000000 0x14000>;
- 
- 			cpu_scp_lpri: scp-shmem@0 {
--				compatible = "amlogic,meson-gxbb-scp-shmem";
-+				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13000 0x400>;
- 			};
- 
- 			cpu_scp_hpri: scp-shmem@200 {
--				compatible = "amlogic,meson-gxbb-scp-shmem";
-+				compatible = "amlogic,meson-gx-scp-shmem", "amlogic,meson-gxbb-scp-shmem";
- 				reg = <0x13400 0x400>;
- 			};
- 		};
-@@ -390,7 +390,7 @@
- 			};
- 
- 			ir: ir@580 {
--				compatible = "amlogic,meson-gxbb-ir";
-+				compatible = "amlogic,meson-gx-ir", "amlogic,meson-gxbb-ir";
- 				reg = <0x0 0x00580 0x0 0x40>;
- 				interrupts = <GIC_SPI 196 IRQ_TYPE_EDGE_RISING>;
- 				status = "disabled";
+[1] http://lkml.kernel.org/r/1489055948-10656-1-git-send-email-narmstrong@baylibre.com
+
+Neil Armstrong (3):
+  ARM64: dts: meson-gx: Finally move common nodes to GX dtsi
+  ARM64: dts: meson-gx: empty line cleanup
+  ARM64: dts: meson-gx: Prepend GX generic compatible like other nodes
+
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 39 ++++++++++++++++++++------
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 43 ++++++-----------------------
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  8 ++++++
+ 3 files changed, 47 insertions(+), 43 deletions(-)
+
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
