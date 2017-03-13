@@ -1,78 +1,73 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] dt-bindings: ata: add DT bindings for ahci-dm816 SATA
- controller
-Date: Mon, 13 Mar 2017 20:27:34 +0300
-Message-ID: <61ee23f2-734b-f793-0054-364ce553ae5e@cogentembedded.com>
-References: <1489422982-3461-1-git-send-email-bgolaszewski@baylibre.com>
- <1489422982-3461-2-git-send-email-bgolaszewski@baylibre.com>
- <2d0ede95-86d6-4d52-6cf5-91de35a29145@cogentembedded.com>
- <CAMpxmJUO65yZDSKhL2k1V1fYRFn3psfCtwokbsZAm61UzcdjSg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] spi: Add spi-bits-per-word binding.
+Date: Mon, 13 Mar 2017 17:55:04 +0000
+Message-ID: <20170313175504.mpwjxqbhc4yxk434@sirena.org.uk>
+References: <20170217101151.hyzmz5a4lgdy7p5m>
+ <20170220153512.6563-1-adrian.fiergolski@cern.ch>
+ <20170221190830.xyubgimyc2w5p5v6@sirena.org.uk>
+ <983e943b-30f2-7d80-294a-df29bca11738@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJUO65yZDSKhL2k1V1fYRFn3psfCtwokbsZAm61UzcdjSg@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, linux-ide@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="4mbz2wcpcfyrq34k"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <983e943b-30f2-7d80-294a-df29bca11738-vJEk5272eHo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adrian Fiergolski <Adrian.Fiergolski-vJEk5272eHo@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2017 08:08 PM, Bartosz Golaszewski wrote:
 
->>> Add DT bindings for the onboard SATA controller present on the DM816x
->>> SoCs.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> ---
->>>  Documentation/devicetree/bindings/ata/ahci-dm816.txt | 20
->>> ++++++++++++++++++++
->>>  1 file changed, 20 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>> b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>> new file mode 100644
->>> index 0000000..b87ed5a
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>> @@ -0,0 +1,20 @@
->>> +Device tree binding for the TI DM816 AHCI SATA Controller
->>> +---------------------------------------------------------
->>> +
->>> +Required properties:
->>> +  - compatible: must be "ti,dm816-ahci"
->>> +  - reg: physical base address and size of the register region used by
->>> +         the controller (as defined by the AHCI 1.1 standard)
->>> +  - interrupts: interrupt specifier (refer to the interrupt binding)
->>> +  - clocks: clock specifiers (refer to the clock binding); two clocks
->>
->>
->>    There should be a phandle preceding the clock specifier, all new such
->> props are different to the old "interrupts" (which had phandle in a separate
->> "interrupt-parent" prop).
+--4mbz2wcpcfyrq34k
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I'm afraid I don't understand - could you point me to an example?
+On Mon, Mar 13, 2017 at 06:25:53PM +0100, Adrian Fiergolski wrote:
+> Hi Mark,
 
-    Have you read Documentation/devicetree/bindings/clock/clock-bindings.txt, 
-on clock consumers?
-    In fact, your own example below doesn't have clock specifiers, only phandles.
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
 
->>> +            must be specified: the functional clock and an external
->>> +            reference clock
->>> +
->>> +Example:
->>> +
->>> +       sata: sata@4a140000 {
->>> +               compatible = "ti,dm816-ahci";
->>> +               reg = <0x4a140000 0xffff>;
-[...]
->>> +               interrupts = <16>;
->>> +               clocks = <&sysclk5_ck>, <&sata_refclk>;
->>> +       };
->>>
+> In my case, xilinx_spi_probe function (of spi-xilinx controller) sets
+> bits_per_word_mask of spi_master struct only to 16 bits support. Later,
+> xilinx_spi_probe calls of_register_spi_devices, which calls
+> of_register_spi_devices. The last one allocates an empty spi_device
+> struct and configures different options of the spi_device according to a
+> device tree. bits_per_word are not covered here (why?), thus it is left
+> 0 (value after allocation), which, by convention, means 8 bits support.
+> At the end, the same function (of_register_spi_device) calls
+> spi_add_device which finally calls spi_setup. The last call, according
+> to convention, changes bits_per_word to 8 and calls
+> __spi_validate_bits_per_word which fails, as master doesn't support 8
+> bit transmission. This fails registration sequence of a device driver.
+> As you see, the device driver doesn't have possibility to modify
+> bits_per_word during the registration process, thus it can't provide
+> support for such limited controllers.
 
-> Thanks,
-> Bartosz Golaszewski
+I can't see any way in which it follows from the above that it's a good
+idea to try to override bits per word settings in the device tree, that
+just wastes user time and is an abstraction failure.  We need better
+handling of defaults done purely in the kernel.
 
-MBR, Sergei
+--4mbz2wcpcfyrq34k
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAljG3PgACgkQJNaLcl1U
+h9CnqQf+I3Atg3XG/Zt+rvSjjfJtt1Ua66P2+CgfMewyyXr9oeYjgnJLyenn8yUe
+VP33Ohw0ZLbg7dGwNtKn2K0OeHJLNYDjTbM5Lr3/hcpPQJPj5KUPRCmCJjtof6Gj
+Z10hXKA115SjTjsANgJLuywcqb+zYJ9ZvMe+30FUeUvP69R5FxQQHJBMywz2m1Uu
+/u+YKxkMPkj4rx+Gx3pkGmItFSSQALVVgKUiv9Lv24ZY+yw4LR0AaJCynfXaH9sl
+BNP2iNkXEXdu7VDX4+eVtjV1NIU/rzdy762avRvVCJ8VGPtWOTIs7T2r6atLNupB
+Iy5lacb4PmW4mo18eHQfqMgWanVyQQ==
+=21bD
+-----END PGP SIGNATURE-----
+
+--4mbz2wcpcfyrq34k--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
