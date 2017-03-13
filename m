@@ -1,193 +1,43 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/3] ARM64: dts: meson-gx: Finally move common nodes to GX
- dtsi
-Date: Mon, 13 Mar 2017 10:03:27 +0100
-Message-ID: <5c0d7b17-f3f2-5cc6-ec71-41335dd0c86c@baylibre.com>
-References: <1489055948-10656-1-git-send-email-narmstrong@baylibre.com>
- <1489055948-10656-2-git-send-email-narmstrong@baylibre.com>
- <m24lz0d5l5.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <m24lz0d5l5.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: [PATCH] ARM: dts: am335x-baltos: disable EEE for Atheros 8035 PHY
+Date: Mon, 13 Mar 2017 10:03:14 +0100
+Message-ID: <1489395794-6243-1-git-send-email-yegorslists@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2017 01:23 AM, Kevin Hilman wrote:
-> Neil Armstrong <narmstrong@baylibre.com> writes:
-> 
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> 
-> Could use a bit more changelog here (probably what you have in the cover
-> letter.)
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-Oops, sent the wrong files...
+Though cpsw doesn't support EEE feature, Atheros 8035 provides
+automatic EEE support that is enabled by default. This causes
+occasional link drops when link partner also announces EEE support.
+These link drops occur on both 100Mbit/s and 1000Mbit/s speeds.
+So disable EEE advertising completely.
 
-Will resend the patchset with changelog for patches 1 and 3.
+Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ arch/arm/boot/dts/am335x-baltos.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Neil
+diff --git a/arch/arm/boot/dts/am335x-baltos.dtsi b/arch/arm/boot/dts/am335x-baltos.dtsi
+index efb5eae..d42b98f 100644
+--- a/arch/arm/boot/dts/am335x-baltos.dtsi
++++ b/arch/arm/boot/dts/am335x-baltos.dtsi
+@@ -371,6 +371,8 @@
+ 
+ 	phy1: ethernet-phy@1 {
+ 		reg = <7>;
++		eee-broken-100tx;
++		eee-broken-1000t;
+ 	};
+ };
+ 
+-- 
+2.1.4
 
-> 
-> Otherwise, looks good.  Thanks for the cleanup.
-> 
-> Kevin
-> 
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 24 ++++++++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 43 ++++++-----------------------
->>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  8 ++++++
->>  3 files changed, 40 insertions(+), 35 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> index 5d995f7..2d8dc6f 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -296,6 +296,14 @@
->>  				status = "disabled";
->>  			};
->>  
->> +			spifc: spi@8c80 {
->> +				compatible = "amlogic,meson-gxbb-spifc";
->> +				reg = <0x0 0x08c80 0x0 0x80>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				status = "disabled";
->> +			};
->> +
->>  			watchdog@98d0 {
->>  				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
->>  				reg = <0x0 0x098d0 0x0 0x10>;
->> @@ -342,6 +350,13 @@
->>  			#size-cells = <2>;
->>  			ranges = <0x0 0x0 0x0 0xc8100000 0x0 0x100000>;
->>  
->> +			clkc_AO: clock-controller@040 {
->> +				compatible = "amlogic,gx-aoclkc", "amlogic,gxbb-aoclkc";
->> +				reg = <0x0 0x00040 0x0 0x4>;
->> +				#clock-cells = <1>;
->> +				#reset-cells = <1>;
->> +			};
->> +
->>  			uart_AO: serial@4c0 {
->>  				compatible = "amlogic,meson-uart";
->>  				reg = <0x0 0x004c0 0x0 0x14>;
->> @@ -358,6 +373,15 @@
->>  				status = "disabled";
->>  			};
->>  
->> +			i2c_AO: i2c@500 {
->> +				compatible = "amlogic,meson-gx-i2c", "amlogic,meson-gxbb-i2c";
->> +				reg = <0x0 0x500 0x0 0x20>;
->> +				interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				status = "disabled";
->> +			};
->> +
->>  			pwm_AO_ab: pwm@550 {
->>  				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
->>  				reg = <0x0 0x00550 0x0 0x10>;
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> index 04b3324..c2c41aa 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> @@ -97,17 +97,6 @@
->>  	};
->>  };
->>  
->> -&cbus {
->> -	spifc: spi@8c80 {
->> -		compatible = "amlogic,meson-gxbb-spifc";
->> -		reg = <0x0 0x08c80 0x0 0x80>;
->> -		#address-cells = <1>;
->> -		#size-cells = <0>;
->> -		clocks = <&clkc CLKID_SPI>;
->> -		status = "disabled";
->> -	};
->> -};
->> -
->>  &ethmac {
->>  	clocks = <&clkc CLKID_ETH>,
->>  		 <&clkc CLKID_FCLK_DIV2>,
->> @@ -204,30 +193,6 @@
->>  			};
->>  		};
->>  	};
->> -
->> -	clkc_AO: clock-controller@040 {
->> -		compatible = "amlogic,gxbb-aoclkc";
->> -		reg = <0x0 0x00040 0x0 0x4>;
->> -		#clock-cells = <1>;
->> -		#reset-cells = <1>;
->> -	};
->> -
->> -	pwm_ab_AO: pwm@550 {
->> -		compatible = "amlogic,meson-gxbb-pwm";
->> -		reg = <0x0 0x0550 0x0 0x10>;
->> -		#pwm-cells = <3>;
->> -		status = "disabled";
->> -	};
->> -
->> -	i2c_AO: i2c@500 {
->> -		compatible = "amlogic,meson-gxbb-i2c";
->> -		reg = <0x0 0x500 0x0 0x20>;
->> -		interrupts = <GIC_SPI 195 IRQ_TYPE_EDGE_RISING>;
->> -		clocks = <&clkc CLKID_AO_I2C>;
->> -		#address-cells = <1>;
->> -		#size-cells = <0>;
->> -		status = "disabled";
->> -	};
->>  };
->>  
->>  &periphs {
->> @@ -482,6 +447,10 @@
->>  	clocks = <&clkc CLKID_I2C>;
->>  };
->>  
->> +&i2c_AO {
->> +	clocks = <&clkc CLKID_AO_I2C>;
->> +};
->> +
->>  &i2c_B {
->>  	clocks = <&clkc CLKID_I2C>;
->>  };
->> @@ -521,6 +490,10 @@
->>  	clock-names = "core", "clkin0", "clkin1";
->>  };
->>  
->> +&spifc {
->> +	clocks = <&clkc CLKID_SPI>;
->> +};
->> +
->>  &vpu {
->>  	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
->>  };
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
->> index 17cd546..37ed7a0 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
->> @@ -427,6 +427,10 @@
->>  	clocks = <&clkc CLKID_I2C>;
->>  };
->>  
->> +&i2c_AO {
->> +	clocks = <&clkc CLKID_AO_I2C>;
->> +};
->> +
->>  &i2c_B {
->>  	clocks = <&clkc CLKID_I2C>;
->>  };
->> @@ -466,6 +470,10 @@
->>  	clock-names = "core", "clkin0", "clkin1";
->>  };
->>  
->> +&spifc {
->> +	clocks = <&clkc CLKID_SPI>;
->> +};
->> +
->>  &vpu {
->>  	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
->>  };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
