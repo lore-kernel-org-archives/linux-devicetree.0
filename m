@@ -1,7 +1,7 @@
 From: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/4] iio: accel: adxl345: Add support for triggered buffer
-Date: Mon, 13 Mar 2017 19:11:37 +0800
-Message-ID: <1489403497-27849-5-git-send-email-eraretuya@gmail.com>
+Subject: [PATCH 3/4] iio: accel: adxl345: Setup DATA_READY trigger
+Date: Mon, 13 Mar 2017 19:11:36 +0800
+Message-ID: <1489403497-27849-4-git-send-email-eraretuya@gmail.com>
 References: <1489403497-27849-1-git-send-email-eraretuya@gmail.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1489403497-27849-1-git-send-email-eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,280 +10,279 @@ To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5m
 Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, daniel.baluta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, amsfield22-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-EWQkb/GNqlFyDzI6CaY1VQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Provide an all-axes read for triggered buffering.
-
 Signed-off-by: Eva Rachel Retuya <eraretuya-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/accel/Kconfig        |   2 +
- drivers/iio/accel/adxl345_core.c | 124 +++++++++++++++++++++++++++++++++++----
- drivers/iio/accel/adxl345_i2c.c  |   4 ++
- 3 files changed, 119 insertions(+), 11 deletions(-)
+ drivers/iio/accel/adxl345.h      |   4 +-
+ drivers/iio/accel/adxl345_core.c | 113 +++++++++++++++++++++++++++++++++++++--
+ drivers/iio/accel/adxl345_i2c.c  |  10 +++-
+ drivers/iio/accel/adxl345_spi.c  |  10 +++-
+ 4 files changed, 130 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index 15de262..45092da 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -7,6 +7,8 @@ menu "Accelerometers"
+diff --git a/drivers/iio/accel/adxl345.h b/drivers/iio/accel/adxl345.h
+index c1ddf39..f28a503 100644
+--- a/drivers/iio/accel/adxl345.h
++++ b/drivers/iio/accel/adxl345.h
+@@ -11,8 +11,8 @@
+ #ifndef _ADXL345_H_
+ #define _ADXL345_H_
  
- config ADXL345
- 	tristate
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
+-int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+-		       const char *name);
++int adxl345_core_probe(struct device *dev, struct regmap *regmap, int irq,
++		       const char *name, bool use_int2);
+ int adxl345_core_remove(struct device *dev);
  
- config ADXL345_I2C
- 	tristate "Analog Devices ADXL345 3-Axis Digital Accelerometer I2C Driver"
+ #endif /* _ADXL345_H_ */
 diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl345_core.c
-index 4b7055c..5df1e73 100644
+index 7eee31d..4b7055c 100644
 --- a/drivers/iio/accel/adxl345_core.c
 +++ b/drivers/iio/accel/adxl345_core.c
-@@ -13,8 +13,11 @@
+@@ -9,15 +9,19 @@
+  */
+ 
+ #include <linux/delay.h>
++#include <linux/interrupt.h>
  #include <linux/module.h>
  #include <linux/regmap.h>
  
-+#include <linux/iio/buffer.h>
  #include <linux/iio/iio.h>
- #include <linux/iio/trigger.h>
-+#include <linux/iio/triggered_buffer.h>
-+#include <linux/iio/trigger_consumer.h>
++#include <linux/iio/trigger.h>
  
  #include "adxl345.h"
  
-@@ -54,11 +57,20 @@
-  */
+ #define ADXL345_REG_DEVID		0x00
+ #define ADXL345_REG_POWER_CTL		0x2D
++#define ADXL345_REG_INT_ENABLE		0x2E
++#define ADXL345_REG_INT_MAP		0x2F
+ #define ADXL345_REG_INT_SOURCE		0x30
+ #define ADXL345_REG_DATA_FORMAT		0x31
+ #define ADXL345_REG_DATAX0		0x32
+@@ -39,6 +43,8 @@
+ 
+ #define ADXL345_DEVID			0xE5
+ 
++#define ADXL345_IRQ_NAME		"adxl345_event"
++
+ /*
+  * In full-resolution mode, scale factor is maintained at ~4 mg/LSB
+  * in all g ranges.
+@@ -49,7 +55,9 @@
  static const int adxl345_uscale = 38300;
  
-+enum adxl345_scan_index {
-+	ADXL345_IDX_X,
-+	ADXL345_IDX_Y,
-+	ADXL345_IDX_Z,
-+	ADXL345_IDX_TSTAMP,
-+};
-+
  struct adxl345_data {
- 	struct iio_trigger *drdy_trig;
++	struct iio_trigger *drdy_trig;
  	struct regmap *regmap;
-+	struct mutex lock; /* protect this data structure */
- 	bool drdy_trig_on;
++	bool drdy_trig_on;
  	u8 data_range;
-+	s16 buffer[8]; /* 3 x 16-bit channels + padding + 64-bit timestamp */
  };
  
- static int adxl345_set_mode(struct adxl345_data *data, u8 mode)
-@@ -75,12 +87,12 @@ static int adxl345_set_mode(struct adxl345_data *data, u8 mode)
- 	return 0;
+@@ -167,13 +175,57 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
+ 	return -EINVAL;
  }
  
--static int adxl345_get_triple(struct adxl345_data *data, void *buf)
-+static int adxl345_get_triple(struct adxl345_data *data)
- {
- 	struct device *dev = regmap_get_device(data->regmap);
- 	int ret;
- 
--	ret = regmap_bulk_read(data->regmap, ADXL345_REG_DATAX0, buf,
-+	ret = regmap_bulk_read(data->regmap, ADXL345_REG_DATAX0, data->buffer,
- 			       sizeof(__le16) * 3);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to read the data registers, %d\n", ret);
-@@ -120,12 +132,25 @@ static int adxl345_drdy(struct adxl345_data *data)
- 	.address = reg,							\
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
- 	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),		\
-+	.scan_index = ADXL345_IDX_##axis,				\
-+	.scan_type = {							\
-+		.sign = 's',						\
-+		.realbits = 13,						\
-+		.storagebits = 16,					\
-+		.endianness = IIO_LE,					\
-+	},								\
- }
- 
- static const struct iio_chan_spec adxl345_channels[] = {
- 	ADXL345_CHANNEL(ADXL345_REG_DATAX0, X),
- 	ADXL345_CHANNEL(ADXL345_REG_DATAY0, Y),
- 	ADXL345_CHANNEL(ADXL345_REG_DATAZ0, Z),
-+	IIO_CHAN_SOFT_TIMESTAMP(ADXL345_IDX_TSTAMP),
-+};
-+
-+static const unsigned long adxl345_scan_masks[] = {
-+	BIT(ADXL345_IDX_X) | BIT(ADXL345_IDX_Y) | BIT(ADXL345_IDX_Z),
-+	0
- };
- 
- static int adxl345_read_raw(struct iio_dev *indio_dev,
-@@ -133,31 +158,44 @@ static int adxl345_read_raw(struct iio_dev *indio_dev,
- 			    int *val, int *val2, long mask)
- {
- 	struct adxl345_data *data = iio_priv(indio_dev);
--	s16 regval[3];
- 	int ret;
- 
- 	switch (mask) {
- 	case IIO_CHAN_INFO_RAW:
-+		ret = iio_device_claim_direct_mode(indio_dev);
-+		if (ret)
-+			return ret;
-+
-+		mutex_lock(&data->lock);
- 		ret = adxl345_set_mode(data, ADXL345_POWER_CTL_MEASURE);
--		if (ret < 0)
-+		if (ret < 0) {
-+			mutex_unlock(&data->lock);
- 			return ret;
-+		}
- 		ret = adxl345_drdy(data);
--		if (ret < 0)
-+		if (ret < 0) {
-+			adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
-+			mutex_unlock(&data->lock);
- 			return ret;
-+		}
- 
--		ret = adxl345_get_triple(data, &regval);
--		if (ret < 0)
-+		ret = adxl345_get_triple(data);
-+		mutex_unlock(&data->lock);
-+		iio_device_release_direct_mode(indio_dev);
-+		if (ret < 0) {
-+			adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
- 			return ret;
-+		}
- 
- 		switch (chan->address) {
- 		case ADXL345_REG_DATAX0:
--			*val = regval[0];
-+			*val = data->buffer[ADXL345_IDX_X];
- 			break;
- 		case ADXL345_REG_DATAY0:
--			*val = regval[1];
-+			*val = data->buffer[ADXL345_IDX_Y];
- 			break;
- 		case ADXL345_REG_DATAZ0:
--			*val = regval[2];
-+			*val = data->buffer[ADXL345_IDX_Z];
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -194,6 +232,56 @@ static irqreturn_t adxl345_irq(int irq, void *p)
- 	return ret;
- }
- 
-+static irqreturn_t adxl345_trigger_handler(int irq, void *p)
++static irqreturn_t adxl345_irq(int irq, void *p)
 +{
-+	struct iio_poll_func *pf = p;
-+	struct iio_dev *indio_dev = pf->indio_dev;
++	struct iio_dev *indio_dev = p;
 +	struct adxl345_data *data = iio_priv(indio_dev);
-+	int ret;
++	int ret = IRQ_NONE;
++	u32 int_stat;
 +
-+	mutex_lock(&data->lock);
-+	ret = adxl345_get_triple(data);
-+	mutex_unlock(&data->lock);
++	ret = regmap_read(data->regmap, ADXL345_REG_INT_SOURCE, &int_stat);
 +	if (ret < 0)
-+		goto error;
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-+					   pf->timestamp);
-+error:
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int adxl345_triggered_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	struct adxl345_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	ret = iio_triggered_buffer_postenable(indio_dev);
-+	if (ret)
 +		return ret;
 +
-+	return adxl345_set_mode(data, ADXL345_POWER_CTL_MEASURE);
++	if (int_stat & ADXL345_INT_DATA_READY) {
++		iio_trigger_poll(data->drdy_trig);
++		ret = IRQ_HANDLED;
++	}
++
++	return ret;
 +}
 +
-+static int adxl345_triggered_buffer_predisable(struct iio_dev *indio_dev)
++static int adxl345_drdy_trigger_set_state(struct iio_trigger *trig, bool state)
 +{
++	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
 +	struct adxl345_data *data = iio_priv(indio_dev);
++	struct device *dev;
 +	int ret;
 +
-+	ret = adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
-+	if (ret)
++	dev = regmap_get_device(data->regmap);
++	ret = regmap_update_bits(data->regmap, ADXL345_REG_INT_ENABLE,
++				 ADXL345_INT_DATA_READY, (state ?
++				 ADXL345_INT_DATA_READY : 0));
++	if (ret < 0) {
++		dev_err(dev, "Failed to update INT_ENABLE bits\n");
 +		return ret;
++	}
++	data->drdy_trig_on = state;
 +
-+	return iio_triggered_buffer_predisable(indio_dev);
++	return ret;
 +}
 +
-+static const struct iio_buffer_setup_ops adxl345_buffer_setup_ops = {
-+	.postenable = adxl345_triggered_buffer_postenable,
-+	.predisable = adxl345_triggered_buffer_predisable,
++static const struct iio_trigger_ops adxl345_trigger_ops = {
++	.owner = THIS_MODULE,
++	.set_trigger_state = adxl345_drdy_trigger_set_state,
 +};
 +
- static int adxl345_drdy_trigger_set_state(struct iio_trigger *trig, bool state)
+ static const struct iio_info adxl345_info = {
+ 	.driver_module	= THIS_MODULE,
+ 	.read_raw	= adxl345_read_raw,
+ };
+ 
+-int adxl345_core_probe(struct device *dev, struct regmap *regmap,
+-		       const char *name)
++int adxl345_core_probe(struct device *dev, struct regmap *regmap, int irq,
++		       const char *name, bool use_int2)
  {
- 	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-@@ -278,12 +366,15 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap, int irq,
+ 	struct adxl345_data *data;
+ 	struct iio_dev *indio_dev;
+@@ -212,6 +264,20 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
  		return ret;
  	}
  
-+	mutex_init(&data->lock);
++	/*
++	 * Any bits set to 0 send their respective interrupts to the INT1 pin,
++	 * whereas bits set to 1 send their respective interrupts to the INT2
++	 * pin. Map all interrupts to the specified pin.
++	 */
++	if (!use_int2)
++		ret = regmap_write(data->regmap, ADXL345_REG_INT_MAP, 0x00);
++	else
++		ret = regmap_write(data->regmap, ADXL345_REG_INT_MAP, 0xFF);
++	if (ret < 0) {
++		dev_err(dev, "Failed to set up interrupts: %d\n", ret);
++		return ret;
++	}
 +
  	indio_dev->dev.parent = dev;
  	indio_dev->name = name;
  	indio_dev->info = &adxl345_info;
- 	indio_dev->modes = INDIO_DIRECT_MODE;
+@@ -219,7 +285,46 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap,
  	indio_dev->channels = adxl345_channels;
  	indio_dev->num_channels = ARRAY_SIZE(adxl345_channels);
-+	indio_dev->available_scan_masks = adxl345_scan_masks;
  
- 	if (irq > 0) {
- 		ret =
-@@ -312,14 +403,24 @@ int adxl345_core_probe(struct device *dev, struct regmap *regmap, int irq,
- 		}
- 	}
- 
-+	ret = iio_triggered_buffer_setup(indio_dev, iio_pollfunc_store_time,
-+					 adxl345_trigger_handler,
-+					 &adxl345_buffer_setup_ops);
+-	return iio_device_register(indio_dev);
++	if (irq > 0) {
++		ret =
++		devm_request_threaded_irq(dev, irq, NULL, adxl345_irq,
++					  IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
++					  ADXL345_IRQ_NAME, indio_dev);
++		if (ret < 0) {
++			dev_err(dev, "Failed to request irq: %d\n", irq);
++			return ret;
++		}
++
++		data->drdy_trig = devm_iio_trigger_alloc(dev, "%s-dev%d",
++							 indio_dev->name,
++							 indio_dev->id);
++		if (!data->drdy_trig)
++			return -ENOMEM;
++
++		data->drdy_trig->dev.parent = dev;
++		data->drdy_trig->ops = &adxl345_trigger_ops;
++		iio_trigger_set_drvdata(data->drdy_trig, indio_dev);
++
++		ret = iio_trigger_register(data->drdy_trig);
++		if (ret) {
++			dev_err(dev, "Failed to register trigger: %d\n", ret);
++			return ret;
++		}
++	}
++
++	ret = iio_device_register(indio_dev);
 +	if (ret < 0) {
-+		dev_err(dev, "iio_triggered_buffer_setup failed: %d\n", ret);
++		dev_err(dev, "iio_device_register failed: %d\n", ret);
 +		goto err_trigger_unregister;
 +	}
 +
- 	ret = iio_device_register(indio_dev);
- 	if (ret < 0) {
- 		dev_err(dev, "iio_device_register failed: %d\n", ret);
--		goto err_trigger_unregister;
-+		goto err_buffer_cleanup;
- 	}
++	return ret;
++
++err_trigger_unregister:
++	if (data->drdy_trig)
++		iio_trigger_unregister(data->drdy_trig);
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(adxl345_core_probe);
  
- 	return ret;
- 
-+err_buffer_cleanup:
-+	iio_triggered_buffer_cleanup(indio_dev);
- err_trigger_unregister:
- 	if (data->drdy_trig)
- 		iio_trigger_unregister(data->drdy_trig);
-@@ -334,6 +435,7 @@ int adxl345_core_remove(struct device *dev)
+@@ -229,6 +334,8 @@ int adxl345_core_remove(struct device *dev)
  	struct adxl345_data *data = iio_priv(indio_dev);
  
  	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
- 	if (data->drdy_trig)
- 		iio_trigger_unregister(data->drdy_trig);
++	if (data->drdy_trig)
++		iio_trigger_unregister(data->drdy_trig);
  
+ 	return adxl345_set_mode(data, ADXL345_POWER_CTL_STANDBY);
+ }
 diff --git a/drivers/iio/accel/adxl345_i2c.c b/drivers/iio/accel/adxl345_i2c.c
-index 8c791b8..1e0f071 100644
+index 05e1ec4..8c791b8 100644
 --- a/drivers/iio/accel/adxl345_i2c.c
 +++ b/drivers/iio/accel/adxl345_i2c.c
-@@ -30,6 +30,10 @@ static int adxl345_i2c_probe(struct i2c_client *client,
- 	bool use_int2 = false;
- 	int irq;
+@@ -13,6 +13,7 @@
  
-+	if (!i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_SMBUS_READ_I2C_BLOCK))
-+		return -EOPNOTSUPP;
-+
+ #include <linux/i2c.h>
+ #include <linux/module.h>
++#include <linux/of_irq.h>
+ #include <linux/regmap.h>
+ 
+ #include "adxl345.h"
+@@ -26,6 +27,8 @@ static int adxl345_i2c_probe(struct i2c_client *client,
+ 			     const struct i2c_device_id *id)
+ {
+ 	struct regmap *regmap;
++	bool use_int2 = false;
++	int irq;
+ 
  	regmap = devm_regmap_init_i2c(client, &adxl345_i2c_regmap_config);
  	if (IS_ERR(regmap)) {
- 		dev_err(&client->dev, "Error initializing i2c regmap: %ld\n",
+@@ -34,7 +37,12 @@ static int adxl345_i2c_probe(struct i2c_client *client,
+ 		return PTR_ERR(regmap);
+ 	}
+ 
+-	return adxl345_core_probe(&client->dev, regmap, id ? id->name : NULL);
++	irq = of_irq_get_byname(client->dev.of_node, "INT2");
++	if (irq == client->irq)
++		use_int2 = true;
++
++	return adxl345_core_probe(&client->dev, regmap, client->irq,
++				  id ? id->name : NULL, use_int2);
+ }
+ 
+ static int adxl345_i2c_remove(struct i2c_client *client)
+diff --git a/drivers/iio/accel/adxl345_spi.c b/drivers/iio/accel/adxl345_spi.c
+index 6d65819..731d675 100644
+--- a/drivers/iio/accel/adxl345_spi.c
++++ b/drivers/iio/accel/adxl345_spi.c
+@@ -9,6 +9,7 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/of_irq.h>
+ #include <linux/regmap.h>
+ #include <linux/spi/spi.h>
+ 
+@@ -27,6 +28,8 @@ static int adxl345_spi_probe(struct spi_device *spi)
+ {
+ 	const struct spi_device_id *id = spi_get_device_id(spi);
+ 	struct regmap *regmap;
++	bool use_int2 = false;
++	int irq;
+ 
+ 	/* Bail out if max_speed_hz exceeds 5 MHz */
+ 	if (spi->max_speed_hz > ADXL345_MAX_SPI_FREQ_HZ) {
+@@ -42,7 +45,12 @@ static int adxl345_spi_probe(struct spi_device *spi)
+ 		return PTR_ERR(regmap);
+ 	}
+ 
+-	return adxl345_core_probe(&spi->dev, regmap, id->name);
++	irq = of_irq_get_byname(spi->dev.of_node, "INT2");
++	if (irq == spi->irq)
++		use_int2 = true;
++
++	return adxl345_core_probe(&spi->dev, regmap, spi->irq, id->name,
++				  use_int2);
+ }
+ 
+ static int adxl345_spi_remove(struct spi_device *spi)
 -- 
 2.7.4
