@@ -1,93 +1,56 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Mon, 13 Mar 2017 21:29:55 +0000
-Message-ID: <20170313212955.GO21222@n2100.armlinux.org.uk>
-References: <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
- <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
- <20170221001332.GS21222@n2100.armlinux.org.uk>
- <25596b21-70de-5e46-f149-f9ce3a86ecb7@gmail.com>
- <1487667023.2331.8.camel@pengutronix.de>
- <20170313131647.GB10701@valkosipuli.retiisi.org.uk>
- <20170313132701.GJ21222@n2100.armlinux.org.uk>
- <1489413301.2288.53.camel@pengutronix.de>
- <27397114-7d77-2353-c526-bddd5f5297d9@gmail.com>
- <20170313210349.GD10701@valkosipuli.retiisi.org.uk>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/4] ARM: dts: dm8168-evm: add the external reference
+ clock for SATA
+Date: Mon, 13 Mar 2017 14:34:06 -0700
+Message-ID: <20170313213405.GX20572@atomide.com>
+References: <1489423399-3824-1-git-send-email-bgolaszewski@baylibre.com>
+ <1489423399-3824-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170313210349.GD10701-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglin
+In-Reply-To: <1489423399-3824-3-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Paul Walmsley <paul@pwsan.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 13, 2017 at 11:03:50PM +0200, Sakari Ailus wrote:
-> Hi Steve,
+* Bartosz Golaszewski <bgolaszewski@baylibre.com> [170313 09:45]:
+> This board has an external oscillator supplying the reference clock
+> signal for SATA. Its rate is fixed at 100Mhz. Add a corresponding
+> device tree node.
+
+Is this the 100MHz clock from PCIe? Just like on dm814x-evm as noted
+in the workaround thread below:
+
+http://e2e.ti.com/support/dsp/davinci_digital_media_processors/f/716/p/181083/671141
+
+Regards,
+
+Tony
+
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/boot/dts/dm8168-evm.dts | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> On Mon, Mar 13, 2017 at 11:06:22AM -0700, Steve Longerbeam wrote:
-> > I'm kinda in the middle on this topic. I agree with Sakari that
-> > frame rate can fluctuate, but that should only be temporary. If
-> > the frame rate permanently shifts from what a subdev reports via
-> > g_frame_interval, then that is a system problem. So I agree with
-> > Phillip and Russell that a link validation of frame interval still
-> > makes sense.
-> > 
-> > But I also have to agree with Sakari that a subdev that has no
-> > control over frame rate has no business implementing those ops.
-> > 
-> > And then I agree with Russell that for subdevs that do have control
-> > over frame rate, they would have to walk the graph to find the frame
-> > rate source.
-> > 
-> > So we're stuck in a broken situation: either the subdevs have to walk
-> > the graph to find the source of frame rate, or s_frame_interval
-> > would have to be mandatory and validated between pads, same as set_fmt.
+> diff --git a/arch/arm/boot/dts/dm8168-evm.dts b/arch/arm/boot/dts/dm8168-evm.dts
+> index 0bf55fa..f13e214 100644
+> --- a/arch/arm/boot/dts/dm8168-evm.dts
+> +++ b/arch/arm/boot/dts/dm8168-evm.dts
+> @@ -25,6 +25,12 @@
+>  		regulator-min-microvolt = <3300000>;
+>  		regulator-max-microvolt = <3300000>;
+>  	};
+> +
+> +	sata_refclk: fixedclock0 {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <100000000>;
+> +	};
+>  };
+>  
+>  &dm816x_pinmux {
+> -- 
+> 2.9.3
 > 
-> It's not broken; what we are missing though is documentation on how to
-> control devices that can change the frame rate i.e. presumably drop frames
-> occasionally.
-
-It's not about "presumably drop frames occasionally."  The definition
-of "occasional" is "occurring or appearing at irregular or infrequent
-intervals".  Another word which describes what you're saying would be
-"randomly drop frames" which would be a quite absurd "feature" to
-include in hardware.
-
-It's about _deterministically_ omitting frames from the capture.
-
-The hardware provides two controls:
-1. the size of a group of frames - between 1 and 5 frames
-2. select which frames within the group are dropped using a bitmask
-
-This gives a _regular_ pattern of dropped frames.
-
-The rate scaling is given by: hweight(bitmask) / group size.
-
-So, for example, if you're receiving a 50fps TV broadcast, and want to
-capture at 25fps, you can set the group size to 2, and set the frame
-drop to binary "01" or "10" - if it's interlaced, this would have the
-effect of selecting one field, or skipping every other frame if
-progressive.
-
-That's not "we'll occasionally drop some frames", that's frame rate
-scaling.  Just like you can scale the size of an image by omitting
-every other pixel and every other line, this hardware allows omitting
-every other frame or more.
-
-So, to configure this feature, CSI needs to know two bits of information:
-
-1. The _source_ frame rate.
-2. The desired _sink_ frame rate.
-
->From that, it can compute how many frames to drop, and size of the group.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
