@@ -1,32 +1,30 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RESEND PATCH 0/3] ARM64: dts: meson-gx: Cleanup for common nodes
-Date: Mon, 13 Mar 2017 10:10:49 +0100
-Message-ID: <1489396252-28696-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: carlo@caione.org, khilman@baylibre.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: r8a7796: add IMR-LX4 support
+Date: Mon, 13 Mar 2017 10:12:32 +0100
+Message-ID: <20170313091232.GA19296@verge.net.au>
+References: <20170220213129.182097269@cogentembedded.com>
+ <20170310093049.GH21820@verge.net.au>
+ <9d1d3e6d-ebe8-06a9-4d49-d62ee2f038bd@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9d1d3e6d-ebe8-06a9-4d49-d62ee2f038bd@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Since we know the GXBB and GXL/GXM share more hardware, we can safely move
-the remaining peripheral nodes present in the GXBB dtsi to the common GX dtsi.
-The following patches are small cleanups and helps to uniform the GX common
-dtsi compatible scheme.
+On Fri, Mar 10, 2017 at 03:28:22PM +0300, Sergei Shtylyov wrote:
+> On 03/10/2017 12:30 PM, Simon Horman wrote:
+> 
+> >>Describe the IMR-LX4 devices in the R8A7796 device tree.
+> >>
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >
+> >Thanks, queued up for v4.12.
+> 
+>    This is probably premature, given some uncertainty with the "compatible"
+> prop (I mean the SoC specific values).
 
-Changes since original v1 at [1]:
- - Add back missing changelog on patches 1 and 3
-
-[1] http://lkml.kernel.org/r/1489055948-10656-1-git-send-email-narmstrong@baylibre.com
-
-Neil Armstrong (3):
-  ARM64: dts: meson-gx: Finally move common nodes to GX dtsi
-  ARM64: dts: meson-gx: empty line cleanup
-  ARM64: dts: meson-gx: Prepend GX generic compatible like other nodes
-
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 39 ++++++++++++++++++++------
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 43 ++++++-----------------------
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  8 ++++++
- 3 files changed, 47 insertions(+), 43 deletions(-)
-
--- 
-1.9.1
+Thanks for letting me know, I will drop the patch for now.
