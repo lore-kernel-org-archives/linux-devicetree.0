@@ -1,89 +1,56 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
- getting of frame rates
-Date: Mon, 13 Mar 2017 11:06:22 -0700
-Message-ID: <27397114-7d77-2353-c526-bddd5f5297d9@gmail.com>
-References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
- <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
- <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
- <20170221001332.GS21222@n2100.armlinux.org.uk>
- <25596b21-70de-5e46-f149-f9ce3a86ecb7@gmail.com>
- <1487667023.2331.8.camel@pengutronix.de>
- <20170313131647.GB10701@valkosipuli.retiisi.org.uk>
- <20170313132701.GJ21222@n2100.armlinux.org.uk>
- <1489413301.2288.53.camel@pengutronix.de>
+From: Adrian Fiergolski <Adrian.Fiergolski-vJEk5272eHo@public.gmane.org>
+Subject: Re: [PATCH] spi: Add spi-bits-per-word binding.
+Date: Mon, 13 Mar 2017 19:12:13 +0100
+Message-ID: <12c66ecf-8472-c108-d2b4-1d6c3a8e6e74@cern.ch>
+References: <20170217101151.hyzmz5a4lgdy7p5m>
+ <20170220153512.6563-1-adrian.fiergolski@cern.ch>
+ <20170221190830.xyubgimyc2w5p5v6@sirena.org.uk>
+ <983e943b-30f2-7d80-294a-df29bca11738@cern.ch>
+ <20170313175504.mpwjxqbhc4yxk434@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1489413301.2288.53.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170313175504.mpwjxqbhc4yxk434-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/13/2017 06:55 AM, Philipp Zabel wrote:
-> On Mon, 2017-03-13 at 13:27 +0000, Russell King - ARM Linux wrote:
->> On Mon, Mar 13, 2017 at 03:16:48PM +0200, Sakari Ailus wrote:
->>> The vast majority of existing drivers do not implement them nor the user
->>> space expects having to set them. Making that mandatory would break existing
->>> user space.
->>>
->>> In addition, that does not belong to link validation either: link validation
->>> should only include static properties of the link that are required for
->>> correct hardware operation. Frame rate is not such property: hardware that
->>> supports the MC interface generally does not recognise such concept (with
->>> the exception of some sensors). Additionally, it is dynamic: the frame rate
->>> can change during streaming, making its validation at streamon time useless.
->>
->> So how do we configure the CSI, which can do frame skipping?
->>
->> With what you're proposing, it means it's possible to configure the
->> camera sensor source pad to do 50fps.  Configure the CSI sink pad to
->> an arbitary value, such as 30fps, and configure the CSI source pad to
->> 15fps.
->>
->> What you actually get out of the CSI is 25fps, which bears very little
->> with the actual values used on the CSI source pad.
->>
->> You could say "CSI should ask the camera sensor" - well, that's fine
->> if it's immediately downstream, but otherwise we'd need to go walking
->> down the graph to find something that resembles its source - there may
->> be mux and CSI2 interface subdev blocks in that path.  Or we just accept
->> that frame rates are completely arbitary and bear no useful meaning what
->> so ever.
+On 13.03.2017 at 18:55, Mark Brown wrote:
 >
-> Which would include the frame interval returned by VIDIOC_G_PARM on the
-> connected video device, as that gets its information from the CSI output
-> pad's frame interval.
->
+>> In my case, xilinx_spi_probe function (of spi-xilinx controller) sets
+>> bits_per_word_mask of spi_master struct only to 16 bits support. Later=
+,
+>> xilinx_spi_probe calls of_register_spi_devices, which calls
+>> of_register_spi_devices. The last one allocates an empty spi_device
+>> struct and configures different options of the spi_device according to=
+ a
+>> device tree. bits_per_word are not covered here (why?), thus it is lef=
+t
+>> 0 (value after allocation), which, by convention, means 8 bits support=
+=2E
+>> At the end, the same function (of_register_spi_device) calls
+>> spi_add_device which finally calls spi_setup. The last call, according=
 
-I'm kinda in the middle on this topic. I agree with Sakari that
-frame rate can fluctuate, but that should only be temporary. If
-the frame rate permanently shifts from what a subdev reports via
-g_frame_interval, then that is a system problem. So I agree with
-Phillip and Russell that a link validation of frame interval still
-makes sense.
+>> to convention, changes bits_per_word to 8 and calls
+>> __spi_validate_bits_per_word which fails, as master doesn't support 8
+>> bit transmission. This fails registration sequence of a device driver.=
 
-But I also have to agree with Sakari that a subdev that has no
-control over frame rate has no business implementing those ops.
+>> As you see, the device driver doesn't have possibility to modify
+>> bits_per_word during the registration process, thus it can't provide
+>> support for such limited controllers.
+> I can't see any way in which it follows from the above that it's a good=
 
-And then I agree with Russell that for subdevs that do have control
-over frame rate, they would have to walk the graph to find the frame
-rate source.
+> idea to try to override bits per word settings in the device tree, that=
 
-So we're stuck in a broken situation: either the subdevs have to walk
-the graph to find the source of frame rate, or s_frame_interval
-would have to be mandatory and validated between pads, same as set_fmt.
+> just wastes user time and is an abstraction failure.  We need better
+> handling of defaults done purely in the kernel.
+If enforcing by device tree specific for a given device driver SPI_CPHA,
+SPIC_CPOL, SPI_CS_HIGH, max_speed_hz, etc. if fine form the abstraction
+point of view, why it doesn't apply to bits_per_word ?
 
-Steve
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
