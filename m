@@ -1,78 +1,39 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: add Gateworks Ventana GW5904 support
-Date: Mon, 13 Mar 2017 06:20:59 -0700
-Message-ID: <CAJ+vNU1JAp3=bxrKY9cNac8=aEG4MMh01Cb6iwb-dV+gyNPn_g@mail.gmail.com>
-References: <1489178411-6559-1-git-send-email-tharvey@gateworks.com>
- <04584d61-f1e2-3722-1f13-ff133edc0c22@gmail.com> <CAJ+vNU1NcW=y_c-jJBnAaOozrzYJAekd9BEiMdd2=Bpx=Ng79Q@mail.gmail.com>
- <b105d1ea-7975-bd21-0aa0-762060ceb62a@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b105d1ea-7975-bd21-0aa0-762060ceb62a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/5] clk: meson: Fix GXBB and GXL/GXM GP0 PLL
+Date: Mon, 13 Mar 2017 14:26:39 +0100
+Message-ID: <1489411604-18700-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, carlo@caione.org, khilman@baylibre.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 5:20 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 03/10/2017 05:07 PM, Tim Harvey wrote:
->> On Fri, Mar 10, 2017 at 12:43 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> +     dsa {
->>>> +             compatible = "marvell,dsa";
->>>> +             #address-cells = <2>;
->>>> +             #size-cells = <0>;
->>>> +
->>>> +             dsa,ethernet = <&fec>;
->>>> +             dsa,mii-bus = <&mdio>;
->>>> +
->>>
->>> Please consider using the new binding for DSA switches, see:
->>>
->>> https://patchwork.kernel.org/patch/9493037/
->>>
->>
->> Hi Florian,
->>
->> I tried the new binding first, but haven't gotten it to work yet. Let
->> me make sure I understand what I should be doing.
->>
->> This is a MV88E6176 so I first need to add dt support for that to the
->> mv88e6xxx driver (which supports the device, just not via dt):
->> diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
->> index 03dc886..fd5c716 100644
->> --- a/drivers/net/dsa/mv88e6xxx/chip.c
->> +++ b/drivers/net/dsa/mv88e6xxx/chip.c
->> @@ -4602,6 +4602,10 @@ static const struct of_device_id mv88e6xxx_of_match[] = {
->>                 .data = &mv88e6xxx_table[MV88E6085],
->>         },
->>         {
->> +               .compatible = "marvell,mv88e6176",
->> +               .data = &mv88e6xxx_table[MV88E6176],
->> +       },
->> +       {
->>                 .compatible = "marvell,mv88e6190",
->>                 .data = &mv88e6xxx_table[MV88E6190],
->>         },
->>
->> Then I remove the old binding and add the new binding as such:
->>
->> &fec {
->>         pinctrl-names = "default";
->>         pinctrl-0 = <&pinctrl_enet>;
->>         phy-mode = "rgmii-id";
->>         status = "okay";
->
-> You most likely need to declare a fixed PHY for the FEC to be setting up
-> the link, speed and duplex?
+This patchset fixes support for the Amlogic GXBB then GXL/GXM embedded GP0 PLL.
 
-Florian,
+The current support is done via a very generic interface where only the
+N/M/OD parameters are changed in the control registers.
 
-Thanks - this appears to be the issue. I declared the fixed-phy down
-in the cpu port but I guess it needs to be done in the net device.
+But unlike the Fixed PLL, this PLL is not initialized by the bootloader or
+firmware, and needs some parameters to initialize and lock correctly.
 
-Tim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This patchset also adds the GXL variant compatible string which is already
+supported by the GXL and GXM DT nodes.
+
+Neil Armstrong (5):
+  clk: meson: Add support for parameters for specific PLLs
+  clk: meson-gxbb: Add GP0 PLL init parameters
+  clk: meson-gxbb: Add GXL/GXM GP0 Variant
+  clk: meson-gxbb: Expose GP0 dt-bindings clock id
+  dt-bindings: clock: gxbb-clkc: Add GXL compatible variant
+
+ .../bindings/clock/amlogic,gxbb-clkc.txt           |  3 +-
+ drivers/clk/meson/clk-pll.c                        | 52 +++++++++++-
+ drivers/clk/meson/clkc.h                           | 23 +++++
+ drivers/clk/meson/gxbb.c                           | 97 +++++++++++++++++++++-
+ drivers/clk/meson/gxbb.h                           |  4 +-
+ include/dt-bindings/clock/gxbb-clkc.h              |  1 +
+ 6 files changed, 173 insertions(+), 7 deletions(-)
+
+-- 
+1.9.1
+
