@@ -1,69 +1,59 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for TP-LINK Archer C5 V2
-Date: Mon, 13 Mar 2017 19:48:26 +0100
-Message-ID: <437d898d-b0f4-a4b5-cb51-8ea88ba7a35a@milecki.pl>
-References: <20170311121453.18534-1-zajec5@gmail.com>
- <20170312171032.GK15842@lunn.ch>
+From: Evgeniy Polyakov <zbr@ioremap.net>
+Subject: Re: [PATCH v2 21/23] MAINTAINERS: Add file patterns for w1 device tree bindings
+Date: Mon, 13 Mar 2017 22:08:53 +0300
+Message-ID: <427591489432133@web24o.yandex.ru>
+References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org> <1489324627-19126-22-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170312171032.GK15842@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>, Rafa?? Mi??ecki <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, John Crispin <john@phrozen.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489324627-19126-22-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2017 06:10 PM, Andrew Lunn wrote:
->> +	chosen {
->> +		bootargs = "console=ttyS0,115200 earlycon";
+Hi
+
+12.03.2017, 16:17, "Geert Uytterhoeven" <geert@linux-m68k.org>:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+
+I have no objection on this patch, but I do not really know who is responsible for this and which tree should it come into.
+If it is ok, Greg, please pull it into your one, or I see devicetree@ mail in copy... Stumbled
+
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Evgeniy Polyakov <zbr@ioremap.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
 >
-> Using bootargs to pass the serial settings has been deprecated for a
-> while. Please use stdout-path instead.
-
-I tried following patch with my SR400ac (I put Archer C5 aside for now).
-
-While serial console seems to work:
-1) I keep seeing boot log messages after:
-[    0.402309] 18000300.serial: ttyS0 at MMIO 0x18000300 (irq = 18, base_baud = 6250000) is a 16550
-2) Typed chars come back to my serial console
-
-I can't log in. I press ENTER but I'm not getting prompt for entering user name.
-
-Do you know why this change could have such an effect?
-
-
-diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-index 36b628b..a5442a9 100644
---- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-+++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
-@@ -17,7 +17,7 @@
-  	model = "SmartRG SR400ac";
-
-  	chosen {
--		bootargs = "console=ttyS0,115200 earlycon";
-+		bootargs = "earlycon";
-  	};
-
-  	memory {
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 4fbb089..66c6d2a 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -19,7 +19,7 @@
-  	interrupt-parent = <&gic>;
-
-  	chosen {
--		stdout-path = &uart0;
-+		stdout-path = "/chipcommonA/serial@0300:115200";
-  	};
-
-  	chipcommonA {
+> v2:
+>   - No changes.
+>
+> Impact on next-20170310:
+>
+> +Evgeniy Polyakov <zbr@ioremap.net> (maintainer:W1 DALLAS'S 1-WIRE BUS)
+>  Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  linux-kernel@vger.kernel.org (open list)
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 000342ab65971a8c..e80f00a3368587c7 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13518,6 +13518,7 @@ F: drivers/mmc/host/vub300.c
+>  W1 DALLAS'S 1-WIRE BUS
+>  M: Evgeniy Polyakov <zbr@ioremap.net>
+>  S: Maintained
+> +F: Documentation/devicetree/bindings/w1/
+>  F: Documentation/w1/
+>  F: drivers/w1/
+>
+> --
+> 2.7.4
