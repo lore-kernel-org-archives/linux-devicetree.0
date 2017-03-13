@@ -1,34 +1,34 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] ARM: dts: dm8168-evm: add SATA node
-Date: Mon, 13 Mar 2017 14:15:21 -0700
-Message-ID: <20170313211520.GW20572@atomide.com>
-References: <1489423399-3824-1-git-send-email-bgolaszewski@baylibre.com>
- <1489423399-3824-4-git-send-email-bgolaszewski@baylibre.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH V7 5/7] ACPI: Delay the enumeration on the devices whose  dependency has not met
+Date: Mon, 13 Mar 2017 22:24:34 +0100
+Message-ID: <4600523.rWNiWKrYZC@aspire.rjw.lan>
+References: <1489372963-9000-1-git-send-email-yuanzhichang@hisilicon.com> <1489372963-9000-6-git-send-email-yuanzhichang@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1489423399-3824-4-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Paul Walmsley <paul@pwsan.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1489372963-9000-6-git-send-email-yuanzhichang@hisilicon.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-* Bartosz Golaszewski <bgolaszewski@baylibre.com> [170313 09:45]:
-> Add the SATA controller node to the dm8168-evm device tree.
-> --- a/arch/arm/boot/dts/dm816x.dtsi
-> +++ b/arch/arm/boot/dts/dm816x.dtsi
-> @@ -293,6 +293,13 @@
->  			phy-handle = <&phy1>;
->  		};
->  
-> +		sata: sata@4a140000 {
-> +			compatible = "ti,dm816-ahci";
-> +			reg = <0x4a140000 0xffff>;
-> +			interrupts = <16>;
-> +			ti,hwmods = "sata";
-> +		};
+On Monday, March 13, 2017 10:42:41 AM zhichang.yuan wrote:
+> In commit 40e7fcb1929(ACPI: Add _DEP support to fix battery issue on Asus
+> T100TA), the '_DEP' was supported to solve the dependency of Asus battery. But
+> this patch is specific to Asus battery device.
+> In the real world, there are other devices which need the dependency to play the
+> role on the enumeration order. For example, all the Hip06 LPC
+> periperals(IPMI-BT, uart, etc) must be scanned after the LPC host driver
+> finished the probing. So, it makes sense to add a checking whether the ACPI
+> device meet all the dependencies during its enumeration slot, if not, the
+> enumeration will be delayed till all dependency master finish their work.
+> 
+> This patch adds the dependency checking in ACPI enumeration, also the
+> corresponding handling to retrigger the Hip06 LPC peripherals' scanning.
 
-The size should be 0x10000 instead of 0xffff, right?
+AFAICS, _DEP is generally abused in the wild and cannot be made generic.  Sorry.
 
-Tony
+Thanks,
+Rafael
+
