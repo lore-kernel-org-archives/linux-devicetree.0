@@ -1,107 +1,40 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V5 1/9] PM / Domains: Ignore domain-idle-states that are
- not compatible
-Date: Mon, 13 Mar 2017 16:56:06 +0100
-Message-ID: <CAPDyKFqHzVJd0+rEPDmOp9BCtbVSRtvnobGemCnmTabmu6x=Sg@mail.gmail.com>
-References: <1488573695-106680-1-git-send-email-lina.iyer@linaro.org> <1488573695-106680-2-git-send-email-lina.iyer@linaro.org>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [RFC] serdev binding for QCA7000 UART driver
+Date: Mon, 13 Mar 2017 17:10:20 +0100
+Message-ID: <5177ec94-9ed5-a096-9877-05a69cc5b5f0@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1488573695-106680-2-git-send-email-lina.iyer@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lina Iyer <lina.iyer@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Andy Gross <andy.gross@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Brendan Jackman <brendan.jackman@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Juri Lelli <Juri.Lelli@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3 March 2017 at 21:41, Lina Iyer <lina.iyer@linaro.org> wrote:
-> domain-idle-states property may have phandles to idle state bindings
-> that may not be compatible with idle state definition defined in [1].
+|Hi Rob, since serdev has been merged, i'm currently working on a
+suitable ethernet driver for the QCA7000 [1]. In order to provide a plug
+and play solution for the network interface i suggest the following
+binding, which uses common properties for UART configuration: * Qualcomm
+QCA7000 (Ethernet over UART protocol) Note: The QCA7000 is also useable
+as a UART slave device. Required properties: - compatible : Should be
+"qca,qca7000-uart" Optional properties: - local-mac-address : 6 bytes,
+specifies MAC address - current-speed : Specifies current serial device
+speed in bits per second (default = 115200) - data-bits : Specifies
+number of data bits (default = 8) - use-parity : If present, this
+enables the parity error detection (default = off) - odd-parity : If
+present, this specifies that the parity of each character must be odd
+(default = even) Example: /* Freescale i.MX28 UART */ auart0:
+serial@8006a000 { compatible = "fsl,imx28-auart", "fsl,imx23-auart"; reg
+= <0x8006a000 0x2000>; pinctrl-names = "default"; pinctrl-0 =
+<&auart0_2pins_a>; status = "okay"; qca7000: ethernet { compatible =
+"qca,qca7000-uart"; local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+current-speed = <38400>; data-bits = <8>; use-parity; odd-parity; }; };
+Is it okay for you or do you want a different kind of configuration? Are
+there any plans for parity handling? Thanks Stefan |
 
-I can't find the reference to [1] here, perhaps just point to the DT
-doc file path is better.
+[1] - https://lwn.net/Articles/701225/
 
-> Such phandles would just be ignored and not throw and error when read by
-> the domain core.
->
-> Cc: <devicetree@vger.kernel.org>
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
-
-With an updated change-log, you may add:
-
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Kind regards
-Uffe
-
-> ---
->  Documentation/devicetree/bindings/power/power_domain.txt |  4 +++-
->  drivers/base/power/domain.c                              | 16 +++++++++-------
->  2 files changed, 12 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> index 723e1ad..940707d 100644
-> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -31,7 +31,9 @@ Optional properties:
->
->  - domain-idle-states : A phandle of an idle-state that shall be soaked into a
->                  generic domain power state. The idle state definitions are
-> -                compatible with domain-idle-state specified in [1].
-> +                compatible with domain-idle-state specified in [1]. phandles
-> +                that are not compatible with domain-idle-state will be
-> +                ignored.
->    The domain-idle-state property reflects the idle state of this PM domain and
->    not the idle states of the devices or sub-domains in the PM domain. Devices
->    and sub-domains have their own idle-states independent of the parent
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index e697dec..de3e489 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -2079,11 +2079,6 @@ static int genpd_parse_state(struct genpd_power_state *genpd_state,
->         int err;
->         u32 residency;
->         u32 entry_latency, exit_latency;
-> -       const struct of_device_id *match_id;
-> -
-> -       match_id = of_match_node(idle_state_match, state_node);
-> -       if (!match_id)
-> -               return -EINVAL;
->
->         err = of_property_read_u32(state_node, "entry-latency-us",
->                                                 &entry_latency);
-> @@ -2132,6 +2127,7 @@ int of_genpd_parse_idle_states(struct device_node *dn,
->         int err, ret;
->         int count;
->         struct of_phandle_iterator it;
-> +       const struct of_device_id *match_id;
->
->         count = of_count_phandle_with_args(dn, "domain-idle-states", NULL);
->         if (count <= 0)
-> @@ -2144,6 +2140,9 @@ int of_genpd_parse_idle_states(struct device_node *dn,
->         /* Loop over the phandles until all the requested entry is found */
->         of_for_each_phandle(&it, err, dn, "domain-idle-states", NULL, 0) {
->                 np = it.node;
-> +               match_id = of_match_node(idle_state_match, np);
-> +               if (!match_id)
-> +                       continue;
->                 ret = genpd_parse_state(&st[i++], np);
->                 if (ret) {
->                         pr_err
-> @@ -2155,8 +2154,11 @@ int of_genpd_parse_idle_states(struct device_node *dn,
->                 }
->         }
->
-> -       *n = count;
-> -       *states = st;
-> +       *n = i;
-> +       if (!i)
-> +               kfree(st);
-> +       else
-> +               *states = st;
->
->         return 0;
->  }
-> --
-> 2.7.4
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
