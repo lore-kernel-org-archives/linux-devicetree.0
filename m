@@ -1,60 +1,66 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCHv2 4/5] mfd: altr_a10sr: Add Arria10 DevKit Reset
- Controller
-Date: Mon, 13 Mar 2017 15:42:12 +0100
-Message-ID: <1489416132.2288.70.camel@pengutronix.de>
-References: <1487783419-10912-1-git-send-email-thor.thayer@linux.intel.com>
-         <1487783419-10912-5-git-send-email-thor.thayer@linux.intel.com>
-         <1488292941.2288.55.camel@pengutronix.de>
-         <31abf03e-a3e6-70ef-58f9-dc2950da5ee7@linux.intel.com>
+Subject: Re: [PATCH v2 1/9] gpu: ipu-v3: add DT binding for the Prefetch
+ Resolve Engine
+Date: Mon, 13 Mar 2017 15:45:10 +0100
+Message-ID: <1489416310.2288.73.camel@pengutronix.de>
+References: <20170308111321.3035-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <31abf03e-a3e6-70ef-58f9-dc2950da5ee7@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170308111321.3035-1-l.stach@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-03-09 at 10:03 -0600, Thor Thayer wrote:
-> Hi Lee,
-> 
-> On 02/28/2017 08:42 AM, Philipp Zabel wrote:
-> > On Wed, 2017-02-22 at 11:10 -0600, thor.thayer@linux.intel.com wrote:
-> >> From: Thor Thayer <thor.thayer@linux.intel.com>
-> >>
-> >> Add Peripheral PHY Reset Controller to the Arria10
-> >> Development Kit System Resource Chip's MFD.
-> >>
-> >> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-> >> ---
-> >> v2  Changes to commit header & body for clarification.
-> >> ---
-> >>  drivers/mfd/altera-a10sr.c | 4 ++++
-> >>  1 file changed, 4 insertions(+)
-> >>
-> >> diff --git a/drivers/mfd/altera-a10sr.c b/drivers/mfd/altera-a10sr.c
-> >> index 06e1f7f..96e7d2c 100644
-> >> --- a/drivers/mfd/altera-a10sr.c
-> >> +++ b/drivers/mfd/altera-a10sr.c
-> >> @@ -33,6 +33,10 @@
-> >>  		.name = "altr_a10sr_gpio",
-> >>  		.of_compatible = "altr,a10sr-gpio",
-> >>  	},
-> >> +	{
-> >> +		.name = "altr_a10sr_reset",
-> >> +		.of_compatible = "altr,a10sr-reset",
-> >> +	},
-> >>  };
-> >>
-> >>  static bool altr_a10sr_reg_readable(struct device *dev, unsigned int reg)
-> >
-> > Lee, should this be merged through the reset tree? Otherwise I'll just
-> > pick up patches 1-3.
-
-I have picked up patches 1-3, but I only just noticed that patch 1 also
-would require Lee's ack for me to submit this.
-
-regards
-Philipp
+T24gV2VkLCAyMDE3LTAzLTA4IGF0IDEyOjEzICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPiBU
+aGUgUHJlZmV0Y2ggUmVzb2x2ZSBFbmdpbmUgaXMgYSBwcmVmZXRjaCBhbmQgdGlsZSByZXNvbHZl
+IGVuZ2luZQo+IHdoaWNoIHByZWZldGNoZXMgZGlzcGxheSBkYXRhIGZyb20gRFJBTSB0byBhbiBp
+bnRlcm5hbCBTUkFNIHJlZ2lvbi4KPiBJdCBoYXMgYSBzaW5nbGUgY2xvY2sgZm9yIGNvbmZpZ3Vy
+YXRpb24gcmVnaXN0ZXIgYWNjZXNzIGFuZCB0aGUKPiBmdW5jdGlvbmFsIHVuaXRzLiBBIHNpbmds
+ZSBzaGFyZWQgaW50ZXJydXB0IGlzIHVzZWQgZm9yIHN0YXR1cyBhbmQKPiBlcnJvciBzaWduYWxp
+bmcuCj4gCj4gVGhlIG9ubHkgZXh0ZXJuYWwgZGVwZW5kZW5jeSBpcyB0aGUgU1JBTSByZWdpb24g
+dG8gdXNlIGZvciB0aGUKPiBwcmVmZXRjaCBkb3VibGUgYnVmZmVyLgo+IAo+IFNpZ25lZC1vZmYt
+Ynk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPgoKSSBoYXZlIHBpY2tlZCB1
+cCB0aGlzIHNlcmllcy4gUm9iLCBhcmUgeW91IG9rIHdpdGggdGhlIGJpbmRpbmdzIGluIHRoaXMK
+cGF0Y2g/IElmIHNvLCBJJ2xsIGluY2x1ZGUgaXQgaW4gdGhlIG5leHQgcHVsbCByZXF1ZXN0LgoK
+cmVnYXJkcwpQaGlsaXBwCgo+IC0tLQo+IHYyOgo+IC0gY2hhbmdlIFNSQU0gcGhhbmRsZSB0byAi
+ZnNsLGlyYW0iLCBhcyB1c2VkIGluIG90aGVyIGlteCBEVCBiaW5kaW5ncwo+IC0gZHJvcCBsZWFk
+aW5nIDAgaW4gZXhhbXBsZQo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlt
+eC1kcm0udHh0ICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxl
+IGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9mc2wtaW14LWRybS50eHQK
+PiBpbmRleCA5NzFjM2VlZGIxYzcuLjcwYWU1MzM1ZDFlMyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlteC1kcm0udHh0Cj4g
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2ZzbC1p
+bXgtZHJtLnR4dAo+IEBAIC01Myw2ICs1MywzMiBAQCBpcHU6IGlwdUAxODAwMDAwMCB7Cj4gIAl9
+Owo+ICB9Owo+ICAKPiArRnJlZXNjYWxlIGkuTVggUFJFIChQcmVmZXRjaCBSZXNvbHZlIEVuZ2lu
+ZSkKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4g
+K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmc2wsaW14
+NnFwLXByZSIKPiArLSByZWc6IHNob3VsZCBiZSByZWdpc3RlciBiYXNlIGFuZCBsZW5ndGggYXMg
+ZG9jdW1lbnRlZCBpbiB0aGUKPiArICBkYXRhc2hlZXQKPiArLSBjbG9ja3MgOiBwaGFuZGxlIHRv
+IHRoZSBQUkUgYXhpIGNsb2NrIGlucHV0LCBhcyBkZXNjcmliZWQKPiArICBpbiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0IGFuZAo+ICsg
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQu
+Cj4gKy0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAiYXhpIgo+ICstIGludGVycnVwdHM6IHNob3Vs
+ZCBjb250YWluIHRoZSBQUkUgaW50ZXJydXB0Cj4gKy0gZnNsLGlyYW06IHBoYW5kbGUgcG9pbnRp
+bmcgdG8gdGhlIG1taW8tc3JhbSBkZXZpY2Ugbm9kZSwgdGhhdCBzaG91bGQgYmUKPiArICB1c2Vk
+IGZvciB0aGUgUFJFIFNSQU0gZG91YmxlIGJ1ZmZlci4KPiArCj4gK2V4YW1wbGU6Cj4gKwo+ICtw
+cmVAMjFjODAwMCB7Cj4gKwljb21wYXRpYmxlID0gImZzbCxpbXg2cXAtcHJlIjsKPiArCXJlZyA9
+IDwweDAyMWM4MDAwIDB4MTAwMD47Cj4gKwlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOTAgSVJRX1RZ
+UEVfRURHRV9SSVNJTkc+Owo+ICsJY2xvY2tzID0gPCZjbGtzIElNWDZRRExfQ0xLX1BSRTA+Owo+
+ICsJY2xvY2stbmFtZXMgPSAiYXhpIjsKPiArCWZzbCxpcmFtID0gPCZvY3JhbTI+Owo+ICt9Owo+
+ICsKPiAgUGFyYWxsZWwgZGlzcGxheSBzdXBwb3J0Cj4gID09PT09PT09PT09PT09PT09PT09PT09
+PQo+ICAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
