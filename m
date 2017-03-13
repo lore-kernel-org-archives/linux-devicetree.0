@@ -1,71 +1,203 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: ata: add DT bindings for ahci-dm816 SATA
- controller
-Date: Mon, 13 Mar 2017 19:53:00 +0300
-Message-ID: <2d0ede95-86d6-4d52-6cf5-91de35a29145@cogentembedded.com>
-References: <1489422982-3461-1-git-send-email-bgolaszewski@baylibre.com>
- <1489422982-3461-2-git-send-email-bgolaszewski@baylibre.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [v3 3/5] coresight: add support for debug module
+Date: Mon, 13 Mar 2017 10:56:00 -0600
+Message-ID: <20170313165600.GB32431@linaro.org>
+References: <1488520809-31670-4-git-send-email-leo.yan@linaro.org>
+ <011fdac0-59bf-b539-2de3-0b59a41bc922@arm.com>
+ <20170309175915.GA964@leoy-linaro>
+ <3f27efee-3b63-81fd-eb96-73fd7e6f5e92@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489422982-3461-2-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3f27efee-3b63-81fd-eb96-73fd7e6f5e92-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Cc: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Fri, Mar 10, 2017 at 02:29:53PM +0000, Suzuki K Poulose wrote:
+> On 09/03/17 17:59, Leo Yan wrote:
+> >Hi Suziku,
+> >>The problem is, it is not guaranteed that the EDPCSR_Hi, EDCIDSR & EDVIDSR are
+> >>updated as a side effect of a memory mapped access (which is what we do here) to the
+> >>EDPCSR_Lo.
+> >>
+> >>Section H.7.1.2 : Reads of EDPCSRs (in ARM DDI 0487A.k) :
+> >>
+> >>"The indirect writes to EDCIDSR, EDVIDSR, and EDPCSRhi might not occur for a memory-mapped access
+> >>to the external debug interface. For more information, see Memory-mapped accesses to the external debug
+> >>interface on page H8-4968."
+> >>
+> >>So we cannot really rely on the values in EDVIDSR which we use to make further decisions. So I
+> >>am wondering if this is really guranteed to be useful.
+> >
+> >So this is caused by Software lock is locked?
+> >
+> >Section H8.4.1:
+> >
+> >"Reads and writes have no side-effects. A side-effect is where a
+> >direct read or a direct write of a register creates
+> >an indirect write of the same or another register. When the Software
+> >Lock is locked, the indirect write does
+> >not occur."
+> 
+> Yes, thats correct, further :
+> 
+> Section H9.2.32: EDPCSR
+> 
+> "For a read of EDPCSRlo from the memory-mapped interface, if EDLSR.SLK == 1, meaning
+> the Software Lock is locked, then the access has no side-effects. That is, EDCIDSR,
+> EDVIDSR, and EDPCSRhi are unchanged."
+> 
+> And since we do a CS_UNLOCK, that should be fine. Please ignore my comment.
+> 
+> >>>diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+> >>>index 130cb21..3ed651e 100644
+> >>>--- a/drivers/hwtracing/coresight/Kconfig
+> >>>+++ b/drivers/hwtracing/coresight/Kconfig
+> >>>@@ -89,4 +89,14 @@ config CORESIGHT_STM
+> >>>	  logging useful software events or data coming from various entities
+> >>>	  in the system, possibly running different OSs
+> >>>
+> >>>+config CORESIGHT_DEBUG
+> >>
+> >>To make it more specific, may be CORESIGHT_CPU_DEBUG ?
+> >
+> >Will fix.
+> >
+> >>>+	bool "CoreSight debug driver"
+> >>
+> >>"Coresight CPU Debug driver"
+> >
+> >Will fix.
+> >
+> >>>+	depends on ARM || ARM64
+> >>>+	help
+> >>>+	  This driver provides support for coresight debugging module. This
+> >>>+	  is primarily used to dump sample-based profiling registers for
+> >>>+	  panic. To avoid lockups when accessing debug module registers,
+> >>>+	  it is safer to disable CPU low power states (like "nohlt" on the
+> >>>+	  kernel command line) when using this feature.
+> >>>+
+> >>
+> >>>+#define EDPCSR_THUMB			BIT(0)
+> >>>+#define EDPCSR_ARM_INST_MASK		GENMASK(31, 2)
+> >>>+#define EDPCSR_THUMB_INST_MASK		GENMASK(31, 1)
+> >>
+> >>We don't need two different masks. {ED/DBG}PCSR has only bit 0 reserved
+> >>for instruction set indication.
+> >
+> >I think we need this two different masks. Please review below extra doc
+> >for PC offset analysis in ARM ARM.
+> 
+> You're correct. Thanks for the pointer. I got confused, as there was no bit
+> dedicated in the DBGPCSR bit assignment figure.
+> 
+> >>>+	/*
+> >>>+	 * Handle arm instruction offset, if the arm instruction
+> >>>+	 * is not 4 byte alignment then it's possible the case
+> >>>+	 * for implementation defined; keep original value for this
+> >>>+	 * case and print info for notice.
+> >>>+	 */
+> >>>+	if (pc & BIT(1))
+> >>>+		pr_emerg("Instruction offset is implementation defined\n");
+> >>
+> >>I am struggling to find the any mention about this in the ARM ARM. Please could
+> >>you point me to it.
+> >
+> >Sure, please see ARM DDI 0406C.b, chapter C11.11.34 "
+> >DBGPCSR, Program Counter Sampling Register":
+> >
+> >A profiling tool can use the value of the T bit to calculate the
+> >instruction address as follows:
+> >
+> >When an offset is applied to the sampled address
+> >- if T is 0 and DBGPCSR[1] is 0, ((DBGPCSR[31:2] << 2) - 8) is the
+> >address of the sampled ARM instruction
+> >- if T is 0 and DBGPCSR[1] is 1, the instruction address is
+> >IMPLEMENTATION DEFINED
+> >- if T is 1, ((DBGPCSR[31:1] << 1) - 4) is the address of the sampled
+> >Thumb or ThumbEE instruction.
+> >
+> >When no offset is applied to the sampled address
+> >-  if T is 0 and DBGPCSR[1] is 0, (DBGPCSR[31:2] << 2) is the address
+> >of the sampled ARM instruction
+> >-  if T is 0 and DBGPCSR[1] is 1, the instruction address is
+> >IMPLEMENTATION DEFINED
+> >- if T is 1, (DBGPCSR[31:1] << 1) is the address of the sampled Thumb
+> >or ThumbEE instruction.
+> >
+> 
+> Ok.
+> 
+> 
+> >>>+
+> >>>+	put_online_cpus();
+> >>>+
+> >>>+	if (!debug_count++)
+> >>>+		atomic_notifier_chain_register(&panic_notifier_list,
+> >>>+					       &debug_notifier);
+> >>>+
+> >>
+> >>>+	sprintf(buf, (char *)id->data, drvdata->cpu);
+> >>>+	dev_info(dev, "%s initialized\n", buf);
+> >>
+> >>This could simply be :
+> >>	dev_info(dev, "Coresight debug-CPU%d initialized\n", drvdata->cpu);
+> >>
+> >>and get rid of the static string and the buffer, see below.
+> 
+> Also we need pm_runtime_put() here to balance the pm_runtime_get_ from AMBA
+> device probe.
 
-On 03/13/2017 07:36 PM, Bartosz Golaszewski wrote:
+Good point.
 
-> Add DT bindings for the onboard SATA controller present on the DM816x
-> SoCs.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/ata/ahci-dm816.txt | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/ahci-dm816.txt
->
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-dm816.txt b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
-> new file mode 100644
-> index 0000000..b87ed5a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
-> @@ -0,0 +1,20 @@
-> +Device tree binding for the TI DM816 AHCI SATA Controller
-> +---------------------------------------------------------
-> +
-> +Required properties:
-> +  - compatible: must be "ti,dm816-ahci"
-> +  - reg: physical base address and size of the register region used by
-> +         the controller (as defined by the AHCI 1.1 standard)
-> +  - interrupts: interrupt specifier (refer to the interrupt binding)
-> +  - clocks: clock specifiers (refer to the clock binding); two clocks
+> More on that below.
+> 
+> >>
+> >>>+	return 0;
+> >>>+}
+> >>>+
+> >>>+static struct amba_id debug_ids[] = {
+> >>>+	{       /* Debug for Cortex-A53 */
+> >>>+		.id	= 0x000bbd03,
+> >>>+		.mask	= 0x000fffff,
+> >>
+> >>...
+> >>
+> >>>+		.data   = "Coresight debug-CPU%d",
+> >>
+> >>I think this is pointless, as the debug area we are interested in is always associated
+> >>with a CPU, we could as well figure out what to print from the drvdata->cpu above.
+> >
+> >I prefer to follow your suggestion for upper two comments; but I'd like
+> >check with Mathieu, due I followed up Mathieu's suggestion to write
+> >current code.
+> 
+> Btw, I don't see any PM calls to make sure the power domain (at least the debug domain)
+> is up, which could cause problems with accesses to some of these registers (leave alone the
+> ones in CPU power domain), especially the EDPRSR. We could also do pm_runtime_get on the
+> CPU's power domain, if the CPU is online, before we access the pcsr.
 
-    There should be a phandle preceding the clock specifier, all new such 
-props are different to the old "interrupts" (which had phandle in a separate 
-"interrupt-parent" prop).
+I thought about PM runtime operations a little while back but wondered if it is
+really a good thing to have them around.  When this code is called the system
+has crashed and as such making PM runtimes call isn't a good idea.
 
-> +            must be specified: the functional clock and an external
-> +            reference clock
-> +
-> +Example:
-> +
-> +	sata: sata@4a140000 {
-> +		compatible = "ti,dm816-ahci";
-> +		reg = <0x4a140000 0xffff>;
+One thing we could do is _not_ call pm_runtime_put() at the end of the probe()
+operation.  That way we wouldn't have to mess around with PM runtime operations
+on an unstable system.  This, of course, is costly in terms of power consumption
+but the system is under test/debug anyway.
 
-   I think you meant 0x10000 ISO 0xffff -- this is a size, not limit.
+Thoughts?
 
-> +		interrupts = <16>;
-> +		clocks = <&sysclk5_ck>, <&sata_refclk>;
-> +	};
->
-
-MBR, Sergei
-
+> 
+> Suzuki
+> 
+> 
+> 
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
