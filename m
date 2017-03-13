@@ -1,176 +1,107 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 07/11] iio: adc: sun4i-gpadc-iio: move code used in MFD
- probing to new function
-Date: Mon, 13 Mar 2017 20:58:06 +0000
-Message-ID: <4d3b0b84-446a-721c-9767-5eb151a05d4d@kernel.org>
-References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
- <20170310103921.19469-8-quentin.schulz@free-electrons.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Mon, 13 Mar 2017 23:03:50 +0200
+Message-ID: <20170313210349.GD10701@valkosipuli.retiisi.org.uk>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+ <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+ <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
+ <20170221001332.GS21222@n2100.armlinux.org.uk>
+ <25596b21-70de-5e46-f149-f9ce3a86ecb7@gmail.com>
+ <1487667023.2331.8.camel@pengutronix.de>
+ <20170313131647.GB10701@valkosipuli.retiisi.org.uk>
+ <20170313132701.GJ21222@n2100.armlinux.org.uk>
+ <1489413301.2288.53.camel@pengutronix.de>
+ <27397114-7d77-2353-c526-bddd5f5297d9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170310103921.19469-8-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <27397114-7d77-2353-c526-bddd5f5297d9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/17 10:39, Quentin Schulz wrote:
-> This moves code used in MFD probing to a new sun4i_gpadc_probe_mfd
-> function.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Looks sane to me - though a hint on why in the explanation wouldn't go
-amiss!
+Hi Steve,
 
-We'll have to figure out the path for this series at somepoint.
-In meantime
+On Mon, Mar 13, 2017 at 11:06:22AM -0700, Steve Longerbeam wrote:
+> 
+> 
+> On 03/13/2017 06:55 AM, Philipp Zabel wrote:
+> >On Mon, 2017-03-13 at 13:27 +0000, Russell King - ARM Linux wrote:
+> >>On Mon, Mar 13, 2017 at 03:16:48PM +0200, Sakari Ailus wrote:
+> >>>The vast majority of existing drivers do not implement them nor the user
+> >>>space expects having to set them. Making that mandatory would break existing
+> >>>user space.
+> >>>
+> >>>In addition, that does not belong to link validation either: link validation
+> >>>should only include static properties of the link that are required for
+> >>>correct hardware operation. Frame rate is not such property: hardware that
+> >>>supports the MC interface generally does not recognise such concept (with
+> >>>the exception of some sensors). Additionally, it is dynamic: the frame rate
+> >>>can change during streaming, making its validation at streamon time useless.
+> >>
+> >>So how do we configure the CSI, which can do frame skipping?
+> >>
+> >>With what you're proposing, it means it's possible to configure the
+> >>camera sensor source pad to do 50fps.  Configure the CSI sink pad to
+> >>an arbitary value, such as 30fps, and configure the CSI source pad to
+> >>15fps.
+> >>
+> >>What you actually get out of the CSI is 25fps, which bears very little
+> >>with the actual values used on the CSI source pad.
+> >>
+> >>You could say "CSI should ask the camera sensor" - well, that's fine
+> >>if it's immediately downstream, but otherwise we'd need to go walking
+> >>down the graph to find something that resembles its source - there may
+> >>be mux and CSI2 interface subdev blocks in that path.  Or we just accept
+> >>that frame rates are completely arbitary and bear no useful meaning what
+> >>so ever.
+> >
+> >Which would include the frame interval returned by VIDIOC_G_PARM on the
+> >connected video device, as that gets its information from the CSI output
+> >pad's frame interval.
+> >
+> 
+> I'm kinda in the middle on this topic. I agree with Sakari that
+> frame rate can fluctuate, but that should only be temporary. If
+> the frame rate permanently shifts from what a subdev reports via
+> g_frame_interval, then that is a system problem. So I agree with
+> Phillip and Russell that a link validation of frame interval still
+> makes sense.
+> 
+> But I also have to agree with Sakari that a subdev that has no
+> control over frame rate has no business implementing those ops.
+> 
+> And then I agree with Russell that for subdevs that do have control
+> over frame rate, they would have to walk the graph to find the frame
+> rate source.
+> 
+> So we're stuck in a broken situation: either the subdevs have to walk
+> the graph to find the source of frame rate, or s_frame_interval
+> would have to be mandatory and validated between pads, same as set_fmt.
 
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> added in v2
-> 
->  drivers/iio/adc/sun4i-gpadc-iio.c | 78 ++++++++++++++++++++++-----------------
->  1 file changed, 45 insertions(+), 33 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
-> index a8e134f..7cb997a 100644
-> --- a/drivers/iio/adc/sun4i-gpadc-iio.c
-> +++ b/drivers/iio/adc/sun4i-gpadc-iio.c
-> @@ -454,31 +454,16 @@ static int sun4i_irq_init(struct platform_device *pdev, const char *name,
->  	return 0;
->  }
->  
-> -static int sun4i_gpadc_probe(struct platform_device *pdev)
-> +static int sun4i_gpadc_probe_mfd(struct platform_device *pdev,
-> +				 struct iio_dev *indio_dev)
->  {
-> -	struct sun4i_gpadc_iio *info;
-> -	struct iio_dev *indio_dev;
-> +	struct sun4i_gpadc_iio *info = iio_priv(indio_dev);
-> +	struct sun4i_gpadc_dev *sun4i_gpadc_dev =
-> +		dev_get_drvdata(pdev->dev.parent);
->  	int ret;
-> -	struct sun4i_gpadc_dev *sun4i_gpadc_dev;
-> -
-> -	sun4i_gpadc_dev = dev_get_drvdata(pdev->dev.parent);
-> -
-> -	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-> -	if (!indio_dev)
-> -		return -ENOMEM;
->  
-> -	info = iio_priv(indio_dev);
-> -	platform_set_drvdata(pdev, indio_dev);
-> -
-> -	mutex_init(&info->mutex);
->  	info->regmap = sun4i_gpadc_dev->regmap;
-> -	info->indio_dev = indio_dev;
-> -	init_completion(&info->completion);
-> -	indio_dev->name = dev_name(&pdev->dev);
-> -	indio_dev->dev.parent = &pdev->dev;
-> -	indio_dev->dev.of_node = pdev->dev.of_node;
-> -	indio_dev->info = &sun4i_gpadc_iio_info;
-> -	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
->  	indio_dev->num_channels = ARRAY_SIZE(sun4i_gpadc_channels);
->  	indio_dev->channels = sun4i_gpadc_channels;
->  
-> @@ -519,8 +504,7 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  			dev_err(&pdev->dev,
->  				"could not register thermal sensor: %ld\n",
->  				PTR_ERR(tzd));
-> -			ret = PTR_ERR(tzd);
-> -			goto err;
-> +			return PTR_ERR(tzd);
->  		}
->  	} else {
->  		indio_dev->num_channels =
-> @@ -528,36 +512,65 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  		indio_dev->channels = sun4i_gpadc_channels_no_temp;
->  	}
->  
-> -	pm_runtime_set_autosuspend_delay(&pdev->dev,
-> -					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-> -	pm_runtime_use_autosuspend(&pdev->dev);
-> -	pm_runtime_set_suspended(&pdev->dev);
-> -	pm_runtime_enable(&pdev->dev);
-> -
->  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
->  		ret = sun4i_irq_init(pdev, "TEMP_DATA_PENDING",
->  				     sun4i_gpadc_temp_data_irq_handler,
->  				     "temp_data", &info->temp_data_irq,
->  				     &info->ignore_temp_data_irq);
->  		if (ret < 0)
-> -			goto err;
-> +			return ret;
->  	}
->  
->  	ret = sun4i_irq_init(pdev, "FIFO_DATA_PENDING",
->  			     sun4i_gpadc_fifo_data_irq_handler, "fifo_data",
->  			     &info->fifo_data_irq, &info->ignore_fifo_data_irq);
->  	if (ret < 0)
-> -		goto err;
-> +		return ret;
->  
->  	if (IS_ENABLED(CONFIG_THERMAL_OF)) {
->  		ret = iio_map_array_register(indio_dev, sun4i_gpadc_hwmon_maps);
->  		if (ret < 0) {
->  			dev_err(&pdev->dev,
->  				"failed to register iio map array\n");
-> -			goto err;
-> +			return ret;
->  		}
->  	}
->  
-> +	return 0;
-> +}
-> +
-> +static int sun4i_gpadc_probe(struct platform_device *pdev)
-> +{
-> +	struct sun4i_gpadc_iio *info;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	info = iio_priv(indio_dev);
-> +	platform_set_drvdata(pdev, indio_dev);
-> +
-> +	mutex_init(&info->mutex);
-> +	info->indio_dev = indio_dev;
-> +	init_completion(&info->completion);
-> +	indio_dev->name = dev_name(&pdev->dev);
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->dev.of_node = pdev->dev.of_node;
-> +	indio_dev->info = &sun4i_gpadc_iio_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	ret = sun4i_gpadc_probe_mfd(pdev, indio_dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pm_runtime_set_autosuspend_delay(&pdev->dev,
-> +					 SUN4I_GPADC_AUTOSUSPEND_DELAY);
-> +	pm_runtime_use_autosuspend(&pdev->dev);
-> +	pm_runtime_set_suspended(&pdev->dev);
-> +	pm_runtime_enable(&pdev->dev);
-> +
->  	ret = devm_iio_device_register(&pdev->dev, indio_dev);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "could not register the device\n");
-> @@ -570,7 +583,6 @@ static int sun4i_gpadc_probe(struct platform_device *pdev)
->  	if (IS_ENABLED(CONFIG_THERMAL_OF))
->  		iio_map_array_unregister(indio_dev);
->  
-> -err:
->  	pm_runtime_put(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
->  
-> 
+It's not broken; what we are missing though is documentation on how to
+control devices that can change the frame rate i.e. presumably drop frames
+occasionally.
 
+If you're doing something that hasn't been done before, it may be that new
+documentation needs to be written to accomodate that use case. As we have an
+existing interface (VIDIOC_SUBDEV_[GS]_FRAME_INTERVAL) it does make sense
+to use that. What is not possible, though, is to mandate its use in link
+validation everywhere.
+
+If you had a hardware limitation that would require that the frame rate is
+constant, then we'd need to handle that in link validation for that
+particular piece of hardware. But there really is no case for doing that for
+everything else.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
