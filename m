@@ -1,81 +1,133 @@
-From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 07/23] MAINTAINERS: Add file patterns for fpga device
- tree bindings
-Date: Mon, 13 Mar 2017 09:55:16 -0500
-Message-ID: <CANk1AXSPyOwdVJfhb8VP2as3+z+F3O1c44CJ8z6WksRqVAcGDQ@mail.gmail.com>
-References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org> <1489324627-19126-8-git-send-email-geert@linux-m68k.org>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH net-next 1/4] dt-bindings: net: dsa: add mt7530 binding
+Date: Mon, 13 Mar 2017 22:57:47 +0800
+Message-ID: <1489417070-28483-2-git-send-email-sean.wang@mediatek.com>
+References: <1489417070-28483-1-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489324627-19126-8-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+In-Reply-To: <1489417070-28483-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 12, 2017 at 8:16 AM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Submitters of device tree binding documentation may forget to CC
-> the subsystem maintainer if this is missing.
->
-> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-> Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Please apply this patch directly if you want to be involved in device
-> tree binding documentation for your subsystem.
->
-> v2:
->   - Add Acked-by.
->
-> Impact on next-20170310:
->
-> -Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:7/4=100%)
-> +Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (maintainer:FPGA MANAGER FRAMEWORK)
-> +Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> (reviewer:FPGA MANAGER FRAMEWORK)
-> +Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->  Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-> -Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (commit_signer:4/4=100%,authored:4/4=100%)
-> -Matthew Gerlach <mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (commit_signer:2/4=50%)
-> -Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> (commit_signer:1/4=25%)
-> -Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (commit_signer:1/4=25%)
-> +linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:FPGA MANAGER FRAMEWORK)
->  devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
->  linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
-> ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c0822d4fa5c3ade5..fc0d3d709db0687f 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5150,6 +5150,7 @@ R:        Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
->  L:     linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  S:     Maintained
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/atull/linux-fpga.git
-> +F:     Documentation/devicetree/bindings/fpga/
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Also needs:
+Add device-tree binding for Mediatek MT7530 switch.
 
-F: Documentation/fpga/
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/net/dsa/mt7530.txt         | 96 ++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
 
-Acked-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
+new file mode 100644
+index 0000000..3c52a6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
+@@ -0,0 +1,96 @@
++Mediatek MT7530 Ethernet switch
++================================
++
++Required properties:
++
++- compatible: Must be compatible = "mediatek,mt7530";
++- #address-cells: Must be 1
++- #size-cells: Must be 0
++- mediatek,ethsys: Phandle to the syscon node that handles the reset.
++- mediatek,ethernet: Phandle to the syscon node that Mediatek ethernet
++	driver provides that handles the TRGMII setup used by the switch.
++	See
++	Documentation/devicetree/bindings/net/mediatek-net.txt for the
++	detailed setup on mediatek ethernet.
++- mediatek,mcm: String, should be "enabled" or "disabled" to indicate that
++	the MT7530 is the part on multi-chip module as the function MT7623A
++	has or the remote standalone chip as the function MT7623N reference
++	board provides to.
++- core-supply: Phandle to the regulator node necessary for the core power.
++- io-supply: Phandle to the regulator node necessary for the I/O power
++See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt for
++details for the regulator setup on these boards such as MT7623A or MT7623N.
++
++Optional properties:
++
++- mediatek,reset-pin: Phandle to the pinctrl node used for the reset. Which
++	must be required if the property of specified as "disabled". See
++	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt for
++	the mediatek pintcrl setting for the details.
++
++Each port children node within ports container must have the following
++mandatory properties:
++- reg			: Port address described must be 6 for CPU port
++			and from 0 to 5 for user ports.
++
++See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
++required, optional properties and how the integrated switch subnodes must
++be specified.
++
++Example:
++
++	&mdio0 {
++		switch@0 {
++			compatible = "mediatek,mt7530";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			mediatek,ethsys = <&ethsys>;
++			mediatek,ethernet = <&eth>;
++			mediatek,mcm = "enabled";
++			core-supply = <&mt6323_vpa_reg>;
++			io-supply = <&mt6323_vemc3v3_reg>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0>;
++				port@0 {
++					reg = <0>;
++					label = "lan0";
++				};
++
++				port@1 {
++					reg = <1>;
++					label = "lan1";
++				};
++
++				port@2 {
++					reg = <2>;
++					label = "lan2";
++				};
++
++				port@3 {
++					reg = <3>;
++					label = "lan3";
++				};
++
++				port@4 {
++					reg = <4>;
++					label = "wan";
++				};
++
++				port@6 {
++					reg = <6>;
++					label = "cpu";
++					ethernet = <&eth>;
++					phy-mode = "trgmii";
++					fixed-link {
++						speed = <1000>;
++						full-duplex;
++					};
++				};
++			};
++		};
++	};
+-- 
+1.9.1
 
-Please send to Greg KH; he is taking our patches.
-
-Thanks,
-Alan
-
-
->  F:     drivers/fpga/
->  F:     include/linux/fpga/fpga-mgr.h
->  W:     http://www.rocketboards.org
-> --
-> 2.7.4
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
