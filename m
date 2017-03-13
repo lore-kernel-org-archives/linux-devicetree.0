@@ -1,41 +1,59 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 3/8] ARM: dts: exynos: Fix watchdog reset on Exynos4412
-Date: Mon, 13 Mar 2017 08:41:08 +0200
-Message-ID: <CAJKOXPf7MDtg1KbtdBcvo78BihKPA3M6OhuEfMAfrhYGzrOZAA@mail.gmail.com>
-References: <20170311172527.16368-1-krzk@kernel.org> <20170311172527.16368-4-krzk@kernel.org>
- <050544d8-5513-16b3-3d8f-117aa173226f@roeck-us.net>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 12/23] MAINTAINERS: Add file patterns for media device
+ tree bindings
+Date: Mon, 13 Mar 2017 08:43:52 +0100
+Message-ID: <CAMuHMdXYkMWUYSoWRr87eq9t3dFjjM7R1cDwYxKOVBBLmX57mg@mail.gmail.com>
+References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org>
+ <1489324627-19126-13-git-send-email-geert@linux-m68k.org> <20170312220231.193801fd@vento.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <050544d8-5513-16b3-3d8f-117aa173226f@roeck-us.net>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170312220231.193801fd-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 12, 2017 at 10:48 PM, Guenter Roeck <linux@roeck-us.net> wrote:
-> On 03/11/2017 09:25 AM, Krzysztof Kozlowski wrote:
->>
->> The Exynos4412 has the same watchdog as newer SoCs (e.g. Exynos5250).
->> Just like the others, for working it requires additional steps in Power
->> Management Unit: unmasking the reset request and enabling the system
->> reset.  Without these additional steps in PMU, the watchdog will not be
->> able to reset the system on expiration event.
->>
->> Change the compatible of Exynos4412 watchdog device node to
->> samsung,exynos5250-wdt which includes the additional PMU steps.
->>
->> This will also fix infinite watchdog interrupt in soft mode (lack of
->> interrupt clear) because it is also included in samsung,exynos5250-wdt.
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
->
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
->
-> I assume this patch will be pushed through some arm tree.
+Hi Mauro,
 
-Yes, I will take it through samsung-soc.
+On Mon, Mar 13, 2017 at 2:02 AM, Mauro Carvalho Chehab
+<mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org> wrote:
+> Em Sun, 12 Mar 2017 14:16:56 +0100
+> Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> escreveu:
+>
+>> Submitters of device tree binding documentation may forget to CC
+>> the subsystem maintainer if this is missing.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+>> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>> Cc: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>
+> As the To: is devicetree, I'm assuming that this patch will be
+> applied there, so:
+>
+> Acked-by: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
 
-Best regards,
-Krzysztof
+Thanks!
+
+> I may also merge via my tree, if that would be better. Just let me
+> know in such case.
+
+Please apply to your tree, cfr.
+
+| Please apply this patch directly if you want to be involved in device
+| tree binding documentation for your subsystem.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
