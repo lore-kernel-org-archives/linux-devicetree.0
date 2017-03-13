@@ -1,130 +1,31 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH net-next 1/4] dt-bindings: net: dsa: add mt7530 binding
-Date: Mon, 13 Mar 2017 22:57:47 +0800
-Message-ID: <1489417070-28483-2-git-send-email-sean.wang@mediatek.com>
-References: <1489417070-28483-1-git-send-email-sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] Add STM32 MDMA driver
+Date: Mon, 13 Mar 2017 16:06:37 +0100
+Message-ID: <1489417599-31308-1-git-send-email-cedric.madianga@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489417070-28483-1-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patchset adds support for the STM32 MDMA controller.
+The Master Direct memory access (MDMA) provides high-speed data transfer
+between memory and memory or between peripherals and memory.
+Contrary to STM32 DMA, the STM32 MDMA controller supports hardware LLI and
+uses a larger integrated FIFO (128 vs 16 bytes)
 
-Add device-tree binding for Mediatek MT7530 switch.
+M'boumba Cedric Madianga (2):
+  dt-bindings: Document the STM32 MDMA bindings
+  dmaengine: Add STM32 MDMA driver
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/net/dsa/mt7530.txt         | 96 ++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/dsa/mt7530.txt
+ .../devicetree/bindings/dma/stm32-mdma.txt         |   94 ++
+ drivers/dma/Kconfig                                |   12 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/stm32-mdma.c                           | 1570 ++++++++++++++++++++
+ 4 files changed, 1677 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
+ create mode 100644 drivers/dma/stm32-mdma.c
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/mt7530.txt b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-new file mode 100644
-index 0000000..3c52a6a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/dsa/mt7530.txt
-@@ -0,0 +1,96 @@
-+Mediatek MT7530 Ethernet switch
-+================================
-+
-+Required properties:
-+
-+- compatible: Must be compatible = "mediatek,mt7530";
-+- #address-cells: Must be 1
-+- #size-cells: Must be 0
-+- mediatek,ethsys: Phandle to the syscon node that handles the reset.
-+- mediatek,ethernet: Phandle to the syscon node that Mediatek ethernet
-+	driver provides that handles the TRGMII setup used by the switch.
-+	See
-+	Documentation/devicetree/bindings/net/mediatek-net.txt for the
-+	detailed setup on mediatek ethernet.
-+- mediatek,mcm: String, should be "enabled" or "disabled" to indicate that
-+	the MT7530 is the part on multi-chip module as the function MT7623A
-+	has or the remote standalone chip as the function MT7623N reference
-+	board provides to.
-+- core-supply: Phandle to the regulator node necessary for the core power.
-+- io-supply: Phandle to the regulator node necessary for the I/O power
-+See Documentation/devicetree/bindings/regulator/mt6323-regulator.txt for
-+details for the regulator setup on these boards such as MT7623A or MT7623N.
-+
-+Optional properties:
-+
-+- mediatek,reset-pin: Phandle to the pinctrl node used for the reset. Which
-+	must be required if the property of specified as "disabled". See
-+	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt for
-+	the mediatek pintcrl setting for the details.
-+
-+Each port children node within ports container must have the following
-+mandatory properties:
-+- reg			: Port address described must be 6 for CPU port
-+			and from 0 to 5 for user ports.
-+
-+See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
-+required, optional properties and how the integrated switch subnodes must
-+be specified.
-+
-+Example:
-+
-+	&mdio0 {
-+		switch@0 {
-+			compatible = "mediatek,mt7530";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			mediatek,ethsys = <&ethsys>;
-+			mediatek,ethernet = <&eth>;
-+			mediatek,mcm = "enabled";
-+			core-supply = <&mt6323_vpa_reg>;
-+			io-supply = <&mt6323_vemc3v3_reg>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0>;
-+				port@0 {
-+					reg = <0>;
-+					label = "lan0";
-+				};
-+
-+				port@1 {
-+					reg = <1>;
-+					label = "lan1";
-+				};
-+
-+				port@2 {
-+					reg = <2>;
-+					label = "lan2";
-+				};
-+
-+				port@3 {
-+					reg = <3>;
-+					label = "lan3";
-+				};
-+
-+				port@4 {
-+					reg = <4>;
-+					label = "wan";
-+				};
-+
-+				port@6 {
-+					reg = <6>;
-+					label = "cpu";
-+					ethernet = <&eth>;
-+					phy-mode = "trgmii";
-+					fixed-link {
-+						speed = <1000>;
-+						full-duplex;
-+					};
-+				};
-+			};
-+		};
-+	};
 -- 
 1.9.1
 
