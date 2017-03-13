@@ -1,30 +1,30 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: r8a7796: add IMR-LX4 support
-Date: Mon, 13 Mar 2017 10:12:32 +0100
-Message-ID: <20170313091232.GA19296@verge.net.au>
-References: <20170220213129.182097269@cogentembedded.com>
- <20170310093049.GH21820@verge.net.au>
- <9d1d3e6d-ebe8-06a9-4d49-d62ee2f038bd@cogentembedded.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: shmobile: Document and identify RZ/G1H and
+ RZ/G1N
+Date: Mon, 13 Mar 2017 10:26:37 +0100
+Message-ID: <20170313092636.GD19296@verge.net.au>
+References: <1489153710-8159-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <9d1d3e6d-ebe8-06a9-4d49-d62ee2f038bd@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1489153710-8159-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 10, 2017 at 03:28:22PM +0300, Sergei Shtylyov wrote:
-> On 03/10/2017 12:30 PM, Simon Horman wrote:
+On Fri, Mar 10, 2017 at 02:48:26PM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
 > 
-> >>Describe the IMR-LX4 devices in the R8A7796 device tree.
-> >>
-> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >
-> >Thanks, queued up for v4.12.
+> Now the part numbers of the Renesas RZ/G1H and RZ/G1N are publicly
+> available, this patch series documents the DT bindings for these SoCs,
+> and adds support for identifying them.
 > 
->    This is probably premature, given some uncertainty with the "compatible"
-> prop (I mean the SoC specific values).
+> Thanks!
 
-Thanks for letting me know, I will drop the patch for now.
+Thanks, applied.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
