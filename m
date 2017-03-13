@@ -1,66 +1,82 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 1/9] gpu: ipu-v3: add DT binding for the Prefetch
- Resolve Engine
-Date: Mon, 13 Mar 2017 15:45:10 +0100
-Message-ID: <1489416310.2288.73.camel@pengutronix.de>
-References: <20170308111321.3035-1-l.stach@pengutronix.de>
+From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 07/23] MAINTAINERS: Add file patterns for fpga device
+ tree bindings
+Date: Mon, 13 Mar 2017 09:55:16 -0500
+Message-ID: <CANk1AXSPyOwdVJfhb8VP2as3+z+F3O1c44CJ8z6WksRqVAcGDQ@mail.gmail.com>
+References: <1489324627-19126-1-git-send-email-geert@linux-m68k.org> <1489324627-19126-8-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170308111321.3035-1-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489324627-19126-8-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE3LTAzLTA4IGF0IDEyOjEzICswMTAwLCBMdWNhcyBTdGFjaCB3cm90ZToKPiBU
-aGUgUHJlZmV0Y2ggUmVzb2x2ZSBFbmdpbmUgaXMgYSBwcmVmZXRjaCBhbmQgdGlsZSByZXNvbHZl
-IGVuZ2luZQo+IHdoaWNoIHByZWZldGNoZXMgZGlzcGxheSBkYXRhIGZyb20gRFJBTSB0byBhbiBp
-bnRlcm5hbCBTUkFNIHJlZ2lvbi4KPiBJdCBoYXMgYSBzaW5nbGUgY2xvY2sgZm9yIGNvbmZpZ3Vy
-YXRpb24gcmVnaXN0ZXIgYWNjZXNzIGFuZCB0aGUKPiBmdW5jdGlvbmFsIHVuaXRzLiBBIHNpbmds
-ZSBzaGFyZWQgaW50ZXJydXB0IGlzIHVzZWQgZm9yIHN0YXR1cyBhbmQKPiBlcnJvciBzaWduYWxp
-bmcuCj4gCj4gVGhlIG9ubHkgZXh0ZXJuYWwgZGVwZW5kZW5jeSBpcyB0aGUgU1JBTSByZWdpb24g
-dG8gdXNlIGZvciB0aGUKPiBwcmVmZXRjaCBkb3VibGUgYnVmZmVyLgo+IAo+IFNpZ25lZC1vZmYt
-Ynk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4LmRlPgoKSSBoYXZlIHBpY2tlZCB1
-cCB0aGlzIHNlcmllcy4gUm9iLCBhcmUgeW91IG9rIHdpdGggdGhlIGJpbmRpbmdzIGluIHRoaXMK
-cGF0Y2g/IElmIHNvLCBJJ2xsIGluY2x1ZGUgaXQgaW4gdGhlIG5leHQgcHVsbCByZXF1ZXN0LgoK
-cmVnYXJkcwpQaGlsaXBwCgo+IC0tLQo+IHYyOgo+IC0gY2hhbmdlIFNSQU0gcGhhbmRsZSB0byAi
-ZnNsLGlyYW0iLCBhcyB1c2VkIGluIG90aGVyIGlteCBEVCBiaW5kaW5ncwo+IC0gZHJvcCBsZWFk
-aW5nIDAgaW4gZXhhbXBsZQo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlt
-eC1kcm0udHh0ICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxl
-IGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2lteC9mc2wtaW14LWRybS50eHQK
-PiBpbmRleCA5NzFjM2VlZGIxYzcuLjcwYWU1MzM1ZDFlMyAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlteC1kcm0udHh0Cj4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaW14L2ZzbC1p
-bXgtZHJtLnR4dAo+IEBAIC01Myw2ICs1MywzMiBAQCBpcHU6IGlwdUAxODAwMDAwMCB7Cj4gIAl9
-Owo+ICB9Owo+ICAKPiArRnJlZXNjYWxlIGkuTVggUFJFIChQcmVmZXRjaCBSZXNvbHZlIEVuZ2lu
-ZSkKPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KPiArCj4g
-K1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJmc2wsaW14
-NnFwLXByZSIKPiArLSByZWc6IHNob3VsZCBiZSByZWdpc3RlciBiYXNlIGFuZCBsZW5ndGggYXMg
-ZG9jdW1lbnRlZCBpbiB0aGUKPiArICBkYXRhc2hlZXQKPiArLSBjbG9ja3MgOiBwaGFuZGxlIHRv
-IHRoZSBQUkUgYXhpIGNsb2NrIGlucHV0LCBhcyBkZXNjcmliZWQKPiArICBpbiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0IGFuZAo+ICsg
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9pbXg2cS1jbG9jay50eHQu
-Cj4gKy0gY2xvY2stbmFtZXM6IHNob3VsZCBiZSAiYXhpIgo+ICstIGludGVycnVwdHM6IHNob3Vs
-ZCBjb250YWluIHRoZSBQUkUgaW50ZXJydXB0Cj4gKy0gZnNsLGlyYW06IHBoYW5kbGUgcG9pbnRp
-bmcgdG8gdGhlIG1taW8tc3JhbSBkZXZpY2Ugbm9kZSwgdGhhdCBzaG91bGQgYmUKPiArICB1c2Vk
-IGZvciB0aGUgUFJFIFNSQU0gZG91YmxlIGJ1ZmZlci4KPiArCj4gK2V4YW1wbGU6Cj4gKwo+ICtw
-cmVAMjFjODAwMCB7Cj4gKwljb21wYXRpYmxlID0gImZzbCxpbXg2cXAtcHJlIjsKPiArCXJlZyA9
-IDwweDAyMWM4MDAwIDB4MTAwMD47Cj4gKwlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgOTAgSVJRX1RZ
-UEVfRURHRV9SSVNJTkc+Owo+ICsJY2xvY2tzID0gPCZjbGtzIElNWDZRRExfQ0xLX1BSRTA+Owo+
-ICsJY2xvY2stbmFtZXMgPSAiYXhpIjsKPiArCWZzbCxpcmFtID0gPCZvY3JhbTI+Owo+ICt9Owo+
-ICsKPiAgUGFyYWxsZWwgZGlzcGxheSBzdXBwb3J0Cj4gID09PT09PT09PT09PT09PT09PT09PT09
-PQo+ICAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Sun, Mar 12, 2017 at 8:16 AM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Submitters of device tree binding documentation may forget to CC
+> the subsystem maintainer if this is missing.
+>
+> Signed-off-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Acked-by: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> Cc: linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+> Please apply this patch directly if you want to be involved in device
+> tree binding documentation for your subsystem.
+>
+> v2:
+>   - Add Acked-by.
+>
+> Impact on next-20170310:
+>
+> -Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS,commit_signer:7/4=100%)
+> +Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (maintainer:FPGA MANAGER FRAMEWORK)
+> +Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> (reviewer:FPGA MANAGER FRAMEWORK)
+> +Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+> -Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (commit_signer:4/4=100%,authored:4/4=100%)
+> -Matthew Gerlach <mgerlach-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (commit_signer:2/4=50%)
+> -Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org> (commit_signer:1/4=25%)
+> -Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> (commit_signer:1/4=25%)
+> +linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:FPGA MANAGER FRAMEWORK)
+>  devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+>  linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c0822d4fa5c3ade5..fc0d3d709db0687f 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5150,6 +5150,7 @@ R:        Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+>  L:     linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  S:     Maintained
+>  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/atull/linux-fpga.git
+> +F:     Documentation/devicetree/bindings/fpga/
+
+Also needs:
+
+F: Documentation/fpga/
+
+Acked-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Please send to Greg KH; he is taking our patches.
+
+Thanks,
+Alan
+
+
+>  F:     drivers/fpga/
+>  F:     include/linux/fpga/fpga-mgr.h
+>  W:     http://www.rocketboards.org
+> --
+> 2.7.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
