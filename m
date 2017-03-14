@@ -1,71 +1,76 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 02/20] net-next: stmmac: add optional setup function
-Date: Tue, 14 Mar 2017 15:18:38 +0100
-Message-ID: <20170314141856.24560-3-clabbe.montjoie@gmail.com>
-References: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Subject: [PATCH] media: mtk-jpeg: fix continuous log "Context is NULL"
+Date: Tue, 14 Mar 2017 22:21:22 +0800
+Message-ID: <1489501282-52137-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net
-Cc: devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Bin Liu <bin.liu@mediatek.com>, Rick Chang <rick.chang@mediatek.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Instead of ading more ifthen logic for adding a new mac_device_info
-setup function, it is easier to add a function pointer to the function
-needed.
+The symptom is continuous log "mtk-jpeg 18004000.jpegdec: Context is NULL"
+in kernel log. It is becauese the error handling in irq doesn't clear
+interrupt.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+The calling flow like as below when issue happen
+mtk_jpeg_device_run()
+mtk_jpeg_job_abort()
+  v4l2_m2m_job_finish() -> m2m_dev->curr_ctx = NULL;
+mtk_jpeg_dec_irq()
+  v4l2_m2m_get_curr_priv()
+     -> m2m_dev->curr_ctx == NULL
+     -> return NULL
+log "Context is NULL"
+
+There is race condition between job_abort() and irq. In order to simplify
+code, don't want to add extra flag to maintain state, empty job_abort() and
+clear interrupt before v4l2_m2m_get_curr_priv() in irq.
+
+Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 +++-
- include/linux/stmmac.h                            | 3 +++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 4498a38..856ac57 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3101,7 +3101,9 @@ static int stmmac_hw_init(struct stmmac_priv *priv)
- 	struct mac_device_info *mac;
+diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+index b10183f..c02bc7f 100644
+--- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
++++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+@@ -862,15 +862,6 @@ static int mtk_jpeg_job_ready(void *priv)
  
- 	/* Identify the MAC HW device */
--	if (priv->plat->has_gmac) {
-+	if (priv->plat->setup) {
-+		mac = priv->plat->setup(priv);
-+	} else if (priv->plat->has_gmac) {
- 		priv->dev->priv_flags |= IFF_UNICAST_FLT;
- 		mac = dwmac1000_setup(priv->ioaddr,
- 				      priv->plat->multicast_filter_bins,
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index fc273e9..8f09f18 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -109,6 +109,8 @@ struct stmmac_axi {
- 	bool axi_rb;
- };
+ static void mtk_jpeg_job_abort(void *priv)
+ {
+-	struct mtk_jpeg_ctx *ctx = priv;
+-	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+-	struct vb2_buffer *src_buf, *dst_buf;
+-
+-	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+-	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+-	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), VB2_BUF_STATE_ERROR);
+-	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), VB2_BUF_STATE_ERROR);
+-	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
+ }
  
-+struct stmmac_priv;
-+
- struct plat_stmmacenet_data {
- 	int bus_id;
- 	int phy_addr;
-@@ -136,6 +138,7 @@ struct plat_stmmacenet_data {
- 	void (*fix_mac_speed)(void *priv, unsigned int speed);
- 	int (*init)(struct platform_device *pdev, void *priv);
- 	void (*exit)(struct platform_device *pdev, void *priv);
-+	struct mac_device_info *(*setup)(struct stmmac_priv *priv);
- 	void *bsp_priv;
- 	struct clk *stmmac_clk;
- 	struct clk *pclk;
+ static struct v4l2_m2m_ops mtk_jpeg_m2m_ops = {
+@@ -941,6 +932,8 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+ 	u32 dec_ret;
+ 	int i;
+ 
++	dec_ret = mtk_jpeg_dec_get_int_status(jpeg->dec_reg_base);
++	dec_irq_ret = mtk_jpeg_dec_enum_result(dec_ret);
+ 	ctx = v4l2_m2m_get_curr_priv(jpeg->m2m_dev);
+ 	if (!ctx) {
+ 		v4l2_err(&jpeg->v4l2_dev, "Context is NULL\n");
+@@ -951,9 +944,6 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+ 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+ 	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
+ 
+-	dec_ret = mtk_jpeg_dec_get_int_status(jpeg->dec_reg_base);
+-	dec_irq_ret = mtk_jpeg_dec_enum_result(dec_ret);
+-
+ 	if (dec_irq_ret >= MTK_JPEG_DEC_RESULT_UNDERFLOW)
+ 		mtk_jpeg_dec_reset(jpeg->dec_reg_base);
+ 
 -- 
-2.10.2
+1.9.1
