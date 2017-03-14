@@ -1,45 +1,53 @@
-From: Doug Berger <opendmb@gmail.com>
-Subject: Re: [PATCH net-next 09/12] net: bcmgenet: return EOPNOTSUPP for
- unknown ioctl commands
-Date: Tue, 14 Mar 2017 10:31:00 -0700
-Message-ID: <07283b51-ef2b-92f8-88c2-3803c6f9c81b@gmail.com>
-References: <20170314004142.4746-1-opendmb@gmail.com>
- <20170314004142.4746-10-opendmb@gmail.com>
- <063D6719AE5E284EB5DD2968C1650D6DCFFB052E@AcuExch.aculab.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and
+ endpoints
+Date: Tue, 14 Mar 2017 19:54:09 +0200
+Message-ID: <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
+ <1629581.fh46rNHz4U@aspire.rjw.lan>
+ <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
+ <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com>
+ <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6DCFFB052E@AcuExch.aculab.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Laight <David.Laight@ACULAB.COM>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "rafal@milecki.pl" <rafal@milecki.pl>, "xow@google.com" <xow@google.com>, "joel@jms.id.au" <joel@jms.id.au>, "jon.mason@broadcom.com" <jon.mason@broadcom.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pgynther@google.com" <pgynther@google.com>, "jaedon.shin@gmail.com" <jaedon.shin@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2017 04:04 AM, David Laight wrote:
-> From: Doug Berger
->> Sent: 14 March 2017 00:42
->> This commit changes the ioctl handling behavior to return the
->> EOPNOTSUPP error code instead of the EINVAL error code when an
->> unknown ioctl command value is detected.
+Hi Rafael,
+
+Rafael J. Wysocki wrote:
+> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
+> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>> On 03/14/17 10:08, Sakari Ailus wrote:
+>>> How about this instead:
+>>>
+>>> All port nodes are located under the device's "_DSD" node in the
+>>> hierarchical data extension tree. The property extension related to
+>>> each port node must contain the key "port" and an integer value which
+>>> is the number of the port.
 >>
->> It also removes some redundant parsing of the ioctl command value
->> and allows the SIOCSHWTSTAMP value to be handled.
-> 
-> A better description would seem to be:
-> Remove checks on ioctl command and just forward all ioctl requests
-> to phy_mii_ioctl().
-That is a good description of the code change, but I felt that was
-clearly conveyed by the patch content.  I thought it would be a better
-use of the comment to describe the more subtle functional change that
-might be less clear.
+>> So with matching strings instead of indices, this will change, too...
+>
+> It doesn't have to AFAICS, but the number is just redundant IMO.  You
+> only need a boolean property saying "this is a port", so you know that
+> you should expect a list of endpoints in that object.
 
-> 
-> I also thought the 'generic' response to an unknown ioctl command
-> was ENOTTY.
-and I think it probably helped solicit this feedback :).  I would have
-thought that error makes more sense if there is no ioctl handler, but I
-will definitely look into it.
+No, it's not redundant. It's the number of the physical port in the 
+device --- this is how the driver gets to know where the connection has 
+been made.
 
-Thanks for the feedback,
-    Doug
+-- 
+Regards,
+
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
