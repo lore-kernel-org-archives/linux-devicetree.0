@@ -1,62 +1,49 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v3 6/9] gpu: ipu-v3: hook up PRG unit
-Date: Tue, 14 Mar 2017 11:38:45 +0100
-Message-ID: <1489487928-26083-6-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 7/9] gpu: ipu-v3: only set non-zero AXI ID for IC when PRG is absent
+Date: Tue, 14 Mar 2017 11:38:46 +0100
+Message-ID: <1489487928-26083-7-git-send-email-p.zabel@pengutronix.de>
 References: <1489487928-26083-1-git-send-email-p.zabel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1489487928-26083-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489487928-26083-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+CgpUaGUgaS5NWDYgUXVh
-ZFBsdXMgSVBVIG5lZWRzIHRvIFBSRyB1bml0IHRvIGdhaW4gYWNjZXNzIHRvIHRoZQpkYXRhIGJ1
-cy4gTWFrZSBzdXJlIGl0IGlzIHByZXNlbnQgYW5kIGF2YWlsYWJsZSB0byBiZSB1c2VkLgoKU2ln
-bmVkLW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+ClNpZ25lZC1v
-ZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Ci0tLQogZHJpdmVy
-cy9ncHUvaXB1LXYzL2lwdS1jb21tb24uYyB8IDExICsrKysrKysrKystCiBkcml2ZXJzL2dwdS9p
-cHUtdjMvaXB1LXBydi5oICAgIHwgIDEgKwogMiBmaWxlcyBjaGFuZ2VkLCAxMSBpbnNlcnRpb25z
-KCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1j
-b21tb24uYyBiL2RyaXZlcnMvZ3B1L2lwdS12My9pcHUtY29tbW9uLmMKaW5kZXggNGM4NDUzOTg5
-NzQ2Ny4uN2FlZmNjZWMzMWIxZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1j
-b21tb24uYworKysgYi9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LWNvbW1vbi5jCkBAIC05MzksNiAr
-OTM5LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgaW14X2lwdV9kdF9pZHNb
-XSA9IHsKIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg1MS1pcHUiLCAuZGF0YSA9ICZpcHVfdHlw
-ZV9pbXg1MSwgfSwKIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg1My1pcHUiLCAuZGF0YSA9ICZp
-cHVfdHlwZV9pbXg1MywgfSwKIAl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg2cS1pcHUiLCAuZGF0
-YSA9ICZpcHVfdHlwZV9pbXg2cSwgfSwKKwl7IC5jb21wYXRpYmxlID0gImZzbCxpbXg2cXAtaXB1
-IiwgLmRhdGEgPSAmaXB1X3R5cGVfaW14NnEsIH0sCiAJeyAvKiBzZW50aW5lbCAqLyB9CiB9Owog
-TU9EVUxFX0RFVklDRV9UQUJMRShvZiwgaW14X2lwdV9kdF9pZHMpOwpAQCAtMTM5OCwxMSArMTM5
-OSwxOSBAQCBzdGF0aWMgaW50IGlwdV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
-KQogCWlmICghaXB1KQogCQlyZXR1cm4gLUVOT0RFVjsKIAorCWlwdS0+aWQgPSBvZl9hbGlhc19n
-ZXRfaWQobnAsICJpcHUiKTsKKworCWlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShucCwgImZz
-bCxpbXg2cXAtaXB1IikpIHsKKwkJaXB1LT5wcmdfcHJpdiA9IGlwdV9wcmdfbG9va3VwX2J5X3Bo
-YW5kbGUoJnBkZXYtPmRldiwKKwkJCQkJCQkgICJmc2wscHJnIiwgaXB1LT5pZCk7CisJCWlmICgh
-aXB1LT5wcmdfcHJpdikKKwkJCXJldHVybiAtRVBST0JFX0RFRkVSOworCX0KKwogCWZvciAoaSA9
-IDA7IGkgPCA2NDsgaSsrKQogCQlpcHUtPmNoYW5uZWxbaV0uaXB1ID0gaXB1OwogCWlwdS0+ZGV2
-dHlwZSA9IGRldnR5cGU7CiAJaXB1LT5pcHVfdHlwZSA9IGRldnR5cGUtPnR5cGU7Ci0JaXB1LT5p
-ZCA9IG9mX2FsaWFzX2dldF9pZChucCwgImlwdSIpOwogCiAJc3Bpbl9sb2NrX2luaXQoJmlwdS0+
-bG9jayk7CiAJbXV0ZXhfaW5pdCgmaXB1LT5jaGFubmVsX2xvY2spOwpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvaXB1LXYzL2lwdS1wcnYuaCBiL2RyaXZlcnMvZ3B1L2lwdS12My9pcHUtcHJ2LmgK
-aW5kZXggN2U5YzQ3ZWZjYjFlMC4uY2EyYTIyM2EwZDFlMCAxMDA2NDQKLS0tIGEvZHJpdmVycy9n
-cHUvaXB1LXYzL2lwdS1wcnYuaAorKysgYi9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LXBydi5oCkBA
-IC0yMDksNiArMjA5LDcgQEAgc3RydWN0IGlwdV9zb2MgewogCXN0cnVjdCBpcHVfdmRpICAgICAg
-ICAgICp2ZGlfcHJpdjsKIAlzdHJ1Y3QgaXB1X2ltYWdlX2NvbnZlcnRfcHJpdiAqaW1hZ2VfY29u
-dmVydF9wcml2OwogCXN0cnVjdCBpcHVfc21mY19wcml2CSpzbWZjX3ByaXY7CisJc3RydWN0IGlw
-dV9wcmcJCSpwcmdfcHJpdjsKIH07CiAKIHN0YXRpYyBpbmxpbmUgdTMyIGlwdV9pZG1hY19yZWFk
-KHN0cnVjdCBpcHVfc29jICppcHUsIHVuc2lnbmVkIG9mZnNldCkKLS0gCjIuMTEuMAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+Using non-zero AXI IDs for anything other than the display channels
+collides with the PRG AXI snooping, so only do this if there is no
+PRG present.
+
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/gpu/ipu-v3/ipu-image-convert.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
+index 805b6fa7b5f4c..524a717ab28e4 100644
+--- a/drivers/gpu/ipu-v3/ipu-image-convert.c
++++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
+@@ -671,7 +671,12 @@ static void init_idmac_channel(struct ipu_image_convert_ctx *ctx,
+ 	ipu_ic_task_idma_init(chan->ic, channel, width, height,
+ 			      burst_size, rot_mode);
+ 
+-	ipu_cpmem_set_axi_id(channel, 1);
++	/*
++	 * Setting a non-zero AXI ID collides with the PRG AXI snooping, so
++	 * only do this when there is no PRG present.
++	 */
++	if (!channel->ipu->prg_priv)
++		ipu_cpmem_set_axi_id(channel, 1);
+ 
+ 	ipu_idmac_set_double_buffer(channel, ctx->double_buffering);
+ }
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
