@@ -1,58 +1,64 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: Excluding pins from Linux control
-Date: Tue, 14 Mar 2017 21:09:54 +0100 (CET)
-Message-ID: <1588667510.505126.1489522194503@email.1und1.de>
-References: <433834766.313467.1488218521360@email.1und1.de>
- <CACRpkdYB+4=hG4YcUTvyg50cP6SfMhUuUMW7XqJAVxswYBsWng@mail.gmail.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] pci: remove msi_controller registration API
+Date: Tue, 14 Mar 2017 15:15:24 -0500
+Message-ID: <20170314201524.GF26264@bhelgaas-glaptop.roam.corp.google.com>
+References: <1488292276-11106-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYB+4=hG4YcUTvyg50cP6SfMhUuUMW7XqJAVxswYBsWng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1488292276-11106-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-> Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> hat am 14. März 2017 um 15:39 geschrieben:
+On Tue, Feb 28, 2017 at 03:31:13PM +0100, Thomas Petazzoni wrote:
+> Hello,
 > 
+> This small patch series aims at removing the small msi_controller
+> registration API implemented in drivers/of/of_pci.c.
 > 
-> On Mon, Feb 27, 2017 at 7:02 PM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+> In order to do so, it moves the last two users of this API to the
+> generic MSI support:
 > 
-> > on BCM2835 (Raspberry Pi) the firmware on the VideoCore and Linux on the ARM core share
-> > a common pin "space". Depending on the board revision the VideoCore needs to controls
-> > some pins, which shouldn't be claimed by Linux on the ARM.
-> >
-> > What is the right way to exclude control on Linux for those pins in order to avoid possible
-> > harmful operations?
+>  - The pci-aardvark driver is moved to use the generic MSI
+>    support. This driver is both the provider of the MSI capability and
+>    the consumer of this capability.
 > 
-> Do you want to do this statically (at boot) or dynamically (at runtime)?
-
-statically
-
+>  - The pci-mvebu driver is cleaned up from using the msi_controller
+>    registration API. This driver is only consuming MSI capabilies from
+>    another driver (irq-armada-370-xp) which was migrated to the
+>    generic MSI support some time ago. Therefore, this patch is simply
+>    removing dead code.
 > 
-> If you want to do it statically, at boot time:
-> Just add some NOOP function (i.e. a function that result in
-> zero register writes or anything) named "videocore-reserved" or
-> something to the driver in  drivers/pinctrl/bcm/pinctrl-bcm2835.c,
-> make it applicable to the affected pins, making it possible
-> to create a state that will combine the function "videocore-reserved"
-> with these pins, resulting in them being exclusively used for
-> that.
-
-If you speak of a NOOP function, do you mean a "dummy" pin function which is configured by the device tree? Like extending the "brcm,function" property from the existing binding?
-
+> Finally, the last commit removed the now unused API.
 > 
-> Then in the videocore device tree node (I assume there is
-> something like such) create a pinctrl state that just take all these
-> pins with this dummy function.
+> Changes between v2 and v3 are described in each individual patch.
+> 
+> Thanks,
+> 
+> Thomas
+> 
+> Thomas Petazzoni (3):
+>   pci: pci-aardvark: move to MSI handling using generic MSI support
+>   pci: pci-mvebu: remove useless MSI enabling code
+>   of: pci: remove unused MSI controller helpers
+> 
+>  drivers/of/of_pci.c             |  45 -----------
+>  drivers/pci/host/pci-aardvark.c | 173 ++++++++++++++++------------------------
+>  drivers/pci/host/pci-mvebu.c    |  17 ----
+>  include/linux/of_pci.h          |  11 ---
+>  4 files changed, 67 insertions(+), 179 deletions(-)
 
-Is there a comparable example in the existing drivers?
+Applied to pci/msi for v4.12, thanks!
 
-Thanks
-Stefan
+I think Marc's ack on 1/30 applies to the first two, so I added it to them.
+
+Oh, and I'll drop the other aardvark change that removes the same bits of
+unused "msi-parent" code from advk_pcie_probe().
+
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
