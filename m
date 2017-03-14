@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v5 4/8] ARM: dts: imx6q-icore: Add LVDS support
-Date: Tue, 14 Mar 2017 15:18:13 +0530
-Message-ID: <1489484897-14933-5-git-send-email-jagan@openedev.com>
+Subject: [PATCH v5 6/8] ARM: dts: imx6q-icore: Add touchscreen node
+Date: Tue, 14 Mar 2017 15:18:15 +0530
+Message-ID: <1489484897-14933-7-git-send-email-jagan@openedev.com>
 References: <1489484897-14933-1-git-send-email-jagan@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1489484897-14933-1-git-send-email-jagan@openedev.com>
@@ -12,8 +12,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add LVDS display support for OpenFrame Capacitive touch 7 inc
-display which is supported by Engicam i.CoreM6 QDL Starter Kit.
+max11801 touchscreen on Engicam iCoreM6 Quad module is
+connected via i2c1, so add tc: max11801@48 on i2c1.
 
 Cc: Domenico Acri <domenico.acri@engicam.com>
 Cc: Matteo Lisi <matteo.lisi@engicam.com>
@@ -24,49 +24,30 @@ Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 Changes for v5:
 - %s/arm/ARM/g with subject prefix
 Changes for v4:
-- Fix checkpatch.pl Errors/Warnings
-Changes for v3:
-- Use native-mode as timing0 since this is the initial lvds-channel
-- Rename hsd100pxn1 reference as timing0
-- Update the correct patch author
-Changes for v2:
-- none
+- Newly added patch
 
- arch/arm/boot/dts/imx6q-icore.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ arch/arm/boot/dts/imx6q-icore.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
-index 59eb7ad..73f34d1 100644
+index 73f34d1..8c1a572 100644
 --- a/arch/arm/boot/dts/imx6q-icore.dts
 +++ b/arch/arm/boot/dts/imx6q-icore.dts
-@@ -57,3 +57,28 @@
- &can2 {
+@@ -58,6 +58,15 @@
  	status = "okay";
  };
-+
-+&ldb {
-+	status = "okay";
-+
-+	lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <18>;
-+		status = "okay";
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency = <60000000>;
-+				hactive = <800>;
-+				vactive = <480>;
-+				hback-porch = <30>;
-+				hfront-porch = <30>;
-+				vback-porch = <5>;
-+				vfront-porch = <5>;
-+				hsync-len = <64>;
-+				vsync-len = <20>;
-+			};
-+		};
+ 
++&i2c1 {
++	ts: max11801@48 {
++		compatible = "max11801";
++		reg = <0x48>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <31 2>;
 +	};
 +};
++
+ &ldb {
+ 	status = "okay";
+ 
 -- 
 1.9.1
