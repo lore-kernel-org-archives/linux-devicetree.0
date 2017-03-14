@@ -1,49 +1,55 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
-Date: Tue, 14 Mar 2017 09:56:35 -0700
-Message-ID: <CAPcyv4hGGbhF-g8B__9=rsP+QwR6RBi=WqALLgABNb1M4D3rBw@mail.gmail.com>
-References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH 3/3] device property: of_property_read_string_array()
+ returns number of strings
+Date: Tue, 14 Mar 2017 17:57:40 +0100
+Message-ID: <CAJZ5v0iNYhqY0VSumBx4-A2YcKcHv6UsXyGpRHgQdM4D-=_9SQ@mail.gmail.com>
+References: <1488806791-25488-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488806791-25488-4-git-send-email-sakari.ailus@linux.intel.com>
+ <1840694.EMHZKJ1jEg@aspire.rjw.lan> <bf544a26-d551-e5e5-6ca1-513f35d057b4@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-raid-owner@vger.kernel.org>
-In-Reply-To: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-raid-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>, Shaohua Li <shli@fb.>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <bf544a26-d551-e5e5-6ca1-513f35d057b4@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 6, 2017 at 1:43 AM, Anup Patel <anup.patel@broadcom.com> wrote:
-> The Broadcom SBA RAID is a stream-based device which provides
-> RAID5/6 offload.
+On Tue, Mar 14, 2017 at 8:17 AM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> Hi Rafael,
 >
-> It requires a SoC specific ring manager (such as Broadcom FlexRM
-> ring manager) to provide ring-based programming interface. Due to
-> this, the Broadcom SBA RAID driver (mailbox client) implements
-> DMA device having one DMA channel using a set of mailbox channels
-> provided by Broadcom SoC specific ring manager driver (mailbox
-> controller).
+> On 03/14/17 00:24, Rafael J. Wysocki wrote:
+>> On Monday, March 06, 2017 03:26:31 PM Sakari Ailus wrote:
+>>> of_property_read_string_array() returns number of strings read if the
+>>> target array of pointers is non-NULL. fwnode_property_read_string_array()
+>>> is documented to return 0 in that case. Fix this.
+>>
+>> Well, if we want people to use fwnode_property_read_string_array() instead of
+>> of_property_read_string_array(), it should better behave analogously, shouldn't it?
 >
-> The Broadcom SBA RAID hardware requires PQ disk position instead
-> of PQ disk coefficient. To address this, we have added raid_gflog
-> table which will help driver to convert PQ disk coefficient to PQ
-> disk position.
+> Not necessarily.
 >
-> This patchset is based on Linux-4.11-rc1 and depends on patchset
-> "[PATCH v5 0/2] Broadcom FlexRM ring manager support"
+> The documentation states that fwnode_property_read_string_array()
+> returns 0 on success. That makes sense since the callers often check
+> whether the return value is non-zero and then return based on that.
+> Returning zero on success is just simpler for the caller.
 >
-> It is also available at sba-raid-v6 branch of
-> https://github.com/Broadcom/arm64-linux.git
+> Often the number of elements to read from an array is known beforehand,
+> so there's little use for the actual number read.
 >
-[..]
+> Besides the fwnode variants, also the OF integer array access functions
+> return zero on success.
 >
-> Anup Patel (4):
->   lib/raid6: Add log-of-2 table for RAID6 HW requiring disk position
->   async_tx: Fix DMA_PREP_FENCE usage in do_async_gen_syndrome()
->   dmaengine: Add Broadcom SBA RAID driver
->   dt-bindings: Add DT bindings document for Broadcom SBA RAID driver
+> Rob had a similar comment but the discussion did not continue after my
+> initial reply. I can sure change that if you still think it's better the
+> other way.
 
-For the dmaengine and async_tx changes:
+I understand the argumentation, but if X is supposed to be an easy
+replacement for Y, it really should stick to the return value
+conventions used by the latter or it is not easy any more.
 
-Acked-by: Dan Williams <dan.j.williams@intel.com>
+So yes, please.
 
-The raid change should get an ack from Shaohua.
+Thanks,
+Rafael
