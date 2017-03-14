@@ -1,76 +1,35 @@
-From: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
-Subject: [PATCH] media: mtk-jpeg: fix continuous log "Context is NULL"
-Date: Tue, 14 Mar 2017 22:21:22 +0800
-Message-ID: <1489501282-52137-1-git-send-email-minghsiu.tsai@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
-Cc: srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, Bin Liu <bin.liu@mediatek.com>, Rick Chang <rick.chang@mediatek.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 19/20] ARM: sunxi: Enable dwmac-sun8i driver on sunxi_defconfig
+Date: Tue, 14 Mar 2017 15:18:55 +0100
+Message-ID: <20170314141856.24560-20-clabbe.montjoie@gmail.com>
+References: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net
+Cc: f.fainelli@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, LABBE Corentin <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The symptom is continuous log "mtk-jpeg 18004000.jpegdec: Context is NULL"
-in kernel log. It is becauese the error handling in irq doesn't clear
-interrupt.
+From: LABBE Corentin <clabbe.montjoie@gmail.com>
 
-The calling flow like as below when issue happen
-mtk_jpeg_device_run()
-mtk_jpeg_job_abort()
-  v4l2_m2m_job_finish() -> m2m_dev->curr_ctx = NULL;
-mtk_jpeg_dec_irq()
-  v4l2_m2m_get_curr_priv()
-     -> m2m_dev->curr_ctx == NULL
-     -> return NULL
-log "Context is NULL"
+Enable the dwmac-sun8i driver in the sunxi default configuration
 
-There is race condition between job_abort() and irq. In order to simplify
-code, don't want to add extra flag to maintain state, empty job_abort() and
-clear interrupt before v4l2_m2m_get_curr_priv() in irq.
-
-Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ arch/arm/configs/sunxi_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-index b10183f..c02bc7f 100644
---- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-+++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
-@@ -862,15 +862,6 @@ static int mtk_jpeg_job_ready(void *priv)
- 
- static void mtk_jpeg_job_abort(void *priv)
- {
--	struct mtk_jpeg_ctx *ctx = priv;
--	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
--	struct vb2_buffer *src_buf, *dst_buf;
--
--	src_buf = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
--	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf), VB2_BUF_STATE_ERROR);
--	v4l2_m2m_buf_done(to_vb2_v4l2_buffer(dst_buf), VB2_BUF_STATE_ERROR);
--	v4l2_m2m_job_finish(jpeg->m2m_dev, ctx->fh.m2m_ctx);
- }
- 
- static struct v4l2_m2m_ops mtk_jpeg_m2m_ops = {
-@@ -941,6 +932,8 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- 	u32 dec_ret;
- 	int i;
- 
-+	dec_ret = mtk_jpeg_dec_get_int_status(jpeg->dec_reg_base);
-+	dec_irq_ret = mtk_jpeg_dec_enum_result(dec_ret);
- 	ctx = v4l2_m2m_get_curr_priv(jpeg->m2m_dev);
- 	if (!ctx) {
- 		v4l2_err(&jpeg->v4l2_dev, "Context is NULL\n");
-@@ -951,9 +944,6 @@ static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
- 	dst_buf = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
- 	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(src_buf);
- 
--	dec_ret = mtk_jpeg_dec_get_int_status(jpeg->dec_reg_base);
--	dec_irq_ret = mtk_jpeg_dec_enum_result(dec_ret);
--
- 	if (dec_irq_ret >= MTK_JPEG_DEC_RESULT_UNDERFLOW)
- 		mtk_jpeg_dec_reset(jpeg->dec_reg_base);
- 
+diff --git a/arch/arm/configs/sunxi_defconfig b/arch/arm/configs/sunxi_defconfig
+index 5cd5dd70..504e022 100644
+--- a/arch/arm/configs/sunxi_defconfig
++++ b/arch/arm/configs/sunxi_defconfig
+@@ -40,6 +40,7 @@ CONFIG_ATA=y
+ CONFIG_AHCI_SUNXI=y
+ CONFIG_NETDEVICES=y
+ CONFIG_SUN4I_EMAC=y
++CONFIG_DWMAC_SUN8I=y
+ # CONFIG_NET_VENDOR_ARC is not set
+ # CONFIG_NET_CADENCE is not set
+ # CONFIG_NET_VENDOR_BROADCOM is not set
 -- 
-1.9.1
+2.10.2
