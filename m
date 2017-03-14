@@ -1,101 +1,73 @@
-From: <nkosuta-f+iqBESB6gc@public.gmane.org>
-Subject: (unknown)
-Date: Tue, 14 Mar 2017 17:14:33 -0000
-Message-ID: <148951167373.15433.11895600901813689105@permonline.ru>
-Reply-To: <nkosuta-f+iqBESB6gc@public.gmane.org>
+From: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH net-next 02/12] net: phy: bcm7xxx: add support for 28nm
+ EPHY
+Date: Tue, 14 Mar 2017 10:23:27 -0700
+Message-ID: <1a487139-ffd9-0598-54da-29986f1e795f@gmail.com>
+References: <20170314004142.4746-1-opendmb@gmail.com>
+ <20170314004142.4746-3-opendmb@gmail.com> <20170314010651.GO15842@lunn.ch>
+ <3e5f7ac9-7e97-60f1-3986-4045522a65f5@gmail.com>
+ <20170314024320.GQ15842@lunn.ch>
 Mime-Version: 1.0
-Content-Type: application/zip; name="EMAIL_05109557_devicetree.zip"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
-Subject: 
+In-Reply-To: <20170314024320.GQ15842-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pgynther-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jaedon.shin-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-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
+On 03/13/2017 07:43 PM, Andrew Lunn wrote:
+> On Mon, Mar 13, 2017 at 07:06:25PM -0700, Doug Berger wrote:
+>> On 03/13/2017 06:06 PM, Andrew Lunn wrote:
+>>> On Mon, Mar 13, 2017 at 05:41:32PM -0700, Doug Berger wrote:
+>>>> +static int bcm7xxx_28nm_ephy_01_afe_config_init(struct phy_device *phydev)
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	/* set shadow mode 2 */
+>>>> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST,
+>>>> +			       MII_BCM7XXX_SHD_MODE_2, 0);
+>>>> +	if (ret < 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	/* Set current trim values INT_trim = -1, Ext_trim =0 */
+>>>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_BIAS_TRIM, 0x3BE0);
+>>>> +	if (ret < 0)
+>>>> +		goto reset_shadow_mode;
+>>>> +
+>>>> +	/* Cal reset */
+>>>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
+>>>> +			MII_BCM7XXX_SHD_3_TL4);
+>>>> +	if (ret < 0)
+>>>> +		goto reset_shadow_mode;
+>>>
+>>> Hi Doug
+>>>
+>>> It would be nice to have a few blank lines here and there...
+>>>
+>> Thanks for taking the time to review this.
+>>
+>> In general I try to keep lines of related functionality together and use
+>> the blank lines to help identify boundaries.  In this particular case, I
+>> believe it is clearer to keep the code that may return an error code
+>> together with the code that tests for the error.
+> 
+> Hi Doug
+> 
+> I agree with that. Which is why i placed the comment between the goto
+> and the next block of code. This is where i think there should be a
+> blank line, to separate it from setting the trim values.
+> 
+OK, I see.  I thought you were referring to the code blocks above the
+comment.  In that case, as described earlier, the code below the comment
+is tightly coupled with the code above the comment since the pair of
+transactions are how we "/* Cal reset */".  The idea of introducing a
+subroutine/helper function for these paired (addr/data) transactions
+might help readability so I will consider it for a future patch.
+
+Thanks again for the feedback,
+    Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
