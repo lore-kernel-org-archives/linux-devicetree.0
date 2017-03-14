@@ -1,113 +1,145 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 00/20] net-next: stmmac: add dwmac-sun8i ethernet driver
-Date: Tue, 14 Mar 2017 15:18:36 +0100
-Message-ID: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+From: Peter Robinson <pbrobinson@gmail.com>
+Subject: Re: [PATCH v3 0/7] mmc: bcm2835: Add new driver for the sdhost controller
+Date: Tue, 14 Mar 2017 14:22:19 +0000
+Message-ID: <CALeDE9Oaqe_7spH9r5-Bth9AvrwviFsZ4woEyE_Zyrws0jM9Dw@mail.gmail.com>
+References: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net
-Cc: devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1487668026-7100-1-git-send-email-kraxel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-rpi-kernel@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello
+Hi Gerd,
 
-This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
-present on Allwinner H3/H5/A83T/A64 SoCs.
+> Next version if the bcm2835 sdhost patch series.
+>
+> New in v3:
+>  * squashed in cleanups by Stefan.
+>  * use one dma channel only.
+>  * improve commit messages.
+>
+> New in v2:
+>  * DMA fixed.
+>  * updated docs (kconfig, file comment, commit message) clarifying
+>    the two sd controller situation.
+>  * some code cleanups, as pointed out by Stefan.
+>  * dt bindings use mmc@... now.
+>  * added patches to update defconfigs.
+>  * added patch for rpi3 device tree, so wifi is actually enabled.
+>
+> please review & test,
+>   Gerd
+>
+> Eric Anholt (2):
+>   dt-bindings: Add binding for brcm,bcm2835-sdhost.
+>   mmc: bcm2835: Add new driver for the sdhost controller.
+>
+> Gerd Hoffmann (5):
+>   mmc: bcm2835: add sdhost controller to devicetree
+>   arm: set CONFIG_MMC_BCM2835=y in bcm2835_defconfig and
+>     multi_v7_defconfig
+>   arm64: set CONFIG_MMC_BCM2835=y in defconfig
+>   ARM: dts: bcm283x: switch from &sdhci to &sdhost
+>   ARM: dts: bcm2837: add &sdhci and &sdhost
 
-This driver is the continuation of the sun8i-emac driver.
-During the development, it appeared that in fact the hardware was a modified
-version of some dwmac.
-So the driver is now written as a glue driver for stmmac.
+I know there's a v4, which is the one I tested, but I don't see it on
+the rpi list. A few things I've found.
 
-It supports 10/100/1000 Mbit/s speed with half/full duplex.
-It can use an internal PHY (MII 10/100) or an external PHY
-via RGMII/RMII.
+First the flipping of the mmc host driver for the SD card slot will
+cause issues for users that build it as a module. When I tested this
+on Fedora the first update I ended up with a system that didn't boot.
+I'm handling in Fedora with a dracut snippet which will pull both in
+both until that settles down.
 
-This patch series enable the driver only for the H3/A64/H5 SoC since A83T
-doesn't have the necessary clocks present in mainline.
+Also i often see the device hang for a long period when systemd probes
+for rfkill status, sometimes it needs to be reset but it generally
+gets there.
 
-The driver have been tested on the following boards:
-- H3 Orange PI PC, BananaPI-M2+
-- A64 Pine64, BananaPi-M64
-- A83T BananaPI-M3
+Finally also seeing the following crash with the patches on 4.11rc2
 
-The first two patchs are some mandatory changes for letting dwmac-sun8i be used.
-The following three patchs add the driver and its documentation.
-The remaining are DT patch enabling it.
+[    6.337148] sdhci: Secure Digital Host Controller Interface driver
+[    6.349263] sdhci: Copyright(c) Pierre Ossman
+[    6.362401] sdhci-pltfm: SDHCI platform and OF driver helper
+[    6.381331] sdhost-bcm2835 3f202000.mmc: loaded - DMA enabled (>1)
+[    6.412548] mmc1: SDHCI controller on 3f300000.sdhci
+[3f300000.sdhci] using PIO
+[    6.445766] mmc1: queuing unknown CIS tuple 0x80 (2 bytes)
+[    6.460651] mmc1: queuing unknown CIS tuple 0x80 (3 bytes)
+[    6.473431] mmc1: queuing unknown CIS tuple 0x80 (3 bytes)
+[    6.487820] mmc1: queuing unknown CIS tuple 0x80 (7 bytes)
+[    6.509590] mmc0: host does not support reading read-only switch,
+assuming write-enable
+[    6.511929] mmc0: new high speed SDHC card at address aaaa
+[    6.527859] mmcblk0: mmc0:aaaa SL16G 14.8 GiB
+[    6.528991] ------------[ cut here ]------------
+[    6.529018] WARNING: CPU: 2 PID: 326 at kernel/workqueue.c:2417
+check_flush_dependency+0xac/0x134
+[    6.529033] workqueue: PF_MEMALLOC task 326(mmcqd/0) is flushing
+!WQ_MEM_RECLAIM events:drain_local_pages_wq
+[    6.529036] Modules linked in: mmc_block(+) sdhci_iproc sdhci_pltfm
+sdhci pwm_bcm2835 bcm2835 i2c_bcm2835 mmc_core bcm2835_dma i2c_dev
+[    6.529075] CPU: 2 PID: 326 Comm: mmcqd/0 Not tainted
+4.11.0-0.rc2.git0.1.fc26.armv7hl #1
+[    6.529079] Hardware name: Generic DT based system
+[    6.529106] [<c0311708>] (unwind_backtrace) from [<c030c438>]
+(show_stack+0x18/0x1c)
+[    6.529122] [<c030c438>] (show_stack) from [<c0639b44>]
+(dump_stack+0x80/0xa0)
+[    6.529137] [<c0639b44>] (dump_stack) from [<c034ca3c>] (__warn+0xe4/0x104)
+[    6.529150] [<c034ca3c>] (__warn) from [<c034ca98>]
+(warn_slowpath_fmt+0x3c/0x4c)
+[    6.529166] [<c034ca98>] (warn_slowpath_fmt) from [<c0363b2c>]
+(check_flush_dependency+0xac/0x134)
+[    6.529184] [<c0363b2c>] (check_flush_dependency) from [<c036433c>]
+(flush_work+0xa0/0x178)
+[    6.529201] [<c036433c>] (flush_work) from [<c0458084>]
+(drain_all_pages+0x1a8/0x1cc)
+[    6.529221] [<c0458084>] (drain_all_pages) from [<c04b1d90>]
+(start_isolate_page_range+0x168/0x1b4)
+[    6.529239] [<c04b1d90>] (start_isolate_page_range) from
+[<c045b854>] (alloc_contig_range+0xd4/0x314)
+[    6.529258] [<c045b854>] (alloc_contig_range) from [<c04b6660>]
+(cma_alloc+0x188/0x300)
+[    6.529275] [<c04b6660>] (cma_alloc) from [<c03161e8>]
+(__alloc_from_contiguous+0x40/0xd8)
+[    6.529290] [<c03161e8>] (__alloc_from_contiguous) from
+[<c03162bc>] (cma_allocator_alloc+0x3c/0x44)
+[    6.529303] [<c03162bc>] (cma_allocator_alloc) from [<c0316504>]
+(__dma_alloc+0x1d4/0x2f0)
+[    6.529317] [<c0316504>] (__dma_alloc) from [<c0316698>]
+(arm_dma_alloc+0x3c/0x48)
+[    6.529331] [<c0316698>] (arm_dma_alloc) from [<c049d120>]
+(dma_pool_alloc+0x124/0x240)
+[    6.529356] [<c049d120>] (dma_pool_alloc) from [<bf009568>]
+(bcm2835_dma_create_cb_chain+0xb0/0x1dc [bcm2835_dma])
+[    6.529385] [<bf009568>] (bcm2835_dma_create_cb_chain
+[bcm2835_dma]) from [<bf009ad4>] (bcm2835_dma_prep_slave_sg+0xf0/0x25c
+[bcm2835_dma])
+[    6.529418] [<bf009ad4>] (bcm2835_dma_prep_slave_sg [bcm2835_dma])
+from [<bf04af04>] (bcm2835_request+0x2a4/0x3f4 [bcm2835])
+[    6.529548] [<bf04af04>] (bcm2835_request [bcm2835]) from
+[<bf0145d0>] (mmc_start_request+0x1f8/0x264 [mmc_core])
+[    6.529756] [<bf0145d0>] (mmc_start_request [mmc_core]) from
+[<bf016204>] (mmc_start_areq+0x2c8/0x318 [mmc_core])
+[    6.529890] [<bf016204>] (mmc_start_areq [mmc_core]) from
+[<bf07fa1c>] (mmc_blk_issue_rw_rq+0xc0/0x308 [mmc_block])
+[    6.529943] [<bf07fa1c>] (mmc_blk_issue_rw_rq [mmc_block]) from
+[<bf080f84>] (mmc_blk_issue_rq+0x418/0x428 [mmc_block])
+[    6.529997] [<bf080f84>] (mmc_blk_issue_rq [mmc_block]) from
+[<bf081138>] (mmc_queue_thread+0x148/0x1bc [mmc_block])
+[    6.530031] [<bf081138>] (mmc_queue_thread [mmc_block]) from
+[<c036ae30>] (kthread+0x120/0x138)
+[    6.530049] [<c036ae30>] (kthread) from [<c0307e58>]
+(ret_from_fork+0x14/0x3c)
+[    6.530055] ---[ end trace 221a5a14ca55fa22 ]---
+[    6.545765]  mmcblk0: p1 p2 p3 p4
+[    6.566015] random: fast init done
+[    6.623699] mmc1: new high speed SDIO card at address 0001
 
-Regards
-Corentin Labbe
+Other than that you can add a Tested-by for me:
+Tested-by: Peter Robinson <pbrobinson@gmail.com>
 
-Changes since v1:
-- added TX/RX delay units
-- splitted syscon documentation in its own patch
-- regulator is now disabled after clk_prepare_enable(gmac->tx_clk) error
-- Fixed a memory leak on mac_device_info
-- Use now generic pin config for all DT stuff
-- CONFIG_DWMAC_SUN8I is now set to y in defconfigs
-
-Corentin Labbe (17):
-  net-next: stmmac: export stmmac_set_mac_addr/stmmac_get_mac_addr
-  net-next: stmmac: add optional setup function
-  ARM: sun8i: dt: Add DT bindings documentation for Allwinner
-    dwmac-sun8i
-  ARM: sun8i: dt: Add DT bindings documentation for Allwinner syscon
-  net-next: stmmac: Add dwmac-sun8i
-  ARM: dts: sunxi-h3-h5: Add dt node for the syscon control module
-  ARM: dts: sunxi-h3-h5: add dwmac-sun8i ethernet driver
-  ARM: dts: sun8i: Enable dwmac-sun8i on the Orange Pi 2
-  ARM: dts: sun8i: Enable dwmac-sun8i on the Orange PI One
-  ARM: dts: sun8i: Enable dwmac-sun8i on the Orange Pi plus
-  ARM: dts: sun8i: orangepi-pc-plus: Set EMAC activity LEDs to active
-    high
-  ARM64: dts: sun50i-a64: Add dt node for the syscon control module
-  ARM64: dts: sun50i-a64: add dwmac-sun8i Ethernet driver
-  ARM: dts: sun50i-a64: enable dwmac-sun8i on pine64
-  ARM: dts: sun50i-a64: enable dwmac-sun8i on pine64 plus
-  ARM: dts: sun50i-a64: enable dwmac-sun8i on the BananaPi M64
-  ARM: sunxi: Enable dwmac-sun8i driver on multi_v7_defconfig
-
-LABBE Corentin (3):
-  ARM: dts: sun8i: Enable dwmac-sun8i on the Banana Pi M2+
-  ARM: dts: sun8i: Enable dwmac-sun8i on the Orange PI PC
-  ARM: sunxi: Enable dwmac-sun8i driver on sunxi_defconfig
-
- .../devicetree/bindings/misc/allwinner,syscon.txt  |  19 +
- .../devicetree/bindings/net/dwmac-sun8i.txt        |  77 ++
- arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |  37 +
- arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |   8 +
- arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |   8 +
- arch/arm/boot/dts/sun8i-h3-orangepi-pc-plus.dts    |   5 +
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |   8 +
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts       |  35 +
- arch/arm/boot/dts/sunxi-h3-h5.dtsi                 |  39 +
- arch/arm/configs/multi_v7_defconfig                |   1 +
- arch/arm/configs/sunxi_defconfig                   |   1 +
- .../boot/dts/allwinner/sun50i-a64-bananapi-m64.dts |  14 +
- .../boot/dts/allwinner/sun50i-a64-pine64-plus.dts  |  16 +-
- .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts |  15 +
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  43 +
- drivers/net/ethernet/stmicro/stmmac/Kconfig        |  11 +
- drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c  | 938 +++++++++++++++++++++
- drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c    |   3 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  31 +-
- .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   9 +-
- include/linux/stmmac.h                             |   4 +
- 22 files changed, 1317 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/misc/allwinner,syscon.txt
- create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-
--- 
-2.10.2
+Peter
