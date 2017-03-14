@@ -1,97 +1,96 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v4 14/36] [media] v4l2-mc: add a function to inherit
- controls from a pipeline
-Date: Tue, 14 Mar 2017 19:26:35 +0100
-Message-ID: <20170314182635.GA3744@amd>
-References: <20170310130733.GU21222@n2100.armlinux.org.uk>
- <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
- <20170310140124.GV21222@n2100.armlinux.org.uk>
- <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
- <20170310125342.7f047acf@vento.lan>
- <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
- <20170311082549.576531d0@vento.lan>
- <20170311231456.GH21222@n2100.armlinux.org.uk>
- <20170312212904.GA7995@amd>
- <20170312193745.636df0bf@vento.lan>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
+Date: Tue, 14 Mar 2017 19:26:46 +0100
+Message-ID: <20170314182646.GB3744@amd>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
+ <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
+ <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
+ <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
+ <5d5cf4a4-a4d3-586e-cd16-54f543dfcce9@gmail.com>
+ <aa6a5a1d-18fd-8bed-a349-2654d2d1abe0@xs4all.nl>
+ <20170313104538.GF21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170312193745.636df0bf-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
+In-Reply-To: <20170313104538.GF21222@n2100.armlinux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.inf
 List-Id: devicetree@vger.kernel.org
 
 
---FL5UXtIhxfXey3p5
+--aM3YZ0Iwxop3KEKx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
-
-> > Mid-layer is difficult... there are _hundreds_ of possible
-> > pipeline setups. If it should live in kernel or in userspace is a
-> > question... but I don't think having it in kernel helps in any way.
+On Mon 2017-03-13 10:45:38, Russell King - ARM Linux wrote:
+> On Mon, Mar 13, 2017 at 11:02:34AM +0100, Hans Verkuil wrote:
+> > On 03/11/2017 07:14 PM, Steve Longerbeam wrote:
+> > > The event must be user visible, otherwise the user has no indication
+> > > the error, and can't correct it by stream restart.
+> >=20
+> > In that case the driver can detect this and call vb2_queue_error. It's
+> > what it is there for.
+> >=20
+> > The event doesn't help you since only this driver has this issue. So no=
+body
+> > will watch this event, unless it is sw specifically written for this So=
+C.
+> >=20
+> > Much better to call vb2_queue_error to signal a fatal error (which this
+> > apparently is) since there are more drivers that do this, and vivid sup=
+ports
+> > triggering this condition as well.
 >=20
-> Mid-layer is difficult, because we either need to feed some
-> library with knowledge for all kernel drivers or we need to improve
-> the MC API to provide more details.
+> So today, I can fiddle around with the IMX219 registers to help gain
+> an understanding of how this sensor works.  Several of the registers
+> (such as the PLL setup [*]) require me to disable streaming on the
+> sensor while changing them.
 >=20
-> For example, several drivers used to expose entities via the
-> generic MEDIA_ENT_T_DEVNODE to represent entities of different
-> types. See, for example, entities 1, 5 and 7 (and others) at:
->
-> > https://mchehab.fedorapeople.org/mc-next-gen/igepv2_omap3isp.png
+> This is something I've done many times while testing various ideas,
+> and is my primary way of figuring out and testing such things.
+>=20
+> Whenever I resume streaming (provided I've let the sensor stop
+> streaming at a frame boundary) it resumes as if nothing happened.  If I
+> stop the sensor mid-frame, then I get the rolling issue that Steve
+> reports, but once the top of the frame becomes aligned with the top of
+> the capture, everything then becomes stable again as if nothing happened.
+>=20
+> The side effect of what you're proposing is that when I disable streaming
+> at the sensor by poking at its registers, rather than the capture just
+> stopping, an error is going to be delivered to gstreamer, and gstreamer
+> is going to exit, taking the entire capture process down.
+>=20
+> This severely restricts the ability to be able to develop and test
+> sensor drivers.
 
-Well... we provide enough information, so that device-specific code
-does not have to be in kernel.
+Well, but kernel should do what is best for production, not what is
+best for driver debugging.
 
-There are few types of ENT_T_DEVNODE there. "ISP CCP2" does not really
-provide any functionality to the user. It just has to be there,
-because the pipeline needs to be connected. "ISP Preview" provides
-format conversion. "ISP Resizer" provides rescaling.
+And yes, I guess you can have #ifdef or module parameter or something
+switching for behaviour you prefer when you are debugging. But for
+production, vb2_queue_error() seems to be the right solution.
 
-I'm not sure if it ever makes sense to use "ISP Preview
-output". Normally you take data for display from "ISP Resizer
-output". (Would there be some power advantage from that?)
-
-> A device-specific code could either be hardcoding the entity number
-> or checking for the entity strings to add some logic to setup
-> controls on those "unknown" entities, a generic app won't be able=20
-> to do anything with them, as it doesn't know what function(s) such
-> entity provide.
-
-Generic app should know if it wants RGGB10 data, then it can use "ISP
-CCDC output", or if it wants "cooked" data suitable for display, then
-it wants to use "ISP Resizer output". Once application knows what
-output it wants, there's just one path through the system. So being
-able to tell the ENT_T_DEVNODEs apart does not seem to be critical.
-
-OTOH, for useful camera application, different paths are needed at
-different phases.
-									Pavel
+								Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---FL5UXtIhxfXey3p5
+--aM3YZ0Iwxop3KEKx
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAljINdsACgkQMOfwapXb+vLsJgCfTHi3WWXopxgQDoVYKBFeNCsX
-1pIAoJCLkkQ1XeTTlDPgVbzaLaRyJWY5
-=pshM
+iEYEARECAAYFAljINeYACgkQMOfwapXb+vK14QCbBgL8BWnvz975TIwHj1zYgdU3
+Yc4AnRNhAYf0StYuCHTqTIHTfebPobdS
+=9XSv
 -----END PGP SIGNATURE-----
 
---FL5UXtIhxfXey3p5--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--aM3YZ0Iwxop3KEKx--
