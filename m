@@ -1,61 +1,44 @@
-From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 1/2] dt-bindings: arm64 ARCH_THUNDER2 platform documentation
-Date: Tue, 14 Mar 2017 12:47:13 +0000
-Message-ID: <1489495634-2920-2-git-send-email-jnair@caviumnetworks.com>
-References: <1489313015-4783-1-git-send-email-jnair@caviumnetworks.com>
- <1489495634-2920-1-git-send-email-jnair@caviumnetworks.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Specify serial console parameters
+Date: Tue, 14 Mar 2017 13:51:39 +0100
+Message-ID: <20170314125139.GW15842@lunn.ch>
+References: <20170314075830.2247-1-zajec5@gmail.com>
+ <20170314122650.GV15842@lunn.ch>
+ <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489495634-2920-1-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3345fb38-fbea-141e-6ad2-a3341e2c31fe-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for Cavium's ThunderX2 CN99XX ARM64 processor. This
-SoC will use "cavium,thunderx2-cn9900" as the compatible property.
+> >The alias is fine. But putting the stdout-path here is unusual. Which
+> >serial port is used for console is board specific, where as
+> >bcm5301x.dtsi is very generic, it describes the SoC, not a board.  If
+> >you look at other .dtsi files, those that specify stdout-path contain
+> >properties which are common to a range of similar boards.
+> 
+> So far I've never seen any board using other uart. Also uart0 is disabled by
+> default and we enable it per board family (BCM4708 / BCM47081 / BCM4709 /
+> BCM47094). I think it's just more practical to have simple DTS that covers
+> 99,9% boards by default and handled that margin of devices separately.
+> 
+> We already got a lot of duplicated code for enabling uart0, see:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7b790d3b2943bf8e7e7bafe184008bd6451fe0bd
+> 
+> Jon Mason from Broadcom who knows this hardware and designs very well confirmed
+> it's a sane/safe assumption.
 
-Also add a documentation entry for the "cavium,thunder2" cpu core
-present in these SoCs.
+I don't disagree with you, it does make sense. But it is just
+different to every other SoC .dtsi file Linux has. And we try to avoid
+things being different.
 
-Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 8 ++++++++
- Documentation/devicetree/bindings/arm/cpus.txt            | 1 +
- 2 files changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+It is down to Florian to decide, as maintainer.
 
-diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-new file mode 100644
-index 0000000..dc5dd65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-@@ -0,0 +1,8 @@
-+Cavium ThunderX2 CN99XX platform tree bindings
-+----------------------------------------------
-+
-+Boards with Cavium ThunderX2 CN99XX SoC shall have the root property:
-+  compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-+
-+These SoC uses the "cavium,thunder2" core which will be compatible
-+with "brcm,vulcan".
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 698ad1f0..1030f5f 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -170,6 +170,7 @@ nodes to be present and contain the properties described below.
- 			    "brcm,brahma-b15"
- 			    "brcm,vulcan"
- 			    "cavium,thunder"
-+			    "cavium,thunder2"
- 			    "faraday,fa526"
- 			    "intel,sa110"
- 			    "intel,sa1100"
--- 
-2.7.4
-
+   Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
