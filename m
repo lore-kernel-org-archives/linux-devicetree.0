@@ -1,147 +1,237 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [RESEND] drm/exynos: Remove support for Exynos4415 (SoC not
- supported anymore)
-Date: Tue, 14 Mar 2017 10:21:03 +0900
-Message-ID: <58C7457F.4050405@samsung.com>
-References: <CGME20170311180431epcas2p10b35859d1f3eedd1e4dc4d4bb9833cce@epcas2p1.samsung.com>
- <20170311180416.7071-1-krzk@kernel.org>
+From: Doug Berger <opendmb@gmail.com>
+Subject: Re: [PATCH net-next 02/12] net: phy: bcm7xxx: add support for 28nm
+ EPHY
+Date: Mon, 13 Mar 2017 19:06:25 -0700
+Message-ID: <3e5f7ac9-7e97-60f1-3986-4045522a65f5@gmail.com>
+References: <20170314004142.4746-1-opendmb@gmail.com>
+ <20170314004142.4746-3-opendmb@gmail.com> <20170314010651.GO15842@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20170311180416.7071-1-krzk@kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170314010651.GO15842@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, rafal@milecki.pl, xow@google.com, joel@jms.id.au, jon.mason@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pgynther@google.com, jaedon.shin@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Merged.
+On 03/13/2017 06:06 PM, Andrew Lunn wrote:
+> On Mon, Mar 13, 2017 at 05:41:32PM -0700, Doug Berger wrote:
+>> +static int bcm7xxx_28nm_ephy_01_afe_config_init(struct phy_device *phydev)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* set shadow mode 2 */
+>> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST,
+>> +			       MII_BCM7XXX_SHD_MODE_2, 0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/* Set current trim values INT_trim = -1, Ext_trim =0 */
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_BIAS_TRIM, 0x3BE0);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+>> +
+>> +	/* Cal reset */
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
+>> +			MII_BCM7XXX_SHD_3_TL4);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+> 
+> Hi Doug
+> 
+> It would be nice to have a few blank lines here and there...
+> 
+Thanks for taking the time to review this.
 
-Thanks.
+In general I try to keep lines of related functionality together and use
+the blank lines to help identify boundaries.  In this particular case, I
+believe it is clearer to keep the code that may return an error code
+together with the code that tests for the error.
 
-2017년 03월 12일 03:04에 Krzysztof Kozlowski 이(가) 쓴 글:
-> Support for Exynos4415 is going away because there are no internal nor
-> external users.
+Perhaps this would be a better alternative:
++	/* Set current trim values INT_trim = -1, Ext_trim =0 */
++	if (phy_write(phydev, MII_BCM7XXX_SHD_2_BIAS_TRIM, 0x3BE0) < 0)
++		goto reset_shadow_mode;
++
++	/* Cal reset */
++	if (phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
++		      MII_BCM7XXX_SHD_3_TL4) < 0)
++		goto reset_shadow_mode;
+
+>> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
+>> +			       MII_BCM7XXX_TL4_RST_MSK, 0);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+>> +
+>> +	/* Cal reset disable */
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
+>> +			MII_BCM7XXX_SHD_3_TL4);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
 > 
-> Since commit 46dcf0ff0de3 ("ARM: dts: exynos: Remove exynos4415.dtsi"),
-> the platform cannot be instantiated so remove also the drivers.
+> ... just to break things up into readable chunks.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Acked-by: Kukjin Kim <kgene@kernel.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/display/exynos/exynos_dsim.txt |  1 -
->  .../bindings/display/exynos/samsung-fimd.txt           |  1 -
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c                | 15 +--------------
->  drivers/gpu/drm/exynos/exynos_drm_fimd.c               | 18 ++----------------
->  4 files changed, 3 insertions(+), 32 deletions(-)
+Maybe:
++	if (phy_set_clr_bits(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
++			     MII_BCM7XXX_TL4_RST_MSK, 0) < 0)
++		goto reset_shadow_mode;
++
++	/* Cal reset disable */
++	if (phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
++		      MII_BCM7XXX_SHD_3_TL4) < 0)
++		goto reset_shadow_mode;
+
+>> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
+>> +			       0, MII_BCM7XXX_TL4_RST_MSK);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+>> +
+>> +reset_shadow_mode:
+>> +	/* reset shadow mode 2 */
+>> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, 0,
+>> +			       MII_BCM7XXX_SHD_MODE_2);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	return 0;
 > 
-> diff --git a/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt b/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
-> index a78265993665..ca5204b3bc21 100644
-> --- a/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
-> +++ b/Documentation/devicetree/bindings/display/exynos/exynos_dsim.txt
-> @@ -4,7 +4,6 @@ Required properties:
->    - compatible: value should be one of the following
->  		"samsung,exynos3250-mipi-dsi" /* for Exynos3250/3472 SoCs */
->  		"samsung,exynos4210-mipi-dsi" /* for Exynos4 SoCs */
-> -		"samsung,exynos4415-mipi-dsi" /* for Exynos4415 SoC */
->  		"samsung,exynos5410-mipi-dsi" /* for Exynos5410/5420/5440 SoCs */
->  		"samsung,exynos5422-mipi-dsi" /* for Exynos5422/5800 SoCs */
->  		"samsung,exynos5433-mipi-dsi" /* for Exynos5433 SoCs */
-> diff --git a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
-> index 18645e0228b0..5837402c3ade 100644
-> --- a/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
-> +++ b/Documentation/devicetree/bindings/display/exynos/samsung-fimd.txt
-> @@ -11,7 +11,6 @@ Required properties:
->  		"samsung,s5pv210-fimd"; /* for S5PV210 SoC */
->  		"samsung,exynos3250-fimd"; /* for Exynos3250/3472 SoCs */
->  		"samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
-> -		"samsung,exynos4415-fimd"; /* for Exynos4415 SoC */
->  		"samsung,exynos5250-fimd"; /* for Exynos5250 SoCs */
->  		"samsung,exynos5420-fimd"; /* for Exynos5420/5422/5800 SoCs */
->  
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index 812e2ec0761d..ef6f9c6de098 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -86,7 +86,7 @@
->  #define DSIM_SYNC_INFORM		(1 << 27)
->  #define DSIM_EOT_DISABLE		(1 << 28)
->  #define DSIM_MFLUSH_VS			(1 << 29)
-> -/* This flag is valid only for exynos3250/3472/4415/5260/5430 */
-> +/* This flag is valid only for exynos3250/3472/5260/5430 */
->  #define DSIM_CLKLANE_STOP		(1 << 30)
->  
->  /* DSIM_ESCMODE */
-> @@ -473,17 +473,6 @@ static const struct exynos_dsi_driver_data exynos4_dsi_driver_data = {
->  	.reg_values = reg_values,
->  };
->  
-> -static const struct exynos_dsi_driver_data exynos4415_dsi_driver_data = {
-> -	.reg_ofs = exynos_reg_ofs,
-> -	.plltmr_reg = 0x58,
-> -	.has_clklane_stop = 1,
-> -	.num_clks = 2,
-> -	.max_freq = 1000,
-> -	.wait_for_reset = 1,
-> -	.num_bits_resol = 11,
-> -	.reg_values = reg_values,
-> -};
-> -
->  static const struct exynos_dsi_driver_data exynos5_dsi_driver_data = {
->  	.reg_ofs = exynos_reg_ofs,
->  	.plltmr_reg = 0x58,
-> @@ -521,8 +510,6 @@ static const struct of_device_id exynos_dsi_of_match[] = {
->  	  .data = &exynos3_dsi_driver_data },
->  	{ .compatible = "samsung,exynos4210-mipi-dsi",
->  	  .data = &exynos4_dsi_driver_data },
-> -	{ .compatible = "samsung,exynos4415-mipi-dsi",
-> -	  .data = &exynos4415_dsi_driver_data },
->  	{ .compatible = "samsung,exynos5410-mipi-dsi",
->  	  .data = &exynos5_dsi_driver_data },
->  	{ .compatible = "samsung,exynos5422-mipi-dsi",
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> index a9fa444c6053..661b9fe049e2 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> @@ -71,10 +71,10 @@
->  #define TRIGCON				0x1A4
->  #define TRGMODE_ENABLE			(1 << 0)
->  #define SWTRGCMD_ENABLE			(1 << 1)
-> -/* Exynos3250, 3472, 4415, 5260 5410, 5420 and 5422 only supported. */
-> +/* Exynos3250, 3472, 5260 5410, 5420 and 5422 only supported. */
->  #define HWTRGEN_ENABLE			(1 << 3)
->  #define HWTRGMASK_ENABLE		(1 << 4)
-> -/* Exynos3250, 3472, 4415, 5260, 5420 and 5422 only supported. */
-> +/* Exynos3250, 3472, 5260, 5420 and 5422 only supported. */
->  #define HWTRIGEN_PER_ENABLE		(1 << 31)
->  
->  /* display mode change control register except exynos4 */
-> @@ -138,18 +138,6 @@ static struct fimd_driver_data exynos4_fimd_driver_data = {
->  	.has_vtsel = 1,
->  };
->  
-> -static struct fimd_driver_data exynos4415_fimd_driver_data = {
-> -	.timing_base = 0x20000,
-> -	.lcdblk_offset = 0x210,
-> -	.lcdblk_vt_shift = 10,
-> -	.lcdblk_bypass_shift = 1,
-> -	.trg_type = I80_HW_TRG,
-> -	.has_shadowcon = 1,
-> -	.has_vidoutcon = 1,
-> -	.has_vtsel = 1,
-> -	.has_trigger_per_te = 1,
-> -};
-> -
->  static struct fimd_driver_data exynos5_fimd_driver_data = {
->  	.timing_base = 0x20000,
->  	.lcdblk_offset = 0x214,
-> @@ -210,8 +198,6 @@ static const struct of_device_id fimd_driver_dt_match[] = {
->  	  .data = &exynos3_fimd_driver_data },
->  	{ .compatible = "samsung,exynos4210-fimd",
->  	  .data = &exynos4_fimd_driver_data },
-> -	{ .compatible = "samsung,exynos4415-fimd",
-> -	  .data = &exynos4415_fimd_driver_data },
->  	{ .compatible = "samsung,exynos5250-fimd",
->  	  .data = &exynos5_fimd_driver_data },
->  	{ .compatible = "samsung,exynos5420-fimd",
+> How about:
 > 
+> 	return phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, 0,
+> 	       		        MII_BCM7XXX_SHD_MODE_2);
+> 
+The trouble here is that currently the phy_set_clr_bits() function
+returns the value written or a negative error and the function
+bcm7xxx_28nm_ephy_01_afe_config_init() is supposed to return 0 on
+success and non-zero on failure so this would not have the same
+functionality.  I suppose we could change the phy_set_clr_bits() API to
+return 0 on success to make this work, but I wasn't trying to change
+preexisting functionality in this file.
+
+>> +/* The 28nm EPHY does not support Clause 45 (MMD) used by bcm-phy-lib */
+>> +static int bcm7xxx_28nm_ephy_apd_enable(struct phy_device *phydev)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* set shadow mode 1 */
+>> +	ret = phy_set_clr_bits(phydev, MII_BRCM_FET_BRCMTEST,
+>> +			       MII_BRCM_FET_BT_SRE, 0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/* Enable auto-power down */
+>> +	ret = phy_set_clr_bits(phydev, MII_BRCM_FET_SHDW_AUXSTAT2,
+>> +			       MII_BRCM_FET_SHDW_AS2_APDE, 0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/* reset shadow mode 1 */
+>> +	ret = phy_set_clr_bits(phydev, MII_BRCM_FET_BRCMTEST, 0,
+>> +			       MII_BRCM_FET_BT_SRE);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	return 0;
+> 
+> How about just
+> 
+>     return phy_set_clr_bits(phydev, MII_BRCM_FET_BRCMTEST, 0,
+>     	   		       MII_BRCM_FET_BT_SRE);
+> 
+Same remark as above.
+
+>> +}
+>> +
+>> +static int bcm7xxx_28nm_ephy_eee_enable(struct phy_device *phydev)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* set shadow mode 2 */
+>> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST,
+>> +			       MII_BCM7XXX_SHD_MODE_2, 0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/* Advertise supported modes */
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
+>> +			MII_BCM7XXX_SHD_3_AN_EEE_ADV);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+> 
+> blank...
+> 
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
+>> +			MDIO_EEE_100TX);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+Here the two phy_write() calls are required to "/* Advertise supported
+modes */" (one sets an address and the other specifies the data to write
+to that address) so I kept them together to imply an association with
+the preceding comment.  If new code in the future came between them it
+would be "bad" so closing the space helps indicate that it is not a safe
+coding boundary for inserting code.
+
+>> +
+>> +	/* Restore Defaults */
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
+>> +			MII_BCM7XXX_SHD_3_PCS_CTRL_2);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
+>> +			MII_BCM7XXX_PCS_CTRL_2_DEF);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+Same here.
+
+>> +
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
+>> +			MII_BCM7XXX_SHD_3_EEE_THRESH);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
+>> +			MII_BCM7XXX_EEE_THRESH_DEF);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+Here...
+
+>> +
+>> +	/* Enable EEE autonegotiation */
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
+>> +			MII_BCM7XXX_SHD_3_AN_STAT);
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+>> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
+>> +			(MII_BCM7XXX_AN_NULL_MSG_EN | MII_BCM7XXX_AN_EEE_EN));
+>> +	if (ret < 0)
+>> +		goto reset_shadow_mode;
+and here.
+
+>> +
+>> +reset_shadow_mode:
+>> +	/* reset shadow mode 2 */
+>> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, 0,
+>> +			       MII_BCM7XXX_SHD_MODE_2);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/* Restart autoneg */
+>> +	phy_write(phydev, MII_BMCR,
+>> +		  (BMCR_SPEED100 | BMCR_ANENABLE | BMCR_ANRESTART));
+>> +
+>> +	return 0;
+> 
+>   return phy_write(.....); ?
+> 
+I would feel more comfortable with this if the return value of the
+struct mii_bus write member function was more clearly defined.  In our
+case, we return 0 on success so I would consider this change, but I
+would prefer a consensus that all mii_bus write functions return 0 on
+success before doing so.
+
+>> +}
+> 
+>   Andrew
+> 
+Thanks again,
+    Doug
