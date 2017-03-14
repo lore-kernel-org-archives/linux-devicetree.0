@@ -1,44 +1,58 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH] ARM: dts: imx7s: Do not claim i.MX51 compatibility for SRC
-Date: Tue, 14 Mar 2017 08:33:57 -0700
-Message-ID: <20170314153357.32463-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, yurovsky@gmail.com, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v0 1/2] interconnect: Add generic interconnect controller
+ API
+Date: Tue, 14 Mar 2017 17:35:57 +0200
+Message-ID: <20fa9f6c-22b8-08d0-8fbd-82cbad9acc87@linaro.org>
+References: <20170301182235.19154-1-georgi.djakov@linaro.org>
+ <20170301182235.19154-2-georgi.djakov@linaro.org>
+ <15929d7a-65e5-f8ba-2fac-0381c5f8e8fc@infradead.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <15929d7a-65e5-f8ba-2fac-0381c5f8e8fc-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, skannan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, seansw-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, davidai-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-System Reset Controller in i.MX7 doesn't have any commonality with IP
-block found in i.MX5 and i.MX6 SoC families. Given that and the new
-upstream driver for i.MX7 variant (see
-https://lkml.org/lkml/2017/2/21/466) remove "fsl,imx51-src" from
-compatibility string.
+On 03/03/2017 12:53 AM, Randy Dunlap wrote:
+> On 03/01/17 10:22, Georgi Djakov wrote:
+>>
+>> diff --git a/drivers/interconnect/Kconfig b/drivers/interconnect/Kconfig
+>> new file mode 100644
+>> index 000000000000..103524b59905
+>> --- /dev/null
+>> +++ b/drivers/interconnect/Kconfig
+>> @@ -0,0 +1,10 @@
+>> +menuconfig INTERCONNECT
+>> +	bool "On-Chip Interconnect management support"
+>
+> Why isn't this symbol tristate instead of bool so that the
+> interconnect management support can be built as a loadable module?
+>
 
-Cc: yurovsky@gmail.com
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- arch/arm/boot/dts/imx7s.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for the comment! For simplicity, the core API currently is
+only supported as a built-in, but we can definitely try making it
+modular. I can do it after we get some initial feedback on if and
+how this concept fits in the kernel and set the direction we want
+to go.
 
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index ec7a61a..12984b6 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -556,7 +556,7 @@
- 			};
- 
- 			src: src@30390000 {
--				compatible = "fsl,imx7d-src", "fsl,imx51-src", "syscon";
-+				compatible = "fsl,imx7d-src", "syscon";
- 				reg = <0x30390000 0x10000>;
- 				interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 				#reset-cells = <1>;
--- 
-2.9.3
+BR,
+Georgi
+
+>
+>> +	help
+>> +	  Support for management of the on-chip interconnects.
+>> +
+>> +	  This framework is designed to provide a generic interface for
+>> +          managing the interconnects in a SoC.
+>> +
+>> +	  If unsure, say no.
+>> +
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
