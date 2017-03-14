@@ -1,44 +1,41 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Specify serial console parameters
-Date: Tue, 14 Mar 2017 13:51:39 +0100
-Message-ID: <20170314125139.GW15842@lunn.ch>
-References: <20170314075830.2247-1-zajec5@gmail.com>
- <20170314122650.GV15842@lunn.ch>
- <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/8] ARM: dts: s3c64xx: Enable watchdog on all S3C64xx
+ boards
+Date: Tue, 14 Mar 2017 13:58:35 +0100
+Message-ID: <4386279.iJpUOasmTG@amdc3058>
+References: <20170311172527.16368-1-krzk@kernel.org>
+ <20170311172527.16368-5-krzk@kernel.org>
+ <CGME20170314125837epcas1p481afc11bcf7fc11ef477edda28bccc74@epcas1p4.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3345fb38-fbea-141e-6ad2-a3341e2c31fe-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-reply-to: <20170311172527.16368-5-krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> >The alias is fine. But putting the stdout-path here is unusual. Which
-> >serial port is used for console is board specific, where as
-> >bcm5301x.dtsi is very generic, it describes the SoC, not a board.  If
-> >you look at other .dtsi files, those that specify stdout-path contain
-> >properties which are common to a range of similar boards.
-> 
-> So far I've never seen any board using other uart. Also uart0 is disabled by
-> default and we enable it per board family (BCM4708 / BCM47081 / BCM4709 /
-> BCM47094). I think it's just more practical to have simple DTS that covers
-> 99,9% boards by default and handled that margin of devices separately.
-> 
-> We already got a lot of duplicated code for enabling uart0, see:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7b790d3b2943bf8e7e7bafe184008bd6451fe0bd
-> 
-> Jon Mason from Broadcom who knows this hardware and designs very well confirmed
-> it's a sane/safe assumption.
 
-I don't disagree with you, it does make sense. But it is just
-different to every other SoC .dtsi file Linux has. And we try to avoid
-things being different.
+Hi,
 
-It is down to Florian to decide, as maintainer.
+On Saturday, March 11, 2017 07:25:23 PM Krzysztof Kozlowski wrote:
+> Watchdog module does not have external dependencies so it can be safely
+> enabled in s3c64xx.dtsi thus making it available for all S3C64xx-based
+> boards.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-   Andrew
+Please first fix the driver w.r.t. infinite interrupt in soft mode
+issue and only then enable it on more hardware.  IOW this patch
+should be placed after patch #7 in the series.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
