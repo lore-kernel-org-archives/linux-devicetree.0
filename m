@@ -1,245 +1,109 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/3] mfd: wm831x: Add basic device tree binding
-Date: Tue, 14 Mar 2017 14:56:21 +0000
-Message-ID: <20170314145621.2k3i3vz6j2eznyfu@dell>
-References: <1488818804-9406-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [GIT PULL] generic TEE subsystem for v4.12
+Date: Tue, 14 Mar 2017 15:57:34 +0100
+Message-ID: <20170314145305.GA12937@jax>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1488818804-9406-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
+To: arm@kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F. Davis" <afd@ti.com>, broonie@kernel.org, scott.branden@broadcom.com, Loic PALLARDY <loic.pallardy@st.com>, Etienne CARRIERE <etienne.carriere@st.com>, Benjamin GAIGNARD <benjamin.ga>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 06 Mar 2017, Charles Keepax wrote:
+Hi arm-soc maintainers,
 
-> Add the basic ability to register the device through device tree, more
-> work is needed to get each individual sub-driver functioning correctly
-> but this is enough to get the device to probe from device tree.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
-> 
-> No changes since v2.
-> 
->  drivers/mfd/wm831x-core.c       | 32 +++++++++++++++++++++++++++++++-
->  drivers/mfd/wm831x-i2c.c        |  9 ++++++++-
->  drivers/mfd/wm831x-irq.c        |  6 +++---
->  drivers/mfd/wm831x-spi.c        |  6 +++++-
->  include/linux/mfd/wm831x/core.h | 15 +++++++++++++++
->  5 files changed, 62 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/mfd/wm831x-core.c b/drivers/mfd/wm831x-core.c
-> index 3e0e99e..21d3cdd 100644
-> --- a/drivers/mfd/wm831x-core.c
-> +++ b/drivers/mfd/wm831x-core.c
-> @@ -19,6 +19,8 @@
->  #include <linux/mfd/core.h>
->  #include <linux/slab.h>
->  #include <linux/err.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  
->  #include <linux/mfd/wm831x/core.h>
->  #include <linux/mfd/wm831x/pdata.h>
-> @@ -1613,6 +1615,31 @@ struct regmap_config wm831x_regmap_config = {
->  };
->  EXPORT_SYMBOL_GPL(wm831x_regmap_config);
->  
-> +#ifdef CONFIG_OF
-> +const struct of_device_id wm831x_of_match[] = {
-> +	{ .compatible = "wlf,wm8310", .data = (void *)WM8310 },
-> +	{ .compatible = "wlf,wm8311", .data = (void *)WM8311 },
-> +	{ .compatible = "wlf,wm8312", .data = (void *)WM8312 },
-> +	{ .compatible = "wlf,wm8320", .data = (void *)WM8320 },
-> +	{ .compatible = "wlf,wm8321", .data = (void *)WM8321 },
-> +	{ .compatible = "wlf,wm8325", .data = (void *)WM8325 },
-> +	{ .compatible = "wlf,wm8326", .data = (void *)WM8326 },
-> +	{ },
-> +};
-> +EXPORT_SYMBOL_GPL(wm831x_of_match);
-> +
-> +int wm831x_of_get_type(struct device *dev)
-> +{
-> +	const struct of_device_id *id = of_match_device(wm831x_of_match, dev);
-> +
-> +	if (id)
-> +		return (unsigned long)id->data;
-> +	else
+Please consider this pull request for v4.12
 
-This is not possible.
+This pull request contains version 16 of the generic TEE driver.
 
-> +		return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(wm831x_of_get_type);
+The TEE subsystem will contain drivers for various TEE implementations.
+A TEE (Trusted Execution Environment) is a trusted OS running in some
+secure environment, for example, TrustZone on ARM CPUs, or a separate
+secure co-processor etc.
 
-No need for this function and certainly no requirement to export it.
+The patch set has been reviewed by different people during the different
+versions. Now I think this has reached a state where it's mature enough
+to merge.
 
-> +#endif
-> +
->  /*
->   * Instantiate the generic non-control parts of the device.
->   */
-> @@ -1628,7 +1655,10 @@ int wm831x_device_init(struct wm831x *wm831x, unsigned long id, int irq)
+The v16 cover letter containing detailed revision history can be found at
+https://lkml.org/lkml/2017/3/10/1277
 
-You can expand 'id' to 'type' now.
+Thanks,
+Jens
 
->  	dev_set_drvdata(wm831x->dev, wm831x);
->  
->  	if (pdata)
-> -		wm831x->soft_shutdown = pdata->soft_shutdown;
-> +		memcpy(&wm831x->pdata, pdata, sizeof(*pdata));
-> +	pdata = &wm831x->pdata;
+The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
 
-We normally deal with pdata in .probe().
+  Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
 
-It makes sense to group it with your 'get_type' code.
+are available in the git repository at:
 
-> +	wm831x->soft_shutdown = pdata->soft_shutdown;
->  
->  	ret = wm831x_reg_read(wm831x, WM831X_PARENT_ID);
->  	if (ret < 0) {
-> diff --git a/drivers/mfd/wm831x-i2c.c b/drivers/mfd/wm831x-i2c.c
-> index 824bcba..b2acd92 100644
-> --- a/drivers/mfd/wm831x-i2c.c
-> +++ b/drivers/mfd/wm831x-i2c.c
-> @@ -28,8 +28,14 @@ static int wm831x_i2c_probe(struct i2c_client *i2c,
->  			    const struct i2c_device_id *id)
->  {
->  	struct wm831x *wm831x;
-> +	enum wm831x_parent type;
->  	int ret;
->  
-> +	if (i2c->dev.of_node)
-> +		type = (enum wm831x_parent)wm831x_of_get_type(&i2c->dev);
+  git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-drv-for-4.12
 
-Move the 'get_type' code here instead and store the type into device
-data i.e. wm831x.
+for you to fetch changes up to 14e21cb8f811100a2104e952b8f5bc0326a5e213:
 
-> +	else
-> +		type = (enum wm831x_parent)id->driver_data;
-> +
->  	wm831x = devm_kzalloc(&i2c->dev, sizeof(struct wm831x), GFP_KERNEL);
->  	if (wm831x == NULL)
->  		return -ENOMEM;
-> @@ -45,7 +51,7 @@ static int wm831x_i2c_probe(struct i2c_client *i2c,
->  		return ret;
->  	}
->  
-> -	return wm831x_device_init(wm831x, id->driver_data, i2c->irq);
-> +	return wm831x_device_init(wm831x, type, i2c->irq);
->  }
->  
->  static int wm831x_i2c_remove(struct i2c_client *i2c)
-> @@ -94,6 +100,7 @@ static struct i2c_driver wm831x_i2c_driver = {
->  	.driver = {
->  		.name = "wm831x",
->  		.pm = &wm831x_pm_ops,
-> +		.of_match_table = of_match_ptr(wm831x_of_match),
->  	},
->  	.probe = wm831x_i2c_probe,
->  	.remove = wm831x_i2c_remove,
-> diff --git a/drivers/mfd/wm831x-irq.c b/drivers/mfd/wm831x-irq.c
-> index dfea8b9..c01239a 100644
-> --- a/drivers/mfd/wm831x-irq.c
-> +++ b/drivers/mfd/wm831x-irq.c
-> @@ -564,7 +564,7 @@ static const struct irq_domain_ops wm831x_irq_domain_ops = {
->  
->  int wm831x_irq_init(struct wm831x *wm831x, int irq)
->  {
-> -	struct wm831x_pdata *pdata = dev_get_platdata(wm831x->dev);
-> +	struct wm831x_pdata *pdata = &wm831x->pdata;
->  	struct irq_domain *domain;
->  	int i, ret, irq_base;
->  
-> @@ -579,7 +579,7 @@ int wm831x_irq_init(struct wm831x *wm831x, int irq)
->  	}
->  
->  	/* Try to dynamically allocate IRQs if no base is specified */
-> -	if (pdata && pdata->irq_base) {
-> +	if (pdata->irq_base) {
->  		irq_base = irq_alloc_descs(pdata->irq_base, 0,
->  					   WM831X_NUM_IRQS, 0);
->  		if (irq_base < 0) {
-> @@ -608,7 +608,7 @@ int wm831x_irq_init(struct wm831x *wm831x, int irq)
->  		return -EINVAL;
->  	}
->  
-> -	if (pdata && pdata->irq_cmos)
-> +	if (pdata->irq_cmos)
->  		i = 0;
->  	else
->  		i = WM831X_IRQ_OD;
-> diff --git a/drivers/mfd/wm831x-spi.c b/drivers/mfd/wm831x-spi.c
-> index 80482ae..44c6eec 100644
-> --- a/drivers/mfd/wm831x-spi.c
-> +++ b/drivers/mfd/wm831x-spi.c
-> @@ -28,7 +28,10 @@ static int wm831x_spi_probe(struct spi_device *spi)
->  	enum wm831x_parent type;
->  	int ret;
->  
-> -	type = (enum wm831x_parent)id->driver_data;
-> +	if (spi->dev.of_node)
-> +		type = (enum wm831x_parent)wm831x_of_get_type(&spi->dev);
-> +	else
-> +		type = (enum wm831x_parent)id->driver_data;
->  
->  	wm831x = devm_kzalloc(&spi->dev, sizeof(struct wm831x), GFP_KERNEL);
->  	if (wm831x == NULL)
-> @@ -97,6 +100,7 @@ static struct spi_driver wm831x_spi_driver = {
->  	.driver = {
->  		.name	= "wm831x",
->  		.pm	= &wm831x_spi_pm,
-> +		.of_match_table = of_match_ptr(wm831x_of_match),
->  	},
->  	.id_table	= wm831x_spi_ids,
->  	.probe		= wm831x_spi_probe,
-> diff --git a/include/linux/mfd/wm831x/core.h b/include/linux/mfd/wm831x/core.h
-> index 76c2264..752a722 100644
-> --- a/include/linux/mfd/wm831x/core.h
-> +++ b/include/linux/mfd/wm831x/core.h
-> @@ -21,6 +21,8 @@
->  #include <linux/list.h>
->  #include <linux/regmap.h>
->  #include <linux/mfd/wm831x/auxadc.h>
-> +#include <linux/mfd/wm831x/pdata.h>
-> +#include <linux/of.h>
->  
->  /*
->   * Register values.
-> @@ -367,6 +369,8 @@ struct wm831x {
->  
->  	struct regmap *regmap;
->  
-> +	struct wm831x_pdata pdata;
-> +
->  	int irq;  /* Our chip IRQ */
->  	struct mutex irq_lock;
->  	struct irq_domain *irq_domain;
-> @@ -427,4 +431,15 @@ static inline int wm831x_irq(struct wm831x *wm831x, int irq)
->  
->  extern struct regmap_config wm831x_regmap_config;
->  
-> +extern const struct of_device_id wm831x_of_match[];
-> +
-> +#ifdef CONFIG_OF
-> +int wm831x_of_get_type(struct device *dev);
-> +#else
-> +static inline int wm831x_of_get_type(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +#endif
+  arm64: dt: hikey: Add optee node (2017-03-10 14:51:58 +0100)
 
-No need.
+----------------------------------------------------------------
+Introduce generic TEE subsystem:
+- the TEE subsystem itself
+- an OP-TEE driver using the subsystem
+- optee bindings
+- optee node for hi6220-hikey.dts
 
->  #endif
+----------------------------------------------------------------
+Jens Wiklander (4):
+      dt/bindings: add bindings for optee
+      tee: generic TEE subsystem
+      tee: add OP-TEE driver
+      Documentation: tee subsystem and op-tee driver
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Jerome Forissier (1):
+      arm64: dt: hikey: Add optee node
+
+ Documentation/00-INDEX                             |   2 +
+ .../bindings/arm/firmware/linaro,optee-tz.txt      |  31 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ Documentation/ioctl/ioctl-number.txt               |   1 +
+ Documentation/tee.txt                              | 118 +++
+ MAINTAINERS                                        |  13 +
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   7 +
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/tee/Kconfig                                |  18 +
+ drivers/tee/Makefile                               |   5 +
+ drivers/tee/optee/Kconfig                          |   7 +
+ drivers/tee/optee/Makefile                         |   5 +
+ drivers/tee/optee/call.c                           | 444 ++++++++++
+ drivers/tee/optee/core.c                           | 622 ++++++++++++++
+ drivers/tee/optee/optee_msg.h                      | 418 ++++++++++
+ drivers/tee/optee/optee_private.h                  | 183 +++++
+ drivers/tee/optee/optee_smc.h                      | 450 +++++++++++
+ drivers/tee/optee/rpc.c                            | 396 +++++++++
+ drivers/tee/optee/supp.c                           | 273 +++++++
+ drivers/tee/tee_core.c                             | 893 +++++++++++++++++++++
+ drivers/tee/tee_private.h                          | 129 +++
+ drivers/tee/tee_shm.c                              | 358 +++++++++
+ drivers/tee/tee_shm_pool.c                         | 156 ++++
+ include/linux/tee_drv.h                            | 277 +++++++
+ include/uapi/linux/tee.h                           | 346 ++++++++
+ 26 files changed, 5156 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+ create mode 100644 Documentation/tee.txt
+ create mode 100644 drivers/tee/Kconfig
+ create mode 100644 drivers/tee/Makefile
+ create mode 100644 drivers/tee/optee/Kconfig
+ create mode 100644 drivers/tee/optee/Makefile
+ create mode 100644 drivers/tee/optee/call.c
+ create mode 100644 drivers/tee/optee/core.c
+ create mode 100644 drivers/tee/optee/optee_msg.h
+ create mode 100644 drivers/tee/optee/optee_private.h
+ create mode 100644 drivers/tee/optee/optee_smc.h
+ create mode 100644 drivers/tee/optee/rpc.c
+ create mode 100644 drivers/tee/optee/supp.c
+ create mode 100644 drivers/tee/tee_core.c
+ create mode 100644 drivers/tee/tee_private.h
+ create mode 100644 drivers/tee/tee_shm.c
+ create mode 100644 drivers/tee/tee_shm_pool.c
+ create mode 100644 include/linux/tee_drv.h
+ create mode 100644 include/uapi/linux/tee.h
