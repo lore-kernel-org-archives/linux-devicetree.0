@@ -1,7 +1,7 @@
 From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 2/2] arm64: dts: move from ARCH_VULCAN to ARCH_THUNDER2
-Date: Tue, 14 Mar 2017 12:47:14 +0000
-Message-ID: <1489495634-2920-3-git-send-email-jnair@caviumnetworks.com>
+Subject: [PATCH v6 1/2] dt-bindings: arm64 ARCH_THUNDER2 platform documentation
+Date: Tue, 14 Mar 2017 12:47:13 +0000
+Message-ID: <1489495634-2920-2-git-send-email-jnair@caviumnetworks.com>
 References: <1489313015-4783-1-git-send-email-jnair@caviumnetworks.com>
  <1489495634-2920-1-git-send-email-jnair@caviumnetworks.com>
 Mime-Version: 1.0
@@ -13,443 +13,46 @@ To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Move and update device tree files as part of transition from Broadcom
-Vulcan to Cavium ThunderX2.
+Add documentation for Cavium's ThunderX2 CN99XX ARM64 processor. This
+SoC will use "cavium,thunderx2-cn9900" as the compatible property.
 
-The changes are to:
- * rename dts/broadcom/vulcan.dtsi to cavium/thunder2-99xx.dtsi,
-   update cpu cores to be "cavium,thunder2", and update SoC to be
-   "cavium,thunderx2-cn9900"
- * move SoC dts/broadcom/vulcan-eval.dtsi to cavium/thunder2-99xx.dtsi
-   and update board name string
- * Update dts/broadcom/Makefile not to build vulcan dtbs
- * Update dts/cavium/Makefile to build thunder2 dtbs
-
-No changes to the dts contents except the updated "compatible" and
-"model" properties.
+Also add a documentation entry for the "cavium,thunder2" cpu core
+present in these SoCs.
 
 Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/broadcom/Makefile         |   1 -
- arch/arm64/boot/dts/broadcom/vulcan-eval.dts  |  33 ------
- arch/arm64/boot/dts/broadcom/vulcan.dtsi      | 147 -------------------------
- arch/arm64/boot/dts/cavium/Makefile           |   1 +
- arch/arm64/boot/dts/cavium/thunder2-99xx.dts  |  34 ++++++
- arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi | 148 ++++++++++++++++++++++++++
- 6 files changed, 183 insertions(+), 181 deletions(-)
- delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan-eval.dts
- delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan.dtsi
- create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dts
- create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+ Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 8 ++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt            | 1 +
+ 2 files changed, 9 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
 
-diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-index f1caece..bfa8f8e 100644
---- a/arch/arm64/boot/dts/broadcom/Makefile
-+++ b/arch/arm64/boot/dts/broadcom/Makefile
-@@ -1,6 +1,5 @@
- dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb
- dtb-$(CONFIG_ARCH_BCM_IPROC) += ns2-svk.dtb ns2-xmc.dtb
--dtb-$(CONFIG_ARCH_VULCAN) += vulcan-eval.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/broadcom/vulcan-eval.dts b/arch/arm64/boot/dts/broadcom/vulcan-eval.dts
-deleted file mode 100644
-index 9ee8d3d..0000000
---- a/arch/arm64/boot/dts/broadcom/vulcan-eval.dts
-+++ /dev/null
-@@ -1,33 +0,0 @@
--/*
-- * dts file for Broadcom (BRCM) Vulcan Evaluation Platform
-- *
-- * Copyright (c) 2013-2016 Broadcom
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-- */
--
--/dts-v1/;
--
--#include "vulcan.dtsi"
--
--/ {
--	model = "Broadcom Vulcan Eval Platform";
--	compatible = "brcm,vulcan-eval", "brcm,vulcan-soc";
--
--	memory {
--		device_type = "memory";
--		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
--		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
--	};
--
--	aliases {
--		serial0 = &uart0;
--	};
--
--	chosen {
--		stdout-path = "serial0:115200n8";
--	};
--};
-diff --git a/arch/arm64/boot/dts/broadcom/vulcan.dtsi b/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-deleted file mode 100644
-index 34e11a9..0000000
---- a/arch/arm64/boot/dts/broadcom/vulcan.dtsi
-+++ /dev/null
-@@ -1,147 +0,0 @@
--/*
-- * dtsi file for Broadcom (BRCM) Vulcan processor
-- *
-- * Copyright (c) 2013-2016 Broadcom
-- * Author: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of
-- * the License, or (at your option) any later version.
-- */
--
--#include <dt-bindings/interrupt-controller/arm-gic.h>
--
--/ {
--	model = "Broadcom Vulcan";
--	compatible = "brcm,vulcan-soc";
--	interrupt-parent = <&gic>;
--	#address-cells = <2>;
--	#size-cells = <2>;
--
--	/* just 4 cpus now, 128 needed in full config */
--	cpus {
--		#address-cells = <0x2>;
--		#size-cells = <0x0>;
--
--		cpu@0 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x0>;
--			enable-method = "psci";
--		};
--
--		cpu@1 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x1>;
--			enable-method = "psci";
--		};
--
--		cpu@2 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x2>;
--			enable-method = "psci";
--		};
--
--		cpu@3 {
--			device_type = "cpu";
--			compatible = "brcm,vulcan", "arm,armv8";
--			reg = <0x0 0x3>;
--			enable-method = "psci";
--		};
--	};
--
--	psci {
--		compatible = "arm,psci-0.2";
--		method = "smc";
--	};
--
--	gic: interrupt-controller@400080000 {
--		compatible = "arm,gic-v3";
--		#interrupt-cells = <3>;
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
--		interrupt-controller;
--		#redistributor-regions = <1>;
--		reg = <0x04 0x00080000 0x0 0x20000>,	/* GICD */
--		      <0x04 0x01000000 0x0 0x1000000>;	/* GICR */
--		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
--
--		gicits: gic-its@40010000 {
--			compatible = "arm,gic-v3-its";
--			msi-controller;
--			reg = <0x04 0x00100000 0x0 0x20000>;	/* GIC ITS */
--		};
--	};
--
--	timer {
--		compatible = "arm,armv8-timer";
--		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
--	};
--
--	pmu {
--		compatible = "brcm,vulcan-pmu", "arm,armv8-pmuv3";
--		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>; /* PMU overflow */
--	};
--
--	clk125mhz: uart_clk125mhz {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <125000000>;
--		clock-output-names = "clk125mhz";
--	};
--
--	pci {
--		compatible = "pci-host-ecam-generic";
--		device_type = "pci";
--		#interrupt-cells = <1>;
--		#address-cells = <3>;
--		#size-cells = <2>;
--
--		/* ECAM at 0x3000_0000 - 0x4000_0000 */
--		reg = <0x0 0x30000000  0x0 0x10000000>;
--		reg-names = "PCI ECAM";
--
--		/*
--		 * PCI ranges:
--		 *   IO		no supported
--		 *   MEM        0x4000_0000 - 0x6000_0000
--		 *   MEM64 pref 0x40_0000_0000 - 0x60_0000_0000
--		 */
--		ranges =
--		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
--		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
--		interrupt-map-mask = <0 0 0 7>;
--		interrupt-map =
--		      /* addr  pin  ic   icaddr  icintr */
--			<0 0 0  1  &gic   0 0    GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
--			 0 0 0  2  &gic   0 0    GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
--			 0 0 0  3  &gic   0 0    GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
--			 0 0 0  4  &gic   0 0    GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
--		msi-parent = <&gicits>;
--		dma-coherent;
--	};
--
--	soc {
--		compatible = "simple-bus";
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
--
--		uart0: serial@402020000 {
--			compatible = "arm,pl011", "arm,primecell";
--			reg = <0x04 0x02020000 0x0 0x1000>;
--			interrupt-parent = <&gic>;
--			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&clk125mhz>;
--			clock-names = "apb_pclk";
--		};
--	};
--
--};
-diff --git a/arch/arm64/boot/dts/cavium/Makefile b/arch/arm64/boot/dts/cavium/Makefile
-index e34f89d..581b2c1 100644
---- a/arch/arm64/boot/dts/cavium/Makefile
-+++ b/arch/arm64/boot/dts/cavium/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
-+dtb-$(CONFIG_ARCH_THUNDER2) += thunder2-99xx.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dts b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
+diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
 new file mode 100644
-index 0000000..6c6fb86
+index 0000000..dc5dd65
 --- /dev/null
-+++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
-@@ -0,0 +1,34 @@
-+/*
-+ * dts file for Cavium ThunderX2 CN99XX Evaluation Platform
-+ *
-+ * Copyright (c) 2017 Cavium Inc.
-+ * Copyright (c) 2013-2016 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
++++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+@@ -0,0 +1,8 @@
++Cavium ThunderX2 CN99XX platform tree bindings
++----------------------------------------------
 +
-+/dts-v1/;
++Boards with Cavium ThunderX2 CN99XX SoC shall have the root property:
++  compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
 +
-+#include "thunder2-99xx.dtsi"
-+
-+/ {
-+	model = "Cavium ThunderX2 CN99XX";
-+	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
-+		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-new file mode 100644
-index 0000000..4220fbd
---- /dev/null
-+++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-@@ -0,0 +1,148 @@
-+/*
-+ * dtsi file for Cavium ThunderX2 CN99XX processor
-+ *
-+ * Copyright (c) 2017 Cavium Inc.
-+ * Copyright (c) 2013-2016 Broadcom
-+ * Author: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	model = "Cavium ThunderX2 CN99XX";
-+	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	/* just 4 cpus now, 128 needed in full config */
-+	cpus {
-+		#address-cells = <0x2>;
-+		#size-cells = <0x0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	gic: interrupt-controller@400080000 {
-+		compatible = "arm,gic-v3";
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		interrupt-controller;
-+		#redistributor-regions = <1>;
-+		reg = <0x04 0x00080000 0x0 0x20000>,	/* GICD */
-+		      <0x04 0x01000000 0x0 0x1000000>;	/* GICR */
-+		interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		gicits: gic-its@40010000 {
-+			compatible = "arm,gic-v3-its";
-+			msi-controller;
-+			reg = <0x04 0x00100000 0x0 0x20000>;	/* GIC ITS */
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_PPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmu {
-+		compatible = "brcm,vulcan-pmu", "arm,armv8-pmuv3";
-+		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH>; /* PMU overflow */
-+	};
-+
-+	clk125mhz: uart_clk125mhz {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <125000000>;
-+		clock-output-names = "clk125mhz";
-+	};
-+
-+	pci {
-+		compatible = "pci-host-ecam-generic";
-+		device_type = "pci";
-+		#interrupt-cells = <1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+
-+		/* ECAM at 0x3000_0000 - 0x4000_0000 */
-+		reg = <0x0 0x30000000  0x0 0x10000000>;
-+		reg-names = "PCI ECAM";
-+
-+		/*
-+		 * PCI ranges:
-+		 *   IO		no supported
-+		 *   MEM        0x4000_0000 - 0x6000_0000
-+		 *   MEM64 pref 0x40_0000_0000 - 0x60_0000_0000
-+		 */
-+		ranges =
-+		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
-+		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map =
-+		      /* addr  pin  ic   icaddr  icintr */
-+			<0 0 0  1  &gic   0 0    GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH
-+			 0 0 0  2  &gic   0 0    GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH
-+			 0 0 0  3  &gic   0 0    GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH
-+			 0 0 0  4  &gic   0 0    GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+		msi-parent = <&gicits>;
-+		dma-coherent;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		uart0: serial@402020000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x04 0x02020000 0x0 0x1000>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clk125mhz>;
-+			clock-names = "apb_pclk";
-+		};
-+	};
-+
-+};
++These SoC uses the "cavium,thunder2" core which will be compatible
++with "brcm,vulcan".
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 698ad1f0..1030f5f 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -170,6 +170,7 @@ nodes to be present and contain the properties described below.
+ 			    "brcm,brahma-b15"
+ 			    "brcm,vulcan"
+ 			    "cavium,thunder"
++			    "cavium,thunder2"
+ 			    "faraday,fa526"
+ 			    "intel,sa110"
+ 			    "intel,sa1100"
 -- 
 2.7.4
 
