@@ -1,70 +1,35 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/2] ata: ahci: add support for DaVinci DM816 SATA controller
-Date: Tue, 14 Mar 2017 10:03:35 -0700
-Message-ID: <m2wpbraizc.fsf@baylibre.com>
-References: <1489422982-3461-1-git-send-email-bgolaszewski@baylibre.com>
-        <1489422982-3461-3-git-send-email-bgolaszewski@baylibre.com>
-        <db5d21c2-b0e2-c9ec-1f15-460973fd23e3@cogentembedded.com>
-        <7ab4b440-f9d0-22fa-f463-f4c5542e21e7@baylibre.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and endpoints
+Date: Tue, 14 Mar 2017 18:05:54 +0100
+Message-ID: <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
+ <1629581.fh46rNHz4U@aspire.rjw.lan> <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
+ <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7ab4b440-f9d0-22fa-f463-f4c5542e21e7@baylibre.com> (Neil
-        Armstrong's message of "Tue, 14 Mar 2017 10:00:07 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> On 03/14/2017 09:57 AM, Sergei Shtylyov wrote:
->> Hello!
->> 
->> On 3/13/2017 7:36 PM, Bartosz Golaszewski wrote:
->> 
->>> This SATA controller is quite similar to the one present on the DA850
->>> SoC, but the PHY configuration is different and it supports two HBA
->>> ports.
->>>
->>> The IP suffers from the same PMP issue the DA850 does - if we enable
->>> PMP but don't use it - softreset fails. Appropriate workaround was
->>> implemented in this driver as well.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>> ---
->>>  drivers/ata/Kconfig      |   9 +++
->>>  drivers/ata/Makefile     |   1 +
->>>  drivers/ata/ahci_dm816.c | 200 +++++++++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 210 insertions(+)
->>>  create mode 100644 drivers/ata/ahci_dm816.c
->>>
->>> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
->>> index 70b57d2..7f59a7a 100644
->>> --- a/drivers/ata/Kconfig
->>> +++ b/drivers/ata/Kconfig
->>> @@ -118,6 +118,15 @@ config AHCI_DA850
->>>
->>>        If unsure, say N.
->>>
->>> +config AHCI_DM816
->>> +    tristate "DaVinci DM816 AHCI SATA support"
->> 
->>    Is it really DaVinci?
->> 
->>> +    depends on ARCH_OMAP2PLUS
->> 
->>    Especially if it depends on OMAP...
+On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> On 03/14/17 10:08, Sakari Ailus wrote:
+>> How about this instead:
+>>
+>> All port nodes are located under the device's "_DSD" node in the
+>> hierarchical data extension tree. The property extension related to
+>> each port node must contain the key "port" and an integer value which
+>> is the number of the port.
 >
-> Hi Sergei,
->
-> Yes it's a DaVinci family SoC, but shares a lot of IPs with the OMAP family.
->
+> So with matching strings instead of indices, this will change, too...
 
-Actually, this is more of an OMAP family, which shares some IP from
-DaVinci family
+It doesn't have to AFAICS, but the number is just redundant IMO.  You
+only need a boolean property saying "this is a port", so you know that
+you should expect a list of endpoints in that object.
 
-I think in other parts of the kernel, we refer to this as TI 816x
-instead of using either DaVinci or OMAP.
-
-Kevin
+Thanks,
+Rafael
