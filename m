@@ -1,35 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/7] Rename RK1108 to RV1108
-Date: Tue, 14 Mar 2017 14:36:24 +0100
-Message-ID: <CACRpkdbuX7f58S_sTBMVEusX2g1iJ4T-cw9efJLFSYb8fV=EDA@mail.gmail.com>
-References: <1486983566-32265-1-git-send-email-andy.yan@rock-chips.com>
- <0bbc4151-d954-1a27-48c3-1e8c9cb9e16f@rock-chips.com> <CACRpkdbNbGvwUq3uLgekimOwzBZCXf37JW9LCCqLm1so=CMNrw@mail.gmail.com>
- <4369285.zq7cJYMXhu@phil>
+From: Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH net-next 2/4] net-next: dsa: add Mediatek tag RX/TX handler
+Date: Tue, 14 Mar 2017 09:38:22 -0400
+Message-ID: <8760jcger5.fsf@weeman.i-did-not-set--mail-host-address--so-tickle-me>
+References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
+ <1489421488-300-3-git-send-email-sean.wang@mediatek.com>
+ <87innd6rk2.fsf@weeman.i-did-not-set--mail-host-address--so-tickle-me>
+ <1489472530.1870.21.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <4369285.zq7cJYMXhu@phil>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Andy Yan <andy.yan@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Shawn Lin <shawn.lin@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1489472530.1870.21.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 23, 2017 at 4:00 PM, Heiko Stuebner <heiko@sntech.de> wrote:
-> Am Donnerstag, 23. Februar 2017, 11:15:56 CET schrieb Linus Walleij:
+Hi Sean,
 
->> Nobody gets hurt. Just rename everything to avoid confusion.
->> Just my =E2=82=AC0.01.
->>
->> Acked-by: Linus Walleij <linus.walleij@linaro.org>
->>
->> Tell me if I can merge a subset of the patches to the pinctrl tree.
+Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> writes:
+
+>> This won't apply, the port index in now stored in p->dp->index.
 >
-> I did provide Reviewed-bys for them, so you should be able to merge the
-> pinctrl patches (4+5) at your convenience :-)
+> It seems that I need to upgrade to newer kernel to verify this
 
-They are conflicting right now, but I will merge it when I get a v4.11-rc1
-based series.
+Correct. In fact every time you send patches to net-next (or any other
+subsystem branch), you must rebase your patch series onto the latest
+version of that tree, in order to avoid eventuel conflicts.
 
-Yours,
-Linus Walleij
+Thanks,
+
+        Vivien
