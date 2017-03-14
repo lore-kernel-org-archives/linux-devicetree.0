@@ -1,41 +1,91 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Specify serial console parameters
-Date: Tue, 14 Mar 2017 22:51:06 +0100
-Message-ID: <20170314215106.GB22176@lunn.ch>
-References: <20170314075830.2247-1-zajec5@gmail.com>
- <20170314122650.GV15842@lunn.ch>
- <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
- <CAC3K-4qQzX37BLD2N-N-vDwSk=H_rF5PzoMM+GM=Z935QFVnXw@mail.gmail.com>
- <9f5a0381-aae6-9ac2-56f3-9eb78ecfd819@broadcom.com>
- <CAC3K-4pAzs5fXNB=ZpyzYZnTENa=c0v81GVn7WpW53K7GV9UOg@mail.gmail.com>
- <5776ba44-e280-9711-1b05-1c79556884e2@broadcom.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and endpoints
+Date: Tue, 14 Mar 2017 23:11:40 +0100
+Message-ID: <CAJZ5v0hCvcPgYYV0Hysfu0pEYCzzHp7KKdW3nYyjm7RGS3bHoQ@mail.gmail.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
+ <1629581.fh46rNHz4U@aspire.rjw.lan> <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
+ <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com> <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
+ <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com> <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ@mail.gmail.com>
+ <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5776ba44-e280-9711-1b05-1c79556884e2-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rafa?? Mi??ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-> >Unfortunately, there is not a common bootloader.  CFE is used for the
-> >4708/9 boards, and u-boot is used for the 5301x boards.
-> OK, little different situation not having a boot rom with console
-> output enforcing all designs to use the same UART.
-> Do both of the bootloaders happen to use the same UART and all the
-> boards are designed to use the same UART?
+On Tue, Mar 14, 2017 at 10:16 PM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> Rafael J. Wysocki wrote:
+>>
+>> On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
+>> <sakari.ailus@linux.intel.com> wrote:
+>>>
+>>> Hi Rafael,
+>>>
+>>> Rafael J. Wysocki wrote:
+>>>>
+>>>>
+>>>> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
+>>>> <sakari.ailus@linux.intel.com> wrote:
+>>>>>
+>>>>>
+>>>>> On 03/14/17 10:08, Sakari Ailus wrote:
+>>>>>>
+>>>>>>
+>>>>>> How about this instead:
+>>>>>>
+>>>>>> All port nodes are located under the device's "_DSD" node in the
+>>>>>> hierarchical data extension tree. The property extension related to
+>>>>>> each port node must contain the key "port" and an integer value which
+>>>>>> is the number of the port.
+>>>>>
+>>>>>
+>>>>>
+>>>>> So with matching strings instead of indices, this will change, too...
+>>>>
+>>>>
+>>>>
+>>>> It doesn't have to AFAICS, but the number is just redundant IMO.  You
+>>>> only need a boolean property saying "this is a port", so you know that
+>>>> you should expect a list of endpoints in that object.
+>>>
+>>>
+>>>
+>>> No, it's not redundant. It's the number of the physical port in the
+>>> device
+>>> --- this is how the driver gets to know where the connection has been
+>>> made.
+>>
+>>
+>> OK, but what exactly do you mean by "physical port"?
+>
+>
+> The device (or an IP block) has physical interfaces to the world outside.
+> There could be just one, but there may be more. For an ISP, there could be
+> e.g. four CSI-2 receivers to each of which you could connect a camera
+> sensor. So for an ISP device, that number tells which of the receivers a
+> given sensor is connected to.
+>
+> The mapping between this number and what the hardware datasheet refers to
+> needs to be documented per device.
 
-You need to be a little bit careful here. Some vendor could use a
-different UART in there design, use some other bootloader,
-etc. Somebody in the community might want to throw out uboot and use
-barebox etc....
+OK, so the number actually is an arbitrary piece of data associated
+with the key "port" and the interpretation of that piece of data
+depends on whoever asks for that value.
 
-Device tree does allow .dtsi properties to be over written, so it is
-not an issue in practice.
+IOW, the core doesn't care.
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With all due respect to whoever invented this on the DT side, this is
+just bad design to me, because it causes the "port" property to serve
+two different purposes at the same time.  First, it tells the core
+that this object is a port.  Second, it is expected to provide a piece
+of data of unspecified interpretation to somebody.  Which means that
+the "port" property is both general and device-specific at the same
+time and the sanity of that is quite questionable IMO.
+
+Thanks,
+Rafael
