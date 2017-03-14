@@ -1,156 +1,88 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v5 2/8] ARM: dts: imx6q: Add Engicam i.CoreM6 Quad/Dual
- OpenFrame Cap 10.1 initial support
-Date: Tue, 14 Mar 2017 15:18:11 +0530
-Message-ID: <1489484897-14933-3-git-send-email-jagan@openedev.com>
-References: <1489484897-14933-1-git-send-email-jagan@openedev.com>
+From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 3/4] sound: arm: Add build system for
+ bcm2835-analog-audio driver.
+Date: Tue, 14 Mar 2017 02:53:59 -0700
+Message-ID: <1489485239.656.7.camel@crowfest.net>
+References: <201703141503.gyuLu0Kr%fengguang.wu@intel.com>
+         <1489481899.656.5.camel@crowfest.net>
+         <5a437138-bf9c-1e48-9fa6-82fac9b6e54c@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1489484897-14933-1-git-send-email-jagan@openedev.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Domenico Acri <domenico.acri@engicam.com>, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5a437138-bf9c-1e48-9fa6-82fac9b6e54c-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+On Tue, 2017-03-14 at 10:13 +0100, Stefan Wahren wrote:
+> Am 14.03.2017 um 09:58 schrieb Michael Zoran:
+> > On Tue, 2017-03-14 at 15:15 +0800, kbuild test robot wrote:
+> > > Hi Michael,
+> > > 
+> > > [auto build test ERROR on sound/for-next]
+> > > [also build test ERROR on v4.11-rc2 next-20170310]
+> > > [if your patch is applied to the wrong git tree, please drop us a
+> > > note to help improve the system]
+> > > 
+> > > url:    https://github.com/0day-ci/linux/commits/Michael-Zoran/dt
+> > > -bin
+> > > dings-Document-the-dmas-and-dma-names-properties-for-bcm2835-
+> > > analog-
+> > > audio/20170314-091035
+> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sou
+> > > nd.g
+> > > it for-next
+> > > config: arm64-allmodconfig (attached as .config)
+> > > compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> > > reproduce:
+> > >         wget https://raw.githubusercontent.com/01org/lkp-tests/ma
+> > > ster
+> > > /sbin/make.cross -O ~/bin/make.cross
+> > >         chmod +x ~/bin/make.cross
+> > >         # save the attached .config to linux build tree
+> > >         make.cross ARCH=arm64 
+> > > 
+> > > All errors (new ones prefixed by >>):
+> > > 
+> > >    /tmp/ccNU8kQ5.s: Assembler messages:
+> > > > > /tmp/ccNU8kQ5.s:1411: Error: unknown mnemonic `ldmia' --
+> > > > > `ldmia
+> > > > > x26,{r0,r1,r2,r3}'
+> > > > > /tmp/ccNU8kQ5.s:1412: Error: unknown mnemonic `stmia' --
+> > > > > `stmia
+> > > > > x19!,{r0,r1,r2,r3}'
+> > > > > /tmp/ccNU8kQ5.s:1618: Error: unknown mnemonic `ldmia' --
+> > > > > `ldmia
+> > > > > x19!,{r0,r1,r2,r3}'
+> > > > > /tmp/ccNU8kQ5.s:1619: Error: unknown mnemonic `stmia' --
+> > > > > `stmia
+> > > > > x26,{r0,r1,r2,r3}'
+> > > 
+> > > ---
+> > > 0-DAY kernel test infrastructure                Open Source
+> > > Technology Center
+> > > https://lists.01.org/pipermail/kbuild-all                   Intel
+> > > Corporation
+> > 
+> > I'm a bit confused here.  Why I'm I seeing assembly instruction
+> > build
+> > errors when the mail points to a DT binding document change?
+> > 
+> > 
+> 
+> The email subject doesn't refer to a DT binding.
+> 
+> I assume it's your change to enable ARM64 for all SND_ARM drivers,
+> which
+> aren't aware of that.
 
-i.CoreM6 Quad/Dual OpenFrame modules are "system on modules plus
-openframe display carriers" which are good solution for develop
-user friendly graphic user interface.
+OK, that makes sense now.  Should I just submit another change adding a
+depends on ARM to the 1 or 2 other drivers in the directory?
 
-General features:
-CPU           NXP i.MX6Q rev1.2 at 792 MHz
-RAM           1GB, 32, 64 bit, DDR3-800/1066
-NAND          SLC,512MB
-LVDS Display  TFT 10.1" industrial, 1280x800 resolution
-Backlight     LED backlight, brightness 350 Cd/m2
-Power supply  15 to 30 Vdc
 
-Cc: Domenico Acri <domenico.acri@engicam.com>
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v5:
-- %s/arm/ARM/g with subject prefix
-Changes for v4:
-- Fix checkpatch.pl Errors/Warnings
-Changes for v3:
-- Use native-mode as timing0 since this is the initial lvds-channel
-- Rename hsd100pxn1 reference as timing0
-- Update the correct patch author
-Changes for v2:
-- none
-
- arch/arm/boot/dts/Makefile                |  1 +
- arch/arm/boot/dts/imx6q-icore-ofcap10.dts | 76 +++++++++++++++++++++++++++++++
- 2 files changed, 77 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 43c27b6..736f83e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -398,6 +398,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-h100.dtb \
- 	imx6q-hummingboard.dtb \
- 	imx6q-icore.dtb \
-+	imx6q-icore-ofcap10.dtb \
- 	imx6q-icore-rqs.dtb \
- 	imx6q-marsboard.dtb \
- 	imx6q-mccmon6.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-icore-ofcap10.dts b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-new file mode 100644
-index 0000000..49b60ca
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-icore-ofcap10.dts
-@@ -0,0 +1,76 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6q.dtsi"
-+#include "imx6qdl-icore.dtsi"
-+
-+/ {
-+	model = "Engicam i.CoreM6 Quad/Dual OpenFrame Capacitive touch 10.1 Kit";
-+	compatible = "engicam,imx6-icore", "fsl,imx6q";
-+};
-+
-+&ldb {
-+	status = "okay";
-+
-+	lvds-channel@0 {
-+		fsl,data-mapping = "spwg";
-+		fsl,data-width = <24>;
-+		status = "okay";
-+
-+		display-timings {
-+			native-mode = <&timing0>;
-+			timing0: timing0 {
-+				clock-frequency = <60000000>;
-+				hactive = <1280>;
-+				vactive = <800>;
-+				hback-porch = <40>;
-+				hfront-porch = <40>;
-+				vback-porch = <10>;
-+				vfront-porch = <3>;
-+				hsync-len = <80>;
-+				vsync-len = <10>;
-+			};
-+		};
-+	};
-+};
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
