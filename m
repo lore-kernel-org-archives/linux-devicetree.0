@@ -1,15 +1,15 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: fix for Allwinner H5 pinctrl's
- compatible
-Date: Tue, 14 Mar 2017 14:11:00 +0100
-Message-ID: <CACRpkdZMwNoD2CGe2Hy6OXoDcjiQah_JOndVyFDUbBpFim=1aQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] dt: bindings: add binding for Allwinner A64 R_PIO
+ pinctrl
+Date: Tue, 14 Mar 2017 14:11:50 +0100
+Message-ID: <CACRpkdYtoXWwdiE0K+idk+Yem6HD2eqSA_tWOrnJ+btw5tnVaQ@mail.gmail.com>
 References: <20170301180111.12365-1-icenowy@aosc.xyz>
- <20170301180111.12365-4-icenowy@aosc.xyz>
+ <20170301180111.12365-5-icenowy@aosc.xyz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170301180111.12365-4-icenowy@aosc.xyz>
+In-Reply-To: <20170301180111.12365-5-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,15 +25,15 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Mar 1, 2017 at 7:01 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
 
-> The compatible for Allwinner H5 pin controller is wrong written as
-> allwinner,sun50i-h5-r-pinctrl, however, it's really a generic pinctrl
-> rather than a "r" one.
+> Allwinner A64 SoC has also a dedicated pin controller for Port L GPIOs,
+> which is called "Port Controller (CPUs-PORT)" in SoC User Manual.
 >
-> Fix this compatible string.
+> Add a binding for this pin controller, like the ones in A23/33 and H3.
 >
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
 
-Patch applied with Maxime's ACK.
+Patch applied.
 
 Yours,
 Linus Walleij
