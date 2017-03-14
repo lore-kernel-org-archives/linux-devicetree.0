@@ -1,278 +1,65 @@
-From: Nathan Sullivan <nathan.sullivan@ni.com>
-Subject: [PATCH 2/2] MIPS: NI 169445 board support
-Date: Tue, 14 Mar 2017 11:13:23 -0500
-Message-ID: <1489508003-25288-3-git-send-email-nathan.sullivan@ni.com>
-References: <1489508003-25288-1-git-send-email-nathan.sullivan@ni.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dts: mfd: axp20x: Add "xpowers,master-mode"
+ property for AXP806 PMICs
+Date: Tue, 14 Mar 2017 16:19:04 +0000
+Message-ID: <20170314161904.ti5anq5aqoedt4lq@dell>
+References: <cover.1487791328.git.rask@formelder.dk>
+ <396866a490b6056c60e93d862656bb90daedab98.1487791328.git.rask@formelder.dk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1489508003-25288-1-git-send-email-nathan.sullivan@ni.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, ralf@linux-mips.org
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-mips@linux-mips.org, Nathan Sullivan <nathan.sullivan@ni.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <396866a490b6056c60e93d862656bb90daedab98.1487791328.git.rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Support the National Instruments 169445 board.
+On Wed, 22 Feb 2017, Rask Ingemann Lambertsen wrote:
 
-Signed-off-by: Nathan Sullivan <nathan.sullivan@ni.com>
----
- Documentation/devicetree/bindings/mips/ni.txt   |   7 ++
- MAINTAINERS                                     |   8 ++
- arch/mips/boot/dts/Makefile                     |   1 +
- arch/mips/boot/dts/ni/169445.dts                | 100 ++++++++++++++++++++++++
- arch/mips/boot/dts/ni/Makefile                  |   7 ++
- arch/mips/configs/generic/board-ni169445.config |  27 +++++++
- arch/mips/generic/Kconfig                       |   6 ++
- arch/mips/generic/vmlinux.its.S                 |  25 ++++++
- 8 files changed, 181 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/ni.txt
- create mode 100644 arch/mips/boot/dts/ni/169445.dts
- create mode 100644 arch/mips/boot/dts/ni/Makefile
- create mode 100644 arch/mips/configs/generic/board-ni169445.config
+> commit b101829a029a ("mfd: axp20x: Fix AXP806 access errors on cold boot")
+> was intended to fix the case where a board uses an AXP806 in slave mode,
+> but the boot loader leaves it in master mode for lack of AXP806 support.
+> But now the driver breaks on boards where the PMIC is operating in master
+> mode. To let the device tree describe which mode of operation is needed,
+> this patch introduces a new property "xpowers,master-mode".
+> 
+> Fixes: 204ae2963e10 ("mfd: axp20x: Add bindings for AXP806 PMIC")
+> Signed-off-by: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+> Changes from v1 to v2:
+> Changed the commit message such that Fixes: points to the commit which
+> introduced the bindings for the AXP806 because the property should have been
+> included from the beginning of the AXP806 support.
+> 
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mips/ni.txt b/Documentation/devicetree/bindings/mips/ni.txt
-new file mode 100644
-index 0000000..722bf2d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ni.txt
-@@ -0,0 +1,7 @@
-+National Instruments MIPS platforms
-+
-+required root node properties:
-+	- compatible: must be "ni,169445"
-+
-+CPU Nodes
-+	- compatible: must be "mti,mips14KEc"
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c265a5f..b72f059 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8887,6 +8887,14 @@ F:	include/linux/sunrpc/
- F:	include/uapi/linux/nfs*
- F:	include/uapi/linux/sunrpc/
- 
-+NI169445 MIPS ARCHITECTURE
-+M:	Nathan Sullivan <nathan.sullivan@ni.com>
-+L:	linux-mips@linux-mips.org
-+S:	Maintained
-+F:	arch/mips/boot/dts/ni/
-+F:	arch/mips/configs/generic/board-ni169445.config
-+F:	Documentation/devicetree/bindings/mips/ni.txt
-+
- NILFS2 FILESYSTEM
- M:	Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>
- L:	linux-nilfs@vger.kernel.org
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index b9db492..27b0f37 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -4,6 +4,7 @@ dts-dirs	+= img
- dts-dirs	+= ingenic
- dts-dirs	+= lantiq
- dts-dirs	+= mti
-+dts-dirs	+= ni
- dts-dirs	+= netlogic
- dts-dirs	+= pic32
- dts-dirs	+= qca
-diff --git a/arch/mips/boot/dts/ni/169445.dts b/arch/mips/boot/dts/ni/169445.dts
-new file mode 100644
-index 0000000..9746576
---- /dev/null
-+++ b/arch/mips/boot/dts/ni/169445.dts
-@@ -0,0 +1,100 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ni,169445";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mti,mips14KEc";
-+			clocks = <&baseclk>;
-+			reg = <0>;
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x10000000>;
-+	};
-+
-+	baseclk: baseclock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <50000000>;
-+	};
-+
-+	cpu_intc: cpu_intc {
-+		#address-cells = <0>;
-+		compatible = "mti,cpu-interrupt-controller";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+
-+	ahb@0 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x1f300000 0x80FFF>;
-+
-+		gpio1:gpio-controller@1f300010 {
-+			compatible = "ni,169445-nand-gpio";
-+			reg = <0x10 0x4>;
-+			reg-names = "dat";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+
-+		gpio2:gpio-controller@1f300014 {
-+			compatible = "ni,169445-nand-gpio";
-+			reg = <0x14 0x4>;
-+			reg-names = "dat";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			no-output;
-+		};
-+
-+		nand@1f300000 {
-+			compatible = "gpio-control-nand";
-+			nand-on-flash-bbt;
-+			nand-ecc-mode = "soft_bch";
-+			nand-ecc-step-size = <512>;
-+			nand-ecc-strength = <4>;
-+			reg = <0x0 4>;
-+			gpios = <&gpio2 0 0>, /* rdy */
-+				<&gpio1 1 0>, /* nce */
-+				<&gpio1 2 0>, /* ale */
-+				<&gpio1 3 0>, /* cle */
-+				<&gpio1 4 0>; /* nwp */
-+		};
-+
-+		serial@1f380000 {
-+			compatible = "ns16550a";
-+			reg = <0x80000 0x1000>;
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <6>;
-+			clocks = <&baseclk>;
-+			reg-shift = <0>;
-+		};
-+
-+		ethernet@1f340000 {
-+			compatible = "snps,dwmac-4.10a";
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <5>;
-+			interrupt-names = "macirq";
-+			reg = <0x40000 0x2000>;
-+			clock-names = "stmmaceth", "pclk";
-+			clocks = <&baseclk>, <&baseclk>;
-+
-+			phy-mode = "rgmii";
-+
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/mips/boot/dts/ni/Makefile b/arch/mips/boot/dts/ni/Makefile
-new file mode 100644
-index 0000000..66cfdff
---- /dev/null
-+++ b/arch/mips/boot/dts/ni/Makefile
-@@ -0,0 +1,7 @@
-+dtb-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= 169445.dtb
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-					+= dummy.o
-+
-+always					:= $(dtb-y)
-+clean-files				:= *.dtb *.dtb.S
-diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
-new file mode 100644
-index 0000000..0bae1f8
---- /dev/null
-+++ b/arch/mips/configs/generic/board-ni169445.config
-@@ -0,0 +1,27 @@
-+CONFIG_FIT_IMAGE_FDT_NI169445=y
-+
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+
-+CONFIG_GPIOLIB=y
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_GPIO_GENERIC_PLATFORM=y
-+
-+CONFIG_MTD=y
-+CONFIG_MTD_BLOCK=y
-+CONFIG_MTD_CMDLINE_PARTS=y
-+
-+CONFIG_MTD_NAND_ECC=y
-+CONFIG_MTD_NAND_ECC_BCH=y
-+CONFIG_MTD_NAND=y
-+CONFIG_MTD_NAND_GPIO=y
-+CONFIG_MTD_NAND_IDS=y
-+
-+CONFIG_MTD_UBI=y
-+CONFIG_MTD_UBI_BLOCK=y
-+
-+CONFIG_NETDEVICES=y
-+CONFIG_STMMAC_ETH=y
-+CONFIG_STMMAC_PLATFORM=y
-+CONFIG_DWMAC_GENERIC=y
-diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-index a606b3f..fbf0813 100644
---- a/arch/mips/generic/Kconfig
-+++ b/arch/mips/generic/Kconfig
-@@ -16,4 +16,10 @@ config LEGACY_BOARD_SEAD3
- 	  Enable this to include support for booting on MIPS SEAD-3 FPGA-based
- 	  development boards, which boot using a legacy boot protocol.
- 
-+config FIT_IMAGE_FDT_NI169445
-+	bool "Include FDT for NI 169445"
-+	help
-+	  Enable this to include the FDT for the 169445 platform from
-+	  National Instruments in the FIT kernel image.
-+
- endif
-diff --git a/arch/mips/generic/vmlinux.its.S b/arch/mips/generic/vmlinux.its.S
-index f67fbf1..de851f7 100644
---- a/arch/mips/generic/vmlinux.its.S
-+++ b/arch/mips/generic/vmlinux.its.S
-@@ -29,3 +29,28 @@
- 		};
- 	};
- };
-+
-+#ifdef CONFIG_FIT_IMAGE_FDT_NI169445
-+/ {
-+	images {
-+		fdt@ni169445 {
-+			description = "NI 169445 device tree";
-+			data = /incbin/("boot/dts/ni/169445.dtb");
-+			type = "flat_dt";
-+			arch = "mips";
-+			compression = "none";
-+			hash@0 {
-+				algo = "sha1";
-+			};
-+		};
-+	};
-+
-+	configurations {
-+		conf@ni169445 {
-+			description = "NI 169445 Linux Kernel";
-+			kernel = "kernel@0";
-+			fdt = "fdt@ni169445";
-+		};
-+	};
-+};
-+#endif
+Applied, thanks.
+
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> index 8f3ad9a..b41d260 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -28,6 +28,9 @@ Optional properties:
+>  		  regulator to drive the OTG VBus, rather then as an input pin
+>  		  which signals whether the board is driving OTG VBus or not.
+>  
+> +- x-powers,master-mode: Boolean (axp806 only). Set this when the PMIC is
+> +			wired for master mode. The default is slave mode.
+> +
+>  - <input>-supply: a phandle to the regulator supply node. May be omitted if
+>  		  inputs are unregulated, such as using the IPSOUT output
+>  		  from the PMIC.
+
 -- 
-2.1.4
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
