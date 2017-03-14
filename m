@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 7/9] gpu: ipu-v3: only set non-zero AXI ID for IC when PRG is absent
-Date: Tue, 14 Mar 2017 11:38:46 +0100
-Message-ID: <1489487928-26083-7-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v3 5/9] gpu: ipu-v3: document valid IPUv3 compatibles and extend for i.MX6 QuadPlus
+Date: Tue, 14 Mar 2017 11:38:44 +0100
+Message-ID: <1489487928-26083-5-git-send-email-p.zabel@pengutronix.de>
 References: <1489487928-26083-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1489487928-26083-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -12,34 +12,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Using non-zero AXI IDs for anything other than the display channels
-collides with the PRG AXI snooping, so only do this if there is no
-PRG present.
+Document the valid compatible strings for the IPUv3.
+
+On i.MX6 QuadPlus the IPU needs to know which PRG has to be
+used for this IPU instance. Add a "fsl,prg" property containing
+a phandle pointing to the correct PRG device.
 
 Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/gpu/ipu-v3/ipu-image-convert.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 805b6fa7b5f4c..524a717ab28e4 100644
---- a/drivers/gpu/ipu-v3/ipu-image-convert.c
-+++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -671,7 +671,12 @@ static void init_idmac_channel(struct ipu_image_convert_ctx *ctx,
- 	ipu_ic_task_idma_init(chan->ic, channel, width, height,
- 			      burst_size, rot_mode);
+diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
+index 62eb637630b5a..fa01db7eb66c5 100644
+--- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
++++ b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
+@@ -21,13 +21,19 @@ Freescale i.MX IPUv3
+ ====================
  
--	ipu_cpmem_set_axi_id(channel, 1);
-+	/*
-+	 * Setting a non-zero AXI ID collides with the PRG AXI snooping, so
-+	 * only do this when there is no PRG present.
-+	 */
-+	if (!channel->ipu->prg_priv)
-+		ipu_cpmem_set_axi_id(channel, 1);
- 
- 	ipu_idmac_set_double_buffer(channel, ctx->double_buffering);
- }
+ Required properties:
+-- compatible: Should be "fsl,<chip>-ipu"
++- compatible: Should be "fsl,<chip>-ipu" where <chip> is one of
++  - imx51
++  - imx53
++  - imx6q
++  - imx6qp
+ - reg: should be register base and length as documented in the
+   datasheet
+ - interrupts: Should contain sync interrupt and error interrupt,
+   in this order.
+ - resets: phandle pointing to the system reset controller and
+           reset line index, see reset/fsl,imx-src.txt for details
++Additional required properties for fsl,imx6qp-ipu:
++- fsl,prg: phandle to prg node associated with this IPU instance
+ Optional properties:
+ - port@[0-3]: Port nodes with endpoint definitions as defined in
+   Documentation/devicetree/bindings/media/video-interfaces.txt.
 -- 
 2.11.0
 
