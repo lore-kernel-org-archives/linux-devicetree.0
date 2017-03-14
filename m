@@ -1,109 +1,149 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [GIT PULL] generic TEE subsystem for v4.12
-Date: Tue, 14 Mar 2017 15:57:34 +0100
-Message-ID: <20170314145305.GA12937@jax>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 3/3] mfd: wm831x: Add device tree binding document
+Date: Tue, 14 Mar 2017 14:59:35 +0000
+Message-ID: <20170314145935.3wy3ximhtuhw3fgc@dell>
+References: <1488818804-9406-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1488818804-9406-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F. Davis" <afd@ti.com>, broonie@kernel.org, scott.branden@broadcom.com, Loic PALLARDY <loic.pallardy@st.com>, Etienne CARRIERE <etienne.carriere@st.com>, Benjamin GAIGNARD <benjamin.ga>
+In-Reply-To: <1488818804-9406-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Hi arm-soc maintainers,
+On Mon, 06 Mar 2017, Charles Keepax wrote:
 
-Please consider this pull request for v4.12
+> Add a device tree binding document for the wm831x series of PMICs.
+> Currently only support for the registering the device and the GPIOs are
+> actually implemented in the driver.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> ---
+> 
+> Changes since v2:
+>  - Flesh the binding some more with some additional features of the device,
+>    although these are not yet implemented in the code.
+> 
+>  Documentation/devicetree/bindings/mfd/wm831x.txt | 81 ++++++++++++++++++++++++
+>  MAINTAINERS                                      |  1 +
+>  2 files changed, 82 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/wm831x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
+> new file mode 100644
+> index 0000000..680ac18
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
+> @@ -0,0 +1,81 @@
+> +Cirrus Logic/Wolfson Microelectronics wm831x PMICs
+> +
+> +System PMICs with a wide range of additional features.
+> +
+> +Required properties:
+> +
+> +  - compatible : One of the following chip-specific strings:
+> +        "wlf,wm8310"
+> +        "wlf,wm8311"
+> +        "wlf,wm8312"
+> +        "wlf,wm8320"
+> +        "wlf,wm8321"
+> +        "wlf,wm8325"
+> +        "wlf,wm8326"
+> +
+> +  - reg : I2C slave address when connected using I2C, chip select number
+> +    when using SPI.
+> +
+> +  - gpio-controller : Indicates this device is a GPIO controller.
+> +  - #gpio-cells : Must be 2. The first cell is the pin number and the
+> +    second cell is used to specify optional parameters (currently unused).
 
-This pull request contains version 16 of the generic TEE driver.
+Then why not "must be 1", if the second cell is unused?
 
-The TEE subsystem will contain drivers for various TEE implementations.
-A TEE (Trusted Execution Environment) is a trusted OS running in some
-secure environment, for example, TrustZone on ARM CPUs, or a separate
-secure co-processor etc.
+> +  - interrupts : The interrupt line the /IRQ signal for the device is
+> +    connected to.
 
-The patch set has been reviewed by different people during the different
-versions. Now I think this has reached a state where it's mature enough
-to merge.
+What's with the '/'?
 
-The v16 cover letter containing detailed revision history can be found at
-https://lkml.org/lkml/2017/3/10/1277
+> +  - interrupt-parent : The parent interrupt controller.
+> +
+> +  - interrupt-controller : wm831x devices contain interrupt controllers and
+> +    may provide interrupt services to other devices.
+> +  - #interrupt-cells: Must be 2. The first cell is the IRQ number, and the
+> +    second cell is the flags, encoded as the trigger masks from
+> +    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 
-Thanks,
-Jens
+Please use the succinct "../../" format.
 
-The following changes since commit c1ae3cfa0e89fa1a7ecc4c99031f5e9ae99d9201:
+> +Optional sub-nodes:
+> +  - regulators : Contains sub-nodes for each of the regulators supplied by
+> +    the device. The regulators are bound using their names listed below:
+> +
+> +    dcdc1 : DCDC1
+> +    dcdc2 : DCDC2
+> +    dcdc3 : DCDC3
+> +    dcdc4 : DCDC3
+> +    isink1 : ISINK1
+> +    isink2 : ISINK2
+> +    ldo1 : LDO1
+> +    ldo2 : LDO2
+> +    ldo3 : LDO3
+> +    ldo4 : LDO4
+> +    ldo5 : LDO5
+> +    ldo7 : LDO7
+> +    ldo11 : LDO11
+> +
+> +    The bindings details of each regulator can be found in:
+> +    Documentation/devicetree/bindings/regulator/regulator.txt
 
-  Linux 4.11-rc1 (2017-03-05 12:59:56 -0800)
+As above.
 
-are available in the git repository at:
+> +Example:
+> +
+> +wm8310: pmic@36 {
+> +	compatible = "wlf,wm8310";
+> +	reg = <0x36>;
+> +
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +
+> +	interrupts = <347>;
+> +	interrupt-parent = <&gic>;
+> +
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +
+> +	regulators {
+> +		dcdc1: dcdc1 {
+> +			regulator-name = "DCDC1";
+> +			regulator-min-microvolt = <600000>;
+> +			regulator-max-microvolt = <600000>;
+> +		};
+> +		ldo1: ldo1 {
+> +			regulator-name = "LDO1";
+> +			regulator-min-microvolt = <1700000>;
+> +			regulator-max-microvolt = <1700000>;
+> +		};
+> +	};
+> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 2d8ca28..48fdc82 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -13363,6 +13363,7 @@ F:	Documentation/hwmon/wm83??
+>  F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
+>  F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
+>  F:	Documentation/devicetree/bindings/mfd/arizona.txt
+> +F:	Documentation/devicetree/bindings/mfd/wm831x.txt
+>  F:	arch/arm/mach-s3c64xx/mach-crag6410*
+>  F:	drivers/clk/clk-wm83*.c
+>  F:	drivers/extcon/extcon-arizona.c
 
-  git://git.linaro.org:/people/jens.wiklander/linux-tee.git tags/tee-drv-for-4.12
-
-for you to fetch changes up to 14e21cb8f811100a2104e952b8f5bc0326a5e213:
-
-  arm64: dt: hikey: Add optee node (2017-03-10 14:51:58 +0100)
-
-----------------------------------------------------------------
-Introduce generic TEE subsystem:
-- the TEE subsystem itself
-- an OP-TEE driver using the subsystem
-- optee bindings
-- optee node for hi6220-hikey.dts
-
-----------------------------------------------------------------
-Jens Wiklander (4):
-      dt/bindings: add bindings for optee
-      tee: generic TEE subsystem
-      tee: add OP-TEE driver
-      Documentation: tee subsystem and op-tee driver
-
-Jerome Forissier (1):
-      arm64: dt: hikey: Add optee node
-
- Documentation/00-INDEX                             |   2 +
- .../bindings/arm/firmware/linaro,optee-tz.txt      |  31 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- Documentation/ioctl/ioctl-number.txt               |   1 +
- Documentation/tee.txt                              | 118 +++
- MAINTAINERS                                        |  13 +
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts     |   7 +
- drivers/Kconfig                                    |   2 +
- drivers/Makefile                                   |   1 +
- drivers/tee/Kconfig                                |  18 +
- drivers/tee/Makefile                               |   5 +
- drivers/tee/optee/Kconfig                          |   7 +
- drivers/tee/optee/Makefile                         |   5 +
- drivers/tee/optee/call.c                           | 444 ++++++++++
- drivers/tee/optee/core.c                           | 622 ++++++++++++++
- drivers/tee/optee/optee_msg.h                      | 418 ++++++++++
- drivers/tee/optee/optee_private.h                  | 183 +++++
- drivers/tee/optee/optee_smc.h                      | 450 +++++++++++
- drivers/tee/optee/rpc.c                            | 396 +++++++++
- drivers/tee/optee/supp.c                           | 273 +++++++
- drivers/tee/tee_core.c                             | 893 +++++++++++++++++++++
- drivers/tee/tee_private.h                          | 129 +++
- drivers/tee/tee_shm.c                              | 358 +++++++++
- drivers/tee/tee_shm_pool.c                         | 156 ++++
- include/linux/tee_drv.h                            | 277 +++++++
- include/uapi/linux/tee.h                           | 346 ++++++++
- 26 files changed, 5156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
- create mode 100644 Documentation/tee.txt
- create mode 100644 drivers/tee/Kconfig
- create mode 100644 drivers/tee/Makefile
- create mode 100644 drivers/tee/optee/Kconfig
- create mode 100644 drivers/tee/optee/Makefile
- create mode 100644 drivers/tee/optee/call.c
- create mode 100644 drivers/tee/optee/core.c
- create mode 100644 drivers/tee/optee/optee_msg.h
- create mode 100644 drivers/tee/optee/optee_private.h
- create mode 100644 drivers/tee/optee/optee_smc.h
- create mode 100644 drivers/tee/optee/rpc.c
- create mode 100644 drivers/tee/optee/supp.c
- create mode 100644 drivers/tee/tee_core.c
- create mode 100644 drivers/tee/tee_private.h
- create mode 100644 drivers/tee/tee_shm.c
- create mode 100644 drivers/tee/tee_shm_pool.c
- create mode 100644 include/linux/tee_drv.h
- create mode 100644 include/uapi/linux/tee.h
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
