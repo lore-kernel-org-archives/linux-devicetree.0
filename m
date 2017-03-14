@@ -1,611 +1,113 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
- support display out.
-Date: Tue, 14 Mar 2017 17:02:24 +0000
-Message-ID: <20170314170224.fib6ne2uedvg7gnc@dell>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
- <20170301111943.12170-2-enric.balletbo@collabora.com>
+From: Steve Longerbeam <steve_longerbeam@mentor.com>
+Subject: Re: [PATCH v5 00/39] i.MX Media Driver
+Date: Tue, 14 Mar 2017 10:02:26 -0700
+Message-ID: <06038465-5634-3f69-521d-3f2a7d14afde@mentor.com>
+References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170312194700.GR21222@n2100.armlinux.org.uk>
+ <20170312175923.6ad86dff@vento.lan>
+ <20170312211324.GW21222@n2100.armlinux.org.uk>
+ <20170312191002.5f0a2cff@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170301111943.12170-2-enric.balletbo@collabora.com>
+In-Reply-To: <20170312191002.5f0a2cff@vento.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benson Leung <bleung@chromium.org>
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 01 Mar 2017, Enric Balletbo i Serra wrote:
 
-> From: Benson Leung <bleung@chromium.org>
-> 
-> This is the driver for the USB Type C cable detection mechanism
-> built into the ChromeOS Embedded Controller on systems that
-> have USB Type-C ports.
-> 
-> At present, this allows for the presence of display out, but in
-> future, it may also be used to notify host and device type cables
-> and the presence of power.
-> 
-> Signed-off-by: Benson Leung <bleung@chromium.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
-> Changes since v1:
->  Requested by Chanwoo Choi
->  - Rename files changing _ for -
->  - Remove the unneeded blank line on bottom of header.
->  - Remove kobject.h and cros_ec_commands.h includes.
->  - Remove the debug message as is not necessary.
->  - Use the tab for indentation instead of space for if sentence.
->  - Define each variable on different lines when the variables should be
->    initialized.
->  - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
->  - Add one blank line to split out between state and property setting.
->  - Add the author information (header and module)
-> 
->  Enric Balletbo
->  - As Rob suggested to rename the compatible name to something indicating that
->    is USB Type C related I also renamed the file names, extcon-cros-ec ->
->    extcon-usbc-cros-ec, I think it's more clear.
-> 
->  drivers/extcon/Kconfig               |   7 +
->  drivers/extcon/Makefile              |   1 +
->  drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
 
->  include/linux/mfd/cros_ec_commands.h |  75 +++++++
+On 03/12/2017 03:10 PM, Mauro Carvalho Chehab wrote:
+> Em Sun, 12 Mar 2017 21:13:24 +0000
+> Russell King - ARM Linux <linux@armlinux.org.uk> escreveu:
+>
+>> On Sun, Mar 12, 2017 at 05:59:28PM -0300, Mauro Carvalho Chehab wrote:
+>>> Yet, udev/systemd has some rules that provide an unique name for V4L
+>>> devices at /lib/udev/rules.d/60-persistent-v4l.rules. Basically, it
+>>> runs a small application (v4l_id) with creates a persistent symling
+>>> using rules like this:
+>>>
+>>> 	KERNEL=="video*", ENV{ID_SERIAL}=="?*", SYMLINK+="v4l/by-id/$env{ID_BUS}-$env{ID_SERIAL}-video-index$attr{index}"
+>>>
+>>> Those names are stored at /dev/v4l/by-path.
+>> This doesn't help:
+>>
+>> $ ls -Al /dev/v4l/by-id/
+>> total 0
+>> lrwxrwxrwx 1 root root 13 Mar 12 19:54 usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera-video-index0 -> ../../video10
+>> $ ls -Al /dev/v4l/by-path/
+>> total 0
+>> lrwxrwxrwx 1 root root 12 Mar 12 19:54 platform-2040000.vpu-video-index0 -> ../../video0
+>> lrwxrwxrwx 1 root root 12 Mar 12 19:54 platform-2040000.vpu-video-index1 -> ../../video1
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index0 -> ../../video2
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index1 -> ../../video3
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index2 -> ../../video4
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index3 -> ../../video5
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index4 -> ../../video6
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index5 -> ../../video7
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index6 -> ../../video8
+>> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index7 -> ../../video9
+>> lrwxrwxrwx 1 root root 13 Mar 12 19:54 platform-ci_hdrc.0-usb-0:1:1.0-video-index0 -> ../../video10
+>>
+>> The problem is the "platform-capture-subsystem-video-index" entries.
+>> These themselves change order.  For instance, I now have:
+>>
+>> - entity 72: ipu1_csi0 capture (1 pad, 1 link)
+>>               type Node subtype V4L flags 0
+>>               device node name /dev/video6
+>>
+>> which means it's platform-capture-subsystem-video-index4.  Before, it
+>> was platform-capture-subsystem-video-index2.
+> That's a driver problem. v4l_id gets information to build the persistent
+> name from the result of VIDIOC_QUERYCAP.
+>
+> In the case of Exynos gsc driver, for example, the information is here:
+>
+> static int gsc_m2m_querycap(struct file *file, void *fh,
+> 			   struct v4l2_capability *cap)
+> {
+> 	struct gsc_ctx *ctx = fh_to_ctx(fh);
+> 	struct gsc_dev *gsc = ctx->gsc_dev;
+>
+> 	strlcpy(cap->driver, GSC_MODULE_NAME, sizeof(cap->driver));
+> 	strlcpy(cap->card, GSC_MODULE_NAME " gscaler", sizeof(cap->card));
+> 	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
+> 		 dev_name(&gsc->pdev->dev));
+> 	cap->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_M2M_MPLANE |
+> 		V4L2_CAP_VIDEO_CAPTURE_MPLANE |	V4L2_CAP_VIDEO_OUTPUT_MPLANE;
+>
+> 	cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
+> 	return 0;
+> }
+>
+> See that the bus_info there is filled with:
+>
+> 	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s", dev_name(&gsc->pdev->dev));
+>
+>  From the output you printed, it seems that the i.MX6 is just doing:
+> 	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:");
+> for some devices.
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+imx6 is setting bus_info string on all capture devices as:
 
->  4 files changed, 498 insertions(+)
->  create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
-> 
-> diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-> index 96bbae5..9e67e68 100644
-> --- a/drivers/extcon/Kconfig
-> +++ b/drivers/extcon/Kconfig
-> @@ -142,4 +142,11 @@ config EXTCON_USB_GPIO
->  	  Say Y here to enable GPIO based USB cable detection extcon support.
->  	  Used typically if GPIO is used for USB ID pin detection.
->  
-> +config EXTCON_USBC_CROS_EC
-> +	tristate "ChromeOS Embedded Controller EXTCON support"
-> +	depends on MFD_CROS_EC
-> +	help
-> +	  Say Y here to enable USB Type C cable detection extcon support when
-> +	  using Chrome OS EC based USB Type-C ports.
-> +
->  endif
-> diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-> index 237ac3f..e4422949 100644
-> --- a/drivers/extcon/Makefile
-> +++ b/drivers/extcon/Makefile
-> @@ -19,3 +19,4 @@ obj-$(CONFIG_EXTCON_QCOM_SPMI_MISC) += extcon-qcom-spmi-misc.o
->  obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
->  obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
->  obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
-> +obj-$(CONFIG_EXTCON_USBC_CROS_EC) += extcon-usbc-cros-ec.o
-> diff --git a/drivers/extcon/extcon-usbc-cros-ec.c b/drivers/extcon/extcon-usbc-cros-ec.c
-> new file mode 100644
-> index 0000000..e759ed4
-> --- /dev/null
-> +++ b/drivers/extcon/extcon-usbc-cros-ec.c
-> @@ -0,0 +1,415 @@
-> +/**
-> + * drivers/extcon/extcon-usbc-cros-ec - ChromeOS Embedded Controller extcon
-> + *
-> + * Copyright (C) 2017 Google, Inc
-> + * Author: Benson Leung <bleung@chromium.org>
-> + *
-> + * This software is licensed under the terms of the GNU General Public
-> + * License version 2, as published by the Free Software Foundation, and
-> + * may be copied, distributed, and modified under those terms.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/extcon.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/module.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +#include <linux/sched.h>
-> +
-> +struct cros_ec_extcon_info {
-> +	struct device *dev;
-> +	struct extcon_dev *edev;
-> +
-> +	int port_id;
-> +
-> +	struct cros_ec_device *ec;
-> +
-> +	struct notifier_block notifier;
-> +
-> +	bool dp; /* DisplayPort enabled */
-> +	bool mux; /* SuperSpeed (usb3) enabled */
-> +	unsigned int power_type;
-> +};
-> +
-> +static const unsigned int usb_type_c_cable[] = {
-> +	EXTCON_DISP_DP,
-> +	EXTCON_NONE,
-> +};
-> +
-> +/**
-> + * cros_ec_pd_command() - Send a command to the EC.
-> + * @info: pointer to struct cros_ec_extcon_info
-> + * @command: EC command
-> + * @version: EC command version
-> + * @outdata: EC command output data
-> + * @outsize: Size of outdata
-> + * @indata: EC command input data
-> + * @insize: Size of indata
-> + *
-> + * Return: 0 on success, <0 on failure.
-> + */
-> +static int cros_ec_pd_command(struct cros_ec_extcon_info *info,
-> +			      unsigned int command,
-> +			      unsigned int version,
-> +			      void *outdata,
-> +			      unsigned int outsize,
-> +			      void *indata,
-> +			      unsigned int insize)
-> +{
-> +	struct cros_ec_command *msg;
-> +	int ret;
-> +
-> +	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-> +
-> +	msg->version = version;
-> +	msg->command = command;
-> +	msg->outsize = outsize;
-> +	msg->insize = insize;
-> +
-> +	if (outsize)
-> +		memcpy(msg->data, outdata, outsize);
-> +
-> +	ret = cros_ec_cmd_xfer_status(info->ec, msg);
-> +	if (ret >= 0 && insize)
-> +		memcpy(indata, msg->data, insize);
-> +
-> +	kfree(msg);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * cros_ec_usb_get_power_type() - Get power type info about PD device attached
-> + * to given port.
-> + * @info: pointer to struct cros_ec_extcon_info
-> + *
-> + * Return: power type on success, <0 on failure.
-> + */
-> +static int cros_ec_usb_get_power_type(struct cros_ec_extcon_info *info)
-> +{
-> +	struct ec_params_usb_pd_power_info req;
-> +	struct ec_response_usb_pd_power_info resp;
-> +	int ret;
-> +
-> +	req.port = info->port_id;
-> +	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_POWER_INFO, 0,
-> +				 &req, sizeof(req), &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return resp.type;
-> +}
-> +
-> +/**
-> + * cros_ec_usb_get_pd_mux_state() - Get PD mux state for given port.
-> + * @info: pointer to struct cros_ec_extcon_info
-> + *
-> + * Return: PD mux state on success, <0 on failure.
-> + */
-> +static int cros_ec_usb_get_pd_mux_state(struct cros_ec_extcon_info *info)
-> +{
-> +	struct ec_params_usb_pd_mux_info req;
-> +	struct ec_response_usb_pd_mux_info resp;
-> +	int ret;
-> +
-> +	req.port = info->port_id;
-> +	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_MUX_INFO, 0,
-> +				 &req, sizeof(req),
-> +				 &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return resp.flags;
-> +}
-> +
-> +/**
-> + * cros_ec_usb_get_role() - Get role info about possible PD device attached to a
-> + * given port.
-> + * @info: pointer to struct cros_ec_extcon_info
-> + * @polarity: pointer to cable polarity (return value)
-> + *
-> + * Return: role info on success, -ENOTCONN if no cable is connected, <0 on
-> + * failure.
-> + */
-> +static int cros_ec_usb_get_role(struct cros_ec_extcon_info *info,
-> +				bool *polarity)
-> +{
-> +	struct ec_params_usb_pd_control pd_control;
-> +	struct ec_response_usb_pd_control_v1 resp;
-> +	int ret;
-> +
-> +	pd_control.port = info->port_id;
-> +	pd_control.role = USB_PD_CTRL_ROLE_NO_CHANGE;
-> +	pd_control.mux = USB_PD_CTRL_MUX_NO_CHANGE;
-> +	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_CONTROL, 1,
-> +				 &pd_control, sizeof(pd_control),
-> +				 &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (!(resp.enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-> +		return -ENOTCONN;
-> +
-> +	*polarity = resp.polarity;
-> +
-> +	return resp.role;
-> +}
-> +
-> +/**
-> + * cros_ec_pd_get_num_ports() - Get number of EC charge ports.
-> + * @info: pointer to struct cros_ec_extcon_info
-> + *
-> + * Return: number of ports on success, <0 on failure.
-> + */
-> +static int cros_ec_pd_get_num_ports(struct cros_ec_extcon_info *info)
-> +{
-> +	struct ec_response_usb_pd_ports resp;
-> +	int ret;
-> +
-> +	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_PORTS,
-> +				 0, NULL, 0, &resp, sizeof(resp));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return resp.num_ports;
-> +}
-> +
-> +static int extcon_cros_ec_detect_cable(struct cros_ec_extcon_info *info,
-> +				       bool force)
-> +{
-> +	struct device *dev = info->dev;
-> +	int role, power_type;
-> +	bool polarity = false;
-> +	bool dp = false;
-> +	bool mux = false;
-> +	bool hpd = false;
-> +
-> +	power_type = cros_ec_usb_get_power_type(info);
-> +	if (power_type < 0) {
-> +		dev_err(dev, "failed getting power type err = %d\n",
-> +			power_type);
-> +		return power_type;
-> +	}
-> +
-> +	role = cros_ec_usb_get_role(info, &polarity);
-> +	if (role < 0) {
-> +		if (role != -ENOTCONN) {
-> +			dev_err(dev, "failed getting role err = %d\n", role);
-> +			return role;
-> +		}
-> +	} else {
-> +		int pd_mux_state;
-> +
-> +		pd_mux_state = cros_ec_usb_get_pd_mux_state(info);
-> +		if (pd_mux_state < 0)
-> +			pd_mux_state = USB_PD_MUX_USB_ENABLED;
-> +
-> +		dp = pd_mux_state & USB_PD_MUX_DP_ENABLED;
-> +		mux = pd_mux_state & USB_PD_MUX_USB_ENABLED;
-> +		hpd = pd_mux_state & USB_PD_MUX_HPD_IRQ;
-> +	}
-> +
-> +	if (force || info->dp != dp || info->mux != mux ||
-> +		info->power_type != power_type) {
-> +
-> +		info->dp = dp;
-> +		info->mux = mux;
-> +		info->power_type = power_type;
-> +
-> +		extcon_set_state(info->edev, EXTCON_DISP_DP, dp);
-> +
-> +		extcon_set_property(info->edev, EXTCON_DISP_DP,
-> +				    EXTCON_PROP_USB_TYPEC_POLARITY,
-> +				    (union extcon_property_value)(int)polarity);
-> +		extcon_set_property(info->edev, EXTCON_DISP_DP,
-> +				    EXTCON_PROP_USB_SS,
-> +				    (union extcon_property_value)(int)mux);
-> +		extcon_set_property(info->edev, EXTCON_DISP_DP,
-> +				    EXTCON_PROP_DISP_HPD,
-> +				    (union extcon_property_value)(int)hpd);
-> +
-> +		extcon_sync(info->edev, EXTCON_DISP_DP);
-> +
-> +	} else if (hpd) {
-> +		extcon_set_property(info->edev, EXTCON_DISP_DP,
-> +				    EXTCON_PROP_DISP_HPD,
-> +				    (union extcon_property_value)(int)hpd);
-> +		extcon_sync(info->edev, EXTCON_DISP_DP);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int extcon_cros_ec_event(struct notifier_block *nb,
-> +				unsigned long queued_during_suspend,
-> +				void *_notify)
-> +{
-> +	struct cros_ec_extcon_info *info;
-> +	struct cros_ec_device *ec;
-> +	u32 host_event;
-> +
-> +	info = container_of(nb, struct cros_ec_extcon_info, notifier);
-> +	ec = info->ec;
-> +
-> +	host_event = cros_ec_get_host_event(ec);
-> +	if (host_event & (EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU) |
-> +			  EC_HOST_EVENT_MASK(EC_HOST_EVENT_USB_MUX))) {
-> +		extcon_cros_ec_detect_cable(info, false);
-> +		return NOTIFY_OK;
-> +	}
-> +
-> +	return NOTIFY_DONE;
-> +}
-> +
-> +static int extcon_cros_ec_probe(struct platform_device *pdev)
-> +{
-> +	struct cros_ec_extcon_info *info;
-> +	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	int numports, ret;
-> +
-> +	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	info->dev = dev;
-> +	info->ec = ec;
-> +
-> +	if (np) {
-> +		u32 port;
-> +
-> +		ret = of_property_read_u32(np, "google,usb-port-id", &port);
-> +		if (ret < 0) {
-> +			dev_err(dev, "Missing google,usb-port-id property\n");
-> +			return ret;
-> +		}
-> +		info->port_id = port;
-> +	} else {
-> +		info->port_id = pdev->id;
-> +	}
-> +
-> +	numports = cros_ec_pd_get_num_ports(info);
-> +	if (numports < 0) {
-> +		dev_err(dev, "failed getting number of ports! ret = %d\n",
-> +			numports);
-> +		return numports;
-> +	}
-> +
-> +	if (info->port_id >= numports) {
-> +		dev_err(dev, "This system only supports %d ports\n", numports);
-> +		return -ENODEV;
-> +	}
-> +
-> +	info->edev = devm_extcon_dev_allocate(dev, usb_type_c_cable);
-> +	if (IS_ERR(info->edev)) {
-> +		dev_err(dev, "failed to allocate extcon device\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = devm_extcon_dev_register(dev, info->edev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register extcon device\n");
-> +		return ret;
-> +	}
-> +
-> +	extcon_set_property_capability(info->edev, EXTCON_DISP_DP,
-> +				       EXTCON_PROP_USB_TYPEC_POLARITY);
-> +	extcon_set_property_capability(info->edev, EXTCON_DISP_DP,
-> +				       EXTCON_PROP_USB_SS);
-> +	extcon_set_property_capability(info->edev, EXTCON_DISP_DP,
-> +				       EXTCON_PROP_DISP_HPD);
-> +
-> +	platform_set_drvdata(pdev, info);
-> +
-> +	/* Get PD events from the EC */
-> +	info->notifier.notifier_call = extcon_cros_ec_event;
-> +	ret = blocking_notifier_chain_register(&info->ec->event_notifier,
-> +					       &info->notifier);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to register notifier\n");
-> +		return ret;
-> +	}
-> +
-> +	/* Perform initial detection */
-> +	ret = extcon_cros_ec_detect_cable(info, true);
-> +	if (ret < 0) {
-> +		dev_err(dev, "failed to detect initial cable state\n");
-> +		goto unregister_notifier;
-> +	}
-> +
-> +	return 0;
-> +
-> +unregister_notifier:
-> +	blocking_notifier_chain_unregister(&info->ec->event_notifier,
-> +					   &info->notifier);
-> +	return ret;
-> +}
-> +
-> +static int extcon_cros_ec_remove(struct platform_device *pdev)
-> +{
-> +	struct cros_ec_extcon_info *info = platform_get_drvdata(pdev);
-> +
-> +	blocking_notifier_chain_unregister(&info->ec->event_notifier,
-> +					   &info->notifier);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int extcon_cros_ec_suspend(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int extcon_cros_ec_resume(struct device *dev)
-> +{
-> +	int ret;
-> +	struct cros_ec_extcon_info *info = dev_get_drvdata(dev);
-> +
-> +	ret = extcon_cros_ec_detect_cable(info, true);
-> +	if (ret < 0)
-> +		dev_err(dev, "failed to detect cable state on resume\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops extcon_cros_ec_dev_pm_ops = {
-> +	SET_SYSTEM_SLEEP_PM_OPS(extcon_cros_ec_suspend, extcon_cros_ec_resume)
-> +};
-> +
-> +#define DEV_PM_OPS	(&extcon_cros_ec_dev_pm_ops)
-> +#else
-> +#define DEV_PM_OPS	NULL
-> +#endif /* CONFIG_PM_SLEEP */
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id extcon_cros_ec_of_match[] = {
-> +	{ .compatible = "google,extcon-usbc-cros-ec" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, extcon_cros_ec_of_match);
-> +#endif /* CONFIG_OF */
-> +
-> +static struct platform_driver extcon_cros_ec_driver = {
-> +	.driver = {
-> +		.name  = "extcon-usbc-cros-ec",
-> +		.of_match_table = of_match_ptr(extcon_cros_ec_of_match),
-> +		.pm = DEV_PM_OPS,
-> +	},
-> +	.remove  = extcon_cros_ec_remove,
-> +	.probe   = extcon_cros_ec_probe,
-> +};
-> +
-> +module_platform_driver(extcon_cros_ec_driver);
-> +
-> +MODULE_DESCRIPTION("ChromeOS Embedded Controller extcon driver");
-> +MODULE_AUTHOR("Benson Leung <bleung@chromium.org>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-> index 255d14a..3ca9953 100644
-> --- a/include/linux/mfd/cros_ec_commands.h
-> +++ b/include/linux/mfd/cros_ec_commands.h
-> @@ -285,10 +285,15 @@ enum host_event_code {
->  	EC_HOST_EVENT_HANG_DETECT = 20,
->  	/* Hang detect logic detected a hang and warm rebooted the AP */
->  	EC_HOST_EVENT_HANG_REBOOT = 21,
-> +	/* PD MCU triggering host event */
-> +	EC_HOST_EVENT_PD_MCU = 22,
->  
->  	/* EC RTC event occurred */
->  	EC_HOST_EVENT_RTC = 26,
->  
-> +	/* EC desires to change state of host-controlled USB mux */
-> +	EC_HOST_EVENT_USB_MUX = 28,
-> +
->  	/*
->  	 * The high bit of the event mask is not used as a host event code.  If
->  	 * it reads back as set, then the entire event mask should be
-> @@ -2873,6 +2878,76 @@ struct ec_params_usb_pd_control {
->  	uint8_t mux;
->  } __packed;
->  
-> +#define PD_CTRL_RESP_ENABLED_COMMS      (1 << 0) /* Communication enabled */
-> +#define PD_CTRL_RESP_ENABLED_CONNECTED  (1 << 1) /* Device connected */
-> +#define PD_CTRL_RESP_ENABLED_PD_CAPABLE (1 << 2) /* Partner is PD capable */
-> +
-> +struct ec_response_usb_pd_control_v1 {
-> +	uint8_t enabled;
-> +	uint8_t role;
-> +	uint8_t polarity;
-> +	char state[32];
-> +} __packed;
-> +
-> +#define EC_CMD_USB_PD_PORTS 0x102
-> +
-> +struct ec_response_usb_pd_ports {
-> +	uint8_t num_ports;
-> +} __packed;
-> +
-> +#define EC_CMD_USB_PD_POWER_INFO 0x103
-> +
-> +#define PD_POWER_CHARGING_PORT 0xff
-> +struct ec_params_usb_pd_power_info {
-> +	uint8_t port;
-> +} __packed;
-> +
-> +enum usb_chg_type {
-> +	USB_CHG_TYPE_NONE,
-> +	USB_CHG_TYPE_PD,
-> +	USB_CHG_TYPE_C,
-> +	USB_CHG_TYPE_PROPRIETARY,
-> +	USB_CHG_TYPE_BC12_DCP,
-> +	USB_CHG_TYPE_BC12_CDP,
-> +	USB_CHG_TYPE_BC12_SDP,
-> +	USB_CHG_TYPE_OTHER,
-> +	USB_CHG_TYPE_VBUS,
-> +	USB_CHG_TYPE_UNKNOWN,
-> +};
-> +
-> +struct usb_chg_measures {
-> +	uint16_t voltage_max;
-> +	uint16_t voltage_now;
-> +	uint16_t current_max;
-> +	uint16_t current_lim;
-> +} __packed;
-> +
-> +struct ec_response_usb_pd_power_info {
-> +	uint8_t role;
-> +	uint8_t type;
-> +	uint8_t dualrole;
-> +	uint8_t reserved1;
-> +	struct usb_chg_measures meas;
-> +	uint32_t max_power;
-> +} __packed;
-> +
-> +/* Get info about USB-C SS muxes */
-> +#define EC_CMD_USB_PD_MUX_INFO 0x11a
-> +
-> +struct ec_params_usb_pd_mux_info {
-> +	uint8_t port; /* USB-C port number */
-> +} __packed;
-> +
-> +/* Flags representing mux state */
-> +#define USB_PD_MUX_USB_ENABLED       (1 << 0)
-> +#define USB_PD_MUX_DP_ENABLED        (1 << 1)
-> +#define USB_PD_MUX_POLARITY_INVERTED (1 << 2)
-> +#define USB_PD_MUX_HPD_IRQ           (1 << 3)
-> +
-> +struct ec_response_usb_pd_mux_info {
-> +	uint8_t flags; /* USB_PD_MUX_*-encoded USB mux state */
-> +} __packed;
-> +
->  /*****************************************************************************/
->  /*
->   * Passthru commands
+snprintf(cap->bus_info, sizeof(cap->bus_info),
+                  "platform:%s", dev_name(priv->dev));
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+dev_name(priv->dev) is the device name of the attached subdev.
+So the bus_info string, at least for attached CSI subdevs, should
+be "platform:imx-ipuv3-csi".
+
+Maybe there is something else missing, I haven't had a chance to
+look at this yet.
+
+Steve
+
+
+>
+> If you change the i.MX6 driver to do the same, you'll likely be able to
+> have unique names there too.
+>
+> Regards,
+> Mauro
