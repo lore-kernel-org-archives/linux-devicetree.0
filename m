@@ -1,7 +1,7 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 3/9] gpu: ipu-v3: add DT binding for the Prefetch Resolve Gasket
-Date: Tue, 14 Mar 2017 11:38:42 +0100
-Message-ID: <1489487928-26083-3-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v3 8/9] drm/imx: enable/disable PRG on CRTC enable/disable
+Date: Tue, 14 Mar 2017 11:38:47 +0100
+Message-ID: <1489487928-26083-8-git-send-email-p.zabel@pengutronix.de>
 References: <1489487928-26083-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1489487928-26083-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -12,58 +12,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-This adds the the devicetree binding for the Prefetch Resolve Gasket,
-as found on i.MX6 QuadPlus.
-The PRG is fairly simple in that it only has a configuration register
-range and two clocks, one for the AHB slave port and one for the AXI
-ports and the functional units.
-
-The PRE connections need to be described in the DT, as the PRE<->PRG
-assignment is a mix between fixed and muxable connections.
+On i.MX6 QuadPlus the PRG needs to be clocked in order to pass
+through the data access requests from the IDMAC. This call is a
+no-op for other all other SoCs.
 
 Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- .../bindings/display/imx/fsl-imx-drm.txt           | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ drivers/gpu/drm/imx/ipuv3-crtc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-index 70ae5335d1e30..62eb637630b5a 100644
---- a/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-+++ b/Documentation/devicetree/bindings/display/imx/fsl-imx-drm.txt
-@@ -79,6 +79,31 @@ pre@21c8000 {
- 	fsl,iram = <&ocram2>;
- };
+diff --git a/drivers/gpu/drm/imx/ipuv3-crtc.c b/drivers/gpu/drm/imx/ipuv3-crtc.c
+index 82772b8d63216..dab9d50ffd8c1 100644
+--- a/drivers/gpu/drm/imx/ipuv3-crtc.c
++++ b/drivers/gpu/drm/imx/ipuv3-crtc.c
+@@ -55,6 +55,7 @@ static void ipu_crtc_enable(struct drm_crtc *crtc)
+ 	struct ipu_crtc *ipu_crtc = to_ipu_crtc(crtc);
+ 	struct ipu_soc *ipu = dev_get_drvdata(ipu_crtc->dev->parent);
  
-+Freescale i.MX PRG (Prefetch Resolve Gasket)
-+============================================
-+
-+Required properties:
-+- compatible: should be "fsl,imx6qp-prg"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- clocks : phandles to the PRG ipg and axi clock inputs, as described
-+  in Documentation/devicetree/bindings/clock/clock-bindings.txt and
-+  Documentation/devicetree/bindings/clock/imx6q-clock.txt.
-+- clock-names: should be "ipg" and "axi"
-+- fsl,pres: phandles to the PRE units attached to this PRG, with the fixed
-+  PRE as the first entry and the muxable PREs following.
-+
-+example:
-+
-+prg@21cc000 {
-+	compatible = "fsl,imx6qp-prg";
-+	reg = <0x021cc000 0x1000>;
-+	clocks = <&clks IMX6QDL_CLK_PRG0_APB>,
-+		 <&clks IMX6QDL_CLK_PRG0_AXI>;
-+	clock-names = "ipg", "axi";
-+	fsl,pres = <&pre1>, <&pre2>, <&pre3>;
-+};
-+
- Parallel display support
- ========================
++	ipu_prg_enable(ipu);
+ 	ipu_dc_enable(ipu);
+ 	ipu_dc_enable_channel(ipu_crtc->dc);
+ 	ipu_di_enable(ipu_crtc->di);
+@@ -95,6 +96,7 @@ static void ipu_crtc_atomic_disable(struct drm_crtc *crtc,
+ 	 */
+ 	ipu_crtc_disable_planes(ipu_crtc, old_crtc_state);
+ 	ipu_dc_disable(ipu);
++	ipu_prg_disable(ipu);
  
+ 	spin_lock_irq(&crtc->dev->event_lock);
+ 	if (crtc->state->event) {
 -- 
 2.11.0
 
