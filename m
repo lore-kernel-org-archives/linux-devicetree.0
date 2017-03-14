@@ -1,140 +1,151 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 1/3] ARM: imx: Add GPCv2 power gating driver bindings
-Date: Tue, 14 Mar 2017 08:05:38 -0700
-Message-ID: <20170314150540.27831-2-andrew.smirnov@gmail.com>
-References: <20170314150540.27831-1-andrew.smirnov@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170314150540.27831-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/9] Docs: dt: document qcom iommu bindings
+Date: Tue, 14 Mar 2017 11:18:05 -0400
+Message-ID: <20170314151811.17234-4-robdclark@gmail.com>
+References: <20170314151811.17234-1-robdclark@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170314151811.17234-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for power domain driver for GPCv2 IP block found in
-i.MX7 SoCs.
-
-Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/power/fsl,imx-gpcv2.txt    | 71 ++++++++++++++++++++++
- include/dt-bindings/power/imx7-power.h             | 18 ++++++
- 2 files changed, 89 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
- create mode 100644 include/dt-bindings/power/imx7-power.h
+ .../devicetree/bindings/iommu/qcom,iommu.txt       | 113 +++++++++++++++++++++
+ 1 file changed, 113 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
 
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
 new file mode 100644
-index 0000000..02f45c6
+index 0000000..fd5b7fa
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
-@@ -0,0 +1,71 @@
-+Freescale i.MX General Power Controller v2
-+==========================================
++++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+@@ -0,0 +1,113 @@
++* QCOM IOMMU v1 Implementation
 +
-+The i.MX7S/D General Power Control (GPC) block contains Power Gating
-+Control (PGC) for various power domains.
++Qualcomm "B" family devices which are not compatible with arm-smmu have
++a similar looking IOMMU but without access to the global register space,
++and optionally requiring additional configuration to route context irqs
++to non-secure vs secure interrupt line.
 +
-+Required properties:
++** Required properties:
 +
-+- compatible: Should be "fsl,imx7d-gpc"
++- compatible       : Should be one of:
 +
-+- reg: should be register base and length as documented in the
-+  datasheet
++                        "qcom,msm8916-iommu"
 +
-+- interrupts: Should contain GPC interrupt request 1
++- clock-names      : Should be a pair of "iface" (required for IOMMUs
++                     register group access) and "bus" (required for
++                     the IOMMUs underlying bus access).
++- clocks           : Phandles for respective clocks described by
++                     clock-names.
++- #address-cells   : must be 1.
++- #size-cells      : must be 1.
++- #iommu-cells     : Must be 1.
++- ranges           : Base address and size of the iommu context banks.
++- qcom,iommu-secure-id  : secure-id.
 +
-+Power domains contained within GPC node are generic power domain
-+providers, documented in
-+Documentation/devicetree/bindings/power/power_domain.txt, which are
-+described as subnodes of the power gating controller 'pgc' node,
-+which, in turn, is expected to contain the following:
++- List of sub-nodes, one per translation context bank.  Each sub-node
++  has the following required properties:
 +
-+Required properties:
++  - compatible     : Should be one of:
++        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
++        - "qcom,msm-iommu-v1-sec" : secure context bank
++  - reg            : Base address and size of context bank within the iommu
++  - interrupts     : The context fault irq.
 +
-+- reg: Power domain index. Valid values are defined in
-+  include/dt-bindings/power/imx7-power.h
++** Optional properties:
 +
-+- #power-domain-cells: Should be 0
++- reg              : Base address and size of the SMMU local base, should
++                     be only specified if the iommu requires configuration
++                     for routing of context bank irq's to secure vs non-
++                     secure lines.  (Ie. if the iommu contains secure
++                     context banks)
 +
-+Optional properties:
 +
-+- power-supply: Power supply used to power the domain
++** Examples:
 +
-+Example:
++	apps_iommu: iommu@1e20000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
++		ranges = <0 0x1e20000 0x40000>;
++		reg = <0x1ef0000 0x3000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_APSS_TCU_CLK>;
++		clock-names = "iface", "bus";
++		qcom,iommu-secure-id = <17>;
 +
-+	gpc: gpc@303a0000 {
-+		compatible = "fsl,imx7d-gpc";
-+		reg = <0x303a0000 0x1000>;
-+		interrupt-controller;
-+		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&intc>;
++		// mdp_0:
++		iommu-ctx@4000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x4000 0x1000>;
++			interrupts = <GIC_SPI 70 0>;
++		};
 +
-+		pgc {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pgc_pcie_phy: power-domain@3 {
-+				#power-domain-cells = <0>;
-+
-+				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
-+				power-supply = <&reg_1p0d>;
-+			};
++		// venus_ns:
++		iommu-ctx@5000 {
++			compatible = "qcom,msm-iommu-v1-sec";
++			reg = <0x5000 0x1000>;
++			interrupts = <GIC_SPI 70 0>;
 +		};
 +	};
 +
++	gpu_iommu: iommu@1f08000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
++		ranges = <0 0x1f08000 0x10000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_GFX_TCU_CLK>;
++		clock-names = "iface", "bus";
++		qcom,iommu-secure-id = <18>;
 +
-+Specifying power domain for IP modules
-+======================================
++		// gfx3d_user:
++		iommu-ctx@1f09000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x1000 0x1000>;
++			interrupts = <GIC_SPI 241 0>;
++		};
 +
-+IP cores belonging to a power domain should contain a 'power-domains'
-+property that is a phandle for PGC node representing the domain.
-+
-+Example of a device that is part of the PCIE_PHY power domain:
-+
-+	pcie: pcie@33800000 {
-+	      reg = <0x33800000 0x4000>,
-+	            <0x4ff00000 0x80000>;
-+		/* ... */
-+		power-domains = <&pgc_pcie_phy>;
-+		/* ... */
++		// gfx3d_priv:
++		iommu-ctx@1f0a000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x2000 0x1000>;
++			interrupts = <GIC_SPI 242 0>;
++		};
 +	};
-diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
-new file mode 100644
-index 0000000..eb70023
---- /dev/null
-+++ b/include/dt-bindings/power/imx7-power.h
-@@ -0,0 +1,18 @@
-+/*
-+ *  Copyright (C) 2017 Impinj
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
 +
-+#ifndef __DT_BINDINGS_IMX7_POWER_H__
-+#define __DT_BINDINGS_IMX7_POWER_H__
++	...
 +
-+#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
-+#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
-+#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
-+#define IMX7_POWER_DOMAIN_PCIE_PHY	3
-+#define IMX7_POWER_DOMAIN_MIPI_PHY	4
++	venus: video-codec@1d00000 {
++		...
++		iommus = <&apps_iommu 5>;
++	};
 +
-+#endif
++	mdp: mdp@1a01000 {
++		...
++		iommus = <&apps_iommu 4>;
++	};
++
++	gpu@01c00000 {
++		...
++		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
++	};
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
