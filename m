@@ -1,112 +1,87 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx: add Gateworks Ventana GW5904 support
-Date: Tue, 14 Mar 2017 08:05:03 -0700
-Message-ID: <CAJ+vNU2V4R1qEdowBkyS5OKk15iOEq0vvtW-RwRnHskdb861tg@mail.gmail.com>
-References: <1489178411-6559-1-git-send-email-tharvey@gateworks.com> <20170314105517.GP3618@dragon>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 5/6] gpio: Add gpio driver support for ThunderX and OCTEON-TX
+Date: Tue, 14 Mar 2017 16:02:34 +0100
+Message-ID: <CACRpkdY1yKCrjTshmGVcKO2gDjC6cNufG1+VC_31Of1iJxYyiA@mail.gmail.com>
+References: <1488332932-2691-1-git-send-email-david.daney@cavium.com> <1488332932-2691-6-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170314105517.GP3618@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1488332932-2691-6-git-send-email-david.daney@cavium.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <david.daney@cavium.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 3:55 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Mar 10, 2017 at 12:40:11PM -0800, Tim Harvey wrote:
-<snip>
->> @@ -0,0 +1,19 @@
->> +/*
->> + * Copyright 2017 Gateworks Corporation
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
+On Wed, Mar 1, 2017 at 2:48 AM, David Daney <david.daney@cavium.com> wrote:
+
+> Cavium ThunderX and OCTEON-TX are arm64 based SoCs.  Add driver for
+> the on-chip GPIO pins.
 >
-> For new dts files, GPL/X11 dual licence is recommended.  There are
-> plenty of examples in arch/arm/boot/dts.
+> Signed-off-by: David Daney <david.daney@cavium.com>
 
-Shawn,
+I guess this can't be merged until the corresponding IRQ changes
+are merged. It can be applied in the irqchip tree or next merge
+window or they can give me an immutable branch to pull to
+the GPIO subsystem or whatever works.
 
-Thanks for the review. I will incorporate all of your comments in a v2
-but do have a few points worth discussion below
+Some pretty minor things remain.
 
-<snip>
->> +&ldb {
->> +     status = "okay";
->> +
->> +     lvds-channel@0 {
->> +             fsl,data-mapping = "spwg";
->> +             fsl,data-width = <18>;
->> +             status = "okay";
->> +
->> +             display-timings {
->> +                     native-mode = <&timing0>;
->> +                     timing0: hsd100pxn1 {
->> +                             clock-frequency = <65000000>;
->> +                             hactive = <1024>;
->> +                             vactive = <768>;
->> +                             hback-porch = <220>;
->> +                             hfront-porch = <40>;
->> +                             vback-porch = <21>;
->> +                             vfront-porch = <7>;
->> +                             hsync-len = <60>;
->> +                             vsync-len = <10>;
->> +                     };
->> +             };
->> +     };
->
-> Take a look at commit 4dc633e9b019 ("ARM: dts: sabrelite: use
-> simple-panel instead of display-timings for LVDS0"), and consider to use
-> simple-panel?
+> +#include <linux/gpio/driver.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/irq.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/pci.h>
+> +#include <linux/spinlock.h>
 
-I haven't moved to simple-panel yet because I have bootloader code
-that allows choosing/altering display timings with the goal being
-users don't need to recompile their device-tree or kernel to use a
-display with different timings. It seems to me that moving to
-simple-panel would make this even more difficult as while the
-bootloader could find and alter the panel's compatible property (in
-the case the kernel has a supported simple-panel compiled in) it no
-longer has access to the raw timings (in case the kernel doesn't have
-a simple-panel driver built-in already).
+I think you should explicitly include <linux/bitops.h>
 
-I do like the way simple-panel combines display timings with
-backlight, power supplies, dc bus, and a gpio enable but it doesn't
-encapsulate touch controller or expose timings to device-tree for easy
-manipulation.
+Other than that it is all fine.
 
-What are you thoughts on this?
+> +/*
+> + * Interrupts are chained from underlying MSI-X vectors.  We have
+> + * these irq_chip functions to be able to handle level triggering
+> + * semantics and other acknowledgment tasks associated with the GPIO
+> + * mechanism.
+> + */
+> +static struct irq_chip thunderx_gpio_irq_chip = {
+> +       .name                   = "GPIO",
+> +       .irq_enable             = thunderx_gpio_irq_enable,
+> +       .irq_disable            = thunderx_gpio_irq_disable,
+> +       .irq_ack                = thunderx_gpio_irq_ack,
+> +       .irq_mask               = thunderx_gpio_irq_mask,
+> +       .irq_mask_ack           = thunderx_gpio_irq_mask_ack,
+> +       .irq_unmask             = thunderx_gpio_irq_unmask,
+> +       .irq_eoi                = irq_chip_eoi_parent,
+> +       .irq_set_affinity       = irq_chip_set_affinity_parent,
+> +       .irq_set_type           = thunderx_gpio_irq_set_type,
+> +
+> +       .flags                  = IRQCHIP_SET_TYPE_MASKED
+> +};
 
->
-<snip>
->> +
->> +&pwm2 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_pwm2>; /* MX6_DIO1 */
->> +     status = "disabled";
->> +};
->> +
->> +&pwm3 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_pwm3>; /* MX6_DIO2 */
->> +     status = "disabled";
->> +};
->
-> Why do you have these two devices but disable them?
+I think you should implement .irq_request_resources() and
+.irq_release_resources() calling
+gpiochip_lock_as_irq(chip, d->hwirq)
+and gpiochip_unlock_as_irq(chip, d->hwirq) respectively,
+much like gpiochip_irq_reqres() and gpiochip_irq_relres()
+in the gpiolib.
 
-This is because I have a bootloader configuration that allows the user
-to choose between GPIO and PWM for the non-backlight PWM pins. I
-should probably add a comment to those nodes specifying that firmware
-modifies the status property.
+This helps the kernel knowing that the lines are taken for
+interrupts and must be inputs.
 
-Thanks,
+> +static int thunderx_gpio_irq_map(struct irq_domain *d, unsigned int irq,
+> +                                irq_hw_number_t hwirq)
+> +{
+> +       irq_set_irq_type(irq, IRQ_TYPE_LEVEL_LOW);
 
-Tim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I would prefer that you just write the right state into the hardware
+if that is what you want to do. Normally the consumer specifies
+trigger type.
+
+But I'm uncertain, maybe this is allright with the IRQ maintainers.
+
+Apart from these nitpicks it is a beautiful driver.
+
+Yours,
+Linus Walleij
