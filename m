@@ -1,43 +1,59 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 1/4] pinctrl: samsung: Fix the width of PINCFG_TYPE_DRV
- bitfields for Exynos5433
-Date: Tue, 14 Mar 2017 16:27:26 +0200
-Message-ID: <CAJKOXPd1pRN47Ss5qTHUVAdPwxKqE5vGGevG1OhVH0uSZnotKA@mail.gmail.com>
-References: <CGME20161230041426epcas1p1f827d3cee8b607d81e9921b412ddf301@epcas1p1.samsung.com>
- <20161230041421.24448-1-andi.shyti@samsung.com> <20161230041421.24448-2-andi.shyti@samsung.com>
- <CACRpkdbR3x14h38Gg7qpeWnswwD9qsS0zDUrrXCEJH-AdEB+cQ@mail.gmail.com>
- <58AF7CCB.5070303@samsung.com> <CACRpkda0-k7Vo9Y6yNtLNXu-gGnJW9y83t6W9p032KWjHYdMiw@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: Excluding pins from Linux control
+Date: Tue, 14 Mar 2017 15:39:11 +0100
+Message-ID: <CACRpkdYB+4=hG4YcUTvyg50cP6SfMhUuUMW7XqJAVxswYBsWng@mail.gmail.com>
+References: <433834766.313467.1488218521360@email.1und1.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda0-k7Vo9Y6yNtLNXu-gGnJW9y83t6W9p032KWjHYdMiw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andi Shyti <andi@etezian.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <433834766.313467.1488218521360-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 3:47 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Feb 24, 2017 at 1:22 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->> On 2016년 12월 30일 22:28, Linus Walleij wrote:
->>> On Fri, Dec 30, 2016 at 5:14 AM, Andi Shyti <andi.shyti@samsung.com> wrote:
-> Probably. Send a patch fixing it up so I can apply it.
+On Mon, Feb 27, 2017 at 7:02 PM, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> wrote:
+
+> on BCM2835 (Raspberry Pi) the firmware on the VideoCore and Linux on the ARM core share
+> a common pin "space". Depending on the board revision the VideoCore needs to controls
+> some pins, which shouldn't be claimed by Linux on the ARM.
 >
-> There are now something like 5 different people submitting Samsung pinctrl
-> patches without coordination so this will start to happen a lot if you keep
-> up this development pace.
->
-> As I just wrote in another mail: I want someone to step up and collect
-> Samsung patches and send them to me using a pull request.
+> What is the right way to exclude control on Linux for those pins in order to avoid possible
+> harmful operations?
 
-I think we can handle it as there are three of us.
+Do you want to do this statically (at boot) or dynamically (at runtime)?
 
-> Samsung people also need to start reviewing each other's patches
-> more I guess, but mainly I need help with integration.
+If you want to do it statically, at boot time:
+Just add some NOOP function (i.e. a function that result in
+zero register writes or anything) named "videocore-reserved" or
+something to the driver in  drivers/pinctrl/bcm/pinctrl-bcm2835.c,
+make it applicable to the affected pins, making it possible
+to create a state that will combine the function "videocore-reserved"
+with these pins, resulting in them being exclusively used for
+that.
 
-More or less recently we do the reviews. Sure we can focus more... and
-actually having an entry gate for patches would ensure at least one
-more review from the applying person.
+Then in the videocore device tree node (I assume there is
+something like such) create a pinctrl state that just take all these
+pins with this dummy function.
 
-Best regards,
-Krzysztof
+(If the videocore does not even have a device tree node, hog all
+those pins to that function using hogs as described in
+Documentaion/pinctrl.txt, essentially just take the pins for the
+pin controller itself.)
+
+If you want to do it at runtime, you need some communication link
+to the videocore (I guess) and then it is essentially the same
+approach but done using proper states reflecting whether the
+videocore is actively using them or not, but for the simple case
+even this would be easiest done using the static approach above.
+You may need a dynamic solution if you want to remux the
+pins to ground when going to sleep for example, then something
+must move the pins from "default" to "sleep" state and back,
+and that needs to be the videocore driver in the kernel I guess.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
