@@ -1,67 +1,63 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
 Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Specify serial console parameters
-Date: Tue, 14 Mar 2017 13:32:48 +0100
-Message-ID: <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
+Date: Tue, 14 Mar 2017 13:37:13 +0100
+Message-ID: <aab82e4c-803e-34d7-5455-ba905b91bde4@gmail.com>
 References: <20170314075830.2247-1-zajec5@gmail.com>
  <20170314122650.GV15842@lunn.ch>
+ <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170314122650.GV15842-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Rafa?? Mi??ecki <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2017 01:26 PM, Andrew Lunn wrote:
-> On Tue, Mar 14, 2017 at 08:58:29AM +0100, Rafa?? Mi??ecki wrote:
->> From: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>
->> This adds baud rate, parity & number of data bits. It's required to get
->> serial working correctly.
->>
->> Signed-off-by: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/bcm5301x.dtsi | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
->> index 8fd1ef9f0c2d..468107166a6f 100644
->> --- a/arch/arm/boot/dts/bcm5301x.dtsi
->> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
->> @@ -18,8 +18,12 @@
->>  / {
->>  	interrupt-parent = <&gic>;
->>
->> +	aliases {
->> +		serial0 = &uart0;
->> +	};
->> +
->>  	chosen {
->> -		stdout-path = &uart0;
->> +		stdout-path = "serial0:115200n8";
->>  	};
->
-> Hi Rafal
->
-> The alias is fine. But putting the stdout-path here is unusual. Which
-> serial port is used for console is board specific, where as
-> bcm5301x.dtsi is very generic, it describes the SoC, not a board.  If
-> you look at other .dtsi files, those that specify stdout-path contain
-> properties which are common to a range of similar boards.
-
-So far I've never seen any board using other uart. Also uart0 is disabled by
-default and we enable it per board family (BCM4708 / BCM47081 / BCM4709 /
-BCM47094). I think it's just more practical to have simple DTS that covers
-99,9% boards by default and handled that margin of devices separately.
-
-We already got a lot of duplicated code for enabling uart0, see:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7b790d3b2943bf8e7e7bafe184008bd6451fe0bd
-
-Jon Mason from Broadcom who knows this hardware and designs very well confirmed
-it's a sane/safe assumption.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDMvMTQvMjAxNyAwMTozMiBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IE9uIDAzLzE0
+LzIwMTcgMDE6MjYgUE0sIEFuZHJldyBMdW5uIHdyb3RlOgo+PiBPbiBUdWUsIE1hciAxNCwgMjAx
+NyBhdCAwODo1ODoyOUFNICswMTAwLCBSYWZhPz8gTWk/P2Vja2kgd3JvdGU6Cj4+PiBGcm9tOiBS
+YWZhPz8gTWk/P2Vja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+Pgo+Pj4gVGhpcyBhZGRzIGJhdWQg
+cmF0ZSwgcGFyaXR5ICYgbnVtYmVyIG9mIGRhdGEgYml0cy4gSXQncyByZXF1aXJlZCB0byBnZXQK
+Pj4+IHNlcmlhbCB3b3JraW5nIGNvcnJlY3RseS4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBSYWZh
+Pz8gTWk/P2Vja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+PiAtLS0KPj4+ICBhcmNoL2FybS9ib290
+L2R0cy9iY201MzAxeC5kdHNpIHwgNiArKysrKy0KPj4+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNl
+cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2JjbTUzMDF4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9iY201MzAxeC5kdHNpCj4+
+PiBpbmRleCA4ZmQxZWY5ZjBjMmQuLjQ2ODEwNzE2NmE2ZiAxMDA2NDQKPj4+IC0tLSBhL2FyY2gv
+YXJtL2Jvb3QvZHRzL2JjbTUzMDF4LmR0c2kKPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2Jj
+bTUzMDF4LmR0c2kKPj4+IEBAIC0xOCw4ICsxOCwxMiBAQAo+Pj4gIC8gewo+Pj4gICAgICBpbnRl
+cnJ1cHQtcGFyZW50ID0gPCZnaWM+Owo+Pj4KPj4+ICsgICAgYWxpYXNlcyB7Cj4+PiArICAgICAg
+ICBzZXJpYWwwID0gJnVhcnQwOwo+Pj4gKyAgICB9Owo+Pj4gKwo+Pj4gICAgICBjaG9zZW4gewo+
+Pj4gLSAgICAgICAgc3Rkb3V0LXBhdGggPSAmdWFydDA7Cj4+PiArICAgICAgICBzdGRvdXQtcGF0
+aCA9ICJzZXJpYWwwOjExNTIwMG44IjsKPj4+ICAgICAgfTsKPj4KPj4gSGkgUmFmYWwKPj4KPj4g
+VGhlIGFsaWFzIGlzIGZpbmUuIEJ1dCBwdXR0aW5nIHRoZSBzdGRvdXQtcGF0aCBoZXJlIGlzIHVu
+dXN1YWwuIFdoaWNoCj4+IHNlcmlhbCBwb3J0IGlzIHVzZWQgZm9yIGNvbnNvbGUgaXMgYm9hcmQg
+c3BlY2lmaWMsIHdoZXJlIGFzCj4+IGJjbTUzMDF4LmR0c2kgaXMgdmVyeSBnZW5lcmljLCBpdCBk
+ZXNjcmliZXMgdGhlIFNvQywgbm90IGEgYm9hcmQuICBJZgo+PiB5b3UgbG9vayBhdCBvdGhlciAu
+ZHRzaSBmaWxlcywgdGhvc2UgdGhhdCBzcGVjaWZ5IHN0ZG91dC1wYXRoIGNvbnRhaW4KPj4gcHJv
+cGVydGllcyB3aGljaCBhcmUgY29tbW9uIHRvIGEgcmFuZ2Ugb2Ygc2ltaWxhciBib2FyZHMuCj4K
+PiBTbyBmYXIgSSd2ZSBuZXZlciBzZWVuIGFueSBib2FyZCB1c2luZyBvdGhlciB1YXJ0LiBBbHNv
+IHVhcnQwIGlzIGRpc2FibGVkIGJ5Cj4gZGVmYXVsdCBhbmQgd2UgZW5hYmxlIGl0IHBlciBib2Fy
+ZCBmYW1pbHkgKEJDTTQ3MDggLyBCQ000NzA4MSAvIEJDTTQ3MDkgLwo+IEJDTTQ3MDk0KS4gSSB0
+aGluayBpdCdzIGp1c3QgbW9yZSBwcmFjdGljYWwgdG8gaGF2ZSBzaW1wbGUgRFRTIHRoYXQgY292
+ZXJzCj4gOTksOSUgYm9hcmRzIGJ5IGRlZmF1bHQgYW5kIGhhbmRsZWQgdGhhdCBtYXJnaW4gb2Yg
+ZGV2aWNlcyBzZXBhcmF0ZWx5Lgo+Cj4gV2UgYWxyZWFkeSBnb3QgYSBsb3Qgb2YgZHVwbGljYXRl
+ZCBjb2RlIGZvciBlbmFibGluZyB1YXJ0MCwgc2VlOgo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcv
+cHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPTdi
+NzkwZDNiMjk0M2JmOGU3ZTdiYWZlMTg0MDA4YmQ2NDUxZmUwYmQKPgo+IEpvbiBNYXNvbiBmcm9t
+IEJyb2FkY29tIHdobyBrbm93cyB0aGlzIGhhcmR3YXJlIGFuZCBkZXNpZ25zIHZlcnkgd2VsbCBj
+b25maXJtZWQKPiBpdCdzIGEgc2FuZS9zYWZlIGFzc3VtcHRpb24uCgpUaGF0IHdhcyBzdXBwb3Nl
+ZCB0byBiZSAiYW55IG90aGVyIHVhcnQgb3IgcGFyYW1ldGVycyIuCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
+bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
