@@ -1,281 +1,118 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] ARM64: dts: meson-gxl: improve support for the P212 reference design
-Date: Tue, 14 Mar 2017 15:34:26 -0700
-Message-ID: <m21stza3nx.fsf@baylibre.com>
-References: <20170219224114.17201-1-martin.blumenstingl@googlemail.com>
-        <20170304095213.8221-1-martin.blumenstingl@googlemail.com>
-        <20170304095213.8221-2-martin.blumenstingl@googlemail.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and
+ endpoints
+Date: Wed, 15 Mar 2017 00:53:23 +0200
+Message-ID: <572ba62c-3168-adcf-f9de-4826b1804f38@linux.intel.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
+ <1629581.fh46rNHz4U@aspire.rjw.lan>
+ <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
+ <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com>
+ <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
+ <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com>
+ <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ@mail.gmail.com>
+ <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
+ <CAJZ5v0hCvcPgYYV0Hysfu0pEYCzzHp7KKdW3nYyjm7RGS3bHoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170304095213.8221-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Sat, 4 Mar 2017 10:52:13 +0100")
+In-Reply-To: <CAJZ5v0hCvcPgYYV0Hysfu0pEYCzzHp7KKdW3nYyjm7RGS3bHoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
-
-> The Amlogic P212 reference design is used by other devices as well, such
-> as (for example) the Khadas VIM boards. Thus this patch adds and moves
-> all common entries from meson-gxl-s905x-p212.dts to a new, separate
-> meson-gxl-s905x-p212.dtsi (which can be re-used on boards such as the
-> Khadas VIM).
-> Support for all boards based on the P212 reference design includes:
-> - enabling IR support
-> - enabling the SAR ADC (SARADC_CH1 is connected to a resistor which
->   indicates the hardware revision, a similar design is found on the
->   Khadas VIM boards)
-> - all MMC controllers (which means that SDIO wifi, the SD card and the
->   eMMC are now supported)
-> - pwm_ef as dependency for the SDIO wifi modules
-> - uart_A which is connected to the bluetooth module (the bluetooth
->   module itself is not enabled yet due to missing devicetree bindings
->   for the Broadcom serial bluetooth devices)
-> - uart_AO is moved to the .dtsi (as all known devices use it as their
->   boot-console)
+Rafael J. Wysocki wrote:
+> On Tue, Mar 14, 2017 at 10:16 PM, Sakari Ailus
+> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>> Rafael J. Wysocki wrote:
+>>>
+>>> On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
+>>> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>>>
+>>>> Hi Rafael,
+>>>>
+>>>> Rafael J. Wysocki wrote:
+>>>>>
+>>>>>
+>>>>> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
+>>>>> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 03/14/17 10:08, Sakari Ailus wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>> How about this instead:
+>>>>>>>
+>>>>>>> All port nodes are located under the device's "_DSD" node in the
+>>>>>>> hierarchical data extension tree. The property extension related to
+>>>>>>> each port node must contain the key "port" and an integer value which
+>>>>>>> is the number of the port.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> So with matching strings instead of indices, this will change, too...
+>>>>>
+>>>>>
+>>>>>
+>>>>> It doesn't have to AFAICS, but the number is just redundant IMO.  You
+>>>>> only need a boolean property saying "this is a port", so you know that
+>>>>> you should expect a list of endpoints in that object.
+>>>>
+>>>>
+>>>>
+>>>> No, it's not redundant. It's the number of the physical port in the
+>>>> device
+>>>> --- this is how the driver gets to know where the connection has been
+>>>> made.
+>>>
+>>>
+>>> OK, but what exactly do you mean by "physical port"?
+>>
+>>
+>> The device (or an IP block) has physical interfaces to the world outside.
+>> There could be just one, but there may be more. For an ISP, there could be
+>> e.g. four CSI-2 receivers to each of which you could connect a camera
+>> sensor. So for an ISP device, that number tells which of the receivers a
+>> given sensor is connected to.
+>>
+>> The mapping between this number and what the hardware datasheet refers to
+>> needs to be documented per device.
 >
-> Specific to the P212 board:
-> - this also enables the CVBS connector (which is not available on the
->   Khadas VIM boards for example)
-> - Realtek based SDIO wifi (instead of Broadcom which most other devices
->   use)
+> OK, so the number actually is an arbitrary piece of data associated
+> with the key "port" and the interpretation of that piece of data
+> depends on whoever asks for that value.
 >
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-I also gave this a spin on P212 board and it's working well.
-
-Applied to v4.12/dt64
-
-Kevin
-
-> ---
->  .../boot/dts/amlogic/meson-gxl-s905x-p212.dts      |  21 +--
->  .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     | 173 +++++++++++++++++++++
->  2 files changed, 185 insertions(+), 9 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+> IOW, the core doesn't care.
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> index 9639f012b02b..db31e093f40e 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dts
-> @@ -43,23 +43,26 @@
->  
->  /dts-v1/;
->  
-> -#include "meson-gxl-s905x.dtsi"
-> +#include "meson-gxl-s905x-p212.dtsi"
->  
->  / {
->  	compatible = "amlogic,p212", "amlogic,s905x", "amlogic,meson-gxl";
->  	model = "Amlogic Meson GXL (S905X) P212 Development Board";
->  
-> -	aliases {
-> -		serial0 = &uart_AO;
-> -	};
-> +	cvbs-connector {
-> +		compatible = "composite-video-connector";
->  
-> -	chosen {
-> -		stdout-path = "serial0:115200n8";
-> +		port {
-> +			cvbs_connector_in: endpoint {
-> +				remote-endpoint = <&cvbs_vdac_out>;
-> +			};
-> +		};
->  	};
-> +};
->  
-> -	memory@0 {
-> -		device_type = "memory";
-> -		reg = <0x0 0x0 0x0 0x80000000>;
-> +&cvbs_vdac_port {
-> +	cvbs_vdac_out: endpoint {
-> +		remote-endpoint = <&cvbs_connector_in>;
->  	};
->  };
->  
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> new file mode 100644
-> index 000000000000..f3eea8e89d12
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> @@ -0,0 +1,173 @@
-> +/*
-> + * Copyright (c) 2016 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>.
-> + * Based on meson-gx-p23x-q20x.dtsi:
-> + * - Copyright (c) 2016 Endless Computers, Inc.
-> + *   Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> + * - Copyright (c) 2016 BayLibre, SAS.
-> + *   Author: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> + */
-> +
-> +/* Common DTSI for devices which are based on the P212 reference board. */
-> +
-> +#include "meson-gxl-s905x.dtsi"
-> +
-> +/ {
-> +	aliases {
-> +		serial0 = &uart_AO;
-> +		serial1 = &uart_A;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x80000000>;
-> +	};
-> +
-> +	vddio_boot: regulator-vddio_boot {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_BOOT";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vddao_3v3: regulator-vddao_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDAO_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	vddio_ao18: regulator-vddio_ao18 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VDDIO_AO18";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +	};
-> +
-> +	vcc_3v3: regulator-vcc_3v3 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VCC_3V3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	emmc_pwrseq: emmc-pwrseq {
-> +		compatible = "mmc-pwrseq-emmc";
-> +		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	wifi32k: wifi32k {
-> +		compatible = "pwm-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <32768>;
-> +		pwms = <&pwm_ef 0 30518 0>; /* PWM_E at 32.768KHz */
-> +	};
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&gpio GPIOX_6 GPIO_ACTIVE_LOW>;
-> +		clocks = <&wifi32k>;
-> +		clock-names = "ext_clock";
-> +	};
-> +};
-> +
-> +&ethmac {
-> +	status = "okay";
-> +};
-> +
-> +&ir {
-> +	status = "okay";
-> +	pinctrl-0 = <&remote_input_ao_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&saradc {
-> +	status = "okay";
-> +	vref-supply = <&vddio_ao18>;
-> +};
-> +
-> +/* Wireless SDIO Module */
-> +&sd_emmc_a {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdio_pins>;
-> +	pinctrl-names = "default";
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <100000000>;
-> +
-> +	non-removable;
-> +	disable-wp;
-> +
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* SD card */
-> +&sd_emmc_b {
-> +	status = "okay";
-> +	pinctrl-0 = <&sdcard_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	max-frequency = <100000000>;
-> +	disable-wp;
-> +
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> +	cd-inverted;
-> +
-> +	vmmc-supply = <&vddao_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +/* eMMC */
-> +&sd_emmc_c {
-> +	status = "okay";
-> +	pinctrl-0 = <&emmc_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	bus-width = <8>;
-> +	cap-sd-highspeed;
-> +	cap-mmc-highspeed;
-> +	max-frequency = <200000000>;
-> +	non-removable;
-> +	disable-wp;
-> +	mmc-ddr-1_8v;
-> +	mmc-hs200-1_8v;
-> +
-> +	mmc-pwrseq = <&emmc_pwrseq>;
-> +	vmmc-supply = <&vcc_3v3>;
-> +	vqmmc-supply = <&vddio_boot>;
-> +};
-> +
-> +&pwm_ef {
-> +	status = "okay";
-> +	pinctrl-0 = <&pwm_e_pins>;
-> +	pinctrl-names = "default";
-> +	clocks = <&clkc CLKID_FCLK_DIV4>;
-> +	clock-names = "clkin0";
-> +};
-> +
-> +/* This is connected to the Bluetooth module: */
-> +&uart_A {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-> +	pinctrl-names = "default";
-> +	uart-has-rtscts;
-> +};
-> +
-> +&uart_AO {
-> +	status = "okay";
-> +	pinctrl-0 = <&uart_ao_a_pins>;
-> +	pinctrl-names = "default";
-> +};
+> With all due respect to whoever invented this on the DT side, this is
+> just bad design to me, because it causes the "port" property to serve
+> two different purposes at the same time.  First, it tells the core
+> that this object is a port.  Second, it is expected to provide a piece
+> of data of unspecified interpretation to somebody.  Which means that
+> the "port" property is both general and device-specific at the same
+> time and the sanity of that is quite questionable IMO.
+
+DT uses a node called either "port" or "ports" to store the port nodes. 
+The reg property tells the number of the port (see 
+Documentation/devicetree/bindings/graph.txt). I'm no DT expert, but my 
+understanding is that the node namespace is different from the property 
+namespace.
+
+If you're concerned of possible double meanings, it's entirely possible 
+to put the port nodes under hierarchical data extension named e.g. 
+"ports", and document that this is what the node must be called (single 
+port node could be just called "port"). This way, it should be much more 
+difficult to interpret a non-port node as a port node --- roughly 
+equivalent of the DT ports node.
+
+The drawback with this change is that the size of the data structure in 
+ASL (and AML) will grow.
+
+-- 
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
