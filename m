@@ -1,113 +1,70 @@
-From: Steve Longerbeam <steve_longerbeam@mentor.com>
-Subject: Re: [PATCH v5 00/39] i.MX Media Driver
-Date: Tue, 14 Mar 2017 10:02:26 -0700
-Message-ID: <06038465-5634-3f69-521d-3f2a7d14afde@mentor.com>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <20170312194700.GR21222@n2100.armlinux.org.uk>
- <20170312175923.6ad86dff@vento.lan>
- <20170312211324.GW21222@n2100.armlinux.org.uk>
- <20170312191002.5f0a2cff@vento.lan>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/2] ata: ahci: add support for DaVinci DM816 SATA controller
+Date: Tue, 14 Mar 2017 10:03:35 -0700
+Message-ID: <m2wpbraizc.fsf@baylibre.com>
+References: <1489422982-3461-1-git-send-email-bgolaszewski@baylibre.com>
+        <1489422982-3461-3-git-send-email-bgolaszewski@baylibre.com>
+        <db5d21c2-b0e2-c9ec-1f15-460973fd23e3@cogentembedded.com>
+        <7ab4b440-f9d0-22fa-f463-f4c5542e21e7@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170312191002.5f0a2cff@vento.lan>
+In-Reply-To: <7ab4b440-f9d0-22fa-f463-f4c5542e21e7@baylibre.com> (Neil
+        Armstrong's message of "Tue, 14 Mar 2017 10:00:07 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-
-On 03/12/2017 03:10 PM, Mauro Carvalho Chehab wrote:
-> Em Sun, 12 Mar 2017 21:13:24 +0000
-> Russell King - ARM Linux <linux@armlinux.org.uk> escreveu:
->
->> On Sun, Mar 12, 2017 at 05:59:28PM -0300, Mauro Carvalho Chehab wrote:
->>> Yet, udev/systemd has some rules that provide an unique name for V4L
->>> devices at /lib/udev/rules.d/60-persistent-v4l.rules. Basically, it
->>> runs a small application (v4l_id) with creates a persistent symling
->>> using rules like this:
+> On 03/14/2017 09:57 AM, Sergei Shtylyov wrote:
+>> Hello!
+>> 
+>> On 3/13/2017 7:36 PM, Bartosz Golaszewski wrote:
+>> 
+>>> This SATA controller is quite similar to the one present on the DA850
+>>> SoC, but the PHY configuration is different and it supports two HBA
+>>> ports.
 >>>
->>> 	KERNEL=="video*", ENV{ID_SERIAL}=="?*", SYMLINK+="v4l/by-id/$env{ID_BUS}-$env{ID_SERIAL}-video-index$attr{index}"
+>>> The IP suffers from the same PMP issue the DA850 does - if we enable
+>>> PMP but don't use it - softreset fails. Appropriate workaround was
+>>> implemented in this driver as well.
 >>>
->>> Those names are stored at /dev/v4l/by-path.
->> This doesn't help:
->>
->> $ ls -Al /dev/v4l/by-id/
->> total 0
->> lrwxrwxrwx 1 root root 13 Mar 12 19:54 usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera-video-index0 -> ../../video10
->> $ ls -Al /dev/v4l/by-path/
->> total 0
->> lrwxrwxrwx 1 root root 12 Mar 12 19:54 platform-2040000.vpu-video-index0 -> ../../video0
->> lrwxrwxrwx 1 root root 12 Mar 12 19:54 platform-2040000.vpu-video-index1 -> ../../video1
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index0 -> ../../video2
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index1 -> ../../video3
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index2 -> ../../video4
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index3 -> ../../video5
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index4 -> ../../video6
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index5 -> ../../video7
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index6 -> ../../video8
->> lrwxrwxrwx 1 root root 12 Mar 12 20:53 platform-capture-subsystem-video-index7 -> ../../video9
->> lrwxrwxrwx 1 root root 13 Mar 12 19:54 platform-ci_hdrc.0-usb-0:1:1.0-video-index0 -> ../../video10
->>
->> The problem is the "platform-capture-subsystem-video-index" entries.
->> These themselves change order.  For instance, I now have:
->>
->> - entity 72: ipu1_csi0 capture (1 pad, 1 link)
->>               type Node subtype V4L flags 0
->>               device node name /dev/video6
->>
->> which means it's platform-capture-subsystem-video-index4.  Before, it
->> was platform-capture-subsystem-video-index2.
-> That's a driver problem. v4l_id gets information to build the persistent
-> name from the result of VIDIOC_QUERYCAP.
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>> ---
+>>>  drivers/ata/Kconfig      |   9 +++
+>>>  drivers/ata/Makefile     |   1 +
+>>>  drivers/ata/ahci_dm816.c | 200 +++++++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 210 insertions(+)
+>>>  create mode 100644 drivers/ata/ahci_dm816.c
+>>>
+>>> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+>>> index 70b57d2..7f59a7a 100644
+>>> --- a/drivers/ata/Kconfig
+>>> +++ b/drivers/ata/Kconfig
+>>> @@ -118,6 +118,15 @@ config AHCI_DA850
+>>>
+>>>        If unsure, say N.
+>>>
+>>> +config AHCI_DM816
+>>> +    tristate "DaVinci DM816 AHCI SATA support"
+>> 
+>>    Is it really DaVinci?
+>> 
+>>> +    depends on ARCH_OMAP2PLUS
+>> 
+>>    Especially if it depends on OMAP...
 >
-> In the case of Exynos gsc driver, for example, the information is here:
+> Hi Sergei,
 >
-> static int gsc_m2m_querycap(struct file *file, void *fh,
-> 			   struct v4l2_capability *cap)
-> {
-> 	struct gsc_ctx *ctx = fh_to_ctx(fh);
-> 	struct gsc_dev *gsc = ctx->gsc_dev;
+> Yes it's a DaVinci family SoC, but shares a lot of IPs with the OMAP family.
 >
-> 	strlcpy(cap->driver, GSC_MODULE_NAME, sizeof(cap->driver));
-> 	strlcpy(cap->card, GSC_MODULE_NAME " gscaler", sizeof(cap->card));
-> 	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
-> 		 dev_name(&gsc->pdev->dev));
-> 	cap->device_caps = V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_M2M_MPLANE |
-> 		V4L2_CAP_VIDEO_CAPTURE_MPLANE |	V4L2_CAP_VIDEO_OUTPUT_MPLANE;
->
-> 	cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
-> 	return 0;
-> }
->
-> See that the bus_info there is filled with:
->
-> 	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s", dev_name(&gsc->pdev->dev));
->
->  From the output you printed, it seems that the i.MX6 is just doing:
-> 	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:");
-> for some devices.
 
-imx6 is setting bus_info string on all capture devices as:
+Actually, this is more of an OMAP family, which shares some IP from
+DaVinci family
 
-snprintf(cap->bus_info, sizeof(cap->bus_info),
-                  "platform:%s", dev_name(priv->dev));
+I think in other parts of the kernel, we refer to this as TI 816x
+instead of using either DaVinci or OMAP.
 
-dev_name(priv->dev) is the device name of the attached subdev.
-So the bus_info string, at least for attached CSI subdevs, should
-be "platform:imx-ipuv3-csi".
-
-Maybe there is something else missing, I haven't had a chance to
-look at this yet.
-
-Steve
-
-
->
-> If you change the i.MX6 driver to do the same, you'll likely be able to
-> have unique names there too.
->
-> Regards,
-> Mauro
+Kevin
