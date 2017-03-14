@@ -1,55 +1,45 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v5 5/8] dt-bindings: input: touchscreen: Add max11801-ts binding
-Date: Tue, 14 Mar 2017 15:18:14 +0530
-Message-ID: <1489484897-14933-6-git-send-email-jagan@openedev.com>
+Subject: [PATCH v5 8/8] ARM: imx_v6_v7_defconfig: Select hid-multitouchdriver
+Date: Tue, 14 Mar 2017 15:18:17 +0530
+Message-ID: <1489484897-14933-9-git-send-email-jagan@openedev.com>
 References: <1489484897-14933-1-git-send-email-jagan@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1489484897-14933-1-git-send-email-jagan@openedev.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add missing documentation of max11801-ts dt-binding details.
+Select CONFIG_HID_MULTITOUCH so that we can have multi touchscreen
+funtionality via USB by default on Engicam i.CoreM6 Quad with
+OpenFrame Cap 10.1 display boards.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
 Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v5:
+- %s/arm/ARM/g with subject prefix
+Changes for v4:
 - Newly added patch
 
- .../bindings/input/touchscreen/max11801-ts.txt         | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
+ arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
-new file mode 100644
-index 0000000..b6ac452
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/max11801-ts.txt
-@@ -0,0 +1,18 @@
-+* MAXI MAX11801 Resistive touch screen controller with i2c interface
-+
-+Required properties:
-+- compatible: must be "max11801"
-+- reg: i2c slave address
-+- interrupt-parent: the phandle for the interrupt controller
-+- interrupts: touch controller interrupt
-+
-+Example:
-+
-+&i2c1 {
-+	ts: max11801@48 {
-+		compatible = "max11801";
-+		reg = <0x48>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <31 2>;
-+	};
-+};
+diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
+index 842168f..914e8cb 100644
+--- a/arch/arm/configs/imx_v6_v7_defconfig
++++ b/arch/arm/configs/imx_v6_v7_defconfig
+@@ -174,6 +174,7 @@ CONFIG_TOUCHSCREEN_SX8654=y
+ CONFIG_TOUCHSCREEN_COLIBRI_VF50=y
+ CONFIG_INPUT_MISC=y
+ CONFIG_INPUT_MMA8450=y
++CONFIG_HID_MULTITOUCH=y
+ CONFIG_SERIO_SERPORT=m
+ # CONFIG_LEGACY_PTYS is not set
+ CONFIG_SERIAL_IMX=y
 -- 
 1.9.1
