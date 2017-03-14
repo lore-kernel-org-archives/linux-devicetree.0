@@ -1,55 +1,60 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 3/3] device property: of_property_read_string_array()
- returns number of strings
-Date: Tue, 14 Mar 2017 09:17:32 +0200
-Message-ID: <bf544a26-d551-e5e5-6ca1-513f35d057b4@linux.intel.com>
-References: <1488806791-25488-1-git-send-email-sakari.ailus@linux.intel.com>
- <1488806791-25488-4-git-send-email-sakari.ailus@linux.intel.com>
- <1840694.EMHZKJ1jEg@aspire.rjw.lan>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx6q-bx50v3/imx6q-b450v3/imx6q-b650v3: fix
+ at25 spi-clk frequency issue
+Date: Tue, 14 Mar 2017 15:28:48 +0800
+Message-ID: <20170314072846.GJ3618@dragon>
+References: <20170303212032.31725-1-yungching0725@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1840694.EMHZKJ1jEg-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170303212032.31725-1-yungching0725@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ken Lin <yungching0725@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, inux@armlinux.org.uk, robh+dt@kernel.org, akshay.bhat@timesys.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org, peter.stretz@advantech.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
+On Sat, Mar 04, 2017 at 05:20:32AM +0800, Ken Lin wrote:
+> Change the maxium spi clock frequency from 20MHz to 10MHz to meet the operation voltage range requirement recommended in AT25 datasheet
 
-On 03/14/17 00:24, Rafael J. Wysocki wrote:
-> On Monday, March 06, 2017 03:26:31 PM Sakari Ailus wrote:
->> of_property_read_string_array() returns number of strings read if the
->> target array of pointers is non-NULL. fwnode_property_read_string_array()
->> is documented to return 0 in that case. Fix this.
+The commit log should be wrapped around column 72 to make it easier for
+read.
+
+The subject prefix is unnecessarily too long, as it only changes
+imx6q-bx50v3.dtsi.
+
+I fixed them this time, and apply the patch.
+
+Shawn
+
 > 
-> Well, if we want people to use fwnode_property_read_string_array() instead of
-> of_property_read_string_array(), it should better behave analogously, shouldn't it?
-
-Not necessarily.
-
-The documentation states that fwnode_property_read_string_array()
-returns 0 on success. That makes sense since the callers often check
-whether the return value is non-zero and then return based on that.
-Returning zero on success is just simpler for the caller.
-
-Often the number of elements to read from an array is known beforehand,
-so there's little use for the actual number read.
-
-Besides the fwnode variants, also the OF integer array access functions
-return zero on success.
-
-Rob had a similar comment but the discussion did not continue after my
-initial reply. I can sure change that if you still think it's better the
-other way.
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Ken Lin <yungching0725@gmail.com>
+> ---
+>  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> index f99e6efda3e2..614c40e5f772 100644
+> --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> @@ -103,7 +103,7 @@
+>  
+>  	m25_eeprom: m25p80@0 {
+>  		compatible = "atmel,at25";
+> -		spi-max-frequency = <20000000>;
+> +		spi-max-frequency = <10000000>;
+>  		size = <0x8000>;
+>  		pagesize = <64>;
+>  		reg = <0>;
+> -- 
+> 2.11.0
+> 
