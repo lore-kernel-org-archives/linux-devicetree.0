@@ -1,87 +1,322 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 5/6] gpio: Add gpio driver support for ThunderX and OCTEON-TX
-Date: Tue, 14 Mar 2017 16:02:34 +0100
-Message-ID: <CACRpkdY1yKCrjTshmGVcKO2gDjC6cNufG1+VC_31Of1iJxYyiA@mail.gmail.com>
-References: <1488332932-2691-1-git-send-email-david.daney@cavium.com> <1488332932-2691-6-git-send-email-david.daney@cavium.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v5 1/4] PCI: imx6: Add code to support i.MX7D
+Date: Tue, 14 Mar 2017 15:05:50 +0000
+Message-ID: <20170314150550.r7ophd7qfkuv6ziw@dell>
+References: <20170220160900.7014-1-andrew.smirnov@gmail.com>
+ <20170220160900.7014-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1488332932-2691-6-git-send-email-david.daney@cavium.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <david.daney@cavium.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170220160900.7014-2-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 1, 2017 at 2:48 AM, David Daney <david.daney@cavium.com> wrote:
+On Mon, 20 Feb 2017, Andrey Smirnov wrote:
 
-> Cavium ThunderX and OCTEON-TX are arm64 based SoCs.  Add driver for
-> the on-chip GPIO pins.
->
-> Signed-off-by: David Daney <david.daney@cavium.com>
+> Add various bits of code needed to support i.MX7D variant of the IP.
+> 
+> Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Reviewed-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  13 ++-
+>  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
+>  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
+>  3 files changed, 112 insertions(+), 26 deletions(-)
 
-I guess this can't be merged until the corresponding IRQ changes
-are merged. It can be applied in the irqchip tree or next merge
-window or they can give me an immutable branch to pull to
-the GPIO subsystem or whatever works.
+I Acked the original v5 -- please carry it over.
 
-Some pretty minor things remain.
-
-> +#include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/pci.h>
-> +#include <linux/spinlock.h>
-
-I think you should explicitly include <linux/bitops.h>
-
-Other than that it is all fine.
-
-> +/*
-> + * Interrupts are chained from underlying MSI-X vectors.  We have
-> + * these irq_chip functions to be able to handle level triggering
-> + * semantics and other acknowledgment tasks associated with the GPIO
-> + * mechanism.
-> + */
-> +static struct irq_chip thunderx_gpio_irq_chip = {
-> +       .name                   = "GPIO",
-> +       .irq_enable             = thunderx_gpio_irq_enable,
-> +       .irq_disable            = thunderx_gpio_irq_disable,
-> +       .irq_ack                = thunderx_gpio_irq_ack,
-> +       .irq_mask               = thunderx_gpio_irq_mask,
-> +       .irq_mask_ack           = thunderx_gpio_irq_mask_ack,
-> +       .irq_unmask             = thunderx_gpio_irq_unmask,
-> +       .irq_eoi                = irq_chip_eoi_parent,
-> +       .irq_set_affinity       = irq_chip_set_affinity_parent,
-> +       .irq_set_type           = thunderx_gpio_irq_set_type,
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index 83aeb1f..11db2ab 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+>  and thus inherits all the common properties defined in designware-pcie.txt.
+>  
+>  Required properties:
+> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
+> +- compatible:
+> +	- "fsl,imx6q-pcie"
+> +	- "fsl,imx6sx-pcie",
+> +	- "fsl,imx6qp-pcie"
+> +	- "fsl,imx7d-pcie"
+>  - reg: base address and length of the PCIe controller
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> @@ -34,6 +38,13 @@ Additional required properties for imx6sx-pcie:
+>  - clock names: Must include the following additional entries:
+>  	- "pcie_inbound_axi"
+>  
+> +Additional required properties for imx7d-pcie:
+> +- power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
+> +- resets: Must contain phandles to PCIE related reset lines exposed by SRC IP block
+> +- reset-names: Must contain the following entires:
+> +  	       - "pciephy"
+> +	       - "apps"
 > +
-> +       .flags                  = IRQCHIP_SET_TYPE_MASKED
-> +};
-
-I think you should implement .irq_request_resources() and
-.irq_release_resources() calling
-gpiochip_lock_as_irq(chip, d->hwirq)
-and gpiochip_unlock_as_irq(chip, d->hwirq) respectively,
-much like gpiochip_irq_reqres() and gpiochip_irq_relres()
-in the gpiolib.
-
-This helps the kernel knowing that the lines are taken for
-interrupts and must be inputs.
-
-> +static int thunderx_gpio_irq_map(struct irq_domain *d, unsigned int irq,
-> +                                irq_hw_number_t hwirq)
+>  Example:
+>  
+>  	pcie@0x01000000 {
+> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+> index 50a1291..2f3f375 100644
+> --- a/drivers/pci/host/pci-imx6.c
+> +++ b/drivers/pci/host/pci-imx6.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+> +#include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
+>  #include <linux/module.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/of_device.h>
+> @@ -27,6 +28,7 @@
+>  #include <linux/signal.h>
+>  #include <linux/types.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/reset.h>
+>  
+>  #include "pcie-designware.h"
+>  
+> @@ -36,6 +38,7 @@ enum imx6_pcie_variants {
+>  	IMX6Q,
+>  	IMX6SX,
+>  	IMX6QP,
+> +	IMX7D,
+>  };
+>  
+>  struct imx6_pcie {
+> @@ -47,6 +50,8 @@ struct imx6_pcie {
+>  	struct clk		*pcie_inbound_axi;
+>  	struct clk		*pcie;
+>  	struct regmap		*iomuxc_gpr;
+> +	struct reset_control	*pciephy_reset;
+> +	struct reset_control	*apps_reset;
+>  	enum imx6_pcie_variants variant;
+>  	u32			tx_deemph_gen1;
+>  	u32			tx_deemph_gen2_3p5db;
+> @@ -56,6 +61,11 @@ struct imx6_pcie {
+>  	int			link_gen;
+>  };
+>  
+> +/* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+> +#define PHY_PLL_LOCK_WAIT_MAX_RETRIES	2000
+> +#define PHY_PLL_LOCK_WAIT_USLEEP_MIN	50
+> +#define PHY_PLL_LOCK_WAIT_USLEEP_MAX	200
+> +
+>  /* PCIe Root Complex registers (memory-mapped) */
+>  #define PCIE_RC_LCR				0x7c
+>  #define PCIE_RC_LCR_MAX_LINK_SPEEDS_GEN1	0x1
+> @@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	u32 val, gpr1, gpr12;
+>  
+>  	switch (imx6_pcie->variant) {
+> +	case IMX7D:
+> +		reset_control_assert(imx6_pcie->pciephy_reset);
+> +		reset_control_assert(imx6_pcie->apps_reset);
+> +		break;
+>  	case IMX6SX:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
+> @@ -333,11 +347,33 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+>  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
+>  		break;
+> +	case IMX7D:
+> +		break;
+>  	}
+>  
+>  	return ret;
+>  }
+>  
+> +static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
 > +{
-> +       irq_set_irq_type(irq, IRQ_TYPE_LEVEL_LOW);
+> +	u32 val;
+> +	unsigned int retries;
+> +	struct pcie_port *pp = &imx6_pcie->pp;
+> +	struct device *dev = pp->dev;
+> +
+> +	for (retries = 0; retries < PHY_PLL_LOCK_WAIT_MAX_RETRIES; retries++) {
+> +		regmap_read(imx6_pcie->iomuxc_gpr, IOMUXC_GPR22, &val);
+> +
+> +		if (val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED)
+> +			return;
+> +
+> +		usleep_range(PHY_PLL_LOCK_WAIT_USLEEP_MIN,
+> +			     PHY_PLL_LOCK_WAIT_USLEEP_MAX);
+> +	}
+> +
+> +	dev_err(dev, "PCIe PLL lock timeout\n");
+> +}
+> +
+>  static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  {
+>  	struct pcie_port *pp = &imx6_pcie->pp;
+> @@ -381,6 +417,10 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	}
+>  
+>  	switch (imx6_pcie->variant) {
+> +	case IMX7D:
+> +		reset_control_deassert(imx6_pcie->pciephy_reset);
+> +		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
+> +		break;
+>  	case IMX6SX:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR5,
+>  				   IMX6SX_GPR5_PCIE_BTNRST_RESET, 0);
+> @@ -407,35 +447,44 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  
+>  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  {
+> -	if (imx6_pcie->variant == IMX6SX)
+> +	switch (imx6_pcie->variant) {
+> +	case IMX7D:
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> +				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
+> +		break;
+> +	case IMX6SX:
+>  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
+>  				   IMX6SX_GPR12_PCIE_RX_EQ_2);
+> +		/* FALLTHROUGH */
+> +	default:
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> +				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
+>  
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> -			IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
+> +		/* configure constant input signal to the pcie ctrl and phy */
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> +				   IMX6Q_GPR12_LOS_LEVEL, 9 << 4);
+> +
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> +				   IMX6Q_GPR8_TX_DEEMPH_GEN1,
+> +				   imx6_pcie->tx_deemph_gen1 << 0);
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> +				   IMX6Q_GPR8_TX_DEEMPH_GEN2_3P5DB,
+> +				   imx6_pcie->tx_deemph_gen2_3p5db << 6);
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> +				   IMX6Q_GPR8_TX_DEEMPH_GEN2_6DB,
+> +				   imx6_pcie->tx_deemph_gen2_6db << 12);
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> +				   IMX6Q_GPR8_TX_SWING_FULL,
+> +				   imx6_pcie->tx_swing_full << 18);
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> +				   IMX6Q_GPR8_TX_SWING_LOW,
+> +				   imx6_pcie->tx_swing_low << 25);
+> +		break;
+> +	}
+>  
+> -	/* configure constant input signal to the pcie ctrl and phy */
+>  	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>  			IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT << 12);
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> -			IMX6Q_GPR12_LOS_LEVEL, 9 << 4);
+> -
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> -			   IMX6Q_GPR8_TX_DEEMPH_GEN1,
+> -			   imx6_pcie->tx_deemph_gen1 << 0);
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> -			   IMX6Q_GPR8_TX_DEEMPH_GEN2_3P5DB,
+> -			   imx6_pcie->tx_deemph_gen2_3p5db << 6);
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> -			   IMX6Q_GPR8_TX_DEEMPH_GEN2_6DB,
+> -			   imx6_pcie->tx_deemph_gen2_6db << 12);
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> -			   IMX6Q_GPR8_TX_SWING_FULL,
+> -			   imx6_pcie->tx_swing_full << 18);
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
+> -			   IMX6Q_GPR8_TX_SWING_LOW,
+> -			   imx6_pcie->tx_swing_low << 25);
+>  }
+>  
+>  static int imx6_pcie_wait_for_link(struct imx6_pcie *imx6_pcie)
+> @@ -498,8 +547,11 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
+>  	dw_pcie_writel_rc(pp, PCIE_RC_LCR, tmp);
+>  
+>  	/* Start LTSSM. */
+> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> -			IMX6Q_GPR12_PCIE_CTL_2, 1 << 10);
+> +	if (imx6_pcie->variant == IMX7D)
+> +		reset_control_deassert(imx6_pcie->apps_reset);
+> +	else
+> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> +				   IMX6Q_GPR12_PCIE_CTL_2, 1 << 10);
+>  
+>  	ret = imx6_pcie_wait_for_link(imx6_pcie);
+>  	if (ret) {
+> @@ -674,13 +726,31 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
+>  		return PTR_ERR(imx6_pcie->pcie);
+>  	}
+>  
+> -	if (imx6_pcie->variant == IMX6SX) {
+> +	switch (imx6_pcie->variant) {
+> +	case IMX6SX:
+>  		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
+>  							   "pcie_inbound_axi");
+>  		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
+>  			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
+>  			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
+>  		}
+> +		break;
+> +	case IMX7D:
+> +		imx6_pcie->pciephy_reset = devm_reset_control_get(dev,
+> +								  "pciephy");
+> +		if (IS_ERR(imx6_pcie->pciephy_reset)) {
+> +			dev_err(dev, "Failed to get PCIEPHY reset contol\n");
+> +			return PTR_ERR(imx6_pcie->pciephy_reset);
+> +		}
+> +
+> +		imx6_pcie->apps_reset = devm_reset_control_get(dev, "apps");
+> +		if (IS_ERR(imx6_pcie->apps_reset)) {
+> +			dev_err(dev, "Failed to get PCIE APPS reset contol\n");
+> +			return PTR_ERR(imx6_pcie->apps_reset);
+> +		}
+> +		break;
+> +	default:
+> +		break;
+>  	}
+>  
+>  	/* Grab GPR config register range */
+> @@ -738,6 +808,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
+>  	{ .compatible = "fsl,imx6q-pcie",  .data = (void *)IMX6Q,  },
+>  	{ .compatible = "fsl,imx6sx-pcie", .data = (void *)IMX6SX, },
+>  	{ .compatible = "fsl,imx6qp-pcie", .data = (void *)IMX6QP, },
+> +	{ .compatible = "fsl,imx7d-pcie",  .data = (void *)IMX7D,  },
+>  	{},
+>  };
+>  
+> diff --git a/include/linux/mfd/syscon/imx7-iomuxc-gpr.h b/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
+> index 4585d61..abbd524 100644
+> --- a/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
+> +++ b/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
+> @@ -44,4 +44,8 @@
+>  
+>  #define IMX7D_GPR5_CSI_MUX_CONTROL_MIPI		(0x1 << 4)
+>  
+> +#define IMX7D_GPR12_PCIE_PHY_REFCLK_SEL		BIT(5)
+> +
+> +#define IMX7D_GPR22_PCIE_PHY_PLL_LOCKED		BIT(31)
+> +
+>  #endif /* __LINUX_IMX7_IOMUXC_GPR_H */
 
-I would prefer that you just write the right state into the hardware
-if that is what you want to do. Normally the consumer specifies
-trigger type.
-
-But I'm uncertain, maybe this is allright with the IRQ maintainers.
-
-Apart from these nitpicks it is a beautiful driver.
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
