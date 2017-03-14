@@ -1,64 +1,88 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH net-next 4/4] net-next: dsa: add dsa support for
- Mediatek MT7530 switch
-Date: Tue, 14 Mar 2017 15:03:36 +0800
-Message-ID: <1489475016.1870.49.camel@mtkswgap22>
-References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
-         <1489421488-300-5-git-send-email-sean.wang@mediatek.com>
-         <20170313231117.GF14183@lunn.ch>
+From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Subject: Re: [PATCH V7 4/7] LPC: Support the device-tree LPC host on
+ Hip06/Hip07 (fwd)
+Date: Tue, 14 Mar 2017 15:07:35 +0800
+Message-ID: <58C796B7.9060505@hisilicon.com>
+References: <alpine.DEB.2.20.1703140635090.3516@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170313231117.GF14183-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.20.1703140635090.3516@hadrien>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Julia Lawall <julia.lawall@lip6.fr>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, kbuild-all@01.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-03-14 at 00:11 +0100, Andrew Lunn wrote:
-> > +static int
-> > +mt7530_setup(struct dsa_switch *ds)
-> > +{
-> > +	struct mt7530_priv *priv = ds->priv;
-> > +	int ret, i, phy_mode;
-> > +	u8  cpup_mask = 0;
-> > +	u32 id, val;
-> > +	struct regmap *regmap;
-> > +
-> > +	/* Make sure that cpu port specfied on the dt is appropriate */
-> > +	if (!dsa_is_cpu_port(ds, MT7530_CPU_PORT)) {
-> > +		dev_err(priv->dev, "port not matched with the CPU port\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	regmap = devm_regmap_init(ds->dev, NULL, priv,
-> > +				  &mt7530_regmap_config);
-> > +	if (IS_ERR(regmap))
-> > +		dev_warn(priv->dev, "phy regmap initialization failed");
-> > +
-> > +	phy_mode = of_get_phy_mode(ds->ports[ds->dst->cpu_port].dn);
-> > +	if (phy_mode < 0) {
-> > +		dev_err(priv->dev, "Can't find phy-mode for master device\n");
-> > +		return phy_mode;
-> > +	}
-> > +	dev_info(priv->dev, "phy-mode for master device = %x\n", phy_mode);
+Hi, Julia,
+
+
+On 2017/3/14 13:37, Julia Lawall wrote:
+> Line 460 looks suspicious.  Can tmprange be different than range but not
+> be an ERR_PTR?  If so, lpcdev->io_host will have an invalid value.
 > 
-> Hi Sean
+
+Thanks for your pointing out!
+You are right!
+
+miss a line of 'return 0;' 
+
+if (tmprange != range) {
+    kfree(range);
+    if (IS_ERR(tmprange))
+        return -EFAULT;
+    return 0;
+}
+
+Thanks again!
+Zhichang 
+
+> julia
 > 
-> It is not documented in the binding that a phy-mode is mandatory for
-> the cpu port.
+> ---------- Forwarded message ----------
+> Date: Tue, 14 Mar 2017 13:12:05 +0800
+> From: kbuild test robot <fengguang.wu@intel.com>
+> To: kbuild@01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: Re: [PATCH V7 4/7] LPC: Support the device-tree LPC host on Hip06/Hip07
 > 
->     Andrew
+> Hi zhichang.yuan,
+> 
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v4.11-rc2 next-20170310]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/zhichang-yuan/LPC-legacy-ISA-I-O-support/20170314-114635
+> :::::: branch date: 85 minutes ago
+> :::::: commit date: 85 minutes ago
+> 
+>>> drivers/bus/hisi_lpc.c:465:19-24: ERROR: reference preceded by free on line 460
+> 
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout 4e05ad6c3274fa75c903c7809ef0b51329a31ab2
+> vim +465 drivers/bus/hisi_lpc.c
+> 
+> 4e05ad6c zhichang.yuan 2017-03-13  454  	range->flags = IO_HOST_INDIRECT;
+> 4e05ad6c zhichang.yuan 2017-03-13  455  	range->size = LPC_BUS_IO_SIZE;
+> 4e05ad6c zhichang.yuan 2017-03-13  456  	range->hw_start = LPC_MIN_BUS_RANGE;
+> 4e05ad6c zhichang.yuan 2017-03-13  457
+> 4e05ad6c zhichang.yuan 2017-03-13  458  	tmprange = register_libio_range(range);
+> 4e05ad6c zhichang.yuan 2017-03-13  459  	if (tmprange != range) {
+> 4e05ad6c zhichang.yuan 2017-03-13 @460  		kfree(range);
+> 4e05ad6c zhichang.yuan 2017-03-13  461  		if (IS_ERR(tmprange))
+> 4e05ad6c zhichang.yuan 2017-03-13  462  			return -EFAULT;
+> 4e05ad6c zhichang.yuan 2017-03-13  463  	}
+> 4e05ad6c zhichang.yuan 2017-03-13  464
+> 4e05ad6c zhichang.yuan 2017-03-13 @465  	lpcdev->io_host = range;
+> 4e05ad6c zhichang.yuan 2017-03-13  466
+> 4e05ad6c zhichang.yuan 2017-03-13  467  	return 0;
+> 4e05ad6c zhichang.yuan 2017-03-13  468  }
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+> .
+> 
 
-Hi Andrew,
-
-thanks for your reviewing. I'll also add the missing part into the next
-one. 
-	Sean
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
