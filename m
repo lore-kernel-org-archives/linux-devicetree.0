@@ -1,15 +1,15 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/5] pinctrl: sunxi: refactor pinctrl choice selecting
- for ARM64
-Date: Tue, 14 Mar 2017 14:09:16 +0100
-Message-ID: <CACRpkdZzTFAn-Mkm+SUwoatbV3RzyqoSVMB0dqkNhuDsYY56AA@mail.gmail.com>
-References: <20170301180111.12365-1-icenowy@aosc.xyz>
- <20170301180111.12365-2-icenowy@aosc.xyz>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 3/8] ARM: dts: exynos: Fix watchdog reset on Exynos4412
+Date: Tue, 14 Mar 2017 15:09:25 +0200
+Message-ID: <CAJKOXPcoP7c=TTFtWqBLMXT0BS_yi3fpu8X3q4sxCTM9m=mPmw@mail.gmail.com>
+References: <20170311172527.16368-1-krzk@kernel.org>
+ <CGME20170314130352epcas5p472cdaa4ae512b4a839d92e85d6dadb81@epcas5p4.samsung.com>
+ <20170311172527.16368-4-krzk@kernel.org> <6788694.7QfyuOlrPv@amdc3058>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170301180111.12365-2-icenowy@aosc.xyz>
+In-Reply-To: <6788694.7QfyuOlrPv@amdc3058>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,20 +19,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Icenowy Zheng <icenowy@aosc.xyz>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Andre Przywara <andre.przywara@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 1, 2017 at 7:01 PM, Icenowy Zheng <icenowy@aosc.xyz> wrote:
-
-> ARM64 Allwinner SoCs used to have every pinctrl driver selected in
-> ARCH_SUNXI. Change this to make their default value to (ARM64 &&
-> ARCH_SUNXI).
+On Tue, Mar 14, 2017 at 3:03 PM, Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
 >
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+> Hi,
+>
+> On Saturday, March 11, 2017 07:25:22 PM Krzysztof Kozlowski wrote:
+>> The Exynos4412 has the same watchdog as newer SoCs (e.g. Exynos5250).
+>> Just like the others, for working it requires additional steps in Power
+>> Management Unit: unmasking the reset request and enabling the system
+>> reset.  Without these additional steps in PMU, the watchdog will not be
+>> able to reset the system on expiration event.
+>>
+>> Change the compatible of Exynos4412 watchdog device node to
+>> samsung,exynos5250-wdt which includes the additional PMU steps.
+>
+> This is going to confuse people.  How's about doing it cleanly
+> (by adding samsung,exynos4412-wdt compatible and convert existing
+> users to use instead)?
 
-Patch applied with Maxime's ACK.
+I don't find usage of 5250 in Exynos4412 DTS as confusing because
+since long time I do not threat these numbers as having any meaning
+(e.g. 3250 is newer...). Yes, we can duplicate the compatible for that
+purpose. Care to send a patch for this?
 
-Yours,
-Linus Walleij
+Best regards,
+Krzysztof
