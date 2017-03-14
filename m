@@ -1,237 +1,126 @@
-From: Doug Berger <opendmb@gmail.com>
-Subject: Re: [PATCH net-next 02/12] net: phy: bcm7xxx: add support for 28nm
- EPHY
-Date: Mon, 13 Mar 2017 19:06:25 -0700
-Message-ID: <3e5f7ac9-7e97-60f1-3986-4045522a65f5@gmail.com>
-References: <20170314004142.4746-1-opendmb@gmail.com>
- <20170314004142.4746-3-opendmb@gmail.com> <20170314010651.GO15842@lunn.ch>
+From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: added thermal monitor node
+Date: Tue, 14 Mar 2017 10:17:49 +0800
+Message-ID: <1489457869-21815-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170314010651.GO15842@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, rafal@milecki.pl, xow@google.com, joel@jms.id.au, jon.mason@broadcom.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pgynther@google.com, jaedon.shin@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/13/2017 06:06 PM, Andrew Lunn wrote:
-> On Mon, Mar 13, 2017 at 05:41:32PM -0700, Doug Berger wrote:
->> +static int bcm7xxx_28nm_ephy_01_afe_config_init(struct phy_device *phydev)
->> +{
->> +	int ret;
->> +
->> +	/* set shadow mode 2 */
->> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST,
->> +			       MII_BCM7XXX_SHD_MODE_2, 0);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* Set current trim values INT_trim = -1, Ext_trim =0 */
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_BIAS_TRIM, 0x3BE0);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
->> +
->> +	/* Cal reset */
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
->> +			MII_BCM7XXX_SHD_3_TL4);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
-> 
-> Hi Doug
-> 
-> It would be nice to have a few blank lines here and there...
-> 
-Thanks for taking the time to review this.
+There is a thermal monitoring unit on ls1012a soc which can
+monitor and record the temperature of cores so that appropriate actions
+can be taken or alarm the user when the temperature exceeds a programmed
+temperature threshold.
 
-In general I try to keep lines of related functionality together and use
-the blank lines to help identify boundaries.  In this particular case, I
-believe it is clearer to keep the code that may return an error code
-together with the code that tests for the error.
+Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+---
+v2:
+	-- rebased to latest kernel.
 
-Perhaps this would be a better alternative:
-+	/* Set current trim values INT_trim = -1, Ext_trim =0 */
-+	if (phy_write(phydev, MII_BCM7XXX_SHD_2_BIAS_TRIM, 0x3BE0) < 0)
-+		goto reset_shadow_mode;
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 76 ++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index cffebb4..d9d9b0f 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -43,6 +43,7 @@
+  */
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+ 	compatible = "fsl,ls1012a";
+@@ -126,6 +127,81 @@
+ 			#clock-cells = <2>;
+ 			clocks = <&sysclk>;
+ 		};
++		tmu: tmu@1f00000 {
++			compatible = "fsl,qoriq-tmu";
++			reg = <0x0 0x1f00000 0x0 0x10000>;
++			interrupts = <0 33 0x4>;
++			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
++			fsl,tmu-calibration = <0x00000000 0x00000026
++					       0x00000001 0x0000002d
++					       0x00000002 0x00000032
++					       0x00000003 0x00000039
++					       0x00000004 0x0000003f
++					       0x00000005 0x00000046
++					       0x00000006 0x0000004d
++					       0x00000007 0x00000054
++					       0x00000008 0x0000005a
++					       0x00000009 0x00000061
++					       0x0000000a 0x0000006a
++					       0x0000000b 0x00000071
 +
-+	/* Cal reset */
-+	if (phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
-+		      MII_BCM7XXX_SHD_3_TL4) < 0)
-+		goto reset_shadow_mode;
-
->> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
->> +			       MII_BCM7XXX_TL4_RST_MSK, 0);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
->> +
->> +	/* Cal reset disable */
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
->> +			MII_BCM7XXX_SHD_3_TL4);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
-> 
-> ... just to break things up into readable chunks.
-> 
-Maybe:
-+	if (phy_set_clr_bits(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
-+			     MII_BCM7XXX_TL4_RST_MSK, 0) < 0)
-+		goto reset_shadow_mode;
++					       0x00010000 0x00000025
++					       0x00010001 0x0000002c
++					       0x00010002 0x00000035
++					       0x00010003 0x0000003d
++					       0x00010004 0x00000045
++					       0x00010005 0x0000004e
++					       0x00010006 0x00000057
++					       0x00010007 0x00000061
++					       0x00010008 0x0000006b
++					       0x00010009 0x00000076
 +
-+	/* Cal reset disable */
-+	if (phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
-+		      MII_BCM7XXX_SHD_3_TL4) < 0)
-+		goto reset_shadow_mode;
++					       0x00020000 0x00000029
++					       0x00020001 0x00000033
++					       0x00020002 0x0000003d
++					       0x00020003 0x00000049
++					       0x00020004 0x00000056
++					       0x00020005 0x00000061
++					       0x00020006 0x0000006d
++
++					       0x00030000 0x00000021
++					       0x00030001 0x0000002a
++					       0x00030002 0x0000003c
++					       0x00030003 0x0000004e>;
++			big-endian;
++			#thermal-sensor-cells = <1>;
++		};
++
++		thermal-zones {
++			cpu_thermal: cpu-thermal {
++				polling-delay-passive = <1000>;
++				polling-delay = <5000>;
++
++				thermal-sensors = <&tmu 0>;
++
++				trips {
++					cpu_alert: cpu-alert {
++						temperature = <85000>;
++						hysteresis = <2000>;
++						type = "passive";
++					};
++					cpu_crit: cpu-crit {
++						temperature = <95000>;
++						hysteresis = <2000>;
++						type = "critical";
++					};
++				};
++
++				cooling-maps {
++					map0 {
++						trip = <&cpu_alert>;
++						cooling-device =
++							<&cpu0 THERMAL_NO_LIMIT
++							THERMAL_NO_LIMIT>;
++					};
++				};
++			};
++		};
+ 
+ 		i2c0: i2c@2180000 {
+ 			compatible = "fsl,vf610-i2c";
+-- 
+2.1.0.27.g96db324
 
->> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
->> +			       0, MII_BCM7XXX_TL4_RST_MSK);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
->> +
->> +reset_shadow_mode:
->> +	/* reset shadow mode 2 */
->> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, 0,
->> +			       MII_BCM7XXX_SHD_MODE_2);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return 0;
-> 
-> How about:
-> 
-> 	return phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, 0,
-> 	       		        MII_BCM7XXX_SHD_MODE_2);
-> 
-The trouble here is that currently the phy_set_clr_bits() function
-returns the value written or a negative error and the function
-bcm7xxx_28nm_ephy_01_afe_config_init() is supposed to return 0 on
-success and non-zero on failure so this would not have the same
-functionality.  I suppose we could change the phy_set_clr_bits() API to
-return 0 on success to make this work, but I wasn't trying to change
-preexisting functionality in this file.
-
->> +/* The 28nm EPHY does not support Clause 45 (MMD) used by bcm-phy-lib */
->> +static int bcm7xxx_28nm_ephy_apd_enable(struct phy_device *phydev)
->> +{
->> +	int ret;
->> +
->> +	/* set shadow mode 1 */
->> +	ret = phy_set_clr_bits(phydev, MII_BRCM_FET_BRCMTEST,
->> +			       MII_BRCM_FET_BT_SRE, 0);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* Enable auto-power down */
->> +	ret = phy_set_clr_bits(phydev, MII_BRCM_FET_SHDW_AUXSTAT2,
->> +			       MII_BRCM_FET_SHDW_AS2_APDE, 0);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* reset shadow mode 1 */
->> +	ret = phy_set_clr_bits(phydev, MII_BRCM_FET_BRCMTEST, 0,
->> +			       MII_BRCM_FET_BT_SRE);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return 0;
-> 
-> How about just
-> 
->     return phy_set_clr_bits(phydev, MII_BRCM_FET_BRCMTEST, 0,
->     	   		       MII_BRCM_FET_BT_SRE);
-> 
-Same remark as above.
-
->> +}
->> +
->> +static int bcm7xxx_28nm_ephy_eee_enable(struct phy_device *phydev)
->> +{
->> +	int ret;
->> +
->> +	/* set shadow mode 2 */
->> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST,
->> +			       MII_BCM7XXX_SHD_MODE_2, 0);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* Advertise supported modes */
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
->> +			MII_BCM7XXX_SHD_3_AN_EEE_ADV);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
-> 
-> blank...
-> 
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
->> +			MDIO_EEE_100TX);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
-Here the two phy_write() calls are required to "/* Advertise supported
-modes */" (one sets an address and the other specifies the data to write
-to that address) so I kept them together to imply an association with
-the preceding comment.  If new code in the future came between them it
-would be "bad" so closing the space helps indicate that it is not a safe
-coding boundary for inserting code.
-
->> +
->> +	/* Restore Defaults */
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
->> +			MII_BCM7XXX_SHD_3_PCS_CTRL_2);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
->> +			MII_BCM7XXX_PCS_CTRL_2_DEF);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
-Same here.
-
->> +
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
->> +			MII_BCM7XXX_SHD_3_EEE_THRESH);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
->> +			MII_BCM7XXX_EEE_THRESH_DEF);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
-Here...
-
->> +
->> +	/* Enable EEE autonegotiation */
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_ADDR_CTRL,
->> +			MII_BCM7XXX_SHD_3_AN_STAT);
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
->> +	ret = phy_write(phydev, MII_BCM7XXX_SHD_2_CTRL_STAT,
->> +			(MII_BCM7XXX_AN_NULL_MSG_EN | MII_BCM7XXX_AN_EEE_EN));
->> +	if (ret < 0)
->> +		goto reset_shadow_mode;
-and here.
-
->> +
->> +reset_shadow_mode:
->> +	/* reset shadow mode 2 */
->> +	ret = phy_set_clr_bits(phydev, MII_BCM7XXX_TEST, 0,
->> +			       MII_BCM7XXX_SHD_MODE_2);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	/* Restart autoneg */
->> +	phy_write(phydev, MII_BMCR,
->> +		  (BMCR_SPEED100 | BMCR_ANENABLE | BMCR_ANRESTART));
->> +
->> +	return 0;
-> 
->   return phy_write(.....); ?
-> 
-I would feel more comfortable with this if the return value of the
-struct mii_bus write member function was more clearly defined.  In our
-case, we return 0 on success so I would consider this change, but I
-would prefer a consensus that all mii_bus write functions return 0 on
-success before doing so.
-
->> +}
-> 
->   Andrew
-> 
-Thanks again,
-    Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
