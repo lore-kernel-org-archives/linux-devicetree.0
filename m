@@ -1,77 +1,216 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 4/4] dts: bcm283x.dtsi: Add analog audio/headphone jack
- for bcm2835
-Date: Tue, 14 Mar 2017 09:05:54 +0100
-Message-ID: <a5ae562f-6843-f137-6470-36c53cfd1799@i2se.com>
-References: <20170312063820.19313-1-mzoran@crowfest.net>
- <20170312063820.19313-4-mzoran@crowfest.net>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and
+ endpoints
+Date: Tue, 14 Mar 2017 10:08:32 +0200
+Message-ID: <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
+ <1629581.fh46rNHz4U@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170312063820.19313-4-mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1629581.fh46rNHz4U@aspire.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Am 12.03.2017 um 07:38 schrieb Michael Zoran:
-> Add the DT nodes for the analog audio/headphone jack for the BCM2835
->
-> Signed-off-by: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm283x.dtsi | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index 9798bc9293d8..bf2cd463a6e6 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -338,7 +338,12 @@
->  				brcm,pins = <42 43>;
->  				brcm,function = <BCM2835_FSEL_ALT5>;
->  			};
-> -		};
-> +
-> +                        analog_audio_pins: analog_audio_pins {
-> +                                brcm,pins = <40 45>;
-> +                                brcm,function = <4 4>; /* Alt0 */
+Hi Rafael,
 
-Please look at the other pin groups and adapt accordingly (defines, naming).
+On 03/14/17 00:08, Rafael J. Wysocki wrote:
+> On Monday, March 06, 2017 04:19:30 PM Sakari Ailus wrote:
+>> Document the use of references into the hierarchical data extension
+>> structure, as well as the use of port and endpoint concepts that are very
+>> similar to those in Devicetree.
+>>
+>> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+>> ---
+>>  Documentation/acpi/dsd/graph.txt | 164 +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 164 insertions(+)
+>>  create mode 100644 Documentation/acpi/dsd/graph.txt
+>>
+>> diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/acpi/dsd/graph.txt
+>> new file mode 100644
+>> index 0000000..6195936
+>> --- /dev/null
+>> +++ b/Documentation/acpi/dsd/graph.txt
+>> @@ -0,0 +1,164 @@
+>> +Graphs
+>> +
+>> +
+>> +_DSD
+>> +----
+>> +
+>> +_DSD (Device Specific Data) [7] is a predefined ACPI device
+>> +configuration object that can be used to convey information on
+>> +hardware features which are not specifically covered by the ACPI
+>> +specification [1][6]. There are two _DSD extensions that are relevant
+>> +for graphs: property [4] and hierarchical data extensions [5]. The
+>> +property extension provides generic key-value pairs whereas the
+>> +hierarchical data extension supports nodes with references to other
+>> +nodes, forming a tree. The nodes in the tree may contain properties as
+>> +defined by the property extension. The two extensions together provide
+>> +a tree-like structure with zero or more properties (key-value pairs)
+>> +in each node of the tree.
+>> +
+>> +The data structure may be accessed at runtime by using the device_*
+>> +and fwnode_* functions defined in include/linux/fwnode.h .
+>> +
+>> +Fwnode represents a generic firmware node object. It is independent on
+>> +the firmware type. In ACPI, fwnodes are _DSD hierarchical data
+>> +extensions objects. A device's _DSD object is represented by an
+>> +fwnode.
+>> +
+>> +The data structure may be referenced to elsewhere in the ACPI tables
+>> +by using a hard reference to the device itself and an index to the
+>> +hierarchical data extension array on each depth.
+>> +
+>> +
+>> +Ports and endpoints
+>> +-------------------
+>> +
+>> +The port and endpoint concepts are very similar to those in Devicetree
+>> +[3]. The port represent represent interface in a device, and an
+> 
+> s/represent represent/represents/
+> 
+> Plus I would say "a port" and "an interface".
 
-> +                        };
-> +                };
->  
->  		uart0: serial@7e201000 {
->  			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
-> @@ -464,6 +469,17 @@
->  			status = "disabled";
->  		};
->  
-> +                analogaudio: analogaudio@7e20c000 {
-> +                        compatible = "brcm,bcm2835-analog-audio";
-> +                        reg = <0x7e20c000 0x28>;
-> +                        clocks = <&clocks BCM2835_CLOCK_PWM>;
-> +                        assigned-clocks = <&clocks BCM2835_CLOCK_PWM>;
-> +                        pinctrl-names = "default";
-> +                        pinctrl-0 = <&analog_audio_pins>;
+Fixed.
 
-This isn't future-proof. Don't define pintrl at SoC level. This should
-be done on board level.
+> 
+>> +endpoint represents a connection to that interface.
+>> +
+>> +All port nodes are located under the device's "_DSD" node in
+>> +hierarchical data extension tree. The first package list entry of the
+>> +hierarchical data extension related to each port node must begin with
+>> +"port" string and must be followed by the number of the port.
+> 
+> So "port" should be the key, right?
 
-AFAIK the Raspberry Pi 3 uses pin 40 and 41.
+How about this instead:
 
-Thanks
-Stefan
+All port nodes are located under the device's "_DSD" node in the
+hierarchical data extension tree. The property extension related to
+each port node must contain the key "port" and an integer value which
+is the number of the port.
 
-> +                        dmas = <&dma 5>;
-> +                        dma-names = "tx";
-> +                };
-> +
->  		sdhci: sdhci@7e300000 {
->  			compatible = "brcm,bcm2835-sdhci";
->  			reg = <0x7e300000 0x100>;
+> 
+>> +
+>> +Further on, endpoints are located under the individual port nodes. The
+>> +first hierarchical data extension package list entry of the endpoint
+>> +nodes must begin with "endpoint" and must be followed by the number
+>> +of the endpoint.
+>> +
+>> +Each port node contains a property extension key "port", the value of
+>> +which is the number of the port node. The number of the endpoint node is
+>> +the index of the endpoint node in the endpoint node array under the port
+>> +node, starting from 0.
+>> +
+>> +The endpoint reference uses property extension with "remote-endpoint"
+>> +property name followed by a reference in the same package. Such references
+>> +consist of the name of the device, index of the port node and finally the
+>> +index of the endpoint node. The port index is indeed index to the referred
+>> +port array, not the number of the port that is related to numbering of
+>> +actual hardware interfaces in the respective hardware. The endpoint nodes
+>> +are always referred to using an index to the endpoint node array.
+>> +Individual references thus appear as:
+>> +
+>> +    Package() { device, port_node_index, endpoint_node_index }
+>> +
+>> +The references to endpoints must be always done both ways, to the
+>> +remote endpoint and back from the referred remote endpoint node.
+>> +
+>> +A simple example of this is show below:
+>> +
+>> +    Scope (\_SB.PCI0.I2C2)
+>> +    {
+>> +	Device (CAM0)
+>> +	{
+>> +	    Name (_DSD, Package () {
+>> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>> +		Package () {
+>> +		    Package () { "compatible", Package () { "nokia,smia" } },
+>> +		},
+>> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+>> +		Package () {
+>> +		    Package () { "port0", "PRT0" },
+>> +		}
+>> +	    })
+>> +	    Name (PRT0, Package() {
+>> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>> +		Package () {
+>> +		    Package () { "port", 0 },
+>> +		},
+>> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+>> +		Package () {
+>> +		    Package () { "endpoint0", "EP0" },
+>> +		}
+>> +	    })
+>> +	    Name (EP0, Package() {
+>> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>> +		Package () {
+>> +		    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, 0, 0 } },
+>> +		}
+>> +	    })
+>> +	}
+>> +    }
+>> +
+>> +    Scope (\_SB.PCI0)
+>> +    {
+>> +	Device (ISP)
+>> +	{
+>> +	    Name (_DSD, Package () {
+>> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+>> +		Package () {
+>> +		    Package () { "port4", "PRT4" },
+>> +		}
+>> +	    })
+>> +
+>> +	    Name (PRT4, Package() {
+>> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>> +		Package () {
+>> +		    Package () { "port", 4 }, /* CSI-2 port number */
+>> +		},
+>> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
+>> +		Package () {
+>> +		    Package () { "endpoint0", "EP0" },
+>> +		}
+>> +	    })
+>> +
+>> +	    Name (EP0, Package() {
+>> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
+>> +		Package () {
+>> +		    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, 0, 0 } },
+> 
+> Why indices and not the keys?  Something like
+> 
+> 	Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, "port0", "endpoint0" } },
+> 
+> should work too and would be more flexible I suppose and less prone to errors.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I agree. I'm definitely for using human readable strings instead of
+indices here. I'll change the implementation correspondingly.
+
+> 
+>> +		}
+>> +	    })
+>> +	}
+>> +    }
+>> +
+>> +Here, the port 0 of the "CAM0" device is connected to the port 4 of
+>> +the "ISP" device. Note that the port index in the reference is still
+>> +0, as it refers to an entry in the table and not the port node number
+>> +itself.
+> 
+> Thanks,
+> Rafael
+> 
+
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
