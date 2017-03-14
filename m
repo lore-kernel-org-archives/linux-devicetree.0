@@ -1,60 +1,73 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH V7 4/7] LPC: Support the device-tree LPC host on Hip06/Hip07
- (fwd)
-Date: Tue, 14 Mar 2017 06:37:20 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1703140635090.3516@hadrien>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Add LED subnode binding for
+ MT6323 PMIC
+Date: Tue, 14 Mar 2017 13:40:09 +0800
+Message-ID: <1489470009.1870.6.camel@mtkswgap22>
+References: <1488549385-19899-1-git-send-email-sean.wang@mediatek.com>
+         <1488549385-19899-3-git-send-email-sean.wang@mediatek.com>
+         <c86eacdb-d5c8-2f0a-11f1-1a3bc623b4b0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Sender: linux-acpi-owner@vger.kernel.org
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, "zhichang.yuan" <yuanzhichang@hisilicon.com>, kbuild-all@01.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <c86eacdb-d5c8-2f0a-11f1-1a3bc623b4b0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Line 460 looks suspicious.  Can tmprange be different than range but not
-be an ERR_PTR?  If so, lpcdev->io_host will have an invalid value.
+On Mon, 2017-03-13 at 13:00 +0100, Matthias Brugger wrote:
+> 
+> On 03/03/17 14:56, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >
+> > This patch adds documentation for devicetree bindings
+> > for LED support as the subnode of MT6323 PMIC
+> >
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > index 949c85f..522a3bb 100644
+> > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+> > @@ -6,6 +6,7 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
+> >  - Audio codec
+> >  - GPIO
+> >  - Clock
+> > +- LED
+> >
+> >  It is interfaced to host controller using SPI interface by a proprietary hardware
+> >  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
+> > @@ -34,6 +35,10 @@ Optional subnodes:
+> >  - clk
+> >  	Required properties:
+> >  		- compatible: "mediatek,mt6397-clk"
+> > +- led
+> > +	Required properties:
+> > +		- compatible: "mediatek,mt6323-led"
+> > +	see Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> 
+> Part of this patch is already part of linux-next:
+> 05daab3 ("Documentation: devicetree: Add LED subnode binding for MT6323 
+> PMIC")
+> 
+Hi Matthias,
 
-julia
+There is still small differences from the merged patch. 
 
----------- Forwarded message ----------
-Date: Tue, 14 Mar 2017 13:12:05 +0800
-From: kbuild test robot <fengguang.wu@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH V7 4/7] LPC: Support the device-tree LPC host on Hip06/Hip07
+I will submit the series for the next version based on newer kernel and
 
-Hi zhichang.yuan,
+split the already merged ones out. Thanks for your kindly remainder.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v4.11-rc2 next-20170310]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+	Sean
+> Regards,
+> Matthias
 
-url:    https://github.com/0day-ci/linux/commits/zhichang-yuan/LPC-legacy-ISA-I-O-support/20170314-114635
-:::::: branch date: 85 minutes ago
-:::::: commit date: 85 minutes ago
 
->> drivers/bus/hisi_lpc.c:465:19-24: ERROR: reference preceded by free on line 460
-
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 4e05ad6c3274fa75c903c7809ef0b51329a31ab2
-vim +465 drivers/bus/hisi_lpc.c
-
-4e05ad6c zhichang.yuan 2017-03-13  454  	range->flags = IO_HOST_INDIRECT;
-4e05ad6c zhichang.yuan 2017-03-13  455  	range->size = LPC_BUS_IO_SIZE;
-4e05ad6c zhichang.yuan 2017-03-13  456  	range->hw_start = LPC_MIN_BUS_RANGE;
-4e05ad6c zhichang.yuan 2017-03-13  457
-4e05ad6c zhichang.yuan 2017-03-13  458  	tmprange = register_libio_range(range);
-4e05ad6c zhichang.yuan 2017-03-13  459  	if (tmprange != range) {
-4e05ad6c zhichang.yuan 2017-03-13 @460  		kfree(range);
-4e05ad6c zhichang.yuan 2017-03-13  461  		if (IS_ERR(tmprange))
-4e05ad6c zhichang.yuan 2017-03-13  462  			return -EFAULT;
-4e05ad6c zhichang.yuan 2017-03-13  463  	}
-4e05ad6c zhichang.yuan 2017-03-13  464
-4e05ad6c zhichang.yuan 2017-03-13 @465  	lpcdev->io_host = range;
-4e05ad6c zhichang.yuan 2017-03-13  466
-4e05ad6c zhichang.yuan 2017-03-13  467  	return 0;
-4e05ad6c zhichang.yuan 2017-03-13  468  }
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
