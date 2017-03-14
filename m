@@ -1,29 +1,57 @@
-From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] dts: bcm283x.dtsi: Add analog audio/headphone jack
- for bcm2835
-Date: Tue, 14 Mar 2017 01:47:59 -0700
-Message-ID: <1489481279.656.1.camel@crowfest.net>
-References: <20170312063820.19313-1-mzoran@crowfest.net>
-         <20170312063820.19313-4-mzoran@crowfest.net>
-         <a5ae562f-6843-f137-6470-36c53cfd1799@i2se.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] ata: ahci: add support for DaVinci DM816 SATA
+ controller
+Date: Tue, 14 Mar 2017 11:57:08 +0300
+Message-ID: <db5d21c2-b0e2-c9ec-1f15-460973fd23e3@cogentembedded.com>
+References: <1489422982-3461-1-git-send-email-bgolaszewski@baylibre.com>
+ <1489422982-3461-3-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a5ae562f-6843-f137-6470-36c53cfd1799-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489422982-3461-3-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-03-14 at 09:05 +0100, Stefan Wahren wrote:
+Hello!
 
-> AFAIK the Raspberry Pi 3 uses pin 40 and 41.
-> 
+On 3/13/2017 7:36 PM, Bartosz Golaszewski wrote:
 
-I did all my testing on the RPI 3, so I'm almost certain it's correct. 
-It matches with the schematic and it matches with what the downstream
-tree uses for the firmware based driver(dummy claiming of pins).
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This SATA controller is quite similar to the one present on the DA850
+> SoC, but the PHY configuration is different and it supports two HBA
+> ports.
+>
+> The IP suffers from the same PMP issue the DA850 does - if we enable
+> PMP but don't use it - softreset fails. Appropriate workaround was
+> implemented in this driver as well.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/ata/Kconfig      |   9 +++
+>  drivers/ata/Makefile     |   1 +
+>  drivers/ata/ahci_dm816.c | 200 +++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 210 insertions(+)
+>  create mode 100644 drivers/ata/ahci_dm816.c
+>
+> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+> index 70b57d2..7f59a7a 100644
+> --- a/drivers/ata/Kconfig
+> +++ b/drivers/ata/Kconfig
+> @@ -118,6 +118,15 @@ config AHCI_DA850
+>
+>  	  If unsure, say N.
+>
+> +config AHCI_DM816
+> +	tristate "DaVinci DM816 AHCI SATA support"
+
+    Is it really DaVinci?
+
+> +	depends on ARCH_OMAP2PLUS
+
+    Especially if it depends on OMAP...
+
+[...]
+
+MBR, Sergei
