@@ -1,49 +1,43 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 09/20] ARM: dts: sun8i: Enable dwmac-sun8i on the Orange PI PC
-Date: Tue, 14 Mar 2017 15:18:45 +0100
-Message-ID: <20170314141856.24560-10-clabbe.montjoie@gmail.com>
-References: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/4] pinctrl: samsung: Fix the width of PINCFG_TYPE_DRV
+ bitfields for Exynos5433
+Date: Tue, 14 Mar 2017 16:27:26 +0200
+Message-ID: <CAJKOXPd1pRN47Ss5qTHUVAdPwxKqE5vGGevG1OhVH0uSZnotKA@mail.gmail.com>
+References: <CGME20161230041426epcas1p1f827d3cee8b607d81e9921b412ddf301@epcas1p1.samsung.com>
+ <20161230041421.24448-1-andi.shyti@samsung.com> <20161230041421.24448-2-andi.shyti@samsung.com>
+ <CACRpkdbR3x14h38Gg7qpeWnswwD9qsS0zDUrrXCEJH-AdEB+cQ@mail.gmail.com>
+ <58AF7CCB.5070303@samsung.com> <CACRpkda0-k7Vo9Y6yNtLNXu-gGnJW9y83t6W9p032KWjHYdMiw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+In-Reply-To: <CACRpkda0-k7Vo9Y6yNtLNXu-gGnJW9y83t6W9p032KWjHYdMiw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net
-Cc: f.fainelli@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, LABBE Corentin <clabbe.montjoie@gmail.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-From: LABBE Corentin <clabbe.montjoie@gmail.com>
+On Tue, Mar 14, 2017 at 3:47 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Fri, Feb 24, 2017 at 1:22 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> On 2016년 12월 30일 22:28, Linus Walleij wrote:
+>>> On Fri, Dec 30, 2016 at 5:14 AM, Andi Shyti <andi.shyti@samsung.com> wrote:
+> Probably. Send a patch fixing it up so I can apply it.
+>
+> There are now something like 5 different people submitting Samsung pinctrl
+> patches without coordination so this will start to happen a lot if you keep
+> up this development pace.
+>
+> As I just wrote in another mail: I want someone to step up and collect
+> Samsung patches and send them to me using a pull request.
 
-The dwmac-sun8i hardware is present on the Orange PI PC.
-It uses the internal PHY.
+I think we can handle it as there are three of us.
 
-This patch create the needed emac node.
+> Samsung people also need to start reviewing each other's patches
+> more I guess, but mainly I need help with integration.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
----
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+More or less recently we do the reviews. Sure we can focus more... and
+actually having an entry gate for patches would ensure at least one
+more review from the applying person.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index f148111..746c25a 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -53,6 +53,7 @@
- 
- 	aliases {
- 		serial0 = &uart0;
-+		ethernet0 = &emac;
- 	};
- 
- 	chosen {
-@@ -184,3 +185,10 @@
- 	/* USB VBUS is always on */
- 	status = "okay";
- };
-+
-+&emac {
-+	phy-handle = <&int_mii_phy>;
-+	phy-mode = "mii";
-+	allwinner,leds-active-low;
-+	status = "okay";
-+};
--- 
-2.10.2
+Best regards,
+Krzysztof
