@@ -1,96 +1,60 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Tue, 14 Mar 2017 19:26:46 +0100
-Message-ID: <20170314182646.GB3744@amd>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
- <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
- <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
- <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
- <5d5cf4a4-a4d3-586e-cd16-54f543dfcce9@gmail.com>
- <aa6a5a1d-18fd-8bed-a349-2654d2d1abe0@xs4all.nl>
- <20170313104538.GF21222@n2100.armlinux.org.uk>
+From: Shaohua Li <shli-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 0/4] Broadcom SBA RAID support
+Date: Tue, 14 Mar 2017 11:48:06 -0700
+Message-ID: <20170314184806.o2oykhztje3obwot@kernel.org>
+References: <1488793408-25592-1-git-send-email-anup.patel@broadcom.com>
+ <CAPcyv4hGGbhF-g8B__9=rsP+QwR6RBi=WqALLgABNb1M4D3rBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="aM3YZ0Iwxop3KEKx"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170313104538.GF21222@n2100.armlinux.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.inf
+In-Reply-To: <CAPcyv4hGGbhF-g8B__9=rsP+QwR6RBi=WqALLgABNb1M4D3rBw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-raid <lin>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 14, 2017 at 09:56:35AM -0700, Dan Williams wrote:
+> On Mon, Mar 6, 2017 at 1:43 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> > The Broadcom SBA RAID is a stream-based device which provides
+> > RAID5/6 offload.
+> >
+> > It requires a SoC specific ring manager (such as Broadcom FlexRM
+> > ring manager) to provide ring-based programming interface. Due to
+> > this, the Broadcom SBA RAID driver (mailbox client) implements
+> > DMA device having one DMA channel using a set of mailbox channels
+> > provided by Broadcom SoC specific ring manager driver (mailbox
+> > controller).
+> >
+> > The Broadcom SBA RAID hardware requires PQ disk position instead
+> > of PQ disk coefficient. To address this, we have added raid_gflog
+> > table which will help driver to convert PQ disk coefficient to PQ
+> > disk position.
+> >
+> > This patchset is based on Linux-4.11-rc1 and depends on patchset
+> > "[PATCH v5 0/2] Broadcom FlexRM ring manager support"
+> >
+> > It is also available at sba-raid-v6 branch of
+> > https://github.com/Broadcom/arm64-linux.git
+> >
+> [..]
+> >
+> > Anup Patel (4):
+> >   lib/raid6: Add log-of-2 table for RAID6 HW requiring disk position
+> >   async_tx: Fix DMA_PREP_FENCE usage in do_async_gen_syndrome()
+> >   dmaengine: Add Broadcom SBA RAID driver
+> >   dt-bindings: Add DT bindings document for Broadcom SBA RAID driver
+> 
+> For the dmaengine and async_tx changes:
+> 
+> Acked-by: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> The raid change should get an ack from Shaohua.
 
---aM3YZ0Iwxop3KEKx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For the raid6 part:
 
-On Mon 2017-03-13 10:45:38, Russell King - ARM Linux wrote:
-> On Mon, Mar 13, 2017 at 11:02:34AM +0100, Hans Verkuil wrote:
-> > On 03/11/2017 07:14 PM, Steve Longerbeam wrote:
-> > > The event must be user visible, otherwise the user has no indication
-> > > the error, and can't correct it by stream restart.
-> >=20
-> > In that case the driver can detect this and call vb2_queue_error. It's
-> > what it is there for.
-> >=20
-> > The event doesn't help you since only this driver has this issue. So no=
-body
-> > will watch this event, unless it is sw specifically written for this So=
-C.
-> >=20
-> > Much better to call vb2_queue_error to signal a fatal error (which this
-> > apparently is) since there are more drivers that do this, and vivid sup=
-ports
-> > triggering this condition as well.
->=20
-> So today, I can fiddle around with the IMX219 registers to help gain
-> an understanding of how this sensor works.  Several of the registers
-> (such as the PLL setup [*]) require me to disable streaming on the
-> sensor while changing them.
->=20
-> This is something I've done many times while testing various ideas,
-> and is my primary way of figuring out and testing such things.
->=20
-> Whenever I resume streaming (provided I've let the sensor stop
-> streaming at a frame boundary) it resumes as if nothing happened.  If I
-> stop the sensor mid-frame, then I get the rolling issue that Steve
-> reports, but once the top of the frame becomes aligned with the top of
-> the capture, everything then becomes stable again as if nothing happened.
->=20
-> The side effect of what you're proposing is that when I disable streaming
-> at the sensor by poking at its registers, rather than the capture just
-> stopping, an error is going to be delivered to gstreamer, and gstreamer
-> is going to exit, taking the entire capture process down.
->=20
-> This severely restricts the ability to be able to develop and test
-> sensor drivers.
-
-Well, but kernel should do what is best for production, not what is
-best for driver debugging.
-
-And yes, I guess you can have #ifdef or module parameter or something
-switching for behaviour you prefer when you are debugging. But for
-production, vb2_queue_error() seems to be the right solution.
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---aM3YZ0Iwxop3KEKx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAljINeYACgkQMOfwapXb+vK14QCbBgL8BWnvz975TIwHj1zYgdU3
-Yc4AnRNhAYf0StYuCHTqTIHTfebPobdS
-=9XSv
------END PGP SIGNATURE-----
-
---aM3YZ0Iwxop3KEKx--
+Acked-by: Shaohua Li <shli-b10kYP2dOMg@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
