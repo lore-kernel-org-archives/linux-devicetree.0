@@ -1,216 +1,150 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and
- endpoints
-Date: Tue, 14 Mar 2017 10:08:32 +0200
-Message-ID: <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
-References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
- <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
- <1629581.fh46rNHz4U@aspire.rjw.lan>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: added thermal monitor node
+Date: Tue, 14 Mar 2017 16:08:23 +0800
+Message-ID: <20170314080821.GN3618@dragon>
+References: <1489457869-21815-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1629581.fh46rNHz4U@aspire.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1489457869-21815-1-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafael,
-
-On 03/14/17 00:08, Rafael J. Wysocki wrote:
-> On Monday, March 06, 2017 04:19:30 PM Sakari Ailus wrote:
->> Document the use of references into the hierarchical data extension
->> structure, as well as the use of port and endpoint concepts that are very
->> similar to those in Devicetree.
->>
->> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
->> ---
->>  Documentation/acpi/dsd/graph.txt | 164 +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 164 insertions(+)
->>  create mode 100644 Documentation/acpi/dsd/graph.txt
->>
->> diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/acpi/dsd/graph.txt
->> new file mode 100644
->> index 0000000..6195936
->> --- /dev/null
->> +++ b/Documentation/acpi/dsd/graph.txt
->> @@ -0,0 +1,164 @@
->> +Graphs
->> +
->> +
->> +_DSD
->> +----
->> +
->> +_DSD (Device Specific Data) [7] is a predefined ACPI device
->> +configuration object that can be used to convey information on
->> +hardware features which are not specifically covered by the ACPI
->> +specification [1][6]. There are two _DSD extensions that are relevant
->> +for graphs: property [4] and hierarchical data extensions [5]. The
->> +property extension provides generic key-value pairs whereas the
->> +hierarchical data extension supports nodes with references to other
->> +nodes, forming a tree. The nodes in the tree may contain properties as
->> +defined by the property extension. The two extensions together provide
->> +a tree-like structure with zero or more properties (key-value pairs)
->> +in each node of the tree.
->> +
->> +The data structure may be accessed at runtime by using the device_*
->> +and fwnode_* functions defined in include/linux/fwnode.h .
->> +
->> +Fwnode represents a generic firmware node object. It is independent on
->> +the firmware type. In ACPI, fwnodes are _DSD hierarchical data
->> +extensions objects. A device's _DSD object is represented by an
->> +fwnode.
->> +
->> +The data structure may be referenced to elsewhere in the ACPI tables
->> +by using a hard reference to the device itself and an index to the
->> +hierarchical data extension array on each depth.
->> +
->> +
->> +Ports and endpoints
->> +-------------------
->> +
->> +The port and endpoint concepts are very similar to those in Devicetree
->> +[3]. The port represent represent interface in a device, and an
+On Tue, Mar 14, 2017 at 10:17:49AM +0800, Yuantian Tang wrote:
+> There is a thermal monitoring unit on ls1012a soc which can
+> monitor and record the temperature of cores so that appropriate actions
+> can be taken or alarm the user when the temperature exceeds a programmed
+> temperature threshold.
 > 
-> s/represent represent/represents/
-> 
-> Plus I would say "a port" and "an interface".
+> Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
 
-Fixed.
+'arm64: dts: ls1012a: ...' for subject prefix to make it more specific.
 
+> ---
+> v2:
+> 	-- rebased to latest kernel.
 > 
->> +endpoint represents a connection to that interface.
->> +
->> +All port nodes are located under the device's "_DSD" node in
->> +hierarchical data extension tree. The first package list entry of the
->> +hierarchical data extension related to each port node must begin with
->> +"port" string and must be followed by the number of the port.
+>  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 76 ++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
 > 
-> So "port" should be the key, right?
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> index cffebb4..d9d9b0f 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+> @@ -43,6 +43,7 @@
+>   */
+>  
+>  #include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	compatible = "fsl,ls1012a";
+> @@ -126,6 +127,81 @@
+>  			#clock-cells = <2>;
+>  			clocks = <&sysclk>;
+>  		};
 
-How about this instead:
+Have a newline between nodes.
 
-All port nodes are located under the device's "_DSD" node in the
-hierarchical data extension tree. The property extension related to
-each port node must contain the key "port" and an integer value which
-is the number of the port.
+> +		tmu: tmu@1f00000 {
+> +			compatible = "fsl,qoriq-tmu";
+> +			reg = <0x0 0x1f00000 0x0 0x10000>;
+> +			interrupts = <0 33 0x4>;
+> +			fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
+> +			fsl,tmu-calibration = <0x00000000 0x00000026
+> +					       0x00000001 0x0000002d
+> +					       0x00000002 0x00000032
+> +					       0x00000003 0x00000039
+> +					       0x00000004 0x0000003f
+> +					       0x00000005 0x00000046
+> +					       0x00000006 0x0000004d
+> +					       0x00000007 0x00000054
+> +					       0x00000008 0x0000005a
+> +					       0x00000009 0x00000061
+> +					       0x0000000a 0x0000006a
+> +					       0x0000000b 0x00000071
+> +
+> +					       0x00010000 0x00000025
+> +					       0x00010001 0x0000002c
+> +					       0x00010002 0x00000035
+> +					       0x00010003 0x0000003d
+> +					       0x00010004 0x00000045
+> +					       0x00010005 0x0000004e
+> +					       0x00010006 0x00000057
+> +					       0x00010007 0x00000061
+> +					       0x00010008 0x0000006b
+> +					       0x00010009 0x00000076
+> +
+> +					       0x00020000 0x00000029
+> +					       0x00020001 0x00000033
+> +					       0x00020002 0x0000003d
+> +					       0x00020003 0x00000049
+> +					       0x00020004 0x00000056
+> +					       0x00020005 0x00000061
+> +					       0x00020006 0x0000006d
+> +
+> +					       0x00030000 0x00000021
+> +					       0x00030001 0x0000002a
+> +					       0x00030002 0x0000003c
+> +					       0x00030003 0x0000004e>;
+> +			big-endian;
+> +			#thermal-sensor-cells = <1>;
+> +		};
+> +
+> +		thermal-zones {
+> +			cpu_thermal: cpu-thermal {
+> +				polling-delay-passive = <1000>;
+> +				polling-delay = <5000>;
+> +
 
-> 
->> +
->> +Further on, endpoints are located under the individual port nodes. The
->> +first hierarchical data extension package list entry of the endpoint
->> +nodes must begin with "endpoint" and must be followed by the number
->> +of the endpoint.
->> +
->> +Each port node contains a property extension key "port", the value of
->> +which is the number of the port node. The number of the endpoint node is
->> +the index of the endpoint node in the endpoint node array under the port
->> +node, starting from 0.
->> +
->> +The endpoint reference uses property extension with "remote-endpoint"
->> +property name followed by a reference in the same package. Such references
->> +consist of the name of the device, index of the port node and finally the
->> +index of the endpoint node. The port index is indeed index to the referred
->> +port array, not the number of the port that is related to numbering of
->> +actual hardware interfaces in the respective hardware. The endpoint nodes
->> +are always referred to using an index to the endpoint node array.
->> +Individual references thus appear as:
->> +
->> +    Package() { device, port_node_index, endpoint_node_index }
->> +
->> +The references to endpoints must be always done both ways, to the
->> +remote endpoint and back from the referred remote endpoint node.
->> +
->> +A simple example of this is show below:
->> +
->> +    Scope (\_SB.PCI0.I2C2)
->> +    {
->> +	Device (CAM0)
->> +	{
->> +	    Name (_DSD, Package () {
->> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->> +		Package () {
->> +		    Package () { "compatible", Package () { "nokia,smia" } },
->> +		},
->> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
->> +		Package () {
->> +		    Package () { "port0", "PRT0" },
->> +		}
->> +	    })
->> +	    Name (PRT0, Package() {
->> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->> +		Package () {
->> +		    Package () { "port", 0 },
->> +		},
->> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
->> +		Package () {
->> +		    Package () { "endpoint0", "EP0" },
->> +		}
->> +	    })
->> +	    Name (EP0, Package() {
->> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->> +		Package () {
->> +		    Package () { "remote-endpoint", Package() { \_SB.PCI0.ISP, 0, 0 } },
->> +		}
->> +	    })
->> +	}
->> +    }
->> +
->> +    Scope (\_SB.PCI0)
->> +    {
->> +	Device (ISP)
->> +	{
->> +	    Name (_DSD, Package () {
->> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
->> +		Package () {
->> +		    Package () { "port4", "PRT4" },
->> +		}
->> +	    })
->> +
->> +	    Name (PRT4, Package() {
->> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->> +		Package () {
->> +		    Package () { "port", 4 }, /* CSI-2 port number */
->> +		},
->> +		ToUUID("dbb8e3e6-5886-4ba6-8795-1319f52a966b"),
->> +		Package () {
->> +		    Package () { "endpoint0", "EP0" },
->> +		}
->> +	    })
->> +
->> +	    Name (EP0, Package() {
->> +		ToUUID("daffd814-6eba-4d8c-8a91-bc9bbf4aa301"),
->> +		Package () {
->> +		    Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, 0, 0 } },
-> 
-> Why indices and not the keys?  Something like
-> 
-> 	Package () { "remote-endpoint", Package () { \_SB.PCI0.I2C2.CAM0, "port0", "endpoint0" } },
-> 
-> should work too and would be more flexible I suppose and less prone to errors.
+We usually do not have any newline in middle of property list, so please
+drop it.
 
-I agree. I'm definitely for using human readable strings instead of
-indices here. I'll change the implementation correspondingly.
+> +				thermal-sensors = <&tmu 0>;
+> +
+> +				trips {
+> +					cpu_alert: cpu-alert {
+> +						temperature = <85000>;
+> +						hysteresis = <2000>;
+> +						type = "passive";
+> +					};
 
+Have a newline between node.
+
+Shawn
+
+> +					cpu_crit: cpu-crit {
+> +						temperature = <95000>;
+> +						hysteresis = <2000>;
+> +						type = "critical";
+> +					};
+> +				};
+> +
+> +				cooling-maps {
+> +					map0 {
+> +						trip = <&cpu_alert>;
+> +						cooling-device =
+> +							<&cpu0 THERMAL_NO_LIMIT
+> +							THERMAL_NO_LIMIT>;
+> +					};
+> +				};
+> +			};
+> +		};
+>  
+>  		i2c0: i2c@2180000 {
+>  			compatible = "fsl,vf610-i2c";
+> -- 
+> 2.1.0.27.g96db324
 > 
->> +		}
->> +	    })
->> +	}
->> +    }
->> +
->> +Here, the port 0 of the "CAM0" device is connected to the port 4 of
->> +the "ISP" device. Note that the port index in the reference is still
->> +0, as it refers to an entry in the table and not the port node number
->> +itself.
 > 
-> Thanks,
-> Rafael
-> 
-
-
--- 
-Kind regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
