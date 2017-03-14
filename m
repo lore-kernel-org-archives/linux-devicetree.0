@@ -1,38 +1,35 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 4/4] dts: bcm283x.dtsi: Add analog audio/headphone jack
- for bcm2835
-Date: Tue, 14 Mar 2017 11:07:35 +0100
-Message-ID: <952dc3e0-a01a-bb21-78bd-d3639251c84a@i2se.com>
-References: <20170312063820.19313-1-mzoran@crowfest.net>
- <20170312063820.19313-4-mzoran@crowfest.net>
- <a5ae562f-6843-f137-6470-36c53cfd1799@i2se.com>
- <1489481279.656.1.camel@crowfest.net>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v7 2/2] backlight arcxcnn add support for ArcticSand
+ devices
+Date: Tue, 14 Mar 2017 10:16:30 +0000
+Message-ID: <d628cdbc-dbc4-1065-23e8-63c0d6a2dd86@linaro.org>
+References: <1489429323-6103-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489481279.656.1.camel-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1489429323-6103-1-git-send-email-olimpiu@arcticsand.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olimpiu Dejeu <olimpiu@arcticsand.com>, robh@kernel.org
+Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com, joe@perches.com, medasaro@arcticsand.com
 List-Id: devicetree@vger.kernel.org
 
-Am 14.03.2017 um 09:47 schrieb Michael Zoran:
-> On Tue, 2017-03-14 at 09:05 +0100, Stefan Wahren wrote:
->
->> AFAIK the Raspberry Pi 3 uses pin 40 and 41.
->>
-> I did all my testing on the RPI 3, so I'm almost certain it's correct. 
-> It matches with the schematic and it matches with what the downstream
-> tree uses for the firmware based driver(dummy claiming of pins).
+On 13/03/17 18:22, Olimpiu Dejeu wrote:
+> backlight: Add support for Arctic Sand LED backlight driver chips
+> This driver provides support for the Arctic Sand arc2c0608 chip,
+>     and provides a framework to support future devices.
+> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
 
-The reduced schematic that i have name the pins as AUD_PWM0 and
-AUD_PWM1, which says nothing about the actual pins. Do you have a better
-document?
+Please could you also submit a patch to add arc to
+./Documentation/devicetree/bindings/vendor-prefixes.txt.
 
-In the firmware dt-blob.dts [1] the Raspberry Pi 3 uses pin 40 and 41.
+checkpatch.pl should have been asking you to do since v1 but only if you 
+test the patch series against a clean kernel (tools such as aiaiai can 
+help with this).
 
-[1] - https://github.com/raspberrypi/firmware/blob/master/extra/dt-blob.dts
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However, once that is attended to:
+
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+
+
+Daniel.
