@@ -1,68 +1,122 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 3/4] sound: arm: Add build system for
- bcm2835-analog-audio driver.
-Date: Tue, 14 Mar 2017 10:13:06 +0100
-Message-ID: <5a437138-bf9c-1e48-9fa6-82fac9b6e54c@i2se.com>
-References: <201703141503.gyuLu0Kr%fengguang.wu@intel.com>
- <1489481899.656.5.camel@crowfest.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH V4] dts/imx6q-b850v3: Use megachips-stdpxxxx-ge-b850v3-fw bridges (LVDS-DP++)
+Date: Tue, 14 Mar 2017 10:23:02 +0100
+Message-ID: <20170314092302.7317-1-peter.senna@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1489481899.656.5.camel-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, tred
 List-Id: devicetree@vger.kernel.org
 
-Am 14.03.2017 um 09:58 schrieb Michael Zoran:
-> On Tue, 2017-03-14 at 15:15 +0800, kbuild test robot wrote:
->> Hi Michael,
->>
->> [auto build test ERROR on sound/for-next]
->> [also build test ERROR on v4.11-rc2 next-20170310]
->> [if your patch is applied to the wrong git tree, please drop us a
->> note to help improve the system]
->>
->> url:    https://github.com/0day-ci/linux/commits/Michael-Zoran/dt-bin
->> dings-Document-the-dmas-and-dma-names-properties-for-bcm2835-analog-
->> audio/20170314-091035
->> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.g
->> it for-next
->> config: arm64-allmodconfig (attached as .config)
->> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
->> reproduce:
->>         wget https://raw.githubusercontent.com/01org/lkp-tests/master
->> /sbin/make.cross -O ~/bin/make.cross
->>         chmod +x ~/bin/make.cross
->>         # save the attached .config to linux build tree
->>         make.cross ARCH=arm64 
->>
->> All errors (new ones prefixed by >>):
->>
->>    /tmp/ccNU8kQ5.s: Assembler messages:
->>>> /tmp/ccNU8kQ5.s:1411: Error: unknown mnemonic `ldmia' -- `ldmia
->>>> x26,{r0,r1,r2,r3}'
->>>> /tmp/ccNU8kQ5.s:1412: Error: unknown mnemonic `stmia' -- `stmia
->>>> x19!,{r0,r1,r2,r3}'
->>>> /tmp/ccNU8kQ5.s:1618: Error: unknown mnemonic `ldmia' -- `ldmia
->>>> x19!,{r0,r1,r2,r3}'
->>>> /tmp/ccNU8kQ5.s:1619: Error: unknown mnemonic `stmia' -- `stmia
->>>> x26,{r0,r1,r2,r3}'
->> ---
->> 0-DAY kernel test infrastructure                Open Source
->> Technology Center
->> https://lists.01.org/pipermail/kbuild-all                   Intel
->> Corporation
-> I'm a bit confused here.  Why I'm I seeing assembly instruction build
-> errors when the mail points to a DT binding document change?
->
->
+Configures the megachips-stdpxxxx-ge-b850v3-fw bridges on the GE
+B850v3 dts file.
 
-The email subject doesn't refer to a DT binding.
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+Subject was [PATCH V4 4/4] ...
+But patches 1, 2, and 3 are already upstream and were not resent.
 
-I assume it's your change to enable ARM64 for all SND_ARM drivers, which
-aren't aware of that.
+Changes from V3:
+ - Newline fixes
+ - Removed 'status = "okay";' from '&mux2_i2c2'
+ - Sorted device nodes in order of unit address
+
+Unchanged since V1.
+ arch/arm/boot/dts/imx6q-b850v3.dts | 66 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6q-b850v3.dts b/arch/arm/boot/dts/imx6q-b850v3.dts
+index d78514c..ef67b47 100644
+--- a/arch/arm/boot/dts/imx6q-b850v3.dts
++++ b/arch/arm/boot/dts/imx6q-b850v3.dts
+@@ -72,6 +72,14 @@
+ 		fsl,data-mapping = "spwg";
+ 		fsl,data-width = <24>;
+ 		status = "okay";
++
++		port@4 {
++			reg = <4>;
++
++			lvds0_out: endpoint {
++				remote-endpoint = <&stdp4028_in>;
++			};
++		};
+ 	};
+ };
+ 
+@@ -142,3 +150,61 @@
+ 		reg = <0x4a>;
+ 	};
+ };
++
++&mux2_i2c2 {
++	clock-frequency = <100000>;
++
++	stdp2690@72 {
++		compatible = "megachips,stdp2690-ge-b850v3-fw";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x72>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				stdp2690_in: endpoint {
++					remote-endpoint = <&stdp4028_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				stdp2690_out: endpoint {
++					/* Connector for external display */
++				};
++			};
++		};
++	};
++
++	stdp4028@73 {
++		compatible = "megachips,stdp4028-ge-b850v3-fw";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x73>;
++		interrupt-parent = <&gpio2>;
++		interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				stdp4028_in: endpoint {
++					remote-endpoint = <&lvds0_out>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++				stdp4028_out: endpoint {
++					remote-endpoint = <&stdp2690_in>;
++				};
++			};
++		};
++	};
++};
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
