@@ -1,55 +1,102 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and endpoints
-Date: Tue, 14 Mar 2017 21:43:55 +0100
-Message-ID: <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ@mail.gmail.com>
-References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
- <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
- <1629581.fh46rNHz4U@aspire.rjw.lan> <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
- <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com> <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
- <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com>
+From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Specify serial console parameters
+Date: Tue, 14 Mar 2017 13:44:36 -0700
+Message-ID: <9f5a0381-aae6-9ac2-56f3-9eb78ecfd819@broadcom.com>
+References: <20170314075830.2247-1-zajec5@gmail.com>
+ <20170314122650.GV15842@lunn.ch>
+ <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
+ <CAC3K-4qQzX37BLD2N-N-vDwSk=H_rF5PzoMM+GM=Z935QFVnXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cf2ab8be-a351-f1ea-28a9-f5cca57061cd-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <CAC3K-4qQzX37BLD2N-N-vDwSk=H_rF5PzoMM+GM=Z935QFVnXw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
-<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> Hi Rafael,
->
-> Rafael J. Wysocki wrote:
->>
->> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
->> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
->>>
->>> On 03/14/17 10:08, Sakari Ailus wrote:
->>>>
->>>> How about this instead:
->>>>
->>>> All port nodes are located under the device's "_DSD" node in the
->>>> hierarchical data extension tree. The property extension related to
->>>> each port node must contain the key "port" and an integer value which
->>>> is the number of the port.
->>>
->>>
->>> So with matching strings instead of indices, this will change, too...
->>
->>
->> It doesn't have to AFAICS, but the number is just redundant IMO.  You
->> only need a boolean property saying "this is a port", so you know that
->> you should expect a list of endpoints in that object.
->
->
-> No, it's not redundant. It's the number of the physical port in the device
-> --- this is how the driver gets to know where the connection has been made.
 
-OK, but what exactly do you mean by "physical port"?
 
-Thanks,
-Rafael
+On 17-03-14 07:53 AM, Jon Mason wrote:
+> On Tue, Mar 14, 2017 at 8:32 AM, Rafał Miłecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On 03/14/2017 01:26 PM, Andrew Lunn wrote:
+>>>
+>>> On Tue, Mar 14, 2017 at 08:58:29AM +0100, Rafa?? Mi??ecki wrote:
+>>>>
+>>>> From: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>
+>>>> This adds baud rate, parity & number of data bits. It's required to get
+>>>> serial working correctly.
+>>>>
+>>>> Signed-off-by: Rafa?? Mi??ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/bcm5301x.dtsi | 6 +++++-
+>>>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> b/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> index 8fd1ef9f0c2d..468107166a6f 100644
+>>>> --- a/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> +++ b/arch/arm/boot/dts/bcm5301x.dtsi
+>>>> @@ -18,8 +18,12 @@
+>>>>  / {
+>>>>         interrupt-parent = <&gic>;
+>>>>
+>>>> +       aliases {
+>>>> +               serial0 = &uart0;
+>>>> +       };
+>>>> +
+>>>>         chosen {
+>>>> -               stdout-path = &uart0;
+>>>> +               stdout-path = "serial0:115200n8";
+>>>>         };
+>>>
+>>>
+>>> Hi Rafal
+>>>
+>>> The alias is fine. But putting the stdout-path here is unusual. Which
+>>> serial port is used for console is board specific, where as
+>>> bcm5301x.dtsi is very generic, it describes the SoC, not a board.  If
+>>> you look at other .dtsi files, those that specify stdout-path contain
+>>> properties which are common to a range of similar boards.
+>>
+>>
+>> So far I've never seen any board using other uart. Also uart0 is disabled by
+>> default and we enable it per board family (BCM4708 / BCM47081 / BCM4709 /
+>> BCM47094). I think it's just more practical to have simple DTS that covers
+>> 99,9% boards by default and handled that margin of devices separately.
+>>
+>> We already got a lot of duplicated code for enabling uart0, see:
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7b790d3b2943bf8e7e7bafe184008bd6451fe0bd
+>>
+>> Jon Mason from Broadcom who knows this hardware and designs very well
+>> confirmed
+>> it's a sane/safe assumption.
+>
+>
+> It should work for all the boards.  The question is whether it should
+> be in the DTSI or DTS file.  This code replicates code I have in
+> arch/arm/boot/dts/bcm953012k.dts
+> So, either it should be removed or we should change all of the other
+> DTS files to have this entry.  My understanding is that the latter
+> approach is the acceptable one (which matches Andrew's comment), but I
+> can make the other changes if necessary.
+dtsi file is fine to handle 99% of the use cases and not duplicate the 
+entry.  This is what we do for newer SoCs (such as Cygnus) where the 
+console will always be a particular UART (as the BootROM already uses a 
+certain UART the boards are designed to use that UART as the console 
+always).  For bcm953012 a similar situation exists as a common 
+bootloader is used across boards.  So, the uart used as the terminal 
+will always be the same.
+
+I don't see a good reason for duplicating the code in every dts file.
+
+Acked-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>
+> Thanks,
+> Jon
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
