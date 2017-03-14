@@ -1,351 +1,249 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v2 08/11] iio: adc: sun4i-gpadc-iio: add
- support for A33 thermal sensor
-Date: Tue, 14 Mar 2017 13:18:37 +0800
-Message-ID: <1061031489468717@web20o.yandex.ru>
-References: <20170310103921.19469-1-quentin.schulz@free-electrons.com>
-	 <20170310103921.19469-9-quentin.schulz@free-electrons.com> <c70640c7-7dd9-dc7c-b751-430b2ad59245@kernel.org>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBMP2TXDAKGQEYKCO4LQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <c70640c7-7dd9-dc7c-b751-430b2ad59245-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "wens-jdAy2FN1RRM@public.gmane.org" <wens-jdAy2FN1RRM@public.gmane.org>, "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "knaack.h-Mmb7MZpHnFY@public.gmane.org" <knaack.h-Mmb7MZpHnFY@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org" <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <stefan.mavrodiev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH] cpufreq: dbx500: Manage cooling device from cpufreq driver
+Date: Tue, 14 Mar 2017 10:48:31 +0530
+Message-ID: <99cc71f22d0470cb164b0fa05e07a863265bf922.1489468688.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The best place to register the CPU cooling device is from the cpufreq
+driver as we would know if all the resources are already available or
+not. That's what is done for the cpufreq-dt.c driver as well.
 
+The cpu-cooling driver for dbx500 platform was just (un)registering
+with the thermal framework and that can be handled easily by the cpufreq
+driver as well and in proper sequence as well.
 
-14.03.2017, 05:08, "Jonathan Cameron" <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On 10/03/17 10:39, Quentin Schulz wrote:
->> =C2=A0This adds support for the Allwinner A33 thermal sensor.
->>
->> =C2=A0Unlike the A10, A13 and A31, the Allwinner A33 only has one channe=
-l
->> =C2=A0which is dedicated to the thermal sensor. Moreover, its thermal se=
-nsor
->> =C2=A0does not generate interruptions, thus we only need to directly rea=
-d the
->> =C2=A0register storing the temperature value.
->>
->> =C2=A0The MFD used by the A10, A13 and A31, was created to avoid breakin=
-g the
->> =C2=A0DT binding, but since the nodes for the ADC weren't there for the =
-A33,
->> =C2=A0it is not needed.
->>
->> =C2=A0Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Talk me through why it makes sense to do this rather than simply spin out
-> a really simple thermal driver for the A33?
+Get rid of the cooling driver and its its users and manage everything
+from the cpufreq driver instead.
 
-According to him the A33 thermal sensor is a simplified version of the GPAD=
-C.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+Only compile tested.
 
-I have already did a simple thermal driver ~8 months ago, but is rejected f=
-or
-this reason.
+ arch/arm/boot/dts/ste-dbx5x0.dtsi        |   5 --
+ drivers/cpufreq/dbx500-cpufreq.c         |  20 ++++++
+ drivers/thermal/Kconfig                  |  12 ----
+ drivers/thermal/Makefile                 |   1 -
+ drivers/thermal/db8500_cpufreq_cooling.c | 105 -------------------------------
+ 5 files changed, 20 insertions(+), 123 deletions(-)
+ delete mode 100644 drivers/thermal/db8500_cpufreq_cooling.c
 
->
-> I'm not against what you have here, but don't feel it has been fully argu=
-ed.
->
-> Jonathan
->> =C2=A0---
->>
->> =C2=A0v2:
->> =C2=A0=C2=A0=C2=A0- removed added comments in Kconfig,
->> =C2=A0=C2=A0=C2=A0- simplified Kconfig depends on condition,
->> =C2=A0=C2=A0=C2=A0- removed THERMAL_OF requirement for sun8i,
->> =C2=A0=C2=A0=C2=A0- renamed sun8i_gpadc_channels to sun8i_a33_gpadc_chan=
-nels,
->> =C2=A0=C2=A0=C2=A0- renamed use_dt boolean in no_irq as it reflects bett=
-er why we need it,
->> =C2=A0=C2=A0=C2=A0- removed spurious/unneeded modifications done in v1,
->>
->> =C2=A0=C2=A0drivers/iio/adc/Kconfig | 2 +-
->> =C2=A0=C2=A0drivers/iio/adc/sun4i-gpadc-iio.c | 100 ++++++++++++++++++++=
-++++++++++++++++--
->> =C2=A0=C2=A0include/linux/mfd/sun4i-gpadc.h | 4 ++
->> =C2=A0=C2=A03 files changed, 102 insertions(+), 4 deletions(-)
->>
->> =C2=A0diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->> =C2=A0index 9f8b4b1..8c8ead6 100644
->> =C2=A0--- a/drivers/iio/adc/Kconfig
->> =C2=A0+++ b/drivers/iio/adc/Kconfig
->> =C2=A0@@ -562,7 +562,7 @@ config STX104
->> =C2=A0=C2=A0config SUN4I_GPADC
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tristate "Su=
-pport for the Allwinner SoCs GPADC"
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0depends on I=
-IO
->> =C2=A0- depends on MFD_SUN4I_GPADC
->> =C2=A0+ depends on MFD_SUN4I_GPADC || MACH_SUN8I
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0help
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-Say yes here to build support for Allwinner (A10, A13 and A31) SoCs
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-GPADC. This ADC provides 4 channels which can be used as an ADC or as
->> =C2=A0diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/s=
-un4i-gpadc-iio.c
->> =C2=A0index 7cb997a..70684cd 100644
->> =C2=A0--- a/drivers/iio/adc/sun4i-gpadc-iio.c
->> =C2=A0+++ b/drivers/iio/adc/sun4i-gpadc-iio.c
->> =C2=A0@@ -85,6 +85,12 @@ static const struct gpadc_data sun6i_gpadc_data=
- =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.adc_chan_ma=
-sk =3D SUN6I_GPADC_CTRL1_ADC_CHAN_MASK,
->> =C2=A0=C2=A0};
->>
->> =C2=A0+static const struct gpadc_data sun8i_a33_gpadc_data =3D {
->> =C2=A0+ .temp_offset =3D -1662,
->> =C2=A0+ .temp_scale =3D 162,
->> =C2=A0+ .tp_mode_en =3D SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
->> =C2=A0+};
->> =C2=A0+
->> =C2=A0=C2=A0struct sun4i_gpadc_iio {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct iio_d=
-ev *indio_dev;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct compl=
-etion completion;
->> =C2=A0@@ -96,6 +102,7 @@ struct sun4i_gpadc_iio {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned int=
- temp_data_irq;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0atomic_t ign=
-ore_temp_data_irq;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0const struct=
- gpadc_data *data;
->> =C2=A0+ bool no_irq;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* prevents =
-concurrent reads of temperature and ADC */
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct mutex=
- mutex;
->> =C2=A0=C2=A0};
->> =C2=A0@@ -138,6 +145,23 @@ static const struct iio_chan_spec sun4i_gpadc=
-_channels_no_temp[] =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0SUN4I_GPADC_=
-ADC_CHANNEL(3, "adc_chan3"),
->> =C2=A0=C2=A0};
->>
->> =C2=A0+static const struct iio_chan_spec sun8i_a33_gpadc_channels[] =3D =
-{
->> =C2=A0+ {
->> =C2=A0+ .type =3D IIO_TEMP,
->> =C2=A0+ .info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
->> =C2=A0+ BIT(IIO_CHAN_INFO_SCALE) |
->> =C2=A0+ BIT(IIO_CHAN_INFO_OFFSET),
->> =C2=A0+ .datasheet_name =3D "temp_adc",
->> =C2=A0+ },
->> =C2=A0+};
->> =C2=A0+
->> =C2=A0+static const struct regmap_config sun4i_gpadc_regmap_config =3D {
->> =C2=A0+ .reg_bits =3D 32,
->> =C2=A0+ .val_bits =3D 32,
->> =C2=A0+ .reg_stride =3D 4,
->> =C2=A0+ .fast_io =3D true,
->> =C2=A0+};
->> =C2=A0+
->> =C2=A0=C2=A0static int sun4i_prepare_for_irq(struct iio_dev *indio_dev, =
-int channel,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned int=
- irq)
->> =C2=A0=C2=A0{
->> =C2=A0@@ -247,6 +271,17 @@ static int sun4i_gpadc_temp_read(struct iio_d=
-ev *indio_dev, int *val)
->> =C2=A0=C2=A0{
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct sun4i=
-_gpadc_iio *info =3D iio_priv(indio_dev);
->>
->> =C2=A0+ if (info->no_irq) {
->> =C2=A0+ pm_runtime_get_sync(indio_dev->dev.parent);
->> =C2=A0+
->> =C2=A0+ regmap_read(info->regmap, SUN4I_GPADC_TEMP_DATA, val);
->> =C2=A0+
->> =C2=A0+ pm_runtime_mark_last_busy(indio_dev->dev.parent);
->> =C2=A0+ pm_runtime_put_autosuspend(indio_dev->dev.parent);
->> =C2=A0+
->> =C2=A0+ return 0;
->> =C2=A0+ }
->> =C2=A0+
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return sun4i=
-_gpadc_read(indio_dev, 0, val, info->temp_data_irq);
->> =C2=A0=C2=A0}
->>
->> =C2=A0@@ -454,6 +489,58 @@ static int sun4i_irq_init(struct platform_dev=
-ice *pdev, const char *name,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
->> =C2=A0=C2=A0}
->>
->> =C2=A0+static const struct of_device_id sun4i_gpadc_of_id[] =3D {
->> =C2=A0+ {
->> =C2=A0+ .compatible =3D "allwinner,sun8i-a33-gpadc-iio",
->> =C2=A0+ .data =3D &sun8i_a33_gpadc_data,
->> =C2=A0+ },
->> =C2=A0+ { /* sentinel */ }
->> =C2=A0+};
->> =C2=A0+
->> =C2=A0+static int sun4i_gpadc_probe_dt(struct platform_device *pdev,
->> =C2=A0+ struct iio_dev *indio_dev)
->> =C2=A0+{
->> =C2=A0+ struct sun4i_gpadc_iio *info =3D iio_priv(indio_dev);
->> =C2=A0+ const struct of_device_id *of_dev;
->> =C2=A0+ struct thermal_zone_device *tzd;
->> =C2=A0+ struct resource *mem;
->> =C2=A0+ void __iomem *base;
->> =C2=A0+ int ret;
->> =C2=A0+
->> =C2=A0+ of_dev =3D of_match_device(sun4i_gpadc_of_id, &pdev->dev);
->> =C2=A0+ if (!of_dev)
->> =C2=A0+ return -ENODEV;
->> =C2=A0+
->> =C2=A0+ info->no_irq =3D true;
->> =C2=A0+ info->data =3D (struct gpadc_data *)of_dev->data;
->> =C2=A0+ indio_dev->num_channels =3D ARRAY_SIZE(sun8i_a33_gpadc_channels)=
-;
->> =C2=A0+ indio_dev->channels =3D sun8i_a33_gpadc_channels;
->> =C2=A0+
->> =C2=A0+ mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> =C2=A0+ base =3D devm_ioremap_resource(&pdev->dev, mem);
->> =C2=A0+ if (IS_ERR(base))
->> =C2=A0+ return PTR_ERR(base);
->> =C2=A0+
->> =C2=A0+ info->regmap =3D devm_regmap_init_mmio(&pdev->dev, base,
->> =C2=A0+ &sun4i_gpadc_regmap_config);
->> =C2=A0+ if (IS_ERR(info->regmap)) {
->> =C2=A0+ ret =3D PTR_ERR(info->regmap);
->> =C2=A0+ dev_err(&pdev->dev, "failed to init regmap: %d\n", ret);
->> =C2=A0+ return ret;
->> =C2=A0+ }
->> =C2=A0+
->> =C2=A0+ if (!IS_ENABLED(THERMAL_OF))
->> =C2=A0+ return 0;
->> =C2=A0+
->> =C2=A0+ tzd =3D devm_thermal_zone_of_sensor_register(&pdev->dev, 0, info=
-,
->> =C2=A0+ &sun4i_ts_tz_ops);
->> =C2=A0+ if (IS_ERR(tzd))
->> =C2=A0+ dev_err(&pdev->dev, "could not register thermal sensor: %ld\n",
->> =C2=A0+ PTR_ERR(tzd));
->> =C2=A0+
->> =C2=A0+ return PTR_ERR_OR_ZERO(tzd);
->> =C2=A0+}
->> =C2=A0+
->> =C2=A0=C2=A0static int sun4i_gpadc_probe_mfd(struct platform_device *pde=
-v,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct iio_d=
-ev *indio_dev)
->> =C2=A0=C2=A0{
->> =C2=A0@@ -462,6 +549,7 @@ static int sun4i_gpadc_probe_mfd(struct platfo=
-rm_device *pdev,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0dev_get_drvdata(pdev->dev.parent);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret;
->>
->> =C2=A0+ info->no_irq =3D false;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0info->regmap=
- =3D sun4i_gpadc_dev->regmap;
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0indio_dev->n=
-um_channels =3D ARRAY_SIZE(sun4i_gpadc_channels);
->> =C2=A0@@ -561,7 +649,11 @@ static int sun4i_gpadc_probe(struct platform_=
-device *pdev)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0indio_dev->i=
-nfo =3D &sun4i_gpadc_iio_info;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0indio_dev->m=
-odes =3D INDIO_DIRECT_MODE;
->>
->> =C2=A0- ret =3D sun4i_gpadc_probe_mfd(pdev, indio_dev);
->> =C2=A0+ if (pdev->dev.of_node)
->> =C2=A0+ ret =3D sun4i_gpadc_probe_dt(pdev, indio_dev);
->> =C2=A0+ else
->> =C2=A0+ ret =3D sun4i_gpadc_probe_mfd(pdev, indio_dev);
->> =C2=A0+
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ret;
->>
->> =C2=A0@@ -580,7 +672,7 @@ static int sun4i_gpadc_probe(struct platform_d=
-evice *pdev)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
->>
->> =C2=A0=C2=A0err_map:
->> =C2=A0- if (IS_ENABLED(CONFIG_THERMAL_OF))
->> =C2=A0+ if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iio_map_array_unregister(indio_dev);
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pm_runtime_p=
-ut(&pdev->dev);
->> =C2=A0@@ -592,10 +684,11 @@ static int sun4i_gpadc_probe(struct platform=
-_device *pdev)
->> =C2=A0=C2=A0static int sun4i_gpadc_remove(struct platform_device *pdev)
->> =C2=A0=C2=A0{
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct iio_d=
-ev *indio_dev =3D platform_get_drvdata(pdev);
->> =C2=A0+ struct sun4i_gpadc_iio *info =3D iio_priv(indio_dev);
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pm_runtime_p=
-ut(&pdev->dev);
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pm_runtime_d=
-isable(&pdev->dev);
->> =C2=A0- if (IS_ENABLED(CONFIG_THERMAL_OF))
->> =C2=A0+ if (!info->no_irq && IS_ENABLED(CONFIG_THERMAL_OF))
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0iio_map_array_unregister(indio_dev);
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
->> =C2=A0@@ -611,6 +704,7 @@ static const struct platform_device_id sun4i_g=
-padc_id[] =3D {
->> =C2=A0=C2=A0static struct platform_driver sun4i_gpadc_driver =3D {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.driver =3D =
-{
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.name =3D "sun4i-gpadc-iio",
->> =C2=A0+ .of_match_table =3D sun4i_gpadc_of_id,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.pm =3D &sun4i_gpadc_pm_ops,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0},
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.id_table =
-=3D sun4i_gpadc_id,
->> =C2=A0diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/s=
-un4i-gpadc.h
->> =C2=A0index 509e736..139872c 100644
->> =C2=A0--- a/include/linux/mfd/sun4i-gpadc.h
->> =C2=A0+++ b/include/linux/mfd/sun4i-gpadc.h
->> =C2=A0@@ -38,6 +38,10 @@
->> =C2=A0=C2=A0#define SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(x) (GENMASK(3, 0) =
-& BIT(x))
->> =C2=A0=C2=A0#define SUN6I_GPADC_CTRL1_ADC_CHAN_MASK GENMASK(3, 0)
->>
->> =C2=A0+/* TP_CTRL1 bits for sun8i SoCs */
->> =C2=A0+#define SUN8I_GPADC_CTRL1_CHOP_TEMP_EN BIT(8)
->> =C2=A0+#define SUN8I_GPADC_CTRL1_GPADC_CALI_EN BIT(7)
->> =C2=A0+
->> =C2=A0=C2=A0#define SUN4I_GPADC_CTRL2 0x08
->>
->> =C2=A0=C2=A0#define SUN4I_GPADC_CTRL2_TP_SENSITIVE_ADJUST(x) ((GENMASK(3=
-, 0) & (x)) << 28)
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 82d8c4771293..9eea52013914 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -1170,11 +1170,6 @@
+ 			status = "disabled";
+ 		};
+ 
+-		cpufreq-cooling {
+-			compatible = "stericsson,db8500-cpufreq-cooling";
+-			status = "disabled";
+-		};
+-
+ 		mcde@a0350000 {
+ 			compatible = "stericsson,mcde";
+ 			reg = <0xa0350000 0x1000>, /* MCDE */
+diff --git a/drivers/cpufreq/dbx500-cpufreq.c b/drivers/cpufreq/dbx500-cpufreq.c
+index 5c3ec1dd4921..3575b82210ba 100644
+--- a/drivers/cpufreq/dbx500-cpufreq.c
++++ b/drivers/cpufreq/dbx500-cpufreq.c
+@@ -11,6 +11,7 @@
+ #include <linux/module.h>
+ #include <linux/kernel.h>
+ #include <linux/cpufreq.h>
++#include <linux/cpu_cooling.h>
+ #include <linux/delay.h>
+ #include <linux/slab.h>
+ #include <linux/platform_device.h>
+@@ -18,6 +19,7 @@
+ 
+ static struct cpufreq_frequency_table *freq_table;
+ static struct clk *armss_clk;
++static struct thermal_cooling_device *cdev;
+ 
+ static int dbx500_cpufreq_target(struct cpufreq_policy *policy,
+ 				unsigned int index)
+@@ -32,6 +34,22 @@ static int dbx500_cpufreq_init(struct cpufreq_policy *policy)
+ 	return cpufreq_generic_init(policy, freq_table, 20 * 1000);
+ }
+ 
++static int dbx500_cpufreq_exit(struct cpufreq_policy *policy)
++{
++	if (!IS_ERR(cdev))
++		cpufreq_cooling_unregister(cdev);
++	return 0;
++}
++
++static void dbx500_cpufreq_ready(struct cpufreq_policy *policy)
++{
++	cdev = cpufreq_cooling_register(policy->cpus);
++	if (IS_ERR(cdev))
++		pr_err("Failed to register cooling device %ld\n", PTR_ERR(cdev));
++	else
++		pr_info("Cooling device registered: %s\n", cdev->type);
++}
++
+ static struct cpufreq_driver dbx500_cpufreq_driver = {
+ 	.flags  = CPUFREQ_STICKY | CPUFREQ_CONST_LOOPS |
+ 			CPUFREQ_NEED_INITIAL_FREQ_CHECK,
+@@ -39,6 +57,8 @@ static struct cpufreq_driver dbx500_cpufreq_driver = {
+ 	.target_index = dbx500_cpufreq_target,
+ 	.get    = cpufreq_generic_get,
+ 	.init   = dbx500_cpufreq_init,
++	.exit  = dbx500_cpufreq_exit,
++	.ready  = dbx500_cpufreq_ready,
+ 	.name   = "DBX500",
+ 	.attr   = cpufreq_generic_attr,
+ };
+diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+index 776b34396144..0a16cf4bed39 100644
+--- a/drivers/thermal/Kconfig
++++ b/drivers/thermal/Kconfig
+@@ -291,18 +291,6 @@ config ARMADA_THERMAL
+ 	  Enable this option if you want to have support for thermal management
+ 	  controller present in Armada 370 and Armada XP SoC.
+ 
+-config DB8500_CPUFREQ_COOLING
+-	tristate "DB8500 cpufreq cooling"
+-	depends on ARCH_U8500 || COMPILE_TEST
+-	depends on HAS_IOMEM
+-	depends on CPU_THERMAL
+-	default y
+-	help
+-	  Adds DB8500 cpufreq cooling devices, and these cooling devices can be
+-	  bound to thermal zone trip points. When a trip point reached, the
+-	  bound cpufreq cooling device turns active to set CPU frequency low to
+-	  cool down the CPU.
+-
+ config INTEL_POWERCLAMP
+ 	tristate "Intel PowerClamp idle injection driver"
+ 	depends on THERMAL
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index 7adae2029355..c2372f10dae5 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -41,7 +41,6 @@ obj-$(CONFIG_TANGO_THERMAL)	+= tango_thermal.o
+ obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
+ obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
+ obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
+-obj-$(CONFIG_DB8500_CPUFREQ_COOLING)	+= db8500_cpufreq_cooling.o
+ obj-$(CONFIG_INTEL_POWERCLAMP)	+= intel_powerclamp.o
+ obj-$(CONFIG_X86_PKG_TEMP_THERMAL)	+= x86_pkg_temp_thermal.o
+ obj-$(CONFIG_INTEL_SOC_DTS_IOSF_CORE)	+= intel_soc_dts_iosf.o
+diff --git a/drivers/thermal/db8500_cpufreq_cooling.c b/drivers/thermal/db8500_cpufreq_cooling.c
+deleted file mode 100644
+index e58bd0b658b5..000000000000
+--- a/drivers/thermal/db8500_cpufreq_cooling.c
++++ /dev/null
+@@ -1,105 +0,0 @@
+-/*
+- * db8500_cpufreq_cooling.c - DB8500 cpufreq works as cooling device.
+- *
+- * Copyright (C) 2012 ST-Ericsson
+- * Copyright (C) 2012 Linaro Ltd.
+- *
+- * Author: Hongbo Zhang <hongbo.zhang@linaro.com>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-
+-#include <linux/cpu_cooling.h>
+-#include <linux/err.h>
+-#include <linux/module.h>
+-#include <linux/of.h>
+-#include <linux/platform_device.h>
+-#include <linux/slab.h>
+-
+-static int db8500_cpufreq_cooling_probe(struct platform_device *pdev)
+-{
+-	struct thermal_cooling_device *cdev;
+-
+-	cdev = cpufreq_cooling_register(cpu_present_mask);
+-	if (IS_ERR(cdev)) {
+-		int ret = PTR_ERR(cdev);
+-
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&pdev->dev,
+-				"Failed to register cooling device %d\n",
+-				ret);
+-				
+-		return ret;
+-	}
+-
+-	platform_set_drvdata(pdev, cdev);
+-
+-	dev_info(&pdev->dev, "Cooling device registered: %s\n",	cdev->type);
+-
+-	return 0;
+-}
+-
+-static int db8500_cpufreq_cooling_remove(struct platform_device *pdev)
+-{
+-	struct thermal_cooling_device *cdev = platform_get_drvdata(pdev);
+-
+-	cpufreq_cooling_unregister(cdev);
+-
+-	return 0;
+-}
+-
+-static int db8500_cpufreq_cooling_suspend(struct platform_device *pdev,
+-		pm_message_t state)
+-{
+-	return -ENOSYS;
+-}
+-
+-static int db8500_cpufreq_cooling_resume(struct platform_device *pdev)
+-{
+-	return -ENOSYS;
+-}
+-
+-#ifdef CONFIG_OF
+-static const struct of_device_id db8500_cpufreq_cooling_match[] = {
+-	{ .compatible = "stericsson,db8500-cpufreq-cooling" },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, db8500_cpufreq_cooling_match);
+-#endif
+-
+-static struct platform_driver db8500_cpufreq_cooling_driver = {
+-	.driver = {
+-		.name = "db8500-cpufreq-cooling",
+-		.of_match_table = of_match_ptr(db8500_cpufreq_cooling_match),
+-	},
+-	.probe = db8500_cpufreq_cooling_probe,
+-	.suspend = db8500_cpufreq_cooling_suspend,
+-	.resume = db8500_cpufreq_cooling_resume,
+-	.remove = db8500_cpufreq_cooling_remove,
+-};
+-
+-static int __init db8500_cpufreq_cooling_init(void)
+-{
+-	return platform_driver_register(&db8500_cpufreq_cooling_driver);
+-}
+-
+-static void __exit db8500_cpufreq_cooling_exit(void)
+-{
+-	platform_driver_unregister(&db8500_cpufreq_cooling_driver);
+-}
+-
+-/* Should be later than db8500_cpufreq_register */
+-late_initcall(db8500_cpufreq_cooling_init);
+-module_exit(db8500_cpufreq_cooling_exit);
+-
+-MODULE_AUTHOR("Hongbo Zhang <hongbo.zhang@stericsson.com>");
+-MODULE_DESCRIPTION("DB8500 cpufreq cooling driver");
+-MODULE_LICENSE("GPL");
+-- 
+2.7.1.410.g6faf27b
