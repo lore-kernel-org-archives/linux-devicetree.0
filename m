@@ -1,63 +1,50 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: BCM5301X: Specify serial console parameters
-Date: Tue, 14 Mar 2017 13:37:13 +0100
-Message-ID: <aab82e4c-803e-34d7-5455-ba905b91bde4@gmail.com>
-References: <20170314075830.2247-1-zajec5@gmail.com>
- <20170314122650.GV15842@lunn.ch>
- <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
+From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 0/2] ARCH_VULCAN to ARCH_THUNDER2 transition
+Date: Tue, 14 Mar 2017 12:47:12 +0000
+Message-ID: <1489495634-2920-1-git-send-email-jnair@caviumnetworks.com>
+References: <1489313015-4783-1-git-send-email-jnair@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3345fb38-fbea-141e-6ad2-a3341e2c31fe@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Rafa?? Mi??ecki <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1489313015-4783-1-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMTQvMjAxNyAwMTozMiBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IE9uIDAzLzE0
-LzIwMTcgMDE6MjYgUE0sIEFuZHJldyBMdW5uIHdyb3RlOgo+PiBPbiBUdWUsIE1hciAxNCwgMjAx
-NyBhdCAwODo1ODoyOUFNICswMTAwLCBSYWZhPz8gTWk/P2Vja2kgd3JvdGU6Cj4+PiBGcm9tOiBS
-YWZhPz8gTWk/P2Vja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+Pgo+Pj4gVGhpcyBhZGRzIGJhdWQg
-cmF0ZSwgcGFyaXR5ICYgbnVtYmVyIG9mIGRhdGEgYml0cy4gSXQncyByZXF1aXJlZCB0byBnZXQK
-Pj4+IHNlcmlhbCB3b3JraW5nIGNvcnJlY3RseS4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBSYWZh
-Pz8gTWk/P2Vja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+PiAtLS0KPj4+ICBhcmNoL2FybS9ib290
-L2R0cy9iY201MzAxeC5kdHNpIHwgNiArKysrKy0KPj4+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNl
-cnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2JjbTUzMDF4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9iY201MzAxeC5kdHNpCj4+
-PiBpbmRleCA4ZmQxZWY5ZjBjMmQuLjQ2ODEwNzE2NmE2ZiAxMDA2NDQKPj4+IC0tLSBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2JjbTUzMDF4LmR0c2kKPj4+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2Jj
-bTUzMDF4LmR0c2kKPj4+IEBAIC0xOCw4ICsxOCwxMiBAQAo+Pj4gIC8gewo+Pj4gICAgICBpbnRl
-cnJ1cHQtcGFyZW50ID0gPCZnaWM+Owo+Pj4KPj4+ICsgICAgYWxpYXNlcyB7Cj4+PiArICAgICAg
-ICBzZXJpYWwwID0gJnVhcnQwOwo+Pj4gKyAgICB9Owo+Pj4gKwo+Pj4gICAgICBjaG9zZW4gewo+
-Pj4gLSAgICAgICAgc3Rkb3V0LXBhdGggPSAmdWFydDA7Cj4+PiArICAgICAgICBzdGRvdXQtcGF0
-aCA9ICJzZXJpYWwwOjExNTIwMG44IjsKPj4+ICAgICAgfTsKPj4KPj4gSGkgUmFmYWwKPj4KPj4g
-VGhlIGFsaWFzIGlzIGZpbmUuIEJ1dCBwdXR0aW5nIHRoZSBzdGRvdXQtcGF0aCBoZXJlIGlzIHVu
-dXN1YWwuIFdoaWNoCj4+IHNlcmlhbCBwb3J0IGlzIHVzZWQgZm9yIGNvbnNvbGUgaXMgYm9hcmQg
-c3BlY2lmaWMsIHdoZXJlIGFzCj4+IGJjbTUzMDF4LmR0c2kgaXMgdmVyeSBnZW5lcmljLCBpdCBk
-ZXNjcmliZXMgdGhlIFNvQywgbm90IGEgYm9hcmQuICBJZgo+PiB5b3UgbG9vayBhdCBvdGhlciAu
-ZHRzaSBmaWxlcywgdGhvc2UgdGhhdCBzcGVjaWZ5IHN0ZG91dC1wYXRoIGNvbnRhaW4KPj4gcHJv
-cGVydGllcyB3aGljaCBhcmUgY29tbW9uIHRvIGEgcmFuZ2Ugb2Ygc2ltaWxhciBib2FyZHMuCj4K
-PiBTbyBmYXIgSSd2ZSBuZXZlciBzZWVuIGFueSBib2FyZCB1c2luZyBvdGhlciB1YXJ0LiBBbHNv
-IHVhcnQwIGlzIGRpc2FibGVkIGJ5Cj4gZGVmYXVsdCBhbmQgd2UgZW5hYmxlIGl0IHBlciBib2Fy
-ZCBmYW1pbHkgKEJDTTQ3MDggLyBCQ000NzA4MSAvIEJDTTQ3MDkgLwo+IEJDTTQ3MDk0KS4gSSB0
-aGluayBpdCdzIGp1c3QgbW9yZSBwcmFjdGljYWwgdG8gaGF2ZSBzaW1wbGUgRFRTIHRoYXQgY292
-ZXJzCj4gOTksOSUgYm9hcmRzIGJ5IGRlZmF1bHQgYW5kIGhhbmRsZWQgdGhhdCBtYXJnaW4gb2Yg
-ZGV2aWNlcyBzZXBhcmF0ZWx5Lgo+Cj4gV2UgYWxyZWFkeSBnb3QgYSBsb3Qgb2YgZHVwbGljYXRl
-ZCBjb2RlIGZvciBlbmFibGluZyB1YXJ0MCwgc2VlOgo+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcv
-cHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPTdi
-NzkwZDNiMjk0M2JmOGU3ZTdiYWZlMTg0MDA4YmQ2NDUxZmUwYmQKPgo+IEpvbiBNYXNvbiBmcm9t
-IEJyb2FkY29tIHdobyBrbm93cyB0aGlzIGhhcmR3YXJlIGFuZCBkZXNpZ25zIHZlcnkgd2VsbCBj
-b25maXJtZWQKPiBpdCdzIGEgc2FuZS9zYWZlIGFzc3VtcHRpb24uCgpUaGF0IHdhcyBzdXBwb3Nl
-ZCB0byBiZSAiYW55IG90aGVyIHVhcnQgb3IgcGFyYW1ldGVycyIuCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcg
-bGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Here are the updated versions of two patches of the series that did
+not get into 4.11.  The patches are move the device trees to their
+new location and to document the new cpu and core names.
+
+v5->v6
+Updated version addressing comment from Matthias, and adding his
+Reviewed-by tag. (https://www.spinics.net/lists/arm-kernel/msg568157.html)
+
+JC.
+
+Jayachandran C (2):
+  dt-bindings: arm64 ARCH_THUNDER2 platform documentation
+  arm64: dts: move from ARCH_VULCAN to ARCH_THUNDER2
+
+ .../devicetree/bindings/arm/cavium-thunder2.txt    |   8 ++
+ Documentation/devicetree/bindings/arm/cpus.txt     |   1 +
+ arch/arm64/boot/dts/broadcom/Makefile              |   1 -
+ arch/arm64/boot/dts/broadcom/vulcan-eval.dts       |  33 -----
+ arch/arm64/boot/dts/broadcom/vulcan.dtsi           | 147 --------------------
+ arch/arm64/boot/dts/cavium/Makefile                |   1 +
+ arch/arm64/boot/dts/cavium/thunder2-99xx.dts       |  34 +++++
+ arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi      | 148 +++++++++++++++++++++
+ 8 files changed, 192 insertions(+), 181 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+ delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan-eval.dts
+ delete mode 100644 arch/arm64/boot/dts/broadcom/vulcan.dtsi
+ create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dts
+ create mode 100644 arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
