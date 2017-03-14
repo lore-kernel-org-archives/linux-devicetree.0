@@ -1,87 +1,104 @@
-From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 3/4] sound: arm: Add build system for
- bcm2835-analog-audio driver.
-Date: Tue, 14 Mar 2017 02:53:59 -0700
-Message-ID: <1489485239.656.7.camel@crowfest.net>
-References: <201703141503.gyuLu0Kr%fengguang.wu@intel.com>
-         <1489481899.656.5.camel@crowfest.net>
-         <5a437138-bf9c-1e48-9fa6-82fac9b6e54c@i2se.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] backlight arcxcnn devicetree bindings for
+ ArcticSand
+Date: Tue, 14 Mar 2017 10:05:47 +0000
+Message-ID: <20170314100547.zqj5vkbk2dyqlcld@dell>
+References: <1488306035-16461-1-git-send-email-olimpiu@arcticsand.com>
+ <73fb917e-d71c-b094-7d33-8ccddd0ea1cf@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5a437138-bf9c-1e48-9fa6-82fac9b6e54c-eS4NqCHxEME@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <73fb917e-d71c-b094-7d33-8ccddd0ea1cf-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-03-14 at 10:13 +0100, Stefan Wahren wrote:
-> Am 14.03.2017 um 09:58 schrieb Michael Zoran:
-> > On Tue, 2017-03-14 at 15:15 +0800, kbuild test robot wrote:
-> > > Hi Michael,
-> > > 
-> > > [auto build test ERROR on sound/for-next]
-> > > [also build test ERROR on v4.11-rc2 next-20170310]
-> > > [if your patch is applied to the wrong git tree, please drop us a
-> > > note to help improve the system]
-> > > 
-> > > url:    https://github.com/0day-ci/linux/commits/Michael-Zoran/dt
-> > > -bin
-> > > dings-Document-the-dmas-and-dma-names-properties-for-bcm2835-
-> > > analog-
-> > > audio/20170314-091035
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sou
-> > > nd.g
-> > > it for-next
-> > > config: arm64-allmodconfig (attached as .config)
-> > > compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> > > reproduce:
-> > >         wget https://raw.githubusercontent.com/01org/lkp-tests/ma
-> > > ster
-> > > /sbin/make.cross -O ~/bin/make.cross
-> > >         chmod +x ~/bin/make.cross
-> > >         # save the attached .config to linux build tree
-> > >         make.cross ARCH=arm64 
-> > > 
-> > > All errors (new ones prefixed by >>):
-> > > 
-> > >    /tmp/ccNU8kQ5.s: Assembler messages:
-> > > > > /tmp/ccNU8kQ5.s:1411: Error: unknown mnemonic `ldmia' --
-> > > > > `ldmia
-> > > > > x26,{r0,r1,r2,r3}'
-> > > > > /tmp/ccNU8kQ5.s:1412: Error: unknown mnemonic `stmia' --
-> > > > > `stmia
-> > > > > x19!,{r0,r1,r2,r3}'
-> > > > > /tmp/ccNU8kQ5.s:1618: Error: unknown mnemonic `ldmia' --
-> > > > > `ldmia
-> > > > > x19!,{r0,r1,r2,r3}'
-> > > > > /tmp/ccNU8kQ5.s:1619: Error: unknown mnemonic `stmia' --
-> > > > > `stmia
-> > > > > x26,{r0,r1,r2,r3}'
-> > > 
-> > > ---
-> > > 0-DAY kernel test infrastructure                Open Source
-> > > Technology Center
-> > > https://lists.01.org/pipermail/kbuild-all                   Intel
-> > > Corporation
+On Fri, 10 Mar 2017, Daniel Thompson wrote:
+
+> On 28/02/17 19:20, Olimpiu Dejeu wrote:
+> > backlight: Add devicetree bindings for the Arctic Sand backlight driver
+> > This patch provides devicetree bindings for the Arctic Sand
+> >     driver submitted in the previous patch
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+> 
+> Acked-by: Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> But...
+> 
+> This binding documentation patch should precede the code in the patch series
+> (amoung other things this avoids transient checkpatch errors).
+
+Right.  Also, when you send patch-sets, please sent them 'threaded'.
+
+Please resubmit with Daniel's Ack.
+
+> > ---
+> > v5 => v6:
+> > - Version updated to match other patch in set. No other changes.
+> > v4 => v5:
+> > - Added spaces for increased readability per Lee Jones
+> > v3 => v4:
+> > - Added spaces for increased readability per Lee Jones
+> > v2 => v3:
+> > - Version updated to match other patch in set. No other changes.
+> > v1 => v2:
+> > - Version updated to match other patch in set. No other changes.
 > > 
-> > I'm a bit confused here.  Why I'm I seeing assembly instruction
-> > build
-> > errors when the mail points to a DT binding document change?
+> >  .../bindings/leds/backlight/arcxcnn_bl.txt         | 33 ++++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
 > > 
+> > diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> > new file mode 100644
+> > index 0000000..ecb7731
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> > @@ -0,0 +1,33 @@
+> > +Binding for ArcticSand arc2c0608 LED driver
+> > +
+> > +Required properties:
+> > +- compatible:		should be "arc,arc2c0608"
+> > +- reg:			slave address
+> > +
+> > +Optional properties:
+> > +- default-brightness:	brightness value on boot, value from: 0-4095
+> > +- label:		The name of the backlight device
+> > +			See Documentation/devicetree/bindings/leds/common.txt
+> > +- led-sources:		List of enabled channels from 0 to 5.
+> > +			See Documentation/devicetree/bindings/leds/common.txt
+> > +
+> > +- arc,led-config-0:	setting for register ILED_CONFIG_0
+> > +- arc,led-config-1:	setting for register ILED_CONFIG_1
+> > +- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
+> > +- arc,comp-config:	setting for register CONFIG_COMP
+> > +- arc,filter-config:	setting for register FILTER_CONFIG
+> > +- arc,trim-config:	setting for register IMAXTUNE
+> > +
+> > +Note: Optional properties not specified will default to values in IC EPROM
+> > +
+> > +Example:
+> > +
+> > +arc2c0608@30 {
+> > +	compatible = "arc,arc2c0608";
+> > +	reg = <0x30>;
+> > +	default-brightness = <500>;
+> > +	label = "lcd-backlight";
+> > +	linux,default-trigger = "backlight";
+> > +	led-sources = <0 1 2 5>;
+> > +};
+> > +
 > > 
 > 
-> The email subject doesn't refer to a DT binding.
-> 
-> I assume it's your change to enable ARM64 for all SND_ARM drivers,
-> which
-> aren't aware of that.
 
-OK, that makes sense now.  Should I just submit another change adding a
-depends on ARM to the 1 or 2 other drivers in the directory?
-
-
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
