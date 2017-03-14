@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v5 1/8] ARM: dts: imx6qdl-icore: Add backlight support for lvds
-Date: Tue, 14 Mar 2017 15:18:10 +0530
-Message-ID: <1489484897-14933-2-git-send-email-jagan@openedev.com>
+Subject: [PATCH v5 4/8] ARM: dts: imx6q-icore: Add LVDS support
+Date: Tue, 14 Mar 2017 15:18:13 +0530
+Message-ID: <1489484897-14933-5-git-send-email-jagan@openedev.com>
 References: <1489484897-14933-1-git-send-email-jagan@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1489484897-14933-1-git-send-email-jagan@openedev.com>
@@ -12,8 +12,8 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-This patch add support for lvds backlight on i.CoreM6 QDL
-variant boards.
+Add LVDS display support for OpenFrame Capacitive touch 7 inc
+display which is supported by Engicam i.CoreM6 QDL Starter Kit.
 
 Cc: Domenico Acri <domenico.acri@engicam.com>
 Cc: Matteo Lisi <matteo.lisi@engicam.com>
@@ -23,57 +23,50 @@ Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v5:
 - %s/arm/ARM/g with subject prefix
-- remove status=okay for backlight node
-- remove -1 suffix from pwm3grp iomux node
-Changes for v4, v3, v2:
+Changes for v4:
+- Fix checkpatch.pl Errors/Warnings
+Changes for v3:
+- Use native-mode as timing0 since this is the initial lvds-channel
+- Rename hsd100pxn1 reference as timing0
+- Update the correct patch author
+Changes for v2:
 - none
 
- arch/arm/boot/dts/imx6qdl-icore.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm/boot/dts/imx6q-icore.dts | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-icore.dtsi b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-index 55bebfc..56d0c5d 100644
---- a/arch/arm/boot/dts/imx6qdl-icore.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-icore.dtsi
-@@ -48,6 +48,13 @@
- 		reg = <0x10000000 0x80000000>;
- 	};
- 
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm3 0 100000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <7>;
-+	};
-+
- 	reg_3p3v: regulator-3p3v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "3P3V";
-@@ -136,6 +143,12 @@
+diff --git a/arch/arm/boot/dts/imx6q-icore.dts b/arch/arm/boot/dts/imx6q-icore.dts
+index 59eb7ad..73f34d1 100644
+--- a/arch/arm/boot/dts/imx6q-icore.dts
++++ b/arch/arm/boot/dts/imx6q-icore.dts
+@@ -57,3 +57,28 @@
+ &can2 {
  	status = "okay";
  };
- 
-+&pwm3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm3>;
++
++&ldb {
 +	status = "okay";
-+};
 +
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart4>;
-@@ -246,6 +259,12 @@
- 		>;
- 	};
- 
-+	pinctrl_pwm3: pwm3grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD4_DAT1__PWM3_OUT 0x1b0b1
-+		>;
++	lvds-channel@0 {
++		fsl,data-mapping = "spwg";
++		fsl,data-width = <18>;
++		status = "okay";
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: timing0 {
++				clock-frequency = <60000000>;
++				hactive = <800>;
++				vactive = <480>;
++				hback-porch = <30>;
++				hfront-porch = <30>;
++				vback-porch = <5>;
++				vfront-porch = <5>;
++				hsync-len = <64>;
++				vsync-len = <20>;
++			};
++		};
 +	};
-+
- 	pinctrl_usbotg: usbotggrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x17059
++};
 -- 
 1.9.1
