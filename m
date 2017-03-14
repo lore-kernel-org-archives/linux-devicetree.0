@@ -1,71 +1,50 @@
 From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] dt-bindings: mfd: Add LED subnode binding for
- MT6323 PMIC
-Date: Tue, 14 Mar 2017 13:40:09 +0800
-Message-ID: <1489470009.1870.6.camel@mtkswgap22>
-References: <1488549385-19899-1-git-send-email-sean.wang@mediatek.com>
-         <1488549385-19899-3-git-send-email-sean.wang@mediatek.com>
-         <c86eacdb-d5c8-2f0a-11f1-1a3bc623b4b0@gmail.com>
+Subject: Re: [PATCH net-next 1/4] dt-bindings: net: dsa: add Mediatek MT7530
+ binding
+Date: Tue, 14 Mar 2017 14:06:35 +0800
+Message-ID: <1489471595.1870.12.camel@mtkswgap22>
+References: <1489421488-300-1-git-send-email-sean.wang@mediatek.com>
+         <1489421488-300-2-git-send-email-sean.wang@mediatek.com>
+         <20170313163624.GD3953@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c86eacdb-d5c8-2f0a-11f1-1a3bc623b4b0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170313163624.GD3953-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Landen.Chao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, objelf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-03-13 at 13:00 +0100, Matthias Brugger wrote:
+On Mon, 2017-03-13 at 17:36 +0100, Andrew Lunn wrote:
+> > +- mediatek,reset-pin: Phandle to the pinctrl node used for the reset. Which
+> > +	must be required if the property mediatek,mcm of specified as
+> > +	"disabled". See
+> > +	Documentation/devicetree/bindings/pinctrl/pinctrl-mt65xx.txt for
+> > +	the mediatek pintcrl setting for the details.
 > 
-> On 03/03/17 14:56, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >
-> > This patch adds documentation for devicetree bindings
-> > for LED support as the subnode of MT6323 PMIC
-> >
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > index 949c85f..522a3bb 100644
-> > --- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-> > @@ -6,6 +6,7 @@ MT6397/MT6323 is a multifunction device with the following sub modules:
-> >  - Audio codec
-> >  - GPIO
-> >  - Clock
-> > +- LED
-> >
-> >  It is interfaced to host controller using SPI interface by a proprietary hardware
-> >  called PMIC wrapper or pwrap. MT6397/MT6323 MFD is a child device of pwrap.
-> > @@ -34,6 +35,10 @@ Optional subnodes:
-> >  - clk
-> >  	Required properties:
-> >  		- compatible: "mediatek,mt6397-clk"
-> > +- led
-> > +	Required properties:
-> > +		- compatible: "mediatek,mt6323-led"
-> > +	see Documentation/devicetree/bindings/leds/leds-mt6323.txt
+> Hi Sean
 > 
-> Part of this patch is already part of linux-next:
-> 05daab3 ("Documentation: devicetree: Add LED subnode binding for MT6323 
-> PMIC")
+> This appears to be a plan GPIO line. Marvell has the same. It would be
+> nice to be consistent with the naming. From
+> Documentation/devicetree/bindings/net/dsa/marvell.txt
 > 
-Hi Matthias,
+> Optional properties:
+> 
+> - reset-gpios           : Should be a gpio specifier for a reset line
+> 
+>   Andrew
 
-There is still small differences from the merged patch. 
 
-I will submit the series for the next version based on newer kernel and
+Hi Andrew,
 
-split the already merged ones out. Thanks for your kindly remainder.
+I'll change the property into the consistent way, and usage for 
+
+GPIO control be also used in devm_gpiod_* instead as you suggested
+
+for patch 4.
 
 	Sean
-> Regards,
-> Matthias
-
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
