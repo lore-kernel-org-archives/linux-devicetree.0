@@ -1,64 +1,73 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add INNOLUX P079ZCA panel bindings
-Date: Tue, 14 Mar 2017 13:59:03 -0700
-Message-ID: <20170314205901.GA26988@google.com>
-References: <1488502909-22160-1-git-send-email-zyw@rock-chips.com>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and
+ endpoints
+Date: Tue, 14 Mar 2017 23:16:54 +0200
+Message-ID: <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
+References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
+ <1629581.fh46rNHz4U@aspire.rjw.lan>
+ <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
+ <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com>
+ <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
+ <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com>
+ <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1488502909-22160-1-git-send-email-zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+Rafael J. Wysocki wrote:
+> On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
+> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>> Hi Rafael,
+>>
+>> Rafael J. Wysocki wrote:
+>>>
+>>> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
+>>> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>>>
+>>>> On 03/14/17 10:08, Sakari Ailus wrote:
+>>>>>
+>>>>> How about this instead:
+>>>>>
+>>>>> All port nodes are located under the device's "_DSD" node in the
+>>>>> hierarchical data extension tree. The property extension related to
+>>>>> each port node must contain the key "port" and an integer value which
+>>>>> is the number of the port.
+>>>>
+>>>>
+>>>> So with matching strings instead of indices, this will change, too...
+>>>
+>>>
+>>> It doesn't have to AFAICS, but the number is just redundant IMO.  You
+>>> only need a boolean property saying "this is a port", so you know that
+>>> you should expect a list of endpoints in that object.
+>>
+>>
+>> No, it's not redundant. It's the number of the physical port in the device
+>> --- this is how the driver gets to know where the connection has been made.
+>
+> OK, but what exactly do you mean by "physical port"?
 
-On Fri, Mar 03, 2017 at 09:01:48AM +0800, Chris Zhong wrote:
-> The Innolux P079ZCA is a 7.85" panel with a 768X1024 resolution and
-> connected to DSI using four lanes.
-> 
-> Signed-off-by: Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
->  .../bindings/display/panel/innolux,p079zca.txt     | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-> new file mode 100644
-> index 0000000..c40c8e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/innolux,p079zca.txt
-> @@ -0,0 +1,22 @@
-> +Innolux P079ZCA 7.85" 768x1024 TFT LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "innolux,p079zca"
-> +- power-supply: phandle of the regulator that provides the supply voltage
-> +- enable-gpios: panel enable gpio
-> +
-> +Optional properties:
-> +- backlight: phandle of the backlight device attached to the panel
-> +
-> +Example:
-> +
-> +	&mipi_dsi {
-> +		panel {
-> +			compatible = "innolux,p079zca";
-> +			reg = <0>;
+The device (or an IP block) has physical interfaces to the world 
+outside. There could be just one, but there may be more. For an ISP, 
+there could be e.g. four CSI-2 receivers to each of which you could 
+connect a camera sensor. So for an ISP device, that number tells which 
+of the receivers a given sensor is connected to.
 
-Where's the documentation for this property?
+The mapping between this number and what the hardware datasheet refers 
+to needs to be documented per device.
 
-Brian
+-- 
+Regards,
 
-> +			power-supply = <...>;
-> +			backlight = <&backlight>;
-> +			enable-gpios = <&gpio1 13 GPIO_ACTIVE_HIGH>;
-> +			status = "okay";
-> +		};
-> +	};
+Sakari Ailus
+sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
