@@ -1,84 +1,106 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
- for imx6sll
-Date: Tue, 14 Mar 2017 14:54:24 +0100
-Message-ID: <CACRpkdaLq125bKQcpHeFn312omxw9jp0VHr9DVanj42Y_29+mg@mail.gmail.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-6-git-send-email-ping.bai@nxp.com> <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
- <CAA+hA=TL=Ys6j7YGOofAqrEGBcR15szvx3mMf-Dm03rnEa_VRA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAA+hA=TL=Ys6j7YGOofAqrEGBcR15szvx3mMf-Dm03rnEa_VRA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Dong Aisheng <dongas86@gmail.com>
-Cc: Bai Ping <ping.bai@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jacky Bai <jacky.baip@gmail.com>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 03/20] ARM: sun8i: dt: Add DT bindings documentation for Allwinner dwmac-sun8i
+Date: Tue, 14 Mar 2017 15:18:39 +0100
+Message-ID: <20170314141856.24560-4-clabbe.montjoie@gmail.com>
+References: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net
+Cc: f.fainelli@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 16, 2017 at 8:51 AM, Dong Aisheng <dongas86@gmail.com> wrote:
-> On Tue, Dec 27, 2016 at 8:59 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+This patch adds documentation for Device-Tree bindings for the
+Allwinner dwmac-sun8i driver.
 
->> I would consider augmenting the code in the driver to handle the generic
->> bindings *in addition* to the old legacy bindings, and use those over these
->> random custom bits.
-(...)
-> Generic binding only supports parsing strings for pins and function
-> from dts right now, that means we need back to the old way of hardcoding
-> all register bits in driver which we actually chose to move out since
-> the commit "e164153 pinctrl: imx: move hard-coding data into device tree".
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+---
+ .../devicetree/bindings/net/dwmac-sun8i.txt        | 77 ++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/dwmac-sun8i.txt
 
-Aha I see.
-
-> One option is using macro definitions instead of raw data as pinctrl-single
-> users as OMAP.
-> e.g.
-> art2_pins: pinmux_uart2_pins {
->         pinctrl-single,pins = <
->                 OMAP4_IOPAD(0x118, PIN_INPUT_PULLUP | MUX_MODE0)
->  /* uart2_cts.uart2_cts */
->         ........
->
-> For this way, no driver changes required, just replace the raw data by macro
-> in device tree. But i wonder this may not be your original intention although
-> it's the easiest way for us.
-> Anyway, if you agree, we probably would prefer this way.
-
-That make it look better than it looks today, but...
-
-> Another option is partially convert to generic binding for only pad
-> configuration
-> part. e.g.
-> pinctrl_usdhc1: usdhc1grp {
->         fsl,pins = <
->                 MX7D_PAD_SD1_CMD__SD1_CMD
->                 MX7D_PAD_SD1_CLK__SD1_CLK
->                 MX7D_PAD_SD1_DATA0__SD1_DATA0
->                 ...
->         >;
->         bias-pull-up = <47KOHM>;
->         drive-strength = <130OHM>;
->         slew-rate = <FAST>;
->         speed = <50MHZ>;
->         ....
-> };
-> (Some of the property still not supported or not the same as generic
-> binding right now)
-
-This looks totally awesome, so if you could do this, it would be even
-better.
-
-> This way requires no big drivers changes and only extend the driver
-> to support the generic pinctrl dt configuration properties.
-
-Yep, you should be able to support both the old and the new
-way of configuring the pins this way I guess.
-
-> And it also fix the raw data issues and looks like more applicable than the full
-> migration.
->
-> So would you be willing to accept it?
-
-Anything that move us closer to the generic bindings will be accepted.
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/net/dwmac-sun8i.txt b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+new file mode 100644
+index 0000000..f01ef17
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+@@ -0,0 +1,77 @@
++* Allwinner sun8i GMAC ethernet controller
++
++This device is a platform glue layer for stmmac.
++Please see stmmac.txt for the other unchanged properties.
++
++Required properties:
++- compatible: should be one of the following string:
++		"allwinner,sun8i-a83t-emac"
++		"allwinner,sun8i-h3-emac"
++		"allwinner,sun50i-a64-emac"
++- reg: address and length of the register for the device.
++- interrupts: interrupt for the device
++- interrupt-names: should be "macirq"
++- clocks: A phandle to the reference clock for this device
++- clock-names: should be "stmmaceth"
++- resets: A phandle to the reset control for this device
++- reset-names: should be "stmmaceth"
++- phy-mode: See ethernet.txt
++- phy-handle: See ethernet.txt
++- #address-cells: shall be 1
++- #size-cells: shall be 0
++- syscon: A phandle to the syscon of the SoC with one of the following
++ compatible string:
++  - allwinner,sun8i-h3-system-controller
++  - allwinner,sun8i-a64-system-controller
++  - allwinner,sun8i-a83t-system-controller
++
++Optional properties:
++- allwinner,tx-delay: TX clock delay chain value. Range value is 0-0x07. Default is 0)
++- allwinner,rx-delay: RX clock delay chain value. Range value is 0-0x1F. Default is 0)
++Both delay properties are in 0.1ns step.
++
++Optional properties for "allwinner,sun8i-h3-emac":
++- allwinner,leds-active-low: EPHY LEDs are active low
++
++Required child node of emac:
++- mdio bus node: should be named mdio
++
++Required properties of the mdio node:
++- #address-cells: shall be 1
++- #size-cells: shall be 0
++
++The device node referenced by "phy" or "phy-handle" should be a child node
++of the mdio node. See phy.txt for the generic PHY bindings.
++
++Required properties of the phy node with "allwinner,sun8i-h3-emac":
++- clocks: a phandle to the reference clock for the EPHY
++- resets: a phandle to the reset control for the EPHY
++
++Example:
++
++emac: ethernet@1c0b000 {
++	compatible = "allwinner,sun8i-h3-emac";
++	syscon = <&syscon>;
++	reg = <0x01c0b000 0x104>;
++	interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "macirq";
++	resets = <&ccu RST_BUS_EMAC>;
++	reset-names = "stmmaceth";
++	clocks = <&ccu CLK_BUS_EMAC>;
++	clock-names = "stmmaceth";
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	phy = <&int_mii_phy>;
++	phy-mode = "mii";
++	allwinner,leds-active-low;
++	mdio: mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		int_mii_phy: ethernet-phy@1 {
++			reg = <1>;
++			clocks = <&ccu CLK_BUS_EPHY>;
++			resets = <&ccu RST_BUS_EPHY>;
++		};
++	};
++};
+-- 
+2.10.2
