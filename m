@@ -1,7 +1,7 @@
 From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 20/20] ARM: sunxi: Enable dwmac-sun8i driver on multi_v7_defconfig
-Date: Tue, 14 Mar 2017 15:18:56 +0100
-Message-ID: <20170314141856.24560-21-clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 14/20] ARM64: dts: sun50i-a64: Add dt node for the syscon control module
+Date: Tue, 14 Mar 2017 15:18:50 +0100
+Message-ID: <20170314141856.24560-15-clabbe.montjoie@gmail.com>
 References: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170314141856.24560-1-clabbe.montjoie@gmail.com>
@@ -10,24 +10,33 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, 
 Cc: f.fainelli@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable the dwmac-sun8i driver in the multi_v7 default configuration
+This patch add the dt node for the syscon register present on the
+Allwinner A64.
+
+Only two register are present in this syscon and the only one useful is
+the one dedicated to EMAC clock.
 
 Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 36c1b39..380919f 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -257,6 +257,7 @@ CONFIG_SMSC911X=y
- CONFIG_STMMAC_ETH=y
- CONFIG_STMMAC_PLATFORM=y
- CONFIG_DWMAC_DWC_QOS_ETH=y
-+CONFIG_DWMAC_SUN8I=y
- CONFIG_TI_CPSW=y
- CONFIG_XILINX_EMACLITE=y
- CONFIG_AT803X_PHY=y
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 1c64ea2..3b09af2 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -121,6 +121,12 @@
+ 		#size-cells = <1>;
+ 		ranges;
+ 
++		syscon: syscon@01c00000 {
++			compatible = "syscon",
++				"allwinner,sun8i-h3-system-controller";
++			reg = <0x01c00000 0x1000>;
++		};
++
+ 		mmc0: mmc@1c0f000 {
+ 			compatible = "allwinner,sun50i-a64-mmc";
+ 			reg = <0x01c0f000 0x1000>;
 -- 
 2.10.2
