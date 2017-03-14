@@ -1,7 +1,7 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Tue, 14 Mar 2017 16:47:28 +0000
-Message-ID: <20170314164728.GQ21222@n2100.armlinux.org.uk>
+Date: Tue, 14 Mar 2017 09:50:14 -0700
+Message-ID: <8461e333-6867-eecc-db7a-9bf44a2baf18@gmail.com>
 References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
  <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
  <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
@@ -11,55 +11,48 @@ References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
  <aa6a5a1d-18fd-8bed-a349-2654d2d1abe0@xs4all.nl>
  <20170313104538.GF21222@n2100.armlinux.org.uk>
  <1489508491.28116.8.camel@ndufresne.ca>
+ <20170314164728.GQ21222@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1489508491.28116.8.camel@ndufresne.ca>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170314164728.GQ21222@n2100.armlinux.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>, Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 12:21:31PM -0400, Nicolas Dufresne wrote:
-> My main concern here based on what I'm reading, is that this driver is
-> not even able to notice immediately that a produced frame was corrupted
-> (because it's out of sync). From usability perspective, this is really
-> bad. Can't the driver derive a clock from some irq and calculate for
-> each frame if the timing was correct ? And if not mark the buffer with
-> V4L2_BUF_FLAG_ERROR ?
 
-One of the issues of measuring timing with IRQs is the fact that the
-IRQ subsystem only allows one IRQ to run at a time.  If an IRQ takes
-a relatively long time to process, then it throws the timing of other
-IRQs out.
 
-If you're going to decide that a buffer should be marked in error on
-the basis of an interrupt arriving late, this can trigger spuriously.
+On 03/14/2017 09:47 AM, Russell King - ARM Linux wrote:
+> On Tue, Mar 14, 2017 at 12:21:31PM -0400, Nicolas Dufresne wrote:
+>> My main concern here based on what I'm reading, is that this driver is
+>> not even able to notice immediately that a produced frame was corrupted
+>> (because it's out of sync). From usability perspective, this is really
+>> bad. Can't the driver derive a clock from some irq and calculate for
+>> each frame if the timing was correct ? And if not mark the buffer with
+>> V4L2_BUF_FLAG_ERROR ?
+> One of the issues of measuring timing with IRQs is the fact that the
+> IRQ subsystem only allows one IRQ to run at a time.  If an IRQ takes
+> a relatively long time to process, then it throws the timing of other
+> IRQs out.
+>
+> If you're going to decide that a buffer should be marked in error on
+> the basis of an interrupt arriving late, this can trigger spuriously.
+>
+> It wasn't that long ago that USB HID was regularly eating something
+> like 20ms of interrupt time... that's been solved, but that doesn't
+> mean all cases are solved - there are still interrupt handlers in the
+> kernel that are on the order of milliseconds to complete.
+>
+> Given the quality I observe of some USB serial devices (eg, running at
+> 115200 baud, but feeling like they deliver characters to userspace at
+> 9600 baud) I wouldn't be surprised if some USB serial drivers eat a lot
+> of IRQ time... and if so, all it'll take is to plug such a device in
+> to disrupt capture.
+>
+> That sounds way too fragile to me.
 
-It wasn't that long ago that USB HID was regularly eating something
-like 20ms of interrupt time... that's been solved, but that doesn't
-mean all cases are solved - there are still interrupt handlers in the
-kernel that are on the order of milliseconds to complete.
+exactly, hence the imx6 timer input capture support.
 
-Given the quality I observe of some USB serial devices (eg, running at
-115200 baud, but feeling like they deliver characters to userspace at
-9600 baud) I wouldn't be surprised if some USB serial drivers eat a lot
-of IRQ time... and if so, all it'll take is to plug such a device in
-to disrupt capture.
-
-That sounds way too fragile to me.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Steve
