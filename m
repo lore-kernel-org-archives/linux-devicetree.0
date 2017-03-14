@@ -1,58 +1,126 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v5 15/39] [media] v4l2: add a frame interval error event
-Date: Tue, 14 Mar 2017 09:50:14 -0700
-Message-ID: <8461e333-6867-eecc-db7a-9bf44a2baf18@gmail.com>
-References: <1489121599-23206-1-git-send-email-steve_longerbeam@mentor.com>
- <1489121599-23206-16-git-send-email-steve_longerbeam@mentor.com>
- <5b0a0e76-2524-4140-5ccc-380a8f949cfa@xs4all.nl>
- <ec05e6e0-79f2-2db2-bde9-4aed00d76faa@gmail.com>
- <6b574476-77df-0e25-a4d1-32d4fe0aec12@xs4all.nl>
- <5d5cf4a4-a4d3-586e-cd16-54f543dfcce9@gmail.com>
- <aa6a5a1d-18fd-8bed-a349-2654d2d1abe0@xs4all.nl>
- <20170313104538.GF21222@n2100.armlinux.org.uk>
- <1489508491.28116.8.camel@ndufresne.ca>
- <20170314164728.GQ21222@n2100.armlinux.org.uk>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 2/6] genirq: Add handle_fasteoi_{level,edge}_irq flow
+ handlers.
+Date: Tue, 14 Mar 2017 16:54:08 +0000
+Message-ID: <254c0505-6890-2e9f-cf04-3c8efbcfeb2d@arm.com>
+References: <1488332932-2691-1-git-send-email-david.daney@cavium.com>
+ <1488332932-2691-3-git-send-email-david.daney@cavium.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170314164728.GQ21222@n2100.armlinux.org.uk>
-Sender: linux-media-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>, Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1488332932-2691-3-git-send-email-david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 01/03/17 01:48, David Daney wrote:
+> Follow-on patch for gpio-thunderx uses a irqdomain hierarchy which
+> requires slightly different flow handlers, add them to chip.c which
+> contains most of the other flow handlers.
+> 
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  include/linux/irq.h |   2 ++
+>  kernel/irq/chip.c   | 102 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 104 insertions(+)
+> 
+> diff --git a/include/linux/irq.h b/include/linux/irq.h
+> index f887351..3db0eb8 100644
+> --- a/include/linux/irq.h
+> +++ b/include/linux/irq.h
+> @@ -518,6 +518,8 @@ static inline int irq_set_parent(int irq, int parent_irq)
+>  extern int irq_chip_pm_get(struct irq_data *data);
+>  extern int irq_chip_pm_put(struct irq_data *data);
+>  #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+> +extern void handle_fasteoi_edge_irq(struct irq_desc *desc);
+> +extern void handle_fasteoi_level_irq(struct irq_desc *desc);
+>  extern void irq_chip_enable_parent(struct irq_data *data);
+>  extern void irq_chip_disable_parent(struct irq_data *data);
+>  extern void irq_chip_ack_parent(struct irq_data *data);
+> diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+> index 73ea90b..213105d 100644
+> --- a/kernel/irq/chip.c
+> +++ b/kernel/irq/chip.c
+> @@ -981,6 +981,108 @@ void irq_cpu_offline(void)
+>  
+>  #ifdef	CONFIG_IRQ_DOMAIN_HIERARCHY
+>  /**
+> + *	handle_fasteoi_edge_irq - irq handler for edge hierarchy
+> + *	stacked on transparent controllers
+> + *
+> + *	@desc:	the interrupt description structure for this irq
+> + *
+> + *	Like handle_fasteoi_irq(), but for use with hierarchy where
+> + *	the irq_chip also needs to have its ->irq_ack() function
+> + *	called.
+> + */
+> +void handle_fasteoi_edge_irq(struct irq_desc *desc)
+> +{
+> +	struct irq_chip *chip = desc->irq_data.chip;
+> +
+> +	raw_spin_lock(&desc->lock);
+> +
+> +	if (!irq_may_run(desc))
+> +		goto out;
+> +
+> +	desc->istate &= ~(IRQS_REPLAY | IRQS_WAITING);
+> +
+> +	/*
+> +	 * If its disabled or no action available
+> +	 * then mask it and get out of here:
+> +	 */
+> +	if (unlikely(!desc->action || irqd_irq_disabled(&desc->irq_data))) {
+> +		desc->istate |= IRQS_PENDING;
+> +		mask_irq(desc);
+> +		goto out;
+> +	}
+> +
+> +	kstat_incr_irqs_this_cpu(desc);
+> +	if (desc->istate & IRQS_ONESHOT)
+> +		mask_irq(desc);
+> +
+> +	/* Start handling the irq */
+> +	desc->irq_data.chip->irq_ack(&desc->irq_data);
+> +
+> +	preflow_handler(desc);
+> +	handle_irq_event(desc);
+> +
+> +	cond_unmask_eoi_irq(desc, chip);
+> +
+> +	raw_spin_unlock(&desc->lock);
+> +	return;
+> +out:
+> +	if (!(chip->flags & IRQCHIP_EOI_IF_HANDLED))
+> +		chip->irq_eoi(&desc->irq_data);
+> +	raw_spin_unlock(&desc->lock);
+> +}
+> +EXPORT_SYMBOL_GPL(handle_fasteoi_edge_irq);
 
+So this is handle_fasteoi_irq with an irq_ack() added in the middle. In
+the spirit of making this a bit more maintainable, how about making the
+handle_fasteoi_irq code reusable (if necessary by forcing the compiler
+to inline stuff)?
 
-On 03/14/2017 09:47 AM, Russell King - ARM Linux wrote:
-> On Tue, Mar 14, 2017 at 12:21:31PM -0400, Nicolas Dufresne wrote:
->> My main concern here based on what I'm reading, is that this driver is
->> not even able to notice immediately that a produced frame was corrupted
->> (because it's out of sync). From usability perspective, this is really
->> bad. Can't the driver derive a clock from some irq and calculate for
->> each frame if the timing was correct ? And if not mark the buffer with
->> V4L2_BUF_FLAG_ERROR ?
-> One of the issues of measuring timing with IRQs is the fact that the
-> IRQ subsystem only allows one IRQ to run at a time.  If an IRQ takes
-> a relatively long time to process, then it throws the timing of other
-> IRQs out.
->
-> If you're going to decide that a buffer should be marked in error on
-> the basis of an interrupt arriving late, this can trigger spuriously.
->
-> It wasn't that long ago that USB HID was regularly eating something
-> like 20ms of interrupt time... that's been solved, but that doesn't
-> mean all cases are solved - there are still interrupt handlers in the
-> kernel that are on the order of milliseconds to complete.
->
-> Given the quality I observe of some USB serial devices (eg, running at
-> 115200 baud, but feeling like they deliver characters to userspace at
-> 9600 baud) I wouldn't be surprised if some USB serial drivers eat a lot
-> of IRQ time... and if so, all it'll take is to plug such a device in
-> to disrupt capture.
->
-> That sounds way too fragile to me.
+But the one thing that makes me uncomfortable here is that we're seem to
+have this irq_ack() propagated all along the irqdata chain, which is not
+what's happening. Only the EOI gets propagated.
 
-exactly, hence the imx6 timer input capture support.
+Why can't you just put the irq_ack call in your top level irq_eoi
+callback? That'd make it similar to what is happening on the mbigen side
+(not exactly surprising, since they are doing very similar things).
 
-Steve
+Same remark about handle_fasteoi_level_irq.
+
+Thoughts?
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
