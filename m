@@ -1,91 +1,174 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v4 16/16] ACPI / DSD: Document references, ports and endpoints
-Date: Tue, 14 Mar 2017 23:11:40 +0100
-Message-ID: <CAJZ5v0hCvcPgYYV0Hysfu0pEYCzzHp7KKdW3nYyjm7RGS3bHoQ@mail.gmail.com>
-References: <1488809970-25568-1-git-send-email-sakari.ailus@linux.intel.com>
- <1488809970-25568-17-git-send-email-sakari.ailus@linux.intel.com>
- <1629581.fh46rNHz4U@aspire.rjw.lan> <3df6ac2a-29cc-52b1-cc0c-4c1bc4198c83@linux.intel.com>
- <d0ce808b-a000-6038-c347-25fae32535dc@linux.intel.com> <CAJZ5v0j1i-tNOdyhhknYCSPbOg7KAQpYgeReH_KwgebO3AcjRA@mail.gmail.com>
- <cf2ab8be-a351-f1ea-28a9-f5cca57061cd@linux.intel.com> <CAJZ5v0i4pEKkz+3Ob42x96YHpPWasH2O8VnDCz8aKw_wxywLyQ@mail.gmail.com>
- <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: media / v4l2-mc: wishlist for complex cameras (was Re: [PATCH v4
+ 14/36] [media] v4l2-mc: add a function to inherit controls from a pipeline)
+Date: Tue, 14 Mar 2017 23:32:54 +0100
+Message-ID: <20170314223254.GA7141@amd>
+References: <c679f755-52a6-3c6f-3d65-277db46676cc@xs4all.nl>
+ <20170310140124.GV21222@n2100.armlinux.org.uk>
+ <cc8900b0-c091-b14b-96f4-01f8fa72431c@xs4all.nl>
+ <20170310125342.7f047acf@vento.lan>
+ <20170310223714.GI3220@valkosipuli.retiisi.org.uk>
+ <20170311082549.576531d0@vento.lan>
+ <20170313124621.GA10701@valkosipuli.retiisi.org.uk>
+ <20170314004533.3b3cd44b@vento.lan>
+ <e0a6c60b-1735-de0b-21f4-d8c3f4b3f10f@xs4all.nl>
+ <20170314072143.498cde9b@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <dba2ce05-fc0c-3994-118c-a7de6a5afc78@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170314072143.498cde9b-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus@linux.i
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 14, 2017 at 10:16 PM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> Rafael J. Wysocki wrote:
->>
->> On Tue, Mar 14, 2017 at 6:54 PM, Sakari Ailus
->> <sakari.ailus@linux.intel.com> wrote:
->>>
->>> Hi Rafael,
->>>
->>> Rafael J. Wysocki wrote:
->>>>
->>>>
->>>> On Tue, Mar 14, 2017 at 9:09 AM, Sakari Ailus
->>>> <sakari.ailus@linux.intel.com> wrote:
->>>>>
->>>>>
->>>>> On 03/14/17 10:08, Sakari Ailus wrote:
->>>>>>
->>>>>>
->>>>>> How about this instead:
->>>>>>
->>>>>> All port nodes are located under the device's "_DSD" node in the
->>>>>> hierarchical data extension tree. The property extension related to
->>>>>> each port node must contain the key "port" and an integer value which
->>>>>> is the number of the port.
->>>>>
->>>>>
->>>>>
->>>>> So with matching strings instead of indices, this will change, too...
->>>>
->>>>
->>>>
->>>> It doesn't have to AFAICS, but the number is just redundant IMO.  You
->>>> only need a boolean property saying "this is a port", so you know that
->>>> you should expect a list of endpoints in that object.
->>>
->>>
->>>
->>> No, it's not redundant. It's the number of the physical port in the
->>> device
->>> --- this is how the driver gets to know where the connection has been
->>> made.
->>
->>
->> OK, but what exactly do you mean by "physical port"?
->
->
-> The device (or an IP block) has physical interfaces to the world outside.
-> There could be just one, but there may be more. For an ISP, there could be
-> e.g. four CSI-2 receivers to each of which you could connect a camera
-> sensor. So for an ISP device, that number tells which of the receivers a
-> given sensor is connected to.
->
-> The mapping between this number and what the hardware datasheet refers to
-> needs to be documented per device.
 
-OK, so the number actually is an arbitrary piece of data associated
-with the key "port" and the interpretation of that piece of data
-depends on whoever asks for that value.
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-IOW, the core doesn't care.
+Hi!
 
-With all due respect to whoever invented this on the DT side, this is
-just bad design to me, because it causes the "port" property to serve
-two different purposes at the same time.  First, it tells the core
-that this object is a port.  Second, it is expected to provide a piece
-of data of unspecified interpretation to somebody.  Which means that
-the "port" property is both general and device-specific at the same
-time and the sanity of that is quite questionable IMO.
+> > > Even if they were merged, if we keep the same mean time to develop a
+> > > libv4l plugin, that would mean that a plugin for i.MX6 could take 2-3
+> > > years to be developed.
+> > >=20
+> > > There's a clear message on it:
+> > > 	- we shouldn't keep pushing for a solution via libv4l. =20
+> >=20
+> > Or:
+> >=20
+> > 	- userspace plugin development had a very a low priority and
+> > 	  never got the attention it needed.
+>=20
+> The end result is the same: we can't count on it.
+>=20
+> >=20
+> > I know that's *my* reason. I rarely if ever looked at it. I always assu=
+med
+> > Sakari and/or Laurent would look at it. If this reason is also valid for
+> > Sakari and Laurent, then it is no wonder nothing has happened in all th=
+at
+> > time.
+> >=20
+> > We're all very driver-development-driven, and userspace gets very little
+> > attention in general. So before just throwing in the towel we should ta=
+ke
+> > a good look at the reasons why there has been little or no development:=
+ is
+> > it because of fundamental design defects, or because nobody paid attent=
+ion
+> > to it?
+>=20
+> No. We should look it the other way: basically, there are patches
+> for i.MX6 driver that sends control from videonode to subdevs.=20
+>=20
+> If we nack apply it, who will write the userspace plugin? When
+> such change will be merged upstream?
 
-Thanks,
-Rafael
+Well, I believe first question is: what applications would we want to
+run on complex devices? Will sending control from video to subdevs
+actually help?
+
+mplayer is useful for testing... but that one already works (after you
+setup the pipeline, and configure exposure/gain).
+
+But thats useful for testing, not really for production. Image will be
+out of focus and with wrong white balance.
+
+What I would really like is an application to get still photos. For
+taking pictures with manual settings we need
+
+a) units for controls: user wants to focus on 1m, and take picture
+with ISO200, 1/125 sec. We should also tell him that lens is f/5.6 and
+focal length is 20mm with 5mm chip.
+
+But... autofocus/autogain would really be good to have. Thus we need:
+
+b) for each frame, we need exposure settings and focus position at
+time frame was taken. Otherwise autofocus/autogain will be too
+slow. At least focus position is going to be tricky -- either kernel
+would have to compute focus position for us (not trivial) or we'd need
+enough information to compute it in userspace.
+
+There are more problems: hardware-accelerated preview is not trivial
+to set up (and I'm unsure if it can be done in generic way). Still
+photos application needs to switch resolutions between preview and
+photo capture. Probably hardware-accelerated histograms are needed for
+white balance, auto gain and auto focus, ....
+
+It seems like there's a _lot_ of stuff to be done before we have
+useful support for complex cameras...
+
+(And I'm not sure... when application such as skype is running, is
+there some way to run autogain/autofocus/autowhitebalance? Is that
+something we want to support?)
+
+> If we don't have answers to any of the above questions, we should not
+> nack it.
+>=20
+> That's said, that doesn't prevent merging a libv4l plugin if/when
+> someone can find time/interest to develop it.
+
+I believe other question is: will not having same control on main
+video device and subdevs be confusing? Does it actually help userspace
+in any way? Yes, we can make controls accessible to old application,
+but does it make them more useful?=20
+
+> > In addition, I suspect end-users of these complex devices don't really =
+care
+> > about a plugin: they want full control and won't typically use generic
+> > applications. If they would need support for that, we'd have seen much =
+more
+> > interest. The main reason for having a plugin is to simplify testing and
+> > if this is going to be used on cheap hobbyist devkits.
+>=20
+> What are the needs for a cheap hobbyist devkit owner? Do we currently
+> satisfy those needs? I'd say that having a functional driver when
+> compiled without the subdev API, that implements the ioctl's/controls
+
+Having different interface based on config options... is just
+weird. What about poor people (like me) trying to develop complex
+applications?
+
+> [1] Yet, I might eventually do that for fun, an OMAP3 board with tvp5150
+> just arrived here last week. It would be nice to have xawtv3 running on i=
+t :-)
+> So, if I have a lot of spare time (with is very unlikely), I might eventu=
+ally=20
+> do something for it to work.
+>=20
+> > I know it took me a very long time before I had a working omap3.
+>=20
+> My first OMAP3 board with working V4L2 source just arrived last week
+> :-)
+
+You can get Nokia N900 on aliexpress. If not, they are still available
+between people :-).
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAljIb5YACgkQMOfwapXb+vJ6PACfWWMPQNEi86/Zs3oSCQ/l3O/p
+Fm4An1xqGfjLFGw2oOaiujkd1uC9Xd32
+=7vGp
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
