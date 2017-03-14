@@ -1,81 +1,130 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: ata: add DT bindings for ahci-dm816 SATA controller
-Date: Tue, 14 Mar 2017 11:43:47 +0100
-Message-ID: <CAMpxmJXjy54jPaTTvCw4n2grvcJZvpUMf-acadr9OhUq=7T_Jg@mail.gmail.com>
-References: <1489422982-3461-1-git-send-email-bgolaszewski@baylibre.com>
- <1489422982-3461-2-git-send-email-bgolaszewski@baylibre.com>
- <2d0ede95-86d6-4d52-6cf5-91de35a29145@cogentembedded.com> <CAMpxmJUO65yZDSKhL2k1V1fYRFn3psfCtwokbsZAm61UzcdjSg@mail.gmail.com>
- <61ee23f2-734b-f793-0054-364ce553ae5e@cogentembedded.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 29/36] media: imx: mipi-csi2: enable setting and
+ getting of frame rates
+Date: Tue, 14 Mar 2017 11:43:07 +0100
+Message-ID: <1489488187.8406.3.camel@pengutronix.de>
+References: <1487211578-11360-1-git-send-email-steve_longerbeam@mentor.com>
+         <1487211578-11360-30-git-send-email-steve_longerbeam@mentor.com>
+         <20170220220409.GX16975@valkosipuli.retiisi.org.uk>
+         <20170221001332.GS21222@n2100.armlinux.org.uk>
+         <25596b21-70de-5e46-f149-f9ce3a86ecb7@gmail.com>
+         <1487667023.2331.8.camel@pengutronix.de>
+         <20170313131647.GB10701@valkosipuli.retiisi.org.uk>
+         <20170313132701.GJ21222@n2100.armlinux.org.uk>
+         <1489413301.2288.53.camel@pengutronix.de>
+         <27397114-7d77-2353-c526-bddd5f5297d9@gmail.com>
+         <20170313210349.GD10701@valkosipuli.retiisi.org.uk>
+         <4ed15eae-b6c6-55f7-1c6c-9ea84466ed71@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <61ee23f2-734b-f793-0054-364ce553ae5e-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <4ed15eae-b6c6-55f7-1c6c-9ea84466ed71-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-k
 List-Id: devicetree@vger.kernel.org
 
-2017-03-13 18:27 GMT+01:00 Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>:
-> On 03/13/2017 08:08 PM, Bartosz Golaszewski wrote:
->
->>>> Add DT bindings for the onboard SATA controller present on the DM816x
->>>> SoCs.
->>>>
->>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/ata/ahci-dm816.txt | 20
->>>> ++++++++++++++++++++
->>>>  1 file changed, 20 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>>> b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>>> new file mode 100644
->>>> index 0000000..b87ed5a
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/ata/ahci-dm816.txt
->>>> @@ -0,0 +1,20 @@
->>>> +Device tree binding for the TI DM816 AHCI SATA Controller
->>>> +---------------------------------------------------------
->>>> +
->>>> +Required properties:
->>>> +  - compatible: must be "ti,dm816-ahci"
->>>> +  - reg: physical base address and size of the register region used by
->>>> +         the controller (as defined by the AHCI 1.1 standard)
->>>> +  - interrupts: interrupt specifier (refer to the interrupt binding)
->>>> +  - clocks: clock specifiers (refer to the clock binding); two clocks
->>>
->>>
->>>
->>>    There should be a phandle preceding the clock specifier, all new such
->>> props are different to the old "interrupts" (which had phandle in a
->>> separate
->>> "interrupt-parent" prop).
->
->
->> I'm afraid I don't understand - could you point me to an example?
->
->
->    Have you read Documentation/devicetree/bindings/clock/clock-bindings.txt,
-> on clock consumers?
+On Tue, 2017-03-14 at 08:34 +0100, Hans Verkuil wrote:
+> On 03/13/2017 10:03 PM, Sakari Ailus wrote:
+> > Hi Steve,
+> > 
+> > On Mon, Mar 13, 2017 at 11:06:22AM -0700, Steve Longerbeam wrote:
+> >>
+> >>
+> >> On 03/13/2017 06:55 AM, Philipp Zabel wrote:
+> >>> On Mon, 2017-03-13 at 13:27 +0000, Russell King - ARM Linux wrote:
+> >>>> On Mon, Mar 13, 2017 at 03:16:48PM +0200, Sakari Ailus wrote:
+> >>>>> The vast majority of existing drivers do not implement them nor the user
+> >>>>> space expects having to set them. Making that mandatory would break existing
+> >>>>> user space.
+> >>>>>
+> >>>>> In addition, that does not belong to link validation either: link validation
+> >>>>> should only include static properties of the link that are required for
+> >>>>> correct hardware operation. Frame rate is not such property: hardware that
+> >>>>> supports the MC interface generally does not recognise such concept (with
+> >>>>> the exception of some sensors). Additionally, it is dynamic: the frame rate
+> >>>>> can change during streaming, making its validation at streamon time useless.
+> >>>>
+> >>>> So how do we configure the CSI, which can do frame skipping?
+> >>>>
+> >>>> With what you're proposing, it means it's possible to configure the
+> >>>> camera sensor source pad to do 50fps.  Configure the CSI sink pad to
+> >>>> an arbitary value, such as 30fps, and configure the CSI source pad to
+> >>>> 15fps.
+> >>>>
+> >>>> What you actually get out of the CSI is 25fps, which bears very little
+> >>>> with the actual values used on the CSI source pad.
+> >>>>
+> >>>> You could say "CSI should ask the camera sensor" - well, that's fine
+> >>>> if it's immediately downstream, but otherwise we'd need to go walking
+> >>>> down the graph to find something that resembles its source - there may
+> >>>> be mux and CSI2 interface subdev blocks in that path.  Or we just accept
+> >>>> that frame rates are completely arbitary and bear no useful meaning what
+> >>>> so ever.
+> >>>
+> >>> Which would include the frame interval returned by VIDIOC_G_PARM on the
+> >>> connected video device, as that gets its information from the CSI output
+> >>> pad's frame interval.
+> >>>
+> >>
+> >> I'm kinda in the middle on this topic. I agree with Sakari that
+> >> frame rate can fluctuate, but that should only be temporary. If
+> >> the frame rate permanently shifts from what a subdev reports via
+> >> g_frame_interval, then that is a system problem. So I agree with
+> >> Phillip and Russell that a link validation of frame interval still
+> >> makes sense.
+> >>
+> >> But I also have to agree with Sakari that a subdev that has no
+> >> control over frame rate has no business implementing those ops.
+> >>
+> >> And then I agree with Russell that for subdevs that do have control
+> >> over frame rate, they would have to walk the graph to find the frame
+> >> rate source.
+> >>
+> >> So we're stuck in a broken situation: either the subdevs have to walk
+> >> the graph to find the source of frame rate, or s_frame_interval
+> >> would have to be mandatory and validated between pads, same as set_fmt.
+> > 
+> > It's not broken; what we are missing though is documentation on how to
+> > control devices that can change the frame rate i.e. presumably drop frames
+> > occasionally.
+> > 
+> > If you're doing something that hasn't been done before, it may be that new
+> > documentation needs to be written to accomodate that use case. As we have an
+> > existing interface (VIDIOC_SUBDEV_[GS]_FRAME_INTERVAL) it does make sense
+> > to use that. What is not possible, though, is to mandate its use in link
+> > validation everywhere.
+> > 
+> > If you had a hardware limitation that would require that the frame rate is
+> > constant, then we'd need to handle that in link validation for that
+> > particular piece of hardware. But there really is no case for doing that for
+> > everything else.
+> > 
+> 
+> General note: I would strongly recommend that g/s_parm support is removed in
+> v4l2_subdev in favor of g/s_frame_interval.
+> 
+> g/s_parm is an abomination...
 
-Yes I have. It says:
+Agreed. Just in this specific case I was talking about G_PARM on
+the /dev/video node, not the v4l2_subdev nodes. This is currently used
+by non-subdev-aware userspace to obtain the framerate from the video
+capture device.
 
- 66 clocks:         List of phandle and clock specifier pairs, one pair
- 67                 for each clock input to the device.  Note: if the
- 68                 clock provider specifies '0' for #clock-cells, then
- 69                 only the phandle portion of the pair will appear.
+> There seem to be only a few i2c drivers that use g/s_parm, so this shouldn't
+> be a lot of work.
+> 
+> Having two APIs for the same thing is always very bad.
+> 
+> Regards,
+> 
+> 	Hans
+> 
 
->    In fact, your own example below doesn't have clock specifiers, only
-> phandles.
->
+regards
+Philipp
 
-Since the SATA reference clock specifies 0 for #clock-cells I'll omit
-the clock specifier. On the other hand: I'll rephrase the clocks
-property description in the bindings for clarity.
-
-Thanks,
-Bartosz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
